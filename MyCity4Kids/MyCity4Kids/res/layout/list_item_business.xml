@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="15dp">
+
+    <RelativeLayout
+        android:id="@+id/rightElementsContainer"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true">
+
+        <TextView
+            android:id="@+id/txvrating"
+            android:layout_width="45dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/bluerect_drawable"
+            android:gravity="center"
+            android:text="3.9"
+            android:textColor="@color/white_color"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/txvDistance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:drawableTop="@drawable/distance_icon"
+            android:gravity="center"
+            android:textColor="@color/black_color"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/start_end_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="3dp"
+            android:singleLine="true"
+            android:text="26-28"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/btn_bg_blue"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/month_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/start_end_date"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/start_end_date"
+            android:layout_marginLeft="2dp"
+            android:singleLine="true"
+            android:text="Oct"
+            android:textColor="#696969"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/age_group_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/start_end_date"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/month_txt"
+            android:layout_marginTop="2dp"
+            android:singleLine="true"
+            android:text="@string/ageGroup"
+            android:textColor="#737373"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/age_group_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/start_end_date"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/age_group_txt"
+            android:singleLine="true"
+            android:text="8-12"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/btn_bg_blue"
+            android:textStyle="bold"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/leftElementsContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@id/rightElementsContainer">
+
+        <TextView
+            android:id="@+id/txvName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="1dp"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-medium"
+            android:singleLine="true"
+            android:text="name"
+            android:textColor="#424242"
+            android:textSize="16dp" />
+
+        <LinearLayout
+            android:id="@+id/layoutadress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txvName"
+            android:layout_marginBottom="1dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/addressicon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/location_grey" />
+
+            <TextView
+                android:id="@+id/txvAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="2dp"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif"
+                android:singleLine="true"
+                android:text=""
+                android:textColor="#919191"
+                android:textSize="13dp" />
+        </LinearLayout>
+        <!-- <TextView
+             android:id="@+id/txvAddress"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_alignParentLeft="true"
+             android:layout_below="@id/txvName"
+
+             android:textColor="#494949"
+             android:textStyle="bold" />-->
+
+        <TextView
+            android:id="@+id/txvDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/layoutadress"
+            android:layout_marginTop="2dp"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:text=" "
+            android:textColor="#919191"
+            android:textSize="13dp" />
+
+        <TextView
+            android:id="@+id/txvBookNow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txvDescription"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/rectangle_btn_background"
+            android:padding="4dp"
+            android:text="Book Now"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/white_color"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:scrollbars="none" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <ImageView
+            android:id="@+id/imgLogo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:src="@drawable/app_logo" />
+
+        <TextView
+            android:id="@+id/txvLogoTag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/imgLogo"
+            android:layout_centerHorizontal="true"
+            android:text="About your child. Around Your home"
+           android:textColor="#316dd4"
+                android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txvSignUpTag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txvLogoTag"
+            android:layout_marginTop="20dp"
+            android:text="@string/sign_up_txt"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/editFirstName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txvSignUpTag"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_edittext"
+            android:hint="First Name"
+            android:inputType="textNoSuggestions"
+            android:padding="8dp"
+            android:singleLine="true" />
+
+        <EditText
+            android:id="@+id/editLastName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/editFirstName"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_edittext"
+            android:hint="Last Name"
+            android:inputType="textNoSuggestions"
+            android:padding="8dp"
+            android:singleLine="true" />
+
+        <EditText
+            android:id="@+id/editEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/editLastName"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_edittext"
+            android:hint="Email address"
+            android:inputType="textEmailAddress|textNoSuggestions"
+            android:padding="8dp"
+            android:singleLine="true" />
+
+        <EditText
+            android:id="@+id/editPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/editEmail"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_edittext"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:padding="8dp"
+            android:singleLine="true" />
+
+        <EditText
+            android:id="@+id/editConfirmPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/editPassword"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_edittext"
+            android:hint="Confirm Password"
+            android:inputType="textPassword"
+            android:padding="8dp"
+            android:singleLine="true" />
+
+        <TextView
+            android:id="@+id/txvSignUp"
+            style="@style/custom_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/editConfirmPassword"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/bg_btn_blue"
+            android:padding="10dp"
+            android:text="@string/sign_up_txt" />
+
+        <TextView
+            android:id="@+id/txvLogin"
+            style="@style/custom_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txvSignUp"
+         
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_btn_green"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/login_txt" />
+    </RelativeLayout>
+
+</ScrollView>

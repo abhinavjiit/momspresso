@@ -1,0 +1,82 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SelectLocationActivity" >
+
+    <RelativeLayout
+        android:id="@+id/rltRootHeader"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/blue_bg" >
+
+        <!--
+        <ImageView
+            android:id="@+id/imgLogo"
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/app_logo" />
+
+        <TextView
+            android:id="@+id/txvCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/bg_btn_blue"
+            android:gravity="center_vertical"
+            android:paddingBottom="2dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="2dp"
+            android:text="Cancel"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/white_color" />
+
+        <TextView
+            android:id="@+id/txvHeaderText"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:layout_toLeftOf="@id/txvCancel"
+            android:layout_toRightOf="@id/imgLogo"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="Select Location"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/white_color" />
+        -->
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            layout="@layout/common_header_bar" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/txvInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rltRootHeader"
+        android:gravity="center_vertical"
+        android:padding="5dp"
+        android:text="@string/location_info"
+        android:textColor="#555555"
+        android:visibility="gone" />
+
+    <ListView
+        android:id="@+id/locationList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txvInfo"
+        android:cacheColorHint="@android:color/transparent"
+        android:divider="#e3e3e5"
+        android:dividerHeight="1dp"
+        android:padding="5dp" />
+
+</RelativeLayout>

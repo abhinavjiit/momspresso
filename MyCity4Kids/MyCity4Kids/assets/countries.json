@@ -1,0 +1,82 @@
+{
+  "responseCode": 200,
+  "response": "success",
+  "result": {
+    "message": "Your appointment has been created successfully",
+    "data": {
+      "Appointment": [
+        {
+          "Appointment": {
+            "id": "12",
+            "user_id": "138899",
+            "family_id": "66",
+            "offline_id": "10",
+            "appointment_name": "Health checkup visit with parents",
+            "starttime": "2147483647",
+            "endtime": "1234142341",
+            "is_recurring": "yes",
+            "repeate_untill": "forever",
+            "repeat": "other",
+            "repeate_num": "1",
+            "repeate_frequency": "weekly",
+            "reminder": "30",
+            "locality": "0",
+            "created_on": "2015-06-25 00:00:00",
+            "modified_on": "2015-06-25 17:53:54"
+          },
+          "AppointmentAttendee": [
+            {
+              "id": "21",
+              "appointment_id": "12",
+              "uk_id": "122215",
+              "uk_type": "user"
+            },
+            {
+              "id": "20",
+              "appointment_id": "12",
+              "uk_id": "13",
+              "uk_type": "kid"
+            }
+          ],
+          "AppointmentNote": [
+            {
+              "id": "16",
+              "appointment_id": "12",
+              "user_id": "138899",
+              "note": "wjk dagjagsj hdgaj",
+              "created_on": "2015-06-25 17:53:54"
+            }
+          ],
+          "AppointmentWhomRemind": [
+            {
+              "id": "21",
+              "appointment_id": "12",
+              "user_id": "144455"
+            },
+            {
+              "id": "20",
+              "appointment_id": "12",
+              "user_id": "133336"
+            }
+          ],
+          "AppointmentFile": [
+            {
+              "id": "20",
+              "appointment_id": "12",
+              "file_name": "appointmentsss.doc",
+              "file_type": "text",
+              "url": "http:\/\/www.mycity4kids.com\/files\/appointments\/testcases.pdf"
+            },
+            {
+              "id": "19",
+              "appointment_id": "12",
+              "file_name": "indexsss.jpg",
+              "file_type": "image",
+              "url": "http:\/\/www.mycity4kids.com\/files\/appointments\/index.png"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

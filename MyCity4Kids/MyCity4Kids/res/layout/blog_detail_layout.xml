@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.mycity4kids.observablescrollview.TouchInterceptionFrameLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:id="@+id/pager_wrapper"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/viewpager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/blogger_bg">
+            <!--android:background="?attr/colorPrimary"-->
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/flexible_space_height_blogger_with_toolbar">
+
+
+                <LinearLayout
+                    android:id="@+id/common_block"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/blogger_bg"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/flexible_space_image_height_blogger"
+                            android:background="@drawable/blog_bgnew" />
+
+                        <View
+                            android:id="@+id/transparentView"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/flexible_space_image_height_blogger"
+                            android:background="#4D000000" />
+
+                        <View
+                            android:id="@+id/blank_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_below="@+id/blogger_bg"
+                            android:background="@color/blogger_bg"></View>
+
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="134dp"
+                            android:layout_alignBottom="@+id/blank_view"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true">
+
+
+                            <RelativeLayout
+                                android:id="@+id/dp_frame"
+                                android:layout_width="110dp"
+                                android:layout_height="124dp"
+                                android:layout_marginLeft="10dp">
+
+
+                                <ImageView
+                                    android:id="@+id/blogger_profile"
+                                    android:layout_width="90dp"
+                                    android:layout_height="100dp"
+                                    android:layout_centerInParent="true"
+                                    android:layout_margin="10dp"
+                                    android:background="@color/edit_hint_color" />
+
+                                <TextView
+                                    android:id="@+id/author_type"
+                                    android:layout_width="70dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentTop="true"
+                                    android:layout_centerHorizontal="true"
+                                    android:background="@color/blogger_name_bg"
+                                    android:ellipsize="end"
+                                    android:fontFamily="sans-serif-medium"
+                                    android:gravity="center"
+                                    android:paddingLeft="2dp"
+                                    android:paddingRight="2dp"
+                                    android:singleLine="true"
+                                    android:textColor="@color/white_color"
+                                    android:textSize="12dp" />
+
+                                <ImageView
+                                    android:id="@+id/blog_follow"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:background="@drawable/follow_blog"
+                                    android:padding="10dp" />
+
+                            </RelativeLayout>
+
+                            <TextView
+                                android:id="@+id/blogger_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginTop="24dp"
+                                android:layout_toEndOf="@+id/dp_frame"
+                                android:layout_toRightOf="@+id/dp_frame"
+                                android:ellipsize="end"
+                                android:fontFamily="sans-serif"
+                                android:lines="1"
+                                android:textColor="@color/white_color"
+                                android:textSize="22dp" />
+
+
+                            <TextView
+                                android:id="@+id/blogger_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/blogger_name"
+                                android:layout_marginLeft="10dp"
+                                android:layout_toEndOf="@+id/dp_frame"
+                                android:layout_toRightOf="@+id/dp_frame"
+                                android:ellipsize="end"
+                                android:fontFamily="sans-serif-light"
+                                android:lines="1"
+                                android:textColor="@color/white_color"
+                                android:textSize="17dp" />
+
+                            <ImageView
+                                android:id="@+id/facebook_"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentBottom="true"
+                                android:layout_marginBottom="14dp"
+                                android:layout_marginLeft="10dp"
+                                android:layout_toRightOf="@+id/dp_frame"
+                                android:background="@drawable/fb_new"
+                                android:padding="10dp" />
+
+                            <ImageView
+                                android:id="@+id/twitter_"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentBottom="true"
+                                android:layout_marginBottom="14dp"
+                                android:layout_marginLeft="15dp"
+                                android:layout_toRightOf="@+id/facebook_"
+                                android:background="@drawable/twitter_"
+                                android:padding="10dp" />
+
+                            <ImageView
+                                android:id="@+id/rss_"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentBottom="true"
+                                android:layout_marginBottom="14dp"
+                                android:layout_marginLeft="15dp"
+                                android:layout_toRightOf="@+id/twitter_"
+                                android:background="@drawable/rss_"
+                                android:padding="10dp"
+                                android:visibility="gone" />
+
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/author_rank"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginTop="10dp"
+                            android:drawableLeft="@drawable/trend_"
+                            android:drawablePadding="7dp"
+                            android:text="12"
+                            android:textColor="@color/white_color"
+                            android:textSize="16dp" />
+
+                        <TextView
+                            android:id="@+id/author_follow"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_below="@+id/author_rank"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginTop="2dp"
+                            android:drawableLeft="@drawable/follower_"
+                            android:drawablePadding="7dp"
+                            android:text="12"
+                            android:textColor="@color/white_color"
+                            android:textSize="16dp" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/about_desc_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/blogger_bg"
+                        android:orientation="vertical"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp">
+
+
+                        <TextView
+                            android:id="@+id/blogger_desc"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:ellipsize="end"
+                            android:maxLines="4"
+                            android:paddingBottom="2dp"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:scrollbars="vertical"
+                            android:textColor="@color/black_color"
+                            android:textSize="14dp" />
+
+                        <TextView
+                            android:id="@+id/more_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_below="@+id/blogger_desc"
+                            android:clickable="true"
+                            android:gravity="right"
+                            android:paddingBottom="2dp"
+                            android:paddingLeft="8dp"
+                            android:paddingRight="8dp"
+                            android:text="More"
+                            android:textColor="#5962E4"
+                            android:visibility="gone" />
+
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/overlay"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/flexible_space_height_blogger_with_toolbar"
+                android:background="?attr/colorPrimary"
+                android:visibility="gone" />
+
+
+            <android.support.design.widget.TabLayout
+                android:id="@+id/sliding_tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/common_block"
+                android:background="@color/white_color"
+                android:fillViewport="false"
+                app:layout_collapseMode="pin"
+                app:tabGravity="fill"
+                app:tabIndicatorColor="@color/tabsScrollColor"
+                app:tabIndicatorHeight="3dp"
+                app:tabMode="fixed"
+                app:tabSelectedTextColor="#1b51e6"
+                app:tabTextColor="#5f85ed"
+                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+        </FrameLayout>
+    </com.mycity4kids.observablescrollview.TouchInterceptionFrameLayout>
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@color/transparent"
+        android:minHeight="?attr/actionBarSize">
+
+        <TextView
+            android:id="@+id/titleMain"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:textColor="@color/white_color"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+    </android.support.v7.widget.Toolbar>
+</FrameLayout>

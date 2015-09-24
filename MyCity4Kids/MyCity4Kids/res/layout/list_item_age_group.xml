@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:orientation="horizontal"
+    android:paddingLeft="13dp">
+
+    <ImageView
+        android:id="@+id/colordots"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/eventcolor1"
+        android:padding="5dp" />
+
+    <TextView
+        android:id="@+id/txvAgeGroupName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:fontFamily="sans-serif"
+        android:gravity="left"
+        android:text="name"
+        android:textColor="#424242"
+        android:textSize="14dp" />
+
+    <CheckBox
+        android:id="@+id/radioBtnAgeGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:button="@drawable/new_checkbox_selector"
+        android:padding="14dp" />
+
+</LinearLayout>

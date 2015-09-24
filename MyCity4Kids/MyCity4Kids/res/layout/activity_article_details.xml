@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/a_light_blue">
+
+    <RelativeLayout
+        android:id="@+id/rltHeader"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/blue_bg">
+
+        <ImageView
+            android:id="@+id/imgBack"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/back_img"
+            android:padding="10dp"
+            android:src="@drawable/back_arrow" />
+
+        <TextView
+            android:id="@+id/header_txt"
+            android:layout_width="250dp"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="@string/articles"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/white_color"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/img_twitter"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:contentDescription="@string/round_img"
+            android:padding="5dp"
+            android:src="@drawable/header_twitter" />
+
+        <View
+            android:id="@+id/img_fb_separator"
+            android:layout_width="1dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_toLeftOf="@id/img_twitter"
+            android:background="@drawable/header_seprator" />
+
+        <ImageView
+            android:id="@+id/img_fb"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_toLeftOf="@id/img_fb_separator"
+            android:contentDescription="@string/round_img"
+            android:padding="5dp"
+            android:src="@drawable/header_facebook_post" />
+
+        <View
+            android:id="@+id/img_share_separator"
+            android:layout_width="1dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_toLeftOf="@id/img_fb"
+            android:background="@drawable/header_seprator" />
+
+        <ImageView
+            android:id="@+id/img_share"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_toLeftOf="@id/img_share_separator"
+            android:contentDescription="@string/round_img"
+            android:padding="5dp"
+            android:src="@drawable/header_share" />
+
+        <View
+            android:id="@+id/img_follow_separator"
+            android:layout_width="1dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_toLeftOf="@id/img_share"
+            android:background="@drawable/header_seprator" />
+
+        <ImageView
+            android:id="@+id/img_follow"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_toLeftOf="@id/img_follow_separator"
+            android:contentDescription="@string/round_img"
+            android:padding="5dp"
+            android:src="@drawable/header_follow" />
+
+        <View
+            android:id="@+id/img_font_size_separator"
+            android:layout_width="1dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_toLeftOf="@id/img_follow"
+            android:background="@drawable/header_seprator" />
+
+        <Spinner
+            android:id="@+id/fontSizePicker"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="5dp"
+            android:layout_toLeftOf="@id/img_font_size_separator"
+            android:background="@drawable/header_char_size"
+            android:ellipsize="end"
+            android:padding="10dp"
+            android:prompt="@string/none"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/btn_bg_blue"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/topPicksDetailContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rltHeader"
+        android:padding="10dp">
+
+        <RelativeLayout
+            android:id="@+id/imvAuthorThumbContainer"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_marginTop="5dp">
+
+            <ImageView
+                android:id="@+id/imvAuthorThumb"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:contentDescription="@string/author_img" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/txvArticleTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/imvAuthorThumbContainer"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:paddingLeft="10dp"
+            android:singleLine="false"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/btn_bg_blue"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txvPublishDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/txvAuthorName"
+            android:layout_alignBottom="@+id/txvAuthorName"
+            android:layout_alignParentRight="true"
+            android:singleLine="true"
+            android:textColor="@color/gray2"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/txvAuthorName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/imvAuthorThumbContainer"
+            android:layout_alignLeft="@+id/txvArticleTitle"
+            android:paddingLeft="10dp"
+            android:singleLine="true"
+            android:textColor="#737373"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/bottom_Lout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/comment_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:background="@color/white_color"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <EditText
+                android:id="@+id/editCommentTxt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".87"
+                android:background="@drawable/edit_text"
+                android:gravity="top|left"
+                android:hint="@string/write_comment"
+                android:maxLength="150"
+                android:padding="12dp"
+                android:singleLine="false"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/black_color"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/add_comment_btn"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".13"
+                android:background="@drawable/comment_add_new"
+                android:clickable="true" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/add_comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@color/a_baseblue"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/leave_comment"
+            android:textColor="@color/white_color"
+            android:textSize="@dimen/common_button_txt_size"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/bottom_Lout"
+        android:layout_below="@id/topPicksDetailContainer"
+        android:fadingEdgeLength="20dp"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/inside_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/a_light_blue"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txvDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autoLink="web"
+                android:background="@color/white_color"
+                android:ellipsize="end"
+                android:padding="10dp"
+                android:singleLine="false"
+                android:textAlignment="textEnd"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#494949" />
+
+            <!--
+                 <WebView
+                android:id="@+id/WebView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:overScrollMode="never"
+                android:padding="10dp" />
+            -->
+
+            <!--android:drawableTop="@drawable/top_separator"-->
+
+            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/comment_text_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                android:elevation="3dp"
+                card_view:contentPadding="5dp">
+
+                <TextView
+                    android:id="@+id/txvComment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white_color"
+                    android:drawablePadding="5dp"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:padding="8dp"
+                    android:text="Comments"
+                    android:textAlignment="textEnd"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/black_color" />
+
+            </android.support.v7.widget.CardView>
+
+            <LinearLayout
+                android:id="@+id/commnetLout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/a_light_blue"
+                android:orientation="vertical"
+                android:padding="5dp">
+
+                <!-- <add comment dynamically> -->
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.mycity4kids"
+    android:versionCode="10"
+    android:versionName="2.6"> <!-- version increase for final release -->
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="22" />
+    <!-- So that we can get the account name -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+
+    <!-- Used to request data from the Google+ APIs in the SignInActivity -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!--<uses-permission android:name="android.permission.GET_ACCOUNTS" />-->
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+
+    <!-- Required if we need to invalidate access tokens -->
+    <!--<uses-permission android:name="android.permission.USE_CREDENTIALS" />-->
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <!-- External storage for caching. -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- My Location -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
+    <!-- <permission
+         android:name="com.mycity4kids.gcm.permission.C2D_MESSAGE"
+         android:protectionLevel="signature" />-->
+
+    <uses-permission android:name="com.mycity4kids.gcm.permission.C2D_MESSAGE" />
+
+
+    !-- Maps API needs OpenGL ES 2.0. -->
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+
+    <application
+        android:name=".application.BaseApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:theme="@style/AppTheme">
+
+        <!-- API key For Google Map Local -->
+
+        <!--<meta-data-->
+        <!--android:name="com.google.android.maps.v2.API_KEY"-->
+        <!--android:value="AIzaSyDW1kR3eOOksMp4gBrOnyGVB-q9bFJ21x4" />-->
+
+
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyCLaeioxT3JtDNGj4aczM_Clno7T_WTfWU" />
+
+        <!--// this is old one keyyyyy-->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
+        <receiver
+            android:name="com.mycity4kids.receiver.InstallReferrerReceiver"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>-->
+
+        <activity
+            android:name=".filechooser.com.ipaulpro.afilechooser.FileChooserActivity"
+            android:enabled="@bool/use_activity"
+            android:exported="true"
+            android:icon="@drawable/ic_chooser"
+            android:label="@string/choose_file">
+            <intent-filter>
+                <action android:name="android.intent.action.GET_CONTENT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.OPENABLE" />
+
+                <data android:mimeType="*/*" />
+            </intent-filter>
+        </activity>
+
+
+        <activity
+            android:name=".ui.activity.SplashActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppBaseTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!--The following intent filter is added to provide deep linking to the MC4K app  -->
+            <intent-filter>
+                <data android:scheme="mc4k" />
+                <data android:scheme="mycity4kids" />
+                <data
+                    android:host="www.mycity4kids.com"
+                    android:scheme="http" />
+                <data
+                    android:host="mycity4kids.com"
+                    android:scheme="http" />
+                <data
+                    android:host="www.mycity4kids.com"
+                    android:scheme="https" />
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".google.SignInActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.activity.LoginActivity"
+            android:label="@string/title_activity_login"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <!-- Login Activity for facebook & app id -->
+        <activity
+            android:name="com.facebook.LoginActivity"
+            android:label="@string/app_name" />
+
+        <activity
+            android:name=".ui.activity.ArticleFilterDialogActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Transparent" />
+
+        <activity
+            android:name=".ui.activity.ExpendedBlogDescriptionActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Transparent" />
+
+
+        <activity
+            android:name=".ui.activity.BlogFilterActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Transparent" />
+
+        <activity
+            android:name=".ui.activity.BlogDetailActivity"
+            android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|uiMode|keyboard"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity
+            android:name=".ui.activity.ActivityCreateTask"
+            android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|uiMode|keyboard"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity
+            android:name=".ui.activity.MissingPlaceActivity"
+            android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|uiMode|keyboard"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity
+            android:name=".ui.activity.ActivityShowTask"
+            android:configChanges="keyboardHidden|screenSize|orientation"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity
+            android:name=".ui.activity.NewsLetterWebviewActivity"
+            android:configChanges="keyboardHidden|screenSize|orientation"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".ui.activity.ActivityEditTask"
+            android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|uiMode|keyboard"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+
+        <activity
+            android:name=".ui.activity.ActivityShowAppointment"
+            android:configChanges="keyboardHidden|screenSize|orientation"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity
+            android:name=".ui.activity.LoadWebViewActivity"
+            android:configChanges="keyboardHidden|screenSize|orientation"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity
+            android:name=".cropimage.CropImage"
+            android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|uiMode|keyboard"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+
+
+        <activity
+            android:name=".ui.activity.ActivityLogin"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity
+            android:name=".ui.activity.ActivityCreateAppointment"
+            android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|uiMode|keyboard"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity
+            android:name=".ui.activity.ActivityViewPager"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity
+            android:name=".ui.activity.ActivityEditAppointment"
+            android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|uiMode|keyboard"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity android:name=".googlemap.MapActivity" />
+        <activity
+            android:name=".ui.activity.RegistrationActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".ui.activity.HomeCategoryActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".ui.activity.HomeCategoryTransparentDialogActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".ui.activity.ForgotPasswordActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".ui.activity.SelectLocationActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.ActivitySignUp"
+            android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|uiMode|keyboard"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.BusinessListActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".ui.activity.BusinessListActivityKidsResources"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".ui.activity.ProfileActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.WriteReviewActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
+            android:name=".ui.activity.ParentingArticlesActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.BusinessDetailsActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".ui.activity.AddBusinesEventActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".ui.activity.RecentlyViewedActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".ui.activity.BookOrPayWebActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".ui.activity.AutoSuggestTransparentDialogActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Transparent"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".ui.activity.LandingLoginActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Transparent" />
+        <activity
+            android:name=".ui.activity.LoginEmailActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Transparent" />
+        <activity
+            android:name=".ui.activity.YouTubeVideoActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Transparent"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.activity.TopPicksActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Transparent"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.activity.TopPicksDetailActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.activity.PhotoActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Transparent"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.activity.ReportAnErrorActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.LoadingActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Transparent"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".ui.activity.PhotoSlideActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Transparent"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".ui.activity.ArticlesAndBlogsDetailsActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".ui.activity.ArticleBlogSearchDialogActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Transparent"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".ui.activity.AddCommentReplyActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/total_transparent_dialog"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.activity.DashboardActivity"
+            android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|uiMode|keyboard"
+            android:label="@string/app_name"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity
+            android:name=".ui.activity.ActivityFamilyProfile"
+            android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|uiMode|keyboard"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".ui.activity.TutorialActivity"
+            android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|uiMode|keyboard"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/transparent_status"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity
+            android:name=".ui.activity.JoinFamilyActivity"
+            android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|uiMode|keyboard"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/transparent_status"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity
+            android:name=".ui.activity.NewLoginActivity"
+            android:label="@string/title_activity_new_login"></activity>
+
+        <activity
+            android:name="com.mycity4kids.reminders.AlarmDialogActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Dialog" />
+        <!--<activity-->
+        <!--android:name="com.mycity4kids.ui.activity.EventsFilterActivity"-->
+        <!--android:configChanges="keyboard|keyboardHidden|orientation|screenSize"-->
+        <!--android:screenOrientation="portrait"-->
+        <!--android:theme="@style/Theme.Transparent" />-->
+
+        <receiver
+            android:name="com.mycity4kids.reminders.BootCompleteReceiver"
+            android:enabled="true"
+            android:exported="false"
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name="com.mycity4kids.reminders.AlarmReceiver" />
+        <receiver android:name="com.mycity4kids.reminders.CancelNotificationReceiver" />
+        <receiver android:name="com.mycity4kids.reminders.ShareNotificationReceiver" />
+        <receiver android:name="com.mycity4kids.reminders.ShareArticleReceiver" />
+
+        <service android:name="com.mycity4kids.gcm.GcmIntentService" />
+        <service android:name="com.mycity4kids.sync.PushTokenService" />
+        <service android:name="com.mycity4kids.sync.SyncService" />
+        <service android:name="com.mycity4kids.sync.RemainderEmailService" />
+        <service android:name="com.mycity4kids.sync.SyncUserInfoService" />
+        <service android:name="com.mycity4kids.sync.CompletedTasksService" />
+
+
+        <receiver
+            android:name="com.mycity4kids.gcm.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
+                <category android:name="com.chapp.android" />
+            </intent-filter>
+        </receiver>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="421701ee89def40fd06948f23fb71f48ff84eb04" />
+    </application>
+
+</manifest>

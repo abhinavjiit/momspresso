@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/parentLout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white_color"
+    android:orientation="vertical" >
+
+    <!--
+         <com.mycity4kids.widget.Header
+        android:id="@+id/header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />this is slider code 
+        according to cr this has removed
+    -->
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/detail_header" />
+
+    <LinearLayout
+        android:id="@+id/lnrRootFilterSort"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone" >
+
+        <CheckedTextView
+            android:id="@+id/txvArticles"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/state_maintain"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:paddingBottom="15dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingTop="15dp"
+            android:text="Articles"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/white_color" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="10dp"
+            android:background="@color/white_color" />
+
+        <CheckedTextView
+            android:id="@+id/txvBlogs"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/state_maintain"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:paddingBottom="15dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingTop="15dp"
+            android:text="Blogs"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/white_color" />
+    </LinearLayout>
+
+    <!--
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="match_parent"
+         android:orientation="horizontal"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:id="@+id/filterLout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#5997fc" >
+
+            <ImageView
+                android:id="@+id/filter_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:src="@drawable/filter_f_event" />
+        </LinearLayout>
+
+        <HorizontalScrollView
+            android:id="@+id/horizontalList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fillViewport="true"
+            android:scrollbars="none" >
+
+            <TabWidget
+                android:id="@android:id/tabs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" />
+        </HorizontalScrollView>
+    </LinearLayout>
+    -->
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

@@ -1,0 +1,33 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.mycity4kids.ui.activity.DashboardActivity">
+
+
+    <!--<item-->
+        <!--android:id="@+id/down_arrow"-->
+        <!--android:icon="@drawable/drop_downxxhdpi"-->
+        <!--android:title="down"-->
+        <!--android:visible="false"-->
+        <!--app:showAsAction="always" />-->
+
+
+    <item
+        android:id="@+id/today"
+        android:icon="@drawable/today_xxhdpi"
+        android:title="today"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/calender"
+        android:icon="@drawable/calendar_xxhdpi"
+        android:title="calender"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/filter"
+        android:icon="@drawable/filter_xxhdpi"
+        android:title="filter"
+        app:showAsAction="always" />
+
+</menu>

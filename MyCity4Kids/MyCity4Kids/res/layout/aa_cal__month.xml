@@ -1,0 +1,223 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:id="@+id/mainScroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/mainlayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:weightSum="3">
+
+                    <TextView
+                        android:id="@+id/back_"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="back" />
+
+                    <TextView
+                        android:id="@+id/date_"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="year" />
+
+                    <TextView
+                        android:id="@+id/next_"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="next" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/weekDays"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/a_baseblue"
+                    android:orientation="horizontal"
+                    android:paddingBottom="12dp"
+                    android:paddingTop="5dp">
+
+                    <TextView
+                        android:id="@+id/sun"
+                        android:layout_width="0dp"
+                        android:layout_height="20dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="S"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/white_color" />
+
+                    <TextView
+                        android:id="@+id/mon"
+                        android:layout_width="0dp"
+                        android:layout_height="20dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="M"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/white_color" />
+
+                    <TextView
+                        android:id="@+id/tue"
+                        android:layout_width="0dp"
+                        android:layout_height="20dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="T"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/white_color" />
+
+                    <TextView
+                        android:id="@+id/wed"
+                        android:layout_width="0dp"
+                        android:layout_height="20dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="W"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/white_color" />
+
+                    <TextView
+                        android:id="@+id/thur"
+                        android:layout_width="0dp"
+                        android:layout_height="20dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="T"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/white_color" />
+
+                    <TextView
+                        android:id="@+id/fri"
+                        android:layout_width="0dp"
+                        android:layout_height="20dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="F"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/white_color" />
+
+                    <TextView
+                        android:id="@+id/sat"
+                        android:layout_width="0dp"
+                        android:layout_height="20dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="S"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/white_color" />
+                </LinearLayout>
+
+
+                <com.mycity4kids.widget.CustomGridView
+                    android:id="@+id/gridview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/weekDays"
+                    android:listSelector="@android:color/transparent"
+                    android:numColumns="7"
+                    android:stretchMode="columnWidth" />
+
+
+                <LinearLayout
+                    android:id="@+id/curent_date_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:background="@color/a_monthHeader"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/currentDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/a_monthHeader"
+                        android:fontFamily="sans-serif-medium"
+                        android:gravity="center_vertical"
+                        android:padding="10dp"
+                        android:text="22 AUG"
+                        android:textColor="@color/dark_grey" />
+
+                    <TextView
+                        android:id="@+id/day_"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:background="@color/a_monthHeader"
+                        android:fontFamily="sans-serif-medium"
+                        android:gravity="center_vertical"
+                        android:padding="10dp"
+                        android:text="SUNDAY"
+                        android:textColor="@color/dark_grey" />
+
+                </LinearLayout>
+
+                <com.mycity4kids.widget.CustomListView
+                    android:id="@+id/list_month_event"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:divider="@color/dividercolor"
+                    android:dividerHeight="0.3dp"
+                    android:padding="2dp" />
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+    <FrameLayout
+        android:id="@+id/filter_attendee1"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="right|top"
+        android:background="@color/white_color"
+        android:foregroundGravity="right|top">
+
+        <com.mycity4kids.widget.CustomListView
+            android:id="@+id/attendee_list1"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content" />
+
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/add_appointment_month"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:padding="10dp"
+        android:src="@drawable/add_bluexxhdpi" />
+
+</RelativeLayout>

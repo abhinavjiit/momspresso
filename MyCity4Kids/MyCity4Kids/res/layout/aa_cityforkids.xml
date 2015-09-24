@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/mainlayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white_color"
+        android:orientation="vertical"
+        android:paddingBottom="10dp">
+
+        <TextView
+            android:id="@+id/txtCalender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="12dp"
+            android:text="Enter your child's schedule in the family calendar"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <FrameLayout
+            android:id="@+id/calender"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/calendar_dashboard_bgxxhdpi"
+            android:orientation="vertical">
+
+            <LinearLayout
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/calendar_dashboard_xxhdpi"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/day"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="26"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/white_color"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="4"
+                    android:gravity="center"
+                    android:text="26"
+                    android:textColor="@color/black_color"
+                    android:textSize="@dimen/date_size"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+
+        </FrameLayout>
+
+
+        <TextView
+            android:id="@+id/txttodo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="12dp"
+            android:text="Make a to-do list of things you need to get done"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+
+        <TextView
+            android:id="@+id/todos"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/note_3d_xxhdpi">
+
+        </TextView>
+
+
+        <LinearLayout
+            android:id="@+id/lnrEventBlofg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtevents"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="12dp"
+                android:text="Discover great events in the city for your kids"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+
+            <TextView
+                android:id="@+id/events"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/zoom_xxhdpi">
+
+            </TextView>
+
+        </LinearLayout>
+            <TextView
+                android:id="@+id/txtblogs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:layout_marginLeft="18dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="12dp"
+                android:text="Enjoy reading the best Parenting Blogs"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+            <!--android:text="Blog upcoming kid's events,local resources and parenting blogs  "-->
+
+            <TextView
+                android:id="@+id/blogs"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/pinkblog_xxhdpi">
+
+            </TextView>
+
+
+    </LinearLayout>
+
+
+</ScrollView>

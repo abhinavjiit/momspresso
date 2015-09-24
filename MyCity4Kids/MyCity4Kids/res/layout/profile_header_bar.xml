@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/sliding_top_row"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="@color/header_color" >
+
+    <TextView
+        android:id="@+id/btnCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:padding="7dp"
+        android:text="Cancel"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white_color"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+<!--     <TextView
+        android:id="@+id/btnSubmit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:padding="7dp"
+        android:text="Save"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white_color"
+        android:textStyle="bold" /> -->
+
+    <TextView
+        android:id="@+id/txvHeaderText"
+        android:layout_width="250dp"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:singleLine="true"
+        android:text="Profile"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white_color"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txvEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:drawablePadding="5dp"
+        android:drawableRight="@drawable/arrow_down"
+        android:gravity="center_vertical"
+        android:text="Edit"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white_color"
+        android:textStyle="bold" 
+        android:visibility="gone"/>
+
+    <ImageView
+        android:id="@+id/cross_icon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:padding="10dp"
+        android:src="@drawable/cross_icon" />
+
+</RelativeLayout>

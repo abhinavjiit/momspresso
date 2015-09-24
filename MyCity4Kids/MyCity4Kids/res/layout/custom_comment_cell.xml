@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/inner_comment_view"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@color/transparent"
+    android:elevation="3dp"
+    card_view:contentPadding="2dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent">
+
+
+        <RelativeLayout
+            android:id="@+id/relativeMainContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white_color"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp">
+
+            <RelativeLayout
+                android:id="@+id/imvAuthorThumbContainer"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/network_img"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:contentDescription="@string/author_img"
+                    android:src="@drawable/default_img"
+                    android:visibility="visible" />
+
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/txvCommentTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/imvAuthorThumbContainer"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:paddingLeft="4dp"
+                android:singleLine="false"
+                android:text="@string/title"
+                android:textColor="@color/black_color"
+                android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/txvDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/txvCommentTitle"
+                android:layout_alignStart="@+id/txvCommentTitle"
+                android:layout_below="@+id/txvCommentTitle"
+                android:paddingLeft="4dp"
+                android:text="datasssss"
+                android:textColor="@color/grey"
+                android:textSize="13dp" />
+
+            <TextView
+                android:id="@+id/txvCommentDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/imvAuthorThumbContainer"
+                android:layout_marginTop="2dp"
+                android:ellipsize="end"
+                android:singleLine="false"
+                android:textAlignment="textEnd"
+                android:textColor="@color/black_color"
+                android:textSize="13dp" />
+
+            <TextView
+                android:id="@+id/txvReply"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/txvCommentDescription"
+                android:padding="5dp"
+                android:text="REPLY"
+                android:textColor="@color/header_color"
+                android:textSize="14dp" />
+
+
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/dividerLine"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_below="@+id/relativeMainContainer"
+            android:background="@color/a_light_blue"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/backgroun_img"
+    android:scrollbars="none" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:padding="18dp" >
+
+        <ImageView
+            android:id="@+id/img_f_mycity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="50dp"
+            android:paddingRight="45dp"
+            android:src="@drawable/logo" />
+
+        <ImageView
+            android:id="@+id/cross_icon"
+            android:layout_width="@dimen/common_margin"
+            android:layout_height="@dimen/common_margin"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:paddingBottom="25dp"
+            android:paddingRight="25dp"
+            android:src="@drawable/cross_icon_back" />
+
+        <LinearLayout
+            android:id="@+id/first_name_Lout"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/common_button_height"
+            android:layout_alignLeft="@+id/txvSignUp"
+            android:layout_alignRight="@+id/txvSignUp"
+            android:layout_below="@id/img_f_mycity"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/img_key"
+                android:layout_width="45dp"
+                android:layout_height="@dimen/common_button_height"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/blue_man_icon"
+                android:scaleType="fitStart" />
+
+            <EditText
+                android:id="@+id/editFirstName"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_button_height"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/bg_edittext_ractangle"
+                android:hint="Enter your name"
+                android:inputType="textNoSuggestions"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:paddingLeft="10dp"
+                android:singleLine="true"
+                android:textColorHint="@color/hint_txt_color" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/email_lout"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/common_button_height"
+            android:layout_alignLeft="@id/txvSignUp"
+            android:layout_alignRight="@id/txvSignUp"
+            android:layout_below="@id/first_name_Lout"
+            android:layout_marginTop="@dimen/common_button_margin"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/img_key_value"
+                android:layout_width="45dp"
+                android:layout_height="@dimen/common_button_height"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/blue_email_icon"
+                android:scaleType="fitStart" />
+
+            <EditText
+                android:id="@+id/editEmail"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_button_height"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/bg_edittext_ractangle"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:hint="Enter your email address"
+                android:inputType="textEmailAddress|textNoSuggestions"
+                android:paddingLeft="10dp"
+                android:singleLine="true"
+                android:textColorHint="@color/hint_txt_color" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/confirm_email_lout"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/common_button_height"
+            android:layout_alignLeft="@+id/txvSignUp"
+            android:layout_alignRight="@+id/txvSignUp"
+            android:layout_below="@id/email_lout"
+            android:layout_marginTop="@dimen/common_button_margin"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/img_key_valued"
+                android:layout_width="45dp"
+                android:layout_height="@dimen/common_button_height"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/blue_email_icon"
+                android:scaleType="fitStart" />
+
+            <EditText
+                android:id="@+id/confirm_email"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_button_height"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/bg_edittext_ractangle"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:hint="Confirm your email address"
+                android:inputType="textEmailAddress|none"
+                android:paddingLeft="10dp"
+                android:singleLine="true"
+                android:textColorHint="@color/hint_txt_color" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/password_lout"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/common_button_height"
+            android:layout_alignLeft="@+id/txvSignUp"
+            android:layout_alignRight="@+id/txvSignUp"
+            android:layout_below="@id/confirm_email_lout"
+            android:layout_marginTop="@dimen/common_button_margin"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/img_key_value1"
+                android:layout_width="45dp"
+                android:layout_height="@dimen/common_button_height"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/blue_key_icon"
+                android:scaleType="fitStart" />
+
+            <EditText
+                android:id="@+id/editPassword"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_button_height"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/bg_edittext_ractangle"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:hint="Password"
+                android:inputType="textPassword"
+                android:paddingLeft="10dp"
+                android:singleLine="true"
+                android:textColorHint="@color/hint_txt_color" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txvSignUp"
+            style="@style/custom_style"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/common_button_height"
+            android:layout_below="@id/password_lout"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="@dimen/common_button_margin"
+            android:background="@drawable/final_btn_background_selector"
+            android:gravity="center"
+            android:text="@string/sign_up_txt"
+            android:textColor="@color/white_color"
+            android:textSize="@dimen/common_button_txt_size" />
+    </RelativeLayout>
+
+</ScrollView>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="a_monthHeader">#EEEEEE</color>
+    <color name="a_dialog_monthbg">#F7F7F7</color>
+    <color name="a_baseblue">#1C55F1</color>
+    <color name="a_spouce_bg">#f0f4ff</color>
+    <color name="a_light_blue">#e3eaff</color>
+    <color name="a_light_pink">#ffedf0</color>
+    <color name="a_bg_blue">#F0F4FF</color>
+    <color name="a_fuchsia">#44ff00ff</color>
+    <color name="white_color">#ffffff</color>
+    <color name="black_color">#000000</color>
+    <color name="dividercolor">#E9E9E9</color>
+
+    <color name="grey">#878787</color>
+    <color name="dark_grey">#464646</color>
+    <color name="grey_light">#eeeeee</color>
+    <color name="blue_color">#0000cc</color>
+    <color name="blue_bg">#4c69ba</color>
+    <color name="section_header">#f7f7f7</color>
+    <color name="transparent">#00000000</color>
+    <color name="search_bg">#5997fc</color>
+    <color name="edit_hint_color">#969495</color>
+    <color name="edit_text_bg">#ededed</color>
+    <color name="btn_bg_blue">#306ed5</color>
+    <color name="radio_btn_checked">#7090dc</color>
+    <color name="radio_btn_unchecked">#454545</color>
+    <color name="trans_gray">#95000000</color>
+    <color name="gray2">#8037444d</color>
+    <color name="tab_checked">#7BACFD</color>
+    <color name="tab_unchecked">#5997fc</color>
+    <color name="dark_blue">#316fd6</color>
+    <color name="transparent_blue">#494949</color>
+    <color name="blue_login">#2a6bd3</color>
+    <color name="light_blue">#4a85eb</color>
+    <color name="header_color">#316ed5</color>
+    <color name="tab_color">#e1e1e1</color>
+    <color name="edit_txt_hint">#cdcdcd</color>
+    <color name="fb_color">#3a60a2</color>
+    <color name="fb_selector_color">#4971b5</color>
+    <color name="google_color">#c83929</color>
+    <color name="google_selector_color">#d74a3a</color>
+    <color name="input_text_color">#494949</color>
+    <color name="radio_btn_text_color">#5a5a5a</color>
+    <!-- Common colors to be used across screens -->
+    <color name="common_grey_1">#494949</color>
+    <color name="common_blue">#316ed5</color>
+    <color name="common_grey_2">#555555</color>
+    <color name="light_gray">#f5f3f4</color>
+    <color name="transparent_color">#70000000</color>
+    <color name="diveder_color">#ededed</color>
+    <color name="line_separator_color">#cbcbcb</color>
+    <color name="line_separator_colornew">#fcfcfc</color>
+    <color name="slider_txt_color">#696969</color>
+    <color name="hint_txt_color">#CFCFCF</color>
+
+
+    <color name="light_grey1">#E4E8F1</color>
+
+    <color name="home_light_blue">#1c55f1</color>
+
+    <!-- Business Details Screen - Info tab -->
+    <color name="event_divider_color">#d3d3d3</color>
+    <color name="new_divider_color">#e2e2e2</color>
+    <color name="new_background_color">#f0f4ff</color>
+    <color name="skyblue_color">#01acc0</color>
+    <color name="purple_color">#ab48bd</color>
+    <!-- new color strings -->
+    <color name="primary">#1d55f1</color>
+    <color name="primary_dark">#1744c3</color>
+    <color name="blue_light">#3366f3</color>
+    <color name="red_drawer_selected">#ec3b55</color>
+    <color name="home_purple">#536CFD</color>
+    <color name="home_green">#1BDDD2</color>
+    <color name="home_blue">#4ECFE2</color>
+    <color name="home_bg">#EFF3FE</color>
+    <color name="divider_color">#F4F4F4</color>
+
+    <color name="new_grey">#424242</color>
+    <color name="canceltxt_color">#bdbdbd</color>
+    <color name="greytxt_color">#616161</color>
+    <color name="blogger_bg">#F4F4F4</color>
+    <color name="new_blue">#4056DA</color>
+
+
+    <color name="blogger_name_bg">#119EE8</color>
+    <color name="blogger_listing_bg">#F0F3FF</color>
+
+    <!--anupama -->
+    <color name="tabsScrollColor">#ec3b55</color>
+    <color name="ColorPrimary">#00897B</color>
+    <color name="ColorPrimaryDark">#00695C</color>
+</resources>

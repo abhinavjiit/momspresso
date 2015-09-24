@@ -1,0 +1,115 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/a_bg_blue">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:elevation="8dp"
+        android:minHeight="?attr/actionBarSize"></android.support.v7.widget.Toolbar>
+
+
+    <RelativeLayout
+        android:id="@+id/toolbar1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/backbtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/back_xxhdpi"
+            android:gravity="center"
+            android:padding="2dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/backbtn"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="30dp"
+            android:layout_toRightOf="@+id/backbtn"
+            android:text="Report an Error"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/white_color"
+            android:textSize="21dp" />
+
+        <TextView
+            android:id="@+id/save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="right"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/check_xxhdpi"
+            android:gravity="right" />
+    </RelativeLayout>
+
+
+    <ScrollView
+        android:layout_below="@id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/rltContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white_color"
+            android:orientation="vertical"
+            android:paddingLeft="20dp">
+
+            <com.mycity4kids.widget.CustomListView
+                android:id="@+id/lvErrorList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:cacheColorHint="@android:color/transparent"
+                android:divider="@null"
+                android:dividerHeight="0dp"
+                android:requiresFadingEdge="vertical"
+                android:scrollbars="none"
+                android:visibility="visible" />
+
+            <EditText
+                android:id="@+id/edtSpecifyError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white_color"
+                android:fontFamily="sans-serif"
+                android:hint="SPECIFY REASON"
+                android:maxLength="150"
+                android:paddingBottom="15dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="15dp"
+                android:singleLine="false"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/black_color"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/separator"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="30dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                android:background="#d3d3d3" />
+
+        </LinearLayout>
+
+    </ScrollView>
+</RelativeLayout>

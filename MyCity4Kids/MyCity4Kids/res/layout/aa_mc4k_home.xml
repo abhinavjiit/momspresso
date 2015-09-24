@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/base_scroll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/home_bg"
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:scrollbars="none">
+
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@color/white_color"
+                android:orientation="vertical">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:background="@color/home_purple"
+                    android:orientation="horizontal"
+                    android:padding="8dp"
+                    android:weightSum="1">
+
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight=".2">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:src="@drawable/calendar_dashboard_list" />
+
+                        <TextView
+                            android:id="@+id/current_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:layout_centerHorizontal="true"
+                            android:paddingBottom="3dp"
+                            android:text="17"
+                            android:textColor="@color/black_color" />
+
+                    </RelativeLayout>
+
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight=".7"
+                        android:text="@string/home_appointment"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/white_color"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/add_appointment"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight=".1"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:src="@drawable/attachment" />
+
+                </LinearLayout>
+
+                <com.mycity4kids.widget.CustomListView
+                    android:id="@+id/home_appointmentList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@color/dividercolor"
+                    android:dividerHeight="0.3dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/home_bg" />
+
+                <TextView
+                    android:id="@+id/go_to_cal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="15dp"
+                    android:text="@string/home_gotoCalendar"
+                    android:textColor="@color/home_light_blue"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@color/white_color"
+                android:orientation="vertical">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/home_green"
+                    android:orientation="horizontal"
+                    android:padding="8dp"
+                    android:weightSum="1">
+
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight=".2"
+                        android:src="@drawable/note_3d_listhdpi" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight=".7"
+                        android:text="To Do"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/white_color"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/add_task"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight=".1"
+                        android:padding="5dp"
+                        android:src="@drawable/attachment" />
+
+                </LinearLayout>
+
+                <ListView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <com.mycity4kids.widget.CustomListView
+                    android:id="@+id/home_taskList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@color/dividercolor"
+                    android:dividerHeight="0.3dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/home_bg" />
+
+                <TextView
+                    android:id="@+id/go_to_task"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="15dp"
+                    android:text="@string/home_goto_todo"
+                    android:textColor="@color/home_light_blue"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/eventsss"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white_color"
+                android:orientation="vertical">
+
+
+                <LinearLayout
+
+                    android:id="@+id/eventHeader"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/home_blue"
+                    android:orientation="horizontal"
+                    android:padding="8dp"
+                    android:weightSum="1">
+
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight=".2"
+                        android:src="@drawable/zoom_list" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight=".8"
+                        android:text="@string/home_events"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/white_color"
+                        android:textStyle="bold" />
+
+
+                </LinearLayout>
+
+                <ProgressBar
+                    android:id="@+id/eventprogressbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/no_events"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="2dp"
+                    android:text="No Events Listed"
+                    android:textColor="@color/grey"
+                    android:textSize="12dp"
+                    android:visibility="gone" />
+
+
+                <com.mycity4kids.widget.CustomListView
+                    android:id="@+id/eventList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@color/dividercolor"
+                    android:dividerHeight="0.3dp" />
+
+                <TextView
+                    android:id="@+id/go_to_events"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="15dp"
+                    android:text="@string/home_goto_event"
+                    android:textColor="@color/home_light_blue"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/blogss"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white_color"
+                android:orientation="vertical">
+
+                <LinearLayout
+
+                    android:id="@+id/blogHeader"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="#ce92d8"
+                    android:orientation="horizontal"
+                    android:padding="8dp"
+                    android:weightSum="1">
+
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight=".2"
+                        android:src="@drawable/blog_listxxhdpi" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight=".8"
+                        android:text="Blogs"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/white_color"
+                        android:textStyle="bold" />
+
+
+                </LinearLayout>
+
+                <ProgressBar
+                    android:id="@+id/blogprogressbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/no_blog"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="2dp"
+                    android:text="No Blogs Listed"
+                    android:textColor="@color/grey"
+                    android:textSize="12dp"
+                    android:visibility="gone" />
+
+
+                <com.mycity4kids.widget.CustomListView
+                    android:id="@+id/bloglist"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@color/dividercolor"
+                    android:dividerHeight="0.3dp" />
+
+                <TextView
+                    android:id="@+id/go_to_blog"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="15dp"
+                    android:text="@string/home_goto_blog"
+                    android:textColor="@color/home_light_blue"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/rltLoadingView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/white_color"
+            android:paddingBottom="5dp"
+            android:visibility="gone">
+
+            <View
+                android:id="@+id/sepaartorView"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="5dp"
+                android:background="@color/blue_bg" />
+
+            <TextView
+                android:id="@+id/txvLoadMore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/sepaartorView"
+                android:layout_centerInParent="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="@string/loading_txt"
+                android:textColor="@color/black_color" />
+
+            <ImageView
+                android:id="@+id/imgLoader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/sepaartorView"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="4dp"
+                android:layout_toLeftOf="@id/txvLoadMore"
+                android:src="@drawable/progress_spinner" />
+        </RelativeLayout>
+    </RelativeLayout>
+</ScrollView>

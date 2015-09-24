@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    android:orientation="horizontal"
+    android:paddingLeft="13dp">
+
+    <TextView
+        android:id="@+id/txvSubCategoryName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_weight="1"
+        android:fontFamily="sans-serif"
+        android:gravity="left"
+        android:textColor="#424242"
+        android:textSize="14dp" />
+
+    <RadioButton
+        android:id="@+id/radioBtnCategory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:button="@drawable/new_checkbox_selector"
+        android:padding="14dp" />
+
+</LinearLayout>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="10dp">
+
+    <include
+        android:id="@+id/common_block"
+        layout="@layout/blog_common_header_item" />
+
+    <LinearLayout
+        android:id="@+id/article_block"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="#E0E3E9"
+        android:paddingLeft="1dp"
+        android:paddingRight="1dp"
+        android:paddingBottom="1.8dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/white_color"
+            android:paddingBottom="10dp"
+            android:paddingTop="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="Recent Articles:"
+                android:textColor="@color/black_color"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/recent_article_frame"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:orientation="vertical">
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/new_background_color"
+    android:orientation="vertical">
+
+    <ListView
+        android:id="@+id/ext_cal_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white_color" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0.2dp"
+        android:background="@color/white_color"
+        android:paddingLeft="15dp">
+
+        <TextView
+            android:id="@+id/add_cal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/add_xxhdpi"
+            android:drawablePadding="10dp"
+            android:padding="12dp"
+            android:text="ADD CALENDAR"
+            android:textColor="@color/new_blue" />
+
+    </LinearLayout>
+
+</LinearLayout>

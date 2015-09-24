@@ -1,0 +1,186 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+
+    -->
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+
+    <!-- Common  style theme for background this is for button & text view which use like button -->
+    <style name="custom_style" parent="@android:style/Widget.Button">
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="GenericProgressIndicator" parent="@android:style/Widget.ProgressBar.Small">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:indeterminate">true</item>
+    </style>
+
+    <style name="SearchResultRadioButtonStyle">
+        <item name="android:layout_width">0dip</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@drawable/radio_btn_selector</item>
+        <item name="android:button">@android:color/transparent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingBottom">3dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@color/white_color</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+    <!-- transparent theme -->
+
+    <style name="Theme.D1NoTitleDim" parent="android:style/Theme.Translucent">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="CustomRatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/custom_ratingbar</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+    <style name="CustomRatingBarEvent" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/custom_ratingbar</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+    <style name="CustomRatingInfoBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/custom_ratinginfobar</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+
+    <style name="CustomReviewRatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/custom_reviewrating_bar</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+
+    <style name="CustomTheme" parent="@android:style/Theme">
+        <item name="android:tabWidgetStyle">@style/CustomTabWidget</item>
+    </style>
+
+    <style name="CustomTabWidget" parent="@android:style/Widget.TabWidget">
+        <item name="android:textAppearance">@style/CustomTabWidgetText</item>
+    </style>
+
+    <style name="CustomTabWidgetText" parent="@android:style/TextAppearance.Widget.TabWidget">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Theme.Transparent" parent="AppBaseTheme">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:windowBackground">@color/transparent_color</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:colorForeground">#fff</item>
+    </style>
+
+    <style name="total_transparent_dialog" parent="AppBaseTheme">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:colorForeground">#fff</item>
+    </style>
+
+    <style name="largeEdittextText">
+
+        <!-- <item name="android:textAppearance">@android:style/TextAppearance.Large.Inverse</item> -->
+        <item name="android:textSize">14dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:background">#FFB90F</item>
+        <!-- <item name="android:background">#FFFFFF</item> -->
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+
+    <style name="fileChooserName">
+        <item name="android:drawablePadding">@dimen/list_item_padding</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:paddingLeft">@dimen/list_item_padding</item>
+        <item name="android:paddingRight">@dimen/list_item_padding</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+    </style>
+
+
+    -
+
+    <style name="style_photo_options_dialog_btn">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textColor">@color/grey</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:background">@color/white_color</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="transparent_status" parent="AppBaseTheme">
+    </style>
+    -
+
+    <style name="style_dialog_btn_cancel">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textColor">@color/red_drawer_selected</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:background">@color/white_color</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+
+    </style>
+
+    <style name="CropButton">
+        <item name="android:layout_margin">1dp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">3dp</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_width">60dp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@drawable/selector_crop_button</item>
+    </style>
+
+
+    <style name="DialogAnimation" parent="android:style/Theme.Dialog">
+        <item name="android:windowEnterAnimation">@anim/dialog_up</item>
+        <item name="android:windowExitAnimation">@anim/dialog_down</item>
+    </style>
+
+    <style name="Divider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1.5dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:background">@color/hint_txt_color</item>
+    </style>
+
+    <style name="Theme.AppCompat.Translucent">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+    </style>
+
+</resources>

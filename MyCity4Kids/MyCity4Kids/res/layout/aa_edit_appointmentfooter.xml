@@ -1,0 +1,78 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/a_bg_blue"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white_color"
+        android:orientation="vertical"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp">
+
+
+        <TextView
+            android:id="@+id/add_attachments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:drawableLeft="@drawable/add_xxhdpi"
+            android:drawablePadding="20dp"
+            android:gravity="center"
+            android:text="ADD ATTACHMENTS"
+            android:textStyle="bold"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/home_light_blue" />
+
+        <com.mycity4kids.widget.CustomListView
+            android:id="@+id/list_attachment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="35dp"
+            android:paddingRight="30dp"
+            android:paddingTop="5dp">
+
+        </com.mycity4kids.widget.CustomListView>
+
+        <TextView
+            android:id="@+id/add_images"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:drawableLeft="@drawable/add_xxhdpi"
+            android:drawablePadding="20dp"
+            android:gravity="center"
+            android:text="ADD IMAGES"
+            android:textStyle="bold"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/home_light_blue" />
+
+        <com.mycity4kids.widget.CustomListView
+            android:id="@+id/list_images"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp">
+
+        </com.mycity4kids.widget.CustomListView>
+
+        <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="@color/a_bg_blue"-->
+        <!--android:orientation="vertical">-->
+
+
+        <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="80dp"-->
+        <!--android:background="@color/a_bg_blue" />-->
+
+        <!--</LinearLayout>-->
+
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white_color"
+        android:orientation="vertical"
+        android:padding="25dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/color_spouse"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="7dp"
+                android:text="CHILD INFORMATION"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/black_color"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:id="@+id/cross"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/cross_xxhdpi" />
+
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <LinearLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/kidcolor"
+                android:background="@color/white_color"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/txtkidname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+                    android:paddingBottom="7dp"
+                    android:text="CHILD'S NAME"
+                    android:textColor="@color/new_grey" />
+
+                <EditText
+                    android:id="@+id/kids_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:digits=" abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                    android:drawableBottom="@drawable/underline"
+                    android:inputType="textCapWords"
+                    android:paddingBottom="7dp"
+                    android:textColor="@color/black_color" />
+
+
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/kidcolor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:drawableBottom="@drawable/color_2xxhdpi"
+                android:drawablePadding="5dp"
+                android:hint="@string/colour"
+                android:textColor="@color/black_color" />
+
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/txtkidbdy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:paddingBottom="7dp"
+            android:text="BIRTHDAY"
+            android:textColor="@color/new_grey" />
+
+        <TextView
+            android:id="@+id/kids_bdy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:background="@null"
+            android:drawableBottom="@drawable/underline"
+            android:drawablePadding="3dp"
+            android:drawableRight="@drawable/drop_down_arrowxxhdpi"
+            android:gravity="left"
+            android:padding="5dp"
+            android:paddingBottom="7dp"
+            android:textColor="@color/black_color" />
+
+
+    </LinearLayout>
+</LinearLayout>

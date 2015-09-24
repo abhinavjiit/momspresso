@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/parent_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/simple_header"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        layout="@layout/simple_header" />
+
+    <LinearLayout
+        android:id="@+id/laout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/search_bg"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true"
+        android:orientation="horizontal"
+        android:weightSum="1" >
+
+        <EditText
+            android:id="@+id/query_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight=".9"
+            android:background="@null"
+            android:hint="@string/hint_text"
+            android:imeOptions="actionSearch"
+            android:inputType="textFilter"
+            android:padding="10dp"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:textColor="@color/white_color"
+            android:textColorHint="@color/white_color"
+            android:textCursorDrawable="@null" />
+
+        <TextView
+            android:id="@+id/line"
+            android:layout_width="1dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".01"
+            android:background="#ffffff"
+            android:padding="15dp" />
+
+        <ImageView
+            android:id="@+id/business_search_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="2dp"
+            android:layout_weight=".09"
+            android:padding="10dp"
+            android:src="@drawable/search" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/localityLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/edit_text_bg"
+        android:focusableInTouchMode="true"
+        android:orientation="horizontal"
+        android:weightSum="1" >
+
+        <EditText
+            android:id="@+id/locality_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight=".9"
+            android:background="@color/edit_text_bg"
+            android:hint="@string/locality_txt"
+            android:imeOptions="actionSearch"
+            android:inputType="textFilter"
+            android:padding="10dp"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:textColor="@color/edit_hint_color"
+            android:textColorHint="#929292"
+            android:textCursorDrawable="@null" />
+
+        <TextView
+            android:id="@+id/line1"
+            android:layout_width="1dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".01"
+            android:background="#c6c6c6"
+            android:padding="15dp" />
+
+        <ImageView
+            android:id="@+id/locality_img"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight=".1"
+            android:padding="10dp"
+            android:src="@drawable/locality_icon" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/lout_f_Progress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:gravity="center_horizontal|center_vertical"
+        android:visibility="gone" >
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/searchList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:visibility="gone" >
+    </ListView>
+
+</LinearLayout>

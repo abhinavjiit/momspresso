@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <string name="app_name">mycity4kids</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="plus_generic_error">Sign in with Google is not available.</string>
+    <string name="progress_message">Signing in to Google&#8230;</string>
+    <string name="unknown_person">Unknown</string>
+    <string name="signed_out_status">Signed out.</string>
+    <string name="revoke_access_status">Revoked access.</string>
+    <string name="revoke_access_error_status">Unable to revoke access.</string>
+    <string name="loading_status">Loading…</string>
+    <string name="signing_in_status">Signing in with Google+.</string>
+    <string name="signed_in_status">Signed in as \"%s\".</string>
+    <string name="share_prefill_text">Welcome to the Google+ platform.</string>
+    <string name="send_interactive_button_name">Send Interactive Post</string>
+    <string name="plus_example_deep_link_id">/+/mobile/android/</string>
+    <string name="plus_example_deep_link_url">https://developers.google.com/+/mobile/android/</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="yes">YES</string>
+
+
+    <!-- <string name="facebook_app_id">1437325266589625</string>-->
+
+    <!--but now we are using client APP ID -->
+    <string name="facebook_app_id">206155642763202</string>
+
+    <string name="write_review_prompt">What would you like to review?</string>
+
+    <!-- splash screen -->
+
+    <string name="splash_title">About your child.Around your home</string>
+    <string name="loading_txt">Loading&#8230;</string>
+
+    <!-- Login Screen -->
+    <string name="skip_txt">SKIP THIS STEP</string>
+    <string name="sign_in">SIGN IN</string>
+    <string name="login_with_email">LOGIN WITH YOUR EMAIL</string>
+    <string name="new_user">New User?</string>
+    <string name="connect_txt">Connect With</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="reset_password">RESET PASSWORD</string>
+    <string name="sign_in_fb">Sign in with Facebook</string>
+    <string name="sign_in_google">Sign in with Google +</string>
+    <string name="user_login">User is not logged in.</string>
+    <string name="rest_password">REST PASSWORD</string>
+    <string name="login_successful">You have logged in successfully.</string>
+    <string name="email_or_password_not_matched">Invalid email id or password.</string>
+    <!-- Registration Screen -->
+    <string name="title_activity_registration">RegistrationActivity</string>
+    <string name="sign_up_txt">SIGN UP</string>
+    <string name="login_txt">Sign Up</string>
+    <string name="forgot_txt"> FORGOT PASSWORD?</string>
+    <string name="fb_txt">Facebook</string>
+    <string name="logout_txt">Logout</string>
+    <string name="subcategoryName">subCagegory</string>
+    <string name="categoryName">subCagegory</string>
+    <string name="location_info">To get a personalized recommendation and results, Please select your preferred location</string>
+    <string name="email_already_registered">Please use Login instead of Sign-Up as your email id is already registered with us</string>
+    <string name="registration_successful">Your registration has been completed successfully</string>
+    <!-- HomeCategoryActivity -->
+    <string name="hint_text">What are you looking for ?</string>
+    <string name="locality_txt">In which location?</string>
+    <string name="error_network">Device is out of network coverage.</string>
+    <string name="please_wait">Please Wait...</string>
+    <string name="no_result_txt">No result found.</string>
+    <string name="went_wrong">Something went wrong.</string>
+    <string name="no_data">Data not found.</string>
+    <string name="toast_network_error">Device is out of network coverage.</string>
+    <string name="toast_response_error">Some error occurred, please try again later!</string>
+    <string name="toast_server_error">Server error </string>
+    <string name="fetching_data">Fetching data&#8230;</string>
+    <string name="login_failed_please_try_again_">Login failed.</string>
+    <string name="please_select">Please select at least one value</string>
+    <!-- slidingDrawer -->
+    <string name="user_txt">Username</string>
+    <string name="home_txt">Home</string>
+    <string name="profile_txt">My Profile</string>
+    <string name="write_review_txt">Write a review</string>
+    <string name="recently_viewed">Recently Viewed</string>
+    <string name="business_event">Add a Listing</string>
+    <string name="follow_txt">Follow us on</string>
+    <string name="facebook_txt">Facebook</string>
+    <string name="twitter_txt">Twitter</string>
+    <string name="no_query">Please enter a search query.</string>
+    <string name="feedback_txt">Send Feedback</string>
+    <string name="invite_txt">Invite Friends</string>
+    <string name="rate_txt">Rate the App</string>
+
+    <!-- Filter/sort Screen -->
+    <string name="apply">APPLY</string>
+    <string name="reset">Reset</string>
+    <string name="reset_filters">RESET</string>
+    <string name="no_age_group">There is no age group to filter.</string>
+    <string name="no_category_group">There is no category group to filter.</string>
+    <string name="ageGroup">Age Group</string>
+
+    <!-- Add Listing Screen -->
+
+    <string name="add_listing_success">Your request has been submitted successfully.</string>
+
+    <!-- Add Listing Screen -->
+
+    <string name="write_review_success">Your review has been submitted successfully.</string>
+    <string name="write_review_success_new">Review has been sent for moderation once done it will be published in 48 hrs.</string>
+
+    <!-- Details Screen -->
+
+    <string name="product_txt">Toddlers Tunnel</string>
+    <string name="activities_text">Activities</string>
+    <string name="facilities_txt">Facilities</string>
+    <string name="age_grout_txt">Age Group</string>
+    <string name="event_dates_txt">Event Dates</string>
+    <string name="timings_txt">Timings</string>
+    <string name="cost_text">Cost</string>
+    <string name="description_txt">Description</string>
+    <string name="contact_txt">Contact</string>
+    <string name="about_txt">About</string>
+    <string name="event_list">There are no listings found.</string>
+    <string name="additional_info">Additional Information</string>
+    <string name="address_txt">Address</string>
+    <string name="sub_address_txt">Address</string>
+    <string name="address_locality_txt">Address</string>
+    <string name="pay_txt">Pay Fees</string>
+
+    <!-- Top Picks Screen -->
+    <string name="top_picks">Top Picks</string>
+    <string name="articles">Article</string>
+    <string name="author_img">Author Image</string>
+    <string name="title">Article Title</string>
+    <string name="author_name">Author Name</string>
+    <string name="article_publish_date">Article Publish Date</string>
+    <string name="description">Description</string>
+    <string name="progress_spinner">Progress Spinner</string>
+    <string name="none"> </string>
+
+    <!-- article details -->
+    <string name="comment">Comments</string>
+    <string name="Add_comment">ADD A COMMENT</string>
+    <string name="leave_comment">LEAVE A COMMENT</string>
+    <string name="submit">SUBMIT</string>
+    <string name="write_comment">Write a comment</string>
+    <string name="add_reply">Add a reply</string>
+    <string name="cancle_filer">CANCEL</string>
+    <string name="search_filer">SEARCH</string>
+    <string name="follow">You are following </string>
+    <string name="unfollow">You are unfollowing </string>
+
+    <!-- Top Picks Detail Screen -->
+    <string name="round_img">Toggle Menu</string>
+    <string name="back_img">Back Icon</string>
+    <string name="organised_by">Organized By</string>
+
+    <!-- Report An Error Screen -->
+    <string name="please_select_an_error">Please select at least one option</string>
+
+    <!-- View Edit Profile Screen -->
+    <string name="profile_photo">User Profile Photo</string>
+    <string name="close_profile_photo">Close Profile Photo</string>
+    <string name="city_prompt">Select Your City</string>
+    <string name="locality_prompt">Select Your Locality</string>
+    <string name="children">ADD CHILDREN</string>
+    <string name="DOB_prompt">Select Date of Birth</string>
+    <string name="girl">Girl</string>
+    <string name="boy">Boy</string>
+    <string name="dad">Dad</string>
+    <string name="mom">Mom</string>
+    <string name="jlk">Just Love Kids</string>
+
+    <!-- alert text for first time if gps off -->
+
+    <string name="gps_enabled_alert">It seems that location detection is disabled on your phone.Click OK to go to location settings.</string>
+    <string name="rate_this">Rate this app</string>
+
+    <string name="rate_description_new">
+<![CDATA[
+<html>
+ <head></head>
+ <body style="text-align:justify;">
+ If you enjoy using the mycity4kids Family Organizer, please take a moment to rate it. Thank you for your support !!!
+ </body>
+</html>
+]]>
+</string>
+
+    <string name="rate_description">If you enjoy using the mycity4kids Family Organizer, please take a moment to rate it. Thank you for your support !!!</string>
+    <string name="update_title">Upgrade ?</string>
+    <string name="install_now">INSTALL NOW</string>
+    <string name="rate_now">RATE NOW</string>
+    <string name="later">LATER</string>
+    <string name="exit_appointment">Your appointment details won\'t be saved. Are you sure you want to exit?</string>
+
+    <string name="update_desctiption">A new, Enhanced version of the mycity4Kids app is ready for installation.</string>
+    <string-array name="location_array">
+        <item name="delhi/ncr">Delhi/NCR </item>
+        <item name="banglore"> Balglore</item>
+    </string-array>
+
+    <string name="netwrok_error">Netwrok error</string>
+    <string name="search_locality">Search locality</string>
+    <string name="add_business">Add a Listing</string>
+    <string name="add_business_description">Please enter the following detail to add a business or an event</string>
+    <string name="add_business_hint">Business or Event Name</string>
+    <string name="add_business_contact">Contact Number</string>
+    <string name="transit">TRANSIT</string>
+    <string name="write_review">WRITE A REVIEW</string>
+    <string name="direction">DIRECTIONS</string>
+    <string name="error_player">There was an error initializing the YouTubePlayer (%1$s)</string>
+
+    <!-- Facebook Comments -->
+    <string name="cancelled">Cancelled</string>
+    <string name="permission_not_granted">Unable to perform selected action because permissions were not granted.</string>
+    <string name="ok">OK</string>
+    <string name="hello_user">Hello %1$s!</string>
+    <string name="successfully_posted_post">Successfully posted \'%1$s\'.\nPost ID: %2$s</string>
+    <string name="error">Error</string>
+    <string name="status_update">Updating status for %1$s at %2$s</string>
+    <string name="photo_post">Photo Post</string>
+    <string name="you_picked">You picked:</string>
+    <string name="no_friends_selected">&lt;No friends selected&gt;</string>
+    <string name="no_place_selected">&lt;No place selected&gt;</string>
+    <string name="pick_seattle_place">Pick a Seattle Place</string>
+    <!-- <string name="app_id">1497460137141503</string> -->
+    <string name="exception">Exception: %1$s</string>
+    <string name="description_article">I just have found an amazing article about parenting and kids at mycity4kids. To know more, please visit.</string>
+    <string name="description_blog">I just have found an amazing blog about parenting and kids at mycity4kids. To know more, please visit.</string>
+    <string name="description_common">I just discovered something interesting - Check it out here</string>
+    <string name="post_title">mycity4kids</string>
+    <string name="loading_">Loading...</string>
+
+    <string name="family_name">Family Name</string>
+    <string name="spouse_information">SPOUSE INFORMATION</string>
+    <string name="spouse_name">SPOUSE NAME</string>
+    <string name="colour">COLOR</string>
+
+    <string name="spouse_email">SPOUSE EMAIL</string>
+    <string name="family_share_pswd">FAMILY SHARED PASSWORD</string>
+    <string name="confirm_shared_pswd">CONFIRM SHARED PASSWORD</string>
+    <string name="add_pincode">ADD PINCODE</string>
+    <string name="additional_adult_acc">ADDITIONAL ADULT ACCOUNT</string>
+    <string name="childerns_information">CHILDREN INFORMATION</string>
+    <string name="kids_name">KIDS NAME</string>
+    <string name="kids_bday">KIDS BIRTHDAY</string>
+    <string name="additional_child">ADDITIONAL CHILD</string>
+    <string name="email">EMAIL</string>
+    <string name="account_prefrences">ACCOUNT PREFERENCES</string>
+    <string name="device_setting">DEVICE SETTINGS</string>
+    <string name="notifications">NOTIFICATIONS</string>
+
+    <string name="mycity_forkids">Welcome to mycity4kids!</string>
+    <string name="organise_urkids">Organize your kids  daily schedule with a family</string>
+    <string name="organise_todos">Organize your familys to do list.</string>
+    <string name="existing_email">EXISTING EMAIL ACCOUNT?SIGNIN HERE</string>
+    <string name="title_activity_dashboard">DashboardActivity</string>
+    <string name="blank"></string>
+    <string name="appointment">Appointment</string>
+    <string name="craete_appointment">Create Appointment</string>
+    <string name="family_details">Family Details</string>
+    <string name="new_signin">Sign In</string>
+    <!--temp data-->
+    <string name="endtime">8 :00 PM</string>
+    <string name="enddate">28, Feb 2015, Monday</string>
+    <string name="appointment_title">Shake Up Kids Camp</string>
+    <string name="start">START</string>
+    <string name="end">END</string>
+    <string name="who">WHO</string>
+    <string name="all">ALL(Vera,Jane)</string>
+    <string name="address">ADDRESS</string>
+    <string name="repeats">REPEATS</string>
+    <string name="monday">Every Monday</string>
+    <string name="reminder">REMINDER</string>
+    <string name="before">1 Hour Before</string>
+    <string name="attachments">ATTACHMENT</string>
+    <string name="image">IMAGES</string>
+    <string name="note">NOTES</string>
+
+    <string name="add_adult">You have successfully added an adult.</string>
+    <string name="add_child">You have successfully added a kid.</string>
+
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="please_enter_valid_email">Please enter valid email</string>
+    <string name="please_enter_dob">Please enter date of birth</string>
+    <string name="please_enter_name">Please enter name</string>
+
+    <!--// string color codess-->
+
+    <string name="title_activity_new_login">NewLoginActivity</string>
+    <string name="home_appointment">Today\'s Appointments</string>
+    <string name="home_gotoCalendar">GO TO CALENDAR</string>
+    <string name="home_todo">TODO</string>
+    <string name="home_goto_todo">GO TO TO-DO LISTS</string>
+    <string name="home_goto_event">GO TO UPCOMING EVENTS</string>
+    <string name="home_goto_blog">GO TO TRENDING BLOGS</string>
+    <string name="home_events">Events</string>
+    <string name="empty_directory">Empty Directory</string>
+    <string name="storage_removed">Storage was removed or unmounted.</string>
+    <string name="choose_file">Select a file</string>
+    <string name="error_selecting_file">Error selecting File</string>
+    <string name="internal_storage">Internal storage</string>
+
+    <string name="enter_kid">Please first enter the existing kids value</string>
+    <string name="enter_adult">Please first enter the existing adults value</string>
+
+    <string name="saving_image">Saving image</string>
+    <string name="preparing_card">Preparing card</string>
+    <string name="no_storage_card">No storage card</string>
+    <string name="not_enough_space">Not enough space</string>
+    <string name="server_error">Some error occurred, please try again later!</string>
+    <string name="edit_family">"Your family information has been updated successfully"</string>
+
+    <string name="color_selected">This color is already selected.</string>
+
+    <string name="exit_signup">Are you sure you want to exit the \n\"sign-up\" process?</string>
+    <string name="exit_task">Your task details won\'t be saved. Are you sure you want to exit?</string>
+    <string name="exitappointment">Your appointment details won\'t be saved. Are you sure you want to exit?</string>
+    <string name="delete_list">Are you sure you want to delete all tasks in this list?</string>
+
+    <string name="delete_appointment">Are you sure you want to delete the appointment?</string>
+    <string name="delete_task">Are you sure you want to delete the task?</string>
+
+
+    <string name="upload_iamge_successfully">You have successfully uploaded an image.</string>
+    <string name="upload_file_successfully">You have successfully uploaded a file.</string>
+    <string name="logout_msg">Are you sure you want to logout?</string>
+    <string name="reminder_selected">You cant select this</string>
+    <string name="activities_txt">Activities</string>
+    <string name="duration_txt">duration</string>
+    <string name="cost_txt">Cost</string>
+
+    <string name="social_media_edit">Social Media Events can not be edited...</string>
+    <string name="file_format">Invalid file format.Supported file formats are docx,xlsx,ppt,txt,pdf</string>
+    <string name="event_added">Event has been added</string>
+    <string name="do_login">Your account already exists. Please use the \'Join a Family\' option</string>
+
+
+    <string name="new_yes">YES</string>
+    <string name="new_cancel">CANCEL</string>
+
+</resources>

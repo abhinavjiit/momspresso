@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <EditText
+        android:id="@+id/add_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Add List"
+        android:padding="10dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/black_color" />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:paddingBottom="10dp"
+        android:paddingRight="5dp"
+        android:paddingTop="10dp">
+
+        <TextView
+            android:id="@+id/cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="30dp"
+            android:layout_toStartOf="@+id/done"
+            android:gravity="right"
+            android:padding="2dp"
+            android:text="CANCEL" />
+
+        <TextView
+            android:id="@+id/done"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="center_vertical"
+            android:padding="2dp"
+            android:text="DONE"
+            android:textColor="@color/blue_color" />
+
+    </RelativeLayout>
+
+
+</LinearLayout>
+

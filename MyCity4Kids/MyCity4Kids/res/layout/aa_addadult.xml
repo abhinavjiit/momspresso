@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white_color"
+        android:orientation="vertical"
+        android:padding="25dp">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/color_spouse"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="7dp"
+                android:text="SPOUSE / GUARDIAN DETAILS"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/black_color"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:id="@+id/cross"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/cross_xxhdpi" />
+
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/color_spouse"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:paddingBottom="7dp"
+                    android:text="NAME" />
+
+                <EditText
+                    android:id="@+id/spouse_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:digits=" abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                    android:drawableBottom="@drawable/underline"
+                    android:inputType="textCapWords"
+                    android:paddingBottom="7dp"
+                    android:text=""
+                    android:textColor="@color/black_color" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/color_spouse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:drawableBottom="@drawable/color_1xxhdpi"
+                android:drawablePadding="5dp"
+                android:hint="@string/colour"
+                android:textColor="@color/black_color" />
+
+
+        </RelativeLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:fontFamily="sans-serif"
+            android:paddingBottom="7dp"
+            android:text="EMAIL" />
+
+        <EditText
+            android:id="@+id/spouse_email"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:drawableBottom="@drawable/underline"
+            android:inputType="textEmailAddress"
+            android:paddingBottom="7dp"
+            android:textColor="@color/black_color" />
+    </LinearLayout>
+</LinearLayout>

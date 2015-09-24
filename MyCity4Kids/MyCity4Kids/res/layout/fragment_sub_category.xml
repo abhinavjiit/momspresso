@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+
+    <RelativeLayout
+        android:id="@+id/layout_age_non_blank"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <RelativeLayout
+            android:id="@+id/filter_options"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/lin"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#E0E0E0" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/lin"
+                android:background="@color/white_color">
+
+                <TextView
+                    android:id="@+id/list_reset"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_toLeftOf="@+id/list_apply"
+                    android:padding="14dp"
+                    android:text="RESET"
+                    android:textColor="@color/hint_txt_color"
+                    android:textSize="14dp" />
+
+                <TextView
+                    android:id="@+id/cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/list_reset"
+                    android:padding="14dp"
+                    android:text="CANCEL"
+                    android:textColor="@color/hint_txt_color"
+                    android:textSize="14dp" />
+
+
+                <View
+                    android:id="@+id/line"
+                    android:layout_width="1dp"
+                    android:layout_height="45dp"
+                    android:background="#ffffff"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/list_apply"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_gravity="center_vertical"
+                    android:padding="14dp"
+                    android:text="DONE"
+                    android:textColor="@color/new_blue"
+                    android:textSize="14dp" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <ListView
+            android:id="@+id/subCategoryListView"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:layout_above="@+id/filter_options"
+            android:cacheColorHint="@color/transparent"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:fadingEdgeLength="20dp"
+            android:listSelector="@color/transparent"
+            android:requiresFadingEdge="vertical"
+            android:scrollbars="none" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/txt_no_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="18sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.6dp"
+        android:layout_alignParentTop="true"
+        android:background="#CECECE"></View>
+
+</RelativeLayout>

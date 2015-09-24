@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/a_bg_blue"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/family_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="1dp"
+        android:background="@color/white_color"
+        android:drawablePadding="50dp"
+        android:drawableRight="@drawable/arrow_xxhdpi"
+        android:gravity="center_vertical"
+        android:padding="15dp"
+        android:text="Family Details"
+        android:textColor="@color/new_grey"
+        android:textSize="15dp" />
+
+    <TextView
+        android:id="@+id/notification"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="1dp"
+        android:background="@color/white_color"
+        android:drawablePadding="50dp"
+        android:drawableRight="@drawable/arrow_xxhdpi"
+        android:gravity="center_vertical"
+        android:padding="15dp"
+        android:text="Notifications"
+        android:textColor="@color/new_grey"
+        android:textSize="15dp" />
+
+    <TextView
+        android:id="@+id/external_cal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="1dp"
+        android:background="@color/white_color"
+        android:drawablePadding="50dp"
+        android:drawableRight="@drawable/arrow_xxhdpi"
+        android:gravity="center_vertical"
+        android:padding="15dp"
+        android:text="External Calendars"
+        android:textColor="@color/new_grey"
+        android:textSize="15dp" />
+
+    <TextView
+        android:id="@+id/sync_setting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="1dp"
+        android:background="@color/white_color"
+        android:drawablePadding="50dp"
+        android:drawableRight="@drawable/arrow_xxhdpi"
+        android:gravity="center_vertical"
+        android:padding="15dp"
+        android:text="Sync Settings"
+        android:textColor="@color/new_grey"
+        android:textSize="15dp" />
+
+
+    <TextView
+        android:id="@+id/logout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="1dp"
+        android:background="@color/white_color"
+        android:gravity="center_vertical"
+        android:padding="15dp"
+        android:text="Log Out"
+        android:textColor="@color/new_grey"
+        android:textSize="15dp" />
+
+
+</LinearLayout>

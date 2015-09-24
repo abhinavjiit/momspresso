@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff">
+
+    <LinearLayout
+        android:id="@+id/localityLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/edit_text_bg"
+        android:focusableInTouchMode="true"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:weightSum="1">
+
+        <EditText
+            android:id="@+id/txt_search_locality"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight=".9"
+            android:background="@color/edit_text_bg"
+            android:hint="Search Location"
+            android:imeOptions="actionSearch"
+            android:inputType="textFilter"
+            android:padding="10dp"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:textColor="@color/edit_hint_color"
+            android:textColorHint="@color/grey"
+            android:textCursorDrawable="@null" />
+    </LinearLayout>
+
+    <ExpandableListView
+        android:id="@+id/localityListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:dividerHeight="0dp"
+        android:background="@color/white_color"
+        android:layout_above="@+id/filter_options"
+        android:layout_below="@+id/localityLayout"
+        android:groupIndicator="@null"
+        android:requiresFadingEdge="vertical"
+        android:scrollbars="none" />
+
+
+    <RelativeLayout
+        android:id="@+id/filter_options"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <ImageView
+            android:id="@+id/lin"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#c6c6c6" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lin"
+            android:background="@color/white_color">
+
+            <TextView
+                android:id="@+id/list_reset"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_toLeftOf="@+id/list_apply"
+                android:padding="14dp"
+                android:text="RESET"
+                android:textColor="@color/hint_txt_color"
+                android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/list_reset"
+                android:padding="14dp"
+                android:text="CANCEL"
+                android:textColor="@color/hint_txt_color"
+                android:textSize="14dp" />
+
+
+            <TextView
+                android:id="@+id/list_apply"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="center_vertical"
+                android:padding="14dp"
+                android:text="DONE"
+                android:textColor="@color/new_blue"
+                android:textSize="14dp" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.6dp"
+        android:layout_alignParentTop="true"
+        android:background="#CECECE"></View>
+
+</RelativeLayout>
