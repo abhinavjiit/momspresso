@@ -463,7 +463,7 @@
         </receiver>
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="421701ee89def40fd06948f23fb71f48ff84eb04" />
+            android:value="0955a2855f4c5641b7994b98f58aef7eadbf4cd5" />
     </application>
 
 </manifest>
