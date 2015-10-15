@@ -206,9 +206,9 @@
                     android:background="#5b6dda"
                     android:fontFamily="sans-serif-medium"
                     android:gravity="center_horizontal"
+                    android:paddingBottom="2dp"
                     android:paddingLeft="4dp"
                     android:paddingRight="4dp"
-                    android:paddingBottom="2dp"
                     android:paddingTop="2dp"
                     android:text="BLOGGER"
                     android:textColor="@color/white_color"
@@ -293,28 +293,29 @@
 
             </RelativeLayout>
 
-            <TextView
-                android:id="@+id/txvDescription"
+            <!--<TextView-->
+            <!--android:id="@+id/txvDescription"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@+id/topPicksDetailContainer_new"-->
+            <!--android:autoLink="web"-->
+            <!--android:background="@color/white_color"-->
+            <!--android:ellipsize="end"-->
+            <!--android:fontFamily="sans-serif-light"-->
+            <!--android:padding="10dp"-->
+            <!--android:singleLine="false"-->
+            <!--android:textAlignment="textEnd"-->
+            <!--android:textColor="#494949" />-->
+
+            <WebView
+                android:id="@+id/articleWebView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/topPicksDetailContainer_new"
                 android:autoLink="web"
                 android:background="@color/white_color"
                 android:ellipsize="end"
-                android:fontFamily="sans-serif-light"
-                android:padding="10dp"
-                android:singleLine="false"
-                android:textAlignment="textEnd"
-                android:textColor="#494949" />
-
-            <!--
-                 <WebView
-                android:id="@+id/WebView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:overScrollMode="never"
-                android:padding="10dp" />
-            -->
+                android:fontFamily="sans-serif-light" />
 
             <!--android:drawableTop="@drawable/top_separator"-->
 
@@ -323,7 +324,7 @@
                 android:id="@+id/comment_text_layout"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/txvDescription"
+                android:layout_below="@+id/articleWebView"
                 android:layout_gravity="center"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"

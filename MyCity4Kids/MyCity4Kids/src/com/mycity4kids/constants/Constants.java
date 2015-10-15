@@ -45,7 +45,7 @@ public class Constants {
 
     public static final String PUSH_MODEL = "pushmodel";
 
-    public static  boolean IS_RESET = false;
+    public static boolean IS_RESET = false;
 
 
     public static final String EVENT_SYNC_TIMESTAMP = "eventSyncTimestamp";
@@ -240,9 +240,14 @@ public class Constants {
     public static String REMAINDER_TYPE = "remainder_email_type";
     public static String REMAINDER_ID = "remainder_email_id";
 
-    public static String IS_FROM_DEEPLINK   = "is_from_deeplink";
-    public static String CITY_ID_DEEPLINK   = "city_id_deeplink";
-    public static String DEEPLINK_URL       = "deeplink_url";
+    public static String IS_FROM_DEEPLINK = "is_from_deeplink";
+    public static String CITY_ID_DEEPLINK = "city_id_deeplink";
+    public static String DEEPLINK_URL = "deeplink_url";
 //	public static int BACK_PRESS_CONST = 0 ;
 
+    /*Fragments Mapping Constants*/
+    public static String LOAD_FRAGMENT = "load_fragment";
+    public static String BUSINESS_EVENTLIST_FRAGMENT = "fragment_eventlist";
+    public static String TODOLIST_FRAGMENT = "fragment_todolist";
+    public static String CALENDARLIST_FRAGMENT = "fragment_calendarlist";
 }

@@ -43,6 +43,8 @@ public class WhoToRemindDialogFragment extends android.app.DialogFragment {
 
         View rootView = inflater.inflate(R.layout.aa_attendees_fragment, container,
                 false);
+        TextView addAdultTextView = (TextView) rootView.findViewById(R.id.additional_adult);
+        addAdultTextView.setVisibility(View.VISIBLE);
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
         TextView title = (TextView) rootView.findViewById(R.id.title);
@@ -56,6 +58,15 @@ public class WhoToRemindDialogFragment extends android.app.DialogFragment {
             iftask = extras.getString("iftask");
 
         }
+
+        addAdultTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openAddAdultDialog();
+            }
+        });
+
+
         TableAdult tableAdult = new TableAdult(BaseApplication.getInstance());
         ArrayList<UserInfo> userInfos = (ArrayList<UserInfo>) tableAdult.getAllAdults();
 
@@ -153,5 +164,12 @@ public class WhoToRemindDialogFragment extends android.app.DialogFragment {
         }
         return result;
 
+    }
+
+    private void openAddAdultDialog() {
+        AddAdultDialogFragment dialogFragment = new AddAdultDialogFragment();
+        dialogFragment.setTargetFragment(dialogFragment, 2);
+        dialogFragment.show(getFragmentManager(), "add_adult");
+        getDialog().dismiss();
     }
 }

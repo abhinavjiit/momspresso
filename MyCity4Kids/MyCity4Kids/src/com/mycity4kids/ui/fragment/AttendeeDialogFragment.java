@@ -44,6 +44,8 @@ public class AttendeeDialogFragment extends android.app.DialogFragment {
 
         View rootView = inflater.inflate(R.layout.aa_attendees_fragment, container,
                 false);
+        TextView addAdultTextView = (TextView) rootView.findViewById(R.id.additional_adult);
+        addAdultTextView.setVisibility(View.GONE);
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
 
@@ -60,7 +62,6 @@ public class AttendeeDialogFragment extends android.app.DialogFragment {
             TextView title = (TextView) rootView.findViewById(R.id.title);
             title.setText("ASSIGNEES");
         }
-
 
         TableKids tableKids = new TableKids(BaseApplication.getInstance());
         ArrayList<KidsInfo> kidsInformations = (ArrayList<KidsInfo>) tableKids.getAllKids();
@@ -161,6 +162,6 @@ public class AttendeeDialogFragment extends android.app.DialogFragment {
             }
         }
         return result;
-
     }
+
 }

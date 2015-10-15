@@ -11,6 +11,7 @@ import com.kelltontech.network.ServiceRequest;
 import com.kelltontech.ui.IScreen;
 import com.kelltontech.utils.DataUtils;
 import com.kelltontech.utils.StringUtils;
+import com.mycity4kids.BuildConfig;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.parentingdetails.ParentingDetailResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -70,7 +71,13 @@ public class ArticleBlogDetailsController extends BaseController {
         if (!StringUtils.isNullOrEmpty(device_id)) {
             builder.append("&imei_no=").append(device_id);
         }
+
+        if (!StringUtils.isNullOrEmpty(authorId)) {
+            builder.append("article_id=").append(authorId);
+        }
+        String versionName = BuildConfig.VERSION_NAME;
         builder.append("&user_id=").append(SharedPrefUtils.getUserDetailModel(getActivity()).getId());
+        builder.append("&app_version=").append(versionName);
         return builder.toString().replace(" ", "%20");
 
     }

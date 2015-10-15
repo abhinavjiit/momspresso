@@ -35,6 +35,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -252,7 +253,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
             fontPicker = (Spinner) findViewById(R.id.fontSizePicker_new);
             ArrayList<String> fontList = new ArrayList<String>();
 
-            for (int font = 14; font < 41; font += 2) {
+            for (int font = 40; font < 61; font += 2) {
                 String fontSize = "" + Integer.valueOf(font);
                 fontList.add(fontSize);
             }
@@ -264,12 +265,11 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
                 public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                     float textSize = Float.valueOf(fontPicker.getAdapter().getItem(pos).toString());
 
-                    ((TextView) findViewById(R.id.txvDescription)).setTextSize(textSize);
-                    //	((WebView)findViewById(R.id.WebView)).getSettings().setTextZoom((int)(textSize));
-
-
-                    //	webView.getSettings().setDefaultFontSize((int)(textSize));
-                    //	webView.invalidate();
+                    //((TextView) findViewById(R.id.txvDescription)).setTextSize(textSize);
+                    WebView webView = (WebView) findViewById(R.id.articleWebView);
+                    webView.getSettings().setTextZoom((int) (textSize));
+                    webView.getSettings().setDefaultFontSize((int) (textSize));
+                    webView.invalidate();
                 }
 
                 @Override
@@ -350,10 +350,10 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
                 @Override
                 public void onResult(Status status) {
                     if (status.isSuccess()) {
-                        Log.d(TAG, APP_URI.toString()+" App Indexing API: The screen view started" +
+                        Log.d(TAG, APP_URI.toString() + " App Indexing API: The screen view started" +
                                 " successfully.");
                     } else {
-                        Log.e(TAG, APP_URI.toString()+" App Indexing API: There was an error " +
+                        Log.e(TAG, APP_URI.toString() + " App Indexing API: There was an error " +
                                 "recording the screen ." + status.toString());
                     }
                 }
@@ -374,10 +374,10 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
                 @Override
                 public void onResult(Status status) {
                     if (status.isSuccess()) {
-                        Log.d(TAG, APP_URI.toString()+" App Indexing API:  The screen view end " +
+                        Log.d(TAG, APP_URI.toString() + " App Indexing API:  The screen view end " +
                                 "successfully.");
                     } else {
-                        Log.e(TAG, APP_URI.toString()+" App Indexing API: There was an error " +
+                        Log.e(TAG, APP_URI.toString() + " App Indexing API: There was an error " +
                                 "recording the screen." + status.toString());
                     }
                 }
@@ -492,12 +492,12 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
                 String author = ((TextView) findViewById(R.id.user_name)).getText().toString();
                 String shareMessage;
                 if (StringUtils.isNullOrEmpty(shareUrl)) {
-                    shareMessage = "mycity4kids\n\nCheck out this interesting blog post " +"\""+ detailData.getTitle() + "\" by " + author+".";
+                    shareMessage = "mycity4kids\n\nCheck out this interesting blog post " + "\"" + detailData.getTitle() + "\" by " + author + ".";
                 } else {
-                    shareMessage = "mycity4kids\n\nCheck out this interesting blog post "+"\""+ detailData.getTitle() + "\" by " + author + ".\nRead Here: " + shareUrl;
+                    shareMessage = "mycity4kids\n\nCheck out this interesting blog post " + "\"" + detailData.getTitle() + "\" by " + author + ".\nRead Here: " + shareUrl;
                 }
 
-               // String shareMessage = "mycity4kids \n \n Check out this interesting blog post on " + detailData.getTitle() + " by " + author + " \n Read Here: " + shareUrl;
+                // String shareMessage = "mycity4kids \n \n Check out this interesting blog post on " + detailData.getTitle() + " by " + author + " \n Read Here: " + shareUrl;
                 // String shareMessage = "I just discovered something interesting on " + detailData.getTitle() + " - Check it out here " + shareUrl;
                 /*+mBusinessInfoModel.getName()==null?"":mBusinessInfoModel.getName()+" in mycity4kids app. Check it out "+mBusinessInfoModel.getWeb_url()==null?"":mBusinessInfoModel.getWeb_url();*/
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
@@ -758,7 +758,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
         if (imageList.size() > 0) {
             for (ImageData images : imageList) {
                 if (bodyDescription.contains(images.getKey())) {
-                    bodyDesc = bodyDesc.replaceAll("\\[", "").replaceAll("\\]", "");
+                    bodyDesc = bodyDesc.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\n", "<br/>");
                     //bodyDescription.replaceAll("\\]", "");
                     String imagekey = images.getKey().replaceAll("\\[", "").replaceAll("\\]", "");//<img src=\http://www.mycity4kids.com/parentingstop/uploads/737x164_Metro%20Museum.jpg\>
                     //	imagekey=images.getKey().replaceAll("\\]", "");
@@ -766,29 +766,31 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
                     bodyDesc = bodyDesc.replaceAll(imagekey, "<p style='text-align:center'><img src=\\" + images.getValue() + "\\></p>");
                 }
             }
-            spannedValue = Html.fromHtml(bodyDesc, this, null);
-            ((TextView) findViewById(R.id.txvDescription)).setText(spannedValue);
-            ((TextView) findViewById(R.id.txvDescription)).setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+//            spannedValue = Html.fromHtml(bodyDesc, this, null);
+//            ((TextView) findViewById(R.id.txvDescription)).setText(spannedValue);
+//            ((TextView) findViewById(R.id.txvDescription)).setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
 
 
-            //	String bodyImgTxt="<html><head></head><body>"+bodyDesc+"</body></html>";
-            /*WebView view=(WebView)findViewById(R.id.WebView);
-            view.getSettings().setLoadWithOverviewMode(true);
-			view.getSettings().setUseWideViewPort(true);
-			view.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);*/
-            //	webView.loadDataWithBaseURL("", bodyImgTxt, "text/html", "utf-8", "");
+            String bodyImgTxt = "<html><head></head><body>" + bodyDesc + "</body></html>";
+            WebView view = (WebView) findViewById(R.id.articleWebView);
+//            view.getSettings().setLoadWithOverviewMode(true);
+//			view.getSettings().setUseWideViewPort(true);
+            view.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+            view.loadDataWithBaseURL("", bodyImgTxt, "text/html", "utf-8", "");
 
         } else {
-            //	String bodyImgTxt="<html><head></head><body>"+bodyDesc+"</body></html>";
-            /*WebView view=(WebView)findViewById(R.id.WebView);
-            view.getSettings().setLoadWithOverviewMode(true);
-			view.getSettings().setUseWideViewPort(true);
-			view.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);*/
-            //	webView.loadDataWithBaseURL("", bodyImgTxt, "text/html", "utf-8", "");
-            if (!StringUtils.isNullOrEmpty(detailData.getBody().getText())) {
-                ((TextView) findViewById(R.id.txvDescription)).setText(detailData.getBody().getText());
-                ((TextView) findViewById(R.id.txvDescription)).setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
-            }
+            bodyDesc = bodyDesc.replaceAll("\n", "<br/>");
+            //bodyDesc = "Music, maths, wildlife, art and dance - these are just a few elements in the week that lies ahead for children in Delhi NCR. Join Happy Feet’s music and movement programme for young children or sign up for some hip hop, Bollywood Jazz and contemporary dance in Shiamak’s Winter Funk. Students can gain from Amend Academy’s session on short cut tricks in Maths or take advantage of Kumon’s two week free trial to get a sense of the programme. Celebrate Wildlife Week at Asola Bhatti Sanctuary with a host of interesting activities. Let your children explore space through art in a painting competition organised by SPACE.</i></p><p><i><br></i></p>  <p><b><u>Creative Learning through Dance, Music and Movement</u></b></p>  <p>Locality:&nbsp;<a href=\"http://www.mycity4kids.com/Delhi-NCR/Events_Sheikh-Sarai-I_South-Delhi_el\" title=\"Events in Sheikh Sarai I\">Sheikh Sarai I</a></p>  <p>Age Group: 2 to 8 years</p>  <p>Date: 30<sup>th</sup> September to 31<sup>st</sup> December 2015</p>  <p>Children are naturally interested in music and dance and both these creative media are naturally good for children in their growth and development. Happy Feet is a music, dance and dance programme designed to build coordination, enhance creativity, confidence and core strength in young children. The next batch of the 3 month programme starts this week.</p><p>For more details, please <a href=\"http://www.mycity4kids.com/Delhi-NCR/Events/Dance-Music-and-Movement-Creative-Learning_Sheikh-Sarai-I/53802_ed\" target=\"_blank\" style=\"font-weight: bold;\">click here</a>.</p><p><br></p>  <p><b><u>Pick up some Short-cut Tricks of Maths</u></b></p>  <p>Locality:&nbsp;<a href=\"http://www.mycity4kids.com/Delhi-NCR/Events_Rohini-Sector-8_North-Delhi_el\" title=\"Events in Rohini Sector 8\">Rohini Sector 8</a></p>  <p>Age Group: 11 to 17 years</p>  <p>Date: 1<sup>st</sup> October 2015&nbsp;</p>  <p>Exams, Olympiads, competitive exams . . . it just gets tougher and more competitive for students these days. Since Maths is an integral part of their curriculum and out of school academics, it would help children to learn some easy short cuts for calculations. Amend Education Academy has organised a one day camp to teach students some quick tips and tricks of mathematics to help them get\uFEFF&nbsp;faster in calculations.</p><p>For more details, please <a href=\"http://www.mycity4kids.com/Delhi-NCR/Enhanced-Learning/Amend-Education-Academy_Rohini-Sector-8/48076_bd\" target=\"_blank\" style=\"font-weight: bold;\">click here</a>.</p><p><br></p>  <p><b><u>Wildlife Week 2015 at Asola Bhatti Wildlife Sanctuary</u></b></p>  <p>&nbsp;Locality: <a href=\"http://www.mycity4kids.com/Delhi-NCR/Events_Tughlakabad_South-Delhi_el\" title=\"Events in Tughlakabad\">Tughlakabad</a></p>  <p>Age Group: 10 and above</p>  <p>Date: 1<sup>st</sup> to 11<sup>th</sup> October 2015</p>  <p>Starting on 1<sup>st</sup> October is the Wildlife Week celebration at Asola Bhatti Wildlife Sanctuary.&nbsp;There are a host of activities being planned for the next 10 days, all free of cost and suitable for children of 10 years and above. You can join any of the walks and excursions around the venue that include a Migratory Bird Walk, Asola Lake Excursion, Leopard Trail and Blackbuck Trail and also a Wetland Birds Excursion to the Okhla Bird Sanctuary. In addition to the native tree plantation, kids will enjoy the more physical activities like tree climbing and mountain biking while yoga sessions will find takers from all age groups. There are several creative sessions such as making DIY bird feeder/nest, art from waste and competitions in wildlife quiz, face painting, wildlife sketching and online slogan writing as well as photo exhibitions and acoustic music sessions.</p>  <p>Those interested in learning more about wildlife can attend the workshop on wildlife gardening and study of aquatic lifeforms or even volunteer for habitat restoration or butterfly gardening. There will also be interactions with the Forest Department and several other expert talks on green living and related topics.</p><p>For more details, please <a href=\"http://www.mycity4kids.com/Delhi-NCR/Events/Wildlife-Week-2015-at-Asola-Bhatti-Wildlife-Sanctuary_Tughlakabad/53211_ed\" target=\"_blank\" style=\"font-weight: bold;\">click here</a>.</p><p><br> <br> <b><u>Don’t know what Kumon is? Try it out for free now.</u></b></p>  <p>Locality:&nbsp;Various centres in Delhi-NCR</p>  <p>Age Group: 5 and above</p>  <p>Date: 3<sup>rd</sup> to 16<sup>th</sup> October 2015</p>  <p>Kumon after-school&nbsp;math&nbsp;and&nbsp;reading&nbsp;programmes is offering free trial of two weeks&nbsp;for students new to the concept or current students who would like to try out a second subject. The Kumon method is an individualised learning method based on worksheets designed in a way that allows students to figure out how to solve problems on their own. This would be a good opportunity for parents who have been meaning to try out the Kumon Method for their children, however, have been hesitant due to lack of information or guidance.</p><p>For m ore information. please <a href=\"http://www.mycity4kids.com/Delhi-NCR/kumon-classes\" target=\"_blank\" style=\"font-weight: bold;\">click here</a>.</p>  <p>&nbsp;</p>  <p><b><u>World Space Week Interschool Painting Competition</u></b></p>  <p>Locality:&nbsp;<a href=\"http://www.mycity4kids.com/Delhi-NCR/Events_Others_Others_el\" title=\"Events in Others\">Online</a></p>  <p>Age Group: 7 to 17 years</p>  <p>Date: 5<sup>th</sup> to 28<sup>th</sup> October 2015</p>  <p>SPACE is an organisation working towards educating the masses through its programmes in astronomy and space science through tutorials, modules, curriculum for education requirements of schools &amp; students in India. As part of the celebrations of the World Space Week, SPACE is organising an Interschool Painting competition for students at primary and middle level from their associated schools only. The theme is ‘Discovering space’ and participants are encouraged to let their imagination soar - new planets, asteroids and blackholes; settlements and colonies in space; aliens and space creatures - anything goes. Entries should be submitted as scans of the paintings or as clicked images of the paintings. Painting submission starts from 5th October 2015 and can be submitted as part of 4 categories according to age (Group I: I to III; Group II: IV and V; Group III: VI to VIII and Group IV: IX to XII).</p>  <p>For more details, please <a href=\"http://www.mycity4kids.com/Delhi-NCR/Events/World-Space-Week-Interschool-Painting-Competition_Others/54379_ed\" target=\"_blank\" style=\"font-weight: bold;\">click here.</a></p>  <p>&nbsp;</p>  <br>  <p><b><u>Shiamak Winter Funk 2015 in Delhi</u></b></p>  <p>Locality:&nbsp;<a href=\"http://www.mycity4kids.com/Delhi-NCR/Events_Sector-57-Gurgaon_Gurgaon_el\" title=\"Events in Sector 57 Gurgaon\">Sector 57 Gurgaon</a>, East of Kailash, Jankapuri, Noida Punjabi Bagh, Vasantkunj</p>  <p>Age Group: 4 and above</p>  <p>Date: 7<sup>th</sup> to 25<sup>th</sup> October 2015</p>  <p>With Delhi winters approaching another winter staple starts soon - \u202ASHIAMAK Winter Funk. The next edition of this popular dance workshops will be held for three categories, Children (4-6 yrs);&nbsp;Junior (7-11 yrs) and Adults (12 yrs &amp; above). You can learn Hip Hop, Contemporary and Bollywood Jazz and even get to perform on stage. This time there is a special opportunity for the participants to win a chance to perform at a Bollywood award show. For early enrolments, there is a special early bird offer on 1st, 3rd and 4th October 2015.</p><p>For more details, please <a href=\"http://www.mycity4kids.com/Delhi-NCR/shiamak-winter-funk-2015\" target=\"_blank\" style=\"font-weight: bold;\">click here</a>.</p><p><br></p><p><i>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style=\"font-weight: bold;\">Submit An Event</span><br></i><i>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Do you know of an event we should add? Please send a mail to&nbsp;<a href=\"mailto:parul.ohri@mycity4kids.com\" target=\"_blank\">parul.ohri@mycity4kids.com</a>.<br></i><i>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Are you hosting an event we should know about? Please use the form at&nbsp;<a href=\"http://www.mycity4kids.com/Delhi-NCR/event/createevent\" target=\"_blank\">Delhi-NCR Events</a>.";
+            String bodyImgTxt = "<html><head></head><body>" + bodyDesc + "</body></html>";
+            WebView view = (WebView) findViewById(R.id.articleWebView);
+//            view.getSettings().setLoadWithOverviewMode(true);
+//            view.getSettings().setUseWideViewPort(true);
+            view.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+            view.loadDataWithBaseURL("", bodyImgTxt, "text/html", "utf-8", "");
+//            if (!StringUtils.isNullOrEmpty(detailData.getBody().getText())) {
+//                ((TextView) findViewById(R.id.txvDescription)).setText(detailData.getBody().getText());
+//                ((TextView) findViewById(R.id.txvDescription)).setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+//            }
 
         }
 
@@ -879,6 +881,11 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
 //            leftMargin = leftMargin + 17;
 //
 //            holder.innerCommentView.setLayoutParams(cardViewParams);
+            if (!StringUtils.isNullOrEmpty(commentList.getComment_type()) && commentList.getComment_type().equals("fb")) {
+                holder.replyTxt.setVisibility(View.GONE);
+            }else{
+                holder.replyTxt.setVisibility(View.VISIBLE);
+            }
 
             if (!StringUtils.isNullOrEmpty(commentList.getName())) {
                 holder.commentName.setText(commentList.getName());

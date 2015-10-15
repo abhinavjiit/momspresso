@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white_color"
+        android:orientation="vertical"
+        android:padding="25dp">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/color_spouse"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:nextFocusDown="@+id/color_spouse"
+                android:paddingBottom="7dp"
+                android:text="ADD SPOUSE / GUARDIAN DETAILS TO YOUR FAMILY"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/black_color"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/color_spouse"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:paddingBottom="7dp"
+                    android:text="NAME" />
+
+                <EditText
+                    android:id="@+id/spouse_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:digits=" abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                    android:drawableBottom="@drawable/underline"
+                    android:inputType="textCapWords"
+                    android:paddingBottom="7dp"
+                    android:text=""
+                    android:textColor="@color/black_color" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/color_spouse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:drawableBottom="@drawable/color_1xxhdpi"
+                android:drawablePadding="5dp"
+                android:hint="@string/colour"
+                android:nextFocusDown="@+id/spouse_email"
+                android:textColor="@color/black_color" />
+
+
+        </RelativeLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:fontFamily="sans-serif"
+            android:paddingBottom="7dp"
+            android:text="EMAIL" />
+
+        <EditText
+            android:id="@+id/spouse_email"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:drawableBottom="@drawable/underline"
+            android:inputType="textEmailAddress"
+            android:paddingBottom="7dp"
+            android:textColor="@color/black_color" />
+
+        <RelativeLayout
+            android:id="@+id/footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:paddingBottom="10dp"
+            android:paddingRight="5dp"
+            android:paddingTop="10dp">
+
+            <TextView
+                android:id="@+id/cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="30dp"
+                android:layout_toLeftOf="@+id/done"
+                android:layout_toStartOf="@+id/done"
+                android:gravity="right"
+                android:padding="2dp"
+                android:text="CANCEL"
+                android:textColor="@color/canceltxt_color" />
+
+            <TextView
+                android:id="@+id/done"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="center_vertical"
+                android:padding="2dp"
+                android:text="DONE"
+                android:textColor="@color/home_light_blue" />
+
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

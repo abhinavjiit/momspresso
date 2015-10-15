@@ -155,7 +155,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     @Override
     protected void onNewIntent(Intent intent) {
         if (!StringUtils.isNullOrEmpty(intent.getStringExtra(AppConstants.DEEP_LINK_URL)))
-                getDeepLinkData(intent.getStringExtra(AppConstants.DEEP_LINK_URL));
+            getDeepLinkData(intent.getStringExtra(AppConstants.DEEP_LINK_URL));
         super.onNewIntent(intent);
     }
 
@@ -165,8 +165,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         setContentView(R.layout.activity_dashboard);
 
         onNewIntent(getIntent());
-
-       // DatabaseUtil.exportDb();
+        Bundle bundle = getIntent().getExtras();
+        String fragmentToLoad = "";
+        if (null != bundle)
+            fragmentToLoad = bundle.getString("load_fragment", "");
+        // DatabaseUtil.exportDb();
 
         taskData = new TableTaskData(BaseApplication.getInstance());
 
@@ -181,6 +184,15 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         allTaskList = (CustomListView) findViewById(R.id.show_tasklist);
 
         txvAllTaskPopup = (TextView) findViewById(R.id.all_tasklist);
+
+
+        // onclick events
+        findViewById(R.id.rdBtnToday).setOnClickListener(this);
+        findViewById(R.id.rdBtnCalender).setOnClickListener(this);
+        findViewById(R.id.rdBtnTodo).setOnClickListener(this);
+        findViewById(R.id.rdBtnUpcoming).setOnClickListener(this);
+        findViewById(R.id.feed_back).setOnClickListener(this);
+
         setSupportActionBar(mToolbar);
 
         if (!SharedPrefUtils.getPushTokenUpdateToServer(DashboardActivity.this)) {
@@ -203,19 +215,17 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         updateImageProfile();
 
 
-        if (SharedPrefUtils.getFirstTimeCheckFlag(DashboardActivity.this)) {
-            replaceFragment(new FragmentMC4KHome(), null, false);
+        if (Constants.BUSINESS_EVENTLIST_FRAGMENT.equals(fragmentToLoad)) {
+            setTitle("Upcoming Events");
+            FragmentBusinesslistEvents fragment = new FragmentBusinesslistEvents();
+            Bundle mBundle = new Bundle();
+            mBundle.putInt(Constants.PAGE_TYPE, Constants.EVENT_PAGE_TYPE);
+            mBundle.putInt(Constants.EXTRA_CATEGORY_ID, SharedPrefUtils.getEventIdForCity(DashboardActivity.this));
+            mBundle.putString(Constants.CATEGOTY_NAME, "Events & workshop");
+            fragment.setArguments(mBundle);
+            replaceFragment(fragment, mBundle, true);
         } else {
-            TableAppointmentData data = new TableAppointmentData(BaseApplication.getInstance());
-            taskData = new TableTaskData(BaseApplication.getInstance());
-            int count = data.getRowsCount() + taskData.getRowsCount();
-            if (count > 0) {
-                SharedPrefUtils.setHomeCheckFlag(this, true);
-                replaceFragment(new FragmentMC4KHome(), null, false);
-            } else {
-                SharedPrefUtils.setHomeCheckFlag(this, false);
-                replaceFragment(new FragmentCityForKids(), null, false);
-            }
+            replaceFragment(new FragmentMC4KHome(), null, false);
         }
 
         Intent intent = this.getIntent();
@@ -274,12 +284,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         //  title all tasks popup
         txvAllTaskPopup.setText("All Tasks (" + taskData.getRowsCount() + ")");
 
-        // onclick events
-        findViewById(R.id.rdBtnToday).setOnClickListener(this);
-        findViewById(R.id.rdBtnCalender).setOnClickListener(this);
-        findViewById(R.id.rdBtnTodo).setOnClickListener(this);
-        findViewById(R.id.rdBtnUpcoming).setOnClickListener(this);
-        findViewById(R.id.feed_back).setOnClickListener(this);
 
         if (SharedPrefUtils.isCityFetched(this)) {
             findViewById(R.id.rdBtnUpcoming).setVisibility(View.VISIBLE);
@@ -366,7 +370,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             RateAppDialogFragment rateAppDialogFragment = new RateAppDialogFragment();
             rateAppDialogFragment.show(getFragmentManager(), rateAppDialogFragment.getClass().getSimpleName());
         }
-
 
 
         // manage fragment change
@@ -2381,9 +2384,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void getDeepLinkData(String deepLinkURL) {
-           DeepLinkingController _deepLinkingController = new DeepLinkingController(this, this);
-           _deepLinkingController.getData(AppConstants.DEEP_LINK_RESOLVER_REQUEST, deepLinkURL);
-            showProgressDialog("");
+        DeepLinkingController _deepLinkingController = new DeepLinkingController(this, this);
+        _deepLinkingController.getData(AppConstants.DEEP_LINK_RESOLVER_REQUEST, deepLinkURL);
+        showProgressDialog("");
     }
 
     private void identifyTargetScreen(DeepLinkData data) {
@@ -2416,7 +2419,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         if (!StringUtils.isNullOrEmpty(data.getCategory_id())) {
             Intent _businessListIntent = new Intent(DashboardActivity.this, BusinessListActivityKidsResources.class);
             _businessListIntent.putExtra(Constants.EXTRA_CATEGORY_ID, Integer.parseInt(data.getCategory_id()));
-            _businessListIntent.putExtra(Constants.CITY_ID_DEEPLINK, data.getCity_id()+"");
+            _businessListIntent.putExtra(Constants.CITY_ID_DEEPLINK, data.getCity_id() + "");
             _businessListIntent.putExtra(Constants.IS_FROM_DEEPLINK, true);
             _businessListIntent.putExtra(Constants.DEEPLINK_URL, data.getUrl());
             startActivity(_businessListIntent);
@@ -2424,7 +2427,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void renderBusinessDetailScreen(DeepLinkData data) {
-        if (!StringUtils.isNullOrEmpty(data.getCategory_id())  && !StringUtils.isNullOrEmpty(data.getDetail_id())) {
+        if (!StringUtils.isNullOrEmpty(data.getCategory_id()) && !StringUtils.isNullOrEmpty(data.getDetail_id())) {
             Intent _eventDetailIntent = new Intent(DashboardActivity.this, BusinessDetailsActivity.class);
             _eventDetailIntent.putExtra(Constants.CATEGORY_ID, Integer.parseInt(data.getCategory_id()));
             _eventDetailIntent.putExtra(Constants.BUSINESS_OR_EVENT_ID, data.getDetail_id() + "");
@@ -2433,6 +2436,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             startActivity(_eventDetailIntent);
         }
     }
+
     // Pending for Indexing
     private void renderEventListingScreen(DeepLinkData data) {
         if (!StringUtils.isNullOrEmpty(data.getCategory_id())) {
@@ -2465,7 +2469,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         if (!StringUtils.isNullOrEmpty(data.getAuthor_name())) {
             Intent _authorListIntent = new Intent(DashboardActivity.this, BlogDetailActivity.class);
             _authorListIntent.putExtra(Constants.IS_COMMING_FROM_LISTING, false);
-            _authorListIntent.putExtra(Constants.ARTICLE_NAME, Uri.encode(data.getAuthor_name())+"");
+            _authorListIntent.putExtra(Constants.ARTICLE_NAME, Uri.encode(data.getAuthor_name()) + "");
             _authorListIntent.putExtra(Constants.FILTER_TYPE, "authors");
             _authorListIntent.putExtra(Constants.DEEPLINK_URL, data.getUrl());
             startActivity(_authorListIntent);
@@ -2476,7 +2480,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         if (!StringUtils.isNullOrEmpty(data.getBlog_title())) {
             Intent _bloggerListIntent = new Intent(DashboardActivity.this, BlogDetailActivity.class);
             _bloggerListIntent.putExtra(Constants.IS_COMMING_FROM_LISTING, false);
-            _bloggerListIntent.putExtra(Constants.ARTICLE_NAME, Uri.encode(data.getBlog_title())+"");
+            _bloggerListIntent.putExtra(Constants.ARTICLE_NAME, Uri.encode(data.getBlog_title()) + "");
             _bloggerListIntent.putExtra(Constants.FILTER_TYPE, "blogs");
             _bloggerListIntent.putExtra(Constants.DEEPLINK_URL, data.getUrl());
             startActivity(_bloggerListIntent);
