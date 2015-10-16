@@ -290,13 +290,13 @@
     <!--// string color codess-->
 
     <string name="title_activity_new_login">NewLoginActivity</string>
-    <string name="home_appointment">Today\'s Appointments</string>
+    <string name="home_appointment">Appointments</string>
     <string name="home_gotoCalendar">GO TO CALENDAR</string>
     <string name="home_todo">TODO</string>
     <string name="home_goto_todo">GO TO TO-DO LISTS</string>
     <string name="home_goto_event">GO TO UPCOMING EVENTS</string>
-    <string name="home_goto_blog">GO TO TRENDING BLOGS</string>
-    <string name="home_events">Events</string>
+    <string name="home_goto_blog">GO TO ALL TRENDING BLOGS</string>
+    <string name="home_events">Events Today</string>
     <string name="empty_directory">Empty Directory</string>
     <string name="storage_removed">Storage was removed or unmounted.</string>
     <string name="choose_file">Select a file</string>

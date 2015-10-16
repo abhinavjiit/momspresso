@@ -38,6 +38,7 @@ import com.mycity4kids.models.parentingstop.ParentingRequest;
 import com.mycity4kids.models.user.KidsInfo;
 import com.mycity4kids.newmodels.AppointmentMappingModel;
 import com.mycity4kids.newmodels.AttendeeModel;
+import com.mycity4kids.newmodels.TaskDataModel;
 import com.mycity4kids.newmodels.TaskMappingModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.ActivityCreateAppointment;
@@ -75,8 +76,8 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     TableAppointmentData tableAppointment;
     ArrayList<AppointmentMappingModel> appointmentListData;
     AdapterHomeAppointment adapterHomeAppointment;
-    ImageView goToCal, goToTask, goToBlogs;
-    TextView current,txtappointment,txttodo,txtevents,txtblogs;
+    TextView goToCal, current, goToTask, goToBlogs;
+    ImageView imgGoToCal, imgGoToTodo, imgGoToEvents, imgGoToBlogs;
     ImageView addAppointment, addTask;
     java.sql.Timestamp firsttamp;
     AdapterHomeTask adapterHomeTask;
@@ -94,21 +95,26 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     private View rltLoadingView;
     private boolean mIsRequestRunning;
     private boolean mEventDataAvalble;
+    TextView txtCal, txtTodo, txtEvents, txtBlogs;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.aa_mc4k_home, container, false);
         appointmentList = (CustomListView) view.findViewById(R.id.home_appointmentList);
-        goToCal = (ImageView) view.findViewById(R.id.go_to_cal);
+        goToCal = (TextView) view.findViewById(R.id.go_to_cal);
         addAppointment = (ImageView) view.findViewById(R.id.add_appointment);
         current = (TextView) view.findViewById(R.id.current_date);
-        goToTask = (ImageView) view.findViewById(R.id.go_to_task);
+        goToTask = (TextView) view.findViewById(R.id.go_to_task);
         baseScroll = (ScrollView) view.findViewById(R.id.base_scroll);
-        txtappointment= (TextView) view.findViewById(R.id.txt_appointment);
-        txttodo= (TextView) view.findViewById(R.id.txt_todo);
-        txtevents=(TextView)view.findViewById(R.id.txt_events);
-        txtblogs=(TextView)view.findViewById(R.id.txt_blogs);
+        imgGoToCal = (ImageView) view.findViewById(R.id.img_go_to_cal);
+        imgGoToTodo = (ImageView) view.findViewById(R.id.img_go_to_todo);
+        imgGoToEvents = (ImageView) view.findViewById(R.id.img_go_to_events);
+        imgGoToBlogs = (ImageView) view.findViewById(R.id.img_go_to_blogs);
+        txtCal = (TextView) view.findViewById(R.id.txtCal);
+        txtTodo = (TextView) view.findViewById(R.id.txtTodo);
+        txtEvents = (TextView) view.findViewById(R.id.txtEvents);
+        txtBlogs = (TextView) view.findViewById(R.id.txtBlogs);
 
 
         addTask = (ImageView) view.findViewById(R.id.add_task);
@@ -122,10 +128,14 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         addTask.setOnClickListener(this);
         goToCal.setOnClickListener(this);
         addAppointment.setOnClickListener(this);
-        txtappointment.setOnClickListener(this);
-        txttodo.setOnClickListener(this);
-        txtevents.setOnClickListener(this);
-        txtblogs.setOnClickListener(this);
+        imgGoToCal.setOnClickListener(this);
+        imgGoToTodo.setOnClickListener(this);
+        imgGoToEvents.setOnClickListener(this);
+        imgGoToBlogs.setOnClickListener(this);
+        txtCal.setOnClickListener(this);
+        txtTodo.setOnClickListener(this);
+        txtEvents.setOnClickListener(this);
+        txtBlogs.setOnClickListener(this);
 
         view.findViewById(R.id.go_to_blog).setOnClickListener(this);
         view.findViewById(R.id.go_to_events).setOnClickListener(this);
@@ -133,6 +143,33 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         view.findViewById(R.id.no_blog).setOnClickListener(this);
         view.findViewById(R.id.no_events).setOnClickListener(this);
 
+        TableAppointmentData tAppointment = new TableAppointmentData(BaseApplication.getInstance());
+        List<AppointmentMappingModel> apptList = tAppointment.getAll();
+        if(null!=apptList && apptList.size()==0){
+            goToCal.setText("ADD AN APPOINTMENT");
+            goToCal.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent appointmentIntent = new Intent(getActivity(), ActivityCreateAppointment.class);
+                    startActivity(appointmentIntent);
+
+                }
+            });
+        }
+
+        TableTaskData tTask = new TableTaskData(BaseApplication.getInstance());
+        List<TaskDataModel.TaskDetail> allTaskList = tTask.getAll();
+        if(null!=allTaskList && allTaskList.size()==0){
+            goToTask.setText("ADD A TASK");
+            goToTask.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent TaskIntent = new Intent(getActivity(), ActivityCreateTask.class);
+                    startActivity(TaskIntent);
+
+                }
+            });
+        }
 
         appointmentList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -309,7 +346,8 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
 
         if (!SharedPrefUtils.isCityFetched(getActivity())) {
             view.findViewById(R.id.eventsss).setVisibility(View.GONE);
-           // view.findViewById(R.id.blogss).setVisibility(View.GONE);
+
+            // view.findViewById(R.id.blogss).setVisibility(View.GONE);
         } else {
             view.findViewById(R.id.eventsss).setVisibility(View.VISIBLE);
             view.findViewById(R.id.blogss).setVisibility(View.VISIBLE);
@@ -392,7 +430,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                 startDate = df.parse(kidsInformations.get(i).getDate_of_birth());
                 int age = getAge(startDate);
 
-                selectedageGroups.add(""+age);
+                selectedageGroups.add("" + age);
 
 
                 // previously age group logic commented
@@ -532,7 +570,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
 
                     if (mBusinessDataListings.isEmpty()) {
 
-                        ((ImageView) view.findViewById(R.id.go_to_events)).setVisibility(View.VISIBLE);
+                        ((TextView) view.findViewById(R.id.go_to_events)).setVisibility(View.VISIBLE);
                         ((TextView) view.findViewById(R.id.no_events)).setVisibility(View.VISIBLE);
                         // eventListView.setVisibility(View.GONE);
                     }
@@ -540,7 +578,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
 
                 } else if (responseData.getResponseCode() == 400) {
 
-                    ((ImageView) view.findViewById(R.id.go_to_events)).setVisibility(View.VISIBLE);
+                    ((TextView) view.findViewById(R.id.go_to_events)).setVisibility(View.VISIBLE);
                     ((TextView) view.findViewById(R.id.no_events)).setVisibility(View.VISIBLE);
                     //eventListView.setVisibility(View.GONE);
                     //((LinearLayout) view.findViewById(R.id.eventHeader)).setVisibility(View.GONE);
@@ -558,7 +596,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                     articlesListingAdapter.notifyDataSetChanged();
 
                     if (mArticleDataListing.isEmpty()) {
-                        ((ImageView) view.findViewById(R.id.go_to_blog)).setVisibility(View.VISIBLE);
+                        ((TextView) view.findViewById(R.id.go_to_blog)).setVisibility(View.VISIBLE);
                         ((TextView) view.findViewById(R.id.no_blog)).setVisibility(View.VISIBLE);
                         //  ((LinearLayout) view.findViewById(R.id.blogHeader)).setVisibility(View.GONE);
                         //  eventListView.setVisibility(View.GONE);
@@ -566,7 +604,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                     baseScroll.smoothScrollTo(0, 0);
 
                 } else if (responseBlogData.getResponseCode() == 400) {
-                    ((ImageView) view.findViewById(R.id.go_to_blog)).setVisibility(View.VISIBLE);
+                    ((TextView) view.findViewById(R.id.go_to_blog)).setVisibility(View.VISIBLE);
                     ((TextView) view.findViewById(R.id.no_blog)).setVisibility(View.VISIBLE);
                     //blogListView.setVisibility(View.GONE);
                     // ((LinearLayout) view.findViewById(R.id.blogHeader)).setVisibility(View.GONE);
@@ -589,7 +627,8 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
 
             // break;
             case R.id.go_to_cal:
-            case R.id.txt_appointment:
+            case R.id.img_go_to_cal:
+            case R.id.txtCal:
                 ((DashboardActivity) getActivity()).replaceFragment(new FragmentCalender(), null, true);
 
                 break;
@@ -604,14 +643,17 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                 break;
 
             case R.id.go_to_task:
-            case R.id.txt_todo:
+            case R.id.img_go_to_todo:
+            case R.id.txtTodo:
 
                 ((DashboardActivity) getActivity()).setTitle("All Task");
                 ((DashboardActivity) getActivity()).replaceFragment(new FragmentTaskHome(), null, true);
 
                 break;
             case R.id.go_to_events:
-            case R.id.txt_events:
+            case R.id.img_go_to_events:
+            case R.id.txtEvents:
+
                 Constants.IS_SEARCH_LISTING = false;
                 FragmentBusinesslistEvents fragment = new FragmentBusinesslistEvents();
                 Bundle bundle = new Bundle();
@@ -622,7 +664,8 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                 ((DashboardActivity) getActivity()).replaceFragment(fragment, bundle, true);
                 break;
             case R.id.go_to_blog:
-                case R.id.txt_blogs:
+            case R.id.img_go_to_blogs:
+            case R.id.txtBlogs:
                 ((DashboardActivity) getActivity()).replaceFragment(new ArticlesFragment(), null, true);
 
 
@@ -1660,4 +1703,3 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     }
 
 }
-//
