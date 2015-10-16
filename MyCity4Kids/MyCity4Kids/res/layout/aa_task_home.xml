@@ -50,14 +50,25 @@
           android:layout_margin="20dp"
           android:src="@drawable/plus_home_icon" />-->
 
-    <ImageView
+
+
+    <android.support.design.widget.FloatingActionButton
         android:id="@+id/add_task"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:padding="10dp"
-        android:src="@drawable/add_bluexxhdpi" />
+        android:layout_margin="10dp"
+        android:clickable="true"
+        app:fabSize="normal"
+        android:elevation="6dp"
+        app:borderWidth="0dp"
+        android:scaleType="fitXY"
+        app:pressedTranslationZ="12dp"
+        android:src="@drawable/plus_icon"
+        app:backgroundTint="#3F51B5"
+        app:rippleColor="#E91E63"
+    />
 
 </RelativeLayout>
