@@ -758,12 +758,12 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
         if (imageList.size() > 0) {
             for (ImageData images : imageList) {
                 if (bodyDescription.contains(images.getKey())) {
-                    bodyDesc = bodyDesc.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\n", "<br/>");
+                    //bodyDesc = bodyDesc.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\n", "<br/>");
                     //bodyDescription.replaceAll("\\]", "");
-                    String imagekey = images.getKey().replaceAll("\\[", "").replaceAll("\\]", "");//<img src=\http://www.mycity4kids.com/parentingstop/uploads/737x164_Metro%20Museum.jpg\>
+                    //String imagekey = images.getKey().replaceAll("\\[", "").replaceAll("\\]", "");//<img src=\http://www.mycity4kids.com/parentingstop/uploads/737x164_Metro%20Museum.jpg\>
                     //	imagekey=images.getKey().replaceAll("\\]", "");
                     //	bodyDesc=bodyDesc.replaceAll(imagekey, "<img src=\\"+images.getValue()+"\\>");
-                    bodyDesc = bodyDesc.replaceAll(imagekey, "<p style='text-align:center'><img src=\\" + images.getValue() + "\\></p>");
+                    bodyDesc = bodyDesc.replace(images.getKey(), "<p style='text-align:center'><img src=" + images.getValue() + "></p>");
                 }
             }
 //            spannedValue = Html.fromHtml(bodyDesc, this, null);

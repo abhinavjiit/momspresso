@@ -37,7 +37,7 @@
         android:gravity="center_vertical"
         android:paddingBottom="5dp"
         android:paddingTop="5dp"
-        android:text="ADDITIONAL ADULT ACCOUNT"
+        android:text="ADD SPOUSE/GUARDIAN"
         android:textColor="@color/blue_color"
         android:textSize="15sp" />
 

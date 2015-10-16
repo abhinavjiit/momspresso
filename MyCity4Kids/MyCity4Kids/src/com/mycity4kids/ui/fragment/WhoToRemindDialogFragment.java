@@ -168,6 +168,14 @@ public class WhoToRemindDialogFragment extends android.app.DialogFragment {
 
     private void openAddAdultDialog() {
         AddAdultDialogFragment dialogFragment = new AddAdultDialogFragment();
+
+        Bundle args = new Bundle();
+        args.putIntegerArrayList("chkValues", chklist);
+        args.putBoolean("All", all);
+        args.putBoolean("edit", edit);
+        args.putString("iftask", iftask);
+        dialogFragment.setArguments(args);
+
         dialogFragment.setTargetFragment(dialogFragment, 2);
         dialogFragment.show(getFragmentManager(), "add_adult");
         getDialog().dismiss();

@@ -248,6 +248,6 @@ public class Constants {
     /*Fragments Mapping Constants*/
     public static String LOAD_FRAGMENT = "load_fragment";
     public static String BUSINESS_EVENTLIST_FRAGMENT = "fragment_eventlist";
-    public static String TODOLIST_FRAGMENT = "fragment_todolist";
-    public static String CALENDARLIST_FRAGMENT = "fragment_calendarlist";
+    public static String TODOLIST_FRAGMENT = "fragment_todo";
+    public static String CALENDARLIST_FRAGMENT = "fragment_calendar";
 }

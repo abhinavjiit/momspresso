@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mycity4kids"
-    android:versionCode="10"
-    android:versionName="2.6"> <!-- version increase for final release -->
+    android:versionCode="11"
+    android:versionName="2.7"> <!-- version increase for final release -->
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="22" />
@@ -463,7 +463,7 @@
         </receiver>
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="421701ee89def40fd06948f23fb71f48ff84eb04" />
+            android:value="0955a2855f4c5641b7994b98f58aef7eadbf4cd5" />
     </application>
 
 </manifest>

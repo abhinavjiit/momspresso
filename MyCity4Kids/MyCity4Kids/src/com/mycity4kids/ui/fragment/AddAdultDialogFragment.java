@@ -84,6 +84,13 @@ public class AddAdultDialogFragment extends android.app.DialogFragment implement
         cancel = (TextView) rootView.findViewById(R.id.cancel);
         done = (TextView) rootView.findViewById(R.id.done);
 
+        Bundle extras = getArguments();
+        if (extras != null) {
+            all = extras.getBoolean("All");
+            edit = extras.getBoolean("edit");
+            iftask = extras.getString("iftask");
+
+        }
         adultColor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -410,7 +417,7 @@ public class AddAdultDialogFragment extends android.app.DialogFragment implement
                     args.putIntegerArrayList("chkValues", idlist);
                     args.putBoolean("All", all);
                     args.putBoolean("edit", false);
-                    args.putString("iftask", "");
+                    args.putString("iftask", iftask);
                     dialogFragment.setArguments(args);
 
 

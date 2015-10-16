@@ -10,23 +10,19 @@ public class PushNotificationModel implements Parcelable {
 
     private int family_id;
     private String action;
-
-
+    private String calendar_items = "";
+    private String todo_items = "";
     private String title;
-
-
-    public String getShare_content() {
-        return share_content;
-    }
-
-    public void setShare_content(String share_content) {
-        this.share_content = share_content;
-    }
-
     private String share_content;
     private String message_id;
     private int user_id;
     private int appointment_id;
+    private int id;
+    private String type;
+    private String url;
+    private String article_cover_image_url="";
+    private String filter_type="";
+    private String blog_name="";
 
     public String getUrl() {
         return url;
@@ -35,10 +31,6 @@ public class PushNotificationModel implements Parcelable {
     public void setUrl(String url) {
         this.url = url;
     }
-
-    private int id;
-    private String type;
-    private String url;
 
     public int getId() {
         return id;
@@ -76,7 +68,6 @@ public class PushNotificationModel implements Parcelable {
         this.title = title;
     }
 
-
     public void setMessage_id(String message_id) {
         this.message_id = message_id;
     }
@@ -105,6 +96,54 @@ public class PushNotificationModel implements Parcelable {
         this.type = type;
     }
 
+    public void setCalendar_items(String calendar_items) {
+        this.calendar_items = calendar_items;
+    }
+
+    public String getCalendar_items() {
+        return calendar_items;
+    }
+
+    public String getTodo_items() {
+        return todo_items;
+    }
+
+    public void setTodo_items(String todo_items) {
+        this.todo_items = todo_items;
+    }
+
+    public String getShare_content() {
+        return share_content;
+    }
+
+    public void setShare_content(String share_content) {
+        this.share_content = share_content;
+    }
+
+    public String getArticle_cover_image_url() {
+        return article_cover_image_url;
+    }
+
+    public void setArticle_cover_image_url(String article_cover_image_url) {
+        this.article_cover_image_url = article_cover_image_url;
+    }
+
+    public String getFilter_type() {
+        return filter_type;
+    }
+
+    public void setFilter_type(String filter_type) {
+        this.filter_type = filter_type;
+    }
+
+    public String getBlog_name() {
+        return blog_name;
+    }
+
+    public void setBlog_name(String blog_name) {
+        this.blog_name = blog_name;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -123,6 +162,11 @@ public class PushNotificationModel implements Parcelable {
         user_id = in.readInt();
         appointment_id = in.readInt();
         id = in.readInt();
+        calendar_items = in.readString();
+        todo_items = in.readString();
+        article_cover_image_url = in.readString();
+        filter_type = in.readString();
+        blog_name = in.readString();
     }
 
 
@@ -138,6 +182,11 @@ public class PushNotificationModel implements Parcelable {
         dest.writeInt(user_id);
         dest.writeInt(appointment_id);
         dest.writeInt(id);
+        dest.writeString(calendar_items);
+        dest.writeString(todo_items);
+        dest.writeString(article_cover_image_url);
+        dest.writeString(filter_type);
+        dest.writeString(blog_name);
     }
 
     public static Parcelable.Creator<PushNotificationModel> CREATOR = new Parcelable.Creator<PushNotificationModel>() {
@@ -151,5 +200,6 @@ public class PushNotificationModel implements Parcelable {
             return new PushNotificationModel[size];
         }
     };
+
 
 }

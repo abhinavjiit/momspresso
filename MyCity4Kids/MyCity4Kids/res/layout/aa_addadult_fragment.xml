@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:nextFocusDown="@+id/color_spouse"
                 android:paddingBottom="7dp"
-                android:text="ADD SPOUSE / GUARDIAN DETAILS TO YOUR FAMILY"
+                android:text="ADD SPOUSE / GUARDIAN TO YOUR FAMILY"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/black_color"
                 android:textStyle="bold" />

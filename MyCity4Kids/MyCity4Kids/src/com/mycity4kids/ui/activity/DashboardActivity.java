@@ -165,10 +165,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         setContentView(R.layout.activity_dashboard);
 
         onNewIntent(getIntent());
-        Bundle bundle = getIntent().getExtras();
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
         String fragmentToLoad = "";
-        if (null != bundle)
-            fragmentToLoad = bundle.getString("load_fragment", "");
+        if (null != extras)
+            fragmentToLoad = extras.getString("load_fragment", "");
         // DatabaseUtil.exportDb();
 
         taskData = new TableTaskData(BaseApplication.getInstance());
@@ -224,18 +225,23 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             mBundle.putString(Constants.CATEGOTY_NAME, "Events & workshop");
             fragment.setArguments(mBundle);
             replaceFragment(fragment, mBundle, true);
+        } else if (Constants.TODOLIST_FRAGMENT.equals(fragmentToLoad)) {
+            setTitle("Weekly To-Do");
+            replaceFragment(new FragmentTaskHome(), null, true);
+        } else if (Constants.CALENDARLIST_FRAGMENT.equals(fragmentToLoad)) {
+            setTitle("Weekly Calender");
+            replaceFragment(new FragmentCalender(), null, true);
         } else {
             replaceFragment(new FragmentMC4KHome(), null, false);
         }
 
-        Intent intent = this.getIntent();
-        Bundle extras = intent.getExtras();
         if (extras != null) {
             boolean push = extras.getBoolean("push");
             taskId = extras.getInt(AppConstants.EXTRA_TASK_ID);
             String isrecurring = extras.getString(AppConstants.IS_RECURRING);
             NotificationManager nMgr = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
             nMgr.cancel(extras.getInt(AppConstants.NOTIFICATION_ID, 0));
+            nMgr.cancel(extras.getInt(AppConstants.NOTIFICATION_ID, 2));
             if (push)
                 replaceFragment(new FragmentFamilyDetail(), null, true);
 

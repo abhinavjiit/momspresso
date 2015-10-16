@@ -1,6 +1,8 @@
 package com.mycity4kids.controller;
 
 import android.app.Activity;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -75,7 +77,15 @@ public class ArticleBlogDetailsController extends BaseController {
         if (!StringUtils.isNullOrEmpty(authorId)) {
             builder.append("article_id=").append(authorId);
         }
-        String versionName = BuildConfig.VERSION_NAME;
+        PackageInfo pInfo = null;
+        try {
+            pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        String versionName = pInfo.versionName;
         builder.append("&user_id=").append(SharedPrefUtils.getUserDetailModel(getActivity()).getId());
         builder.append("&app_version=").append(versionName);
         return builder.toString().replace(" ", "%20");

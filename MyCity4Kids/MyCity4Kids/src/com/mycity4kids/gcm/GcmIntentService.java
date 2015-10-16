@@ -9,7 +9,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -129,6 +128,25 @@ public class
                     intent.putExtra(Constants.ARTICLE_ID, "" + pushNotificationModel.getId());
                     intent.putExtra(AppConstants.NOTIFICATION_ID, requestID);
                     intent.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.ARTICLES);
+                    intent.putExtra(Constants.BLOG_NAME, pushNotificationModel.getBlog_name());
+                    if(pushNotificationModel.getFilter_type().trim().equals("Blogger")) {
+                        intent.putExtra(Constants.FILTER_TYPE, "blogs");
+                    }else{
+                        intent.putExtra(Constants.FILTER_TYPE, "authors");
+                    }
+//                    if (articleDataModelsNew.get(position).getAuthor_type().trim().equalsIgnoreCase("Blogger")) {
+//                        intent.putExtra(Constants.ARTICLE_NAME, articleDataModelsNew.get(position).getBlog_name());
+//                        intent.putExtra(Constants.FILTER_TYPE, "blogs");
+//                    } else {
+//                        intent.putExtra(Constants.ARTICLE_NAME, articleDataModelsNew.get(position).getAuthor_name());
+//                        intent.putExtra(Constants.FILTER_TYPE, "authors");
+//                    }
+
+//                    intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
+//                    intent.putExtra(Constants.ARTICLE_COVER_IMAGE, parentingListData.getThumbnail_image());
+//                    intent.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.ARTICLES);
+//                    intent.putExtra(Constants.FILTER_TYPE, parentingListData.getAuthor_type());
+//                    intent.putExtra(Constants.BLOG_NAME, parentingListData.getBlog_name());
 
                     PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                     NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
@@ -172,14 +190,72 @@ public class
                     mBuilder.setContentIntent(contentIntent);
                     mBuilder.addAction(R.drawable.share, "Share", sharePendingIntent);
                     mNotificationManager.notify(requestID, mBuilder.build());
+                } else if (type.equalsIgnoreCase("weekly_calendar_todo")) {
+                    int requestID = 2;
+                    pushNotificationModel.getTodo_items();
+                    String calendarBtnText, todoBtnText;
+                    int plus_calendar_image;
+
+                    if (Integer.parseInt(pushNotificationModel.getCalendar_items()) < 1) {
+                        calendarBtnText = "Appointment";
+                        plus_calendar_image = R.drawable.attachment;
+                    } else {
+                        calendarBtnText = "Calendar(" + pushNotificationModel.getCalendar_items() + ")";
+                        plus_calendar_image = R.drawable.calendar_new;
+                    }
+                    int plus_todo_image;
+
+                    if (Integer.parseInt(pushNotificationModel.getTodo_items()) < 1) {
+                        todoBtnText = "Tasks";
+                        plus_todo_image = R.drawable.attachment;
+                    } else {
+                        todoBtnText = "Tasks(" + pushNotificationModel.getTodo_items() + ")";
+                        plus_todo_image = R.drawable.todo;
+                    }
+
+                    NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+
+                    Intent actionIntent = new Intent(this, DashboardActivity.class);
+                    actionIntent.setAction("Show");
+                    actionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    actionIntent.putExtra(AppConstants.NOTIFICATION_ID, requestID);
+                    PendingIntent contentIntent = PendingIntent.getActivity(this, 0, actionIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                    Intent to_dointent = new Intent(this, DashboardActivity.class);
+                    to_dointent.putExtra("load_fragment", "fragment_todo");
+                    to_dointent.setAction("todo");
+                    to_dointent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    PendingIntent todoIntent = PendingIntent.getActivity(this, 0, to_dointent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                    Intent calintent = new Intent(this, DashboardActivity.class);
+                    calintent.setAction("Cal");
+                    calintent.putExtra("load_fragment", "fragment_calendar");
+                    calintent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    PendingIntent calendarIntent = PendingIntent.getActivity(this, 0, calintent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                    NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+                            .setSmallIcon(R.drawable.ic_launcher)
+                            .setContentTitle(pushNotificationModel.getTitle())
+                            .setContentText(pushNotificationModel.getMessage_id());
+
+                    mBuilder.addAction(plus_calendar_image, calendarBtnText, calendarIntent);
+                    mBuilder.addAction(plus_todo_image, todoBtnText, todoIntent);
+                    mBuilder.setAutoCancel(true);
+                    mBuilder.setContentIntent(contentIntent);
+
+                    mNotificationManager.notify(requestID, mBuilder.build());
 
                 } else if (type.equalsIgnoreCase("event_detail")) {
                     // generate notifications
                     Log.i(TAG, " INSIDE EVENTS DETAILS: " + msg);
                     Bitmap remote_picture = null;
+                    String url = "http://www.mycity4kids.com/parenting/uploads/resized/Parenting.png";
+                    if (!StringUtils.isNullOrEmpty(pushNotificationModel.getUrl())) {
+                        url = pushNotificationModel.getUrl();
+                    }
                     try {
                         remote_picture = BitmapFactory.decodeStream(
-                                (InputStream) new URL("http://www.mycity4kids.com/parenting/uploads/resized/Parenting.png").getContent());
+                                (InputStream) new URL(url).getContent());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
