@@ -10,6 +10,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
@@ -38,6 +39,7 @@ public class ArticleViewFragment extends BaseFragment {
     ArticlesListingAdapter articlesListingAdapter;
     ArrayList<CommonParentingList> articleDataModelsNew;
     ListView listView;
+    TextView noBlogsTextView;
     String sortType;
     String searchName = "";
     Boolean isSearchActive = false;
@@ -55,6 +57,7 @@ public class ArticleViewFragment extends BaseFragment {
         view = getActivity().getLayoutInflater().inflate(R.layout.new_article_layout, container, false);
         listView = (ListView) view.findViewById(R.id.scroll);
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
+        noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
         view.findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_indefinitely));
 
         if (getArguments() != null) {
@@ -283,8 +286,10 @@ public class ArticleViewFragment extends BaseFragment {
         ArrayList<CommonParentingList> dataList = responseData.getResult().getData().getData();
 
         if (dataList.size() == 0) {
+            noBlogsTextView.setVisibility(View.VISIBLE);
             //((DashboardActivity) getActivity()).showToast(responseData.getResult().getMessage());
         } else {
+            noBlogsTextView.setVisibility(View.GONE);
             totalPageCount = responseData.getResult().getData().getPage_count();
             if (nextPageNumber == 1) {
                 articleDataModelsNew = dataList;
