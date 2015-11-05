@@ -211,24 +211,14 @@
 
     </FrameLayout>
 
-    <android.support.design.widget.FloatingActionButton
+    <ImageView
         android:id="@+id/add_appointment_month"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_margin="10dp"
-        android:clickable="true"
-        app:fabSize="normal"
-        android:elevation="6dp"
-        app:borderWidth="0dp"
-        android:scaleType="fitXY"
-        app:pressedTranslationZ="12dp"
-        android:src="@drawable/plus_icon"
-        app:backgroundTint="#3F51B5"
-        app:rippleColor="#E91E63"
-        />
-
+        android:padding="10dp"
+        android:src="@drawable/add_bluexxhdpi" />
 
 </RelativeLayout>

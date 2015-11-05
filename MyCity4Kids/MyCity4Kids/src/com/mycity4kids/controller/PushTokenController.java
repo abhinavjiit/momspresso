@@ -29,6 +29,7 @@ public class PushTokenController extends BaseController {
         serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
         serviceRequest.setRequestData(requestData);
         serviceRequest.setDataType(requestType);
+        serviceRequest.setContext(context);
         serviceRequest.setResponseController(this);
         serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
         serviceRequest.setUrl(AppConstants.PUSH_TOKEN_URL + getAppendUrl());

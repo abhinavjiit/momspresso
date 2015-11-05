@@ -97,6 +97,7 @@ public class ArticleModelNew extends BaseModel {
         ArrayList<CommonParentingList> recent;
         ArrayList<CommonParentingList> popular;
         ArrayList<CommonParentingList> trending;
+        ArrayList<CommonParentingList> bookmark;
 
         public ArrayList<CommonParentingList> getRecent() {
             return recent;
@@ -120,6 +121,14 @@ public class ArticleModelNew extends BaseModel {
 
         public void setTrending(ArrayList<CommonParentingList> trending) {
             this.trending = trending;
+        }
+
+        public ArrayList<CommonParentingList> getBookmark() {
+            return bookmark;
+        }
+
+        public void setBookmark(ArrayList<CommonParentingList> bookmark) {
+            this.bookmark = bookmark;
         }
 
 //        public AllArticles(Parcel parcel) {

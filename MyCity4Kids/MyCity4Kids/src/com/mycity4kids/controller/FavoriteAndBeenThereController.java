@@ -29,13 +29,14 @@ import com.mycity4kids.models.forgot.CommonResponse;
 public class FavoriteAndBeenThereController extends BaseController{
 
 	private static final String LOG_TAG = "FavoriteAndBeenThereController";
-	
+	private Activity context;
 	/**
 	 * @param activity
 	 * @param screen
 	 */
 	public FavoriteAndBeenThereController(Activity activity, IScreen screen) {
 		super(activity, screen);
+		context = activity;
 	}
 	
 	@Override
@@ -46,7 +47,7 @@ public class FavoriteAndBeenThereController extends BaseController{
 		serviceRequest.setRequestData(requestData);
 		serviceRequest.setDataType(requestType);
 		serviceRequest.setResponseController(this);
-
+		serviceRequest.setContext(context);
 		switch (requestType) {
 		case AppConstants.FAVORITE_REQUEST: {
 			serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.POST);
@@ -92,12 +93,12 @@ public class FavoriteAndBeenThereController extends BaseController{
 		}
 		}
 	}
-	private HttpEntity setRequestParameters(Object pRequestModel) {
+	private List<NameValuePair> setRequestParameters(Object pRequestModel) {
 		UrlEncodedFormEntity encodedEntity = null;
 		String device_id=DataUtils.getDeviceId(getActivity());
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 		try {
-			FavoriteRequest favoriteRequest = (FavoriteRequest)pRequestModel; 
-			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+			FavoriteRequest favoriteRequest = (FavoriteRequest)pRequestModel;
 			nameValuePairs.add(new BasicNameValuePair("user_id", favoriteRequest.getUser_id() ));
 			nameValuePairs.add(new BasicNameValuePair("sessionId", favoriteRequest.getSessionId() ));
 			nameValuePairs.add(new BasicNameValuePair("id", favoriteRequest.getId() ));
@@ -107,7 +108,7 @@ public class FavoriteAndBeenThereController extends BaseController{
 		} catch (Exception e) {
 			Log.e(LOG_TAG, "setRequestParameters", e);
 		}
-		return encodedEntity;
+		return nameValuePairs;
 	}
 
 	private String getAppendUrl(FavoriteRequest favoriteRequest) {

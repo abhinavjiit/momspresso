@@ -32,6 +32,7 @@ public class GetAppointmentController extends BaseController {
         ServiceRequest serviceRequest = new ServiceRequest();
         //serviceRequest.setHttpHeaders(header, header);
         serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
+        serviceRequest.setContext(context);
         //serviceRequest.setRequestData(requestData);
         //serviceRequest.setPostData(setRequestParameters((LoginRequest)requestData));
         serviceRequest.setDataType(requestType);

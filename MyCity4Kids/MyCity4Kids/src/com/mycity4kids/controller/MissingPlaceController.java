@@ -32,6 +32,7 @@ public class MissingPlaceController extends BaseController {
 
         serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
         serviceRequest.setRequestData(requestData);
+        serviceRequest.setContext(context);
         serviceRequest.setDataType(requestType);
         serviceRequest.setResponseController(this);
         serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);

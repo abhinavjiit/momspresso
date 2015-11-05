@@ -44,7 +44,7 @@ public class AddNotesController extends BaseController {
         serviceRequest.setRequestData(requestData);
         //String data = new Gson().toJson(requestData);
         //System.out.println("JSON " + data);
-
+        serviceRequest.setContext(context);
         serviceRequest.setPostData(setRequestParameters(requestData));
         serviceRequest.setDataType(requestType);
         serviceRequest.setResponseController(this);
@@ -112,12 +112,12 @@ public class AddNotesController extends BaseController {
      *
      * @return
      */
-    private HttpEntity setRequestParameters(Object requestData) {
+    private List<NameValuePair> setRequestParameters(Object requestData) {
 
         NotesModel _requestModel = (NotesModel) requestData;
         UrlEncodedFormEntity encodedEntity = null;
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         try {
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 
             nameValuePairs.add(new BasicNameValuePair("sessionId", SharedPrefUtils.getUserDetailModel(context).getSessionId()));
             nameValuePairs.add(new BasicNameValuePair("user_id", "" + SharedPrefUtils.getUserDetailModel(context).getId()));
@@ -133,7 +133,7 @@ public class AddNotesController extends BaseController {
             // TODO: handle exception
         }
 
-        return encodedEntity;
+        return nameValuePairs;
 
     }
 

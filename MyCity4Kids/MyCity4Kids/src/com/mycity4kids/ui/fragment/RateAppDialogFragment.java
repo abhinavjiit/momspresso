@@ -69,7 +69,7 @@ public class RateAppDialogFragment extends android.app.DialogFragment implements
 
             case R.id.not_now:
                 rateModel.setAppRateComplete(false);
-                rateModel.setAppRateVersion(0);
+                rateModel.setAppRateVersion(-7);
                 SharedPrefUtils.setAppRateVersion(getActivity(), rateModel);
                 getDialog().dismiss();
 
@@ -77,6 +77,7 @@ public class RateAppDialogFragment extends android.app.DialogFragment implements
             case R.id.rate_now:
                 rateModel.setAppRateComplete(true);
                 rateModel.setAppRateVersion(0);
+                getDialog().dismiss();
                 SharedPrefUtils.setAppRateVersion(getActivity(), rateModel);
                 /**
                  * a try/catch block here because an Exception will be thrown if the Play Store is not installed on the target device.

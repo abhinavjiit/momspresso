@@ -32,6 +32,7 @@ public class GetTaskController extends BaseController {
         //serviceRequest.setRequestData(requestData);
         //serviceRequest.setPostData(setRequestParameters((LoginRequest)requestData));
         serviceRequest.setDataType(requestType);
+        serviceRequest.setContext(context);
         serviceRequest.setHttpHeaders(new String[]{"Content-Type"}, new String[]{"application/json"});
         serviceRequest.setResponseController(this);
         serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);

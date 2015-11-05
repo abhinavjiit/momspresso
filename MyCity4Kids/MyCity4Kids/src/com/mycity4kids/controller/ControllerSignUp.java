@@ -48,6 +48,7 @@ public class ControllerSignUp extends BaseController {
 //        } catch (Exception ex) {
 //
 //        }
+        serviceRequest.setContext(activity);
         serviceRequest.setPostData(setRequestParameters(data));
         serviceRequest.setDataType(requestType);
         serviceRequest.setResponseController(this);
@@ -111,10 +112,10 @@ public class ControllerSignUp extends BaseController {
      *
      * @return
      */
-    private HttpEntity setRequestParameters(String requestData) {
+    private List<NameValuePair> setRequestParameters(String requestData) {
         UrlEncodedFormEntity encodedEntity = null;
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         try {
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
             if (!StringUtils.isNullOrEmpty(requestData)) {
                 nameValuePairs.add(new BasicNameValuePair("nuser", requestData));
                 nameValuePairs.add(new BasicNameValuePair("user_from", ""+SharedPrefUtils.getSignupFlag(activity)));
@@ -123,7 +124,7 @@ public class ControllerSignUp extends BaseController {
                 SharedPrefUtils.setPushTokenUpdateToServer(activity, true);
             }
             nameValuePairs.add(new BasicNameValuePair("push_token", SharedPrefUtils.getDeviceToken(activity)));
-            encodedEntity = new UrlEncodedFormEntity(nameValuePairs, "UTF-8");
+//            encodedEntity = new UrlEncodedFormEntity(nameValuePairs, "UTF-8");
 
             System.out.println("JSON " + nameValuePairs);
 
@@ -133,7 +134,7 @@ public class ControllerSignUp extends BaseController {
             // TODO: handle exception
         }
 
-        return encodedEntity;
+        return nameValuePairs;
 
     }
 

@@ -11,57 +11,62 @@ import com.kelltontech.ui.IScreen;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.category.CategoryResponse;
 
-public class CategoryController extends BaseController{
+public class CategoryController extends BaseController {
 
-	public CategoryController(Activity activity, IScreen screen) {
-		super(activity, screen);
-		// TODO Auto-generated constructor stub
-	}
-	@Override
-	public ServiceRequest getData(int requestType, Object requestData) {
-		ServiceRequest serviceRequest=new ServiceRequest();
-		//serviceRequest.setHttpHeaders(header, header);
-		serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
-		serviceRequest.setRequestData(requestData);
-		//serviceRequest.setPostData(setRequestParameters((LoginRequest)requestData));
-		serviceRequest.setDataType(requestType);
-		serviceRequest.setResponseController(this);
-		//serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
-		serviceRequest.setUrl("http://54.251.100.249/webservices/apiservices/category?city_id=2");
-		HttpClientConnection connection = HttpClientConnection.getInstance();
-		connection.addRequest(serviceRequest);
+    private Activity context;
 
-		return serviceRequest;
-	}
+    public CategoryController(Activity activity, IScreen screen) {
+        super(activity, screen);
+        context = activity;
+        // TODO Auto-generated constructor stub
+    }
 
-	@Override
-	public void handleResponse(Response response) {
-		switch (response.getDataType()) {
-		case AppConstants.CATEGORY_REQUEST:
+    @Override
+    public ServiceRequest getData(int requestType, Object requestData) {
+        ServiceRequest serviceRequest = new ServiceRequest();
+        //serviceRequest.setHttpHeaders(header, header);
+        serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
+        serviceRequest.setRequestData(requestData);
+        serviceRequest.setContext(context);
+        //serviceRequest.setPostData(setRequestParameters((LoginRequest)requestData));
+        serviceRequest.setDataType(requestType);
+        serviceRequest.setResponseController(this);
+        //serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
+        serviceRequest.setUrl("http://54.251.100.249/webservices/apiservices/category?city_id=2");
+        HttpClientConnection connection = HttpClientConnection.getInstance();
+        connection.addRequest(serviceRequest);
 
-			try {
-				String responseData=new String(response.getResponseData());
-				
-				CategoryResponse _categoryResponse=new Gson().fromJson(responseData, CategoryResponse.class);
-				response.setResponseObject(_categoryResponse);
+        return serviceRequest;
+    }
 
-				sendResponseToScreen(response);
-			} catch (Exception e) {
-				sendResponseToScreen(null);
-			}
+    @Override
+    public void handleResponse(Response response) {
+        switch (response.getDataType()) {
+            case AppConstants.CATEGORY_REQUEST:
 
-			break;
+                try {
+                    String responseData = new String(response.getResponseData());
 
-		default:
-			break;
-		}
+                    CategoryResponse _categoryResponse = new Gson().fromJson(responseData, CategoryResponse.class);
+                    response.setResponseObject(_categoryResponse);
 
-	}
+                    sendResponseToScreen(response);
+                } catch (Exception e) {
+                    sendResponseToScreen(null);
+                }
 
-	@Override
-	public void parseResponse(Response response) {
-		// TODO Auto-generated method stub
+                break;
 
-	}
+            default:
+                break;
+        }
+
+    }
+
+    @Override
+    public void parseResponse(Response response) {
+        // TODO Auto-generated method stub
+
+    }
 
 }

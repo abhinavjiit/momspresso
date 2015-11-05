@@ -92,53 +92,6 @@ public class ArticlesFragment extends BaseFragment {
 
         try {
             setRetainInstance(true);
-//            mArticleList = (ListView) view.findViewById(R.id.articles_list);
-//            mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
-//            mTabWidget = (TabWidget) view.findViewById(android.R.id.tabs);
-//            mHorizontalScrollView = (HorizontalScrollView) view.findViewById(R.id.horizontalList);
-//            new ArrayList<ParentingArticleListModel>();
-//            mParentingLists = new ArrayList<CommonParentingList>();
-//            mAdapter = new ArticlesListingAdapter(getActivity(), false);
-//            Constants.IS_PAGE_AVAILABLE = true;
-//            mArticleList.setAdapter(mAdapter);
-//            showProgressDialog(getString(R.string.please_wait));
-
-//            managePaginationInListing();
-
-
-            //	Bundle bundle=getArguments();
-            /*//boolean isCommingFromPareningSearch=bundle.getBoolean(Constants.IS_PARENTING_COMMING_FROM_SEARCH,false);
-             *//**
-             * this boolean tag i will take onScroll
-             * for recognise this is search listing or normal listing
-             *//*
-
-//		if(bundle!=null){
-//			  *//**
-             //             * hit for search Parenting article listing
-             //             *//*
-//            boolean isCommingFromPareningSearch=bundle.getBoolean(Constants.IS_PARENTING_COMMING_FROM_SEARCH,false);
-//			SearchListType searchListType=(SearchListType) bundle.getSerializable(Constants.PARENTING_SEARCH_LIST_TYPE);
-//			ParentingFilterType parentingType=(ParentingFilterType)bundle.getSerializable(Constants.PARENTING_TYPE);
-//			String queryForSearch=bundle.getString(Constants.PARENTING_SEARCH_QUERY);
-//
-//			ParentingSearchRequest _searchRequest=new ParentingSearchRequest();
-//			_searchRequest.setCityId(SharedPrefUtils.getCurrentCityModel(getActivity()).getId());
-//			_searchRequest.setParentingType(parentingType.getParentingType());
-//			_searchRequest.setFilerType(searchListType.getSearchListType());
-//			_searchRequest.setQuery(queryForSearch);
-//			_searchRequest.setCommingFromSearch(isCommingFromPareningSearch);
-//			hitArticleSearchListing(mPageCount, _searchRequest);
-//			mArticleList.setTag(_searchRequest);
-//		}else{*/
-//            /**
-//             * hit for Article listing without search:
-//             */
-////            hitArticleListingApi(mPageCount);
-//
-//
-//            //	mArticleList.setTag(false);
-//            //	}
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -170,12 +123,6 @@ public class ArticlesFragment extends BaseFragment {
                     ArticleViewFragment fragment = tabsPagerAdapter.getFragmentByPosition(currentPagePosition);
                     if (fragment != null)
                         fragment.setSearchFilterString(searchName, currentPagePosition);
-
-//                    if (currentPagePosition != 1) {
-//                        ArticleViewFragment fragment = tabsPagerAdapter.getFragmentByPosition(currentPagePosition);
-//                        if (fragment != null)
-//                            fragment.setSearchFilterString(searchName, currentPagePosition);
-//                    }
                 }
 
                 mSlidingTabLayout.setScrollPosition(position, 0, true);
@@ -239,6 +186,7 @@ public class ArticlesFragment extends BaseFragment {
                     CommonParentingList parentingListData = (CommonParentingList) ((ArticlesListingAdapter) parent.getAdapter()).getItem(pos);
                     intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
                     intent.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.ARTICLES);
+                    intent.putExtra(Constants.PARENTING_TYPE, parentingListData.getBookmarkStatus());
                     startActivity(intent);
 
                 }

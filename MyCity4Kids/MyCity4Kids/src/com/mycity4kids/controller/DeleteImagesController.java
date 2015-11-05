@@ -36,6 +36,7 @@ public class DeleteImagesController extends BaseController {
         serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.POST);
         serviceRequest.setPostData(setRequestParameters(requestData, requestType));
         serviceRequest.setDataType(requestType);
+        serviceRequest.setContext(context);
         serviceRequest.setResponseController(this);
         serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
 
@@ -106,11 +107,11 @@ public class DeleteImagesController extends BaseController {
      * @param requestData
      * @return
      */
-    private HttpEntity setRequestParameters(Object requestData, int reqtype) {
+    private List<NameValuePair> setRequestParameters(Object requestData, int reqtype) {
 
         UrlEncodedFormEntity encodedEntity = null;
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         try {
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 
             String json = new Gson().toJson(requestData);
 
@@ -143,7 +144,7 @@ public class DeleteImagesController extends BaseController {
         } catch (Exception e) {
             // TODO: handle exception
         }
-        return encodedEntity;
+        return nameValuePairs;
     }
 
 

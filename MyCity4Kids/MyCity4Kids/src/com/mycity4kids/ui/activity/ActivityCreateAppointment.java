@@ -692,6 +692,7 @@ public class ActivityCreateAppointment extends BaseActivity implements View.OnCl
                 args.putBoolean("All", all);
                 args.putBoolean("edit", false);
                 args.putString("iftask", "");
+                args.putString("dialogTitle","Who to remind");
                 dialogFragment1.setArguments(args);
 
                 dialogFragment1.setTargetFragment(dialogFragment1, 2);

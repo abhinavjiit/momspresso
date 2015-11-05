@@ -14,8 +14,11 @@ import com.mycity4kids.newmodels.parentingmodel.CityByPinCodeModel;
 
 public class ControllerCityByPincode extends BaseController {
 
+    private Activity context;
+
     public ControllerCityByPincode(Activity activity, IScreen screen) {
         super(activity, screen);
+        context = activity;
     }
 
     @Override
@@ -24,7 +27,7 @@ public class ControllerCityByPincode extends BaseController {
         //serviceRequest.setHttpHeaders(header, header);
         serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
         serviceRequest.setRequestData(requestData);
-
+        serviceRequest.setContext(context);
 //        serviceRequest.setPostData(setRequestParameters(data));
         serviceRequest.setDataType(requestType);
         serviceRequest.setResponseController(this);

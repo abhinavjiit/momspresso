@@ -7,15 +7,6 @@ public class ParentingDetailsData {
     private String title;
     private String author_id;
     private String author_name;
-
-    public String getThumbnail_image() {
-        return thumbnail_image;
-    }
-
-    public void setThumbnail_image(String thumbnail_image) {
-        this.thumbnail_image = thumbnail_image;
-    }
-
     private String thumbnail_image;
     private String author_image;
     private ArrayList<CommentsData> comments;
@@ -24,6 +15,7 @@ public class ParentingDetailsData {
     private String url;
     private String author_type;
     private String user_following_status;
+    private String is_bookmark;
 
     public String getAuthor_type() {
         return author_type;
@@ -89,6 +81,14 @@ public class ParentingDetailsData {
         this.author_name = author_name;
     }
 
+    public String getThumbnail_image() {
+        return thumbnail_image;
+    }
+
+    public void setThumbnail_image(String thumbnail_image) {
+        this.thumbnail_image = thumbnail_image;
+    }
+
     public String getAuthor_image() {
         return author_image;
     }
@@ -113,5 +113,12 @@ public class ParentingDetailsData {
         this.body = body;
     }
 
+    public String getBookmarkStatus() {
+        return is_bookmark;
+    }
+
+    public void setBookmarkStatus(String is_bookmark) {
+        this.is_bookmark = is_bookmark;
+    }
 
 }

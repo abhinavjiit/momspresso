@@ -43,7 +43,7 @@ public class AddUserKidsController extends BaseController {
         serviceRequest.setRequestData(requestData);
         String data = new Gson().toJson(requestData);
         System.out.println("JSON " + data);
-
+        serviceRequest.setContext(context);
         serviceRequest.setPostData(setRequestParameters(data));
         serviceRequest.setDataType(requestType);
         serviceRequest.setResponseController(this);
@@ -117,17 +117,17 @@ public class AddUserKidsController extends BaseController {
      *
      * @return
      */
-    private HttpEntity setRequestParameters(String requestData) {
+    private List<NameValuePair> setRequestParameters(String requestData) {
         UrlEncodedFormEntity encodedEntity = null;
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         try {
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
             if (!StringUtils.isNullOrEmpty(requestData)) {
                 nameValuePairs.add(new BasicNameValuePair("sessionId", SharedPrefUtils.getUserDetailModel(context).getSessionId()));
                 nameValuePairs.add(new BasicNameValuePair("user_id", "" + SharedPrefUtils.getUserDetailModel(context).getId()));
                 nameValuePairs.add(new BasicNameValuePair("family_id", "" + SharedPrefUtils.getUserDetailModel(context).getFamily_id()));
                 nameValuePairs.add(new BasicNameValuePair("nuser", requestData));
             }
-            encodedEntity = new UrlEncodedFormEntity(nameValuePairs, "UTF-8");
+//            encodedEntity = new UrlEncodedFormEntity(nameValuePairs, "UTF-8");
 
             // encodedEntity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE,
             // "application/x-www-form-urlencoded"));
@@ -135,7 +135,7 @@ public class AddUserKidsController extends BaseController {
             // TODO: handle exception
         }
 
-        return encodedEntity;
+        return nameValuePairs;
 
     }
 

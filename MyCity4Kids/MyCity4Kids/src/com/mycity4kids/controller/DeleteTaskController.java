@@ -36,6 +36,7 @@ public class DeleteTaskController extends BaseController {
         ServiceRequest serviceRequest = new ServiceRequest();
         serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.POST);
         serviceRequest.setRequestData(requestData);
+        serviceRequest.setContext(context);
         DeleteTaskModel _requestModel = (DeleteTaskModel) requestData;
         serviceRequest.setPostData(setRequestParameters(_requestModel));
         serviceRequest.setDataType(requestType);
@@ -91,18 +92,18 @@ public class DeleteTaskController extends BaseController {
      * @param requestData
      * @return
      */
-    private HttpEntity setRequestParameters(DeleteTaskModel requestData) {
+    private List<NameValuePair> setRequestParameters(DeleteTaskModel requestData) {
 
         String data = new Gson().toJson(requestData);
 
         UrlEncodedFormEntity encodedEntity = null;
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         try {
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 
             nameValuePairs.add(new BasicNameValuePair("user_id", "" + SharedPrefUtils.getUserDetailModel(context).getId()));
             nameValuePairs.add(new BasicNameValuePair("tasks", "" + data));
 
-            encodedEntity = new UrlEncodedFormEntity(nameValuePairs, "UTF-8");
+//            encodedEntity = new UrlEncodedFormEntity(nameValuePairs, "UTF-8");
 
             System.out.println("Appointment JSON " + nameValuePairs.toString());
             // encodedEntity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE,
@@ -110,7 +111,7 @@ public class DeleteTaskController extends BaseController {
         } catch (Exception e) {
             // TODO: handle exception
         }
-        return encodedEntity;
+        return nameValuePairs;
     }
 
     /**

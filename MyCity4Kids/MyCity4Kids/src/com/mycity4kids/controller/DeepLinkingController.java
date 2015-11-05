@@ -19,72 +19,76 @@ import com.mycity4kids.models.deeplinking.DeepLinkApiModel;
  * Created by arsh.vardhan on 15-09-2015.
  */
 
-    public class DeepLinkingController extends BaseController {
+public class DeepLinkingController extends BaseController {
 
-        public DeepLinkingController(Activity activity, IScreen screen) {
-            super(activity, screen);
-            // TODO Auto-generated constructor stub
+    private Activity context;
+
+    public DeepLinkingController(Activity activity, IScreen screen) {
+        super(activity, screen);
+        context = activity;
+        // TODO Auto-generated constructor stub
+    }
+
+    @Override
+    public ServiceRequest getData(int requestType, Object requestData) {
+        String _deeplinkURI = (String) requestData;
+
+        ServiceRequest serviceRequest = new ServiceRequest();
+        serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
+        serviceRequest.setRequestData(requestData);
+        serviceRequest.setDataType(requestType);
+        serviceRequest.setContext(context);
+        serviceRequest.setHttpHeaders(new String[]{"Content-Type"}, new String[]{"application/json"});
+        serviceRequest.setResponseController(this);
+        serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
+        serviceRequest.setUrl(AppConstants.DEEP_LINKING_URL + getAppendUrl(requestType, _deeplinkURI));
+        HttpClientConnection connection = HttpClientConnection.getInstance();
+        connection.addRequest(serviceRequest);
+
+        return serviceRequest;
+    }
+
+    @Override
+    public void handleResponse(Response response) {
+        switch (response.getDataType()) {
+            case AppConstants.DEEP_LINK_RESOLVER_REQUEST:
+
+                try {
+                    String responseData = new String(response.getResponseData());
+                    Log.i("ConfigurationResponse", responseData);
+                    DeepLinkApiModel _deepLinkResponse = new Gson().fromJson(responseData, DeepLinkApiModel.class);
+                    response.setResponseObject(_deepLinkResponse);
+                    sendResponseToScreen(response);
+                } catch (Exception e) {
+                    sendResponseToScreen(null);
+                }
+
+                break;
+
+            default:
+                break;
         }
 
-        @Override
-        public ServiceRequest getData(int requestType, Object requestData) {
-            String _deeplinkURI=(String)requestData;
+    }
 
-            ServiceRequest serviceRequest=new ServiceRequest();
-            serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
-            serviceRequest.setRequestData(requestData);
-            serviceRequest.setDataType(requestType);
-            serviceRequest.setHttpHeaders(new String[]{"Content-Type"}, new String[]{"application/json"});
-            serviceRequest.setResponseController(this);
-            serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
-            serviceRequest.setUrl(AppConstants.DEEP_LINKING_URL+getAppendUrl(requestType,_deeplinkURI));
-            HttpClientConnection connection = HttpClientConnection.getInstance();
-            connection.addRequest(serviceRequest);
+    @Override
+    public void parseResponse(Response response) {
+        // TODO Auto-generated method stub
 
-            return serviceRequest;
+    }
+
+    private String getAppendUrl(int requestType, String deepLinkURL) {
+        StringBuilder builder = new StringBuilder();
+        /**
+         * This will call from SplashActivity.class: for resolving deep link and fetching
+         * target screen data from server
+         */
+
+        if (AppConstants.DEEP_LINK_RESOLVER_REQUEST == requestType) {
+            builder.append("url=").append(deepLinkURL);
         }
 
-        @Override
-        public void handleResponse(Response response) {
-            switch (response.getDataType()) {
-                case AppConstants.DEEP_LINK_RESOLVER_REQUEST:
-
-                    try {
-                        String responseData=new String(response.getResponseData());
-                        Log.i("ConfigurationResponse", responseData);
-                        DeepLinkApiModel _deepLinkResponse=new Gson().fromJson(responseData,DeepLinkApiModel.class);
-                        response.setResponseObject(_deepLinkResponse);
-                        sendResponseToScreen(response);
-                    } catch (Exception e) {
-                        sendResponseToScreen(null);
-                    }
-
-                    break;
-
-                default:
-                    break;
-            }
-
-        }
-
-        @Override
-        public void parseResponse(Response response) {
-            // TODO Auto-generated method stub
-
-        }
-
-        private String getAppendUrl(int requestType,String deepLinkURL){
-            StringBuilder builder=new StringBuilder();
-            /**
-             * This will call from SplashActivity.class: for resolving deep link and fetching
-             * target screen data from server
-             */
-
-            if(AppConstants.DEEP_LINK_RESOLVER_REQUEST==requestType){
-                builder.append("url=").append(deepLinkURL);
-            }
-
-            return builder.toString();
-        }
+        return builder.toString();
+    }
 
 }

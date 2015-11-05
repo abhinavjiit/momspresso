@@ -9,6 +9,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
+import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -129,26 +131,20 @@ public class
                     intent.putExtra(AppConstants.NOTIFICATION_ID, requestID);
                     intent.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.ARTICLES);
                     intent.putExtra(Constants.BLOG_NAME, pushNotificationModel.getBlog_name());
-                    if(pushNotificationModel.getFilter_type().trim().equals("Blogger")) {
+                    if (pushNotificationModel.getFilter_type().trim().equals("Blogger")) {
                         intent.putExtra(Constants.FILTER_TYPE, "blogs");
-                    }else{
+                    } else {
                         intent.putExtra(Constants.FILTER_TYPE, "authors");
                     }
-//                    if (articleDataModelsNew.get(position).getAuthor_type().trim().equalsIgnoreCase("Blogger")) {
-//                        intent.putExtra(Constants.ARTICLE_NAME, articleDataModelsNew.get(position).getBlog_name());
-//                        intent.putExtra(Constants.FILTER_TYPE, "blogs");
-//                    } else {
-//                        intent.putExtra(Constants.ARTICLE_NAME, articleDataModelsNew.get(position).getAuthor_name());
-//                        intent.putExtra(Constants.FILTER_TYPE, "authors");
-//                    }
 
-//                    intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
-//                    intent.putExtra(Constants.ARTICLE_COVER_IMAGE, parentingListData.getThumbnail_image());
-//                    intent.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.ARTICLES);
-//                    intent.putExtra(Constants.FILTER_TYPE, parentingListData.getAuthor_type());
-//                    intent.putExtra(Constants.BLOG_NAME, parentingListData.getBlog_name());
+                    TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+                    // Adds the back stack
+                    stackBuilder.addParentStack(ArticlesAndBlogsDetailsActivity.class);
+                    // Adds the Intent to the top of the stack
+                    stackBuilder.addNextIntent(intent);
 
-                    PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    //PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    PendingIntent contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
                     NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
                             .setLargeIcon(icon).setSmallIcon(R.drawable.iconnotify)
                             .setContentTitle(title).setStyle(new NotificationCompat.BigTextStyle().bigText(message)).setContentText(message);
@@ -249,13 +245,16 @@ public class
                     // generate notifications
                     Log.i(TAG, " INSIDE EVENTS DETAILS: " + msg);
                     Bitmap remote_picture = null;
-                    String url = "http://www.mycity4kids.com/parenting/uploads/resized/Parenting.png";
+                    Bitmap bitmap = null;
+                    String url = "http://192.168.1.35/test/360X240.jpg";
                     if (!StringUtils.isNullOrEmpty(pushNotificationModel.getUrl())) {
                         url = pushNotificationModel.getUrl();
                     }
                     try {
                         remote_picture = BitmapFactory.decodeStream(
                                 (InputStream) new URL(url).getContent());
+
+                        bitmap = getScaledBitmap(remote_picture);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -277,7 +276,7 @@ public class
                             NotificationCompat.BigPictureStyle();
                     notiStyle.setBigContentTitle("Big Picture Expanded");
                     notiStyle.setSummaryText("Nice big picture.");
-                    notiStyle.bigPicture(remote_picture);
+                    notiStyle.bigPicture(bitmap);
 
                     NotificationCompat.Builder mBuilder =
                             new NotificationCompat.Builder(this)
@@ -330,5 +329,16 @@ public class
         }
 
 
+    }
+
+    private Bitmap getScaledBitmap(Bitmap bitmap) {
+        DisplayMetrics displaymetrics = getResources().getDisplayMetrics();
+        int height = 180;
+
+
+        float scaleFactor = (float) displaymetrics.heightPixels / (float) displaymetrics.widthPixels;
+        int newWidth = (int) (bitmap.getWidth() / scaleFactor);
+
+        return Bitmap.createScaledBitmap(bitmap, newWidth, height, true);
     }
 }

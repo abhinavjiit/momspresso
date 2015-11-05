@@ -28,9 +28,11 @@ import java.util.List;
 public class ImageUploadController extends BaseController {
 
     private static final String LOG_TAG = "ImageUploadController";
+    private Activity context;
 
     public ImageUploadController(Activity activity, IScreen screen) {
         super(activity, screen);
+        context = activity;
     }
 
     @Override
@@ -38,6 +40,7 @@ public class ImageUploadController extends BaseController {
         ServiceRequest serviceRequest = new ServiceRequest();
         serviceRequest.setDataType(requestType);
         serviceRequest.setRequestData(requestData);
+        serviceRequest.setContext(context);
         serviceRequest.setResponseController(this);
         serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
         serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.POST);
@@ -75,33 +78,33 @@ public class ImageUploadController extends BaseController {
      * @param pRequestModel
      * @return
      */
-    private HttpEntity setRequestParameters(Object pRequestModel) {
+    private List<NameValuePair> setRequestParameters(Object pRequestModel) {
         UrlEncodedFormEntity encodedEntity = null;
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         try {
             ImageUploadRequest imgUploadRq = (ImageUploadRequest) pRequestModel;
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
             //nameValuePairs.add(new BasicNameValuePair("user_id", imgUploadRq.getUser_id() ));
             //nameValuePairs.add(new BasicNameValuePair("sessionId", imgUploadRq.getSessionId() ));
             //nameValuePairs.add(new BasicNameValuePair("profileId", imgUploadRq.getProfileId() ));
             nameValuePairs.add(new BasicNameValuePair("file", imgUploadRq.getImage()));
             nameValuePairs.add(new BasicNameValuePair("type", imgUploadRq.getType()));
             Log.i("imageUpload", nameValuePairs.toString());
-            encodedEntity = new UrlEncodedFormEntity(nameValuePairs);
+//            encodedEntity = new UrlEncodedFormEntity(nameValuePairs);
         } catch (Exception e) {
             Log.e(LOG_TAG, "setRequestParameters", e);
         }
-        return encodedEntity;
+        return nameValuePairs;
     }
 
     /**
      * @param pRequestModel
      * @return
      */
-    private HttpEntity createUploadBusinessImageEntity(Object pRequestModel) {
+    private List<NameValuePair> createUploadBusinessImageEntity(Object pRequestModel) {
         UrlEncodedFormEntity encodedEntity = null;
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         try {
             BusinessImageUploadRequest imgUploadRq = (BusinessImageUploadRequest) pRequestModel;
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
             nameValuePairs.add(new BasicNameValuePair("userId", imgUploadRq.getUserId()));
             nameValuePairs.add(new BasicNameValuePair("sessionId", imgUploadRq.getSessionId()));
             nameValuePairs.add(new BasicNameValuePair("businessId", imgUploadRq.getBusinessId()));
@@ -112,7 +115,7 @@ public class ImageUploadController extends BaseController {
         } catch (Exception e) {
             Log.e(LOG_TAG, "createUploadBusinessImageEntity", e);
         }
-        return encodedEntity;
+        return nameValuePairs;
     }
 
     @Override

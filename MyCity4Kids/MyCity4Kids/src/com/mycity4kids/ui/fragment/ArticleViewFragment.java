@@ -62,6 +62,12 @@ public class ArticleViewFragment extends BaseFragment {
             sortType = getArguments().getString(Constants.SORT_TYPE);
             isSearchActive = getArguments().getBoolean(Constants.IS_SEARCH_ACTIVE);
         }
+        if ("bookmark".equals(sortType)) {
+            articleDataModelsNew = new ArrayList<CommonParentingList>();
+            nextPageNumber = 1;
+            hitBookmarkedArticleListingAPI(nextPageNumber, "bookmark");
+        }
+
 
         articlesListingAdapter = new ArticlesListingAdapter(getActivity(), true);
         articlesListingAdapter.setNewListData(articleDataModelsNew);
@@ -77,13 +83,18 @@ public class ArticleViewFragment extends BaseFragment {
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
                 boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
-                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && (nextPageNumber < 2 || nextPageNumber < totalPageCount)) {
-                    if (isSearchActive == false) {
+                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && (nextPageNumber < 2 || nextPageNumber <= totalPageCount)) {
+                    if (!"bookmark".equals(sortType)) {
+                        if (isSearchActive == false) {
+                            mLodingView.setVisibility(View.VISIBLE);
+                            hitArticleListingApi(nextPageNumber, sortType);
+                        } else if (isSearchActive) {
+                            mLodingView.setVisibility(View.VISIBLE);
+                            newSearchTopicArticleListingApi(searchName, sortType, nextPageNumber);
+                        }
+                    } else {
                         mLodingView.setVisibility(View.VISIBLE);
-                        hitArticleListingApi(nextPageNumber, sortType);
-                    } else if (isSearchActive) {
-                        mLodingView.setVisibility(View.VISIBLE);
-                        newSearchTopicArticleListingApi(searchName, sortType, nextPageNumber);
+                        hitBookmarkedArticleListingAPI(nextPageNumber, "bookmark");
                     }
                     isReuqestRunning = true;
                 }
@@ -143,9 +154,7 @@ public class ArticleViewFragment extends BaseFragment {
 
                 isReuqestRunning = false;
                 mLodingView.setVisibility(View.GONE);
-
                 break;
-
 
             case AppConstants.TOP_PICKS_REQUEST:
                 responseData = (CommonParentingResponse) response.getResponseObject();
@@ -153,21 +162,6 @@ public class ArticleViewFragment extends BaseFragment {
                     getArticleResponse(responseData);
                     removeProgressDialog();
                 } else if (responseData.getResponseCode() == 400) {
-//                    if (mLodingView.getVisibility() == View.VISIBLE) {
-//                        mLodingView.setVisibility(View.GONE);
-//                    }
-                    /**
-                     * if search result will fail for first time then we
-                     * are showing as it is list which comes at first time
-                     * so for this handling ;this function relate.
-                     */
-//                    Constants.IS_PAGE_AVAILABLE = false;
-//                    if (mFirstPageCountFromSearch <= 1 && isCommingFromSearching) {
-//                        isCommingFromSearching = false;
-//                        Constants.IS_PAGE_AVAILABLE = true;
-//                        mIsRequestRunning = false;
-//                    }
-
                     removeProgressDialog();
                     String message = responseData.getResult().getMessage();
                     if (!StringUtils.isNullOrEmpty(message)) {
@@ -180,13 +174,29 @@ public class ArticleViewFragment extends BaseFragment {
                 Constants.IS_REQUEST_RUNNING = false;
                 isReuqestRunning = false;
                 mLodingView.setVisibility(View.GONE);
+                break;
 
+            case AppConstants.BOOKMARKED_ARTICLE_LIST_REQUEST:
+                responseData = (CommonParentingResponse) response.getResponseObject();
+                if (responseData.getResponseCode() == 200) {
+                    getArticleResponse(responseData);
+                } else if (responseData.getResponseCode() == 400) {
+                    String message = responseData.getResult().getMessage();
+                    totalPageCount = 0;
+                    if (!StringUtils.isNullOrEmpty(message)) {
+                        ((DashboardActivity) getActivity()).showToast(message);
+                    } else {
+                        ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
+                    }
+                }
+
+                isReuqestRunning = false;
+                mLodingView.setVisibility(View.GONE);
                 break;
 
             default:
                 break;
         }
-
 
     }
 
@@ -207,6 +217,22 @@ public class ArticleViewFragment extends BaseFragment {
 
     }
 
+    private void hitBookmarkedArticleListingAPI(int pPageCount, String SortKey) {
+        ParentingRequest _parentingModel = new ParentingRequest();
+        /**
+         * this case will case in pagination case: for sorting
+         */
+        if (SortKey != null) {
+            _parentingModel.setSoty_by(SortKey);
+        }
+
+        _parentingModel.setCity_id(SharedPrefUtils.getCurrentCityModel(getActivity()).getId());
+        _parentingModel.setPage("" + pPageCount);
+        ParentingStopController _controller = new ParentingStopController(getActivity(), this);
+//        mIsRequestRunning = true;
+        _controller.getData(AppConstants.BOOKMARKED_ARTICLE_LIST_REQUEST, _parentingModel);
+
+    }
 
     public void refreshSubList(ArrayList<CommonParentingList> newList) {
         articleDataModelsNew = newList;
@@ -240,6 +266,12 @@ public class ArticleViewFragment extends BaseFragment {
                 articlesListingAdapter.setNewListData(tempList.getTrending());
                 break;
 
+            case 3:
+
+                articleDataModelsNew = tempList.getBookmark();
+                articlesListingAdapter.setNewListData(tempList.getBookmark());
+                break;
+
         }
         articlesListingAdapter.notifyDataSetChanged();
 
@@ -251,7 +283,7 @@ public class ArticleViewFragment extends BaseFragment {
         ArrayList<CommonParentingList> dataList = responseData.getResult().getData().getData();
 
         if (dataList.size() == 0) {
-            ((DashboardActivity) getActivity()).showToast(responseData.getResult().getMessage());
+            //((DashboardActivity) getActivity()).showToast(responseData.getResult().getMessage());
         } else {
             totalPageCount = responseData.getResult().getData().getPage_count();
             if (nextPageNumber == 1) {

@@ -15,6 +15,7 @@ public class CommonParentingList implements Parcelable {
     private String author_color_code;
     private String blog_name;
     private String user_following_status;
+    private String is_bookmark;
 
     public String getUser_following_status() {
         return user_following_status;
@@ -104,6 +105,14 @@ public class CommonParentingList implements Parcelable {
         this.author_color_code = author_color_code;
     }
 
+    public String getBookmarkStatus() {
+        return is_bookmark;
+    }
+
+    public void setBookmarkStatus(String is_bookmark) {
+        this.is_bookmark = is_bookmark;
+    }
+
     public CommonParentingList(Parcel parcel) {
         this.id = parcel.readString();
         this.title = parcel.readString();
@@ -115,6 +124,7 @@ public class CommonParentingList implements Parcelable {
         this.author_type = parcel.readString();
         this.author_color_code = parcel.readString();
         this.user_following_status = parcel.readString();
+        this.is_bookmark = parcel.readString();
     }
 
     @Override
@@ -134,6 +144,7 @@ public class CommonParentingList implements Parcelable {
         dest.writeString(author_type);
         dest.writeString(author_color_code);
         dest.writeString(user_following_status);
+        dest.writeString(is_bookmark);
     }
 
     public static Creator<CommonParentingList> CREATOR = new Creator<CommonParentingList>() {

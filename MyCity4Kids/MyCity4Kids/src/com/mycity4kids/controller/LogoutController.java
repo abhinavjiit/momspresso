@@ -39,6 +39,7 @@ public class LogoutController extends BaseController {
         //serviceRequest.setHttpHeaders(header, header);
         serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.POST);
         serviceRequest.setRequestData(requestData);
+        serviceRequest.setContext(mActivity);
         //serviceRequest.setHttpHeaders(new String[]{HTTP.CONTENT_TYPE}, new String[]{"application/x-www-form-urlencoded"});
         serviceRequest.setPostData(setRequestParameters((String) requestData));
         serviceRequest.setDataType(requestType);
@@ -96,13 +97,13 @@ public class LogoutController extends BaseController {
         }
     }
 
-    private HttpEntity setRequestParameters(String sessionId) {
+    private List<NameValuePair> setRequestParameters(String sessionId) {
         UserTable _userTable = new UserTable((BaseApplication) getActivity().getApplication());
         String userId = "" + _userTable.getUserId();
 
         UrlEncodedFormEntity encodedEntity = null;
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         try {
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
             nameValuePairs.add(new BasicNameValuePair("sessionId", "" + SharedPrefUtils.getUserDetailModel(mActivity).getSessionId()));
             nameValuePairs.add(new BasicNameValuePair("user_id", "" + SharedPrefUtils.getUserDetailModel(mActivity).getId()));
             encodedEntity = new UrlEncodedFormEntity(nameValuePairs, "UTF-8");
@@ -115,7 +116,7 @@ public class LogoutController extends BaseController {
             // TODO: handle exception
         }
 
-        return encodedEntity;
+        return nameValuePairs;
 
     }
 }

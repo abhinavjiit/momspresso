@@ -41,6 +41,7 @@ public class TaskListController extends BaseController {
 
         serviceRequest.setPostData(setRequestParameters(_requestModel, requestType));
         serviceRequest.setDataType(requestType);
+        serviceRequest.setContext(context);
         serviceRequest.setResponseController(this);
         serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
 
@@ -116,14 +117,14 @@ public class TaskListController extends BaseController {
      * @param requestData
      * @return
      */
-    private HttpEntity setRequestParameters(TaskListModel requestData, int reqtype) {
+    private List<NameValuePair> setRequestParameters(TaskListModel requestData, int reqtype) {
 
         String data = new Gson().toJson(requestData);
         //System.out.println("Appointment JSON " + data);
 
         UrlEncodedFormEntity encodedEntity = null;
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         try {
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 
 
             if (reqtype == AppConstants.CREATE_TASKLIST_REQUEST) {
@@ -159,7 +160,7 @@ public class TaskListController extends BaseController {
         } catch (Exception e) {
             // TODO: handle exception
         }
-        return encodedEntity;
+        return nameValuePairs;
     }
 
 

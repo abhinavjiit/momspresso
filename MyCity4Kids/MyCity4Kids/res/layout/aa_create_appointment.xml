@@ -50,42 +50,37 @@
                     android:drawableBottom="@drawable/underline"
                     android:drawablePadding="5dp"
                     android:gravity="left"
-                    android:scrollHorizontally="false"
                     android:hint="Event Appointment"
                     android:inputType="textMultiLine|textCapWords"
+                    android:scrollHorizontally="false"
                     android:textColor="@color/black_color" />
 
                 <!-- -->
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:padding="2dp"
-                    android:text="LOCATION"
-                    android:textColor="@color/greytxt_color" />
+                    android:orientation="horizontal">
 
-                <EditText
-                    android:id="@+id/appointment_location"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:drawableBottom="@drawable/underline"
-                    android:drawablePadding="5dp"
-                    android:gravity="left"
-                    android:inputType="textCapWords"
-                    android:paddingBottom="7dp"
-                    android:paddingLeft="2dp"
-                    android:paddingTop="7dp"
-                    android:textColor="@color/black_color" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:padding="2dp"
+                        android:text="ATTENDEES"
+                        android:textColor="@color/greytxt_color" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:padding="2dp"
-                    android:text="ATTENDEES"
-                    android:textColor="@color/greytxt_color" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:padding="2dp"
+                        android:text="*"
+                        android:textColor="#ff0000" />
+
+
+                </LinearLayout>
+
 
                 <TextView
                     android:id="@+id/appointment_attendee"
@@ -102,48 +97,29 @@
                     android:paddingTop="7dp"
                     android:textColor="@color/black_color" />
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:padding="2dp"
-                    android:text="WHO TO REMIND"
-                    android:textColor="@color/greytxt_color" />
-
-                <TextView
-                    android:id="@+id/appointment_whotoremind"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:background="@null"
-                    android:drawableBottom="@drawable/underline"
-                    android:drawablePadding="5dp"
-                    android:drawableRight="@drawable/drop_down_arrowxxhdpi"
-                    android:gravity="left"
-                    android:paddingBottom="5dp"
-                    android:paddingLeft="2dp"
-                    android:paddingTop="7dp"
-                    android:textColor="@color/black_color" />
+                    android:orientation="horizontal">
 
 
-            </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:padding="2dp"
+                        android:text="START"
+                        android:textColor="@color/greytxt_color" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:background="@color/white_color"
-                android:orientation="vertical"
-                android:paddingLeft="30dp"
-                android:paddingRight="30dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="7dp"
+                        android:padding="2dp"
+                        android:text="*"
+                        android:textColor="#ff0000" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:padding="2dp"
-                    android:text="START"
-                    android:textColor="@color/greytxt_color" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -182,14 +158,30 @@
 
                 </LinearLayout>
 
-
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:padding="2dp"
-                    android:text="END"
-                    android:textColor="@color/greytxt_color" />
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:padding="2dp"
+                        android:text="END"
+                        android:textColor="@color/greytxt_color" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="7dp"
+                        android:padding="2dp"
+                        android:text="*"
+                        android:textColor="#ff0000" />
+
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -228,109 +220,166 @@
 
                 </LinearLayout>
 
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:orientation="horizontal"
-                    android:padding="5dp">
+                    android:layout_marginTop="5dp"
+                    android:background="@color/white_color"
+                    android:orientation="vertical">
 
-                    <CheckBox
-                        android:id="@+id/recurring_event"
+
+                    <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="4dp"
-                        android:layout_alignParentTop="true"
-                        android:gravity="center_vertical|right"
-                        android:layout_toStartOf="@+id/textView"
-                        android:button="@drawable/new_checkbox_selector"
-                        android:checked="false" />
+                        android:layout_gravity="right"
+                        android:orientation="horizontal"
+                        android:padding="5dp">
+
+                        <CheckBox
+                            android:id="@+id/recurring_event"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:layout_toStartOf="@+id/textView"
+                            android:button="@drawable/new_checkbox_selector"
+                            android:checked="false"
+                            android:gravity="center_vertical|right"
+                            android:padding="4dp" />
+
+                        <TextView
+                            android:id="@+id/textView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:text="RECURRING EVENT"
+                            android:textColor="@color/greytxt_color" />
+
+
+                    </RelativeLayout>
 
                     <TextView
-                        android:id="@+id/textView"
+                        android:id="@+id/repeat_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:text="RECURRING EVENT"
+                        android:padding="2dp"
+                        android:text="REPEAT"
                         android:textColor="@color/greytxt_color" />
 
 
-                </RelativeLayout>
+                    <TextView
+                        android:id="@+id/appointment_repeat"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:layout_weight="1"
+                        android:drawableBottom="@drawable/underline"
+                        android:drawablePadding="3dp"
+                        android:drawableRight="@drawable/drop_down_arrowxxhdpi"
+                        android:gravity="left"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="2dp"
+                        android:paddingTop="5dp"
+                        android:textColor="@color/black_color" />
+
+                    <TextView
+                        android:id="@+id/until_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="2dp"
+                        android:text="UNTIL"
+                        android:textColor="@color/greytxt_color" />
+
+
+                    <TextView
+                        android:id="@+id/appointment_until"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:layout_weight="1"
+                        android:drawableBottom="@drawable/underline"
+                        android:drawablePadding="3dp"
+                        android:drawableRight="@drawable/drop_down_arrowxxhdpi"
+                        android:gravity="left"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="2dp"
+                        android:paddingTop="5dp"
+                        android:textColor="@color/black_color" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="2dp"
+                        android:text="REMINDER"
+                        android:textColor="@color/greytxt_color" />
+
+
+                    <TextView
+                        android:id="@+id/appointment_remainder"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:layout_weight="1"
+                        android:drawableBottom="@drawable/underline"
+                        android:drawablePadding="3dp"
+                        android:drawableRight="@drawable/drop_down_arrowxxhdpi"
+                        android:gravity="left"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="2dp"
+                        android:paddingTop="5dp"
+                        android:textColor="@color/black_color" />
+
+                </LinearLayout>
+
 
                 <TextView
-                    android:id="@+id/repeat_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:padding="2dp"
-                    android:text="REPEAT"
+                    android:text="WHO TO REMIND"
                     android:textColor="@color/greytxt_color" />
 
-
                 <TextView
-                    android:id="@+id/appointment_repeat"
+                    android:id="@+id/appointment_whotoremind"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:layout_weight="1"
+                    android:background="@null"
                     android:drawableBottom="@drawable/underline"
-                    android:drawablePadding="3dp"
+                    android:drawablePadding="5dp"
                     android:drawableRight="@drawable/drop_down_arrowxxhdpi"
                     android:gravity="left"
                     android:paddingBottom="5dp"
                     android:paddingLeft="2dp"
-                    android:paddingTop="5dp"
-                    android:textColor="@color/black_color" />
-
-                <TextView
-                    android:id="@+id/until_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="2dp"
-                    android:text="UNTIL"
-                    android:textColor="@color/greytxt_color" />
-
-
-                <TextView
-                    android:id="@+id/appointment_until"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:layout_weight="1"
-                    android:drawableBottom="@drawable/underline"
-                    android:drawablePadding="3dp"
-                    android:drawableRight="@drawable/drop_down_arrowxxhdpi"
-                    android:gravity="left"
-                    android:paddingBottom="5dp"
-                    android:paddingLeft="2dp"
-                    android:paddingTop="5dp"
+                    android:paddingTop="7dp"
                     android:textColor="@color/black_color" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:padding="2dp"
-                    android:text="REMINDER"
+                    android:text="LOCATION"
                     android:textColor="@color/greytxt_color" />
 
-
-                <TextView
-                    android:id="@+id/appointment_remainder"
+                <EditText
+                    android:id="@+id/appointment_location"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:layout_weight="1"
+                    android:background="@null"
                     android:drawableBottom="@drawable/underline"
-                    android:drawablePadding="3dp"
-                    android:drawableRight="@drawable/drop_down_arrowxxhdpi"
+                    android:drawablePadding="5dp"
                     android:gravity="left"
-                    android:paddingBottom="5dp"
+                    android:inputType="textCapWords"
+                    android:paddingBottom="7dp"
                     android:paddingLeft="2dp"
-                    android:paddingTop="5dp"
+                    android:paddingTop="7dp"
                     android:textColor="@color/black_color" />
+
 
             </LinearLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -356,12 +405,12 @@
                     android:background="@null"
                     android:drawableBottom="@drawable/underline"
                     android:drawablePadding="5dp"
-                    android:scrollHorizontally="false"
                     android:hint="Add a note"
                     android:inputType="textCapWords|textMultiLine"
                     android:paddingBottom="7dp"
                     android:paddingLeft="2dp"
                     android:paddingTop="7dp"
+                    android:scrollHorizontally="false"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@color/black_color" />
 

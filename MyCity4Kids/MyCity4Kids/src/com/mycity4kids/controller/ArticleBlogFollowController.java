@@ -25,9 +25,11 @@ import java.util.List;
 public class ArticleBlogFollowController extends BaseController {
 
     private static final String LOG_TAG = "ArticleBlogFollowController";
+    private Activity context;
 
     public ArticleBlogFollowController(Activity activity, IScreen screen) {
         super(activity, screen);
+        context = activity;
     }
 
     @Override
@@ -37,6 +39,7 @@ public class ArticleBlogFollowController extends BaseController {
             serviceRequest.setDataType(requestType);
             serviceRequest.setRequestData(requestData);
             serviceRequest.setResponseController(this);
+            serviceRequest.setContext(context);
             serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.POST);
             serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
             serviceRequest.setPostData(setRequestParameters(requestData));
@@ -76,20 +79,18 @@ public class ArticleBlogFollowController extends BaseController {
      * @param pRequestModel
      * @return
      */
-    private HttpEntity setRequestParameters(Object pRequestModel) {
-        UrlEncodedFormEntity encodedEntity = null;
+    private List<NameValuePair> setRequestParameters(Object pRequestModel) {
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         try {
             ArticleBlogFollowRequest _followRequest = (ArticleBlogFollowRequest) pRequestModel;
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
             nameValuePairs.add(new BasicNameValuePair("user_id", _followRequest.getUserId()));
             nameValuePairs.add(new BasicNameValuePair("session_id", _followRequest.getSessionId()));
             nameValuePairs.add(new BasicNameValuePair("author_id", _followRequest.getAuthorId()));
             Log.i("Article Blog Follow Params: ", nameValuePairs.toString());
-            encodedEntity = new UrlEncodedFormEntity(nameValuePairs);
         } catch (Exception e) {
             Log.e(LOG_TAG, "setRequestParameters", e);
         }
-        return encodedEntity;
+        return nameValuePairs;
     }
 
 	

@@ -25,6 +25,7 @@ public class TabsPagerAdapter extends FragmentStatePagerAdapter {
     private ArticleViewFragment mRecentArticlefragment;
     private ArticleViewFragment mPopularArticlefragment;
     private ArticleViewFragment mTrendingArticlefragment;
+    private ArticleViewFragment mBookmarkedArticlefragment;
     String searchName = "";
 
     int currentPosition = 0;
@@ -47,7 +48,7 @@ public class TabsPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return 4;
     }
 
     @Override
@@ -63,8 +64,11 @@ public class TabsPagerAdapter extends FragmentStatePagerAdapter {
             return "RECENT";
         } else if (position == 1) {
             return "TRENDING";
-        } else {
+        } else if (position == 2) {
             return "POPULAR";
+        } else {
+            //PERSONAL
+            return "MY BLOGS";
         }
     }
 
@@ -124,6 +128,19 @@ public class TabsPagerAdapter extends FragmentStatePagerAdapter {
                 }
 
                 return mTrendingArticlefragment;
+            case 3:
+                if (mBookmarkedArticlefragment == null) {
+                    mBookmarkedArticlefragment = new ArticleViewFragment();
+                    bundle.putInt(Constants.TAB_POSITION, 3);
+                    bundle.putString(Constants.SORT_TYPE, "bookmark");
+                    bundle.putBoolean(Constants.IS_SEARCH_ACTIVE, false);
+                    mBookmarkedArticlefragment.setArguments(bundle);
+                } else {
+                    if (articlelist != null)
+                        mBookmarkedArticlefragment.refreshSubList(articlelist.getPopular());
+                }
+
+                return mBookmarkedArticlefragment;
         }
 
         return null;
@@ -180,6 +197,8 @@ public class TabsPagerAdapter extends FragmentStatePagerAdapter {
                 return mPopularArticlefragment;
             case 2:
                 return mTrendingArticlefragment;
+            case 3:
+                return mBookmarkedArticlefragment;
             default:
                 return mRecentArticlefragment;
         }

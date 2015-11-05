@@ -21,8 +21,11 @@ import org.apache.commons.lang3.StringEscapeUtils;
  */
 public class ParentingFilterController extends BaseController {
 
+    private Activity context;
+
     public ParentingFilterController(Activity activity, IScreen screen) {
         super(activity, screen);
+        context = activity;
         // TODO Auto-generated constructor stub
     }
 
@@ -33,6 +36,7 @@ public class ParentingFilterController extends BaseController {
             serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
             serviceRequest.setRequestData(requestData);
             serviceRequest.setDataType(requestType);
+            serviceRequest.setContext(context);
             serviceRequest.setResponseController(this);
             serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
             serviceRequest.setUrl(AppConstants.PARENTING_FILTER_DATA_URL + getAppendUrl(requestType, requestData));

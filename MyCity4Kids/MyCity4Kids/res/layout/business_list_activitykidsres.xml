@@ -1,7 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/businessRoot"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
+
     <RelativeLayout
         android:id="@+id/search_bar"
         android:layout_width="match_parent"
@@ -14,18 +15,17 @@
             android:id="@+id/search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="What are you looking for?"
-            android:padding="10dp"
-            android:visibility="visible"
             android:background="@null"
             android:drawablePadding="10dp"
+            android:hint="What are you looking for?"
+            android:padding="10dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/black_color"
-            android:textColorHint="@color/grey" />
+            android:textColorHint="@color/grey"
+            android:visibility="visible" />
 
         <ImageButton
             android:id="@+id/search_btn"
-            android:visibility="visible"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -34,27 +34,30 @@
             android:layout_marginRight="10dp"
             android:background="@drawable/search"
             android:clickable="true"
-            android:padding="8dp" />
+            android:padding="8dp"
+            android:visibility="visible" />
 
 
     </RelativeLayout>
+
     <ImageView
+        android:id="@+id/searchline"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#d3d3d3"
-        android:id="@+id/searchline"
-        android:layout_below="@+id/search_bar"/>
+        android:layout_below="@+id/search_bar"
+        android:background="#d3d3d3" />
+
     <LinearLayout
         android:id="@+id/localityLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/searchline"
+        android:layout_marginBottom="5dp"
         android:background="@color/white_color"
         android:focusableInTouchMode="true"
         android:orientation="horizontal"
-        android:layout_below="@+id/searchline"
         android:visibility="visible"
-        android:weightSum="1"
-        android:layout_marginBottom="5dp">
+        android:weightSum="1">
 
         <EditText
             android:id="@+id/locality_search"
@@ -62,10 +65,10 @@
             android:layout_height="wrap_content"
             android:layout_weight=".9"
             android:background="@color/white_color"
-            android:hint="In which locality?"
-            android:imeOptions="actionSearch"
             android:drawableLeft="@drawable/near_mexxhdpi"
             android:drawablePadding="5dp"
+            android:hint="In which locality?"
+            android:imeOptions="actionSearch"
             android:inputType="textFilter"
             android:padding="10dp"
             android:scrollHorizontally="true"
@@ -85,7 +88,7 @@
             android:layout_weight=".1"
             android:padding="10dp"
             android:src="@drawable/locality_icon"
-            android:visibility="gone"/>
+            android:visibility="gone" />
     </LinearLayout>
 
     <ListView
@@ -95,31 +98,31 @@
         android:layout_below="@+id/localityLayout"
         android:background="#ffffff"
         android:cacheColorHint="@color/transparent" />
+
     <ListView
         android:id="@+id/searchList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        android:background="@color/white_color"
         android:layout_below="@+id/localityLayout"
-        >
-    </ListView>
+        android:background="@color/white_color"
+        android:visibility="gone"></ListView>
+
     <TabHost
         android:id="@android:id/tabhost"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/topSeparator"
-        android:background="@android:color/white" >
+        android:background="@android:color/white">
 
         <LinearLayout
             android:id="@+id/tabLout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content">
 
                 <FrameLayout
                     android:id="@android:id/tabcontent"
@@ -130,20 +133,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true" >
+                    android:layout_centerVertical="true">
 
                     <LinearLayout
                         android:id="@+id/linearLayout1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
-                        android:layout_alignParentTop="true" >
+                        android:layout_alignParentTop="true">
 
                         <LinearLayout
                             android:id="@+id/filterLout"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:background="#5997fc" >
+                            android:background="#5997fc">
 
                             <ImageView
                                 android:id="@+id/filter_icon"
@@ -158,14 +161,14 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fillViewport="true"
-                            android:scrollbars="none" >
+                            android:scrollbars="none">
 
                             <TabWidget
                                 android:id="@android:id/tabs"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal"
-                                android:showDividers="none"/>
+                                android:showDividers="none" />
                         </HorizontalScrollView>
                     </LinearLayout>
 
@@ -174,7 +177,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
-                        android:layout_below="@+id/linearLayout1" >
+                        android:layout_below="@+id/linearLayout1">
 
                         <android.support.v4.view.ViewPager
                             android:id="@+id/viewpager"
@@ -202,14 +205,14 @@
             </RelativeLayout>
         </LinearLayout>
     </TabHost>
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/rltHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="8dp"
         android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize">
-    </android.support.v7.widget.Toolbar>
+        android:elevation="8dp"
+        android:minHeight="?attr/actionBarSize"></android.support.v7.widget.Toolbar>
 
     <RelativeLayout
         android:id="@+id/rltHeadertmp"
@@ -256,8 +259,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/rltHeader"
         android:orientation="horizontal"
-        android:visibility="gone"
-        >
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/txvFilter"
@@ -306,7 +308,7 @@
         android:layout_below="@id/lnrRootFilterSort"
         android:layout_centerInParent="true"
         android:layout_marginTop="100dp"
-        android:text="There is no business list."
+        android:text="No shortlist has been created."
         android:textColor="@android:color/darker_gray"
         android:textSize="18sp"
         android:visibility="gone" />
@@ -325,8 +327,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/white_color"
-        android:visibility="gone"
-        android:paddingBottom="5dp" >
+        android:paddingBottom="5dp"
+        android:visibility="gone">
 
         <View
             android:id="@+id/sepaartorView"

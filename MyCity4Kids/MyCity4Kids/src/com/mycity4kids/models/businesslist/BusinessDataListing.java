@@ -66,7 +66,7 @@ public class BusinessDataListing implements Parcelable {
     private Timings timings;
     private ArrayList<Facalities> facilities;
     private String duration;
-
+    private String is_bookmark;
 
     private EventDate event_date;
     private String age_group;
@@ -626,6 +626,13 @@ public class BusinessDataListing implements Parcelable {
         this.facilities = facilities;
     }
 
+    public String getBookmarkStatus() {
+        return is_bookmark;
+    }
+
+    public void setBookmarkStatus(String is_bookmark) {
+        this.is_bookmark = is_bookmark;
+    }
 
     @Override
     public int describeContents() {
@@ -697,6 +704,7 @@ public class BusinessDataListing implements Parcelable {
             dest.writeInt((byte) 1);
             contact.writeToParcel(dest, flags);
         }
+        dest.writeString(is_bookmark);
     }
 
     private BusinessDataListing() {
@@ -764,6 +772,7 @@ public class BusinessDataListing implements Parcelable {
         if (contact_flag == 1) {
             contact = new ContactDetail(in);
         }
+        this.is_bookmark = in.readString();
     }
 
 

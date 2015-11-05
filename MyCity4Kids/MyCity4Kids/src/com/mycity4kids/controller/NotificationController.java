@@ -42,7 +42,7 @@ public class NotificationController extends BaseController {
         serviceRequest.setDataType(requestType);
         serviceRequest.setResponseController(this);
         serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
-
+        serviceRequest.setContext(context);
         serviceRequest.setUrl(AppConstants.NOTIFICATION_URL);
         HttpClientConnection connection = HttpClientConnection.getInstance();
         connection.addRequest(serviceRequest);
@@ -90,12 +90,12 @@ public class NotificationController extends BaseController {
      *
      * @return
      */
-    private HttpEntity setRequestParameters(int reqtype) {
+    private List<NameValuePair> setRequestParameters(int reqtype) {
 
 
         UrlEncodedFormEntity encodedEntity = null;
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         try {
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
             nameValuePairs.add(new BasicNameValuePair("user_id", "" + SharedPrefUtils.getUserDetailModel(context).getId()));
             nameValuePairs.add(new BasicNameValuePair("notification_app", SharedPrefUtils.getNotificationPrefrence(context, true)));
             nameValuePairs.add(new BasicNameValuePair("notification_task", SharedPrefUtils.getNotificationPrefrence(context, false)));
@@ -107,6 +107,6 @@ public class NotificationController extends BaseController {
         } catch (Exception e) {
             // TODO: handle exception
         }
-        return encodedEntity;
+        return nameValuePairs;
     }
 }

@@ -62,6 +62,7 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.AutoSuggestController;
+import com.mycity4kids.controller.BookmarkController;
 import com.mycity4kids.controller.BusinessListController;
 import com.mycity4kids.dbtable.AdvancedSearchTable;
 import com.mycity4kids.dbtable.LocalityTable;
@@ -70,6 +71,7 @@ import com.mycity4kids.enums.MapTypeFilter;
 import com.mycity4kids.interfaces.IFilter;
 import com.mycity4kids.interfaces.ISort;
 import com.mycity4kids.models.autosuggest.AutoSuggestResponse;
+import com.mycity4kids.models.bookmark.BookmarkModel;
 import com.mycity4kids.models.businesslist.BusinessDataListing;
 import com.mycity4kids.models.businesslist.BusinessListRequest;
 import com.mycity4kids.models.businesslist.BusinessListResponse;
@@ -119,6 +121,7 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
     PopupWindow pwindo;
 
     enum TabType {Filter, Sort}
+
     ;
 
     public enum FilterType {SubCategory, Locality, AgeGroup, More, Activities, DateValue}
@@ -141,13 +144,14 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
     boolean isContainCommaQuery = false;
     private EditText mLocalitySearchEtxt;
     LinearLayout localityLayout;
-    private float  density;
+    private float density;
     private boolean isFromDeepLink;
     private String cityIdFrmDeepLink;
     private String deepLinkURL;
     private GoogleApiClient mClient;
     private String TAG;
     private String screenTitle = "Resources List";
+    private int openBookmarkResources;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -217,47 +221,21 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
             } else {
 
                 String categoryName = !StringUtils.isNullOrEmpty(getIntent().getStringExtra
-                        (Constants.CATEGOTY_NAME))? getIntent().getStringExtra(Constants.CATEGOTY_NAME):"";
+                        (Constants.CATEGOTY_NAME)) ? getIntent().getStringExtra(Constants.CATEGOTY_NAME) : "";
+
+                openBookmarkResources = getIntent().getIntExtra(Constants.SHOW_BOOKMARK_RESOURCES, 0);
                 //_headerTxt.setText(categoryName);
-                getSupportActionBar().setTitle(categoryName+"");
-                hitBusinessListingApi(categoryId, mPageCount);
+                if (openBookmarkResources == 1) {
+                    getSupportActionBar().setTitle("Shortlisted Resources");
+                    getBookmarkedBusinessListingAPI(mPageCount);
+                } else {
+                    getSupportActionBar().setTitle(categoryName + "");
+                    hitBusinessListingApi(categoryId, mPageCount);
+                }
                 if (businessOrEventType == Constants.EVENT_PAGE_TYPE) {
                     tab_host.setVisibility(View.VISIBLE);
                     // _RootLayout.setVisibility(View.GONE);
                     manageTabForFilter();
-/*
-                    tab_host.getTabWidget().getChildAt(0).setOnTouchListener(new OnTouchListener() {
-
-                        @Override
-                        public boolean onTouch(View v, MotionEvent event) {
-                            if (event.getAction() == MotionEvent.ACTION_UP) {
-                                ((TextView) findViewById(R.id.txt_no_data_business)).setVisibility(View.GONE);
-                                if (tab_host.getCurrentTabTag().equals("Tab0")) {
-                                    tab_host.getTabWidget().getChildAt(0).setSelected(true);
-                                    if (pager_view.getVisibility() == View.GONE) {
-                                        Animation bottomUp = AnimationUtils.loadAnimation(BusinessListActivityKidsResources.this, R.anim.bottom_down);
-                                        pager_view.startAnimation(bottomUp);
-                                        pager_view.setVisibility(View.VISIBLE);
-                                    } else {
-                                        Animation bottomUp = AnimationUtils.loadAnimation(BusinessListActivityKidsResources.this, R.anim.bottom_up);
-                                        bottomUp.setAnimationListener(makeTopGone);
-                                        pager_view.startAnimation(bottomUp);
-                                        //	pager_view.setVisibility(View.INVISIBLE) ;
-                                        //	pager_view.setVisibility(View.GONE) ;
-                                    }
-
-                                } else if (tab_host.getCurrentTabTag().equals("SortTab0")) {
-                                    tab_host.getTabWidget().getChildAt(0).setSelected(true);
-                                    if (mSortbyArrays != null && !mSortbyArrays.isEmpty()) {
-                                        SortBy sortBy = mSortbyArrays.get(0);
-                                    }
-                                }
-
-                            }
-                            return false;
-                        }
-                    });
-*/
 
                 } else if (businessOrEventType == Constants.BUSINESS_PAGE_TYPE) {
                     mSortbyArrays = getSorts();
@@ -305,7 +283,7 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
 
 
                 } else if (parent.getAdapter() instanceof SubLocalityAdapter) {
-                    String listItem = (String)parent.getAdapter().getItem(pos).toString();
+                    String listItem = (String) parent.getAdapter().getItem(pos).toString();
                     ///if(pos == 0 && ((SubLocalityAdapter)parent.getAdapter()).getSublocalities().get(0).equals("Current Location")) {
                     String queryData = mQuerySearchEtxt.getText().toString();
                     String locality = mLocalitySearchEtxt.getText().toString();
@@ -334,7 +312,7 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
                     }
                     ///	}else{
                         /*	mLocalitySearchEtxt.removeTextChangedListener(textWatcher);
-							String listItem = ((SubLocalityAdapter)parent.getAdapter()).getSublocalities().get(pos);
+                            String listItem = ((SubLocalityAdapter)parent.getAdapter()).getSublocalities().get(pos);
 							mLocalitySearchEtxt.setText(listItem);
 							mLocalitySearchEtxt.addTextChangedListener(textWatcher);
 						}*/
@@ -374,34 +352,34 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
     }
 
     @Override
-	protected void onStart() {
-		super.onStart();
+    protected void onStart() {
+        super.onStart();
         if (!StringUtils.isNullOrEmpty(deepLinkURL) && AppConstants.BASE_URL.equalsIgnoreCase("http://webserve.mycity4kids.com/")) {
-		// Connect client
-		mClient.connect();
-		final String TITLE = screenTitle;
-		final Uri APP_URI = AppConstants.APP_BASE_URI.buildUpon().appendPath(deepLinkURL).build();
-        final Uri WEB_URL = AppConstants.WEB_BASE_URL.buildUpon().appendPath(deepLinkURL).build();
-		Action viewAction = Action.newAction(Action.TYPE_VIEW, TITLE, WEB_URL, APP_URI);
-		PendingResult<Status> result = AppIndex.AppIndexApi.start(mClient, viewAction);
+            // Connect client
+            mClient.connect();
+            final String TITLE = screenTitle;
+            final Uri APP_URI = AppConstants.APP_BASE_URI.buildUpon().appendPath(deepLinkURL).build();
+            final Uri WEB_URL = AppConstants.WEB_BASE_URL.buildUpon().appendPath(deepLinkURL).build();
+            Action viewAction = Action.newAction(Action.TYPE_VIEW, TITLE, WEB_URL, APP_URI);
+            PendingResult<Status> result = AppIndex.AppIndexApi.start(mClient, viewAction);
 
-		result.setResultCallback(new ResultCallback<Status>() {
-			@Override
-			public void onResult(Status status) {
-				if (status.isSuccess()) {
-					Log.d(TAG, APP_URI.toString()+" App Indexing API: The screen view started " +
-                            "successfully.");
-				} else {
-					Log.e(TAG, APP_URI.toString()+" App Indexing API: There was an error " +
-                            "recording the screen ." + status.toString());
-				}
-			}
-		});
+            result.setResultCallback(new ResultCallback<Status>() {
+                @Override
+                public void onResult(Status status) {
+                    if (status.isSuccess()) {
+                        Log.d(TAG, APP_URI.toString() + " App Indexing API: The screen view started " +
+                                "successfully.");
+                    } else {
+                        Log.e(TAG, APP_URI.toString() + " App Indexing API: There was an error " +
+                                "recording the screen ." + status.toString());
+                    }
+                }
+            });
         }
-	}
+    }
 
     @Override
-	protected void onStop() {
+    protected void onStop() {
         if (!StringUtils.isNullOrEmpty(deepLinkURL) && AppConstants.BASE_URL.equalsIgnoreCase("http://webserve.mycity4kids.com/")) {
             final String TITLE = screenTitle;
             final Uri APP_URI = AppConstants.APP_BASE_URI.buildUpon().appendPath(deepLinkURL).build();
@@ -413,10 +391,10 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
                 @Override
                 public void onResult(Status status) {
                     if (status.isSuccess()) {
-                        Log.d(TAG, APP_URI.toString()+" App Indexing API:  The screen view end " +
+                        Log.d(TAG, APP_URI.toString() + " App Indexing API:  The screen view end " +
                                 "successfully.");
                     } else {
-                        Log.e(TAG, APP_URI.toString()+" App Indexing API: There was an error " +
+                        Log.e(TAG, APP_URI.toString() + " App Indexing API: There was an error " +
                                 "recording the screen." + status.toString());
                     }
                 }
@@ -425,7 +403,7 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
             mClient.disconnect();
         }
         super.onStop();
-	}
+    }
 
 
     @Override
@@ -526,7 +504,7 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
-                if(localityLayout.getVisibility() !=View.VISIBLE)
+                if (localityLayout.getVisibility() != View.VISIBLE)
                     localityLayout.setVisibility(View.VISIBLE);
                 return false;
             }
@@ -574,6 +552,8 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
                     businessId = businessListData.getId();
                     intent.putExtra(Constants.CATEGORY_ID, categoryId);
                     intent.putExtra(Constants.BUSINESS_OR_EVENT_ID, businessId);
+                    if (null != businessListData.getBookmarkStatus())
+                        intent.putExtra(Constants.RESOURCE_BOOKMARK_STATUS, Integer.parseInt(businessListData.getBookmarkStatus()));
                     if (Constants.IS_SEARCH_LISTING) {
                         if (businessListData.getType().equalsIgnoreCase("event")) {
                             intent.putExtra(Constants.PAGE_TYPE, Constants.EVENT_PAGE_TYPE);
@@ -646,7 +626,7 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
         } else if (isFromDeepLink) {
             BusinessListRequest businessListRequest = new BusinessListRequest();
             businessListRequest.setCategory_id(categoryId + "");
-            businessListRequest.setCity_id(!StringUtils.isNullOrEmpty(cityIdFrmDeepLink)?cityIdFrmDeepLink :/*(SharedPrefUtils.getCurrentCityModel(BusinessListActivityKidsResources.this)).getId() +*/ "");
+            businessListRequest.setCity_id(!StringUtils.isNullOrEmpty(cityIdFrmDeepLink) ? cityIdFrmDeepLink :/*(SharedPrefUtils.getCurrentCityModel(BusinessListActivityKidsResources.this)).getId() +*/ "");
             businessListRequest.setPage(page + "");
             businessListController.getData(AppConstants.BUSINESS_LIST_REQUEST, businessListRequest);
             isFromDeepLink = false;
@@ -657,6 +637,17 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
             businessListRequest.setPage(page + "");
             businessListController.getData(AppConstants.BUSINESS_LIST_REQUEST, businessListRequest);
         }
+        mIsRequestRunning = true;
+        //	mIsComingFromFilter=false;
+    }
+
+    public void getBookmarkedBusinessListingAPI(int page) {
+        if (page == 1) {
+            showProgressDialog(getString(R.string.fetching_data));
+        }
+        BusinessListController bookmarkController = new BusinessListController(this, this);
+        bookmarkController.getData(AppConstants.BOOKMARKED_RESOURCE_LIST_REQUEST, "" + SharedPrefUtils.getUserDetailModel(this).getId());
+
         mIsRequestRunning = true;
         //	mIsComingFromFilter=false;
     }
@@ -679,8 +670,8 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
             businessListRequest.setCity_id((SharedPrefUtils.getCurrentCityModel(BusinessListActivityKidsResources.this)).getId() + "");
             businessListRequest.setPage(page + "");
             businessListRequest.setQuerySearch(query);
-            if(!StringUtils.isNullOrEmpty(locality))
-            businessListRequest.setLocalitySearch(locality);
+            if (!StringUtils.isNullOrEmpty(locality))
+                businessListRequest.setLocalitySearch(locality);
 
             businessListController.getData(AppConstants.BUSINESS_SEARCH_LISTING_REQUESTNEW, businessListRequest);
         }
@@ -702,7 +693,7 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
                 if (!queryList.isEmpty()) {
                     businessListView.setVisibility(View.GONE);
                     mSearchList.setVisibility(View.VISIBLE);
-                    ((TextView)findViewById(R.id.txt_no_data_business)).setVisibility(View.GONE);
+                    ((TextView) findViewById(R.id.txt_no_data_business)).setVisibility(View.GONE);
                     //mLoutProgress.setVisibility(View.GONE);
                     ArrayAdapter<String> mQueryAdapter = new ArrayAdapter<String>(BusinessListActivityKidsResources.this, R.layout.text_for_locality, queryList);
                     mSearchList.setAdapter(mQueryAdapter);
@@ -778,7 +769,7 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
                     finish();
                 }
                 break;
-
+            case AppConstants.BOOKMARKED_RESOURCE_LIST_REQUEST:
             case AppConstants.BUSINESS_LIST_REQUEST:
                 responseData = (BusinessListResponse) response.getResponseObject();
                 if (responseData.getResponseCode() == Constants.HTTP_RESPONSE_SUCCESS) {
@@ -942,7 +933,7 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
 
 
 			*//*if(chosen_tab == TabType.Filter ) {
-					if( pager_view.getVisibility() == View.GONE ) {
+                    if( pager_view.getVisibility() == View.GONE ) {
 						manageTabForFilter() ; 
 						Animation bottomUp = AnimationUtils.loadAnimation(this, R.anim.bottom_down);
 						pager_view.startAnimation(bottomUp);
@@ -967,12 +958,12 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
 				}	*//*
                 //	}
 			*//*}else{
-				showToast(getResources().getString(R.string.no_data));
+                showToast(getResources().getString(R.string.no_data));
 			}*//*
                 break;
             case R.id.imgBack:
 			*//*if(Constants.IS_SEARCH_LISTING){
-				startActivity(new Intent(this,HomeCategoryActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                startActivity(new Intent(this,HomeCategoryActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
 			}else{*//*
                 finish();
                 //}
@@ -1099,7 +1090,7 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
                     return fragment;
                 }
             }/*else{
-				SortFragment sortFragment=new SortFragment();
+                SortFragment sortFragment=new SortFragment();
 				sortFragment.setAction(BusinessListActivity.this) ;
 				args.putInt(Constants.CATEGORY_KEY,categoryId ) ; 
 				args.putInt(Constants.PAGE_TYPE, businessOrEventType ) ;
@@ -1168,7 +1159,7 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
                 pager_view.setVisibility(View.VISIBLE);
             }
         }/* else {
-			Animation bottomUp = AnimationUtils.loadAnimation(BusinessListActivity.this, R.anim.bottom_up);
+            Animation bottomUp = AnimationUtils.loadAnimation(BusinessListActivity.this, R.anim.bottom_up);
 			pager_view.startAnimation(bottomUp);
 			pager_view.setVisibility(View.INVISIBLE) ;
 		}*/
@@ -1194,8 +1185,8 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
     }
 
     private void manageIndicator(int pos) {
-		/*for(int i = 0 ; i < this.tab_host.getTabWidget().getTabCount() ; i++ ) {
-			((ImageView)((LinearLayout)tab_host.getTabWidget().getChildTabViewAt(i)).findViewById(R.id.tab_arrow_indicator)).setVisibility(View.GONE) ;
+        /*for(int i = 0 ; i < this.tab_host.getTabWidget().getTabCount() ; i++ ) {
+            ((ImageView)((LinearLayout)tab_host.getTabWidget().getChildTabViewAt(i)).findViewById(R.id.tab_arrow_indicator)).setVisibility(View.GONE) ;
 		}
 
 
@@ -1338,8 +1329,8 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
             advancedListFromDb = new ArrayList<AdvancedSearch>();
             advancedListFromDb = advancedListFromSearch;
         }
-		/*if( advancedListFromDb==null||advancedListFromDb.isEmpty()){
-			showToast("There is no filters available");
+        /*if( advancedListFromDb==null||advancedListFromDb.isEmpty()){
+            showToast("There is no filters available");
 			return;
 		}*/
 
@@ -1348,8 +1339,8 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
         if (tab_host.getTabWidget() != null) {
             tab_host.getTabWidget().removeAllViews();
         }
-		/*  if(tab_host.getTabWidget() != null )
-		  {
+        /*  if(tab_host.getTabWidget() != null )
+          {
 			tab_host.getTabWidget().removeAllViews() ;
 		  }*/
         // 	tab_host.setup();
@@ -1371,11 +1362,11 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
                 //	}
 
 				/*	if(businessOrEventType==Constants.EVENT_PAGE_TYPE){
-				layout.setBackgroundResource(R.drawable.tab_selector);
+                layout.setBackgroundResource(R.drawable.tab_selector);
 			}else if(businessOrEventType==Constants.BUSINESS_PAGE_TYPE){*/
                 //layout.setBackgroundResource(R.drawable.detail_tab_selector);
                 //	}
-				/*	if(this.tab_host.getTabWidget().getTabCount()==1){
+                /*	if(this.tab_host.getTabWidget().getTabCount()==1){
 				layout.setBackgroundResource(R.color.tab_color);*/
 
 				/*	}else{
@@ -1701,6 +1692,7 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
             //	pager_view.setVisibility(View.GONE) ;
         }
     }
+
     @Override
     public void cancel(int type) {
         ((TextView) findViewById(R.id.txvSortBy)).setBackgroundColor(getResources().getColor(R.color.tab_unchecked));
@@ -1711,6 +1703,7 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
         tab_host.startAnimation(bottomUp);
 
     }
+
     @Override
     public void reject(int type) {
         ((TextView) findViewById(R.id.txvSortBy)).setBackgroundColor(getResources().getColor(R.color.tab_unchecked));
@@ -1766,6 +1759,9 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         // according to fragment change it
+        if (openBookmarkResources == 1) {
+            return true;
+        }
         getMenuInflater().inflate(R.menu.menu_res, menu);
         return true;
     }
@@ -1823,7 +1819,7 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
                 LayoutInflater inflater = (LayoutInflater) BusinessListActivityKidsResources.this
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View layout = inflater.inflate(R.layout.screen_popup, (ViewGroup) findViewById(R.id.popup_element));
-                int popUpWidth = (int)(120 * density);
+                int popUpWidth = (int) (120 * density);
                 pwindo = new PopupWindow(layout, popUpWidth, ViewGroup.LayoutParams.WRAP_CONTENT, true);
                 pwindo.setOutsideTouchable(true);
                 pwindo.setFocusable(true);
@@ -1839,7 +1835,7 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
                 Display display = getWindowManager().getDefaultDisplay();
                 int widthPixels = getResources().getDisplayMetrics().widthPixels;
                 if (!sortisChecked) {
-                    pwindo.showAtLocation(layout, Gravity.NO_GRAVITY, (widthPixels - popUpWidth - (int)(50 * density)), toolbarheight);
+                    pwindo.showAtLocation(layout, Gravity.NO_GRAVITY, (widthPixels - popUpWidth - (int) (50 * density)), toolbarheight);
                 } else {
                     pwindo.dismiss();
                 }
@@ -2125,7 +2121,7 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
                         adapter.notifyDataSetChanged();
                         mSearchList.setVisibility(View.VISIBLE);
                         businessListView.setVisibility(View.GONE);
-                        ((TextView)findViewById(R.id.txt_no_data_business)).setVisibility(View.GONE);
+                        ((TextView) findViewById(R.id.txt_no_data_business)).setVisibility(View.GONE);
                         mSearchList.setAdapter(adapter);
                         adapter.notifyDataSetChanged();
                         mSearchList.setTag(Constants.LOCALITY_LIST_TAG);

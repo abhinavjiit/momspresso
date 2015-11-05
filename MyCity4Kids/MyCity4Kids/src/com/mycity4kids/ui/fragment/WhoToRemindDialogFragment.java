@@ -19,6 +19,7 @@ import com.mycity4kids.ui.activity.ActivityCreateAppointment;
 import com.mycity4kids.ui.activity.ActivityCreateTask;
 import com.mycity4kids.ui.activity.ActivityEditAppointment;
 import com.mycity4kids.ui.activity.ActivityEditTask;
+import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
 import com.mycity4kids.ui.adapter.AttendeeCustomAdapter;
 
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class WhoToRemindDialogFragment extends android.app.DialogFragment {
     private boolean all;
     private boolean edit;
     String iftask = "";
+    String dialogTitle;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,7 +50,7 @@ public class WhoToRemindDialogFragment extends android.app.DialogFragment {
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
         TextView title = (TextView) rootView.findViewById(R.id.title);
-        title.setText("Who to remind");
+        //title.setText("Who to remind");
 
         Bundle extras = getArguments();
         if (extras != null) {
@@ -56,9 +58,9 @@ public class WhoToRemindDialogFragment extends android.app.DialogFragment {
             all = extras.getBoolean("All");
             edit = extras.getBoolean("edit");
             iftask = extras.getString("iftask");
-
+            dialogTitle = extras.getString("dialogTitle");
         }
-
+        title.setText(dialogTitle);
         addAdultTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -116,38 +118,50 @@ public class WhoToRemindDialogFragment extends android.app.DialogFragment {
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (dialogTitle.equals("Who to remind")) {
 
 
-                if (chkCondition()) {
+                    if (chkCondition()) {
 
-                    if (edit) {
+                        if (edit) {
 
-                        if (!StringUtils.isNullOrEmpty(iftask) && iftask.equalsIgnoreCase("iftask")) {
-                            ((ActivityEditTask) getActivity()).setWhoToRemind(adapter.getAttendeeList());
+                            if (!StringUtils.isNullOrEmpty(iftask) && iftask.equalsIgnoreCase("iftask")) {
+                                ((ActivityEditTask) getActivity()).setWhoToRemind(adapter.getAttendeeList());
+                            } else {
+                                ((ActivityEditAppointment) getActivity()).setWhoToRemind(adapter.getAttendeeList());
+                            }
+
+                            getDialog().dismiss();
                         } else {
-                            ((ActivityEditAppointment) getActivity()).setWhoToRemind(adapter.getAttendeeList());
+
+                            if (!StringUtils.isNullOrEmpty(iftask) && iftask.equalsIgnoreCase("iftask")) {
+                                ((ActivityCreateTask) getActivity()).setWhoToRemind(adapter.getAttendeeList());
+                            } else {
+                                ((ActivityCreateAppointment) getActivity()).setWhoToRemind(adapter.getAttendeeList());
+                            }
+
+                            getDialog().dismiss();
                         }
 
-                        getDialog().dismiss();
+
                     } else {
-
-                        if (!StringUtils.isNullOrEmpty(iftask) && iftask.equalsIgnoreCase("iftask")) {
-                            ((ActivityCreateTask) getActivity()).setWhoToRemind(adapter.getAttendeeList());
-                        } else {
-                            ((ActivityCreateAppointment) getActivity()).setWhoToRemind(adapter.getAttendeeList());
-                        }
-
-                        getDialog().dismiss();
+                        ToastUtils.showToast(getActivity(), "Please select atleast one user");
                     }
+                } else if (dialogTitle.equals("Share with")) {
+                    if (chkCondition()) {
+                        ((ArticlesAndBlogsDetailsActivity) getActivity()).setShareWith(adapter.getAttendeeList());
 
+                        ToastUtils.showToast(getActivity(), "Thanks for Sharing");
+                        getDialog().dismiss();
 
-                } else {
-                    ToastUtils.showToast(getActivity(), "Please select atleast one user");
+                    } else {
+                        ToastUtils.showToast(getActivity(), "Please select atleast one user");
+                    }
                 }
+
 
             }
         });
-
         return rootView;
     }
 
@@ -174,6 +188,7 @@ public class WhoToRemindDialogFragment extends android.app.DialogFragment {
         args.putBoolean("All", all);
         args.putBoolean("edit", edit);
         args.putString("iftask", iftask);
+        args.putString("dialogTitle", dialogTitle);
         dialogFragment.setArguments(args);
 
         dialogFragment.setTargetFragment(dialogFragment, 2);

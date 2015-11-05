@@ -37,7 +37,7 @@ public class AppointmentController extends BaseController {
         serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.POST);
 //        serviceRequest.setRequestData(requestData);
         AppoitmentDataModel _requestModel = (AppoitmentDataModel) requestData;
-
+        serviceRequest.setContext(context);
         serviceRequest.setPostData(setRequestParameters(_requestModel, requestType));
         serviceRequest.setDataType(requestType);
         serviceRequest.setResponseController(this);
@@ -119,14 +119,14 @@ public class AppointmentController extends BaseController {
      * @param requestData
      * @return
      */
-    private HttpEntity setRequestParameters(AppoitmentDataModel requestData, int reqtype) {
+    private List<NameValuePair> setRequestParameters(AppoitmentDataModel requestData, int reqtype) {
 
         String data = new Gson().toJson(requestData);
         //System.out.println("Appointment JSON " + data);
 
         UrlEncodedFormEntity encodedEntity = null;
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         try {
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 
 
             if (reqtype == AppConstants.CREATE_APPOINTEMT_REQUEST) {
@@ -155,7 +155,7 @@ public class AppointmentController extends BaseController {
         } catch (Exception e) {
             // TODO: handle exception
         }
-        return encodedEntity;
+        return nameValuePairs;
     }
 
 

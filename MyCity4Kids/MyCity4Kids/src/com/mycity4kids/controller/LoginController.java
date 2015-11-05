@@ -44,7 +44,7 @@ public class LoginController extends BaseController {
         //	serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
         serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.POST);
         serviceRequest.setRequestData(requestData);
-
+        serviceRequest.setContext(activity);
         UserRequest _requestModel = (UserRequest) requestData;
         serviceRequest.setPostData(setRequestParameters(_requestModel));
         serviceRequest.setDataType(requestType);
@@ -143,10 +143,10 @@ public class LoginController extends BaseController {
      * @param requestData
      * @return
      */
-    private HttpEntity setRequestParameters(UserRequest requestData) {
+    private List<NameValuePair> setRequestParameters(UserRequest requestData) {
         UrlEncodedFormEntity encodedEntity = null;
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         try {
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 
             if (requestData.getNetworkName().equalsIgnoreCase("google") || requestData.getNetworkName().equalsIgnoreCase("facebook")) {
                 if (!StringUtils.isNullOrEmpty(requestData.getEmailId())) {
@@ -186,7 +186,7 @@ public class LoginController extends BaseController {
         } catch (Exception e) {
             // TODO: handle exception
         }
-        return encodedEntity;
+        return nameValuePairs;
     }
 
     /**

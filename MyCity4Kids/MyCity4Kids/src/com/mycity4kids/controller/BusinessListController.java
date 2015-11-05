@@ -24,9 +24,11 @@ import com.mycity4kids.utils.location.GPSTracker;
  */
 public class BusinessListController extends BaseController {
     boolean isfilter = false;
+    private Activity context;
 
     public BusinessListController(Activity activity, IScreen screen) {
         super(activity, screen);
+        context = activity;
     }
 
     public void isFilter(boolean isfilter) {
@@ -43,6 +45,7 @@ public class BusinessListController extends BaseController {
                 serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
                 serviceRequest.setDataType(requestType);
                 serviceRequest.setResponseController(this);
+                serviceRequest.setContext(context);
                 serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
                 //Log.d("check", "request url " + AppConstants.BUSINESS_LISTING_URLNEW + getQueryString(requestData));
 
@@ -58,7 +61,7 @@ public class BusinessListController extends BaseController {
                 serviceRequest.setDataType(requestType);
                 serviceRequest.setResponseController(this);
                 serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
-
+                serviceRequest.setContext(context);
                 serviceRequest.setUrl(AppConstants.BUSINESS_SEARCH_URL + getQuerySearchUrl(requestData));
 
                 HttpClientConnection connection = HttpClientConnection.getInstance();
@@ -69,7 +72,7 @@ public class BusinessListController extends BaseController {
                 serviceRequest.setDataType(requestType);
                 serviceRequest.setResponseController(this);
                 serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
-
+                serviceRequest.setContext(context);
                 serviceRequest.setUrl(AppConstants.BUSINESS_SEARCH_URL + getQueryBusinessSearchUrl(requestData));
 
                 HttpClientConnection connection = HttpClientConnection.getInstance();
@@ -80,8 +83,19 @@ public class BusinessListController extends BaseController {
                 serviceRequest.setDataType(requestType);
                 serviceRequest.setResponseController(this);
                 serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
-
+                serviceRequest.setContext(context);
                 serviceRequest.setUrl(AppConstants.BUSINESS_SEARCH_URL_NEW + getQueryEventSearchUrl(requestData));
+
+                HttpClientConnection connection = HttpClientConnection.getInstance();
+                connection.addRequest(serviceRequest);
+            } else if (requestType == AppConstants.BOOKMARKED_RESOURCE_LIST_REQUEST) {
+
+                serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
+                serviceRequest.setDataType(requestType);
+                serviceRequest.setResponseController(this);
+                serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
+                serviceRequest.setContext(context);
+                serviceRequest.setUrl(AppConstants.FETCH_RESOURCE_BOOKMARK_URL + getEventURL(requestData));
 
                 HttpClientConnection connection = HttpClientConnection.getInstance();
                 connection.addRequest(serviceRequest);
@@ -137,6 +151,19 @@ public class BusinessListController extends BaseController {
                 }
                 break;
             case AppConstants.BUSINESS_SEARCH_LISTING_REQUESTEVENTNEW:
+                try {
+                    String responseData = new String(response.getResponseData());
+                    Log.d("check", "request url " + responseData);
+                    //Log.i("BusinessSearchList Response", responseData);
+                    BusinessListResponse businessList = new Gson().fromJson(responseData, BusinessListResponse.class);
+                    response.setResponseObject(businessList);
+                    sendResponseToScreen(response);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    sendResponseToScreen(null);
+                }
+                break;
+            case AppConstants.BOOKMARKED_RESOURCE_LIST_REQUEST:
                 try {
                     String responseData = new String(response.getResponseData());
                     Log.d("check", "request url " + responseData);
@@ -226,7 +253,7 @@ public class BusinessListController extends BaseController {
             builder.append("&locality_id=").append(businessModel.getLocality_id());
         }
         /*	if (! StringUtils.isNullOrEmpty(businessModel.getMore())) {
-			builder.append("&more=").append(businessModel.getMore());
+            builder.append("&more=").append(businessModel.getMore());
 		}*/
         if (!StringUtils.isNullOrEmpty(businessModel.getSort_by())) {
             builder.append("&sort=").append(businessModel.getSort_by());
@@ -238,7 +265,7 @@ public class BusinessListController extends BaseController {
             builder.append("&longitude=").append(businessModel.getLongitude());
         }
 //anupama
-		/*String device_id=DataUtils.getDeviceId(getActivity());
+        /*String device_id=DataUtils.getDeviceId(getActivity());
 		if (! StringUtils.isNullOrEmpty(device_id)) {
 			builder.append("&imei_no=").append(device_id);
 		}*/
@@ -342,6 +369,14 @@ public class BusinessListController extends BaseController {
 
         builder.append("&pincode=").append(SharedPrefUtils.getpinCode(getActivity()));
 
+        return builder.toString().replace(" ", "%20");
+
+    }
+
+    private String getEventURL(Object requestData) {
+        StringBuilder builder = new StringBuilder();
+        String userid = (String) requestData;
+        builder.append("user_id=").append(SharedPrefUtils.getUserDetailModel(context).getId());
         return builder.toString().replace(" ", "%20");
 
     }

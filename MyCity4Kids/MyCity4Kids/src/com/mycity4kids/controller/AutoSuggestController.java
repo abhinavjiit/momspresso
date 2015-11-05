@@ -18,9 +18,11 @@ import com.mycity4kids.preference.SharedPrefUtils;
 public class AutoSuggestController extends BaseController {
 
     private ServiceRequest _request;
+    private Activity context;
 
     public AutoSuggestController(Activity activity, IScreen screen) {
         super(activity, screen);
+        context = activity;
         // TODO Auto-generated constructor stub
     }
 
@@ -29,6 +31,7 @@ public class AutoSuggestController extends BaseController {
         ServiceRequest serviceRequest = new ServiceRequest();
         serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
         serviceRequest.setDataType(requestType);
+        serviceRequest.setContext(context);
         serviceRequest.setResponseController(this);
 
         serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);

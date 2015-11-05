@@ -37,6 +37,7 @@ public class BaseApplication extends Application {
      */
     private static GoogleAnalytics mGa;
     private static Tracker mTracker;
+    public static String base_url;
 
     // Placeholder property ID.this was old which create by own account.
     //private static final String GA_PROPERTY_ID = "UA-50870780-1";

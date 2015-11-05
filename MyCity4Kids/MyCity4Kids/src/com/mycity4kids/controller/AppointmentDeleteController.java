@@ -43,6 +43,7 @@ public class AppointmentDeleteController extends BaseController {
         ServiceRequest serviceRequest = new ServiceRequest();
         serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.POST);
         serviceRequest.setRequestData(requestData);
+        serviceRequest.setContext(context);
         AppoitmentDataModel.AppointmentDetail _requestModel = ( AppoitmentDataModel.AppointmentDetail) requestData;
         serviceRequest.setPostData(setRequestParameters(_requestModel));
         serviceRequest.setDataType(requestType);
@@ -98,14 +99,14 @@ public class AppointmentDeleteController extends BaseController {
      * @param requestData
      * @return
      */
-    private HttpEntity setRequestParameters( AppoitmentDataModel.AppointmentDetail requestData) {
+    private List<NameValuePair> setRequestParameters( AppoitmentDataModel.AppointmentDetail requestData) {
 
         String data = new Gson().toJson(requestData);
 
 
         UrlEncodedFormEntity encodedEntity = null;
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         try {
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 
 
             nameValuePairs.add(new BasicNameValuePair("sessionId", SharedPrefUtils.getUserDetailModel(context).getSessionId()));
@@ -120,7 +121,7 @@ public class AppointmentDeleteController extends BaseController {
         } catch (Exception e) {
             // TODO: handle exception
         }
-        return encodedEntity;
+        return nameValuePairs;
     }
 
     /**

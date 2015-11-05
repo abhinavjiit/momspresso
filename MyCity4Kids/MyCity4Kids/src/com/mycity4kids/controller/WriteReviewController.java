@@ -23,8 +23,11 @@ import java.util.List;
 
 public class WriteReviewController extends BaseController {
 
+    private Activity context;
+
     public WriteReviewController(Activity activity, IScreen screen) {
         super(activity, screen);
+        context = activity;
         // TODO Auto-generated constructor stub
     }
 
@@ -33,6 +36,7 @@ public class WriteReviewController extends BaseController {
         ServiceRequest serviceRequest = new ServiceRequest();
         serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.POST);
         serviceRequest.setRequestData(requestData);
+        serviceRequest.setContext(context);
         serviceRequest.setPostData(setRequestParameters((WriteReviewModel) requestData));
         serviceRequest.setDataType(requestType);
         serviceRequest.setResponseController(this);
@@ -65,10 +69,10 @@ public class WriteReviewController extends BaseController {
 
     }
 
-    private HttpEntity setRequestParameters(WriteReviewModel writeReviewModel) {
+    private List<NameValuePair> setRequestParameters(WriteReviewModel writeReviewModel) {
         UrlEncodedFormEntity encodedEntity = null;
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         try {
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 
 			 	/*
 			 	private String title,reviewType,rating,descriptionuserId,type,businessId,sessionId;
@@ -96,7 +100,7 @@ public class WriteReviewController extends BaseController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return encodedEntity;
+        return nameValuePairs;
     }
 
     @Override

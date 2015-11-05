@@ -374,6 +374,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         SharedPrefUtils.setAppRateVersion(this, rateModel);
         if (!SharedPrefUtils.getRateVersion(this).isAppRateComplete() && currentRateVersion >= 3) {
             RateAppDialogFragment rateAppDialogFragment = new RateAppDialogFragment();
+            reteVersionModel.setAppRateVersion(-7);
             rateAppDialogFragment.show(getFragmentManager(), rateAppDialogFragment.getClass().getSimpleName());
         }
 
@@ -950,6 +951,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             getMenuInflater().inflate(R.menu.blog_menu, menu);
         } else if (topFragment instanceof NotificationFragment) {
             getMenuInflater().inflate(R.menu.forgot_password, menu);
+        } else if (topFragment instanceof FragmentHomeCategory) {
+            getMenuInflater().inflate(R.menu.kidsresource_listing, menu);
         }
 
         return true;
@@ -1105,7 +1108,15 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 }
 
                 break;
+            case R.id.kidsresource_bookmark:
+                if (topFragment instanceof FragmentHomeCategory) {
+                    Log.d("KIDS RESOURCE ", "bookmark kids resource");
+                    Intent intent = new Intent(this, BusinessListActivityKidsResources.class);
+                    intent.putExtra(Constants.SHOW_BOOKMARK_RESOURCES, 1);
+                    startActivity(intent);
+                }
 
+                break;
             default:
                 return super.onOptionsItemSelected(item);
         }

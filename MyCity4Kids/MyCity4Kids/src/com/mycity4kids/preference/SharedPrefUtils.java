@@ -139,9 +139,10 @@ public class SharedPrefUtils {
         _editor.putInt(SELECTED_TASKLIST_ID, id);
         _editor.commit();
     }
+
     public static int getSignupFlag(Context pContext) {
         SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        int id =1;
+        int id = 1;
         id = (_sharedPref.getInt(SIGNUP_FLAG, 0));
         return id;
     }
@@ -153,9 +154,10 @@ public class SharedPrefUtils {
         _editor.putInt(SIGNUP_FLAG, id);
         _editor.commit();
     }
+
     public static int getTaskListID(Context pContext) {
         SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        int id =0;
+        int id = 0;
         id = (_sharedPref.getInt(SELECTED_TASKLIST_ID, 0));
         return id;
     }
@@ -167,6 +169,7 @@ public class SharedPrefUtils {
         _editor.putBoolean(IS_HOME_FLAG, flag);
         _editor.commit();
     }
+
     public static boolean getLogoutFlag(Context pContext) {
         SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         boolean flag = (_sharedPref.getBoolean(LOGOUT_FLAG, false));
@@ -193,6 +196,7 @@ public class SharedPrefUtils {
         _editor.putBoolean(RATE_NOW_FIRST_CHECK, flag);
         _editor.commit();
     }
+
     public static boolean getHomeCheckFlag(Context pContext) {
         SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         boolean flag = (_sharedPref.getBoolean(IS_HOME_FLAG, false));
@@ -206,6 +210,7 @@ public class SharedPrefUtils {
         _editor.putBoolean(IS_FIRST_TYM_CHECK, flag);
         _editor.commit();
     }
+
     public static boolean getFirstTimeCheckFlag(Context pContext) {
         SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         boolean flag = (_sharedPref.getBoolean(IS_FIRST_TYM_CHECK, false));
@@ -417,6 +422,7 @@ public class SharedPrefUtils {
         _editor.putString(PINCODE, pincode);
         _editor.commit();
     }
+
     public static String getpinCode(Context context) {
         SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         return _sharedPref.getString(PINCODE, "");
@@ -445,5 +451,17 @@ public class SharedPrefUtils {
     public static int getEventIdForCity(Context context) {
         SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         return _sharedPref.getInt(EVENT_ID, 6);
+    }
+
+    public static void setBaseURL(Context context, String baseURL) {
+        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        _editor.putString("BASE_URL", baseURL);
+        _editor.commit();
+    }
+
+    public static String getBaseURL(Context context) {
+        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return _sharedPref.getString("BASE_URL", "dwdwdwdwdw");
     }
 }

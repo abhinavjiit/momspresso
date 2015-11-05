@@ -22,16 +22,23 @@ import org.apache.commons.lang3.StringEscapeUtils;
 
 public class ArticleBlogDetailsController extends BaseController {
 
+    private Activity context;
 
     @Override
     public ServiceRequest getData(int requestType, Object requestData) {
+
         ServiceRequest serviceRequest = new ServiceRequest();
-        serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
-        serviceRequest.setRequestData(requestData);
-        serviceRequest.setDataType(requestType);
+        serviceRequest.setContext(context);
         serviceRequest.setResponseController(this);
         serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
-        serviceRequest.setUrl(AppConstants.ARTICLES_BLOGS_DETAILS_URL + getAppendUrl(requestData));
+        if (AppConstants.ARTICLES_DETAILS_REQUEST == requestType) {
+            serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
+            serviceRequest.setRequestData(requestData);
+            serviceRequest.setDataType(requestType);
+            serviceRequest.setUrl(AppConstants.ARTICLES_BLOGS_DETAILS_URL + getAppendUrl(requestData));
+        } else if (AppConstants.ARTICLES_DETAILS_REQUEST == requestType) {
+
+        }
         //serviceRequest.setUrl("http://54.251.100.249/webservices/apiparentingstop/detail_article?article_id=1655");
         HttpClientConnection connection = HttpClientConnection.getInstance();
         connection.addRequest(serviceRequest);
@@ -41,6 +48,7 @@ public class ArticleBlogDetailsController extends BaseController {
 
     public ArticleBlogDetailsController(Activity activity, IScreen screen) {
         super(activity, screen);
+        context = activity;
         // TODO Auto-generated constructor stub
     }
 

@@ -13,8 +13,11 @@ import com.mycity4kids.models.version.VersionResponse;
 
 public class WebServiceVersionController extends BaseController{
 
+	private Activity context;
+
 	public WebServiceVersionController(Activity activity, IScreen screen) {
 		super(activity, screen);
+		context = activity;
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -24,6 +27,7 @@ public class WebServiceVersionController extends BaseController{
 		//serviceRequest.setHttpHeaders(header, header);
 		serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
 		serviceRequest.setRequestData(requestData);
+		serviceRequest.setContext(context);
 		//serviceRequest.setPostData(setRequestParameters((LoginRequest)requestData));
 		serviceRequest.setDataType(requestType);
 		serviceRequest.setResponseController(this);

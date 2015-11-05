@@ -145,7 +145,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
 
         TableAppointmentData tAppointment = new TableAppointmentData(BaseApplication.getInstance());
         List<AppointmentMappingModel> apptList = tAppointment.getAll();
-        if(null!=apptList && apptList.size()==0){
+        if (null != apptList && apptList.size() == 0) {
             goToCal.setText("ADD AN APPOINTMENT");
             goToCal.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -159,7 +159,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
 
         TableTaskData tTask = new TableTaskData(BaseApplication.getInstance());
         List<TaskDataModel.TaskDetail> allTaskList = tTask.getAll();
-        if(null!=allTaskList && allTaskList.size()==0){
+        if (null != allTaskList && allTaskList.size() == 0) {
             goToTask.setText("ADD A TASK");
             goToTask.setOnClickListener(new View.OnClickListener() {
                 @Override

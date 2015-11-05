@@ -56,6 +56,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.controller.BookmarkController;
 import com.mycity4kids.controller.BusinessAndEventDetailsController;
 import com.mycity4kids.controller.FavoriteAndBeenThereController;
 import com.mycity4kids.controller.ImageUploadController;
@@ -64,6 +65,7 @@ import com.mycity4kids.enums.AddReviewOrPhoto;
 import com.mycity4kids.fragmentdialog.CameraFragmentDialog;
 import com.mycity4kids.fragmentdialog.LoginFragmentDialog;
 import com.mycity4kids.interfaces.IOnSubmitGallery;
+import com.mycity4kids.models.bookmark.BookmarkModel;
 import com.mycity4kids.models.businesseventdetails.Batches;
 import com.mycity4kids.models.businesseventdetails.DetailMap;
 import com.mycity4kids.models.businesseventdetails.DetailsRequest;
@@ -140,6 +142,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
     private int mTabHeight;
     private boolean mScrolled;
     private int mTopHeaderHeight;
+    private int bookmarkStatus;
     private View mBelowTitleView;
     private TextView titleMain;
     private float density;
@@ -154,6 +157,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
     private String deepLinkURL;
     private GoogleApiClient mClient;
     private String TAG;
+    private ImageView imgBookmark;
 //    private String screenTitle = "Business Detail";
 
     @Override
@@ -168,6 +172,8 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
         mEventOrBusiness = bundle.getInt(Constants.PAGE_TYPE);
         if (mEventOrBusiness == Constants.BUSINESS_PAGE_TYPE) {
             setContentView(R.layout.business_details_activity);
+            imgBookmark = (ImageView) findViewById(R.id.img_favourites);
+            imgBookmark.setOnClickListener(this);
         } else if (mEventOrBusiness == Constants.EVENT_PAGE_TYPE) {
             setContentView(R.layout.event_details_activity);
         }
@@ -210,6 +216,12 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
             _requestModel.setCategoryId("" + categoryId);
             if (mEventOrBusiness == Constants.BUSINESS_PAGE_TYPE) {
                 _requestModel.setType("business");
+//                bookmarkStatus = getIntent().getIntExtra(Constants.RESOURCE_BOOKMARK_STATUS, 0);
+//                if (bookmarkStatus == 0)
+//                    imgBookmark.setImageResource(R.drawable.ic_favorite_border_white_48dp);
+//                else
+//                    imgBookmark.setImageResource(R.drawable.ic_favorite_border_white_48dp_fill);
+
             } else if (mEventOrBusiness == Constants.EVENT_PAGE_TYPE) {
                 _requestModel.setType("event");
             }
@@ -397,7 +409,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
         if (!StringUtils.isNullOrEmpty(deepLinkURL) && AppConstants.BASE_URL.equalsIgnoreCase("http://webserve.mycity4kids.com/")) {
             // Connect client
             mClient.connect();
-            final String TITLE = mEventOrBusiness == Constants.BUSINESS_PAGE_TYPE ? "Resource Detail": "Event Detail";
+            final String TITLE = mEventOrBusiness == Constants.BUSINESS_PAGE_TYPE ? "Resource Detail" : "Event Detail";
             final Uri APP_URI = AppConstants.APP_BASE_URI.buildUpon().appendPath(deepLinkURL).build();
             final Uri WEB_URL = AppConstants.WEB_BASE_URL.buildUpon().appendPath(deepLinkURL).build();
             Action viewAction = Action.newAction(Action.TYPE_VIEW, TITLE, WEB_URL, APP_URI);
@@ -407,10 +419,10 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
                 @Override
                 public void onResult(Status status) {
                     if (status.isSuccess()) {
-                        Log.d(TAG, APP_URI.toString()+" App Indexing API: The screen view started" +
+                        Log.d(TAG, APP_URI.toString() + " App Indexing API: The screen view started" +
                                 " successfully.");
                     } else {
-                        Log.e(TAG, APP_URI.toString()+" App Indexing API: There was an error " +
+                        Log.e(TAG, APP_URI.toString() + " App Indexing API: There was an error " +
                                 "recording the screen ." + status.toString());
                     }
                 }
@@ -421,7 +433,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
     @Override
     protected void onStop() {
         if (!StringUtils.isNullOrEmpty(deepLinkURL) && AppConstants.BASE_URL.equalsIgnoreCase("http://webserve.mycity4kids.com/")) {
-            final String TITLE = mEventOrBusiness == Constants.BUSINESS_PAGE_TYPE ? "Resource Detail": "Event Detail";
+            final String TITLE = mEventOrBusiness == Constants.BUSINESS_PAGE_TYPE ? "Resource Detail" : "Event Detail";
             final Uri APP_URI = AppConstants.APP_BASE_URI.buildUpon().appendPath(deepLinkURL).build();
             final Uri WEB_URL = AppConstants.WEB_BASE_URL.buildUpon().appendPath(deepLinkURL).build();
             Action viewAction = Action.newAction(Action.TYPE_VIEW, TITLE, WEB_URL, APP_URI);
@@ -431,10 +443,10 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
                 @Override
                 public void onResult(Status status) {
                     if (status.isSuccess()) {
-                        Log.d(TAG, APP_URI.toString()+" App Indexing API:  The screen view end " +
+                        Log.d(TAG, APP_URI.toString() + " App Indexing API:  The screen view end " +
                                 "successfully.");
                     } else {
-                        Log.e(TAG, APP_URI.toString()+" App Indexing API: There was an error " +
+                        Log.e(TAG, APP_URI.toString() + " App Indexing API: There was an error " +
                                 "recording the screen." + status.toString());
                     }
                 }
@@ -571,6 +583,13 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
             return;
         }
         try {
+            if ("0".equals(pDetailsResponse.getResult().getData().getInfo().getBookmarkStatus())) {
+                imgBookmark.setImageResource(R.drawable.ic_favorite_border_white_48dp);
+                bookmarkStatus = 0;
+            } else {
+                imgBookmark.setImageResource(R.drawable.ic_favorite_border_white_48dp_fill);
+                bookmarkStatus = 1;
+            }
             String name = pDetailsResponse.getResult().getData().getInfo().getName().trim();
             ((TextView) findViewById(R.id.titleMain)).setText(name.trim());
             ((TextView) findViewById(R.id.title)).setText(name.trim());
@@ -1036,6 +1055,10 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
                     }
                 }
                 break;
+                case R.id.img_favourites: {
+                    addRemoveBookmark();
+                }
+                break;
 
 
             }
@@ -1060,7 +1083,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
                         webUrl = "";
                     }
 
-                    String shareMessage = "mycity4kids\n\nCheck out this interesting event " +"\""+ titleName + "\" on " + shareDate + " at " + shareTime + ".\n" + webUrl;
+                    String shareMessage = "mycity4kids\n\nCheck out this interesting event " + "\"" + titleName + "\" on " + shareDate + " at " + shareTime + ".\n" + webUrl;
                     shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
                     startActivity(Intent.createChooser(shareIntent, "mycity4kids"));
                 }
@@ -1183,6 +1206,24 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
         LoginFragmentDialog fragmentDialog = new LoginFragmentDialog();
         fragmentDialog.setArguments(args);
         fragmentDialog.show(getSupportFragmentManager(), "");
+    }
+
+
+    private void addRemoveBookmark() {
+        BookmarkModel bookmarkRequest = new BookmarkModel();
+        bookmarkRequest.setId(businessId);
+        if (bookmarkStatus == 0) {
+            bookmarkStatus = 1;
+            imgBookmark.setImageResource(R.drawable.ic_favorite_border_white_48dp_fill);
+            bookmarkRequest.setAction("add");
+        } else {
+            bookmarkStatus = 0;
+            imgBookmark.setImageResource(R.drawable.ic_favorite_border_white_48dp);
+            bookmarkRequest.setAction("remove");
+        }
+//        followAPICall(followAuthorId);
+        BookmarkController bookmarkController = new BookmarkController(this, this);
+        bookmarkController.getData(AppConstants.BOOKMARK_RESOURCE_REQUEST, bookmarkRequest);
     }
 
     /**

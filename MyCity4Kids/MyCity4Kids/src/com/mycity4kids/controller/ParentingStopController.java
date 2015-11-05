@@ -21,8 +21,11 @@ import org.apache.commons.lang3.StringEscapeUtils;
 
 public class ParentingStopController extends BaseController {
 
+    private Activity context;
+
     public ParentingStopController(Activity activity, IScreen screen) {
         super(activity, screen);
+        context = activity;
         // TODO Auto-generated constructor stub
     }
 
@@ -33,6 +36,7 @@ public class ParentingStopController extends BaseController {
             serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
             serviceRequest.setRequestData(requestData);
             serviceRequest.setDataType(requestType);
+            serviceRequest.setContext(context);
             serviceRequest.setResponseController(this);
             serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
             serviceRequest.setUrl(AppConstants.PARENTING_STOP_ARTICLE_URL + getAppendUrl(requestType, requestData));
@@ -44,6 +48,7 @@ public class ParentingStopController extends BaseController {
             serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
             serviceRequest.setRequestData(requestData);
             serviceRequest.setDataType(requestType);
+            serviceRequest.setContext(context);
             serviceRequest.setResponseController(this);
             serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
             serviceRequest.setUrl(AppConstants.PARENTING_STOP_BLOGS_URL + getAppendUrl(requestType, requestData));
@@ -54,6 +59,7 @@ public class ParentingStopController extends BaseController {
             serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
             serviceRequest.setRequestData(requestData);
             serviceRequest.setDataType(requestType);
+            serviceRequest.setContext(context);
             serviceRequest.setResponseController(this);
             //	serviceRequest.setHttpHeaders(new String[]{"Content-Type"}, "");
             serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
@@ -65,6 +71,7 @@ public class ParentingStopController extends BaseController {
             serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
             serviceRequest.setRequestData(requestData);
             serviceRequest.setDataType(requestType);
+            serviceRequest.setContext(context);
             serviceRequest.setResponseController(this);
             //	serviceRequest.setHttpHeaders(new String[]{"Content-Type"}, "");
             serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
@@ -76,9 +83,21 @@ public class ParentingStopController extends BaseController {
             serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
             serviceRequest.setRequestData(requestData);
             serviceRequest.setDataType(requestType);
+            serviceRequest.setContext(context);
             serviceRequest.setResponseController(this);
             serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
             serviceRequest.setUrl(AppConstants.NEW_ALL_ARTICLE_URL + getAppendUrl(requestType, requestData));
+
+            HttpClientConnection connection = HttpClientConnection.getInstance();
+            connection.addRequest(serviceRequest);
+        } else if (requestType == AppConstants.BOOKMARKED_ARTICLE_LIST_REQUEST) {
+            serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
+            serviceRequest.setRequestData(requestData);
+            serviceRequest.setDataType(requestType);
+            serviceRequest.setContext(context);
+            serviceRequest.setResponseController(this);
+            serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
+            serviceRequest.setUrl(AppConstants.FETCH_BOOKMARK_URL + getAppendUrl(requestType, requestData));
 
             HttpClientConnection connection = HttpClientConnection.getInstance();
             connection.addRequest(serviceRequest);
@@ -167,7 +186,19 @@ public class ParentingStopController extends BaseController {
                     sendResponseToScreen(null);
                 }
                 break;
+            case AppConstants.BOOKMARKED_ARTICLE_LIST_REQUEST:
+                try {
+                    String responseData = new String(response.getResponseData());
+                    //String removeHtmlData = StringEscapeUtils.unescapeHtml4(responseData);
+                    Log.i("today article Response", responseData);
+                    CommonParentingResponse articleBlogResponse = new Gson().fromJson(responseData, CommonParentingResponse.class);
+                    response.setResponseObject(articleBlogResponse);
 
+                    sendResponseToScreen(response);
+                } catch (Exception e) {
+                    sendResponseToScreen(null);
+                }
+                break;
 
 		/*case AppConstants.TOP_PICKS_REQUEST:
             try {
@@ -297,6 +328,14 @@ public class ParentingStopController extends BaseController {
                     builder.append("&pincode=").append(pincode);
                 }
                 builder.append("&sort=").append("trending_today");
+
+                break;
+            case AppConstants.BOOKMARKED_ARTICLE_LIST_REQUEST:
+                builder.append("user_id=").append(SharedPrefUtils.getUserDetailModel(context).getId());
+
+                if (!StringUtils.isNullOrEmpty(parentingModel.getPage())) {
+                    builder.append("&page=").append(parentingModel.getPage());
+                }
 
                 break;
             default:

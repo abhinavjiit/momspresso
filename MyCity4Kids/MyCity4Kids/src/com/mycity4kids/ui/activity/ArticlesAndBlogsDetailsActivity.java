@@ -11,6 +11,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LevelListDrawable;
@@ -22,12 +23,10 @@ import android.os.Handler;
 import android.os.StrictMode;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.text.Html.ImageGetter;
 import android.text.Spanned;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,11 +34,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.view.animation.AnimationUtils;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -72,10 +70,13 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.ArticleBlogDetailsController;
 import com.mycity4kids.controller.ArticleBlogFollowController;
+import com.mycity4kids.controller.BlogShareSpouseController;
+import com.mycity4kids.controller.BookmarkController;
 import com.mycity4kids.controller.CommentController;
 import com.mycity4kids.dbtable.UserTable;
 import com.mycity4kids.enums.ParentingFilterType;
 import com.mycity4kids.fragmentdialog.LoginFragmentDialog;
+import com.mycity4kids.models.bookmark.BookmarkModel;
 import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.models.parentingdetails.CommentRequest;
 import com.mycity4kids.models.parentingdetails.CommentsData;
@@ -84,8 +85,12 @@ import com.mycity4kids.models.parentingdetails.ParentingDetailResponse;
 import com.mycity4kids.models.parentingdetails.ParentingDetailsData;
 import com.mycity4kids.models.parentingstop.ArticleBlogFollowRequest;
 import com.mycity4kids.models.user.UserModel;
+import com.mycity4kids.newmodels.AppoitmentDataModel;
+import com.mycity4kids.newmodels.AttendeeModel;
+import com.mycity4kids.newmodels.BlogShareSpouseModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.CircleTransformation;
+import com.mycity4kids.ui.fragment.WhoToRemindDialogFragment;
 import com.squareup.picasso.Picasso;
 
 import java.io.FileNotFoundException;
@@ -124,7 +129,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
     CardView commentCountView;
     RelativeLayout followClick;
     RelativeLayout mainLayout;
-
+    ImageView bookmarkImageView;
 
     Toolbar mToolbar;
     private float density;
@@ -140,11 +145,16 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
     float defaultTextSize = Float.valueOf(16);
     String authorType;
     private String blogName;
+    private int bookmarkStatus;
 
     private String deepLinkURL;
     private GoogleApiClient mClient;
     private String TAG;
     private String screenTitle = "Parenting Blogs";
+    Button share_spouse;
+    public ArrayList<AppoitmentDataModel.Attendee> attendeeDataList;
+    public ArrayList<BlogShareSpouseModel> whoToShareList;
+
 
 //    private SystemBarTintManager mStatusBarManager;
 
@@ -179,6 +189,10 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
             ((ImageView) findViewById(R.id.img_fb)).setOnClickListener(this);
             ((ImageView) findViewById(R.id.img_twitter)).setOnClickListener(this);
             ((ImageView) findViewById(R.id.user_image)).setOnClickListener(this);
+            bookmarkImageView = (ImageView) findViewById(R.id.bookmarkBlogImageView);
+            bookmarkImageView.setOnClickListener(this);
+            share_spouse = (Button) findViewById(R.id.share_spouse);
+            share_spouse.setOnClickListener(this);
             author_type = (TextView) findViewById(R.id.blogger_type);
             mainLayout = (RelativeLayout) findViewById(R.id.main_layout);
             followClick = (RelativeLayout) findViewById(R.id.follow_click);
@@ -189,6 +203,13 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
             String coverImageUrl = getIntent().getStringExtra(Constants.ARTICLE_COVER_IMAGE);
 
             authorType = getIntent().getStringExtra(Constants.FILTER_TYPE);
+//            bookmarkStatus = getIntent().getIntExtra(Constants.BOOKMARK_STATUS, 0);
+
+//            if (bookmarkStatus == 0)
+//                bookmarkImageView.setImageResource(R.drawable.ic_favorite_border_white_48dp);
+//            else
+//                bookmarkImageView.setImageResource(R.drawable.ic_favorite_border_white_48dp_fill);
+
             if (!StringUtils.isNullOrEmpty(getIntent().getStringExtra(Constants.BLOG_NAME))) {
                 blogName = getIntent().getStringExtra(Constants.BLOG_NAME);
             } else {
@@ -250,32 +271,32 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
 //            imageLoader = new ImageLoader(Volley.newRequestQueue(this), imageCache);
             mUiHelper = new UiLifecycleHelper(this, FacebookUtils.callback);
             mUiHelper.onCreate(savedInstanceState);
-            fontPicker = (Spinner) findViewById(R.id.fontSizePicker_new);
-            ArrayList<String> fontList = new ArrayList<String>();
-
-            for (int font = 40; font < 61; font += 2) {
-                String fontSize = "" + Integer.valueOf(font);
-                fontList.add(fontSize);
-            }
-            ArrayAdapter<String> fontAdapter = new ArrayAdapter<String>(this, R.layout.text_for_write_review, fontList);
-            fontPicker.setAdapter(fontAdapter);
-
-            fontPicker.setOnItemSelectedListener(new OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                    float textSize = Float.valueOf(fontPicker.getAdapter().getItem(pos).toString());
-
-                    //((TextView) findViewById(R.id.txvDescription)).setTextSize(textSize);
-                    WebView webView = (WebView) findViewById(R.id.articleWebView);
-                    webView.getSettings().setTextZoom((int) (textSize));
-                    webView.getSettings().setDefaultFontSize((int) (textSize));
-                    webView.invalidate();
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> arg0) {
-                }
-            });
+//            fontPicker = (Spinner) findViewById(R.id.fontSizePicker_new);
+//            ArrayList<String> fontList = new ArrayList<String>();
+//
+//            for (int font = 40; font < 61; font += 2) {
+//                String fontSize = "" + Integer.valueOf(font);
+//                fontList.add(fontSize);
+//            }
+//            ArrayAdapter<String> fontAdapter = new ArrayAdapter<String>(this, R.layout.text_for_write_review, fontList);
+//            fontPicker.setAdapter(fontAdapter);
+//
+//            fontPicker.setOnItemSelectedListener(new OnItemSelectedListener() {
+//                @Override
+//                public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+//                    float textSize = Float.valueOf(fontPicker.getAdapter().getItem(pos).toString());
+//
+//                    //((TextView) findViewById(R.id.txvDescription)).setTextSize(textSize);
+//                    WebView webView = (WebView) findViewById(R.id.articleWebView);
+//                    webView.getSettings().setTextZoom((int) (textSize));
+//                    webView.getSettings().setDefaultFontSize((int) (textSize));
+//                    webView.invalidate();
+//                }
+//
+//                @Override
+//                public void onNothingSelected(AdapterView<?> arg0) {
+//                }
+//            });
 
             Bundle bundle = getIntent().getExtras();
             if (bundle != null) {
@@ -305,6 +326,8 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
 //        mInitialStatusBarColor = getResources().getColor(R.color.transparent);
 //        mFinalStatusBarColor = getResources().getColor(R.color.primary_dark);
         mActionBarBackgroundDrawable = findViewById(R.id.viewColor).getBackground();
+        share_spouse.setVisibility(View.INVISIBLE);
+
 
         final int titleScrollHeight = (int) (50 * density);
         mScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
@@ -313,6 +336,34 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
             public void onScrollChanged() {
 
                 int scrollPosition = mScrollView.getScrollY(); //for verticalScrollView
+                Log.d("Scroll Position", String.valueOf(scrollPosition));
+                Log.d("Height Scroll", String.valueOf(mScrollView.getHeight()));
+                Log.d("Child Count", String.valueOf(mScrollView.getChildCount()));
+                Log.d("ScrollY", String.valueOf(mScrollView.getScrollY()));
+                int scrollBottom = mScrollView.getBottom();
+                View view = (View) mScrollView.getChildAt(mScrollView.getChildCount() - 1);
+
+                Rect scrollBounds = new Rect();
+                mScrollView.getHitRect(scrollBounds);
+                if (commentCountView.getLocalVisibleRect(scrollBounds)) {
+                    // Any portion of the imageView, even a single pixel, is within the visible window
+                    share_spouse.setAnimation((AnimationUtils.loadAnimation(ArticlesAndBlogsDetailsActivity.this, R.anim.right_to_left)));
+                    share_spouse.setVisibility(View.VISIBLE);
+                } else {
+                    // NONE of the imageView is within the visible window
+                    share_spouse.setVisibility(View.INVISIBLE);
+                }
+
+                //View view2 = (View) ((RelativeLayout)mScrollView.getChildAt(0)).getChildAt(2);
+
+                Log.d("View is", String.valueOf(view));
+                //int diff = (view2.getTop() - (mScrollView.getHeight() + mScrollView.getScrollY()));
+                //Log.d("diff", String.valueOf(diff));
+                //if(diff==0)
+                //{
+
+                //share_spouse.setVisibility(View.VISIBLE);
+                //}
 
                 int headerHeight = cover_image.getHeight() - mToolbar.getHeight();
                 float ratio = 0;
@@ -615,9 +666,35 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
                             showToast(getString(R.string.went_wrong));
                         }
                     }
-
-                default:
                     break;
+                case AppConstants.BOOKMARK_BLOG_REQUEST:
+                    CommonResponse bookmarkResponse = (CommonResponse) response.getResponseObject();
+                    if (bookmarkResponse.getResponseCode() == 200) {
+                        ToastUtils.showToast(getApplicationContext(), bookmarkResponse.getResult().getMessage(), Toast.LENGTH_SHORT);
+                        if (BuildConfig.DEBUG) {
+                            Log.e("Bookmark response", bookmarkResponse.getResult().getMessage());
+                        }
+                    } else if (bookmarkResponse.getResponseCode() == 400) {
+                        String message = bookmarkResponse.getResult().getMessage();
+                        if (BuildConfig.DEBUG) {
+                            Log.e("Bookmark response", bookmarkResponse.getResult().getMessage());
+                        }
+                        if (!StringUtils.isNullOrEmpty(message)) {
+                            showToast(message);
+                        } else {
+                            showToast(getString(R.string.went_wrong));
+                        }
+
+                        if (bookmarkStatus == 0) {
+                            bookmarkStatus = 1;
+                            bookmarkImageView.setImageResource(R.drawable.ic_favorite_border_white_48dp_fill);
+                        } else {
+                            bookmarkStatus = 0;
+                            bookmarkImageView.setImageResource(R.drawable.ic_favorite_border_white_48dp);
+                        }
+                    }
+                    break;
+                default:
             }
         } catch (Exception e) {
             removeProgressDialog();
@@ -719,6 +796,13 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
         detailData = detailsResponse.getResult().getData();
         imageList = detailsResponse.getResult().getData().getBody().getImage();
 
+        if ("0".equals(detailData.getBookmarkStatus())) {
+            bookmarkImageView.setImageResource(R.drawable.ic_favorite_border_white_48dp);
+            bookmarkStatus = 0;
+        } else {
+            bookmarkImageView.setImageResource(R.drawable.ic_favorite_border_white_48dp_fill);
+            bookmarkStatus = 1;
+        }
         if (!StringUtils.isNullOrEmpty(detailsResponse.getResult().getData().getUser_following_status())) {
             if (detailsResponse.getResult().getData().getUser_following_status().equalsIgnoreCase("0")) {
                 ((ImageView) findViewById(R.id.follow_article)).setBackground(getResources().getDrawable(R.drawable.follow_blog));
@@ -763,7 +847,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
                     //String imagekey = images.getKey().replaceAll("\\[", "").replaceAll("\\]", "");//<img src=\http://www.mycity4kids.com/parentingstop/uploads/737x164_Metro%20Museum.jpg\>
                     //	imagekey=images.getKey().replaceAll("\\]", "");
                     //	bodyDesc=bodyDesc.replaceAll(imagekey, "<img src=\\"+images.getValue()+"\\>");
-                    bodyDesc = bodyDesc.replace(images.getKey(), "<p style='text-align:center'><img src=" + images.getValue() + "></p>");
+                    bodyDesc = bodyDesc.replace(images.getKey(), "<p style='text-align:center'><img src=" + images.getValue() + " style=\"width: 100%;\"+></p>");
                 }
             }
 //            spannedValue = Html.fromHtml(bodyDesc, this, null);
@@ -883,7 +967,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
 //            holder.innerCommentView.setLayoutParams(cardViewParams);
             if (!StringUtils.isNullOrEmpty(commentList.getComment_type()) && commentList.getComment_type().equals("fb")) {
                 holder.replyTxt.setVisibility(View.GONE);
-            }else{
+            } else {
                 holder.replyTxt.setVisibility(View.VISIBLE);
             }
 
@@ -1039,7 +1123,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
                         //showToast(getResources().getString(R.string.user_login));
                         //return;
                     } else {
-                        UserModel userModel = userTable.getAllUserData();
+//                        UserModel userModel = userTable.getAllUserData();
 //                        _followRequest.setSessionId("" + userModel.getUser().getSessionId());
 //                        _followRequest.setUserId("" + userModel.getUser().getId());
                         _followRequest.setSessionId("" + SharedPrefUtils.getUserDetailModel(this).getId());
@@ -1099,6 +1183,24 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
                         }
                     });
                     break;
+                case R.id.share_spouse:
+
+                    ArrayList<Integer> idlist = new ArrayList<>();
+                    idlist = new ArrayList<>();
+                    WhoToRemindDialogFragment dialogFragment1 = new WhoToRemindDialogFragment();
+
+                    Bundle args = new Bundle();
+                    args.putString("dialogTitle", "Share with");
+                    args.putIntegerArrayList("chkValues", idlist);
+                    dialogFragment1.setArguments(args);
+
+
+                    dialogFragment1.setTargetFragment(dialogFragment1, 2);
+                    dialogFragment1.show(getFragmentManager(), "whotoremind");
+
+                    break;
+
+
                 case R.id.img_twitter:
 //				Twitter.getInstance(Constants.TWITTER_OAUTH_KEY,
 //                        Constants.TWITTER_OAUTH_SECRET, Constants.CALLBACK_URL,
@@ -1178,7 +1280,9 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
                     }
                     startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
                     break;
-
+                case R.id.bookmarkBlogImageView:
+                    addRemoveBookmark();
+                    break;
 
             }
         } catch (Exception e) {
@@ -1325,6 +1429,27 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
         }
     }
 
+    public void setShareWith(ArrayList<AttendeeModel> attendeeList) {
+
+        whoToShareList = new ArrayList<>();
+        ArrayList<String> userList = new ArrayList<>();
+        BlogShareSpouseModel spouseModel = new BlogShareSpouseModel();
+        for (int i = 0; i < attendeeList.size(); i++) {
+            if (attendeeList.get(i).getCheck() == true) {
+                if (attendeeList.get(i).getType().equalsIgnoreCase("user")) {
+                    userList.add(String.valueOf(attendeeList.get(i).getId()));
+                    Log.d("Attendees are", String.valueOf(attendeeList.get(i).getId()));
+                }
+            }
+        }
+        //whoToShareList.add(spouseModel);
+
+        spouseModel.setSharedWithUserList(userList);
+        spouseModel.setArticleId(articleId);
+        BlogShareSpouseController blogShareSpouseContoller = new BlogShareSpouseController(this, this);
+        blogShareSpouseContoller.getData(AppConstants.SHARE_SPOUSE_BLOG, spouseModel);
+    }
+
     public void followAPICall(String id) {
 
         ArticleBlogFollowRequest _followRequest = new ArticleBlogFollowRequest();
@@ -1332,9 +1457,27 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
         _followRequest.setUserId("" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getId());
         _followRequest.setAuthorId("" + id);
         ArticleBlogFollowController _followController = new ArticleBlogFollowController(this, this);
-        showProgressDialog(getString(R.string.please_wait));
+//        showProgressDialog(getString(R.string.please_wait));
         _followController.getData(AppConstants.ARTICLE_BLOG_FOLLOW_REQUEST, _followRequest);
 
+    }
+
+    private void addRemoveBookmark() {
+        BookmarkModel bookmarkRequest = new BookmarkModel();
+        bookmarkRequest.setId(articleId);
+        bookmarkRequest.setCategory("blogs");
+        if (bookmarkStatus == 0) {
+            bookmarkStatus = 1;
+            bookmarkImageView.setImageResource(R.drawable.ic_favorite_border_white_48dp_fill);
+            bookmarkRequest.setAction("add");
+        } else {
+            bookmarkStatus = 0;
+            bookmarkImageView.setImageResource(R.drawable.ic_favorite_border_white_48dp);
+            bookmarkRequest.setAction("remove");
+        }
+//        followAPICall(followAuthorId);
+        BookmarkController bookmarkController = new BookmarkController(this, this);
+        bookmarkController.getData(AppConstants.BOOKMARK_BLOG_REQUEST, bookmarkRequest);
     }
 
     private void sendScrollDown() {

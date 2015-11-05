@@ -23,6 +23,7 @@ public class BusinessListingAdapter extends BaseAdapter {
     private Context mContext;
     private LayoutInflater mInflator;
     private int mBusinessOrEventType;
+    String formatRating;
 
     public BusinessListingAdapter(Context pContext) {
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -78,7 +79,10 @@ public class BusinessListingAdapter extends BaseAdapter {
         } else {
             holder.txvrarting.setVisibility(View.VISIBLE);
             DecimalFormat oneDForm = new DecimalFormat("#.#");
-            holder.txvrarting.setText("" + oneDForm.format(mBusinessData.get(position).getRating()));
+            formatRating = oneDForm.format(mBusinessData.get(position).getRating());
+            if (!formatRating.contains("."))
+                formatRating = formatRating + ".0";
+            holder.txvrarting.setText(formatRating);
         }
 
         holder.txvName.setText(mBusinessData.get(position).getName());

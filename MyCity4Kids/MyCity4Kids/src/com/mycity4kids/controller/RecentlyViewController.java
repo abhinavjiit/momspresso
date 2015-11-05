@@ -31,6 +31,7 @@ public class RecentlyViewController extends BaseController {
         serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
         serviceRequest.setRequestData(requestData);
         serviceRequest.setDataType(requestType);
+        serviceRequest.setContext(context);
         serviceRequest.setResponseController(this);
         serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
         if (getAppendUrl(requestData).equals("") || getAppendUrl(requestData) == null) {

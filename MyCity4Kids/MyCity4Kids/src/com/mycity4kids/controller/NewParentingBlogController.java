@@ -26,8 +26,11 @@ import org.apache.commons.lang3.StringEscapeUtils;
  */
 public class NewParentingBlogController extends BaseController {
 
+    private Activity context;
+
     public NewParentingBlogController(Activity activity, IScreen screen) {
         super(activity, screen);
+        context = activity;
         // TODO Auto-generated constructor stub
     }
 
@@ -38,6 +41,7 @@ public class NewParentingBlogController extends BaseController {
             serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
             serviceRequest.setRequestData(requestData);
             serviceRequest.setDataType(requestType);
+            serviceRequest.setContext(context);
             serviceRequest.setResponseController(this);
             serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
             serviceRequest.setUrl(AppConstants.NEW_PARENTING_BLOG_URL + getAppendUrl(requestType, requestData));
@@ -49,6 +53,7 @@ public class NewParentingBlogController extends BaseController {
             serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
             serviceRequest.setRequestData(requestData);
             serviceRequest.setDataType(requestType);
+            serviceRequest.setContext(context);
             serviceRequest.setResponseController(this);
             serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
             serviceRequest.setUrl(AppConstants.NEW_PARENTING_BLOG_URL + getAppendUrl(requestType, requestData));
@@ -59,6 +64,7 @@ public class NewParentingBlogController extends BaseController {
             serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
             serviceRequest.setRequestData(requestData);
             serviceRequest.setDataType(requestType);
+            serviceRequest.setContext(context);
             serviceRequest.setResponseController(this);
             serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
             serviceRequest.setUrl(AppConstants.NEW_PARENTING_BLOG_ARTICLE_LISTING_URL + getAppendUrl(requestType, requestData));
@@ -69,6 +75,7 @@ public class NewParentingBlogController extends BaseController {
             serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
             serviceRequest.setRequestData(requestData);
             serviceRequest.setDataType(requestType);
+            serviceRequest.setContext(context);
             serviceRequest.setResponseController(this);
             serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
             serviceRequest.setUrl(AppConstants.NEW_PARENTING_BLOG_ARTICLE_LISTING_URL + getAppendUrl(requestType, requestData));
@@ -79,6 +86,7 @@ public class NewParentingBlogController extends BaseController {
             serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
             serviceRequest.setRequestData(requestData);
             serviceRequest.setDataType(requestType);
+            serviceRequest.setContext(context);
             serviceRequest.setResponseController(this);
             serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
             serviceRequest.setUrl(AppConstants.NEW_PARENTING_BLOG_ARTICLE_LISTING_URL + getAppendUrl(requestType, requestData));

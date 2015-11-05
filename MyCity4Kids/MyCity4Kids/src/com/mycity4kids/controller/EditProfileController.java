@@ -43,7 +43,7 @@ public class EditProfileController extends BaseController {
         serviceRequest.setDataType(requestType);
         serviceRequest.setResponseController(this);
         serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
-
+        serviceRequest.setContext(context);
         if (requestType == AppConstants.EDIT_ADULTPROFILE_REQUEST)
             serviceRequest.setUrl(AppConstants.EDIT_ADULTPROFILE_URL);
 
@@ -142,11 +142,11 @@ public class EditProfileController extends BaseController {
      * @param requestData
      * @return
      */
-    private HttpEntity setRequestParameters(Object requestData, int reqtype) {
+    private List<NameValuePair> setRequestParameters(Object requestData, int reqtype) {
 
         UrlEncodedFormEntity encodedEntity = null;
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         try {
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 
 
             if (reqtype == AppConstants.EDIT_ADULTPROFILE_REQUEST) {
@@ -200,7 +200,7 @@ public class EditProfileController extends BaseController {
         } catch (Exception e) {
             // TODO: handle exception
         }
-        return encodedEntity;
+        return nameValuePairs;
     }
 
 

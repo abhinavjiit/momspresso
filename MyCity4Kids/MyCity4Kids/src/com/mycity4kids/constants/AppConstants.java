@@ -2,17 +2,21 @@ package com.mycity4kids.constants;
 
 import android.net.Uri;
 
+import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.preference.SharedPrefUtils;
+
 /**
  * @author Deepanker Chaudhary
  */
 public class AppConstants {
 
 
-//    public static final String BASE_URL = "http://www.mycity4kids.com/webservices/";
-
-//    public static final String STAGING_CLIENT_SERVER_URL = "http://54.169.17.138/";
+    //    public static final String STAGING_CLIENT_SERVER_URL = "http://54.169.17.138/";
     public static final String LIVE_URL = "http://webserve.mycity4kids.com/";
-   // public static final String LIVE_URL = "http://54.169.17.138/";
+    // public static final String LIVE_URL = "http://54.169.17.138/";
+
+    //Enable For Testing
+    //public static final String LIVE_URL = SharedPrefUtils.getBaseURL(BaseApplication.getAppContext());
 
     public static final String BASE_URL = LIVE_URL;
 
@@ -39,6 +43,7 @@ public class AppConstants {
 
     public static final String NEW_PARENTING_BLOG_URL = STAGING_CLIENT_SERVER_URL + "apiparentingstop/bloggers";
     public static final String NEW_PARENTING_BLOG_ARTICLE_LISTING_URL = STAGING_CLIENT_SERVER_URL + "apiparentingstop/";
+    public static final String SHARE_BLOG_ARTICLE_URL = STAGING_CLIENT_SERVER_URL + "apiparentingstop/share_blog";
 
 
     public static final String MISSING_PLACE_URL = STAGING_CLIENT_SERVER_URL + "apilistings/";
@@ -64,6 +69,10 @@ public class AppConstants {
     public static final String SAVE_PROFILE_URL = BASE_URL + "apiusers/profile";
     public static final String COMMENT_REPLY_URL = BASE_URL + "apiparentingstop/comment";
     public static final String ARTICLE_BLOG_FOLLOW_URL = BASE_URL + "apiusers/follow";
+    public static final String BOOKMARK_BLOG_URL = BASE_URL + "apiparentingstop/add_or_remove_bookmark";
+    public static final String BOOKMARK_RESOURCE_URL = BASE_URL + "apilistings/add_or_remove_bookmark";
+    public static final String FETCH_BOOKMARK_URL = BASE_URL + "apiparentingstop/fav_blogs?";
+    public static final String FETCH_RESOURCE_BOOKMARK_URL = BASE_URL + "apilistings/resourceBookmark?";
 
     public static final String PARENTING_FILTER_DATA_URL = STAGING_CLIENT_SERVER_URL + "apiparentingstop/filters_data?";
     public static final String PARENTING_LIST_DATA_FILTERED_URL = STAGING_CLIENT_SERVER_URL + "apiparentingstop/filters_data?";
@@ -223,8 +232,9 @@ public class AppConstants {
     public static final int DELETE_TASKS_IMAGE_REQUEST = 71;
     public static final int CITY_BY_PINCODE_REQUEST = 72;
     public static final int PARRENTING_BLOG_ALL_DATA = 73;
-
-
+    public static final int BOOKMARK_BLOG_REQUEST = 74;
+    public static final int BOOKMARK_RESOURCE_REQUEST = 75;
+    public static final int SHARE_SPOUSE_BLOG = 76;
     /**
      * this type related to google map get direction
      */
@@ -232,6 +242,8 @@ public class AppConstants {
     public static final int GET_GOOGLE_MAP_TRANSIT = 101;
 
     public static final int ARTICLES_TODAY_REQUEST = 102;
+    public static final int BOOKMARKED_ARTICLE_LIST_REQUEST = 103;
+    public static final int BOOKMARKED_RESOURCE_LIST_REQUEST = 104;
 
     public static final int REQUEST_AUTHORIZATION = 1001;
     public static final int REQUEST_ACCOUNT_PICKER = 1000;
@@ -274,13 +286,13 @@ public class AppConstants {
     /**
      * Deep Linking Constants
      */
-    public static final String DEEP_LINK_URL                = "deep_link_url";
-    public static final String DEEP_LINK_BUSINESS_LISTING   = "business_listing";
-    public static final String DEEP_LINK_BUSINESS_DETAIL    = "business_detail";
-    public static final String DEEP_LINK_EVENT_LISTING      = "events_listing";
-    public static final String DEEP_LINK_EVENT_DETAIL       = "event_detail";
-    public static final String DEEP_LINK_AUTHOR_LISTING     = "author_listing";
-    public static final String DEEP_LINK_BLOGGER_LISTING    = "blogger_listing";
-    public static final String DEEP_LINK_ARTICLE_DETAIL     = "article_detail";
+    public static final String DEEP_LINK_URL = "deep_link_url";
+    public static final String DEEP_LINK_BUSINESS_LISTING = "business_listing";
+    public static final String DEEP_LINK_BUSINESS_DETAIL = "business_detail";
+    public static final String DEEP_LINK_EVENT_LISTING = "events_listing";
+    public static final String DEEP_LINK_EVENT_DETAIL = "event_detail";
+    public static final String DEEP_LINK_AUTHOR_LISTING = "author_listing";
+    public static final String DEEP_LINK_BLOGGER_LISTING = "blogger_listing";
+    public static final String DEEP_LINK_ARTICLE_DETAIL = "article_detail";
 
 }

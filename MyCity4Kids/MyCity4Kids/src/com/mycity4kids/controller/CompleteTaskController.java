@@ -36,6 +36,7 @@ public class CompleteTaskController extends BaseController {
         ServiceRequest serviceRequest = new ServiceRequest();
         serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.POST);
         serviceRequest.setRequestData(requestData);
+        serviceRequest.setContext(context);
         CompleteTaskRequestModel _requestModel = (CompleteTaskRequestModel) requestData;
         serviceRequest.setPostData(setRequestParameters(_requestModel));
         serviceRequest.setDataType(requestType);
@@ -91,13 +92,13 @@ public class CompleteTaskController extends BaseController {
      * @param requestData
      * @return
      */
-    private HttpEntity setRequestParameters(CompleteTaskRequestModel requestData) {
+    private List<NameValuePair> setRequestParameters(CompleteTaskRequestModel requestData) {
 
         String data = new Gson().toJson(requestData);
 
         UrlEncodedFormEntity encodedEntity = null;
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         try {
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 
             nameValuePairs.add(new BasicNameValuePair("task_date_excluded", "" + data));
             nameValuePairs.add(new BasicNameValuePair("user_id", "" + SharedPrefUtils.getUserDetailModel(context).getId()));
@@ -111,7 +112,7 @@ public class CompleteTaskController extends BaseController {
         } catch (Exception e) {
             // TODO: handle exception
         }
-        return encodedEntity;
+        return nameValuePairs;
     }
 
     /**

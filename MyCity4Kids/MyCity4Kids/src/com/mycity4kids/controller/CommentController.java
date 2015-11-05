@@ -25,8 +25,11 @@ import java.util.List;
 
 public class CommentController extends BaseController {
 
+    private Activity context;
+
     public CommentController(Activity activity, IScreen screen) {
         super(activity, screen);
+        context = activity;
         // TODO Auto-generated constructor stub
     }
 
@@ -36,6 +39,7 @@ public class CommentController extends BaseController {
         //serviceRequest.setHttpHeaders(header, header);
         serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.POST);
         serviceRequest.setRequestData(requestData);
+        serviceRequest.setContext(context);
         serviceRequest.setHttpHeaders(new String[]{HTTP.CONTENT_TYPE}, new String[]{"application/x-www-form-urlencoded"});
         serviceRequest.setPostData(setRequestParameters((CommentRequest) requestData));
         serviceRequest.setDataType(requestType);
@@ -78,10 +82,10 @@ public class CommentController extends BaseController {
     }
 
 
-    private HttpEntity setRequestParameters(CommentRequest commentRequestData) {
+    private List<NameValuePair> setRequestParameters(CommentRequest commentRequestData) {
         UrlEncodedFormEntity encodedEntity = null;
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         try {
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
             nameValuePairs.add(new BasicNameValuePair("sessionId", commentRequestData.getSessionId()));
             if (!StringUtils.isNullOrEmpty(commentRequestData.getParentId())) {
                 nameValuePairs.add(new BasicNameValuePair("parent_id", commentRequestData.getParentId()));
@@ -95,7 +99,7 @@ public class CommentController extends BaseController {
             // TODO: handle exception
         }
 
-        return encodedEntity;
+        return nameValuePairs;
 
     }
 }

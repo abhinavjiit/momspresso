@@ -71,6 +71,7 @@ public class AddAdultDialogFragment extends android.app.DialogFragment implement
     private SignUpModel signupModel;
     ArrayList<AttendeeModel> attendeeList;
     private ProgressDialog mProgressDialog;
+    private String dialogTitle;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -89,7 +90,7 @@ public class AddAdultDialogFragment extends android.app.DialogFragment implement
             all = extras.getBoolean("All");
             edit = extras.getBoolean("edit");
             iftask = extras.getString("iftask");
-
+            dialogTitle = extras.getString("dialogTitle");
         }
         adultColor.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -418,6 +419,7 @@ public class AddAdultDialogFragment extends android.app.DialogFragment implement
                     args.putBoolean("All", all);
                     args.putBoolean("edit", false);
                     args.putString("iftask", iftask);
+                    args.putString("dialogTitle", dialogTitle);
                     dialogFragment.setArguments(args);
 
 
