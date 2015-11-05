@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,9 +75,22 @@ public class WhoToRemindDialogFragment extends android.app.DialogFragment {
 
         ArrayList<AttendeeModel> attendeeList = new ArrayList<AttendeeModel>();
 
+        if (dialogTitle.equals("Share with")) {
+            Log.d("User Size is ", String.valueOf(userInfos.size()));
 
-        for (int i = 0; i < userInfos.size(); i++) {
-            attendeeList.add(new AttendeeModel(userInfos.get(i).getId(), "user", userInfos.get(i).getFirst_name(), userInfos.get(i).getColor_code()));
+
+            for (int i = 1; i < userInfos.size(); i++) {
+                attendeeList.add(new AttendeeModel(userInfos.get(i).getId(), "user", userInfos.get(i).getFirst_name(), userInfos.get(i).getColor_code()));
+            }
+
+
+        }
+        else {
+
+
+            for (int i = 0; i < userInfos.size(); i++) {
+                attendeeList.add(new AttendeeModel(userInfos.get(i).getId(), "user", userInfos.get(i).getFirst_name(), userInfos.get(i).getColor_code()));
+            }
         }
 
 
@@ -85,7 +99,18 @@ public class WhoToRemindDialogFragment extends android.app.DialogFragment {
         done = (TextView) rootView.findViewById(R.id.done);
 
         AttendeeModel data1 = new AttendeeModel(0, "ALL", "All", "#3949ab");
-        attendeeList.add(0, data1);
+        if(userInfos.size()<2) {
+            System.out.println("Hello");
+        }
+        else if(userInfos.size()==2)
+        {
+            System.out.println("Do nothing");
+        }
+        else
+        {
+            attendeeList.add(0, data1);
+        }
+
         // chking values
         if (all) {
             for (int i = 0; i < attendeeList.size(); i++) {
@@ -148,6 +173,8 @@ public class WhoToRemindDialogFragment extends android.app.DialogFragment {
                         ToastUtils.showToast(getActivity(), "Please select atleast one user");
                     }
                 } else if (dialogTitle.equals("Share with")) {
+
+
                     if (chkCondition()) {
                         ((ArticlesAndBlogsDetailsActivity) getActivity()).setShareWith(adapter.getAttendeeList());
 

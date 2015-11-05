@@ -317,6 +317,20 @@
                 android:ellipsize="end"
                 android:fontFamily="sans-serif-light" />
 
+
+            <Button
+                android:id="@+id/share_spouse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/articleWebView"
+                android:text="Share with Spouse/Guardian"
+                android:background="#224cf0"
+                android:padding="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:textAllCaps="false"
+                android:layout_marginTop="5dp"/>
+
             <!--android:drawableTop="@drawable/top_separator"-->
 
             <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -324,7 +338,7 @@
                 android:id="@+id/comment_text_layout"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/articleWebView"
+                android:layout_below="@+id/share_spouse"
                 android:layout_gravity="center"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
@@ -345,19 +359,6 @@
                     android:textAlignment="textEnd"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@color/black_color" />
-
-
-                <Button
-                    android:id="@+id/share_spouse"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignEnd="@+id/comment_text_layout"
-                    android:layout_alignRight="@+id/comment_text_layout"
-                    android:layout_alignTop="@+id/comment_text_layout"
-                    android:layout_gravity="right"
-                    android:background="#224cf0"
-                    android:elevation="8dp"
-                    android:text="SHARE" />
 
             </android.support.v7.widget.CardView>
 
