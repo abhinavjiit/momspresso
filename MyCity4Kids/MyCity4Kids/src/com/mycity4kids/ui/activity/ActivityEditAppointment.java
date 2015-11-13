@@ -1138,6 +1138,7 @@ public class ActivityEditAppointment extends BaseActivity implements View.OnClic
                 args.putBoolean("All", all);
                 args.putBoolean("edit", true);
                 args.putString("iftask", "");
+                args.putString("dialogTitle","Who to remind");
                 dialogFragment1.setArguments(args);
 
                 dialogFragment1.setTargetFragment(dialogFragment1, 2);

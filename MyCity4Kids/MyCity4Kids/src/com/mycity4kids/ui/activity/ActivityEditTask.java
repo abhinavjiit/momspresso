@@ -1113,6 +1113,7 @@ public class ActivityEditTask extends BaseActivity implements View.OnClickListen
                 args.putBoolean("All", all);
                 args.putBoolean("edit", true);
                 args.putString("iftask", "iftask");
+                args.putString("dialogTitle","Who to remind");
                 dialogFragment1.setArguments(args);
 
                 dialogFragment1.setTargetFragment(dialogFragment1, 2);

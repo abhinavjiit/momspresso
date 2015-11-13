@@ -583,12 +583,14 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
             return;
         }
         try {
-            if ("0".equals(pDetailsResponse.getResult().getData().getInfo().getBookmarkStatus())) {
-                imgBookmark.setImageResource(R.drawable.ic_favorite_border_white_48dp);
-                bookmarkStatus = 0;
-            } else {
-                imgBookmark.setImageResource(R.drawable.ic_favorite_border_white_48dp_fill);
-                bookmarkStatus = 1;
+            if (mEventOrBusiness == Constants.BUSINESS_PAGE_TYPE) {
+                if ("0".equals(pDetailsResponse.getResult().getData().getInfo().getBookmarkStatus())) {
+                    imgBookmark.setImageResource(R.drawable.ic_favorite_border_white_48dp);
+                    bookmarkStatus = 0;
+                } else {
+                    imgBookmark.setImageResource(R.drawable.ic_favorite_border_white_48dp_fill);
+                    bookmarkStatus = 1;
+                }
             }
             String name = pDetailsResponse.getResult().getData().getInfo().getName().trim();
             ((TextView) findViewById(R.id.titleMain)).setText(name.trim());
