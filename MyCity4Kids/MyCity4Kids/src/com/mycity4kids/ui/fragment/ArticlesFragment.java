@@ -676,7 +676,9 @@ public class ArticlesFragment extends BaseFragment {
         mViewPager.setAdapter(tabsPagerAdapter);
         mSlidingTabLayout.setupWithViewPager(mViewPager);
         mViewPager.setCurrentItem(currentPagePosition);
-
     }
 
+    public void refreshBlogList() {
+        tabsPagerAdapter.refreshBookmarkedBlogList();
+    }
 }

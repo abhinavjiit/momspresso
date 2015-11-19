@@ -9,6 +9,7 @@ import com.kelltontech.network.HttpClientConnection;
 import com.kelltontech.network.Response;
 import com.kelltontech.network.ServiceRequest;
 import com.kelltontech.ui.IScreen;
+import com.kelltontech.utils.DataUtils;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.dbtable.UserTable;
@@ -106,6 +107,8 @@ public class LogoutController extends BaseController {
         try {
             nameValuePairs.add(new BasicNameValuePair("sessionId", "" + SharedPrefUtils.getUserDetailModel(mActivity).getSessionId()));
             nameValuePairs.add(new BasicNameValuePair("user_id", "" + SharedPrefUtils.getUserDetailModel(mActivity).getId()));
+            nameValuePairs.add(new BasicNameValuePair("deviceId", DataUtils.getDeviceId(mActivity)));
+            nameValuePairs.add(new BasicNameValuePair("push_token", SharedPrefUtils.getDeviceToken(mActivity)));
             encodedEntity = new UrlEncodedFormEntity(nameValuePairs, "UTF-8");
             //	String finalData=sessionId+"="+sessionId;T
 

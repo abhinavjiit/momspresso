@@ -186,8 +186,8 @@ public class TabsPagerAdapter extends FragmentStatePagerAdapter {
                 break;
         }
 
-
     }
+
 
     public ArticleViewFragment getFragmentByPosition(int currentPagePosition) {
         switch (currentPagePosition) {
@@ -202,5 +202,9 @@ public class TabsPagerAdapter extends FragmentStatePagerAdapter {
             default:
                 return mRecentArticlefragment;
         }
+    }
+
+    public void refreshBookmarkedBlogList() {
+        mBookmarkedArticlefragment.refreshBookmarkList();
     }
 }

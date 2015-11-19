@@ -246,18 +246,22 @@ public class
                     Log.i(TAG, " INSIDE EVENTS DETAILS: " + msg);
                     Bitmap remote_picture = null;
                     Bitmap bitmap = null;
-                    String url = "http://192.168.1.35/test/360X240.jpg";
+                    String url;
                     if (!StringUtils.isNullOrEmpty(pushNotificationModel.getUrl())) {
                         url = pushNotificationModel.getUrl();
-                    }
-                    try {
-                        remote_picture = BitmapFactory.decodeStream(
-                                (InputStream) new URL(url).getContent());
+                        try {
+                            remote_picture = BitmapFactory.decodeStream(
+                                    (InputStream) new URL(url).getContent());
 
+                            bitmap = getScaledBitmap(remote_picture);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        remote_picture = BitmapFactory.decodeResource(getResources(), R.drawable.rateus_bg_);
                         bitmap = getScaledBitmap(remote_picture);
-                    } catch (IOException e) {
-                        e.printStackTrace();
                     }
+
 
                     int requestID = (int) System.currentTimeMillis();
 
@@ -267,23 +271,23 @@ public class
                     resultIntent.putExtra(Constants.CATEGORY_ID, SharedPrefUtils.getEventIdForCity(getApplication()));
                     resultIntent.putExtra(Constants.BUSINESS_OR_EVENT_ID, pushNotificationModel.getId());
                     resultIntent.putExtra(Constants.PAGE_TYPE, Constants.EVENT_PAGE_TYPE);
-                    resultIntent.putExtra(Constants.DISTANCE, pushNotificationModel.getUser_id());
+                    resultIntent.putExtra(Constants.DISTANCE, "0");
                     resultIntent.putExtra(AppConstants.NOTIFICATION_ID, requestID);
 
                     PendingIntent contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
                     NotificationCompat.BigPictureStyle notiStyle = new
                             NotificationCompat.BigPictureStyle();
-                    notiStyle.setBigContentTitle("Big Picture Expanded");
-                    notiStyle.setSummaryText("Nice big picture.");
+                    notiStyle.setBigContentTitle(pushNotificationModel.getTitle());
+                    notiStyle.setSummaryText(pushNotificationModel.getMessage_id());
                     notiStyle.bigPicture(bitmap);
 
                     NotificationCompat.Builder mBuilder =
                             new NotificationCompat.Builder(this)
                                     .setSmallIcon(R.drawable.ic_launcher)
-                                    .setContentTitle("My notification")
+                                    .setContentTitle(pushNotificationModel.getTitle())
                                     .setContentIntent(contentIntent)
-                                    .setContentText("Hello World!").setStyle(notiStyle);
+                                    .setContentText(pushNotificationModel.getMessage_id()).setStyle(notiStyle);
                     // Sets an ID for the notification
                     int mNotificationId = (int) System.currentTimeMillis();
                     ;

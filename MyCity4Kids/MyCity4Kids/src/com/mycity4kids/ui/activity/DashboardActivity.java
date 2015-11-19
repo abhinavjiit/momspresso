@@ -114,6 +114,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -789,6 +791,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         } else if (topFragment instanceof SendFeedbackFragment) {
             refreshMenu();
             setTitle("Send Feedback");
+        } else if (topFragment instanceof ArticlesFragment) {
+            Log.d("Articles Frag ", "REFRESH TIME");
+            ((ArticlesFragment) topFragment).refreshBlogList();
         }
 
         allTaskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -2183,13 +2188,25 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     }
 
     public void notiftTaskList() {
-
-        taskListAdapter.notifyList(getTaskList(), false);
+        ArrayList<TaskListModel> sortTaskFolderList = getTaskList();
+        Collections.sort(sortTaskFolderList, new TaskFolderListComparator());
+        taskListAdapter.notifyList(sortTaskFolderList, false);
         TableTaskData taskData = new TableTaskData(BaseApplication.getInstance());
         txvAllTaskPopup.setText("All Tasks (" + taskData.getRowsCount() + ")");
 
     }
 
+
+    public class TaskFolderListComparator implements Comparator<TaskListModel> {
+        @Override
+        public int compare(TaskListModel taskListModel, TaskListModel t1) {
+            if (taskListModel.getSize() > t1.getSize() || taskListModel.getSize() < t1.getSize()) {
+                return t1.getSize() - taskListModel.getSize();
+            } else {
+                return taskListModel.getList_name().compareToIgnoreCase(t1.getList_name());
+            }
+        }
+    }
 
     public void addTaskList(String name, boolean edit) {
 

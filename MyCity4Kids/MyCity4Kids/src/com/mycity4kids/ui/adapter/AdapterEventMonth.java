@@ -140,7 +140,6 @@ public class AdapterEventMonth extends BaseAdapter {
     private String getTime(long timeStampStr) {
         try {
             DateFormat sdf = new SimpleDateFormat("hh:mm a");
-            sdf.setTimeZone(TimeZone.getTimeZone("GMT+0530"));
             Date netDate = (new Date(timeStampStr));
             return sdf.format(netDate).toUpperCase();
         } catch (Exception ex) {

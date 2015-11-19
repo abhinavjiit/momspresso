@@ -286,6 +286,9 @@ public class ArticleViewFragment extends BaseFragment {
         ArrayList<CommonParentingList> dataList = responseData.getResult().getData().getData();
 
         if (dataList.size() == 0) {
+            articleDataModelsNew = dataList;
+            articlesListingAdapter.setNewListData(articleDataModelsNew);
+            articlesListingAdapter.notifyDataSetChanged();
             noBlogsTextView.setVisibility(View.VISIBLE);
             //((DashboardActivity) getActivity()).showToast(responseData.getResult().getMessage());
         } else {
@@ -352,4 +355,8 @@ public class ArticleViewFragment extends BaseFragment {
         _controller.getData(AppConstants.TOP_PICKS_REQUEST, _parentingModel);
     }
 
+    public void refreshBookmarkList() {
+        nextPageNumber = 1;
+        hitBookmarkedArticleListingAPI(nextPageNumber, "bookmark");
+    }
 }

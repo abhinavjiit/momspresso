@@ -12,6 +12,7 @@ import com.kelltontech.network.HttpClientConnection;
 import com.kelltontech.network.Response;
 import com.kelltontech.network.ServiceRequest;
 import com.kelltontech.ui.IScreen;
+import com.kelltontech.utils.DataUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -21,7 +22,6 @@ import com.mycity4kids.models.user.UserRequest;
 import com.mycity4kids.models.user.UserResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.message.BasicNameValuePair;
@@ -172,8 +172,8 @@ public class LoginController extends BaseController {
                     nameValuePairs.add(new BasicNameValuePair("password", requestData.getPassword()));
                 }
             }
-
-           if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getDeviceToken(activity))) {
+            nameValuePairs.add(new BasicNameValuePair("deviceId", DataUtils.getDeviceId(activity)));
+            if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getDeviceToken(activity))) {
                 SharedPrefUtils.setPushTokenUpdateToServer(activity, true);
             }
             nameValuePairs.add(new BasicNameValuePair("push_token", SharedPrefUtils.getDeviceToken(activity)));
