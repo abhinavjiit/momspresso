@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
@@ -228,6 +229,30 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen 
                     public void onClick(DialogInterface dialog, int which) {
                         // do nothing
                         dialog.dismiss();
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
+
+    public void showUpgradeAppAlertDialog(String title, String message, final OnButtonClicked onButtonClicked) {
+        new AlertDialog.Builder(this)
+                .setTitle(title)
+                .setCancelable(false)
+                .setMessage(message)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // continue with delete
+                        String appPackage = getPackageName();
+                        try {
+                            Intent rateIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackage));
+                            startActivity(rateIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                        } catch (Exception e) {
+                            Intent rateIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackage));
+                            startActivity(rateIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                        }
+                        dialog.dismiss();
+                        finish();
                     }
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert)

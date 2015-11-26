@@ -134,6 +134,11 @@ public class AdapterTaskList extends BaseExpandableListAdapter {
             groupHolder.header.setText(headerList.get(groupPosition));
             groupHolder.header.setTextColor(Color.BLACK);
 
+        } else if (headerList.get(groupPosition).equalsIgnoreCase("DUE AFTER 30 DAYS")) {
+
+            groupHolder.header.setText(headerList.get(groupPosition));
+            groupHolder.header.setTextColor(Color.BLACK);
+
         }
         convertView.setBackgroundColor(Color.parseColor("#F0F4FF"));
 

@@ -207,7 +207,7 @@ public class SplashActivity extends BaseActivity {
 
             if (!StringUtils.isNullOrEmpty(_deepLinkURL)) {
                 intent.putExtra(AppConstants.DEEP_LINK_URL, _deepLinkURL);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP/*|Intent.FLAG_ACTIVITY_NEW_TASK*/);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP/*|Intent.FLAG_ACTIVITY_NEW_TASK*/);
             }
 
             startActivity(intent);
@@ -271,6 +271,14 @@ public class SplashActivity extends BaseActivity {
                 if (responseObject instanceof ConfigurationApiModel) {
                     ConfigurationApiModel _configurationResponse = (ConfigurationApiModel) responseObject;
 
+                    if (_configurationResponse.getResult().getData().getIsAppUpdateRequired() == 1) {
+                        showUpgradeAppAlertDialog("Error", "Please upgrade your app to continue", new OnButtonClicked() {
+                            @Override
+                            public void onButtonCLick(int buttonId) {
+                            }
+                        });
+                        return;
+                    }
                     /**
                      * Save data into tables :-
                      */

@@ -57,10 +57,10 @@ public class FragmentTaskHome extends BaseFragment implements View.OnClickListen
     private LinkedHashMap<String, ArrayList<TaskMappingModel>> childList;
     ArrayList<TaskMappingModel> tempData1;
     ArrayList<TaskMappingModel> tempData2;
-    ArrayList<TaskMappingModel> tempData3;
+    ArrayList<TaskMappingModel> tempData3, tempData4;
     ArrayList<TaskMappingModel> new_tempData1;
     ArrayList<TaskMappingModel> new_tempData2;
-    ArrayList<TaskMappingModel> new_tempData3;
+    ArrayList<TaskMappingModel> new_tempData3, new_tempData4;
     TableTaskData tableTaskData;
     Boolean flag_id_all = false;
     int listId = 0;
@@ -397,6 +397,7 @@ public class FragmentTaskHome extends BaseFragment implements View.OnClickListen
         Calendar backDate = (Calendar) baseCalendar.clone();
         Calendar dueIn30 = (Calendar) baseCalendar.clone();
         Calendar start8 = (Calendar) baseCalendar.clone();
+        Calendar dueAfter30 = (Calendar) baseCalendar.clone();
 
         Calendar dueThisSunday = Calendar.getInstance();
         // add only those days before calender week
@@ -417,9 +418,9 @@ public class FragmentTaskHome extends BaseFragment implements View.OnClickListen
         start8.add(Calendar.DAY_OF_MONTH, count + 1);
 //        dueIn30.add(Calendar.DAY_OF_MONTH, 30);
         dueIn30.add(Calendar.DAY_OF_MONTH, start8.getActualMaximum(Calendar.DAY_OF_MONTH));
-
-
-        long currentTS = 0, backDateTS = 0, due7TS = 0, due8TS = 0, due30TS = 0;
+        dueAfter30.add(Calendar.DAY_OF_MONTH, start8.getActualMaximum(Calendar.DAY_OF_MONTH) + 1);
+        dueAfter30.add(Calendar.MONTH, 6);
+        long currentTS = 0, backDateTS = 0, due7TS = 0, due8TS = 0, due30TS = 0, dueAfter30TS = 0;
 
         try {
 //            currentTS = (convertTimeStamp(String.valueOf(String.valueOf(baseCalendar.get(Calendar.DAY_OF_MONTH)) + " " + String.valueOf((baseCalendar.get(Calendar.MONTH) + 1)) + " " + String.valueOf(baseCalendar.get(Calendar.YEAR)) + " 12:01 AM")));
@@ -433,7 +434,7 @@ public class FragmentTaskHome extends BaseFragment implements View.OnClickListen
             due8TS = (convertTimeStamp(String.valueOf(start8.get(Calendar.DAY_OF_MONTH)) + " " + String.valueOf((start8.get(Calendar.MONTH)) + 1) + " " + String.valueOf(start8.get(Calendar.YEAR)) + " 12:01 AM"));
 
             due30TS = (convertTimeStamp(String.valueOf(dueIn30.get(Calendar.DAY_OF_MONTH)) + " " + String.valueOf((dueIn30.get(Calendar.MONTH) + 1)) + " " + String.valueOf(dueIn30.get(Calendar.YEAR)) + " 11:59 PM"));
-
+            dueAfter30TS = (convertTimeStamp(String.valueOf(dueAfter30.get(Calendar.DAY_OF_MONTH)) + " " + String.valueOf((dueAfter30.get(Calendar.MONTH) + 1)) + " " + String.valueOf(dueAfter30.get(Calendar.YEAR)) + " 11:59 PM"));
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -442,15 +443,18 @@ public class FragmentTaskHome extends BaseFragment implements View.OnClickListen
         tempData1 = new ArrayList<>();
         tempData2 = new ArrayList<>();
         tempData3 = new ArrayList<>();
+        tempData4 = new ArrayList<>();
 
         tempData1 = tableTaskData.getBackDaysData(backDateTS, isListSelected, id, SharedPrefUtils.getUserDetailModel(getActivity()).getId());
         tempData2 = tableTaskData.allDataBTWNdays(currentTS, due7TS, isListSelected, id, SharedPrefUtils.getUserDetailModel(getActivity()).getId());
         tempData3 = tableTaskData.allDataBTWNdays(due8TS, due30TS, isListSelected, id, SharedPrefUtils.getUserDetailModel(getActivity()).getId());
-
+        tempData4 = tableTaskData.allDataBTWNdays(due30TS, dueAfter30TS, isListSelected, id, SharedPrefUtils.getUserDetailModel(getActivity()).getId());
+        //tempData4 = tableTaskData.allDataBTWNdays(due30TS, 0, isListSelected, id, SharedPrefUtils.getUserDetailModel(getActivity()).getId());
 
         new_tempData1 = new ArrayList<>();
         new_tempData2 = new ArrayList<>();
         new_tempData3 = new ArrayList<>();
+        new_tempData4 = new ArrayList<>();
         headerList = new ArrayList<>();
 
 // getoverdue recurring list
@@ -476,6 +480,7 @@ public class FragmentTaskHome extends BaseFragment implements View.OnClickListen
 
         new_tempData2 = (ArrayList<TaskMappingModel>) getDaysRecurring(baseCalendar, dueThisWeek, tempData2);
         new_tempData3 = (ArrayList<TaskMappingModel>) getDaysRecurring(baseCalendar, dueIn30, tempData3);
+        new_tempData4 = (ArrayList<TaskMappingModel>) getDaysRecurring(baseCalendar, dueAfter30, tempData4);
 
         new_tempData1 = getOverdueList(new_tempData2, new_tempData1);
 
@@ -496,6 +501,10 @@ public class FragmentTaskHome extends BaseFragment implements View.OnClickListen
             childList.put("DUE IN 30 DAYS", new_tempData3);
         }
 
+        if (new_tempData4.size() > 0) {
+            headerList.add("DUE AFTER 30 DAYS");
+            childList.put("DUE AFTER 30 DAYS", new_tempData4);
+        }
 
         originalList = (LinkedHashMap<String, ArrayList<TaskMappingModel>>) childList.clone();
 
