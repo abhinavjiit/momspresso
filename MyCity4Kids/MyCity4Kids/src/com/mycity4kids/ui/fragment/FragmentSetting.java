@@ -166,7 +166,9 @@ public class FragmentSetting extends BaseFragment implements View.OnClickListene
         LogoutResponse responseData = (LogoutResponse) response.getResponseObject();
         String message = responseData.getResult().getMessage();
         if (responseData.getResponseCode() == 200) {
+            String pushToken = SharedPrefUtils.getDeviceToken(getActivity());
             SharedPrefUtils.clearPrefrence(getActivity());
+            SharedPrefUtils.setDeviceToken(getActivity(), pushToken);
             /**
              * delete table from local also;
              */
