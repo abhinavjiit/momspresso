@@ -39,7 +39,7 @@ public class ApiHandler extends AsyncTask<String, Void, String> {
                     keyvalue.put("user_id", "" + SharedPrefUtils.getUserDetailModel(context).getId());
                     keyvalue.put("tasks", params[1]);
 
-                    jsonString = HTTPPoster.doPost(params[0],keyvalue,map);
+                    jsonString = HTTPPoster.doPost(params[0],keyvalue,map, context);
                     Log.e(this.getClass().getName(), "jsonString: " + jsonString);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -57,7 +57,7 @@ public class ApiHandler extends AsyncTask<String, Void, String> {
                     HashMap<String, String> keyvalue = new HashMap<String, String>();
                     keyvalue.put("task_date_excluded", params[1]);
 
-                    jsonString = HTTPPoster.doPost(params[0],keyvalue,map);
+                    jsonString = HTTPPoster.doPost(params[0],keyvalue,map, context);
                     Log.e(this.getClass().getName(), "jsonString: " + jsonString);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -72,7 +72,7 @@ public class ApiHandler extends AsyncTask<String, Void, String> {
                     //System.out.println("RequestUrl : " + params[0]);
                     HashMap<String, String> map = new HashMap<String, String>();
                     map.put("Content-Type", "application/json");
-                    jsonString = HTTPPoster.doGet(params[0], map);
+                    jsonString = HTTPPoster.doGet(params[0], map,context);
                     Log.e(this.getClass().getName(), "jsonString: " + jsonString);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -85,7 +85,7 @@ public class ApiHandler extends AsyncTask<String, Void, String> {
                     //System.out.println("RequestUrl : " + params[0]);
                     HashMap<String, String> map = new HashMap<String, String>();
                     map.put("Content-Type", "application/json");
-                    jsonString = HTTPPoster.doGet(params[0], map);
+                    jsonString = HTTPPoster.doGet(params[0], map,context);
                     Log.e(this.getClass().getName(), "jsonString: " + jsonString);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -98,7 +98,7 @@ public class ApiHandler extends AsyncTask<String, Void, String> {
                     //System.out.println("RequestUrl : " + params[0]);
                     HashMap<String, String> map = new HashMap<String, String>();
                     map.put("Content-Type", "application/json");
-                    jsonString = HTTPPoster.doGet(params[0], map);
+                    jsonString = HTTPPoster.doGet(params[0], map,context);
                     Log.e(this.getClass().getName(), "jsonString: " + jsonString);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -110,7 +110,7 @@ public class ApiHandler extends AsyncTask<String, Void, String> {
                     //System.out.println("RequestUrl : " + params[0]);
                     HashMap<String, String> map = new HashMap<String, String>();
                     map.put("Content-Type", "application/json");
-                    jsonString = HTTPPoster.doGet(params[0], map);
+                    jsonString = HTTPPoster.doGet(params[0], map,context);
                     Log.e(this.getClass().getName(), "jsonString: " + jsonString);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -124,7 +124,7 @@ public class ApiHandler extends AsyncTask<String, Void, String> {
                     //System.out.println("RequestUrl : " + params[0]);
                     HashMap<String, String> map = new HashMap<String, String>();
                     map.put("Content-Type", "application/json");
-                    jsonString = HTTPPoster.doGet(params[0], map);
+                    jsonString = HTTPPoster.doGet(params[0], map,context);
                     Log.e(this.getClass().getName(), "jsonString: " + jsonString);
                 } catch (Exception e) {
                     e.printStackTrace();

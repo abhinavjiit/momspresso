@@ -197,6 +197,7 @@ public class Constants {
      */
     public static int REMINDER_TYPE_APPOINTMENT = 1;
     public static int REMINDER_TYPE_TASKS = 2;
+    public static int REMINDER_KIDS_BIRTHDAY = -1;
 
     public static final int CROP_IMAGE = 20;
 
@@ -251,4 +252,7 @@ public class Constants {
     public static String BUSINESS_EVENTLIST_FRAGMENT = "fragment_eventlist";
     public static String TODOLIST_FRAGMENT = "fragment_todo";
     public static String CALENDARLIST_FRAGMENT = "fragment_calendar";
+
+    /*Kids Birthday Constants*/
+    public static String KIDS_NAME = "kids_name";
 }

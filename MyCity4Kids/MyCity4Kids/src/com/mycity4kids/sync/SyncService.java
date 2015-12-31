@@ -13,16 +13,24 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.text.Html;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.kelltontech.utils.ConnectivityUtils;
+import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.controller.LogoutController;
+import com.mycity4kids.dbtable.ExternalCalendarTable;
+import com.mycity4kids.dbtable.TableAdult;
+import com.mycity4kids.dbtable.TableApiEvents;
 import com.mycity4kids.dbtable.TableAppointmentData;
 import com.mycity4kids.dbtable.TableAttendee;
+import com.mycity4kids.dbtable.TableFamily;
 import com.mycity4kids.dbtable.TableFile;
+import com.mycity4kids.dbtable.TableKids;
 import com.mycity4kids.dbtable.TableNotes;
 import com.mycity4kids.dbtable.TableTaskData;
 import com.mycity4kids.dbtable.TableTaskList;
@@ -32,6 +40,7 @@ import com.mycity4kids.dbtable.TaskTableAttendee;
 import com.mycity4kids.dbtable.TaskTableFile;
 import com.mycity4kids.dbtable.TaskTableNotes;
 import com.mycity4kids.dbtable.TaskTableWhoToRemind;
+import com.mycity4kids.dbtable.UserTable;
 import com.mycity4kids.newmodels.AppointmentResponse;
 import com.mycity4kids.newmodels.AppoitmentDataModel;
 import com.mycity4kids.newmodels.PushNotificationModel;
@@ -45,6 +54,7 @@ import com.mycity4kids.ui.activity.ActivityEditAppointment;
 import com.mycity4kids.ui.activity.ActivityEditTask;
 import com.mycity4kids.ui.activity.ActivityShowAppointment;
 import com.mycity4kids.ui.activity.ActivityShowTask;
+import com.mycity4kids.ui.activity.JoinFamilyActivity;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -62,8 +72,8 @@ public class SyncService extends IntentService implements UpdateListener {
     private boolean isAppointment = true;
     private int id;
     private PushNotificationModel pushNotificationModel;
-   // public static final int APPOINTMENT_NOTIFICATION_ID = 11231;
-   // public static final int TASK_NOTIFICATION_ID = 11230;
+    // public static final int APPOINTMENT_NOTIFICATION_ID = 11231;
+    // public static final int TASK_NOTIFICATION_ID = 11230;
     private Uri bitmapUri;
     Bitmap icon;
 
@@ -99,7 +109,7 @@ public class SyncService extends IntentService implements UpdateListener {
             e.printStackTrace();
         }
 
-         icon = BitmapFactory.decodeResource(getResources(),
+        icon = BitmapFactory.decodeResource(getResources(),
                 R.drawable.ic_launcher);
 
         if (ConnectivityUtils.isNetworkEnabled(this)) {
@@ -486,7 +496,7 @@ public class SyncService extends IntentService implements UpdateListener {
             // call pending intent here
             if (pushNotificationModel != null) {
 
-                if (!pushNotificationModel.getAction().equalsIgnoreCase("deleted")&& !pushNotificationModel.getAction().equalsIgnoreCase("Excluded")) {
+                if (!pushNotificationModel.getAction().equalsIgnoreCase("deleted") && !pushNotificationModel.getAction().equalsIgnoreCase("Excluded")) {
                     if (pushNotificationModel.getType().equalsIgnoreCase("task")) {
 
                         int requestID = (int) System.currentTimeMillis();
@@ -564,6 +574,65 @@ public class SyncService extends IntentService implements UpdateListener {
 
                     } else if (responseData.getResponseCode() == 400) {
                         Log.e(TAG, "response failed getAppointment");
+                    } else if (responseData.getResponseCode() == 401) {
+                        String message = responseData.getResult().getMessage();
+                        String pushToken = SharedPrefUtils.getDeviceToken((BaseApplication) getApplicationContext());
+                        SharedPrefUtils.clearPrefrence((BaseApplication) getApplicationContext());
+                        SharedPrefUtils.setDeviceToken((BaseApplication) getApplicationContext(), pushToken);
+                        /**
+                         * delete table from local also;
+                         */
+                        UserTable _tables = new UserTable((BaseApplication) getApplicationContext());
+                        _tables.deleteAll();
+
+                        TableFamily _familytables = new TableFamily((BaseApplication) getApplicationContext());
+                        _familytables.deleteAll();
+
+                        TableAdult _adulttables = new TableAdult((BaseApplication) getApplicationContext());
+                        _adulttables.deleteAll();
+
+                        TableKids _kidtables = new TableKids((BaseApplication) getApplicationContext());
+                        _kidtables.deleteAll();
+
+                        new TableAppointmentData(BaseApplication.getInstance()).deleteAll();
+                        new TableNotes(BaseApplication.getInstance()).deleteAll();
+                        new TableFile(BaseApplication.getInstance()).deleteAll();
+                        new TableAttendee(BaseApplication.getInstance()).deleteAll();
+                        new TableWhoToRemind(BaseApplication.getInstance()).deleteAll();
+
+
+                        new TableTaskData(BaseApplication.getInstance()).deleteAll();
+                        new TableTaskList(BaseApplication.getInstance()).deleteAll();
+                        new TaskTableAttendee(BaseApplication.getInstance()).deleteAll();
+                        new TaskTableWhoToRemind(BaseApplication.getInstance()).deleteAll();
+                        new TaskTableFile(BaseApplication.getInstance()).deleteAll();
+                        new TaskTableNotes(BaseApplication.getInstance()).deleteAll();
+                        new TaskCompletedTable(BaseApplication.getInstance()).deleteAll();
+                        new TableApiEvents(BaseApplication.getInstance()).deleteAll();
+
+                        new ExternalCalendarTable(BaseApplication.getInstance()).deleteAll();
+
+                        // clear cachee
+                        AppointmentManager.getInstance((BaseApplication) getApplicationContext()).clearList();
+                        BaseApplication.setBlogResponse(null);
+                        BaseApplication.setBusinessREsponse(null);
+
+
+                        // clear all sessions
+
+                        if (StringUtils.isNullOrEmpty(message)) {
+                            Toast.makeText((BaseApplication) getApplicationContext(), getString(R.string.went_wrong), Toast.LENGTH_SHORT).show();
+
+                        } else {
+                            Toast.makeText((BaseApplication) getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                        }
+
+                        // set logout flag
+                        SharedPrefUtils.setLogoutFlag((BaseApplication) getApplicationContext(), true);
+
+                        Intent in = new Intent((BaseApplication) getApplicationContext(), JoinFamilyActivity.class);
+                        in.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(in);
                     }
 
 
@@ -628,7 +697,7 @@ public class SyncService extends IntentService implements UpdateListener {
         return builder.toString();
     }
 
-    private int getUniqueRequestCode(){
+    private int getUniqueRequestCode() {
         Random randomGenerator = new Random();
         return randomGenerator.nextInt(1000);
     }

@@ -20,6 +20,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.dbtable.TableAdult;
 import com.mycity4kids.enums.ParentingFilterType;
 import com.mycity4kids.newmodels.PushNotificationModel;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -30,6 +31,8 @@ import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
 import com.mycity4kids.ui.activity.BusinessDetailsActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.NewsLetterWebviewActivity;
+import com.mycity4kids.ui.activity.PlanYourWeekActivity;
+import com.mycity4kids.ui.activity.SplashActivity;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -318,6 +321,45 @@ public class
                     NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
                             .setLargeIcon(icon).setSmallIcon(R.drawable.iconnotify)
                             .setContentTitle(title).setStyle(new NotificationCompat.BigTextStyle().bigText(message)).setContentText(message);
+
+                    mBuilder.setDefaults(NotificationCompat.DEFAULT_ALL);
+                    mBuilder.setAutoCancel(true);
+                    mBuilder.setContentIntent(contentIntent);
+                    mNotificationManager.notify(requestID, mBuilder.build());
+
+                } else if (type.equalsIgnoreCase("plan_week")) {
+
+                    // generate notifications
+                    Bitmap icon = BitmapFactory.decodeResource(getResources(),
+                            R.drawable.ic_launcher);
+
+                    int requestID = (int) System.currentTimeMillis();
+                    String message = pushNotificationModel.getMessage_id();
+                    String title = pushNotificationModel.getTitle();
+                    Intent cIntent = null;
+                    PendingIntent contentIntent;
+                    NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+                    TableAdult _table = new TableAdult(BaseApplication.getInstance());
+                    if (_table.getAdultCount() > 0) { // if he signup
+                        cIntent = new Intent(getApplicationContext(), PlanYourWeekActivity.class);
+                        cIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+                        // Adds the back stack
+                        stackBuilder.addParentStack(PlanYourWeekActivity.class);
+                        // Adds the Intent to the top of the stack
+                        stackBuilder.addNextIntent(cIntent);
+                        contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                    } else {
+                        cIntent = new Intent(getApplicationContext(), SplashActivity.class);
+                        contentIntent = PendingIntent.getActivity(this, 0, cIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    }
+//                    message = "Plan you week.";
+                    NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+                            .setLargeIcon(icon).setSmallIcon(R.drawable.iconnotify)
+                            .setContentTitle(title)
+                            .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
+                            .setContentText(message);
 
                     mBuilder.setDefaults(NotificationCompat.DEFAULT_ALL);
                     mBuilder.setAutoCancel(true);

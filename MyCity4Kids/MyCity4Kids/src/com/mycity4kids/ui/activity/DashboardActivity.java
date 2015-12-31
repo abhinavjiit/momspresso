@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,6 +49,7 @@ import com.mycity4kids.controller.DeepLinkingController;
 import com.mycity4kids.controller.DeleteTaskController;
 import com.mycity4kids.controller.TaskListController;
 import com.mycity4kids.dbtable.TableAppointmentData;
+import com.mycity4kids.dbtable.TableKids;
 import com.mycity4kids.dbtable.TableTaskData;
 import com.mycity4kids.dbtable.TableTaskList;
 import com.mycity4kids.dbtable.TaskCompletedTable;
@@ -187,7 +189,25 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         allTaskList = (CustomListView) findViewById(R.id.show_tasklist);
 
         txvAllTaskPopup = (TextView) findViewById(R.id.all_tasklist);
-
+//        Reminder.with(this).info(Constants.REMINDER_KIDS_BIRTHDAY, "RANDOM kids birthday")
+//                .startTime(1419318120000l).setRepeatBehavior("Yearly", "Forever", "", null)
+//                .remindBefore("0").setRecurring("yes").create(11111120);
+        TableKids _kidTable = new TableKids(BaseApplication.getInstance());
+        Long sTime;
+        for (int i = 0; i < _kidTable.getKidsCount(); i++) {
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            Date dob;
+            try {
+                //28800000 -- Morning 8 am addition
+                dob = df.parse(_kidTable.getAllKids().get(i).getDate_of_birth());
+                Reminder.with(this).info(Constants.REMINDER_KIDS_BIRTHDAY, "" + _kidTable.getAllKids().get(i).getName())
+                        .startTime(dob.getTime() + 28800000).setRepeatBehavior("Yearly", "Forever", "", null)
+                        .remindBefore("0").setRecurring("yes").create(-i);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+//        addChildbirthTS();
 
         // onclick events
         findViewById(R.id.rdBtnToday).setOnClickListener(this);

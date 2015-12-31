@@ -3,6 +3,7 @@ package com.mycity4kids.reminders;
 import android.util.Log;
 
 import com.kelltontech.utils.StringUtils;
+import com.mycity4kids.constants.Constants;
 import com.mycity4kids.enums.DayOfWeek;
 
 import java.text.SimpleDateFormat;
@@ -17,7 +18,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class ReminderUtils {
 
-    public static long calculateNextReminderTime(long startTimeMillis, String reminderBefore, String repeat, String repeatFrequency, String repeatNum, String repeatUntill) {
+    public static long calculateNextReminderTime(int reminderType, long startTimeMillis, String reminderBefore, String repeat, String repeatFrequency, String repeatNum, String repeatUntill) {
         long nextReminderTime = startTimeMillis;
         if (!StringUtils.isNullOrEmpty(reminderBefore)) {
             nextReminderTime = calculateTimeDifference(startTimeMillis, reminderBefore);
@@ -62,9 +63,9 @@ public class ReminderUtils {
                 if (calenderCurrentTime.getTimeInMillis() > System.currentTimeMillis()) {
                     break;
                 }
-                if (i== daysArray.length -1){
+                if (i == daysArray.length - 1) {
                     calenderCurrentTime.add(Calendar.WEEK_OF_MONTH, 1);
-                    i=-1;
+                    i = -1;
                 }
             }
             Log.e("dayOfWeek", "Date " + calenderCurrentTime.getTime());
@@ -85,9 +86,26 @@ public class ReminderUtils {
             calenderCurrentTime.add(Calendar.MONTH, 1);
             nextReminderTime = calenderCurrentTime.getTimeInMillis();
         } else if (repeat.equalsIgnoreCase("Yearly")) {
-            // calculate timestamp of next year from start
-            calendarStartTime.set(Calendar.YEAR, calenderCurrentTime.get(Calendar.YEAR));
-            calendarStartTime.add(Calendar.YEAR, 1);
+            if (reminderType == Constants.REMINDER_KIDS_BIRTHDAY) {
+                // calculate timestamp of the next birthday.
+                if (calendarStartTime.get(Calendar.MONTH) < calenderCurrentTime.get(Calendar.MONTH)) {
+                    calendarStartTime.set(Calendar.YEAR, calenderCurrentTime.get(Calendar.YEAR));
+                    calendarStartTime.add(Calendar.YEAR, 1);
+                } else if (calendarStartTime.get(Calendar.MONTH) == calenderCurrentTime.get(Calendar.MONTH)) {
+                    if (calendarStartTime.get(Calendar.DAY_OF_MONTH) <= calenderCurrentTime.get(Calendar.DAY_OF_MONTH)) {
+                        calendarStartTime.set(Calendar.YEAR, calenderCurrentTime.get(Calendar.YEAR));
+                        calendarStartTime.add(Calendar.YEAR, 1);
+                    } else {
+                        calendarStartTime.set(Calendar.YEAR, calenderCurrentTime.get(Calendar.YEAR));
+                    }
+                } else {
+                    calendarStartTime.set(Calendar.YEAR, calenderCurrentTime.get(Calendar.YEAR));
+                }
+            } else {
+                // calculate timestamp of next year from start
+                calendarStartTime.set(Calendar.YEAR, calenderCurrentTime.get(Calendar.YEAR));
+                calendarStartTime.add(Calendar.YEAR, 1);
+            }
             nextReminderTime = calendarStartTime.getTimeInMillis();
         } else if (repeat.equalsIgnoreCase("Other")) {
             int repeatCount = Integer.parseInt(repeatNum);

@@ -1,11 +1,16 @@
 package com.kelltontech.network;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.SocketException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Vector;
@@ -14,6 +19,7 @@ import java.util.zip.GZIPInputStream;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpDelete;
@@ -21,17 +27,28 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.cookie.Cookie;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.preference.PreferenceManager;
+import android.util.Base64;
+import android.util.Base64InputStream;
+import android.util.Base64OutputStream;
 import android.util.Log;
 
+import com.kelltontech.persistence.SharedPrefsUtils;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.DataUtils;
+import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.utils.SerializableCookie;
 
 /**
  * @author sachin.gupta
@@ -40,6 +57,7 @@ public class HttpClientConnection extends Thread {
     private final String LOG_TAG = "HttpClientConnection";
 
     private static HttpClientConnection instance;
+//    public static List<Cookie> cookies;
 
     private HttpClientConnection() {
         defaultStatusCodeChecker = new StatusCodeChecker() {
@@ -163,7 +181,9 @@ public class HttpClientConnection extends Thread {
             return;
         }
 
+//        HttpClient httpClient = getHttpclient();
         HttpClient httpClient = new DefaultHttpClient();
+//        HttpClient httpClient = HttpClientFactory.getThreadSafeClient();
         //	httpClient.getParams().setParameter(ClientPNames.ALLOW_CIRCULAR_REDIRECTS, true);
         int requestTimeOut = currentRequest.getRequestTimeOut();
         if (requestTimeOut <= 0) {
@@ -236,7 +256,6 @@ public class HttpClientConnection extends Thread {
                 Log.i(LOG_TAG, "Request URL: " + getOrPost.getURI().toString());
             }
 
-
             String[] headerNames = currentRequest.getHeaderNames();
             if (headerNames != null) {
                 String[] headerValues = currentRequest.getHeaderValues();
@@ -245,8 +264,22 @@ public class HttpClientConnection extends Thread {
                     Log.i(LOG_TAG, "Header: " + headerNames[i] + " = " + headerValues[i]);
                 }
             }
+            PackageInfo pInfo = currentRequest.getContext().getPackageManager().getPackageInfo(currentRequest.getContext().getPackageName(), 0);
+            String version = pInfo.versionName;
+            getOrPost.addHeader("appVersion", version);
+
+            List<Cookie> cookies = loadSharedPreferencesCookie();
+            if (cookies != null) {
+                CookieStore cookieStore = new BasicCookieStore();
+                for (int i = 0; i < cookies.size(); i++)
+                    cookieStore.addCookie(cookies.get(i));
+                ((DefaultHttpClient) httpClient).setCookieStore(cookieStore);
+            }
 
             httpResponse = httpClient.execute(getOrPost);
+            cookies = ((DefaultHttpClient) httpClient).getCookieStore().getCookies();
+            saveSharedPreferencesCookies(cookies);
+//            cookies = ((DefaultHttpClient) httpClient).getCookieStore().getCookies();
             int statusCode = httpResponse.getStatusLine().getStatusCode();
 
             Log.i(LOG_TAG, "Response Received : " + statusCode);
@@ -296,7 +329,7 @@ public class HttpClientConnection extends Thread {
         } catch (Exception e) {
             notifyError("There are some problem.", e);
         } finally {
-            httpClient.getConnectionManager().shutdown();
+            //httpClient.getConnectionManager().shutdown();
         }
     }
 
@@ -375,5 +408,63 @@ public class HttpClientConnection extends Thread {
             }
         }
         return false;
+    }
+
+    private void saveSharedPreferencesCookies(List<Cookie> cookies) {
+        SerializableCookie[] serializableCookies = new SerializableCookie[cookies.size()];
+        for (int i = 0; i < cookies.size(); i++) {
+            SerializableCookie serializableCookie = new SerializableCookie(cookies.get(i));
+            serializableCookies[i] = serializableCookie;
+        }
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(currentRequest.getContext());
+        SharedPreferences.Editor editor = preferences.edit();
+        ObjectOutputStream objectOutput;
+        ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
+        try {
+            objectOutput = new ObjectOutputStream(arrayOutputStream);
+
+
+            objectOutput.writeObject(serializableCookies);
+            byte[] data = arrayOutputStream.toByteArray();
+            objectOutput.close();
+            arrayOutputStream.close();
+
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            Base64OutputStream b64 = new Base64OutputStream(out, Base64.DEFAULT);
+            b64.write(data);
+            b64.close();
+            out.close();
+
+            editor.putString("cookies", new String(out.toByteArray()));
+            editor.apply();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private List<Cookie> loadSharedPreferencesCookie() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(currentRequest.getContext());
+        byte[] bytes = preferences.getString("cookies", "{}").getBytes();
+        if (bytes.length == 0 || bytes.length == 2)
+            return null;
+        ByteArrayInputStream byteArray = new ByteArrayInputStream(bytes);
+        Base64InputStream base64InputStream = new Base64InputStream(byteArray, Base64.DEFAULT);
+        ObjectInputStream in;
+        List<Cookie> cookies = new ArrayList<Cookie>();
+        SerializableCookie[] serializableCookies;
+        try {
+            in = new ObjectInputStream(base64InputStream);
+            serializableCookies = (SerializableCookie[]) in.readObject();
+            for (int i = 0; i < serializableCookies.length; i++) {
+                Cookie cookie = serializableCookies[i].getCookie();
+                cookies.add(cookie);
+            }
+            return cookies;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

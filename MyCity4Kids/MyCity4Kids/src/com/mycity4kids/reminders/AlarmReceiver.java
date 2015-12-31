@@ -7,8 +7,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.WakefulBroadcastReceiver;
 
+import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
@@ -18,7 +20,9 @@ import com.mycity4kids.ui.activity.ActivityEditAppointment;
 import com.mycity4kids.ui.activity.ActivityEditTask;
 import com.mycity4kids.ui.activity.ActivityShowAppointment;
 import com.mycity4kids.ui.activity.ActivityShowTask;
+import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
+import com.mycity4kids.ui.activity.KidsBirthdayActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Random;
@@ -29,7 +33,7 @@ import java.util.Random;
 public class AlarmReceiver extends WakefulBroadcastReceiver {
 
     //public static final int APPOINTMENT_NOTIFICATION_ID = 11235;
-   // public static final int TASK_NOTIFICATION_ID = 11234;
+    // public static final int TASK_NOTIFICATION_ID = 11234;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -57,7 +61,8 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         if (notificationPrefs == AppConstants.NOTIFICATION_PREF_NONE) {
             return;
         } else {
-            if (notificationPrefs == AppConstants.NOTIFICATION_PREF_BOTH || notificationPrefs == AppConstants.NOTIFICATION_PREF_EMAIL) {
+            if ((notificationPrefs == AppConstants.NOTIFICATION_PREF_BOTH || notificationPrefs == AppConstants.NOTIFICATION_PREF_EMAIL)
+                    && reminderType != Constants.REMINDER_KIDS_BIRTHDAY) {
                 Intent intentS = new Intent(context, RemainderEmailService.class);
                 intentS.putExtra(Constants.REMAINDER_TYPE, reminderType);
                 intentS.putExtra(Constants.REMAINDER_ID, reminderId);
@@ -117,7 +122,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
                 /////////////////////////////////////
 
 
-            } else {
+            } else if (reminderType == Constants.REMINDER_TYPE_TASKS) {
                 showActvity = ActivityShowTask.class;
                 editActivity = ActivityEditTask.class;
                 keyForId = AppConstants.EXTRA_TASK_ID;
@@ -159,13 +164,45 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
                 mNotificationManager.notify(requestID, mBuilder.build());
 
 
+            } else {
+                showActvity = KidsBirthdayActivity.class;
+                reminderHeader = "Happy Birthday!";
+
+                Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
+                        R.drawable.ic_launcher);
+
+
+                int requestID = (int) System.currentTimeMillis();
+
+                Intent actionIntent = new Intent(context, showActvity);
+                actionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                actionIntent.putExtra(Constants.KIDS_NAME, appointmentName);
+                actionIntent.putExtra(AppConstants.NOTIFICATION_ID, requestID);
+
+                TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+                // Adds the back stack
+                stackBuilder.addParentStack(KidsBirthdayActivity.class);
+                // Adds the Intent to the top of the stack
+                stackBuilder.addNextIntent(actionIntent);
+                PendingIntent contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+//                PendingIntent contentIntent = PendingIntent.getActivity(context, getUniqueRequestCode(), actionIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context).setLargeIcon(icon)
+                        .setSmallIcon(R.drawable.iconnotify).setContentTitle(reminderHeader)
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText("Wish you a very happy birthday " + appointmentName))
+                        .setContentText("Wish you a very happy birthday " + appointmentName);
+                mBuilder.setDefaults(NotificationCompat.DEFAULT_ALL);
+                mBuilder.setPriority(NotificationCompat.PRIORITY_HIGH);
+                mBuilder.setAutoCancel(true);
+                mBuilder.setContentIntent(contentIntent);
+                mNotificationManager.notify(requestID, mBuilder.build());
+
             }
         }
     }
 
-    private int getUniqueRequestCode(){
+    private int getUniqueRequestCode() {
         Random randomGenerator = new Random();
         return randomGenerator.nextInt(1000);
     }
 
-    }
+}

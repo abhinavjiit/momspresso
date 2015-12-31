@@ -87,7 +87,7 @@ public class Reminder {
 
         if (System.currentTimeMillis() > reminderTriggerMilles || (isRecurring && repeat.equalsIgnoreCase("Days"))) {
             if (isRecurring) {
-                reminderTriggerMilles = ReminderUtils.calculateNextReminderTime(startTimeMillis, remindBefore, repeat, repeatFrequency, repeatNum, repeatUntill);
+                reminderTriggerMilles = ReminderUtils.calculateNextReminderTime(reminderType, startTimeMillis, remindBefore, repeat, repeatFrequency, repeatNum, repeatUntill);
             } else {
                 reminderTriggerMilles = 0;
             }
@@ -104,16 +104,16 @@ public class Reminder {
         i.putExtra(Constants.EXTRA_ALARM_RECURRING, isRecurring ? "yes" : "no");
         i.putExtra(Constants.EXTRA_ALARM_START_MILLIS, startTimeMillis);
 
-        if (!StringUtils.isNullOrEmpty(repeat)){
+        if (!StringUtils.isNullOrEmpty(repeat)) {
             i.putExtra(Constants.EXTRA_ALARM_REPEAT, repeat);
         }
-        if (!StringUtils.isNullOrEmpty(repeatFrequency)){
+        if (!StringUtils.isNullOrEmpty(repeatFrequency)) {
             i.putExtra(Constants.EXTRA_ALARM_REPEAT_FREQ, repeatFrequency);
         }
-        if (!StringUtils.isNullOrEmpty(repeatNum)){
+        if (!StringUtils.isNullOrEmpty(repeatNum)) {
             i.putExtra(Constants.EXTRA_ALARM_REPEAT_NUM, repeatNum);
         }
-        if (!StringUtils.isNullOrEmpty(repeatUntill)){
+        if (!StringUtils.isNullOrEmpty(repeatUntill)) {
             i.putExtra(Constants.EXTRA_ALARM_REPEAT_UNTILL, repeatUntill);
         }
         i.putExtra(Constants.EXTRA_ALARM_ID, reminderId);

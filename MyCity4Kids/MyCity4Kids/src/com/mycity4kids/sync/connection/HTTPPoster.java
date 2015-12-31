@@ -1,10 +1,28 @@
 package com.mycity4kids.sync.connection;
 
-import com.kelltontech.utils.DataUtils;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.util.Base64;
+import android.util.Base64InputStream;
+import android.util.Base64OutputStream;
+import android.util.Log;
+import android.webkit.CookieManager;
 
+import com.kelltontech.network.HttpClientFactory;
+import com.kelltontech.utils.DataUtils;
+import com.kelltontech.utils.StringUtils;
+import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.utils.SerializableCookie;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -14,6 +32,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
@@ -25,9 +44,12 @@ import org.apache.http.conn.params.ConnPerRouteBean;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.cookie.Cookie;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.SingleClientConnManager;
+import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
@@ -44,6 +66,7 @@ public class HTTPPoster {
     private static final int TIMEOUT_CONN = 120000;
     private static final int TIMEOUT_SO = 120000;
     private static final int MCC_TIMEOUT = 120000;
+    private static CookieStore store = null;
 
     /**
      * execute the HTTP Connection and return the response.
@@ -51,7 +74,7 @@ public class HTTPPoster {
      * @param url     URL of the web service API.
      * @param kvPairs {@link HashMap} for key value.
      */
-    public static String doPost(String url, Map<String, String> kvPairs, Map<String, String> header)
+    public static String doPost(String url, Map<String, String> kvPairs, Map<String, String> header, Context context)
             throws ClientProtocolException, IOException {
 //		HttpClient httpClient = getNewHttpClient(new BasicHttpParams());
         HttpClient httpClient = new DefaultHttpClient();
@@ -67,7 +90,6 @@ public class HTTPPoster {
                 httppost.addHeader(k, v);
             }
         }
-
         if (kvPairs != null && kvPairs.isEmpty() == false) {
             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(kvPairs.size());
             String k, v;
@@ -80,8 +102,17 @@ public class HTTPPoster {
             }
             httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
         }
+        List<Cookie> cookies = loadSharedPreferencesCookie(context);
+        if (cookies != null) {
+            CookieStore cookieStore = new BasicCookieStore();
+            for (int i = 0; i < cookies.size(); i++)
+                cookieStore.addCookie(cookies.get(i));
+            ((DefaultHttpClient) httpClient).setCookieStore(cookieStore);
+        }
 
         HttpResponse response = httpClient.execute(httppost);
+        cookies = ((DefaultHttpClient) httpClient).getCookieStore().getCookies();
+        saveSharedPreferencesCookies(cookies, context);
 
         InputStream responseContentStream = response.getEntity() == null ? null : response.getEntity().getContent();
         String responseString = new String(DataUtils.convertStreamToBytes(responseContentStream));
@@ -101,7 +132,7 @@ public class HTTPPoster {
      * @throws ClientProtocolException
      * @throws IOException
      */
-    public static String doPost(String url, Map<String, String> header, String body) throws ClientProtocolException,
+    public static String doPost(String url, Map<String, String> header, String body, Context context) throws ClientProtocolException,
             IOException {
         HttpClient httpclient = getNewHttpClient(new BasicHttpParams());
 
@@ -116,8 +147,8 @@ public class HTTPPoster {
                 v = header.get(k);
                 httppost.setHeader(k, v);
             }
-        }
 
+        }
         if (body != null && !body.trim().equals("")) {
 
             StringEntity entity = new StringEntity(body, "UTF-8");
@@ -137,9 +168,10 @@ public class HTTPPoster {
      * @throws ClientProtocolException
      * @throws IOException
      */
-    public static String doGet(String url, Map<String, String> header) throws ClientProtocolException, IOException {
+    public static String doGet(String url, Map<String, String> header, Context context) throws IOException {
 
-        HttpClient httpclient = getNewHttpClient(new BasicHttpParams());
+//        HttpClient httpclient = getNewHttpClient(new BasicHttpParams());
+        HttpClient httpclient = new DefaultHttpClient();
         HttpGet httppost = new HttpGet(url);
         if (header != null && header.isEmpty() == false) {
             String k, v;
@@ -151,8 +183,16 @@ public class HTTPPoster {
                 httppost.setHeader(k, v);
             }
         }
+        List<Cookie> cookies = loadSharedPreferencesCookie(context);
+        if (cookies != null) {
+            CookieStore cookieStore = new BasicCookieStore();
+            for (int i = 0; i < cookies.size(); i++)
+                cookieStore.addCookie(cookies.get(i));
+            ((DefaultHttpClient) httpclient).setCookieStore(cookieStore);
+        }
         HttpResponse response = httpclient.execute(httppost);
-
+        cookies = ((DefaultHttpClient) httpclient).getCookieStore().getCookies();
+        saveSharedPreferencesCookies(cookies, context);
         String responseString = EntityUtils.toString(response.getEntity());
 
         return responseString;
@@ -168,7 +208,7 @@ public class HTTPPoster {
      * @throws ClientProtocolException
      * @throws IOException
      */
-    public static String doPut(String webserviceUrl, String jsonData) throws ClientProtocolException, IOException {
+    public static String doPut(String webserviceUrl, String jsonData, Context context) throws ClientProtocolException, IOException {
 
         HttpClient httpclient = getNewHttpClient(new BasicHttpParams());
         HttpPut httpPut = new HttpPut(webserviceUrl);
@@ -209,5 +249,63 @@ public class HTTPPoster {
             HttpConnectionParams.setSoTimeout(params, TIMEOUT_SO);
             return new DefaultHttpClient(params);
         }
+    }
+
+    private static void saveSharedPreferencesCookies(List<Cookie> cookies, Context context) {
+        SerializableCookie[] serializableCookies = new SerializableCookie[cookies.size()];
+        for (int i = 0; i < cookies.size(); i++) {
+            SerializableCookie serializableCookie = new SerializableCookie(cookies.get(i));
+            serializableCookies[i] = serializableCookie;
+        }
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        ObjectOutputStream objectOutput;
+        ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
+        try {
+            objectOutput = new ObjectOutputStream(arrayOutputStream);
+
+
+            objectOutput.writeObject(serializableCookies);
+            byte[] data = arrayOutputStream.toByteArray();
+            objectOutput.close();
+            arrayOutputStream.close();
+
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            Base64OutputStream b64 = new Base64OutputStream(out, Base64.DEFAULT);
+            b64.write(data);
+            b64.close();
+            out.close();
+
+            editor.putString("cookies", new String(out.toByteArray()));
+            editor.apply();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static List<Cookie> loadSharedPreferencesCookie(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        byte[] bytes = preferences.getString("cookies", "{}").getBytes();
+        if (bytes.length == 0 || bytes.length == 2)
+            return null;
+        ByteArrayInputStream byteArray = new ByteArrayInputStream(bytes);
+        Base64InputStream base64InputStream = new Base64InputStream(byteArray, Base64.DEFAULT);
+        ObjectInputStream in;
+        List<Cookie> cookies = new ArrayList<Cookie>();
+        SerializableCookie[] serializableCookies;
+        try {
+            in = new ObjectInputStream(base64InputStream);
+            serializableCookies = (SerializableCookie[]) in.readObject();
+            for (int i = 0; i < serializableCookies.length; i++) {
+                Cookie cookie = serializableCookies[i].getCookie();
+                cookies.add(cookie);
+            }
+            return cookies;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
