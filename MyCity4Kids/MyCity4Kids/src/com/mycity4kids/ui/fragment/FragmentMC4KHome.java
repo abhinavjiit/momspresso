@@ -467,27 +467,27 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
 
         // previously age group logic commented
 
-        Object[] myArr = selectedageGroups.toArray();
+//        Object[] myArr = selectedageGroups.toArray();
 
-        String finalString = "&age[]=";
-
-        boolean flag = false;
-        for (int i = 0; i < myArr.length; i++) {
-
-            if (flag) {
-                finalString = finalString + "&age[]=";
-            }
-
-            finalString = finalString + myArr[i].toString();
-            flag = true;
-
-        }
+//        String finalString = "&age[]=";
+//
+//        boolean flag = false;
+//        for (int i = 0; i < myArr.length; i++) {
+//
+//            if (flag) {
+//                finalString = finalString + "&age[]=";
+//            }
+//
+//            finalString = finalString + myArr[i].toString();
+//            flag = true;
+//
+//        }
         BusinessListController businessListController = new BusinessListController(getActivity(), this);
         BusinessListRequest businessListRequest = new BusinessListRequest();
         businessListRequest.setCategory_id(categoryId + "");
         businessListRequest.setDate_by("onlytoday");
-        if (myArr.length > 0)
-            businessListRequest.setAge_group(finalString);
+//        if (myArr.length > 0)
+//            businessListRequest.setAge_group(finalString);
         businessListRequest.setCity_id((SharedPrefUtils.getCurrentCityModel(getActivity())).getId() + "");
         businessListRequest.setPage(page + "");
         businessListController.getData(AppConstants.BUSINESS_LIST_REQUEST, businessListRequest);

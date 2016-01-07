@@ -319,22 +319,22 @@ public class AgeGroupAdapter extends BaseAdapter {
                 // now add age also
                 Object[] ageObj = selectedageGroups.toArray();
 
-                String ageString = "&age[]=";
-
-                boolean flag = false;
-                for (int i = 0; i < ageObj.length; i++) {
-
-                    if (flag) {
-                        ageString = ageString + "&age[]=";
-                    }
-
-                    ageString = ageString + ageObj[i].toString();
-                    flag = true;
-
-                }
-
-
-                finalstrdata = finalstrdata + ageString;
+//                String ageString = "&age[]=";
+//
+//                boolean flag = false;
+//                for (int i = 0; i < ageObj.length; i++) {
+//
+//                    if (flag) {
+//                        ageString = ageString + "&age[]=";
+//                    }
+//
+//                    ageString = ageString + ageObj[i].toString();
+//                    flag = true;
+//
+//                }
+//
+//
+//                finalstrdata = finalstrdata + ageString;
 
                 mFilterMap.put(MapTypeFilter.AgeGroup, finalstrdata);
 

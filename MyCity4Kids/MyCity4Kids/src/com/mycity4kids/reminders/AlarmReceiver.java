@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.WakefulBroadcastReceiver;
+import android.util.Log;
 
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -63,6 +64,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         } else {
             if ((notificationPrefs == AppConstants.NOTIFICATION_PREF_BOTH || notificationPrefs == AppConstants.NOTIFICATION_PREF_EMAIL)
                     && reminderType != Constants.REMINDER_KIDS_BIRTHDAY) {
+                Log.d("SENDING REMINDER EMAIL", "******************** APPOINTMENT TASK EMAIL ***********************");
                 Intent intentS = new Intent(context, RemainderEmailService.class);
                 intentS.putExtra(Constants.REMAINDER_TYPE, reminderType);
                 intentS.putExtra(Constants.REMAINDER_ID, reminderId);

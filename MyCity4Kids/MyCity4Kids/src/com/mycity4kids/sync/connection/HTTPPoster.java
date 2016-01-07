@@ -2,6 +2,8 @@ package com.mycity4kids.sync.connection;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 import android.util.Base64;
 import android.util.Base64InputStream;
@@ -75,7 +77,7 @@ public class HTTPPoster {
      * @param kvPairs {@link HashMap} for key value.
      */
     public static String doPost(String url, Map<String, String> kvPairs, Map<String, String> header, Context context)
-            throws ClientProtocolException, IOException {
+            throws ClientProtocolException, IOException, PackageManager.NameNotFoundException {
 //		HttpClient httpClient = getNewHttpClient(new BasicHttpParams());
         HttpClient httpClient = new DefaultHttpClient();
         HttpPost httppost = new HttpPost(url);
@@ -90,6 +92,9 @@ public class HTTPPoster {
                 httppost.addHeader(k, v);
             }
         }
+        PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+        String version = pInfo.versionName;
+        httppost.addHeader("appVersion", version);
         if (kvPairs != null && kvPairs.isEmpty() == false) {
             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(kvPairs.size());
             String k, v;
@@ -105,14 +110,21 @@ public class HTTPPoster {
         List<Cookie> cookies = loadSharedPreferencesCookie(context);
         if (cookies != null) {
             CookieStore cookieStore = new BasicCookieStore();
-            for (int i = 0; i < cookies.size(); i++)
+            for (int i = 0; i < cookies.size(); i++) {
                 cookieStore.addCookie(cookies.get(i));
+//                Log.d("MycityCookie ", "Name = " + cookies.get(i).getName() + " Value = " + cookies.get(i).getValue());
+            }
             ((DefaultHttpClient) httpClient).setCookieStore(cookieStore);
         }
 
         HttpResponse response = httpClient.execute(httppost);
         cookies = ((DefaultHttpClient) httpClient).getCookieStore().getCookies();
         saveSharedPreferencesCookies(cookies, context);
+//        if (cookies != null) {
+//            for (int i = 0; i < cookies.size(); i++) {
+//                Log.d("MycityCookie Response", "Name = " + cookies.get(i).getName() + " Value = " + cookies.get(i).getValue());
+//            }
+//        }
 
         InputStream responseContentStream = response.getEntity() == null ? null : response.getEntity().getContent();
         String responseString = new String(DataUtils.convertStreamToBytes(responseContentStream));
@@ -168,7 +180,7 @@ public class HTTPPoster {
      * @throws ClientProtocolException
      * @throws IOException
      */
-    public static String doGet(String url, Map<String, String> header, Context context) throws IOException {
+    public static String doGet(String url, Map<String, String> header, Context context) throws IOException, PackageManager.NameNotFoundException {
 
 //        HttpClient httpclient = getNewHttpClient(new BasicHttpParams());
         HttpClient httpclient = new DefaultHttpClient();
@@ -183,16 +195,26 @@ public class HTTPPoster {
                 httppost.setHeader(k, v);
             }
         }
+        PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+        String version = pInfo.versionName;
+        httppost.addHeader("appVersion", version);
         List<Cookie> cookies = loadSharedPreferencesCookie(context);
         if (cookies != null) {
             CookieStore cookieStore = new BasicCookieStore();
-            for (int i = 0; i < cookies.size(); i++)
+            for (int i = 0; i < cookies.size(); i++) {
                 cookieStore.addCookie(cookies.get(i));
+//                Log.d("MycityCookie ", "Name = " + cookies.get(i).getName() + " Value = " + cookies.get(i).getValue());
+            }
             ((DefaultHttpClient) httpclient).setCookieStore(cookieStore);
         }
         HttpResponse response = httpclient.execute(httppost);
         cookies = ((DefaultHttpClient) httpclient).getCookieStore().getCookies();
         saveSharedPreferencesCookies(cookies, context);
+//        if (cookies != null) {
+//            for (int i = 0; i < cookies.size(); i++) {
+//                Log.d("MycityCookie Response", "Name = " + cookies.get(i).getName() + " Value = " + cookies.get(i).getValue());
+//            }
+//        }
         String responseString = EntityUtils.toString(response.getEntity());
 
         return responseString;

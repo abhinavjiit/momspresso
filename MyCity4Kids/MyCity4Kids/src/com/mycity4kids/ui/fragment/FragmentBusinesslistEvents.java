@@ -265,20 +265,20 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
             // now add age also
             Object[] ageObj = ageArryList.toArray();
 
-            String ageString = "&age[]=";
+//            String ageString = "&age[]=";
 
-            flag = false;
-            for (int i = 0; i < ageObj.length; i++) {
-
-                if (flag) {
-                    ageString = ageString + "&age[]=";
-                }
-
-                ageString = ageString + ageObj[i].toString();
-                flag = true;
-
-            }
-            finalString = finalString + ageString;
+//            flag = false;
+//            for (int i = 0; i < ageObj.length; i++) {
+//
+//                if (flag) {
+//                    ageString = ageString + "&age[]=";
+//                }
+//
+//                ageString = ageString + ageObj[i].toString();
+//                flag = true;
+//
+//            }
+//          finalString = finalString + ageString;
 
             mFilterMap.put(MapTypeFilter.AgeGroup, finalString);
             //

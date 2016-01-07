@@ -6,6 +6,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -203,8 +204,10 @@ public class SplashActivity extends BaseActivity {
         TableAdult _table = new TableAdult(BaseApplication.getInstance());
         if (_table.getAdultCount() > 0) { // if he signup
 
+            startSyncing();
+            startSyncingUserInfo();
             Intent intent = new Intent(SplashActivity.this, DashboardActivity.class);
-
+            Log.e("MYCITY4KIDS", "USER logged In");
             if (!StringUtils.isNullOrEmpty(_deepLinkURL)) {
                 intent.putExtra(AppConstants.DEEP_LINK_URL, _deepLinkURL);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP/*|Intent.FLAG_ACTIVITY_NEW_TASK*/);
@@ -214,6 +217,7 @@ public class SplashActivity extends BaseActivity {
             finish();
 
         } else {
+            Log.e("MYCITY4KIDS", "USER logged Out");
             if (!isConfigurationAvailable) {
                 showAlertDialog("Error", "Something went wrong from server side!", new OnButtonClicked() {
                     @Override

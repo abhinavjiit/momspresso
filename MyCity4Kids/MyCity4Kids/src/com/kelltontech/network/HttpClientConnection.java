@@ -271,15 +271,21 @@ public class HttpClientConnection extends Thread {
             List<Cookie> cookies = loadSharedPreferencesCookie();
             if (cookies != null) {
                 CookieStore cookieStore = new BasicCookieStore();
-                for (int i = 0; i < cookies.size(); i++)
+                for (int i = 0; i < cookies.size(); i++) {
                     cookieStore.addCookie(cookies.get(i));
+//                    Log.d("MycityCookie Request", "Name = " + cookies.get(i).getName() + " Value = " + cookies.get(i).getValue());
+                }
                 ((DefaultHttpClient) httpClient).setCookieStore(cookieStore);
             }
 
             httpResponse = httpClient.execute(getOrPost);
             cookies = ((DefaultHttpClient) httpClient).getCookieStore().getCookies();
             saveSharedPreferencesCookies(cookies);
-//            cookies = ((DefaultHttpClient) httpClient).getCookieStore().getCookies();
+//            if (cookies != null) {
+//                for (int i = 0; i < cookies.size(); i++) {
+//                    Log.d("MycityCookie Response", "Name = " + cookies.get(i).getName() + " Value = " + cookies.get(i).getValue());
+//                }
+//            }
             int statusCode = httpResponse.getStatusLine().getStatusCode();
 
             Log.i(LOG_TAG, "Response Received : " + statusCode);

@@ -163,8 +163,8 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen 
     public void onAppStart() {
         if (ConnectivityUtils.isNetworkEnabled(this)) {
             if (SharedPrefUtils.getUserDetailModel(this).getId() > 0) {
-                startSyncing();
-                startSyncingUserInfo();
+//                startSyncing();
+//                startSyncingUserInfo();
             }
 
         }
