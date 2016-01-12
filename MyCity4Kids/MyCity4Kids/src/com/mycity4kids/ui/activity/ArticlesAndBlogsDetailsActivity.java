@@ -202,7 +202,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
             titleMain.setTextColor(Color.argb(0, 255, 255, 255));
             String coverImageUrl = getIntent().getStringExtra(Constants.ARTICLE_COVER_IMAGE);
 
-            authorType = getIntent().getStringExtra(Constants.FILTER_TYPE);
+//            authorType = getIntent().getStringExtra(Constants.FILTER_TYPE);
 //            bookmarkStatus = getIntent().getIntExtra(Constants.BOOKMARK_STATUS, 0);
 
 //            if (bookmarkStatus == 0)
@@ -210,11 +210,11 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
 //            else
 //                bookmarkImageView.setImageResource(R.drawable.ic_favorite_border_white_48dp_fill);
 
-            if (!StringUtils.isNullOrEmpty(getIntent().getStringExtra(Constants.BLOG_NAME))) {
-                blogName = getIntent().getStringExtra(Constants.BLOG_NAME);
-            } else {
-                blogName = "mycity4kids team";
-            }
+//            if (!StringUtils.isNullOrEmpty(getIntent().getStringExtra(Constants.BLOG_NAME))) {
+//                blogName = getIntent().getStringExtra(Constants.BLOG_NAME);
+//            } else {
+//                blogName = "mycity4kids team";
+//            }
 
 
             cover_image = (ImageView) findViewById(R.id.cover_image);
@@ -794,8 +794,12 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
 
     private void getResponseUpdateUi(ParentingDetailResponse detailsResponse) {
         detailData = detailsResponse.getResult().getData();
-        imageList = detailsResponse.getResult().getData().getBody().getImage();
-
+        imageList = detailData.getBody().getImage();
+        blogName = detailData.getBlog_title();
+        authorType = detailData.getAuthor_type();
+        if (StringUtils.isNullOrEmpty(blogName)) {
+            blogName = "mycity4kids team";
+        }
         if ("0".equals(detailData.getBookmarkStatus())) {
             bookmarkImageView.setImageResource(R.drawable.ic_favorite_border_white_48dp);
             bookmarkStatus = 0;
@@ -1253,6 +1257,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
                 case R.id.user_image:
 
                     Intent intentn = new Intent(this, BlogDetailActivity.class);
+                    intentn.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intentn.putExtra(Constants.IS_COMMING_FROM_LISTING, false);
                     if (!StringUtils.isNullOrEmpty(authorType)) {
                         if (authorType.trim().equalsIgnoreCase("Blogger")) {
@@ -1268,6 +1273,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
 
                 case R.id.user_name:
                     Intent intentnn = new Intent(this, BlogDetailActivity.class);
+                    intentnn.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intentnn.putExtra(Constants.IS_COMMING_FROM_LISTING, false);
                     if (!StringUtils.isNullOrEmpty(authorType)) {
                         if (authorType.trim().equalsIgnoreCase("Blogger")) {

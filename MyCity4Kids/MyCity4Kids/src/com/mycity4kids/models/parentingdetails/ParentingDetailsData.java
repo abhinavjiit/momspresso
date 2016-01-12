@@ -16,6 +16,7 @@ public class ParentingDetailsData {
     private String author_type;
     private String user_following_status;
     private String is_bookmark;
+    private String blog_title;
 
     public String getAuthor_type() {
         return author_type;
@@ -121,4 +122,11 @@ public class ParentingDetailsData {
         this.is_bookmark = is_bookmark;
     }
 
+    public String getBlog_title() {
+        return blog_title;
+    }
+
+    public void setBlog_title(String blog_title) {
+        this.blog_title = blog_title;
+    }
 }

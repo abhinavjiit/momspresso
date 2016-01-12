@@ -500,7 +500,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
             return;
         }
-        blogProgessBar.setVisibility(View.VISIBLE);
+//        blogProgessBar.setVisibility(View.VISIBLE);
         ParentingRequest _parentingModel = new ParentingRequest();
         _parentingModel.setCity_id(SharedPrefUtils.getCurrentCityModel(getActivity()).getId());
         _parentingModel.setPage("1");
