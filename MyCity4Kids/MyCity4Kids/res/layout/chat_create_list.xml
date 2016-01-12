@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:elevation="8dp"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Group Name"
+            android:id="@+id/groupName"
+            android:textColor="#ffffff"
+            android:gravity="left"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="left"
+            android:layout_marginRight="10dp"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            />
+    </android.support.v7.widget.Toolbar>
+    <ListView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/chatListView"
+        android:layout_gravity="center_horizontal"
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        android:layout_weight="1"
+        android:stackFromBottom="true"
+        android:transcriptMode="alwaysScroll"/>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:weightSum="1"
+        android:layout_weight="0.1">
+        <EditText
+            android:layout_width="251dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/editText"
+            android:layout_weight="0.97"
+            android:textColor="#000000"
+            android:inputType="textMultiLine"
+            android:maxLines="4"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="send"
+            android:id="@+id/button"
+            android:textColor="#000000"/>
+
+
+    </LinearLayout>
+
+</LinearLayout>
