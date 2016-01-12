@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- <string name=ChatPlatform-->
+    <string name="title_section1">Private Groups</string>
+    <string name="title_section2">Public Groups</string>
+    <string name="title_section3">Join Groups</string>
 
     <string name="app_name">mycity4kids</string>
     <string name="action_settings">Settings</string>

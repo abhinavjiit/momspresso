@@ -30,6 +30,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.READ_CONTACTS"></uses-permission>
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
     <!-- <permission
@@ -97,18 +98,36 @@
                 <data android:mimeType="*/*" />
             </intent-filter>
         </activity>
+<activity android:name="com.chatPlatform.ActivitiesFragments.ChatDashboard"
+    android:screenOrientation="portrait"
 
+>
+    <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
 
+        <category android:name="android.intent.category.LAUNCHER" />
+    </intent-filter>
+</activity>
+        <activity android:name="com.chatPlatform.ActivitiesFragments.CreateChat"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"></activity>
+        <activity android:name="com.chatPlatform.ActivitiesFragments.CreateGroup"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name="com.chatPlatform.ActivitiesFragments.GroupActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name="com.chatPlatform.ActivitiesFragments.AccessContacts"
+            android:screenOrientation="portrait"
+        ></activity>
         <activity
             android:name=".ui.activity.SplashActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppBaseTheme">
-            <intent-filter>
+           <!-- <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter>-->
 
             <!--The following intent filter is added to provide deep linking to the MC4K app  -->
             <intent-filter>

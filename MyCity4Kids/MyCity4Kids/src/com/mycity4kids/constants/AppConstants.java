@@ -249,6 +249,7 @@ public class AppConstants {
     public static final int REQUEST_ACCOUNT_PICKER = 1000;
     public static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     public static final int PUSH_TOKEN_REQUEST = 1003;
+    public static final int CREATE_GROUP_REQUEST = 1004;
 
     public static final int DEEP_LINK_RESOLVER_REQUEST = 2001;
 

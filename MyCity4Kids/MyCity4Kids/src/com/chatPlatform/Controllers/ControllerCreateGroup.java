@@ -114,11 +114,12 @@ public class ControllerCreateGroup extends BaseController{
      *
      * @return
      */
-    private HttpEntity setRequestParameters(GroupInfo requestData) {
+    private List<NameValuePair> setRequestParameters(GroupInfo requestData) {
         UrlEncodedFormEntity encodedEntity = null;
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         try {
             String data = new Gson().toJson(requestData.getInviteList());
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+
 
                 nameValuePairs.add(new BasicNameValuePair("groupId", requestData.getGroupId()));
                 nameValuePairs.add(new BasicNameValuePair("userId",""+ requestData.getUserId()));
@@ -135,7 +136,7 @@ public class ControllerCreateGroup extends BaseController{
             // TODO: handle exception
         }
 
-        return encodedEntity;
+        return nameValuePairs;
 
     }
 
