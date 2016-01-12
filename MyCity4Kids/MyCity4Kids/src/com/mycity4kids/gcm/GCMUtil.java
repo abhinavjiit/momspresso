@@ -36,19 +36,21 @@ public class GCMUtil {
     private static OnGcmTokenReceived onGcmListener;
 
     public static void initializeGCM(final Activity context) {
-       // onGcmListener = onGcmTokenReceiveListener;
+        // onGcmListener = onGcmTokenReceiveListener;
         if (checkPlayServices(context)) {
             gcm = GoogleCloudMessaging.getInstance(context);
             regid = getRegistrationId(context);
 
             if (regid.isEmpty()) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (StringUtils.isNullOrEmpty(SharedPrefUtils.getDeviceToken(context)))
-                            registerInBackground(context);
-                    }
-                }).start();
+//                new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        if (StringUtils.isNullOrEmpty(SharedPrefUtils.getDeviceToken(context)))
+//                            registerInBackground(context);
+//                    }
+//                }).start();
+                if (StringUtils.isNullOrEmpty(SharedPrefUtils.getDeviceToken(context)))
+                    registerInBackground(context);
             } else {
                 //onGcmListener.onGcmTokenReceive(regid);
                 // call broadcast here too

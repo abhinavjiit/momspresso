@@ -205,6 +205,7 @@ public class TabsPagerAdapter extends FragmentStatePagerAdapter {
     }
 
     public void refreshBookmarkedBlogList() {
-        mBookmarkedArticlefragment.refreshBookmarkList();
+        if (null != mBookmarkedArticlefragment)
+            mBookmarkedArticlefragment.refreshBookmarkList();
     }
 }

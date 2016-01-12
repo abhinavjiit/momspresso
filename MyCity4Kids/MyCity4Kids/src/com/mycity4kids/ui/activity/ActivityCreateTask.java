@@ -1479,7 +1479,7 @@ public class ActivityCreateTask extends BaseActivity implements View.OnClickList
 
                         Time.setText(aTime.toUpperCase());
 
-                        Log.d("time ", (String) Time.getText());
+//                        Log.d("time ", (String) Time.getText());
 
                     }
                 }, mHour, mMinute, false);
