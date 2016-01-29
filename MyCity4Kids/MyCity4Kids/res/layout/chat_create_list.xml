@@ -32,7 +32,8 @@
         android:dividerHeight="0dp"
         android:layout_weight="1"
         android:stackFromBottom="true"
-        android:transcriptMode="alwaysScroll"/>
+        android:transcriptMode="normal"
+        />
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"

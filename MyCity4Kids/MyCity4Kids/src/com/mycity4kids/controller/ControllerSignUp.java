@@ -16,6 +16,7 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.dbtable.UserTable;
 import com.mycity4kids.models.user.UserResponse;
+import com.mycity4kids.newmodels.NewSignUpModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 
 import org.apache.http.NameValuePair;
@@ -40,22 +41,14 @@ public class ControllerSignUp extends BaseController {
         //serviceRequest.setHttpHeaders(header, header);
         serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.POST);
         serviceRequest.setRequestData(requestData);
-        String data = new Gson().toJson(requestData);
-
-//        try {
-//            StringEntity entity = new StringEntity(data);
-//            serviceRequest.setPostData(entity);
-//        } catch (Exception ex) {
-//
-//        }
         serviceRequest.setContext(activity);
-        serviceRequest.setPostData(setRequestParameters(data));
+        serviceRequest.setPostData(setRequestParameters(requestData, requestType));
         serviceRequest.setDataType(requestType);
         serviceRequest.setResponseController(this);
         serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
         //	serviceRequest.setUrl("http://54.251.100.249/webservices/apiusers/registration?emailId=deepanker.chaudhary.1990@gmail.com&password=123456&FirstName=deep&LastName=chaudhary&MobileNumber=1235678990&cityId=1");
         //	serviceRequest.setUrl(AppConstants.REGISTRATION_URL+getAppendUrl((UserRequest)requestData));
-        serviceRequest.setUrl(AppConstants.SIGN_UP_URL);
+        serviceRequest.setUrl(AppConstants.NEW_SIGN_UP_URL);
         HttpClientConnection connection = HttpClientConnection.getInstance();
         connection.addRequest(serviceRequest);
 
@@ -65,7 +58,7 @@ public class ControllerSignUp extends BaseController {
     @Override
     public void handleResponse(Response response) {
         switch (response.getDataType()) {
-            case AppConstants.SIGNUP_REQUEST:
+            case AppConstants.NEW_SIGNUP_REQUEST:
                 try {
                     String responseData = new String(response.getResponseData());
                     Log.i("SIGNUP Response", responseData);
@@ -112,25 +105,22 @@ public class ControllerSignUp extends BaseController {
      *
      * @return
      */
-    private List<NameValuePair> setRequestParameters(String requestData) {
+    private List<NameValuePair> setRequestParameters(Object requestData, int requestType) {
         UrlEncodedFormEntity encodedEntity = null;
+        NewSignUpModel model = (NewSignUpModel) requestData;
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+
         try {
-            if (!StringUtils.isNullOrEmpty(requestData)) {
-                nameValuePairs.add(new BasicNameValuePair("nuser", requestData));
-                nameValuePairs.add(new BasicNameValuePair("user_from", "" + SharedPrefUtils.getSignupFlag(activity)));
-            }
-            if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getDeviceToken(activity))) {
-                SharedPrefUtils.setPushTokenUpdateToServer(activity, true);
-            }
-            nameValuePairs.add(new BasicNameValuePair("push_token", SharedPrefUtils.getDeviceToken(activity)));
-            nameValuePairs.add(new BasicNameValuePair("deviceId", DataUtils.getDeviceId(activity)));
-//            encodedEntity = new UrlEncodedFormEntity(nameValuePairs, "UTF-8");
-
+            nameValuePairs.add(new BasicNameValuePair("name", model.getUsername()));
+            nameValuePairs.add(new BasicNameValuePair("mobile", "" + model.getMobileNumber()));
+            nameValuePairs.add(new BasicNameValuePair("email", "" + model.getEmail()));
+            nameValuePairs.add(new BasicNameValuePair("colorCode", "" + model.getColor_code()));
+            nameValuePairs.add(new BasicNameValuePair("password", "" + model.getPassword()));
+            nameValuePairs.add(new BasicNameValuePair("cityId", "" + SharedPrefUtils.getCurrentCityModel(activity).getId()));
+            nameValuePairs.add(new BasicNameValuePair("requestMedium", "" + model.getSocialMode()));
+            nameValuePairs.add(new BasicNameValuePair("socialToken", "" + model.getSocialToken()));
+            nameValuePairs.add(new BasicNameValuePair("profileImg", "" + model.getProfileImgUrl()));
             System.out.println("JSON " + nameValuePairs);
-
-            // encodedEntity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE,
-            // "application/x-www-form-urlencoded"));
         } catch (Exception e) {
             // TODO: handle exception
         }

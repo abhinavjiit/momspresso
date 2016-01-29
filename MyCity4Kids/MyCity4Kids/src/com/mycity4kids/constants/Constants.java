@@ -160,6 +160,8 @@ public class Constants {
     public static final String ENTER_PINCODE = "Please enter pincode";
     public static final String ENTER_KIDNAME = "Please enter name";
     public static final String ENTER_KIDBDY = "Please enter birthday";
+    public static final String ENTER_MOBILE = "Please enter mobile number";
+    public static final String ENTER_VALID_MOBILE = "Please enter a valid mobile number";
 
 
     public static final String PASSWORD_MISMATCH = "Password should be same";

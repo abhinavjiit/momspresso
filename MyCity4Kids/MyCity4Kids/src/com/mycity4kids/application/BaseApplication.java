@@ -8,9 +8,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
+import android.support.multidex.MultiDex;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.chatPlatform.ServiceReplication.ReplicationService;
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.Document;
@@ -134,10 +136,15 @@ public class BaseApplication extends Application {
         });
     }
 
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
 
     /*
-     * Returns the Google Analytics tracker.
-     */
+         * Returns the Google Analytics tracker.
+         */
     public static Tracker getGaTracker() {
         return mTracker;
     }
@@ -160,14 +167,15 @@ public class BaseApplication extends Application {
     protected static void setInstance(BaseApplication mInstance) {
         BaseApplication.mInstance = mInstance;
     }
+
     public static final String TAG = "ChatApp";
 
     private static final String DATABASE_NAME = "chatdb";
 
     private Manager manager;
     private Database database;
-    private String userNumber="123";
-    private String userName="test";
+    private String userNumber = "123";
+    private String userName = "test";
 
     public String getUserNumber() {
         return userNumber;
@@ -177,24 +185,25 @@ public class BaseApplication extends Application {
         this.userNumber = userNumber;
     }
 
-    public String getUserName()
-    {
+    public String getUserName() {
         return userName;
     }
-    public void setUserName(String userName)
-    {this.userName=userName;}
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
     public void initDatabase() {
         try {
 
-            Manager.enableLogging(TAG, com.couchbase.lite.util.Log.VERBOSE);
+            /*Manager.enableLogging(TAG, com.couchbase.lite.util.Log.VERBOSE);
             Manager.enableLogging(com.couchbase.lite.util.Log.TAG, com.couchbase.lite.util.Log.VERBOSE);
             Manager.enableLogging(com.couchbase.lite.util.Log.TAG_SYNC_ASYNC_TASK, com.couchbase.lite.util.Log.VERBOSE);
             Manager.enableLogging(com.couchbase.lite.util.Log.TAG_SYNC, com.couchbase.lite.util.Log.VERBOSE);
             Manager.enableLogging(com.couchbase.lite.util.Log.TAG_QUERY, com.couchbase.lite.util.Log.VERBOSE);
             Manager.enableLogging(com.couchbase.lite.util.Log.TAG_VIEW, com.couchbase.lite.util.Log.VERBOSE);
             Manager.enableLogging(com.couchbase.lite.util.Log.TAG_DATABASE, com.couchbase.lite.util.Log.VERBOSE);
-
+*/
             manager = new Manager(new AndroidContext(getApplicationContext()), Manager.DEFAULT_OPTIONS);
         } catch (IOException e) {
             com.couchbase.lite.util.Log.e(TAG, "Cannot create Manager object", e);
@@ -203,16 +212,16 @@ public class BaseApplication extends Application {
 
         try {
             database = manager.getDatabase(DATABASE_NAME);
-            if(database != null) {
+            if (database != null) {
                 database.addChangeListener(new Database.ChangeListener() {
                     public void changed(Database.ChangeEvent event) {
                         List<DocumentChange> docChangeList = event.getChanges();
-                        DocumentChange docChange=docChangeList.get(0);
-                        String id= docChange.getDocumentId();
-                        Document doc= database.getDocument(id);
-                        String msg= (String) doc.getProperty("msg");
-                        String title=(String) doc.getProperty("title");
-                        notifyMe(title,msg);
+                        DocumentChange docChange = docChangeList.get(0);
+                        String id = docChange.getDocumentId();
+                        Document doc = database.getDocument(id);
+                        String msg = (String) doc.getProperty("msg");
+                        String title = (String) doc.getProperty("title");
+                        notifyMe(title, msg);
                     }
                 });
             }
@@ -227,11 +236,14 @@ public class BaseApplication extends Application {
         return this.database;
     }
 
-    public Manager getManager() { return this.manager; }
-    public URL createSyncURL(boolean isEncrypted){
+    public Manager getManager() {
+        return this.manager;
+    }
+
+    public URL createSyncURL(boolean isEncrypted) {
         URL syncURL = null;
         // String host = "https://10.0.2.2";
-        String host="http://52.74.34.206";
+        String host = "http://52.74.34.206";
         String port = "4984";
         String dbName = "my_test_config";
         try {
@@ -242,7 +254,7 @@ public class BaseApplication extends Application {
         return syncURL;
     }
 
-    public void startReplications(String userName, String Password)  {
+    public void startReplications(String userName, String Password) {
         try {
             final Replication pull = this.getDatabase().createPullReplication(this.createSyncURL(false));
             Replication push = this.getDatabase().createPushReplication(this.createSyncURL(false));
@@ -266,7 +278,7 @@ public class BaseApplication extends Application {
                         // progressDialog.dismiss();
                     } else {
                         double total = pull.getCompletedChangesCount();
-                        int totalChanges=  pull.getChangesCount();
+                        int totalChanges = pull.getChangesCount();
                         //progressDialog.setMax(total);
                         // progressDialog.setProgress(push.getChangesCount() + pull.getChangesCount());
                         android.util.Log.i("sync-progress", "totalChanges " + totalChanges + " comepletedChanges " + total);
@@ -274,13 +286,13 @@ public class BaseApplication extends Application {
                 }
             });
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             android.util.Log.e("sync-error", "cannot sync", e);
         }
     }
 
-    public void notifyMe(String title, String msg){
+    public void notifyMe(String title, String msg) {
 
 /*
 
@@ -305,11 +317,12 @@ public class BaseApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Fabric.with(this, new Crashlytics());
+//      Fabric.with(this, new Crashlytics());
         setInstance(this);
         initializeGa();
         initDatabase();
-        startReplications("test","test");
+        startReplications("test", "test");
+        // startService(new Intent(this,ReplicationService.class));
         // For Google Analytics initialization.
 
 

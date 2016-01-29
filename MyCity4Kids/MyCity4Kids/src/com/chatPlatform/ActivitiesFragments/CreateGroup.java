@@ -42,7 +42,7 @@ public class CreateGroup extends BaseActivity {
     Button addMemberButton;
     String membersArr[]=null;
     String owenrsArr[];
-    String groupName;
+    String groupName,description;
     BaseApplication app;
     int counter;
     String groupTypeInput;
@@ -52,6 +52,7 @@ public class CreateGroup extends BaseActivity {
     TextView publicGroupTV,privateGroupTV;
     String documentId;
     String admin;
+    EditText editTextDescription;
 ActionBar actionBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,12 +81,13 @@ ActionBar actionBar;
         membersArr[0]="user-156850";
         membersArr[1]="user-0987654321";*/
         ArrayList<String> membersList;
-        owenrsArr=new String[2];
+        owenrsArr=new String[1];
         owenrsArr[0]="user-"+UserId;
         groupNameEditText= (EditText) findViewById(R.id.groupName_editText);
         groupTypeSwitch=(Switch) findViewById(R.id.groupTypeSwitch);
         publicGroupTV=(TextView)findViewById(R.id.publicGroup);
         privateGroupTV=(TextView)findViewById(R.id.privateGroup);
+        editTextDescription=(EditText)findViewById(R.id.editTextDescription);
         ColorStateList buttonStates = new ColorStateList(
                 new int[][]{
                         new int[]{android.R.attr.state_checked},
@@ -166,6 +168,7 @@ ActionBar actionBar;
             @Override
             public void onClick(View v) {
                 groupName=groupNameEditText.getText().toString();
+                description=editTextDescription.getText().toString();
                 documentId=createGroup();
                 if (documentId!=null)
                 {Intent intent=new Intent(CreateGroup.this,AccessContacts.class);
@@ -198,7 +201,7 @@ ActionBar actionBar;
         map.put("members", owenrsArr);
         map.put("blockedMembers", "");
         map.put("title", groupName);
-        map.put("description", "This is new group");
+        map.put("description", description);
         map.put("lastMessage", "");
        // map.put("membersList",membersList);
 

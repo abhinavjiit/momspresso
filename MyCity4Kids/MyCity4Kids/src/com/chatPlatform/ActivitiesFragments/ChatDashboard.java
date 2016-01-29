@@ -27,27 +27,28 @@ import java.util.List;
  */
 public class ChatDashboard extends AppCompatActivity implements JoinGroupAdapter.OnGroupJoinInterface {
 
-        private Toolbar toolbar;
-        private TabLayout tabLayout;
-        private ViewPager viewPager;
-      //  private TextView textView;
-        private FloatingActionButton floatingActionButton;
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-                super.onCreate(savedInstanceState);
-                setContentView(R.layout.dashboard_chat);
-            //    textView =(TextView)findViewById(R.id.button1);
-                toolbar = (Toolbar) findViewById(R.id.toolbar);
-            floatingActionButton=(FloatingActionButton) findViewById((R.id.createGroup));
-                setSupportActionBar(toolbar);
+    private Toolbar toolbar;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+    //  private TextView textView;
+    private FloatingActionButton floatingActionButton;
 
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                getSupportActionBar().setTitle("GROUPS");
-                viewPager = (ViewPager) findViewById(R.id.viewpager);
-                setupViewPager(viewPager);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.dashboard_chat);
+        //    textView =(TextView)findViewById(R.id.button1);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        floatingActionButton = (FloatingActionButton) findViewById((R.id.createGroup));
+        setSupportActionBar(toolbar);
 
-                tabLayout = (TabLayout) findViewById(R.id.tabs);
-                tabLayout.setupWithViewPager(viewPager);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("GROUPS");
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        setupViewPager(viewPager);
+
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
        /*     Bundle extras = getIntent().getExtras();
           if (extras!=null)
           { String toOpen = extras.getString("toOpen");
@@ -62,13 +63,13 @@ public class ChatDashboard extends AppCompatActivity implements JoinGroupAdapter
                     ft.replace(R.id.viewpager, fragment);
                        ft.commit();}
             }}}*/
-            floatingActionButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent i=new Intent(ChatDashboard.this,CreateGroup.class);
-                    startActivity(i);
-                }
-            });
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(ChatDashboard.this, CreateGroup.class);
+                startActivity(i);
+            }
+        });
          /*   textView=(TextView)findViewById(R.id.button1);
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -77,15 +78,17 @@ public class ChatDashboard extends AppCompatActivity implements JoinGroupAdapter
                     startActivity(i);
                 }
             });*/
-        }
+    }
+
     ViewPagerAdapter adapter;
-        private void setupViewPager(ViewPager viewPager) {
-            adapter = new ViewPagerAdapter(getSupportFragmentManager());
-                adapter.addFragment(new PrivateGroupListView(), "Private Group");
-                adapter.addFragment(new PublicGroupListView(), "Public Group");
-                adapter.addFragment(new JoinGroupListView(), "Join Group");
-                viewPager.setAdapter(adapter);
-        }
+
+    private void setupViewPager(ViewPager viewPager) {
+        adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(new PrivateGroupListView(), "Private Group");
+        adapter.addFragment(new PublicGroupListView(), "Public Group");
+        adapter.addFragment(new JoinGroupListView(), "Join Group");
+        viewPager.setAdapter(adapter);
+    }
 
     @Override
     public void OnGroupJoined() {
@@ -98,49 +101,55 @@ public class ChatDashboard extends AppCompatActivity implements JoinGroupAdapter
     }*/
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
-                private final List<Fragment> mFragmentList = new ArrayList<>();
-                private final List<String> mFragmentTitleList = new ArrayList<>();
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
 
-                public ViewPagerAdapter(FragmentManager manager) {
-                        super(manager);
-                }
-
-                @Override
-                public Fragment getItem(int position) {
-                        return mFragmentList.get(position);
-                }
-
-                @Override
-                public int getCount() {
-                        return mFragmentList.size();
-                }
-
-                public void addFragment(Fragment fragment, String title) {
-                        mFragmentList.add(fragment);
-                        mFragmentTitleList.add(title);
-                }
-
-                @Override
-                public CharSequence getPageTitle(int position) {
-                        return mFragmentTitleList.get(position);
-                }
-
+        public ViewPagerAdapter(FragmentManager manager) {
+            super(manager);
         }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        public void addFragment(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
+        }
+
+    }
 }
  /*extends AppCompatActivity{
         *//**
-         * The {@link android.support.v4.view.PagerAdapter} that will provide
-         * fragments for each of the sections. We use a
-         * {@link android.support.v4.app.FragmentPagerAdapter} derivative, which
-         * will keep every loaded fragment in memory. If this becomes too memory
-         * intensive, it may be best to switch to a
-         * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-         *//*
+ * The {@link android.support.v4.view.PagerAdapter} that will provide
+ * fragments for each of the sections. We use a
+ * {@link android.support.v4.app.FragmentPagerAdapter} derivative, which
+ * will keep every loaded fragment in memory. If this becomes too memory
+ * intensive, it may be best to switch to a
+ * {@link android.support.v4.app.FragmentStatePagerAdapter}.
+ * <p/>
+ * The {@link ViewPager} that will host the section contents.
+ * <p/>
+ * The {@link ViewPager} that will host the section contents.
+ * <p/>
+ * The {@link ViewPager} that will host the section contents.
+ *//*
         SectionsPagerAdapter mSectionsPagerAdapter;
 
         *//**
-         * The {@link ViewPager} that will host the section contents.
-         *//*
+ * The {@link ViewPager} that will host the section contents.
+ *//*
         ViewPager mViewPager;
 
 @Override

@@ -6,6 +6,7 @@ import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -49,6 +50,7 @@ public class CreateChat extends BaseActivity {
 Toolbar mToolbar;
 TextView groupName;
     String title;
+    int rows;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,20 +76,34 @@ TextView groupName;
         { Database database = app.getDatabase();
         title=database.getDocument(groupChannelId).getProperty("title").toString();}
         groupName.setText(title);
-        final Button btnAddMore = new Button(this);
-        btnAddMore.setText("load previous message");
-        chatListView.addHeaderView(btnAddMore);
-        btnAddMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                intialQueryLimit += 10;
-                increaseQuery(intialQueryLimit);
-            }
-        });
+
         query = Chats.getQuery(app.getDatabase(), groupChannelId);
         liveQuery = query.toLiveQuery();
         chatAdapter = new ChatAdapter(this, liveQuery);
         chatListView.setAdapter(chatAdapter);
+       // int rows=query.getView().getTotalRows();
+
+        try {
+            final QueryEnumerator chatEnumerator = query.run();
+            rows=chatEnumerator.getCount();
+        } catch (CouchbaseLiteException e) {
+            e.printStackTrace();
+        }
+        Log.e("rows",rows+"");
+        if (rows>10)
+        {
+            Log.e("rows",rows+"");
+            final Button btnAddMore = new Button(this);
+            btnAddMore.setText("load previous messages");
+            chatListView.addHeaderView(btnAddMore);
+            btnAddMore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    intialQueryLimit += 10;
+                    increaseQuery(intialQueryLimit);
+                }
+            });
+        }
 groupName.setOnClickListener(new View.OnClickListener() {
     @Override
     public void onClick(View v) {

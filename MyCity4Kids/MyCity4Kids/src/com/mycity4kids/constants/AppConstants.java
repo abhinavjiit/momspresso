@@ -12,8 +12,9 @@ public class AppConstants {
 
 
     //    public static final String STAGING_CLIENT_SERVER_URL = "http://54.169.17.138/";
-    public static final String LIVE_URL = "http://webserve.mycity4kids.com/";
-    // public static final String LIVE_URL = "http://54.169.17.138/";
+//    public static final String LIVE_URL = "http://webserve.mycity4kids.com/";
+    public static final String LIVE_URL = "http://54.169.17.138/";
+//    public static final String LIVE_URL = "http://10.42.0.1/";
 
     //Enable For Testing
     //public static final String LIVE_URL = SharedPrefUtils.getBaseURL(BaseApplication.getAppContext());
@@ -138,6 +139,16 @@ public class AppConstants {
 
     public static final Uri APP_BASE_URI = Uri.parse("android-app://com.mycity4kids/http/www.mycity4kids.com/");
     public static final Uri WEB_BASE_URL = Uri.parse("http://www.mycity4kids.com/");
+
+
+    /*New Login/Sign Up Constants*/
+    public static final String SMS_ORIGIN = "044091";
+    public static final int NEW_SIGNUP_REQUEST = 1005;
+    public static final int VERIFY_OTP_REQUEST = 1006;
+    public static final int NEW_LOGIN_REQUEST = 1007;
+    public static final String VERIFY_OTP_URL = BASE_URL + STAGING_USERS_KEY + "/checkOtpV1";
+    public static final String NEW_SIGN_UP_URL = BASE_URL + STAGING_USERS_KEY + "/registrationV1/";
+    public static final String NEW_LOGIN_URL = BASE_URL + STAGING_USERS_KEY + "/loginV1/";
 
     public static final int LOGIN_REQUEST = 0;
     public static final int GOOGLE_REQUEST = 1;

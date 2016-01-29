@@ -138,6 +138,35 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
+            <RadioButton
+                android:id="@+id/rdBtnMyGroups"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:background="@drawable/selector_drawer_menu"
+                android:button="@null"
+                android:drawableLeft="@drawable/parenting"
+                android:drawablePadding="10dp"
+                android:padding="12dp"
+                android:text="MY GROUPS"
+                android:textColor="@color/white_color"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <RadioButton
+                android:id="@+id/homework"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:background="@drawable/selector_drawer_menu"
+                android:button="@null"
+                android:drawableLeft="@drawable/parenting"
+                android:drawablePadding="10dp"
+                android:padding="12dp"
+                android:text="Homework"
+                android:textColor="@color/white_color"
+                android:textSize="16sp"
+                android:textStyle="bold" />
         </RadioGroup>
 
         <TextView

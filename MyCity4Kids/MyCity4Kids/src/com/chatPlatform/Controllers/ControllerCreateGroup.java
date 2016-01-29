@@ -33,6 +33,7 @@ public class ControllerCreateGroup extends BaseController{
     Activity activity;
     public ControllerCreateGroup(Activity activity, IScreen screen) {
         super(activity, screen);
+        this.activity=activity;
     }
     @Override
     public ServiceRequest getData(int requestType, Object requestData) {
@@ -40,6 +41,7 @@ public class ControllerCreateGroup extends BaseController{
         //serviceRequest.setHttpHeaders(header, header);
         serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.POST);
         serviceRequest.setRequestData(requestData);
+        serviceRequest.setContext(activity);
         GroupInfo data = (GroupInfo)requestData;
 //        String data = new Gson().toJson(requestData);
 

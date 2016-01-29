@@ -22,7 +22,7 @@ public class JoinFamilyActivity extends BaseActivity implements View.OnClickList
 
         setContentView(R.layout.aa_joinfamily);
 
-        TextView login = (TextView)findViewById(R.id.email_login_btn);
+        TextView login = (TextView) findViewById(R.id.email_login_btn);
         login.setPaintFlags(login.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
         findViewById(R.id.craete_family).setOnClickListener(this);
@@ -41,8 +41,10 @@ public class JoinFamilyActivity extends BaseActivity implements View.OnClickList
 
         switch (v.getId()) {
             case R.id.craete_family:
-                startActivity(new Intent(this, LandingLoginActivity.class));
+//                startActivity(new Intent(this, LandingLoginActivity.class));
+                startActivity(new Intent(this, CreateFamilyActivity.class));
                 break;
+
 
             case R.id.join_family:
                 Intent i = new Intent(this, ActivityLogin.class);
