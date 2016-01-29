@@ -6,6 +6,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.animation.AnimationUtils;
@@ -169,6 +170,14 @@ public class SplashActivity extends BaseActivity {
                 if (ConnectivityUtils.isNetworkEnabled(SplashActivity.this)) {
 
                     _controller.getData(AppConstants.CONFIGURATION_REQUEST, versionApiModel);
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            navigateToNextScreen(true);
+                        }
+                    }, 500);
+
                     //ToastUtils.showToast(SplashActivity.this, getString(R.string.error_network));
                     //return;
                 } else {
