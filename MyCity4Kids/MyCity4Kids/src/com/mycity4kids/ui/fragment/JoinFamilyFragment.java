@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.mycity4kids.R;
 import com.mycity4kids.ui.activity.ActivityLogin;
+import com.mycity4kids.ui.activity.CreateFamilyActivity;
 import com.mycity4kids.ui.activity.LandingLoginActivity;
 
 import java.util.ArrayList;
@@ -51,21 +52,22 @@ public class JoinFamilyFragment extends Fragment implements View.OnClickListener
     @Override
     public void onClick(View v) {
 
-        switch(v.getId())
-        {
+        switch (v.getId()) {
             case R.id.craete_family:
                 startActivity(new Intent(getActivity(), LandingLoginActivity.class));
-            break;
+//                startActivity(new Intent(getActivity(), CreateFamilyActivity.class));
+
+                break;
 
             case R.id.join_family:
-                Intent i = new Intent(getActivity(),ActivityLogin.class);
-                i.putExtra("frmJoinFamily",true);
+                Intent i = new Intent(getActivity(), ActivityLogin.class);
+                i.putExtra("frmJoinFamily", true);
                 startActivity(i);
-            break;
+                break;
 
             case R.id.email_login_btn:
                 startActivity(new Intent(getActivity(), ActivityLogin.class));
-            break;
+                break;
         }
 
     }

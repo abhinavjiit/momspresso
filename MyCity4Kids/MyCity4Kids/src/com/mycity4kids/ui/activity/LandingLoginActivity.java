@@ -212,7 +212,7 @@ public class LandingLoginActivity extends BaseActivity implements OnClickListene
             case R.id.sign_up_btn:
 
                 Intent intent1 = new Intent(LandingLoginActivity.this, ActivitySignUp.class);
-                intent1.putExtra(Constants.SIGNUP_FLAG,true);
+                intent1.putExtra(Constants.SIGNUP_FLAG, true);
                 startActivity(intent1);
 
 //			if(!Constants.IS_COMING_FROM_INSIDE){
@@ -412,7 +412,7 @@ public class LandingLoginActivity extends BaseActivity implements OnClickListene
                         if (responseData.getResult().getData().getError().toString().trim().equalsIgnoreCase("family_linked")) {
                             if (mGooglePlusUtils != null)
                                 mGooglePlusUtils.onStop();
-                                showLoginDialog(getResources().getString(R.string.do_login));
+                            showLoginDialog(getResources().getString(R.string.do_login));
 
 
                         } else {
@@ -420,11 +420,11 @@ public class LandingLoginActivity extends BaseActivity implements OnClickListene
                             if (isFacebook) {
 
                                 if (fbUser != null) {
-                                    Intent i = new Intent(this, ActivitySignUp.class);
+                                    Intent i = new Intent(this, SocialSignUpActivity.class);
                                     Bundle bundle = new Bundle();
                                     bundle.putString(Constants.USER_ID, fbUser.getId());
                                     bundle.putString(Constants.USER_NAME, fbUser.getFirstName() + " " + fbUser.getLastName());
-                                    bundle.putString(Constants.USER_EMAIL, fbUser.asMap().get("email").toString());
+                                    bundle.putString(Constants.USER_EMAIL, "hpmycity23@yahoo.com");
                                     bundle.putString(Constants.ACCESS_TOKEN, accessToken);
                                     bundle.putString(Constants.MODE, "facebook");
                                     bundle.putString(Constants.PROFILE_IMAGE, personPhotoUrl);
@@ -642,6 +642,14 @@ public class LandingLoginActivity extends BaseActivity implements OnClickListene
                 // removeProgressDialog();
             }
         } catch (Exception e) {
+            final LoginController _controller = new LoginController(this, this);
+            UserRequest _userModel = new UserRequest();
+            _userModel.setEmailId("hpmycity23@yahoo.com");
+            _userModel.setProfileId("123");
+            _userModel.setNetworkName("facebook");
+            _userModel.setFirstName("hemant");
+            _userModel.setLastName("parmar");
+            _controller.getData(AppConstants.LOGIN_REQUEST, _userModel);
             removeProgressDialog();
             showToast("Try again later.");
             //e.printStackTrace();

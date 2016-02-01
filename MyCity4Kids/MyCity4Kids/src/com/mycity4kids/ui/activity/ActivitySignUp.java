@@ -69,6 +69,7 @@ import com.mycity4kids.models.user.KidsInfo;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.models.user.UserModel;
 import com.mycity4kids.models.user.UserResponse;
+import com.mycity4kids.newmodels.NewSignUpModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.dialog.PhotoOptionsDialog;
 import com.mycity4kids.ui.fragment.NotificationFragment;
@@ -105,6 +106,7 @@ public class ActivitySignUp extends BaseActivity implements View.OnClickListener
     private EditText mFamilyname;
     private EditText mSpousename;
     private EditText mSpouseemail;
+    private EditText mSpouseMobile;
     private TextView mColorfrSpouse;
     private EditText mFamilysharepswd;
     private EditText mConfirmPswd;
@@ -134,6 +136,7 @@ public class ActivitySignUp extends BaseActivity implements View.OnClickListener
     private String Fb_access_token = "";
     private String google_secret = "";
     private SignUpModel signupModel;
+    private NewSignUpModel newSignupModel;
     private ImageView profile_image;
     private Bitmap originalImage = null;
     private Toolbar mToolbar;
@@ -162,33 +165,34 @@ public class ActivitySignUp extends BaseActivity implements View.OnClickListener
         rootLayout = (LinearLayout) findViewById(R.id.root);
         scrollView = (ScrollView) findViewById(R.id.mainScroll);
 
-        mFamilyname = (EditText) findViewById(R.id.family_name);
+//        mFamilyname = (EditText) findViewById(R.id.family_name);
         profile_image = (ImageView) findViewById(R.id.profile_image);
         mSpousename = (EditText) findViewById(R.id.spouse_name);
         mSpouseemail = (EditText) findViewById(R.id.spouse_email);
+        mSpouseMobile = (EditText) findViewById(R.id.spouse_mobile);
         mFamilysharepswd = (EditText) findViewById(R.id.family_password);
-        mConfirmPswd = (EditText) findViewById(R.id.confirm_password);
-        mAddpincode = (EditText) findViewById(R.id.add_pincode);
+//        mConfirmPswd = (EditText) findViewById(R.id.confirm_password);
+//        mAddpincode = (EditText) findViewById(R.id.add_pincode);
         mColorfrSpouse = (TextView) findViewById(R.id.color_spouse);
-        mAdultContainer = (LinearLayout) findViewById(R.id.internal_adult_layout);
-        mKidsName = (EditText) findViewById(R.id.kids_name);
-        mKidsbdy = (TextView) findViewById(R.id.kids_bdy);
-        mChildContainer = (LinearLayout) findViewById(R.id.internal_kid_layout);
-        mColorfrKid = (TextView) findViewById(R.id.kidcolor);
-        mAdditionalChild = (TextView) findViewById(R.id.additional_child);
-        mAdditionalAdult = (TextView) findViewById(R.id.additional_adult);
-        notificationBtn = (TextView) findViewById(R.id.notification);
-        ((TextView) findViewById(R.id.device_setting)).setOnClickListener(this);
-        notificationBtn.setOnClickListener(this);
+//        mAdultContainer = (LinearLayout) findViewById(R.id.internal_adult_layout);
+//        mKidsName = (EditText) findViewById(R.id.kids_name);
+//        mKidsbdy = (TextView) findViewById(R.id.kids_bdy);
+//        mChildContainer = (LinearLayout) findViewById(R.id.internal_kid_layout);
+//        mColorfrKid = (TextView) findViewById(R.id.kidcolor);
+//        mAdditionalChild = (TextView) findViewById(R.id.additional_child);
+//        mAdditionalAdult = (TextView) findViewById(R.id.additional_adult);
+//        notificationBtn = (TextView) findViewById(R.id.notification);
+//        ((TextView) findViewById(R.id.device_setting)).setOnClickListener(this);
+//        notificationBtn.setOnClickListener(this);
         //findViewById(R.id.save).setOnClickListener(this);
         findViewById(R.id.profile_image).setOnClickListener(this);
-        mKidsbdy.setOnClickListener(this);
+//        mKidsbdy.setOnClickListener(this);
 
-        mColorfrKid.setOnClickListener(this);
+//        mColorfrKid.setOnClickListener(this);
         mColorfrSpouse.setOnClickListener(this);
-        mAdditionalChild.setOnClickListener(this);
-        mAdditionalAdult.setOnClickListener(this);
-        mKidsbdy.setOnClickListener(this);
+//        mAdditionalChild.setOnClickListener(this);
+//        mAdditionalAdult.setOnClickListener(this);
+//        mKidsbdy.setOnClickListener(this);
         profile_image.setOnClickListener(this);
 
         // mFamilyname.setKeyListener(DigitsKeyListener.getInstance(" abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"));
@@ -293,8 +297,8 @@ public class ActivitySignUp extends BaseActivity implements View.OnClickListener
         mColorfrSpouse.setTag("1");
         used_colors.put("spouse1", "1");
 
-        mColorfrKid.setTag("2");
-        used_colors.put("kid0", "2");
+//        mColorfrKid.setTag("2");
+//        used_colors.put("kid0", "2");
 
         // checkDBExists();
     }
@@ -367,7 +371,8 @@ public class ActivitySignUp extends BaseActivity implements View.OnClickListener
                     if (checkValidation()) {
                         // if (checkCustomLayoutValidations()) {
 
-                        signupModel = getSignUpRequestModel();
+//                        signupModel = getSignUpRequestModel();
+                        newSignupModel = getNewSignUpRequestModel();
 
                         if (!ConnectivityUtils.isNetworkEnabled(ActivitySignUp.this)) {
                             ToastUtils.showToast(ActivitySignUp.this, getString(R.string.error_network));
@@ -376,7 +381,7 @@ public class ActivitySignUp extends BaseActivity implements View.OnClickListener
 
                         showProgressDialog(getString(R.string.please_wait));
                         ControllerSignUp _controller = new ControllerSignUp(ActivitySignUp.this, ActivitySignUp.this);
-                        _controller.getData(AppConstants.SIGNUP_REQUEST, signupModel);
+                        _controller.getData(AppConstants.NEW_SIGNUP_REQUEST, newSignupModel);
 //                        if (!ConnectivityUtils.isNetworkEnabled(ActivitySignUp.this)) {
 //                            ToastUtils.showToast(ActivitySignUp.this, getString(R.string.error_network));
 //                            return true;
@@ -416,7 +421,7 @@ public class ActivitySignUp extends BaseActivity implements View.OnClickListener
         switch (response.getDataType()) {
 
 
-            case AppConstants.SIGNUP_REQUEST:
+            case AppConstants.NEW_SIGNUP_REQUEST:
 
                 // save in
                 UserResponse responseData = (UserResponse) response.getResponseObject();
@@ -428,25 +433,23 @@ public class ActivitySignUp extends BaseActivity implements View.OnClickListener
                     Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
 
                     // save in db
-                    saveDatainDB(responseData);
+//                    saveDatainDB(responseData);
 
                     // store userdetail in prefrences
 
-                    UserInfo model = new UserInfo();
-                    model.setId(responseData.getResult().getData().getUser().getId());
-                    model.setFamily_id(responseData.getResult().getData().getUser().getFamily_id());
-                    model.setColor_code(responseData.getResult().getData().getUser().getColor_code());
-                    model.setSessionId(responseData.getResult().getData().getUser().getSessionId());
-                    model.setFirst_name(responseData.getResult().getData().getUser().getFirst_name() + " " + responseData.getResult().getData().getUser().getLast_name());
-
-                    SharedPrefUtils.setUserDetailModel(ActivitySignUp.this, model);
-
-
-                    // shift to my city for kids
+//                    UserInfo model = new UserInfo();
+//                    model.setId(responseData.getResult().getData().getUser().getId());
+//                    model.setFamily_id(responseData.getResult().getData().getUser().getFamily_id());
+//                    model.setColor_code(responseData.getResult().getData().getUser().getColor_code());
+//                    model.setSessionId(responseData.getResult().getData().getUser().getSessionId());
+//                    model.setFirst_name(responseData.getResult().getData().getUser().getFirst_name() + " " + responseData.getResult().getData().getUser().getLast_name());
+//
+//                    SharedPrefUtils.setUserDetailModel(ActivitySignUp.this, model);
 
                     removeProgressDialog();
-                    Intent intent = new Intent(ActivitySignUp.this, LoadingActivity.class);
-                    //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    Intent intent = new Intent(ActivitySignUp.this, ActivityVerifyOTP.class);
+                    intent.putExtra("email", newSignupModel.getEmail());
+                    intent.putExtra("mobile", newSignupModel.getMobileNumber());
                     startActivity(intent);
                     //finish();
 
@@ -474,6 +477,11 @@ public class ActivitySignUp extends BaseActivity implements View.OnClickListener
 
                 } else if (responseData.getResponseCode() == 400) {
 
+//
+                    /*Intent inte = new Intent(ActivitySignUp.this, ActivityVerifyOTP.class);
+                    inte.putExtra("email", newSignupModel.getEmail());
+                    inte.putExtra("mobile", newSignupModel.getMobileNumber());
+                    startActivity(inte);*/
                     removeProgressDialog();
                     if (responseData.getResult().getData().getExist().equalsIgnoreCase("exist")) {
                         showLoginDialog(message);
@@ -1402,6 +1410,28 @@ public class ActivitySignUp extends BaseActivity implements View.OnClickListener
         return _requestModel;
     }
 
+    private NewSignUpModel getNewSignUpRequestModel() {
+        NewSignUpModel nsuModel = new NewSignUpModel();
+        nsuModel.setUsername(mSpousename.getText().toString().trim());
+        nsuModel.setMobileNumber(mSpouseMobile.getText().toString().trim());
+        nsuModel.setEmail(mSpouseemail.getText().toString().trim());
+        nsuModel.setPassword(mFamilysharepswd.getText().toString().trim());
+        nsuModel.setProfileImgUrl(profileImageUrl);
+        nsuModel.setColor_code(new ColorCode().getValue("" + mColorfrSpouse.getTag()));
+        if (StringUtils.isNullOrEmpty(facebook_id)) {
+            nsuModel.setSocialMode("fb");
+            nsuModel.setSocialToken(Fb_access_token);
+        } else if (StringUtils.isNullOrEmpty(g_id)) {
+            nsuModel.setSocialMode("gp");
+            nsuModel.setSocialToken(google_secret);
+        } else {
+            nsuModel.setSocialMode("custom");
+            nsuModel.setSocialToken("");
+        }
+
+        return nsuModel;
+    }
+
     public void showDatePickerDialog() {
         DialogFragment newFragment = new DatePickerFragment();
         newFragment.show(getSupportFragmentManager(), "datePicker");
@@ -1625,30 +1655,6 @@ public class ActivitySignUp extends BaseActivity implements View.OnClickListener
             mFamilysharepswd.requestFocus();
             mFamilysharepswd.setError(Constants.ENTER_FAMILY_PSWD);
             result = false;
-        } else if (mConfirmPswd.getText().toString().equals("")) {
-
-            mConfirmPswd.setFocusableInTouchMode(true);
-            mConfirmPswd.requestFocus();
-            mConfirmPswd.setError(Constants.ENTER_CONFIRM_PSWD);
-            result = false;
-        } else if (mAddpincode.getText().toString().equals("")) {
-
-            mAddpincode.setFocusableInTouchMode(true);
-            mAddpincode.requestFocus();
-            mAddpincode.setError(Constants.ENTER_PINCODE);
-            result = false;
-        } else if (mKidsName.getText().toString().trim().equals("")) {
-
-            mKidsName.setFocusableInTouchMode(true);
-            mKidsName.requestFocus();
-            mKidsName.setError(Constants.ENTER_KIDNAME);
-            result = false;
-        } else if (mKidsbdy.getText().toString().equals("")) {
-
-            mKidsbdy.setFocusableInTouchMode(true);
-            mKidsbdy.requestFocus();
-            mKidsbdy.setError(Constants.ENTER_KIDBDY);
-            result = false;
         } else if (!StringUtils.isValidEmail(mSpouseemail.getText().toString().trim())) {
 
             mSpouseemail.setFocusableInTouchMode(true);
@@ -1661,18 +1667,7 @@ public class ActivitySignUp extends BaseActivity implements View.OnClickListener
             mFamilysharepswd.requestFocus();
             mFamilysharepswd.setError(Constants.PASSWORD_LENGTH);
             result = false;
-        } else if (!(mFamilysharepswd.getText().toString().equals(mConfirmPswd.getText().toString()))) {
-
-            mConfirmPswd.setFocusableInTouchMode(true);
-            mConfirmPswd.requestFocus();
-            mConfirmPswd.setError(Constants.PASSWORD_MISMATCH);
-            result = false;
-        } else if (!checkDuplicateEmailIds()) {
-            // check same email id
-            ToastUtils.showToast(this, Constants.DUPLICATE_EMAIL);
-            result = false;
         }
-
 
         return result;
     }
@@ -1735,63 +1730,15 @@ public class ActivitySignUp extends BaseActivity implements View.OnClickListener
 
         switch (v.getId()) {
 
-            case R.id.additional_adult:
-                addNewAdult();
-                break;
-
-            case R.id.additional_child:
-                addNewChild();
-
-                break;
-
-            case R.id.kidcolor:
-                isKIDColor = true;
-                showColorPickerDialog("", null);
-                break;
-
             case R.id.color_spouse:
                 isSpouseColor = true;
                 showColorPickerDialog("", null);
                 break;
 
-            case R.id.kids_bdy:
-                isKIDBdy = true;
-                showDatePickerDialog();
-                break;
-
-
             case R.id.profile_image:
 
                 showPhotoOptionsDialog();
                 //openGallery();
-
-                break;
-
-            case R.id.notification:
-
-                scrollView.setVisibility(View.GONE);
-                ((FrameLayout) findViewById(R.id.setting_frame)).setVisibility(View.VISIBLE);
-//               open notification settting fragment
-                bundle = new Bundle();
-                bundle.putBoolean(Constants.IS_COMMING_FROM_SETTING, false);
-                NotificationFragment notificationFragment = new NotificationFragment();
-                notificationFragment.setArguments(bundle);
-                fragmentTransaction.replace(R.id.setting_frame, notificationFragment);
-                fragmentTransaction.commit();
-
-                break;
-
-            case R.id.device_setting:
-
-                scrollView.setVisibility(View.GONE);
-                ((FrameLayout) findViewById(R.id.setting_frame)).setVisibility(View.VISIBLE);
-//               open sync settting fragment
-                bundle = new Bundle();
-                bundle.putBoolean(Constants.IS_COMMING_FROM_SETTING, false);
-                SyncSettingFragment syncSettingFragment = new SyncSettingFragment();
-                syncSettingFragment.setArguments(bundle);
-                fragmentTransaction.replace(R.id.setting_frame, syncSettingFragment);
-                fragmentTransaction.commit();
 
                 break;
 

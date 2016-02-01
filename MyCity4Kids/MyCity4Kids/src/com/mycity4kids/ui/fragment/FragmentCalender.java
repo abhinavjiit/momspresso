@@ -28,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -112,7 +113,14 @@ public class FragmentCalender extends BaseFragment implements View.OnClickListen
         attendeeFrame = (FrameLayout) view.findViewById(R.id.filter_attendee);
         listAttendee = (ListView) view.findViewById(R.id.attendee_list);
         search_bar = (RelativeLayout) view.findViewById(R.id.search_bar);
+        TextView addad = (TextView) view.findViewById(R.id.txtEmptyView);
+        FrameLayout fl = (FrameLayout)view.findViewById(R.id.down_drawer);
+        addad.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+            }
+        });
 //        DatabaseUtil.exportDb();
 
         ((DashboardActivity) getActivity()).filter = false;

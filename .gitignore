@@ -27,3 +27,4 @@
 /.idea
 .idea
 *.properties
+.DS_Store

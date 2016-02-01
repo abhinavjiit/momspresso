@@ -46,7 +46,7 @@ public class LoginController extends BaseController {
         serviceRequest.setRequestData(requestData);
         serviceRequest.setContext(activity);
         UserRequest _requestModel = (UserRequest) requestData;
-        serviceRequest.setPostData(setRequestParameters(_requestModel));
+        serviceRequest.setPostData(setRequestParameters(requestType, _requestModel));
         serviceRequest.setDataType(requestType);
         serviceRequest.setResponseController(this);
         serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
@@ -64,6 +64,7 @@ public class LoginController extends BaseController {
     public void handleResponse(Response response) {
         switch (response.getDataType()) {
             case AppConstants.LOGIN_REQUEST:
+            case AppConstants.NEW_LOGIN_REQUEST:
                 try {
                     String responseData = new String(response.getResponseData());
                 /*String[] data=responseData.split("-->");
@@ -143,18 +144,56 @@ public class LoginController extends BaseController {
      * @param requestData
      * @return
      */
-    private List<NameValuePair> setRequestParameters(UserRequest requestData) {
+    private List<NameValuePair> setRequestParameters(int requestType, UserRequest requestData) {
         UrlEncodedFormEntity encodedEntity = null;
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         try {
 
-            if (requestData.getNetworkName().equalsIgnoreCase("google") || requestData.getNetworkName().equalsIgnoreCase("facebook")) {
+            if (requestType == AppConstants.LOGIN_REQUEST) {
+                if (requestData.getNetworkName().equalsIgnoreCase("google") || requestData.getNetworkName().equalsIgnoreCase("facebook")) {
+                    if (!StringUtils.isNullOrEmpty(requestData.getEmailId())) {
+                        nameValuePairs.add(new BasicNameValuePair("emailId", requestData.getEmailId()));
+                    }
+                    if (!StringUtils.isNullOrEmpty(requestData.getNetworkName())) {
+                        nameValuePairs.add(new BasicNameValuePair("network", requestData.getNetworkName()));
+                    }
+                    if (!StringUtils.isNullOrEmpty(requestData.getProfileId())) {
+                        nameValuePairs.add(new BasicNameValuePair("profileId", requestData.getProfileId()));
+                    }
+                    if (!StringUtils.isNullOrEmpty(requestData.getFirstName())) {
+                        nameValuePairs.add(new BasicNameValuePair("firstname", requestData.getFirstName()));
+                    }
+                    if (!StringUtils.isNullOrEmpty(requestData.getLastName())) {
+                        nameValuePairs.add(new BasicNameValuePair("lastname", requestData.getLastName()));
+                    }
+                } else {
+                    if (!StringUtils.isNullOrEmpty(requestData.getEmailId())) {
+                        nameValuePairs.add(new BasicNameValuePair("emailId", requestData.getEmailId()));
+                    }
+                    if (!StringUtils.isNullOrEmpty(requestData.getPassword())) {
+                        nameValuePairs.add(new BasicNameValuePair("password", requestData.getPassword()));
+                    }
+                }
+                nameValuePairs.add(new BasicNameValuePair("deviceId", DataUtils.getDeviceId(activity)));
+                if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getDeviceToken(activity))) {
+                    SharedPrefUtils.setPushTokenUpdateToServer(activity, true);
+                }
+                nameValuePairs.add(new BasicNameValuePair("push_token", SharedPrefUtils.getDeviceToken(activity)));
+                encodedEntity = new UrlEncodedFormEntity(nameValuePairs, "UTF-8");
+                Log.i("Login request ", nameValuePairs.toString());
+            } else if (requestType == AppConstants.NEW_LOGIN_REQUEST) {
                 if (!StringUtils.isNullOrEmpty(requestData.getEmailId())) {
                     nameValuePairs.add(new BasicNameValuePair("emailId", requestData.getEmailId()));
                 }
-                if (!StringUtils.isNullOrEmpty(requestData.getNetworkName())) {
-                    nameValuePairs.add(new BasicNameValuePair("network", requestData.getNetworkName()));
+
+                if (!StringUtils.isNullOrEmpty(requestData.getNetworkName()) && requestData.getNetworkName().equalsIgnoreCase("google")) {
+                    nameValuePairs.add(new BasicNameValuePair("requestMedium", "gp"));
+                } else if (!StringUtils.isNullOrEmpty(requestData.getNetworkName()) && requestData.getNetworkName().equalsIgnoreCase("facebook")) {
+                    nameValuePairs.add(new BasicNameValuePair("requestMedium", "fb"));
+                } else {
+                    nameValuePairs.add(new BasicNameValuePair("requestMedium", "custom"));
                 }
+
                 if (!StringUtils.isNullOrEmpty(requestData.getProfileId())) {
                     nameValuePairs.add(new BasicNameValuePair("profileId", requestData.getProfileId()));
                 }
@@ -164,22 +203,17 @@ public class LoginController extends BaseController {
                 if (!StringUtils.isNullOrEmpty(requestData.getLastName())) {
                     nameValuePairs.add(new BasicNameValuePair("lastname", requestData.getLastName()));
                 }
-            } else {
-                if (!StringUtils.isNullOrEmpty(requestData.getEmailId())) {
-                    nameValuePairs.add(new BasicNameValuePair("emailId", requestData.getEmailId()));
-                }
                 if (!StringUtils.isNullOrEmpty(requestData.getPassword())) {
                     nameValuePairs.add(new BasicNameValuePair("password", requestData.getPassword()));
                 }
+                nameValuePairs.add(new BasicNameValuePair("deviceId", DataUtils.getDeviceId(activity)));
+                if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getDeviceToken(activity))) {
+                    SharedPrefUtils.setPushTokenUpdateToServer(activity, true);
+                }
+                nameValuePairs.add(new BasicNameValuePair("push_token", SharedPrefUtils.getDeviceToken(activity)));
+                encodedEntity = new UrlEncodedFormEntity(nameValuePairs, "UTF-8");
+                Log.i("Login request ", nameValuePairs.toString());
             }
-            nameValuePairs.add(new BasicNameValuePair("deviceId", DataUtils.getDeviceId(activity)));
-            if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getDeviceToken(activity))) {
-                SharedPrefUtils.setPushTokenUpdateToServer(activity, true);
-            }
-            nameValuePairs.add(new BasicNameValuePair("push_token", SharedPrefUtils.getDeviceToken(activity)));
-            encodedEntity = new UrlEncodedFormEntity(nameValuePairs, "UTF-8");
-            Log.i("Login request ", nameValuePairs.toString());
-
 
             // encodedEntity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE,
             // "application/x-www-form-urlencoded"));

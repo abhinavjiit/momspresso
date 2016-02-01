@@ -247,6 +247,7 @@ public class SplashActivity extends BaseActivity {
                 finish();
             }
         }
+        Log.d("GCM Token ", SharedPrefUtils.getDeviceToken(this));
     }
 
     @Override
