@@ -26,8 +26,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.chatPlatform.ActivitiesFragments.ChatDashboard;
-import com.chatPlatform.ActivitiesFragments.HomeworkFragment;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.gson.Gson;
@@ -317,7 +315,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
         findViewById(R.id.rdBtnKids).setOnClickListener(this);
         findViewById(R.id.rdBtnParentingBlogs).setOnClickListener(this);
-        findViewById(R.id.rdBtnMyGroups).setOnClickListener(this);
         findViewById(R.id.txvSettings).setOnClickListener(this);
         findViewById(R.id.txvHelp).setOnClickListener(this);
         findViewById(R.id.imgProfile).setOnClickListener(this);
@@ -347,7 +344,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         findViewById(R.id.add_tasklist).setOnClickListener(this);
 
         findViewById(R.id.downarrow).setOnClickListener(this);
-        findViewById(R.id.homework).setOnClickListener(this);
+
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.black_color));

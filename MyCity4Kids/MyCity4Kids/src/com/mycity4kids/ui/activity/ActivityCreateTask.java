@@ -119,13 +119,13 @@ public class ActivityCreateTask extends BaseActivity implements View.OnClickList
     private String file_name = "";
     private ArrayList<String> documentUrl;
     private boolean imageUploading = false;
-//    private float density;
+    private float density;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.aa_create_task);
-//        density = getResources().getDisplayMetrics().density;
+        density = getResources().getDisplayMetrics().density;
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -620,7 +620,7 @@ public class ActivityCreateTask extends BaseActivity implements View.OnClickList
                 args.putBoolean("All", all);
                 args.putBoolean("edit", false);
                 args.putString("iftask", "iftask");
-                args.putString("dialogTitle", "Who to remind");
+                args.putString("dialogTitle","Who to remind");
                 dialogFragment1.setArguments(args);
 
                 dialogFragment1.setTargetFragment(dialogFragment1, 2);

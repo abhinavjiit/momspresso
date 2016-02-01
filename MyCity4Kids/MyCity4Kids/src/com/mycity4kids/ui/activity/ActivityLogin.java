@@ -362,7 +362,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                         model.setSessionId(responseData.getResult().getData().getUser().getSessionId());
                         model.setFirst_name(responseData.getResult().getData().getUser().getFirst_name() + " " + responseData.getResult().getData().getUser().getLast_name());
                         SharedPrefUtils.setUserDetailModel(ActivityLogin.this, model);
-Log.e("model userId",responseData.getResult().getData().getUser().getId()+"");
+
                         // set city also
 
                         // then call getappoitmnt service
