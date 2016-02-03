@@ -36,7 +36,7 @@ import com.mycity4kids.models.deeplinking.DeepLinkApiModel;
 import com.mycity4kids.models.deeplinking.DeepLinkData;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.sync.PushTokenService;
-import com.mycity4kids.utils.AnalyticsHelper;
+/*import com.mycity4kids.utils.AnalyticsHelper;*/
 import com.mycity4kids.utils.NearMyCity;
 import com.mycity4kids.utils.location.GPSTracker;
 
@@ -69,7 +69,7 @@ public class SplashActivity extends BaseActivity {
 
             setContentView(R.layout.splash_activity);
 
-            AnalyticsHelper.logEvent("Application Launch...");
+           /* AnalyticsHelper.logEvent("Application Launch...");*/
 
             ImageView _spin = (ImageView) findViewById(R.id.spin);
             _spin.startAnimation(AnimationUtils.loadAnimation(this,
