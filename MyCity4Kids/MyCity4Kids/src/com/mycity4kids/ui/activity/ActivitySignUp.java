@@ -367,6 +367,10 @@ public class ActivitySignUp extends BaseActivity implements View.OnClickListener
 
             case R.id.save:
 
+//                Intent inte = new Intent(ActivitySignUp.this, CreateFamilyActivity.class);
+//                inte.putExtra("profileUrl", profileImageUrl);
+//                startActivity(inte);
+//                return true;
                 if (((FrameLayout) findViewById(R.id.setting_frame)).getVisibility() == View.GONE) {
                     if (checkValidation()) {
                         // if (checkCustomLayoutValidations()) {
@@ -450,6 +454,8 @@ public class ActivitySignUp extends BaseActivity implements View.OnClickListener
                     Intent intent = new Intent(ActivitySignUp.this, ActivityVerifyOTP.class);
                     intent.putExtra("email", newSignupModel.getEmail());
                     intent.putExtra("mobile", newSignupModel.getMobileNumber());
+                    intent.putExtra("profileUrl", profileImageUrl);
+                    intent.putExtra("colorCode", newSignupModel.getColor_code());
                     startActivity(intent);
                     //finish();
 
@@ -1418,16 +1424,8 @@ public class ActivitySignUp extends BaseActivity implements View.OnClickListener
         nsuModel.setPassword(mFamilysharepswd.getText().toString().trim());
         nsuModel.setProfileImgUrl(profileImageUrl);
         nsuModel.setColor_code(new ColorCode().getValue("" + mColorfrSpouse.getTag()));
-        if (StringUtils.isNullOrEmpty(facebook_id)) {
-            nsuModel.setSocialMode("fb");
-            nsuModel.setSocialToken(Fb_access_token);
-        } else if (StringUtils.isNullOrEmpty(g_id)) {
-            nsuModel.setSocialMode("gp");
-            nsuModel.setSocialToken(google_secret);
-        } else {
-            nsuModel.setSocialMode("custom");
-            nsuModel.setSocialToken("");
-        }
+        nsuModel.setSocialMode("custom");
+        nsuModel.setSocialToken("");
 
         return nsuModel;
     }

@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.Session;
 import com.facebook.model.GraphUser;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;
@@ -48,6 +49,8 @@ import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.models.user.UserModel;
 import com.mycity4kids.models.user.UserRequest;
 import com.mycity4kids.models.user.UserResponse;
+import com.mycity4kids.newmodels.UserInviteModel;
+import com.mycity4kids.newmodels.UserInviteResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.fragment.PasswordDialogFragment;
 
@@ -66,7 +69,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
     private Toolbar mToolbar;
     LinearLayout forgotView;
     private boolean filterchange;
-    private String socialEmailid="";
+    private String socialEmailid = "";
 //    private GetAppointmentController _appointmentcontroller;
 //    private GetTaskController _taskcontroller;
 
@@ -181,10 +184,10 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                         showProgressDialog(getString(R.string.please_wait));
                         //mProgressDialog=ProgressDialog.show(this, "", "Please Wait...",true,false);
 
-                        String emailId = mEmailId.getText().toString().trim();
+                        String emailId_or_mobile = mEmailId.getText().toString().trim();
                         String password = mPassword.getText().toString().trim();
                         UserRequest _requestModel = new UserRequest();
-                        _requestModel.setEmailId(emailId);
+                        _requestModel.setEmailId(emailId_or_mobile);
                         _requestModel.setPassword(password);
                         _requestModel.setNetworkName("throughMail");
                         _requestModel.setPush_token(SharedPrefUtils.getDeviceToken(this));
@@ -194,7 +197,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                         _requestModel.setImei_no(getImeiNumber() + "");
                         _requestModel.setManufacturer(Build.MANUFACTURER + "");
                         LoginController _controller = new LoginController(this, this);
-                        _controller.getData(AppConstants.LOGIN_REQUEST, _requestModel);
+                        _controller.getData(AppConstants.NEW_LOGIN_REQUEST, _requestModel);
                     } else {
                         showToast(getString(R.string.error_network));
                     }
@@ -340,7 +343,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
 
         switch (response.getDataType()) {
 
-            case AppConstants.LOGIN_REQUEST:
+            case AppConstants.NEW_LOGIN_REQUEST:
                 try {
                     UserResponse responseData = (UserResponse) response.getResponseObject();
                     if (responseData.getResponseCode() == 200) {
@@ -374,17 +377,12 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                         startActivity(intent1);
                         // finish();
                     } else if (responseData.getResponseCode() == 400) {
-
-
                         if (!StringUtils.isNullOrEmpty(responseData.getResult().getData().getError())) {
                             if (responseData.getResult().getData().getError().toString().trim().equalsIgnoreCase("existing_user") || responseData.getResult().getData().getError().toString().trim().equalsIgnoreCase("sign_up")) {
-
-
                                 showSignUpDialog(responseData.getResult().getData().getMessage(), responseData);
                             } else if (responseData.getResult().getData().getError().toString().trim().equalsIgnoreCase("family_linked")) {
                                 PasswordDialogFragment dialogFragment = new PasswordDialogFragment();
-                                dialogFragment.show(getFragmentManager(),"");
-
+                                dialogFragment.show(getFragmentManager(), "");
                             } else {
                                 Toast.makeText(ActivityLogin.this, responseData.getResult().getData().getMessage(), Toast.LENGTH_SHORT).show();
                             }
@@ -399,13 +397,30 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                     e.printStackTrace();
                 }
                 break;
+            case AppConstants.ACCEPT_OR_REJECT_INVITE_REQUEST:
+                UserInviteResponse rData = (UserInviteResponse) response.getResponseObject();
+                if (rData.getResponseCode() == 201) {
+                    UserInviteModel userInviteModel = new UserInviteModel();
+                    userInviteModel.setUserId(rData.getResult().getData().getUserId());
+                    userInviteModel.setEmail(rData.getResult().getData().getEmail());
+                    userInviteModel.setMobile(rData.getResult().getData().getMobile());
+                    userInviteModel.setFamilyInvites(rData.getResult().getData().getFamilyInvites());
+                    SharedPrefUtils.setUserFamilyInvites(this, new Gson().toJson(userInviteModel).toString());
+
+                    Intent intent = new Intent(this, ListFamilyInvitesActivity.class);
+                    intent.putExtra("userInviteData", userInviteModel);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                } else if (rData.getResponseCode() == 400) {
+                    Toast.makeText(ActivityLogin.this, rData.getResult().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+                break;
         }
 
 
     }
 
-    public void addPassword(String pswd)
-    {
+    public void addPassword(String pswd) {
 
         showProgressDialog(getString(R.string.please_wait));
         String emailId = socialEmailid;
@@ -421,7 +436,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         _requestModel.setImei_no(getImeiNumber() + "");
         _requestModel.setManufacturer(Build.MANUFACTURER + "");
         LoginController _controller = new LoginController(this, this);
-        _controller.getData(AppConstants.LOGIN_REQUEST, _requestModel);
+        _controller.getData(AppConstants.NEW_LOGIN_REQUEST, _requestModel);
     }
 
     @Override
@@ -458,7 +473,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
 
                 Log.i("login data", new Gson().toJson(_userModel).toString());
                 //	showProgressDialog("PleaseWait");
-                _controller.getData(AppConstants.LOGIN_REQUEST, _userModel);
+                _controller.getData(AppConstants.NEW_LOGIN_REQUEST, _userModel);
             } else {
                 Log.i("ActivityLogin", "GoogleApiClient persona information is null");
             }
@@ -487,6 +502,12 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                 final LoginController _controller = new LoginController(this, this);
                 //Toast.makeText(LoginActivity.this, user.asMap().get("email").toString(), Toast.LENGTH_LONG).show() ;
                 String fbEmailId = user.asMap().get("email").toString();
+
+                Session session = Session.getActiveSession();
+                String accessToken;
+                if (session.isOpened())
+                    accessToken = session.getAccessToken();
+
                 UserRequest _userModel = new UserRequest();
                 _userModel.setEmailId(fbEmailId);
                 _userModel.setProfileId(user.getId());
@@ -495,11 +516,11 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                 _userModel.setLastName(user.getLastName());
 
                 socialEmailid = fbEmailId;
-                _controller.getData(AppConstants.LOGIN_REQUEST, _userModel);
+                _controller.getData(AppConstants.NEW_LOGIN_REQUEST, _userModel);
                 Log.i("fbUsernameUserId", user.getId() + " " + user.getUsername() + " " + user.asMap().get("email"));
             }
         } catch (Exception e) {
-           // e.printStackTrace();
+            // e.printStackTrace();
         }
     }
 
@@ -507,9 +528,9 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         boolean isLoginOk = true;
         String email_id = mEmailId.getText().toString().trim();
 
-        if (email_id.trim().length() == 0 || (!StringUtils.isValidEmail(email_id))) {
+        if (email_id.trim().length() == 0 || ((!StringUtils.isValidEmail(email_id)) && (!StringUtils.checkMobileNumber(email_id)))) {
             mEmailId.setFocusableInTouchMode(true);
-            mEmailId.setError("Please enter valid email id");
+            mEmailId.setError("Please enter valid email id or mobile number");
             mEmailId.requestFocus();
             isLoginOk = false;
         } else if (mPassword.getText().toString().length() == 0) {

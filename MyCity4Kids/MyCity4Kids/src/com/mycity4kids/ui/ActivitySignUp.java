@@ -1684,7 +1684,6 @@ public class ActivitySignUp {
 //
 //        for (int position = 0; position < mChildContainer.getChildCount(); position++) {
 //            View innerLayout = (View) mChildContainer.getChildAt(position);
-//
 //            EditText nameOfKidEdt = (EditText) innerLayout.findViewById(R.id.kids_name);
 //            TextView dobOfKidSpn = (TextView) innerLayout.findViewById(R.id.kids_bdy);
 //

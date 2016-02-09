@@ -67,7 +67,7 @@ public class ControllerSignUp extends BaseController {
                     response.setResponseObject(_signUpData);
 
                     if (_signUpData.getResponseCode() == 200) {
-                        saveUserDetails(getActivity(), _signUpData, (UserResponse) response.getResponseObject());
+                        //saveUserDetails(getActivity(), _signUpData, (UserResponse) response.getResponseObject());
                         //clearPreference(getActivity());
                     }
 
@@ -129,17 +129,6 @@ public class ControllerSignUp extends BaseController {
 
     }
 
-    public void saveUserDetails(Context context, UserResponse pUserDetails, UserResponse requestdata) {
-
-        try {
-            UserTable userTable = new UserTable((BaseApplication) ((Activity) context).getApplication());
-            userTable.deleteAll();
-            userTable.insertData(requestdata);
-
-        } catch (Exception e) {
-
-        }
-    }
 
     public static void clearPreference(Context context) {
         SharedPrefUtils.setProfileImgUrl(context, "");

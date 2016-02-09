@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
+import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -22,7 +23,7 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.asynctask.HeavyDbTask;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.controller.ConfigurationController;
-import com.mycity4kids.controller.DeepLinkingController;
+import com.mycity4kids.controller.UpdateMobileController;
 import com.mycity4kids.dbtable.TableAdult;
 import com.mycity4kids.fragmentdialog.FragmentAlertDialog;
 import com.mycity4kids.gcm.GCMUtil;
@@ -32,10 +33,12 @@ import com.mycity4kids.models.VersionApiModel;
 import com.mycity4kids.models.city.City;
 import com.mycity4kids.models.city.MetroCity;
 import com.mycity4kids.models.configuration.ConfigurationApiModel;
-import com.mycity4kids.models.deeplinking.DeepLinkApiModel;
-import com.mycity4kids.models.deeplinking.DeepLinkData;
+import com.mycity4kids.models.user.UserRequest;
+import com.mycity4kids.models.user.UserResponse;
+import com.mycity4kids.newmodels.UserInviteModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.sync.PushTokenService;
+import com.mycity4kids.ui.fragment.AddMobileFragment;
 import com.mycity4kids.utils.AnalyticsHelper;
 import com.mycity4kids.utils.NearMyCity;
 import com.mycity4kids.utils.location.GPSTracker;
@@ -43,6 +46,8 @@ import com.mycity4kids.utils.location.GPSTracker;
 public class SplashActivity extends BaseActivity {
     private boolean isLocationScreen = false;
     private String _deepLinkURL;
+    private int isFirstLaunch = 0;
+    private String mobileNumberForVerification = "";
 //    private DeepLinkData _deepLinkData;
 //    private GetAppointmentController _appointmentcontroller;
 
@@ -150,6 +155,7 @@ public class SplashActivity extends BaseActivity {
                                 return;
 
                             }
+                            isFirstLaunch = 1;
                             _controller.getData(AppConstants.CONFIGURATION_REQUEST, versionApiModel);
 
 
@@ -174,6 +180,7 @@ public class SplashActivity extends BaseActivity {
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            isFirstLaunch = 0;
                             navigateToNextScreen(true);
                         }
                     }, 500);
@@ -181,6 +188,7 @@ public class SplashActivity extends BaseActivity {
                     //ToastUtils.showToast(SplashActivity.this, getString(R.string.error_network));
                     //return;
                 } else {
+                    isFirstLaunch = 0;
                     navigateToNextScreen(true);
                 }
             }
@@ -200,7 +208,6 @@ public class SplashActivity extends BaseActivity {
             if (StringUtils.isNullOrEmpty(SharedPrefUtils.getDeviceToken(this))) {
                 GCMUtil.initializeGCM(this);
             } else {
-
                 Intent intent = new Intent(this, PushTokenService.class);
                 this.startService(intent);
             }
@@ -212,18 +219,24 @@ public class SplashActivity extends BaseActivity {
     private void navigateToNextScreen(boolean isConfigurationAvailable) {
         TableAdult _table = new TableAdult(BaseApplication.getInstance());
         if (_table.getAdultCount() > 0) { // if he signup
-
-            startSyncing();
-            startSyncingUserInfo();
-            Intent intent = new Intent(SplashActivity.this, DashboardActivity.class);
             Log.e("MYCITY4KIDS", "USER logged In");
-            if (!StringUtils.isNullOrEmpty(_deepLinkURL)) {
-                intent.putExtra(AppConstants.DEEP_LINK_URL, _deepLinkURL);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP/*|Intent.FLAG_ACTIVITY_NEW_TASK*/);
+            String mobileNumb = SharedPrefUtils.getUserDetailModel(this).getMobile_number();
+            if (StringUtils.isNullOrEmpty(mobileNumb)) {
+                AddMobileFragment dialogFragment = new AddMobileFragment();
+                dialogFragment.show(getFragmentManager(), "");
+            } else {
+                startSyncing();
+                startSyncingUserInfo();
+                Intent intent = new Intent(SplashActivity.this, DashboardActivity.class);
+                if (!StringUtils.isNullOrEmpty(_deepLinkURL)) {
+                    intent.putExtra(AppConstants.DEEP_LINK_URL, _deepLinkURL);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP/*|Intent.FLAG_ACTIVITY_NEW_TASK*/);
+                }
+
+                startActivity(intent);
+                finish();
             }
 
-            startActivity(intent);
-            finish();
 
         } else {
             Log.e("MYCITY4KIDS", "USER logged Out");
@@ -236,15 +249,34 @@ public class SplashActivity extends BaseActivity {
                 });
                 return;
             } else {
+                String userFamilyInvites = SharedPrefUtils.getUserFamilyInvites(this);
+                if (null != userFamilyInvites && !userFamilyInvites.isEmpty()) {
+                    //User Signed in but has not created family.
+                    UserInviteModel userInviteModel = new Gson().fromJson(userFamilyInvites, UserInviteModel.class);
+                    if (null != userInviteModel.getFamilyInvites() && !userInviteModel.getFamilyInvites().isEmpty()) {
+                        Intent intent = new Intent(SplashActivity.this, ListFamilyInvitesActivity.class);
+                        intent.putExtra("userInviteData", userInviteModel);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Intent intent = new Intent(SplashActivity.this, CreateFamilyActivity.class);
+                        intent.putExtra("userInviteData", userInviteModel);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        finish();
+                    }
+                } else {
 
-                Intent intent;
-                if (SharedPrefUtils.getLogoutFlag(this))
-                    intent = new Intent(SplashActivity.this, JoinFamilyActivity.class);
-                else
-                    intent = new Intent(SplashActivity.this, TutorialActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                finish();
+                    Intent intent;
+                    if (SharedPrefUtils.getLogoutFlag(this))
+                        intent = new Intent(SplashActivity.this, JoinFamilyActivity.class);
+                    else
+                        intent = new Intent(SplashActivity.this, TutorialActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    finish();
+                }
             }
         }
         Log.d("GCM Token ", SharedPrefUtils.getDeviceToken(this));
@@ -301,14 +333,26 @@ public class SplashActivity extends BaseActivity {
 
                         @Override
                         public void comeBackOnUI() {
-                            navigateToNextScreen(true);
+                            if (isFirstLaunch == 1)
+                                navigateToNextScreen(true);
                         }
                     });
                     _heavyDbTask.execute();
 
                 }
                 break;
-
+            case AppConstants.UPDATE_MOBILE_FOR_EXISTING_USER_REQUEST:
+                UserResponse responseData = (UserResponse) response.getResponseObject();
+                String message = responseData.getResult().getMessage();
+                if (responseData.getResponseCode() == 200) {
+                    removeProgressDialog();
+                    Intent intent = new Intent(this, ActivityVerifyOTP.class);
+                    intent.putExtra("email", SharedPrefUtils.getUserDetailModel(this).getEmail());
+                    intent.putExtra("mobile", mobileNumberForVerification);
+                    intent.putExtra("isExistingUser", "1");
+                    startActivity(intent);
+                }
+                break;
             default:
                 break;
         }
@@ -403,6 +447,16 @@ public class SplashActivity extends BaseActivity {
 
         getSupportFragmentManager().beginTransaction().add(fragment, "MAGIC_TAG").commit();
         return;
+    }
+
+    public void getMobileFromExistingUsers(String mobileNum) {
+        mobileNumberForVerification = mobileNum;
+        showProgressDialog(getString(R.string.please_wait));
+        UserRequest _requestModel = new UserRequest();
+        _requestModel.setUserId("" + SharedPrefUtils.getUserDetailModel(this).getId());
+        _requestModel.setMobileNumber(mobileNumberForVerification);
+        UpdateMobileController _controller = new UpdateMobileController(this, this);
+        _controller.getData(AppConstants.UPDATE_MOBILE_FOR_EXISTING_USER_REQUEST, _requestModel);
     }
 
 }

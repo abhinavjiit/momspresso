@@ -104,7 +104,7 @@
         <activity
             android:name=".ui.activity.ActivityVerifyOTP"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateVisible"/>
+            android:windowSoftInputMode="stateVisible" />
         <activity
             android:name=".ui.activity.ListFamilyInvitesActivity"
             android:screenOrientation="portrait" />

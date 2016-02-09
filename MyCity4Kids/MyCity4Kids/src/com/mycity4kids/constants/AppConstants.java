@@ -13,8 +13,9 @@ public class AppConstants {
 
     //    public static final String STAGING_CLIENT_SERVER_URL = "http://54.169.17.138/";
 //    public static final String LIVE_URL = "http://webserve.mycity4kids.com/";
-    public static final String LIVE_URL = "http://54.169.17.138/";
+//    public static final String LIVE_URL = "http://54.169.17.138/";
 //    public static final String LIVE_URL = "http://10.42.0.1/";
+    public static final String LIVE_URL = "http://192.168.2.113/";
 
     //Enable For Testing
     //public static final String LIVE_URL = SharedPrefUtils.getBaseURL(BaseApplication.getAppContext());
@@ -146,9 +147,18 @@ public class AppConstants {
     public static final int NEW_SIGNUP_REQUEST = 1005;
     public static final int VERIFY_OTP_REQUEST = 1006;
     public static final int NEW_LOGIN_REQUEST = 1007;
+    public static final int ACCEPT_OR_REJECT_INVITE_REQUEST = 1008;
+    public static final int CREATE_FAMILY_REQUEST = 1009;
+    public static final int UPDATE_MOBILE_FOR_EXISTING_USER_REQUEST = 1010;
+    public static final int CONFIRM_MOBILE_OTP_FOR_EXISTING_USERS_REQUEST = 1011;
     public static final String VERIFY_OTP_URL = BASE_URL + STAGING_USERS_KEY + "/checkOtpV1";
     public static final String NEW_SIGN_UP_URL = BASE_URL + STAGING_USERS_KEY + "/registrationV1/";
     public static final String NEW_LOGIN_URL = BASE_URL + STAGING_USERS_KEY + "/loginV1/";
+    public static final String CREATE_FAMILY_URL = BASE_URL + STAGING_USERS_KEY + "/createFamilyV1/";
+    public static final String ACCEPT_OR_REJECT_INVITE_URL = BASE_URL + STAGING_USERS_KEY + "/acceptInviteV1/";
+    public static final String UPDATE_MOBILE_FOR_EXISTING_USERS_URL = BASE_URL + STAGING_USERS_KEY + "/updateMobileV1/";
+    public static final String CONFIRM_MOBILE_OTP_FOR_EXISTING_USERS_URL = BASE_URL + STAGING_USERS_KEY + "/confirmUpdateMobileOtpV1/";
+
 
     public static final int LOGIN_REQUEST = 0;
     public static final int GOOGLE_REQUEST = 1;

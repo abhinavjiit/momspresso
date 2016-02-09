@@ -20,6 +20,7 @@ import com.mycity4kids.dbtable.UserTable;
 import com.mycity4kids.models.login.LoginResponse;
 import com.mycity4kids.models.user.UserRequest;
 import com.mycity4kids.models.user.UserResponse;
+import com.mycity4kids.newmodels.UserInviteResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 
 import org.apache.http.NameValuePair;
@@ -52,7 +53,7 @@ public class LoginController extends BaseController {
         serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
         //	serviceRequest.setUrl("http://54.251.100.249/webservices/apiusers/login?emailId=saur1234234123233@gmail.com&password=123456");
         //	serviceRequest.setUrl(AppConstants.LOGIN_URL+getAppendUrl(requestType,_requestModel));
-        serviceRequest.setUrl(AppConstants.LOGIN_URL);
+        serviceRequest.setUrl(AppConstants.NEW_LOGIN_URL);
 
         HttpClientConnection connection = HttpClientConnection.getInstance();
         connection.addRequest(serviceRequest);
@@ -79,6 +80,11 @@ public class LoginController extends BaseController {
                     if (_loginResponse.getResponseCode() == 200) {
                         _loginResponse.setLoggedIn(true);
                         saveUserDetails(getActivity(), _loginResponse, (UserResponse) response.getResponseObject());
+                    } else if (_loginResponse.getResponseCode() == 201) {
+                        _loginResponse.setLoggedIn(true);
+                        UserInviteResponse _signUpData = new Gson().fromJson(responseData, UserInviteResponse.class);
+                        response.setResponseObject(_signUpData);
+                        response.setDataType(AppConstants.ACCEPT_OR_REJECT_INVITE_REQUEST);
                     }
 
 
@@ -145,7 +151,6 @@ public class LoginController extends BaseController {
      * @return
      */
     private List<NameValuePair> setRequestParameters(int requestType, UserRequest requestData) {
-        UrlEncodedFormEntity encodedEntity = null;
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         try {
 
@@ -179,19 +184,25 @@ public class LoginController extends BaseController {
                     SharedPrefUtils.setPushTokenUpdateToServer(activity, true);
                 }
                 nameValuePairs.add(new BasicNameValuePair("push_token", SharedPrefUtils.getDeviceToken(activity)));
-                encodedEntity = new UrlEncodedFormEntity(nameValuePairs, "UTF-8");
                 Log.i("Login request ", nameValuePairs.toString());
             } else if (requestType == AppConstants.NEW_LOGIN_REQUEST) {
                 if (!StringUtils.isNullOrEmpty(requestData.getEmailId())) {
-                    nameValuePairs.add(new BasicNameValuePair("emailId", requestData.getEmailId()));
+                    if (StringUtils.isValidEmail(requestData.getEmailId())) {
+                        nameValuePairs.add(new BasicNameValuePair("email", requestData.getEmailId()));
+                    } else {
+                        nameValuePairs.add(new BasicNameValuePair("mobile", requestData.getEmailId()));
+                    }
                 }
 
                 if (!StringUtils.isNullOrEmpty(requestData.getNetworkName()) && requestData.getNetworkName().equalsIgnoreCase("google")) {
                     nameValuePairs.add(new BasicNameValuePair("requestMedium", "gp"));
+                    nameValuePairs.add(new BasicNameValuePair("socialToken", requestData.getAccessToken()));
                 } else if (!StringUtils.isNullOrEmpty(requestData.getNetworkName()) && requestData.getNetworkName().equalsIgnoreCase("facebook")) {
                     nameValuePairs.add(new BasicNameValuePair("requestMedium", "fb"));
+                    nameValuePairs.add(new BasicNameValuePair("socialToken", requestData.getAccessToken()));
                 } else {
                     nameValuePairs.add(new BasicNameValuePair("requestMedium", "custom"));
+                    nameValuePairs.add(new BasicNameValuePair("socialToken", ""));
                 }
 
                 if (!StringUtils.isNullOrEmpty(requestData.getProfileId())) {
@@ -210,8 +221,7 @@ public class LoginController extends BaseController {
                 if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getDeviceToken(activity))) {
                     SharedPrefUtils.setPushTokenUpdateToServer(activity, true);
                 }
-                nameValuePairs.add(new BasicNameValuePair("push_token", SharedPrefUtils.getDeviceToken(activity)));
-                encodedEntity = new UrlEncodedFormEntity(nameValuePairs, "UTF-8");
+                nameValuePairs.add(new BasicNameValuePair("pushToken", SharedPrefUtils.getDeviceToken(activity)));
                 Log.i("Login request ", nameValuePairs.toString());
             }
 

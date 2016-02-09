@@ -1626,9 +1626,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 setTitle("Articles");
                 replaceFragment(new ArticlesFragment(), null, true);
                 break;
-            case R.id.rdBtnMyGroups:
-                Intent i = new Intent(DashboardActivity.this, ChatDashboard.class);
-                startActivity(i);
             case R.id.txvSettings:
                 changeVisibiltyOfArrow(false);
                 setTitle("Settings");
@@ -1962,10 +1959,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     refreshMenu();
                 }
 
-                break;
-            case R.id.homework:
-                Intent homeworkIntent = new Intent(DashboardActivity.this, HomeworkFragment.class);
-                startActivity(homeworkIntent);
                 break;
             default:
                 break;

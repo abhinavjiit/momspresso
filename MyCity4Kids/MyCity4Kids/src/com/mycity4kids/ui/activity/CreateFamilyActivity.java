@@ -4,12 +4,16 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -18,11 +22,30 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
+import com.kelltontech.utils.ConnectivityUtils;
+import com.kelltontech.utils.StringUtils;
 import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.constants.ColorCode;
+import com.mycity4kids.constants.Constants;
+import com.mycity4kids.controller.CreateFamilyController;
+import com.mycity4kids.dbtable.TableAdult;
+import com.mycity4kids.dbtable.TableFamily;
+import com.mycity4kids.dbtable.TableKids;
+import com.mycity4kids.models.profile.KidsInformation;
+import com.mycity4kids.models.user.KidsInfo;
+import com.mycity4kids.models.user.UserInfo;
+import com.mycity4kids.models.user.UserModel;
+import com.mycity4kids.models.user.UserResponse;
+import com.mycity4kids.newmodels.CreateFamilyModel;
+import com.mycity4kids.newmodels.UserInviteModel;
+import com.mycity4kids.preference.SharedPrefUtils;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -31,6 +54,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 
 /**
@@ -59,8 +83,8 @@ public class CreateFamilyActivity extends BaseActivity implements View.OnClickLi
     boolean isSpouseColor;
     boolean isKIDColor;
     static boolean isKIDBdy;
-
     private Dialog mColorPickerDialog;
+    private UserInviteModel userInviteModel;
 
     private HashMap<String, String> used_colors = new HashMap<>();
 
@@ -69,12 +93,14 @@ public class CreateFamilyActivity extends BaseActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_family_activity);
 
+        userInviteModel = getIntent().getExtras().getParcelable("userInviteData");
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
         setSupportActionBar(mToolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Family Details");
+
 
         rootLayout = (LinearLayout) findViewById(R.id.root);
         mAdultContainer = (LinearLayout) findViewById(R.id.internal_adult_layout);
@@ -84,9 +110,9 @@ public class CreateFamilyActivity extends BaseActivity implements View.OnClickLi
         mAdditionalAdult = (TextView) findViewById(R.id.additional_adult);
         scrollView = (ScrollView) findViewById(R.id.mainScroll);
 
-        mSpouseEmail = (EditText) findViewById(R.id.spouse_email);
-        mSpouseName = (EditText) findViewById(R.id.spouse_name);
-        mColorfrSpouse = (TextView) findViewById(R.id.color_spouse);
+//        mSpouseEmail = (EditText) findViewById(R.id.spouse_email);
+//        mSpouseName = (EditText) findViewById(R.id.spouse_name);
+//        mColorfrSpouse = (TextView) findViewById(R.id.color_spouse);
 
         mKidsName = (EditText) findViewById(R.id.kids_name);
         mKidsbdy = (TextView) findViewById(R.id.kids_bdy);
@@ -97,11 +123,289 @@ public class CreateFamilyActivity extends BaseActivity implements View.OnClickLi
         mAdditionalAdult.setOnClickListener(this);
         mKidsbdy.setOnClickListener(this);
         mColorfrKid.setOnClickListener(this);
-        mColorfrSpouse.setOnClickListener(this);
+//        mColorfrSpouse.setOnClickListener(this);
+        mColorfrKid.setTag("2");
+        used_colors.put("kid0", "2");
+        addDynamicAdult();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        // according to fragment change it
+
+        getMenuInflater().inflate(R.menu.forgot_password, menu);
+
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+            case R.id.save:
+                Log.d("onOptionsItemSelected", " HOME");
+                if (checkCustomLayoutValidations() && checkDuplicateEmailIds()) {
+                    // if (checkCustomLayoutValidations()) {
+
+                    CreateFamilyModel createFamilyModel = getCreateFamilyRequestModel();
+
+                    if (!ConnectivityUtils.isNetworkEnabled(CreateFamilyActivity.this)) {
+                        ToastUtils.showToast(CreateFamilyActivity.this, getString(R.string.error_network));
+                        return true;
+                    }
+
+                    showProgressDialog(getString(R.string.please_wait));
+                    CreateFamilyController _controller = new CreateFamilyController(CreateFamilyActivity.this, CreateFamilyActivity.this);
+                    _controller.getData(AppConstants.CREATE_FAMILY_REQUEST, createFamilyModel);
+//                        if (!ConnectivityUtils.isNetworkEnabled(ActivitySignUp.this)) {
+//                            ToastUtils.showToast(ActivitySignUp.this, getString(R.string.error_network));
+//                            return true;
+//                        }
+//                        showProgressDialog(getString(R.string.please_wait));
+                    // get cityid from pincode
+//                        new ControllerCityByPincode(this, this).getData(AppConstants.CITY_BY_PINCODE_REQUEST, "" + mAddpincode.getText().toString());
+//                        new LocationByPincode(ActivitySignUp.this, "" + mAddpincode.getText().toString(), ActivitySignUp.this);
+                }
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public boolean checkCustomLayoutValidations() {
+        boolean result = true;
+
+        for (int position = 0; position < mAdultContainer.getChildCount(); position++) {
+            View innerLayout = (View) mAdultContainer.getChildAt(position);
+
+            EditText adultname = (EditText) innerLayout.findViewById(R.id.spouse_name);
+            EditText adultemail = (EditText) innerLayout.findViewById(R.id.spouse_email);
+
+
+            if (!adultname.getText().toString().trim().equals("")) {
+                if (adultemail.getText().toString().trim().equals("")) {
+
+                    adultemail.setError(getResources().getString(R.string.please_enter_valid_email_or_mobile));
+                    adultemail.setFocusableInTouchMode(true);
+                    adultemail.requestFocus();
+                    return false;
+                } else {
+                    if (!StringUtils.isValidEmail(adultemail.getText().toString())
+                            && (!StringUtils.checkMobileNumber(adultemail.getText().toString()))) {
+                        adultemail.setError(getResources().getString(R.string.please_enter_valid_email_or_mobile));
+                        adultemail.setFocusableInTouchMode(true);
+                        adultemail.requestFocus();
+                        return false;
+                    }
+
+                }
+            } else {
+                adultname.setError(getResources().getString(R.string.please_enter_name));
+                adultname.setFocusableInTouchMode(true);
+                adultname.requestFocus();
+                return false;
+            }
+
+        }
+
+        // checking kids validation
+
+        if (mKidsName.getText().toString().trim().equals("")) {
+
+            mKidsName.setFocusableInTouchMode(true);
+            mKidsName.requestFocus();
+            mKidsName.setError(Constants.ENTER_KIDNAME);
+            result = false;
+        } else if (mKidsbdy.getText().toString().equals("")) {
+
+            mKidsbdy.setFocusableInTouchMode(true);
+            mKidsbdy.requestFocus();
+            mKidsbdy.setError(Constants.ENTER_KIDBDY);
+            result = false;
+        }
+
+        for (int position = 0; position < mChildContainer.getChildCount(); position++) {
+            View innerLayout = (View) mChildContainer.getChildAt(position);
+
+            EditText nameOfKidEdt = (EditText) innerLayout.findViewById(R.id.kids_name);
+            TextView dobOfKidSpn = (TextView) innerLayout.findViewById(R.id.kids_bdy);
+
+            if (!nameOfKidEdt.getText().toString().trim().equals("")) {
+
+                if (dobOfKidSpn.getText().toString().trim().equals("")) {
+
+                    dobOfKidSpn.setError(getResources().getString(R.string.please_enter_dob));
+                    dobOfKidSpn.setFocusableInTouchMode(true);
+                    dobOfKidSpn.requestFocus();
+
+                    return false;
+                }
+            } else {
+                nameOfKidEdt.setError(getResources().getString(R.string.please_enter_name));
+                nameOfKidEdt.setFocusableInTouchMode(true);
+                nameOfKidEdt.requestFocus();
+                return false;
+            }
+
+        }
+        return result;
+    }
+
+    public boolean checkDuplicateEmailIds() {
+
+        ArrayList<String> emailIdlist = new ArrayList<String>();
+
+        for (int position = 0; position < mAdultContainer.getChildCount(); position++) {
+            View innerLayout = (View) mAdultContainer.getChildAt(position);
+            EditText adultemail = (EditText) innerLayout.findViewById(R.id.spouse_email);
+            emailIdlist.add((adultemail.getText().toString().trim()));
+        }
+
+
+        int listSize = emailIdlist.size();
+        HashSet<String> hashset = new HashSet<>();
+        hashset.addAll(emailIdlist);
+
+        int actualSize = hashset.size();
+
+        if (listSize == actualSize)
+            return true;
+        else
+            ToastUtils.showToast(this, "Please remove duplicate Email or Mobile");
+
+
+        return false;
     }
 
     @Override
     protected void updateUi(Response response) {
+        if (response == null) {
+            removeProgressDialog();
+            Toast.makeText(this, getResources().getString(R.string.server_error), Toast.LENGTH_SHORT).show();
+            // showSnackbar(rootLayout, getResources().getString(R.string.server_error));
+            return;
+        }
+        switch (response.getDataType()) {
+
+
+            case AppConstants.CREATE_FAMILY_REQUEST:
+                //                // save in
+                UserResponse responseData = (UserResponse) response.getResponseObject();
+                String message = responseData.getResult().getMessage();
+                if (responseData.getResponseCode() == 200) {
+
+                    //  showSnackbar(rootLayout, message);
+
+                    Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+
+                    // save in db
+                    saveDatainDB(responseData);
+
+                    // store userdetail in prefrences
+
+                    UserInfo model = new UserInfo();
+                    model.setId(responseData.getResult().getData().getUser().getId());
+                    model.setMobile_number(responseData.getResult().getData().getUser().getMobile_number());
+                    model.setFamily_id(responseData.getResult().getData().getUser().getFamily_id());
+                    model.setColor_code(responseData.getResult().getData().getUser().getColor_code());
+                    model.setSessionId(responseData.getResult().getData().getUser().getSessionId());
+                    model.setFirst_name(responseData.getResult().getData().getUser().getFirst_name() + " " + responseData.getResult().getData().getUser().getLast_name());
+
+                    SharedPrefUtils.setUserDetailModel(CreateFamilyActivity.this, model);
+
+
+                    // shift to my city for kids
+
+                    removeProgressDialog();
+                    Intent intent = new Intent(CreateFamilyActivity.this, LoadingActivity.class);
+                    //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    //finish();
+
+
+                    // configuration api call
+//                    VersionApiModel versionApiModel = SharedPrefUtils.getSharedPrefVersion(this);
+//                    ConfigurationController _controller = new ConfigurationController(this, this);
+//
+//                    try {
+//                        PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+//                        String version = pInfo.versionName;
+//
+//                        versionApiModel.setCityId(SharedPrefUtils.getCurrentCityModel(this).getId());
+//                        versionApiModel.setAppUpdateVersion(version);
+//                        if (ConnectivityUtils.isNetworkEnabled(ActivitySignUp.this)) {
+//
+//                            showProgressDialog(getResources().getString(R.string.please_wait));
+//                            _controller.getData(AppConstants.LOCATION_SEARCH_REQUEST, versionApiModel);
+//
+//                        }
+//                    } catch (Exception e) {
+//
+//                    }
+
+
+                } else if (responseData.getResponseCode() == 400) {
+
+                    removeProgressDialog();
+                    if (responseData.getResult().getData().getExist().equalsIgnoreCase("exist")) {
+//                        showLoginDialog(message);
+                    } else {
+                        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+                        // showSnackbar(rootLayout, message);
+                    }
+
+
+                }
+                break;
+        }
+    }
+
+    public void saveDatainDB(UserResponse model) {
+
+        TableAdult adultTable = new TableAdult((BaseApplication) getApplicationContext());
+        adultTable.deleteAll();
+        try {
+
+            adultTable.beginTransaction();
+            for (UserModel.AdultsInfo user : model.getResult().getData().getAdult()) {
+
+                adultTable.insertData(user.getUser());
+            }
+            adultTable.setTransactionSuccessful();
+        } finally {
+            adultTable.endTransaction();
+        }
+
+        // saving child data
+        TableKids kidsTable = new TableKids((BaseApplication) getApplicationContext());
+        kidsTable.deleteAll();
+        try {
+            kidsTable.beginTransaction();
+            for (KidsInfo kids : model.getResult().getData().getKidsInformation()) {
+
+                kidsTable.insertData(kids);
+
+            }
+            kidsTable.setTransactionSuccessful();
+        } finally {
+            kidsTable.endTransaction();
+        }
+
+        // saving family
+
+        TableFamily familyTable = new TableFamily((BaseApplication) getApplicationContext());
+        familyTable.deleteAll();
+        try {
+            SharedPrefUtils.setpinCode(CreateFamilyActivity.this, model.getResult().getData().getUser().getPincode());
+            familyTable.insertData(model.getResult().getData().getFamily());
+
+        } catch (Exception e) {
+            e.getMessage();
+        }
+
 
     }
 
@@ -133,40 +437,118 @@ public class CreateFamilyActivity extends BaseActivity implements View.OnClickLi
         }
     }
 
-    private void addNewAdult() {
-        boolean addAdult = false;
-        if ((mSpouseName.getText().toString().trim().equals("")) || (mSpouseEmail.getText().toString().trim().equals(""))) {
+    private CreateFamilyModel getCreateFamilyRequestModel() {
+        CreateFamilyModel createFamilyModel = new CreateFamilyModel();
+        createFamilyModel.setUserId(userInviteModel.getUserId());
+        createFamilyModel.setFamilyName(mFamilyName.getText().toString());
+        createFamilyModel.setProfileImageUrl(userInviteModel.getProfileImgUrl());
+        createFamilyModel.setUserColorCode(userInviteModel.getColorCode());
 
-            ToastUtils.showToast(this, getResources().getString(R.string.enter_adult));
-        } else {
-            if (mAdultContainer.getChildCount() > 0) {
+//        if (signUpFlag)
+//            SharedPrefUtils.setSignupFlag(this, 0);
+//        else
+//            SharedPrefUtils.setSignupFlag(this, 1);
 
+        ArrayList<KidsInformation> kidsArray = getKidsInfo();
 
-                for (int position = 0; position < mAdultContainer.getChildCount(); position++) {
-                    View innerLayout = (View) mAdultContainer.getChildAt(position);
+        ArrayList<CreateFamilyModel.InvitedUserModel> userArray = getAdultInfo();
 
-                    EditText adultname = (EditText) innerLayout.findViewById(R.id.spouse_name);
-                    EditText adultemail = (EditText) innerLayout.findViewById(R.id.spouse_email);
+        createFamilyModel.setInviteUserList(userArray);
+        createFamilyModel.setKidsInformationArrayList(kidsArray);
+        return createFamilyModel;
+    }
 
-                    if ((adultname.getText().toString().trim().equals("")) || (adultemail.getText().toString().trim().equals(""))) {
+    private ArrayList<CreateFamilyModel.InvitedUserModel> getAdultInfo() {
+        ArrayList<CreateFamilyModel.InvitedUserModel> userInfoList = new ArrayList<>();
 
-                        addAdult = false;
-                        ToastUtils.showToast(this, getResources().getString(R.string.enter_adult));
-                        break;
+        for (int position = 0; position < mAdultContainer.getChildCount(); position++) {
+            View innerLayout = (View) mAdultContainer.getChildAt(position);
 
-                    } else {
-                        addAdult = true;
-                    }
-                }
+            EditText adultname = (EditText) innerLayout.findViewById(R.id.spouse_name);
+            EditText adultemail = (EditText) innerLayout.findViewById(R.id.spouse_email);
+            final TextView adultColor = (TextView) innerLayout.findViewById(R.id.color_spouse);
 
-
-                if (addAdult)
-                    addDynamicAdult();
-
+            if ((adultname.getText().toString().trim().equals("")) || (adultemail.getText().toString().trim().equals(""))) {
             } else {
-                addDynamicAdult();
+                CreateFamilyModel.InvitedUserModel usersInformation = new CreateFamilyModel().new InvitedUserModel();
+                usersInformation.setName(adultname.getText().toString().trim());
+                if (StringUtils.isValidEmail(adultemail.getText().toString().trim())) {
+                    usersInformation.setEmail(adultemail.getText().toString().trim());
+                } else {
+                    usersInformation.setMobile(adultemail.getText().toString().trim());
+                }
+                usersInformation.setColor_code(new ColorCode().getValue("" + adultColor.getTag()));
+                userInfoList.add(usersInformation);
             }
         }
+        return userInfoList;
+    }
+
+    private ArrayList<KidsInformation> getKidsInfo() {
+        ArrayList<KidsInformation> kidsInfoList = new ArrayList<KidsInformation>();
+
+        KidsInformation kidInformation = new KidsInformation();
+        kidInformation.setName((mKidsName.getText().toString().trim()));
+        kidInformation.setBirthday((mKidsbdy.getText().toString().trim()));
+        kidInformation.setColor_code(new ColorCode().getValue("" + mColorfrKid.getTag()));
+        kidsInfoList.add(kidInformation);
+
+        for (int position = 0; position < mChildContainer.getChildCount(); position++) {
+            View innerLayout = (View) mChildContainer.getChildAt(position);
+
+            EditText nameOfKidEdt = (EditText) innerLayout.findViewById(R.id.kids_name);
+            TextView dobOfKidSpn = (TextView) innerLayout.findViewById(R.id.kids_bdy);
+            final TextView kidcolor = (TextView) innerLayout.findViewById(R.id.kidcolor);
+
+            //if(!StringUtils.isNullOrEmpty((nameOfKidEdt.getText().toString().trim()) && (dobOfKidSpn.getText().toString().trim())))
+
+            if ((nameOfKidEdt.getText().toString().trim().equals("")) || (dobOfKidSpn.getText().toString().trim().equals(""))) {
+            } else {
+                KidsInformation kidsInformation = new KidsInformation();
+                kidsInformation.setName((nameOfKidEdt).getText().toString().trim());
+                kidsInformation.setBirthday((dobOfKidSpn).getText().toString().trim());
+                kidsInformation.setColor_code(new ColorCode().getValue("" + kidcolor.getTag()));
+                // kidsInformation.setId((String) innerLayout.getTag());
+                kidsInfoList.add(kidsInformation);
+            }
+        }
+        return kidsInfoList;
+    }
+
+    private void addNewAdult() {
+        boolean addAdult = false;
+//        if ((mSpouseName.getText().toString().trim().equals("")) || (mSpouseEmail.getText().toString().trim().equals(""))) {
+//
+//            ToastUtils.showToast(this, getResources().getString(R.string.enter_adult));
+//        } else {
+        if (mAdultContainer.getChildCount() > 0) {
+
+
+            for (int position = 0; position < mAdultContainer.getChildCount(); position++) {
+                View innerLayout = (View) mAdultContainer.getChildAt(position);
+
+                EditText adultname = (EditText) innerLayout.findViewById(R.id.spouse_name);
+                EditText adultemail = (EditText) innerLayout.findViewById(R.id.spouse_email);
+
+                if ((adultname.getText().toString().trim().equals("")) || (adultemail.getText().toString().trim().equals(""))) {
+
+                    addAdult = false;
+                    ToastUtils.showToast(this, getResources().getString(R.string.enter_adult));
+                    break;
+
+                } else {
+                    addAdult = true;
+                }
+            }
+
+
+            if (addAdult)
+                addDynamicAdult();
+
+        } else {
+            addDynamicAdult();
+        }
+//        }
     }
 
     private void addNewChild() {
@@ -619,6 +1001,7 @@ public class CreateFamilyActivity extends BaseActivity implements View.OnClickLi
 
 
         }
+
     }
 
     public static String convertDate(String convertdate) {

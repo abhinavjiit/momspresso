@@ -367,7 +367,7 @@ public class LandingLoginActivity extends BaseActivity implements OnClickListene
 
         switch (response.getDataType()) {
 
-            case AppConstants.LOGIN_REQUEST:
+            case AppConstants.NEW_LOGIN_REQUEST:
                 try {
                     UserResponse responseData = (UserResponse) response.getResponseObject();
                     if (responseData.getResponseCode() == 200) {
@@ -379,6 +379,14 @@ public class LandingLoginActivity extends BaseActivity implements OnClickListene
                             mGooglePlusUtils.onStop();
                         showLoginDialog(getResources().getString(R.string.do_login));
 
+                        if (true) {
+                            // Family not present for the user.
+                            Intent intent = new Intent(LandingLoginActivity.this, ListFamilyInvitesActivity.class);
+                            intent.putExtra("userInviteData", "");
+                            startActivity(intent);
+                        } else {
+
+                        }
 //                        Toast.makeText(LandingLoginActivity.this, responseData.getResult().getMessage(), Toast.LENGTH_SHORT).show();
 //
 //                        // if db not exists first save in db
@@ -409,7 +417,7 @@ public class LandingLoginActivity extends BaseActivity implements OnClickListene
                         // now move to sign up screen
                         removeProgressDialog();
 
-                        if (responseData.getResult().getData().getError().toString().trim().equalsIgnoreCase("family_linked")) {
+                        if (responseData.getResult().getMessage().toString().trim().equalsIgnoreCase("family_linked")) {
                             if (mGooglePlusUtils != null)
                                 mGooglePlusUtils.onStop();
                             showLoginDialog(getResources().getString(R.string.do_login));
@@ -574,10 +582,11 @@ public class LandingLoginActivity extends BaseActivity implements OnClickListene
             _userModel.setNetworkName("google");
             _userModel.setFirstName(currentPersonName);
             _userModel.setLastName("");
+            _userModel.setAccessToken(googleToken);
 
             Log.i("login data", new Gson().toJson(_userModel).toString());
             final LoginController _controller = new LoginController(LandingLoginActivity.this, LandingLoginActivity.this);
-            _controller.getData(AppConstants.LOGIN_REQUEST, _userModel);
+            _controller.getData(AppConstants.NEW_LOGIN_REQUEST, _userModel);
 
 //            Intent i = new Intent(LandingLoginActivity.this, ActivitySignUp.class);
 //            Bundle bundle = new Bundle();
@@ -625,7 +634,8 @@ public class LandingLoginActivity extends BaseActivity implements OnClickListene
                 _userModel.setNetworkName("facebook");
                 _userModel.setFirstName(user.getFirstName());
                 _userModel.setLastName(user.getLastName());
-                _controller.getData(AppConstants.LOGIN_REQUEST, _userModel);
+                _userModel.setAccessToken(accessToken);
+                _controller.getData(AppConstants.NEW_LOGIN_REQUEST, _userModel);
 
 
 //                Intent i = new Intent(this, ActivitySignUp.class);
@@ -649,7 +659,8 @@ public class LandingLoginActivity extends BaseActivity implements OnClickListene
             _userModel.setNetworkName("facebook");
             _userModel.setFirstName("hemant");
             _userModel.setLastName("parmar");
-            _controller.getData(AppConstants.LOGIN_REQUEST, _userModel);
+            _userModel.setAccessToken(accessToken);
+            _controller.getData(AppConstants.NEW_LOGIN_REQUEST, _userModel);
             removeProgressDialog();
             showToast("Try again later.");
             //e.printStackTrace();

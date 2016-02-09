@@ -7,6 +7,7 @@ import com.kelltontech.model.BaseModel;
  */
 public class UserRequest extends BaseModel {
 
+    private String userId;
     private String emailId;
     private String password;
     private String firstName;
@@ -26,6 +27,7 @@ public class UserRequest extends BaseModel {
     private String manufacturer;
     private String imei_no;
 
+    private String accessToken;
 
     public String getConfirmEmail() {
         return confirmEmail;
@@ -153,5 +155,21 @@ public class UserRequest extends BaseModel {
 
     public void setImei_no(String imei_no) {
         this.imei_no = imei_no;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

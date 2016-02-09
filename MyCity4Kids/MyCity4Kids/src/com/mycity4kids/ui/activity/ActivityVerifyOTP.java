@@ -15,8 +15,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
+import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -25,7 +27,12 @@ import com.mycity4kids.dbtable.TableAdult;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.models.user.UserModel;
 import com.mycity4kids.models.user.UserResponse;
+import com.mycity4kids.newmodels.FamilyInvites;
+import com.mycity4kids.newmodels.UserInviteModel;
+import com.mycity4kids.newmodels.UserInviteResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
+
+import java.util.ArrayList;
 
 /**
  * Created by hemant on 20/1/16.
@@ -37,7 +44,7 @@ public class ActivityVerifyOTP extends BaseActivity {
     private EditText otpSMSText;
     private TextView verifyOTPTextView;
 
-    private String email, mobileNumber;
+    private String email, mobileNumber, profileImageUrl, colorCode, isExistingUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +53,10 @@ public class ActivityVerifyOTP extends BaseActivity {
 
         email = getIntent().getExtras().getString("email");
         mobileNumber = getIntent().getExtras().getString("mobile");
+        profileImageUrl = getIntent().getExtras().getString("profileUrl");
+        colorCode = getIntent().getExtras().getString("colorCode");
+        isExistingUser = getIntent().getExtras().getString("isExistingUser", "");
+
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         otpSMSText = (EditText) findViewById(R.id.otpSMSText);
         verifyOTPTextView = (TextView) findViewById(R.id.verifyOTPTextView);
@@ -53,8 +64,13 @@ public class ActivityVerifyOTP extends BaseActivity {
         verifyOTPTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ActivityVerifyOTP.this, ListFamilyInvitesActivity.class);
-                startActivity(intent);
+                VerifyOTPController _controller = new VerifyOTPController(ActivityVerifyOTP.this, ActivityVerifyOTP.this);
+                if ("1".equals(isExistingUser)) {
+                    _controller.getData(AppConstants.CONFIRM_MOBILE_OTP_FOR_EXISTING_USERS_REQUEST,
+                            mobileNumber, email, otpSMSText.getText().toString());
+                } else {
+                    _controller.getData(AppConstants.VERIFY_OTP_REQUEST, mobileNumber, email, otpSMSText.getText().toString());
+                }
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -139,32 +155,54 @@ public class ActivityVerifyOTP extends BaseActivity {
         switch (response.getDataType()) {
             case AppConstants.VERIFY_OTP_REQUEST:
                 // save in
-                UserResponse responseData = (UserResponse) response.getResponseObject();
+                UserInviteResponse responseData = (UserInviteResponse) response.getResponseObject();
                 String message = responseData.getResult().getMessage();
                 if (responseData.getResponseCode() == 200) {
-
                     //  showSnackbar(rootLayout, message);
-
                     Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+                    UserInviteModel userInviteModel = new UserInviteModel();
+                    userInviteModel.setUserId(responseData.getResult().getData().getUserId());
+                    userInviteModel.setEmail(email);
+                    userInviteModel.setMobile(mobileNumber);
+                    userInviteModel.setProfileImgUrl(profileImageUrl);
+                    userInviteModel.setColorCode(colorCode);
+                    userInviteModel.setFamilyInvites(responseData.getResult().getData().getFamilyInvites());
+                    SharedPrefUtils.setUserFamilyInvites(this, new Gson().toJson(userInviteModel).toString());
 
-                    // save in db
-                    saveDatainDB(responseData);
-
-                    // store userdetail in prefrences
-
-                    UserInfo model = new UserInfo();
-                    model.setId(responseData.getResult().getData().getUser().getId());
-                    model.setFamily_id(responseData.getResult().getData().getUser().getFamily_id());
-                    model.setColor_code(responseData.getResult().getData().getUser().getColor_code());
-                    model.setSessionId(responseData.getResult().getData().getUser().getSessionId());
-                    model.setFirst_name(responseData.getResult().getData().getUser().getFirst_name() + " " + responseData.getResult().getData().getUser().getLast_name());
-
-                    SharedPrefUtils.setUserDetailModel(ActivityVerifyOTP.this, model);
                     // shift to my city for kids
                     removeProgressDialog();
+                    ArrayList<FamilyInvites> familyInviteList = userInviteModel.getFamilyInvites();
+                    if (null != familyInviteList && !familyInviteList.isEmpty()) {
+                        Intent intent = new Intent(getApplicationContext(), ListFamilyInvitesActivity.class);
+                        intent.putExtra("userInviteData", userInviteModel);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        break;
+                    } else {
+                        Intent intent = new Intent(getApplicationContext(), CreateFamilyActivity.class);
+                        intent.putExtra("userInviteData", userInviteModel);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        break;
+                    }
 
-                    break;
                 }
+            case AppConstants.CONFIRM_MOBILE_OTP_FOR_EXISTING_USERS_REQUEST:
+                removeProgressDialog();
+                UserInviteResponse resData = (UserInviteResponse) response.getResponseObject();
+                String msg = resData.getResult().getMessage();
+                if (resData.getResponseCode() == 200) {
+                    Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+                    startSyncing();
+                    startSyncingUserInfo();
+                    Intent intent = new Intent(ActivityVerifyOTP.this, DashboardActivity.class);
+                    Log.e("MYCITY4KIDS", "USER logged In");
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startActivity(intent);
+                    finish();
+                }
+
+                break;
         }
     }
 

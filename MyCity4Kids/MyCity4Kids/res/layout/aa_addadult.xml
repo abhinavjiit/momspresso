@@ -92,7 +92,7 @@
             android:layout_marginTop="7dp"
             android:fontFamily="sans-serif"
             android:paddingBottom="7dp"
-            android:text="EMAIL" />
+            android:text="EMAIL OR MOBILE" />
 
         <EditText
             android:id="@+id/spouse_email"

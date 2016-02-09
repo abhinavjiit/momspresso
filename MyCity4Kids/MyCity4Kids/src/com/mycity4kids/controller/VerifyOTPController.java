@@ -15,6 +15,7 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.dbtable.UserTable;
 import com.mycity4kids.models.user.UserResponse;
 import com.mycity4kids.newmodels.TaskListModel;
+import com.mycity4kids.newmodels.UserInviteResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 
 import org.apache.http.NameValuePair;
@@ -44,7 +45,12 @@ public class VerifyOTPController extends BaseController {
         serviceRequest.setContext(context);
         serviceRequest.setResponseController(this);
         serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
-        serviceRequest.setUrl(AppConstants.VERIFY_OTP_URL);
+        if (requestType == AppConstants.VERIFY_OTP_REQUEST) {
+            serviceRequest.setUrl(AppConstants.VERIFY_OTP_URL);
+        } else if (requestType == AppConstants.CONFIRM_MOBILE_OTP_FOR_EXISTING_USERS_REQUEST) {
+            serviceRequest.setUrl(AppConstants.CONFIRM_MOBILE_OTP_FOR_EXISTING_USERS_URL);
+        }
+
 
         HttpClientConnection connection = HttpClientConnection.getInstance();
         connection.addRequest(serviceRequest);
@@ -66,6 +72,10 @@ public class VerifyOTPController extends BaseController {
 
             if (reqtype == AppConstants.VERIFY_OTP_REQUEST) {
                 nameValuePairs.add(new BasicNameValuePair("email", email));
+                nameValuePairs.add(new BasicNameValuePair("mobile", mobileNumber));
+                nameValuePairs.add(new BasicNameValuePair("otp", otp));
+            } else if (reqtype == AppConstants.CONFIRM_MOBILE_OTP_FOR_EXISTING_USERS_REQUEST) {
+                nameValuePairs.add(new BasicNameValuePair("userId", "" + SharedPrefUtils.getUserDetailModel(context).getId()));
                 nameValuePairs.add(new BasicNameValuePair("mobile", mobileNumber));
                 nameValuePairs.add(new BasicNameValuePair("otp", otp));
             }
@@ -97,19 +107,27 @@ public class VerifyOTPController extends BaseController {
                     String responseData = new String(response.getResponseData());
                     Log.i("VERIFY_OTP_REQUEST Response", responseData);
 
-                    UserResponse _signUpData = new Gson().fromJson(responseData, UserResponse.class);
+                    UserInviteResponse _signUpData = new Gson().fromJson(responseData, UserInviteResponse.class);
                     response.setResponseObject(_signUpData);
-
-                    if (_signUpData.getResponseCode() == 200) {
-                        saveUserDetails(getActivity(), _signUpData, (UserResponse) response.getResponseObject());
-                    }
 
                     sendResponseToScreen(response);
                 } catch (Exception e) {
                     sendResponseToScreen(null);
                 }
                 break;
+            case AppConstants.CONFIRM_MOBILE_OTP_FOR_EXISTING_USERS_REQUEST:
+                try {
+                    String responseData = new String(response.getResponseData());
+                    Log.i("VERIFY_OTP_REQUEST Response", responseData);
 
+                    UserInviteResponse _signUpData = new Gson().fromJson(responseData, UserInviteResponse.class);
+                    response.setResponseObject(_signUpData);
+
+                    sendResponseToScreen(response);
+                } catch (Exception e) {
+                    sendResponseToScreen(null);
+                }
+                break;
             default:
                 break;
         }

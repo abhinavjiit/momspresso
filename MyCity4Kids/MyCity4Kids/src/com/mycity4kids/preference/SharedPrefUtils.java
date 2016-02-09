@@ -4,11 +4,16 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
+import com.google.gson.Gson;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.VersionApiModel;
 import com.mycity4kids.models.city.MetroCity;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.models.version.RateVersion;
+import com.mycity4kids.newmodels.UserInviteModel;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * To save the Preference for My City App
@@ -53,6 +58,8 @@ public class SharedPrefUtils {
 
     public static final String USER_ID = "userid";
     public static final String FAMILY_ID = "familyid";
+    public static final String EMAIL = "email";
+    public static final String MOBILE = "mobile";
     public static final String COLOR_CODE = "colorcode";
     public static final String USER_NAME = "username";
     public static final String SESSIONID = "sessionid";
@@ -233,6 +240,8 @@ public class SharedPrefUtils {
         SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         Editor _editor = _sharedPref.edit();
         _editor.putInt(USER_ID, pModel.getId());
+        _editor.putString(EMAIL, pModel.getEmail());
+        _editor.putString(MOBILE, pModel.getMobile_number());
         _editor.putString(COLOR_CODE, pModel.getColor_code());
         _editor.putInt(FAMILY_ID, pModel.getFamily_id());
         _editor.putString(USER_NAME, pModel.getFirst_name());
@@ -245,8 +254,10 @@ public class SharedPrefUtils {
         SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         UserInfo user = new UserInfo();
         user.setId(_sharedPref.getInt(USER_ID, 0));
-        user.setColor_code(_sharedPref.getString(COLOR_CODE, ""));
         user.setFamily_id(_sharedPref.getInt(FAMILY_ID, 0));
+        user.setEmail(_sharedPref.getString(EMAIL, ""));
+        user.setMobile_number(_sharedPref.getString(MOBILE, ""));
+        user.setColor_code(_sharedPref.getString(COLOR_CODE, ""));
         user.setFirst_name(_sharedPref.getString(USER_NAME, "user"));
         user.setSessionId(_sharedPref.getString(SESSIONID, ""));
         return user;
@@ -463,5 +474,17 @@ public class SharedPrefUtils {
     public static String getBaseURL(Context context) {
         SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         return _sharedPref.getString("BASE_URL", "dwdwdwdwdw");
+    }
+
+    public static void setUserFamilyInvites(Context context, String userInviteModel) {
+        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        _editor.putString("userInviteModel", userInviteModel);
+        _editor.commit();
+    }
+
+    public static String getUserFamilyInvites(Context context) {
+        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return _sharedPref.getString("userInviteModel", "");
     }
 }

@@ -285,6 +285,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="please_enter_valid_email">Please enter valid email</string>
+    <string name="please_enter_valid_email_or_mobile">Please enter valid email or mobile</string>
     <string name="please_enter_dob">Please enter date of birth</string>
     <string name="please_enter_name">Please enter name</string>
 

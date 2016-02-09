@@ -20,7 +20,7 @@
         android:scrollbars="none">
 
         <LinearLayout
-
+            android:id="@+id/root"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -52,60 +52,60 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@color/black_color" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white_color"
-                android:orientation="vertical"
-                android:padding="25dp">
+            <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="@color/white_color"-->
+            <!--android:orientation="vertical"-->
+            <!--android:padding="25dp">-->
 
-                <RelativeLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content">
+            <!--<RelativeLayout-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="wrap_content">-->
 
-                    <EditText
-                        android:id="@+id/spouse_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginBottom="5dp"
-                        android:layout_toLeftOf="@+id/color_spouse"
-                        android:background="@null"
-                        android:drawableBottom="@drawable/underline"
-                        android:drawablePadding="20dp"
-                        android:hint="SPOUSE NAME"
-                        android:padding="7dp"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@color/black_color" />
+            <!--<EditText-->
+            <!--android:id="@+id/spouse_name"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:layout_marginBottom="5dp"-->
+            <!--android:layout_toLeftOf="@+id/color_spouse"-->
+            <!--android:background="@null"-->
+            <!--android:drawableBottom="@drawable/underline"-->
+            <!--android:drawablePadding="20dp"-->
+            <!--android:hint="SPOUSE NAME"-->
+            <!--android:padding="7dp"-->
+            <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
+            <!--android:textColor="@color/black_color" />-->
 
-                    <TextView
-                        android:id="@+id/color_spouse"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:drawableBottom="@drawable/color_1xxhdpi"
-                        android:drawablePadding="5dp"
-                        android:hint="@string/colour"
-                        android:textColor="@color/black_color" />
-
-
-                </RelativeLayout>
+            <!--<TextView-->
+            <!--android:id="@+id/color_spouse"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:drawableBottom="@drawable/color_1xxhdpi"-->
+            <!--android:drawablePadding="5dp"-->
+            <!--android:hint="@string/colour"-->
+            <!--android:textColor="@color/black_color" />-->
 
 
-                <EditText
-                    android:id="@+id/spouse_email"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:background="@null"
-                    android:drawableBottom="@drawable/underline"
-                    android:drawablePadding="20dp"
-                    android:hint="SPOUSE EMAIL OR MOBILE"
-                    android:padding="7dp"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@color/black_color" />
+            <!--</RelativeLayout>-->
 
 
-            </LinearLayout>
+            <!--<EditText-->
+            <!--android:id="@+id/spouse_email"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:background="@null"-->
+            <!--android:drawableBottom="@drawable/underline"-->
+            <!--android:drawablePadding="20dp"-->
+            <!--android:hint="SPOUSE EMAIL OR MOBILE"-->
+            <!--android:padding="7dp"-->
+            <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
+            <!--android:textColor="@color/black_color" />-->
+
+
+            <!--</LinearLayout>-->
 
 
             <ImageView
@@ -226,33 +226,6 @@
                 android:text="ADDITIONAL CHILD"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/blue_color" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/a_spouce_bg"
-                android:paddingLeft="20dp"
-                android:paddingTop="4dp"
-                android:text="ACCOUNT PREFERENCES"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/black_color" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white_color"
-                android:orientation="vertical"
-                android:padding="15dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="15dp"
-                    android:text="NOTIFICATIONS"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@color/blue_color" />
-
-            </LinearLayout>
 
         </LinearLayout>
 
