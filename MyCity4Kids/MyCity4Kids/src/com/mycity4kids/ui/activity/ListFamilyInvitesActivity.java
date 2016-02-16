@@ -51,6 +51,8 @@ public class ListFamilyInvitesActivity extends BaseActivity implements FamilyInv
     TextView createFamilyTextView;
     UserInviteModel userInviteModel;
     ArrayList<FamilyInvites> familyInviteList;
+    FamilyInvitesAdapter adapter;
+    int invitePosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +75,7 @@ public class ListFamilyInvitesActivity extends BaseActivity implements FamilyInv
         listView.addHeaderView(header, null, false);
         List<FamilyInvites> list = new ArrayList<>();
         familyInviteList = userInviteModel.getFamilyInvites();
-        FamilyInvitesAdapter adapter = new FamilyInvitesAdapter(this, R.layout.invite_item, familyInviteList, this);
+        adapter = new FamilyInvitesAdapter(this, R.layout.invite_item, familyInviteList, this);
         listView.setAdapter(adapter);
 
 
@@ -147,6 +149,29 @@ public class ListFamilyInvitesActivity extends BaseActivity implements FamilyInv
                     e.printStackTrace();
                 }
                 break;
+
+            case AppConstants.DELETE_INVITE:
+                try {
+                    removeProgressDialog();
+                    UserResponse responseData = (UserResponse) response.getResponseObject();
+                    if (responseData.getResponseCode() == 200) {
+                        Toast.makeText(ListFamilyInvitesActivity.this, responseData.getResult().getMessage(), Toast.LENGTH_SHORT).show();
+                        familyInviteList.remove(invitePosition);
+                        adapter.notifyDataSetChanged();
+
+                    } else if (responseData.getResponseCode() == 400) {
+                        if (!StringUtils.isNullOrEmpty(responseData.getResult().getData().getError())) {
+                            Toast.makeText(ListFamilyInvitesActivity.this, responseData.getResult().getData().getMessage(),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+
+                } catch (Exception e) {
+                    removeProgressDialog();
+                    e.printStackTrace();
+                }
+                break;
         }
     }
 
@@ -213,12 +238,13 @@ public class ListFamilyInvitesActivity extends BaseActivity implements FamilyInv
     @Override
     public void onInvitationResponse(String response, int position) {
 
-        if("cancel".equals(response)){
+        invitePosition = position;
+        if ("cancel".equals(response)) {
             FamilyInvitationController familyInvitationController = new FamilyInvitationController(this, this);
             familyInvitationController.getData(AppConstants.DELETE_INVITE,
                     familyInviteList.get(position), userInviteModel);
             showProgressDialog(getString(R.string.please_wait));
-        }else{
+        } else {
             FamilyInvitationController familyInvitationController = new FamilyInvitationController(this, this);
             familyInvitationController.getData(AppConstants.ACCEPT_OR_REJECT_INVITE_REQUEST,
                     familyInviteList.get(position), userInviteModel);

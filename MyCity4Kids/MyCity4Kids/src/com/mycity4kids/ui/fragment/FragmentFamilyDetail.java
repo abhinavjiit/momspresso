@@ -71,6 +71,7 @@ import com.mycity4kids.utils.RoundedTransformation;
 import com.mycity4kids.widget.CustomListView;
 import com.squareup.picasso.Picasso;
 
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -486,7 +487,11 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
             } else {
                 SignUpModel.User usersInformation = new SignUpModel().new User();
                 usersInformation.setUsername((adultname.getText().toString().trim()));
-                usersInformation.setEmail((adultemail.getText().toString().trim()));
+                if (StringUtils.isValidEmail(adultemail.getText().toString())) {
+                    usersInformation.setEmail((adultemail.getText().toString().trim()));
+                } else {
+                    usersInformation.setMobile((adultemail.getText().toString().trim()));
+                }
                 usersInformation.setColor_code(new ColorCode().getValue("" + adultColor.getTag()));
                 usersInformation.setPincode(SharedPrefUtils.getpinCode(getActivity()));
                 userInfoList.add(usersInformation);

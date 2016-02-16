@@ -38,6 +38,7 @@ import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.models.user.UserResponse;
 import com.mycity4kids.newmodels.NewSignUpModel;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.ui.CircleTransformation;
 import com.mycity4kids.ui.fragment.NotificationFragment;
 import com.mycity4kids.ui.fragment.SyncSettingFragment;
 import com.mycity4kids.utils.RoundedTransformation;
@@ -101,6 +102,7 @@ public class SocialSignUpActivity extends BaseActivity implements View.OnClickLi
         mColorfrSpouse.setOnClickListener(this);
         mColorfrSpouse.setTag("1");
         used_colors.put("spouse1", "1");
+        Picasso.with(this).load(profileImgUrl).transform(new CircleTransformation()).into(profile_image);
     }
 
     @Override

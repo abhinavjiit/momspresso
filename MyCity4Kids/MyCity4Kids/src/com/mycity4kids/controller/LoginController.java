@@ -179,11 +179,6 @@ public class LoginController extends BaseController {
                         nameValuePairs.add(new BasicNameValuePair("password", requestData.getPassword()));
                     }
                 }
-                nameValuePairs.add(new BasicNameValuePair("deviceId", DataUtils.getDeviceId(activity)));
-                if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getDeviceToken(activity))) {
-                    SharedPrefUtils.setPushTokenUpdateToServer(activity, true);
-                }
-                nameValuePairs.add(new BasicNameValuePair("push_token", SharedPrefUtils.getDeviceToken(activity)));
                 Log.i("Login request ", nameValuePairs.toString());
             } else if (requestType == AppConstants.NEW_LOGIN_REQUEST) {
                 if (!StringUtils.isNullOrEmpty(requestData.getEmailId())) {
@@ -217,11 +212,6 @@ public class LoginController extends BaseController {
                 if (!StringUtils.isNullOrEmpty(requestData.getPassword())) {
                     nameValuePairs.add(new BasicNameValuePair("password", requestData.getPassword()));
                 }
-                nameValuePairs.add(new BasicNameValuePair("deviceId", DataUtils.getDeviceId(activity)));
-                if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getDeviceToken(activity))) {
-                    SharedPrefUtils.setPushTokenUpdateToServer(activity, true);
-                }
-                nameValuePairs.add(new BasicNameValuePair("pushToken", SharedPrefUtils.getDeviceToken(activity)));
                 Log.i("Login request ", nameValuePairs.toString());
             }
 

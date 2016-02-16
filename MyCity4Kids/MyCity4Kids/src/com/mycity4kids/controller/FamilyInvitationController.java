@@ -77,8 +77,6 @@ public class FamilyInvitationController extends BaseController {
                 nameValuePairs.add(new BasicNameValuePair("invitationId", "" + model.getInvitationId()));
                 nameValuePairs.add(new BasicNameValuePair("familyId", "" + model.getFamilyId()));
                 nameValuePairs.add(new BasicNameValuePair("colorCode", "" + model.getColorCode()));
-                nameValuePairs.add(new BasicNameValuePair("pushToken", "" + SharedPrefUtils.getDeviceToken(activity)));
-                nameValuePairs.add(new BasicNameValuePair("deviceId", "" + DataUtils.getDeviceId(activity)));
                 nameValuePairs.add(new BasicNameValuePair("pictureUrl", "" + model.getProfileImage()));
             } else {
                 nameValuePairs.add(new BasicNameValuePair("userId", "" + userInfo.getUserId()));
@@ -87,8 +85,6 @@ public class FamilyInvitationController extends BaseController {
                 nameValuePairs.add(new BasicNameValuePair("invitationId", "" + model.getInvitationId()));
                 nameValuePairs.add(new BasicNameValuePair("familyId", "" + model.getFamilyId()));
                 nameValuePairs.add(new BasicNameValuePair("colorCode", "" + model.getColorCode()));
-                nameValuePairs.add(new BasicNameValuePair("pushToken", "" + SharedPrefUtils.getDeviceToken(activity)));
-                nameValuePairs.add(new BasicNameValuePair("deviceId", "" + DataUtils.getDeviceId(activity)));
                 nameValuePairs.add(new BasicNameValuePair("pictureUrl", "" + model.getProfileImage()));
             }
             System.out.println("JSON " + nameValuePairs);
@@ -131,18 +127,9 @@ public class FamilyInvitationController extends BaseController {
                     String responseData = new String(response.getResponseData());
                 /*String[] data=responseData.split("-->");
                 String finalData=data[1].trim();*/
-                    Log.i("Login Response", responseData);
+                    Log.i("Delete Invite Response", responseData);
                     UserResponse _loginResponse = new Gson().fromJson(responseData, UserResponse.class);
                     response.setResponseObject(_loginResponse);
-                    /**
-                     * if response code is 200 then user is logged in and we save login details In shared pref
-                     * & send to response to login screen
-                     */
-                    if (_loginResponse.getResponseCode() == 200) {
-                        _loginResponse.setLoggedIn(true);
-                        saveUserDetails(getActivity(), _loginResponse, (UserResponse) response.getResponseObject());
-                    }
-
 
                     sendResponseToScreen(response);
                 } catch (Exception e) {
