@@ -20,8 +20,10 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.dbtable.ActivititiesTable;
 import com.mycity4kids.enums.MapTypeFilter;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.IFilter;
 import com.mycity4kids.models.category.Activities;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.BusinessListActivityKidsResources;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.adapter.ActivitiesFragmentAdapter;
@@ -45,6 +47,8 @@ public class ActivitiesFragment extends Fragment implements OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_activities_group, container, false);
+        Utils.pushOpenScreenEvent(getActivity(), "Listing Activities Filter", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
+
         query_search = (EditText) view.findViewById(R.id.query_search);
         ActivititiesTable _table = new ActivititiesTable((BaseApplication) getActivity().getApplication());
         categoryId = getArguments().getInt(Constants.CATEGORY_KEY);

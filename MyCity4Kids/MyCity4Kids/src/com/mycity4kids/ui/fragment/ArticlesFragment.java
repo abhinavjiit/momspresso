@@ -29,6 +29,7 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.ParentingStopController;
 import com.mycity4kids.controller.ParentingStopSearchController;
 import com.mycity4kids.enums.ParentingFilterType;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.parentingfilter.ParentingSearchRequest;
 import com.mycity4kids.models.parentingstop.CommonParentingList;
 import com.mycity4kids.models.parentingstop.CommonParentingResponse;
@@ -82,6 +83,7 @@ public class ArticlesFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Utils.pushOpenScreenEvent(getActivity(), "Blogs Dashboard", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
 
         View view = inflater.inflate(R.layout.aa_fragment_article_new, null);
 

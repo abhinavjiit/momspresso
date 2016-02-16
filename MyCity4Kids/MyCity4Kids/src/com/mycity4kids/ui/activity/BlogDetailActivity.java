@@ -44,6 +44,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.NewParentingBlogController;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.models.parentingstop.ParentingRequest;
 import com.mycity4kids.newmodels.bloggermodel.BlogArticleList.BlogArticleListResponse;
@@ -112,7 +113,7 @@ public class BlogDetailActivity extends BaseActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Utils.pushOpenScreenEvent(BlogDetailActivity.this, "Blogger Description Screen", SharedPrefUtils.getUserDetailModel(this).getId() + "");
         TAG = BlogDetailActivity.this.getClass().getSimpleName();
         mClient = new GoogleApiClient.Builder(this).addApi(AppIndex.APP_INDEX_API).build();
         deepLinkURL = getIntent().getStringExtra(Constants.DEEPLINK_URL);

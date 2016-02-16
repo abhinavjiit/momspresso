@@ -62,6 +62,7 @@ import com.mycity4kids.dbtable.LocalityTable;
 import com.mycity4kids.dbtable.UserTable;
 import com.mycity4kids.fragmentdialog.CameraFragmentDialog;
 import com.mycity4kids.fragmentdialog.StartDatePicker;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.IGetDate;
 import com.mycity4kids.interfaces.IOnSubmitGallery;
 import com.mycity4kids.models.VersionApiModel;
@@ -104,6 +105,8 @@ public class ProfileActivity extends BaseActivity implements IOnSubmitGallery,On
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Utils.pushOpenScreenEvent(ProfileActivity.this, "Edit Profile", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+
 		try {
 			setContentView(R.layout.activity_view_edit_profile);
 			profileImage=(NetworkImageView) findViewById(R.id.profile_img);

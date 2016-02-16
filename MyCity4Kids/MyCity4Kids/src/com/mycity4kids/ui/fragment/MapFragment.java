@@ -33,7 +33,9 @@ import com.mycity4kids.googlemap.maputils.MapUtils;
 import com.mycity4kids.googlemap.models.Directions;
 import com.mycity4kids.googlemap.models.Steps;
 import com.mycity4kids.googlemap.models.TransitModel;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.businesseventdetails.DetailMap;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.utils.location.GPSTracker;
 
 import java.util.ArrayList;
@@ -51,6 +53,8 @@ public class MapFragment extends BaseFragment implements OnClickListener, OnMapR
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, null, false);
+        Utils.pushOpenScreenEvent(getActivity(), "Map for resource/event", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
+
         try {
 //			if(googleMap!=null){
 //				googleMap.clear();

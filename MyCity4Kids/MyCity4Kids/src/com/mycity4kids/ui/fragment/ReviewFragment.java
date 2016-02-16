@@ -25,10 +25,12 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.businesseventdetails.DetailsGallery;
 import com.mycity4kids.models.businesseventdetails.DetailsReviews;
 import com.mycity4kids.models.businesseventdetails.GalleryListtingData;
 import com.mycity4kids.models.businesseventdetails.VideoDetails;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.WriteReviewActivity;
 import com.mycity4kids.ui.activity.YouTubeVideoActivity;
 import com.mycity4kids.ui.adapter.GalleryAdapter;
@@ -51,6 +53,8 @@ public class ReviewFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_review, null, false);
+        Utils.pushOpenScreenEvent(getActivity(), "Review resource/events", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
+
         try {
             _reviewLayout = (LinearLayout) view.findViewById(R.id.reviewLayout);
 

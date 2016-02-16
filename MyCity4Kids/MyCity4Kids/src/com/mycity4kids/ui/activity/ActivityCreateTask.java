@@ -50,6 +50,7 @@ import com.mycity4kids.dbtable.TaskTableFile;
 import com.mycity4kids.dbtable.TaskTableNotes;
 import com.mycity4kids.dbtable.TaskTableWhoToRemind;
 import com.mycity4kids.dbtable.UserTable;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.models.user.ImageUploadRequest;
 import com.mycity4kids.models.user.UserModel;
@@ -127,6 +128,7 @@ public class ActivityCreateTask extends BaseActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.aa_create_task);
+        Utils.pushOpenScreenEvent(ActivityCreateTask.this, "Create Task", SharedPrefUtils.getUserDetailModel(this).getId() + "");
         density = getResources().getDisplayMetrics().density;
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);

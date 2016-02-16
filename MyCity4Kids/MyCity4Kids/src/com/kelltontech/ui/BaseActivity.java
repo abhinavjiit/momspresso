@@ -24,6 +24,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.Tracker;
 import com.kelltontech.network.Response;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
@@ -33,6 +34,7 @@ import com.kelltontech.utils.facebook.model.FacebookUtils;
 import com.kelltontech.utils.facebook.model.UserInfo;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.ArticleBlogFollowController;
@@ -44,7 +46,7 @@ import com.mycity4kids.sync.SyncSocialMediaEventService;
 import com.mycity4kids.sync.SyncUserInfoService;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.LandingLoginActivity;
-import com.mycity4kids.utils.AnalyticsHelper;
+/*import com.mycity4kids.utils.AnalyticsHelper;*/
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -58,10 +60,13 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen 
     public static boolean isAppInFg = false;
     public static boolean isScrInFg = false;
     public static boolean isChangeScrFg = false;
+    Tracker mTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        BaseApplication baseApplication=(BaseApplication) getApplication();
+      //  mTracker=baseApplication.getTracker(BaseApplication.TrackerName.APP_TRACKER);
         Log.i(getClass().getSimpleName(), "onCreate()");
 
     }
@@ -145,14 +150,14 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen 
         }
         isScrInFg = true;
         super.onStart();
-        AnalyticsHelper.onActivityStart(this);
-        AnalyticsHelper.setLogEnabled(Constants.IS_GOOGLE_ANALYTICS_ENABLED);
+        /*AnalyticsHelper.onActivityStart(this);
+        AnalyticsHelper.setLogEnabled(Constants.IS_GOOGLE_ANALYTICS_ENABLED);*/
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        AnalyticsHelper.onActivityStop(this);
+      //  AnalyticsHelper.onActivityStop(this);
         if (!isScrInFg || !isChangeScrFg) {
             isAppInFg = false;
             onAppPause();

@@ -54,6 +54,7 @@ import com.mycity4kids.controller.WriteReviewController;
 import com.mycity4kids.dbtable.CategoryListTable;
 import com.mycity4kids.dbtable.UserTable;
 import com.mycity4kids.fragmentdialog.CameraFragmentDialog;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.IOnSubmitGallery;
 import com.mycity4kids.models.WriteReviewModel;
 import com.mycity4kids.models.autosuggest.AutoSuggestModelData;
@@ -61,6 +62,7 @@ import com.mycity4kids.models.autosuggest.AutoSuggestReviewResponse;
 import com.mycity4kids.models.category.CategoryModel;
 import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.models.user.UserModel;
+import com.mycity4kids.preference.SharedPrefUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -102,6 +104,7 @@ public class WriteReviewActivity extends BaseActivity implements IOnSubmitGaller
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
+            Utils.pushOpenScreenEvent(WriteReviewActivity.this, "Write Review", SharedPrefUtils.getUserDetailModel(this).getId() + "");
 
             setContentView(R.layout.activity_write_a_review);
             mToolbar = (Toolbar) findViewById(R.id.toolbar);

@@ -29,12 +29,14 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.ParentingFilterSearchController;
 import com.mycity4kids.enums.ParentingFilterType;
 import com.mycity4kids.enums.SearchListType;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.parentingfilter.ArticleBlogFilterData;
 import com.mycity4kids.models.parentingfilter.ArticleBlogFilterResponse;
 import com.mycity4kids.models.parentingfilter.FilterAuthors;
 import com.mycity4kids.models.parentingfilter.FilterBlogs;
 import com.mycity4kids.models.parentingfilter.FilterTags;
 import com.mycity4kids.models.parentingfilter.FilterTopics;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.adapter.ParentingFilterAdapter;
 /**
  * 
@@ -49,6 +51,8 @@ public class ArticleBlogSearchDialogActivity<T> extends BaseActivity implements 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Utils.pushOpenScreenEvent(ArticleBlogSearchDialogActivity.this, "Blog Search", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+
 		try {
 			setContentView(R.layout.activity_article_blog_search);
 			((ImageView)findViewById(R.id.imgBack)).setOnClickListener(this);

@@ -9,6 +9,8 @@ import android.widget.TextView;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
+import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.preference.SharedPrefUtils;
 
 /**
  * Created by khushboo.goyal on 19-06-2015.
@@ -19,6 +21,7 @@ public class JoinFamilyActivity extends BaseActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Utils.pushOpenScreenEvent(JoinFamilyActivity.this, "Join Family Dashboard", SharedPrefUtils.getUserDetailModel(this).getId() + "");
 
         setContentView(R.layout.aa_joinfamily);
 

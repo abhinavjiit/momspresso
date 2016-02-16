@@ -34,10 +34,13 @@ import com.mycity4kids.dbtable.UserTable;
 import com.mycity4kids.enums.AddReviewOrPhoto;
 import com.mycity4kids.fragmentdialog.CameraFragmentDialog;
 import com.mycity4kids.fragmentdialog.LoginFragmentDialog;
+import com.mycity4kids.gtmutils.GTMEventType;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.IOnSubmitGallery;
 import com.mycity4kids.models.businesseventdetails.Batches;
 import com.mycity4kids.models.businesslist.BusinessDataListing;
 import com.mycity4kids.models.favorite.FavoriteRequest;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.BusinessDetailsActivity;
 import com.mycity4kids.ui.activity.RecentlyViewedActivity;
 
@@ -166,6 +169,7 @@ public class DetailHeader extends RelativeLayout implements OnClickListener {
                 case R.id.write_a_review:
                     Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
                     shareIntent.setType("text/plain");
+                    Utils.pushEvent(getContext(), GTMEventType.SHARE_RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getContext()).getId() + "", "");
 
 
                     String titleName = detailsResponse.getName();
@@ -245,6 +249,8 @@ public class DetailHeader extends RelativeLayout implements OnClickListener {
                     fragmentDialog.setSubmitListner((IOnSubmitGallery) getContext());
                     fragmentDialog.show(((FragmentActivity) getContext()).getSupportFragmentManager(), "");
                     ((BusinessDetailsActivity) getContext()).writeReviewFromHeader(AddReviewOrPhoto.AddPhoto);
+                    Utils.pushEvent(getContext(), GTMEventType.ADDPHOTOS_EVENT_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getContext()).getId() + "", "");
+
 
                     break;
                 case R.id.share_with_frnd:

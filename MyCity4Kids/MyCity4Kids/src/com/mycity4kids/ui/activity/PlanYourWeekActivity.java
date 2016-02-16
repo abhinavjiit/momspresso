@@ -10,6 +10,8 @@ import android.widget.TextView;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
+import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.preference.SharedPrefUtils;
 
 /**
  * Created by hemant on 30/12/15.
@@ -25,6 +27,8 @@ public class PlanYourWeekActivity extends BaseActivity implements View.OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Utils.pushOpenScreenEvent(PlanYourWeekActivity.this, "Plan Your Week", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+
         setContentView(R.layout.aa_suggested_task_cal_fragment);
         addAppointmentTextView = (TextView) findViewById(R.id.txtCal);
         addTodoTextView = (TextView) findViewById(R.id.txtTodo);

@@ -26,6 +26,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.gson.Gson;
@@ -60,6 +62,8 @@ import com.mycity4kids.enums.DialogEnum;
 import com.mycity4kids.enums.ParentingFilterType;
 import com.mycity4kids.facebook.FacebookUtils;
 import com.mycity4kids.gcm.GCMUtil;
+import com.mycity4kids.gtmutils.GTMEventType;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.IGetRateAndUpdateEvent;
 import com.mycity4kids.interfaces.OnUIView;
 import com.mycity4kids.models.configuration.ConfigurationApiModel;
@@ -147,6 +151,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private int taskId = 0;
     private TableTaskData taskData;
     private int blogListPosition;
+    Tracker t;
 
     // The onNewIntent() is overridden to get and resolve the data for deep linking
     @Override
@@ -160,7 +165,23 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+        t=((BaseApplication)getApplication()).getTracker(
+        BaseApplication.TrackerName.APP_TRACKER);
+        // Enable Display Features.
+        t.enableAdvertisingIdCollection(true);
+        // Set screen name.
+        t.setScreenName("DashBoard");
+// You only need to set User ID on a tracker once. By setting it on the tracker, the ID will be
+        // sent with all subsequent hits.
+        // new code
+        t.set("&uid", SharedPrefUtils.getUserDetailModel(this).getId()+"");
 
+        // This hit will be sent with the User ID value and be visible in User-ID-enabled views (profiles).
+        t.send(new HitBuilders.EventBuilder().setCategory("UX").setAction("User Sign In").build());
+
+        // till here
+// Send a screen view.
+        t.send(new HitBuilders.ScreenViewBuilder().build());
         onNewIntent(getIntent());
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
@@ -182,6 +203,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         allTaskList = (CustomListView) findViewById(R.id.show_tasklist);
 
         txvAllTaskPopup = (TextView) findViewById(R.id.all_tasklist);
+
+        Utils.pushOpenScreenEvent(DashboardActivity.this, "DashBoard", SharedPrefUtils.getUserDetailModel(this).getId()+"");
+
 //        Reminder.with(this).info(Constants.REMINDER_KIDS_BIRTHDAY, "RANDOM kids birthday")
 //                .startTime(1419318120000l).setRepeatBehavior("Yearly", "Forever", "", null)
 //                .remindBefore("0").setRecurring("yes").create(11111120);
@@ -1574,6 +1598,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
             case R.id.rdBtnToday:
                 changeVisibiltyOfArrow(false);
+                Utils.pushEvent(DashboardActivity.this, GTMEventType.MC4KToday_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
                 //TableAppointmentData data = new TableAppointmentData(BaseApplication.getInstance());
                 //TableTaskData taskData = new TableTaskData(BaseApplication.getInstance());
                 //int count = data.getRowsCount() + taskData.getRowsCount();
@@ -1603,6 +1628,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
             case R.id.rdBtnCalender:
                 // title show current month
+                Utils.pushEvent(DashboardActivity.this, GTMEventType.CALENDAR_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
                 changeVisibiltyOfArrow(true);
                 Calendar c = Calendar.getInstance();
                 setTitle(form.format(c.getTime()).toString());
@@ -1614,7 +1640,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
                 break;
             case R.id.rdBtnTodo:
-
+                Utils.pushEvent(DashboardActivity.this, GTMEventType.TODO_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
                 replaceFragment(new FragmentTaskHome(), null, true);
                 setTitle("All Tasks");
                 SharedPrefUtils.setTaskListID(DashboardActivity.this, 0);
@@ -1622,7 +1648,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 refreshMenu();
                 break;
             case R.id.rdBtnUpcoming:
-
+                Utils.pushEvent(DashboardActivity.this, GTMEventType.UPCOMING_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
                 Constants.IS_SEARCH_LISTING = false;
                 changeVisibiltyOfArrow(false);
                 setTitle("Upcoming Events");
@@ -1635,23 +1661,27 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 replaceFragment(fragment, bundle, true);
                 break;
             case R.id.rdBtnKids:
+                Utils.pushEvent(DashboardActivity.this, GTMEventType.RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
                 Constants.IS_SEARCH_LISTING = false;
                 changeVisibiltyOfArrow(false);
                 setTitle("Kids Resources");
                 replaceFragment(new FragmentHomeCategory(), null, true);
                 break;
             case R.id.rdBtnParentingBlogs:
+                Utils.pushEvent(DashboardActivity.this, GTMEventType.BLOGS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
                 changeVisibiltyOfArrow(false);
                 setTitle("Articles");
                 replaceFragment(new ArticlesFragment(), null, true);
                 break;
             case R.id.txvSettings:
+                Utils.pushEvent(DashboardActivity.this, GTMEventType.SETTINGS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
                 changeVisibiltyOfArrow(false);
                 setTitle("Settings");
                 replaceFragment(new FragmentSetting(), null, true);
                 break;
 
             case R.id.txvHelp:
+                Utils.pushEvent(DashboardActivity.this, GTMEventType.HELP_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
                 Intent intent = new Intent(DashboardActivity.this, LoadWebViewActivity.class);
                 intent.putExtra(Constants.WEB_VIEW_URL, "http://www.mycity4kids.com/mobile#faq");
                 startActivity(intent);
@@ -1682,6 +1712,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
 
             case R.id.txvtelfrnd:
+                Utils.pushEvent(DashboardActivity.this, GTMEventType.TELLFRIEND_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
                 Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
                 shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "mycity4kids android app");
@@ -1691,7 +1722,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
 
             case R.id.feed_back:
-
+                Utils.pushEvent(DashboardActivity.this, GTMEventType.FEEDBACK_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
                 changeVisibiltyOfArrow(false);
                 setTitle("Send Feedback");
                 replaceFragment(new SendFeedbackFragment(), null, true);

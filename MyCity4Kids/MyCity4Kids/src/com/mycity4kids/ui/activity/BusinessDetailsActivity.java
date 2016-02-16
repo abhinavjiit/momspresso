@@ -64,6 +64,8 @@ import com.mycity4kids.dbtable.UserTable;
 import com.mycity4kids.enums.AddReviewOrPhoto;
 import com.mycity4kids.fragmentdialog.CameraFragmentDialog;
 import com.mycity4kids.fragmentdialog.LoginFragmentDialog;
+import com.mycity4kids.gtmutils.GTMEventType;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.IOnSubmitGallery;
 import com.mycity4kids.models.bookmark.BookmarkModel;
 import com.mycity4kids.models.businesseventdetails.Batches;
@@ -82,6 +84,7 @@ import com.mycity4kids.observablescrollview.ScrollState;
 import com.mycity4kids.observablescrollview.ScrollUtils;
 import com.mycity4kids.observablescrollview.Scrollable;
 import com.mycity4kids.observablescrollview.TouchInterceptionFrameLayout;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.slidingtab.SlidingTabLayout;
 import com.mycity4kids.ui.adapter.ViewPagerAdapterEventdetail;
 import com.mycity4kids.ui.fragment.MapFragment;
@@ -163,6 +166,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Utils.pushOpenScreenEvent(BusinessDetailsActivity.this, "Resource/Event Details", SharedPrefUtils.getUserDetailModel(this).getId() + "");
 
         TAG = BusinessDetailsActivity.this.getClass().getSimpleName();
         mClient = new GoogleApiClient.Builder(this).addApi(AppIndex.APP_INDEX_API).build();
@@ -967,6 +971,8 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
             switch (v.getId()) {
                 case R.id.txvCall: {
                     Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + information.getPhone()));
+                    Utils.pushEvent(BusinessDetailsActivity.this, GTMEventType.CALL_RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "");
+
                     startActivity(intent);
                 }
                 break;
@@ -975,6 +981,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
                         goToLoginDialog();
                         return;
                     }
+                    Utils.pushEvent(BusinessDetailsActivity.this, GTMEventType.WRITEREVIEW_RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "");
                     writeReviewFromHeader(AddReviewOrPhoto.WriteAReview);
                 }
                 break;
@@ -992,6 +999,8 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
                         goToLoginDialog();
                         return;
                     }
+                    Utils.pushEvent(BusinessDetailsActivity.this, GTMEventType.ADDPHOTOS_RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "");
+
                     CameraFragmentDialog fragmentDialog = new CameraFragmentDialog();
                     fragmentDialog.setSubmitListner((IOnSubmitGallery) BusinessDetailsActivity.this);
                     fragmentDialog.show(getSupportFragmentManager(), "");
@@ -1058,6 +1067,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
                 }
                 break;
                 case R.id.img_favourites: {
+                    Utils.pushEvent(BusinessDetailsActivity.this, GTMEventType.FAVOURITE_RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "");
                     addRemoveBookmark();
                 }
                 break;
@@ -1069,6 +1079,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
             switch (v.getId()) {
                 case R.id.txvCall: {
                     Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + information.getPhone()));
+                    Utils.pushEvent(BusinessDetailsActivity.this, GTMEventType.CALL_EVENT_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
                     startActivity(intent);
                 }
                 break;
@@ -1087,6 +1098,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
 
                     String shareMessage = "mycity4kids\n\nCheck out this interesting event " + "\"" + titleName + "\" on " + shareDate + " at " + shareTime + ".\n" + webUrl;
                     shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
+                    Utils.pushEvent(BusinessDetailsActivity.this, GTMEventType.SHARE_EVENT_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "");
                     startActivity(Intent.createChooser(shareIntent, "mycity4kids"));
                 }
                 break;
@@ -1106,6 +1118,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
                     i.putExtra(Constants.EVENT_LOCATION, information.getLocality());
                     i.putExtra(Constants.EVENT_START_DATE, information.getEvent_date().getStart_date());
                     i.putExtra(Constants.EVENT_END_DATE, information.getEvent_date().getEnd_date());
+                    Utils.pushEvent(BusinessDetailsActivity.this, GTMEventType.ADDCALENDAR_EVENT_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "");
                     startActivity(i);
                     //saveCalendarEvent(information);
                 }

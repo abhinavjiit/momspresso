@@ -11,6 +11,8 @@ import android.widget.LinearLayout;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
+import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.MissingPlaceActivity;
 import com.mycity4kids.ui.activity.ReportAnErrorActivity;
 
@@ -23,6 +25,7 @@ public class SendFeedbackFragment extends BaseFragment implements View.OnClickLi
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Utils.pushOpenScreenEvent(getActivity(), "Feedback", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
 
         View view = inflater.inflate(R.layout.aa_feedback, null, false);
 

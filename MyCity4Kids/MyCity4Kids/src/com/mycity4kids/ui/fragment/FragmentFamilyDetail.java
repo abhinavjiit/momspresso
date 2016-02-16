@@ -52,6 +52,7 @@ import com.mycity4kids.dbtable.TableAdult;
 import com.mycity4kids.dbtable.TableFamily;
 import com.mycity4kids.dbtable.TableKids;
 import com.mycity4kids.dbtable.UserTable;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.listener.OnButtonClicked;
 import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.models.profile.KidsInformation;
@@ -127,6 +128,7 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.aa_family_detail, container, false);
+        Utils.pushOpenScreenEvent(getActivity(), "Family Details ", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
 
         density = getActivity().getResources().getDisplayMetrics().density;
 

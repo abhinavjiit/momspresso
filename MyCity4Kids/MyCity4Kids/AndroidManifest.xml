@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mycity4kids"
     android:versionCode="19"
-    android:versionName="3.0.3"> <!-- version increase for final release -->
+    android:versionName="3.0.3">
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="22" />
@@ -470,6 +470,18 @@
         <!--android:configChanges="keyboard|keyboardHidden|orientation|screenSize"-->
         <!--android:screenOrientation="portrait"-->
         <!--android:theme="@style/Theme.Transparent" />-->
+        <!--  Add preview activity. -->
+        <activity
+            android:name="com.google.android.gms.tagmanager.PreviewActivity"
+            android:label="@string/app_name"
+            android:noHistory="true">  <!-- optional, removes the previewActivity from the activity stack. -->
+            <intent-filter>
+                <data android:scheme="tagmanager.com.mycity4kids" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE"/>
+            </intent-filter>
+        </activity>
 
         <receiver
             android:name="com.mycity4kids.reminders.BootCompleteReceiver"
@@ -492,7 +504,15 @@
         <service android:name="com.mycity4kids.sync.RemainderEmailService" />
         <service android:name="com.mycity4kids.sync.SyncUserInfoService" />
         <service android:name="com.mycity4kids.sync.CompletedTasksService" />
-
+        <receiver android:name="com.google.android.gms.analytics.AnalyticsReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.analytics.ANALYTICS_DISPATCH" />
+            </intent-filter>
+        </receiver>
+        <service android:name="com.google.android.gms.analytics.AnalyticsService"
+            android:enabled="true"
+            android:exported="false"/>
 
         <receiver
             android:name="com.mycity4kids.gcm.GcmBroadcastReceiver"

@@ -21,9 +21,11 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.dbtable.LocalityTable;
 import com.mycity4kids.enums.MapTypeFilter;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.IFilter;
 import com.mycity4kids.models.locality.LocalityModel;
 import com.mycity4kids.models.locality.ZoneModel;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.BusinessListActivityKidsResources;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.adapter.LocalitiesAdapter;
@@ -48,6 +50,8 @@ public class LocalitiesFragment extends Fragment implements OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_locality, container, false);
+        Utils.pushOpenScreenEvent(getActivity(), "Listing Localities Filter", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
+
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         businessOrEvent = getArguments().getInt(Constants.PAGE_TYPE);
         localityData = new HashMap<ZoneModel, ArrayList<LocalityModel>>();

@@ -11,6 +11,8 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.ActivitySignUp;
 import com.mycity4kids.ui.activity.DashboardActivity;
 
@@ -25,6 +27,7 @@ public class SyncSettingFragment extends BaseFragment implements View.OnClickLis
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Utils.pushOpenScreenEvent(getActivity(), "Sync Settings", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
 
         View view = inflater.inflate(R.layout.aa_sync_settings, container, false);
 

@@ -14,10 +14,16 @@ import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
+
 import com.google.analytics.tracking.android.GAServiceManager;
 import com.google.analytics.tracking.android.GoogleAnalytics;
 import com.google.analytics.tracking.android.Logger.LogLevel;
 import com.google.analytics.tracking.android.Tracker;
+
+
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.Tracker;
+
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.database.BaseDbHelper;
@@ -32,6 +38,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
 
 
 /**
@@ -64,7 +71,7 @@ public class BaseApplication extends Application {
     //private static final boolean GA_IS_DRY_RUN = false;
 
     // GA Logger.
-    private static final LogLevel GA_LOG_VERBOSITY = LogLevel.ERROR;
+/*    private static final LogLevel GA_LOG_VERBOSITY = LogLevel.ERROR;*/
 
     // Key used to store a user's tracking preferences in SharedPreferences.
     private static final String TRACKING_PREF_KEY = "trackingPreference";
@@ -80,7 +87,13 @@ public class BaseApplication extends Application {
     }
 
     private static ArrayList<CommonParentingList> blogResponse;
+    public enum TrackerName {
+        APP_TRACKER, // Tracker used only in this app.
+        GLOBAL_TRACKER, // Tracker used by all the apps from a company. eg: roll-up tracking.
+        ECOMMERCE_TRACKER,// Tracker used by all ecommerce transactions from a company.
+    }
 
+    HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
 
     public static ArrayList<BusinessDataListing> getBusinessREsponse() {
         return businessREsponse;
@@ -89,14 +102,51 @@ public class BaseApplication extends Application {
     public static void setBusinessREsponse(ArrayList<BusinessDataListing> businessREsponse) {
         BaseApplication.businessREsponse = businessREsponse;
     }
+    /**
+     * Gets the default {@link Tracker} for this {@link Application}.
+     * @return tracker
+     */
+ /*   synchronized public Tracker getDefaultTracker() {
+        if (mTracker == null) {
+            GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
+            // To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
+            mTracker = analytics.newTracker(R.xml.global_tracker);
+        }
+        return mTracker;
+    }*/
 
+    public  synchronized Tracker getTracker(TrackerName trackerId) {
+        if (!mTrackers.containsKey(trackerId)) {
+
+
+            GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
+            Tracker t = (trackerId == TrackerName.APP_TRACKER) ?
+                    analytics.newTracker(R.xml.app_tracker)
+                    : (trackerId == TrackerName.GLOBAL_TRACKER) ? analytics.newTracker(GA_PROPERTY_ID)
+                    : analytics.newTracker(R.xml.app_tracker);
+            mTrackers.put(trackerId, t);
+        }
+        return mTrackers.get(trackerId);
+    }
+   /* public synchronized Tracker getTracker() {
+
+        try {
+            final GoogleAnalytics googleAnalytics = GoogleAnalytics.getInstance(this);
+            return googleAnalytics.newTracker(R.xml.app_tracker);
+
+        }catch(final Exception e){
+            Log.e("hey", "Failed to initialize Google Analytics V4");
+        }
+
+        return null;
+    }*/
     /*
 
          * Method to handle basic Google Analytics initialization. This call will
          * not block as all Google Analytics work occurs off the main thread.
          */
     @SuppressWarnings("deprecation")
-    private void initializeGa() {
+   /* private void initializeGa() {
         mGa = GoogleAnalytics.getInstance(this);
         mTracker = mGa.getTracker(GA_PROPERTY_ID);
 
@@ -124,7 +174,7 @@ public class BaseApplication extends Application {
                 }
             }
         });
-    }
+    }*/
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -163,10 +213,9 @@ public class BaseApplication extends Application {
         super.onCreate();
 //        Fabric.with(this, new Crashlytics());
         setInstance(this);
-        initializeGa();
-
+        //initializeGa();
+        // startService(new Intent(this,ReplicationService.class))
         // For Google Analytics initialization.
-
 
         Log.i(LOG_TAG, "onCreate()");
     }

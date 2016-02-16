@@ -11,6 +11,8 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.preference.SharedPrefUtils;
 
 /**
  * Created by manish.soni on 27-07-2015.
@@ -24,7 +26,7 @@ public class BlogFilterActivity extends BaseActivity implements View.OnClickList
         // TODO Auto-generated method stub
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
-
+        Utils.pushOpenScreenEvent(BlogFilterActivity.this, "Blogger Filter Dialogue Screen", SharedPrefUtils.getUserDetailModel(this).getId() + "");
         getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
         setContentView(R.layout.blog_filter_activity_layout);

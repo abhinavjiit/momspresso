@@ -9,7 +9,11 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Window;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.kelltontech.network.Response;
+import com.mycity4kids.application.BaseApplication;
+
 /**
  * 
  * @author deepanker.chaudhary
@@ -77,4 +81,15 @@ private ProgressDialog	mProgressDialog;
     public void refreshFragment(Bundle bundle) {
 
     }
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		final Tracker tracker = ((BaseApplication)getActivity().getApplication()).getTracker(BaseApplication.TrackerName.APP_TRACKER);
+		if(tracker != null){
+
+			tracker.setScreenName(getClass().getSimpleName());
+			tracker.send(new HitBuilders.ScreenViewBuilder().build());
+		}
+	}
 }

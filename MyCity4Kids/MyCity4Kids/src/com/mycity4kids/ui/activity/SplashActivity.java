@@ -1,6 +1,8 @@
 package com.mycity4kids.ui.activity;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -11,8 +13,12 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-
 import com.google.gson.Gson;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.tagmanager.Container;
+import com.google.android.gms.tagmanager.ContainerHolder;
+import com.google.android.gms.tagmanager.TagManager;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -25,6 +31,9 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.controller.ConfigurationController;
 import com.mycity4kids.dbtable.TableAdult;
 import com.mycity4kids.fragmentdialog.FragmentAlertDialog;
+import com.mycity4kids.gcm.GCMUtil;
+import com.mycity4kids.gtmutils.ContainerHolderSingleton;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.OnUIView;
 import com.mycity4kids.listener.OnButtonClicked;
 import com.mycity4kids.models.VersionApiModel;
@@ -33,9 +42,11 @@ import com.mycity4kids.models.city.MetroCity;
 import com.mycity4kids.models.configuration.ConfigurationApiModel;
 import com.mycity4kids.newmodels.UserInviteModel;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.utils.AnalyticsHelper;
+import com.mycity4kids.sync.PushTokenService;
 import com.mycity4kids.utils.NearMyCity;
 import com.mycity4kids.utils.location.GPSTracker;
+
+import java.util.concurrent.TimeUnit;
 
 public class SplashActivity extends BaseActivity {
     private boolean isLocationScreen = false;
@@ -61,14 +72,15 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Utils.pushOpenScreenEvent(SplashActivity.this, "Splash Screen", SharedPrefUtils.getUserDetailModel(this).getId() + "");
         onNewIntent(getIntent());
+        setUpGTM();
 
         try {
 
             setContentView(R.layout.splash_activity);
 
-            AnalyticsHelper.logEvent("Application Launch...");
+           /* AnalyticsHelper.logEvent("Application Launch...");*/
 
             ImageView _spin = (ImageView) findViewById(R.id.spin);
             _spin.startAnimation(AnimationUtils.loadAnimation(this,
@@ -427,4 +439,65 @@ public class SplashActivity extends BaseActivity {
         return;
     }
 
+    private void setUpGTM() {
+        TagManager tagManager = TagManager.getInstance(this);
+
+        // Modify the log level of the logger to print out not only
+        // warning and error messages, but also verbose, debug, info messages.
+        tagManager.setVerboseLoggingEnabled(true);
+
+        PendingResult<ContainerHolder> pending =
+                tagManager.loadContainerPreferNonDefault(AppConstants.CONTAINER_ID,
+                        R.raw.gtmms864s_v4);
+        // The onResult method will be called as soon as one of the following happens:
+        //     1. a saved container is loaded
+        //     2. if there is no saved container, a network container is loaded
+        //     3. the 2-second timeout occurs
+        pending.setResultCallback(new ResultCallback<ContainerHolder>() {
+            @Override
+            public void onResult(ContainerHolder containerHolder) {
+                ContainerHolderSingleton.setContainerHolder(containerHolder);
+                Container container = containerHolder.getContainer();
+                if (!containerHolder.getStatus().isSuccess()) {
+                    Log.e("CuteAnimals", "failure loading container");
+                    displayErrorToUser(R.string.load_error);
+                    return;
+                }
+                ContainerHolderSingleton.setContainerHolder(containerHolder);
+                ContainerLoadedCallback.registerCallbacksForContainer(container);
+                containerHolder.setContainerAvailableListener(new ContainerLoadedCallback());
+                //startMainActivity();
+            }
+        }, 2, TimeUnit.SECONDS);
+    }
+
+    private static class ContainerLoadedCallback implements ContainerHolder.ContainerAvailableListener {
+        @Override
+        public void onContainerAvailable(ContainerHolder containerHolder, String containerVersion) {
+            // We load each container when it becomes available.
+            Container container = containerHolder.getContainer();
+            registerCallbacksForContainer(container);
+        }
+        public static void registerCallbacksForContainer(Container container) {
+            // Register two custom function call macros to the container.
+            //       container.registerFunctionCallMacroCallback("increment", new CustomMacroCallback());
+            //       container.registerFunctionCallMacroCallback("mod", new CustomMacroCallback());
+            //       // Register a custom function call tag to the container.
+            //       container.registerFunctionCallTagCallback("custom_tag", new CustomTagCallback());
+
+        }
+
+    }
+    private void displayErrorToUser(int stringKey) {
+        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        alertDialog.setTitle("Error");
+        alertDialog.setMessage(getResources().getString(stringKey));
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,
+                "OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+        alertDialog.show();
+    }
 }

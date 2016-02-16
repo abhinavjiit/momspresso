@@ -68,6 +68,8 @@ import com.mycity4kids.dbtable.AdvancedSearchTable;
 import com.mycity4kids.dbtable.LocalityTable;
 import com.mycity4kids.dbtable.SortByTable;
 import com.mycity4kids.enums.MapTypeFilter;
+import com.mycity4kids.gtmutils.GTMEventType;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.IFilter;
 import com.mycity4kids.interfaces.ISort;
 import com.mycity4kids.models.autosuggest.AutoSuggestResponse;
@@ -159,6 +161,7 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
 
         TAG = BusinessListActivityKidsResources.this.getClass().getSimpleName();
         mClient = new GoogleApiClient.Builder(this).addApi(AppIndex.APP_INDEX_API).build();
+        Utils.pushOpenScreenEvent(BusinessListActivityKidsResources.this, "Resources List", SharedPrefUtils.getUserDetailModel(this).getId() + "");
 
         Constants.IS_RESET = true;
         try {
@@ -1774,6 +1777,8 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
                 finish();
                 break;
             case R.id.filterres:
+                Utils.pushEvent(BusinessListActivityKidsResources.this, GTMEventType.FILTER_RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
+
                 if (chosen_tab == TabType.Filter) {
                     ((TextView) findViewById(R.id.txt_no_data_business)).setVisibility(View.GONE);
                     //	tab_host.setVisibility(View.GONE) ;

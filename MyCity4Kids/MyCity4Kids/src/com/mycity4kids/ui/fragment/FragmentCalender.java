@@ -40,10 +40,12 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.dbtable.TableAdult;
 import com.mycity4kids.dbtable.TableAppointmentData;
 import com.mycity4kids.dbtable.TableKids;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.user.KidsInfo;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.newmodels.AppointmentMappingModel;
 import com.mycity4kids.newmodels.AttendeeModel;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.reminders.AppointmentManager;
 import com.mycity4kids.ui.activity.ActivityCreateAppointment;
 import com.mycity4kids.ui.activity.ActivityShowAppointment;
@@ -102,6 +104,7 @@ public class FragmentCalender extends BaseFragment implements View.OnClickListen
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.aa_appointmentmain, container, false);
+        Utils.pushOpenScreenEvent(getActivity(), "Calendar", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
 
         mainLayout = (RelativeLayout) view.findViewById(R.id.mainlayout);
 

@@ -17,8 +17,10 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.dbtable.SubCategoryTable;
 import com.mycity4kids.enums.MapTypeFilter;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.IFilter;
 import com.mycity4kids.models.category.SubCategory;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.BusinessListActivityKidsResources;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.adapter.SubCategoryAdapter;
@@ -43,7 +45,8 @@ public class SubCategoryFragment extends Fragment implements OnClickListener{
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_sub_category,container, false);
-		
+		Utils.pushOpenScreenEvent(getActivity(), "Listing Sub Category Filter", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
+
 		SubCategoryTable _table=new SubCategoryTable((BaseApplication)getActivity().getApplication());
 		categoryId=getArguments().getInt(Constants.CATEGORY_KEY);
 		businessOrEvent=getArguments().getInt(Constants.PAGE_TYPE);

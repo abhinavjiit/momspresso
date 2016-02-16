@@ -39,6 +39,7 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.dbtable.ExternalCalendarTable;
 import com.mycity4kids.dbtable.TableAppointmentData;
 import com.mycity4kids.facebook.FacebookUtils;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.IFacebookEvent;
 import com.mycity4kids.interfaces.IFacebookUser;
 import com.mycity4kids.interfaces.OnListItemClick;
@@ -85,6 +86,7 @@ public class ExternalCalFragment extends BaseFragment implements OnListItemClick
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Utils.pushOpenScreenEvent(getActivity(), "External Calendar ", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
 
         View view = inflater.inflate(R.layout.aa_external_cal, container, false);
         ((DashboardActivity) getActivity()).setTitle("External Calendars");

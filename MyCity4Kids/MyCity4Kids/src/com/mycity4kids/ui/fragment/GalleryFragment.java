@@ -27,10 +27,12 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.dbtable.UserTable;
 import com.mycity4kids.fragmentdialog.CameraFragmentDialog;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.IOnSubmitGallery;
 import com.mycity4kids.models.businesseventdetails.DetailsGallery;
 import com.mycity4kids.models.businesseventdetails.GalleryListtingData;
 import com.mycity4kids.models.businesseventdetails.VideoListingDetails;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.BusinessDetailsActivity;
 import com.mycity4kids.ui.activity.PhotoSlideActivity;
 import com.mycity4kids.ui.activity.YouTubeVideoActivity;
@@ -52,6 +54,7 @@ public class GalleryFragment extends BaseFragment implements IOnSubmitGallery {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_gallery, null, false);
+        Utils.pushOpenScreenEvent(getActivity(), "Gallery resource/events", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
 
         try {
 

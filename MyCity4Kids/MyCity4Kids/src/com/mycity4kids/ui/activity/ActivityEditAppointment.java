@@ -50,6 +50,7 @@ import com.mycity4kids.dbtable.TableFile;
 import com.mycity4kids.dbtable.TableNotes;
 import com.mycity4kids.dbtable.TableWhoToRemind;
 import com.mycity4kids.dbtable.UserTable;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.models.user.ImageUploadRequest;
 import com.mycity4kids.models.user.UserModel;
@@ -148,6 +149,7 @@ public class ActivityEditAppointment extends BaseActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.aa_edit_appointment);
+        Utils.pushOpenScreenEvent(ActivityEditAppointment.this, "Edit Appointment", SharedPrefUtils.getUserDetailModel(this).getId() + "");
 
         NotificationManager nMgr = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         nMgr.cancel(getIntent().getIntExtra(AppConstants.NOTIFICATION_ID, 0));

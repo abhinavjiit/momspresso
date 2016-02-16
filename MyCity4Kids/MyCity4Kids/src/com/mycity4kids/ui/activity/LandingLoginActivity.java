@@ -35,6 +35,7 @@ import com.mycity4kids.dbtable.TableKids;
 import com.mycity4kids.dbtable.UserTable;
 import com.mycity4kids.facebook.FacebookUtils;
 import com.mycity4kids.google.GooglePlusUtils;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.IFacebookUser;
 import com.mycity4kids.interfaces.IPlusClient;
 import com.mycity4kids.models.user.KidsInfo;
@@ -70,6 +71,8 @@ public class LandingLoginActivity extends BaseActivity implements OnClickListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.login_with_fb_google);
+        Utils.pushOpenScreenEvent(LandingLoginActivity.this, "Login/Registration Dashboard", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+
         setContentView(R.layout.aa_splashactivity);
         try {
             //((Button)findViewById(R.id.skip_btn_login)).setOnClickListener(this);

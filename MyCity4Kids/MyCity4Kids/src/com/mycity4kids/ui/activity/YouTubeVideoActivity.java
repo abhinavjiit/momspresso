@@ -22,6 +22,8 @@ import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
 import com.mycity4kids.R;
+import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.youtube.DeveloperKey;
 import com.mycity4kids.youtube.YouTubeFailureRecoveryActivity;
 
@@ -41,6 +43,7 @@ public class YouTubeVideoActivity extends YouTubeFailureRecoveryActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.playerview_demo);
+        Utils.pushOpenScreenEvent(YouTubeVideoActivity.this, "Youtube Video", SharedPrefUtils.getUserDetailModel(this).getId() + "");
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
