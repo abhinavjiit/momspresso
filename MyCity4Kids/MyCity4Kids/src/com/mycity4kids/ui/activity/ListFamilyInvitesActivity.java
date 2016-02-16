@@ -27,6 +27,7 @@ import com.mycity4kids.dbtable.TableAdult;
 import com.mycity4kids.dbtable.TableFamily;
 import com.mycity4kids.dbtable.TableKids;
 import com.mycity4kids.dbtable.UserTable;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.user.KidsInfo;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.models.user.UserModel;
@@ -55,6 +56,7 @@ public class ListFamilyInvitesActivity extends BaseActivity implements FamilyInv
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.invite_layout);
+        Utils.pushOpenScreenEvent(ListFamilyInvitesActivity.this, "List of Family Invites", SharedPrefUtils.getUserDetailModel(this).getId() + "");
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 

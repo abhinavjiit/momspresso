@@ -38,6 +38,7 @@ import com.mycity4kids.controller.CreateFamilyController;
 import com.mycity4kids.dbtable.TableAdult;
 import com.mycity4kids.dbtable.TableFamily;
 import com.mycity4kids.dbtable.TableKids;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.profile.KidsInformation;
 import com.mycity4kids.models.user.KidsInfo;
 import com.mycity4kids.models.user.UserInfo;
@@ -92,6 +93,7 @@ public class CreateFamilyActivity extends BaseActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_family_activity);
+        Utils.pushOpenScreenEvent(CreateFamilyActivity.this, "Create Family", SharedPrefUtils.getUserDetailModel(this).getId() + "");
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 

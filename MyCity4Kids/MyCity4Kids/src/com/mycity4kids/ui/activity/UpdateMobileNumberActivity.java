@@ -18,6 +18,7 @@ import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.controller.UpdateMobileController;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.user.UserRequest;
 import com.mycity4kids.models.user.UserResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -41,6 +42,7 @@ public class UpdateMobileNumberActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.social_signup_layout);
+        Utils.pushOpenScreenEvent(UpdateMobileNumberActivity.this, "Update Mobile No", SharedPrefUtils.getUserDetailModel(this).getId() + "");
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);

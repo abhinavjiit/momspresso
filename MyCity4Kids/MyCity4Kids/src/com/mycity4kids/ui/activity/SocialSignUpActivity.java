@@ -33,6 +33,7 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.ColorCode;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.ControllerSignUp;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.models.user.UserResponse;
 import com.mycity4kids.newmodels.NewSignUpModel;
@@ -74,6 +75,7 @@ public class SocialSignUpActivity extends BaseActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.social_signup_layout);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        Utils.pushOpenScreenEvent(SocialSignUpActivity.this, "Social Media Signup", SharedPrefUtils.getUserDetailModel(this).getId() + "");
 
         setSupportActionBar(mToolbar);
 

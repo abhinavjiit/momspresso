@@ -49,6 +49,7 @@ import com.mycity4kids.dbtable.TableFile;
 import com.mycity4kids.dbtable.TableNotes;
 import com.mycity4kids.dbtable.TableWhoToRemind;
 import com.mycity4kids.dbtable.UserTable;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.models.user.ImageUploadRequest;
 import com.mycity4kids.models.user.UserModel;
@@ -130,7 +131,7 @@ public class ActivityCreateAppointment extends BaseActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.aa_create_appointment);
         density = getResources().getDisplayMetrics().density;
-
+        Utils.pushOpenScreenEvent(ActivityCreateAppointment.this, "Create Appointment", SharedPrefUtils.getUserDetailModel(this).getId() + "");
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -929,7 +930,7 @@ public class ActivityCreateAppointment extends BaseActivity implements View.OnCl
                             // }
                         }
 
-                       // Log.d("Date ", (String) startDate.getText());
+                        // Log.d("Date ", (String) startDate.getText());
                     }
                 }, mYear, mMonth, mDay);
         dpd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));

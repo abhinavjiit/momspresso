@@ -26,6 +26,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.asynctask.HeavyDbTask;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.controller.ConfigurationController;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.OnUIView;
 import com.mycity4kids.listener.OnButtonClicked;
 import com.mycity4kids.models.VersionApiModel;
@@ -49,6 +50,8 @@ public class ChangeCityFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.change_city, container, false);
+        Utils.pushOpenScreenEvent(getActivity(), "City Change", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
+
         ((DashboardActivity) getActivity()).setTitle("Change City");
         setHasOptionsMenu(true);
         radioGroup=(RadioGroup)view.findViewById(R.id.radioGroup);

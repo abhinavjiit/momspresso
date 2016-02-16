@@ -28,6 +28,7 @@ import com.mycity4kids.controller.ControllerSignUp;
 import com.mycity4kids.controller.UpdateMobileController;
 import com.mycity4kids.controller.VerifyOTPController;
 import com.mycity4kids.dbtable.TableAdult;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.models.user.UserModel;
 import com.mycity4kids.models.user.UserRequest;
@@ -59,6 +60,7 @@ public class ActivityVerifyOTP extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.confirm_otp_activity);
+        Utils.pushOpenScreenEvent(ActivityVerifyOTP.this, "OTP Verification", SharedPrefUtils.getUserDetailModel(this).getId() + "");
 
         email = getIntent().getExtras().getString("email");
         mobileNumber = getIntent().getExtras().getString("mobile");
