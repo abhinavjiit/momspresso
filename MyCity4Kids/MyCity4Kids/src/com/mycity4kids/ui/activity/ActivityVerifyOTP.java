@@ -12,7 +12,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,10 +55,12 @@ public class ActivityVerifyOTP extends BaseActivity {
     private static final String TAG = ActivityVerifyOTP.class.getSimpleName();
     private Toolbar mToolbar;
     private EditText otpSMSText;
-    private TextView verifyOTPTextView, resendOtpTextView;
+    private TextView verifyOTPTextView, resendOtpTextView,textViewSendingOtp,textViewTimer,textMobileNumber;
     private NewSignUpModel newSignupModel;
-
+    Animation animationBlinking;
     private String email, mobileNumber, profileImageUrl, colorCode, isExistingUser;
+    private RelativeLayout layoutSendingOtp;
+    private LinearLayout verifyOTPLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,11 +79,19 @@ public class ActivityVerifyOTP extends BaseActivity {
         otpSMSText = (EditText) findViewById(R.id.otpSMSText);
         verifyOTPTextView = (TextView) findViewById(R.id.verifyOTPTextView);
         resendOtpTextView = (TextView) findViewById(R.id.resendOtpTextView);
-
+        textViewSendingOtp=(TextView) findViewById(R.id.textViewSendingOtp);
+        textViewTimer=(TextView) findViewById(R.id.textViewTimer);
+        layoutSendingOtp=(RelativeLayout)findViewById(R.id.layoutSendingOtp);
+        verifyOTPLayout=(LinearLayout) findViewById(R.id.verifyOTPLayout);
+        textMobileNumber=(TextView) findViewById(R.id.textMobileNumber);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Verify Mobile");
-
+        textMobileNumber.setText(mobileNumber);
+        Log.e("mobileNo",mobileNumber);
+        animationBlinking = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.blink);
+        textViewSendingOtp.setAnimation(animationBlinking);
+        setAnimantionTimer(20000);
         verifyOTPTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,12 +132,43 @@ public class ActivityVerifyOTP extends BaseActivity {
         new CountDownTimer(timeInMillis, 1000) {
 
             public void onTick(long millisUntilFinished) {
-                resendOtpTextView.setText("Resend in " + millisUntilFinished / 1000 + " seconds: ");
+                resendOtpTextView.setText("Resend OTP in " + millisUntilFinished / 1000 + " seconds: ");
             }
 
             public void onFinish() {
-                resendOtpTextView.setText("Resend");
+                resendOtpTextView.setText("Resend OTP");
                 resendOtpTextView.setEnabled(true);
+            }
+        }.start();
+    }
+    private void setAnimantionTimer(int timeInMillis)
+    { verifyOTPLayout.setVisibility(View.GONE);
+        verifyOTPTextView.setVisibility(View.GONE);
+        resendOtpTextView.setVisibility(View.GONE);
+        layoutSendingOtp.setVisibility(View.VISIBLE);
+         new CountDownTimer(timeInMillis, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                textViewTimer.setText("Wait for "+millisUntilFinished / 1000 + " " + "seconds");
+
+
+            }
+
+            @Override
+            public void onFinish() {
+                //layoutContainerForMobileNoWhenAuthenticating.setVisibility(View.GONE);
+                layoutSendingOtp.setVisibility(View.GONE);
+                verifyOTPLayout.setVisibility(View.VISIBLE);
+                verifyOTPTextView.setVisibility(View.VISIBLE);
+                resendOtpTextView.setVisibility(View.VISIBLE);
+              //  layoutContainerForOtpOptions.setVisibility(View.VISIBLE);
+                otpSMSText.setFocusable(true);
+
+                otpSMSText.requestFocus();
+                otpSMSText.setFocusableInTouchMode(true);
+                otpSMSText.setCursorVisible(true);
+                otpSMSText.invalidate();
+
             }
         }.start();
     }
@@ -157,15 +202,13 @@ public class ActivityVerifyOTP extends BaseActivity {
                         Log.e(TAG, "Received SMS: " + message + ", Sender: " + senderAddress);
                         String verificationCode;
                         // if the SMS is not from our gateway, ignore the message
-                        if ("1".equals(senderAddress)) {
-                            verificationCode = message;
-                        } else {
+
                             if (!senderAddress.toLowerCase().contains(AppConstants.SMS_ORIGIN.toLowerCase())) {
                                 return;
                             }
                             // verification code from sms
                             verificationCode = getVerificationCode(message);
-                        }
+
                         Log.e(TAG, "OTP received: " + verificationCode);
                         otpSMSText.setText(verificationCode);
                         showProgressDialog(getString(R.string.please_wait));
