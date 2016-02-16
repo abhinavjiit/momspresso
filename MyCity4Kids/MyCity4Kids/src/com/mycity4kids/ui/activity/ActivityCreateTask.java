@@ -7,7 +7,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.drawable.ColorDrawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -779,7 +781,7 @@ public class ActivityCreateTask extends BaseActivity implements View.OnClickList
         int mDay = c.get(Calendar.DAY_OF_MONTH);
 
         // Launch Date Picker Dialog
-        DatePickerDialog dpd = new DatePickerDialog(ActivityCreateTask.this,
+        DatePickerDialog dpd = new DatePickerDialog(ActivityCreateTask.this,android.R.style.Theme_Holo_Light_Dialog_NoActionBar,
                 new DatePickerDialog.OnDateSetListener() {
 
                     @Override
@@ -799,6 +801,7 @@ public class ActivityCreateTask extends BaseActivity implements View.OnClickList
 //                        Log.d("Date ", (String) startDate.getText());
                     }
                 }, mYear, mMonth, mDay);
+        dpd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dpd.show();
 
     }
@@ -1445,7 +1448,7 @@ public class ActivityCreateTask extends BaseActivity implements View.OnClickList
         int mMinute = c.get(Calendar.MINUTE);
 
         // Launch Time Picker Dialog
-        TimePickerDialog tpd = new TimePickerDialog(ActivityCreateTask.this,
+        TimePickerDialog tpd = new TimePickerDialog(ActivityCreateTask.this,android.R.style.Theme_Holo_Light_Dialog_NoActionBar,
                 new TimePickerDialog.OnTimeSetListener() {
 
                     @Override
@@ -1483,6 +1486,7 @@ public class ActivityCreateTask extends BaseActivity implements View.OnClickList
 
                     }
                 }, mHour, mMinute, false);
+        tpd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         tpd.show();
     }
 

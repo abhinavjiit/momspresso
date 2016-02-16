@@ -91,7 +91,9 @@ public class NearMyCity {
 		addresses.add(new City("Pune", 18.5203 , 73.8567 ,4)) ; 
 		addresses.add(new City("Hyderabad", 17.3660 , 78.4760,5 )) ; 
 		addresses.add(new City("Chennai", 22.5667 , 88.3667,6 )) ;
-	
+		addresses.add(new City("Kolkata",22.5667,88.3667,7));
+		addresses.add(new City("Jaipur",26.9000,75.8000,8));
+		addresses.add(new City("Ahmedabad",23.0300,72.5800,9));
 		
 		for(int i = 0 ; i < addresses.size() ; i++) {
 			

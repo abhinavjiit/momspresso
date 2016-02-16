@@ -50,8 +50,8 @@ import com.mycity4kids.ui.activity.JoinFamilyActivity;
  */
 //
 public class FragmentSetting extends BaseFragment implements View.OnClickListener {
-
-
+int cityId;
+TextView cityChange;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -60,10 +60,45 @@ public class FragmentSetting extends BaseFragment implements View.OnClickListene
 
         ((TextView) view.findViewById(R.id.logout)).setOnClickListener(this);
         ((TextView) view.findViewById(R.id.family_details)).setOnClickListener(this);
-        ((TextView) view.findViewById(R.id.sync_setting)).setOnClickListener(this);
+      //  ((TextView) view.findViewById(R.id.sync_setting)).setOnClickListener(this);
         ((TextView) view.findViewById(R.id.external_cal)).setOnClickListener(this);
         ((TextView) view.findViewById(R.id.notification)).setOnClickListener(this);
-
+        cityChange=(TextView) view.findViewById(R.id.cityChange);
+        cityChange.setOnClickListener(this);
+        cityId=SharedPrefUtils.getCurrentCityModel(getActivity()).getId();
+        switch (cityId)
+        {
+            case 1:
+                cityChange.setText("Change City (Delhi-NCR)");
+                break;
+            case 2:
+                cityChange.setText("Change City (Bangalore)");
+                break;
+            case 3:
+                cityChange.setText("Change City (Mumbai)");
+                break;
+            case 4:
+                cityChange.setText("Change City (Pune)");
+                break;
+            case 5:
+                cityChange.setText("Change City (Hyderabad)");
+                break;
+            case 6:
+                cityChange.setText("Change City (Chennai)");
+                break;
+            case 7:
+                cityChange.setText("Change City (Kolkata)");
+                break;
+            case 8:
+                cityChange.setText("Change City (Jaipur)");
+                break;
+            case 9:
+                cityChange.setText("Change City (Ahmedabad)");
+                break;
+           /* case 100:
+                radioGroup.check(R.id.Others);
+                break;*/
+        }
         return view;
     }
 
@@ -133,11 +168,11 @@ public class FragmentSetting extends BaseFragment implements View.OnClickListene
 
                 break;
 
-            case R.id.sync_setting:
+         /*   case R.id.sync_setting:
                 bundle = new Bundle();
                 bundle.putBoolean(Constants.IS_COMMING_FROM_SETTING, true);
                 ((DashboardActivity) getActivity()).replaceFragment(new SyncSettingFragment(), bundle, true);
-                break;
+                break;*/
 
             case R.id.external_cal:
 
@@ -149,7 +184,8 @@ public class FragmentSetting extends BaseFragment implements View.OnClickListene
                 bundle.putBoolean(Constants.IS_COMMING_FROM_SETTING, true);
                 ((DashboardActivity) getActivity()).replaceFragment(new NotificationFragment(), bundle, true);
                 break;
-
+            case  R.id.cityChange:
+                ((DashboardActivity) getActivity()).replaceFragment(new ChangeCityFragment(),null,true);
             default:
                 break;
         }

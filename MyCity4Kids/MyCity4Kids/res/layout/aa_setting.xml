@@ -19,6 +19,19 @@
         android:text="Family Details"
         android:textColor="@color/new_grey"
         android:textSize="15dp" />
+    <TextView
+        android:id="@+id/cityChange"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="1dp"
+        android:background="@color/white_color"
+        android:drawablePadding="50dp"
+        android:drawableRight="@drawable/arrow_xxhdpi"
+        android:gravity="center_vertical"
+        android:padding="15dp"
+        android:text="Change City ()"
+        android:textColor="@color/new_grey"
+        android:textSize="15dp" />
 
     <TextView
         android:id="@+id/notification"
@@ -48,7 +61,7 @@
         android:textColor="@color/new_grey"
         android:textSize="15dp" />
 
-    <TextView
+   <!-- <TextView
         android:id="@+id/sync_setting"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -60,7 +73,8 @@
         android:padding="15dp"
         android:text="Sync Settings"
         android:textColor="@color/new_grey"
-        android:textSize="15dp" />
+        android:textSize="15dp" />-->
+
 
 
     <TextView

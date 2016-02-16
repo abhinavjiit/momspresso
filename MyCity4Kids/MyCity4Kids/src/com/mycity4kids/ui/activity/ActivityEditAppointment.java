@@ -7,7 +7,9 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.drawable.ColorDrawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -1364,7 +1366,7 @@ public class ActivityEditAppointment extends BaseActivity implements View.OnClic
         int mDay = c.get(Calendar.DAY_OF_MONTH);
 
         // Launch Date Picker Dialog
-        DatePickerDialog dpd = new DatePickerDialog(ActivityEditAppointment.this,
+        DatePickerDialog dpd = new DatePickerDialog(ActivityEditAppointment.this,android.R.style.Theme_Holo_Light_Dialog_NoActionBar,
                 new DatePickerDialog.OnDateSetListener() {
 
                     @Override
@@ -1433,6 +1435,7 @@ public class ActivityEditAppointment extends BaseActivity implements View.OnClic
                         Log.d("Date ", (String) startDate.getText());
                     }
                 }, mYear, mMonth, mDay);
+        dpd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dpd.show();
 
     }
@@ -1465,7 +1468,7 @@ public class ActivityEditAppointment extends BaseActivity implements View.OnClic
         int mMinute = c.get(Calendar.MINUTE);
 
         // Launch Time Picker Dialog
-        TimePickerDialog tpd = new TimePickerDialog(ActivityEditAppointment.this,
+        TimePickerDialog tpd = new TimePickerDialog(ActivityEditAppointment.this,android.R.style.Theme_Holo_Light_Dialog_NoActionBar,
                 new TimePickerDialog.OnTimeSetListener() {
 
                     @Override
@@ -1536,6 +1539,7 @@ public class ActivityEditAppointment extends BaseActivity implements View.OnClic
 
                     }
                 }, mHour, mMinute, false);
+        tpd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         tpd.show();
     }
 

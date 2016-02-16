@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -267,7 +269,8 @@ public class FragmentKidProfile extends BaseFragment implements View.OnClickList
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             // Use the current date as the default date in the picker
-            DatePickerDialog dlg = new DatePickerDialog(getActivity(), this, curent_year, current_month, current_day);
+            DatePickerDialog dlg = new DatePickerDialog(getActivity(),android.R.style.Theme_Holo_Light_Dialog_NoActionBar, this, curent_year, current_month, current_day);
+            dlg.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             dlg.getDatePicker().setMaxDate(c.getTimeInMillis());
             return dlg;
 
@@ -399,7 +402,7 @@ public class FragmentKidProfile extends BaseFragment implements View.OnClickList
 
 
         // Launch Date Picker Dialog
-        DatePickerDialog dpd = new DatePickerDialog(getActivity(),
+        DatePickerDialog dpd = new DatePickerDialog(getActivity(),android.R.style.Theme_Holo_Light_Dialog_NoActionBar,
                 new DatePickerDialog.OnDateSetListener() {
 
                     @Override
@@ -423,6 +426,7 @@ public class FragmentKidProfile extends BaseFragment implements View.OnClickList
                     }
                 }, mYear, mMonth, mDay);
         dpd.getDatePicker().setMaxDate(maxdate);
+        dpd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dpd.show();
 
     }

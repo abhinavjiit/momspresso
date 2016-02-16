@@ -6,7 +6,9 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.drawable.ColorDrawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -1309,7 +1311,7 @@ public class ActivityEditTask extends BaseActivity implements View.OnClickListen
         int mMinute = c.get(Calendar.MINUTE);
 
         // Launch Time Picker Dialog
-        TimePickerDialog tpd = new TimePickerDialog(ActivityEditTask.this,
+        TimePickerDialog tpd = new TimePickerDialog(ActivityEditTask.this,android.R.style.Theme_Holo_Light_Dialog_NoActionBar,
                 new TimePickerDialog.OnTimeSetListener() {
 
                     @Override
@@ -1349,6 +1351,7 @@ public class ActivityEditTask extends BaseActivity implements View.OnClickListen
 
                     }
                 }, mHour, mMinute, false);
+        tpd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         tpd.show();
     }
 

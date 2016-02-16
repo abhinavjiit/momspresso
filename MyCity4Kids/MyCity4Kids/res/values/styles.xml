@@ -12,7 +12,12 @@
             backward-compatibility can go here.
         -->
     </style>
+    <style name="datepicker" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/primary</item>
 
+    </style>
     <!-- Common  style theme for background this is for button & text view which use like button -->
     <style name="custom_style" parent="@android:style/Widget.Button">
         <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>

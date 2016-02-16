@@ -1,6 +1,8 @@
 package com.mycity4kids.ui.fragment;
 
 import android.app.DatePickerDialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -119,7 +121,7 @@ public class DueDateFagment extends android.app.DialogFragment implements View.O
         int mDay = c.get(Calendar.DAY_OF_MONTH);
 
         // Launch Date Picker Dialog
-        DatePickerDialog dpd = new DatePickerDialog(getActivity(),
+        DatePickerDialog dpd = new DatePickerDialog(getActivity(),android.R.style.Theme_Holo_Light_Dialog_NoActionBar,
                 new DatePickerDialog.OnDateSetListener() {
 
                     @Override
@@ -175,6 +177,7 @@ public class DueDateFagment extends android.app.DialogFragment implements View.O
 
                     }
                 }, mYear, mMonth, mDay);
+        dpd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dpd.show();
 
     }

@@ -135,15 +135,13 @@ public class TaskListController extends BaseController {
                 nameValuePairs.add(new BasicNameValuePair("list_for", ""));
                 nameValuePairs.add(new BasicNameValuePair("list_name", requestData.getList_name()));
 
-                if(requestData.getId()>0)
-                    nameValuePairs.add(new BasicNameValuePair("id",""+requestData.getId()));
+                if (requestData.getId() > 0)
+                    nameValuePairs.add(new BasicNameValuePair("id", "" + requestData.getId()));
 
                 encodedEntity = new UrlEncodedFormEntity(nameValuePairs, "UTF-8");
 
 
-            }
-
-            else if (reqtype == AppConstants.DELETE_LIST_REQUEST) {
+            } else if (reqtype == AppConstants.DELETE_LIST_REQUEST) {
 
 //                nameValuePairs.add(new BasicNameValuePair("sessionId", SharedPrefUtils.getUserDetailModel(context).getSessionId()));
                 nameValuePairs.add(new BasicNameValuePair("task_list_id", "" + requestData.getId()));

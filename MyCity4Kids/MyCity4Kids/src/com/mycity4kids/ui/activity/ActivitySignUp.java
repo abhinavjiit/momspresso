@@ -9,7 +9,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -1856,7 +1858,8 @@ public class ActivitySignUp extends BaseActivity implements View.OnClickListener
             //c.set(curent_year,current_month,current_day);
 
             long maxdate = Long.parseLong(convertDate(current_day + "-" + (current_month + 1) + "-" + curent_year)) * 1000;
-            DatePickerDialog dlg = new DatePickerDialog(getActivity(), this, curent_year, current_month, current_day);
+            DatePickerDialog dlg = new DatePickerDialog(getActivity(),android.R.style.Theme_Holo_Light_Dialog_NoActionBar, this, curent_year, current_month, current_day);
+            dlg.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             dlg.getDatePicker().setMaxDate(c.getTimeInMillis());
             return dlg;
 

@@ -79,6 +79,7 @@ import com.mycity4kids.reminders.Reminder;
 import com.mycity4kids.ui.adapter.UserTaskListAdapter;
 import com.mycity4kids.ui.fragment.AddTaskListPopUp;
 import com.mycity4kids.ui.fragment.ArticlesFragment;
+import com.mycity4kids.ui.fragment.ChangeCityFragment;
 import com.mycity4kids.ui.fragment.ExternalCalFragment;
 import com.mycity4kids.ui.fragment.FragmentAdultProfile;
 import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
@@ -569,7 +570,19 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.setHomeAsUpIndicator(android.support.v7.appcompat.R.drawable.abc_ic_ab_back_mtrl_am_alpha);
                     changeVisibiltyOfArrow(false);
-                } else if (currentFrag instanceof ExternalCalFragment) {
+                } else if (currentFrag instanceof ChangeCityFragment)
+                {
+                    setTitle("Change City");
+                    findViewById(R.id.month_popup).setVisibility(View.GONE);
+                    findViewById(R.id.task_popup).setVisibility(View.GONE);
+                    mDrawerToggle.setDrawerIndicatorEnabled(false);
+
+                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                    mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                    mDrawerToggle.setHomeAsUpIndicator(android.support.v7.appcompat.R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+                    changeVisibiltyOfArrow(false);
+                }
+                else if (currentFrag instanceof ExternalCalFragment) {
                     setTitle("External Calendars");
 
                     findViewById(R.id.month_popup).setVisibility(View.GONE);
@@ -953,7 +966,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         } else if (topFragment instanceof FragmentKidProfile) {
 
             getMenuInflater().inflate(R.menu.forgot_password, menu);
-        } else if (topFragment instanceof FragmentTaskHome) {
+        }
+        else if (topFragment instanceof ChangeCityFragment)
+        {
+            getMenuInflater().inflate(R.menu.forgot_password, menu);
+        }
+        else if (topFragment instanceof FragmentTaskHome) {
 
             if (taskIconFlag) {
                 getMenuInflater().inflate(R.menu.task_home_delete, menu);
@@ -1058,7 +1076,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     ((FragmentFamilyDetail) topFragment).onHeaderButtonTapped();
                 } else if (topFragment instanceof NotificationFragment) {
                     ((NotificationFragment) topFragment).saveNotificationSetting();
-                }
+                } else if (topFragment instanceof ChangeCityFragment)
+                    ((ChangeCityFragment) topFragment).changeCity();
                 break;
             case android.R.id.home:
                 finish();

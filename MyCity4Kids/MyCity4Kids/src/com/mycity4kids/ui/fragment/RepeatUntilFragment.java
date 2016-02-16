@@ -1,6 +1,8 @@
 package com.mycity4kids.ui.fragment;
 
 import android.app.DatePickerDialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -193,7 +195,7 @@ public class RepeatUntilFragment extends android.app.DialogFragment implements V
 
 
         // Launch Date Picker Dialog
-        DatePickerDialog dpd = new DatePickerDialog(getActivity(),
+        DatePickerDialog dpd = new DatePickerDialog(getActivity(),android.R.style.Theme_Holo_Light_Dialog_NoActionBar,
                 new DatePickerDialog.OnDateSetListener() {
 
                     @Override
@@ -283,6 +285,7 @@ public class RepeatUntilFragment extends android.app.DialogFragment implements V
                 }, mYear, mMonth, mDay);
 
         dpd.getDatePicker().setMinDate(c.getTimeInMillis());
+        dpd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dpd.show();
 
     }

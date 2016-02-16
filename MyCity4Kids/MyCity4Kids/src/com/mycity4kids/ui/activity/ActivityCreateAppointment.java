@@ -848,7 +848,7 @@ public class ActivityCreateAppointment extends BaseActivity implements View.OnCl
         int mDay = c.get(Calendar.DAY_OF_MONTH);
 
         // Launch Date Picker Dialog
-        DatePickerDialog dpd = new DatePickerDialog(ActivityCreateAppointment.this,
+        DatePickerDialog dpd = new DatePickerDialog(ActivityCreateAppointment.this,android.R.style.Theme_Holo_Light_Dialog_NoActionBar,
                 new DatePickerDialog.OnDateSetListener() {
 
                     @Override
@@ -932,7 +932,7 @@ public class ActivityCreateAppointment extends BaseActivity implements View.OnCl
                        // Log.d("Date ", (String) startDate.getText());
                     }
                 }, mYear, mMonth, mDay);
-        dpd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.RED));
+        dpd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dpd.show();
 
     }
@@ -964,7 +964,7 @@ public class ActivityCreateAppointment extends BaseActivity implements View.OnCl
         int mMinute = c.get(Calendar.MINUTE);
 
         // Launch Time Picker Dialog
-        TimePickerDialog tpd = new TimePickerDialog(ActivityCreateAppointment.this,
+        TimePickerDialog tpd = new TimePickerDialog(ActivityCreateAppointment.this,android.R.style.Theme_Holo_Light_Dialog_NoActionBar,
                 new TimePickerDialog.OnTimeSetListener() {
 
                     @Override
@@ -1035,6 +1035,7 @@ public class ActivityCreateAppointment extends BaseActivity implements View.OnCl
 
                     }
                 }, mHour, mMinute, false);
+        tpd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         tpd.show();
     }
 
