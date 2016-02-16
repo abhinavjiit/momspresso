@@ -58,6 +58,7 @@ import com.mycity4kids.dbtable.TableAdult;
 import com.mycity4kids.dbtable.TableFamily;
 import com.mycity4kids.dbtable.TableKids;
 import com.mycity4kids.dbtable.UserTable;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.OnUIView;
 import com.mycity4kids.listener.OnButtonClicked;
 import com.mycity4kids.models.configuration.ConfigurationApiModel;
@@ -151,6 +152,7 @@ public class ActivitySignUp extends BaseActivity implements View.OnClickListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.aa_signup);
+        Utils.pushOpenScreenEvent(ActivitySignUp.this, "Sign up", SharedPrefUtils.getUserDetailModel(this).getId() + "");
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 

@@ -27,7 +27,9 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.AutoSuggestController;
 import com.mycity4kids.dbtable.LocalityTable;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.autosuggest.AutoSuggestResponse;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.adapter.SubLocalityAdapter;
 
 import java.util.ArrayList;
@@ -50,6 +52,8 @@ public class AutoSuggestTransparentDialogActivity extends BaseActivity implement
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		Utils.pushOpenScreenEvent(AutoSuggestTransparentDialogActivity.this, "Resource Search", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+
 		try {
 			setContentView(R.layout.transparent_auto_search_activity);
 			mSearchList=(ListView)findViewById(R.id.searchList);

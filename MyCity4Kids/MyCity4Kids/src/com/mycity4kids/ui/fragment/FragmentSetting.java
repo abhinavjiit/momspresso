@@ -39,6 +39,7 @@ import com.mycity4kids.dbtable.TaskTableFile;
 import com.mycity4kids.dbtable.TaskTableNotes;
 import com.mycity4kids.dbtable.TaskTableWhoToRemind;
 import com.mycity4kids.dbtable.UserTable;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.logout.LogoutResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.reminders.AppointmentManager;
@@ -56,6 +57,8 @@ public class FragmentSetting extends BaseFragment implements View.OnClickListene
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.aa_setting, container, false);
+        Utils.pushOpenScreenEvent(getActivity(), "Settings", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
+
         ((DashboardActivity) getActivity()).refreshMenu();
 
         ((TextView) view.findViewById(R.id.logout)).setOnClickListener(this);

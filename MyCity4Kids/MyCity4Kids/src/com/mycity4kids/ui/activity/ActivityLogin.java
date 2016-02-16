@@ -41,6 +41,7 @@ import com.mycity4kids.dbtable.TableKids;
 import com.mycity4kids.dbtable.UserTable;
 import com.mycity4kids.facebook.FacebookUtils;
 import com.mycity4kids.google.GooglePlusUtils;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.IFacebookUser;
 import com.mycity4kids.interfaces.IPlusClient;
 import com.mycity4kids.models.user.KidsInfo;
@@ -73,7 +74,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Utils.pushOpenScreenEvent(ActivityLogin.this, "Login Screen", SharedPrefUtils.getUserDetailModel(this).getId() + "");
         setContentView(R.layout.aa_loginform);
 
         forgotView = (LinearLayout) findViewById(R.id.forgot_view);

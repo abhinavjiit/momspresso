@@ -40,5 +40,8 @@
     specifying the canonical name, and the value the alias to use instead. -->
 
 
+<screenName name="com.mycity4kids.ui.activity.DashboardActivity">DashBoard</screenName>
+    <screenName name="com.mycity4kids.ui.fragment.FragmentSetting">Settings</screenName>
+    <screenName name="com.mycity4kids.ui.fragment.FragmentFamilyDetail">Family</screenName>
 
 </resources>

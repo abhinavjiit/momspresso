@@ -24,6 +24,7 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.ParentingFilterController;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.parentingstop.ParentingRequest;
 import com.mycity4kids.newmodels.parentingmodel.ArticleFilterListModel;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -54,6 +55,7 @@ public class ArticleFilterDialogActivity extends BaseActivity implements View.On
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
+        Utils.pushOpenScreenEvent(ArticleFilterDialogActivity.this, "Blogs Filter Dialogue Screen", SharedPrefUtils.getUserDetailModel(this).getId() + "");
         getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
         setContentView(R.layout.filter_dialog_activity);

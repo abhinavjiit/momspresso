@@ -98,7 +98,7 @@ public class BaseApplication extends Application {
         return mTracker;
     }*/
 
-    public synchronized Tracker getTracker(TrackerName trackerId) {
+    public  synchronized Tracker getTracker(TrackerName trackerId) {
         if (!mTrackers.containsKey(trackerId)) {
 
 
@@ -111,6 +111,18 @@ public class BaseApplication extends Application {
         }
         return mTrackers.get(trackerId);
     }
+   /* public synchronized Tracker getTracker() {
+
+        try {
+            final GoogleAnalytics googleAnalytics = GoogleAnalytics.getInstance(this);
+            return googleAnalytics.newTracker(R.xml.app_tracker);
+
+        }catch(final Exception e){
+            Log.e("hey", "Failed to initialize Google Analytics V4");
+        }
+
+        return null;
+    }*/
     /*
 
          * Method to handle basic Google Analytics initialization. This call will

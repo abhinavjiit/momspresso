@@ -22,6 +22,8 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.dbtable.TableAdult;
 import com.mycity4kids.enums.ParentingFilterType;
+import com.mycity4kids.gtmutils.GTMEventType;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.newmodels.PushNotificationModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.reminders.ShareArticleReceiver;
@@ -96,6 +98,7 @@ public class
                 if (type.equalsIgnoreCase("Appointment")) {
 
                     if (!(pushNotificationModel.getUser_id() == SharedPrefUtils.getUserDetailModel(this).getId())) {
+                        Utils.pushEvent(getApplicationContext(), GTMEventType.APPOINTMENT_NOTIFICATION_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getApplicationContext()).getId() + "", "");
                         Intent intent = new Intent(this, SyncService.class);
                         intent.putExtra(Constants.PUSH_MODEL, pushNotificationModel);
                         intent.putExtra("isAppointmentFlag", true);
@@ -104,6 +107,7 @@ public class
                     }
                 } else if (type.equalsIgnoreCase("task")) {
                     if (!(pushNotificationModel.getUser_id() == SharedPrefUtils.getUserDetailModel(this).getId())) {
+                        Utils.pushEvent(getApplicationContext(), GTMEventType.TASK_NOTIFICATION_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getApplicationContext()).getId() + "", "");
                         Intent intent = new Intent(this, SyncService.class);
                         intent.putExtra(Constants.PUSH_MODEL, pushNotificationModel);
                         intent.putExtra("isAppointmentFlag", false);
@@ -113,12 +117,16 @@ public class
                 } else if (type.equalsIgnoreCase("family")) {
                     // update family too
                     if (!(pushNotificationModel.getUser_id() == SharedPrefUtils.getUserDetailModel(this).getId())) {
+                        Utils.pushEvent(getApplicationContext(), GTMEventType.FAMILY_NOTICATION_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getApplicationContext()).getId() + "", "");
+
                         Intent intent = new Intent(this, SyncUserInfoService.class);
                         intent.putExtra(Constants.PUSH_MODEL, pushNotificationModel);
                         startService(intent);
                     }
                 } else if (type.equalsIgnoreCase("Article")) {
                     // generate notifications
+                    Utils.pushEvent(getApplicationContext(), GTMEventType.BLOG_NOTIFICATION_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getApplicationContext()).getId() + "", "");
+
                     Bitmap icon = BitmapFactory.decodeResource(getResources(),
                             R.drawable.ic_launcher);
 
@@ -159,6 +167,7 @@ public class
 
                 } else if (type.equalsIgnoreCase("Newsletter")) {
                     // generate notifications
+                    Utils.pushEvent(getApplicationContext(), GTMEventType.NEWSLETTER_NOTICATION_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getApplicationContext()).getId() + "", "");
 
                     Bitmap icon = BitmapFactory.decodeResource(getResources(),
                             R.drawable.ic_launcher);
@@ -191,6 +200,8 @@ public class
                     mNotificationManager.notify(requestID, mBuilder.build());
                 } else if (type.equalsIgnoreCase("weekly_calendar_todo")) {
                     int requestID = 2;
+                    Utils.pushEvent(getApplicationContext(), GTMEventType.WEEKLY_CALENDAR_NOTIFICATION_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getApplicationContext()).getId() + "", "");
+
                     pushNotificationModel.getTodo_items();
                     String calendarBtnText, todoBtnText;
                     int plus_calendar_image;
@@ -246,6 +257,8 @@ public class
 
                 } else if (type.equalsIgnoreCase("event_detail")) {
                     // generate notifications
+                    Utils.pushEvent(getApplicationContext(), GTMEventType.EVENT_DETAIL_NOTIFICATION_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getApplicationContext()).getId() + "", "");
+
                     Log.i(TAG, " INSIDE EVENTS DETAILS: " + msg);
                     Bitmap remote_picture = null;
                     Bitmap bitmap = null;
@@ -301,6 +314,8 @@ public class
                     mNotifyMgr.notify(requestID, mBuilder.build());
 
                 } else if (type.equalsIgnoreCase("upcoming_event_list")) {
+                    Utils.pushEvent(getApplicationContext(), GTMEventType.UPCOMING_EVENTS_NOTIFICATION_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getApplicationContext()).getId() + "", "");
+
                     Log.i(TAG, " INSIDE EVENTS LIST: " + msg);
                     Bitmap icon = BitmapFactory.decodeResource(getResources(),
                             R.drawable.ic_launcher);
@@ -328,6 +343,7 @@ public class
                     mNotificationManager.notify(requestID, mBuilder.build());
 
                 } else if (type.equalsIgnoreCase("plan_week")) {
+                    Utils.pushEvent(getApplicationContext(), GTMEventType.PLAN_WEEK_NOTIFICATION_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getApplicationContext()).getId() + "", "");
 
                     // generate notifications
                     Bitmap icon = BitmapFactory.decodeResource(getResources(),

@@ -11,6 +11,8 @@ import android.view.Window;
 import android.widget.TextView;
 
 import com.mycity4kids.R;
+import com.mycity4kids.gtmutils.GTMEventType;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.version.RateVersion;
 import com.mycity4kids.preference.SharedPrefUtils;
 
@@ -72,6 +74,7 @@ public class RateAppDialogFragment extends android.app.DialogFragment implements
                 rateModel.setAppRateVersion(-7);
                 SharedPrefUtils.setAppRateVersion(getActivity(), rateModel);
                 getDialog().dismiss();
+                Utils.pushEvent(getActivity(), GTMEventType.NOT_RATE_EVENT_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "", "");
 
                 break;
             case R.id.rate_now:
@@ -79,6 +82,8 @@ public class RateAppDialogFragment extends android.app.DialogFragment implements
                 rateModel.setAppRateVersion(0);
                 getDialog().dismiss();
                 SharedPrefUtils.setAppRateVersion(getActivity(), rateModel);
+                Utils.pushEvent(getActivity(), GTMEventType.RATE_APP_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "", "");
+
                 /**
                  * a try/catch block here because an Exception will be thrown if the Play Store is not installed on the target device.
                  */

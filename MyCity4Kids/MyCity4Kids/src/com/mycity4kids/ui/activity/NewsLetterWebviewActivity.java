@@ -13,6 +13,8 @@ import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.preference.SharedPrefUtils;
 
 /**
  * Created by khushboo.goyal on 25-08-2015.
@@ -25,7 +27,7 @@ public class NewsLetterWebviewActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.newsletter_webview);
-
+        Utils.pushOpenScreenEvent(NewsLetterWebviewActivity.this, "Push NewsLetter Screen", SharedPrefUtils.getUserDetailModel(this).getId() + "");
         NotificationManager nMgr = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         nMgr.cancel(getIntent().getIntExtra(AppConstants.NOTIFICATION_ID, 0));
 

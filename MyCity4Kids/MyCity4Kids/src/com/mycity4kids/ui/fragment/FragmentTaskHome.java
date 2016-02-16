@@ -23,6 +23,7 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.dbtable.TableTaskData;
 import com.mycity4kids.dbtable.TaskCompletedTable;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.newmodels.TaskMappingModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.ActivityCreateTask;
@@ -73,6 +74,7 @@ public class FragmentTaskHome extends BaseFragment implements View.OnClickListen
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 //        return super.onCreateView(inflater, container, savedInstanceState);
         view = inflater.inflate(R.layout.aa_task_home, container, false);
+        Utils.pushOpenScreenEvent(getActivity(), "To-Do Lists", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
 
         tastMainList = (ExpandableListView) view.findViewById(R.id.task_main_list);
         //searchBtn = (ImageView) view.findViewById(R.id.search_btn);

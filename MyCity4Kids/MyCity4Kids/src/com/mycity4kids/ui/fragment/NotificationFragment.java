@@ -15,6 +15,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.NotificationController;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.parentingstop.ParentingRequest;
 import com.mycity4kids.newmodels.bloggermodel.ParentingBlogResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -36,6 +37,7 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Utils.pushOpenScreenEvent(getActivity(), "Notification Settings", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
 
         View view = inflater.inflate(R.layout.aa_notification, container, false);
 

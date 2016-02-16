@@ -36,6 +36,7 @@ import com.mycity4kids.dbtable.TaskTableAttendee;
 import com.mycity4kids.dbtable.TaskTableFile;
 import com.mycity4kids.dbtable.TaskTableNotes;
 import com.mycity4kids.dbtable.TaskTableWhoToRemind;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.user.KidsInfo;
 import com.mycity4kids.newmodels.AddTaskNoteResponse;
 import com.mycity4kids.newmodels.AttendeeModel;
@@ -89,7 +90,7 @@ public class ActivityShowTask extends BaseActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.aa_show_task);
-
+        Utils.pushOpenScreenEvent(ActivityShowTask.this, "Task Detail", SharedPrefUtils.getUserDetailModel(this).getId() + "");
         NotificationManager nMgr = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         nMgr.cancel(getIntent().getIntExtra(AppConstants.NOTIFICATION_ID, 0));
 

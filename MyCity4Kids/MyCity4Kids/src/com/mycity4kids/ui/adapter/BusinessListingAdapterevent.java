@@ -22,9 +22,12 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.dbtable.TableApiEvents;
 import com.mycity4kids.dbtable.TableKids;
+import com.mycity4kids.gtmutils.GTMEventType;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.ColorModel;
 import com.mycity4kids.models.businesslist.BusinessDataListing;
 import com.mycity4kids.models.user.KidsInfo;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.ActivityCreateAppointment;
 import com.squareup.picasso.Picasso;
 
@@ -489,6 +492,7 @@ public class BusinessListingAdapterevent extends BaseAdapter implements Filterab
                     i.putExtra(Constants.EVENT_LOCATION, mBusinessData.get(position).getLocality());
                     i.putExtra(Constants.EVENT_START_DATE, mBusinessData.get(position).getStart_date());
                     i.putExtra(Constants.EVENT_END_DATE, mBusinessData.get(position).getEnd_date());
+                    Utils.pushEvent(mContext, GTMEventType.EVENTLIST_PLUS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getId() + "", "");
                     mContext.startActivity(i);
                 }
 

@@ -76,6 +76,8 @@ import com.mycity4kids.controller.CommentController;
 import com.mycity4kids.dbtable.UserTable;
 import com.mycity4kids.enums.ParentingFilterType;
 import com.mycity4kids.fragmentdialog.LoginFragmentDialog;
+import com.mycity4kids.gtmutils.GTMEventType;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.bookmark.BookmarkModel;
 import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.models.parentingdetails.CommentRequest;
@@ -170,6 +172,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Utils.pushOpenScreenEvent(ArticlesAndBlogsDetailsActivity.this, "Blog Details", SharedPrefUtils.getUserDetailModel(this).getId() + "");
 
         deepLinkURL = getIntent().getStringExtra(Constants.DEEPLINK_URL);
         TAG = ArticlesAndBlogsDetailsActivity.this.getClass().getSimpleName();
@@ -529,6 +532,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
                 finish();
                 return true;
             case R.id.share:
+                Utils.pushEvent(ArticlesAndBlogsDetailsActivity.this, GTMEventType.SHARE_BLOG_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
 
                 Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
@@ -1188,6 +1192,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
                     });
                     break;
                 case R.id.share_spouse:
+                    Utils.pushEvent(ArticlesAndBlogsDetailsActivity.this, GTMEventType.SHARE_SPOUCE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
 
                     ArrayList<Integer> idlist = new ArrayList<>();
                     idlist = new ArrayList<>();
@@ -1287,6 +1292,8 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
                     startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
                     break;
                 case R.id.bookmarkBlogImageView:
+                    Utils.pushEvent(ArticlesAndBlogsDetailsActivity.this, GTMEventType.FAVOURITE_BLOG_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
+
                     addRemoveBookmark();
                     break;
 

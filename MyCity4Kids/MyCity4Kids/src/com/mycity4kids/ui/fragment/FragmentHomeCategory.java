@@ -38,11 +38,13 @@ import com.mycity4kids.dbtable.CategoryListTable;
 import com.mycity4kids.dbtable.LocalityTable;
 import com.mycity4kids.dbtable.UserTable;
 import com.mycity4kids.fragmentdialog.LoginFragmentDialog;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.autosuggest.AutoSuggestResponse;
 import com.mycity4kids.models.category.CategoryModel;
 import com.mycity4kids.models.category.GroupCategoryModel;
 import com.mycity4kids.models.category.SubCategory;
 import com.mycity4kids.models.logout.LogoutResponse;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.AutoSuggestTransparentDialogActivity;
 import com.mycity4kids.ui.activity.BusinessListActivityKidsResources;
 import com.mycity4kids.ui.activity.TopPicksActivity;
@@ -76,6 +78,8 @@ public class FragmentHomeCategory extends BaseFragment implements OnClickListene
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.category_activity, null);
+        Utils.pushOpenScreenEvent(getActivity(), "Kids Resources Dashboard", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
+
         try {
             mLocalitySearchEtxt = (EditText) view.findViewById(R.id.locality_search);
 

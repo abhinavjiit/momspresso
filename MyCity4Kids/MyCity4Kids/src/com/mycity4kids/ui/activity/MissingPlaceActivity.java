@@ -14,8 +14,10 @@ import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.controller.MissingPlaceController;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.parentingstop.ParentingRequest;
 import com.mycity4kids.newmodels.TaskResponse;
+import com.mycity4kids.preference.SharedPrefUtils;
 
 /**
  * Created by manish.soni on 31-07-2015.
@@ -29,7 +31,7 @@ public class MissingPlaceActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.aa_missing_place);
-
+        Utils.pushOpenScreenEvent(MissingPlaceActivity.this, "Add Missing Place", SharedPrefUtils.getUserDetailModel(this).getId() + "");
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

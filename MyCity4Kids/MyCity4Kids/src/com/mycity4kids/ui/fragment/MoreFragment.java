@@ -17,8 +17,10 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.dbtable.FilterTable;
 import com.mycity4kids.enums.MapTypeFilter;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.IFilter;
 import com.mycity4kids.models.category.Filters;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.BusinessListActivityKidsResources;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.adapter.MoreFilterAdapter;
@@ -38,6 +40,7 @@ public class MoreFragment extends Fragment implements OnClickListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_more_group , container, false);
+		Utils.pushOpenScreenEvent(getActivity(), "Listing More Filter", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
 		categoryId=getArguments().getInt(Constants.CATEGORY_KEY);
 		businessOrEvent=getArguments().getInt(Constants.PAGE_TYPE);
 		FilterTable _table = new FilterTable((BaseApplication) getActivity().getApplication());

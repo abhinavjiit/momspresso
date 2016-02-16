@@ -50,6 +50,7 @@ import com.mycity4kids.dbtable.LocalityTable;
 import com.mycity4kids.dbtable.SortByTable;
 import com.mycity4kids.dbtable.TableKids;
 import com.mycity4kids.enums.MapTypeFilter;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.IFilter;
 import com.mycity4kids.interfaces.ISort;
 import com.mycity4kids.models.autosuggest.AutoSuggestResponse;
@@ -133,6 +134,7 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Utils.pushOpenScreenEvent(getActivity(), "Upcoming Events", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
 
         view = inflater.inflate(R.layout.business_list_activity, null);
 

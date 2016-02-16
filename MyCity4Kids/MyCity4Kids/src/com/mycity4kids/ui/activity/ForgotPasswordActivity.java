@@ -17,7 +17,9 @@ import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.controller.ForgotPasswordController;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.forgot.CommonResponse;
+import com.mycity4kids.preference.SharedPrefUtils;
 
 public class ForgotPasswordActivity extends BaseActivity {
     private EditText mEmailId;
@@ -28,6 +30,7 @@ public class ForgotPasswordActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.aa_forgotpswd);
+        Utils.pushOpenScreenEvent(ForgotPasswordActivity.this, "Forgot Password", SharedPrefUtils.getUserDetailModel(this).getId() + "");
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 

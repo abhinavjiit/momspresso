@@ -20,7 +20,9 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.dbtable.UserTable;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.user.UserModel;
+import com.mycity4kids.preference.SharedPrefUtils;
 
 public class BookOrPayWebActivity extends BaseActivity implements OnClickListener{
 	private String eCommerceUrl;
@@ -28,6 +30,8 @@ public class BookOrPayWebActivity extends BaseActivity implements OnClickListene
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Utils.pushOpenScreenEvent(BookOrPayWebActivity.this, "Booking Payment Webpage", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+
 		try {
 			setContentView(R.layout.book_pay_web_view);
 			bookOrPayWebView=(WebView)findViewById(R.id.book_or_pay_web_view);

@@ -22,9 +22,11 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.ForgotPasswordController;
 import com.mycity4kids.dbtable.UserTable;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.models.reportanerror.ErrorListModel;
 import com.mycity4kids.models.reportanerror.ErrorRequest;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.adapter.ReportAnErrorAdapter;
 import com.mycity4kids.widget.CustomListView;
 
@@ -55,6 +57,7 @@ public class ReportAnErrorActivity extends BaseActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Utils.pushOpenScreenEvent(ReportAnErrorActivity.this, "Report Error Info", SharedPrefUtils.getUserDetailModel(this).getId() + "");
 
         setContentView(R.layout.activity_report_an_error);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);

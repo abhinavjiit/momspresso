@@ -66,7 +66,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         BaseApplication baseApplication=(BaseApplication) getApplication();
-        mTracker=baseApplication.getTracker(BaseApplication.TrackerName.APP_TRACKER);
+      //  mTracker=baseApplication.getTracker(BaseApplication.TrackerName.APP_TRACKER);
         Log.i(getClass().getSimpleName(), "onCreate()");
 
     }

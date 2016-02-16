@@ -340,5 +340,6 @@
 
     <string name="new_yes">YES</string>
     <string name="new_cancel">CANCEL</string>
+    <string name="load_error">Failed to load container</string>
 
 </resources>

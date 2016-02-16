@@ -24,5 +24,6 @@
     <!-- The screen names that will appear in reports -->
 
     <string name="com.exchange.realestate.HomePage">HomePage</string>
+    <String name="com.mycity4kids.ui.activity.DashboardActivity">DashBoard</String>
 
 </resources>

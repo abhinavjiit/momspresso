@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import com.mycity4kids.R;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.preference.SharedPrefUtils;
 
 public class AlarmDialogActivity extends Activity {
 
@@ -26,6 +28,8 @@ public class AlarmDialogActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Utils.pushOpenScreenEvent(AlarmDialogActivity.this, "Alarm Dialogue", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+
         try {
             requestWindowFeature(Window.FEATURE_NO_TITLE);
             setContentView(R.layout.dialog_activity_alarm);

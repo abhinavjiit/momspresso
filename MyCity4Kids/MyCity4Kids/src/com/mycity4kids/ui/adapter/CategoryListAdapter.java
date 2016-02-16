@@ -2,6 +2,7 @@ package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -14,8 +15,11 @@ import android.widget.TextView;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.enums.ParentingFilterType;
+import com.mycity4kids.gtmutils.GTMEventType;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.category.CategoryModel;
 import com.mycity4kids.models.category.GroupCategoryModel;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.BusinessListActivityKidsResources;
 import com.mycity4kids.ui.activity.ParentingArticlesActivity;
 
@@ -239,6 +243,31 @@ public class CategoryListAdapter extends BaseExpandableListAdapter {
             intent.putExtra(Constants.EXTRA_CATEGORY_ID, _categoryData.getCategoryId());
             intent.putExtra(Constants.PAGE_TYPE, Constants.BUSINESS_PAGE_TYPE);
             intent.putExtra(Constants.CATEGOTY_NAME, _categoryData.getCategoryGroup());
+            switch (_categoryData.getCategoryId())
+            {
+                case 7:
+                    Log.e("Category", _categoryData.getCategoryGroup());
+                    Utils.pushEvent(mContext, GTMEventType.FUNPLACES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getId()+"", "");
+                    break;
+                case 8:
+                    Log.e("Category", _categoryData.getCategoryGroup());
+                    Utils.pushEvent(mContext, GTMEventType.BIRTHDAY_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getId()+"", "");
+                    break;
+                case 9:
+                    Log.e("Category", _categoryData.getCategoryGroup());
+                    Utils.pushEvent(mContext, GTMEventType.WHERETOSHOP_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getId()+"", "");
+                    break;
+                case 2:
+                    Log.e("Category", _categoryData.getCategoryGroup());
+                    Utils.pushEvent(mContext, GTMEventType.DAYCARE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getId()+"", "");
+                    break;
+                case 55:
+                    Log.e("Category", _categoryData.getCategoryGroup());
+                    Utils.pushEvent(mContext, GTMEventType.HEALTH_WELLNESS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getId()+"", "");
+                    break;
+
+            }
+            //Log.e("Category", _categoryData.getCategoryGroup());
             mContext.startActivity(intent);
         }
 
@@ -248,6 +277,7 @@ public class CategoryListAdapter extends BaseExpandableListAdapter {
         if (subCategory.getCategoryName().contains("Articles") || subCategory.getCategoryName().equalsIgnoreCase("Articles")) {
             Intent intent = new Intent(mContext, ParentingArticlesActivity.class);
             intent.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.ARTICLES);
+            Log.e("Category Name", subCategory.getCategoryName());
             mContext.startActivity(intent);
 
         } else if (subCategory.getCategoryName().contains("Blogs") || subCategory.getCategoryName().equalsIgnoreCase("Blogs")) {
@@ -259,6 +289,35 @@ public class CategoryListAdapter extends BaseExpandableListAdapter {
             intent.putExtra(Constants.EXTRA_CATEGORY_ID, subCategory.getCategoryId());
             intent.putExtra(Constants.PAGE_TYPE, Constants.BUSINESS_PAGE_TYPE);
             intent.putExtra(Constants.CATEGOTY_NAME, subCategory.getCategoryName());
+            switch (subCategory.getCategoryId())
+            {
+                case 4:
+                    Log.e("Category", subCategory.getCategoryName());
+                    Utils.pushEvent(mContext, GTMEventType.HOBBIES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getId()+"", "");
+                    break;
+                case 5:
+                    Log.e("Category", subCategory.getCategoryName());
+                    Utils.pushEvent(mContext, GTMEventType.SPORTS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getId()+"", "");
+                    break;
+                case 57:
+                    Log.e("Category", subCategory.getCategoryName());
+                    Utils.pushEvent(mContext, GTMEventType.ENHANCED_LEARNING_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getId()+"", "");
+                    break;
+                case 3:
+                    Log.e("Category",subCategory.getCategoryName());
+                    Utils.pushEvent(mContext, GTMEventType.TUTIONS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getId()+"", "");
+                    break;
+                case 248:
+                    Log.e("Category", subCategory.getCategoryName());
+                    Utils.pushEvent(mContext, GTMEventType.PLAY_SCHOOLS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getId()+"", "");
+                    break;
+                case 53:
+                    Log.e("Category", subCategory.getCategoryName());
+                    Utils.pushEvent(mContext, GTMEventType.SCHOOLS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getId()+"", "");
+                    break;
+
+            }
+            Log.e("Category Name",subCategory.getCategoryName());
             mContext.startActivity(intent);
         }
 

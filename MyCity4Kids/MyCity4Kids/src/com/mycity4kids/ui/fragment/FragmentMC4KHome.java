@@ -29,6 +29,7 @@ import com.mycity4kids.dbtable.TableKids;
 import com.mycity4kids.dbtable.TableTaskData;
 import com.mycity4kids.dbtable.TaskCompletedTable;
 import com.mycity4kids.enums.ParentingFilterType;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.businesslist.BusinessDataListing;
 import com.mycity4kids.models.businesslist.BusinessListRequest;
 import com.mycity4kids.models.businesslist.BusinessListResponse;
@@ -101,6 +102,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.aa_mc4k_home, container, false);
+        Utils.pushOpenScreenEvent(getActivity(), "Dashboard Fragment", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
         appointmentList = (CustomListView) view.findViewById(R.id.home_appointmentList);
         goToCal = (TextView) view.findViewById(R.id.go_to_cal);
         addAppointment = (ImageView) view.findViewById(R.id.add_appointment);

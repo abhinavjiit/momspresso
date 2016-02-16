@@ -9,6 +9,8 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.preference.SharedPrefUtils;
 
 /**
  * Created by hemant on 18/12/15.
@@ -20,6 +22,8 @@ public class KidsBirthdayActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Utils.pushOpenScreenEvent(KidsBirthdayActivity.this, "Kid's Birthday", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+
         setContentView(R.layout.kids_birthday_layout);
         kidsBirthdayMsgTextView = (TextView) findViewById(R.id.birthdayMsgTextView);
         ImageView closeButton = (ImageView) findViewById(R.id.closeButton);

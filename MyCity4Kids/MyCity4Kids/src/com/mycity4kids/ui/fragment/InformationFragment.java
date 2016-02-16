@@ -33,12 +33,14 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.dbtable.UserTable;
 import com.mycity4kids.enums.AddReviewOrPhoto;
 import com.mycity4kids.fragmentdialog.CameraFragmentDialog;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.IOnSubmitGallery;
 import com.mycity4kids.models.businesseventdetails.Batches;
 import com.mycity4kids.models.businesseventdetails.EventDate;
 import com.mycity4kids.models.businesseventdetails.Facalities;
 import com.mycity4kids.models.businesseventdetails.Timings;
 import com.mycity4kids.models.businesslist.BusinessDataListing;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.BookOrPayWebActivity;
 import com.mycity4kids.ui.activity.BusinessDetailsActivity;
 import com.mycity4kids.ui.activity.WriteReviewActivity;
@@ -69,6 +71,7 @@ public class InformationFragment extends BaseFragment implements OnClickListener
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Utils.pushOpenScreenEvent(getActivity(), "Info resource/events", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
 
         try {
             mBusinessInfoModel = getArguments().getParcelable("BusinessInfo");

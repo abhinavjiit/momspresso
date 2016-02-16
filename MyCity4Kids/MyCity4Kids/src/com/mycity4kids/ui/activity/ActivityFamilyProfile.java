@@ -33,6 +33,7 @@ import com.mycity4kids.controller.EditProfileController;
 import com.mycity4kids.controller.ImageUploadController;
 import com.mycity4kids.dbtable.TableFamily;
 import com.mycity4kids.dbtable.UserTable;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.models.profile.SignUpModel;
 import com.mycity4kids.models.user.ImageUploadRequest;
@@ -66,6 +67,7 @@ public class ActivityFamilyProfile extends BaseActivity implements OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.aa_family_profile);
+        Utils.pushOpenScreenEvent(ActivityFamilyProfile.this, "Family Profile", SharedPrefUtils.getUserDetailModel(this).getId() + "");
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
