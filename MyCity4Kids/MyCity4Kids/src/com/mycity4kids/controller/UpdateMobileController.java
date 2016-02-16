@@ -64,7 +64,7 @@ public class UpdateMobileController extends BaseController {
                     String responseData = new String(response.getResponseData());
                 /*String[] data=responseData.split("-->");
                 String finalData=data[1].trim();*/
-                    Log.i("Login Response", responseData);
+                    Log.i("Update Mobile Response", responseData);
                     UserResponse _loginResponse = new Gson().fromJson(responseData, UserResponse.class);
                     response.setResponseObject(_loginResponse);
                     /**

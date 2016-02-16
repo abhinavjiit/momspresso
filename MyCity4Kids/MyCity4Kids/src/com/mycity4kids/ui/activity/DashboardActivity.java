@@ -210,9 +210,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
         setSupportActionBar(mToolbar);
 
-        if (!SharedPrefUtils.getPushTokenUpdateToServer(DashboardActivity.this)) {
-            GCMUtil.initializeGCM(DashboardActivity.this);
-        }
+//        if (!SharedPrefUtils.getPushTokenUpdateToServer(DashboardActivity.this)) {
+        GCMUtil.initializeGCM(DashboardActivity.this);
+//        }
 
 //        set task list
 

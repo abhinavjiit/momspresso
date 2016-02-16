@@ -452,6 +452,7 @@ public class ActivitySignUp extends BaseActivity implements View.OnClickListener
 
                     removeProgressDialog();
                     Intent intent = new Intent(ActivitySignUp.this, ActivityVerifyOTP.class);
+                    intent.putExtra("signUpData", newSignupModel);
                     intent.putExtra("email", newSignupModel.getEmail());
                     intent.putExtra("mobile", newSignupModel.getMobileNumber());
                     intent.putExtra("profileUrl", profileImageUrl);
@@ -489,12 +490,8 @@ public class ActivitySignUp extends BaseActivity implements View.OnClickListener
                     inte.putExtra("mobile", newSignupModel.getMobileNumber());
                     startActivity(inte);*/
                     removeProgressDialog();
-                    if (responseData.getResult().getData().getExist().equalsIgnoreCase("exist")) {
-                        showLoginDialog(message);
-                    } else {
-                        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-                        // showSnackbar(rootLayout, message);
-                    }
+                    Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+                    // showSnackbar(rootLayout, message);
 
 
                 }

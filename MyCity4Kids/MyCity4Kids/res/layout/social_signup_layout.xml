@@ -110,7 +110,7 @@
                     android:layout_height="match_parent"
                     android:background="@null"
                     android:drawableBottom="@drawable/underline"
-                    android:inputType="number"
+                    android:inputType="phone"
                     android:paddingBottom="7dp"
                     android:textColor="@color/black_color" />
 

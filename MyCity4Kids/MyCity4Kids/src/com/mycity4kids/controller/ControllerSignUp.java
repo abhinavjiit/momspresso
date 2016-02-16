@@ -92,14 +92,6 @@ public class ControllerSignUp extends BaseController {
     }
 
     /**
-     * these method was for GET Registration:
-     *
-     * @param _userRequest
-     * @return
-     */
-
-
-    /**
      * this method creates Registration request
      * // * @param requestData
      *
@@ -115,7 +107,7 @@ public class ControllerSignUp extends BaseController {
             nameValuePairs.add(new BasicNameValuePair("mobile", "" + model.getMobileNumber()));
             nameValuePairs.add(new BasicNameValuePair("email", "" + model.getEmail()));
             nameValuePairs.add(new BasicNameValuePair("colorCode", "" + model.getColor_code()));
-            nameValuePairs.add(new BasicNameValuePair("password", "" + model.getPassword()));
+            nameValuePairs.add(new BasicNameValuePair("password", model.getPassword()));
             nameValuePairs.add(new BasicNameValuePair("cityId", "" + SharedPrefUtils.getCurrentCityModel(activity).getId()));
             nameValuePairs.add(new BasicNameValuePair("requestMedium", "" + model.getSocialMode()));
             nameValuePairs.add(new BasicNameValuePair("socialToken", "" + model.getSocialToken()));

@@ -143,7 +143,7 @@ public class AppConstants {
 
 
     /*New Login/Sign Up Constants*/
-    public static final String SMS_ORIGIN = "044091";
+    public static final String SMS_ORIGIN = "MCKOTP";
     public static final int NEW_SIGNUP_REQUEST = 1005;
     public static final int VERIFY_OTP_REQUEST = 1006;
     public static final int NEW_LOGIN_REQUEST = 1007;
@@ -151,6 +151,7 @@ public class AppConstants {
     public static final int CREATE_FAMILY_REQUEST = 1009;
     public static final int UPDATE_MOBILE_FOR_EXISTING_USER_REQUEST = 1010;
     public static final int CONFIRM_MOBILE_OTP_FOR_EXISTING_USERS_REQUEST = 1011;
+    public static final int DELETE_INVITE = 1012;
     public static final String VERIFY_OTP_URL = BASE_URL + STAGING_USERS_KEY + "/checkOtpV1";
     public static final String NEW_SIGN_UP_URL = BASE_URL + STAGING_USERS_KEY + "/registrationV1/";
     public static final String NEW_LOGIN_URL = BASE_URL + STAGING_USERS_KEY + "/loginV1/";
@@ -158,6 +159,9 @@ public class AppConstants {
     public static final String ACCEPT_OR_REJECT_INVITE_URL = BASE_URL + STAGING_USERS_KEY + "/acceptInviteV1/";
     public static final String UPDATE_MOBILE_FOR_EXISTING_USERS_URL = BASE_URL + STAGING_USERS_KEY + "/updateMobileV1/";
     public static final String CONFIRM_MOBILE_OTP_FOR_EXISTING_USERS_URL = BASE_URL + STAGING_USERS_KEY + "/confirmUpdateMobileOtpV1/";
+    public static final String NEW_LOGOUT_URL = STAGING_INTERNAL_SERVER_URL + STAGING_USERS_KEY + "/logoutV1/";
+    public static final String UPDATE_PUSH_TOKEN_URL = STAGING_INTERNAL_SERVER_URL + STAGING_USERS_KEY + "/updatePushTokenV1?";
+    public static final String ADD_ADULT_AND_KIDS_URL = STAGING_INTERNAL_SERVER_URL + STAGING_USERS_KEY + "/addAdultAndKidsV1/";
 
 
     public static final int LOGIN_REQUEST = 0;

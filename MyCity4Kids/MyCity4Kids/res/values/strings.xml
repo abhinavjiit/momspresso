@@ -27,6 +27,7 @@
 
     <!--but now we are using client APP ID -->
     <string name="facebook_app_id">206155642763202</string>
+    <string name="debug_facebook_app_id">216826955045896</string>
 
     <string name="write_review_prompt">What would you like to review?</string>
 

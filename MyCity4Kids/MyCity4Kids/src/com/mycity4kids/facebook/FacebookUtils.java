@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.facebook.LoggingBehavior;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
+import com.facebook.Settings;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.WebDialog;
 import com.mycity4kids.interfaces.IFacebookEvent;
@@ -58,8 +60,9 @@ public final class FacebookUtils {
 
     public static void facebookLogin(Activity context, final IFacebookUser iFacebookUser) {
 
+        Settings.addLoggingBehavior(LoggingBehavior.INCLUDE_ACCESS_TOKENS);
         Session.OpenRequest openRequest = new Session.OpenRequest(context);
-        openRequest.setPermissions(Arrays.asList("email", "user_events"));
+        openRequest.setPermissions(Arrays.asList("email"));
         openRequest.setCallback(new Session.StatusCallback() {
 
             @Override
@@ -100,10 +103,11 @@ public final class FacebookUtils {
                 @Override
                 public void onCompleted(Response response) {
                     if (response != null) {
-                        Log.e("Facebook response", response.toString());
+//                        Log.e("Facebook response", response.toString());
                         String eventData = response.getGraphObject().asMap().get("data").toString();
-                        Log.e("Facebook events", eventData);
-                        iFacebookEvent.onFacebookEventReceived(eventData);
+//                        Log.e("Facebook events", eventData);
+                        iFacebookEvent.onFacebookEventReceived
+                                (eventData);
                     } else {
                         iFacebookEvent.onFacebookEventReceived(null);
                     }

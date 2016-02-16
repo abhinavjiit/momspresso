@@ -93,7 +93,6 @@ public class CreateFamilyActivity extends BaseActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_family_activity);
 
-        userInviteModel = getIntent().getExtras().getParcelable("userInviteData");
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
         setSupportActionBar(mToolbar);
@@ -101,6 +100,8 @@ public class CreateFamilyActivity extends BaseActivity implements View.OnClickLi
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Family Details");
 
+        if (null != getIntent().getExtras())
+            userInviteModel = getIntent().getExtras().getParcelable("userInviteData");
 
         rootLayout = (LinearLayout) findViewById(R.id.root);
         mAdultContainer = (LinearLayout) findViewById(R.id.internal_adult_layout);
@@ -133,12 +134,10 @@ public class CreateFamilyActivity extends BaseActivity implements View.OnClickLi
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         // according to fragment change it
-
         getMenuInflater().inflate(R.menu.forgot_password, menu);
-
-
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -146,6 +145,7 @@ public class CreateFamilyActivity extends BaseActivity implements View.OnClickLi
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
+                break;
             case R.id.save:
                 Log.d("onOptionsItemSelected", " HOME");
                 if (checkCustomLayoutValidations() && checkDuplicateEmailIds()) {
@@ -170,9 +170,11 @@ public class CreateFamilyActivity extends BaseActivity implements View.OnClickLi
 //                        new ControllerCityByPincode(this, this).getData(AppConstants.CITY_BY_PINCODE_REQUEST, "" + mAddpincode.getText().toString());
 //                        new LocationByPincode(ActivitySignUp.this, "" + mAddpincode.getText().toString(), ActivitySignUp.this);
                 }
+                break;
             default:
                 return super.onOptionsItemSelected(item);
         }
+        return super.onOptionsItemSelected(item);
     }
 
     public boolean checkCustomLayoutValidations() {

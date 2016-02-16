@@ -14,6 +14,7 @@ import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.dbtable.UserTable;
+import com.mycity4kids.models.profile.SignUpModel;
 import com.mycity4kids.models.user.UserResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 
@@ -42,13 +43,13 @@ public class AddUserKidsController extends BaseController {
         serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.POST);
         serviceRequest.setRequestData(requestData);
         String data = new Gson().toJson(requestData);
-        System.out.println("JSON " + data);
+        System.out.println("AddUserKidsController JSON " + data);
         serviceRequest.setContext(context);
-        serviceRequest.setPostData(setRequestParameters(data));
+        serviceRequest.setPostData(setRequestParameters(requestData));
         serviceRequest.setDataType(requestType);
         serviceRequest.setResponseController(this);
         serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
-        serviceRequest.setUrl(AppConstants.ADD_ADDTIONAL_KIDUSER_URL);
+        serviceRequest.setUrl(AppConstants.ADD_ADULT_AND_KIDS_URL);
         HttpClientConnection connection = HttpClientConnection.getInstance();
         connection.addRequest(serviceRequest);
 
@@ -66,8 +67,8 @@ public class AddUserKidsController extends BaseController {
                     UserResponse _signUpData = new Gson().fromJson(responseData, UserResponse.class);
                     response.setResponseObject(_signUpData);
 
-                    if(_signUpData.getResponseCode()==200){
-                        saveUserDetails(getActivity(), _signUpData,(UserResponse)response.getResponseObject());
+                    if (_signUpData.getResponseCode() == 200) {
+                        saveUserDetails(getActivity(), _signUpData, (UserResponse) response.getResponseObject());
                         //clearPreference(getActivity());
                     }
 
@@ -110,23 +111,28 @@ public class AddUserKidsController extends BaseController {
      */
 
 
-
     /**
      * this method creates Registration request
      * // * @param requestData
      *
      * @return
      */
-    private List<NameValuePair> setRequestParameters(String requestData) {
+    private List<NameValuePair> setRequestParameters(Object requestData) {
         UrlEncodedFormEntity encodedEntity = null;
+        SignUpModel sModel = (SignUpModel) requestData;
+        String adultJson = new Gson().toJson(sModel.getUser());
+        String kidsJson = new Gson().toJson(sModel.getKidInformation());
+
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         try {
-            if (!StringUtils.isNullOrEmpty(requestData)) {
-                nameValuePairs.add(new BasicNameValuePair("sessionId", SharedPrefUtils.getUserDetailModel(context).getSessionId()));
-                nameValuePairs.add(new BasicNameValuePair("user_id", "" + SharedPrefUtils.getUserDetailModel(context).getId()));
-                nameValuePairs.add(new BasicNameValuePair("family_id", "" + SharedPrefUtils.getUserDetailModel(context).getFamily_id()));
-                nameValuePairs.add(new BasicNameValuePair("nuser", requestData));
+            if (!StringUtils.isNullOrEmpty(adultJson) || !StringUtils.isNullOrEmpty(kidsJson)) {
+                nameValuePairs.add(new BasicNameValuePair("familyId", "" + SharedPrefUtils.getUserDetailModel(context).getFamily_id()));
+                nameValuePairs.add(new BasicNameValuePair("userId", "" + SharedPrefUtils.getUserDetailModel(context).getId()));
+                nameValuePairs.add(new BasicNameValuePair("name", "" + SharedPrefUtils.getUserDetailModel(context).getFirst_name()));
+                nameValuePairs.add(new BasicNameValuePair("spouseInformation", adultJson));
+                nameValuePairs.add(new BasicNameValuePair("kidsInformation", kidsJson));
             }
+            Log.i("Login request ", nameValuePairs.toString());
 //            encodedEntity = new UrlEncodedFormEntity(nameValuePairs, "UTF-8");
 
             // encodedEntity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE,

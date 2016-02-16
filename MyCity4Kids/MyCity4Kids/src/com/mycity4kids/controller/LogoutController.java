@@ -2,6 +2,7 @@ package com.mycity4kids.controller;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.kelltontech.controller.BaseController;
@@ -45,7 +46,7 @@ public class LogoutController extends BaseController {
         serviceRequest.setPostData(setRequestParameters((String) requestData));
         serviceRequest.setDataType(requestType);
         serviceRequest.setResponseController(this);
-        serviceRequest.setUrl(AppConstants.LOGOUT_URL);
+        serviceRequest.setUrl(AppConstants.NEW_LOGOUT_URL);
         HttpClientConnection connection = HttpClientConnection.getInstance();
         connection.addRequest(serviceRequest);
         return serviceRequest;
@@ -57,7 +58,7 @@ public class LogoutController extends BaseController {
             case AppConstants.LOGOUT_REQUEST:
                 try {
                     String responseData = new String(response.getResponseData());
-
+                    Log.i("Logout Response", responseData);
                     LogoutResponse _logoutResponse = new Gson().fromJson(responseData, LogoutResponse.class);
                     if (_logoutResponse.getResponseCode() == 200) {
                         response.setResponseObject(_logoutResponse);
@@ -105,10 +106,7 @@ public class LogoutController extends BaseController {
         UrlEncodedFormEntity encodedEntity = null;
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         try {
-            nameValuePairs.add(new BasicNameValuePair("sessionId", "" + SharedPrefUtils.getUserDetailModel(mActivity).getSessionId()));
-            nameValuePairs.add(new BasicNameValuePair("user_id", "" + SharedPrefUtils.getUserDetailModel(mActivity).getId()));
-            nameValuePairs.add(new BasicNameValuePair("deviceId", DataUtils.getDeviceId(mActivity)));
-            nameValuePairs.add(new BasicNameValuePair("push_token", SharedPrefUtils.getDeviceToken(mActivity)));
+            nameValuePairs.add(new BasicNameValuePair("userId", "" + SharedPrefUtils.getUserDetailModel(mActivity).getId()));
             encodedEntity = new UrlEncodedFormEntity(nameValuePairs, "UTF-8");
             //	String finalData=sessionId+"="+sessionId;T
 

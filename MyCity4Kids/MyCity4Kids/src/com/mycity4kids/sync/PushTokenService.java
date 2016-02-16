@@ -1,12 +1,15 @@
 package com.mycity4kids.sync;
 
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.kelltontech.utils.ConnectivityUtils;
+import com.kelltontech.utils.DataUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.forgot.CommonResponse;
@@ -34,17 +37,12 @@ public class PushTokenService extends IntentService implements UpdateListener {
     @Override
     protected void onHandleIntent(Intent intent) {
         if (ConnectivityUtils.isNetworkEnabled(this)) {
+            if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getDeviceToken(this))) {
+                // hit api
+                if (SharedPrefUtils.getUserDetailModel(this).getId() > 0) {
+                    hitApiRequest(AppConstants.PUSH_TOKEN_REQUEST);
 
-            if (!SharedPrefUtils.getPushTokenUpdateToServer(this)) {
-
-                if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getDeviceToken(this))) {
-                    // hit api
-                    if (SharedPrefUtils.getUserDetailModel(this).getId() > 0) {
-                        hitApiRequest(AppConstants.PUSH_TOKEN_REQUEST);
-
-                    }
                 }
-
             }
         }
 
@@ -78,12 +76,16 @@ public class PushTokenService extends IntentService implements UpdateListener {
         StringBuilder builder = new StringBuilder();
         switch (requestType) {
             case AppConstants.PUSH_TOKEN_REQUEST:
-                builder.append(AppConstants.PUSH_TOKEN_URL);
+                builder.append(AppConstants.UPDATE_PUSH_TOKEN_URL);
 
-                builder.append("user_id=").append(SharedPrefUtils.getUserDetailModel(this).getId());
-                builder.append("&push_token=").append(SharedPrefUtils.getDeviceToken(this));
+                builder.append("userId=").append(SharedPrefUtils.getUserDetailModel(this).getId());
+                builder.append("&pushToken=").append(SharedPrefUtils.getDeviceToken(this));
+                TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+                String deviceId = telephonyManager.getDeviceId();
+                builder.append("&deviceId=").append(deviceId);
+                builder.append("&deviceType=").append("android");
 
-                Log.i("get appointment ", builder.toString());
+                Log.i("Send Push Token to Server ", builder.toString());
                 return builder.toString().replace(" ", "%20");
 
         }

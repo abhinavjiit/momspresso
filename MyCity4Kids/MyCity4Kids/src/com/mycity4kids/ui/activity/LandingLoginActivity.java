@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.Session;
 import com.facebook.model.GraphUser;
@@ -37,10 +38,15 @@ import com.mycity4kids.google.GooglePlusUtils;
 import com.mycity4kids.interfaces.IFacebookUser;
 import com.mycity4kids.interfaces.IPlusClient;
 import com.mycity4kids.models.user.KidsInfo;
+import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.models.user.UserModel;
 import com.mycity4kids.models.user.UserRequest;
 import com.mycity4kids.models.user.UserResponse;
+import com.mycity4kids.newmodels.UserInviteModel;
+import com.mycity4kids.newmodels.UserInviteResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
+
+import java.util.ArrayList;
 
 /**
  * @author "Deepanker Chaudhary"
@@ -90,8 +96,6 @@ public class LandingLoginActivity extends BaseActivity implements OnClickListene
                 mBusinessOrEventId = bundle.getString(Constants.BUSINESS_OR_EVENT_ID);
                 mBusinessOrEventType = bundle.getInt(Constants.PAGE_TYPE, 0);
                 mDistance = bundle.getString(Constants.DISTANCE);
-
-
             } else {
                 Constants.IS_COMING_FROM_INSIDE = false;
             }
@@ -194,20 +198,6 @@ public class LandingLoginActivity extends BaseActivity implements OnClickListene
 //                commented by manish.
                 startActivity(new Intent(this, ActivityLogin.class));
 
-
-                //sendToHomeScreen();
-                //finish();
-
-                // sendToHomeScreen();
-
-
-                // commented by khushboo.
-//			if(!Constants.IS_COMING_FROM_INSIDE){
-//				goLoginWithOutParams();
-//			}else{
-//				goToEmailLogin();
-//			}
-
                 break;
             case R.id.sign_up_btn:
 
@@ -215,11 +205,6 @@ public class LandingLoginActivity extends BaseActivity implements OnClickListene
                 intent1.putExtra(Constants.SIGNUP_FLAG, true);
                 startActivity(intent1);
 
-//			if(!Constants.IS_COMING_FROM_INSIDE){
-//				goToRegisterFromFirstTime();
-//			}else{
-//				goToRegisterForDetails();
-//			}
                 break;
             case R.id.skip_btn_login:
                 //if(!isCommingFromInside)
@@ -228,14 +213,6 @@ public class LandingLoginActivity extends BaseActivity implements OnClickListene
                 //	finish();
                 break;
 
-			/*case R.id.google_plus_btn:
-            if(ConnectivityUtils.isNetworkEnabled(this)){
-				// showProgressDialog("Please Wait");
-				mGooglePlusUtils.googlePlusLogin();
-			}else{
-				showToast(getString(R.string.error_network));
-			}
-			break;*/
             case R.id.google_lout_btn:
                 if (ConnectivityUtils.isNetworkEnabled(this)) {
                     showProgressDialog("Please Wait");
@@ -377,93 +354,124 @@ public class LandingLoginActivity extends BaseActivity implements OnClickListene
                         removeProgressDialog();
                         if (mGooglePlusUtils != null)
                             mGooglePlusUtils.onStop();
-                        showLoginDialog(getResources().getString(R.string.do_login));
 
-                        if (true) {
-                            // Family not present for the user.
-                            Intent intent = new Intent(LandingLoginActivity.this, ListFamilyInvitesActivity.class);
-                            intent.putExtra("userInviteData", "");
-                            startActivity(intent);
-                        } else {
+                        // save in prefrences
+                        UserInfo model = new UserInfo();
+                        model.setId(responseData.getResult().getData().getUser().getId());
+                        model.setEmail(responseData.getResult().getData().getUser().getEmail());
+                        model.setMobile_number(responseData.getResult().getData().getUser().getMobile_number());
+                        model.setFamily_id(responseData.getResult().getData().getUser().getFamily_id());
+                        model.setColor_code(responseData.getResult().getData().getUser().getColor_code());
+                        model.setSessionId(responseData.getResult().getData().getUser().getSessionId());
+                        model.setFirst_name(responseData.getResult().getData().getUser().getFirst_name() + " " + responseData.getResult().getData().getUser().getLast_name());
+                        SharedPrefUtils.setUserDetailModel(LandingLoginActivity.this, model);
 
+                        if (StringUtils.isNullOrEmpty(responseData.getResult().getData().getUser().getMobile_number())) {
+                            //existing user with no mobile number logging in using social media.
+                            removeProgressDialog();
+                            Intent updateMobileIntent = new Intent(this, UpdateMobileNumberActivity.class);
+//                            updateMobileIntent.putExtra("activity", "landingLoginActivity");
+                            updateMobileIntent.putExtra("isExistingUser", "1");
+                            updateMobileIntent.putExtra("name", responseData.getResult().getData().getUser().getFirst_name());
+                            updateMobileIntent.putExtra("colorCode", responseData.getResult().getData().getUser().getColor_code());
+                            startActivity(updateMobileIntent);
+                            return;
                         }
-//                        Toast.makeText(LandingLoginActivity.this, responseData.getResult().getMessage(), Toast.LENGTH_SHORT).show();
-//
-//                        // if db not exists first save in db
-//                        TableKids kidsTable = new TableKids((BaseApplication) getApplicationContext());
-//                        ArrayList<KidsInfo> kidList = kidsTable.getAllKids();
-//                        if (kidList.isEmpty()) {
-//                            // db not exists
-//                            saveDatainDB(responseData);
-//                        }
-//
-//                        // save in prefrences
-//                        UserInfo model = new UserInfo();
-//                        model.setId(responseData.getResult().getData().getUser().getId());
-//                        model.setFamily_id(responseData.getResult().getData().getUser().getFamily_id());
-//                        model.setColor_code(responseData.getResult().getData().getUser().getColor_code());
-//                        model.setSessionId(responseData.getResult().getData().getUser().getSessionId());
-//                        model.setFirst_name(responseData.getResult().getData().getUser().getFirst_name() + " " + responseData.getResult().getData().getUser().getLast_name());
-//                        SharedPrefUtils.setUserDetailModel(LandingLoginActivity.this, model);
-//
-//                        // set city also
-//
-//                        // then call getappoitmnt service
-//                        startSyncing();
-//
-//                        Intent intent1 = new Intent(this, LoadingActivity.class);
-//                        startActivity(intent1);
+
+                        Toast.makeText(LandingLoginActivity.this, responseData.getResult().getMessage(), Toast.LENGTH_SHORT).show();
+
+                        // if db not exists first save in db
+                        TableKids kidsTable = new TableKids((BaseApplication) getApplicationContext());
+                        ArrayList<KidsInfo> kidList = kidsTable.getAllKids();
+                        if (kidList.isEmpty()) {
+                            // db not exists
+                            saveDatainDB(responseData);
+                        }
+
+                        // set city also
+
+                        // then call getappoitmnt service
+                        startSyncing();
+
+                        Intent intent1 = new Intent(this, LoadingActivity.class);
+                        startActivity(intent1);
                     } else if (responseData.getResponseCode() == 400) {
                         // now move to sign up screen
                         removeProgressDialog();
 
-                        if (responseData.getResult().getMessage().toString().trim().equalsIgnoreCase("family_linked")) {
-                            if (mGooglePlusUtils != null)
-                                mGooglePlusUtils.onStop();
-                            showLoginDialog(getResources().getString(R.string.do_login));
+//                        if (responseData.getResult().getMessage().toString().trim().equalsIgnoreCase("family_linked")) {
+//                            if (mGooglePlusUtils != null)
+//                                mGooglePlusUtils.onStop();
+//                            showLoginDialog(getResources().getString(R.string.do_login));
+//
+//
+//                        } else {
 
+                        if (isFacebook) {
 
-                        } else {
-
-                            if (isFacebook) {
-
-                                if (fbUser != null) {
-                                    Intent i = new Intent(this, SocialSignUpActivity.class);
-                                    Bundle bundle = new Bundle();
-                                    bundle.putString(Constants.USER_ID, fbUser.getId());
-                                    bundle.putString(Constants.USER_NAME, fbUser.getFirstName() + " " + fbUser.getLastName());
-                                    bundle.putString(Constants.USER_EMAIL, "hpmycity23@yahoo.com");
-                                    bundle.putString(Constants.ACCESS_TOKEN, accessToken);
-                                    bundle.putString(Constants.MODE, "facebook");
-                                    bundle.putString(Constants.PROFILE_IMAGE, personPhotoUrl);
-                                    i.putExtra("userbundle", bundle);
-                                    startActivity(i);
-
-
-                                }
-
-                            } else {
-                                // google signup
-                                Intent i = new Intent(LandingLoginActivity.this, ActivitySignUp.class);
+                            if (fbUser != null) {
+                                //new facebook user
+                                Intent i = new Intent(this, SocialSignUpActivity.class);
                                 Bundle bundle = new Bundle();
-                                bundle.putString(Constants.USER_ID, userId);
-                                bundle.putString(Constants.USER_NAME, currentPersonName);
-                                bundle.putString(Constants.USER_EMAIL, googleEmailId);
-                                bundle.putString(Constants.ACCESS_TOKEN, googleToken);
-                                bundle.putString(Constants.MODE, "google");
+                                bundle.putString(Constants.USER_ID, fbUser.getId());
+                                bundle.putString(Constants.USER_NAME, fbUser.getFirstName() + " " + fbUser.getLastName());
+                                bundle.putString(Constants.USER_EMAIL, fbUser.asMap().get("email").toString());
+                                bundle.putString(Constants.ACCESS_TOKEN, accessToken);
+                                bundle.putString(Constants.MODE, "fb");
                                 bundle.putString(Constants.PROFILE_IMAGE, personPhotoUrl);
                                 i.putExtra("userbundle", bundle);
                                 startActivity(i);
-
                             }
-                        }
 
+                        } else {
+                            //new google plus user
+                            Intent i = new Intent(LandingLoginActivity.this, SocialSignUpActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putString(Constants.USER_ID, userId);
+                            bundle.putString(Constants.USER_NAME, currentPersonName);
+                            bundle.putString(Constants.USER_EMAIL, googleEmailId);
+                            bundle.putString(Constants.ACCESS_TOKEN, googleToken);
+                            bundle.putString(Constants.MODE, "gp");
+                            bundle.putString(Constants.PROFILE_IMAGE, personPhotoUrl);
+                            i.putExtra("userbundle", bundle);
+                            startActivity(i);
+
+                        }
+//                        }
 
                     }
 
                 } catch (Exception e) {
                     removeProgressDialog();
                     e.printStackTrace();
+                }
+                break;
+            case AppConstants.ACCEPT_OR_REJECT_INVITE_REQUEST:
+                UserInviteResponse rData = (UserInviteResponse) response.getResponseObject();
+                if (rData.getResponseCode() == 201) {
+                    UserInviteModel userInviteModel = new UserInviteModel();
+                    userInviteModel.setUserId("" + rData.getResult().getData().getUserInfo().getId());
+                    userInviteModel.setEmail(rData.getResult().getData().getUserInfo().getEmail());
+                    userInviteModel.setMobile(rData.getResult().getData().getUserInfo().getMobile_number());
+                    userInviteModel.setFamilyInvites(rData.getResult().getData().getFamilyInvites());
+                    SharedPrefUtils.setUserFamilyInvites(this, new Gson().toJson(userInviteModel).toString());
+                    if (null != rData.getResult().getData().getFamilyInvites() && !rData.getResult().getData().getFamilyInvites().isEmpty()) {
+                        //new FB/G+ user with invites who has not accepted any invites or created a family
+                        // but created his account and verified his mobile.
+                        Intent intent = new Intent(this, ListFamilyInvitesActivity.class);
+                        intent.putExtra("userInviteData", userInviteModel);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    } else {
+                        //new FB/G+ user without invites who has not craeted a family but created his account and verified his mobile.
+                        Intent intent = new Intent(this, CreateFamilyActivity.class);
+                        intent.putExtra("userInviteData", userInviteModel);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
+
+                } else if (rData.getResponseCode() == 400) {
+                    Toast.makeText(LandingLoginActivity.this, rData.getResult().getMessage(), Toast.LENGTH_SHORT).show();
                 }
                 break;
 
@@ -561,6 +569,9 @@ public class LandingLoginActivity extends BaseActivity implements OnClickListene
                 return googleToken;
 
             } catch (UserRecoverableAuthException userAuthEx) {
+                userAuthEx.printStackTrace();
+                Log.d("UserRecoverableAuthException", userAuthEx.toString());
+                startActivityForResult(userAuthEx.getIntent(), 98);
                 // Start the user recoverable action using the intent returned by
             } catch (Exception e) {
                 e.printStackTrace();
@@ -575,6 +586,8 @@ public class LandingLoginActivity extends BaseActivity implements OnClickListene
             super.onPostExecute(result);
 
             // check login here
+            if (StringUtils.isNullOrEmpty(result))
+                return;
 
             UserRequest _userModel = new UserRequest();
             _userModel.setEmailId(googleEmailId);
@@ -611,9 +624,7 @@ public class LandingLoginActivity extends BaseActivity implements OnClickListene
         try {
             //showProgressDialog(getString(R.string.please_wait));
             if (user != null) {
-
                 fbUser = user;
-
                 isFacebook = true;
 
                 Session session = Session.getActiveSession();
@@ -628,6 +639,7 @@ public class LandingLoginActivity extends BaseActivity implements OnClickListene
 
                 final LoginController _controller = new LoginController(this, this);
                 String fbEmailId = user.asMap().get("email").toString();
+
                 UserRequest _userModel = new UserRequest();
                 _userModel.setEmailId(fbEmailId);
                 _userModel.setProfileId(user.getId());
@@ -644,7 +656,6 @@ public class LandingLoginActivity extends BaseActivity implements OnClickListene
 //                bundle.putString(Constants.USER_NAME, user.getFirstName() + " " + user.getLastName());
 //                bundle.putString(Constants.USER_EMAIL, user.asMap().get("email").toString());
 //                bundle.putString(Constants.ACCESS_TOKEN, accessToken);
-//                bundle.putString(Constants.MODE, "facebook");
 //                bundle.putString(Constants.PROFILE_IMAGE, personPhotoUrl);
 //                i.putExtra("userbundle", bundle);
 //                startActivity(i);
@@ -652,16 +663,8 @@ public class LandingLoginActivity extends BaseActivity implements OnClickListene
                 // removeProgressDialog();
             }
         } catch (Exception e) {
-            final LoginController _controller = new LoginController(this, this);
-            UserRequest _userModel = new UserRequest();
-            _userModel.setEmailId("hpmycity23@yahoo.com");
-            _userModel.setProfileId("123");
-            _userModel.setNetworkName("facebook");
-            _userModel.setFirstName("hemant");
-            _userModel.setLastName("parmar");
-            _userModel.setAccessToken(accessToken);
-            _controller.getData(AppConstants.NEW_LOGIN_REQUEST, _userModel);
             removeProgressDialog();
+            Log.d("Facebook Error", "" + e.getMessage());
             showToast("Try again later.");
             //e.printStackTrace();
         }

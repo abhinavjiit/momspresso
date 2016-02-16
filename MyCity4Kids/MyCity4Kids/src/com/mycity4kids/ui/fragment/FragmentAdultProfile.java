@@ -64,7 +64,7 @@ public class FragmentAdultProfile extends BaseFragment implements View.OnClickLi
 
         name = (EditText) view.findViewById(R.id.adult_name);
         email = (EditText) view.findViewById(R.id.adult_email);
-        pincode = (EditText) view.findViewById(R.id.pincode);
+//        pincode = (EditText) view.findViewById(R.id.pincode);
 
         mColorfrAdult = (TextView) view.findViewById(R.id.adultcolor);
 
@@ -81,7 +81,7 @@ public class FragmentAdultProfile extends BaseFragment implements View.OnClickLi
 
         name.setText(userInfo.getFirst_name());
         email.setText(userInfo.getEmail());
-        pincode.setText(userInfo.getPincode());
+//        pincode.setText(userInfo.getPincode());
 
 //        TableFamily familyTable = new TableFamily((BaseApplication) getActivity().getApplicationContext());
 //        UserModel.FamilyInfo family = familyTable.getFamily();
@@ -111,12 +111,12 @@ public class FragmentAdultProfile extends BaseFragment implements View.OnClickLi
             name.setError("Please enter name");
             isLoginOk = false;
         }
-        else if (pincode.getText().toString().length() == 0) {
-            pincode.setFocusableInTouchMode(true);
-            pincode.requestFocus();
-            pincode.setError("Please enter pincode");
-            isLoginOk = false;
-        }
+//        else if (pincode.getText().toString().length() == 0) {
+//            pincode.setFocusableInTouchMode(true);
+//            pincode.requestFocus();
+//            pincode.setError("Please enter pincode");
+//            isLoginOk = false;
+//        }
         return isLoginOk;
     }
 
@@ -133,7 +133,7 @@ public class FragmentAdultProfile extends BaseFragment implements View.OnClickLi
                 _requestModel.setEmail(email.getText().toString().trim());
                 _requestModel.setColor_code(new ColorCode().getValue(""+mColorfrAdult.getTag()));
                 _requestModel.setId("" + id);
-                _requestModel.setPincode(pincode.getText().toString());
+//                _requestModel.setPincode(pincode.getText().toString());
 
                 EditProfileController _controller = new EditProfileController(getActivity(), this);
                 _controller.getData(AppConstants.EDIT_ADULTPROFILE_REQUEST, _requestModel);

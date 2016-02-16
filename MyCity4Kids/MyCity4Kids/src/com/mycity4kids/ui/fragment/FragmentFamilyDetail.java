@@ -572,17 +572,17 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
             EditText adultname = (EditText) innerLayout.findViewById(R.id.spouse_name);
             EditText adultemail = (EditText) innerLayout.findViewById(R.id.spouse_email);
 
-
             if (!adultname.getText().toString().trim().equals("")) {
                 if (adultemail.getText().toString().trim().equals("")) {
 
-                    adultemail.setError(getResources().getString(R.string.please_enter_valid_email));
+                    adultemail.setError(getResources().getString(R.string.please_enter_valid_email_or_mobile));
                     adultemail.setFocusableInTouchMode(true);
                     adultemail.requestFocus();
                     return false;
                 } else {
-                    if (!StringUtils.isValidEmail(adultemail.getText().toString())) {
-                        adultemail.setError(getResources().getString(R.string.please_enter_valid_email));
+                    if (!StringUtils.isValidEmail(adultemail.getText().toString())
+                            && (!StringUtils.checkMobileNumber(adultemail.getText().toString()))) {
+                        adultemail.setError(getResources().getString(R.string.please_enter_valid_email_or_mobile));
                         adultemail.setFocusableInTouchMode(true);
                         adultemail.requestFocus();
                         return false;
@@ -635,19 +635,19 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
 
     public void saveDatainDB(UserResponse model) {
 
-        TableAdult adultTable = new TableAdult((BaseApplication) getActivity().getApplicationContext());
-        adultTable.deleteAll();
-        try {
-
-            adultTable.beginTransaction();
-            for (UserModel.AdultsInfo user : model.getResult().getData().getAdult()) {
-
-                adultTable.insertData(user.getUser());
-            }
-            adultTable.setTransactionSuccessful();
-        } finally {
-            adultTable.endTransaction();
-        }
+//        TableAdult adultTable = new TableAdult((BaseApplication) getActivity().getApplicationContext());
+//        adultTable.deleteAll();
+//        try {
+//
+//            adultTable.beginTransaction();
+//            for (UserModel.AdultsInfo user : model.getResult().getData().getAdult()) {
+//
+//                adultTable.insertData(user.getUser());
+//            }
+//            adultTable.setTransactionSuccessful();
+//        } finally {
+//            adultTable.endTransaction();
+//        }
 
         // saving child data
         TableKids kidsTable = new TableKids((BaseApplication) getActivity().getApplicationContext());
@@ -704,7 +704,7 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
                     mAdultContainer.removeAllViews();
                     mChildContainer.removeAllViews();
 
-                    ((BaseActivity) getActivity()).showSnackbar(getView().findViewById(R.id.root),responseData.getResult().getMessage());
+                    ((BaseActivity) getActivity()).showSnackbar(getView().findViewById(R.id.root), responseData.getResult().getMessage());
 
 //                    if (ifAdultAdded) {
 //                        ((BaseActivity) getActivity()).showSnackbar(getView().findViewById(R.id.root), getResources().getString(R.string.add_adult) + "");

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v7.widget.Toolbar;
 import android.telephony.SmsMessage;
 import android.util.Log;
@@ -15,6 +16,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
@@ -22,15 +24,21 @@ import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.controller.ControllerSignUp;
+import com.mycity4kids.controller.UpdateMobileController;
 import com.mycity4kids.controller.VerifyOTPController;
 import com.mycity4kids.dbtable.TableAdult;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.models.user.UserModel;
+import com.mycity4kids.models.user.UserRequest;
 import com.mycity4kids.models.user.UserResponse;
 import com.mycity4kids.newmodels.FamilyInvites;
+import com.mycity4kids.newmodels.NewSignUpModel;
 import com.mycity4kids.newmodels.UserInviteModel;
 import com.mycity4kids.newmodels.UserInviteResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -42,7 +50,8 @@ public class ActivityVerifyOTP extends BaseActivity {
     private static final String TAG = ActivityVerifyOTP.class.getSimpleName();
     private Toolbar mToolbar;
     private EditText otpSMSText;
-    private TextView verifyOTPTextView;
+    private TextView verifyOTPTextView, resendOtpTextView;
+    private NewSignUpModel newSignupModel;
 
     private String email, mobileNumber, profileImageUrl, colorCode, isExistingUser;
 
@@ -56,16 +65,23 @@ public class ActivityVerifyOTP extends BaseActivity {
         profileImageUrl = getIntent().getExtras().getString("profileUrl");
         colorCode = getIntent().getExtras().getString("colorCode");
         isExistingUser = getIntent().getExtras().getString("isExistingUser", "");
+        newSignupModel = getIntent().getExtras().getParcelable("signUpData");
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         otpSMSText = (EditText) findViewById(R.id.otpSMSText);
         verifyOTPTextView = (TextView) findViewById(R.id.verifyOTPTextView);
+        resendOtpTextView = (TextView) findViewById(R.id.resendOtpTextView);
+
         setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Verify Mobile");
+
         verifyOTPTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 VerifyOTPController _controller = new VerifyOTPController(ActivityVerifyOTP.this, ActivityVerifyOTP.this);
                 if ("1".equals(isExistingUser)) {
+//                    existing users no need to create family or accept invite.
                     _controller.getData(AppConstants.CONFIRM_MOBILE_OTP_FOR_EXISTING_USERS_REQUEST,
                             mobileNumber, email, otpSMSText.getText().toString());
                 } else {
@@ -73,8 +89,41 @@ public class ActivityVerifyOTP extends BaseActivity {
                 }
             }
         });
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Verify Mobile");
+
+
+        resendOtpTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if ("1".equals(isExistingUser)) {
+                    UserRequest _requestModel = new UserRequest();
+                    _requestModel.setUserId("" + SharedPrefUtils.getUserDetailModel(ActivityVerifyOTP.this).getId());
+                    _requestModel.setMobileNumber(mobileNumber);
+                    UpdateMobileController _controller = new UpdateMobileController(ActivityVerifyOTP.this, ActivityVerifyOTP.this);
+                    _controller.getData(AppConstants.UPDATE_MOBILE_FOR_EXISTING_USER_REQUEST, _requestModel);
+                } else {
+                    ControllerSignUp _controller = new ControllerSignUp(ActivityVerifyOTP.this, ActivityVerifyOTP.this);
+                    _controller.getData(AppConstants.NEW_SIGNUP_REQUEST, newSignupModel);
+                }
+                setResetOTPTimeLimit(60000);
+            }
+        });
+
+        setResetOTPTimeLimit(60000);
+    }
+
+    private void setResetOTPTimeLimit(int timeInMillis) {
+        resendOtpTextView.setEnabled(false);
+        new CountDownTimer(timeInMillis, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                resendOtpTextView.setText("Resend in " + millisUntilFinished / 1000 + " seconds: ");
+            }
+
+            public void onFinish() {
+                resendOtpTextView.setText("Resend");
+                resendOtpTextView.setEnabled(true);
+            }
+        }.start();
     }
 
     @Override
@@ -106,7 +155,7 @@ public class ActivityVerifyOTP extends BaseActivity {
                         Log.e(TAG, "Received SMS: " + message + ", Sender: " + senderAddress);
                         String verificationCode;
                         // if the SMS is not from our gateway, ignore the message
-                        if ("9899741739".equals(senderAddress)) {
+                        if ("1".equals(senderAddress)) {
                             verificationCode = message;
                         } else {
                             if (!senderAddress.toLowerCase().contains(AppConstants.SMS_ORIGIN.toLowerCase())) {
@@ -118,8 +167,15 @@ public class ActivityVerifyOTP extends BaseActivity {
                         Log.e(TAG, "OTP received: " + verificationCode);
                         otpSMSText.setText(verificationCode);
                         showProgressDialog(getString(R.string.please_wait));
+
                         VerifyOTPController _controller = new VerifyOTPController(ActivityVerifyOTP.this, ActivityVerifyOTP.this);
-                        _controller.getData(AppConstants.VERIFY_OTP_REQUEST, mobileNumber, email, verificationCode);
+                        if ("1".equals(isExistingUser)) {
+                            _controller.getData(AppConstants.CONFIRM_MOBILE_OTP_FOR_EXISTING_USERS_REQUEST,
+                                    mobileNumber, email, otpSMSText.getText().toString());
+                        } else {
+                            _controller.getData(AppConstants.VERIFY_OTP_REQUEST, mobileNumber, email, otpSMSText.getText().toString());
+                        }
+
 //                    Intent hhtpIntent = new Intent(context, HttpService.class);
 //                    hhtpIntent.putExtra("otp", verificationCode);
 //                    context.startService(hhtpIntent);
@@ -140,7 +196,7 @@ public class ActivityVerifyOTP extends BaseActivity {
         private String getVerificationCode(String message) {
 //            String[] msgArray = message.split("\\r?\\n");
             String[] msgArray = message.split("\\s+");
-            return msgArray[5].substring(0, 6);
+            return msgArray[6].substring(0, 6);
         }
     };
 
@@ -157,6 +213,7 @@ public class ActivityVerifyOTP extends BaseActivity {
                 // save in
                 UserInviteResponse responseData = (UserInviteResponse) response.getResponseObject();
                 String message = responseData.getResult().getMessage();
+                removeProgressDialog();
                 if (responseData.getResponseCode() == 200) {
                     //  showSnackbar(rootLayout, message);
                     Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
@@ -169,8 +226,6 @@ public class ActivityVerifyOTP extends BaseActivity {
                     userInviteModel.setFamilyInvites(responseData.getResult().getData().getFamilyInvites());
                     SharedPrefUtils.setUserFamilyInvites(this, new Gson().toJson(userInviteModel).toString());
 
-                    // shift to my city for kids
-                    removeProgressDialog();
                     ArrayList<FamilyInvites> familyInviteList = userInviteModel.getFamilyInvites();
                     if (null != familyInviteList && !familyInviteList.isEmpty()) {
                         Intent intent = new Intent(getApplicationContext(), ListFamilyInvitesActivity.class);
@@ -192,14 +247,47 @@ public class ActivityVerifyOTP extends BaseActivity {
                 UserInviteResponse resData = (UserInviteResponse) response.getResponseObject();
                 String msg = resData.getResult().getMessage();
                 if (resData.getResponseCode() == 200) {
+                    Log.e("Mobile Verification", "Existing User Mobile");
                     Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+                    UserInfo userInfo = SharedPrefUtils.getUserDetailModel(this);
+                    userInfo.setMobile_number(mobileNumber);
+                    SharedPrefUtils.setUserDetailModel(this, userInfo);
                     startSyncing();
                     startSyncingUserInfo();
-                    Intent intent = new Intent(ActivityVerifyOTP.this, DashboardActivity.class);
-                    Log.e("MYCITY4KIDS", "USER logged In");
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                    startActivity(intent);
-                    finish();
+
+                    Intent intent1 = new Intent(this, LoadingActivity.class);
+                    // intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent1);
+                } else if (resData.getResponseCode() == 400) {
+                    Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+                }
+
+                break;
+            case AppConstants.NEW_SIGNUP_REQUEST:
+
+                // Resend OTP for Sign Up.
+                removeProgressDialog();
+                UserResponse otpResponse = (UserResponse) response.getResponseObject();
+                String otpMessage = otpResponse.getResult().getMessage();
+
+                if (otpResponse.getResponseCode() == 200) {
+                    Log.e("Mobile Verification", "New User");
+                    Toast.makeText(this, otpMessage, Toast.LENGTH_SHORT).show();
+                } else if (otpResponse.getResponseCode() == 400) {
+                    Toast.makeText(this, otpMessage, Toast.LENGTH_SHORT).show();
+                }
+
+                break;
+            case AppConstants.UPDATE_MOBILE_FOR_EXISTING_USER_REQUEST:
+                // Resend OTP for adding mobile for existing User.
+                removeProgressDialog();
+                UserResponse existingOTPResponse = (UserResponse) response.getResponseObject();
+                String otpMsg = existingOTPResponse.getResult().getMessage();
+                if (existingOTPResponse.getResponseCode() == 200) {
+                    Log.e("Mobile Verification", "Existing User Mobile");
+                    Toast.makeText(this, otpMsg, Toast.LENGTH_SHORT).show();
+                } else if (existingOTPResponse.getResponseCode() == 400) {
+                    Toast.makeText(this, otpMsg, Toast.LENGTH_SHORT).show();
                 }
 
                 break;
@@ -250,12 +338,6 @@ public class ActivityVerifyOTP extends BaseActivity {
 //        }
 
 
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.forgot_password, menu);
-        return true;
     }
 
     @Override

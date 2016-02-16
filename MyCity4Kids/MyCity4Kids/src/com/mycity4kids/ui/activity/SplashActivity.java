@@ -23,22 +23,16 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.asynctask.HeavyDbTask;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.controller.ConfigurationController;
-import com.mycity4kids.controller.UpdateMobileController;
 import com.mycity4kids.dbtable.TableAdult;
 import com.mycity4kids.fragmentdialog.FragmentAlertDialog;
-import com.mycity4kids.gcm.GCMUtil;
 import com.mycity4kids.interfaces.OnUIView;
 import com.mycity4kids.listener.OnButtonClicked;
 import com.mycity4kids.models.VersionApiModel;
 import com.mycity4kids.models.city.City;
 import com.mycity4kids.models.city.MetroCity;
 import com.mycity4kids.models.configuration.ConfigurationApiModel;
-import com.mycity4kids.models.user.UserRequest;
-import com.mycity4kids.models.user.UserResponse;
 import com.mycity4kids.newmodels.UserInviteModel;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.sync.PushTokenService;
-import com.mycity4kids.ui.fragment.AddMobileFragment;
 import com.mycity4kids.utils.AnalyticsHelper;
 import com.mycity4kids.utils.NearMyCity;
 import com.mycity4kids.utils.location.GPSTracker;
@@ -203,16 +197,8 @@ public class SplashActivity extends BaseActivity {
 //                Log.e("SplashActivity", "deviceToken ------------- " + deviceToken);
 //            }
 //        });
+//        GCMUtil.initializeGCM(this);
 
-        if (!SharedPrefUtils.getPushTokenUpdateToServer(this)) {
-            if (StringUtils.isNullOrEmpty(SharedPrefUtils.getDeviceToken(this))) {
-                GCMUtil.initializeGCM(this);
-            } else {
-                Intent intent = new Intent(this, PushTokenService.class);
-                this.startService(intent);
-            }
-
-        }
     }
 
 
@@ -222,8 +208,12 @@ public class SplashActivity extends BaseActivity {
             Log.e("MYCITY4KIDS", "USER logged In");
             String mobileNumb = SharedPrefUtils.getUserDetailModel(this).getMobile_number();
             if (StringUtils.isNullOrEmpty(mobileNumb)) {
-                AddMobileFragment dialogFragment = new AddMobileFragment();
-                dialogFragment.show(getFragmentManager(), "");
+                Intent updateMobileIntent = new Intent(this, UpdateMobileNumberActivity.class);
+//                            updateMobileIntent.putExtra("activity", "landingLoginActivity");
+                updateMobileIntent.putExtra("isExistingUser", "1");
+                updateMobileIntent.putExtra("name", SharedPrefUtils.getUserDetailModel(this).getFirst_name());
+                updateMobileIntent.putExtra("colorCode", SharedPrefUtils.getUserDetailModel(this).getColor_code());
+                startActivity(updateMobileIntent);
             } else {
                 startSyncing();
                 startSyncingUserInfo();
@@ -341,18 +331,6 @@ public class SplashActivity extends BaseActivity {
 
                 }
                 break;
-            case AppConstants.UPDATE_MOBILE_FOR_EXISTING_USER_REQUEST:
-                UserResponse responseData = (UserResponse) response.getResponseObject();
-                String message = responseData.getResult().getMessage();
-                if (responseData.getResponseCode() == 200) {
-                    removeProgressDialog();
-                    Intent intent = new Intent(this, ActivityVerifyOTP.class);
-                    intent.putExtra("email", SharedPrefUtils.getUserDetailModel(this).getEmail());
-                    intent.putExtra("mobile", mobileNumberForVerification);
-                    intent.putExtra("isExistingUser", "1");
-                    startActivity(intent);
-                }
-                break;
             default:
                 break;
         }
@@ -447,16 +425,6 @@ public class SplashActivity extends BaseActivity {
 
         getSupportFragmentManager().beginTransaction().add(fragment, "MAGIC_TAG").commit();
         return;
-    }
-
-    public void getMobileFromExistingUsers(String mobileNum) {
-        mobileNumberForVerification = mobileNum;
-        showProgressDialog(getString(R.string.please_wait));
-        UserRequest _requestModel = new UserRequest();
-        _requestModel.setUserId("" + SharedPrefUtils.getUserDetailModel(this).getId());
-        _requestModel.setMobileNumber(mobileNumberForVerification);
-        UpdateMobileController _controller = new UpdateMobileController(this, this);
-        _controller.getData(AppConstants.UPDATE_MOBILE_FOR_EXISTING_USER_REQUEST, _requestModel);
     }
 
 }

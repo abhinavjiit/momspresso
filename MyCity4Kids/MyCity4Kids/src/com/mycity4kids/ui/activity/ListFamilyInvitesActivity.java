@@ -3,8 +3,11 @@ package com.mycity4kids.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -42,6 +45,7 @@ import java.util.List;
  */
 public class ListFamilyInvitesActivity extends BaseActivity implements FamilyInvitesAdapter.InvitationResponse {
 
+    private Toolbar mToolbar;
     ListView listView;
     TextView createFamilyTextView;
     UserInviteModel userInviteModel;
@@ -51,6 +55,14 @@ public class ListFamilyInvitesActivity extends BaseActivity implements FamilyInv
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.invite_layout);
+
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        setSupportActionBar(mToolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Family");
+
         userInviteModel = getIntent().getExtras().getParcelable("userInviteData");
 //        UserInviteModel userInviteModel = (UserInviteModel) baseModel;
         listView = (ListView) findViewById(R.id.listView);
@@ -66,7 +78,12 @@ public class ListFamilyInvitesActivity extends BaseActivity implements FamilyInv
         createFamilyTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Log.d(" Family Invite ", "Create Family");
+                Intent intent = new Intent(getApplicationContext(), CreateFamilyActivity.class);
+                intent.putExtra("userInviteData", userInviteModel);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
             }
         });
     }
@@ -194,9 +211,31 @@ public class ListFamilyInvitesActivity extends BaseActivity implements FamilyInv
     @Override
     public void onInvitationResponse(String response, int position) {
 
-        FamilyInvitationController familyInvitationController = new FamilyInvitationController(this, this);
-        familyInvitationController.getData(AppConstants.ACCEPT_OR_REJECT_INVITE_REQUEST,
-                familyInviteList.get(position), userInviteModel);
-        showProgressDialog(getString(R.string.please_wait));
+        if("cancel".equals(response)){
+            FamilyInvitationController familyInvitationController = new FamilyInvitationController(this, this);
+            familyInvitationController.getData(AppConstants.DELETE_INVITE,
+                    familyInviteList.get(position), userInviteModel);
+            showProgressDialog(getString(R.string.please_wait));
+        }else{
+            FamilyInvitationController familyInvitationController = new FamilyInvitationController(this, this);
+            familyInvitationController.getData(AppConstants.ACCEPT_OR_REJECT_INVITE_REQUEST,
+                    familyInviteList.get(position), userInviteModel);
+            showProgressDialog(getString(R.string.please_wait));
+        }
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

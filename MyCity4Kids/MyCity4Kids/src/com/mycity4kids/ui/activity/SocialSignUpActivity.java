@@ -168,12 +168,7 @@ public class SocialSignUpActivity extends BaseActivity implements View.OnClickLi
             mSpousename.requestFocus();
             mSpousename.setError(Constants.ENTER_SPOUSENAME);
             result = false;
-        } else if (mSpouseMobile.getText().toString().equals("")) {
-            mSpouseMobile.setFocusableInTouchMode(true);
-            mSpouseMobile.requestFocus();
-            mSpouseMobile.setError(Constants.ENTER_MOBILE);
-            result = false;
-        } else if (mSpouseMobile.getText().toString().contains("[a-zA-Z]+")) {
+        } else if (!StringUtils.checkMobileNumber(mSpouseMobile.getText().toString())) {
             mSpouseMobile.setFocusableInTouchMode(true);
             mSpouseMobile.requestFocus();
             mSpouseMobile.setError(Constants.ENTER_VALID_MOBILE);
@@ -191,16 +186,8 @@ public class SocialSignUpActivity extends BaseActivity implements View.OnClickLi
 //        nsuModel.setPassword(mFamilysharepswd.getText().toString().trim());
         nsuModel.setProfileImgUrl(profileImgUrl);
         nsuModel.setColor_code(new ColorCode().getValue("" + mColorfrSpouse.getTag()));
-        if (StringUtils.isNullOrEmpty(social_id)) {
-            nsuModel.setSocialMode("fb");
-            nsuModel.setSocialToken(access_token);
-        } else if (StringUtils.isNullOrEmpty(social_id)) {
-            nsuModel.setSocialMode("gp");
-            nsuModel.setSocialToken(access_token);
-        } else {
-            nsuModel.setSocialMode("custom");
-            nsuModel.setSocialToken("");
-        }
+        nsuModel.setSocialMode(mode);
+        nsuModel.setSocialToken(access_token);
 
         return nsuModel;
     }
@@ -235,11 +222,7 @@ public class SocialSignUpActivity extends BaseActivity implements View.OnClickLi
                 } else if (responseData.getResponseCode() == 400) {
 
                     removeProgressDialog();
-                    if (responseData.getResult().getData().getExist().equalsIgnoreCase("exist")) {
-//                        showLoginDialog(message);
-                    } else {
-                        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-                    }
+                    Toast.makeText(this, message, Toast.LENGTH_LONG).show();
                 }
                 break;
             case AppConstants.IMAGE_UPLOAD_REQUEST:

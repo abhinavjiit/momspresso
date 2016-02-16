@@ -41,8 +41,7 @@ public class JoinFamilyActivity extends BaseActivity implements View.OnClickList
 
         switch (v.getId()) {
             case R.id.craete_family:
-//                startActivity(new Intent(this, LandingLoginActivity.class));
-                startActivity(new Intent(this, CreateFamilyActivity.class));
+                startActivity(new Intent(this, LandingLoginActivity.class));
                 break;
 
 

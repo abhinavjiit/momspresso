@@ -6,11 +6,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.controller.FamilyInvitationController;
 import com.mycity4kids.newmodels.FamilyInvites;
+import com.mycity4kids.ui.CircleTransformation;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -39,6 +43,7 @@ public class FamilyInvitesAdapter extends ArrayAdapter<FamilyInvites> {
         TextView kidsName;
         TextView cancelInvitation;
         TextView acceptInvitation;
+        ImageView networkImg;
     }
 
     @Override
@@ -52,7 +57,7 @@ public class FamilyInvitesAdapter extends ArrayAdapter<FamilyInvites> {
             holder.kidsName = (TextView) convertView.findViewById(R.id.inviteeKids);
             holder.cancelInvitation = (TextView) convertView.findViewById(R.id.cancelInvitation);
             holder.acceptInvitation = (TextView) convertView.findViewById(R.id.acceptInvitation);
-
+            holder.networkImg = (ImageView) convertView.findViewById(R.id.inviteeImage);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -76,6 +81,16 @@ public class FamilyInvitesAdapter extends ArrayAdapter<FamilyInvites> {
             }
         });
 
+        if (!StringUtils.isNullOrEmpty(list.get(position).getProfileImage())) {
+            try {
+                Picasso.with(mContext).load(list.get(position).getProfileImage()).transform(new CircleTransformation()).into(holder.networkImg);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Picasso.with(mContext).load(R.drawable.default_img).transform(new CircleTransformation()).into(holder.networkImg);
+            }
+        } else {
+            Picasso.with(mContext).load(R.drawable.default_img).transform(new CircleTransformation()).into(holder.networkImg);
+        }
         return convertView;
     }
 

@@ -18,6 +18,7 @@ public class UserInviteModel extends BaseModel implements Parcelable {
     private String mobile;
     private String profileImgUrl;
     private String colorCode;
+    private UserInfo userInfo;
     private ArrayList<FamilyInvites> familyInvites;
 
     public UserInviteModel() {
@@ -31,6 +32,7 @@ public class UserInviteModel extends BaseModel implements Parcelable {
         mobile = in.readString();
         profileImgUrl = in.readString();
         colorCode = in.readString();
+        userInfo = in.readParcelable(UserInfo.class.getClassLoader());
         familyInvites = in.readArrayList(FamilyInvites.class.getClassLoader());
     }
 
@@ -42,6 +44,7 @@ public class UserInviteModel extends BaseModel implements Parcelable {
         dest.writeString(mobile);
         dest.writeString(profileImgUrl);
         dest.writeString(colorCode);
+        dest.writeParcelable(userInfo, flags);
         dest.writeList(familyInvites);
     }
 
@@ -110,4 +113,11 @@ public class UserInviteModel extends BaseModel implements Parcelable {
         this.familyInvites = familyInvites;
     }
 
+    public UserInfo getUserInfo() {
+        return userInfo;
+    }
+
+    public void setUserInfo(UserInfo userInfo) {
+        this.userInfo = userInfo;
+    }
 }

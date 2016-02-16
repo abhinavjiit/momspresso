@@ -74,27 +74,27 @@
         android:padding="5dp"
         android:textColor="@color/black_color" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingBottom="7dp"
-        android:paddingTop="5dp"
-        android:text="PINCODE"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+    <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:paddingBottom="7dp"-->
+        <!--android:paddingTop="5dp"-->
+        <!--android:text="PINCODE"-->
+        <!--android:textAppearance="?android:attr/textAppearanceSmall" />-->
 
-    <EditText
-        android:id="@+id/pincode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="2"
-        android:background="@null"
-        android:maxLength="6"
-        android:drawableBottom="@drawable/underline"
-        android:drawablePadding="3dp"
-        android:gravity="left"
-        android:inputType="number"
-        android:padding="5dp"
-        android:textColor="@color/black_color" />
+    <!--<EditText-->
+        <!--android:id="@+id/pincode"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="2"-->
+        <!--android:background="@null"-->
+        <!--android:maxLength="6"-->
+        <!--android:drawableBottom="@drawable/underline"-->
+        <!--android:drawablePadding="3dp"-->
+        <!--android:gravity="left"-->
+        <!--android:inputType="number"-->
+        <!--android:padding="5dp"-->
+        <!--android:textColor="@color/black_color" />-->
 
 
 </LinearLayout>

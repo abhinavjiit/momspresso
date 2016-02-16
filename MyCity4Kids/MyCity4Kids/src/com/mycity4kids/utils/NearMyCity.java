@@ -42,29 +42,29 @@ public class NearMyCity {
 			}	
 		}
 	}
-	
+
 //	private void fetchingLocation() {
 //		try {
-//			Geocoder geocoder = new Geocoder(mContext) ; 
-//			List<Address> addresses = geocoder.getFromLocation(mLattitude, mLongitude, 10) ; 
+//			Geocoder geocoder = new Geocoder(mContext) ;
+//			List<Address> addresses = geocoder.getFromLocation(mLattitude, mLongitude, 10) ;
 //			if(addresses == null || addresses.size() == 0 ) {
 //				mFetchCity.nearCity("City can't be determined now");
 //			} else {
-//				boolean isFetched = false ; 
+//				boolean isFetched = false ;
 //				for(int i = 0 ; i < addresses.size() ; i++ ) {
-//					Address address = addresses.get(i) ; 
+//					Address address = addresses.get(i) ;
 //					if(address.getLatitude() != 0.0 && address.getLongitude() != 0.0 ) {
 //						isFetched = true ;
 //						mFetchCity.nearCity(getNearMe(address));
-//						break ; 
+//						break ;
 //					} else {
-//						continue ; 
+//						continue ;
 //					}
 //				}
 //				if( isFetched == false ) {
 //					mFetchCity.nearCity("City can't be determined now");
 //				}
-//			}	
+//			}
 //		} catch (Exception e) {
 //			mFetchCity.nearCity("City can't be determined now");
 //		}
@@ -72,9 +72,9 @@ public class NearMyCity {
 	private void fetchingLocation() {
 		mFetchCity.nearCity(getNearMe(mLattitude , mLongitude));
 	}
-	
+
 //	private String getNearMe(Address address) {
-	
+
 	/**
 	 * this method get current region according to current Location lat & long
 	 * @param lat

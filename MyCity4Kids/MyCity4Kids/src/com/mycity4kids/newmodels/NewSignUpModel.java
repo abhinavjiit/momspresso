@@ -1,11 +1,14 @@
 package com.mycity4kids.newmodels;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.mycity4kids.models.basemodel.BaseDataModel;
 
 /**
  * Created by hemant on 19/1/16.
  */
-public class NewSignUpModel extends BaseDataModel {
+public class NewSignUpModel extends BaseDataModel implements Parcelable {
     private String username;
     private String color_code;
     private String mobileNumber;
@@ -15,6 +18,52 @@ public class NewSignUpModel extends BaseDataModel {
     private String socialMode;
     private String socialToken;
     private String profileImgUrl;
+
+    public NewSignUpModel() {
+        super();
+    }
+
+    protected NewSignUpModel(Parcel in) {
+        username = in.readString();
+        color_code = in.readString();
+        mobileNumber = in.readString();
+        email = in.readString();
+        password = in.readString();
+        cityId = in.readString();
+        socialMode = in.readString();
+        socialToken = in.readString();
+        profileImgUrl = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(username);
+        dest.writeString(color_code);
+        dest.writeString(mobileNumber);
+        dest.writeString(email);
+        dest.writeString(password);
+        dest.writeString(cityId);
+        dest.writeString(socialMode);
+        dest.writeString(socialToken);
+        dest.writeString(profileImgUrl);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<NewSignUpModel> CREATOR = new Creator<NewSignUpModel>() {
+        @Override
+        public NewSignUpModel createFromParcel(Parcel in) {
+            return new NewSignUpModel(in);
+        }
+
+        @Override
+        public NewSignUpModel[] newArray(int size) {
+            return new NewSignUpModel[size];
+        }
+    };
 
     public String getUsername() {
         return username;
