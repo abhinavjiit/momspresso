@@ -21,7 +21,9 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/inviteeImage"
         android:layout_toRightOf="@+id/inviteeImage"
-        android:text="Joseph Defrenco" />
+        android:text="Joseph Defrenco"
+        android:textColor="@android:color/black"
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/inviteeEmail"
@@ -31,7 +33,9 @@
         android:layout_below="@+id/inviteeName"
         android:layout_toRightOf="@+id/inviteeImage"
         android:gravity="center"
-        android:text="joseph@gmail.com" />
+        android:textSize="14sp"
+        android:text="joseph@gmail.com"
+        android:textColor="@android:color/black" />
 
     <TextView
         android:id="@+id/inviteeKids"
