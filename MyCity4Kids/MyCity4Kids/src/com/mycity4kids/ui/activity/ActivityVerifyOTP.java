@@ -61,6 +61,7 @@ public class ActivityVerifyOTP extends BaseActivity {
     private String email, mobileNumber, profileImageUrl, colorCode, isExistingUser;
     private RelativeLayout layoutSendingOtp;
     private LinearLayout verifyOTPLayout;
+    private int resendCount=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,24 +107,29 @@ public class ActivityVerifyOTP extends BaseActivity {
             }
         });
 
-
-        resendOtpTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if ("1".equals(isExistingUser)) {
-                    UserRequest _requestModel = new UserRequest();
-                    _requestModel.setUserId("" + SharedPrefUtils.getUserDetailModel(ActivityVerifyOTP.this).getId());
-                    _requestModel.setMobileNumber(mobileNumber);
-                    UpdateMobileController _controller = new UpdateMobileController(ActivityVerifyOTP.this, ActivityVerifyOTP.this);
-                    _controller.getData(AppConstants.UPDATE_MOBILE_FOR_EXISTING_USER_REQUEST, _requestModel);
-                } else {
-                    ControllerSignUp _controller = new ControllerSignUp(ActivityVerifyOTP.this, ActivityVerifyOTP.this);
-                    _controller.getData(AppConstants.NEW_SIGNUP_REQUEST, newSignupModel);
-                }
-                setResetOTPTimeLimit(60000);
+if (resendCount<5) {
+    resendOtpTextView.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            resendCount++;
+            if ("1".equals(isExistingUser)) {
+                UserRequest _requestModel = new UserRequest();
+                _requestModel.setUserId("" + SharedPrefUtils.getUserDetailModel(ActivityVerifyOTP.this).getId());
+                _requestModel.setMobileNumber(mobileNumber);
+                UpdateMobileController _controller = new UpdateMobileController(ActivityVerifyOTP.this, ActivityVerifyOTP.this);
+                _controller.getData(AppConstants.UPDATE_MOBILE_FOR_EXISTING_USER_REQUEST, _requestModel);
+            } else {
+                ControllerSignUp _controller = new ControllerSignUp(ActivityVerifyOTP.this, ActivityVerifyOTP.this);
+                _controller.getData(AppConstants.NEW_SIGNUP_REQUEST, newSignupModel);
             }
-        });
-
+            setResetOTPTimeLimit(60000);
+        }
+    });
+}
+        else
+{
+    Toast.makeText(ActivityVerifyOTP.this,"Requests Exhausted, Please come back after some time",Toast.LENGTH_LONG).show();
+}
         setResetOTPTimeLimit(60000);
     }
 

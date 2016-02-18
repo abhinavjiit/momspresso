@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -180,6 +181,15 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         t.send(new HitBuilders.EventBuilder().setCategory("UX").setAction("User Sign In").build());
 
         // till here
+        // Build and send timing.
+   /*     t.send(new HitBuilders.TimingBuilder()
+                .setCategory(getTimingCategory())
+                .setValue(getTimingInterval())
+                .setVariable(getTimingName())
+                .setLabel(getTimingLabel())
+                .build());*/
+
+
 // Send a screen view.
         t.send(new HitBuilders.ScreenViewBuilder().build());
         onNewIntent(getIntent());
@@ -708,6 +718,29 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         });
 
     }
+/*
+    private String getTimingCategory() {
+        return ((EditText) getView().findViewById(R.id.editTimingCategory)).getText().toString().trim();
+    }
+
+    private long getTimingInterval() {
+        String value =
+                ((EditText) getView().findViewById(R.id.editTimingInterval)).getText().toString().trim();
+        if (value.length() == 0) {
+            return 0;
+        }
+        return Long.valueOf(value);
+    }
+
+    private String getTimingName() {
+        return ((EditText) getView().findViewById(R.id.editTimingName)).getText().toString().trim();
+    }
+
+    private String getTimingLabel() {
+        return ((EditText) getView().findViewById(R.id.editTimingLabel)).getText().toString().trim();
+    }
+*/
+
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
