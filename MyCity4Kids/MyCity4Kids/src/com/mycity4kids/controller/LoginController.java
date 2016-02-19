@@ -179,11 +179,6 @@ public class LoginController extends BaseController {
                         nameValuePairs.add(new BasicNameValuePair("password", requestData.getPassword()));
                     }
                 }
-                nameValuePairs.add(new BasicNameValuePair("deviceId", DataUtils.getDeviceId(activity)));
-                if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getDeviceToken(activity))) {
-                    SharedPrefUtils.setPushTokenUpdateToServer(activity, true);
-                }
-                nameValuePairs.add(new BasicNameValuePair("push_token", SharedPrefUtils.getDeviceToken(activity)));
                 Log.i("Login request ", nameValuePairs.toString());
             } else if (requestType == AppConstants.NEW_LOGIN_REQUEST) {
                 if (!StringUtils.isNullOrEmpty(requestData.getEmailId())) {
@@ -217,11 +212,6 @@ public class LoginController extends BaseController {
                 if (!StringUtils.isNullOrEmpty(requestData.getPassword())) {
                     nameValuePairs.add(new BasicNameValuePair("password", requestData.getPassword()));
                 }
-                nameValuePairs.add(new BasicNameValuePair("deviceId", DataUtils.getDeviceId(activity)));
-                if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getDeviceToken(activity))) {
-                    SharedPrefUtils.setPushTokenUpdateToServer(activity, true);
-                }
-                nameValuePairs.add(new BasicNameValuePair("pushToken", SharedPrefUtils.getDeviceToken(activity)));
                 Log.i("Login request ", nameValuePairs.toString());
             }
 
@@ -241,30 +231,6 @@ public class LoginController extends BaseController {
 
 
     public void saveUserDetails(Context context, UserResponse pUserDetails, UserResponse requestdata) {
-
-//		SharedPreferences prefs = context.getSharedPreferences(SAVED_USER_DETAILS, Context.MODE_PRIVATE);
-//		Editor editor = prefs.edit();
-//
-//		try 
-//		{ 
-//			String value;
-//			editor.putString( "emailId", requestdata.getEmailId());
-//
-//			value=requestdata.getPassword();
-//			editor.putString("password", value);
-//
-//
-//			value = pUserDetails.isLoggedIn()+ "";
-//			editor.putString("isLoggedIn", value);
-//
-//			/*	value = pUserDetails.getResult().getUserId();
-//			editor.putString("userId", value);*/
-//
-//
-//
-//			editor.commit();
-//		}
-//		catch (Exception e) {}
 
         try {
             UserTable userTable = new UserTable((BaseApplication) ((Activity) context).getApplication());

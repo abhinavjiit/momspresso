@@ -267,7 +267,7 @@ if (resendCount<5) {
                 removeProgressDialog();
                 if (responseData.getResponseCode() == 200) {
                     //  showSnackbar(rootLayout, message);
-                    Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
                     UserInviteModel userInviteModel = new UserInviteModel();
                     userInviteModel.setUserId(responseData.getResult().getData().getUserId());
                     userInviteModel.setEmail(email);
@@ -299,7 +299,7 @@ if (resendCount<5) {
                 String msg = resData.getResult().getMessage();
                 if (resData.getResponseCode() == 200) {
                     Log.e("Mobile Verification", "Existing User Mobile");
-                    Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
                     UserInfo userInfo = SharedPrefUtils.getUserDetailModel(this);
                     userInfo.setMobile_number(mobileNumber);
                     SharedPrefUtils.setUserDetailModel(this, userInfo);
@@ -323,7 +323,7 @@ if (resendCount<5) {
 
                 if (otpResponse.getResponseCode() == 200) {
                     Log.e("Mobile Verification", "New User");
-                    Toast.makeText(this, otpMessage, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(this, otpMessage, Toast.LENGTH_SHORT).show();
                 } else if (otpResponse.getResponseCode() == 400) {
                     Toast.makeText(this, otpMessage, Toast.LENGTH_SHORT).show();
                 }
@@ -336,7 +336,7 @@ if (resendCount<5) {
                 String otpMsg = existingOTPResponse.getResult().getMessage();
                 if (existingOTPResponse.getResponseCode() == 200) {
                     Log.e("Mobile Verification", "Existing User Mobile");
-                    Toast.makeText(this, otpMsg, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(this, otpMsg, Toast.LENGTH_SHORT).show();
                 } else if (existingOTPResponse.getResponseCode() == 400) {
                     Toast.makeText(this, otpMsg, Toast.LENGTH_SHORT).show();
                 }

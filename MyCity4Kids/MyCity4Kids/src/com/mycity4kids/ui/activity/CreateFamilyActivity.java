@@ -5,6 +5,8 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -354,13 +356,7 @@ public class CreateFamilyActivity extends BaseActivity implements View.OnClickLi
                 } else if (responseData.getResponseCode() == 400) {
 
                     removeProgressDialog();
-                    if (responseData.getResult().getData().getExist().equalsIgnoreCase("exist")) {
-//                        showLoginDialog(message);
-                    } else {
-                        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-                        // showSnackbar(rootLayout, message);
-                    }
-
+                    Toast.makeText(this, message, Toast.LENGTH_LONG).show();
 
                 }
                 break;
@@ -971,7 +967,8 @@ public class CreateFamilyActivity extends BaseActivity implements View.OnClickLi
             //c.set(curent_year,current_month,current_day);
 
             long maxdate = Long.parseLong(convertDate(current_day + "-" + (current_month + 1) + "-" + curent_year)) * 1000;
-            DatePickerDialog dlg = new DatePickerDialog(getActivity(), this, curent_year, current_month, current_day);
+            DatePickerDialog dlg = new DatePickerDialog(getActivity(), android.R.style.Theme_Holo_Light_Dialog_NoActionBar, this, curent_year, current_month, current_day);
+            dlg.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             dlg.getDatePicker().setMaxDate(c.getTimeInMillis());
             return dlg;
 

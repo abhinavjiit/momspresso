@@ -133,6 +133,7 @@ public class SignUpModel extends BaseDataModel {
         }
 
         private String email;
+        private String mobile;
         private String color_code;
         private String pincode;
 
@@ -206,6 +207,14 @@ public class SignUpModel extends BaseDataModel {
 
         public void setNotification_task(String notification_task) {
             this.notification_task = notification_task;
+        }
+
+        public String getMobile() {
+            return mobile;
+        }
+
+        public void setMobile(String mobile) {
+            this.mobile = mobile;
         }
     }
 
