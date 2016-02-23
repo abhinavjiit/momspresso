@@ -43,6 +43,7 @@ import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.logout.LogoutResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.reminders.AppointmentManager;
+import com.mycity4kids.ui.activity.ActivityLogin;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.JoinFamilyActivity;
 
@@ -65,7 +66,7 @@ TextView cityChange;
         ((TextView) view.findViewById(R.id.family_details)).setOnClickListener(this);
       //  ((TextView) view.findViewById(R.id.sync_setting)).setOnClickListener(this);
         ((TextView) view.findViewById(R.id.external_cal)).setOnClickListener(this);
-        ((TextView) view.findViewById(R.id.notification)).setOnClickListener(this);
+//        ((TextView) view.findViewById(R.id.notification)).setOnClickListener(this);
         cityChange=(TextView) view.findViewById(R.id.cityChange);
         cityChange.setOnClickListener(this);
         cityId=SharedPrefUtils.getCurrentCityModel(getActivity()).getId();
@@ -182,11 +183,11 @@ TextView cityChange;
                 ((DashboardActivity) getActivity()).replaceFragment(new ExternalCalFragment(), null, true);
                 break;
 
-            case R.id.notification:
-                bundle = new Bundle();
-                bundle.putBoolean(Constants.IS_COMMING_FROM_SETTING, true);
-                ((DashboardActivity) getActivity()).replaceFragment(new NotificationFragment(), bundle, true);
-                break;
+//            case R.id.notification:
+//                bundle = new Bundle();
+//                bundle.putBoolean(Constants.IS_COMMING_FROM_SETTING, true);
+//                ((DashboardActivity) getActivity()).replaceFragment(new NotificationFragment(), bundle, true);
+//                break;
             case  R.id.cityChange:
                 ((DashboardActivity) getActivity()).replaceFragment(new ChangeCityFragment(),null,true);
             default:
@@ -259,7 +260,7 @@ TextView cityChange;
             // set logout flag
             SharedPrefUtils.setLogoutFlag(getActivity(), true);
 
-            startActivity(new Intent(getActivity(), JoinFamilyActivity.class));
+            startActivity(new Intent(getActivity(), ActivityLogin.class));
             getActivity().finish();
 
         } else if (responseData.getResponseCode() == 400) {

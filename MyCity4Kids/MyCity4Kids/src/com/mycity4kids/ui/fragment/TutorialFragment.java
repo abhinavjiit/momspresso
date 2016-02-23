@@ -93,7 +93,7 @@ public class TutorialFragment extends Fragment {
         three = (ImageView) view.findViewById(R.id.three);
         four = (ImageView) view.findViewById(R.id.four);
         five = (ImageView) view.findViewById(R.id.five);
-        six = (ImageView) view.findViewById(R.id.six);
+//        six = (ImageView) view.findViewById(R.id.six);
 
 
         setImageInPager();
@@ -121,9 +121,6 @@ public class TutorialFragment extends Fragment {
                 break;
             case 5:
                 five.setAlpha(0.8f);
-                break;
-            case 6:
-                six.setAlpha(0.8f);
                 break;
 
         }

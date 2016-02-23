@@ -1,6 +1,8 @@
 package com.mycity4kids.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 import com.mycity4kids.R;
 import com.mycity4kids.ui.adapter.TutorialAdapter;
 
+
 public class TutorialActivity extends FragmentActivity {
 
     private ViewPager mViewPager;
@@ -20,7 +23,7 @@ public class TutorialActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Handler handler = new Handler();
         setContentView(R.layout.activity_view_pager);
 
         mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -56,11 +59,11 @@ public class TutorialActivity extends FragmentActivity {
 
     private void navigateTologin() {
 
-//        Intent intent = new Intent(TutorialActivity.this, LandingLoginActivity.class);
+        Intent intent = new Intent(TutorialActivity.this, ActivityLogin.class);
 //        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//        startActivity(intent);
+        startActivity(intent);
 //        finish();
-        mViewPager.setCurrentItem(5);
+//        mViewPager.setCurrentItem(5);
 
 
     }
@@ -77,6 +80,17 @@ public class TutorialActivity extends FragmentActivity {
             @Override
             public void onPageSelected(int i) {
 //                setCurrentIndicator(i);
+                if (i == mViewPager.getAdapter().getCount() - 1) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Intent in = new Intent(TutorialActivity.this, ActivityLogin.class);
+                            in.putExtra("frmJoinFamily", true);
+                            startActivity(in);
+                        }
+                    }, 1000);
+
+                }
             }
 
             @Override

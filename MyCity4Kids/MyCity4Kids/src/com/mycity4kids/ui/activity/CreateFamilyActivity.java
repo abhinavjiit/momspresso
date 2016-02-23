@@ -115,6 +115,7 @@ public class CreateFamilyActivity extends BaseActivity implements View.OnClickLi
         mAdditionalAdult = (TextView) findViewById(R.id.additional_adult);
         scrollView = (ScrollView) findViewById(R.id.mainScroll);
 
+
 //        mSpouseEmail = (EditText) findViewById(R.id.spouse_email);
 //        mSpouseName = (EditText) findViewById(R.id.spouse_name);
 //        mColorfrSpouse = (TextView) findViewById(R.id.color_spouse);

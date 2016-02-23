@@ -70,6 +70,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
 
     private GooglePlusUtils mGooglePlusUtils;
     private EditText mEmailId, mPassword;
+    private TextView mSignUpTextView;
     private Toolbar mToolbar;
     LinearLayout forgotView;
     private boolean filterchange;
@@ -100,45 +101,10 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
 
         mToolbar.setClickable(true);
 
-//        Field titleField = null;
-//        try {
-//            titleField = Toolbar.class.getDeclaredField("mTitleTextView");
-//        } catch (NoSuchFieldException e) {
-//            e.printStackTrace();
-//        }
-//        titleField.setAccessible(true);
-//        TextView barTitleView = null;
-//        try {
-//            barTitleView = (TextView) titleField.get(mToolbar);
-//        } catch (IllegalAccessException e) {
-//            e.printStackTrace();
-//        }
-//        barTitleView.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(ActivityLogin.this, "Hii ", Toast.LENGTH_SHORT).show();
-//
-//            }
-//        });
-//
-//        barTitleView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.drop_downxxhdpi, 0);
-//        barTitleView.setCompoundDrawablePadding(15);
-
         ((LinearLayout) findViewById(R.id.forgot_view)).setGravity(Gravity.CENTER);
 
-//        Bundle extras = getIntent().getExtras();
-//        if (extras != null) {
-//            boolean joinfamily = extras.getBoolean("frmJoinFamily");
-//            if (joinfamily) {
-//                ((ImageView) findViewById(R.id.connect_facebook)).setVisibility(View.GONE);
-//                ((ImageView) findViewById(R.id.connect_googleplus)).setVisibility(View.GONE);
-//                ((LinearLayout) findViewById(R.id.forgot_view)).setGravity(Gravity.LEFT);
-//            }
-//        }
-
         try {
-
+            mSignUpTextView = (TextView) findViewById(R.id.signUpTextView);
             mEmailId = (EditText) findViewById(R.id.email_login);
             mPassword = (EditText) findViewById(R.id.password_login);
             TextView forgotPassword = (TextView) findViewById(R.id.forgot_password);
@@ -146,7 +112,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
             ((TextView) findViewById(R.id.forgot_password)).setOnClickListener(this);
             ((ImageView) findViewById(R.id.connect_facebook)).setOnClickListener(this);
             ((ImageView) findViewById(R.id.connect_googleplus)).setOnClickListener(this);
-
+            mSignUpTextView.setOnClickListener(this);
             forgotPassword.setPaintFlags(forgotPassword.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
 
@@ -640,16 +606,12 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         Intent intent = null;
         switch (v.getId()) {
             case R.id.connect_facebook:
-
-
                 if (ConnectivityUtils.isNetworkEnabled(this)) {
                     showProgressDialog(getString(R.string.please_wait));
-
                     FacebookUtils.facebookLogin(this, this);
                 } else {
                     showToast(getString(R.string.error_network));
                 }
-
                 break;
 
             case R.id.connect_googleplus:
@@ -661,20 +623,17 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                 }
                 break;
 
-
             case R.id.forgot_password:
                 intent = new Intent(this, ForgotPasswordActivity.class);
                 startActivity(intent);
                 break;
-
-
-//            case R.id.arrow:
-//                showToast(getString(R.string.error_network));
-//                filterchange = true;
-//                invalidateOptionsMenu();
-//                break;
+            case R.id.signUpTextView:
+                intent = new Intent(this, LandingLoginActivity.class);
+                startActivity(intent);
+                break;
             default:
                 break;
+
         }
     }
 

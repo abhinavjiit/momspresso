@@ -272,7 +272,7 @@ public class SplashActivity extends BaseActivity {
 
                     Intent intent;
                     if (SharedPrefUtils.getLogoutFlag(this))
-                        intent = new Intent(SplashActivity.this, JoinFamilyActivity.class);
+                        intent = new Intent(SplashActivity.this, ActivityLogin.class);
                     else
                         intent = new Intent(SplashActivity.this, TutorialActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

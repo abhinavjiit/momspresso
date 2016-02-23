@@ -167,7 +167,7 @@ public class SocialSignUpActivity extends BaseActivity implements View.OnClickLi
     public boolean checkValidation() {
         boolean result = true;
 
-        if (mSpousename.getText().toString().equals("")) {
+        if (mSpousename.getText().toString().trim().equals("")) {
             mSpousename.setFocusableInTouchMode(true);
             mSpousename.requestFocus();
             mSpousename.setError(Constants.ENTER_SPOUSENAME);
@@ -221,6 +221,7 @@ public class SocialSignUpActivity extends BaseActivity implements View.OnClickLi
                     Intent intent = new Intent(SocialSignUpActivity.this, ActivityVerifyOTP.class);
                     intent.putExtra("email", newSignupModel.getEmail());
                     intent.putExtra("mobile", newSignupModel.getMobileNumber());
+                    intent.putExtra("signUpData", newSignupModel);
                     startActivity(intent);
 
                 } else if (responseData.getResponseCode() == 400) {

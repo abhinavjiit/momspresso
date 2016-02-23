@@ -52,6 +52,7 @@ import com.mycity4kids.reminders.Reminder;
 import com.mycity4kids.reminders.ShareNotificationReceiver;
 import com.mycity4kids.ui.activity.ActivityEditAppointment;
 import com.mycity4kids.ui.activity.ActivityEditTask;
+import com.mycity4kids.ui.activity.ActivityLogin;
 import com.mycity4kids.ui.activity.ActivityShowAppointment;
 import com.mycity4kids.ui.activity.ActivityShowTask;
 import com.mycity4kids.ui.activity.JoinFamilyActivity;
@@ -630,7 +631,7 @@ public class SyncService extends IntentService implements UpdateListener {
                         // set logout flag
                         SharedPrefUtils.setLogoutFlag((BaseApplication) getApplicationContext(), true);
 
-                        Intent in = new Intent((BaseApplication) getApplicationContext(), JoinFamilyActivity.class);
+                        Intent in = new Intent((BaseApplication) getApplicationContext(), ActivityLogin.class);
                         in.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(in);
                     }

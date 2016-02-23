@@ -3,6 +3,7 @@
     package="com.mycity4kids"
     android:versionCode="19"
     android:versionName="3.0.3">
+
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="22" />
@@ -74,7 +75,7 @@
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/debug_facebook_app_id" />
+            android:value="@string/facebook_app_id" />
 
         <receiver
             android:name="com.mycity4kids.receiver.InstallReferrerReceiver"
@@ -478,8 +479,9 @@
             <intent-filter>
                 <data android:scheme="tagmanager.com.mycity4kids" />
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
         </activity>
 
@@ -504,15 +506,18 @@
         <service android:name="com.mycity4kids.sync.RemainderEmailService" />
         <service android:name="com.mycity4kids.sync.SyncUserInfoService" />
         <service android:name="com.mycity4kids.sync.CompletedTasksService" />
-        <receiver android:name="com.google.android.gms.analytics.AnalyticsReceiver"
+
+        <receiver
+            android:name="com.google.android.gms.analytics.AnalyticsReceiver"
             android:enabled="true">
             <intent-filter>
                 <action android:name="com.google.android.gms.analytics.ANALYTICS_DISPATCH" />
             </intent-filter>
         </receiver>
-        <service android:name="com.google.android.gms.analytics.AnalyticsService"
+        <service
+            android:name="com.google.android.gms.analytics.AnalyticsService"
             android:enabled="true"
-            android:exported="false"/>
+            android:exported="false" />
 
         <receiver
             android:name="com.mycity4kids.gcm.GcmBroadcastReceiver"

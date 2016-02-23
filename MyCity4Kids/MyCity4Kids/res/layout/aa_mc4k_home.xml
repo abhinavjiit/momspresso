@@ -202,92 +202,6 @@
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
-                android:id="@+id/eventsss"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp">
-
-                <LinearLayout
-
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white_color"
-                    android:orientation="vertical">
-
-
-                    <LinearLayout
-
-                        android:id="@+id/eventHeader"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/home_blue"
-                        android:orientation="horizontal"
-                        android:weightSum="1">
-
-
-                        <ImageView
-                            android:id="@+id/img_go_to_events"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_weight=".2"
-                            android:src="@drawable/zoom_list" />
-
-                        <TextView
-                            android:id="@+id/txtEvents"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_weight=".8"
-                            android:paddingBottom="10dp"
-                            android:paddingTop="10dp"
-                            android:text="@string/home_events"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:textColor="@color/white_color"
-                            android:textStyle="bold" />
-
-
-                    </LinearLayout>
-
-                    <ProgressBar
-                        android:id="@+id/eventprogressbar"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone" />
-
-                    <TextView
-                        android:id="@+id/no_events"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:padding="2dp"
-                        android:text="No Events Listed"
-                        android:textColor="@color/grey"
-                        android:textSize="12dp"
-                        android:visibility="gone" />
-
-
-                    <com.mycity4kids.widget.CustomListView
-                        android:id="@+id/eventList"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:divider="@color/dividercolor"
-                        android:dividerHeight="0.3dp" />
-
-                    <TextView
-                        android:id="@+id/go_to_events"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="15dp"
-                        android:text="@string/home_goto_event"
-                        android:textColor="@color/home_light_blue"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -373,6 +287,92 @@
 
                 </LinearLayout>
 
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/eventsss"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp">
+
+                <LinearLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white_color"
+                    android:orientation="vertical">
+
+
+                    <LinearLayout
+
+                        android:id="@+id/eventHeader"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/home_blue"
+                        android:orientation="horizontal"
+                        android:weightSum="1">
+
+
+                        <ImageView
+                            android:id="@+id/img_go_to_events"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight=".2"
+                            android:src="@drawable/zoom_list" />
+
+                        <TextView
+                            android:id="@+id/txtEvents"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight=".8"
+                            android:paddingBottom="10dp"
+                            android:paddingTop="10dp"
+                            android:text="@string/home_events"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:textColor="@color/white_color"
+                            android:textStyle="bold" />
+
+
+                    </LinearLayout>
+
+                    <ProgressBar
+                        android:id="@+id/eventprogressbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/no_events"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:padding="2dp"
+                        android:text="No Events Listed"
+                        android:textColor="@color/grey"
+                        android:textSize="12dp"
+                        android:visibility="gone" />
+
+
+                    <com.mycity4kids.widget.CustomListView
+                        android:id="@+id/eventList"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:divider="@color/dividercolor"
+                        android:dividerHeight="0.3dp" />
+
+                    <TextView
+                        android:id="@+id/go_to_events"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="15dp"
+                        android:text="@string/home_goto_event"
+                        android:textColor="@color/home_light_blue"
+                        android:textStyle="bold" />
+                </LinearLayout>
             </android.support.v7.widget.CardView>
 
         </LinearLayout>

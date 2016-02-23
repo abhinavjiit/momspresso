@@ -21,7 +21,7 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="yes">YES</string>
     <string name="resend_otp"><u>Resend OTP to mobile</u></string>
-
+    <string name="sign_up"><u>SIGN UP</u></string>
 
     <!-- <string name="facebook_app_id">1437325266589625</string>-->
 

@@ -438,7 +438,7 @@ public class ActivitySignUp extends BaseActivity implements View.OnClickListener
 
                     //  showSnackbar(rootLayout, message);
 
-                    Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
 
                     // save in db
 //                    saveDatainDB(responseData);

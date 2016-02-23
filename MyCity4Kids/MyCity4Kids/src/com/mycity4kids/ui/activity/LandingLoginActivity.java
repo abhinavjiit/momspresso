@@ -81,14 +81,14 @@ public class LandingLoginActivity extends BaseActivity implements OnClickListene
             //((LinearLayout)findViewById(R.id.fb_lout_btn)).setOnClickListener(this);
             //((LinearLayout)findViewById(R.id.google_lout_btn)).setOnClickListener(this);
 
-            TextView login = (TextView) findViewById(R.id.email_login_btn);
+//            TextView login = (TextView) findViewById(R.id.email_login_btn);
 
-            ((TextView) findViewById(R.id.email_login_btn)).setOnClickListener(this);
+//            ((TextView) findViewById(R.id.email_login_btn)).setOnClickListener(this);
             ((ImageView) findViewById(R.id.sign_up_btn)).setOnClickListener(this);
             ((ImageView) findViewById(R.id.fb_lout_btn)).setOnClickListener(this);
             ((ImageView) findViewById(R.id.google_lout_btn)).setOnClickListener(this);
 
-            login.setPaintFlags(login.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+//            login.setPaintFlags(login.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
 
             Bundle bundle = getIntent().getExtras();
@@ -195,13 +195,11 @@ public class LandingLoginActivity extends BaseActivity implements OnClickListene
 
                 break;
 
-            case R.id.email_login_btn:
-
-
-//                commented by manish.
-                startActivity(new Intent(this, ActivityLogin.class));
-
-                break;
+//            case R.id.email_login_btn:
+//
+//                startActivity(new Intent(this, ActivityLogin.class));
+//
+//                break;
             case R.id.sign_up_btn:
 
                 Intent intent1 = new Intent(LandingLoginActivity.this, ActivitySignUp.class);

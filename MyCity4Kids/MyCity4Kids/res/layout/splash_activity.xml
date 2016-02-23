@@ -103,7 +103,7 @@
                     android:src="@drawable/white_filled_bg"
                     android:tag="5" />
 
-                <ImageView
+                <!--<ImageView
                     android:id="@+id/six"
                     android:layout_width="10dp"
                     android:layout_height="10dp"
@@ -111,7 +111,7 @@
                     android:layout_marginRight="5dp"
                     android:alpha="0.2"
                     android:src="@drawable/white_filled_bg"
-                    android:tag="6" />
+                    android:tag="6" />-->
             </LinearLayout>
 
             <TextView

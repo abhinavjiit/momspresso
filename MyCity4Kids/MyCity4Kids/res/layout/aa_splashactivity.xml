@@ -52,18 +52,18 @@
         android:id="@+id/sign_up_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
+        android:layout_marginBottom="20dp"
         android:background="@drawable/signup_xxhdpi" />
 
-    <TextView
-        android:id="@+id/email_login_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:paddingBottom="7dp"
-        android:paddingTop="10dp"
-        android:text="EXISTING ACCOUNT? SIGN IN HERE"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/white_color" />
+    <!--<TextView-->
+    <!--android:id="@+id/email_login_btn"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center_horizontal"-->
+    <!--android:paddingBottom="7dp"-->
+    <!--android:paddingTop="10dp"-->
+    <!--android:text="EXISTING ACCOUNT? SIGN IN HERE"-->
+    <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
+    <!--android:textColor="@color/white_color" />-->
 
 </LinearLayout>
