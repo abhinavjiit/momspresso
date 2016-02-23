@@ -95,13 +95,9 @@
         android:id="@+id/searchResultListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/localityLayout"
         android:background="#ffffff"
-        android:cacheColorHint="@color/transparent"
-        android:layout_above="@+id/txt_no_data_business"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="651dp"
-        android:layout_marginStart="651dp" />
+        android:cacheColorHint="@color/transparent" />
 
     <ListView
         android:id="@+id/searchList"

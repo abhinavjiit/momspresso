@@ -456,7 +456,6 @@
                 android:capitalize="sentences"
                 android:gravity="top|left"
                 android:hint="@string/write_comment"
-                android:maxLength="150"
                 android:padding="12dp"
                 android:singleLine="false"
                 android:textAppearance="?android:attr/textAppearanceSmall"
