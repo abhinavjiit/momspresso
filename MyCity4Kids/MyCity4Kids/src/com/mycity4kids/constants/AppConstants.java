@@ -65,6 +65,7 @@ public class AppConstants {
     public static final String ADD_A_LISTING_URL = BASE_URL + "apilistings/create?";
     public static final String REPORT_AN_ERROR_URL = BASE_URL + "apiservices/report?";
     public static final String GET_GOOGLE_COMMON_URL = "http://maps.googleapis.com/maps/api/directions/json";
+    public static final String GET_GOOGLE_ADDRESS_URL = "http://maps.googleapis.com/maps/api/geocode/json";
     public static final String PARENTING_STOP_BLOGS_URL = BASE_URL + "apiparentingstop/blogs?";
     public static final String ARTICLES_BLOGS_DETAILS_URL = BASE_URL + "apiparentingstop/detail_article?";
     public static final String ARTICLE_BLOG_SEARCH_FILTER_URL = BASE_URL + "apiparentingstop/filters_data?";
@@ -277,6 +278,8 @@ public class AppConstants {
     public static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     public static final int PUSH_TOKEN_REQUEST = 1003;
 
+    public static final int GET_ADDRESS_FROM_LATLONG_REQUEST = 1004;
+    public static final int GET_ADDRESS_FROM_LATLONG_REQUEST_DEST = 1005;
     public static final int DEEP_LINK_RESOLVER_REQUEST = 2001;
 
     public static final String PREF_ACCOUNT_NAME = "accountName";

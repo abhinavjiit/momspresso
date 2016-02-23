@@ -1,7 +1,9 @@
 package com.mycity4kids.ui.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -38,7 +40,11 @@ import com.mycity4kids.models.businesseventdetails.DetailMap;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.utils.location.GPSTracker;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class MapFragment extends BaseFragment implements OnClickListener, OnMapReadyCallback {
     private GoogleMap googleMap;
@@ -48,7 +54,8 @@ public class MapFragment extends BaseFragment implements OnClickListener, OnMapR
     private TextView transitBtn;
     public ArrayList<TransitModel> transitList = new ArrayList<>();
 
-
+    String sourceAddressJson;
+    String destAddressJson;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -158,9 +165,37 @@ public class MapFragment extends BaseFragment implements OnClickListener, OnMapR
         googleMap.clear();
         if (isEnableNetwork()) {
 
-            showProgressDialog(getActivity().getResources().getString(R.string.please_wait));
+            GetDirectionController getDirectionController = new GetDirectionController(getActivity(), this);
+            DetailMap detailMap = new DetailMap();
+            detailMap.setLatitude("" + MapUtils.getLocation(getActivity()).latitude);
+            detailMap.setLongitude("" + MapUtils.getLocation(getActivity()).longitude);
+            getDirectionController.getData(AppConstants.GET_ADDRESS_FROM_LATLONG_REQUEST, detailMap);
+
+
+//            String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?saddr=%f,%f&daddr=%s,%s", _latitude,_longitude, mapInfo.getLatitude(),mapInfo.getLongitude());
+//            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+//            startActivity(intent);
+         /*   String sourceAddressJson = String.format(Locale.ENGLISH, "http://maps.googleapis.com/maps/api/geocode/json?sensor=false&latlng=%f,%f", _latitude, _longitude);
+            String destAddressJson = String.format(Locale.ENGLISH, "http://maps.googleapis.com/maps/api/geocode/json?sensor=false&latlng=%s,%s", mapInfo.getLatitude(), mapInfo.getLongitude());
+
+            String sourceAddressString, destAddressString;
+            JSONObject js = null;
+            try {
+                js = new JSONObject(sourceAddressJson);
+                sourceAddressString = ((JSONObject) js.getJSONArray("results").get(0)).getJSONObject("formatted_address").toString();
+                js = new JSONObject(destAddressJson);
+                destAddressString = ((JSONObject) js.getJSONArray("results").get(0)).getJSONObject("formatted_address").toString();
+
+                String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?saddr=%s&daddr=%s", sourceAddressString, destAddressString);
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                startActivity(intent);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }*/
+            /*showProgressDialog(getActivity().getResources().getString(R.string.please_wait));
             GetDirectionController _controller = new GetDirectionController(getActivity(), this);
-            _controller.getData(AppConstants.GET_GOOGLE_MAP_DIRECTIONS, mapInfo);
+            _controller.getData(AppConstants.GET_GOOGLE_MAP_DIRECTIONS, mapInfo);*/
         } else {
             Toast.makeText(getActivity(), "It seems that location services are disabled on your device.", Toast.LENGTH_LONG).show();
         }
@@ -258,10 +293,35 @@ public class MapFragment extends BaseFragment implements OnClickListener, OnMapR
                         mTransitLayout.addView(textView);
                     }
 
-
                 }
                 break;
+            case AppConstants.GET_ADDRESS_FROM_LATLONG_REQUEST:
+                sourceAddressJson=responseData;
+                GetDirectionController getDirectionController = new GetDirectionController(getActivity(), this);
+                DetailMap detailMap = new DetailMap();
+                detailMap.setLatitude(mapInfo.getLatitude());
+                detailMap.setLongitude(mapInfo.getLongitude());
+                getDirectionController.getData(AppConstants.GET_ADDRESS_FROM_LATLONG_REQUEST_DEST, detailMap);
+                break;
+            case AppConstants.GET_ADDRESS_FROM_LATLONG_REQUEST_DEST:
+                destAddressJson=responseData;
 
+                String sourceAddressString, destAddressString;
+                JSONObject js = null;
+                try {
+                    js = new JSONObject(sourceAddressJson);
+                    sourceAddressString = ((JSONObject) js.getJSONArray("results").get(0)).getString("formatted_address");
+                    js = new JSONObject(destAddressJson);
+                    destAddressString = ((JSONObject) js.getJSONArray("results").get(0)).getString("formatted_address");
+
+                    String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?saddr=%s&daddr=%s", sourceAddressString, destAddressString);
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                    startActivity(intent);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                break;
             default:
                 break;
         }
@@ -312,9 +372,35 @@ public class MapFragment extends BaseFragment implements OnClickListener, OnMapR
                 break;
             case R.id.directionBtn:
                 if (isEnableNetwork()) {
-                    googleMap.clear();
+                   /* googleMap.clear();
                     showProgressDialog(getActivity().getResources().getString(R.string.please_wait));
-                    _controller.getData(AppConstants.GET_GOOGLE_MAP_DIRECTIONS, mapInfo);
+                   /* _controller.getData(AppConstants.GET_GOOGLE_MAP_DIRECTIONS, mapInfo);*//*
+                    String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?saddr=%f,%f&daddr=%f,%f", transitList.get(0).getStartLatitude(), transitList.get(0).getStartLongitude(), transitList.get(0).getEndLatitude(), transitList.get(0).getEndLongitude());
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                    startActivity(intent);*/
+                    GPSTracker getCurrentLocation = new GPSTracker(getActivity());
+
+                    double _latitude = getCurrentLocation.getLatitude();
+                    double _longitude = getCurrentLocation.getLongitude();
+                    String sourceAddressJson = String.format(Locale.ENGLISH, "http://maps.googleapis.com/maps/api/geocode/json?sensor=false&latlng=%f,%f", _latitude, _longitude);
+                    String destAddressJson = String.format(Locale.ENGLISH, "http://maps.googleapis.com/maps/api/geocode/json?sensor=false&latlng=%f,%f", mapInfo.getLatitude(), mapInfo.getLongitude());
+
+                    String sourceAddressString, destAddressString;
+                    JSONObject js = null;
+                    try {
+                        js = new JSONObject(sourceAddressJson);
+                        sourceAddressString = ((JSONObject) js.getJSONArray("results").get(0)).getJSONObject("formatted_address").toString();
+                        js = new JSONObject(destAddressJson);
+                        destAddressString = ((JSONObject) js.getJSONArray("results").get(0)).getJSONObject("formatted_address").toString();
+
+                        String uri = String.format(Locale.ENGLISH, "http://maps.google.com/maps?saddr=%s&daddr=%s", sourceAddressString, destAddressString);
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                        startActivity(intent);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
                 } else {
                     Toast.makeText(getActivity(), "It seems that location services are disabled on your device.", Toast.LENGTH_LONG).show();
                 }
