@@ -651,10 +651,10 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
                         ToastUtils.showToast(getApplicationContext(), followData.getResult().getMessage(), Toast.LENGTH_SHORT);
                         if (isFollowing) {
                             isFollowing = false;
-                            ((ImageView) findViewById(R.id.follow_article)).setBackground(getResources().getDrawable(R.drawable.follow_blog));
+                            ((ImageView) findViewById(R.id.follow_article)).setBackgroundResource(R.drawable.follow_blog);
                         } else {
                             isFollowing = true;
-                            ((ImageView) findViewById(R.id.follow_article)).setBackground(getResources().getDrawable(R.drawable.un_follow_icon));
+                            ((ImageView) findViewById(R.id.follow_article)).setBackgroundResource(R.drawable.un_follow_icon);
                         }
                         if (BuildConfig.DEBUG) {
                             Log.e("follow response", followData.getResult().getMessage());
@@ -774,11 +774,11 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
             if (requestCode == Constants.BLOG_FOLLOW_STATUS) {
 
                 if (intent.getStringExtra(Constants.BLOG_ISFOLLOWING).equalsIgnoreCase("0")) {
-                    ((ImageView) findViewById(R.id.follow_article)).setBackground(getResources().getDrawable(R.drawable.follow_blog));
+                    ((ImageView) findViewById(R.id.follow_article)).setBackgroundResource(R.drawable.follow_blog);
                     isFollowing = false;
 
                 } else {
-                    ((ImageView) findViewById(R.id.follow_article)).setBackground(getResources().getDrawable(R.drawable.un_follow_icon));
+                    ((ImageView) findViewById(R.id.follow_article)).setBackgroundResource(R.drawable.un_follow_icon);
                     isFollowing = true;
                 }
             }
@@ -813,10 +813,10 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
         }
         if (!StringUtils.isNullOrEmpty(detailsResponse.getResult().getData().getUser_following_status())) {
             if (detailsResponse.getResult().getData().getUser_following_status().equalsIgnoreCase("0")) {
-                ((ImageView) findViewById(R.id.follow_article)).setBackground(getResources().getDrawable(R.drawable.follow_blog));
+                ((ImageView) findViewById(R.id.follow_article)).setBackgroundResource(R.drawable.follow_blog);
                 isFollowing = false;
             } else {
-                ((ImageView) findViewById(R.id.follow_article)).setBackground(getResources().getDrawable(R.drawable.un_follow_icon));
+                ((ImageView) findViewById(R.id.follow_article)).setBackgroundResource(R.drawable.un_follow_icon);
                 isFollowing = true;
             }
         }
@@ -1017,7 +1017,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
             if (isComingAfterReply == 1) {
                 --isComingAfterReply;
                 View dividerView = new View(this);
-                dividerView.setBackgroundResource(Color.TRANSPARENT);
+                dividerView.setBackgroundColor(Color.TRANSPARENT);
 //                dividerView.setBackgroundColor(Color.parseColor("#e3eaff"));
                 commentLayout.addView(dividerView, LinearLayout.LayoutParams.MATCH_PARENT, 10);
             }

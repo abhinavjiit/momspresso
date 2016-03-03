@@ -63,7 +63,8 @@ public class AdapterKidAdultList extends BaseAdapter {
         holder.name.setText(datalist.get(i).getName());
         try {
 //            holder.name.setTextColor(Color.parseColor(datalist.get(i).getColorCode()));
-            holder.viewColor.setBackgroundColor(Color.parseColor(datalist.get(i).getColorCode()));
+            if (null != datalist.get(i).getColorCode())
+                holder.viewColor.setBackgroundColor(Color.parseColor(datalist.get(i).getColorCode()));
         } catch (Exception e) {
             e.printStackTrace();
         }

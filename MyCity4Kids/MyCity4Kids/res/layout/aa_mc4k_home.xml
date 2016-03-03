@@ -173,10 +173,6 @@
 
                     </LinearLayout>
 
-                    <ListView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-
                     <com.mycity4kids.widget.CustomListView
                         android:id="@+id/home_taskList"
                         android:layout_width="match_parent"

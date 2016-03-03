@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
@@ -131,8 +132,8 @@ public class
                             R.drawable.ic_launcher);
 
                     int requestID = (int) System.currentTimeMillis();
-                    String message = pushNotificationModel.getMessage_id();
-                    String title = pushNotificationModel.getTitle();
+                    String message = Html.fromHtml(pushNotificationModel.getMessage_id()).toString();
+                    String title = Html.fromHtml(pushNotificationModel.getTitle()).toString();
 
                     NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 

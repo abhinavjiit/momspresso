@@ -156,15 +156,15 @@ public class ActivityCreateAppointment extends BaseActivity implements View.OnCl
         listviewImages.isExpanded();
         listviewAttachment.isExpanded();
 
-        attendee.setKeyListener(null);
+//        attendee.setKeyListener(null);
         startDate = (TextView) findViewById(R.id.start_date);
-        startDate.setKeyListener(null);
+//        startDate.setKeyListener(null);
         startTime = (TextView) findViewById(R.id.start_time);
-        startTime.setKeyListener(null);
+//        startTime.setKeyListener(null);
         endDate = (TextView) findViewById(R.id.end_date);
-        endDate.setKeyListener(null);
+//        endDate.setKeyListener(null);
         endTime = (TextView) findViewById(R.id.end_time);
-        endTime.setKeyListener(null);
+//        endTime.setKeyListener(null);
         //save.setOnClickListener(this);
         attendee.setOnClickListener(this);
         whoToRemind.setOnClickListener(this);

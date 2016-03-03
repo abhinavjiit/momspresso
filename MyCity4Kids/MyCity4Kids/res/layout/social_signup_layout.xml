@@ -111,6 +111,7 @@
                     android:background="@null"
                     android:drawableBottom="@drawable/underline"
                     android:inputType="phone"
+                    android:maxLength="10"
                     android:paddingBottom="7dp"
                     android:textColor="@color/black_color" />
 

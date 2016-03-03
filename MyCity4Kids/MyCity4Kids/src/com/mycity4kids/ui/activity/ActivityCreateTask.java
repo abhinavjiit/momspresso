@@ -158,8 +158,8 @@ public class ActivityCreateTask extends BaseActivity implements View.OnClickList
         listviewImages.isExpanded();
         listviewAttachment.isExpanded();
 
-        attendee.setKeyListener(null);
-        dueDate.setKeyListener(null);
+//        attendee.setKeyListener(null);
+//        dueDate.setKeyListener(null);
         //save.setOnClickListener(this);
         attendee.setOnClickListener(this);
         whoToRemind.setOnClickListener(this);

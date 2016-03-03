@@ -1,40 +1,24 @@
 package com.mycity4kids.application;
 
 import android.app.Application;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
-import android.preference.PreferenceManager;
 import android.support.multidex.MultiDex;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.core.CrashlyticsCore;
-
-
-
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
-
-import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.database.BaseDbHelper;
 import com.mycity4kids.models.businesslist.BusinessDataListing;
 import com.mycity4kids.models.parentingstop.CommonParentingList;
 import com.mycity4kids.newmodels.parentingmodel.ArticleFilterListModel;
 
-import io.fabric.sdk.android.Fabric;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.HashMap;
+
+import io.fabric.sdk.android.Fabric;
 
 
 /**
@@ -83,6 +67,7 @@ public class BaseApplication extends Application {
     }
 
     private static ArrayList<CommonParentingList> blogResponse;
+
     public enum TrackerName {
         APP_TRACKER, // Tracker used only in this app.
         GLOBAL_TRACKER, // Tracker used by all the apps from a company. eg: roll-up tracking.
@@ -98,8 +83,10 @@ public class BaseApplication extends Application {
     public static void setBusinessREsponse(ArrayList<BusinessDataListing> businessREsponse) {
         BaseApplication.businessREsponse = businessREsponse;
     }
+
     /**
      * Gets the default {@link Tracker} for this {@link Application}.
+     *
      * @return tracker
      */
  /*   synchronized public Tracker getDefaultTracker() {
@@ -110,8 +97,7 @@ public class BaseApplication extends Application {
         }
         return mTracker;
     }*/
-
-    public  synchronized Tracker getTracker(TrackerName trackerId) {
+    public synchronized Tracker getTracker(TrackerName trackerId) {
         if (!mTrackers.containsKey(trackerId)) {
 
 
@@ -124,18 +110,19 @@ public class BaseApplication extends Application {
         }
         return mTrackers.get(trackerId);
     }
-   /* public synchronized Tracker getTracker() {
 
-        try {
-            final GoogleAnalytics googleAnalytics = GoogleAnalytics.getInstance(this);
-            return googleAnalytics.newTracker(R.xml.app_tracker);
+    /* public synchronized Tracker getTracker() {
 
-        }catch(final Exception e){
-            Log.e("hey", "Failed to initialize Google Analytics V4");
-        }
+         try {
+             final GoogleAnalytics googleAnalytics = GoogleAnalytics.getInstance(this);
+             return googleAnalytics.newTracker(R.xml.app_tracker);
 
-        return null;
-    }*/
+         }catch(final Exception e){
+             Log.e("hey", "Failed to initialize Google Analytics V4");
+         }
+
+         return null;
+     }*/
     /*
 
          * Method to handle basic Google Analytics initialization. This call will
@@ -207,7 +194,12 @@ public class BaseApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-//        Fabric.with(this, new Crashlytics());
+        // workaround for http://code.google.com/p/android/issues/detail?id=20915
+        try {
+            Class.forName("android.os.AsyncTask");
+        } catch (ClassNotFoundException e) {
+        }
+        Fabric.with(this, new Crashlytics());
         setInstance(this);
         //initializeGa();
         // startService(new Intent(this,ReplicationService.class))
