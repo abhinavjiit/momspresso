@@ -1,8 +1,10 @@
 package com.mycity4kids.ui.fragment;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +50,7 @@ import com.mycity4kids.ui.activity.ActivityShowAppointment;
 import com.mycity4kids.ui.activity.ActivityShowTask;
 import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
 import com.mycity4kids.ui.activity.BusinessDetailsActivity;
+import com.mycity4kids.ui.activity.CreateFamilyActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.adapter.AdapterHomeAppointment;
 import com.mycity4kids.ui.adapter.AdapterHomeTask;
@@ -152,9 +155,13 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
             goToCal.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent appointmentIntent = new Intent(getActivity(), ActivityCreateAppointment.class);
-                    startActivity(appointmentIntent);
-
+                    if (StringUtils.isNullOrEmpty("" + SharedPrefUtils.getUserDetailModel(getActivity()).getFamily_id()) ||
+                            SharedPrefUtils.getUserDetailModel(getActivity()).getFamily_id() == 0) {
+                        showCreateFamilyAlert();
+                    } else {
+                        Intent appointmentIntent = new Intent(getActivity(), ActivityCreateAppointment.class);
+                        startActivity(appointmentIntent);
+                    }
                 }
             });
         }
@@ -166,9 +173,13 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
             goToTask.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent TaskIntent = new Intent(getActivity(), ActivityCreateTask.class);
-                    startActivity(TaskIntent);
-
+                    if (StringUtils.isNullOrEmpty("" + SharedPrefUtils.getUserDetailModel(getActivity()).getFamily_id()) ||
+                            SharedPrefUtils.getUserDetailModel(getActivity()).getFamily_id() == 0) {
+                        showCreateFamilyAlert();
+                    } else {
+                        Intent TaskIntent = new Intent(getActivity(), ActivityCreateTask.class);
+                        startActivity(TaskIntent);
+                    }
                 }
             });
         }
@@ -631,26 +642,35 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
             case R.id.go_to_cal:
             case R.id.img_go_to_cal:
             case R.id.txtCal:
-                ((DashboardActivity) getActivity()).replaceFragment(new FragmentCalender(), null, true);
-
+                if (StringUtils.isNullOrEmpty("" + SharedPrefUtils.getUserDetailModel(getActivity()).getFamily_id()) ||
+                        SharedPrefUtils.getUserDetailModel(getActivity()).getFamily_id() == 0) {
+                    showCreateFamilyAlert();
+                } else {
+                    ((DashboardActivity) getActivity()).replaceFragment(new FragmentCalender(), null, true);
+                }
                 break;
 
             case R.id.add_appointment:
-
-
-                intent = new Intent(getActivity(), ActivityCreateAppointment.class);
-                startActivity(intent);
+                if (StringUtils.isNullOrEmpty("" + SharedPrefUtils.getUserDetailModel(getActivity()).getFamily_id()) ||
+                        SharedPrefUtils.getUserDetailModel(getActivity()).getFamily_id() == 0) {
+                    showCreateFamilyAlert();
+                } else {
+                    intent = new Intent(getActivity(), ActivityCreateAppointment.class);
+                    startActivity(intent);
 //                getActivity().getFragmentManager().beginTransaction().remove(getActivity().getApplicationContext()).commit();
-
+                }
                 break;
 
             case R.id.go_to_task:
             case R.id.img_go_to_todo:
             case R.id.txtTodo:
-
-                ((DashboardActivity) getActivity()).setTitle("All Task");
-                ((DashboardActivity) getActivity()).replaceFragment(new FragmentTaskHome(), null, true);
-
+                if (StringUtils.isNullOrEmpty("" + SharedPrefUtils.getUserDetailModel(getActivity()).getFamily_id()) ||
+                        SharedPrefUtils.getUserDetailModel(getActivity()).getFamily_id() == 0) {
+                    showCreateFamilyAlert();
+                } else {
+                    ((DashboardActivity) getActivity()).setTitle("All Task");
+                    ((DashboardActivity) getActivity()).replaceFragment(new FragmentTaskHome(), null, true);
+                }
                 break;
             case R.id.go_to_events:
             case R.id.img_go_to_events:
@@ -690,10 +710,13 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
 
 
             case R.id.add_task:
-
-                intent = new Intent(getActivity(), ActivityCreateTask.class);
-                startActivity(intent);
-
+                if (StringUtils.isNullOrEmpty("" + SharedPrefUtils.getUserDetailModel(getActivity()).getFamily_id()) ||
+                        SharedPrefUtils.getUserDetailModel(getActivity()).getFamily_id() == 0) {
+                    showCreateFamilyAlert();
+                } else {
+                    intent = new Intent(getActivity(), ActivityCreateTask.class);
+                    startActivity(intent);
+                }
                 break;
         }
 
@@ -1701,6 +1724,32 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         super.onDestroyView();
         // call service here for completed tasks
         ((DashboardActivity) getActivity()).UploadCompleteTasks();
+
+    }
+
+    private void showCreateFamilyAlert() {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+
+        dialog.setMessage(getResources().getString(R.string.create_family)).setNegativeButton(getResources().getString(R.string.yes)
+                , new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Intent createFamilyIntent = new Intent(getActivity(), CreateFamilyActivity.class);
+                startActivity(createFamilyIntent);
+                dialog.cancel();
+            }
+        }).setPositiveButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // do nothing
+                dialog.cancel();
+
+            }
+        }).setIcon(android.R.drawable.ic_dialog_alert);
+
+        AlertDialog alert11 = dialog.create();
+        alert11.show();
+
+        alert11.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.home_light_blue));
+        alert11.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.canceltxt_color));
 
     }
 

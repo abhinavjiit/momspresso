@@ -54,6 +54,7 @@ import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.models.user.UserModel;
 import com.mycity4kids.models.user.UserRequest;
 import com.mycity4kids.models.user.UserResponse;
+import com.mycity4kids.newmodels.FamilyInvites;
 import com.mycity4kids.newmodels.UserInviteModel;
 import com.mycity4kids.newmodels.UserInviteResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -168,13 +169,13 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                         UserRequest _requestModel = new UserRequest();
                         _requestModel.setEmailId(emailId_or_mobile);
                         _requestModel.setPassword(password);
-                        _requestModel.setNetworkName("throughMail");
-                        _requestModel.setPush_token(SharedPrefUtils.getDeviceToken(this));
-                        _requestModel.setPlatform("android");
-                        _requestModel.setDevice_model(Build.MODEL + "");
-                        _requestModel.setDevice_os(Build.VERSION.SDK_INT + "");
-                        _requestModel.setImei_no(getImeiNumber() + "");
-                        _requestModel.setManufacturer(Build.MANUFACTURER + "");
+//                        _requestModel.setNetworkName("throughMail");
+//                        _requestModel.setPush_token(SharedPrefUtils.getDeviceToken(this));
+//                        _requestModel.setPlatform("android");
+//                        _requestModel.setDevice_model(Build.MODEL + "");
+//                        _requestModel.setDevice_os(Build.VERSION.SDK_INT + "");
+//                        _requestModel.setImei_no(getImeiNumber() + "");
+//                        _requestModel.setManufacturer(Build.MANUFACTURER + "");
                         LoginController _controller = new LoginController(this, this);
                         _controller.getData(AppConstants.NEW_LOGIN_REQUEST, _requestModel);
                     } else {
@@ -338,14 +339,30 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                         model.setFirst_name(responseData.getResult().getData().getUser().getFirst_name() + " " + responseData.getResult().getData().getUser().getLast_name());
                         SharedPrefUtils.setUserDetailModel(ActivityLogin.this, model);
 
-                        if (StringUtils.isNullOrEmpty(responseData.getResult().getData().getUser().getMobile_number())) {
+                        ArrayList<FamilyInvites> familyInvitesList = responseData.getResult().getData().getFamilyInvites();
+
+                        // Check User already linked with a family or not.
+                        //then check for Invites if present or not
+                        if ((StringUtils.isNullOrEmpty("" + responseData.getResult().getData().getUser().getFamily_id()) ||
+                                responseData.getResult().getData().getUser().getFamily_id() == 0) && !familyInvitesList.isEmpty()) {
                             removeProgressDialog();
-                            Intent updateMobileIntent = new Intent(this, UpdateMobileNumberActivity.class);
-//                            updateMobileIntent.putExtra("activity", "loginActivity");
-                            updateMobileIntent.putExtra("isExistingUser", "1");
-                            updateMobileIntent.putExtra("name", responseData.getResult().getData().getUser().getFirst_name());
-                            updateMobileIntent.putExtra("colorCode", responseData.getResult().getData().getUser().getColor_code());
-                            startActivity(updateMobileIntent);
+
+                            UserInviteModel userInviteModel = new UserInviteModel();
+                            userInviteModel.setUserId("" + responseData.getResult().getData().getUser().getId());
+                            userInviteModel.setEmail(responseData.getResult().getData().getUser().getEmail());
+                            userInviteModel.setMobile(responseData.getResult().getData().getUser().getMobile_number());
+                            userInviteModel.setFamilyInvites(responseData.getResult().getData().getFamilyInvites());
+                            SharedPrefUtils.setUserFamilyInvites(this, new Gson().toJson(userInviteModel).toString());
+
+                            Intent listFamilyInvitesIntent = new Intent(this, ListFamilyInvitesActivity.class);
+                            listFamilyInvitesIntent.putExtra("userInviteData", userInviteModel);
+                            listFamilyInvitesIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(listFamilyInvitesIntent);
+//                            Intent updateMobileIntent = new Intent(this, UpdateMobileNumberActivity.class);
+//                            updateMobileIntent.putExtra("isExistingUser", "1");
+//                            updateMobileIntent.putExtra("name", responseData.getResult().getData().getUser().getFirst_name());
+//                            updateMobileIntent.putExtra("colorCode", responseData.getResult().getData().getUser().getColor_code());
+//                            startActivity(updateMobileIntent);
                             return;
                         }
                         Toast.makeText(ActivityLogin.this, responseData.getResult().getMessage(), Toast.LENGTH_SHORT).show();
@@ -370,83 +387,12 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                         // finish();
                     } else if (responseData.getResponseCode() == 400) {
                         removeProgressDialog();
-
-                        if ("fb".equals(loginMode)) {
-                            if (fbUser != null) {
-                                //new facebook user
-                                Intent i = new Intent(this, SocialSignUpActivity.class);
-                                Bundle bundle = new Bundle();
-                                bundle.putString(Constants.USER_ID, fbUser.getId());
-                                bundle.putString(Constants.USER_NAME, fbUser.getFirstName() + " " + fbUser.getLastName());
-                                bundle.putString(Constants.USER_EMAIL, fbUser.asMap().get("email").toString());
-                                bundle.putString(Constants.ACCESS_TOKEN, accessToken);
-                                bundle.putString(Constants.MODE, "fb");
-                                bundle.putString(Constants.PROFILE_IMAGE, personPhotoUrl);
-                                i.putExtra("userbundle", bundle);
-                                startActivity(i);
-                            }
-                        } else if ("gp".equals(loginMode)) {
-                            //new google plus user
-                            Intent i = new Intent(this, SocialSignUpActivity.class);
-                            Bundle bundle = new Bundle();
-                            bundle.putString(Constants.USER_ID, userId);
-                            bundle.putString(Constants.USER_NAME, currentPersonName);
-                            bundle.putString(Constants.USER_EMAIL, googleEmailId);
-                            bundle.putString(Constants.ACCESS_TOKEN, googleToken);
-                            bundle.putString(Constants.MODE, "gp");
-                            bundle.putString(Constants.PROFILE_IMAGE, personPhotoUrl);
-                            i.putExtra("userbundle", bundle);
-                            startActivity(i);
-                        } else {
-                            Toast.makeText(this, responseData.getResult().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
+                        Toast.makeText(this, responseData.getResult().getMessage(), Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (Exception e) {
                     removeProgressDialog();
                     e.printStackTrace();
-                }
-                break;
-            case AppConstants.UPDATE_MOBILE_FOR_EXISTING_USER_REQUEST:
-                UserResponse responseData = (UserResponse) response.getResponseObject();
-                String message = responseData.getResult().getMessage();
-                removeProgressDialog();
-                if (responseData.getResponseCode() == 200) {
-                    Intent intent = new Intent(this, ActivityVerifyOTP.class);
-                    intent.putExtra("email", SharedPrefUtils.getUserDetailModel(this).getEmail());
-                    intent.putExtra("mobile", mobileNumberForVerification);
-                    intent.putExtra("isExistingUser", "1");
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                } else if (responseData.getResponseCode() == 400) {
-                    Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-                }
-                break;
-            case AppConstants.ACCEPT_OR_REJECT_INVITE_REQUEST:
-                removeProgressDialog();
-                UserInviteResponse rData = (UserInviteResponse) response.getResponseObject();
-                if (rData.getResponseCode() == 201) {
-//                    if (null != rData.getResult().getData().getFamilyInvites() && !rData.getResult().getData().getFamilyInvites().isEmpty()) {
-                    UserInviteModel userInviteModel = new UserInviteModel();
-                    userInviteModel.setUserId("" + rData.getResult().getData().getUserInfo().getId());
-                    userInviteModel.setEmail(rData.getResult().getData().getUserInfo().getEmail());
-                    userInviteModel.setMobile(rData.getResult().getData().getUserInfo().getMobile_number());
-                    userInviteModel.setFamilyInvites(rData.getResult().getData().getFamilyInvites());
-                    SharedPrefUtils.setUserFamilyInvites(this, new Gson().toJson(userInviteModel).toString());
-                    if (null != rData.getResult().getData().getFamilyInvites() && !rData.getResult().getData().getFamilyInvites().isEmpty()) {
-                        Intent intent = new Intent(this, ListFamilyInvitesActivity.class);
-                        intent.putExtra("userInviteData", userInviteModel);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                    } else {
-                        Intent intent = new Intent(this, CreateFamilyActivity.class);
-                        intent.putExtra("userInviteData", userInviteModel);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                    }
-
-                } else if (rData.getResponseCode() == 400) {
-                    Toast.makeText(ActivityLogin.this, rData.getResult().getMessage(), Toast.LENGTH_SHORT).show();
                 }
                 break;
         }

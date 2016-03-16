@@ -13,10 +13,10 @@ public class AppConstants {
 
     //    public static final String STAGING_CLIENT_SERVER_URL = "http://54.169.17.138/";
 
-    public static final String LIVE_URL = "http://webserve.mycity4kids.com/";
-//    public static final String LIVE_URL = "http://54.169.17.138/";
+//    public static final String LIVE_URL = "http://webserve.mycity4kids.com/";
+    public static final String LIVE_URL = "http://54.169.17.138/";
 //    public static final String LIVE_URL = "http://10.42.0.1/";
-//    public static final String LIVE_URL = "http://192.168.2.113/";
+//    public static final String LIVE_URL = "http://192.168.1.12/";
 
 
     //Enable For Testing
@@ -157,8 +157,8 @@ public class AppConstants {
     public static final int DELETE_INVITE = 1012;
     public static final String VERIFY_OTP_URL = BASE_URL + STAGING_USERS_KEY + "/checkOtpV1";
     public static final String NEW_SIGN_UP_URL = BASE_URL + STAGING_USERS_KEY + "/registrationV1/";
-    public static final String NEW_LOGIN_URL = BASE_URL + STAGING_USERS_KEY + "/loginV1/";
-    public static final String CREATE_FAMILY_URL = BASE_URL + STAGING_USERS_KEY + "/createFamilyV1/";
+    public static final String NEW_LOGIN_URL = BASE_URL + STAGING_USERS_KEY + "/loginV2/";
+    public static final String CREATE_FAMILY_URL = BASE_URL + STAGING_USERS_KEY + "/createFamilyV2/";
     public static final String ACCEPT_OR_REJECT_INVITE_URL = BASE_URL + STAGING_USERS_KEY + "/acceptInviteV1/";
     public static final String UPDATE_MOBILE_FOR_EXISTING_USERS_URL = BASE_URL + STAGING_USERS_KEY + "/updateMobileV1/";
     public static final String CONFIRM_MOBILE_OTP_FOR_EXISTING_USERS_URL = BASE_URL + STAGING_USERS_KEY + "/confirmUpdateMobileOtpV1/";

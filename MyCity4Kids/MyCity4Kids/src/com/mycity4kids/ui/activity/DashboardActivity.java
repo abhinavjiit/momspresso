@@ -275,11 +275,21 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             fragment.setArguments(mBundle);
             replaceFragment(fragment, mBundle, true);
         } else if (Constants.TODOLIST_FRAGMENT.equals(fragmentToLoad)) {
-            setTitle("Weekly To-Do");
-            replaceFragment(new FragmentTaskHome(), null, true);
+            if (StringUtils.isNullOrEmpty("" + SharedPrefUtils.getUserDetailModel(this).getFamily_id()) ||
+                    SharedPrefUtils.getUserDetailModel(this).getFamily_id() == 0){
+                showCreateFamilyAlert();
+            }else {
+                setTitle("Weekly To-Do");
+                replaceFragment(new FragmentTaskHome(), null, true);
+            }
         } else if (Constants.CALENDARLIST_FRAGMENT.equals(fragmentToLoad)) {
-            setTitle("Weekly Calender");
-            replaceFragment(new FragmentCalender(), null, true);
+            if (StringUtils.isNullOrEmpty("" + SharedPrefUtils.getUserDetailModel(this).getFamily_id()) ||
+                    SharedPrefUtils.getUserDetailModel(this).getFamily_id() == 0){
+                showCreateFamilyAlert();
+            }else {
+                setTitle("Weekly Calender");
+                replaceFragment(new FragmentCalender(), null, true);
+            }
         } else {
             replaceFragment(new FragmentMC4KHome(), null, false);
         }
@@ -1636,49 +1646,40 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 //TableTaskData taskData = new TableTaskData(BaseApplication.getInstance());
                 //int count = data.getRowsCount() + taskData.getRowsCount();
                 //if (count > 0) {
-                Fragment currentFrag = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-                if (SharedPrefUtils.getHomeCheckFlag(DashboardActivity.this)) {
-                    if (!(currentFrag instanceof FragmentMC4KHome)) {
-                        replaceFragment(new FragmentMC4KHome(), null, false);
-                        setTitle(getTodayTime());
-                    }
-                } else {
-
-                    if (SharedPrefUtils.getFirstTimeCheckFlag(DashboardActivity.this)) {
-                        if (!(currentFrag instanceof FragmentMC4KHome)) {
-                            replaceFragment(new FragmentMC4KHome(), null, false);
-                            setTitle(getTodayTime());
-                        }
-                    } else {
-                        if (!(currentFrag instanceof FragmentCityForKids)) {
-                            replaceFragment(new FragmentCityForKids(), null, false);
-                            setTitle(getTodayTime());
-                        }
-                    }
-                }
+                replaceFragment(new FragmentMC4KHome(), null, false);
+                setTitle(getTodayTime());
 
                 break;
 
             case R.id.rdBtnCalender:
                 // title show current month
-                Utils.pushEvent(DashboardActivity.this, GTMEventType.CALENDAR_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
-                changeVisibiltyOfArrow(true);
-                Calendar c = Calendar.getInstance();
-                setTitle(form.format(c.getTime()).toString());
+                Utils.pushEvent(DashboardActivity.this, GTMEventType.CALENDAR_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "");
+                if (StringUtils.isNullOrEmpty("" + SharedPrefUtils.getUserDetailModel(this).getFamily_id()) ||
+                        SharedPrefUtils.getUserDetailModel(this).getFamily_id() == 0){
+                    showCreateFamilyAlert();
+                }else {
+                    changeVisibiltyOfArrow(true);
+                    Calendar c = Calendar.getInstance();
+                    setTitle(form.format(c.getTime()).toString());
 
-                replaceFragment(new FragmentCalender(), null, true);
-
+                    replaceFragment(new FragmentCalender(), null, true);
+                }
 
                 //  startActivity(new Intent(this,ActivityCreateAppointment.class));
 
                 break;
             case R.id.rdBtnTodo:
                 Utils.pushEvent(DashboardActivity.this, GTMEventType.TODO_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
-                replaceFragment(new FragmentTaskHome(), null, true);
-                setTitle("All Tasks");
-                SharedPrefUtils.setTaskListID(DashboardActivity.this, 0);
-                taskIconFlag = false;
-                refreshMenu();
+                if (StringUtils.isNullOrEmpty("" + SharedPrefUtils.getUserDetailModel(this).getFamily_id()) ||
+                        SharedPrefUtils.getUserDetailModel(this).getFamily_id() == 0){
+                    showCreateFamilyAlert();
+                }else {
+                    replaceFragment(new FragmentTaskHome(), null, true);
+                    setTitle("All Tasks");
+                    SharedPrefUtils.setTaskListID(DashboardActivity.this, 0);
+                    taskIconFlag = false;
+                    refreshMenu();
+                }
                 break;
             case R.id.rdBtnUpcoming:
                 Utils.pushEvent(DashboardActivity.this, GTMEventType.UPCOMING_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
@@ -2625,4 +2626,29 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
+    private void showCreateFamilyAlert() {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+
+        dialog.setMessage(getResources().getString(R.string.create_family)).setNegativeButton(getResources().getString(R.string.yes)
+                , new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Intent createFamilyIntent = new Intent(DashboardActivity.this, CreateFamilyActivity.class);
+                startActivity(createFamilyIntent);
+                dialog.cancel();
+            }
+        }).setPositiveButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // do nothing
+                dialog.cancel();
+
+            }
+        }).setIcon(android.R.drawable.ic_dialog_alert);
+
+        AlertDialog alert11 = dialog.create();
+        alert11.show();
+
+        alert11.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.home_light_blue));
+        alert11.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.canceltxt_color));
+
+    }
 }

@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+
 import com.google.gson.Gson;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -40,6 +41,7 @@ import com.mycity4kids.models.VersionApiModel;
 import com.mycity4kids.models.city.City;
 import com.mycity4kids.models.city.MetroCity;
 import com.mycity4kids.models.configuration.ConfigurationApiModel;
+import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.newmodels.UserInviteModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.sync.PushTokenService;
@@ -215,26 +217,43 @@ public class SplashActivity extends BaseActivity {
 
 
     private void navigateToNextScreen(boolean isConfigurationAvailable) {
+
+        UserInfo userInfo = SharedPrefUtils.getUserDetailModel(this);
         TableAdult _table = new TableAdult(BaseApplication.getInstance());
-        if (_table.getAdultCount() > 0) { // if he signup
+        if (null != userInfo && !StringUtils.isNullOrEmpty(userInfo.getEmail())) { // if he signup
             Log.e("MYCITY4KIDS", "USER logged In");
-            String mobileNumb = SharedPrefUtils.getUserDetailModel(this).getMobile_number();
-            if (StringUtils.isNullOrEmpty(mobileNumb)) {
-                Intent updateMobileIntent = new Intent(this, UpdateMobileNumberActivity.class);
-//                            updateMobileIntent.putExtra("activity", "landingLoginActivity");
-                updateMobileIntent.putExtra("isExistingUser", "1");
-                updateMobileIntent.putExtra("name", SharedPrefUtils.getUserDetailModel(this).getFirst_name());
-                updateMobileIntent.putExtra("colorCode", SharedPrefUtils.getUserDetailModel(this).getColor_code());
-                startActivity(updateMobileIntent);
+
+            startSyncing();
+            startSyncingUserInfo();
+
+            if (StringUtils.isNullOrEmpty("" + userInfo.getFamily_id()) ||
+                    userInfo.getFamily_id() == 0) {
+                String userFamilyInvites = SharedPrefUtils.getUserFamilyInvites(this);
+                UserInviteModel userInviteModel = new Gson().fromJson(userFamilyInvites, UserInviteModel.class);
+                if (null != userFamilyInvites && !userFamilyInvites.isEmpty()
+                        && (null != userInviteModel.getFamilyInvites() && !userInviteModel.getFamilyInvites().isEmpty())) {
+                    //User Signed in but has not created family.
+                    Intent intent = new Intent(SplashActivity.this, ListFamilyInvitesActivity.class);
+                    intent.putParcelableArrayListExtra("familyInvites", userInviteModel.getFamilyInvites());
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Intent intent = new Intent(SplashActivity.this, DashboardActivity.class);
+                    if (!StringUtils.isNullOrEmpty(_deepLinkURL)) {
+                        intent.putExtra(AppConstants.DEEP_LINK_URL, _deepLinkURL);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP/*|Intent.FLAG_ACTIVITY_NEW_TASK*/);
+                    }
+                    startActivity(intent);
+                    finish();
+                }
+
             } else {
-                startSyncing();
-                startSyncingUserInfo();
                 Intent intent = new Intent(SplashActivity.this, DashboardActivity.class);
                 if (!StringUtils.isNullOrEmpty(_deepLinkURL)) {
                     intent.putExtra(AppConstants.DEEP_LINK_URL, _deepLinkURL);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP/*|Intent.FLAG_ACTIVITY_NEW_TASK*/);
                 }
-
                 startActivity(intent);
                 finish();
             }
@@ -251,34 +270,15 @@ public class SplashActivity extends BaseActivity {
                 });
                 return;
             } else {
-                String userFamilyInvites = SharedPrefUtils.getUserFamilyInvites(this);
-                if (null != userFamilyInvites && !userFamilyInvites.isEmpty()) {
-                    //User Signed in but has not created family.
-                    UserInviteModel userInviteModel = new Gson().fromJson(userFamilyInvites, UserInviteModel.class);
-                    if (null != userInviteModel.getFamilyInvites() && !userInviteModel.getFamilyInvites().isEmpty()) {
-                        Intent intent = new Intent(SplashActivity.this, ListFamilyInvitesActivity.class);
-                        intent.putExtra("userInviteData", userInviteModel);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        Intent intent = new Intent(SplashActivity.this, CreateFamilyActivity.class);
-                        intent.putExtra("userInviteData", userInviteModel);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                        finish();
-                    }
-                } else {
 
-                    Intent intent;
-                    if (SharedPrefUtils.getLogoutFlag(this))
-                        intent = new Intent(SplashActivity.this, ActivityLogin.class);
-                    else
-                        intent = new Intent(SplashActivity.this, TutorialActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    finish();
-                }
+                Intent intent;
+                if (SharedPrefUtils.getLogoutFlag(this))
+                    intent = new Intent(SplashActivity.this, ActivityLogin.class);
+                else
+                    intent = new Intent(SplashActivity.this, TutorialActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
             }
         }
         Log.d("GCM Token ", SharedPrefUtils.getDeviceToken(this));
@@ -478,6 +478,7 @@ public class SplashActivity extends BaseActivity {
             Container container = containerHolder.getContainer();
             registerCallbacksForContainer(container);
         }
+
         public static void registerCallbacksForContainer(Container container) {
             // Register two custom function call macros to the container.
             //       container.registerFunctionCallMacroCallback("increment", new CustomMacroCallback());
@@ -488,6 +489,7 @@ public class SplashActivity extends BaseActivity {
         }
 
     }
+
     private void displayErrorToUser(int stringKey) {
         AlertDialog alertDialog = new AlertDialog.Builder(this).create();
         alertDialog.setTitle("Error");

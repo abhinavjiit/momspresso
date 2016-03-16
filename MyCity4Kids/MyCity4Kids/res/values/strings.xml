@@ -344,5 +344,6 @@
     <string name="new_yes">YES</string>
     <string name="new_cancel">CANCEL</string>
     <string name="load_error">Failed to load container</string>
+    <string name="create_family">Please create family to continue to use the family calendar.</string>
 
 </resources>

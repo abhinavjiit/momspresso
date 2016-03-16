@@ -793,6 +793,7 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
             @Override
             public void onClick(View v) {
                 mAdultContainer.removeView(convertView);
+                used_colors.remove("adult" + convertView.getId());
             }
         });
 

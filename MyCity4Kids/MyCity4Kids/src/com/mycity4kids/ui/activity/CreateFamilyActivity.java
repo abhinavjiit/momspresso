@@ -87,7 +87,7 @@ public class CreateFamilyActivity extends BaseActivity implements View.OnClickLi
     boolean isKIDColor;
     static boolean isKIDBdy;
     private Dialog mColorPickerDialog;
-    private UserInviteModel userInviteModel;
+//    private UserInviteModel userInviteModel;
 
     private HashMap<String, String> used_colors = new HashMap<>();
 
@@ -104,8 +104,8 @@ public class CreateFamilyActivity extends BaseActivity implements View.OnClickLi
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Family Details");
 
-        if (null != getIntent().getExtras())
-            userInviteModel = getIntent().getExtras().getParcelable("userInviteData");
+//        if (null != getIntent().getExtras())
+//            userInviteModel = getIntent().getExtras().getParcelable("userInviteData");
 
         rootLayout = (LinearLayout) findViewById(R.id.root);
         mAdultContainer = (LinearLayout) findViewById(R.id.internal_adult_layout);
@@ -130,8 +130,10 @@ public class CreateFamilyActivity extends BaseActivity implements View.OnClickLi
         mKidsbdy.setOnClickListener(this);
         mColorfrKid.setOnClickListener(this);
 //        mColorfrSpouse.setOnClickListener(this);
-        mColorfrKid.setTag("2");
-        used_colors.put("kid0", "2");
+        mColorfrKid.setTag("3");
+        used_colors.put("kid0", "3");
+
+        used_colors.put("spouse1", "1");
         addDynamicAdult();
     }
 
@@ -440,10 +442,10 @@ public class CreateFamilyActivity extends BaseActivity implements View.OnClickLi
 
     private CreateFamilyModel getCreateFamilyRequestModel() {
         CreateFamilyModel createFamilyModel = new CreateFamilyModel();
-        createFamilyModel.setUserId(userInviteModel.getUserId());
+        createFamilyModel.setUserId(SharedPrefUtils.getUserDetailModel(this).getId() + "");
         createFamilyModel.setFamilyName(mFamilyName.getText().toString());
-        createFamilyModel.setProfileImageUrl(userInviteModel.getProfileImgUrl());
-        createFamilyModel.setUserColorCode(userInviteModel.getColorCode());
+//        createFamilyModel.setProfileImageUrl(userInviteModel.getProfileImgUrl());
+//        createFamilyModel.setUserColorCode(userInviteModel.getColorCode());
 
 //        if (signUpFlag)
 //            SharedPrefUtils.setSignupFlag(this, 0);
@@ -607,6 +609,7 @@ public class CreateFamilyActivity extends BaseActivity implements View.OnClickLi
             @Override
             public void onClick(View v) {
                 mAdultContainer.removeView(convertView);
+                used_colors.remove("adult" + convertView.getId());
             }
         });
 
