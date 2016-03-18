@@ -10,16 +10,18 @@ import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.Session;
@@ -56,8 +58,9 @@ import com.mycity4kids.models.user.UserRequest;
 import com.mycity4kids.models.user.UserResponse;
 import com.mycity4kids.newmodels.FamilyInvites;
 import com.mycity4kids.newmodels.UserInviteModel;
-import com.mycity4kids.newmodels.UserInviteResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.widget.CustomFontEditText;
+import com.mycity4kids.widget.CustomFontTextView;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -70,8 +73,8 @@ import java.util.ArrayList;
 public class ActivityLogin extends BaseActivity implements View.OnClickListener, IPlusClient, IFacebookUser {
 
     private GooglePlusUtils mGooglePlusUtils;
-    private EditText mEmailId, mPassword;
-    private TextView mSignUpTextView;
+    private CustomFontEditText mEmailId, mPassword;
+    CustomFontTextView signinTextView;
     private Toolbar mToolbar;
     LinearLayout forgotView;
     private boolean filterchange;
@@ -85,36 +88,30 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
     private GraphUser fbUser;
 
     private String loginMode = "";
-//    private GetAppointmentController _appointmentcontroller;
-//    private GetTaskController _taskcontroller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Utils.pushOpenScreenEvent(ActivityLogin.this, "Login Screen", SharedPrefUtils.getUserDetailModel(this).getId() + "");
         setContentView(R.layout.aa_loginform);
-
         forgotView = (LinearLayout) findViewById(R.id.forgot_view);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Sign In");
-
-        mToolbar.setClickable(true);
 
         ((LinearLayout) findViewById(R.id.forgot_view)).setGravity(Gravity.CENTER);
 
         try {
-            mSignUpTextView = (TextView) findViewById(R.id.signUpTextView);
-            mEmailId = (EditText) findViewById(R.id.email_login);
-            mPassword = (EditText) findViewById(R.id.password_login);
-            TextView forgotPassword = (TextView) findViewById(R.id.forgot_password);
+            mEmailId = (CustomFontEditText) findViewById(R.id.email_login);
+            mPassword = (CustomFontEditText) findViewById(R.id.password_login);
+            signinTextView = (CustomFontTextView) findViewById(R.id.signinTextView);
+            mEmailId.addTextChangedListener(mTextWatcher);
+            mPassword.addTextChangedListener(mTextWatcher);
 
-            ((TextView) findViewById(R.id.forgot_password)).setOnClickListener(this);
-            ((ImageView) findViewById(R.id.connect_facebook)).setOnClickListener(this);
-            ((ImageView) findViewById(R.id.connect_googleplus)).setOnClickListener(this);
-            mSignUpTextView.setOnClickListener(this);
-            forgotPassword.setPaintFlags(forgotPassword.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+            signinTextView.setEnabled(false);
+
+            signinTextView.setOnClickListener(this);
+            ((CustomFontTextView) findViewById(R.id.forgot_password)).setOnClickListener(this);
+            ((CustomFontTextView) findViewById(R.id.connect_facebook)).setOnClickListener(this);
+            ((CustomFontTextView) findViewById(R.id.connect_googleplus)).setOnClickListener(this);
+//            forgotPassword.setPaintFlags(forgotPassword.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
 
         } catch (Exception e) {
@@ -122,71 +119,6 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         }
         mGooglePlusUtils = new GooglePlusUtils(this, this);
 
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-
-        if (filterchange) {
-            menu.clear();
-            MenuInflater inflater = getMenuInflater();
-            inflater.inflate(R.menu.forgot_password, menu);
-            MenuItem item = menu.findItem(R.id.save);
-            MenuItemCompat.setActionView(item, R.layout.aa_filtericon);
-            View view = MenuItemCompat.getActionView(item);
-            ImageView img = (ImageView) view.findViewById(R.id.filter);
-            img.setImageResource(R.drawable.filter_xxhdpi);
-        }
-
-
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        // according to fragment change it
-        getMenuInflater().inflate(R.menu.forgot_password, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-
-
-            case R.id.save:
-                if (isDataValid()) {
-                    if (ConnectivityUtils.isNetworkEnabled(this)) {
-                        showProgressDialog(getString(R.string.please_wait));
-                        //mProgressDialog=ProgressDialog.show(this, "", "Please Wait...",true,false);
-                        loginMode = "email";
-                        String emailId_or_mobile = mEmailId.getText().toString().trim();
-                        String password = mPassword.getText().toString().trim();
-                        UserRequest _requestModel = new UserRequest();
-                        _requestModel.setEmailId(emailId_or_mobile);
-                        _requestModel.setPassword(password);
-//                        _requestModel.setNetworkName("throughMail");
-//                        _requestModel.setPush_token(SharedPrefUtils.getDeviceToken(this));
-//                        _requestModel.setPlatform("android");
-//                        _requestModel.setDevice_model(Build.MODEL + "");
-//                        _requestModel.setDevice_os(Build.VERSION.SDK_INT + "");
-//                        _requestModel.setImei_no(getImeiNumber() + "");
-//                        _requestModel.setManufacturer(Build.MANUFACTURER + "");
-                        LoginController _controller = new LoginController(this, this);
-                        _controller.getData(AppConstants.NEW_LOGIN_REQUEST, _requestModel);
-                    } else {
-                        showToast(getString(R.string.error_network));
-                    }
-                }
-
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     @Override
@@ -573,9 +505,30 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                 intent = new Intent(this, ForgotPasswordActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.signUpTextView:
-                intent = new Intent(this, LandingLoginActivity.class);
-                startActivity(intent);
+            case R.id.signinTextView:
+                if (isDataValid()) {
+                    if (ConnectivityUtils.isNetworkEnabled(this)) {
+                        showProgressDialog(getString(R.string.please_wait));
+                        //mProgressDialog=ProgressDialog.show(this, "", "Please Wait...",true,false);
+                        loginMode = "email";
+                        String emailId_or_mobile = mEmailId.getText().toString().trim();
+                        String password = mPassword.getText().toString().trim();
+                        UserRequest _requestModel = new UserRequest();
+                        _requestModel.setEmailId(emailId_or_mobile);
+                        _requestModel.setPassword(password);
+//                        _requestModel.setNetworkName("throughMail");
+//                        _requestModel.setPush_token(SharedPrefUtils.getDeviceToken(this));
+//                        _requestModel.setPlatform("android");
+//                        _requestModel.setDevice_model(Build.MODEL + "");
+//                        _requestModel.setDevice_os(Build.VERSION.SDK_INT + "");
+//                        _requestModel.setImei_no(getImeiNumber() + "");
+//                        _requestModel.setManufacturer(Build.MANUFACTURER + "");
+                        LoginController _controller = new LoginController(this, this);
+                        _controller.getData(AppConstants.NEW_LOGIN_REQUEST, _requestModel);
+                    } else {
+                        showToast(getString(R.string.error_network));
+                    }
+                }
                 break;
             default:
                 break;
@@ -705,4 +658,34 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         }
 
     }
+
+    //  create a textWatcher member
+    private TextWatcher mTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            // check Fields For Empty Values
+            checkFieldsForEmptyValues();
+        }
+    };
+
+    void checkFieldsForEmptyValues() {
+
+        String s1 = mEmailId.getText().toString();
+        String s2 = mPassword.getText().toString();
+
+        if (s1.equals("") || s2.equals("")) {
+            signinTextView.setEnabled(false);
+        } else {
+            signinTextView.setEnabled(true);
+        }
+    }
+
 }
