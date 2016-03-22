@@ -50,6 +50,11 @@ public class ImageUploadController extends BaseController {
                 serviceRequest.setUrl(AppConstants.IMAGE_UPLOAD_URL);
                 break;
             }
+            case AppConstants.IMAGE_EDITOR_UPLOAD_REQUEST: {
+                serviceRequest.setPostData(setRequestParameters(requestData));
+                serviceRequest.setUrl(AppConstants.IMAGE_EDITOR_UPLOAD_URL);
+                break;
+            }
 
             case AppConstants.FILE_UPLOAD_REQ: {
                 serviceRequest.setPostData(setRequestParameters(requestData));
@@ -62,7 +67,8 @@ public class ImageUploadController extends BaseController {
                 break;
             }
             case AppConstants.FILE_UPLOAD_REQ_TASK: {
-                serviceRequest.setPostData(setRequestParameters(requestData));
+                serviceRequest.setPostData(
+                        setRequestParameters(requestData));
                 serviceRequest.setUrl(AppConstants.FILE_UPLOAD_URL_TASK);
                 break;
             }
@@ -86,8 +92,9 @@ public class ImageUploadController extends BaseController {
             //nameValuePairs.add(new BasicNameValuePair("user_id", imgUploadRq.getUser_id() ));
             //nameValuePairs.add(new BasicNameValuePair("sessionId", imgUploadRq.getSessionId() ));
             //nameValuePairs.add(new BasicNameValuePair("profileId", imgUploadRq.getProfileId() ));
-            nameValuePairs.add(new BasicNameValuePair("file", imgUploadRq.getImage()));
-            nameValuePairs.add(new BasicNameValuePair("type", imgUploadRq.getType()));
+            nameValuePairs.add(new BasicNameValuePair("file", imgUploadRq.getFile()));
+           // nameValuePairs.add(new BasicNameValuePair("type", imgUploadRq.getType()));
+            nameValuePairs.add(new BasicNameValuePair("imageType", imgUploadRq.getImageType()));
             Log.i("imageUpload", nameValuePairs.toString());
 //            encodedEntity = new UrlEncodedFormEntity(nameValuePairs);
         } catch (Exception e) {
@@ -123,6 +130,20 @@ public class ImageUploadController extends BaseController {
         switch (response.getDataType()) {
             case AppConstants.IMAGE_UPLOAD_REQUEST:
                 CommonResponse _forgotResponse;
+                if (response != null) {
+                    String responseDatta = new String(response.getResponseData());
+                    System.out.println("img response " + responseDatta);
+
+                    _forgotResponse = new Gson().fromJson(responseDatta, CommonResponse.class);
+                    response.setResponseObject(_forgotResponse);
+                    sendResponseToScreen(response);
+                } else {
+                    sendResponseToScreen(null);
+                }
+
+                break;
+            case AppConstants.IMAGE_EDITOR_UPLOAD_REQUEST:
+
                 if (response != null) {
                     String responseDatta = new String(response.getResponseData());
                     System.out.println("img response " + responseDatta);

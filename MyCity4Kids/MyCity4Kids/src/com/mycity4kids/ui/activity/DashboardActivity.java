@@ -58,6 +58,8 @@ import com.mycity4kids.dbtable.TaskTableAttendee;
 import com.mycity4kids.dbtable.TaskTableFile;
 import com.mycity4kids.dbtable.TaskTableNotes;
 import com.mycity4kids.dbtable.TaskTableWhoToRemind;
+import com.mycity4kids.editor.DraftListView;
+import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.enums.DialogButtonEvent;
 import com.mycity4kids.enums.DialogEnum;
 import com.mycity4kids.enums.ParentingFilterType;
@@ -239,7 +241,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         // onclick events
         findViewById(R.id.rdBtnToday).setOnClickListener(this);
         findViewById(R.id.rdBtnCalender).setOnClickListener(this);
-        findViewById(R.id.rdBtnTodo).setOnClickListener(this);
+      //  findViewById(R.id.rdBtnTodo).setOnClickListener(this);
         findViewById(R.id.rdBtnUpcoming).setOnClickListener(this);
         findViewById(R.id.feed_back).setOnClickListener(this);
 
@@ -350,14 +352,16 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
         findViewById(R.id.rdBtnKids).setOnClickListener(this);
         findViewById(R.id.rdBtnParentingBlogs).setOnClickListener(this);
+        findViewById(R.id.editor).setOnClickListener(this);
+        findViewById(R.id.drafts).setOnClickListener(this);
         findViewById(R.id.txvSettings).setOnClickListener(this);
-        findViewById(R.id.txvHelp).setOnClickListener(this);
+      //  findViewById(R.id.txvHelp).setOnClickListener(this);
         findViewById(R.id.imgProfile).setOnClickListener(this);
         findViewById(R.id.txvUserName).setOnClickListener(this);
 
         findViewById(R.id.txvfeedback).setOnClickListener(this);
         findViewById(R.id.txvrate).setOnClickListener(this);
-        findViewById(R.id.txvtelfrnd).setOnClickListener(this);
+   //     findViewById(R.id.txvtelfrnd).setOnClickListener(this);
 
         findViewById(R.id.back_month).setOnClickListener(this);
         findViewById(R.id.next_month).setOnClickListener(this);
@@ -1672,14 +1676,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 //  startActivity(new Intent(this,ActivityCreateAppointment.class));
 
                 break;
-            case R.id.rdBtnTodo:
+           /* case R.id.rdBtnTodo:
                 Utils.pushEvent(DashboardActivity.this, GTMEventType.TODO_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
                 replaceFragment(new FragmentTaskHome(), null, true);
                 setTitle("All Tasks");
                 SharedPrefUtils.setTaskListID(DashboardActivity.this, 0);
                 taskIconFlag = false;
                 refreshMenu();
-                break;
+                break;*/
             case R.id.rdBtnUpcoming:
                 Utils.pushEvent(DashboardActivity.this, GTMEventType.UPCOMING_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
                 Constants.IS_SEARCH_LISTING = false;
@@ -1694,7 +1698,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 replaceFragment(fragment, bundle, true);
                 break;
             case R.id.rdBtnKids:
-                Utils.pushEvent(DashboardActivity.this, GTMEventType.RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
+                Utils.pushEvent(DashboardActivity.this, GTMEventType.RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "");
                 Constants.IS_SEARCH_LISTING = false;
                 changeVisibiltyOfArrow(false);
                 setTitle("Kids Resources");
@@ -1706,6 +1710,33 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 setTitle("Articles");
                 replaceFragment(new ArticlesFragment(), null, true);
                 break;
+            case R.id.editor:
+                Intent intent1 = new Intent(DashboardActivity.this, EditorPostActivity.class);
+                Bundle bundle5 = new Bundle();
+                bundle5.putString(EditorPostActivity.TITLE_PARAM, "");
+                bundle5.putString(EditorPostActivity.CONTENT_PARAM, "");
+                bundle5.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
+                        getString(R.string.example_post_title_placeholder));
+                bundle5.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
+                        getString(R.string.example_post_content_placeholder));
+                bundle5.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
+                bundle5.putString("from","dashboard");
+                intent1.putExtras(bundle5);
+                startActivity(intent1);
+                break;
+            case R.id.drafts:
+                Intent intent5 = new Intent(DashboardActivity.this, DraftListView.class);
+              /*  Bundle bundle5 = new Bundle();
+                bundle5.putString(EditorPostActivity.TITLE_PARAM, "");
+                bundle5.putString(EditorPostActivity.CONTENT_PARAM, "");
+                bundle5.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
+                        getString(R.string.example_post_title_placeholder));
+                bundle5.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
+                        getString(R.string.example_post_content_placeholder));
+                bundle5.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
+                intent1.putExtras(bundle5);*/
+                startActivity(intent5);
+                break;
             case R.id.txvSettings:
                 Utils.pushEvent(DashboardActivity.this, GTMEventType.SETTINGS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
                 changeVisibiltyOfArrow(false);
@@ -1713,14 +1744,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 replaceFragment(new FragmentSetting(), null, true);
                 break;
 
-            case R.id.txvHelp:
+           /* case R.id.txvHelp:
                 Utils.pushEvent(DashboardActivity.this, GTMEventType.HELP_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
                 Intent intent = new Intent(DashboardActivity.this, LoadWebViewActivity.class);
                 intent.putExtra(Constants.WEB_VIEW_URL, "http://www.mycity4kids.com/mobile#faq");
                 startActivity(intent);
 //                changeVisibiltyOfArrow(false);
 
-                break;
+                break;*/
 
             case R.id.txvfeedback:
                 Intent intentEmail = new Intent(Intent.ACTION_SEND);
@@ -1744,7 +1775,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 }
                 break;
 
-            case R.id.txvtelfrnd:
+            /*case R.id.txvtelfrnd:
                 Utils.pushEvent(DashboardActivity.this, GTMEventType.TELLFRIEND_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
                 Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
@@ -1752,7 +1783,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 String shareMessage = "I just downloaded the amazing mycity4kids mobile app. Check it out http://www.mycity4kids.com/mobile";
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
                 startActivity(Intent.createChooser(shareIntent, "mycity4kids").setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                break;
+                break;*/
 
             case R.id.feed_back:
                 Utils.pushEvent(DashboardActivity.this, GTMEventType.FEEDBACK_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");

@@ -65,7 +65,7 @@
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyCLaeioxT3JtDNGj4aczM_Clno7T_WTfWU" />
+            android:value="AIzaSyBlflVAmoQ4ec6vK1gcsJYY2f2TNzYHhfU" />
 
         <!--// this is old one keyyyyy-->
         <meta-data
@@ -460,7 +460,20 @@
         <activity
             android:name=".ui.activity.NewLoginActivity"
             android:label="@string/title_activity_new_login"></activity>
-
+        <activity
+            android:name=".editor.EditorPostActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/EditorTheme"></activity>
+        <activity
+            android:name=".editor.DraftListView"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.nnn"></activity>
+        <activity
+            android:name=".editor.BlogPage"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".editor.ArticleImageTagUpload"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.mycity4kids.reminders.AlarmDialogActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"

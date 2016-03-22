@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="10dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="10dp">
+
+    <LinearLayout
+        android:id="@+id/titleContainer"
+        android:layout_width="match_parent"
+        android:layout_height="67dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:weightSum="1">
+
+            <TextView
+                android:id="@+id/txvArticleTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_gravity="top"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="top"
+                android:maxLines="3"
+                android:paddingLeft="10dp"
+                android:singleLine="false"
+                android:text="@string/title"
+                android:textColor="@color/black_color"
+                android:textSize="20dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_gravity="bottom"
+                android:gravity="bottom"
+                android:weightSum="1">
+
+
+                <TextView
+                    android:id="@+id/txvPublishDate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_weight=".4"
+                    android:fontFamily="sans-serif"
+                    android:gravity="left"
+                    android:layout_gravity="bottom"
+                    android:singleLine="true"
+                    android:text="@string/article_publish_date"
+                    android:textColor="@color/gray2"
+                    android:textSize="12dp" />
+
+            </LinearLayout>
+            <ImageView
+                android:id="@+id/img_menu"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:padding="10dp"
+                android:src="@drawable/ic_more_vert_black_24dp" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

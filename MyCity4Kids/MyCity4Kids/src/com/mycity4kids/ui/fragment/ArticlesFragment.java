@@ -14,6 +14,7 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -28,6 +29,7 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.ParentingStopController;
 import com.mycity4kids.controller.ParentingStopSearchController;
+import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.enums.ParentingFilterType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.parentingfilter.ParentingSearchRequest;
@@ -72,7 +74,7 @@ public class ArticlesFragment extends BaseFragment {
     private ViewPager mViewPager;
     TabsPagerAdapter tabsPagerAdapter;
     ArticleModelNew.AllArticles NewdataList;
-
+ImageView addDraft;
     String searchName = "";
     int currentPagePosition = 0;
     ArticleModelNew.AllArticles initialList;
@@ -86,10 +88,26 @@ public class ArticlesFragment extends BaseFragment {
         Utils.pushOpenScreenEvent(getActivity(), "Blogs Dashboard", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
 
         View view = inflater.inflate(R.layout.aa_fragment_article_new, null);
-
+        addDraft=(ImageView) view.findViewById(R.id.addDraft);
         mViewPager = (ViewPager) view.findViewById(R.id.viewpager);
         mSlidingTabLayout = (TabLayout) view.findViewById(R.id.sliding_tabs);
-
+        /*addDraft.setOnClickListener(new OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        Intent intent1 = new Intent(getActivity(), EditorPostActivity.class);
+        Bundle bundle5 = new Bundle();
+        bundle5.putString(EditorPostActivity.TITLE_PARAM, "");
+        bundle5.putString(EditorPostActivity.CONTENT_PARAM, "");
+        bundle5.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
+                getString(R.string.example_post_title_placeholder));
+        bundle5.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
+                getString(R.string.example_post_content_placeholder));
+        bundle5.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
+        bundle5.putString("from","DraftListView");
+        intent1.putExtras(bundle5);
+        startActivity(intent1);
+    }
+});*/
         initialList = new ArticleModelNew().new AllArticles();
 
         try {
