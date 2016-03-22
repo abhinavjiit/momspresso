@@ -166,6 +166,9 @@ public class AppConstants {
     public static final String UPDATE_PUSH_TOKEN_URL = STAGING_INTERNAL_SERVER_URL + STAGING_USERS_KEY + "/updatePushTokenV1?";
     public static final String ADD_ADULT_AND_KIDS_URL = STAGING_INTERNAL_SERVER_URL + STAGING_USERS_KEY + "/addAdultAndKidsV1/";
 
+    //New Text Editor and Blogs Changes APIs
+    public static final String GET_BLOGGER_DASHBOARD_URL = BASE_URL + "apiblogs/bloggerDashboardData?";
+    public static final String GET_BLOGGER_PUBLISHED_ARTICLES_URL = BASE_URL + "apiblogs/publishedArticle?";
 
     public static final int LOGIN_REQUEST = 0;
     public static final int GOOGLE_REQUEST = 1;
@@ -280,6 +283,11 @@ public class AppConstants {
 
     public static final int GET_ADDRESS_FROM_LATLONG_REQUEST = 1004;
     public static final int GET_ADDRESS_FROM_LATLONG_REQUEST_DEST = 1005;
+
+    //New Text Editor and BLogs Changes
+    public static final int GET_BLOGGER_DASHBOARD_REQUEST = 1006;
+    public static final int GET_BLOGGER_PUBLISHED_ARTICLES_REQUEST = 1007;
+
     public static final int DEEP_LINK_RESOLVER_REQUEST = 2001;
 
     public static final String PREF_ACCOUNT_NAME = "accountName";

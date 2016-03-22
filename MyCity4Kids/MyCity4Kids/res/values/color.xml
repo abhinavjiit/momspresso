@@ -92,5 +92,7 @@
     <color name="ColorPrimary">#00897B</color>
     <color name="ColorPrimaryDark">#00695C</color>
 
-    <color name="login_grey">#8d8d8d</color>
+    <color name="login_grey">#cccccc</color>
+    <color name="login_line_grey">#e0e0e0</color>
+
 </resources>

@@ -175,7 +175,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/login_grey" />
+                    android:background="@color/login_line_grey" />
 
 
                 <!--<TextView-->
@@ -202,7 +202,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/login_grey" />
+                    android:background="@color/login_line_grey" />
 
                 <com.mycity4kids.widget.CustomFontTextView
                     android:id="@+id/signinTextView"
