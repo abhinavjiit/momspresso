@@ -86,7 +86,7 @@ public class BloggerDashboardAndPublishedArticlesController extends BaseControll
 
                     if ("{}".equals(dataObj.toString())) {
                         jsonObject.getJSONObject("result").remove("data");
-                        jsonObject.put("data", new JSONArray());
+                        jsonObject.getJSONObject("result").put("data", new JSONArray());
                         responseData = jsonObject.toString();
                     }
                     PublishedArticlesModel blogResponse = new Gson().fromJson(responseData, PublishedArticlesModel.class);
