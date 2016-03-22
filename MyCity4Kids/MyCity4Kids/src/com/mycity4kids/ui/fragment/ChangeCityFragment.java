@@ -170,8 +170,8 @@ public class ChangeCityFragment extends BaseFragment {
                 _longitude=78.4760;
                 break;
             case "Chennai":
-                _latitude=22.5667;
-                _longitude=88.3667;
+                _latitude=13.0474097;
+                _longitude=79.9288085;
                 break;
             case "Kolkata":
                 _latitude=22.5667;

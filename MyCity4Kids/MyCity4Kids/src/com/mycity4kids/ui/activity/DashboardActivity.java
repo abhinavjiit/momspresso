@@ -58,6 +58,8 @@ import com.mycity4kids.dbtable.TaskTableAttendee;
 import com.mycity4kids.dbtable.TaskTableFile;
 import com.mycity4kids.dbtable.TaskTableNotes;
 import com.mycity4kids.dbtable.TaskTableWhoToRemind;
+import com.mycity4kids.editor.DraftListView;
+import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.enums.DialogButtonEvent;
 import com.mycity4kids.enums.DialogEnum;
 import com.mycity4kids.enums.ParentingFilterType;
@@ -166,8 +168,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-        t=((BaseApplication)getApplication()).getTracker(
-        BaseApplication.TrackerName.APP_TRACKER);
+        t = ((BaseApplication) getApplication()).getTracker(
+                BaseApplication.TrackerName.APP_TRACKER);
         // Enable Display Features.
         t.enableAdvertisingIdCollection(true);
         // Set screen name.
@@ -175,7 +177,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 // You only need to set User ID on a tracker once. By setting it on the tracker, the ID will be
         // sent with all subsequent hits.
         // new code
-        t.set("&uid", SharedPrefUtils.getUserDetailModel(this).getId()+"");
+        t.set("&uid", SharedPrefUtils.getUserDetailModel(this).getId() + "");
 
         // This hit will be sent with the User ID value and be visible in User-ID-enabled views (profiles).
         t.send(new HitBuilders.EventBuilder().setCategory("UX").setAction("User Sign In").build());
@@ -214,7 +216,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
         txvAllTaskPopup = (TextView) findViewById(R.id.all_tasklist);
 
-        Utils.pushOpenScreenEvent(DashboardActivity.this, "DashBoard", SharedPrefUtils.getUserDetailModel(this).getId()+"");
+        Utils.pushOpenScreenEvent(DashboardActivity.this, "DashBoard", SharedPrefUtils.getUserDetailModel(this).getId() + "");
 
 //        Reminder.with(this).info(Constants.REMINDER_KIDS_BIRTHDAY, "RANDOM kids birthday")
 //                .startTime(1419318120000l).setRepeatBehavior("Yearly", "Forever", "", null)
@@ -239,7 +241,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         // onclick events
         findViewById(R.id.rdBtnToday).setOnClickListener(this);
         findViewById(R.id.rdBtnCalender).setOnClickListener(this);
-        findViewById(R.id.rdBtnTodo).setOnClickListener(this);
+        //  findViewById(R.id.rdBtnTodo).setOnClickListener(this);
         findViewById(R.id.rdBtnUpcoming).setOnClickListener(this);
         findViewById(R.id.feed_back).setOnClickListener(this);
 
@@ -276,17 +278,17 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             replaceFragment(fragment, mBundle, true);
         } else if (Constants.TODOLIST_FRAGMENT.equals(fragmentToLoad)) {
             if (StringUtils.isNullOrEmpty("" + SharedPrefUtils.getUserDetailModel(this).getFamily_id()) ||
-                    SharedPrefUtils.getUserDetailModel(this).getFamily_id() == 0){
+                    SharedPrefUtils.getUserDetailModel(this).getFamily_id() == 0) {
                 showCreateFamilyAlert();
-            }else {
+            } else {
                 setTitle("Weekly To-Do");
                 replaceFragment(new FragmentTaskHome(), null, true);
             }
         } else if (Constants.CALENDARLIST_FRAGMENT.equals(fragmentToLoad)) {
             if (StringUtils.isNullOrEmpty("" + SharedPrefUtils.getUserDetailModel(this).getFamily_id()) ||
-                    SharedPrefUtils.getUserDetailModel(this).getFamily_id() == 0){
+                    SharedPrefUtils.getUserDetailModel(this).getFamily_id() == 0) {
                 showCreateFamilyAlert();
-            }else {
+            } else {
                 setTitle("Weekly Calender");
                 replaceFragment(new FragmentCalender(), null, true);
             }
@@ -360,14 +362,16 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
         findViewById(R.id.rdBtnKids).setOnClickListener(this);
         findViewById(R.id.rdBtnParentingBlogs).setOnClickListener(this);
+        findViewById(R.id.editor).setOnClickListener(this);
+        findViewById(R.id.drafts).setOnClickListener(this);
         findViewById(R.id.txvSettings).setOnClickListener(this);
-        findViewById(R.id.txvHelp).setOnClickListener(this);
+        //  findViewById(R.id.txvHelp).setOnClickListener(this);
         findViewById(R.id.imgProfile).setOnClickListener(this);
         findViewById(R.id.txvUserName).setOnClickListener(this);
 
         findViewById(R.id.txvfeedback).setOnClickListener(this);
         findViewById(R.id.txvrate).setOnClickListener(this);
-        findViewById(R.id.txvtelfrnd).setOnClickListener(this);
+        //     findViewById(R.id.txvtelfrnd).setOnClickListener(this);
 
         findViewById(R.id.back_month).setOnClickListener(this);
         findViewById(R.id.next_month).setOnClickListener(this);
@@ -614,8 +618,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.setHomeAsUpIndicator(android.support.v7.appcompat.R.drawable.abc_ic_ab_back_mtrl_am_alpha);
                     changeVisibiltyOfArrow(false);
-                } else if (currentFrag instanceof ChangeCityFragment)
-                {
+                } else if (currentFrag instanceof ChangeCityFragment) {
                     setTitle("Change City");
                     findViewById(R.id.month_popup).setVisibility(View.GONE);
                     findViewById(R.id.task_popup).setVisibility(View.GONE);
@@ -625,8 +628,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.setHomeAsUpIndicator(android.support.v7.appcompat.R.drawable.abc_ic_ab_back_mtrl_am_alpha);
                     changeVisibiltyOfArrow(false);
-                }
-                else if (currentFrag instanceof ExternalCalFragment) {
+                } else if (currentFrag instanceof ExternalCalFragment) {
                     setTitle("External Calendars");
 
                     findViewById(R.id.month_popup).setVisibility(View.GONE);
@@ -1033,12 +1035,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         } else if (topFragment instanceof FragmentKidProfile) {
 
             getMenuInflater().inflate(R.menu.forgot_password, menu);
-        }
-        else if (topFragment instanceof ChangeCityFragment)
-        {
+        } else if (topFragment instanceof ChangeCityFragment) {
             getMenuInflater().inflate(R.menu.forgot_password, menu);
-        }
-        else if (topFragment instanceof FragmentTaskHome) {
+        } else if (topFragment instanceof FragmentTaskHome) {
 
             if (taskIconFlag) {
                 getMenuInflater().inflate(R.menu.task_home_delete, menu);
@@ -1641,7 +1640,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
             case R.id.rdBtnToday:
                 changeVisibiltyOfArrow(false);
-                Utils.pushEvent(DashboardActivity.this, GTMEventType.MC4KToday_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
+                Utils.pushEvent(DashboardActivity.this, GTMEventType.MC4KToday_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "");
                 //TableAppointmentData data = new TableAppointmentData(BaseApplication.getInstance());
                 //TableTaskData taskData = new TableTaskData(BaseApplication.getInstance());
                 //int count = data.getRowsCount() + taskData.getRowsCount();
@@ -1655,9 +1654,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 // title show current month
                 Utils.pushEvent(DashboardActivity.this, GTMEventType.CALENDAR_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "");
                 if (StringUtils.isNullOrEmpty("" + SharedPrefUtils.getUserDetailModel(this).getFamily_id()) ||
-                        SharedPrefUtils.getUserDetailModel(this).getFamily_id() == 0){
+                        SharedPrefUtils.getUserDetailModel(this).getFamily_id() == 0) {
                     showCreateFamilyAlert();
-                }else {
+                } else {
                     changeVisibiltyOfArrow(true);
                     Calendar c = Calendar.getInstance();
                     setTitle(form.format(c.getTime()).toString());
@@ -1669,11 +1668,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
                 break;
             case R.id.rdBtnTodo:
-                Utils.pushEvent(DashboardActivity.this, GTMEventType.TODO_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
+                Utils.pushEvent(DashboardActivity.this, GTMEventType.TODO_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "");
                 if (StringUtils.isNullOrEmpty("" + SharedPrefUtils.getUserDetailModel(this).getFamily_id()) ||
-                        SharedPrefUtils.getUserDetailModel(this).getFamily_id() == 0){
+                        SharedPrefUtils.getUserDetailModel(this).getFamily_id() == 0) {
                     showCreateFamilyAlert();
-                }else {
+                } else {
                     replaceFragment(new FragmentTaskHome(), null, true);
                     setTitle("All Tasks");
                     SharedPrefUtils.setTaskListID(DashboardActivity.this, 0);
@@ -1682,7 +1681,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 }
                 break;
             case R.id.rdBtnUpcoming:
-                Utils.pushEvent(DashboardActivity.this, GTMEventType.UPCOMING_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
+                Utils.pushEvent(DashboardActivity.this, GTMEventType.UPCOMING_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "");
                 Constants.IS_SEARCH_LISTING = false;
                 changeVisibiltyOfArrow(false);
                 setTitle("Upcoming Events");
@@ -1695,33 +1694,60 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 replaceFragment(fragment, bundle, true);
                 break;
             case R.id.rdBtnKids:
-                Utils.pushEvent(DashboardActivity.this, GTMEventType.RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
+                Utils.pushEvent(DashboardActivity.this, GTMEventType.RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "");
                 Constants.IS_SEARCH_LISTING = false;
                 changeVisibiltyOfArrow(false);
                 setTitle("Kids Resources");
                 replaceFragment(new FragmentHomeCategory(), null, true);
                 break;
             case R.id.rdBtnParentingBlogs:
-                Utils.pushEvent(DashboardActivity.this, GTMEventType.BLOGS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
+                Utils.pushEvent(DashboardActivity.this, GTMEventType.BLOGS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "");
                 changeVisibiltyOfArrow(false);
                 setTitle("Articles");
                 replaceFragment(new ArticlesFragment(), null, true);
                 break;
+            case R.id.editor:
+                Intent intent1 = new Intent(DashboardActivity.this, EditorPostActivity.class);
+                Bundle bundle5 = new Bundle();
+                bundle5.putString(EditorPostActivity.TITLE_PARAM, "");
+                bundle5.putString(EditorPostActivity.CONTENT_PARAM, "");
+                bundle5.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
+                        getString(R.string.example_post_title_placeholder));
+                bundle5.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
+                        getString(R.string.example_post_content_placeholder));
+                bundle5.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
+                bundle5.putString("from", "dashboard");
+                intent1.putExtras(bundle5);
+                startActivity(intent1);
+                break;
+            case R.id.drafts:
+                Intent intent5 = new Intent(DashboardActivity.this, DraftListView.class);
+              /*  Bundle bundle5 = new Bundle();
+                bundle5.putString(EditorPostActivity.TITLE_PARAM, "");
+                bundle5.putString(EditorPostActivity.CONTENT_PARAM, "");
+                bundle5.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
+                        getString(R.string.example_post_title_placeholder));
+                bundle5.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
+                        getString(R.string.example_post_content_placeholder));
+                bundle5.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
+                intent1.putExtras(bundle5);*/
+                startActivity(intent5);
+                break;
             case R.id.txvSettings:
-                Utils.pushEvent(DashboardActivity.this, GTMEventType.SETTINGS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
+                Utils.pushEvent(DashboardActivity.this, GTMEventType.SETTINGS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "");
                 changeVisibiltyOfArrow(false);
                 setTitle("Settings");
                 replaceFragment(new FragmentSetting(), null, true);
                 break;
 
-            case R.id.txvHelp:
+           /* case R.id.txvHelp:
                 Utils.pushEvent(DashboardActivity.this, GTMEventType.HELP_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
                 Intent intent = new Intent(DashboardActivity.this, LoadWebViewActivity.class);
                 intent.putExtra(Constants.WEB_VIEW_URL, "http://www.mycity4kids.com/mobile#faq");
                 startActivity(intent);
 //                changeVisibiltyOfArrow(false);
 
-                break;
+                break;*/
 
             case R.id.txvfeedback:
                 Intent intentEmail = new Intent(Intent.ACTION_SEND);
@@ -1745,7 +1771,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 }
                 break;
 
-            case R.id.txvtelfrnd:
+            /*case R.id.txvtelfrnd:
                 Utils.pushEvent(DashboardActivity.this, GTMEventType.TELLFRIEND_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
                 Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
@@ -1753,10 +1779,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 String shareMessage = "I just downloaded the amazing mycity4kids mobile app. Check it out http://www.mycity4kids.com/mobile";
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
                 startActivity(Intent.createChooser(shareIntent, "mycity4kids").setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                break;
+                break;*/
 
             case R.id.feed_back:
-                Utils.pushEvent(DashboardActivity.this, GTMEventType.FEEDBACK_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
+                Utils.pushEvent(DashboardActivity.this, GTMEventType.FEEDBACK_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "");
                 changeVisibiltyOfArrow(false);
                 setTitle("Send Feedback");
                 replaceFragment(new SendFeedbackFragment(), null, true);

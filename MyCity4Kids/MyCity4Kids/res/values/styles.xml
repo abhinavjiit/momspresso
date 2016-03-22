@@ -11,7 +11,11 @@
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
         -->
+
     </style>
+
+
+
     <style name="datepicker" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
@@ -93,7 +97,16 @@
         <item name="android:windowBackground">@color/transparent_color</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:colorForeground">#fff</item>
+
     </style>
+
+    <style name="Theme.nnn" parent="AppBaseTheme">
+        <item name="android:itemTextAppearance">@style/test</item>
+
+    </style>
+<style name="test">
+    <item name="android:textColor">@android:color/black</item>
+</style>
 
     <style name="total_transparent_dialog" parent="AppBaseTheme">
         <item name="android:windowIsTranslucent">true</item>
@@ -186,6 +199,11 @@
         <item name="android:colorBackgroundCacheHint">@null</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
+    </style>
+
+    <style name="EditorTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorControlActivated">@color/color_control_activated</item>
     </style>
 
 </resources>
