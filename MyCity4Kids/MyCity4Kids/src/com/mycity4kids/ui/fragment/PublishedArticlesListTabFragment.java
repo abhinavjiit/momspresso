@@ -99,10 +99,10 @@ public class PublishedArticlesListTabFragment extends BaseFragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                 Intent intent = new Intent(getActivity(), ArticlesAndBlogsDetailsActivity.class);
-                if (adapterView.getAdapter() instanceof BloggerListingAdapter) {
-                    BlogArticleModel parentingListData = (BlogArticleModel) ((BloggerListingAdapter) adapterView.getAdapter()).getItem(i);
+                if (adapterView.getAdapter() instanceof PublishedArticlesListAdapter) {
+                    PublishedArticlesModel.PublishedArticleData parentingListData = (PublishedArticlesModel.PublishedArticleData) ((PublishedArticlesListAdapter) adapterView.getAdapter()).getItem(i);
                     intent.putExtra(Constants.ARTICLE_ID, String.valueOf(parentingListData.getId()));
-                    intent.putExtra(Constants.ARTICLE_COVER_IMAGE, parentingListData.getCover_image());
+                    intent.putExtra(Constants.ARTICLE_COVER_IMAGE, parentingListData.getThumbnail_image());
                     intent.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.ARTICLES);
                     startActivity(intent);
 

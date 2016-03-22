@@ -82,9 +82,9 @@ public class BloggerDashboardAndPublishedArticlesController extends BaseControll
                     String responseData = new String(response.getResponseData());
                     Log.i("GET_BLOGGER_PUBLISHED_ARTICLES_REQUEST response", responseData);
                     JSONObject jsonObject = new JSONObject(responseData);
-                    JSONObject dataObj = jsonObject.getJSONObject("result").getJSONObject("data");
+                    JSONArray dataObj = jsonObject.getJSONObject("result").optJSONArray("data");
 
-                    if ("{}".equals(dataObj.toString())) {
+                    if (null == dataObj) {
                         jsonObject.getJSONObject("result").remove("data");
                         jsonObject.getJSONObject("result").put("data", new JSONArray());
                         responseData = jsonObject.toString();

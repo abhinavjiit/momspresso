@@ -18,32 +18,24 @@
             android:orientation="vertical">
 
 
-            <!--<android.support.v7.widget.Toolbar-->
-            <!--android:id="@+id/toolbar"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:background="?attr/colorPrimary"-->
-            <!--android:minHeight="?attr/actionBarSize">-->
-
-
-            <!--&lt;!&ndash;<ImageView&ndash;&gt;-->
-            <!--&lt;!&ndash;android:id="@+id/arrow"&ndash;&gt;-->
-            <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
-            <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
-            <!--&lt;!&ndash;android:padding="10dp"&ndash;&gt;-->
-            <!--&lt;!&ndash;android:src="@drawable/drop_downxxhdpi" />&ndash;&gt;-->
-
-            <!--</android.support.v7.widget.Toolbar>-->
-
-            <com.mycity4kids.widget.CustomFontTextView
-                android:layout_width="wrap_content"
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:paddingLeft="28dp"
-                android:text="Sign In"
-                android:textColor="@color/black_color"
-                android:textSize="30sp"
-                app:fontName="roboto_thin.ttf" />
+                android:background="?attr/colorPrimary"
+                android:minHeight="?attr/actionBarSize">
+
+            </android.support.v7.widget.Toolbar>
+
+            <!--<com.mycity4kids.widget.CustomFontTextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="20dp"-->
+            <!--android:paddingLeft="28dp"-->
+            <!--android:text="Sign In"-->
+            <!--android:textColor="@color/black_color"-->
+            <!--android:textSize="30sp"-->
+            <!--app:fontName="roboto_thin.ttf" />-->
 
 
             <!--<ImageView-->
@@ -132,15 +124,42 @@
             <!--android:textColor="@color/new_grey" />-->
             <!--</LinearLayout>-->
 
-            <com.mycity4kids.widget.CustomFontTextView
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="30dp"
-                android:paddingTop="25dp"
-                android:text="OR"
-                android:textColor="@color/login_grey"
-                android:textSize="18sp"
-                app:fontName="roboto_light.ttf" />
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="25dp"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="20dp"
+                    android:layout_height="1dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/orTextView"
+                    android:background="@color/login_grey" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/orTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:text="Or sign in with"
+                    android:textColor="@color/login_grey"
+                    android:textSize="18sp"
+                    app:fontName="roboto_light.ttf" />
+
+                <View
+                    android:layout_width="20dp"
+                    android:layout_height="1dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/orTextView"
+                    android:background="@color/login_grey" />
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -168,7 +187,7 @@
                     android:hint="Email"
                     android:inputType="textEmailAddress"
                     android:paddingTop="20dp"
-                    android:textColor="@color/login_grey"
+                    android:textColor="@color/dashboard.bloggername"
                     android:textColorHint="@color/login_grey"
                     app:fontName="roboto_light.ttf" />
 
@@ -193,9 +212,10 @@
                     android:background="@null"
                     android:drawablePadding="5dp"
                     android:hint="Password"
-                    android:paddingTop="20dp"
+                    android:paddingTop="30dp"
                     android:password="true"
-                    android:textColor="@color/black_color"
+                    android:singleLine="true"
+                    android:textColor="@color/dashboard.bloggername"
                     android:textColorHint="@color/login_grey"
                     app:fontName="roboto_light.ttf" />
 
@@ -209,7 +229,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="40dp"
                     android:background="@drawable/signin_selector"
                     android:gravity="center"
                     android:paddingBottom="15dp"
@@ -234,7 +254,7 @@
                     android:layout_height="wrap_content"
                     android:enabled="false"
                     android:paddingBottom="20dp"
-                    android:paddingTop="5dp"
+                    android:paddingTop="10dp"
                     android:text="@string/forgot_txt"
                     android:textColor="@color/login_grey"
                     app:fontName="roboto_light.ttf" />

@@ -97,4 +97,9 @@
     <color name="login_grey">#cccccc</color>
     <color name="login_line_grey">#e0e0e0</color>
 
+    <color name="dashboard.bloggername">#333333</color>
+    <color name="dashboard.stats">#777777</color>
+    <color name="dashboard.selectedTabText">#1c55f1</color>
+
+
 </resources>
