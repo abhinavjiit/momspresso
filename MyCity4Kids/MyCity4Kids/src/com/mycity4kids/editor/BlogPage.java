@@ -87,6 +87,7 @@ public class BlogPage extends BaseActivity {
             if (response.getResponseObject() instanceof CommonResponse) {
                 CommonResponse responseModel = (CommonResponse) response
                         .getResponseObject();
+                removeProgressDialog();
                 if (responseModel.getResponseCode() != 200) {
                     showToast(getString(R.string.toast_response_error));
                     return;
@@ -109,7 +110,7 @@ public class BlogPage extends BaseActivity {
                     //setProfileImage(originalImage);
                  //   showToast("You have successfully uploaded image.");
                 }
-                removeProgressDialog();
+              //  removeProgressDialog();
             }
             break;
     } }}
@@ -199,8 +200,8 @@ public class BlogPage extends BaseActivity {
                         Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(BlogPage.this.getContentResolver(), imageUri);
                         float actualHeight = imageBitmap.getHeight();
                         float actualWidth = imageBitmap.getWidth();
-                        float maxHeight = 1300;
-                        float maxWidth = 700;
+                        float maxHeight = 243;
+                        float maxWidth = 423;
                         float imgRatio = actualWidth / actualHeight;
                         float maxRatio = maxWidth / maxHeight;
 
@@ -278,7 +279,7 @@ public class BlogPage extends BaseActivity {
                 fileInputStream.read(bytes);
                 fileInputStream.close();
 
-                URL url = new URL("http://54.169.17.138/apiblogs/uploadImage");
+                URL url = new URL(AppConstants.IMAGE_EDITOR_UPLOAD_URL);
                 HttpURLConnection connection =
                         (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("POST");

@@ -8,6 +8,8 @@ public class ArticlePublishRequest {
     private String title;
     private String body;
     private String id;
+    private String draftId;
+
 
         private String imageUrl;
 
@@ -54,5 +56,13 @@ public class ArticlePublishRequest {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getDraftId() {
+        return draftId;
+    }
+
+    public void setDraftId(String draftId) {
+        this.draftId = draftId;
     }
 }

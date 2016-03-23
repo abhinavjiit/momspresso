@@ -133,6 +133,8 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                 if (response.getResponseObject() instanceof ParentingDetailResponse) {
                     ParentingDetailResponse responseModel = (ParentingDetailResponse) response
                             .getResponseObject();
+                    removeProgressDialog();
+
                     if (responseModel.getResponseCode() != 200) {
                         showToast(getString(R.string.toast_response_error));
                         return;
@@ -141,7 +143,6 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                             //  SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
                             Log.i("Draft message", responseModel.getResult().getMessage());
                         }
-                        removeProgressDialog();
                         draftId=responseModel.getResult().getData().getId()+"";
 
                         //setProfileImage(originalImage);
@@ -471,6 +472,8 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
 
                     draftObject.setBody(contentFormatting(mEditorFragment.getContent().toString()));
                     draftObject.setTitle(mEditorFragment.getTitle().toString());
+                    draftObject.setId(draftId);
+                    Log.e("dtaftId",draftId+"");
                     Log.e("publish", "clicked");
                     Intent intent = new Intent(EditorPostActivity.this, ArticleImageTagUpload.class);
                     intent.putExtra("draftItem", draftObject);
@@ -608,7 +611,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                 fileInputStream.read(bytes);
                 fileInputStream.close();
 
-                URL url = new URL("http://54.169.17.138/apiblogs/uploadImage");
+                URL url = new URL(AppConstants.IMAGE_EDITOR_UPLOAD_URL);
                 HttpURLConnection connection =
                         (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("POST");

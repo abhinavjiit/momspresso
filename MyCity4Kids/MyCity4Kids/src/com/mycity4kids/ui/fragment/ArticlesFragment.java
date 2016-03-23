@@ -91,7 +91,7 @@ ImageView addDraft;
         addDraft=(ImageView) view.findViewById(R.id.addDraft);
         mViewPager = (ViewPager) view.findViewById(R.id.viewpager);
         mSlidingTabLayout = (TabLayout) view.findViewById(R.id.sliding_tabs);
-        /*addDraft.setOnClickListener(new OnClickListener() {
+        addDraft.setOnClickListener(new OnClickListener() {
     @Override
     public void onClick(View v) {
         Intent intent1 = new Intent(getActivity(), EditorPostActivity.class);
@@ -107,7 +107,7 @@ ImageView addDraft;
         intent1.putExtras(bundle5);
         startActivity(intent1);
     }
-});*/
+});
         initialList = new ArticleModelNew().new AllArticles();
 
         try {

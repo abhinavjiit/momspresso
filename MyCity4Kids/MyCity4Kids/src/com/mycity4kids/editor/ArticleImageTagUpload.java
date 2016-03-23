@@ -116,6 +116,7 @@ public class ArticleImageTagUpload extends BaseActivity {
                     if (response.getResponseObject() instanceof ParentingDetailResponse) {
                         ParentingDetailResponse responseModel = (ParentingDetailResponse) response
                                 .getResponseObject();
+                        removeProgressDialog();
                         if (responseModel.getResponseCode() != 200) {
                             showToast(getString(R.string.toast_response_error));
                             return;
@@ -124,7 +125,7 @@ public class ArticleImageTagUpload extends BaseActivity {
                                 //  SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
                                 Log.i("Draft message", responseModel.getResult().getMessage());
                             }
-                            removeProgressDialog();
+
                            // draftId=responseModel.getResult().getData().getId()+"";
 
                             //setProfileImage(originalImage);
@@ -152,6 +153,7 @@ public class ArticleImageTagUpload extends BaseActivity {
                     if (response.getResponseObject() instanceof BlogDataResponse) {
                         BlogDataResponse responseModel = (BlogDataResponse) response
                                 .getResponseObject();
+                        removeProgressDialog();
                         if (responseModel.getResponseCode() != 200) {
                             showToast(getString(R.string.toast_response_error));
                             return;
@@ -191,8 +193,9 @@ public class ArticleImageTagUpload extends BaseActivity {
                               Intent intent=new Intent(ArticleImageTagUpload.this,BlogPage.class);
                               startActivity(intent);
                           }
-                            removeProgressDialog();
+                           // removeProgressDialog();
                         }
+                      //  removeProgressDialog();
                     }
                     break;
                 }
@@ -231,14 +234,15 @@ public class ArticleImageTagUpload extends BaseActivity {
                     else {
 
                     ArticleDraftList draftObject=(ArticleDraftList) getIntent().getSerializableExtra("draftItem");
-                    showProgressDialog(getResources().getString(R.string.please_wait));
+                        showProgressDialog(getResources().getString(R.string.please_wait));
                     ArticlePublishRequest articlePublishRequestRequest = new ArticlePublishRequest();
 
                     articlePublishRequestRequest.setUser_id("" + userModel.getUser().getId());
 
                     articlePublishRequestRequest.setImageUrl(url);
                     articlePublishRequestRequest.setBody(draftObject.getBody());
-                    articlePublishRequestRequest.setTitle(draftObject.getTitle());
+                    articlePublishRequestRequest.setTitle(draftObject.getTitle().trim());
+                        articlePublishRequestRequest.setDraftId(draftObject.getId());
                     ArticlePublishController _controller = new ArticlePublishController(ArticleImageTagUpload.this, ArticleImageTagUpload.this);
 
                     _controller.getData(AppConstants.ARTICLE_PUBLISH_REQUEST, articlePublishRequestRequest);
@@ -280,8 +284,8 @@ public class ArticleImageTagUpload extends BaseActivity {
                             Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(ArticleImageTagUpload.this.getContentResolver(), imageUri);
                             float actualHeight = imageBitmap.getHeight();
                             float actualWidth = imageBitmap.getWidth();
-                            float maxHeight = 1300;
-                            float maxWidth = 700;
+                            float maxHeight = 243;
+                            float maxWidth = 423;
                             float imgRatio = actualWidth / actualHeight;
                             float maxRatio = maxWidth / maxHeight;
 
@@ -359,7 +363,7 @@ public class ArticleImageTagUpload extends BaseActivity {
                     fileInputStream.read(bytes);
                     fileInputStream.close();
 
-                    URL url = new URL("http://54.169.17.138/apiblogs/uploadImage");
+                    URL url = new URL(AppConstants.IMAGE_EDITOR_UPLOAD_URL);
                     HttpURLConnection connection =
                             (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("POST");

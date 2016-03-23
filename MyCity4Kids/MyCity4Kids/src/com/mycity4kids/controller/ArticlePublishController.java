@@ -99,6 +99,7 @@ public class ArticlePublishController extends BaseController{
             nameValuePairs.add(new BasicNameValuePair("title", articlePublishRequest.getTitle()));
             nameValuePairs.add(new BasicNameValuePair("body", articlePublishRequest.getBody()));
             nameValuePairs.add(new BasicNameValuePair("id", articlePublishRequest.getId()));
+            nameValuePairs.add(new BasicNameValuePair("draftId", articlePublishRequest.getDraftId()));
             nameValuePairs.add(new BasicNameValuePair("imageUrl", articlePublishRequest.getImageUrl()));
 
             Log.i("DraftReuest", nameValuePairs.toString());

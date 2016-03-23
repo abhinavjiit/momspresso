@@ -60,6 +60,7 @@ public class DraftListView extends BaseActivity implements View.OnClickListener,
                 if (response.getResponseObject() instanceof ArticleDraftListResponse) {
                     ArticleDraftListResponse responseModel = (ArticleDraftListResponse) response
                             .getResponseObject();
+                    removeProgressDialog();
                     if (responseModel.getResponseCode() != 200) {
                         showToast(getString(R.string.toast_response_error));
                         return;
@@ -68,7 +69,7 @@ public class DraftListView extends BaseActivity implements View.OnClickListener,
                             //  SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
                             Log.i("Draft message", responseModel.getResult().getMessage());
                         }
-                        removeProgressDialog();
+
                        /* draftList = responseModel.getResult().getData();
 
                         adapter = new DraftListAdapter(this, draftList);
@@ -86,6 +87,7 @@ public class DraftListView extends BaseActivity implements View.OnClickListener,
                 if (response.getResponseObject() instanceof ParentingDetailResponse) {
                     ParentingDetailResponse responseModel = (ParentingDetailResponse) response
                             .getResponseObject();
+                    removeProgressDialog();
                     if (responseModel.getResponseCode() != 200) {
                         showToast(getString(R.string.toast_response_error));
                         return;
@@ -96,7 +98,7 @@ public class DraftListView extends BaseActivity implements View.OnClickListener,
                         }
                         draftList.remove(position);
                         adapter.notifyDataSetChanged();
-                        removeProgressDialog();
+                     //   removeProgressDialog();
                         //  draftId=responseModel.getResult().getData().getId()+"";
 
                         //setProfileImage(originalImage);
