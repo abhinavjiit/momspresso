@@ -640,7 +640,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 .setIcon(R.drawable.ic_log_html)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);*/
         inflater.inflate(R.menu.menu_editor, menu);
-        getActionBar().setTitle("Text Editor");
+        getActionBar().setTitle("Write an Article");
         getActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.primary)));
         super.onCreateOptionsMenu(menu, inflater);
     }

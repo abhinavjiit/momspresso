@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -35,6 +36,7 @@ import com.mycity4kids.controller.ArticleDraftController;
 import com.mycity4kids.controller.ArticlePublishController;
 import com.mycity4kids.controller.BlogSetupController;
 import com.mycity4kids.dbtable.UserTable;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.editor.ArticleDraftList;
 import com.mycity4kids.models.editor.ArticleDraftRequest;
 import com.mycity4kids.models.editor.ArticlePublishRequest;
@@ -127,9 +129,16 @@ public class ArticleImageTagUpload extends BaseActivity {
 
                             //setProfileImage(originalImage);
                             alertDialog(responseModel.getResult().getMessage());
-                            Intent intent=new Intent(ArticleImageTagUpload.this,BloggerDashboardActivity.class);
-                            startActivity(intent);
-                            finish();
+                            Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Intent intent = new Intent(ArticleImageTagUpload.this, BloggerDashboardActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            }, 2000);
+
                            // showToast(responseModel.getResult().getMessage());
                            /* if (fromBackpress) {
                                 super.onBackPressed();
@@ -201,6 +210,7 @@ public class ArticleImageTagUpload extends BaseActivity {
             articleImage =(ImageView) findViewById(R.id.articleImage);
             UserTable userTable = new UserTable((BaseApplication) this.getApplication());
             userModel = userTable.getAllUserData();
+            Utils.pushOpenScreenEvent(ArticleImageTagUpload.this, "Article Image Upload", SharedPrefUtils.getUserDetailModel(this).getId() + "");
             articleImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

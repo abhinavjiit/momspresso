@@ -1,5 +1,6 @@
 package com.mycity4kids.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -15,6 +16,7 @@ import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.controller.BloggerDashboardAndPublishedArticlesController;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.newmodels.BloggerDashboardModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.adapter.BloggerDashboardPagerAdapter;
@@ -36,7 +38,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blogger_dashboard);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-
+        Utils.pushOpenScreenEvent(BloggerDashboardActivity.this, "Blogger Dashboard", SharedPrefUtils.getUserDetailModel(this).getId() + "");
         rankingTextView = (TextView) findViewById(R.id.rankingTextView);
         viewCountTextView = (TextView) findViewById(R.id.viewCountTextView);
         followersViewCount = (TextView) findViewById(R.id.followersViewCount);
@@ -148,9 +150,19 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent=new Intent(BloggerDashboardActivity.this,DashboardActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                onBackPressed();
                 finish();
                 return true;
             default:

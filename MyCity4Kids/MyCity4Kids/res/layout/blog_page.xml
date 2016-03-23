@@ -52,7 +52,7 @@
         />
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="140dp"
         android:id="@+id/blogImage"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
@@ -77,7 +77,7 @@
         />
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="124dp"
+        android:layout_height="114dp"
         android:id="@+id/bloggerBio"
         android:layout_below="@+id/imageMessage"
         android:hint="Let our readers get to know you"

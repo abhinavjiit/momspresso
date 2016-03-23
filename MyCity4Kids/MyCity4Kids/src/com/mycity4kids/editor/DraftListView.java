@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 
 
 import com.kelltontech.network.Response;
@@ -30,6 +31,8 @@ import com.mycity4kids.models.editor.ArticleDraftListResponse;
 import com.mycity4kids.models.editor.ArticleDraftRequest;
 import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.models.parentingdetails.ParentingDetailResponse;
+import com.mycity4kids.models.parentingstop.CommonParentingList;
+import com.mycity4kids.models.parentingstop.CommonParentingResponse;
 import com.mycity4kids.models.parentingstop.ParentingRequest;
 import com.mycity4kids.models.user.UserModel;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -47,6 +50,7 @@ public class DraftListView extends BaseActivity implements View.OnClickListener,
     int position;
     Toolbar mToolbar;
     ImageView addDraft;
+    TextView noDrafts;
 
     @Override
     protected void updateUi(Response response) {
@@ -65,10 +69,11 @@ public class DraftListView extends BaseActivity implements View.OnClickListener,
                             Log.i("Draft message", responseModel.getResult().getMessage());
                         }
                         removeProgressDialog();
-                        draftList = responseModel.getResult().getData();
+                       /* draftList = responseModel.getResult().getData();
 
                         adapter = new DraftListAdapter(this, draftList);
-                        draftListview.setAdapter(adapter);
+                        draftListview.setAdapter(adapter);*/
+                        processDraftResponse(responseModel);
                         //setProfileImage(originalImage);
                         //showToast("Draft Successfully saved");
 
@@ -118,6 +123,7 @@ public class DraftListView extends BaseActivity implements View.OnClickListener,
         getSupportActionBar().setTitle("Drafts");
         draftListview = (ListView) findViewById(R.id.draftListview);
         addDraft=(ImageView) findViewById(R.id.addDraft);
+        noDrafts=(TextView) findViewById(R.id.noDraftsTextView);
         UserTable userTable = new UserTable((BaseApplication) this.getApplication());
         userModel = userTable.getAllUserData();
       /*  hitDraftListingApi();
@@ -250,5 +256,26 @@ public class DraftListView extends BaseActivity implements View.OnClickListener,
             default:
                 return false;
         }
+    }
+
+    private void processDraftResponse(ArticleDraftListResponse responseModel) {
+        draftList = responseModel.getResult().getData();
+
+
+        if (draftList.size() == 0) {
+  /*          articleDataModelsNew = dataList;
+            articlesListingAdapter.setNewListData(articleDataModelsNew);
+            articlesListingAdapter.notifyDataSetChanged();*/
+            noDrafts.setVisibility(View.VISIBLE);
+            //((DashboardActivity) getActivity()).showToast(responseData.getResult().getMessage());
+        } else {
+            noDrafts.setVisibility(View.GONE);
+
+
+            adapter = new DraftListAdapter(this, draftList);
+            draftListview.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        }
+
     }
 }

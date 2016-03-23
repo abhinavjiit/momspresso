@@ -32,6 +32,7 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.controller.ArticleDraftController;
 import com.mycity4kids.controller.BlogSetupController;
 import com.mycity4kids.dbtable.UserTable;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.editor.ArticleDraftRequest;
 import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.models.user.UserModel;
@@ -125,6 +126,7 @@ public class BlogPage extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Setup your Blog");
         blogImage=(ImageView) findViewById(R.id.blogImage);
+        Utils.pushOpenScreenEvent(BlogPage.this, "Article Image Upload", SharedPrefUtils.getUserDetailModel(this).getId() + "");
         UserTable userTable = new UserTable((BaseApplication) this.getApplication());
         userModel = userTable.getAllUserData();
         blogImage.setOnClickListener(new View.OnClickListener() {

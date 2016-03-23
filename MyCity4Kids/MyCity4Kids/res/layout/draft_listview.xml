@@ -10,6 +10,13 @@
         android:background="@color/primary"
         android:minHeight="?attr/actionBarSize">
     </android.support.v7.widget.Toolbar>
+    <TextView
+        android:id="@+id/noDraftsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="No Drafts have been saved yet"
+        android:visibility="gone" />
 <ListView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"

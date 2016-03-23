@@ -37,6 +37,7 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.ArticleDraftController;
 import com.mycity4kids.controller.ImageUploadController;
 import com.mycity4kids.dbtable.UserTable;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.editor.ArticleDraftList;
 import com.mycity4kids.models.editor.ArticleDraftRequest;
 import com.mycity4kids.models.forgot.CommonResponse;
@@ -184,10 +185,11 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getIntent().getIntExtra(EDITOR_PARAM, USE_NEW_EDITOR) == USE_NEW_EDITOR) {
-            ToastUtils.showToast(this, R.string.starting_new_editor);
+           // ToastUtils.showToast(this, R.string.starting_new_editor);
             setContentView(R.layout.activity_new_editor);
             UserTable userTable = new UserTable((BaseApplication) this.getApplication());
             userModel = userTable.getAllUserData();
+            Utils.pushOpenScreenEvent(EditorPostActivity.this, "Text Editor", SharedPrefUtils.getUserDetailModel(this).getId() + "");
            /* if (getIntent().getStringExtra("from").equals("draftList"))
             {  ArticleDraftList draftObject=(ArticleDraftList) getIntent().getSerializableExtra("draftItem");
             mEditorFragment.setTitle(draftObject.getTitle());
