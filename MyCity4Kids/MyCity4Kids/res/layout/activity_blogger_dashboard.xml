@@ -109,7 +109,7 @@
         android:fillViewport="false"
         app:layout_collapseMode="pin"
         app:tabGravity="fill"
-        app:tabIndicatorColor="@color/dashboard.selectedTabText"
+        app:tabIndicatorColor="@color/login_grey"
         app:tabIndicatorHeight="3dp"
         app:tabMode="fixed"
         app:tabSelectedTextColor="@color/dashboard.selectedTabText"
@@ -129,7 +129,8 @@
         android:id="@+id/separator2"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@+id/sliding_tabs" />
+        android:layout_below="@+id/sliding_tabs"
+        android:background="@color/login_grey" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"

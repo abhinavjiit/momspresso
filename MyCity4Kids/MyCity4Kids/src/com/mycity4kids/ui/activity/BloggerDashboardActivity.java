@@ -32,13 +32,16 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     private TextView bloggerNameTextView, rankingTextView, viewCountTextView, followersViewCount;
     private ImageView bloggerImageView;
     TabLayout tabLayout;
+    ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blogger_dashboard);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
+
         Utils.pushOpenScreenEvent(BloggerDashboardActivity.this, "Blogger Dashboard", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
         rankingTextView = (TextView) findViewById(R.id.rankingTextView);
         viewCountTextView = (TextView) findViewById(R.id.viewCountTextView);
         followersViewCount = (TextView) findViewById(R.id.followersViewCount);
@@ -53,23 +56,30 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         }
 
         tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        tabLayout.addTab(tabLayout.newTab().setText("Bookmarks (0)"));
+        tabLayout.addTab(tabLayout.newTab().setText("Published (0)"));
+
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Blogger Profile");
 
-        getBloggerDashboardDetails();
+
     }
 
     private void getBloggerDashboardDetails() {
 
         showProgressDialog("please wait ...");
-        SharedPrefUtils.getUserDetailModel(this).setId(101856);
         BloggerDashboardAndPublishedArticlesController _controller = new BloggerDashboardAndPublishedArticlesController(this, this);
         _controller.getData(AppConstants.GET_BLOGGER_DASHBOARD_REQUEST, 0);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getBloggerDashboardDetails();
+    }
 
     @Override
     protected void updateUi(Response response) {
@@ -99,10 +109,9 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                         viewCountTextView.setText("" + responseData.getResult().getData().getViews());
                         followersViewCount.setText("" + responseData.getResult().getData().getFollowers());
 
-                        tabLayout.addTab(tabLayout.newTab().setText("Bookmarks (" + responseData.getResult().getData().getBookmarkCount() + ")"));
-                        tabLayout.addTab(tabLayout.newTab().setText("Published (" + responseData.getResult().getData().getArticleCount() + ")"));
+                        tabLayout.getTabAt(0).setText("Bookmarks (" + responseData.getResult().getData().getBookmarkCount() + ")");
+                        tabLayout.getTabAt(1).setText("Published (" + responseData.getResult().getData().getArticleCount() + ")");
 
-                        final ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
                         final BloggerDashboardPagerAdapter adapter = new BloggerDashboardPagerAdapter
                                 (getSupportFragmentManager(), this, responseData.getResult().getData().getBookmarkCount(),
                                         responseData.getResult().getData().getArticleCount());
@@ -152,7 +161,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intent=new Intent(BloggerDashboardActivity.this,DashboardActivity.class);
+        Intent intent = new Intent(BloggerDashboardActivity.this, DashboardActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);

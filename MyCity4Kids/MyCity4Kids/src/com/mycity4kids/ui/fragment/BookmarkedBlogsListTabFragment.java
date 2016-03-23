@@ -59,6 +59,16 @@ public class BookmarkedBlogsListTabFragment extends BaseFragment {
         view.findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_indefinitely));
 
 
+
+
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        nextPageNumber=1;
         hitBookmarkedArticleListingAPI(nextPageNumber);
 
         articlesListingAdapter = new ArticlesListingAdapter(getActivity(), true);
@@ -102,7 +112,6 @@ public class BookmarkedBlogsListTabFragment extends BaseFragment {
             }
         });
 
-        return view;
     }
 
     @Override
