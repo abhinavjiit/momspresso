@@ -117,8 +117,8 @@ public class SyncService extends IntentService implements UpdateListener {
 
             if (isAppointment)
                 hitApiRequest(AppConstants.GET_ALL_APPOINTMNET_REQ);
-            else
-                hitApiRequest(AppConstants.GET_ALL_TASK_REQ);
+//            else
+//                hitApiRequest(AppConstants.GET_ALL_TASK_REQ);
 
         }
 //        _appointmentcontroller = new GetAppointmentController(SyncService.this, this);
@@ -567,9 +567,9 @@ public class SyncService extends IntentService implements UpdateListener {
                         SharedPrefUtils.setAppointmentTimeSatmp(this, System.currentTimeMillis());
                         // save in db
                         new SaveAppointmentDataInBackground().execute(responseData.getResult().getData());
-
-                        if (taskCallFromAppointment)
-                            hitApiRequest(AppConstants.GET_ALL_TASK_REQ);
+//
+//                        if (taskCallFromAppointment)
+//                            hitApiRequest(AppConstants.GET_ALL_TASK_REQ);
                         Log.i(TAG, "response success getAppointment");
 
 

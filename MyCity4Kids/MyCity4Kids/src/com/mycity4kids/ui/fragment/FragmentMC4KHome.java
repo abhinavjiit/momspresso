@@ -76,15 +76,15 @@ import java.util.TimeZone;
 public class FragmentMC4KHome extends BaseFragment implements View.OnClickListener {
 
     View view;
-    CustomListView appointmentList, taskList;
+    CustomListView appointmentList;
     TableAppointmentData tableAppointment;
     ArrayList<AppointmentMappingModel> appointmentListData;
     AdapterHomeAppointment adapterHomeAppointment;
-    TextView goToCal, current, goToTask, goToBlogs;
-    ImageView imgGoToCal, imgGoToTodo, imgGoToEvents, imgGoToBlogs;
-    ImageView addAppointment, addTask;
+    TextView goToCal, current, goToBlogs;
+    ImageView imgGoToCal, imgGoToEvents, imgGoToBlogs;
+    ImageView addAppointment;
     java.sql.Timestamp firsttamp;
-    AdapterHomeTask adapterHomeTask;
+//    AdapterHomeTask adapterHomeTask;
     ScrollView baseScroll;
     private ProgressBar progressBar, blogProgessBar;
     private BusinessListingAdapterevent businessAdapter;
@@ -99,7 +99,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     private View rltLoadingView;
     private boolean mIsRequestRunning;
     private boolean mEventDataAvalble;
-    TextView txtCal, txtTodo, txtEvents, txtBlogs;
+    TextView txtCal, txtEvents, txtBlogs;
 
     @Nullable
     @Override
@@ -110,35 +110,35 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         goToCal = (TextView) view.findViewById(R.id.go_to_cal);
         addAppointment = (ImageView) view.findViewById(R.id.add_appointment);
         current = (TextView) view.findViewById(R.id.current_date);
-        goToTask = (TextView) view.findViewById(R.id.go_to_task);
+//        goToTask = (TextView) view.findViewById(R.id.go_to_task);
         baseScroll = (ScrollView) view.findViewById(R.id.base_scroll);
         imgGoToCal = (ImageView) view.findViewById(R.id.img_go_to_cal);
-        imgGoToTodo = (ImageView) view.findViewById(R.id.img_go_to_todo);
+//        imgGoToTodo = (ImageView) view.findViewById(R.id.img_go_to_todo);
         imgGoToEvents = (ImageView) view.findViewById(R.id.img_go_to_events);
         imgGoToBlogs = (ImageView) view.findViewById(R.id.img_go_to_blogs);
         txtCal = (TextView) view.findViewById(R.id.txtCal);
-        txtTodo = (TextView) view.findViewById(R.id.txtTodo);
+//        txtTodo = (TextView) view.findViewById(R.id.txtTodo);
         txtEvents = (TextView) view.findViewById(R.id.txtEvents);
         txtBlogs = (TextView) view.findViewById(R.id.txtBlogs);
 
 
-        addTask = (ImageView) view.findViewById(R.id.add_task);
+//        addTask = (ImageView) view.findViewById(R.id.add_task);
         progressBar = (ProgressBar) view.findViewById(R.id.eventprogressbar);
         blogProgessBar = (ProgressBar) view.findViewById(R.id.blogprogressbar);
-        taskList = (CustomListView) view.findViewById(R.id.home_taskList);
+//        taskList = (CustomListView) view.findViewById(R.id.home_taskList);
         eventListView = (CustomListView) view.findViewById(R.id.eventList);
         blogListView = (CustomListView) view.findViewById(R.id.bloglist);
         rltLoadingView = (RelativeLayout) view.findViewById(R.id.rltLoadingView);
-        goToTask.setOnClickListener(this);
-        addTask.setOnClickListener(this);
+//        goToTask.setOnClickListener(this);
+//        addTask.setOnClickListener(this);
         goToCal.setOnClickListener(this);
         addAppointment.setOnClickListener(this);
         imgGoToCal.setOnClickListener(this);
-        imgGoToTodo.setOnClickListener(this);
+//        imgGoToTodo.setOnClickListener(this);
         imgGoToEvents.setOnClickListener(this);
         imgGoToBlogs.setOnClickListener(this);
         txtCal.setOnClickListener(this);
-        txtTodo.setOnClickListener(this);
+//        txtTodo.setOnClickListener(this);
         txtEvents.setOnClickListener(this);
         txtBlogs.setOnClickListener(this);
 
@@ -165,24 +165,24 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                 }
             });
         }
-
-        TableTaskData tTask = new TableTaskData(BaseApplication.getInstance());
-        List<TaskDataModel.TaskDetail> allTaskList = tTask.getAll();
-        if (null != allTaskList && allTaskList.size() == 0) {
-            goToTask.setText("ADD A TASK");
-            goToTask.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (StringUtils.isNullOrEmpty("" + SharedPrefUtils.getUserDetailModel(getActivity()).getFamily_id()) ||
-                            SharedPrefUtils.getUserDetailModel(getActivity()).getFamily_id() == 0) {
-                        showCreateFamilyAlert();
-                    } else {
-                        Intent TaskIntent = new Intent(getActivity(), ActivityCreateTask.class);
-                        startActivity(TaskIntent);
-                    }
-                }
-            });
-        }
+//
+//        TableTaskData tTask = new TableTaskData(BaseApplication.getInstance());
+//        List<TaskDataModel.TaskDetail> allTaskList = tTask.getAll();
+//        if (null != allTaskList && allTaskList.size() == 0) {
+//            goToTask.setText("ADD A TASK");
+//            goToTask.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    if (StringUtils.isNullOrEmpty("" + SharedPrefUtils.getUserDetailModel(getActivity()).getFamily_id()) ||
+//                            SharedPrefUtils.getUserDetailModel(getActivity()).getFamily_id() == 0) {
+//                        showCreateFamilyAlert();
+//                    } else {
+//                        Intent TaskIntent = new Intent(getActivity(), ActivityCreateTask.class);
+//                        startActivity(TaskIntent);
+//                    }
+//                }
+//            });
+//        }
 
         appointmentList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -205,24 +205,24 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
             }
         });
 
-        taskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                TaskMappingModel taskMappingModel = (TaskMappingModel) adapterHomeTask.getItem(i);
-
-                if (taskMappingModel.getTaskName() == null) {
-
-                } else {
-                    ((DashboardActivity) getActivity()).UploadCompleteTasks();
-
-                    Intent intent = new Intent(getActivity(), ActivityShowTask.class);
-                    intent.putExtra(AppConstants.EXTRA_TASK_ID, taskMappingModel.getTask_id());
-                    startActivityForResult(intent, 1);
-                }
-
-            }
-        });
+//        taskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//
+//                TaskMappingModel taskMappingModel = (TaskMappingModel) adapterHomeTask.getItem(i);
+//
+//                if (taskMappingModel.getTaskName() == null) {
+//
+//                } else {
+//                    ((DashboardActivity) getActivity()).UploadCompleteTasks();
+//
+//                    Intent intent = new Intent(getActivity(), ActivityShowTask.class);
+//                    intent.putExtra(AppConstants.EXTRA_TASK_ID, taskMappingModel.getTask_id());
+//                    startActivityForResult(intent, 1);
+//                }
+//
+//            }
+//        });
 
 //        eventListView.setOnScrollListener(new AbsListView.OnScrollListener() {
 //
@@ -328,8 +328,8 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
             e.printStackTrace();
         }
 
-        adapterHomeTask = new AdapterHomeTask(getActivity(), getCurrentDateTask());
-        taskList.setAdapter(adapterHomeTask);
+//        adapterHomeTask = new AdapterHomeTask(getActivity(), getCurrentDateTask());
+//        taskList.setAdapter(adapterHomeTask);
 
         appointmentListData = getSorted(formatter.format(calendar.getTime()), appointmentListData);
 
@@ -661,17 +661,17 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                 }
                 break;
 
-            case R.id.go_to_task:
-            case R.id.img_go_to_todo:
-            case R.id.txtTodo:
-                if (StringUtils.isNullOrEmpty("" + SharedPrefUtils.getUserDetailModel(getActivity()).getFamily_id()) ||
-                        SharedPrefUtils.getUserDetailModel(getActivity()).getFamily_id() == 0) {
-                    showCreateFamilyAlert();
-                } else {
-                    ((DashboardActivity) getActivity()).setTitle("All Task");
-                    ((DashboardActivity) getActivity()).replaceFragment(new FragmentTaskHome(), null, true);
-                }
-                break;
+//            case R.id.go_to_task:
+//            case R.id.img_go_to_todo:
+//            case R.id.txtTodo:
+//                if (StringUtils.isNullOrEmpty("" + SharedPrefUtils.getUserDetailModel(getActivity()).getFamily_id()) ||
+//                        SharedPrefUtils.getUserDetailModel(getActivity()).getFamily_id() == 0) {
+//                    showCreateFamilyAlert();
+//                } else {
+//                    ((DashboardActivity) getActivity()).setTitle("All Task");
+//                    ((DashboardActivity) getActivity()).replaceFragment(new FragmentTaskHome(), null, true);
+//                }
+//                break;
             case R.id.go_to_events:
             case R.id.img_go_to_events:
             case R.id.txtEvents:
@@ -708,16 +708,16 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
 //
 //                break;
 
-
-            case R.id.add_task:
-                if (StringUtils.isNullOrEmpty("" + SharedPrefUtils.getUserDetailModel(getActivity()).getFamily_id()) ||
-                        SharedPrefUtils.getUserDetailModel(getActivity()).getFamily_id() == 0) {
-                    showCreateFamilyAlert();
-                } else {
-                    intent = new Intent(getActivity(), ActivityCreateTask.class);
-                    startActivity(intent);
-                }
-                break;
+//
+//            case R.id.add_task:
+//                if (StringUtils.isNullOrEmpty("" + SharedPrefUtils.getUserDetailModel(getActivity()).getFamily_id()) ||
+//                        SharedPrefUtils.getUserDetailModel(getActivity()).getFamily_id() == 0) {
+//                    showCreateFamilyAlert();
+//                } else {
+//                    intent = new Intent(getActivity(), ActivityCreateTask.class);
+//                    startActivity(intent);
+//                }
+//                break;
         }
 
     }
@@ -788,8 +788,8 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
             appointmentListData = getSorted(formatter.format(calendar.getTime()), appointmentListData);
             adapterHomeAppointment.notifyList(appointmentListData);
             // refresh tasks list here also
-            adapterHomeTask = new AdapterHomeTask(getActivity(), getCurrentDateTask());
-            taskList.setAdapter(adapterHomeTask);
+//            adapterHomeTask = new AdapterHomeTask(getActivity(), getCurrentDateTask());
+//            taskList.setAdapter(adapterHomeTask);
 
             // refresh events also
             // checking whether event is added or not
@@ -1230,7 +1230,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         new_List.addAll(new_tempData1);
 
         if (new_List.size() == 0) {
-            taskList.setOnItemClickListener(null);
+//            taskList.setOnItemClickListener(null);
             new_List.add(new TaskMappingModel(null, 0, null));
         }
 
@@ -1252,7 +1252,8 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     }
 
     public void notifyTaskList() {
-        adapterHomeTask.notifyTaskList(getCurrentDateTask());
+
+//        adapterHomeTask.notifyTaskList(getCurrentDateTask());
     }
 
     public ArrayList<TaskMappingModel> getDaysRecurring_New(Calendar date, ArrayList<TaskMappingModel> datalist) {

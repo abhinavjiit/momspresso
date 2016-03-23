@@ -81,15 +81,15 @@ public class ApiHandler extends AsyncTask<String, Void, String> {
 
             case AppConstants.GET_ALL_TASK_REQ:
 
-                try {
-                    //System.out.println("RequestUrl : " + params[0]);
-                    HashMap<String, String> map = new HashMap<String, String>();
-                    map.put("Content-Type", "application/json");
-                    jsonString = HTTPPoster.doGet(params[0], map,context);
-                    Log.e(this.getClass().getName(), "jsonString: " + jsonString);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    //System.out.println("RequestUrl : " + params[0]);
+//                    HashMap<String, String> map = new HashMap<String, String>();
+//                    map.put("Content-Type", "application/json");
+//                    jsonString = HTTPPoster.doGet(params[0], map,context);
+//                    Log.e(this.getClass().getName(), "jsonString: " + jsonString);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
                 break;
 
             case AppConstants.SYNC_USER_INFO_REQUEST:
