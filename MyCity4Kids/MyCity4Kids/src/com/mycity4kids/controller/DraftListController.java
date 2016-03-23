@@ -18,6 +18,8 @@ import com.mycity4kids.models.parentingdetails.ParentingDetailResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,6 +84,7 @@ public class DraftListController extends BaseController {
         switch (response.getDataType()) {
             case AppConstants.ARTICLE_DRAFT_REQUEST:
                 ParentingDetailResponse _forgotResponse;
+                try {
                 if (response != null) {
                     String responseDatta = new String(response.getResponseData());
                     System.out.println("draft response " + responseDatta);
@@ -92,13 +95,25 @@ public class DraftListController extends BaseController {
                 } else {
                     sendResponseToScreen(null);
                 }
-
+        } catch (Exception e) {
+            e.printStackTrace();
+            sendResponseToScreen(null);
+        }
                 break;
             case AppConstants.ARTICLE_DRAFT_LIST_REQUEST:
                 ArticleDraftListResponse draftListResponse;
+                try {
                 if (response != null) {
                     String responseDatta = new String(response.getResponseData());
                     System.out.println("draft response " + responseDatta);
+                    JSONObject jsonObject = new JSONObject(responseDatta);
+                    JSONArray dataObj = jsonObject.getJSONObject("result").optJSONArray("data");
+
+                    if (null == dataObj) {
+                        jsonObject.getJSONObject("result").remove("data");
+                        jsonObject.getJSONObject("result").put("data", new JSONArray());
+                        responseDatta = jsonObject.toString();
+                    }
 
                     draftListResponse = new Gson().fromJson(responseDatta, ArticleDraftListResponse.class);
                     response.setResponseObject(draftListResponse);
@@ -106,7 +121,10 @@ public class DraftListController extends BaseController {
                 } else {
                     sendResponseToScreen(null);
                 }
-
+        } catch (Exception e) {
+            e.printStackTrace();
+            sendResponseToScreen(null);
+        }
                 break;
 
         }

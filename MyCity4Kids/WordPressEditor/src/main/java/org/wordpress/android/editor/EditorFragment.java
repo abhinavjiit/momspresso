@@ -901,7 +901,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                         String remoteMediaId = mediaFile.getMediaId();
                         mWebView.execJavaScriptFromString("ZSSEditor.replaceLocalImageWithRemoteImage(" + localMediaId +
                                 ", '" + remoteMediaId + "', '" + remoteUrl + "');");
-                        imageUploading=1;
+
                         Log.i("OOOOOOOOOOOOOOO", "kikijijijijijijijijij");
 
 
@@ -1258,6 +1258,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                     }
                 }
         }
+    }
+
+    @Override
+    public void onImageReplaced(String responseArgs) {
+        imageUploading=1;
     }
 
     private void updateVisualEditorFields() {

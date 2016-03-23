@@ -95,6 +95,7 @@ public class JsCallbackReceiver {
             case CALLBACK_IMAGE_REPLACED:
                 // TODO: Notifies that image upload has finished and that the local url was replaced by the remote url in the ZSS editor
                 AppLog.d(AppLog.T.EDITOR, "Image replaced, " + params);
+                mListener.onImageReplaced(params);
                 break;
             case CALLBACK_IMAGE_TAP:
                 AppLog.d(AppLog.T.EDITOR, "Image tapped, " + params);

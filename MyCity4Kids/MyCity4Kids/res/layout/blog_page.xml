@@ -110,8 +110,9 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
-        android:layout_below="@+id/textLimit"
+        android:layout_marginBottom="10dp"
         android:text="Create Blog"
-        android:background="@color/primary"/>
+        android:background="@color/primary"
+        android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>

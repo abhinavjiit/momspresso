@@ -14,4 +14,5 @@ public interface OnJsEditorStateChangedListener {
     void onLinkTapped(String url, String title);
     void onVideoPressInfoRequested(String videoId);
     void onGetHtmlResponse(Map<String, String> responseArgs);
+    void onImageReplaced(String responseArgs);
 }

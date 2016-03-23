@@ -43,6 +43,7 @@ import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.models.parentingdetails.ParentingDetailResponse;
 import com.mycity4kids.models.user.UserModel;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.ui.activity.BloggerDashboardActivity;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -126,6 +127,9 @@ public class ArticleImageTagUpload extends BaseActivity {
 
                             //setProfileImage(originalImage);
                             alertDialog(responseModel.getResult().getMessage());
+                            Intent intent=new Intent(ArticleImageTagUpload.this,BloggerDashboardActivity.class);
+                            startActivity(intent);
+                            finish();
                            // showToast(responseModel.getResult().getMessage());
                            /* if (fromBackpress) {
                                 super.onBackPressed();
@@ -171,7 +175,9 @@ public class ArticleImageTagUpload extends BaseActivity {
                               _parentingModel.setPage("" + pPageCount);*/
                               ArticlePublishController _controller = new ArticlePublishController(ArticleImageTagUpload.this, ArticleImageTagUpload.this);
 
-                              _controller.getData(AppConstants.ARTICLE_PUBLISH_REQUEST, articlePublishRequestRequest);}
+                              _controller.getData(AppConstants.ARTICLE_PUBLISH_REQUEST, articlePublishRequestRequest);
+
+                          }
                             else {
                               Intent intent=new Intent(ArticleImageTagUpload.this,BlogPage.class);
                               startActivity(intent);

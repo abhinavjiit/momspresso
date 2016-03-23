@@ -130,6 +130,7 @@ public class ImageUploadController extends BaseController {
         switch (response.getDataType()) {
             case AppConstants.IMAGE_UPLOAD_REQUEST:
                 CommonResponse _forgotResponse;
+                try {
                 if (response != null) {
                     String responseDatta = new String(response.getResponseData());
                     System.out.println("img response " + responseDatta);
@@ -140,10 +141,14 @@ public class ImageUploadController extends BaseController {
                 } else {
                     sendResponseToScreen(null);
                 }
+        } catch (Exception e) {
+            e.printStackTrace();
+            sendResponseToScreen(null);
+        }
 
                 break;
             case AppConstants.IMAGE_EDITOR_UPLOAD_REQUEST:
-
+                try {
                 if (response != null) {
                     String responseDatta = new String(response.getResponseData());
                     System.out.println("img response " + responseDatta);
@@ -154,10 +159,13 @@ public class ImageUploadController extends BaseController {
                 } else {
                     sendResponseToScreen(null);
                 }
-
+    } catch (Exception e) {
+        e.printStackTrace();
+        sendResponseToScreen(null);
+    }
                 break;
             case AppConstants.FILE_UPLOAD_REQ:
-
+                try {
                 if (response != null) {
 
 
@@ -170,7 +178,10 @@ public class ImageUploadController extends BaseController {
                 } else {
                     sendResponseToScreen(null);
                 }
-
+} catch (Exception e) {
+        e.printStackTrace();
+        sendResponseToScreen(null);
+        }
                 break;
             case AppConstants.UPLOAD_BUSINESS_IMAGE_REQUEST: {
                 try {
@@ -185,9 +196,10 @@ public class ImageUploadController extends BaseController {
                     sendResponseToScreen(null);
                 }
                 break;
+
             }
             case AppConstants.FILE_UPLOAD_REQ_TASK:
-
+                try {
                 if (response != null) {
                     String responseDatta = new String(response.getResponseData());
                     System.out.println("file response_task " + responseDatta);
@@ -199,6 +211,10 @@ public class ImageUploadController extends BaseController {
                     sendResponseToScreen(null);
                 }
                 break;
+        } catch (Exception e) {
+        e.printStackTrace();
+        sendResponseToScreen(null);
+        }
         }
     }
 

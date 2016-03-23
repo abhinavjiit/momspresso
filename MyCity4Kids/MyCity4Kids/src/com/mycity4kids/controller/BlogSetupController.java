@@ -114,6 +114,7 @@ public class BlogSetupController extends BaseController{
     public void handleResponse(Response response) {
         switch (response.getDataType()) {
             case AppConstants.ARTICLE_DRAFT_REQUEST:
+                try {
                 ParentingDetailResponse _forgotResponse;
                 if (response != null) {
                     String responseDatta = new String(response.getResponseData());
@@ -125,10 +126,14 @@ public class BlogSetupController extends BaseController{
                 } else {
                     sendResponseToScreen(null);
                 }
+        } catch (Exception e) {
+            e.printStackTrace();
+            sendResponseToScreen(null);
+        }
 
                 break;
             case AppConstants.ARTICLE_DRAFT_LIST_REQUEST:
-
+                try {
                 if (response != null) {
                     CommonResponse _forgotResponse1;
                     String responseDatta = new String(response.getResponseData());
@@ -140,10 +145,13 @@ public class BlogSetupController extends BaseController{
                 } else {
                     sendResponseToScreen(null);
                 }
-
+    } catch (Exception e) {
+        e.printStackTrace();
+        sendResponseToScreen(null);
+    }
                 break;
             case AppConstants.BLOG_SETUP_REQUEST:
-
+                try {
                 if (response != null) {
                     CommonResponse _forgotResponse1;
                     String responseDatta = new String(response.getResponseData());
@@ -157,7 +165,10 @@ public class BlogSetupController extends BaseController{
                 }
 
                 break;
-
+} catch (Exception e) {
+        e.printStackTrace();
+        sendResponseToScreen(null);
+        }
         }
     }
 

@@ -221,7 +221,12 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             {super.onBackPressed();
 
             }
-            else {
+             else if (mEditorFragment.imageUploading == 0) {
+                Log.e("imageuploading", mEditorFragment.imageUploading + "");
+                showToast("Please wait while image is being uploaded");
+            }else
+            {
+
                 saveDraftRequest(mEditorFragment.getTitle().toString(), mEditorFragment.getContent().toString(), draftId);
                 fromBackpress = true;
             }
@@ -436,37 +441,42 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.draft) {
-            Log.e("draftId",draftId+"");
-            saveDraftRequest(mEditorFragment.getTitle().toString(), mEditorFragment.getContent().toString(),draftId);
-            fromBackpress = false;
+        switch (item.getItemId()) {
+            case R.id.draft: {
+                if (mEditorFragment.getTitle().toString().isEmpty() && mEditorFragment.getContent().toString().isEmpty()) {
+                    showToast("There is nothing to save in draft");
+                } else if (mEditorFragment.imageUploading == 0) {
+                    Log.e("imageuploading", mEditorFragment.imageUploading + "");
+                    showToast("Please wait while image is being uploaded");
+                } else {
+                    Log.e("draftId", draftId + "");
+                    saveDraftRequest(mEditorFragment.getTitle().toString(), mEditorFragment.getContent().toString(), draftId);
+                    fromBackpress = false;
+                }
+            }
+            break;
+            case R.id.publish: {
+                if (mEditorFragment.getTitle().toString().isEmpty()) {
+                    showToast("Title can't be empty");
+                } else if (mEditorFragment.getContent().toString().isEmpty()) {
+                    showToast("Body can't be empty");
+                } else if (mEditorFragment.imageUploading == 0) {
+                    Log.e("imageuploading", mEditorFragment.imageUploading + "");
+                    showToast("Please wait while image is being uploaded");
+                } else {
+
+                    ArticleDraftList draftObject = new ArticleDraftList();
+
+                    draftObject.setBody(contentFormatting(mEditorFragment.getContent().toString()));
+                    draftObject.setTitle(mEditorFragment.getTitle().toString());
+                    Log.e("publish", "clicked");
+                    Intent intent = new Intent(EditorPostActivity.this, ArticleImageTagUpload.class);
+                    intent.putExtra("draftItem", draftObject);
+                    startActivity(intent);
+                }
+            }
+            break;
         }
-        else if (item.getItemId() == R.id.publish)
-        {
-            if (mEditorFragment.getTitle().toString().isEmpty())
-            {
-                showToast("Title can't be empty");
-            }
-            else if (mEditorFragment.getContent().toString().isEmpty())
-            {
-                showToast("Body can't be empty");
-            }
-            else if (mEditorFragment.imageUploading==0)
-            { Log.e("imageuploading",mEditorFragment.imageUploading+"");
-                showToast("Please wait while image is being uploaded");
-            }
-            else
-            {
-
-            ArticleDraftList draftObject=new ArticleDraftList();
-
-            draftObject.setBody(contentFormatting(mEditorFragment.getContent().toString()));
-            draftObject.setTitle(mEditorFragment.getTitle().toString());
-            Log.e("publish", "clicked");
-            Intent intent=new Intent(EditorPostActivity.this,ArticleImageTagUpload.class);
-            intent.putExtra("draftItem",  draftObject);
-            startActivity(intent);
-        }}
         return super.onOptionsItemSelected(item);
 
     }

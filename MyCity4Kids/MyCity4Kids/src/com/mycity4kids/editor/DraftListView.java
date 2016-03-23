@@ -66,7 +66,7 @@ public class DraftListView extends BaseActivity implements View.OnClickListener,
                         }
                         removeProgressDialog();
                         draftList = responseModel.getResult().getData();
-                        Log.e("draftlist", draftList.get(0).getBody().toString() + "," + draftList.get(1).getBody().toString());
+
                         adapter = new DraftListAdapter(this, draftList);
                         draftListview.setAdapter(adapter);
                         //setProfileImage(originalImage);
@@ -120,7 +120,7 @@ public class DraftListView extends BaseActivity implements View.OnClickListener,
         addDraft=(ImageView) findViewById(R.id.addDraft);
         UserTable userTable = new UserTable((BaseApplication) this.getApplication());
         userModel = userTable.getAllUserData();
-        hitDraftListingApi();
+      /*  hitDraftListingApi();
         draftListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -129,7 +129,7 @@ public class DraftListView extends BaseActivity implements View.OnClickListener,
                 intent.putExtra("from", "draftList");
                 startActivity(intent);
             }
-        });
+        });*/
         addDraft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -165,6 +165,21 @@ public class DraftListView extends BaseActivity implements View.OnClickListener,
                 finish();
         }
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        hitDraftListingApi();
+        draftListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(DraftListView.this, EditorPostActivity.class);
+                intent.putExtra("draftItem", draftList.get(position));
+                intent.putExtra("from", "draftList");
+                startActivity(intent);
+            }
+        });
     }
 
     private void hitDraftListingApi() {

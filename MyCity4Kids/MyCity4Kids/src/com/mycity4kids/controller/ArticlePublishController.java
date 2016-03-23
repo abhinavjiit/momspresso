@@ -116,6 +116,7 @@ public class ArticlePublishController extends BaseController{
         switch (response.getDataType()) {
             case AppConstants.ARTICLE_PUBLISH_REQUEST:
                 ParentingDetailResponse _forgotResponse;
+                try {
                 if (response != null) {
                     String responseDatta = new String(response.getResponseData());
                     System.out.println("draft response " + responseDatta);
@@ -126,10 +127,14 @@ public class ArticlePublishController extends BaseController{
                 } else {
                     sendResponseToScreen(null);
                 }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    sendResponseToScreen(null);
+                }
 
                 break;
             case AppConstants.ARTICLE_DRAFT_LIST_REQUEST:
-
+                try {
                 if (response != null) {
                     CommonResponse _forgotResponse1;
                     String responseDatta = new String(response.getResponseData());
@@ -141,8 +146,12 @@ public class ArticlePublishController extends BaseController{
                 } else {
                     sendResponseToScreen(null);
                 }
-
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    sendResponseToScreen(null);
+                }
                 break;
+
 
         }
     }

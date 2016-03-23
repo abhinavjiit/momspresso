@@ -1666,20 +1666,20 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
                 //  startActivity(new Intent(this,ActivityCreateAppointment.class));
 
-                break;
+                break;/*
             case R.id.rdBtnTodo:
                 Utils.pushEvent(DashboardActivity.this, GTMEventType.TODO_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "");
-                if (StringUtils.isNullOrEmpty("" + SharedPrefUtils.getUserDetailModel(this).getFamily_id()) ||
-                        SharedPrefUtils.getUserDetailModel(this).getFamily_id() == 0) {
-                    showCreateFamilyAlert();
-                } else {
-                    replaceFragment(new FragmentTaskHome(), null, true);
-                    setTitle("All Tasks");
-                    SharedPrefUtils.setTaskListID(DashboardActivity.this, 0);
-                    taskIconFlag = false;
-                    refreshMenu();
-                }
-                break;
+            if (StringUtils.isNullOrEmpty("" + SharedPrefUtils.getUserDetailModel(this).getFamily_id()) ||
+                    SharedPrefUtils.getUserDetailModel(this).getFamily_id() == 0) {
+                showCreateFamilyAlert();
+            } else {
+                replaceFragment(new FragmentTaskHome(), null, true);
+                setTitle("All Tasks");
+                SharedPrefUtils.setTaskListID(DashboardActivity.this, 0);
+                taskIconFlag = false;
+                refreshMenu();
+            }
+            break;*/
             case R.id.rdBtnUpcoming:
                 Utils.pushEvent(DashboardActivity.this, GTMEventType.UPCOMING_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "");
                 Constants.IS_SEARCH_LISTING = false;
@@ -1795,8 +1795,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
 
             case R.id.imgProfile:
-
-                replaceFragment(new FragmentFamilyDetail(), null, true);
+            Intent intent=new Intent(DashboardActivity.this,BloggerDashboardActivity.class);
+                startActivity(intent);
+              //  replaceFragment(new FragmentFamilyDetail(), null, true);
                 break;
 
             case R.id.back_month:
