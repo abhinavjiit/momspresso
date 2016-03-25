@@ -181,6 +181,7 @@ public class ArticleImageTagUpload extends BaseActivity {
                               articlePublishRequestRequest.setImageUrl(url);
                               articlePublishRequestRequest.setBody(draftObject.getBody());
                               articlePublishRequestRequest.setTitle(draftObject.getTitle());
+                              articlePublishRequestRequest.setDraftId(draftObject.getId());
                               /*
                               articleDraftRequest.setCity_id(SharedPrefUtils.getCurrentCityModel(getActivity()).getId());
                               _parentingModel.setPage("" + pPageCount);*/

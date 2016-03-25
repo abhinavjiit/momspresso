@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mycity4kids"
-    android:versionCode="22"
-    android:versionName="3.1.3">
+    android:versionCode="23"
+    android:versionName="4.0">
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -190,7 +190,7 @@
         <activity
             android:name=".ui.activity.BloggerDashboardActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.activity.BlogDetailActivity"
