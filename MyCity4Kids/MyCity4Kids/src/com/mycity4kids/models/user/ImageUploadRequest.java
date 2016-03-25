@@ -10,6 +10,8 @@ public class ImageUploadRequest {
 	private String profileId;
 	private String image;
 	private String type;
+	private String imageType;
+    private String file;
 
 	/**
 	 * @return the user_id
@@ -78,4 +80,20 @@ public class ImageUploadRequest {
 	public void setType(String type) {
 		this.type = type;
 	}
+
+	public void setImageType(String imageType) {
+		this.imageType = imageType;
+	}
+
+	public String getImageType() {
+		return imageType;
+	}
+
+    public void setFile(String file) {
+        this.file = file;
+    }
+
+    public String getFile() {
+        return file;
+    }
 }

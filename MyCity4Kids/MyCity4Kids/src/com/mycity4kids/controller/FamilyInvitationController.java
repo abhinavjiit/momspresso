@@ -73,19 +73,19 @@ public class FamilyInvitationController extends BaseController {
                 nameValuePairs.add(new BasicNameValuePair("userId", "" + userInfo.getUserId()));
                 nameValuePairs.add(new BasicNameValuePair("deleteInvite", "1"));
                 nameValuePairs.add(new BasicNameValuePair("email", userInfo.getEmail()));
-                nameValuePairs.add(new BasicNameValuePair("mobile", userInfo.getMobile()));
+//                nameValuePairs.add(new BasicNameValuePair("mobile", userInfo.getMobile()));
                 nameValuePairs.add(new BasicNameValuePair("invitationId", "" + model.getInvitationId()));
                 nameValuePairs.add(new BasicNameValuePair("familyId", "" + model.getFamilyId()));
                 nameValuePairs.add(new BasicNameValuePair("colorCode", "" + model.getColorCode()));
-                nameValuePairs.add(new BasicNameValuePair("pictureUrl", "" + model.getProfileImage()));
+//                nameValuePairs.add(new BasicNameValuePair("pictureUrl", "" + model.getProfileImage()));
             } else {
                 nameValuePairs.add(new BasicNameValuePair("userId", "" + userInfo.getUserId()));
                 nameValuePairs.add(new BasicNameValuePair("email", userInfo.getEmail()));
-                nameValuePairs.add(new BasicNameValuePair("mobile", userInfo.getMobile()));
+//                nameValuePairs.add(new BasicNameValuePair("mobile", userInfo.getMobile()));
                 nameValuePairs.add(new BasicNameValuePair("invitationId", "" + model.getInvitationId()));
                 nameValuePairs.add(new BasicNameValuePair("familyId", "" + model.getFamilyId()));
                 nameValuePairs.add(new BasicNameValuePair("colorCode", "" + model.getColorCode()));
-                nameValuePairs.add(new BasicNameValuePair("pictureUrl", "" + model.getProfileImage()));
+//                nameValuePairs.add(new BasicNameValuePair("pictureUrl", "" + model.getProfileImage()));
             }
             System.out.println("JSON " + nameValuePairs);
         } catch (Exception e) {

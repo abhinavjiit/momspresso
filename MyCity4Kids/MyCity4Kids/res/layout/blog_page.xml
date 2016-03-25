@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@color/primary"
+        android:minHeight="?attr/actionBarSize">
+    </android.support.v7.widget.Toolbar>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/welcome"
+        android:layout_below="@id/toolbar"
+        android:text=" Welcome!"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:textSize="24sp"
+        android:textColor="@color/welcome_pink"
+        android:layout_gravity="center"
+        android:gravity="center"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textMessage"
+        android:layout_below="@id/welcome"
+        android:text="Set up your blog, introduce yourself and voila, you're ready to create your first blog post"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:textSize="18sp"
+        android:textColor="@color/welcome_pink"
+        android:layout_gravity="center"
+        android:gravity="center"
+        />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/blogTitle"
+        android:layout_below="@+id/textMessage"
+        android:hint="Blog Title"
+        android:layout_marginTop="10dp"
+        android:drawableBottom="@drawable/underline"
+        android:background="@null"
+        android:layout_marginLeft="10dp"
+        android:padding="10dp"
+        android:textColor="@color/black_color"
+        />
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:id="@+id/blogImage"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:scaleType="center"
+        android:layout_below="@id/blogTitle"
+        android:src="@drawable/default_blogger"
+        android:layout_marginTop="10dp"
+
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageMessage"
+        android:text="Upload a blog Photo"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:textSize="15sp"
+        android:layout_gravity="center"
+        android:layout_below="@+id/blogImage"
+        android:gravity="center"
+        android:textColor="@color/black_color"
+        />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="114dp"
+        android:id="@+id/bloggerBio"
+        android:layout_below="@+id/imageMessage"
+        android:hint="Let our readers get to know you"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:padding="10dp"
+        android:gravity="start"
+        android:drawableBottom="@drawable/underline"
+        android:background="@null"
+        android:textColor="@color/black_color"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textLimit"
+        android:text="200 Characters"
+
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:textSize="12sp"
+        android:layout_gravity="right"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/bloggerBio"
+        android:gravity="right"
+        />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/createBlog"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:text="Create Blog"
+        android:background="@color/primary"
+        android:layout_alignParentBottom="true"/>
+
+</RelativeLayout>

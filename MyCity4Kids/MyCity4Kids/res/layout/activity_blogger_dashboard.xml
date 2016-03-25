@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white_color">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize">
+
+    </android.support.v7.widget.Toolbar>
+
+    <ImageView
+        android:id="@+id/bloggerImageView"
+        android:layout_width="84dp"
+        android:layout_height="84dp"
+        android:layout_below="@+id/toolbar"
+        android:layout_margin="15dp"
+        android:src="@drawable/family_xxhdpi" />
+
+    <TextView
+        android:id="@+id/bloggerNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/rankingTextView"
+        android:layout_alignStart="@+id/rankingTextView"
+        android:layout_alignTop="@+id/bloggerImageView"
+        android:layout_marginTop="14dp"
+        android:text="Name"
+        android:textColor="@color/dashboard.bloggername"
+        android:textSize="22sp" />
+
+    <TextView
+        android:id="@+id/rankingTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/bloggerImageView"
+        android:layout_marginBottom="10dp"
+        android:layout_toRightOf="@+id/bloggerImageView"
+        android:drawableLeft="@drawable/ic_trending"
+        android:drawablePadding="2dp"
+        android:text="0"
+        android:textColor="@color/dashboard.stats" />
+
+    <View
+        android:id="@+id/vSeparator1"
+        android:layout_width="1dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/rankingTextView"
+        android:layout_alignTop="@+id/rankingTextView"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:layout_toRightOf="@+id/rankingTextView"
+        android:background="@color/login_grey" />
+
+    <TextView
+        android:id="@+id/viewCountTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/vSeparator1"
+        android:layout_toRightOf="@+id/vSeparator1"
+        android:drawableLeft="@drawable/ic_views"
+        android:drawablePadding="2dp"
+        android:text="0"
+        android:textColor="@color/dashboard.stats" />
+
+    <View
+        android:id="@+id/vSeparator2"
+        android:layout_width="1dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/viewCountTextView"
+        android:layout_alignTop="@+id/viewCountTextView"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:layout_toRightOf="@+id/viewCountTextView"
+        android:background="@color/login_grey" />
+
+    <TextView
+        android:id="@+id/followersViewCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/vSeparator2"
+        android:layout_toRightOf="@+id/vSeparator2"
+        android:drawableLeft="@drawable/ic_followers"
+        android:drawablePadding="2dp"
+        android:text="0"
+        android:textColor="@color/dashboard.stats" />
+
+
+    <View
+        android:id="@+id/separator1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/bloggerImageView"
+        android:background="@color/login_grey" />
+
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/sliding_tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/separator1"
+        android:background="@color/white_color"
+        android:fillViewport="false"
+        app:layout_collapseMode="pin"
+        app:tabGravity="fill"
+        app:tabIndicatorColor="@color/login_grey"
+        app:tabIndicatorHeight="3dp"
+        app:tabMode="fixed"
+        app:tabSelectedTextColor="@color/dashboard.selectedTabText"
+        app:tabTextColor="@color/dashboard.bloggername"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <View
+        android:id="@+id/vertialdivider"
+        android:layout_width="1dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/separator2"
+        android:layout_below="@+id/separator1"
+        android:layout_centerHorizontal="true"
+        android:background="@color/login_grey" />
+
+    <View
+        android:id="@+id/separator2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/sliding_tabs"
+        android:background="@color/login_grey" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/separator2" />
+</RelativeLayout>

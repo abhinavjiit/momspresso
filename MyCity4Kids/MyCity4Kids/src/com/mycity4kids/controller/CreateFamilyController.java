@@ -72,12 +72,14 @@ public class CreateFamilyController extends BaseController {
 
         try {
             nameValuePairs.add(new BasicNameValuePair("userId", requestData.getUserId()));
-            nameValuePairs.add(new BasicNameValuePair("profileImageUrl", "" + requestData.getProfileImageUrl()));
-            nameValuePairs.add(new BasicNameValuePair("userColorCode", "" + requestData.getUserColorCode()));
-            nameValuePairs.add(new BasicNameValuePair("cityId", "" + SharedPrefUtils.getCurrentCityModel(activity).getId()));
+//            nameValuePairs.add(new BasicNameValuePair("profileImageUrl", "" + requestData.getProfileImageUrl()));
+//            nameValuePairs.add(new BasicNameValuePair("userColorCode", "" + requestData.getUserColorCode()));
+//            nameValuePairs.add(new BasicNameValuePair("cityId", "" + SharedPrefUtils.getCurrentCityModel(activity).getId()));
             nameValuePairs.add(new BasicNameValuePair("familyName", "" + requestData.getFamilyName()));
+//            nameValuePairs.add(new BasicNameValuePair("familyName", "" + SharedPrefUtils.getUserDetailModel(activity).getPincode()));
             nameValuePairs.add(new BasicNameValuePair("kidsInformation", "" + kidsJson));
             nameValuePairs.add(new BasicNameValuePair("spouseInformation", "" + adultsJson));
+
             System.out.println("JSON " + nameValuePairs);
         } catch (Exception e) {
             // TODO: handle exception

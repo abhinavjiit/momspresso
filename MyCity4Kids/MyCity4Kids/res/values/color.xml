@@ -12,6 +12,7 @@
     <color name="white_color">#ffffff</color>
     <color name="black_color">#000000</color>
     <color name="dividercolor">#E9E9E9</color>
+    <color name="color_control_activated">@color/wp_blue_light</color>
 
     <color name="grey">#878787</color>
     <color name="dark_grey">#464646</color>
@@ -71,6 +72,7 @@
     <color name="primary_dark">#1744c3</color>
     <color name="blue_light">#3366f3</color>
     <color name="red_drawer_selected">#ec3b55</color>
+    <color name="welcome_pink">#ea3a8d</color>
     <color name="home_purple">#536CFD</color>
     <color name="home_green">#1BDDD2</color>
     <color name="home_blue">#4ECFE2</color>
@@ -91,4 +93,13 @@
     <color name="tabsScrollColor">#ec3b55</color>
     <color name="ColorPrimary">#00897B</color>
     <color name="ColorPrimaryDark">#00695C</color>
+
+    <color name="login_grey">#cccccc</color>
+    <color name="login_line_grey">#e0e0e0</color>
+
+    <color name="dashboard.bloggername">#333333</color>
+    <color name="dashboard.stats">#777777</color>
+    <color name="dashboard.selectedTabText">#1c55f1</color>
+
+
 </resources>

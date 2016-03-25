@@ -2,6 +2,7 @@ package com.mycity4kids.models.user;
 
 import com.kelltontech.model.BaseModel;
 import com.mycity4kids.models.basemodel.BaseDataModel;
+import com.mycity4kids.newmodels.FamilyInvites;
 
 import java.util.ArrayList;
 
@@ -15,6 +16,7 @@ public class UserModel extends BaseModel{
     public String exist;
     private String error;
     private String message;
+    private ArrayList<FamilyInvites> familyInvites;
 
     public String getError() {
         return error;
@@ -91,6 +93,14 @@ public class UserModel extends BaseModel{
      */
     public void setUser(UserInfo user) {
         User = user;
+    }
+
+    public ArrayList<FamilyInvites> getFamilyInvites() {
+        return familyInvites;
+    }
+
+    public void setFamilyInvites(ArrayList<FamilyInvites> familyInvites) {
+        this.familyInvites = familyInvites;
     }
 
 

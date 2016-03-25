@@ -51,7 +51,7 @@
                 android:id="@+id/rdBtnToday"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="28dp"
                 android:background="@drawable/selector_drawer_menu"
                 android:button="@null"
                 android:checked="true"
@@ -62,7 +62,20 @@
                 android:textColor="@color/white_color"
                 android:textSize="16sp"
                 android:textStyle="bold" />
-
+            <RadioButton
+                android:id="@+id/rdBtnParentingBlogs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:background="@drawable/selector_drawer_menu"
+                android:button="@null"
+                android:drawableLeft="@drawable/parenting"
+                android:drawablePadding="10dp"
+                android:padding="12dp"
+                android:text="PARENTING BLOGS"
+                android:textColor="@color/white_color"
+                android:textSize="16sp"
+                android:textStyle="bold" />
             <RadioButton
                 android:id="@+id/rdBtnCalender"
                 android:layout_width="match_parent"
@@ -78,7 +91,7 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <RadioButton
+           <!-- <RadioButton
                 android:id="@+id/rdBtnTodo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -91,7 +104,7 @@
                 android:text="TO-DO LISTS"
                 android:textColor="@color/white_color"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold" />-->
 
             <RadioButton
                 android:id="@+id/rdBtnUpcoming"
@@ -123,8 +136,9 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <RadioButton
-                android:id="@+id/rdBtnParentingBlogs"
+
+          <!--  <RadioButton
+                android:id="@+id/editor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
@@ -133,10 +147,25 @@
                 android:drawableLeft="@drawable/parenting"
                 android:drawablePadding="10dp"
                 android:padding="12dp"
-                android:text="PARENTING BLOGS"
+                android:text="EDITOR"
                 android:textColor="@color/white_color"
                 android:textSize="16sp"
                 android:textStyle="bold" />
+            <RadioButton
+                android:id="@+id/drafts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:background="@drawable/selector_drawer_menu"
+                android:button="@null"
+                android:drawableLeft="@drawable/parenting"
+                android:drawablePadding="10dp"
+                android:padding="12dp"
+                android:text="DRAFTS"
+                android:textColor="@color/white_color"
+                android:textSize="16sp"
+                android:textStyle="bold" />-->
+
 
         </RadioGroup>
 
@@ -168,12 +197,43 @@
             android:textColor="@color/white_color"
             android:textSize="12sp"
             android:visibility="gone" />
+        <TextView
+            android:id="@+id/editor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+
+            android:drawablePadding="10dp"
+
+            android:paddingLeft="12dp"
+            android:paddingTop="5dp"
+            android:text="ADD A BLOG"
+            android:textColor="@color/white_color"
+            android:textSize="12sp"
+            android:drawableLeft="@drawable/icon_add_blog"/>
+
+        <TextView
+            android:id="@+id/drafts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:drawablePadding="10dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="12dp"
+            android:paddingTop="5dp"
+            android:text="DRAFTS"
+            android:textColor="@color/white_color"
+            android:textSize="12sp"
+            android:layout_marginTop="21dp"
+            android:drawableLeft="@drawable/icon_drafts"
+
+            />
 
         <TextView
             android:id="@+id/txvSettings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="21dp"
             android:drawableLeft="@drawable/settings_new"
             android:drawablePadding="10dp"
             android:paddingBottom="5dp"
@@ -187,16 +247,18 @@
             android:id="@+id/feed_back"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/feedback_xxhdpi"
+            android:layout_marginTop="21dp"
             android:drawablePadding="10dp"
             android:paddingBottom="5dp"
             android:paddingLeft="12dp"
             android:paddingTop="5dp"
             android:text="SEND FEEDBACK"
             android:textColor="@color/white_color"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:drawableLeft="@drawable/feedback_xxhdpi"
+            />
 
-        <TextView
+      <!--  <TextView
             android:id="@+id/txvtelfrnd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -220,7 +282,7 @@
             android:paddingTop="5dp"
             android:text="HELP"
             android:textColor="@color/white_color"
-            android:textSize="12sp" />
+            android:textSize="12sp" />-->
 
 
     </LinearLayout>

@@ -79,7 +79,7 @@ public class ArticlesListingAdapter extends BaseAdapter {
             holder.txvAuthorName = (TextView) view.findViewById(R.id.txvAuthorName);
             holder.txvPublishDate = (TextView) view.findViewById(R.id.txvPublishDate);
             holder.imvAuthorThumb = (ImageView) view.findViewById(R.id.imvAuthorThumb);
-            holder.authorPic = (ImageView) view.findViewById(R.id.author_pic);
+//            holder.authorPic = (ImageView) view.findViewById(R.id.author_pic);
 
             view.setTag(holder);
         } else {
@@ -103,11 +103,11 @@ public class ArticlesListingAdapter extends BaseAdapter {
             } else {
                 holder.imvAuthorThumb.setBackgroundResource(R.drawable.article_default);
             }
-            if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getAuthor_image())) {
-                Picasso.with(mContext).load(articleDataModelsNew.get(position).getAuthor_image()).placeholder(R.drawable.blue_man_icon).resize((int) (14 * density), (int) (14 * density)).centerCrop().into(holder.authorPic);
-            } else {
-                holder.imvAuthorThumb.setBackgroundResource(R.drawable.default_user);
-            }
+//            if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getAuthor_image())) {
+//                Picasso.with(mContext).load(articleDataModelsNew.get(position).getAuthor_image()).placeholder(R.drawable.blue_man_icon).resize((int) (14 * density), (int) (14 * density)).centerCrop().into(holder.authorPic);
+//            } else {
+//                holder.imvAuthorThumb.setBackgroundResource(R.drawable.default_user);
+//            }
 
             holder.txvAuthorName.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -160,7 +160,7 @@ public class ArticlesListingAdapter extends BaseAdapter {
         TextView txvAuthorName;
         TextView txvPublishDate;
         ImageView imvAuthorThumb;
-        ImageView authorPic;
+//        ImageView authorPic;
     }
 
     public void refreshArticleList(ArrayList<CommonParentingList> newList) {

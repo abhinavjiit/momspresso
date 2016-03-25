@@ -16,7 +16,7 @@ public class AppConstants {
     public static final String LIVE_URL = "http://webserve.mycity4kids.com/";
 //    public static final String LIVE_URL = "http://54.169.17.138/";
 //    public static final String LIVE_URL = "http://10.42.0.1/";
-//    public static final String LIVE_URL = "http://192.168.2.113/";
+//    public static final String LIVE_URL = "http://192.168.1.12/";
 
 
     //Enable For Testing
@@ -91,6 +91,12 @@ public class AppConstants {
 
     public static final String FORGOT_URL = STAGING_INTERNAL_SERVER_URL + STAGING_USERS_KEY + "/forgotpassword";
     public static final String IMAGE_UPLOAD_URL = STAGING_INTERNAL_SERVER_URL + STAGING_USERS_KEY + "/familyimageupload";
+    public static final String IMAGE_EDITOR_UPLOAD_URL = STAGING_INTERNAL_SERVER_URL + "apiblogs" + "/uploadImage";
+    public static final String ARTICLE_DRAFT_URL = STAGING_INTERNAL_SERVER_URL + "apiblogs" + "/createUpdateDraft";
+    public static final String ARTICLE_DRAFT_LIST_URL = STAGING_INTERNAL_SERVER_URL + "apiblogs" + "/getDraftLists";
+    public static final String ARTICLE_PUBLISH_URL = STAGING_INTERNAL_SERVER_URL + "apiblogs" + "/createUpdateArticle";
+    public static final String BLOG_SETUP_URL = STAGING_INTERNAL_SERVER_URL + "apiblogs" + "/createUpdateBlogPage";
+    public static final String BLOG_DATA_URL = STAGING_INTERNAL_SERVER_URL + "apiblogs" + "/getBlogPage";
     public static final String CREATE_APPOINTMENT_URL = STAGING_INTERNAL_SERVER_URL + "apiappointments/add/";
     public static final String EDIT_APPOINTMENT_URL = STAGING_INTERNAL_SERVER_URL + "apiappointments/add/";
     public static final String DELETE_APPOINTMENT_URL = STAGING_INTERNAL_SERVER_URL + "apiappointments/delete/";
@@ -157,8 +163,8 @@ public class AppConstants {
     public static final int DELETE_INVITE = 1012;
     public static final String VERIFY_OTP_URL = BASE_URL + STAGING_USERS_KEY + "/checkOtpV1";
     public static final String NEW_SIGN_UP_URL = BASE_URL + STAGING_USERS_KEY + "/registrationV1/";
-    public static final String NEW_LOGIN_URL = BASE_URL + STAGING_USERS_KEY + "/loginV1/";
-    public static final String CREATE_FAMILY_URL = BASE_URL + STAGING_USERS_KEY + "/createFamilyV1/";
+    public static final String NEW_LOGIN_URL = BASE_URL + STAGING_USERS_KEY + "/loginV2/";
+    public static final String CREATE_FAMILY_URL = BASE_URL + STAGING_USERS_KEY + "/createFamilyV2/";
     public static final String ACCEPT_OR_REJECT_INVITE_URL = BASE_URL + STAGING_USERS_KEY + "/acceptInviteV1/";
     public static final String UPDATE_MOBILE_FOR_EXISTING_USERS_URL = BASE_URL + STAGING_USERS_KEY + "/updateMobileV1/";
     public static final String CONFIRM_MOBILE_OTP_FOR_EXISTING_USERS_URL = BASE_URL + STAGING_USERS_KEY + "/confirmUpdateMobileOtpV1/";
@@ -166,6 +172,9 @@ public class AppConstants {
     public static final String UPDATE_PUSH_TOKEN_URL = STAGING_INTERNAL_SERVER_URL + STAGING_USERS_KEY + "/updatePushTokenV1?";
     public static final String ADD_ADULT_AND_KIDS_URL = STAGING_INTERNAL_SERVER_URL + STAGING_USERS_KEY + "/addAdultAndKidsV1/";
 
+    //New Text Editor and Blogs Changes APIs
+    public static final String GET_BLOGGER_DASHBOARD_URL = BASE_URL + "apiblogs/bloggerDashboardData?";
+    public static final String GET_BLOGGER_PUBLISHED_ARTICLES_URL = BASE_URL + "apiblogs/publishedArticle?";
 
     public static final int LOGIN_REQUEST = 0;
     public static final int GOOGLE_REQUEST = 1;
@@ -193,6 +202,7 @@ public class AppConstants {
     public static final int BEEN_THERE_REQUEST = 20;
     public static final int WRITE_A_REVIEW_REQUEST = 21;
     public static final int IMAGE_UPLOAD_REQUEST = 22;
+    public static final int IMAGE_EDITOR_UPLOAD_REQUEST = 222;
     public static final int RECENTLY_VIEWED_REQUEST = 23;
     public static final int UPLOAD_BUSINESS_IMAGE_REQUEST = 24;
     public static final int TOP_PICKS_REQUEST = 25;
@@ -280,7 +290,18 @@ public class AppConstants {
 
     public static final int GET_ADDRESS_FROM_LATLONG_REQUEST = 1004;
     public static final int GET_ADDRESS_FROM_LATLONG_REQUEST_DEST = 1005;
+
+    //New Text Editor and BLogs Changes
+    public static final int GET_BLOGGER_DASHBOARD_REQUEST = 1006;
+    public static final int GET_BLOGGER_PUBLISHED_ARTICLES_REQUEST = 1007;
+
     public static final int DEEP_LINK_RESOLVER_REQUEST = 2001;
+    public static final int ARTICLE_DRAFT_REQUEST = 3001;
+    public static final int ARTICLE_DRAFT_LIST_REQUEST = 3002;
+    public static final int BLOG_SETUP_REQUEST = 4001;
+    public static final int ARTICLE_PUBLISH_REQUEST = 5001;
+    public static final int BLOG_DATA_REQUEST = 6001;
+
 
     public static final String PREF_ACCOUNT_NAME = "accountName";
 

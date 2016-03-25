@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="10dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="10dp">
+
+    <LinearLayout
+        android:id="@+id/titleContainer"
+        android:layout_width="match_parent"
+        android:layout_height="67dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:id="@+id/imvAuthorThumbContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical">
+
+            <com.android.volley.toolbox.NetworkImageView
+                android:id="@+id/imvAuthorThumb1"
+                android:layout_width="101dp"
+                android:layout_height="67dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerInParent="true"
+                android:contentDescription="@string/author_img"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/imvAuthorThumb"
+                android:layout_width="101dp"
+                android:layout_height="67dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerInParent="true"
+                android:contentDescription="@string/author_img" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:weightSum="1">
+
+            <TextView
+                android:id="@+id/txvArticleTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_gravity="top"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="top"
+                android:maxLines="3"
+                android:paddingLeft="10dp"
+                android:singleLine="false"
+                android:text="@string/title"
+                android:textColor="@color/black_color"
+                android:textSize="14dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_gravity="bottom"
+                android:gravity="bottom"
+                android:weightSum="1">
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".6"
+                    android:gravity="bottom"
+                    android:orientation="horizontal"
+                    android:paddingLeft="10dp">
+
+                    <ImageView
+                        android:id="@+id/author_pic"
+                        android:layout_width="13dp"
+                        android:layout_height="13dp"
+                        android:layout_gravity="bottom"
+                        android:background="@color/hint_txt_color"
+                        android:gravity="bottom" />
+
+                    <TextView
+                        android:id="@+id/txvAuthorName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:clickable="true"
+                        android:fontFamily="sans-serif"
+                        android:gravity="bottom"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:paddingTop="4dp"
+                        android:singleLine="true"
+                        android:text="@string/author_name"
+                        android:textSize="12dp" />
+
+                </LinearLayout>
+
+
+                <TextView
+                    android:id="@+id/txvPublishDate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_gravity="bottom"
+                    android:layout_weight=".4"
+                    android:fontFamily="sans-serif"
+                    android:gravity="right"
+                    android:singleLine="true"
+                    android:text="@string/article_publish_date"
+                    android:textColor="@color/gray2"
+                    android:textSize="12dp" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

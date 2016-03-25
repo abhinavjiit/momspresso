@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mycity4kids"
-    android:versionCode="21"
-    android:versionName="3.1.2">
+    android:versionCode="23"
+    android:versionName="4.0">
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -188,6 +188,11 @@
             android:theme="@style/Theme.Transparent" />
 
         <activity
+            android:name=".ui.activity.BloggerDashboardActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".ui.activity.BlogDetailActivity"
             android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|uiMode|keyboard"
             android:label="@string/app_name"
@@ -253,7 +258,7 @@
             android:name=".ui.activity.ActivityLogin"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".ui.activity.ActivityCreateAppointment"
@@ -460,7 +465,20 @@
         <activity
             android:name=".ui.activity.NewLoginActivity"
             android:label="@string/title_activity_new_login"></activity>
-
+        <activity
+            android:name=".editor.EditorPostActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/EditorTheme"></activity>
+        <activity
+            android:name=".editor.DraftListView"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.nnn"></activity>
+        <activity
+            android:name=".editor.BlogPage"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".editor.ArticleImageTagUpload"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.mycity4kids.reminders.AlarmDialogActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"

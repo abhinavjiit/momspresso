@@ -101,43 +101,6 @@ public class LoginController extends BaseController {
 
     }
 
-    /**
-     * This was for Get Login.
-     *
-     * @param requestType
-     * @param _userRequest
-     * @return
-     */
-    private String getAppendUrl(int requestType, UserRequest _userRequest) {
-        StringBuilder builder = new StringBuilder();
-
-        if (_userRequest.getNetworkName().equalsIgnoreCase("google")) {
-            builder.append("?emailId=").append(_userRequest.getEmailId()).append("&network=").
-                    append(_userRequest.getNetworkName()).append("&profileId=").append(_userRequest.getProfileId());
-            if (!StringUtils.isNullOrEmpty(_userRequest.getFirstName())) {
-                builder.append("&firstname=").append(_userRequest.getFirstName());
-            }
-            if (!StringUtils.isNullOrEmpty(_userRequest.getLastName())) {
-                builder.append("&lastname=").append(_userRequest.getLastName());
-            }
-        } else if (_userRequest.getNetworkName().equalsIgnoreCase("facebook")) {
-            builder.append("?emailId=").append(_userRequest.getEmailId()).append("&network=").
-                    append(_userRequest.getNetworkName()).append("&profileId=").append(_userRequest.getProfileId());
-            if (!StringUtils.isNullOrEmpty(_userRequest.getFirstName())) {
-                builder.append("&firstname=").append(_userRequest.getFirstName());
-            }
-            if (!StringUtils.isNullOrEmpty(_userRequest.getLastName())) {
-                builder.append("&lastname=").append(_userRequest.getLastName());
-            }
-        } else {
-            builder.append("?emailId=").append(_userRequest.getEmailId()).append("&password=").append(_userRequest.getPassword());
-        }
-
-        return builder.toString().replace(" ", "%20");
-
-    }
-
-
     @Override
     public void parseResponse(Response response) {
         // TODO Auto-generated method stub
@@ -154,40 +117,7 @@ public class LoginController extends BaseController {
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         try {
 
-            if (requestType == AppConstants.LOGIN_REQUEST) {
-                if (requestData.getNetworkName().equalsIgnoreCase("google") || requestData.getNetworkName().equalsIgnoreCase("facebook")) {
-                    if (!StringUtils.isNullOrEmpty(requestData.getEmailId())) {
-                        nameValuePairs.add(new BasicNameValuePair("emailId", requestData.getEmailId()));
-                    }
-                    if (!StringUtils.isNullOrEmpty(requestData.getNetworkName())) {
-                        nameValuePairs.add(new BasicNameValuePair("network", requestData.getNetworkName()));
-                    }
-                    if (!StringUtils.isNullOrEmpty(requestData.getProfileId())) {
-                        nameValuePairs.add(new BasicNameValuePair("profileId", requestData.getProfileId()));
-                    }
-                    if (!StringUtils.isNullOrEmpty(requestData.getFirstName())) {
-                        nameValuePairs.add(new BasicNameValuePair("firstname", requestData.getFirstName()));
-                    }
-                    if (!StringUtils.isNullOrEmpty(requestData.getLastName())) {
-                        nameValuePairs.add(new BasicNameValuePair("lastname", requestData.getLastName()));
-                    }
-                } else {
-                    if (!StringUtils.isNullOrEmpty(requestData.getEmailId())) {
-                        nameValuePairs.add(new BasicNameValuePair("emailId", requestData.getEmailId()));
-                    }
-                    if (!StringUtils.isNullOrEmpty(requestData.getPassword())) {
-                        nameValuePairs.add(new BasicNameValuePair("password", requestData.getPassword()));
-                    }
-                }
-                Log.i("Login request ", nameValuePairs.toString());
-            } else if (requestType == AppConstants.NEW_LOGIN_REQUEST) {
-                if (!StringUtils.isNullOrEmpty(requestData.getEmailId())) {
-                    if (StringUtils.isValidEmail(requestData.getEmailId())) {
-                        nameValuePairs.add(new BasicNameValuePair("email", requestData.getEmailId()));
-                    } else {
-                        nameValuePairs.add(new BasicNameValuePair("mobile", requestData.getEmailId()));
-                    }
-                }
+            if (requestType == AppConstants.NEW_LOGIN_REQUEST) {
 
                 if (!StringUtils.isNullOrEmpty(requestData.getNetworkName()) && requestData.getNetworkName().equalsIgnoreCase("google")) {
                     nameValuePairs.add(new BasicNameValuePair("requestMedium", "gp"));
@@ -198,20 +128,14 @@ public class LoginController extends BaseController {
                 } else {
                     nameValuePairs.add(new BasicNameValuePair("requestMedium", "custom"));
                     nameValuePairs.add(new BasicNameValuePair("socialToken", ""));
+                    if (StringUtils.isValidEmail(requestData.getEmailId())) {
+                        nameValuePairs.add(new BasicNameValuePair("email", requestData.getEmailId()));
+                    }
+                    if (!StringUtils.isNullOrEmpty(requestData.getPassword())) {
+                        nameValuePairs.add(new BasicNameValuePair("password", requestData.getPassword()));
+                    }
                 }
-
-                if (!StringUtils.isNullOrEmpty(requestData.getProfileId())) {
-                    nameValuePairs.add(new BasicNameValuePair("profileId", requestData.getProfileId()));
-                }
-                if (!StringUtils.isNullOrEmpty(requestData.getFirstName())) {
-                    nameValuePairs.add(new BasicNameValuePair("firstname", requestData.getFirstName()));
-                }
-                if (!StringUtils.isNullOrEmpty(requestData.getLastName())) {
-                    nameValuePairs.add(new BasicNameValuePair("lastname", requestData.getLastName()));
-                }
-                if (!StringUtils.isNullOrEmpty(requestData.getPassword())) {
-                    nameValuePairs.add(new BasicNameValuePair("password", requestData.getPassword()));
-                }
+                nameValuePairs.add(new BasicNameValuePair("cityId", "" + SharedPrefUtils.getCurrentCityModel(activity).getId()));
                 Log.i("Login request ", nameValuePairs.toString());
             }
 
