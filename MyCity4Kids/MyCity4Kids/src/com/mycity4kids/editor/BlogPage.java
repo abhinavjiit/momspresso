@@ -141,10 +141,20 @@ public class BlogPage extends BaseActivity {
         createBlog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (blogTitle.getText()==null||bloggerBio.getText()==null)
+                if (blogTitle.getText().toString().isEmpty())
                 {
-                    showToast("Please fill the required fields");
+                   // showToast("Please fill the required fields");
+                    blogTitle.setFocusableInTouchMode(true);
+                    blogTitle.setError("Please enter Blog Title");
+                    blogTitle.requestFocus();
                 }
+                else if (bloggerBio.getText().toString().isEmpty())
+                {
+                    bloggerBio.setFocusableInTouchMode(true);
+                    bloggerBio.setError("Please enter your Bio");
+                    bloggerBio.requestFocus();
+                }
+
                 else {
                 showProgressDialog(getResources().getString(R.string.please_wait));
                 ArticleDraftRequest articleDraftRequest = new ArticleDraftRequest();
