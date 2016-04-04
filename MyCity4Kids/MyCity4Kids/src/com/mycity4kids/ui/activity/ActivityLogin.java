@@ -97,12 +97,12 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Sign In");
 
-        forgotView = (LinearLayout) findViewById(R.id.forgot_view);
-
-        ((LinearLayout) findViewById(R.id.forgot_view)).setGravity(Gravity.CENTER);
+//        forgotView = (LinearLayout) findViewById(R.id.forgot_view);
+//
+//        ((LinearLayout) findViewById(R.id.forgot_view)).setGravity(Gravity.CENTER);
 
         try {
             mEmailId = (CustomFontEditText) findViewById(R.id.email_login);

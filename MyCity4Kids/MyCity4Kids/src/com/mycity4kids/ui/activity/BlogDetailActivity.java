@@ -257,10 +257,10 @@ public class BlogDetailActivity extends BaseActivity implements View.OnClickList
                 @Override
                 public void onResult(Status status) {
                     if (status.isSuccess()) {
-                        Log.d(TAG, APP_URI.toString()+" App Indexing API: The screen view started" +
+                        Log.d(TAG, APP_URI.toString() + " App Indexing API: The screen view started" +
                                 " successfully.");
                     } else {
-                        Log.e(TAG, APP_URI.toString()+" App Indexing API: There was an error " +
+                        Log.e(TAG, APP_URI.toString() + " App Indexing API: There was an error " +
                                 "recording the screen ." + status.toString());
                     }
                 }
@@ -281,10 +281,10 @@ public class BlogDetailActivity extends BaseActivity implements View.OnClickList
                 @Override
                 public void onResult(Status status) {
                     if (status.isSuccess()) {
-                        Log.d(TAG, APP_URI.toString()+" App Indexing API:  The screen view end " +
+                        Log.d(TAG, APP_URI.toString() + " App Indexing API:  The screen view end " +
                                 "successfully.");
                     } else {
-                        Log.e(TAG, APP_URI.toString()+" App Indexing API: There was an error " +
+                        Log.e(TAG, APP_URI.toString() + " App Indexing API: There was an error " +
                                 "recording the screen." + status.toString());
                     }
                 }
@@ -350,11 +350,11 @@ public class BlogDetailActivity extends BaseActivity implements View.OnClickList
                     if (isFollowing) {
                         isFollowing = false;
                         blogDetails.setUser_following_status("0");
-                        ((ImageView) findViewById(R.id.blog_follow)).setBackground(getResources().getDrawable(R.drawable.follow_blog));
+                        ((ImageView) findViewById(R.id.blog_follow)).setBackgroundResource((R.drawable.follow_blog));
                     } else {
                         isFollowing = true;
                         blogDetails.setUser_following_status("1");
-                        ((ImageView) findViewById(R.id.blog_follow)).setBackground(getResources().getDrawable(R.drawable.un_follow_icon));
+                        ((ImageView) findViewById(R.id.blog_follow)).setBackgroundResource((R.drawable.un_follow_icon));
                     }
 
                     if (BuildConfig.DEBUG) {
@@ -552,10 +552,10 @@ public class BlogDetailActivity extends BaseActivity implements View.OnClickList
 
         if (!StringUtils.isNullOrEmpty(blogDetails.getUser_following_status())) {
             if (blogDetails.getUser_following_status().equalsIgnoreCase("0")) {
-                ((ImageView) findViewById(R.id.blog_follow)).setBackground(getResources().getDrawable(R.drawable.follow_blog));
+                ((ImageView) findViewById(R.id.blog_follow)).setBackgroundResource(R.drawable.follow_blog);
                 isFollowing = false;
             } else {
-                ((ImageView) findViewById(R.id.blog_follow)).setBackground(getResources().getDrawable(R.drawable.un_follow_icon));
+                ((ImageView) findViewById(R.id.blog_follow)).setBackgroundResource(R.drawable.un_follow_icon);
                 isFollowing = true;
             }
         }
@@ -879,12 +879,12 @@ public class BlogDetailActivity extends BaseActivity implements View.OnClickList
         if (requestCode == Constants.BLOG_FOLLOW_STATUS) {
 
             if (data.getStringExtra(Constants.BLOG_STATUS).equalsIgnoreCase("0")) {
-                ((ImageView) findViewById(R.id.blog_follow)).setBackground(getResources().getDrawable(R.drawable.follow_blog));
+                ((ImageView) findViewById(R.id.blog_follow)).setBackgroundResource((R.drawable.follow_blog));
                 isFollowing = false;
                 blogDetails.setUser_following_status("0");
 
             } else {
-                ((ImageView) findViewById(R.id.blog_follow)).setBackground(getResources().getDrawable(R.drawable.un_follow_icon));
+                ((ImageView) findViewById(R.id.blog_follow)).setBackgroundResource((R.drawable.un_follow_icon));
                 isFollowing = true;
                 blogDetails.setUser_following_status("1");
             }

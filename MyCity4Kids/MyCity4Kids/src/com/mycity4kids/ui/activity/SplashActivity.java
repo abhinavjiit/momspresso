@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
+
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -14,6 +16,10 @@ import android.view.MotionEvent;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.gson.Gson;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -55,6 +61,11 @@ public class SplashActivity extends BaseActivity {
     private String _deepLinkURL;
     private int isFirstLaunch = 0;
     private String mobileNumberForVerification = "";
+    private GoogleApiClient mClient;
+    private Uri mUrl;
+    private String mTitle;
+    private String mDescription;
+
 //    private DeepLinkData _deepLinkData;
 //    private GetAppointmentController _appointmentcontroller;
 
@@ -77,7 +88,11 @@ public class SplashActivity extends BaseActivity {
         Utils.pushOpenScreenEvent(SplashActivity.this, "Splash Screen", SharedPrefUtils.getUserDetailModel(this).getId() + "");
         onNewIntent(getIntent());
         setUpGTM();
-
+        mClient = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        // mUrl = Uri.parse("http://www.mycity4kids.com/parenting/kalpana---without-boundaries/article/From-the-Bicycle-to-the-Recycle-days...");
+        mUrl = Uri.parse("android-app://com.mycity4kids/http/mycity4kids.com");
+        mTitle = "mycity4kids";
+        mDescription = "Parenting made easy with Mommy Blogs, Kids Activities and Family Organizer";
         try {
 
             setContentView(R.layout.splash_activity);
@@ -215,6 +230,32 @@ public class SplashActivity extends BaseActivity {
 
     }
 
+    public Action getAction() {
+        Thing object = new Thing.Builder()
+                .setName(mTitle)
+                .setDescription(mDescription)
+                .setUrl(mUrl)
+                .build();
+
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mClient.connect();
+        AppIndex.AppIndexApi.start(mClient, getAction());
+    }
+
+    @Override
+    public void onStop() {
+        AppIndex.AppIndexApi.end(mClient, getAction());
+        mClient.disconnect();
+        super.onStop();
+    }
 
     private void navigateToNextScreen(boolean isConfigurationAvailable) {
 

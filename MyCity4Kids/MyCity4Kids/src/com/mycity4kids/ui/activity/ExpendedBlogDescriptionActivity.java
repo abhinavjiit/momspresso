@@ -132,11 +132,11 @@ public class ExpendedBlogDescriptionActivity extends BaseActivity implements Vie
                     if (isFollowing) {
                         isFollowing = false;
                         blogDetails.setUser_following_status("0");
-                        ((ImageView) findViewById(R.id.blog_follow)).setBackground(getResources().getDrawable(R.drawable.follow_blog));
+                        ((ImageView) findViewById(R.id.blog_follow)).setBackgroundResource(R.drawable.follow_blog);
                     } else {
                         isFollowing = true;
                         blogDetails.setUser_following_status("1");
-                        ((ImageView) findViewById(R.id.blog_follow)).setBackground(getResources().getDrawable(R.drawable.un_follow_icon));
+                        ((ImageView) findViewById(R.id.blog_follow)).setBackgroundResource(R.drawable.un_follow_icon);
                     }
 
 
@@ -259,10 +259,10 @@ public class ExpendedBlogDescriptionActivity extends BaseActivity implements Vie
 
         if (!StringUtils.isNullOrEmpty(blogDetails.getUser_following_status())) {
             if (blogDetails.getUser_following_status().equalsIgnoreCase("0")) {
-                ((ImageView) findViewById(R.id.blog_follow)).setBackground(getResources().getDrawable(R.drawable.follow_blog));
+                ((ImageView) findViewById(R.id.blog_follow)).setBackgroundResource(R.drawable.follow_blog);
                 isFollowing = false;
             } else {
-                ((ImageView) findViewById(R.id.blog_follow)).setBackground(getResources().getDrawable(R.drawable.un_follow_icon));
+                ((ImageView) findViewById(R.id.blog_follow)).setBackgroundResource(R.drawable.un_follow_icon);
                 isFollowing = true;
             }
         }

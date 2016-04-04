@@ -41,6 +41,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
@@ -54,6 +55,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.DateTimeUtils;
@@ -90,10 +92,14 @@ import com.mycity4kids.models.user.UserModel;
 import com.mycity4kids.newmodels.AppoitmentDataModel;
 import com.mycity4kids.newmodels.AttendeeModel;
 import com.mycity4kids.newmodels.BlogShareSpouseModel;
+import com.mycity4kids.newmodels.GetCommentsRequestModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.CircleTransformation;
 import com.mycity4kids.ui.fragment.WhoToRemindDialogFragment;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -124,6 +130,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
     private WebView webView;
     private ArrayList<ImageData> imageList;
     Boolean isFollowing = false;
+
 
     LinearLayout newCommentLayout;
     EditText commentText;
@@ -157,17 +164,14 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
     public ArrayList<AppoitmentDataModel.Attendee> attendeeDataList;
     public ArrayList<BlogShareSpouseModel> whoToShareList;
 
-
-//    private SystemBarTintManager mStatusBarManager;
-
-//    public static void navigate(AppCompatActivity activity, View transitionImage, ViewModel viewModel) {
-//        Intent intent = new Intent(activity, DetailActivity.class);
-//        intent.putExtra(EXTRA_IMAGE, viewModel.getImage());
-//        intent.putExtra(EXTRA_TITLE, viewModel.getText());
-//
-//        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, transitionImage, EXTRA_IMAGE);
-//        ActivityCompat.startActivity(activity, intent, options.toBundle());
-//    }
+    //Commments Lazy loading
+//    private ProgressBar progressBar;
+    private String commentTypeToFetch;
+    Boolean isLoading = false;
+    private int offset = 0;
+    private int totalComments = 0;
+    private int pageCount = 0;
+    private RelativeLayout mLodingView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -177,7 +181,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
         deepLinkURL = getIntent().getStringExtra(Constants.DEEPLINK_URL);
         TAG = ArticlesAndBlogsDetailsActivity.this.getClass().getSimpleName();
         mClient = new GoogleApiClient.Builder(this).addApi(AppIndex.APP_INDEX_API).build();
-
+        commentTypeToFetch = AppConstants.COMMENT_TYPE_DB;
         try {
 
             NotificationManager nMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -203,22 +207,8 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
             article_title = (TextView) findViewById(R.id.article_title);
             titleMain = (TextView) findViewById(R.id.titleMain);
             titleMain.setTextColor(Color.argb(0, 255, 255, 255));
+//            progressBar = (ProgressBar) findViewById(R.id.secondBar);
             String coverImageUrl = getIntent().getStringExtra(Constants.ARTICLE_COVER_IMAGE);
-
-//            authorType = getIntent().getStringExtra(Constants.FILTER_TYPE);
-//            bookmarkStatus = getIntent().getIntExtra(Constants.BOOKMARK_STATUS, 0);
-
-//            if (bookmarkStatus == 0)
-//                bookmarkImageView.setImageResource(R.drawable.ic_favorite_border_white_48dp);
-//            else
-//                bookmarkImageView.setImageResource(R.drawable.ic_favorite_border_white_48dp_fill);
-
-//            if (!StringUtils.isNullOrEmpty(getIntent().getStringExtra(Constants.BLOG_NAME))) {
-//                blogName = getIntent().getStringExtra(Constants.BLOG_NAME);
-//            } else {
-//                blogName = "mycity4kids team";
-//            }
-
 
             cover_image = (ImageView) findViewById(R.id.cover_image);
             density = getResources().getDisplayMetrics().density;
@@ -226,9 +216,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
             if (!StringUtils.isNullOrEmpty(coverImageUrl)) {
                 Picasso.with(this).load(coverImageUrl).placeholder(R.drawable.blog_bgnew).resize(width, (int) (220 * density)).centerCrop().into(cover_image);
             }
-
-//            new changes @manish
-
 
             mToolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(mToolbar);
@@ -251,55 +238,14 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
             commentText = (EditText) findViewById(R.id.editCommentTxt);
             commentCountView = (CardView) findViewById(R.id.comment_text_layout);
             commentCountView.setVisibility(View.GONE);
-            /*if(webView!=null){
-                webView.loadUrl("");
-				webView.clearHistory();
-				webView.destroy();
-				webView.loadDataWithBaseURL("", "", "", "", "");
-				webView=null;
-			}
-			webView=(WebView)findViewById(R.id.WebView);
-			webView.clearHistory();
-			webView.setPadding(0, 0, 0, 0);
-			webView.getSettings().setUseWideViewPort(true);
-			webView.getSettings().setJavaScriptEnabled(true);
-			webView.setHorizontalScrollBarEnabled(false);
-			webView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
-			webView.getSettings().setLoadWithOverviewMode(true);*/
-            //webView.invalidate();
+
+            mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
+            findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely));
 
             mScrollView = (ScrollView) findViewById(R.id.scroll_view);
             TextView headerTxt = (TextView) findViewById(R.id.header_txt);
-//            imageCache = new BitmapLruCache();
-//            imageLoader = new ImageLoader(Volley.newRequestQueue(this), imageCache);
             mUiHelper = new UiLifecycleHelper(this, FacebookUtils.callback);
             mUiHelper.onCreate(savedInstanceState);
-//            fontPicker = (Spinner) findViewById(R.id.fontSizePicker_new);
-//            ArrayList<String> fontList = new ArrayList<String>();
-//
-//            for (int font = 40; font < 61; font += 2) {
-//                String fontSize = "" + Integer.valueOf(font);
-//                fontList.add(fontSize);
-//            }
-//            ArrayAdapter<String> fontAdapter = new ArrayAdapter<String>(this, R.layout.text_for_write_review, fontList);
-//            fontPicker.setAdapter(fontAdapter);
-//
-//            fontPicker.setOnItemSelectedListener(new OnItemSelectedListener() {
-//                @Override
-//                public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-//                    float textSize = Float.valueOf(fontPicker.getAdapter().getItem(pos).toString());
-//
-//                    //((TextView) findViewById(R.id.txvDescription)).setTextSize(textSize);
-//                    WebView webView = (WebView) findViewById(R.id.articleWebView);
-//                    webView.getSettings().setTextZoom((int) (textSize));
-//                    webView.getSettings().setDefaultFontSize((int) (textSize));
-//                    webView.invalidate();
-//                }
-//
-//                @Override
-//                public void onNothingSelected(AdapterView<?> arg0) {
-//                }
-//            });
 
             Bundle bundle = getIntent().getExtras();
             if (bundle != null) {
@@ -324,10 +270,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
             e.printStackTrace();
         }
 
-//        mStatusBarManager = new SystemBarTintManager(this);
-//        mStatusBarManager.setStatusBarTintEnabled(true);
-//        mInitialStatusBarColor = getResources().getColor(R.color.transparent);
-//        mFinalStatusBarColor = getResources().getColor(R.color.primary_dark);
         mActionBarBackgroundDrawable = findViewById(R.id.viewColor).getBackground();
         share_spouse.setVisibility(View.INVISIBLE);
 
@@ -339,11 +281,11 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
             public void onScrollChanged() {
 
                 int scrollPosition = mScrollView.getScrollY(); //for verticalScrollView
-                Log.d("Scroll Position", String.valueOf(scrollPosition));
-                Log.d("Height Scroll", String.valueOf(mScrollView.getHeight()));
-                Log.d("Child Count", String.valueOf(mScrollView.getChildCount()));
-                Log.d("ScrollY", String.valueOf(mScrollView.getScrollY()));
-                int scrollBottom = mScrollView.getBottom();
+//                Log.d("Scroll Position", String.valueOf(scrollPosition));
+//                Log.d("Height Scroll", String.valueOf(mScrollView.getHeight()));
+//                Log.d("Child Count", String.valueOf(mScrollView.getChildCount()));
+//                Log.d("ScrollY", String.valueOf(mScrollView.getScrollY()));
+//                int scrollBottom = mScrollView.getBottom();
                 View view = (View) mScrollView.getChildAt(mScrollView.getChildCount() - 1);
 
                 Rect scrollBounds = new Rect();
@@ -357,16 +299,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
                     share_spouse.setVisibility(View.INVISIBLE);
                 }
 
-                //View view2 = (View) ((RelativeLayout)mScrollView.getChildAt(0)).getChildAt(2);
-
-                Log.d("View is", String.valueOf(view));
-                //int diff = (view2.getTop() - (mScrollView.getHeight() + mScrollView.getScrollY()));
-                //Log.d("diff", String.valueOf(diff));
-                //if(diff==0)
-                //{
-
-                //share_spouse.setVisibility(View.VISIBLE);
-                //}
+//                Log.d("View is", String.valueOf(view));
 
                 int headerHeight = cover_image.getHeight() - mToolbar.getHeight();
                 float ratio = 0;
@@ -378,13 +311,27 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
                 updateActionBarTransparency(ratio, ratioForTitle);
                 updateStatusBarColor(ratio);
                 updateParallaxEffect(scrollPosition);
+
+                int diff = (view.getBottom() - (mScrollView.getHeight() + mScrollView.getScrollY()));
+
+                if (diff <= 10 && !isLoading && !StringUtils.isNullOrEmpty(commentTypeToFetch)) {
+                    getMoreComments();
+                }
             }
         });
 
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//            setTranslucentStatus(true);
-//        }
-//        new code @manish
+    }
+
+    private void getMoreComments() {
+        isLoading = true;
+        mLodingView.setVisibility(View.VISIBLE);
+        GetCommentsRequestModel getCommentsRequestModel = new GetCommentsRequestModel();
+        getCommentsRequestModel.setArticleId(articleId);
+        getCommentsRequestModel.setLimit(AppConstants.COMMENT_LIMIT);
+        getCommentsRequestModel.setOffset(offset);
+        getCommentsRequestModel.setCommentType(commentTypeToFetch);
+        ArticleBlogDetailsController _controller = new ArticleBlogDetailsController(this, this);
+        _controller.getData(AppConstants.GET_MORE_COMMENTS, getCommentsRequestModel);
     }
 
 
@@ -451,26 +398,10 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
         return result;
     }
 
-
-//    private void setTranslucentStatus(boolean on) {
-//        Window win = getWindow();
-//        WindowManager.LayoutParams winParams = win.getAttributes();
-//        final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
-//        if (on) {
-//            winParams.flags |= bits;
-//        } else {
-//            winParams.flags &= ~bits;
-//        }
-//        win.setAttributes(winParams);
-//    }
-
     private void updateActionBarTransparency(float scrollRatio, float ratioForTitle) {
         int newAlpha = (int) (scrollRatio * 255);
-//        article_title.setAlpha(255 - ratioForTitle * 255);
-//        ViewHelper.setAlpha(titleMain, scrollRatio * 255);
         titleMain.setTextColor(Color.argb(newAlpha, 255, 255, 255));
         article_title.setTextColor(Color.argb(255 - (int) (ratioForTitle * 255), 255, 255, 255));
-//        titleMain.setAlpha(newAlpha);
         mActionBarBackgroundDrawable.setAlpha(newAlpha);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             mToolbar.setBackground(mActionBarBackgroundDrawable);
@@ -482,10 +413,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void updateStatusBarColor(float scrollRatio) {
-//        int r = interpolate(Color.red(mInitialStatusBarColor), Color.red(mFinalStatusBarColor), 1 - scrollRatio);
-//        int g = interpolate(Color.green(mInitialStatusBarColor), Color.green(mFinalStatusBarColor), 1 - scrollRatio);
-//        int b = interpolate(Color.blue(mInitialStatusBarColor), Color.blue(mFinalStatusBarColor), 1 - scrollRatio);
-//        mStatusBarManager.setTintColor(Color.rgb(r, g, b));
 
         int newAlpha = (int) (scrollRatio * 255);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -532,11 +459,10 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
                 finish();
                 return true;
             case R.id.share:
-                Utils.pushEvent(ArticlesAndBlogsDetailsActivity.this, GTMEventType.SHARE_BLOG_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
+                Utils.pushEvent(ArticlesAndBlogsDetailsActivity.this, GTMEventType.SHARE_BLOG_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "");
 
                 Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
-//                shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, detailData.getTitle());
                 String shareUrl = "";
                 if (StringUtils.isNullOrEmpty(detailData.getUrl())) {
                     shareUrl = "";
@@ -552,9 +478,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
                     shareMessage = "mycity4kids\n\nCheck out this interesting blog post " + "\"" + detailData.getTitle() + "\" by " + author + ".\nRead Here: " + shareUrl;
                 }
 
-                // String shareMessage = "mycity4kids \n \n Check out this interesting blog post on " + detailData.getTitle() + " by " + author + " \n Read Here: " + shareUrl;
-                // String shareMessage = "I just discovered something interesting on " + detailData.getTitle() + " - Check it out here " + shareUrl;
-                /*+mBusinessInfoModel.getName()==null?"":mBusinessInfoModel.getName()+" in mycity4kids app. Check it out "+mBusinessInfoModel.getWeb_url()==null?"":mBusinessInfoModel.getWeb_url();*/
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
                 startActivity(Intent.createChooser(shareIntent, "mycity4kids"));
 
@@ -574,6 +497,57 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
             }
             String commentMessage = "";
             switch (response.getDataType()) {
+                case AppConstants.GET_MORE_COMMENTS:
+                    Log.d("dadadaddadadadawdawdwdwadwadwda", "dwdwdwdwdwdw");
+                    mLodingView.setVisibility(View.GONE);
+                    isLoading = false;
+                    String resData = (String) response.getResponseObject();
+                    JSONObject jsonObject = new JSONObject(resData);
+                    JSONArray commentsJson = new JSONArray();
+                    int commCount = 0;
+                    if (!StringUtils.isNullOrEmpty(commentTypeToFetch) && AppConstants.COMMENT_TYPE_DB.equals(commentTypeToFetch)) {
+                        commCount = jsonObject.getJSONObject("result").getJSONObject("data").getJSONObject("db").getInt("count");
+                        commentsJson = jsonObject.getJSONObject("result").getJSONObject("data").getJSONObject("db").getJSONArray("comments");
+                        if (commCount == 0) {
+                            commentTypeToFetch = AppConstants.COMMENT_TYPE_FB_PLUGIN;
+                            getMoreComments();
+
+                        }
+                        offset = offset + 1;
+                        if (offset * AppConstants.COMMENT_LIMIT >= commCount) {
+                            commentTypeToFetch = AppConstants.COMMENT_TYPE_FB_PLUGIN;
+                            offset = 0;
+                        }
+                    } else if (!StringUtils.isNullOrEmpty(commentTypeToFetch) && AppConstants.COMMENT_TYPE_FB_PLUGIN.equals(commentTypeToFetch)) {
+                        commCount = jsonObject.getJSONObject("result").getJSONObject("data").getJSONObject("fb").getInt("count");
+                        commentsJson = jsonObject.getJSONObject("result").getJSONObject("data").getJSONObject("fb").getJSONArray("comments");
+                        offset = offset + 1;
+                        if (offset * AppConstants.COMMENT_LIMIT >= commCount) {
+                            commentTypeToFetch = AppConstants.COMMENT_TYPE_FB_PAGE;
+                            offset = 0;
+                        }
+                    } else if (!StringUtils.isNullOrEmpty(commentTypeToFetch) && AppConstants.COMMENT_TYPE_FB_PAGE.equals(commentTypeToFetch)) {
+                        commCount = jsonObject.getJSONObject("result").getJSONObject("data").getJSONObject("fan").getInt("count");
+                        commentsJson = jsonObject.getJSONObject("result").getJSONObject("data").getJSONObject("fan").getJSONArray("comments");
+                        offset = offset + 1;
+                        if (offset * AppConstants.COMMENT_LIMIT >= commCount) {
+                            commentTypeToFetch = "";
+                            offset = 0;
+                        }
+                    }
+
+                    LinearLayout commentLayout = ((LinearLayout) findViewById(R.id.commnetLout));
+                    ViewHolder viewHolder = null;
+                    viewHolder = new ViewHolder();
+                    for (int i = 0; i < commentsJson.length(); i++) {
+                        Log.d("COMMENTS ++++ ", " --- " + commentsJson.get(i).toString());
+                        CommentsData cData = new Gson().fromJson(commentsJson.get(i).toString(), CommentsData.class);
+                        leftMargin = 0;
+
+                        ++isComingAfterReply;
+                        setCommentData(viewHolder, cData, commentLayout);
+                    }
+                    break;
                 case AppConstants.ARTICLES_DETAILS_REQUEST:
                 case AppConstants.BLOGS_DETAILS_REQUEST:
                     ParentingDetailResponse responseData = (ParentingDetailResponse) response.getResponseObject();
@@ -630,20 +604,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
                     }
 //                    removeProgressDialog();
                     break;
-//                case AppConstants.ARTICLE_BLOG_FOLLOW_REQUEST:
-//                    CommonResponse followData = (CommonResponse) response.getResponseObject();
-//                    removeProgressDialog();
-//                    if (followData.getResponseCode() == 200) {
-//                        changeFollowUnfollowIcon(followData.getResult().getMessage());
-//                    } else if (followData.getResponseCode() == 400) {
-//                        String message = followData.getResult().getMessage();
-//                        if (!StringUtils.isNullOrEmpty(message)) {
-//                            showToast(message);
-//                        } else {
-//                            showToast(getString(R.string.went_wrong));
-//                        }
-//                    }
-//                    break;
+
                 case AppConstants.ARTICLE_BLOG_FOLLOW_REQUEST:
                     CommonResponse followData = (CommonResponse) response.getResponseObject();
                     removeProgressDialog();
@@ -726,7 +687,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
                 if (resultCode == RESULT_OK) {
 
 
-                    Log.i("position", scrollX + " " + scrollY);
+//                    Log.i("position", scrollX + " " + scrollY);
                     mScrollView.postDelayed(new Runnable() {
 
                         @Override
@@ -850,39 +811,21 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
         if (imageList.size() > 0) {
             for (ImageData images : imageList) {
                 if (bodyDescription.contains(images.getKey())) {
-                    //bodyDesc = bodyDesc.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\n", "<br/>");
-                    //bodyDescription.replaceAll("\\]", "");
-                    //String imagekey = images.getKey().replaceAll("\\[", "").replaceAll("\\]", "");//<img src=\http://www.mycity4kids.com/parentingstop/uploads/737x164_Metro%20Museum.jpg\>
-                    //	imagekey=images.getKey().replaceAll("\\]", "");
-                    //	bodyDesc=bodyDesc.replaceAll(imagekey, "<img src=\\"+images.getValue()+"\\>");
                     bodyDesc = bodyDesc.replace(images.getKey(), "<p style='text-align:center'><img src=" + images.getValue() + " style=\"width: 100%;\"+></p>");
                 }
             }
-//            spannedValue = Html.fromHtml(bodyDesc, this, null);
-//            ((TextView) findViewById(R.id.txvDescription)).setText(spannedValue);
-//            ((TextView) findViewById(R.id.txvDescription)).setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
-
 
             String bodyImgTxt = "<html><head></head><body>" + bodyDesc + "</body></html>";
             WebView view = (WebView) findViewById(R.id.articleWebView);
-//            view.getSettings().setLoadWithOverviewMode(true);
-//			view.getSettings().setUseWideViewPort(true);
             view.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
             view.loadDataWithBaseURL("", bodyImgTxt, "text/html", "utf-8", "");
 
         } else {
             bodyDesc = bodyDesc.replaceAll("\n", "<br/>");
-            //bodyDesc = "Music, maths, wildlife, art and dance - these are just a few elements in the week that lies ahead for children in Delhi NCR. Join Happy Feet’s music and movement programme for young children or sign up for some hip hop, Bollywood Jazz and contemporary dance in Shiamak’s Winter Funk. Students can gain from Amend Academy’s session on short cut tricks in Maths or take advantage of Kumon’s two week free trial to get a sense of the programme. Celebrate Wildlife Week at Asola Bhatti Sanctuary with a host of interesting activities. Let your children explore space through art in a painting competition organised by SPACE.</i></p><p><i><br></i></p>  <p><b><u>Creative Learning through Dance, Music and Movement</u></b></p>  <p>Locality:&nbsp;<a href=\"http://www.mycity4kids.com/Delhi-NCR/Events_Sheikh-Sarai-I_South-Delhi_el\" title=\"Events in Sheikh Sarai I\">Sheikh Sarai I</a></p>  <p>Age Group: 2 to 8 years</p>  <p>Date: 30<sup>th</sup> September to 31<sup>st</sup> December 2015</p>  <p>Children are naturally interested in music and dance and both these creative media are naturally good for children in their growth and development. Happy Feet is a music, dance and dance programme designed to build coordination, enhance creativity, confidence and core strength in young children. The next batch of the 3 month programme starts this week.</p><p>For more details, please <a href=\"http://www.mycity4kids.com/Delhi-NCR/Events/Dance-Music-and-Movement-Creative-Learning_Sheikh-Sarai-I/53802_ed\" target=\"_blank\" style=\"font-weight: bold;\">click here</a>.</p><p><br></p>  <p><b><u>Pick up some Short-cut Tricks of Maths</u></b></p>  <p>Locality:&nbsp;<a href=\"http://www.mycity4kids.com/Delhi-NCR/Events_Rohini-Sector-8_North-Delhi_el\" title=\"Events in Rohini Sector 8\">Rohini Sector 8</a></p>  <p>Age Group: 11 to 17 years</p>  <p>Date: 1<sup>st</sup> October 2015&nbsp;</p>  <p>Exams, Olympiads, competitive exams . . . it just gets tougher and more competitive for students these days. Since Maths is an integral part of their curriculum and out of school academics, it would help children to learn some easy short cuts for calculations. Amend Education Academy has organised a one day camp to teach students some quick tips and tricks of mathematics to help them get\uFEFF&nbsp;faster in calculations.</p><p>For more details, please <a href=\"http://www.mycity4kids.com/Delhi-NCR/Enhanced-Learning/Amend-Education-Academy_Rohini-Sector-8/48076_bd\" target=\"_blank\" style=\"font-weight: bold;\">click here</a>.</p><p><br></p>  <p><b><u>Wildlife Week 2015 at Asola Bhatti Wildlife Sanctuary</u></b></p>  <p>&nbsp;Locality: <a href=\"http://www.mycity4kids.com/Delhi-NCR/Events_Tughlakabad_South-Delhi_el\" title=\"Events in Tughlakabad\">Tughlakabad</a></p>  <p>Age Group: 10 and above</p>  <p>Date: 1<sup>st</sup> to 11<sup>th</sup> October 2015</p>  <p>Starting on 1<sup>st</sup> October is the Wildlife Week celebration at Asola Bhatti Wildlife Sanctuary.&nbsp;There are a host of activities being planned for the next 10 days, all free of cost and suitable for children of 10 years and above. You can join any of the walks and excursions around the venue that include a Migratory Bird Walk, Asola Lake Excursion, Leopard Trail and Blackbuck Trail and also a Wetland Birds Excursion to the Okhla Bird Sanctuary. In addition to the native tree plantation, kids will enjoy the more physical activities like tree climbing and mountain biking while yoga sessions will find takers from all age groups. There are several creative sessions such as making DIY bird feeder/nest, art from waste and competitions in wildlife quiz, face painting, wildlife sketching and online slogan writing as well as photo exhibitions and acoustic music sessions.</p>  <p>Those interested in learning more about wildlife can attend the workshop on wildlife gardening and study of aquatic lifeforms or even volunteer for habitat restoration or butterfly gardening. There will also be interactions with the Forest Department and several other expert talks on green living and related topics.</p><p>For more details, please <a href=\"http://www.mycity4kids.com/Delhi-NCR/Events/Wildlife-Week-2015-at-Asola-Bhatti-Wildlife-Sanctuary_Tughlakabad/53211_ed\" target=\"_blank\" style=\"font-weight: bold;\">click here</a>.</p><p><br> <br> <b><u>Don’t know what Kumon is? Try it out for free now.</u></b></p>  <p>Locality:&nbsp;Various centres in Delhi-NCR</p>  <p>Age Group: 5 and above</p>  <p>Date: 3<sup>rd</sup> to 16<sup>th</sup> October 2015</p>  <p>Kumon after-school&nbsp;math&nbsp;and&nbsp;reading&nbsp;programmes is offering free trial of two weeks&nbsp;for students new to the concept or current students who would like to try out a second subject. The Kumon method is an individualised learning method based on worksheets designed in a way that allows students to figure out how to solve problems on their own. This would be a good opportunity for parents who have been meaning to try out the Kumon Method for their children, however, have been hesitant due to lack of information or guidance.</p><p>For m ore information. please <a href=\"http://www.mycity4kids.com/Delhi-NCR/kumon-classes\" target=\"_blank\" style=\"font-weight: bold;\">click here</a>.</p>  <p>&nbsp;</p>  <p><b><u>World Space Week Interschool Painting Competition</u></b></p>  <p>Locality:&nbsp;<a href=\"http://www.mycity4kids.com/Delhi-NCR/Events_Others_Others_el\" title=\"Events in Others\">Online</a></p>  <p>Age Group: 7 to 17 years</p>  <p>Date: 5<sup>th</sup> to 28<sup>th</sup> October 2015</p>  <p>SPACE is an organisation working towards educating the masses through its programmes in astronomy and space science through tutorials, modules, curriculum for education requirements of schools &amp; students in India. As part of the celebrations of the World Space Week, SPACE is organising an Interschool Painting competition for students at primary and middle level from their associated schools only. The theme is ‘Discovering space’ and participants are encouraged to let their imagination soar - new planets, asteroids and blackholes; settlements and colonies in space; aliens and space creatures - anything goes. Entries should be submitted as scans of the paintings or as clicked images of the paintings. Painting submission starts from 5th October 2015 and can be submitted as part of 4 categories according to age (Group I: I to III; Group II: IV and V; Group III: VI to VIII and Group IV: IX to XII).</p>  <p>For more details, please <a href=\"http://www.mycity4kids.com/Delhi-NCR/Events/World-Space-Week-Interschool-Painting-Competition_Others/54379_ed\" target=\"_blank\" style=\"font-weight: bold;\">click here.</a></p>  <p>&nbsp;</p>  <br>  <p><b><u>Shiamak Winter Funk 2015 in Delhi</u></b></p>  <p>Locality:&nbsp;<a href=\"http://www.mycity4kids.com/Delhi-NCR/Events_Sector-57-Gurgaon_Gurgaon_el\" title=\"Events in Sector 57 Gurgaon\">Sector 57 Gurgaon</a>, East of Kailash, Jankapuri, Noida Punjabi Bagh, Vasantkunj</p>  <p>Age Group: 4 and above</p>  <p>Date: 7<sup>th</sup> to 25<sup>th</sup> October 2015</p>  <p>With Delhi winters approaching another winter staple starts soon - \u202ASHIAMAK Winter Funk. The next edition of this popular dance workshops will be held for three categories, Children (4-6 yrs);&nbsp;Junior (7-11 yrs) and Adults (12 yrs &amp; above). You can learn Hip Hop, Contemporary and Bollywood Jazz and even get to perform on stage. This time there is a special opportunity for the participants to win a chance to perform at a Bollywood award show. For early enrolments, there is a special early bird offer on 1st, 3rd and 4th October 2015.</p><p>For more details, please <a href=\"http://www.mycity4kids.com/Delhi-NCR/shiamak-winter-funk-2015\" target=\"_blank\" style=\"font-weight: bold;\">click here</a>.</p><p><br></p><p><i>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span style=\"font-weight: bold;\">Submit An Event</span><br></i><i>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Do you know of an event we should add? Please send a mail to&nbsp;<a href=\"mailto:parul.ohri@mycity4kids.com\" target=\"_blank\">parul.ohri@mycity4kids.com</a>.<br></i><i>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Are you hosting an event we should know about? Please use the form at&nbsp;<a href=\"http://www.mycity4kids.com/Delhi-NCR/event/createevent\" target=\"_blank\">Delhi-NCR Events</a>.";
             String bodyImgTxt = "<html><head></head><body>" + bodyDesc + "</body></html>";
             WebView view = (WebView) findViewById(R.id.articleWebView);
-//            view.getSettings().setLoadWithOverviewMode(true);
-//            view.getSettings().setUseWideViewPort(true);
             view.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
             view.loadDataWithBaseURL("", bodyImgTxt, "text/html", "utf-8", "");
-//            if (!StringUtils.isNullOrEmpty(detailData.getBody().getText())) {
-//                ((TextView) findViewById(R.id.txvDescription)).setText(detailData.getBody().getText());
-//                ((TextView) findViewById(R.id.txvDescription)).setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
-//            }
 
         }
 
@@ -946,34 +889,13 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
             holder.replyTxt.setOnClickListener(this);
             holder.replyTxt.setTag(commentList);
 
-			/*if(isInsertWithReply){
-                holder.dividerLine.setVisibility(View.VISIBLE);
-				isInsertWithReply=false;
-			}else{
-				holder.dividerLine.setVisibility(View.GONE);
-			}*/
-            /*
-            if(leftMargin==0){
-				holder.dividerLine.setVisibility(View.VISIBLE);
-			}else{
-				holder.dividerLine.setVisibility(View.GONE);
-			}*/
-
-            //	RelativeLayout.LayoutParams head_params = (RelativeLayout.LayoutParams)view.getLayoutParams();
-
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
             params.setMargins(leftMargin, 0, 0, 0);
             leftMargin = leftMargin + 17;
-//            view.setLayoutParams(params);
             holder.mRelativeContainer.setLayoutParams(params);
 
-//            CardView.LayoutParams cardViewParams = new CardView.LayoutParams(CardView.LayoutParams.MATCH_PARENT, CardView.LayoutParams.WRAP_CONTENT);
-//
-//            cardViewParams.setMargins(leftMargin, 0, 0, 5);
-//            leftMargin = leftMargin + 17;
-//
-//            holder.innerCommentView.setLayoutParams(cardViewParams);
-            if (!StringUtils.isNullOrEmpty(commentList.getComment_type()) && commentList.getComment_type().equals("fb")) {
+            if (!StringUtils.isNullOrEmpty(commentList.getComment_type()) &&
+                    (commentList.getComment_type().equals("fan") || commentList.getComment_type().equals("fb"))) {
                 holder.replyTxt.setVisibility(View.GONE);
             } else {
                 holder.replyTxt.setVisibility(View.VISIBLE);
@@ -1003,13 +925,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
                 Picasso.with(this).load(R.drawable.default_img).transform(new CircleTransformation()).into(holder.networkImg);
             }
 
-            /*if(isInsertWithReply){
-            //	holder.dividerLine.setVisibility(View.VISIBLE);
-				isInsertWithReply=false;
-			}else{
-			//	holder.dividerLine.setVisibility(View.GONE);
-			}*/
-
             /**
              * this will add seperator afer complete every comment with reply
              */
@@ -1018,7 +933,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
                 --isComingAfterReply;
                 View dividerView = new View(this);
                 dividerView.setBackgroundColor(Color.TRANSPARENT);
-//                dividerView.setBackgroundColor(Color.parseColor("#e3eaff"));
                 commentLayout.addView(dividerView, LinearLayout.LayoutParams.MATCH_PARENT, 10);
             }
 
@@ -1027,34 +941,11 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
             if (commentList.getReplies() != null && commentList.getReplies().size() > 0) {
 
                 for (CommentsData replyList : commentList.getReplies()) {
-                    /*	i++;
-                    if(i==commentList.getReplies().size()){
-						isInsertWithReply=true;
-					}else{
-						isInsertWithReply=false;
-					}*/
                     setCommentData(holder, replyList, commentLayout);
                 }
             }
         }
     }
-    /*@Override
-    protected void onStop() {
-		super.onStop();
-			webView.clearHistory();
-			webView.clearCache(true);
-		webView.loadUrl("");
-		webView.loadDataWithBaseURL("", "", "", "", "");
-
-	}*/
-    /*@Override
-    protected void onDestroy() {
-		// TODO Auto-generated method stub
-		super.onDestroy();
-		webView.destroy();
-		webView=null;
-	}*/
-
 
     @Override
     public void onClick(View v) {
@@ -1071,29 +962,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
 
                     break;
                 case R.id.add_comment:
-
-//                    commented by @manish
-
-//                    UserTable _table = new UserTable((BaseApplication) getApplication());
-//                    int count = _table.getCount();
-//                    if (count <= 0) {
-//
-//                        LoginFragmentDialog fragmentDialog = new LoginFragmentDialog();
-//                        fragmentDialog.show(ArticlesAndBlogsDetailsActivity.this.getSupportFragmentManager(), "");
-//                        return;
-//                    }
-//                    scrollX = mScrollView.getScrollX();
-//                    scrollY = mScrollView.getScrollY();
-//                    Intent intentAddComment = new Intent(this, AddCommentReplyActivity.class);
-//                    intentAddComment.putExtra(Constants.IS_COMMENT, true);
-//                    intentAddComment.putExtra(Constants.PARENT_ID, "");
-//                    startActivityForResult(intentAddComment, ADD_COMMENT_OR_REPLY);
-
-//                    new changes @manish
-
-//                    ((TextView) findViewById(R.id.add_comment)).setVisibility(View.GONE);
-//                    newCommentLayout.setVisibility(View.VISIBLE);
-                    //	((EditText)findViewById(R.id.editCommentTxt)).setVisibility(View.VISIBLE);
                     break;
 
 
@@ -1142,26 +1010,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
                         _followController.getData(AppConstants.ARTICLE_BLOG_FOLLOW_REQUEST, _followRequest);
                     }
                     break;
-//                case R.id.img_share:
-//                    Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
-//                    shareIntent.setType("text/plain");
-//                    String shareUrl = "";
-//                    if (StringUtils.isNullOrEmpty(detailData.getUrl())) {
-//                        shareUrl = "";
-//                    } else {
-//                        shareUrl = detailData.getUrl();
-//                    }
-//                    String shareMessage="";
-//                    String author = ((TextView) findViewById(R.id.user_name)).getText().toString();
-//                    if (StringUtils.isNullOrEmpty(shareUrl)) {
-//                         shareMessage = "mycity4kids\n\nCheck out this interesting blog post " +"\""+ detailData.getTitle() + "\" by " + author+".";
-//                    } else {
-//                         shareMessage = "mycity4kids\n\nCheck out this interesting blog post "+"\""+ detailData.getTitle() + "\" by " + author + ".\nRead Here: " + shareUrl;
-//                    }
-//
-//                    shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
-//                    startActivity(Intent.createChooser(shareIntent, "mycity4kids"));
-//                    break;
                 case R.id.img_fb:
                     showProgressDialog(getString(R.string.loading_));
                     FacebookUtils.loginFacebook(ArticlesAndBlogsDetailsActivity.this, new FacebookLoginListener() {
@@ -1192,7 +1040,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
                     });
                     break;
                 case R.id.share_spouse:
-                    Utils.pushEvent(ArticlesAndBlogsDetailsActivity.this, GTMEventType.SHARE_SPOUCE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
+                    Utils.pushEvent(ArticlesAndBlogsDetailsActivity.this, GTMEventType.SHARE_SPOUCE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "");
 
                     ArrayList<Integer> idlist = new ArrayList<>();
                     idlist = new ArrayList<>();
@@ -1211,14 +1059,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
 
 
                 case R.id.img_twitter:
-//				Twitter.getInstance(Constants.TWITTER_OAUTH_KEY,
-//                        Constants.TWITTER_OAUTH_SECRET, Constants.CALLBACK_URL,
-//                        ArticlesAndBlogsDetailsActivity.this).doLogin(new ITLogin() {
-//							@Override
-//							public void success(TwitterUser user) {
-//								showToast("Tweet has been successfully posted.");
-//							}
-//						},detailData.getTitle()+ " on mycity4kids. Check it out here " +detailData.getUrl());
                     break;
 
                 case R.id.add_comment_btn:
@@ -1292,7 +1132,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
                     startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
                     break;
                 case R.id.bookmarkBlogImageView:
-                    Utils.pushEvent(ArticlesAndBlogsDetailsActivity.this, GTMEventType.FAVOURITE_BLOG_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
+                    Utils.pushEvent(ArticlesAndBlogsDetailsActivity.this, GTMEventType.FAVOURITE_BLOG_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "");
 
                     addRemoveBookmark();
                     break;
@@ -1323,36 +1163,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         LevelListDrawable d = new LevelListDrawable();
-        /*try {
 
-			Bitmap x;
-
-			HttpURLConnection connection = (HttpURLConnection) new URL(source).openConnection();
-			connection.connect();
-			InputStream input = connection.getInputStream();
-
-			x = BitmapFactory.decodeStream(input);
-			final Drawable drawable=new BitmapDrawable(null,x);
-			 Handler handler=new Handler();
-			 handler.postDelayed(new Runnable() {
-
-				@Override
-				public void run() {
-
-
-
-				//	drawable.setBounds(0, 0, drawable.getIntrinsicWidth(),drawable.getIntrinsicHeight());
-					 ((TextView) findViewById(R.id.txvDescription)).invalidate();
-			            CharSequence t = ((TextView) findViewById(R.id.txvDescription)).getText();
-			            ((TextView) findViewById(R.id.txvDescription)).setText(t);
-				}
-			}, 500);
-
-			return d;
-		} catch(IOException exception) {
-			Log.v("IOException",exception.getMessage());
-			return null;
-		}*/
         new LoadImage().execute(source, d);
         return d;
     }
@@ -1414,17 +1225,8 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements
                 canvas.setMatrix(scaleMatrix);
                 canvas.drawBitmap(bitmap, 0, 0, new Paint(Paint.FILTER_BITMAP_FLAG));
 
-                //     Bitmap bitmapResized = Bitmap.createScaledBitmap(b, 650, 350, false);
                 final BitmapDrawable resizeD = new BitmapDrawable(getResources(), scaledBitmap);
 
-                //   Bitmap bitmapResized = Bitmap.createScaledBitmap(b, 650, 350, false);
-                //   BitmapDrawable resizeD=  new BitmapDrawable(getResources(), bitmapResized);
-
-                //		Handler handler=new Handler();
-                //		handler.postDelayed(new Runnable() {
-
-                //		@Override
-                //		public void run() {
                 mDrawable.addLevel(1, 1, resizeD);
                 mDrawable.setBounds(0, 0, resizeD.getIntrinsicWidth(), resizeD.getIntrinsicHeight());
                 mDrawable.setLevel(1);

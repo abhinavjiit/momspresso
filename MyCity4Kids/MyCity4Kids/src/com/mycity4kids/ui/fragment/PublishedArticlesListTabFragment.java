@@ -114,6 +114,11 @@ public class PublishedArticlesListTabFragment extends BaseFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
     protected void updateUi(Response response) {
 
         PublishedArticlesModel responseData;

@@ -228,9 +228,9 @@ public class ParentingBlogAdapter extends BaseAdapter {
 
         if (!StringUtils.isNullOrEmpty(datalist.get(position).getUser_following_status())) {
             if (datalist.get(position).getUser_following_status().equalsIgnoreCase("0")) {
-                holder.bloggerFollow.setBackground(context.getResources().getDrawable(R.drawable.follow_blog));
+                holder.bloggerFollow.setBackgroundResource(R.drawable.follow_blog);
             } else {
-                holder.bloggerFollow.setBackground(context.getResources().getDrawable(R.drawable.un_follow_icon));
+                holder.bloggerFollow.setBackgroundResource(R.drawable.un_follow_icon);
             }
         }
 

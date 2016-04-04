@@ -16,6 +16,7 @@ import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.parentingdetails.ParentingDetailResponse;
+import com.mycity4kids.newmodels.GetCommentsRequestModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -35,9 +36,13 @@ public class ArticleBlogDetailsController extends BaseController {
             serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
             serviceRequest.setRequestData(requestData);
             serviceRequest.setDataType(requestType);
-            serviceRequest.setUrl(AppConstants.ARTICLES_BLOGS_DETAILS_URL + getAppendUrl(requestData));
-        } else if (AppConstants.ARTICLES_DETAILS_REQUEST == requestType) {
-
+//            serviceRequest.setUrl(AppConstants.ARTICLES_BLOGS_DETAILS_URL + getAppendUrl(requestData));
+            serviceRequest.setUrl(AppConstants.ARTICLES_BLOGS_DETAILS_URL_V1 + getAppendUrl(requestType, requestData));
+        } else if (AppConstants.GET_MORE_COMMENTS == requestType) {
+            serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
+            serviceRequest.setRequestData(requestData);
+            serviceRequest.setDataType(requestType);
+            serviceRequest.setUrl(AppConstants.ARTICLES_BLOGS_COMMENT_URL + getAppendUrl(requestType, requestData));
         }
         //serviceRequest.setUrl("http://54.251.100.249/webservices/apiparentingstop/detail_article?article_id=1655");
         HttpClientConnection connection = HttpClientConnection.getInstance();
@@ -68,31 +73,44 @@ public class ArticleBlogDetailsController extends BaseController {
                     sendResponseToScreen(null);
                 }
                 break;
+            case AppConstants.GET_MORE_COMMENTS:
+                try {
+                    String responseData = new String(response.getResponseData());
+                    Log.i("COMMENTS Response", responseData);
+                    response.setResponseObject(responseData);
+                    sendResponseToScreen(response);
+                } catch (Exception e) {
+                    sendResponseToScreen(null);
+                }
+                break;
         }
     }
 
-    private String getAppendUrl(Object requestData) {
-        String authorId = (String) requestData;
+    private String getAppendUrl(int requestType, Object requestData) {
         StringBuilder builder = new StringBuilder();
-        if (!StringUtils.isNullOrEmpty(authorId)) {
-            builder.append("article_id=").append(authorId);
-        }
-        String device_id = DataUtils.getDeviceId(getActivity());
-        if (!StringUtils.isNullOrEmpty(device_id)) {
-            builder.append("&imei_no=").append(device_id);
+        if (requestType == AppConstants.GET_MORE_COMMENTS) {
+            GetCommentsRequestModel getCommentsRequestModel = (GetCommentsRequestModel) requestData;
+            builder.append("article_id=").append(getCommentsRequestModel.getArticleId());
+            builder.append("&limit=").append(getCommentsRequestModel.getLimit());
+            builder.append("&offset=").append(getCommentsRequestModel.getOffset());
+            builder.append("&comment_type=").append(getCommentsRequestModel.getCommentType());
+        } else {
+            String authorId = (String) requestData;
+            if (!StringUtils.isNullOrEmpty(authorId)) {
+                builder.append("article_id=").append(authorId);
+            }
+            String device_id = DataUtils.getDeviceId(getActivity());
+            if (!StringUtils.isNullOrEmpty(device_id)) {
+                builder.append("&imei_no=").append(device_id);
+            }
         }
 
-        if (!StringUtils.isNullOrEmpty(authorId)) {
-            builder.append("article_id=").append(authorId);
-        }
         PackageInfo pInfo = null;
         try {
             pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
-
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-
         String versionName = pInfo.versionName;
         builder.append("&user_id=").append(SharedPrefUtils.getUserDetailModel(getActivity()).getId());
         builder.append("&app_version=").append(versionName);

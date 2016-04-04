@@ -125,21 +125,26 @@ public class ArticleImageTagUpload extends BaseActivity {
                                 //  SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
                                 Log.i("Draft message", responseModel.getResult().getMessage());
                             }
+                          if ( responseModel.getResponse().toString().equals("success")) {
 
-                           // draftId=responseModel.getResult().getData().getId()+"";
 
-                            //setProfileImage(originalImage);
-                            alertDialog(responseModel.getResult().getMessage());
-                            Handler handler = new Handler();
-                            handler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Intent intent = new Intent(ArticleImageTagUpload.this, BloggerDashboardActivity.class);
-                                    startActivity(intent);
-                                    finish();
-                                }
-                            }, 2000);
+                              // draftId=responseModel.getResult().getData().getId()+"";
 
+                              //setProfileImage(originalImage);
+                              alertDialog(responseModel.getResult().getMessage());
+                              Handler handler = new Handler();
+                              handler.postDelayed(new Runnable() {
+                                  @Override
+                                  public void run() {
+                                      Intent intent = new Intent(ArticleImageTagUpload.this, BloggerDashboardActivity.class);
+                                      startActivity(intent);
+                                      finish();
+                                  }
+                              }, 2000);
+                          }
+                            else {
+                              showToast(responseModel.getResult().getMessage().toString());
+                          }
                            // showToast(responseModel.getResult().getMessage());
                            /* if (fromBackpress) {
                                 super.onBackPressed();

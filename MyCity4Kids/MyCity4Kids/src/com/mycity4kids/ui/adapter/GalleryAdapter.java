@@ -103,7 +103,7 @@ public class GalleryAdapter extends BaseAdapter {
             holder.imgView.getLayoutParams().width = height / 5;
             holder.galleryImg.setScaleType(ImageView.ScaleType.CENTER_CROP);
             holder.imgView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            holder.galleryImg.setBackground(mContext.getResources().getDrawable(R.drawable.no_media));
+            holder.galleryImg.setBackgroundResource(R.drawable.no_media);
         }
         if (galleryType.equals(Constants.FIRST_GALLERY)) {
             if (photosList.get(position).getImageBitmap() != null) {
@@ -123,7 +123,7 @@ public class GalleryAdapter extends BaseAdapter {
             }
         } else if (galleryType.equals(Constants.SECOND_GALLERY)) {
 
-            holder.galleryImg.setBackground(mContext.getResources().getDrawable(R.drawable.video_loading1));
+            holder.galleryImg.setBackgroundResource(R.drawable.video_loading1);
             holder.galleryImg.setImageUrl(photosList.get(position).getImageUrl(), imageLoader);
 
         }

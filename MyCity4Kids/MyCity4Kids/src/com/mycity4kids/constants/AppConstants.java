@@ -68,6 +68,9 @@ public class AppConstants {
     public static final String GET_GOOGLE_ADDRESS_URL = "http://maps.googleapis.com/maps/api/geocode/json";
     public static final String PARENTING_STOP_BLOGS_URL = BASE_URL + "apiparentingstop/blogs?";
     public static final String ARTICLES_BLOGS_DETAILS_URL = BASE_URL + "apiparentingstop/detail_article?";
+    public static final String ARTICLES_BLOGS_DETAILS_URL_V1 = BASE_URL + "apiparentingstop/get_blog_detail?";
+    public static final String ARTICLES_BLOGS_COMMENT_URL = BASE_URL + "apiparentingstop/get_comment?";
+
     public static final String ARTICLE_BLOG_SEARCH_FILTER_URL = BASE_URL + "apiparentingstop/filters_data?";
     public static final String PARENTING_STOP_SEARCH_URL = BASE_URL + "apiparentingstop/search?";
     public static final String VIEW_PROFILE_URL = BASE_URL + "apiusers/viewprofile";
@@ -175,6 +178,12 @@ public class AppConstants {
     //New Text Editor and Blogs Changes APIs
     public static final String GET_BLOGGER_DASHBOARD_URL = BASE_URL + "apiblogs/bloggerDashboardData?";
     public static final String GET_BLOGGER_PUBLISHED_ARTICLES_URL = BASE_URL + "apiblogs/publishedArticle?";
+
+    //Comments Lazy loading
+    public static final int COMMENT_LIMIT = 10;
+    public static final String COMMENT_TYPE_DB = "db";
+    public static final String COMMENT_TYPE_FB_PLUGIN = "fb";
+    public static final String COMMENT_TYPE_FB_PAGE = "fan";
 
     public static final int LOGIN_REQUEST = 0;
     public static final int GOOGLE_REQUEST = 1;
@@ -292,8 +301,12 @@ public class AppConstants {
     public static final int GET_ADDRESS_FROM_LATLONG_REQUEST_DEST = 1005;
 
     //New Text Editor and BLogs Changes
-    public static final int GET_BLOGGER_DASHBOARD_REQUEST = 1006;
-    public static final int GET_BLOGGER_PUBLISHED_ARTICLES_REQUEST = 1007;
+    public static final int GET_BLOGGER_DASHBOARD_REQUEST = 1013;
+    public static final int GET_BLOGGER_PUBLISHED_ARTICLES_REQUEST = 1014;
+
+    public static final int GET_MORE_COMMENTS = 1015;
+//    public static final int GET_BLOGGER_PUBLISHED_ARTICLES_REQUEST = 1016;
+
 
     public static final int DEEP_LINK_RESOLVER_REQUEST = 2001;
     public static final int ARTICLE_DRAFT_REQUEST = 3001;

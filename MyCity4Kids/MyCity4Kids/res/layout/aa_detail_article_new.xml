@@ -323,13 +323,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/articleWebView"
-                android:text="Share with Spouse/Guardian"
-                android:background="#224cf0"
-                android:padding="10dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:textAllCaps="false"
-                android:layout_marginTop="5dp"/>
+                android:layout_marginTop="5dp"
+                android:background="#224cf0"
+                android:padding="10dp"
+                android:text="Share with Spouse/Guardian"
+                android:textAllCaps="false" />
 
             <!--android:drawableTop="@drawable/top_separator"-->
 
@@ -373,7 +373,6 @@
 
                 <!-- <add comment dynamically> -->
             </LinearLayout>
-
 
         </RelativeLayout>
 
@@ -430,6 +429,55 @@
 
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
+
+    <RelativeLayout
+        android:id="@+id/relativeLoadingView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottom_Lout"
+        android:layout_centerHorizontal="true"
+        android:background="#80000000"
+        android:paddingBottom="5dp"
+        android:visibility="gone">
+
+        <View
+            android:id="@+id/sepaartorView"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="1dp"
+            android:background="#DEDEDE" />
+
+        <TextView
+            android:id="@+id/txvLoadMore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sepaartorView"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="@string/loading_txt"
+            android:textColor="@color/white_color" />
+
+        <ImageView
+            android:id="@+id/imgLoader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sepaartorView"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="4dp"
+            android:layout_toLeftOf="@id/txvLoadMore"
+            android:src="@drawable/progress_spinner" />
+    </RelativeLayout>
+
+    <!--<ProgressBar-->
+        <!--android:id="@+id/secondBar"-->
+        <!--style="?android:attr/progressBarStyle"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_above="@+id/bottom_Lout"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:visibility="gone" />-->
 
     <LinearLayout
         android:id="@+id/bottom_Lout"
