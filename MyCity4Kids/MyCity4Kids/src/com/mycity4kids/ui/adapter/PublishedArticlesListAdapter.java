@@ -3,17 +3,25 @@ package com.mycity4kids.ui.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.editor.DraftListView;
+import com.mycity4kids.editor.EditorPostActivity;
+import com.mycity4kids.enums.ParentingFilterType;
+import com.mycity4kids.models.editor.ArticleDraftList;
 import com.mycity4kids.models.parentingstop.CommonParentingList;
 import com.mycity4kids.newmodels.PublishedArticlesModel;
 import com.mycity4kids.newmodels.bloggermodel.BlogArticleList.BlogArticleModel;
@@ -32,22 +40,26 @@ public class PublishedArticlesListAdapter extends BaseAdapter {
     ArrayList<PublishedArticlesModel.PublishedArticleData> mPublishedArticlesList;
     private LayoutInflater mInflator;
     private final float density;
+    private BtnClickListener mClickListener = null;
+
 
     class ViewHolder {
         TextView txvArticleTitle;
         TextView txvViewCount;
         TextView txvPublishDate;
         ImageView imvAuthorThumb;
+        View  popupButton;
     }
 
-    public PublishedArticlesListAdapter(Context context) {
+    public PublishedArticlesListAdapter(Context context, BtnClickListener listener) {
         mContext = context;
         mInflator = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         density = context.getResources().getDisplayMetrics().density;
+        mClickListener = listener;
     }
 
     @Override
-    public View getView(int position, View view, ViewGroup parent) {
+    public View getView(final int position, View view, ViewGroup parent) {
 
         final ViewHolder holder;
         if (view == null) {
@@ -57,6 +69,14 @@ public class PublishedArticlesListAdapter extends BaseAdapter {
             holder.txvPublishDate = (TextView) view.findViewById(R.id.txvPublishDate);
             holder.imvAuthorThumb = (ImageView) view.findViewById(R.id.imvAuthorThumb);
             holder.txvViewCount = (TextView) view.findViewById(R.id.txvViewCount);
+             holder.popupButton = view.findViewById(R.id.img_menu);
+            holder.popupButton.setTag(getItem(position));
+            if (Build.VERSION.SDK_INT==15)
+            {
+                holder.popupButton.setVisibility(View.GONE);
+            }
+            //    popupButton.setOnClickListener((DraftListView)context);
+
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
@@ -67,11 +87,40 @@ public class PublishedArticlesListAdapter extends BaseAdapter {
         holder.txvPublishDate.setText(mPublishedArticlesList.get(position).getCreated());
         if (!StringUtils.isNullOrEmpty(mPublishedArticlesList.get(position).getThumbnail_image())) {
             Picasso.with(mContext).load(mPublishedArticlesList.get(position).getThumbnail_image())
-                    .placeholder(R.drawable.article_default).resize((int) (101 * density), (int) (67 * density))
-                    .centerCrop().into(holder.imvAuthorThumb);
+                    .placeholder(R.drawable.article_default)
+                    .into(holder.imvAuthorThumb);
         } else {
             holder.imvAuthorThumb.setBackgroundResource(R.drawable.article_default);
         }
+        holder.popupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final PopupMenu popup = new PopupMenu(mContext, holder.popupButton);
+                popup.getMenuInflater().inflate(R.menu.pop_up_menu_published, popup.getMenu());
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        int i = item.getItemId();
+                        if (i == R.id.edit) {
+                            mClickListener.onBtnClick(position);
+                               /* Intent intent=new Intent(mContext,EditorPostActivity.class);
+                               // intent.putExtra("publishedItem",(PublishedArticlesModel.PublishedArticleData)getItem(position));
+                                intent.putExtra("from","publishedList");
+
+                                intent.putExtra(Constants.ARTICLE_ID, String.valueOf( ( (PublishedArticlesModel.PublishedArticleData)getItem(position)).getId()));
+                                intent.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.ARTICLES);
+                                mContext.startActivity(intent);
+                                Log.e("edit", "clicked");
+                                //do something*/
+                            return true;
+                        } else {
+                            return onMenuItemClick(item);
+                        }
+                    }
+
+                });
+                popup.show();
+            }
+        });
 
         return view;
     }
@@ -93,5 +142,10 @@ public class PublishedArticlesListAdapter extends BaseAdapter {
     @Override
     public long getItemId(int position) {
         return position;
+    }
+
+    public interface BtnClickListener
+    {
+        void onBtnClick(int position);
     }
 }

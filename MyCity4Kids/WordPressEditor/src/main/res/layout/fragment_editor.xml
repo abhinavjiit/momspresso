@@ -14,13 +14,20 @@
         android:minHeight="?attr/actionBarSize">
 
     </android.support.v7.widget.Toolbar>-->
+
     <include
         layout="@layout/editor_webview"
         android:id="@+id/webview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/format_bar"/>
-
+    <TextView
+        android:id="@+id/disableTitleView"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:visibility="invisible"
+        android:clickable="true"
+        />
     <ScrollView
         android:id="@+id/sourceview"
         android:layout_width="fill_parent"
@@ -50,8 +57,7 @@
                 android:textColor="@android:color/black"
                 android:textColorHint="@color/sourceview_placeholder_text"
                 android:inputType="textCapSentences|textAutoCorrect"
-                android:imeOptions="flagNoExtractUi"
-                editor:fontFile="OpenSans-Bold.ttf"/>
+                android:imeOptions="flagNoExtractUi"/>
 
             <View
                 android:id="@+id/sourceview_horizontal_divider"

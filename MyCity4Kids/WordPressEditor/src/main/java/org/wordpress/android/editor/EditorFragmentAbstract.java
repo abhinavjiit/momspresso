@@ -23,6 +23,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public abstract boolean hasFailedMediaUploads();
     public abstract void setTitlePlaceholder(CharSequence text);
     public abstract void setContentPlaceholder(CharSequence text);
+    public abstract void toggleTitleView(boolean b);
 
     // TODO: remove this as soon as we can (we'll need to drop the legacy editor or fix html2spanned translation)
     public abstract Spanned getSpannedContent();

@@ -31,15 +31,22 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.controller.ArticleDraftController;
 import com.mycity4kids.controller.BlogSetupController;
+import com.mycity4kids.controller.ImageUploadController;
 import com.mycity4kids.dbtable.UserTable;
+import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.editor.ArticleDraftRequest;
 import com.mycity4kids.models.forgot.CommonResponse;
+import com.mycity4kids.models.user.ImageUploadRequest;
 import com.mycity4kids.models.user.UserModel;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.squareup.picasso.Picasso;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.util.helpers.MediaFile;
 
@@ -113,7 +120,27 @@ public class BlogPage extends BaseActivity {
               //  removeProgressDialog();
             }
             break;
-    } }}
+    }
+            case AppConstants.IMAGE_EDITOR_UPLOAD_REQUEST:
+                removeProgressDialog();
+                if (response.getResponseObject() instanceof CommonResponse) {
+                    CommonResponse responseModel = (CommonResponse) response
+                            .getResponseObject();
+                    if (responseModel.getResponseCode() != 200) {
+                        ((BaseActivity) this).showSnackbar(findViewById(R.id.root), getString(R.string.toast_response_error));
+                        return;
+                    } else {
+                        if (!StringUtils.isNullOrEmpty(responseModel.getResult().getMessage())) {
+                            Log.i("IMAGE_UPLOAD_REQUEST", responseModel.getResult().getMessage());
+                        }
+                        setProfileImage(responseModel.getResult().getMessage());
+                        Picasso.with(this).load(responseModel.getResult().getMessage()).error(R.drawable.default_article).into(blogImage);
+                        showToast("Image successfully uploaded!");
+                        // ((BaseActivity) this()).showSnackbar(getView().findViewById(R.id.root), "You have successfully uploaded an image.");
+                    }
+                }
+                break;
+        }}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,6 +168,7 @@ public class BlogPage extends BaseActivity {
         createBlog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Utils.pushEvent(BlogPage.this, GTMEventType.CALENDAR_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(BlogPage.this).getId() + "", "");
                 if (blogTitle.getText().toString().isEmpty())
                 {
                    // showToast("Please fill the required fields");
@@ -154,6 +182,11 @@ public class BlogPage extends BaseActivity {
                     bloggerBio.setError("Please enter your Bio");
                     bloggerBio.requestFocus();
                 }
+                else if(!blogTitle.getText().toString().matches("[a-zA-Z0-9 ]+")) {
+                    blogTitle.setFocusableInTouchMode(true);
+                    blogTitle.setError("Special characters are not allowed!");
+                    blogTitle.requestFocus();
+                }
 
                 else {
                 showProgressDialog(getResources().getString(R.string.please_wait));
@@ -166,6 +199,7 @@ public class BlogPage extends BaseActivity {
                 articleDraftRequest.setImageName(url);
                 articleDraftRequest.setTitle(blogTitle.getText().toString());
                 articleDraftRequest.setBody(bloggerBio.getText().toString());
+                    articleDraftRequest.setSourceId(""+2);
 /*
         articleDraftRequest.setCity_id(SharedPrefUtils.getCurrentCityModel(getActivity()).getId());
         _parentingModel.setPage("" + pPageCount);*/
@@ -233,12 +267,13 @@ public class BlogPage extends BaseActivity {
                             }
                         }
                         finalBitmap = Bitmap.createScaledBitmap(imageBitmap, (int) actualWidth, (int) actualHeight, true);
-                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                       /* ByteArrayOutputStream stream = new ByteArrayOutputStream();
                         finalBitmap.compress(Bitmap.CompressFormat.PNG, 75, stream);
                         byte[] byteArrayFromGallery = stream.toByteArray();
 
-                        imageString = Base64.encodeToString(byteArrayFromGallery, Base64.DEFAULT);
-                        new FileUploadTask().execute();
+                        imageString = Base64.encodeToString(byteArrayFromGallery, Base64.DEFAULT);*/
+                    //    new FileUploadTask().execute();
+                        sendUploadProfileImageRequest(finalBitmap);
                         // compressImage(filePath);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -430,5 +465,53 @@ public class BlogPage extends BaseActivity {
                 })
                 .show();
 
+    }
+    public void sendUploadProfileImageRequest(Bitmap originalImage) {
+        showProgressDialog(getString(R.string.please_wait));
+        ByteArrayOutputStream bao = new ByteArrayOutputStream();
+        originalImage.compress(Bitmap.CompressFormat.PNG, 75, bao);
+        byte[] ba = bao.toByteArray();
+        String imageString = Base64.encodeToString(ba, Base64.DEFAULT);
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("extension", "image/png");
+            jsonObject.put("size", ba.length);
+            jsonObject.put("byteCode", imageString);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        UserTable userTable = new UserTable((BaseApplication) this.getApplication());
+        UserModel userModel = userTable.getAllUserData();
+
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.put(jsonObject);
+
+        ImageUploadRequest requestData = new ImageUploadRequest();
+        //  requestData.setFile(jsonArray.toString());
+        requestData.setFile(imageString);
+        requestData.setUser_id("" + userModel.getUser().getId());
+        // requestData.setSessionId("" + userModel.getUser().getSessionId());
+        // requestData.setProfileId("" + userModel.getUser().getProfileId());
+        requestData.setImageType("jpg");
+        //  requestData.setType(AppConstants.IMAGE_TYPE_USER_PROFILE);
+
+        ImageUploadController controller = new ImageUploadController(this, this);
+        controller.getData(AppConstants.IMAGE_EDITOR_UPLOAD_REQUEST, requestData);
+    }
+
+    public void setProfileImage(String url1) {
+        if (!StringUtils.isNullOrEmpty(url1)) {
+            url = url1;
+            String[] seperated = url.split("/");
+            if (seperated.length != 0) {
+                url = seperated[seperated.length - 1];
+                Log.e("url", url);
+            }
+            // SharedPrefUtils.setProfileImgUrl(getActivity(), url);
+            //((DashboardActivity) getActivity()).updateImageProfile();
+
+        }
     }
  }

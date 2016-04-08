@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -1707,6 +1708,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 replaceFragment(new ArticlesFragment(), null, true);
                 break;
             case R.id.editor:
+                if (Build.VERSION.SDK_INT>15)
+                {
                 Intent intent1 = new Intent(DashboardActivity.this, EditorPostActivity.class);
                 Bundle bundle5 = new Bundle();
                 bundle5.putString(EditorPostActivity.TITLE_PARAM, "");
@@ -1718,7 +1721,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 bundle5.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
                 bundle5.putString("from", "dashboard");
                 intent1.putExtras(bundle5);
-                startActivity(intent1);
+                startActivity(intent1);}
+                else
+                {
+                    Intent viewIntent =
+                            new Intent("android.intent.action.VIEW",
+                                    Uri.parse("http://www.mycity4kids.com/parenting/admin/setupablog"));
+                    startActivity(viewIntent);
+                }
                 break;
             case R.id.drafts:
                 Intent intent5 = new Intent(DashboardActivity.this, DraftListView.class);

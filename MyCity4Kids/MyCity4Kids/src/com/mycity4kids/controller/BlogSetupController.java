@@ -98,6 +98,7 @@ public class BlogSetupController extends BaseController{
             nameValuePairs.add(new BasicNameValuePair("title", articleDraftRequest.getTitle()));
             nameValuePairs.add(new BasicNameValuePair("imageName", articleDraftRequest.getImageName()));
             nameValuePairs.add(new BasicNameValuePair("userBio", articleDraftRequest.getBody()));
+            nameValuePairs.add(new BasicNameValuePair("sourceId", articleDraftRequest.getSourceId()));
          /*   nameValuePairs.add(new BasicNameValuePair("id", articleDraftRequest.getId()));
             nameValuePairs.add(new BasicNameValuePair("status", articleDraftRequest.getStatus()));*/
 

@@ -1147,4 +1147,9 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
     public void setContentPlaceholder(CharSequence text) {
 
     }
+
+    @Override
+    public void toggleTitleView(boolean b) {
+
+    }
 }

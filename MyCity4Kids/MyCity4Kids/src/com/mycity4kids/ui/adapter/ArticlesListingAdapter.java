@@ -3,17 +3,23 @@ package com.mycity4kids.ui.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.editor.EditorPostActivity;
+import com.mycity4kids.enums.ParentingFilterType;
 import com.mycity4kids.models.parentingstop.CommonParentingList;
+import com.mycity4kids.newmodels.PublishedArticlesModel;
 import com.mycity4kids.ui.activity.BlogDetailActivity;
 import com.squareup.picasso.Picasso;
 
@@ -80,6 +86,7 @@ public class ArticlesListingAdapter extends BaseAdapter {
             holder.txvPublishDate = (TextView) view.findViewById(R.id.txvPublishDate);
             holder.imvAuthorThumb = (ImageView) view.findViewById(R.id.imvAuthorThumb);
 //            holder.authorPic = (ImageView) view.findViewById(R.id.author_pic);
+
 
             view.setTag(holder);
         } else {

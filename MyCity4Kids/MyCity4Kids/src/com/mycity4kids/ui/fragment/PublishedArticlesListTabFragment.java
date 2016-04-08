@@ -2,6 +2,7 @@ package com.mycity4kids.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +18,16 @@ import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.StringUtils;
 import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.controller.ArticleBlogDetailsController;
 import com.mycity4kids.controller.BloggerDashboardAndPublishedArticlesController;
+import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.enums.ParentingFilterType;
+import com.mycity4kids.models.parentingdetails.ImageData;
+import com.mycity4kids.models.parentingdetails.ParentingDetailResponse;
+import com.mycity4kids.models.parentingdetails.ParentingDetailsData;
 import com.mycity4kids.newmodels.PublishedArticlesModel;
 import com.mycity4kids.newmodels.bloggermodel.BlogArticleList.BlogArticleModel;
 import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
@@ -37,6 +44,8 @@ public class PublishedArticlesListTabFragment extends BaseFragment {
     PublishedArticlesListAdapter articlesListingAdapter;
     ArrayList<PublishedArticlesModel.PublishedArticleData> articleDataModelsNew;
     ListView listView;
+    ParentingDetailsData detailData;
+    private ArrayList<ImageData> imageList;
 
     private RelativeLayout mLodingView;
 
@@ -45,6 +54,7 @@ public class PublishedArticlesListTabFragment extends BaseFragment {
     int publishedArticleCount;
     int totalPageCount = 0;
     TextView noBlogsTextView;
+    String title, content, thumbnailUrl, articleId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,7 +77,15 @@ public class PublishedArticlesListTabFragment extends BaseFragment {
         getAllPublishedArticles(nextPageNumber);
 
         articlesListingAdapter =
-                new PublishedArticlesListAdapter(getActivity());
+                new PublishedArticlesListAdapter(getActivity(), new PublishedArticlesListAdapter.BtnClickListener() {
+                    @Override
+                    public void onBtnClick(int position) {
+                        ArticleBlogDetailsController _controller = new ArticleBlogDetailsController(getActivity(), PublishedArticlesListTabFragment.this);
+                        showProgressDialog(getString(R.string.fetching_data));
+                        _controller.getData(AppConstants.ARTICLES_DETAILS_REQUEST, articleDataModelsNew.get(position).getId());
+                        articleId = articleDataModelsNew.get(position).getId();
+                    }
+                });
         articlesListingAdapter.setNewListData(articleDataModelsNew);
         listView.setAdapter(articlesListingAdapter);
         articlesListingAdapter.notifyDataSetChanged();
@@ -147,6 +165,27 @@ public class PublishedArticlesListTabFragment extends BaseFragment {
                 isReuqestRunning = false;
                 mLodingView.setVisibility(View.GONE);
                 break;
+            case AppConstants.ARTICLES_DETAILS_REQUEST:
+                ParentingDetailResponse responseData1 = (ParentingDetailResponse) response.getResponseObject();
+                if (responseData1.getResponseCode() == 200) {
+
+
+                    getResponseUpdateUi(responseData1);
+
+                    removeProgressDialog();
+                } else if (responseData1.getResponseCode() == 400) {
+
+                    removeProgressDialog();
+                    //finish();
+                    String message = responseData1.getResult().getMessage();
+                    if (!StringUtils.isNullOrEmpty(message)) {
+                        ToastUtils.showToast(getActivity(), message);
+                    } else {
+                        ToastUtils.showToast(getActivity(), getString(R.string.went_wrong));
+                    }
+                }
+                break;
+
 
             default:
                 break;
@@ -162,7 +201,6 @@ public class PublishedArticlesListTabFragment extends BaseFragment {
             articlesListingAdapter.setNewListData(articleDataModelsNew);
             articlesListingAdapter.notifyDataSetChanged();
             noBlogsTextView.setVisibility(View.VISIBLE);
-            //((DashboardActivity) getActivity()).showToast(responseData.getResult().getMessage());
         } else {
             noBlogsTextView.setVisibility(View.GONE);
             if (nextPageNumber == 1) {
@@ -181,6 +219,43 @@ public class PublishedArticlesListTabFragment extends BaseFragment {
         BloggerDashboardAndPublishedArticlesController _controller =
                 new BloggerDashboardAndPublishedArticlesController(getActivity(), this);
         _controller.getData(AppConstants.GET_BLOGGER_PUBLISHED_ARTICLES_REQUEST, pPageCount);
+
+    }
+
+    private void getResponseUpdateUi(ParentingDetailResponse detailsResponse) {
+        detailData = detailsResponse.getResult().getData();
+        imageList = detailData.getBody().getImage();
+        if (!StringUtils.isNullOrEmpty(detailData.getTitle())) {
+            title = detailData.getTitle();
+        }
+        String bodyDescription = detailData.getBody().getText();
+        String bodyDesc = bodyDescription;
+        if (imageList.size() > 0) {
+            for (ImageData images : imageList) {
+                if (bodyDescription.contains(images.getKey())) {
+                    bodyDesc = bodyDesc.replace(images.getKey(), "<p style='text-align:center'><img src=" + images.getValue() + " style=\"width: 100%;\"+></p>");
+                }
+            }
+
+            String bodyImgTxt = "<html><head></head><body>" + bodyDesc + "</body></html>";
+            content = bodyImgTxt;
+        } else {
+            bodyDesc = bodyDesc.replaceAll("\n", "<br/>");
+            String bodyImgTxt = "<html><head></head><body>" + bodyDesc + "</body></html>";
+            content = bodyImgTxt;
+        }
+        if (!StringUtils.isNullOrEmpty(detailData.getThumbnail_image())) {
+            int width = getResources().getDisplayMetrics().widthPixels;
+            thumbnailUrl = detailData.getThumbnail_image();
+        }
+
+        Intent intent = new Intent(getActivity(), EditorPostActivity.class);
+        intent.putExtra("from", "publishedList");
+        intent.putExtra("title", title);
+        intent.putExtra("content", content);
+        intent.putExtra("thumbnailUrl", thumbnailUrl);
+        intent.putExtra("articleId", articleId);
+        getActivity().startActivity(intent);
 
     }
 }

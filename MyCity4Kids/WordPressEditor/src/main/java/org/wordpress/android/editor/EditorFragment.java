@@ -30,6 +30,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.URLUtil;
 import android.webkit.WebView;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -107,6 +108,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     private CountDownLatch mGetTitleCountDownLatch;
     private CountDownLatch mGetContentCountDownLatch;
     private CountDownLatch mGetSelectedTextCountDownLatch;
+    private TextView disableTitleView;
 
     private final Map<String, ToggleButton> mTagToggleButtonMap = new HashMap<>();
 
@@ -140,7 +142,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 && !getResources().getBoolean(R.bool.is_large_tablet_landscape)) {
             mHideActionBarOnSoftKeyboardUp = true;
         }
-
+        disableTitleView = (TextView)view.findViewById(R.id.disableTitleView);
         mWaitingMediaFiles = new ConcurrentHashMap<>();
         mWaitingGalleries = Collections.newSetFromMap(new ConcurrentHashMap<MediaGallery, Boolean>());
         mUploadingMedia = new HashMap<>();
@@ -207,6 +209,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
         mSourceViewTitle.setHint(mTitlePlaceholder);
         mSourceViewContent.setHint("<p>" + mContentPlaceholder + "</p>");
+
+
 
         // -- Format bar configuration
 
@@ -1423,8 +1427,17 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         String pTag="<p>";
         String newString=pTag.concat(content);
         String formattedString=newString.replace("\n\n", "</p><p>");
-        formattedString.concat("</p>");
+        formattedString=formattedString.concat("</p>");
         return formattedString;
+
+    }
+
+    public void toggleTitleView(boolean b){
+        if(b){
+            disableTitleView.setVisibility(View.VISIBLE);
+        }else {
+            disableTitleView.setVisibility(View.INVISIBLE);
+        }
 
     }
 }

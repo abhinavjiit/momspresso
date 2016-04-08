@@ -10,6 +10,7 @@ public class ArticleDraftRequest {
     private String id;
     private String status;
     private String imageName;
+    private String sourceId;
 
 
     public String getBody() {
@@ -58,5 +59,13 @@ public class ArticleDraftRequest {
 
     public void setImageName(String imageName) {
         this.imageName = imageName;
+    }
+
+    public String getSourceId() {
+        return sourceId;
+    }
+
+    public void setSourceId(String sourceId) {
+        this.sourceId = sourceId;
     }
 }

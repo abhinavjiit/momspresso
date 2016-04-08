@@ -51,7 +51,7 @@ public class ImageUploadController extends BaseController {
                 break;
             }
             case AppConstants.IMAGE_EDITOR_UPLOAD_REQUEST: {
-                serviceRequest.setPostData(setRequestParameters(requestData));
+                serviceRequest.setPostData(setArticleRequestParameters(requestData));
                 serviceRequest.setUrl(AppConstants.IMAGE_EDITOR_UPLOAD_URL);
                 break;
             }
@@ -89,12 +89,30 @@ public class ImageUploadController extends BaseController {
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         try {
             ImageUploadRequest imgUploadRq = (ImageUploadRequest) pRequestModel;
-            //nameValuePairs.add(new BasicNameValuePair("user_id", imgUploadRq.getUser_id() ));
-            //nameValuePairs.add(new BasicNameValuePair("sessionId", imgUploadRq.getSessionId() ));
-            //nameValuePairs.add(new BasicNameValuePair("profileId", imgUploadRq.getProfileId() ));
+            nameValuePairs.add(new BasicNameValuePair("user_id", imgUploadRq.getUser_id()));
+            /*nameValuePairs.add(new BasicNameValuePair("sessionId", imgUploadRq.getSessionId() ));
+            nameValuePairs.add(new BasicNameValuePair("profileId", imgUploadRq.getProfileId() ));*/
+            nameValuePairs.add(new BasicNameValuePair("file", imgUploadRq.getImage()));
+            nameValuePairs.add(new BasicNameValuePair("type", imgUploadRq.getType()));
+            // nameValuePairs.add(new BasicNameValuePair("imageType", imgUploadRq.getImageType()));
+            Log.i("imageUpload", nameValuePairs.toString());
+//            encodedEntity = new UrlEncodedFormEntity(nameValuePairs);
+        } catch (Exception e) {
+            Log.e(LOG_TAG, "setRequestParameters", e);
+        }
+        return nameValuePairs;
+    }
+    private List<NameValuePair> setArticleRequestParameters(Object pRequestModel) {
+        UrlEncodedFormEntity encodedEntity = null;
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+        try {
+            ImageUploadRequest imgUploadRq = (ImageUploadRequest) pRequestModel;
+            nameValuePairs.add(new BasicNameValuePair("user_id", imgUploadRq.getUser_id()));
+            /*nameValuePairs.add(new BasicNameValuePair("sessionId", imgUploadRq.getSessionId() ));
+            nameValuePairs.add(new BasicNameValuePair("profileId", imgUploadRq.getProfileId() ));*/
             nameValuePairs.add(new BasicNameValuePair("file", imgUploadRq.getFile()));
-           // nameValuePairs.add(new BasicNameValuePair("type", imgUploadRq.getType()));
-            nameValuePairs.add(new BasicNameValuePair("imageType", imgUploadRq.getImageType()));
+            //nameValuePairs.add(new BasicNameValuePair("type", imgUploadRq.getType()));
+             nameValuePairs.add(new BasicNameValuePair("imageType", imgUploadRq.getImageType()));
             Log.i("imageUpload", nameValuePairs.toString());
 //            encodedEntity = new UrlEncodedFormEntity(nameValuePairs);
         } catch (Exception e) {
@@ -131,57 +149,57 @@ public class ImageUploadController extends BaseController {
             case AppConstants.IMAGE_UPLOAD_REQUEST:
                 CommonResponse _forgotResponse;
                 try {
-                if (response != null) {
-                    String responseDatta = new String(response.getResponseData());
-                    System.out.println("img response " + responseDatta);
+                    if (response != null) {
+                        String responseDatta = new String(response.getResponseData());
+                        System.out.println("img response " + responseDatta);
 
-                    _forgotResponse = new Gson().fromJson(responseDatta, CommonResponse.class);
-                    response.setResponseObject(_forgotResponse);
-                    sendResponseToScreen(response);
-                } else {
+                        _forgotResponse = new Gson().fromJson(responseDatta, CommonResponse.class);
+                        response.setResponseObject(_forgotResponse);
+                        sendResponseToScreen(response);
+                    } else {
+                        sendResponseToScreen(null);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                     sendResponseToScreen(null);
                 }
-        } catch (Exception e) {
-            e.printStackTrace();
-            sendResponseToScreen(null);
-        }
 
                 break;
             case AppConstants.IMAGE_EDITOR_UPLOAD_REQUEST:
                 try {
-                if (response != null) {
-                    String responseDatta = new String(response.getResponseData());
-                    System.out.println("img response " + responseDatta);
+                    if (response != null) {
+                        String responseDatta = new String(response.getResponseData());
+                        System.out.println("img response " + responseDatta);
 
-                    _forgotResponse = new Gson().fromJson(responseDatta, CommonResponse.class);
-                    response.setResponseObject(_forgotResponse);
-                    sendResponseToScreen(response);
-                } else {
+                        _forgotResponse = new Gson().fromJson(responseDatta, CommonResponse.class);
+                        response.setResponseObject(_forgotResponse);
+                        sendResponseToScreen(response);
+                    } else {
+                        sendResponseToScreen(null);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                     sendResponseToScreen(null);
                 }
-    } catch (Exception e) {
-        e.printStackTrace();
-        sendResponseToScreen(null);
-    }
                 break;
             case AppConstants.FILE_UPLOAD_REQ:
                 try {
-                if (response != null) {
+                    if (response != null) {
 
 
-                    String responseDatta = new String(response.getResponseData());
-                    System.out.println("file response " + responseDatta);
+                        String responseDatta = new String(response.getResponseData());
+                        System.out.println("file response " + responseDatta);
 
-                    _forgotResponse = new Gson().fromJson(responseDatta, CommonResponse.class);
-                    response.setResponseObject(_forgotResponse);
-                    sendResponseToScreen(response);
-                } else {
+                        _forgotResponse = new Gson().fromJson(responseDatta, CommonResponse.class);
+                        response.setResponseObject(_forgotResponse);
+                        sendResponseToScreen(response);
+                    } else {
+                        sendResponseToScreen(null);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                     sendResponseToScreen(null);
                 }
-} catch (Exception e) {
-        e.printStackTrace();
-        sendResponseToScreen(null);
-        }
                 break;
             case AppConstants.UPLOAD_BUSINESS_IMAGE_REQUEST: {
                 try {
@@ -200,21 +218,21 @@ public class ImageUploadController extends BaseController {
             }
             case AppConstants.FILE_UPLOAD_REQ_TASK:
                 try {
-                if (response != null) {
-                    String responseDatta = new String(response.getResponseData());
-                    System.out.println("file response_task " + responseDatta);
+                    if (response != null) {
+                        String responseDatta = new String(response.getResponseData());
+                        System.out.println("file response_task " + responseDatta);
 
-                    _forgotResponse = new Gson().fromJson(responseDatta, CommonResponse.class);
-                    response.setResponseObject(_forgotResponse);
-                    sendResponseToScreen(response);
-                } else {
+                        _forgotResponse = new Gson().fromJson(responseDatta, CommonResponse.class);
+                        response.setResponseObject(_forgotResponse);
+                        sendResponseToScreen(response);
+                    } else {
+                        sendResponseToScreen(null);
+                    }
+                    break;
+                } catch (Exception e) {
+                    e.printStackTrace();
                     sendResponseToScreen(null);
                 }
-                break;
-        } catch (Exception e) {
-        e.printStackTrace();
-        sendResponseToScreen(null);
-        }
         }
     }
 

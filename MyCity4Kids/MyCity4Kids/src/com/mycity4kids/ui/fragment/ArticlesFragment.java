@@ -1,6 +1,8 @@
 package com.mycity4kids.ui.fragment;
 
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -94,6 +96,7 @@ ImageView addDraft;
         addDraft.setOnClickListener(new OnClickListener() {
     @Override
     public void onClick(View v) {
+        if (Build.VERSION.SDK_INT>15){
         Intent intent1 = new Intent(getActivity(), EditorPostActivity.class);
         Bundle bundle5 = new Bundle();
         bundle5.putString(EditorPostActivity.TITLE_PARAM, "");
@@ -105,9 +108,17 @@ ImageView addDraft;
         bundle5.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
         bundle5.putString("from","DraftListView");
         intent1.putExtras(bundle5);
-        startActivity(intent1);
+        startActivity(intent1);}
+        else
+        {
+            Intent viewIntent =
+                    new Intent("android.intent.action.VIEW",
+                            Uri.parse("http://www.mycity4kids.com/parenting/admin/setupablog"));
+            startActivity(viewIntent);
+        }
     }
 });
+
         initialList = new ArticleModelNew().new AllArticles();
 
         try {

@@ -9,6 +9,7 @@ public class ArticlePublishRequest {
     private String body;
     private String id;
     private String draftId;
+    private String sourceId;
 
 
         private String imageUrl;
@@ -64,5 +65,13 @@ public class ArticlePublishRequest {
 
     public void setDraftId(String draftId) {
         this.draftId = draftId;
+    }
+
+    public String getSourceId() {
+        return sourceId;
+    }
+
+    public void setSourceId(String sourceId) {
+        this.sourceId = sourceId;
     }
 }

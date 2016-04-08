@@ -2,6 +2,8 @@ package com.mycity4kids.editor;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -141,6 +143,7 @@ public class DraftListView extends BaseActivity implements View.OnClickListener,
         addDraft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (Build.VERSION.SDK_INT>15){
                 Intent intent1 = new Intent(DraftListView.this, EditorPostActivity.class);
                 Bundle bundle5 = new Bundle();
                 bundle5.putString(EditorPostActivity.TITLE_PARAM, "");
@@ -152,7 +155,14 @@ public class DraftListView extends BaseActivity implements View.OnClickListener,
                 bundle5.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
                 bundle5.putString("from","DraftListView");
                 intent1.putExtras(bundle5);
-                startActivity(intent1);
+                startActivity(intent1);}
+                else
+                {
+                    Intent viewIntent =
+                            new Intent("android.intent.action.VIEW",
+                                    Uri.parse("http://www.mycity4kids.com/parenting/admin/setupablog"));
+                    startActivity(viewIntent);
+                }
             }
         });
 
@@ -182,10 +192,17 @@ public class DraftListView extends BaseActivity implements View.OnClickListener,
         draftListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (Build.VERSION.SDK_INT>15){
                 Intent intent = new Intent(DraftListView.this, EditorPostActivity.class);
                 intent.putExtra("draftItem", draftList.get(position));
                 intent.putExtra("from", "draftList");
-                startActivity(intent);
+                startActivity(intent);}
+                else {
+                    Intent viewIntent =
+                            new Intent("android.intent.action.VIEW",
+                                    Uri.parse("http://www.mycity4kids.com/parenting/admin/setupablog"));
+                    startActivity(viewIntent);
+                }
             }
         });
     }

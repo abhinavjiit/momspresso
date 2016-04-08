@@ -328,6 +328,20 @@ public enum  GTMEventType {
                     return "planWeekNotificationClicked";
                 }
             },
+    PUBLISH_ARTICLE_BUTTON_CLICKED_EVENT
+            {
+                @Override
+                public String toString() {
+                    return "publishArticleClicked";
+                }
+            },
+    SETUP_BLOG_CLICKED_EVENT
+            {
+                @Override
+                public String toString() {
+                    return "setupBlogClicked";
+                }
+            },
 
 
 }

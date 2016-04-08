@@ -23,6 +23,11 @@ import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -34,17 +39,24 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.controller.ArticleBlogDetailsController;
 import com.mycity4kids.controller.ArticleDraftController;
 import com.mycity4kids.controller.ImageUploadController;
 import com.mycity4kids.dbtable.UserTable;
+import com.mycity4kids.enums.ParentingFilterType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.editor.ArticleDraftList;
 import com.mycity4kids.models.editor.ArticleDraftRequest;
 import com.mycity4kids.models.forgot.CommonResponse;
+import com.mycity4kids.models.parentingdetails.CommentsData;
+import com.mycity4kids.models.parentingdetails.ImageData;
 import com.mycity4kids.models.parentingdetails.ParentingDetailResponse;
+import com.mycity4kids.models.parentingdetails.ParentingDetailsData;
 import com.mycity4kids.models.user.ImageUploadRequest;
 import com.mycity4kids.models.user.UserModel;
+import com.mycity4kids.newmodels.PublishedArticlesModel;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.squareup.picasso.Picasso;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -93,13 +105,19 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     private UserModel userModel;
     Uri imageUri;
     private Bitmap originalImage;
+    private String articleId;
+    ParentingDetailsData detailData;
+    private float density;
+    private String thumbnailUrl;
+    private ArrayList<ImageData> imageList;
+
     File file;
     String imageString;
     MediaFile mediaFile;
     String mediaId;
     String response;
     Boolean fromBackpress = false;
-    String draftId="";
+    String draftId = "";
     public static final String EDITOR_PARAM = "EDITOR_PARAM";
     public static final String TITLE_PARAM = "TITLE_PARAM";
     public static final String CONTENT_PARAM = "CONTENT_PARAM";
@@ -123,6 +141,8 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     private EditorFragmentAbstract mEditorFragment;
 
     private Map<String, String> mFailedUploads;
+    String title;
+    String content;
 
 
     @Override
@@ -143,7 +163,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                             //  SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
                             Log.i("Draft message", responseModel.getResult().getMessage());
                         }
-                        draftId=responseModel.getResult().getData().getId()+"";
+                        draftId = responseModel.getResult().getData().getId() + "";
 
                         //setProfileImage(originalImage);
                         showToast("Draft Successfully saved");
@@ -161,45 +181,39 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                             .getResponseObject();
                     if (responseModel.getResponseCode() != 200) {
                         showToast(getString(R.string.toast_response_error));
+                        removeProgressDialog();
                         return;
                     } else {
                         if (!StringUtils.isNullOrEmpty(responseModel.getResult().getMessage())) {
-                            SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
+                      //      SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
                             Log.i("Uploaded Image URL", responseModel.getResult().getMessage());
                         }
                         mediaFile.setFileURL(responseModel.getResult().getMessage());
 
                         ((EditorMediaUploadListener) mEditorFragment).onMediaUploadSucceeded(mediaId, mediaFile);
+                        removeProgressDialog();
                         //setProfileImage(originalImage);
-                        showToast("You have successfully uploaded image.");
+                      //  showToast("You have successfully uploaded image.");
                     }
                 }
                 break;
             }
+
         }
 
     }
-
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getIntent().getIntExtra(EDITOR_PARAM, USE_NEW_EDITOR) == USE_NEW_EDITOR) {
-           // ToastUtils.showToast(this, R.string.starting_new_editor);
+            // ToastUtils.showToast(this, R.string.starting_new_editor);
             setContentView(R.layout.activity_new_editor);
             UserTable userTable = new UserTable((BaseApplication) this.getApplication());
             userModel = userTable.getAllUserData();
             Utils.pushOpenScreenEvent(EditorPostActivity.this, "Text Editor", SharedPrefUtils.getUserDetailModel(this).getId() + "");
-           /* if (getIntent().getStringExtra("from").equals("draftList"))
-            {  ArticleDraftList draftObject=(ArticleDraftList) getIntent().getSerializableExtra("draftItem");
-            mEditorFragment.setTitle(draftObject.getTitle());
-            mEditorFragment.setContent(draftObject.getBody());}*/
-        } /*else {
-            ToastUtils.showToast(this, R.string.starting_legacy_editor);
-            setContentView(R.layout.activity_legacy_editor);
-        }*/
-
+        }
         mFailedUploads = new HashMap<>();
     }
 
@@ -220,17 +234,16 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             ((ImageSettingsDialogFragment) fragment).dismissFragment();
         } else {
             //Toast.makeText(this,"Draft Saved",Toast.LENGTH_LONG).show();
-            if (mEditorFragment.getTitle().toString().isEmpty()&&(mEditorFragment.getContent().toString().isEmpty()))
-            {super.onBackPressed();
+            if ((mEditorFragment.getTitle().toString().isEmpty() && (mEditorFragment.getContent().toString().isEmpty()))||(getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList"))) {
+                finish();
+                super.onBackPressed();
 
-            }
-             else if (mEditorFragment.imageUploading == 0) {
+            } else if (mEditorFragment.imageUploading == 0) {
                 Log.e("imageuploading", mEditorFragment.imageUploading + "");
                 showToast("Please wait while image is being uploaded");
-            }else
-            {
+            } else {
 
-                saveDraftRequest(mEditorFragment.getTitle().toString(), mEditorFragment.getContent().toString(), draftId);
+                saveDraftRequest(titleFormatting(mEditorFragment.getTitle().toString().trim()), mEditorFragment.getContent().toString(), draftId);
                 fromBackpress = true;
             }
             // super.onBackPressed();
@@ -361,13 +374,14 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                             }
                         }
                         Bitmap finalBitmap = Bitmap.createScaledBitmap(imageBitmap, (int) actualWidth, (int) actualHeight, true);
-                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                       /* ByteArrayOutputStream stream = new ByteArrayOutputStream();
                         finalBitmap.compress(Bitmap.CompressFormat.PNG, 75, stream);
                         byte[] byteArrayFromGallery = stream.toByteArray();
                         byteArrayToSend = byteArrayFromGallery;
-                        imageString = Base64.encodeToString(byteArrayToSend, Base64.DEFAULT);
-                        mEditorFragment.imageUploading=0;
-                        new FileUploadTask().execute();
+                        imageString = Base64.encodeToString(byteArrayToSend, Base64.DEFAULT);*/
+                        mEditorFragment.imageUploading = 0;
+                        //new FileUploadTask().execute();
+                        sendUploadProfileImageRequest(finalBitmap);
                         // compressImage(filePath);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -413,16 +427,17 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                         }
                         Bitmap finalBitmap = Bitmap.createScaledBitmap(imageBitmap, (int) actualWidth, (int) actualHeight, true);
 
-                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                       /* ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
 
                         finalBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
                         byte[] byteArrayFromGallery = stream.toByteArray();
                         byteArrayToSend = byteArrayFromGallery;
-                        imageString = Base64.encodeToString(byteArrayToSend, Base64.DEFAULT);
+                        imageString = Base64.encodeToString(byteArrayToSend, Base64.DEFAULT);*/
                         // imageString = Base64.encodeToString(array, Base64.DEFAULT);
-                        mEditorFragment.imageUploading=0;
-                        new FileUploadTask().execute();
+                        mEditorFragment.imageUploading = 0;
+                     //   new FileUploadTask().execute();
+                        sendUploadProfileImageRequest(finalBitmap);
                         // compressImage(filePath);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -441,7 +456,6 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     }
 
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -451,9 +465,13 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                 } else if (mEditorFragment.imageUploading == 0) {
                     Log.e("imageuploading", mEditorFragment.imageUploading + "");
                     showToast("Please wait while image is being uploaded");
-                } else {
+                } else if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList"))
+                {
+                    showToast("Published Articles are not allowed to be saved in drafts");
+                }
+                else {
                     Log.e("draftId", draftId + "");
-                    saveDraftRequest(mEditorFragment.getTitle().toString(), mEditorFragment.getContent().toString(), draftId);
+                    saveDraftRequest(titleFormatting(mEditorFragment.getTitle().toString().trim()), mEditorFragment.getContent().toString(), draftId);
                     fromBackpress = false;
                 }
             }
@@ -471,12 +489,20 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                     ArticleDraftList draftObject = new ArticleDraftList();
 
                     draftObject.setBody(contentFormatting(mEditorFragment.getContent().toString()));
-                    draftObject.setTitle(mEditorFragment.getTitle().toString());
+                    draftObject.setTitle(titleFormatting(mEditorFragment.getTitle().toString()));
                     draftObject.setId(draftId);
-                    Log.e("dtaftId",draftId+"");
+                    Log.e("dtaftId", draftId + "");
                     Log.e("publish", "clicked");
                     Intent intent = new Intent(EditorPostActivity.this, ArticleImageTagUpload.class);
                     intent.putExtra("draftItem", draftObject);
+                    if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList"))
+                    {
+                        intent.putExtra("imageUrl",thumbnailUrl);
+                        intent.putExtra("from","publishedList");
+                        intent.putExtra("articleId",articleId);
+                    }
+                    else
+                    {intent.putExtra("from","editor");}
                     startActivity(intent);
                 }
             }
@@ -487,15 +513,15 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     }
 
 
-
     public void saveDraftRequest(String title, String body, String draftId) {
         showProgressDialog(getResources().getString(R.string.please_wait));
         ArticleDraftRequest requestData = new ArticleDraftRequest();
-
+title=title.trim();
         requestData.setUser_id("" + userModel.getUser().getId());
         requestData.setBody("" + body);
         requestData.setTitle("" + title);
         requestData.setId("" + draftId);
+        requestData.setSourceId(""+2);
 
         Log.e("userId", userModel.getUser().getId() + "");
         ArticleDraftController controller = new ArticleDraftController(this, this);
@@ -515,7 +541,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     @Override
     public void onMediaRetryClicked(String mediaId) {
         if (mFailedUploads.containsKey(mediaId)) {
-           // simulateFileUpload(mediaId, mFailedUploads.get(mediaId));
+            // simulateFileUpload(mediaId, mFailedUploads.get(mediaId));
         }
     }
 
@@ -547,20 +573,31 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
         mEditorFragment.setDebugModeEnabled(true);
 
         // get title and content and draft switch
-        String title = getIntent().getStringExtra(TITLE_PARAM);
-        String content = getIntent().getStringExtra(CONTENT_PARAM);
+        title = getIntent().getStringExtra(TITLE_PARAM);
+        content = getIntent().getStringExtra(CONTENT_PARAM);
         boolean isLocalDraft = getIntent().getBooleanExtra(DRAFT_PARAM, true);
-        if (getIntent().getStringExtra("from")!=null&&getIntent().getStringExtra("from").equals("draftList"))
-        {
-            ArticleDraftList draftObject=(ArticleDraftList) getIntent().getSerializableExtra("draftItem");
-            title=draftObject.getTitle();
-            content=draftObject.getBody();
-            draftId=draftObject.getId();
+        if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("draftList")) {
+            ArticleDraftList draftObject = (ArticleDraftList) getIntent().getSerializableExtra("draftItem");
+            title = draftObject.getTitle();
+            title=title.trim();
+            content = draftObject.getBody();
+            draftId = draftObject.getId();
             mEditorFragment.setTitle(title);
             mEditorFragment.setContent(content);
-        }
-        else /*if (getIntent().getStringExtra("from").equals("dashboard"))*/
-        {
+        } else if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) {
+            //  PublishedArticlesModel.PublishedArticleData draftObject=(PublishedArticlesModel.PublishedArticleData) getIntent().getSerializableExtra("publishedItem");
+            title=getIntent().getStringExtra("title");
+            title=title.trim();
+            content=getIntent().getStringExtra("content");
+            thumbnailUrl=getIntent().getStringExtra("thumbnailUrl");
+            articleId=getIntent().getStringExtra("articleId");
+            mEditorFragment.setTitle(title);
+            mEditorFragment.setContent(content);
+            mEditorFragment.toggleTitleView(true);
+          //  mEditorFragment.setTitle(title);
+            //    mEditorFragment.setContent(content);
+        } else /*if (getIntent().getStringExtra("from").equals("dashboard"))*/ {
+            title=title.trim();
             mEditorFragment.setTitle(title);
             mEditorFragment.setContent(content);
             Log.e("postContent", content);
@@ -568,12 +605,6 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             mEditorFragment.setContentPlaceholder(getIntent().getStringExtra(CONTENT_PLACEHOLDER_PARAM));
             mEditorFragment.setLocalDraft(isLocalDraft);
         }
-      /*  mEditorFragment.setTitle(title);
-        mEditorFragment.setContent(content);
-        Log.e("postContent", content);
-        mEditorFragment.setTitlePlaceholder(getIntent().getStringExtra(TITLE_PLACEHOLDER_PARAM));
-        mEditorFragment.setContentPlaceholder(getIntent().getStringExtra(CONTENT_PLACEHOLDER_PARAM));
-        mEditorFragment.setLocalDraft(isLocalDraft);*/
     }
 
     @Override
@@ -587,191 +618,55 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     }
 
 
+    public String contentFormatting(String content) {
 
-    private class FileUploadTask extends AsyncTask<Object, Integer, String> {
-
-        private ProgressDialog dialog;
-
-        @Override
-        protected void onPreExecute() {
-            dialog = new ProgressDialog(EditorPostActivity.this);
-            dialog.setMessage("Uploading...");
-            dialog.setIndeterminate(false);
-            dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-            dialog.setProgress(0);
-            dialog.setCancelable(false);
-            dialog.show();
-        }
-
-        @Override
-        protected String doInBackground(Object... arg0) {
-            try {
-                FileInputStream fileInputStream = new FileInputStream(file);
-                byte[] bytes = new byte[(int) file.length()];
-                fileInputStream.read(bytes);
-                fileInputStream.close();
-
-                URL url = new URL(AppConstants.IMAGE_EDITOR_UPLOAD_URL);
-                HttpURLConnection connection =
-                        (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("POST");
-                connection.setDoOutput(true);
-                connection.setRequestProperty("Connection", "Keep-Alive");
-                connection.setRequestProperty("Cache-Control", "no-cache");
-                connection.setChunkedStreamingMode(32768);
-               /* connection.setRequestProperty(
-                        "Content-Type", "multipart/form-data;boundary=" + this.boundary);*/
-                List<NameValuePair> params = new ArrayList<NameValuePair>();
-                params.add(new BasicNameValuePair("imageType", "jpg"));
-                params.add(new BasicNameValuePair("file", imageString));
-               // params.add(new BasicNameValuePair("file", "jhsaiksa"));
-
-
-
-//                HttpURLConnection.setFixedLengthStreamingMode(connection);
-                OutputStream outputStream = connection.getOutputStream();
-                BufferedWriter writer = new BufferedWriter(
-                        new OutputStreamWriter(outputStream, "UTF-8"));
-                Log.e("param",getQuery(params));
-                writer.write(getQuery(params));
-
-
-                int bufferLength = 1024;
-                for (int i = 0; i < bytes.length; i += bufferLength) {
-                  //  int progress =  ((i /  bytes.length)*100);
-                    int progress =   (int) ((i / (float) bytes.length)*100);
-                    publishProgress(progress);
-                    if (bytes.length - i >= bufferLength) {
-                        outputStream.write(bytes, i, bufferLength);
-                    } else {
-                        outputStream.write(bytes, i, bytes.length - i);
-                    }
-                }
-
-
-                writer.flush();
-                writer.close();
-                outputStream.close();
-                outputStream.flush();
-
-                connection.getResponseCode();
-                InputStream inputStream = connection.getInputStream();
-                Reader in = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-                publishProgress(97);
-                StringBuilder sb = new StringBuilder();
-                for (int c; (c = in.read()) >= 0; )
-                    sb.append((char) c);
-                response = sb.toString();
-                Log.e("response", response);
-
-                // read the response
-                inputStream.close();
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return response;
-        }
-
-        private String getQuery(List<NameValuePair> params) throws UnsupportedEncodingException {
-            StringBuilder result = new StringBuilder();
-            boolean first = true;
-
-            for (NameValuePair pair : params) {
-                if (first)
-                    first = false;
-                else
-                    result.append("&");
-
-                result.append(URLEncoder.encode(pair.getName(), "UTF-8"));
-                result.append("=");
-                result.append(URLEncoder.encode(pair.getValue(), "UTF-8"));
-            }
-
-            return result.toString();
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... progress) {
-              dialog.setProgress(progress[0]);
-        Log.e("progress", progress[0] + "");
-        //    ((EditorMediaUploadListener) mEditorFragment).onMediaUploadProgress(mediaId, (float)(progress[0]*0.8));
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            try {
-                if (response != null) {
-
-                    CommonResponse responseModel = new Gson().fromJson(response, CommonResponse.class);
-                    if (responseModel.getResponseCode() != 200) {
-                        Log.e("responseCode",""+responseModel.getResponseCode());
-                        showToast(getString(R.string.toast_response_error));
-
-                    } else {
-                        if (!StringUtils.isNullOrEmpty(responseModel.getResult().getMessage())) {
-                            //   SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
-                            Log.i("Uploaded Image URL", responseModel.getResult().getMessage());
-                        }
-                        mediaFile.setFileURL(responseModel.getResult().getMessage());
-
-                        ((EditorMediaUploadListener) mEditorFragment).onMediaUploadSucceeded(mediaId, mediaFile);
-                        Log.i("PPPPPPPPPPPPPPPPP", responseModel.getResult().getMessage());
-
-                        //setProfileImage(originalImage);
-//                        showToast("You have successfully uploaded image.");
-                    }
-                } else {
-                    showToast("Error uploading image, please try again");
-                    Log.e("Response", "null");
-                }
-                dialog.dismiss();
-            } catch (Exception e) {
-            }
-
-        }
-
-    }
-
-
-    private void simulateFileUpload(final String mediaId, final String mediaUrl) {
-        Thread thread = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    float count = (float) 0.5;
-                    while (count < 1.1) {
-                        sleep(500);
-
-                        ((EditorMediaUploadListener) mEditorFragment).onMediaUploadProgress(mediaId, count);
-
-                        count += 0.1;
-                    }
-
-
-
-                    if (mFailedUploads.containsKey(mediaId)) {
-                        mFailedUploads.remove(mediaId);
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        thread.start();
-    }
-    public String contentFormatting( String content)
-    {
-
-        String pTag="<p>";
-        String newString=pTag.concat(content);
-        String formattedString=newString.replace("\n\n", "</p><p>");
-        formattedString.concat("</p>");
+        String pTag = "<p>";
+        String newString = pTag.concat(content);
+        String formattedString = newString.replace("\n\n", "</p><p>");
+        formattedString=formattedString.concat("</p>");
         return formattedString;
 
     }
+    public String titleFormatting(String title)
+    {
+     return title.replace("&nbsp;","");
+
+
+    }
+    public void sendUploadProfileImageRequest(Bitmap originalImage) {
+        showProgressDialog(getString(R.string.please_wait));
+        ByteArrayOutputStream bao = new ByteArrayOutputStream();
+        originalImage.compress(Bitmap.CompressFormat.PNG, 75, bao);
+        byte[] ba = bao.toByteArray();
+        String imageString = Base64.encodeToString(ba, Base64.DEFAULT);
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("extension", "image/png");
+            jsonObject.put("size", ba.length);
+            jsonObject.put("byteCode", imageString);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        UserTable userTable = new UserTable((BaseApplication) this.getApplication());
+        UserModel userModel = userTable.getAllUserData();
+
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.put(jsonObject);
+
+        ImageUploadRequest requestData = new ImageUploadRequest();
+        //  requestData.setFile(jsonArray.toString());
+        requestData.setFile(imageString);
+        requestData.setUser_id("" + userModel.getUser().getId());
+        // requestData.setSessionId("" + userModel.getUser().getSessionId());
+        // requestData.setProfileId("" + userModel.getUser().getProfileId());
+        requestData.setImageType("jpg");
+        //  requestData.setType(AppConstants.IMAGE_TYPE_USER_PROFILE);
+
+        ImageUploadController controller = new ImageUploadController(this, this);
+        controller.getData(AppConstants.IMAGE_EDITOR_UPLOAD_REQUEST, requestData);
+    }
+
 
 }

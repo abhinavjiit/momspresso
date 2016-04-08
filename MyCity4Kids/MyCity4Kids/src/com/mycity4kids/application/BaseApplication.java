@@ -14,6 +14,7 @@ import com.mycity4kids.database.BaseDbHelper;
 import com.mycity4kids.models.businesslist.BusinessDataListing;
 import com.mycity4kids.models.parentingstop.CommonParentingList;
 import com.mycity4kids.newmodels.parentingmodel.ArticleFilterListModel;
+import com.mycity4kids.preference.SharedPrefUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -200,6 +201,8 @@ public class BaseApplication extends Application {
         } catch (ClassNotFoundException e) {
         }
         Fabric.with(this, new Crashlytics());
+        Crashlytics.setUserIdentifier("" + SharedPrefUtils.getUserDetailModel(this).getId());
+        Crashlytics.setUserEmail("" + SharedPrefUtils.getUserDetailModel(this).getEmail());
         setInstance(this);
         //initializeGa();
         // startService(new Intent(this,ReplicationService.class))

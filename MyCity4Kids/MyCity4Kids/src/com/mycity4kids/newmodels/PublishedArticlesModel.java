@@ -1,5 +1,6 @@
 package com.mycity4kids.newmodels;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -55,7 +56,7 @@ public class PublishedArticlesModel {
         }
     }
 
-    public class PublishedArticleData {
+    public class PublishedArticleData implements Serializable{
         private String id;
         private String title;
         private String created;

@@ -106,6 +106,7 @@ public class ArticleDraftController extends BaseController {
             nameValuePairs.add(new BasicNameValuePair("body", articleDraftRequest.getBody()));
             nameValuePairs.add(new BasicNameValuePair("id", articleDraftRequest.getId()));
             nameValuePairs.add(new BasicNameValuePair("status", articleDraftRequest.getStatus()));
+            nameValuePairs.add(new BasicNameValuePair("sourceId", articleDraftRequest.getSourceId()));
 
             Log.i("DraftReuest", nameValuePairs.toString());
 //            encodedEntity = new UrlEncodedFormEntity(nameValuePairs);
