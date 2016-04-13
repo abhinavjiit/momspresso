@@ -110,6 +110,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     private float density;
     private String thumbnailUrl;
     private ArrayList<ImageData> imageList;
+    private String moderation_status, node_id,path;
 
     File file;
     String imageString;
@@ -296,14 +297,19 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                 return true;
             case SELECT_IMAGE_CAMERA_MENU_POSITION:
                 Intent intent1 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                String filename = "tmp_avatar_" + String.valueOf(System.currentTimeMillis()) + ".jpg";
+               /* String filename = "tmp_avatar_" + String.valueOf(System.currentTimeMillis()) + ".jpg";
                 file = new File(Environment.getExternalStorageDirectory(),
                         filename);
-                imageUri = Uri.fromFile(file);
+                imageUri = Uri.fromFile(file);*/
+                File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
 
+              File  output = new File(dir, "CameraContentDemo.jpeg");
+                imageUri=Uri.fromFile(output);
+                intent1.putExtra(MediaStore.EXTRA_OUTPUT,imageUri);
 
+/*
                 intent1.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, imageUri);
-                intent1.putExtra("return-data", true);
+                intent1.putExtra("return-data", true);*/
 
                 startActivityForResult(intent1, ADD_MEDIA_CAMERA_ACTIVITY_REQUEST_CODE);
                 return true;
@@ -491,6 +497,8 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                     draftObject.setBody(contentFormatting(mEditorFragment.getContent().toString()));
                     draftObject.setTitle(titleFormatting(mEditorFragment.getTitle().toString()));
                     draftObject.setId(draftId);
+                    draftObject.setNode_id(node_id);
+                    draftObject.setModeration_status(moderation_status);
                     Log.e("dtaftId", draftId + "");
                     Log.e("publish", "clicked");
                     Intent intent = new Intent(EditorPostActivity.this, ArticleImageTagUpload.class);
@@ -501,7 +509,10 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                         intent.putExtra("from","publishedList");
                         intent.putExtra("articleId",articleId);
                     }
-                    else
+                    else if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("draftList"))
+                    {intent.putExtra("imageUrl",path);
+                        intent.putExtra("from","draftList");
+                    }else
                     {intent.putExtra("from","editor");}
                     startActivity(intent);
                 }
@@ -582,6 +593,10 @@ title=title.trim();
             title=title.trim();
             content = draftObject.getBody();
             draftId = draftObject.getId();
+            path=draftObject.getPath();
+            moderation_status=draftObject.getModeration_status();
+            Log.e("moderation_status",moderation_status);
+            node_id=draftObject.getNode_id();
             mEditorFragment.setTitle(title);
             mEditorFragment.setContent(content);
         } else if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) {

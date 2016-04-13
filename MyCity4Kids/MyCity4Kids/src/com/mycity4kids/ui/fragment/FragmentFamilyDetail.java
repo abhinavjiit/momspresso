@@ -1300,7 +1300,7 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
     public void setProfileImage(String url) {
         if (!StringUtils.isNullOrEmpty(url)) {
             profileimgUrl = url;
-            // SharedPrefUtils.setProfileImgUrl(getActivity(), url);
+             SharedPrefUtils.setProfileImgUrl(getActivity(), url);
             //((DashboardActivity) getActivity()).updateImageProfile();
             Picasso.with(getActivity()).load(url).placeholder(R.drawable.family_xxhdpi).error(R.drawable.family_xxhdpi).resize((int) (150 * density), (int) (150 * density)).centerCrop().transform(new RoundedTransformation()).into(imgProfile);
         }

@@ -2,6 +2,8 @@ package com.mycity4kids.editor;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,6 +28,7 @@ public class DraftListAdapter extends BaseAdapter {
     ArrayList<ArticleDraftList> draftlist;
     private LayoutInflater mInflator;
     DraftListView draftListView;
+
 
     DraftListAdapter(Context context, ArrayList<ArticleDraftList> draftlist)
     {
@@ -57,14 +60,15 @@ public class DraftListAdapter extends BaseAdapter {
             holder.txvArticleTitle = (TextView) view.findViewById(R.id.txvArticleTitle);
             holder.txvAuthorName = (TextView) view.findViewById(R.id.txvAuthorName);
             holder.txvUpdateDate=(TextView) view.findViewById(R.id.txvPublishDate);
-            final View popupButton = view.findViewById(R.id.img_menu);
-            popupButton.setTag(getItem(position));
+            holder.popupButton = view.findViewById(R.id.img_menu);
+            holder.txvUnapproved=(TextView)view.findViewById(R.id.unapproved);
+            holder.popupButton.setTag(getItem(position));
 
         //    popupButton.setOnClickListener((DraftListView)context);
-            popupButton.setOnClickListener(new View.OnClickListener() {
+            holder.popupButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final PopupMenu popup = new PopupMenu(context, popupButton);
+                    final PopupMenu popup = new PopupMenu(context, holder.popupButton);
                     popup.getMenuInflater().inflate(R.menu.pop_menu_draft, popup.getMenu());
                     popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         public boolean onMenuItemClick(MenuItem item) {
@@ -100,6 +104,51 @@ public class DraftListAdapter extends BaseAdapter {
         else {
             holder.txvArticleTitle.setText("Untitled Draft");
         }
+        switch (draftlist.get(position).getModeration_status())
+        {case "0":
+        { holder.txvUnapproved.setVisibility(View.INVISIBLE);
+            view.setBackgroundColor(Color.WHITE);
+            view.setClickable(false);
+            holder.popupButton.setClickable(true);
+            holder.txvArticleTitle.setTextColor(Color.BLACK);
+            holder.txvUpdateDate.setTextColor(context.getResources().getColor(R.color.gray2));
+            break;}
+            case "1":
+            { holder.txvUnapproved.setVisibility(View.INVISIBLE);
+                view.setBackgroundColor(context.getResources().getColor(R.color.gray_color));
+                holder.txvArticleTitle.setTextColor(context.getResources().getColor(R.color.faded_text));
+                holder.txvUpdateDate.setTextColor(context.getResources().getColor(R.color.faded_italic));
+                view.setClickable(true);
+                holder.popupButton.setClickable(false);
+                break;
+            }
+            case "2":
+            { holder.txvUnapproved.setVisibility(View.VISIBLE);
+                view.setBackgroundColor(Color.WHITE);
+                view.setClickable(false);
+                holder.popupButton.setClickable(true);
+                holder.txvArticleTitle.setTextColor(Color.BLACK);
+                holder.txvUpdateDate.setTextColor(context.getResources().getColor(R.color.gray2));
+                break;
+            }
+            case "3":
+            {holder.txvUnapproved.setVisibility(View.VISIBLE);
+                view.setBackgroundColor(Color.WHITE);
+                view.setClickable(false);
+                holder.popupButton.setClickable(true);
+                holder.txvArticleTitle.setTextColor(Color.BLACK);
+                holder.txvUpdateDate.setTextColor(context.getResources().getColor(R.color.gray2));
+                break;
+            }
+            default:
+                holder.txvUnapproved.setVisibility(View.INVISIBLE);
+                view.setBackgroundColor(Color.WHITE);
+                view.setClickable(false);
+                holder.popupButton.setClickable(true);
+                holder.txvArticleTitle.setTextColor(Color.BLACK);
+                holder.txvUpdateDate.setTextColor(context.getResources().getColor(R.color.gray2));
+                break;
+        }
         holder.txvUpdateDate.setText(draftlist.get(position).getUpdatedDate());
         return view;
     }
@@ -113,6 +162,8 @@ public class DraftListAdapter extends BaseAdapter {
         TextView txvAuthorName;
         ImageView menu;
         TextView txvUpdateDate;
+        TextView txvUnapproved;
+        View popupButton;
 
     }
 }

@@ -12,6 +12,13 @@ private String id;
     private String user_id;
     private boolean status;
     private String updated;
+    private String path;
+    private String moderation_status;
+    private String node_id;
+    private String source_id;
+
+    public ArticleDraftList() {
+    }
 
     public String getUpdatedDate() {
         return updated;
@@ -59,5 +66,37 @@ private String id;
 
     public void setUserId(String userId) {
         this.user_id = userId;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getModeration_status() {
+        return moderation_status;
+    }
+
+    public void setModeration_status(String moderation_status) {
+        this.moderation_status = moderation_status;
+    }
+
+    public String getNode_id() {
+        return node_id;
+    }
+
+    public void setNode_id(String node_id) {
+        this.node_id = node_id;
+    }
+
+    public String getSource_id() {
+        return source_id;
+    }
+
+    public void setSource_id(String source_id) {
+        this.source_id = source_id;
     }
 }

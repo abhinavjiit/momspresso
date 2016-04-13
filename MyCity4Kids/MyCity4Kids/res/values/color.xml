@@ -88,6 +88,9 @@
 
     <color name="blogger_name_bg">#119EE8</color>
     <color name="blogger_listing_bg">#F0F3FF</color>
+    <color name="gray_color"> #e5e5e5</color>
+    <color name="faded_text">#a5a5a5</color>
+    <color name="faded_italic">#c1c1c1</color>
 
     <!--anupama -->
     <color name="tabsScrollColor">#ec3b55</color>

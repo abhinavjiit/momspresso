@@ -10,6 +10,8 @@ public class ArticlePublishRequest {
     private String id;
     private String draftId;
     private String sourceId;
+    private String moderation_status;
+    private String node_id;
 
 
         private String imageUrl;
@@ -73,5 +75,21 @@ public class ArticlePublishRequest {
 
     public void setSourceId(String sourceId) {
         this.sourceId = sourceId;
+    }
+
+    public String getModeration_status() {
+        return moderation_status;
+    }
+
+    public void setModeration_status(String moderation_status) {
+        this.moderation_status = moderation_status;
+    }
+
+    public String getNode_id() {
+        return node_id;
+    }
+
+    public void setNode_id(String node_id) {
+        this.node_id = node_id;
     }
 }

@@ -250,7 +250,7 @@ public class ArticleImageTagUpload extends BaseActivity {
         UserTable userTable = new UserTable((BaseApplication) this.getApplication());
         userModel = userTable.getAllUserData();
         Utils.pushOpenScreenEvent(ArticleImageTagUpload.this, "Article Image Upload", SharedPrefUtils.getUserDetailModel(this).getId() + "");
-        if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) {
+        if ((getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList"))||(getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("draftList"))) {
             String thumbnailUrl = getIntent().getStringExtra("imageUrl");
             articleId = getIntent().getStringExtra("articleId");
             Picasso.with(this).load(thumbnailUrl).into(articleImage);
@@ -291,7 +291,9 @@ public class ArticleImageTagUpload extends BaseActivity {
                     articlePublishRequestRequest.setTitle(draftObject.getTitle().trim());
                     articlePublishRequestRequest.setDraftId(draftObject.getId());
                     articlePublishRequestRequest.setId(articleId);
-                    articlePublishRequestRequest.setSourceId(""+2);
+                    articlePublishRequestRequest.setSourceId("" + 2);
+                    articlePublishRequestRequest.setModeration_status(draftObject.getModeration_status()+"");
+                    articlePublishRequestRequest.setNode_id(draftObject.getNode_id()+"");
                     ArticlePublishController _controller = new ArticlePublishController(ArticleImageTagUpload.this, ArticleImageTagUpload.this);
 
                     _controller.getData(AppConstants.ARTICLE_PUBLISH_REQUEST, articlePublishRequestRequest);
