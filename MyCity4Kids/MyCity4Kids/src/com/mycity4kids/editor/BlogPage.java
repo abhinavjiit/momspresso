@@ -236,7 +236,7 @@ public class BlogPage extends BaseActivity {
                         String filePath = cursor.getString(columnIndex);
                         cursor.close();
                         Log.e("File", "filePath: " + filePath);
-
+                        filePath=filePath.replaceAll("[^a-zA-Z0-9.-/_]", "_");
                         file = new File(new URI("file://"
                                 + filePath.replaceAll(" ", "%20")));
                         int maxImageSize = BitmapUtils.getMaxSize(this);

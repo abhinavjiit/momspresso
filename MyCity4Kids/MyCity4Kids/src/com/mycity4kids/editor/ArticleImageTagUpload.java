@@ -253,12 +253,13 @@ public class ArticleImageTagUpload extends BaseActivity {
         if ((getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList"))||(getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("draftList"))) {
             String thumbnailUrl = getIntent().getStringExtra("imageUrl");
             articleId = getIntent().getStringExtra("articleId");
-            Picasso.with(this).load(thumbnailUrl).into(articleImage);
-            String[] seperated = thumbnailUrl.split("/");
+            if (thumbnailUrl!=null)
+            { Picasso.with(this).load(thumbnailUrl).into(articleImage);
+              String[] seperated = thumbnailUrl.split("/");
             if (seperated.length != 0) {
                 url = seperated[seperated.length - 1];
                 Log.e("url", url);
-            }
+            }}
 
         }
         articleImage.setOnClickListener(new View.OnClickListener() {
@@ -292,8 +293,8 @@ public class ArticleImageTagUpload extends BaseActivity {
                     articlePublishRequestRequest.setDraftId(draftObject.getId());
                     articlePublishRequestRequest.setId(articleId);
                     articlePublishRequestRequest.setSourceId("" + 2);
-                    articlePublishRequestRequest.setModeration_status(draftObject.getModeration_status()+"");
-                    articlePublishRequestRequest.setNode_id(draftObject.getNode_id()+"");
+                    articlePublishRequestRequest.setModeration_status(draftObject.getModeration_status() + "");
+                    articlePublishRequestRequest.setNode_id(draftObject.getNode_id() + "");
                     ArticlePublishController _controller = new ArticlePublishController(ArticleImageTagUpload.this, ArticleImageTagUpload.this);
 
                     _controller.getData(AppConstants.ARTICLE_PUBLISH_REQUEST, articlePublishRequestRequest);
@@ -329,7 +330,7 @@ public class ArticleImageTagUpload extends BaseActivity {
                         String filePath = cursor.getString(columnIndex);
                         cursor.close();
                         Log.e("File", "filePath: " + filePath);
-
+                        filePath=filePath.replaceAll("[^a-zA-Z0-9.-/_]", "_");
                         file = new File(new URI("file://"
                                 + filePath.replaceAll(" ", "%20")));
 

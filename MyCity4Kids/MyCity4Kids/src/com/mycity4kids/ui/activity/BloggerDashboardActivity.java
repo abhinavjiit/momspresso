@@ -1,6 +1,8 @@
 package com.mycity4kids.ui.activity;
 
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -16,6 +18,7 @@ import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.controller.BloggerDashboardAndPublishedArticlesController;
+import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.newmodels.BloggerDashboardModel;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -33,6 +36,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     private ImageView bloggerImageView;
     TabLayout tabLayout;
     ViewPager viewPager;
+    ImageView addDraft;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +49,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         rankingTextView = (TextView) findViewById(R.id.rankingTextView);
         viewCountTextView = (TextView) findViewById(R.id.viewCountTextView);
         followersViewCount = (TextView) findViewById(R.id.followersViewCount);
+        addDraft=(ImageView) findViewById(R.id.addDraft);
 
         bloggerNameTextView = (TextView) findViewById(R.id.bloggerNameTextView);
         bloggerNameTextView.setText(SharedPrefUtils.getUserDetailModel(this).getFirst_name());
@@ -64,6 +69,30 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Blogger Profile");
+        addDraft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Build.VERSION.SDK_INT > 15) {
+                    Intent intent1 = new Intent(BloggerDashboardActivity.this, EditorPostActivity.class);
+                    Bundle bundle5 = new Bundle();
+                    bundle5.putString(EditorPostActivity.TITLE_PARAM, "");
+                    bundle5.putString(EditorPostActivity.CONTENT_PARAM, "");
+                    bundle5.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
+                            getString(R.string.example_post_title_placeholder));
+                    bundle5.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
+                            getString(R.string.example_post_content_placeholder));
+                    bundle5.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
+                    bundle5.putString("from", "DraftListView");
+                    intent1.putExtras(bundle5);
+                    startActivity(intent1);
+                } else {
+                    Intent viewIntent =
+                            new Intent("android.intent.action.VIEW",
+                                    Uri.parse("http://www.mycity4kids.com/parenting/admin/setupablog"));
+                    startActivity(viewIntent);
+                }
+            }
+        });
 
 
     }

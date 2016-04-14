@@ -365,6 +365,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         findViewById(R.id.rdBtnParentingBlogs).setOnClickListener(this);
         findViewById(R.id.editor).setOnClickListener(this);
         findViewById(R.id.drafts).setOnClickListener(this);
+        findViewById(R.id.bloggerDashboard).setOnClickListener(this);
         findViewById(R.id.txvSettings).setOnClickListener(this);
         //  findViewById(R.id.txvHelp).setOnClickListener(this);
         findViewById(R.id.imgProfile).setOnClickListener(this);
@@ -1743,6 +1744,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 intent1.putExtras(bundle5);*/
                 startActivity(intent5);
                 break;
+            case R.id.bloggerDashboard:
+                Intent intent=new Intent(DashboardActivity.this,BloggerDashboardActivity.class);
+                startActivity(intent);
+                break;
             case R.id.txvSettings:
                 Utils.pushEvent(DashboardActivity.this, GTMEventType.SETTINGS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "");
                 changeVisibiltyOfArrow(false);
@@ -1805,8 +1810,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
 
             case R.id.imgProfile:
-            Intent intent=new Intent(DashboardActivity.this,BloggerDashboardActivity.class);
-                startActivity(intent);
+            Intent intent4=new Intent(DashboardActivity.this,BloggerDashboardActivity.class);
+                startActivity(intent4);
               //  replaceFragment(new FragmentFamilyDetail(), null, true);
                 break;
 

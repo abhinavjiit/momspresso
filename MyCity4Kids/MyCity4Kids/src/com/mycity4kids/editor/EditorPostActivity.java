@@ -349,7 +349,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                         String filePath = cursor.getString(columnIndex);
                         cursor.close();
                         Log.e("File", "filePath: " + filePath);
-
+                        filePath=filePath.replaceAll("[^a-zA-Z0-9.-/_]", "_");
                         file = new File(new URI("file://"
                                 + filePath.replaceAll(" ", "%20")));
                         int maxImageSize = BitmapUtils.getMaxSize(this);
@@ -594,11 +594,15 @@ title=title.trim();
             content = draftObject.getBody();
             draftId = draftObject.getId();
             path=draftObject.getPath();
-            moderation_status=draftObject.getModeration_status();
+            moderation_status =draftObject.getModeration_status();
             Log.e("moderation_status",moderation_status);
             node_id=draftObject.getNode_id();
             mEditorFragment.setTitle(title);
             mEditorFragment.setContent(content);
+            if (moderation_status=="3")
+            {
+                mEditorFragment.toggleTitleView(true);
+            }
         } else if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) {
             //  PublishedArticlesModel.PublishedArticleData draftObject=(PublishedArticlesModel.PublishedArticleData) getIntent().getSerializableExtra("publishedItem");
             title=getIntent().getStringExtra("title");

@@ -228,6 +228,22 @@
             android:drawableLeft="@drawable/icon_drafts"
 
             />
+        <TextView
+            android:id="@+id/bloggerDashboard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:drawablePadding="10dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="12dp"
+            android:paddingTop="5dp"
+            android:text="MY BLOGS"
+            android:textColor="@color/white_color"
+            android:textSize="12sp"
+            android:layout_marginTop="21dp"
+            android:drawableLeft="@drawable/icon_drafts"
+
+            />
 
         <TextView
             android:id="@+id/txvSettings"
