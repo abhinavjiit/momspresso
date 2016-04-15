@@ -599,7 +599,7 @@ title=title.trim();
             node_id=draftObject.getNode_id();
             mEditorFragment.setTitle(title);
             mEditorFragment.setContent(content);
-            if (moderation_status=="3")
+            if (moderation_status.equals("3"))
             {
                 mEditorFragment.toggleTitleView(true);
             }

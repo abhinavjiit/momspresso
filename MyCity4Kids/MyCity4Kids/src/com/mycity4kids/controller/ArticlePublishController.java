@@ -102,8 +102,8 @@ public class ArticlePublishController extends BaseController{
             nameValuePairs.add(new BasicNameValuePair("draftId", articlePublishRequest.getDraftId()));
             nameValuePairs.add(new BasicNameValuePair("imageUrl", articlePublishRequest.getImageUrl()));
             nameValuePairs.add(new BasicNameValuePair("sourceId", articlePublishRequest.getSourceId()));
-            nameValuePairs.add(new BasicNameValuePair("moderation_status", articlePublishRequest.getModeration_status()));
-            nameValuePairs.add(new BasicNameValuePair("node_id", articlePublishRequest.getNode_id()));
+            nameValuePairs.add(new BasicNameValuePair("moderationStatus", articlePublishRequest.getModeration_status()));
+            nameValuePairs.add(new BasicNameValuePair("nodeId", articlePublishRequest.getNode_id()));
 
             Log.i("DraftRequest", nameValuePairs.toString());
 //            encodedEntity = new UrlEncodedFormEntity(nameValuePairs);
