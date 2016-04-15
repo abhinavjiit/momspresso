@@ -62,6 +62,7 @@
                 android:textColor="@color/white_color"
                 android:textSize="16sp"
                 android:textStyle="bold" />
+
             <RadioButton
                 android:id="@+id/rdBtnParentingBlogs"
                 android:layout_width="match_parent"
@@ -76,6 +77,7 @@
                 android:textColor="@color/white_color"
                 android:textSize="16sp"
                 android:textStyle="bold" />
+
             <RadioButton
                 android:id="@+id/rdBtnCalender"
                 android:layout_width="match_parent"
@@ -91,20 +93,20 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
-           <!-- <RadioButton
-                android:id="@+id/rdBtnTodo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:background="@drawable/selector_drawer_menu"
-                android:button="@null"
-                android:drawableLeft="@drawable/todo"
-                android:drawablePadding="10dp"
-                android:padding="12dp"
-                android:text="TO-DO LISTS"
-                android:textColor="@color/white_color"
-                android:textSize="16sp"
-                android:textStyle="bold" />-->
+            <!-- <RadioButton
+                 android:id="@+id/rdBtnTodo"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_marginTop="2dp"
+                 android:background="@drawable/selector_drawer_menu"
+                 android:button="@null"
+                 android:drawableLeft="@drawable/todo"
+                 android:drawablePadding="10dp"
+                 android:padding="12dp"
+                 android:text="TO-DO LISTS"
+                 android:textColor="@color/white_color"
+                 android:textSize="16sp"
+                 android:textStyle="bold" />-->
 
             <RadioButton
                 android:id="@+id/rdBtnUpcoming"
@@ -137,34 +139,34 @@
                 android:textStyle="bold" />
 
 
-          <!--  <RadioButton
-                android:id="@+id/editor"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:background="@drawable/selector_drawer_menu"
-                android:button="@null"
-                android:drawableLeft="@drawable/parenting"
-                android:drawablePadding="10dp"
-                android:padding="12dp"
-                android:text="EDITOR"
-                android:textColor="@color/white_color"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-            <RadioButton
-                android:id="@+id/drafts"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:background="@drawable/selector_drawer_menu"
-                android:button="@null"
-                android:drawableLeft="@drawable/parenting"
-                android:drawablePadding="10dp"
-                android:padding="12dp"
-                android:text="DRAFTS"
-                android:textColor="@color/white_color"
-                android:textSize="16sp"
-                android:textStyle="bold" />-->
+            <!--  <RadioButton
+                  android:id="@+id/editor"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_marginTop="2dp"
+                  android:background="@drawable/selector_drawer_menu"
+                  android:button="@null"
+                  android:drawableLeft="@drawable/parenting"
+                  android:drawablePadding="10dp"
+                  android:padding="12dp"
+                  android:text="EDITOR"
+                  android:textColor="@color/white_color"
+                  android:textSize="16sp"
+                  android:textStyle="bold" />
+              <RadioButton
+                  android:id="@+id/drafts"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_marginTop="2dp"
+                  android:background="@drawable/selector_drawer_menu"
+                  android:button="@null"
+                  android:drawableLeft="@drawable/parenting"
+                  android:drawablePadding="10dp"
+                  android:padding="12dp"
+                  android:text="DRAFTS"
+                  android:textColor="@color/white_color"
+                  android:textSize="16sp"
+                  android:textStyle="bold" />-->
 
 
         </RadioGroup>
@@ -197,53 +199,47 @@
             android:textColor="@color/white_color"
             android:textSize="12sp"
             android:visibility="gone" />
+
         <TextView
             android:id="@+id/editor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="36dp"
-
+            android:drawableLeft="@drawable/icon_add_blog"
             android:drawablePadding="10dp"
-
             android:paddingLeft="12dp"
             android:paddingTop="5dp"
             android:text="ADD A BLOG"
             android:textColor="@color/white_color"
-            android:textSize="12sp"
-            android:drawableLeft="@drawable/icon_add_blog"/>
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/drafts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
+            android:layout_marginTop="21dp"
+            android:drawableLeft="@drawable/icon_drafts"
             android:drawablePadding="10dp"
             android:paddingBottom="5dp"
             android:paddingLeft="12dp"
             android:paddingTop="5dp"
             android:text="DRAFTS"
             android:textColor="@color/white_color"
-            android:textSize="12sp"
-            android:layout_marginTop="21dp"
-            android:drawableLeft="@drawable/icon_drafts"
+            android:textSize="12sp" />
 
-            />
         <TextView
             android:id="@+id/bloggerDashboard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
+            android:layout_marginTop="21dp"
+            android:drawableLeft="@drawable/icon_my_blogs"
             android:drawablePadding="10dp"
             android:paddingBottom="5dp"
             android:paddingLeft="12dp"
             android:paddingTop="5dp"
             android:text="MY BLOGS"
             android:textColor="@color/white_color"
-            android:textSize="12sp"
-            android:layout_marginTop="21dp"
-            android:drawableLeft="@drawable/icon_drafts"
-
-            />
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/txvSettings"
@@ -264,41 +260,40 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="21dp"
+            android:drawableLeft="@drawable/feedback_xxhdpi"
             android:drawablePadding="10dp"
             android:paddingBottom="5dp"
             android:paddingLeft="12dp"
             android:paddingTop="5dp"
             android:text="SEND FEEDBACK"
             android:textColor="@color/white_color"
-            android:textSize="12sp"
-            android:drawableLeft="@drawable/feedback_xxhdpi"
-            />
-
-      <!--  <TextView
-            android:id="@+id/txvtelfrnd"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/tellafriend_xxhdpi"
-            android:drawablePadding="8dp"
-            android:paddingBottom="5dp"
-            android:paddingLeft="10dp"
-            android:paddingTop="5dp"
-            android:text="TELL A FRIEND"
-            android:textColor="@color/white_color"
             android:textSize="12sp" />
 
-        <TextView
-            android:id="@+id/txvHelp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/help_new"
-            android:drawablePadding="10dp"
-            android:paddingBottom="5dp"
-            android:paddingLeft="12dp"
-            android:paddingTop="5dp"
-            android:text="HELP"
-            android:textColor="@color/white_color"
-            android:textSize="12sp" />-->
+        <!--  <TextView
+              android:id="@+id/txvtelfrnd"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:drawableLeft="@drawable/tellafriend_xxhdpi"
+              android:drawablePadding="8dp"
+              android:paddingBottom="5dp"
+              android:paddingLeft="10dp"
+              android:paddingTop="5dp"
+              android:text="TELL A FRIEND"
+              android:textColor="@color/white_color"
+              android:textSize="12sp" />
+
+          <TextView
+              android:id="@+id/txvHelp"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:drawableLeft="@drawable/help_new"
+              android:drawablePadding="10dp"
+              android:paddingBottom="5dp"
+              android:paddingLeft="12dp"
+              android:paddingTop="5dp"
+              android:text="HELP"
+              android:textColor="@color/white_color"
+              android:textSize="12sp" />-->
 
 
     </LinearLayout>

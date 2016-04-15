@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,12 +81,12 @@ public class ParentingBlogAdapter extends BaseAdapter {
             holder.bloggerName = (TextView) view.findViewById(R.id.blogger_name);
             holder.authorType = (TextView) view.findViewById(R.id.author_type);
             holder.authorRank = (TextView) view.findViewById(R.id.blog_rank);
-            holder.bloggerImage = (ImageView) view.findViewById(R.id.blogger_profile);
+//            holder.bloggerImage = (ImageView) view.findViewById(R.id.blogger_profile);
             holder.bloggerCover = (ImageView) view.findViewById(R.id.blogger_bg);
-            holder.bloggerFollow = (ImageView) view.findViewById(R.id.blog_follow);
-            holder.facebook = (ImageView) view.findViewById(R.id.facebook_);
-            holder.twitter = (ImageView) view.findViewById(R.id.twitter_);
-            holder.rss = (ImageView) view.findViewById(R.id.rss_);
+            holder.bloggerFollow = (TextView) view.findViewById(R.id.blog_follow_text);
+//            holder.facebook = (ImageView) view.findViewById(R.id.facebook_);
+//            holder.twitter = (ImageView) view.findViewById(R.id.twitter_);
+//            holder.rss = (ImageView) view.findViewById(R.id.rss_);
             holder.description = (TextView) view.findViewById(R.id.blogger_desc);
             holder.moreDesc = (TextView) view.findViewById(R.id.more_text);
             holder.recentArticleLayout = (LinearLayout) view.findViewById(R.id.recent_article_frame);
@@ -99,22 +101,22 @@ public class ParentingBlogAdapter extends BaseAdapter {
         holder.bloggerName.setText(datalist.get(position).getFirst_name() + " " + datalist.get(position).getLast_name());
         holder.bloggerName.setTextColor(Color.WHITE);
         holder.authorType.setText(datalist.get(position).getAuthor_type().toUpperCase());
-        holder.authorType.setBackgroundColor(Color.parseColor(datalist.get(position).getAuthor_color_code()));
+        holder.authorType.setTextColor(Color.parseColor(datalist.get(position).getAuthor_color_code()));
 
         holder.description.invalidate();
         if (datalist.get(position).getMaxLineCount() == 0) {
             datalist.get(position).setMaxLineCount(holder.description.getLineCount());
         }
 
-        if (!StringUtils.isNullOrEmpty(datalist.get(position).getProfile_image())) {
-            Picasso.with(context).load(datalist.get(position).getProfile_image()).resize((int) (90 * density), (int) (100 * density)).centerCrop().into(holder.bloggerImage);
-        } else {
-            Picasso.with(context).load(R.drawable.default_img).resize((int) (90 * density), (int) (100 * density)).centerCrop().into(holder.bloggerImage);
-        }
-        if (StringUtils.isNullOrEmpty(datalist.get(position).getCover_image())) {
+//        if (!StringUtils.isNullOrEmpty(datalist.get(position).getProfile_image())) {
+//            Picasso.with(context).load(datalist.get(position).getProfile_image()).resize((int) (90 * density), (int) (100 * density)).centerCrop().into(holder.bloggerImage);
+//        } else {
+//            Picasso.with(context).load(R.drawable.default_img).resize((int) (90 * density), (int) (100 * density)).centerCrop().into(holder.bloggerImage);
+//        }
+        if (StringUtils.isNullOrEmpty(datalist.get(position).getProfile_image())) {
             Picasso.with(context).load(R.drawable.blog_bgnew).resize(screenWidth, (int) (200 * density)).centerCrop().placeholder(R.drawable.blog_bgnew).into(holder.bloggerCover);
         } else {
-            Picasso.with(context).load(datalist.get(position).getCover_image()).resize(screenWidth, (int) (200 * density)).centerCrop().placeholder(R.drawable.blog_bgnew).into(holder.bloggerCover);
+            Picasso.with(context).load(datalist.get(position).getProfile_image()).resize(screenWidth, (int) (200 * density)).centerCrop().placeholder(R.drawable.blog_bgnew).into(holder.bloggerCover);
         }
         if (StringUtils.isNullOrEmpty(datalist.get(position).getAbout_user())) {
             holder.aboutLayout.setVisibility(View.GONE);
@@ -138,10 +140,13 @@ public class ParentingBlogAdapter extends BaseAdapter {
             for (int i = 0; i < datalist.get(position).getRecent_articles().size(); i++) {
 
                 final TextView article = new TextView(context);
+                article.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
                 article.setText(datalist.get(position).getRecent_articles().get(i).getTitle());
                 article.setTextColor(Color.parseColor("#4056DA"));
                 article.setPadding(10, 5, 5, 5);
+                article.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                 holder.recentArticleLayout.addView(article);
+
                 final int finalI = i;
                 article.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -162,41 +167,41 @@ public class ParentingBlogAdapter extends BaseAdapter {
             }
         });
 
-        if (!StringUtils.isNullOrEmpty(datalist.get(position).getFacebook_id())) {
-            holder.facebook.setVisibility(View.VISIBLE);
-        } else {
-            holder.facebook.setVisibility(View.GONE);
-        }
+//        if (!StringUtils.isNullOrEmpty(datalist.get(position).getFacebook_id())) {
+//            holder.facebook.setVisibility(View.VISIBLE);
+//        } else {
+//            holder.facebook.setVisibility(View.GONE);
+//        }
+//
+//        if (!StringUtils.isNullOrEmpty(datalist.get(position).getTwitter_id())) {
+//            holder.twitter.setVisibility(View.VISIBLE);
+//        } else {
+//            holder.twitter.setVisibility(View.GONE);
+//        }
 
-        if (!StringUtils.isNullOrEmpty(datalist.get(position).getTwitter_id())) {
-            holder.twitter.setVisibility(View.VISIBLE);
-        } else {
-            holder.twitter.setVisibility(View.GONE);
-        }
-
-        holder.facebook.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (!StringUtils.isNullOrEmpty(datalist.get(position).getFacebook_id())) {
-                    Intent intent = new Intent(context, LoadWebViewActivity.class);
-                    intent.putExtra(Constants.WEB_VIEW_URL, datalist.get(position).getFacebook_id());
-                    Log.e("Link", datalist.get(position).getFacebook_id());
-                    context.startActivity(intent);
-                }
-            }
-        });
-        holder.twitter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!StringUtils.isNullOrEmpty(datalist.get(position).getTwitter_id())) {
-                    Intent intent = new Intent(context, LoadWebViewActivity.class);
-                    intent.putExtra(Constants.WEB_VIEW_URL, datalist.get(position).getTwitter_id());
-                    Log.e("Link", datalist.get(position).getTwitter_id());
-                    context.startActivity(intent);
-                }
-            }
-        });
+//        holder.facebook.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                if (!StringUtils.isNullOrEmpty(datalist.get(position).getFacebook_id())) {
+//                    Intent intent = new Intent(context, LoadWebViewActivity.class);
+//                    intent.putExtra(Constants.WEB_VIEW_URL, datalist.get(position).getFacebook_id());
+//                    Log.e("Link", datalist.get(position).getFacebook_id());
+//                    context.startActivity(intent);
+//                }
+//            }
+//        });
+//        holder.twitter.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (!StringUtils.isNullOrEmpty(datalist.get(position).getTwitter_id())) {
+//                    Intent intent = new Intent(context, LoadWebViewActivity.class);
+//                    intent.putExtra(Constants.WEB_VIEW_URL, datalist.get(position).getTwitter_id());
+//                    Log.e("Link", datalist.get(position).getTwitter_id());
+//                    context.startActivity(intent);
+//                }
+//            }
+//        });
 
 
         if (datalist.get(position).getMaxLineCount() >= 4) {
@@ -228,9 +233,9 @@ public class ParentingBlogAdapter extends BaseAdapter {
 
         if (!StringUtils.isNullOrEmpty(datalist.get(position).getUser_following_status())) {
             if (datalist.get(position).getUser_following_status().equalsIgnoreCase("0")) {
-                holder.bloggerFollow.setBackgroundResource(R.drawable.follow_blog);
+                holder.bloggerFollow.setText("FOLLOW");
             } else {
-                holder.bloggerFollow.setBackgroundResource(R.drawable.un_follow_icon);
+                holder.bloggerFollow.setText("UNFOLLOW");
             }
         }
 
@@ -244,7 +249,7 @@ public class ParentingBlogAdapter extends BaseAdapter {
         TextView authorRank;
         ImageView bloggerImage;
         ImageView bloggerCover;
-        ImageView bloggerFollow;
+        TextView bloggerFollow;
         ImageView facebook;
         ImageView twitter;
         ImageView rss;

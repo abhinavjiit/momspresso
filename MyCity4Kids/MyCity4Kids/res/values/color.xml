@@ -104,5 +104,15 @@
     <color name="dashboard.stats">#777777</color>
     <color name="dashboard.selectedTabText">#1c55f1</color>
 
+    <color name="blog.comments.date_comment_text">#5c5c5c</color>
+    <color name="blog.comments.addcomment_button">#224cf0</color>
+    <color name="blog.comments.reply_preview_bg">#f5f5f5</color>
+    <color name="blog.comments.follow_reply_btn">#ec3b57</color>
+    <color name="blog.comments.reply_bg">#e5e5e5</color>
+
+    <color name="authortype.colorcode.blogger">#0ea2e8</color>
+    <color name="authortype.colorcode.expert">#7db412</color>
+    <color name="authortype.colorcode.editorial">#e96e01</color>
+    <color name="authortype.colorcode.editor">#5d71ca</color>
 
 </resources>

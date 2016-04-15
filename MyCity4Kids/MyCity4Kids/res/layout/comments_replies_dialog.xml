@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white_color">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize" />
+
+    <ListView
+        android:id="@+id/replyListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/comment_layout"
+        android:layout_below="@+id/toolbar"
+        android:transcriptMode="normal" />
+
+    <LinearLayout
+        android:id="@+id/comment_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="2dp"
+        android:background="@color/white_color"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <EditText
+            android:id="@+id/addReplyEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".87"
+            android:background="@drawable/edit_text"
+            android:capitalize="sentences"
+            android:gravity="top|left"
+            android:hint="@string/write_comment"
+            android:padding="12dp"
+            android:singleLine="false"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/black_color"
+            android:visibility="visible" />
+
+        <LinearLayout
+            android:id="@+id/addCommentLinearLayout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".13"
+            android:background="@color/blog.comments.addcomment_button"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/add_comment_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/send_new"
+                android:clickable="false" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</RelativeLayout>

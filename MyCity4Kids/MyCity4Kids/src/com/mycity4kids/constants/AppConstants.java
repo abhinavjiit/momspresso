@@ -360,4 +360,10 @@ public class AppConstants {
     public static final String DEEP_LINK_ARTICLE_DETAIL = "article_detail";
     public static final String CONTAINER_ID = "GTM-MS864S";
 
+    //Author Types
+    public static final String AUTHOR_TYPE_BLOGGER = "Blogger";
+    public static final String AUTHOR_TYPE_EDITOR = "Editor";
+    public static final String AUTHOR_TYPE_EDITORIAL = "Editorial";
+    public static final String AUTHOR_TYPE_EXPERT = "Expert";
+
 }
