@@ -1,8 +1,11 @@
 package com.mycity4kids.models.parentingdetails;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 
-public class CommentsData {
+public class CommentsData implements Parcelable {
     private String id;
     private String node_id;
     private String parent_id;
@@ -12,6 +15,22 @@ public class CommentsData {
     private String comment_type;
     private String profile_image;
     private ArrayList<CommentsData> replies;
+
+    public CommentsData() {
+
+    }
+
+    protected CommentsData(Parcel in) {
+        id = in.readString();
+        node_id = in.readString();
+        parent_id = in.readString();
+        name = in.readString();
+        body = in.readString();
+        created = in.readString();
+        comment_type = in.readString();
+        profile_image = in.readString();
+        replies = in.createTypedArrayList(CommentsData.CREATOR);
+    }
 
     public ArrayList<CommentsData> getReplies() {
         return replies;
@@ -85,5 +104,35 @@ public class CommentsData {
         this.profile_image = profile_image;
     }
 
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(node_id);
+        dest.writeString(parent_id);
+        dest.writeString(name);
+        dest.writeString(body);
+        dest.writeString(created);
+        dest.writeString(comment_type);
+        dest.writeString(profile_image);
+        dest.writeTypedList(replies);
+    }
+
+    public static final Creator<CommentsData> CREATOR = new Creator<CommentsData>() {
+        @Override
+        public CommentsData createFromParcel(Parcel in) {
+            return new CommentsData(in);
+        }
+
+        @Override
+        public CommentsData[] newArray(int size) {
+            return new CommentsData[size];
+        }
+    };
 
 }

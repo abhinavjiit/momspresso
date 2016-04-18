@@ -18,7 +18,12 @@ import android.widget.TextView;
 import com.mycity4kids.R;
 import com.mycity4kids.models.editor.ArticleDraftList;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * Created by anshul on 3/16/16.
@@ -28,14 +33,14 @@ public class DraftListAdapter extends BaseAdapter {
     ArrayList<ArticleDraftList> draftlist;
     private LayoutInflater mInflator;
     DraftListView draftListView;
+    TimeZone tz = TimeZone.getDefault();
 
-
-    DraftListAdapter(Context context, ArrayList<ArticleDraftList> draftlist)
-    {
-        this.context=context;
-        this.draftlist=draftlist;
+    DraftListAdapter(Context context, ArrayList<ArticleDraftList> draftlist) {
+        this.context = context;
+        this.draftlist = draftlist;
         mInflator = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
+
     @Override
     public int getCount() {
         return draftlist == null ? 0 : draftlist.size();
@@ -59,12 +64,12 @@ public class DraftListAdapter extends BaseAdapter {
             holder = new ViewHolder();
             holder.txvArticleTitle = (TextView) view.findViewById(R.id.txvArticleTitle);
             holder.txvAuthorName = (TextView) view.findViewById(R.id.txvAuthorName);
-            holder.txvUpdateDate=(TextView) view.findViewById(R.id.txvPublishDate);
+            holder.txvUpdateDate = (TextView) view.findViewById(R.id.txvPublishDate);
             holder.popupButton = view.findViewById(R.id.img_menu);
-            holder.txvUnapproved=(TextView)view.findViewById(R.id.unapproved);
+            holder.txvUnapproved = (TextView) view.findViewById(R.id.unapproved);
             holder.popupButton.setTag(getItem(position));
 
-        //    popupButton.setOnClickListener((DraftListView)context);
+            //    popupButton.setOnClickListener((DraftListView)context);
             holder.popupButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -74,16 +79,16 @@ public class DraftListAdapter extends BaseAdapter {
                         public boolean onMenuItemClick(MenuItem item) {
                             int i = item.getItemId();
                             if (i == R.id.edit) {
-                                Intent intent=new Intent(context,EditorPostActivity.class);
-                                intent.putExtra("draftItem",(ArticleDraftList)getItem(position));
-                                intent.putExtra("from","draftList");
+                                Intent intent = new Intent(context, EditorPostActivity.class);
+                                intent.putExtra("draftItem", (ArticleDraftList) getItem(position));
+                                intent.putExtra("from", "draftList");
                                 context.startActivity(intent);
                                 Log.e("edit", "clicked");
                                 //do something
                                 return true;
                             } else if (i == R.id.delete) {
                                 //do something
-                                ((DraftListView) context).deleteDraftAPI((ArticleDraftList)getItem(position),position);
+                                ((DraftListView) context).deleteDraftAPI((ArticleDraftList) getItem(position), position);
                                 Log.e("delete", "clicked");
                                 return true;
                             } else {
@@ -93,37 +98,21 @@ public class DraftListAdapter extends BaseAdapter {
 
                     });
                     popup.show();
-                }});
+                }
+            });
 
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
         }
-        if (!draftlist.get(position).getTitle().toString().isEmpty())
-        {holder.txvArticleTitle.setText(draftlist.get(position).getTitle());}
-        else {
+        if (!draftlist.get(position).getTitle().toString().isEmpty()) {
+            holder.txvArticleTitle.setText(draftlist.get(position).getTitle());
+        } else {
             holder.txvArticleTitle.setText("Untitled Draft");
         }
-        switch (draftlist.get(position).getModeration_status())
-        {case "0":
-        { holder.txvUnapproved.setVisibility(View.INVISIBLE);
-            view.setBackgroundColor(Color.WHITE);
-            view.setClickable(false);
-            holder.popupButton.setClickable(true);
-            holder.txvArticleTitle.setTextColor(Color.BLACK);
-            holder.txvUpdateDate.setTextColor(context.getResources().getColor(R.color.gray2));
-            break;}
-            case "1":
-            { holder.txvUnapproved.setVisibility(View.INVISIBLE);
-                view.setBackgroundColor(context.getResources().getColor(R.color.gray_color));
-                holder.txvArticleTitle.setTextColor(context.getResources().getColor(R.color.faded_text));
-                holder.txvUpdateDate.setTextColor(context.getResources().getColor(R.color.faded_italic));
-                view.setClickable(true);
-                holder.popupButton.setClickable(false);
-                break;
-            }
-            case "2":
-            { holder.txvUnapproved.setVisibility(View.VISIBLE);
+        switch (draftlist.get(position).getModeration_status()) {
+            case "0": {
+                holder.txvUnapproved.setVisibility(View.INVISIBLE);
                 view.setBackgroundColor(Color.WHITE);
                 view.setClickable(false);
                 holder.popupButton.setClickable(true);
@@ -131,8 +120,26 @@ public class DraftListAdapter extends BaseAdapter {
                 holder.txvUpdateDate.setTextColor(context.getResources().getColor(R.color.gray2));
                 break;
             }
-            case "3":
-            {holder.txvUnapproved.setVisibility(View.VISIBLE);
+            case "1": {
+                holder.txvUnapproved.setVisibility(View.INVISIBLE);
+                view.setBackgroundColor(context.getResources().getColor(R.color.gray_color));
+                holder.txvArticleTitle.setTextColor(context.getResources().getColor(R.color.faded_text));
+                holder.txvUpdateDate.setTextColor(context.getResources().getColor(R.color.faded_italic));
+                view.setClickable(true);
+                holder.popupButton.setClickable(false);
+                break;
+            }
+            case "2": {
+                holder.txvUnapproved.setVisibility(View.VISIBLE);
+                view.setBackgroundColor(Color.WHITE);
+                view.setClickable(false);
+                holder.popupButton.setClickable(true);
+                holder.txvArticleTitle.setTextColor(Color.BLACK);
+                holder.txvUpdateDate.setTextColor(context.getResources().getColor(R.color.gray2));
+                break;
+            }
+            case "3": {
+                holder.txvUnapproved.setVisibility(View.VISIBLE);
                 view.setBackgroundColor(Color.WHITE);
                 view.setClickable(false);
                 holder.popupButton.setClickable(true);
@@ -149,12 +156,23 @@ public class DraftListAdapter extends BaseAdapter {
                 holder.txvUpdateDate.setTextColor(context.getResources().getColor(R.color.gray2));
                 break;
         }
-        holder.txvUpdateDate.setText(draftlist.get(position).getUpdatedDate());
+
+        try {
+
+            Calendar calendar1 = Calendar.getInstance();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+            calendar1.setTime(sdf.parse(draftlist.get(position).getUpdatedDate()));
+            calendar1.add(Calendar.MILLISECOND, tz.getOffset(calendar1.getTimeInMillis()));
+
+            holder.txvUpdateDate.setText(sdf.format(calendar1.getTime()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         return view;
     }
 
-    public int getPosition(){
-        return  1;
+    public int getPosition() {
+        return 1;
     }
 
     class ViewHolder {

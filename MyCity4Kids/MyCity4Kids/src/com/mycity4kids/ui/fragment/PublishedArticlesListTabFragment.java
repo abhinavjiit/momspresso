@@ -2,7 +2,6 @@ package com.mycity4kids.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,6 @@ import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.StringUtils;
 import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
-import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.ArticleBlogDetailsController;
@@ -29,10 +27,8 @@ import com.mycity4kids.models.parentingdetails.ImageData;
 import com.mycity4kids.models.parentingdetails.ParentingDetailResponse;
 import com.mycity4kids.models.parentingdetails.ParentingDetailsData;
 import com.mycity4kids.newmodels.PublishedArticlesModel;
-import com.mycity4kids.newmodels.bloggermodel.BlogArticleList.BlogArticleModel;
 import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
 import com.mycity4kids.ui.activity.BloggerDashboardActivity;
-import com.mycity4kids.ui.adapter.BloggerListingAdapter;
 import com.mycity4kids.ui.adapter.PublishedArticlesListAdapter;
 
 import java.util.ArrayList;

@@ -427,8 +427,6 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                 fbUser = user;
                 loginMode = "fb";
 
-                //Toast.makeText(LoginActivity.this, user.asMap().get("email").toString(), Toast.LENGTH_LONG).show() ;
-
                 Session session = Session.getActiveSession();
                 if (session.isOpened()) {
                     accessToken = session.getAccessToken();

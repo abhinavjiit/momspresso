@@ -13,8 +13,8 @@ public class AppConstants {
 
     //    public static final String STAGING_CLIENT_SERVER_URL = "http://54.169.17.138/";
 
-    public static final String LIVE_URL = "http://webserve.mycity4kids.com/";
-//    public static final String LIVE_URL = "http://54.169.17.138/";
+//    public static final String LIVE_URL = "http://webserve.mycity4kids.com/";
+    public static final String LIVE_URL = "http://54.169.17.138/";
 //    public static final String LIVE_URL = "http://10.42.0.1/";
 //    public static final String LIVE_URL = "http://192.168.1.12/";
 
@@ -359,5 +359,11 @@ public class AppConstants {
     public static final String DEEP_LINK_BLOGGER_LISTING = "blogger_listing";
     public static final String DEEP_LINK_ARTICLE_DETAIL = "article_detail";
     public static final String CONTAINER_ID = "GTM-MS864S";
+
+    //Author Types
+    public static final String AUTHOR_TYPE_BLOGGER = "Blogger";
+    public static final String AUTHOR_TYPE_EDITOR = "Editor";
+    public static final String AUTHOR_TYPE_EDITORIAL = "Editorial";
+    public static final String AUTHOR_TYPE_EXPERT = "Expert";
 
 }

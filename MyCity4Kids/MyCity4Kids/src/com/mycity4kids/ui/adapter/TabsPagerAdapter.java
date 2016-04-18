@@ -68,7 +68,7 @@ public class TabsPagerAdapter extends FragmentStatePagerAdapter {
             return "POPULAR";
         } else {
             //PERSONAL
-            return "MY BLOGS";
+            return "BOOKMARKS";
         }
     }
 
