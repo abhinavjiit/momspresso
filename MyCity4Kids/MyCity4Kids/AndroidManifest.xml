@@ -449,23 +449,20 @@
 
         <activity
             android:name=".ui.activity.NewLoginActivity"
-            android:label="@string/title_activity_new_login"></activity>
+            android:label="@string/title_activity_new_login" />
         <activity
             android:name=".editor.EditorPostActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/EditorTheme"></activity>
+            android:theme="@style/EditorTheme" />
         <activity
             android:name=".editor.DraftListView"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.nnn"></activity>
+            android:theme="@style/Theme.nnn" />
         <activity
             android:name=".editor.BlogPage"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".editor.ArticleImageTagUpload"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".ui.activity.NewArticleDetailsActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.mycity4kids.reminders.AlarmDialogActivity"

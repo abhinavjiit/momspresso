@@ -200,9 +200,9 @@ public class BaseApplication extends Application {
             Class.forName("android.os.AsyncTask");
         } catch (ClassNotFoundException e) {
         }
-//        Fabric.with(this, new Crashlytics());
-//        Crashlytics.setUserIdentifier("" + SharedPrefUtils.getUserDetailModel(this).getId());
-//        Crashlytics.setUserEmail("" + SharedPrefUtils.getUserDetailModel(this).getEmail());
+        Fabric.with(this, new Crashlytics());
+        Crashlytics.setUserIdentifier("" + SharedPrefUtils.getUserDetailModel(this).getId());
+        Crashlytics.setUserEmail("" + SharedPrefUtils.getUserDetailModel(this).getEmail());
         setInstance(this);
         //initializeGa();
         // startService(new Intent(this,ReplicationService.class))
