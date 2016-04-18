@@ -13,8 +13,8 @@ public class AppConstants {
 
     //    public static final String STAGING_CLIENT_SERVER_URL = "http://54.169.17.138/";
 
-    public static final String LIVE_URL = "http://webserve.mycity4kids.com/";
-//    public static final String LIVE_URL = "http://54.169.17.138/";
+//    public static final String LIVE_URL = "http://webserve.mycity4kids.com/";
+    public static final String LIVE_URL = "http://54.169.17.138/";
 //    public static final String LIVE_URL = "http://10.42.0.1/";
 //    public static final String LIVE_URL = "http://192.168.1.12/";
 

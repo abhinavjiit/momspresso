@@ -465,6 +465,9 @@
             android:name=".editor.ArticleImageTagUpload"
             android:screenOrientation="portrait"></activity>
         <activity
+            android:name=".ui.activity.NewArticleDetailsActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="com.mycity4kids.reminders.AlarmDialogActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
