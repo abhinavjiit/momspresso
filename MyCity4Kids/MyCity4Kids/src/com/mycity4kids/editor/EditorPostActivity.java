@@ -2,18 +2,10 @@ package com.mycity4kids.editor;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -22,15 +14,7 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.BitmapUtils;
@@ -38,28 +22,20 @@ import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
-import com.mycity4kids.constants.Constants;
-import com.mycity4kids.controller.ArticleBlogDetailsController;
 import com.mycity4kids.controller.ArticleDraftController;
 import com.mycity4kids.controller.ImageUploadController;
 import com.mycity4kids.dbtable.UserTable;
-import com.mycity4kids.enums.ParentingFilterType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.editor.ArticleDraftList;
 import com.mycity4kids.models.editor.ArticleDraftRequest;
 import com.mycity4kids.models.forgot.CommonResponse;
-import com.mycity4kids.models.parentingdetails.CommentsData;
 import com.mycity4kids.models.parentingdetails.ImageData;
 import com.mycity4kids.models.parentingdetails.ParentingDetailResponse;
 import com.mycity4kids.models.parentingdetails.ParentingDetailsData;
 import com.mycity4kids.models.user.ImageUploadRequest;
 import com.mycity4kids.models.user.UserModel;
-import com.mycity4kids.newmodels.PublishedArticlesModel;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.squareup.picasso.Picasso;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -67,32 +43,13 @@ import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -110,7 +67,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     private float density;
     private String thumbnailUrl;
     private ArrayList<ImageData> imageList;
-    private String moderation_status, node_id,path;
+    private String moderation_status, node_id, path;
 
     File file;
     String imageString;
@@ -186,7 +143,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                         return;
                     } else {
                         if (!StringUtils.isNullOrEmpty(responseModel.getResult().getMessage())) {
-                      //      SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
+                            //      SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
                             Log.i("Uploaded Image URL", responseModel.getResult().getMessage());
                         }
                         mediaFile.setFileURL(responseModel.getResult().getMessage());
@@ -194,7 +151,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                         ((EditorMediaUploadListener) mEditorFragment).onMediaUploadSucceeded(mediaId, mediaFile);
                         removeProgressDialog();
                         //setProfileImage(originalImage);
-                      //  showToast("You have successfully uploaded image.");
+                        //  showToast("You have successfully uploaded image.");
                     }
                 }
                 break;
@@ -235,7 +192,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             ((ImageSettingsDialogFragment) fragment).dismissFragment();
         } else {
             //Toast.makeText(this,"Draft Saved",Toast.LENGTH_LONG).show();
-            if ((mEditorFragment.getTitle().toString().isEmpty() && (mEditorFragment.getContent().toString().isEmpty()))||(getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList"))) {
+            if ((mEditorFragment.getTitle().toString().isEmpty() && (mEditorFragment.getContent().toString().isEmpty())) || (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList"))) {
                 finish();
                 super.onBackPressed();
 
@@ -303,9 +260,9 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                 imageUri = Uri.fromFile(file);*/
                 File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
 
-              File  output = new File(dir, "CameraContentDemo.jpeg");
-                imageUri=Uri.fromFile(output);
-                intent1.putExtra(MediaStore.EXTRA_OUTPUT,imageUri);
+                File output = new File(dir, "CameraContentDemo.jpeg");
+                imageUri = Uri.fromFile(output);
+                intent1.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
 
 /*
                 intent1.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, imageUri);
@@ -349,7 +306,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                         String filePath = cursor.getString(columnIndex);
                         cursor.close();
                         Log.e("File", "filePath: " + filePath);
-                        filePath=filePath.replaceAll("[^a-zA-Z0-9.-/_]", "_");
+                        filePath = filePath.replaceAll("[^a-zA-Z0-9.-/_]", "_");
                         file = new File(new URI("file://"
                                 + filePath.replaceAll(" ", "%20")));
                         int maxImageSize = BitmapUtils.getMaxSize(this);
@@ -442,7 +399,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                         imageString = Base64.encodeToString(byteArrayToSend, Base64.DEFAULT);*/
                         // imageString = Base64.encodeToString(array, Base64.DEFAULT);
                         mEditorFragment.imageUploading = 0;
-                     //   new FileUploadTask().execute();
+                        //   new FileUploadTask().execute();
                         sendUploadProfileImageRequest(finalBitmap);
                         // compressImage(filePath);
                     } catch (Exception e) {
@@ -471,11 +428,9 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                 } else if (mEditorFragment.imageUploading == 0) {
                     Log.e("imageuploading", mEditorFragment.imageUploading + "");
                     showToast("Please wait while image is being uploaded");
-                } else if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList"))
-                {
+                } else if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) {
                     showToast("Published Articles are not allowed to be saved in drafts");
-                }
-                else {
+                } else {
                     Log.e("draftId", draftId + "");
                     saveDraftRequest(titleFormatting(mEditorFragment.getTitle().toString().trim()), mEditorFragment.getContent().toString(), draftId);
                     fromBackpress = false;
@@ -503,17 +458,16 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                     Log.e("publish", "clicked");
                     Intent intent = new Intent(EditorPostActivity.this, ArticleImageTagUpload.class);
                     intent.putExtra("draftItem", draftObject);
-                    if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList"))
-                    {
-                        intent.putExtra("imageUrl",thumbnailUrl);
-                        intent.putExtra("from","publishedList");
-                        intent.putExtra("articleId",articleId);
+                    if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) {
+                        intent.putExtra("imageUrl", thumbnailUrl);
+                        intent.putExtra("from", "publishedList");
+                        intent.putExtra("articleId", articleId);
+                    } else if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("draftList")) {
+                        intent.putExtra("imageUrl", path);
+                        intent.putExtra("from", "draftList");
+                    } else {
+                        intent.putExtra("from", "editor");
                     }
-                    else if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("draftList"))
-                    {intent.putExtra("imageUrl",path);
-                        intent.putExtra("from","draftList");
-                    }else
-                    {intent.putExtra("from","editor");}
                     startActivity(intent);
                 }
             }
@@ -527,12 +481,12 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     public void saveDraftRequest(String title, String body, String draftId) {
         showProgressDialog(getResources().getString(R.string.please_wait));
         ArticleDraftRequest requestData = new ArticleDraftRequest();
-title=title.trim();
+        title = title.trim();
         requestData.setUser_id("" + userModel.getUser().getId());
         requestData.setBody("" + body);
         requestData.setTitle("" + title);
         requestData.setId("" + draftId);
-        requestData.setSourceId(""+2);
+        requestData.setSourceId("" + 2);
 
         Log.e("userId", userModel.getUser().getId() + "");
         ArticleDraftController controller = new ArticleDraftController(this, this);
@@ -590,33 +544,37 @@ title=title.trim();
         if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("draftList")) {
             ArticleDraftList draftObject = (ArticleDraftList) getIntent().getSerializableExtra("draftItem");
             title = draftObject.getTitle();
-            title=title.trim();
+            title = title.trim();
             content = draftObject.getBody();
             draftId = draftObject.getId();
-            path=draftObject.getPath();
-            moderation_status =draftObject.getModeration_status();
-            Log.e("moderation_status",moderation_status);
-            node_id=draftObject.getNode_id();
+            path = draftObject.getPath();
+            moderation_status = draftObject.getModeration_status();
+            if (null == moderation_status) {
+                moderation_status = "0";
+            }
+            Log.e("moderation_status", "" + moderation_status);
+            node_id = draftObject.getNode_id();
             mEditorFragment.setTitle(title);
             mEditorFragment.setContent(content);
-            if (moderation_status.equals("3"))
-            {
+            if (null == moderation_status) {
+            }
+            if (moderation_status.equals("3")) {
                 mEditorFragment.toggleTitleView(true);
             }
         } else if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) {
             //  PublishedArticlesModel.PublishedArticleData draftObject=(PublishedArticlesModel.PublishedArticleData) getIntent().getSerializableExtra("publishedItem");
-            title=getIntent().getStringExtra("title");
-            title=title.trim();
-            content=getIntent().getStringExtra("content");
-            thumbnailUrl=getIntent().getStringExtra("thumbnailUrl");
-            articleId=getIntent().getStringExtra("articleId");
+            title = getIntent().getStringExtra("title");
+            title = title.trim();
+            content = getIntent().getStringExtra("content");
+            thumbnailUrl = getIntent().getStringExtra("thumbnailUrl");
+            articleId = getIntent().getStringExtra("articleId");
             mEditorFragment.setTitle(title);
             mEditorFragment.setContent(content);
             mEditorFragment.toggleTitleView(true);
-          //  mEditorFragment.setTitle(title);
+            //  mEditorFragment.setTitle(title);
             //    mEditorFragment.setContent(content);
         } else /*if (getIntent().getStringExtra("from").equals("dashboard"))*/ {
-            title=title.trim();
+            title = title.trim();
             mEditorFragment.setTitle(title);
             mEditorFragment.setContent(content);
             Log.e("postContent", content);
@@ -642,16 +600,17 @@ title=title.trim();
         String pTag = "<p>";
         String newString = pTag.concat(content);
         String formattedString = newString.replace("\n\n", "</p><p>");
-        formattedString=formattedString.concat("</p>");
+        formattedString = formattedString.concat("</p>");
         return formattedString;
 
     }
-    public String titleFormatting(String title)
-    {
-     return title.replace("&nbsp;","");
+
+    public String titleFormatting(String title) {
+        return title.replace("&nbsp;", "");
 
 
     }
+
     public void sendUploadProfileImageRequest(Bitmap originalImage) {
         showProgressDialog(getString(R.string.please_wait));
         ByteArrayOutputStream bao = new ByteArrayOutputStream();

@@ -110,51 +110,60 @@ public class DraftListAdapter extends BaseAdapter {
         } else {
             holder.txvArticleTitle.setText("Untitled Draft");
         }
-        switch (draftlist.get(position).getModeration_status()) {
-            case "0": {
-                holder.txvUnapproved.setVisibility(View.INVISIBLE);
-                view.setBackgroundColor(Color.WHITE);
-                view.setClickable(false);
-                holder.popupButton.setClickable(true);
-                holder.txvArticleTitle.setTextColor(Color.BLACK);
-                holder.txvUpdateDate.setTextColor(context.getResources().getColor(R.color.gray2));
-                break;
+        if (draftlist.get(position).getModeration_status() == null) {
+            holder.txvUnapproved.setVisibility(View.INVISIBLE);
+            view.setBackgroundColor(Color.WHITE);
+            view.setClickable(false);
+            holder.popupButton.setClickable(true);
+            holder.txvArticleTitle.setTextColor(Color.BLACK);
+            holder.txvUpdateDate.setTextColor(context.getResources().getColor(R.color.gray2));
+        } else {
+            switch (draftlist.get(position).getModeration_status()) {
+                case "0": {
+                    holder.txvUnapproved.setVisibility(View.INVISIBLE);
+                    view.setBackgroundColor(Color.WHITE);
+                    view.setClickable(false);
+                    holder.popupButton.setClickable(true);
+                    holder.txvArticleTitle.setTextColor(Color.BLACK);
+                    holder.txvUpdateDate.setTextColor(context.getResources().getColor(R.color.gray2));
+                    break;
+                }
+                case "1": {
+                    holder.txvUnapproved.setVisibility(View.INVISIBLE);
+                    view.setBackgroundColor(context.getResources().getColor(R.color.gray_color));
+                    holder.txvArticleTitle.setTextColor(context.getResources().getColor(R.color.faded_text));
+                    holder.txvUpdateDate.setTextColor(context.getResources().getColor(R.color.faded_italic));
+                    view.setClickable(true);
+                    holder.popupButton.setClickable(false);
+                    break;
+                }
+                case "2": {
+                    holder.txvUnapproved.setVisibility(View.VISIBLE);
+                    view.setBackgroundColor(Color.WHITE);
+                    view.setClickable(false);
+                    holder.popupButton.setClickable(true);
+                    holder.txvArticleTitle.setTextColor(Color.BLACK);
+                    holder.txvUpdateDate.setTextColor(context.getResources().getColor(R.color.gray2));
+                    break;
+                }
+                case "3": {
+                    holder.txvUnapproved.setVisibility(View.VISIBLE);
+                    view.setBackgroundColor(Color.WHITE);
+                    view.setClickable(false);
+                    holder.popupButton.setClickable(true);
+                    holder.txvArticleTitle.setTextColor(Color.BLACK);
+                    holder.txvUpdateDate.setTextColor(context.getResources().getColor(R.color.gray2));
+                    break;
+                }
+                default:
+                    holder.txvUnapproved.setVisibility(View.INVISIBLE);
+                    view.setBackgroundColor(Color.WHITE);
+                    view.setClickable(false);
+                    holder.popupButton.setClickable(true);
+                    holder.txvArticleTitle.setTextColor(Color.BLACK);
+                    holder.txvUpdateDate.setTextColor(context.getResources().getColor(R.color.gray2));
+                    break;
             }
-            case "1": {
-                holder.txvUnapproved.setVisibility(View.INVISIBLE);
-                view.setBackgroundColor(context.getResources().getColor(R.color.gray_color));
-                holder.txvArticleTitle.setTextColor(context.getResources().getColor(R.color.faded_text));
-                holder.txvUpdateDate.setTextColor(context.getResources().getColor(R.color.faded_italic));
-                view.setClickable(true);
-                holder.popupButton.setClickable(false);
-                break;
-            }
-            case "2": {
-                holder.txvUnapproved.setVisibility(View.VISIBLE);
-                view.setBackgroundColor(Color.WHITE);
-                view.setClickable(false);
-                holder.popupButton.setClickable(true);
-                holder.txvArticleTitle.setTextColor(Color.BLACK);
-                holder.txvUpdateDate.setTextColor(context.getResources().getColor(R.color.gray2));
-                break;
-            }
-            case "3": {
-                holder.txvUnapproved.setVisibility(View.VISIBLE);
-                view.setBackgroundColor(Color.WHITE);
-                view.setClickable(false);
-                holder.popupButton.setClickable(true);
-                holder.txvArticleTitle.setTextColor(Color.BLACK);
-                holder.txvUpdateDate.setTextColor(context.getResources().getColor(R.color.gray2));
-                break;
-            }
-            default:
-                holder.txvUnapproved.setVisibility(View.INVISIBLE);
-                view.setBackgroundColor(Color.WHITE);
-                view.setClickable(false);
-                holder.popupButton.setClickable(true);
-                holder.txvArticleTitle.setTextColor(Color.BLACK);
-                holder.txvUpdateDate.setTextColor(context.getResources().getColor(R.color.gray2));
-                break;
         }
 
         try {
