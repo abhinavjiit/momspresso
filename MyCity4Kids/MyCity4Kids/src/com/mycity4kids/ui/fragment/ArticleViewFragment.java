@@ -2,6 +2,7 @@ package com.mycity4kids.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +35,7 @@ import java.util.ArrayList;
 /**
  * Created by manish.soni on 21-07-2015.
  */
-public class ArticleViewFragment extends BaseFragment {
+public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     ArticlesListingAdapter articlesListingAdapter;
     ArrayList<CommonParentingList> articleDataModelsNew;
@@ -47,6 +48,7 @@ public class ArticleViewFragment extends BaseFragment {
     private int totalPageCount = 3;
     private int nextPageNumber = 2;
     private boolean isReuqestRunning = false;
+    private SwipeRefreshLayout swipeRefreshLayout;
 //    private ArrayList<CommonParentingList> mDataList;
 
 
@@ -58,6 +60,7 @@ public class ArticleViewFragment extends BaseFragment {
         listView = (ListView) view.findViewById(R.id.scroll);
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
         view.findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_indefinitely));
 
         if (getArguments() != null) {
@@ -70,7 +73,7 @@ public class ArticleViewFragment extends BaseFragment {
             nextPageNumber = 1;
             hitBookmarkedArticleListingAPI(nextPageNumber, "bookmark");
         }
-
+        swipeRefreshLayout.setOnRefreshListener((SwipeRefreshLayout.OnRefreshListener) ArticleViewFragment.this);
 
         articlesListingAdapter = new ArticlesListingAdapter(getActivity(), true);
         articlesListingAdapter.setNewListData(articleDataModelsNew);
@@ -143,6 +146,7 @@ public class ArticleViewFragment extends BaseFragment {
         switch (response.getDataType()) {
             case AppConstants.PARENTING_STOP_ARTICLES_REQUEST:
                 responseData = (CommonParentingResponse) response.getResponseObject();
+                swipeRefreshLayout.setRefreshing(false);
                 if (responseData.getResponseCode() == 200) {
                     getArticleResponse(responseData);
                 } else if (responseData.getResponseCode() == 400) {
@@ -181,6 +185,7 @@ public class ArticleViewFragment extends BaseFragment {
 
             case AppConstants.BOOKMARKED_ARTICLE_LIST_REQUEST:
                 responseData = (CommonParentingResponse) response.getResponseObject();
+                swipeRefreshLayout.setRefreshing(false);
                 if (responseData.getResponseCode() == 200) {
                     getArticleResponse(responseData);
                 } else if (responseData.getResponseCode() == 400) {
@@ -358,5 +363,17 @@ public class ArticleViewFragment extends BaseFragment {
     public void refreshBookmarkList() {
         nextPageNumber = 1;
         hitBookmarkedArticleListingAPI(nextPageNumber, "bookmark");
+    }
+
+    @Override
+    public void onRefresh() {
+        if (!"bookmark".equals(sortType))
+        { nextPageNumber=1;
+            hitArticleListingApi(nextPageNumber,sortType);}
+        else {
+            nextPageNumber=1;
+            hitBookmarkedArticleListingAPI(1,sortType);
+        }
+
     }
 }

@@ -207,4 +207,13 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    public void hidefloatingbutton( Boolean b) {
+        if (b==true)
+        {addDraft.setVisibility(View.INVISIBLE);}
+        else
+        {
+            addDraft.setVisibility(View.VISIBLE);
+        }
+    }
 }

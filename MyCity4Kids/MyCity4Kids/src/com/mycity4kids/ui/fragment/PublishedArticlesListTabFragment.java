@@ -92,18 +92,27 @@ public class PublishedArticlesListTabFragment extends BaseFragment {
 
             }
 
+
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
                 boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
 
-                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && (nextPageNumber < 2 || nextPageNumber < totalPageCount)) {
+                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && (nextPageNumber < 2 || nextPageNumber <= totalPageCount)) {
 
                     mLodingView.setVisibility(View.VISIBLE);
                     getAllPublishedArticles(nextPageNumber);
                     isReuqestRunning = true;
 
                 }
+                if (firstVisibleItem==0)
+                {
+                    ((BloggerDashboardActivity)getActivity()).hidefloatingbutton(false);
+                }
+                else {
+                    ((BloggerDashboardActivity)getActivity()).hidefloatingbutton(true);
+                }
+
             }
         });
 
