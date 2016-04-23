@@ -34,6 +34,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     private Toolbar mToolbar;
     private TextView bloggerNameTextView, rankingTextView, viewCountTextView, followersViewCount;
     private ImageView bloggerImageView;
+    View vSeparator1, vSeparator2;
     TabLayout tabLayout;
     ViewPager viewPager;
     ImageView addDraft;
@@ -49,7 +50,9 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         rankingTextView = (TextView) findViewById(R.id.rankingTextView);
         viewCountTextView = (TextView) findViewById(R.id.viewCountTextView);
         followersViewCount = (TextView) findViewById(R.id.followersViewCount);
-        addDraft=(ImageView) findViewById(R.id.addDraft);
+        vSeparator1 = (View) findViewById(R.id.vSeparator1);
+        vSeparator2 = (View) findViewById(R.id.vSeparator2);
+        addDraft = (ImageView) findViewById(R.id.addDraft);
 
         bloggerNameTextView = (TextView) findViewById(R.id.bloggerNameTextView);
         bloggerNameTextView.setText(SharedPrefUtils.getUserDetailModel(this).getFirst_name());
@@ -131,12 +134,21 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                         removeProgressDialog();
 
                         if (responseData.getResult().getData().getRank() == 0) {
-                            rankingTextView.setText("NA");
+                            rankingTextView.setVisibility(View.INVISIBLE);
+                            viewCountTextView.setVisibility(View.INVISIBLE);
+                            followersViewCount.setVisibility(View.INVISIBLE);
+                            vSeparator1.setVisibility(View.INVISIBLE);
+                            vSeparator2.setVisibility(View.INVISIBLE);
                         } else {
+                            rankingTextView.setVisibility(View.VISIBLE);
+                            viewCountTextView.setVisibility(View.VISIBLE);
+                            followersViewCount.setVisibility(View.VISIBLE);
+                            vSeparator1.setVisibility(View.VISIBLE);
+                            vSeparator2.setVisibility(View.VISIBLE);
                             rankingTextView.setText("" + responseData.getResult().getData().getRank());
+                            viewCountTextView.setText("" + responseData.getResult().getData().getViews());
+                            followersViewCount.setText("" + responseData.getResult().getData().getFollowers());
                         }
-                        viewCountTextView.setText("" + responseData.getResult().getData().getViews());
-                        followersViewCount.setText("" + responseData.getResult().getData().getFollowers());
 
                         tabLayout.getTabAt(0).setText("Bookmarks (" + responseData.getResult().getData().getBookmarkCount() + ")");
                         tabLayout.getTabAt(1).setText("Published (" + responseData.getResult().getData().getArticleCount() + ")");
@@ -208,11 +220,10 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         }
     }
 
-    public void hidefloatingbutton( Boolean b) {
-        if (b==true)
-        {addDraft.setVisibility(View.INVISIBLE);}
-        else
-        {
+    public void hidefloatingbutton(Boolean b) {
+        if (b == true) {
+            addDraft.setVisibility(View.INVISIBLE);
+        } else {
             addDraft.setVisibility(View.VISIBLE);
         }
     }

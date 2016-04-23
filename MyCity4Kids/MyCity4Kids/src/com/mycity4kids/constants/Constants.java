@@ -214,6 +214,7 @@ public class Constants {
     public static String BLOG_TITLE = "blog_title";
     public static String IS_SEARCH_ACTIVE = "is_Search_Active";
     public static String SEARCH_TOPIC = "search_topic";
+    public static String SEARCH_PARAM = "search_param";
 
     public static String TOTAL_ARTICAL_COUNT = "total_article_count";
     public static String FILTER_NAME = "filter_name";

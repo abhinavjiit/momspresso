@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
@@ -20,6 +22,7 @@ import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -71,8 +74,10 @@ public class BlogDetailActivity extends BaseActivity implements View.OnClickList
     BlogTapPagerAdapter blogTapPagerAdapter;
     BlogItemModel blogDetails;
     TextView bloggerName, authorType, description, moreDesc, bloggerTitle, authorRank, authorFollower;
-    ImageView bloggerCover, bloggerImage, bloggerFollow, facebook, twitter, rss;
+    ImageView bloggerCover, bloggerImage;
+    TextView bloggerFollow;
     RelativeLayout aboutLayout;
+    ImageView profileImageView;
     //    ImageView backButton;
     private float density;
     private int screenWidth;
@@ -128,10 +133,7 @@ public class BlogDetailActivity extends BaseActivity implements View.OnClickList
         authorType = (TextView) findViewById(R.id.author_type);
         bloggerImage = (ImageView) findViewById(R.id.blogger_profile);
         bloggerCover = (ImageView) findViewById(R.id.blogger_bg);
-        bloggerFollow = (ImageView) findViewById(R.id.blog_follow);
-        facebook = (ImageView) findViewById(R.id.facebook_);
-        twitter = (ImageView) findViewById(R.id.twitter_);
-        rss = (ImageView) findViewById(R.id.rss_);
+        bloggerFollow = (TextView) findViewById(R.id.blog_follow);
         description = (TextView) findViewById(R.id.blogger_desc);
         moreDesc = (TextView) findViewById(R.id.more_text);
         aboutLayout = (RelativeLayout) findViewById(R.id.about_desc_layout);
@@ -144,16 +146,13 @@ public class BlogDetailActivity extends BaseActivity implements View.OnClickList
 
         authorFollower.setVisibility(View.GONE);
 
-        facebook.setOnClickListener(this);
-        twitter.setOnClickListener(this);
-        rss.setOnClickListener(this);
         bloggerFollow.setOnClickListener(this);
         moreDesc.setOnClickListener(this);
 
         density = getResources().getDisplayMetrics().density;
         screenWidth = getResources().getDisplayMetrics().widthPixels;
         mTitleView = (TextView) findViewById(R.id.titleMain);
-
+        profileImageView = (ImageView) findViewById(R.id.profileImageView);
         mViewPager.setVisibility(View.VISIBLE);
         mSlidingTabLayout.setVisibility(View.VISIBLE);
 
@@ -239,6 +238,8 @@ public class BlogDetailActivity extends BaseActivity implements View.OnClickList
             }
         });
 
+        changeTabsFont();
+
     }
 
     @Override
@@ -293,6 +294,22 @@ public class BlogDetailActivity extends BaseActivity implements View.OnClickList
             mClient.disconnect();
         }
         super.onStop();
+    }
+
+    private void changeTabsFont() {
+
+        ViewGroup vg = (ViewGroup) mSlidingTabLayout.getChildAt(0);
+        int tabsCount = vg.getChildCount();
+        for (int j = 0; j < tabsCount; j++) {
+            ViewGroup vgTab = (ViewGroup) vg.getChildAt(j);
+            int tabChildsCount = vgTab.getChildCount();
+            for (int i = 0; i < tabChildsCount; i++) {
+                View tabViewChild = vgTab.getChildAt(i);
+                if (tabViewChild instanceof AppCompatTextView) {
+                    ((TextView) tabViewChild).setTypeface(Typeface.create("sans-serif-thin", Typeface.NORMAL));
+                }
+            }
+        }
     }
 
     public void run() {
@@ -350,11 +367,13 @@ public class BlogDetailActivity extends BaseActivity implements View.OnClickList
                     if (isFollowing) {
                         isFollowing = false;
                         blogDetails.setUser_following_status("0");
-                        ((ImageView) findViewById(R.id.blog_follow)).setBackgroundResource((R.drawable.follow_blog));
+//                        ((ImageView) findViewById(R.id.blog_follow)).setBackgroundResource((R.drawable.follow_blog));
+                        ((TextView) findViewById(R.id.blog_follow)).setText("FOLLOW");
                     } else {
                         isFollowing = true;
                         blogDetails.setUser_following_status("1");
-                        ((ImageView) findViewById(R.id.blog_follow)).setBackgroundResource((R.drawable.un_follow_icon));
+//                        ((ImageView) findViewById(R.id.blog_follow)).setBackgroundResource((R.drawable.un_follow_icon));
+                        ((TextView) findViewById(R.id.blog_follow)).setText("UNFOLLOW");
                     }
 
                     if (BuildConfig.DEBUG) {
@@ -494,6 +513,7 @@ public class BlogDetailActivity extends BaseActivity implements View.OnClickList
                 mViewPager.setCurrentItem(1);
             }
         });
+        changeTabsFont();
 
     }
 
@@ -506,8 +526,10 @@ public class BlogDetailActivity extends BaseActivity implements View.OnClickList
 
         if (!StringUtils.isNullOrEmpty(blogDetails.getProfile_image())) {
             Picasso.with(this).load(blogDetails.getProfile_image()).resize((int) (90 * density), (int) (100 * density)).centerCrop().into(bloggerImage);
+            Picasso.with(this).load(blogDetails.getProfile_image()).into(profileImageView);
         } else {
             Picasso.with(this).load(R.drawable.default_img).resize((int) (90 * density), (int) (100 * density)).centerCrop().into(bloggerImage);
+            Picasso.with(this).load(R.drawable.default_img).into(profileImageView);
         }
         if (!StringUtils.isNullOrEmpty(blogDetails.getCover_image())) {
             Picasso.with(this).load(blogDetails.getCover_image()).resize(screenWidth, (int) (230 * density)).centerCrop().placeholder(R.drawable.blog_bgnew).into(bloggerCover);
@@ -515,22 +537,10 @@ public class BlogDetailActivity extends BaseActivity implements View.OnClickList
             Picasso.with(this).load(R.drawable.blog_bgnew).resize(screenWidth, (int) (230 * density)).centerCrop().into(bloggerCover);
         }
 
-
-        if (!StringUtils.isNullOrEmpty(blogDetails.getFacebook_id())) {
-            facebook.setVisibility(View.VISIBLE);
-        } else {
-            facebook.setVisibility(View.GONE);
-        }
-        if (!StringUtils.isNullOrEmpty(blogDetails.getTwitter_id())) {
-            twitter.setVisibility(View.VISIBLE);
-        } else {
-            twitter.setVisibility(View.GONE);
-        }
-
         authorRank.setText(String.valueOf(blogDetails.getAuthor_rank()));
 
         authorType.setText(blogDetails.getAuthor_type().toUpperCase());
-        authorType.setBackgroundColor(Color.parseColor(blogDetails.getAuthor_color_code()));
+        authorType.setTextColor(Color.parseColor(blogDetails.getAuthor_color_code()));
 
         if (StringUtils.isNullOrEmpty(blogDetails.getAbout_user())) {
             aboutLayout.setVisibility(View.GONE);
@@ -552,10 +562,12 @@ public class BlogDetailActivity extends BaseActivity implements View.OnClickList
 
         if (!StringUtils.isNullOrEmpty(blogDetails.getUser_following_status())) {
             if (blogDetails.getUser_following_status().equalsIgnoreCase("0")) {
-                ((ImageView) findViewById(R.id.blog_follow)).setBackgroundResource(R.drawable.follow_blog);
+//                ((ImageView) findViewById(R.id.blog_follow)).setBackgroundResource(R.drawable.follow_blog);
+                ((TextView) findViewById(R.id.blog_follow)).setText("FOLLOW");
                 isFollowing = false;
             } else {
-                ((ImageView) findViewById(R.id.blog_follow)).setBackgroundResource(R.drawable.un_follow_icon);
+//                ((ImageView) findViewById(R.id.blog_follow)).setBackgroundResource(R.drawable.un_follow_icon);
+                ((TextView) findViewById(R.id.blog_follow)).setText("UNFOLLOW");
                 isFollowing = true;
             }
         }
@@ -612,7 +624,7 @@ public class BlogDetailActivity extends BaseActivity implements View.OnClickList
                 mViewPager.setCurrentItem(1);
             }
         });
-
+        changeTabsFont();
     }
 
 
@@ -781,6 +793,8 @@ public class BlogDetailActivity extends BaseActivity implements View.OnClickList
         float alpha = ScrollUtils.getFloat(-translationY / flexibleRange, 0, 1);
 
         ViewHelper.setAlpha(mTitleView, ScrollUtils.getFloat(-translationY / flexibleRange, 0, 1));
+        ViewHelper.setAlpha(profileImageView, ScrollUtils.getFloat(-translationY / flexibleRange, 0, 1));
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(Color.argb((int) alpha, 23, 68, 195));
         }
@@ -836,7 +850,7 @@ public class BlogDetailActivity extends BaseActivity implements View.OnClickList
         blogTapPagerAdapter = new BlogTapPagerAdapter(getSupportFragmentManager(), this, responseData.getResult().getData(), getApplicationContext(), blogDetails.getBlog_title());
         mViewPager.setAdapter(blogTapPagerAdapter);
         mSlidingTabLayout.setupWithViewPager(mViewPager);
-
+        changeTabsFont();
     }
 
     @Override
@@ -879,12 +893,14 @@ public class BlogDetailActivity extends BaseActivity implements View.OnClickList
         if (requestCode == Constants.BLOG_FOLLOW_STATUS) {
 
             if (data.getStringExtra(Constants.BLOG_STATUS).equalsIgnoreCase("0")) {
-                ((ImageView) findViewById(R.id.blog_follow)).setBackgroundResource((R.drawable.follow_blog));
+//                ((ImageView) findViewById(R.id.blog_follow)).setBackgroundResource((R.drawable.follow_blog));
+                ((TextView) findViewById(R.id.blog_follow)).setText("FOLLOW");
                 isFollowing = false;
                 blogDetails.setUser_following_status("0");
 
             } else {
-                ((ImageView) findViewById(R.id.blog_follow)).setBackgroundResource((R.drawable.un_follow_icon));
+//                ((ImageView) findViewById(R.id.blog_follow)).setBackgroundResource((R.drawable.un_follow_icon));
+                ((TextView) findViewById(R.id.blog_follow)).setText("UNFOLLOW");
                 isFollowing = true;
                 blogDetails.setUser_following_status("1");
             }

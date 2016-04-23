@@ -285,12 +285,9 @@ public class ArticleFilterDialogActivity extends BaseActivity implements View.On
                             Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(searchText.getWindowToken(), 0);
 
-                    intent = new Intent(getApplicationContext(), DashboardActivity.class);
+                    intent = new Intent(getApplicationContext(), SearchArticlesAndAuthorsActivity.class);
                     intent.putExtra(Constants.FILTER_NAME, searchText.getText().toString());
-                    intent.putExtra(Constants.RESET_FILTER, false);
-                    intent.putExtra(Constants.IS_MEET_CONTRIBUTORS_SELECTED, false);
-                    setResult(RESULT_OK, intent);
-                    finish();
+                    startActivity(intent);
                 }
 
                 break;

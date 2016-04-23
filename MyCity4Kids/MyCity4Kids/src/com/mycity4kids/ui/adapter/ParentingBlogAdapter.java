@@ -81,12 +81,9 @@ public class ParentingBlogAdapter extends BaseAdapter {
             holder.bloggerName = (TextView) view.findViewById(R.id.blogger_name);
             holder.authorType = (TextView) view.findViewById(R.id.author_type);
             holder.authorRank = (TextView) view.findViewById(R.id.blog_rank);
-//            holder.bloggerImage = (ImageView) view.findViewById(R.id.blogger_profile);
+            holder.shareBlogImageView = (ImageView) view.findViewById(R.id.shareBlogImageView);
             holder.bloggerCover = (ImageView) view.findViewById(R.id.blogger_bg);
             holder.bloggerFollow = (TextView) view.findViewById(R.id.blog_follow_text);
-//            holder.facebook = (ImageView) view.findViewById(R.id.facebook_);
-//            holder.twitter = (ImageView) view.findViewById(R.id.twitter_);
-//            holder.rss = (ImageView) view.findViewById(R.id.rss_);
             holder.description = (TextView) view.findViewById(R.id.blogger_desc);
             holder.moreDesc = (TextView) view.findViewById(R.id.more_text);
             holder.recentArticleLayout = (LinearLayout) view.findViewById(R.id.recent_article_frame);
@@ -167,43 +164,6 @@ public class ParentingBlogAdapter extends BaseAdapter {
             }
         });
 
-//        if (!StringUtils.isNullOrEmpty(datalist.get(position).getFacebook_id())) {
-//            holder.facebook.setVisibility(View.VISIBLE);
-//        } else {
-//            holder.facebook.setVisibility(View.GONE);
-//        }
-//
-//        if (!StringUtils.isNullOrEmpty(datalist.get(position).getTwitter_id())) {
-//            holder.twitter.setVisibility(View.VISIBLE);
-//        } else {
-//            holder.twitter.setVisibility(View.GONE);
-//        }
-
-//        holder.facebook.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                if (!StringUtils.isNullOrEmpty(datalist.get(position).getFacebook_id())) {
-//                    Intent intent = new Intent(context, LoadWebViewActivity.class);
-//                    intent.putExtra(Constants.WEB_VIEW_URL, datalist.get(position).getFacebook_id());
-//                    Log.e("Link", datalist.get(position).getFacebook_id());
-//                    context.startActivity(intent);
-//                }
-//            }
-//        });
-//        holder.twitter.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (!StringUtils.isNullOrEmpty(datalist.get(position).getTwitter_id())) {
-//                    Intent intent = new Intent(context, LoadWebViewActivity.class);
-//                    intent.putExtra(Constants.WEB_VIEW_URL, datalist.get(position).getTwitter_id());
-//                    Log.e("Link", datalist.get(position).getTwitter_id());
-//                    context.startActivity(intent);
-//                }
-//            }
-//        });
-
-
         if (datalist.get(position).getMaxLineCount() >= 4) {
             holder.moreDesc.setVisibility(View.VISIBLE);
             holder.description.setMaxLines(4);
@@ -231,6 +191,33 @@ public class ParentingBlogAdapter extends BaseAdapter {
             }
         });
 
+
+        //author: hemant@mc4k.com -- Share URL for blog not in response at present
+//        holder.shareBlogImageView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+//                shareIntent.setType("text/plain");
+//                String shareUrl = "";
+//                if (StringUtils.isNullOrEmpty(datalist.get(position).getUrl())) {
+//                    shareUrl = "";
+//                } else {
+//                    shareUrl = datalist.get(position).getUrl();
+//                }
+//
+//                String author = datalist.get(position).getFirst_name() + " " + datalist.get(position).getLast_name();
+//                String shareMessage;
+//                if (StringUtils.isNullOrEmpty(shareUrl)) {
+//                    shareMessage = "mycity4kids\n\nCheck out this interesting blog " + "\"" + datalist.get(position).getBlog_title() + "\" by " + author + ".";
+//                } else {
+//                    shareMessage = "mycity4kids\n\nCheck out this interesting blog " + "\"" + datalist.get(position).getBlog_title() + "\" by " + author + ".\nRead Here: " + shareUrl;
+//                }
+//
+//                shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
+//                startActivity(Intent.createChooser(shareIntent, "mycity4kids"));
+//            }
+//        });
+
         if (!StringUtils.isNullOrEmpty(datalist.get(position).getUser_following_status())) {
             if (datalist.get(position).getUser_following_status().equalsIgnoreCase("0")) {
                 holder.bloggerFollow.setText("FOLLOW");
@@ -247,12 +234,9 @@ public class ParentingBlogAdapter extends BaseAdapter {
         TextView bloggerName;
         TextView authorType;
         TextView authorRank;
-        ImageView bloggerImage;
+        ImageView shareBlogImageView;
         ImageView bloggerCover;
         TextView bloggerFollow;
-        ImageView facebook;
-        ImageView twitter;
-        ImageView rss;
         TextView description;
         TextView moreDesc;
         LinearLayout recentArticleLayout;

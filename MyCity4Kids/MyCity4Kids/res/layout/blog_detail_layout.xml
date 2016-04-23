@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -11,7 +12,8 @@
         <FrameLayout
             android:id="@+id/pager_wrapper"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/white_color">
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/viewpager"
@@ -23,7 +25,7 @@
             android:id="@+id/header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/blogger_bg">
+            android:background="@color/white_color">
             <!--android:background="?attr/colorPrimary"-->
 
             <RelativeLayout
@@ -45,23 +47,34 @@
                             android:id="@+id/blogger_bg"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/flexible_space_image_height_blogger"
-                            android:background="@drawable/blog_bgnew" />
+                            android:background="@drawable/blog_bgnew"
+                            android:scaleType="fitXY" />
 
                         <View
                             android:id="@+id/transparentView"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/flexible_space_image_height_blogger"
-                            android:background="#4D000000" />
+                            android:background="#80000000" />
 
                         <View
                             android:id="@+id/blank_view"
                             android:layout_width="match_parent"
-                            android:layout_height="45dp"
+                            android:layout_height="70dp"
                             android:layout_below="@+id/blogger_bg"
-                            android:background="@color/blogger_bg"></View>
+                            android:background="@color/white_color" />
 
+                        <ImageView
+                            android:id="@+id/share"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_below="@+id/blogger_bg"
+                            android:layout_marginRight="20dp"
+                            android:layout_marginTop="20dp"
+                            android:src="@drawable/share" />
 
                         <RelativeLayout
+                            android:id="@+id/relativeLayout"
                             android:layout_width="match_parent"
                             android:layout_height="134dp"
                             android:layout_alignBottom="@+id/blank_view"
@@ -69,140 +82,117 @@
                             android:layout_alignParentStart="true">
 
 
-                            <RelativeLayout
-                                android:id="@+id/dp_frame"
-                                android:layout_width="110dp"
-                                android:layout_height="124dp"
-                                android:layout_marginLeft="10dp">
+                            <!--<RelativeLayout-->
+                            <!--android:id="@+id/dp_frame"-->
+                            <!--android:layout_width="110dp"-->
+                            <!--android:layout_height="124dp"-->
+                            <!--android:layout_marginLeft="10dp">-->
 
 
-                                <ImageView
-                                    android:id="@+id/blogger_profile"
-                                    android:layout_width="90dp"
-                                    android:layout_height="100dp"
-                                    android:layout_centerInParent="true"
-                                    android:layout_margin="10dp"
-                                    android:background="@color/edit_hint_color" />
+                            <com.mikhaellopez.circularimageview.CircularImageView
+                                android:id="@+id/blogger_profile"
+                                android:layout_width="90dp"
+                                android:layout_height="100dp"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="20dp"
+                                android:src="@drawable/default_blogger_profile_img"
+                                app:civ_border_color="@color/transparent" />
 
-                                <TextView
-                                    android:id="@+id/author_type"
-                                    android:layout_width="70dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentTop="true"
-                                    android:layout_centerHorizontal="true"
-                                    android:background="@color/blogger_name_bg"
-                                    android:ellipsize="end"
-                                    android:fontFamily="sans-serif-medium"
-                                    android:gravity="center"
-                                    android:paddingLeft="2dp"
-                                    android:paddingRight="2dp"
-                                    android:singleLine="true"
-                                    android:textColor="@color/white_color"
-                                    android:textSize="12dp" />
+                            <!--<ImageView-->
+                            <!--android:id="@+id/blog_follow"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_alignParentRight="true"-->
+                            <!--android:layout_centerVertical="true"-->
+                            <!--android:background="@drawable/follow_blog"-->
+                            <!--android:padding="10dp" />-->
 
-                                <ImageView
-                                    android:id="@+id/blog_follow"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentRight="true"
-                                    android:layout_centerVertical="true"
-                                    android:background="@drawable/follow_blog"
-                                    android:padding="10dp" />
-
-                            </RelativeLayout>
+                            <!--</RelativeLayout>-->
 
                             <TextView
                                 android:id="@+id/blogger_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="10dp"
-                                android:layout_marginTop="24dp"
-                                android:layout_toEndOf="@+id/dp_frame"
-                                android:layout_toRightOf="@+id/dp_frame"
+                                android:layout_marginTop="30dp"
+                                android:layout_toEndOf="@+id/blogger_profile"
+                                android:layout_toRightOf="@+id/blogger_profile"
                                 android:ellipsize="end"
-                                android:fontFamily="sans-serif"
+                                android:fontFamily="sans-serif-thin"
                                 android:lines="1"
+                                android:text="author name"
                                 android:textColor="@color/white_color"
-                                android:textSize="22dp" />
+                                android:textSize="18sp" />
 
 
                             <TextView
-                                android:id="@+id/blogger_title"
+                                android:id="@+id/blog_follow"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_below="@+id/blogger_name"
+                                android:layout_alignParentBottom="true"
+                                android:layout_marginBottom="34dp"
                                 android:layout_marginLeft="10dp"
-                                android:layout_toEndOf="@+id/dp_frame"
-                                android:layout_toRightOf="@+id/dp_frame"
-                                android:ellipsize="end"
-                                android:fontFamily="sans-serif-light"
-                                android:lines="1"
-                                android:textColor="@color/white_color"
-                                android:textSize="17dp" />
+                                android:layout_toRightOf="@+id/blogger_profile"
+                                android:text="FOLLOW"
+                                android:textColor="@color/blog.comments.follow_reply_btn"
+                                android:textSize="14sp" />
 
-                            <ImageView
-                                android:id="@+id/facebook_"
+                            <TextView
+                                android:id="@+id/author_type"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentBottom="true"
-                                android:layout_marginBottom="14dp"
-                                android:layout_marginLeft="10dp"
-                                android:layout_toRightOf="@+id/dp_frame"
-                                android:background="@drawable/fb_new"
-                                android:padding="10dp" />
-
-                            <ImageView
-                                android:id="@+id/twitter_"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentBottom="true"
-                                android:layout_marginBottom="14dp"
-                                android:layout_marginLeft="15dp"
-                                android:layout_toRightOf="@+id/facebook_"
-                                android:background="@drawable/twitter_"
-                                android:padding="10dp" />
-
-                            <ImageView
-                                android:id="@+id/rss_"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentBottom="true"
-                                android:layout_marginBottom="14dp"
-                                android:layout_marginLeft="15dp"
-                                android:layout_toRightOf="@+id/twitter_"
-                                android:background="@drawable/rss_"
-                                android:padding="10dp"
-                                android:visibility="gone" />
+                                android:layout_alignBottom="@+id/blogger_name"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginRight="10dp"
+                                android:fontFamily="sans-serif-thin"
+                                android:gravity="center"
+                                android:paddingLeft="2dp"
+                                android:paddingRight="2dp"
+                                android:singleLine="true"
+                                android:text="BLOGGER"
+                                android:textColor="@color/blue_light" />
 
                         </RelativeLayout>
-
-                        <TextView
-                            android:id="@+id/author_rank"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_alignParentTop="true"
-                            android:layout_marginRight="10dp"
-                            android:layout_marginTop="10dp"
-                            android:drawableLeft="@drawable/trend_"
-                            android:drawablePadding="7dp"
-                            android:text="12"
-                            android:textColor="@color/white_color"
-                            android:textSize="16dp" />
 
                         <TextView
                             android:id="@+id/author_follow"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
-                            android:layout_below="@+id/author_rank"
                             android:layout_marginRight="10dp"
-                            android:layout_marginTop="2dp"
+                            android:layout_marginTop="40dp"
                             android:drawableLeft="@drawable/follower_"
                             android:drawablePadding="7dp"
                             android:text="12"
                             android:textColor="@color/white_color"
-                            android:textSize="16dp" />
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/author_rank"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBottom="@+id/author_follow"
+                            android:layout_marginRight="5dp"
+                            android:layout_toLeftOf="@+id/author_follow"
+                            android:drawableLeft="@drawable/trend_"
+                            android:drawablePadding="7dp"
+                            android:text="12"
+                            android:textColor="@color/white_color"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/blogger_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_above="@+id/relativeLayout"
+                            android:layout_centerHorizontal="true"
+                            android:ellipsize="end"
+                            android:fontFamily="sans-serif-thin"
+                            android:lines="1"
+                            android:text="blogger title"
+                            android:textColor="@color/white_color"
+                            android:textSize="24sp" />
 
                     </RelativeLayout>
 
@@ -210,13 +200,13 @@
                         android:id="@+id/about_desc_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/blogger_bg"
+                        android:background="@color/white_color"
                         android:orientation="vertical"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp">
 
 
-                        <TextView
+                        <com.mycity4kids.widget.CustomFontTextView
                             android:id="@+id/blogger_desc"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -228,7 +218,8 @@
                             android:paddingRight="10dp"
                             android:scrollbars="vertical"
                             android:textColor="@color/black_color"
-                            android:textSize="14dp" />
+                            android:textSize="14sp"
+                            app:fontName="georgia_italic.ttf" />
 
                         <TextView
                             android:id="@+id/more_text"
@@ -242,7 +233,7 @@
                             android:paddingLeft="8dp"
                             android:paddingRight="8dp"
                             android:text="More"
-                            android:textColor="#5962E4"
+                            android:textColor="@color/blog.comments.follow_reply_btn"
                             android:visibility="gone" />
 
 
@@ -272,8 +263,8 @@
                 app:tabIndicatorColor="@color/tabsScrollColor"
                 app:tabIndicatorHeight="3dp"
                 app:tabMode="fixed"
-                app:tabSelectedTextColor="#1b51e6"
-                app:tabTextColor="#5f85ed"
+                app:tabSelectedTextColor="@color/blog.comments.follow_reply_btn"
+                app:tabTextColor="@color/black_color"
                 app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
         </FrameLayout>
@@ -285,7 +276,16 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:background="@color/transparent"
+        android:gravity="center"
         android:minHeight="?attr/actionBarSize">
+
+        <com.mikhaellopez.circularimageview.CircularImageView
+            android:id="@+id/profileImageView"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/default_blogger_profile_img"
+            app:civ_border_color="@color/transparent" />
 
         <TextView
             android:id="@+id/titleMain"
@@ -294,9 +294,10 @@
             android:layout_centerVertical="true"
             android:ellipsize="end"
             android:gravity="center_vertical"
+            android:paddingLeft="15dp"
             android:singleLine="true"
             android:textColor="@color/white_color"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
     </android.support.v7.widget.Toolbar>

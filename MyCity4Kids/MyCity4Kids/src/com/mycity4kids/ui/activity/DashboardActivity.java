@@ -1049,7 +1049,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         } else if (topFragment instanceof FragmentBusinesslistEvents) {
             getMenuInflater().inflate(R.menu.menu_event, menu);
         } else if (topFragment instanceof ArticlesFragment) {
-            getMenuInflater().inflate(R.menu.menu_event, menu);
+            getMenuInflater().inflate(R.menu.menu_articles, menu);
         } else if (topFragment instanceof ParentingBlogFragment) {
             getMenuInflater().inflate(R.menu.blog_menu, menu);
         } else if (topFragment instanceof NotificationFragment) {
@@ -1115,7 +1115,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     startActivityForResult(intent, Constants.FILTER_BLOG);
                 }
                 break;
-
+            case R.id.search:
+                if (topFragment instanceof ArticlesFragment) {
+//                    ((FragmentBusinesslistEvents) topFragment).toggleFilter();
+                    Intent intent = new Intent(getApplicationContext(), SearchArticlesAndAuthorsActivity.class);
+                    intent.putExtra(Constants.FILTER_NAME, "");
+                    startActivity(intent);
+                }
+                break;
             case R.id.three_bar:
 
                 replaceFragment(new FragmentCalender(), null, true);
@@ -1709,22 +1716,20 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 replaceFragment(new ArticlesFragment(), null, true);
                 break;
             case R.id.editor:
-                if (Build.VERSION.SDK_INT>15)
-                {
-                Intent intent1 = new Intent(DashboardActivity.this, EditorPostActivity.class);
-                Bundle bundle5 = new Bundle();
-                bundle5.putString(EditorPostActivity.TITLE_PARAM, "");
-                bundle5.putString(EditorPostActivity.CONTENT_PARAM, "");
-                bundle5.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
-                        getString(R.string.example_post_title_placeholder));
-                bundle5.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
-                        getString(R.string.example_post_content_placeholder));
-                bundle5.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
-                bundle5.putString("from", "dashboard");
-                intent1.putExtras(bundle5);
-                startActivity(intent1);}
-                else
-                {
+                if (Build.VERSION.SDK_INT > 15) {
+                    Intent intent1 = new Intent(DashboardActivity.this, EditorPostActivity.class);
+                    Bundle bundle5 = new Bundle();
+                    bundle5.putString(EditorPostActivity.TITLE_PARAM, "");
+                    bundle5.putString(EditorPostActivity.CONTENT_PARAM, "");
+                    bundle5.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
+                            getString(R.string.example_post_title_placeholder));
+                    bundle5.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
+                            getString(R.string.example_post_content_placeholder));
+                    bundle5.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
+                    bundle5.putString("from", "dashboard");
+                    intent1.putExtras(bundle5);
+                    startActivity(intent1);
+                } else {
                     Intent viewIntent =
                             new Intent("android.intent.action.VIEW",
                                     Uri.parse("http://www.mycity4kids.com/parenting/admin/setupablog"));
@@ -1745,7 +1750,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 startActivity(intent5);
                 break;
             case R.id.bloggerDashboard:
-                Intent intent=new Intent(DashboardActivity.this,BloggerDashboardActivity.class);
+                Intent intent = new Intent(DashboardActivity.this, BloggerDashboardActivity.class);
                 startActivity(intent);
                 break;
             case R.id.txvSettings:
@@ -1810,9 +1815,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
 
             case R.id.imgProfile:
-            Intent intent4=new Intent(DashboardActivity.this,BloggerDashboardActivity.class);
+                Intent intent4 = new Intent(DashboardActivity.this, BloggerDashboardActivity.class);
                 startActivity(intent4);
-              //  replaceFragment(new FragmentFamilyDetail(), null, true);
+                //  replaceFragment(new FragmentFamilyDetail(), null, true);
                 break;
 
             case R.id.back_month:

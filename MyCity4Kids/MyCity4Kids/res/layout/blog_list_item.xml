@@ -82,6 +82,7 @@
                     android:drawableLeft="@drawable/ic_followers"
                     android:drawablePadding="10dp"
                     android:paddingLeft="10dp"
+                    android:visibility="invisible"
                     android:text="215" />
 
                 <TextView

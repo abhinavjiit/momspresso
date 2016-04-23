@@ -76,7 +76,7 @@ public class ArticlesFragment extends BaseFragment {
     private ViewPager mViewPager;
     TabsPagerAdapter tabsPagerAdapter;
     ArticleModelNew.AllArticles NewdataList;
-ImageView addDraft;
+    ImageView addDraft;
     String searchName = "";
     int currentPagePosition = 0;
     ArticleModelNew.AllArticles initialList;
@@ -90,34 +90,33 @@ ImageView addDraft;
         Utils.pushOpenScreenEvent(getActivity(), "Blogs Dashboard", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
 
         View view = inflater.inflate(R.layout.aa_fragment_article_new, null);
-        addDraft=(ImageView) view.findViewById(R.id.addDraft);
+        addDraft = (ImageView) view.findViewById(R.id.addDraft);
         mViewPager = (ViewPager) view.findViewById(R.id.viewpager);
         mSlidingTabLayout = (TabLayout) view.findViewById(R.id.sliding_tabs);
         addDraft.setOnClickListener(new OnClickListener() {
-    @Override
-    public void onClick(View v) {
-        if (Build.VERSION.SDK_INT>15){
-        Intent intent1 = new Intent(getActivity(), EditorPostActivity.class);
-        Bundle bundle5 = new Bundle();
-        bundle5.putString(EditorPostActivity.TITLE_PARAM, "");
-        bundle5.putString(EditorPostActivity.CONTENT_PARAM, "");
-        bundle5.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
-                getString(R.string.example_post_title_placeholder));
-        bundle5.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
-                getString(R.string.example_post_content_placeholder));
-        bundle5.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
-        bundle5.putString("from","DraftListView");
-        intent1.putExtras(bundle5);
-        startActivity(intent1);}
-        else
-        {
-            Intent viewIntent =
-                    new Intent("android.intent.action.VIEW",
-                            Uri.parse("http://www.mycity4kids.com/parenting/admin/setupablog"));
-            startActivity(viewIntent);
-        }
-    }
-});
+            @Override
+            public void onClick(View v) {
+                if (Build.VERSION.SDK_INT > 15) {
+                    Intent intent1 = new Intent(getActivity(), EditorPostActivity.class);
+                    Bundle bundle5 = new Bundle();
+                    bundle5.putString(EditorPostActivity.TITLE_PARAM, "");
+                    bundle5.putString(EditorPostActivity.CONTENT_PARAM, "");
+                    bundle5.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
+                            getString(R.string.example_post_title_placeholder));
+                    bundle5.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
+                            getString(R.string.example_post_content_placeholder));
+                    bundle5.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
+                    bundle5.putString("from", "DraftListView");
+                    intent1.putExtras(bundle5);
+                    startActivity(intent1);
+                } else {
+                    Intent viewIntent =
+                            new Intent("android.intent.action.VIEW",
+                                    Uri.parse("http://www.mycity4kids.com/parenting/admin/setupablog"));
+                    startActivity(viewIntent);
+                }
+            }
+        });
 
         initialList = new ArticleModelNew().new AllArticles();
 

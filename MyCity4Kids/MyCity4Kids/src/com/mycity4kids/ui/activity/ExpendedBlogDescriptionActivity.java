@@ -32,7 +32,8 @@ public class ExpendedBlogDescriptionActivity extends BaseActivity implements Vie
     private int screenWidth;
     BlogItemModel blogDetails;
     TextView bloggerName, authorType, description, less, bloggerTitle, authorRank, authorFollower;
-    ImageView bloggerCover, bloggerImage, bloggerFollow, facebook, twitter, rss, backIcon;
+    ImageView bloggerCover, bloggerImage, backIcon;
+    TextView bloggerFollow;
     RelativeLayout aboutLayout;
     private String autFollow = "";
     private boolean isFollowing;
@@ -52,10 +53,7 @@ public class ExpendedBlogDescriptionActivity extends BaseActivity implements Vie
         authorType = (TextView) findViewById(R.id.author_type);
         bloggerImage = (ImageView) findViewById(R.id.blogger_profile);
         bloggerCover = (ImageView) findViewById(R.id.blogger_bg);
-        bloggerFollow = (ImageView) findViewById(R.id.blog_follow);
-        facebook = (ImageView) findViewById(R.id.facebook_);
-        twitter = (ImageView) findViewById(R.id.twitter_);
-        rss = (ImageView) findViewById(R.id.rss_);
+        bloggerFollow = (TextView) findViewById(R.id.blog_follow);
         description = (TextView) findViewById(R.id.blogger_desc);
         less = (TextView) findViewById(R.id.less);
         aboutLayout = (RelativeLayout) findViewById(R.id.about_desc_layout);
@@ -71,10 +69,6 @@ public class ExpendedBlogDescriptionActivity extends BaseActivity implements Vie
         density = getResources().getDisplayMetrics().density;
         screenWidth = getResources().getDisplayMetrics().widthPixels;
 
-//        backButton.setOnClickListener(this);
-        facebook.setOnClickListener(this);
-        twitter.setOnClickListener(this);
-        rss.setOnClickListener(this);
         bloggerFollow.setOnClickListener(this);
         less.setOnClickListener(this);
 
@@ -132,11 +126,11 @@ public class ExpendedBlogDescriptionActivity extends BaseActivity implements Vie
                     if (isFollowing) {
                         isFollowing = false;
                         blogDetails.setUser_following_status("0");
-                        ((ImageView) findViewById(R.id.blog_follow)).setBackgroundResource(R.drawable.follow_blog);
+                        ((TextView) findViewById(R.id.blog_follow)).setText("FOLLOW");
                     } else {
                         isFollowing = true;
                         blogDetails.setUser_following_status("1");
-                        ((ImageView) findViewById(R.id.blog_follow)).setBackgroundResource(R.drawable.un_follow_icon);
+                        ((TextView) findViewById(R.id.blog_follow)).setText("UNFOLLOW");
                     }
 
 
@@ -244,25 +238,14 @@ public class ExpendedBlogDescriptionActivity extends BaseActivity implements Vie
             authorFollower.setText(autFollow);
         }
 
-        if (!StringUtils.isNullOrEmpty(blogDetails.getFacebook_id())) {
-            facebook.setVisibility(View.VISIBLE);
-        } else {
-            facebook.setVisibility(View.GONE);
-        }
-        if (!StringUtils.isNullOrEmpty(blogDetails.getTwitter_id())) {
-            twitter.setVisibility(View.VISIBLE);
-        } else {
-            twitter.setVisibility(View.GONE);
-        }
-
         lastFollowStatus = blogDetails.getUser_following_status();
 
         if (!StringUtils.isNullOrEmpty(blogDetails.getUser_following_status())) {
             if (blogDetails.getUser_following_status().equalsIgnoreCase("0")) {
-                ((ImageView) findViewById(R.id.blog_follow)).setBackgroundResource(R.drawable.follow_blog);
+                ((TextView) findViewById(R.id.blog_follow)).setText("FOLLOW");
                 isFollowing = false;
             } else {
-                ((ImageView) findViewById(R.id.blog_follow)).setBackgroundResource(R.drawable.un_follow_icon);
+                ((TextView) findViewById(R.id.blog_follow)).setText("UNFOLLOW");
                 isFollowing = true;
             }
         }

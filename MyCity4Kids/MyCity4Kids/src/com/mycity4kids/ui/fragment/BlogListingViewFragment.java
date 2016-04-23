@@ -60,8 +60,8 @@ public class BlogListingViewFragment extends BaseFragment {
         density = getResources().getDisplayMetrics().density;
 
         listView = (ListView) view.findViewById(R.id.scroll);
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) listView.getLayoutParams();
-        params.setMargins(0, 0, 0, (int) (80 * density));
+//        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) listView.getLayoutParams();
+//        params.setMargins(0, 0, 0, (int) (80 * density));
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
         view.findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_indefinitely));
 

@@ -179,6 +179,9 @@ public class AppConstants {
     public static final String GET_BLOGGER_DASHBOARD_URL = BASE_URL + "apiblogs/bloggerDashboardData?";
     public static final String GET_BLOGGER_PUBLISHED_ARTICLES_URL = BASE_URL + "apiblogs/publishedArticle?";
 
+    //Search bloggers/authors
+    public static final String SEARCH_AUTHORS_URL = BASE_URL + "apiparentingstop/searchWithBlogger?";
+
     //Comments Lazy loading
     public static final int COMMENT_LIMIT = 10;
     public static final String COMMENT_TYPE_DB = "db";
@@ -305,8 +308,7 @@ public class AppConstants {
     public static final int GET_BLOGGER_PUBLISHED_ARTICLES_REQUEST = 1014;
 
     public static final int GET_MORE_COMMENTS = 1015;
-//    public static final int GET_BLOGGER_PUBLISHED_ARTICLES_REQUEST = 1016;
-
+    public static final int SEARCH_AUTHORS_REQUEST = 1016;
 
     public static final int DEEP_LINK_RESOLVER_REQUEST = 2001;
     public static final int ARTICLE_DRAFT_REQUEST = 3001;

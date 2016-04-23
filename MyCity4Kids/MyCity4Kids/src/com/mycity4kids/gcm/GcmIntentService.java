@@ -128,8 +128,28 @@ public class
                     // generate notifications
                     Utils.pushEvent(getApplicationContext(), GTMEventType.BLOG_NOTIFICATION_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getApplicationContext()).getId() + "", "");
 
+                    Log.i(TAG, " BANNER TRENDING " + msg);
                     Bitmap icon = BitmapFactory.decodeResource(getResources(),
                             R.drawable.ic_launcher);
+                    Bitmap remote_picture = null;
+                    Bitmap bitmap = null;
+                    String url;
+                    if (!StringUtils.isNullOrEmpty(pushNotificationModel.getArticle_cover_image_url())) {
+                        url = pushNotificationModel.getArticle_cover_image_url();
+                        try {
+                            remote_picture = BitmapFactory.decodeStream(
+                                    (InputStream) new URL(url).getContent());
+
+                            bitmap = getScaledBitmap(remote_picture);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            remote_picture = BitmapFactory.decodeResource(getResources(), R.drawable.default_blogger);
+                            bitmap = getScaledBitmap(remote_picture);
+                        }
+                    } else {
+                        remote_picture = BitmapFactory.decodeResource(getResources(), R.drawable.default_blogger);
+                        bitmap = getScaledBitmap(remote_picture);
+                    }
 
                     int requestID = (int) System.currentTimeMillis();
                     String message = Html.fromHtml(pushNotificationModel.getMessage_id()).toString();
@@ -157,14 +177,26 @@ public class
 
                     //PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                     PendingIntent contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-                    NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-                            .setLargeIcon(icon).setSmallIcon(R.drawable.iconnotify)
-                            .setContentTitle(title).setStyle(new NotificationCompat.BigTextStyle().bigText(message)).setContentText(message);
 
-                    mBuilder.setDefaults(NotificationCompat.DEFAULT_ALL);
-                    mBuilder.setAutoCancel(true);
-                    mBuilder.setContentIntent(contentIntent);
-                    mNotificationManager.notify(requestID, mBuilder.build());
+                    NotificationCompat.BigPictureStyle notiStyle = new
+                            NotificationCompat.BigPictureStyle();
+                    notiStyle.setBigContentTitle(title);
+                    notiStyle.setSummaryText(message);
+                    notiStyle.bigPicture(bitmap);
+
+                    NotificationCompat.Builder mBuilder =
+                            new NotificationCompat.Builder(this)
+                                    .setLargeIcon(icon)
+                                    .setSmallIcon(R.drawable.iconnotify)
+                                    .setContentTitle(title)
+                                    .setContentIntent(contentIntent)
+                                    .setContentText(message).setStyle(notiStyle);
+                    ;
+                    // Gets an instance of the NotificationManager service
+                    NotificationManager mNotifyMgr =
+                            (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                    // Builds the notification and issues it.
+                    mNotifyMgr.notify(requestID, mBuilder.build());
 
                 } else if (type.equalsIgnoreCase("Newsletter")) {
                     // generate notifications
@@ -402,6 +434,6 @@ public class
         float scaleFactor = (float) displaymetrics.heightPixels / (float) displaymetrics.widthPixels;
         int newWidth = (int) (bitmap.getWidth() / scaleFactor);
 
-        return Bitmap.createScaledBitmap(bitmap, newWidth, height, true);
+        return Bitmap.createScaledBitmap(bitmap, 200, height, true);
     }
 }

@@ -45,8 +45,6 @@ public class NewParentingBlogController extends BaseController {
             serviceRequest.setResponseController(this);
             serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
             serviceRequest.setUrl(AppConstants.NEW_PARENTING_BLOG_URL + getAppendUrl(requestType, requestData));
-
-
             HttpClientConnection connection = HttpClientConnection.getInstance();
             connection.addRequest(serviceRequest);
         } else if (requestType == AppConstants.PARRENTING_BLOG_SORT_DATA) {
@@ -57,7 +55,6 @@ public class NewParentingBlogController extends BaseController {
             serviceRequest.setResponseController(this);
             serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
             serviceRequest.setUrl(AppConstants.NEW_PARENTING_BLOG_URL + getAppendUrl(requestType, requestData));
-
             HttpClientConnection connection = HttpClientConnection.getInstance();
             connection.addRequest(serviceRequest);
         } else if (requestType == AppConstants.PARRENTING_BLOG_ARTICLE_LISTING) {
@@ -68,7 +65,6 @@ public class NewParentingBlogController extends BaseController {
             serviceRequest.setResponseController(this);
             serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
             serviceRequest.setUrl(AppConstants.NEW_PARENTING_BLOG_ARTICLE_LISTING_URL + getAppendUrl(requestType, requestData));
-
             HttpClientConnection connection = HttpClientConnection.getInstance();
             connection.addRequest(serviceRequest);
         } else if (requestType == AppConstants.PARRENTING_BLOG_ARTICLE_LISTING_PAGINATION) {
@@ -79,7 +75,6 @@ public class NewParentingBlogController extends BaseController {
             serviceRequest.setResponseController(this);
             serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
             serviceRequest.setUrl(AppConstants.NEW_PARENTING_BLOG_ARTICLE_LISTING_URL + getAppendUrl(requestType, requestData));
-
             HttpClientConnection connection = HttpClientConnection.getInstance();
             connection.addRequest(serviceRequest);
         } else if (requestType == AppConstants.PARRENTING_BLOG_ALL_DATA) {
@@ -90,34 +85,19 @@ public class NewParentingBlogController extends BaseController {
             serviceRequest.setResponseController(this);
             serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
             serviceRequest.setUrl(AppConstants.NEW_PARENTING_BLOG_ARTICLE_LISTING_URL + getAppendUrl(requestType, requestData));
-
+            HttpClientConnection connection = HttpClientConnection.getInstance();
+            connection.addRequest(serviceRequest);
+        } else if (requestType == AppConstants.SEARCH_AUTHORS_REQUEST) {
+            serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
+            serviceRequest.setRequestData(requestData);
+            serviceRequest.setDataType(requestType);
+            serviceRequest.setContext(context);
+            serviceRequest.setResponseController(this);
+            serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
+            serviceRequest.setUrl(AppConstants.SEARCH_AUTHORS_URL + getAppendUrl(requestType, requestData));
             HttpClientConnection connection = HttpClientConnection.getInstance();
             connection.addRequest(serviceRequest);
         }
-//        else if (requestType == AppConstants.TOP_PICKS_REQUEST) {
-//            serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
-//            serviceRequest.setRequestData(requestData);
-//            serviceRequest.setDataType(requestType);
-//            serviceRequest.setResponseController(this);
-//            //	serviceRequest.setHttpHeaders(new String[]{"Content-Type"}, "");
-//            serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
-//            serviceRequest.setUrl(AppConstants.PARENTING_NEW_TOP_PICKS_URL + getAppendUrl(requestType, requestData));
-//
-//            HttpClientConnection connection = HttpClientConnection.getInstance();
-//            connection.addRequest(serviceRequest);
-//        } else if (requestType == AppConstants.NEW_ALL_ARTICLES_REQUEST) {
-//            serviceRequest.setHttpMethod(HttpClientConnection.HTTP_METHOD.GET);
-//            serviceRequest.setRequestData(requestData);
-//            serviceRequest.setDataType(requestType);
-//            serviceRequest.setResponseController(this);
-//            //	serviceRequest.setHttpHeaders(new String[]{"Content-Type"}, "");
-//            serviceRequest.setPriority(HttpClientConnection.PRIORITY.HIGH);
-//            serviceRequest.setUrl(AppConstants.NEW_ALL_ARTICLE_URL + getAppendUrl(requestType, requestData));
-//
-//            HttpClientConnection connection = HttpClientConnection.getInstance();
-//            connection.addRequest(serviceRequest);
-//        }
-
         return serviceRequest;
     }
 
@@ -201,7 +181,21 @@ public class NewParentingBlogController extends BaseController {
                     sendResponseToScreen(null);
                 }
                 break;
+            case AppConstants.SEARCH_AUTHORS_REQUEST:
 
+                try {
+                    String responseData = new String(response.getResponseData());
+                    String removeHtmlData = StringEscapeUtils.unescapeHtml4(responseData);
+                    Log.i("Blogger Search Result ", removeHtmlData);
+                    ParentingBlogResponse blogResponse = new Gson().fromJson(removeHtmlData, ParentingBlogResponse.class);
+                    response.setResponseObject(blogResponse);
+
+                    sendResponseToScreen(response);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    sendResponseToScreen(null);
+                }
+                break;
 
             default:
                 break;
@@ -221,20 +215,18 @@ public class NewParentingBlogController extends BaseController {
         switch (requestType) {
 
             case AppConstants.PARRENTING_BLOG_DATA:
-
                 boolean flag = false;
                 if (!StringUtils.isNullOrEmpty(parentingModel.getPage())) {
                     flag = true;
                     builder.append("?page=").append(parentingModel.getPage());
                 }
-                if(flag)
-                builder.append("&user_id=").append(SharedPrefUtils.getUserDetailModel(getActivity()).getId());
+                if (flag)
+                    builder.append("&user_id=").append(SharedPrefUtils.getUserDetailModel(getActivity()).getId());
                 else
                     builder.append("?user_id=").append(SharedPrefUtils.getUserDetailModel(getActivity()).getId());
                 break;
 
             case AppConstants.PARRENTING_BLOG_SORT_DATA:
-
                 if (parentingModel.getPage().equalsIgnoreCase("0")) {
                     builder.append("?sort=").append(parentingModel.getSoty_by());
                     builder.append("&user_id=").append(SharedPrefUtils.getUserDetailModel(getActivity()).getId());
@@ -246,7 +238,6 @@ public class NewParentingBlogController extends BaseController {
                 break;
 
             case AppConstants.PARRENTING_BLOG_ARTICLE_LISTING:
-
                 builder.append("search?q=").append(parentingModel.getSearchName());
                 builder.append("&type=blogs&filter=blogs");
                 builder.append("&cityId=").append(parentingModel.getCity_id());
@@ -256,7 +247,6 @@ public class NewParentingBlogController extends BaseController {
                 break;
 
             case AppConstants.PARRENTING_BLOG_ARTICLE_LISTING_PAGINATION:
-
                 builder.append("search?q=").append(parentingModel.getSearchName());
                 builder.append("&type=blogs&filter=blogs");
                 builder.append("&cityId=").append(parentingModel.getCity_id());
@@ -266,7 +256,6 @@ public class NewParentingBlogController extends BaseController {
                 break;
 
             case AppConstants.PARRENTING_BLOG_ALL_DATA:
-
                 builder.append("search?q=").append(parentingModel.getSearchName());
                 builder.append("&type=blogs");
                 builder.append("&filter=").append(parentingModel.getSoty_by());
@@ -275,6 +264,11 @@ public class NewParentingBlogController extends BaseController {
                 builder.append("&page=1");
                 builder.append("&user_id=").append(SharedPrefUtils.getUserDetailModel(getActivity()).getId());
                 builder.append("&imei_no=" + device_id);
+                break;
+
+            case AppConstants.SEARCH_AUTHORS_REQUEST:
+                builder.append("q=").append(parentingModel.getSearchName());
+                builder.append("&page=").append(parentingModel.getPage());
                 break;
 
             default:
@@ -286,25 +280,3 @@ public class NewParentingBlogController extends BaseController {
     }
 
 }
-/*if(requestType==AppConstants.PARENTING_STOP_ARTICLES_REQUEST || requestType==AppConstants.PARENTING_STOP_BLOGS_REQUEST|| requestType==AppConstants.TOP_PICKS_REQUEST){
-
-			builder.append("city_id=").append(parentingModel.getCity_id());
-			if (! StringUtils.isNullOrEmpty(parentingModel.getPage())) {
-				builder.append("&page=").append(parentingModel.getPage());
-			}
-			if(! StringUtils.isNullOrEmpty(parentingModel.getSoty_by())){
-				builder.append("&sort=").append(parentingModel.getSoty_by());
-			}
-		}else if(requestType==AppConstants.PARENTING_STOP_BLOGGER_REQUEST){
-			builder.append("city_id=").append(parentingModel.getCity_id());
-
-			if (! StringUtils.isNullOrEmpty(parentingModel.getAuthorId())) {
-				builder.append("author_id").append(parentingModel.getPage());
-			}
-			if (! StringUtils.isNullOrEmpty(parentingModel.getPage())) {
-				builder.append("&page=").append(parentingModel.getPage());
-			}
-			if(! StringUtils.isNullOrEmpty(parentingModel.getSoty_by())){
-				builder.append("&sort=").append(parentingModel.getSoty_by());
-			}
-		}*/
