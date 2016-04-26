@@ -48,8 +48,16 @@ import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.LandingLoginActivity;
 /*import com.mycity4kids.utils.AnalyticsHelper;*/
 
+import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import okhttp3.Cache;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * This class is used as base-class for application-base-activity.
@@ -60,12 +68,13 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen 
     public static boolean isAppInFg = false;
     public static boolean isScrInFg = false;
     public static boolean isChangeScrFg = false;
+    BaseApplication baseApplication;
     Tracker mTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        BaseApplication baseApplication=(BaseApplication) getApplication();
+     baseApplication=(BaseApplication) getApplication();
       //  mTracker=baseApplication.getTracker(BaseApplication.TrackerName.APP_TRACKER);
         Log.i(getClass().getSimpleName(), "onCreate()");
 
@@ -412,6 +421,30 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen 
             ex.printStackTrace();
             return "";
         }
+    }
+    public Retrofit getRetrofitInstance()
+    { OkHttpClient client = new OkHttpClient
+            .Builder()
+            .cache(new Cache(baseApplication.getCacheDir(), 10 * 1024 * 1024)) // 10 MB
+            .addInterceptor(new Interceptor() {
+                @Override
+                public okhttp3.Response intercept(Chain chain) throws IOException {
+                    Request request = chain.request();
+                    if (ConnectivityUtils.isNetworkEnabled(BaseActivity.this)) {
+                        request = request.newBuilder().header("Cache-Control", "public, max-age=" + 60).build();
+                    } else {
+                        request = request.newBuilder().header("Cache-Control", "public, only-if-cached, max-stale=" + 60 * 60 * 24 * 7).build();
+                    }
+                    return chain.proceed(request);
+                }
+            })
+        .build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(AppConstants.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+        return retrofit;
     }
 
     public void followAPICall(String id) {

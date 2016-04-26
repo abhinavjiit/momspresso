@@ -17,7 +17,8 @@
         android:layout_centerInParent="true"
         android:text="No Drafts have been saved yet"
         android:visibility="gone" />
-<ListView
+
+    <ListView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/draftListview"
