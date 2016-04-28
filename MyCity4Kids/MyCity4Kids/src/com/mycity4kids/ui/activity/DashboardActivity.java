@@ -2173,7 +2173,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         replaceFragment(new ParentingBlogFragment(), null, true);
                     } else {
                         if (topFragment instanceof ArticlesFragment) {
-                            ((ArticlesFragment) topFragment).filterListByTopics(data.getStringExtra(Constants.FILTER_NAME), data.getBooleanExtra(Constants.RESET_FILTER, false), data.getBooleanExtra(Constants.IS_FIRST_RUN, false));
+//                            ((ArticlesFragment) topFragment).filterListByTopics(data.getStringExtra(Constants.FILTER_NAME), data.getBooleanExtra(Constants.RESET_FILTER, false), data.getBooleanExtra(Constants.IS_FIRST_RUN, false));
                         }
                     }
                 case Constants.FILTER_BLOG:
@@ -2230,7 +2230,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         ((FragmentTaskHome) topFragment).refreshTaskList();
                         notiftTaskList();
                     } else if (topFragment instanceof ArticlesFragment) {
-                        ((ArticlesFragment) topFragment).filterListByTopics(data.getStringExtra(Constants.FILTER_NAME), data.getBooleanExtra(Constants.RESET_FILTER, false), data.getBooleanExtra(Constants.IS_FIRST_RUN, false));
+//                        ((ArticlesFragment) topFragment).filterListByTopics(data.getStringExtra(Constants.FILTER_NAME), data.getBooleanExtra(Constants.RESET_FILTER, false), data.getBooleanExtra(Constants.IS_FIRST_RUN, false));
                     }
 
                     break;

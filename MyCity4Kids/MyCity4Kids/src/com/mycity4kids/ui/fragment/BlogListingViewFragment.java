@@ -9,6 +9,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.kelltontech.network.Response;
@@ -48,7 +49,7 @@ public class BlogListingViewFragment extends BaseFragment {
     private boolean isReuqestRunning = false;
     private String blogTitle = "";
     private float density;
-
+    private ProgressBar progressBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,11 +59,13 @@ public class BlogListingViewFragment extends BaseFragment {
         view = getActivity().getLayoutInflater().inflate(R.layout.new_article_layout, container, false);
 
         density = getResources().getDisplayMetrics().density;
-
+        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         listView = (ListView) view.findViewById(R.id.scroll);
 //        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) listView.getLayoutParams();
 //        params.setMargins(0, 0, 0, (int) (80 * density));
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
+
+        progressBar.setVisibility(View.INVISIBLE);
         view.findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_indefinitely));
 
 

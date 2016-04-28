@@ -9,6 +9,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -48,6 +49,7 @@ public class SearchAuthorsTabFragment extends BaseFragment {
     private boolean fragmentOnCreated = false;
     private boolean isDataLoadedOnce = false;
     boolean loadMore = true;
+    private ProgressBar progressBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,6 +59,7 @@ public class SearchAuthorsTabFragment extends BaseFragment {
         listView = (ListView) view.findViewById(R.id.authorListView);
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
         noAuthorsTextView = (TextView) view.findViewById(R.id.noAuthorsTextView);
+        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         view.findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_indefinitely));
 
         listingData = new ArrayList<BlogItemModel>();
@@ -116,7 +119,7 @@ public class SearchAuthorsTabFragment extends BaseFragment {
     protected void updateUi(Response response) {
 
         ParentingBlogResponse responseData;
-
+        progressBar.setVisibility(View.INVISIBLE);
         if (response == null) {
             ((SearchArticlesAndAuthorsActivity) getActivity()).showToast("Something went wrong from server");
             removeProgressDialog();
@@ -175,7 +178,7 @@ public class SearchAuthorsTabFragment extends BaseFragment {
             fragmentVisible = false;
             fragmentOnCreated = true;
             nextPageNumber = 1;
-            if (!isDataLoadedOnce&&!StringUtils.isNullOrEmpty(searchName)) {
+            if (!isDataLoadedOnce && !StringUtils.isNullOrEmpty(searchName)) {
                 hitBloggerAPIrequest(nextPageNumber);
                 isDataLoadedOnce = true;
             }
@@ -223,7 +226,7 @@ public class SearchAuthorsTabFragment extends BaseFragment {
     public void hitBloggerAPIrequest(int page) {
 
         if (nextPageNumber == 1) {
-            showProgressDialog(getString(R.string.please_wait));
+            progressBar.setVisibility(View.VISIBLE);
         }
 //        showProgressDialog(getString(R.string.please_wait));
         ParentingRequest _parentingModel = new ParentingRequest();

@@ -82,45 +82,43 @@ public class BlogPage extends BaseActivity {
     File file;
     String response;
     Bitmap finalBitmap;
-    String url="blogger_list_default.jpg";
-    EditText blogTitle,bloggerBio;
+    String url = "blogger_list_default.jpg";
+    EditText blogTitle, bloggerBio;
     Button createBlog;
     private UserModel userModel;
+
     @Override
     protected void updateUi(Response response) {
         switch (response.getDataType()) {
 
-        case AppConstants.BLOG_SETUP_REQUEST: {
-            if (response.getResponseObject() instanceof CommonResponse) {
-                CommonResponse responseModel = (CommonResponse) response
-                        .getResponseObject();
-                removeProgressDialog();
-                if (responseModel.getResponseCode() != 200) {
-                    showToast(getString(R.string.toast_response_error));
-                    return;
-                } else {
-                    if (!StringUtils.isNullOrEmpty(responseModel.getResult().getMessage())) {
-                     //   SharedPrefUtils.setProfileImgUrl(BlogPage.this, responseModel.getResult().getMessage());
-                        Log.i("Blog Setup Response", responseModel.getResult().getMessage());
-                        if (responseModel.getResponse().equals("failure"))
-                        {
-                           // showToast(responseModel.getResult().getMessage());
-                            alertDialog(responseModel.getResult().getMessage());
+            case AppConstants.BLOG_SETUP_REQUEST: {
+                if (response.getResponseObject() instanceof CommonResponse) {
+                    CommonResponse responseModel = (CommonResponse) response
+                            .getResponseObject();
+                    removeProgressDialog();
+                    if (responseModel.getResponseCode() != 200) {
+                        showToast(getString(R.string.toast_response_error));
+                        return;
+                    } else {
+                        if (!StringUtils.isNullOrEmpty(responseModel.getResult().getMessage())) {
+                            //   SharedPrefUtils.setProfileImgUrl(BlogPage.this, responseModel.getResult().getMessage());
+                            Log.i("Blog Setup Response", responseModel.getResult().getMessage());
+                            if (responseModel.getResponse().equals("failure")) {
+                                // showToast(responseModel.getResult().getMessage());
+                                alertDialog(responseModel.getResult().getMessage());
+                            } else {
+                                showToast(responseModel.getResult().getMessage());
+                                finish();
+                            }
                         }
-                        else
-                        {
-                            showToast(responseModel.getResult().getMessage());
-                            finish();
-                        }
-                    }
 
-                    //setProfileImage(originalImage);
-                 //   showToast("You have successfully uploaded image.");
+                        //setProfileImage(originalImage);
+                        //   showToast("You have successfully uploaded image.");
+                    }
+                    //  removeProgressDialog();
                 }
-              //  removeProgressDialog();
+                break;
             }
-            break;
-    }
             case AppConstants.IMAGE_EDITOR_UPLOAD_REQUEST:
                 removeProgressDialog();
                 if (response.getResponseObject() instanceof CommonResponse) {
@@ -140,20 +138,21 @@ public class BlogPage extends BaseActivity {
                     }
                 }
                 break;
-        }}
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.blog_page);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        bloggerBio=(EditText) findViewById(R.id.bloggerBio);
-        blogTitle=(EditText) findViewById(R.id.blogTitle);
-        createBlog=(Button) findViewById(R.id.createBlog);
+        bloggerBio = (EditText) findViewById(R.id.bloggerBio);
+        blogTitle = (EditText) findViewById(R.id.blogTitle);
+        createBlog = (Button) findViewById(R.id.createBlog);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Setup your Blog");
-        blogImage=(ImageView) findViewById(R.id.blogImage);
+        blogImage = (ImageView) findViewById(R.id.blogImage);
         Utils.pushOpenScreenEvent(BlogPage.this, "Article Image Upload", SharedPrefUtils.getUserDetailModel(this).getId() + "");
         UserTable userTable = new UserTable((BaseApplication) this.getApplication());
         userModel = userTable.getAllUserData();
@@ -161,54 +160,50 @@ public class BlogPage extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_PICK);
-                        intent.setType("image/*");
-                        startActivityForResult(intent, ADD_MEDIA_ACTIVITY_REQUEST_CODE);
+                intent.setType("image/*");
+                startActivityForResult(intent, ADD_MEDIA_ACTIVITY_REQUEST_CODE);
             }
         });
         createBlog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Utils.pushEvent(BlogPage.this, GTMEventType.CALENDAR_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(BlogPage.this).getId() + "", "");
-                if (blogTitle.getText().toString().isEmpty())
-                {
-                   // showToast("Please fill the required fields");
+                if (blogTitle.getText().toString().isEmpty()) {
+                    // showToast("Please fill the required fields");
                     blogTitle.setFocusableInTouchMode(true);
                     blogTitle.setError("Please enter Blog Title");
                     blogTitle.requestFocus();
-                }
-                else if (bloggerBio.getText().toString().isEmpty())
-                {
+                } else if (bloggerBio.getText().toString().isEmpty()) {
                     bloggerBio.setFocusableInTouchMode(true);
                     bloggerBio.setError("Please enter your Bio");
                     bloggerBio.requestFocus();
-                }
-                else if(!blogTitle.getText().toString().matches("[a-zA-Z0-9 ]+")) {
+                } else if (!blogTitle.getText().toString().matches("[a-zA-Z0-9 ]+")) {
                     blogTitle.setFocusableInTouchMode(true);
                     blogTitle.setError("Special characters are not allowed!");
                     blogTitle.requestFocus();
-                }
+                } else {
+                    showProgressDialog(getResources().getString(R.string.please_wait));
+                    ArticleDraftRequest articleDraftRequest = new ArticleDraftRequest();
+                    /**
+                     * this case will case in pagination case: for sorting
+                     */
+                    articleDraftRequest.setUser_id("" + userModel.getUser().getId());
 
-                else {
-                showProgressDialog(getResources().getString(R.string.please_wait));
-                ArticleDraftRequest articleDraftRequest = new ArticleDraftRequest();
-                /**
-                 * this case will case in pagination case: for sorting
-                 */
-                articleDraftRequest.setUser_id("" + userModel.getUser().getId());
-
-                articleDraftRequest.setImageName(url);
-                articleDraftRequest.setTitle(blogTitle.getText().toString());
-                articleDraftRequest.setBody(bloggerBio.getText().toString());
-                    articleDraftRequest.setSourceId(""+2);
+                    articleDraftRequest.setImageName(url);
+                    articleDraftRequest.setTitle(blogTitle.getText().toString());
+                    articleDraftRequest.setBody(bloggerBio.getText().toString());
+                    articleDraftRequest.setSourceId("" + 2);
 /*
         articleDraftRequest.setCity_id(SharedPrefUtils.getCurrentCityModel(getActivity()).getId());
         _parentingModel.setPage("" + pPageCount);*/
-                BlogSetupController _controller = new BlogSetupController(BlogPage.this, BlogPage.this);
+                    BlogSetupController _controller = new BlogSetupController(BlogPage.this, BlogPage.this);
 
-                _controller.getData(AppConstants.BLOG_SETUP_REQUEST, articleDraftRequest);
-            }}
+                    _controller.getData(AppConstants.BLOG_SETUP_REQUEST, articleDraftRequest);
+                }
+            }
         });
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -236,7 +231,7 @@ public class BlogPage extends BaseActivity {
                         String filePath = cursor.getString(columnIndex);
                         cursor.close();
                         Log.e("File", "filePath: " + filePath);
-                        filePath=filePath.replaceAll("[^a-zA-Z0-9.-/_]", "_");
+                        filePath = filePath.replaceAll("[^a-zA-Z0-9.-/_]", "_");
                         file = new File(new URI("file://"
                                 + filePath.replaceAll(" ", "%20")));
                         int maxImageSize = BitmapUtils.getMaxSize(this);
@@ -272,7 +267,7 @@ public class BlogPage extends BaseActivity {
                         byte[] byteArrayFromGallery = stream.toByteArray();
 
                         imageString = Base64.encodeToString(byteArrayFromGallery, Base64.DEFAULT);*/
-                    //    new FileUploadTask().execute();
+                        //    new FileUploadTask().execute();
                         sendUploadProfileImageRequest(finalBitmap);
                         // compressImage(filePath);
                     } catch (Exception e) {
@@ -281,7 +276,10 @@ public class BlogPage extends BaseActivity {
 
 
                 }
-                break;}}
+                break;
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -305,7 +303,7 @@ public class BlogPage extends BaseActivity {
 
         @Override
         protected void onPreExecute() {
-             dialog = new ProgressDialog(BlogPage.this);
+            dialog = new ProgressDialog(BlogPage.this);
             dialog.setMessage("Uploading...");
             dialog.setIndeterminate(false);
             dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
@@ -340,18 +338,17 @@ public class BlogPage extends BaseActivity {
                 // params.add(new BasicNameValuePair("file", "jhsaiksa"));
 
 
-
 //                HttpURLConnection.setFixedLengthStreamingMode(connection);
                 OutputStream outputStream = connection.getOutputStream();
                 BufferedWriter writer = new BufferedWriter(
                         new OutputStreamWriter(outputStream, "UTF-8"));
-                Log.e("param",getQuery(params));
+                Log.e("param", getQuery(params));
                 writer.write(getQuery(params));
 
 
                 int bufferLength = 1024;
                 for (int i = 0; i < bytes.length; i += bufferLength) {
-                    int progress = (int) ((i / (float) bytes.length)*100);
+                    int progress = (int) ((i / (float) bytes.length) * 100);
                     publishProgress(progress);
                     if (bytes.length - i >= bufferLength) {
                         outputStream.write(bytes, i, bufferLength);
@@ -407,9 +404,9 @@ public class BlogPage extends BaseActivity {
 
         @Override
         protected void onProgressUpdate(Integer... progress) {
-              dialog.setProgress(progress[0]);
+            dialog.setProgress(progress[0]);
             Log.e("progress", progress[0] + "");
-          //  ((EditorMediaUploadListener) mEditorFragment).onMediaUploadProgress(mediaId, progress[0]/2);
+            //  ((EditorMediaUploadListener) mEditorFragment).onMediaUploadProgress(mediaId, progress[0]/2);
         }
 
         @Override
@@ -419,7 +416,7 @@ public class BlogPage extends BaseActivity {
 
                     CommonResponse responseModel = new Gson().fromJson(response, CommonResponse.class);
                     if (responseModel.getResponseCode() != 200) {
-                        Log.e("responseCode",""+responseModel.getResponseCode());
+                        Log.e("responseCode", "" + responseModel.getResponseCode());
                         showToast(getString(R.string.toast_response_error));
 
                     } else {
@@ -428,14 +425,14 @@ public class BlogPage extends BaseActivity {
                             //   SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
                             Log.i("Uploaded Image URL", responseModel.getResult().getMessage());
                         }
-                        url=responseModel.getResult().getMessage();
-                        String[] seperated=url.split("/");
-                        if (seperated.length!=0)
-                        {  url=seperated[seperated.length-1];
-                        Log.e("url",url);
+                        url = responseModel.getResult().getMessage();
+                        String[] seperated = url.split("/");
+                        if (seperated.length != 0) {
+                            url = seperated[seperated.length - 1];
+                            Log.e("url", url);
                         }
 
-                     //   ((EditorMediaUploadListener) mEditorFragment).onMediaUploadSucceeded(mediaId, mediaFile);
+                        //   ((EditorMediaUploadListener) mEditorFragment).onMediaUploadSucceeded(mediaId, mediaFile);
 
 
                         //setProfileImage(originalImage);
@@ -452,8 +449,8 @@ public class BlogPage extends BaseActivity {
         }
 
     }
-    private void alertDialog(String msg)
-    {
+
+    private void alertDialog(String msg) {
         new AlertDialog.Builder(this)
                 .setTitle("MyCity4Kids")
                 .setMessage(msg)
@@ -466,6 +463,7 @@ public class BlogPage extends BaseActivity {
                 .show();
 
     }
+
     public void sendUploadProfileImageRequest(Bitmap originalImage) {
         showProgressDialog(getString(R.string.please_wait));
         ByteArrayOutputStream bao = new ByteArrayOutputStream();
@@ -514,4 +512,4 @@ public class BlogPage extends BaseActivity {
 
         }
     }
- }
+}

@@ -714,7 +714,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     "body {\n" +
                     "    font-family: MyFont;\n" +
                     "    font-size: medium;\n" +
-                    "    text-align: justify;\n" +
+                    "    text-align: left;\n" +
                     "}\n" +
                     "</style>" +
                     "</head><body>" + bodyDesc + "</body></html>";
@@ -734,7 +734,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     "body {\n" +
                     "    font-family: MyFont;\n" +
                     "    font-size: medium;\n" +
-                    "    text-align: justify;\n" +
+                    "    text-align: left;\n" +
                     "}\n" +
                     "</style>" +
                     "</head><body>" + bodyDesc + "</body></html>";

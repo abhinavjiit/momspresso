@@ -9,17 +9,26 @@ import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
+import com.kelltontech.utils.ConnectivityUtils;
 import com.mycity4kids.R;
+import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.database.BaseDbHelper;
 import com.mycity4kids.models.businesslist.BusinessDataListing;
 import com.mycity4kids.models.parentingstop.CommonParentingList;
 import com.mycity4kids.newmodels.parentingmodel.ArticleFilterListModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import io.fabric.sdk.android.Fabric;
+import okhttp3.Cache;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 /**
@@ -27,12 +36,13 @@ import io.fabric.sdk.android.Fabric;
  */
 public class BaseApplication extends Application {
     private final String LOG_TAG = "BaseApplication";
-
+    public static final String TAG = BaseApplication.class.getName();
     private ArticleFilterListModel filterList;
 
     private SQLiteDatabase mWritableDatabase;
 
     private static BaseApplication mInstance;
+    private Retrofit retrofit;
     /*
      * Google Analytics configuration values.
      */
@@ -85,19 +95,6 @@ public class BaseApplication extends Application {
         BaseApplication.businessREsponse = businessREsponse;
     }
 
-    /**
-     * Gets the default {@link Tracker} for this {@link Application}.
-     *
-     * @return tracker
-     */
- /*   synchronized public Tracker getDefaultTracker() {
-        if (mTracker == null) {
-            GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
-            // To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
-            mTracker = analytics.newTracker(R.xml.global_tracker);
-        }
-        return mTracker;
-    }*/
     public synchronized Tracker getTracker(TrackerName trackerId) {
         if (!mTrackers.containsKey(trackerId)) {
 
@@ -111,54 +108,6 @@ public class BaseApplication extends Application {
         }
         return mTrackers.get(trackerId);
     }
-
-    /* public synchronized Tracker getTracker() {
-
-         try {
-             final GoogleAnalytics googleAnalytics = GoogleAnalytics.getInstance(this);
-             return googleAnalytics.newTracker(R.xml.app_tracker);
-
-         }catch(final Exception e){
-             Log.e("hey", "Failed to initialize Google Analytics V4");
-         }
-
-         return null;
-     }*/
-    /*
-
-         * Method to handle basic Google Analytics initialization. This call will
-         * not block as all Google Analytics work occurs off the main thread.
-         */
-    @SuppressWarnings("deprecation")
-   /* private void initializeGa() {
-        mGa = GoogleAnalytics.getInstance(this);
-        mTracker = mGa.getTracker(GA_PROPERTY_ID);
-
-        // Set dispatch period.
-        GAServiceManager.getInstance().setLocalDispatchPeriod(GA_DISPATCH_PERIOD);
-
-
-        // Set dryRun flag.
-        // mGa.setDryRun(GA_IS_DRY_RUN);
-
-        // Set Logger verbosity.
-        mGa.getLogger().setLogLevel(GA_LOG_VERBOSITY);
-
-        // Set the opt out flag when user updates a tracking preference.
-        SharedPreferences userPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-
-
-        userPrefs.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
-            @Override
-            public void onSharedPreferenceChanged(
-                    SharedPreferences sharedPreferences, String key) {
-                if (key.equals(TRACKING_PREF_KEY)) {
-                    GoogleAnalytics.getInstance(getApplicationContext()).setAppOptOut(sharedPreferences.getBoolean(key, false));
-
-                }
-            }
-        });
-    }*/
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -204,6 +153,7 @@ public class BaseApplication extends Application {
         Crashlytics.setUserIdentifier("" + SharedPrefUtils.getUserDetailModel(this).getId());
         Crashlytics.setUserEmail("" + SharedPrefUtils.getUserDetailModel(this).getEmail());
         setInstance(this);
+        createRetrofitInstance();
         //initializeGa();
         // startService(new Intent(this,ReplicationService.class))
         // For Google Analytics initialization.
@@ -239,5 +189,38 @@ public class BaseApplication extends Application {
 
     public ArticleFilterListModel getFilterList() {
         return filterList;
+    }
+
+    public Retrofit createRetrofitInstance() {
+        OkHttpClient client = new OkHttpClient
+                .Builder()
+                .cache(new Cache(getCacheDir(), 10 * 1024 * 1024)) // 10 MB
+                .addInterceptor(new Interceptor() {
+                    @Override
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        Request request = chain.request();
+                        if (ConnectivityUtils.isNetworkEnabled(getApplicationContext())) {
+                            request = request.newBuilder().header("Cache-Control", "public, max-age=" + 60).build();
+                        } else {
+                            request = request.newBuilder().header("Cache-Control", "public, only-if-cached, max-stale=" + 60 * 60 * 24 * 7).build();
+                        }
+                        return chain.proceed(request);
+                    }
+                })
+                .build();
+
+        retrofit = new Retrofit.Builder()
+                .baseUrl(AppConstants.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+        return retrofit;
+    }
+
+    public Retrofit getRetrofit() {
+        if (null == retrofit) {
+            createRetrofitInstance();
+        }
+        return retrofit;
     }
 }

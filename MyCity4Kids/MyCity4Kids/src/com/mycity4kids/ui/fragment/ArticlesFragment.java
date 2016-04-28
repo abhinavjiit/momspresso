@@ -93,6 +93,7 @@ public class ArticlesFragment extends BaseFragment {
         addDraft = (ImageView) view.findViewById(R.id.addDraft);
         mViewPager = (ViewPager) view.findViewById(R.id.viewpager);
         mSlidingTabLayout = (TabLayout) view.findViewById(R.id.sliding_tabs);
+
         addDraft.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,9 +130,10 @@ public class ArticlesFragment extends BaseFragment {
         tabsPagerAdapter = new TabsPagerAdapter(getFragmentManager(), getActivity(), null, getActivity(), searchName);
         mViewPager.setAdapter(tabsPagerAdapter);
         mSlidingTabLayout.setupWithViewPager(mViewPager);
-//        mViewPager.setCurrentItem(1);
+        mViewPager.setOffscreenPageLimit(4);
+        mViewPager.setCurrentItem(1);
 
-        NewAllArticleListingApi(mPageCount);
+//        NewAllArticleListingApi(mPageCount);
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
@@ -146,16 +148,6 @@ public class ArticlesFragment extends BaseFragment {
 
             @Override
             public void onPageSelected(int position) {
-                currentPagePosition = position;
-                lastPosition = position;
-                if (!ifReset) {
-
-                    ArticleViewFragment fragment = tabsPagerAdapter.getFragmentByPosition(currentPagePosition);
-                    if (fragment != null)
-                        fragment.setSearchFilterString(searchName, currentPagePosition);
-                }
-
-                mSlidingTabLayout.setScrollPosition(position, 0, true);
 
             }
 
@@ -393,7 +385,7 @@ public class ArticlesFragment extends BaseFragment {
                 if (responseData.getResponseCode() == 200) {
                     removeProgressDialog();
 
-                    updateCurrentArticlePageBySearch(responseData.getResult().getData().getData());
+//                    updateCurrentArticlePageBySearch(responseData.getResult().getData().getData());
 
 
                 } else if (responseData.getResponseCode() == 400) {
@@ -663,49 +655,6 @@ public class ArticlesFragment extends BaseFragment {
                 }
             });
         }
-    }
-
-
-    public void filterListByTopics(String mTopic, Boolean ifReset, Boolean isFirst) {
-        searchName = mTopic;
-
-        this.isFirstRun = isFirst;
-        this.ifReset = ifReset;
-
-        if (ifReset) {
-            NewAllArticleListingApi(mPageCount);
-//            ((DashboardActivity) getActivity()).replaceFragment(new ArticlesFragment(), null, true);
-        } else {
-            ArticleViewFragment fragment = tabsPagerAdapter.getFragmentByPosition(currentPagePosition);
-            fragment.setSearchFilterString(mTopic, currentPagePosition);
-        }
-    }
-
-    public void updateCurrentArticlePageBySearch(ArrayList<CommonParentingList> data) {
-
-        switch (currentPagePosition) {
-            case 0:
-
-                tabsPagerAdapter.refreshCurrentPageBySearch(0, data);
-                initialList.setRecent(data);
-                break;
-            case 1:
-                tabsPagerAdapter.refreshCurrentPageBySearch(1, data);
-                initialList.setPopular(data);
-                break;
-            case 2:
-                tabsPagerAdapter.refreshCurrentPageBySearch(2, data);
-                initialList.setTrending(data);
-                break;
-        }
-        tabsPagerAdapter.setSearchString(searchName);
-//        tabsPagerAdapter.setNewData(initialList);
-//        tabsPagerAdapter.notifyDataSetChanged();
-
-        tabsPagerAdapter = new TabsPagerAdapter(getFragmentManager(), getActivity(), initialList, getActivity(), searchName);
-        mViewPager.setAdapter(tabsPagerAdapter);
-        mSlidingTabLayout.setupWithViewPager(mViewPager);
-        mViewPager.setCurrentItem(currentPagePosition);
     }
 
     public void refreshBlogList() {

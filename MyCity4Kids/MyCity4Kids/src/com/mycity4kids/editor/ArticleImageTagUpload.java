@@ -391,10 +391,13 @@ public class ArticleImageTagUpload extends BaseActivity {
     private void publishArticleRequest() {
         ArticleDraftList draftObject = (ArticleDraftList) getIntent().getSerializableExtra("draftItem");
         showProgressDialog(getResources().getString(R.string.please_wait));
-        Retrofit retrofit = getRetrofitInstance();
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         // prepare call in Retrofit 2.0
         ArticlePublishAPI articlePublishAPI = retrofit.create(ArticlePublishAPI.class);
-
+        if (!ConnectivityUtils.isNetworkEnabled(this)) {
+            showToast("");
+            return;
+        }
         Call<ParentingDetailResponse> call = articlePublishAPI.publishArticle("" + userModel.getUser().getId(),
                 draftObject.getTitle().trim(),
                 draftObject.getBody(),
@@ -456,7 +459,7 @@ public class ArticleImageTagUpload extends BaseActivity {
 
     private void getBlogPage() {
         showProgressDialog(getResources().getString(R.string.please_wait));
-        Retrofit retrofit = getRetrofitInstance();
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
 
         GetBlogPageAPI getBlogPageAPI = retrofit.create(GetBlogPageAPI.class);
 
@@ -528,7 +531,7 @@ public class ArticleImageTagUpload extends BaseActivity {
         originalImage.compress(Bitmap.CompressFormat.PNG, 75, bao);
         byte[] ba = bao.toByteArray();
         String imageString = Base64.encodeToString(ba, Base64.DEFAULT);
-        Retrofit retrofit = getRetrofitInstance();
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
         RequestBody requestBodyFile = RequestBody.create(MEDIA_TYPE_PNG, imageString);
         RequestBody userId = RequestBody.create(MediaType.parse("text/plain"), "" + userModel.getUser().getId());

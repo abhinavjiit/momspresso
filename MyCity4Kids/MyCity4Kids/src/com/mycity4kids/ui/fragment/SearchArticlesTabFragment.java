@@ -9,6 +9,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -49,6 +50,7 @@ public class SearchArticlesTabFragment extends BaseFragment {
     private boolean fragmentVisible = false;
     private boolean fragmentOnCreated = false;
     private boolean isDataLoadedOnce = false;
+    private ProgressBar progressBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,6 +60,7 @@ public class SearchArticlesTabFragment extends BaseFragment {
         listView = (ListView) view.findViewById(R.id.scroll);
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
+        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         view.findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_indefinitely));
 
         articlesListingAdapter = new ArticlesListingAdapter(getActivity(), true);
@@ -147,11 +150,10 @@ public class SearchArticlesTabFragment extends BaseFragment {
     protected void updateUi(Response response) {
 
         String temp = "";
-
+        progressBar.setVisibility(View.INVISIBLE);
         CommonParentingResponse responseData;
         if (response == null) {
             ((SearchArticlesAndAuthorsActivity) getActivity()).showToast("Something went wrong from server");
-            removeProgressDialog();
             isReuqestRunning = false;
             mLodingView.setVisibility(View.GONE);
             return;
@@ -180,9 +182,7 @@ public class SearchArticlesTabFragment extends BaseFragment {
                 responseData = (CommonParentingResponse) response.getResponseObject();
                 if (responseData.getResponseCode() == 200) {
                     getArticleResponse(responseData);
-                    removeProgressDialog();
                 } else if (responseData.getResponseCode() == 400) {
-                    removeProgressDialog();
                     String message = responseData.getResult().getMessage();
                     if (!StringUtils.isNullOrEmpty(message)) {
                         ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(message);
@@ -245,11 +245,9 @@ public class SearchArticlesTabFragment extends BaseFragment {
     }
 
     private void newSearchTopicArticleListingApi(String searchName, String sortby) {
-
         if (nextPageNumber == 1) {
-            showProgressDialog(getString(R.string.please_wait));
+            progressBar.setVisibility(View.VISIBLE);
         }
-
         ParentingRequest _parentingModel = new ParentingRequest();
         _parentingModel.setSearchName(searchName);
         _parentingModel.setCity_id(SharedPrefUtils.getCurrentCityModel(getActivity()).getId());

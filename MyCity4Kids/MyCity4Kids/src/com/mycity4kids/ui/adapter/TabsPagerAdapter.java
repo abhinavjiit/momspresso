@@ -165,29 +165,6 @@ public class TabsPagerAdapter extends FragmentStatePagerAdapter {
 
     }
 
-    public void refreshCurrentPageBySearch(int pos, ArrayList<CommonParentingList> searchList) {
-
-
-        switch (pos) {
-            case 0:
-
-                this.articlelist.setRecent(searchList);
-                mRecentArticlefragment.refreshSubListBySearch(true, searchName, 0, articlelist);
-                break;
-            case 1:
-                this.articlelist.setPopular(searchList);
-                mRecentArticlefragment.refreshSubListBySearch(true, searchName, 1, articlelist);
-
-                break;
-            case 2:
-                mRecentArticlefragment.refreshSubListBySearch(true, searchName, 2, articlelist);
-                this.articlelist.setTrending(searchList);
-
-                break;
-        }
-
-    }
-
 
     public ArticleViewFragment getFragmentByPosition(int currentPagePosition) {
         switch (currentPagePosition) {

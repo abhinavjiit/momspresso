@@ -359,10 +359,6 @@
             android:theme="@style/Theme.Transparent"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".ui.activity.TopPicksDetailActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
             android:name=".ui.activity.PhotoActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Transparent"

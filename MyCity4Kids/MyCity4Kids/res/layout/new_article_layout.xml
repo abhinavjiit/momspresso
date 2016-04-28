@@ -9,17 +9,18 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_alignParentTop="true"
-        android:background="#DEDEDE"></View>
+        android:background="#DEDEDE" />
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    <com.mycity4kids.observablescrollview.ObservableListView
-        android:id="@+id/scroll"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/dummy_line" />
+        <com.mycity4kids.observablescrollview.ObservableListView
+            android:id="@+id/scroll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/dummy_line" />
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <TextView
@@ -68,5 +69,13 @@
             android:layout_toLeftOf="@id/txvLoadMore"
             android:src="@drawable/progress_spinner" />
     </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="visible" />
 
 </RelativeLayout>

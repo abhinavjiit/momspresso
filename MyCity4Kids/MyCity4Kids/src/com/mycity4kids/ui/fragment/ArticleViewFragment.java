@@ -10,6 +10,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -24,7 +25,6 @@ import com.mycity4kids.enums.ParentingFilterType;
 import com.mycity4kids.models.parentingstop.CommonParentingList;
 import com.mycity4kids.models.parentingstop.CommonParentingResponse;
 import com.mycity4kids.models.parentingstop.ParentingRequest;
-import com.mycity4kids.newmodels.parentingmodel.ArticleModelNew;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
@@ -49,6 +49,7 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
     private int nextPageNumber = 2;
     private boolean isReuqestRunning = false;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private ProgressBar progressBar;
 //    private ArrayList<CommonParentingList> mDataList;
 
 
@@ -61,17 +62,22 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
+        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         view.findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_indefinitely));
 
+        progressBar.setVisibility(View.VISIBLE);
         if (getArguments() != null) {
             articleDataModelsNew = getArguments().getParcelableArrayList(Constants.ARTICLES_LIST);
             sortType = getArguments().getString(Constants.SORT_TYPE);
-            isSearchActive = getArguments().getBoolean(Constants.IS_SEARCH_ACTIVE);
         }
         if ("bookmark".equals(sortType)) {
             articleDataModelsNew = new ArrayList<CommonParentingList>();
             nextPageNumber = 1;
             hitBookmarkedArticleListingAPI(nextPageNumber, "bookmark");
+        } else {
+            articleDataModelsNew = new ArrayList<CommonParentingList>();
+            nextPageNumber = 1;
+            hitArticleListingApi(nextPageNumber, sortType);
         }
         swipeRefreshLayout.setOnRefreshListener((SwipeRefreshLayout.OnRefreshListener) ArticleViewFragment.this);
 
@@ -91,13 +97,8 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
                 boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
                 if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && (nextPageNumber < 2 || nextPageNumber <= totalPageCount)) {
                     if (!"bookmark".equals(sortType)) {
-                        if (isSearchActive == false) {
-                            mLodingView.setVisibility(View.VISIBLE);
-                            hitArticleListingApi(nextPageNumber, sortType);
-                        } else if (isSearchActive) {
-                            mLodingView.setVisibility(View.VISIBLE);
-                            newSearchTopicArticleListingApi(searchName, sortType, nextPageNumber);
-                        }
+                        mLodingView.setVisibility(View.VISIBLE);
+                        hitArticleListingApi(nextPageNumber, sortType);
                     } else {
                         mLodingView.setVisibility(View.VISIBLE);
                         hitBookmarkedArticleListingAPI(nextPageNumber, "bookmark");
@@ -133,7 +134,7 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
     protected void updateUi(Response response) {
 
         String temp = "";
-
+        progressBar.setVisibility(View.INVISIBLE);
         CommonParentingResponse responseData;
         if (response == null) {
             ((DashboardActivity) getActivity()).showToast("Something went wrong from server");
@@ -248,44 +249,6 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
         articlesListingAdapter.notifyDataSetChanged();
     }
 
-    public void refreshSubListBySearch(Boolean isSearchActive, String search_name, int pos, ArticleModelNew.AllArticles tempList) {
-
-        this.isSearchActive = isSearchActive;
-        searchName = search_name;
-//        tabPosition = pos;
-        ArrayList<CommonParentingList> newList = null;
-        switch (pos) {
-
-            case 0:
-
-                articleDataModelsNew = tempList.getRecent();
-                articlesListingAdapter.setNewListData(tempList.getRecent());
-
-                break;
-            case 1:
-
-                articleDataModelsNew = tempList.getPopular();
-                articlesListingAdapter.setNewListData(tempList.getPopular());
-
-                break;
-            case 2:
-
-                articleDataModelsNew = tempList.getTrending();
-                articlesListingAdapter.setNewListData(tempList.getTrending());
-                break;
-
-            case 3:
-
-                articleDataModelsNew = tempList.getBookmark();
-                articlesListingAdapter.setNewListData(tempList.getBookmark());
-                break;
-
-        }
-        articlesListingAdapter.notifyDataSetChanged();
-
-    }
-
-
     private void getArticleResponse(CommonParentingResponse responseData) {
         //	parentingResponse = responseData ;
         ArrayList<CommonParentingList> dataList = responseData.getResult().getData().getData();
@@ -310,56 +273,6 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
         }
     }
 
-    public void setSearchFilterString(String newSearchString, int pos) {
-        if (!newSearchString.equalsIgnoreCase(searchName)) {
-            searchName = newSearchString;
-
-            // hit api
-//            isFirstTimeSearch = true;
-            nextPageNumber = 1;
-            isSearchActive = true;
-
-            newSearchTopicArticleListingApi(searchName, sortType, nextPageNumber);
-
-        } else {
-            if (articleDataModelsNew == null) {
-                return;
-            }
-            articlesListingAdapter.setNewListData(articleDataModelsNew);
-            articlesListingAdapter.notifyDataSetChanged();
-
-        }
-    }
-
-    private void newSearchTopicArticleListingApi(String searchName, String sortby, int pageCount) {
-
-        if (nextPageNumber == 1) {
-            showProgressDialog(getString(R.string.please_wait));
-        }
-
-        ParentingRequest _parentingModel = new ParentingRequest();
-        /**
-         * this case will case in pagination case: for sorting
-         */
-//        if (mCurrentSortByModel != null) {
-//            _parentingModel.setSoty_by(mCurrentSortByModel.getKey());
-//        }
-        _parentingModel.setSearchName(searchName);
-        _parentingModel.setCity_id(SharedPrefUtils.getCurrentCityModel(getActivity()).getId());
-
-//        if (isFirstTimeSearch) {
-//            _parentingModel.setPage("" + 1);
-//        } else {
-//            _parentingModel.setPage("" + pageCount);
-//        }
-        _parentingModel.setPage("" + nextPageNumber);
-
-        _parentingModel.setSoty_by(sortby);
-        ParentingStopController _controller = new ParentingStopController(getActivity(), this);
-//        mIsRequestRunning = true;
-        _controller.getData(AppConstants.TOP_PICKS_REQUEST, _parentingModel);
-    }
-
     public void refreshBookmarkList() {
         nextPageNumber = 1;
         hitBookmarkedArticleListingAPI(nextPageNumber, "bookmark");
@@ -367,12 +280,12 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
 
     @Override
     public void onRefresh() {
-        if (!"bookmark".equals(sortType))
-        { nextPageNumber=1;
-            hitArticleListingApi(nextPageNumber,sortType);}
-        else {
-            nextPageNumber=1;
-            hitBookmarkedArticleListingAPI(1,sortType);
+        if (!"bookmark".equals(sortType)) {
+            nextPageNumber = 1;
+            hitArticleListingApi(nextPageNumber, sortType);
+        } else {
+            nextPageNumber = 1;
+            hitBookmarkedArticleListingAPI(1, sortType);
         }
 
     }
