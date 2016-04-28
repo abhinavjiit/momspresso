@@ -204,7 +204,7 @@
             android:id="@+id/editor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="36dp"
+            android:layout_marginTop="25dp"
             android:drawableLeft="@drawable/icon_add_blog"
             android:drawablePadding="10dp"
             android:paddingLeft="12dp"

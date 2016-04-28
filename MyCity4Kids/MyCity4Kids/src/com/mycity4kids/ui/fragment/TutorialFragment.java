@@ -51,12 +51,12 @@ public class TutorialFragment extends Fragment {
         pagerColorList = new ArrayList<String>();
 
         titleList.add("mycity4kids");
-        descList.add("#ParentingFromTheSamePage");
+        descList.add("Parenting made easy");
         pagerImagesList.add(R.drawable.tutorial_1);
         pagerColorList.add("#7388ff");
 
         titleList.add("Organize");
-        descList.add("Your kids daily schedule with a colour-coded Calendar and To-do list");
+        descList.add("Your kids daily schedule with a colour-coded Calendar.");
         pagerImagesList.add(R.drawable.tutorial_2);
         pagerColorList.add("#10ddd0");
 
@@ -72,7 +72,7 @@ public class TutorialFragment extends Fragment {
 
 
         titleList.add("Involve");
-        descList.add("your Spouse by creating a Shared Calendar and To-Do List that can be jointly accessed");
+        descList.add("your Spouse by creating a Shared Calendar which can be jointly accessed");
         pagerImagesList.add(R.drawable.tutorial_5);
         pagerColorList.add("#ff548e");
 

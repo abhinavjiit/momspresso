@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
@@ -40,7 +42,7 @@ public class BaseApplication extends Application {
     private ArticleFilterListModel filterList;
 
     private SQLiteDatabase mWritableDatabase;
-
+    private RequestQueue mRequestQueue;;
     private static BaseApplication mInstance;
     private Retrofit retrofit;
     /*
@@ -149,11 +151,15 @@ public class BaseApplication extends Application {
             Class.forName("android.os.AsyncTask");
         } catch (ClassNotFoundException e) {
         }
-        Fabric.with(this, new Crashlytics());
+       /* Fabric.with(this, new Crashlytics());
         Crashlytics.setUserIdentifier("" + SharedPrefUtils.getUserDetailModel(this).getId());
-        Crashlytics.setUserEmail("" + SharedPrefUtils.getUserDetailModel(this).getEmail());
+        Crashlytics.setUserEmail("" + SharedPrefUtils.getUserDetailModel(this).getEmail());*/
         setInstance(this);
+
         createRetrofitInstance();
+
+        mRequestQueue = Volley.newRequestQueue(getApplicationContext());
+
         //initializeGa();
         // startService(new Intent(this,ReplicationService.class))
         // For Google Analytics initialization.
@@ -185,6 +191,19 @@ public class BaseApplication extends Application {
 
     public void setFilterList(ArticleFilterListModel list) {
         filterList = list;
+    }
+
+    public RequestQueue getRequestQueue() {
+        return mRequestQueue;
+    }
+
+    public  void add(com.android.volley.Request req) {
+        req.setTag(TAG);
+        getRequestQueue().add(req);
+    }
+
+    public void cancel() {
+        mRequestQueue.cancelAll(TAG);
     }
 
     public ArticleFilterListModel getFilterList() {
