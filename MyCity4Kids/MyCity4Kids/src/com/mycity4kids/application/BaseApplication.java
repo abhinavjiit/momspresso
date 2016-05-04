@@ -26,9 +26,15 @@ import java.util.HashMap;
 
 import io.fabric.sdk.android.Fabric;
 import okhttp3.Cache;
+import okhttp3.FormBody;
+import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.logging.HttpLoggingInterceptor;
+import okio.Buffer;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -42,7 +48,8 @@ public class BaseApplication extends Application {
     private ArticleFilterListModel filterList;
 
     private SQLiteDatabase mWritableDatabase;
-    private RequestQueue mRequestQueue;;
+    private RequestQueue mRequestQueue;
+    ;
     private static BaseApplication mInstance;
     private Retrofit retrofit;
     /*
@@ -197,7 +204,7 @@ public class BaseApplication extends Application {
         return mRequestQueue;
     }
 
-    public  void add(com.android.volley.Request req) {
+    public void add(com.android.volley.Request req) {
         req.setTag(TAG);
         getRequestQueue().add(req);
     }
@@ -211,21 +218,69 @@ public class BaseApplication extends Application {
     }
 
     public Retrofit createRetrofitInstance() {
+
+        Interceptor mainInterceptor = new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                Request original = chain.request();
+                HttpUrl originalHttpUrl = original.url();
+                Request.Builder requestBuilder = original.newBuilder();
+
+                if (ConnectivityUtils.isNetworkEnabled(getApplicationContext())) {
+                    original = original.newBuilder().header("Cache-Control", "public, max-age=" + 60).build();
+                } else {
+                    original = original.newBuilder().header("Cache-Control", "public, only-if-cached, max-stale=" + 60 * 60 * 24 * 7).build();
+                }
+
+                if (original.method().equals("GET")) {
+                    HttpUrl url = originalHttpUrl.newBuilder()
+                            .addQueryParameter("user_id", "" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getId())
+                            .build();
+                    requestBuilder = original.newBuilder().url(url)
+                            .method(original.method(), original.body());
+                } else if (original.method().equals("POST") || original.method().equals("PUT")) {
+                    RequestBody formBody = new FormBody.Builder()
+                            .add("user_id", "" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getId())
+                            .build();
+                    String postBodyString = bodyToString(original.body());
+                    postBodyString += ((postBodyString.length() > 0) ? "&" : "") + bodyToString(formBody);
+                    original = requestBuilder
+                            .post(RequestBody.create(MediaType.parse("application/x-www-form-urlencoded;charset=UTF-8"), postBodyString))
+                            .build();
+
+                    requestBuilder = original.newBuilder().url(originalHttpUrl).post(formBody)
+                            .method(original.method(), original.body());
+                }
+
+                // Request customization: add request headers
+
+                Request request = requestBuilder.build();
+                return chain.proceed(request);
+            }
+
+            public String bodyToString(final RequestBody request) {
+                try {
+                    final RequestBody copy = request;
+                    final Buffer buffer = new Buffer();
+                    if (copy != null)
+                        copy.writeTo(buffer);
+                    else
+                        return "";
+                    return buffer.readUtf8();
+                } catch (final IOException e) {
+                    return "did not work";
+                }
+            }
+        };
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+// set your desired log level
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
         OkHttpClient client = new OkHttpClient
                 .Builder()
                 .cache(new Cache(getCacheDir(), 10 * 1024 * 1024)) // 10 MB
-                .addInterceptor(new Interceptor() {
-                    @Override
-                    public okhttp3.Response intercept(Chain chain) throws IOException {
-                        Request request = chain.request();
-                        if (ConnectivityUtils.isNetworkEnabled(getApplicationContext())) {
-                            request = request.newBuilder().header("Cache-Control", "public, max-age=" + 60).build();
-                        } else {
-                            request = request.newBuilder().header("Cache-Control", "public, only-if-cached, max-stale=" + 60 * 60 * 24 * 7).build();
-                        }
-                        return chain.proceed(request);
-                    }
-                })
+                .addInterceptor(mainInterceptor).addInterceptor(logging)
                 .build();
 
         retrofit = new Retrofit.Builder()
