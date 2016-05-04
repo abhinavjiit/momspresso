@@ -407,6 +407,7 @@ public class ArticleImageTagUpload extends BaseActivity {
                 "" + 2,
                 draftObject.getModeration_status() + "",
                 draftObject.getNode_id() + "");
+        Log.e("Publish Request",draftObject.getBody());
 
         //asynchronous call
         call.enqueue(new Callback<ParentingDetailResponse>() {

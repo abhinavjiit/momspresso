@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
@@ -18,6 +19,7 @@ import android.view.View;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.BitmapUtils;
+import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -35,6 +37,11 @@ import com.mycity4kids.models.parentingdetails.ParentingDetailsData;
 import com.mycity4kids.models.user.ImageUploadRequest;
 import com.mycity4kids.models.user.UserModel;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.ArticlePublishAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
+import com.mycity4kids.ui.activity.BloggerDashboardActivity;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,25 +59,24 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+
 /**
  * Created by anshul on 2/29/16.
  */
 public class EditorPostActivity extends BaseActivity implements EditorFragmentAbstract.EditorFragmentListener {
-    String picturePath;
-    private Bitmap bitmap;
-    byte[] byteArrayToSend;
+
     private UserModel userModel;
     Uri imageUri;
-    private Bitmap originalImage;
     private String articleId;
-    ParentingDetailsData detailData;
-    private float density;
     private String thumbnailUrl;
-    private ArrayList<ImageData> imageList;
     private String moderation_status, node_id, path;
 
     File file;
-    String imageString;
     MediaFile mediaFile;
     String mediaId;
     String response;
@@ -108,7 +114,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
         switch (response.getDataType()) {
 
             case AppConstants.ARTICLE_DRAFT_REQUEST: {
-                if (response.getResponseObject() instanceof ParentingDetailResponse) {
+             /*   if (response.getResponseObject() instanceof ParentingDetailResponse) {
                     ParentingDetailResponse responseModel = (ParentingDetailResponse) response
                             .getResponseObject();
                     removeProgressDialog();
@@ -131,10 +137,10 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                         //  finish();
                     }
                 }
-                break;
+                break;*/
             }
             case AppConstants.IMAGE_EDITOR_UPLOAD_REQUEST: {
-                if (response.getResponseObject() instanceof CommonResponse) {
+               /* if (response.getResponseObject() instanceof CommonResponse) {
                     CommonResponse responseModel = (CommonResponse) response
                             .getResponseObject();
                     if (responseModel.getResponseCode() != 200) {
@@ -154,7 +160,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                         //  showToast("You have successfully uploaded image.");
                     }
                 }
-                break;
+                break;*/
             }
 
         }
@@ -200,9 +206,9 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                 Log.e("imageuploading", mEditorFragment.imageUploading + "");
                 showToast("Please wait while image is being uploaded");
             } else {
-
-                saveDraftRequest(titleFormatting(mEditorFragment.getTitle().toString().trim()), mEditorFragment.getContent().toString(), draftId);
                 fromBackpress = true;
+                saveDraftRequest(titleFormatting(mEditorFragment.getTitle().toString().trim()), mEditorFragment.getContent().toString(), draftId);
+
             }
             // super.onBackPressed();
 
@@ -478,19 +484,75 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     }
 
 
-    public void saveDraftRequest(String title, String body, String draftId) {
+    public void saveDraftRequest(String title, String body, String draftId1) {
         showProgressDialog(getResources().getString(R.string.please_wait));
+
+/*
         ArticleDraftRequest requestData = new ArticleDraftRequest();
         title = title.trim();
         requestData.setUser_id("" + userModel.getUser().getId());
         requestData.setBody("" + body);
         requestData.setTitle("" + title);
-        requestData.setId("" + draftId);
+        requestData.setId("" + draftId1);
         requestData.setSourceId("" + 2);
 
         Log.e("userId", userModel.getUser().getId() + "");
         ArticleDraftController controller = new ArticleDraftController(this, this);
-        controller.getData(AppConstants.ARTICLE_DRAFT_REQUEST, requestData);
+        controller.getData(AppConstants.ARTICLE_DRAFT_REQUEST, requestData);*/
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        // prepare call in Retrofit 2.0
+        ArticleDraftAPI articleDraftAPI = retrofit.create(ArticleDraftAPI.class);
+        if (!ConnectivityUtils.isNetworkEnabled(this)) {
+            showToast("");
+            return;
+        }
+        Call<ParentingDetailResponse> call = articleDraftAPI.draftArticle("" + userModel.getUser().getId(),
+                title,
+                body,
+                draftId1,
+                null,
+                AppConstants.Source_Id);
+
+
+        //asynchronous call
+        call.enqueue(new Callback<ParentingDetailResponse>() {
+                         @Override
+                         public void onResponse(Call<ParentingDetailResponse> call, retrofit2.Response<ParentingDetailResponse> response) {
+                             int statusCode = response.code();
+
+                             ParentingDetailResponse responseModel = (ParentingDetailResponse) response.body();
+
+                             removeProgressDialog();
+
+                             if (responseModel.getResponseCode() != 200) {
+                                 showToast(getString(R.string.toast_response_error));
+                                 return;
+                             } else {
+                                 if (!StringUtils.isNullOrEmpty(responseModel.getResult().getMessage())) {
+                                     //  SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
+                                     Log.i("Draft message", responseModel.getResult().getMessage());
+                                 }
+                                 draftId = responseModel.getResult().getData().getId() + "";
+
+                                 //setProfileImage(originalImage);
+                                 showToast("Draft Successfully saved");
+                                 if (fromBackpress) {
+                                     //onBackPressed();
+                                     finish();
+                                 }
+                                 //  finish();
+                             }
+
+                         }
+
+
+                         @Override
+                         public void onFailure(Call<ParentingDetailResponse> call, Throwable t) {
+
+                         }
+                     }
+        );
+
     }
 
     @Override
@@ -617,8 +679,50 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
         originalImage.compress(Bitmap.CompressFormat.PNG, 75, bao);
         byte[] ba = bao.toByteArray();
         String imageString = Base64.encodeToString(ba, Base64.DEFAULT);
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
+        RequestBody requestBodyFile = RequestBody.create(MEDIA_TYPE_PNG, imageString);
+        RequestBody userId = RequestBody.create(MediaType.parse("text/plain"), "" + userModel.getUser().getId());
+        RequestBody imageType = RequestBody.create(MediaType.parse("text/plain"), "jpg");
+        // prepare call in Retrofit 2.0
+        ImageUploadAPI imageUploadAPI = retrofit.create(ImageUploadAPI.class);
 
-        JSONObject jsonObject = new JSONObject();
+        Call<CommonResponse> call = imageUploadAPI.uploadImage(userId,
+                imageType,
+                requestBodyFile);
+        //asynchronous call
+        call.enqueue(new Callback<CommonResponse>() {
+                         @Override
+                         public void onResponse(Call<CommonResponse> call, retrofit2.Response<CommonResponse> response) {
+                             CommonResponse responseModel = response.body();
+
+                             removeProgressDialog();
+                             if (responseModel.getResponseCode() != 200) {
+                                 showToast(getString(R.string.toast_response_error));
+                                 removeProgressDialog();
+                                 return;
+                             } else {
+                                 if (!StringUtils.isNullOrEmpty(responseModel.getResult().getMessage())) {
+                                     //      SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
+                                     Log.i("Uploaded Image URL", responseModel.getResult().getMessage());
+                                 }
+                                 mediaFile.setFileURL(responseModel.getResult().getMessage());
+
+                                 ((EditorMediaUploadListener) mEditorFragment).onMediaUploadSucceeded(mediaId, mediaFile);
+                                 removeProgressDialog();
+                                 //setProfileImage(originalImage);
+                                 //  showToast("You have successfully uploaded image.");
+                             }
+                         }
+
+                         @Override
+                         public void onFailure(Call<CommonResponse> call, Throwable t) {
+
+                         }
+                     }
+        );
+
+   /*     JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("extension", "image/png");
             jsonObject.put("size", ba.length);
@@ -643,7 +747,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
         //  requestData.setType(AppConstants.IMAGE_TYPE_USER_PROFILE);
 
         ImageUploadController controller = new ImageUploadController(this, this);
-        controller.getData(AppConstants.IMAGE_EDITOR_UPLOAD_REQUEST, requestData);
+        controller.getData(AppConstants.IMAGE_EDITOR_UPLOAD_REQUEST, requestData);*/
     }
 
 
