@@ -3,6 +3,8 @@ package com.mycity4kids.ui.activity;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -49,6 +51,7 @@ import com.google.android.gms.common.api.Status;
 import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
+import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
 import com.kelltontech.utils.ToastUtils;
@@ -81,6 +84,7 @@ import com.mycity4kids.newmodels.AttendeeModel;
 import com.mycity4kids.newmodels.BlogShareSpouseModel;
 import com.mycity4kids.newmodels.GetCommentsRequestModel;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.ui.CircleTransformation;
 import com.mycity4kids.ui.fragment.CommentRepliesDialogFragment;
 import com.mycity4kids.ui.fragment.WhoToRemindDialogFragment;
@@ -88,9 +92,15 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
 
 /**
  * @author deepanker.chaudhary
@@ -138,6 +148,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     Boolean isLoading = false;
     private int offset = 0;
     private RelativeLayout mLodingView;
+    private String versionName;
 
     //New UI changes
     private CollapsingToolbarLayout collapsingToolbarLayout;
@@ -207,59 +218,92 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             mScrollView = (NestedScrollView) findViewById(R.id.scroll_view);
             mUiHelper = new UiLifecycleHelper(this, FacebookUtils.callback);
             mUiHelper.onCreate(savedInstanceState);
+            share_spouse.setVisibility(View.INVISIBLE);
+            commLayout = ((LinearLayout) findViewById(R.id.commnetLout));
+            mScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+
+                @Override
+                public void onScrollChanged() {
+
+                    View view = (View) mScrollView.getChildAt(mScrollView.getChildCount() - 1);
+
+                    Rect scrollBounds = new Rect();
+                    mScrollView.getHitRect(scrollBounds);
+                    if (share_spouse.getVisibility() != View.VISIBLE) {
+                        if (commLayout.getLocalVisibleRect(scrollBounds)) {
+                            // Any portion of the imageView, even a single pixel, is within the visible window
+                            share_spouse.setAnimation((AnimationUtils.loadAnimation(ArticlesAndBlogsDetailsActivity.this, R.anim.right_to_left)));
+                            share_spouse.setVisibility(View.VISIBLE);
+                        } else {
+                            // NONE of the imageView is within the visible window
+                            share_spouse.setVisibility(View.INVISIBLE);
+                        }
+                    }
+                    int diff = (view.getBottom() - (mScrollView.getHeight() + mScrollView.getScrollY()));
+
+                    if (diff <= 10 && !isLoading && !StringUtils.isNullOrEmpty(commentTypeToFetch)) {
+                        getMoreComments();
+                    }
+                }
+            });
 
             Bundle bundle = getIntent().getExtras();
             if (bundle != null) {
                 articleId = bundle.getString(Constants.ARTICLE_ID);
                 ArticleBlogDetailsController _controller = new ArticleBlogDetailsController(this, this);
+//                _controller.getData(AppConstants.ARTICLES_DETAILS_REQUEST, articleId);
+                if (!ConnectivityUtils.isNetworkEnabled(this)) {
+                    showToast("No connectivity available");
+                    return;
+                }
                 showProgressDialog(getString(R.string.fetching_data));
-                _controller.getData(AppConstants.ARTICLES_DETAILS_REQUEST, articleId);
+                Retrofit retro = BaseApplication.getInstance().getRetrofit();
+                ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
+
+                PackageInfo pInfo = null;
+                try {
+                    pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
+                versionName = pInfo.versionName;
+
+                Call<ParentingDetailResponse> call = articleDetailsAPI.getArticleBody(articleId,
+                        "" + SharedPrefUtils.getUserDetailModel(this).getId(), versionName);
+
+                call.enqueue(parentingDetailResponseCallback);
+
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        share_spouse.setVisibility(View.INVISIBLE);
-        commLayout = ((LinearLayout) findViewById(R.id.commnetLout));
-        mScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
-
-            @Override
-            public void onScrollChanged() {
-
-                View view = (View) mScrollView.getChildAt(mScrollView.getChildCount() - 1);
-
-                Rect scrollBounds = new Rect();
-                mScrollView.getHitRect(scrollBounds);
-                if (share_spouse.getVisibility() != View.VISIBLE) {
-                    if (commLayout.getLocalVisibleRect(scrollBounds)) {
-                        // Any portion of the imageView, even a single pixel, is within the visible window
-                        share_spouse.setAnimation((AnimationUtils.loadAnimation(ArticlesAndBlogsDetailsActivity.this, R.anim.right_to_left)));
-                        share_spouse.setVisibility(View.VISIBLE);
-                    } else {
-                        // NONE of the imageView is within the visible window
-                        share_spouse.setVisibility(View.INVISIBLE);
-                    }
-                }
-                int diff = (view.getBottom() - (mScrollView.getHeight() + mScrollView.getScrollY()));
-
-                if (diff <= 10 && !isLoading && !StringUtils.isNullOrEmpty(commentTypeToFetch)) {
-                    getMoreComments();
-                }
-            }
-        });
-
     }
 
     private void getMoreComments() {
         isLoading = true;
+        if (!ConnectivityUtils.isNetworkEnabled(this)) {
+            showToast("No connectivity available");
+            return;
+        }
         mLodingView.setVisibility(View.VISIBLE);
-        GetCommentsRequestModel getCommentsRequestModel = new GetCommentsRequestModel();
-        getCommentsRequestModel.setArticleId(articleId);
-        getCommentsRequestModel.setLimit(AppConstants.COMMENT_LIMIT);
-        getCommentsRequestModel.setOffset(offset);
-        getCommentsRequestModel.setCommentType(commentTypeToFetch);
-        ArticleBlogDetailsController _controller = new ArticleBlogDetailsController(this, this);
-        _controller.getData(AppConstants.GET_MORE_COMMENTS, getCommentsRequestModel);
+
+        Retrofit retro = BaseApplication.getInstance().getRetrofit();
+        ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
+
+        Call<ResponseBody> call = articleDetailsAPI.getArticleComments(articleId,
+                "" + AppConstants.COMMENT_LIMIT, "" + offset, commentTypeToFetch,
+                "" + SharedPrefUtils.getUserDetailModel(this).getId(), versionName);
+
+        call.enqueue(articleCommentsResponseCallback);
+
+//        GetCommentsRequestModel getCommentsRequestModel = new GetCommentsRequestModel();
+//        getCommentsRequestModel.setArticleId(articleId);
+//        getCommentsRequestModel.setLimit(AppConstants.COMMENT_LIMIT);
+//        getCommentsRequestModel.setOffset(offset);
+//        getCommentsRequestModel.setCommentType(commentTypeToFetch);
+//        ArticleBlogDetailsController _controller = new ArticleBlogDetailsController(this, this);
+//        _controller.getData(AppConstants.GET_MORE_COMMENTS, getCommentsRequestModel);
     }
 
 
@@ -441,6 +485,9 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                         if (isCommingFromCommentAPI) {
                             if (StringUtils.isNullOrEmpty(commentMessage)) {
                                 showToast("Your comment has been added!");
+                                if (null != commentText) {
+                                    commentText.setText("");
+                                }
                             } else {
                                 Toast.makeText(ArticlesAndBlogsDetailsActivity.this, commentMessage, Toast.LENGTH_SHORT).show();
                             }
@@ -721,7 +768,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             WebView view = (WebView) findViewById(R.id.articleWebView);
             view.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
             view.loadDataWithBaseURL("", bodyImgTxt, "text/html", "utf-8", "");
-
+            view.getSettings().setJavaScriptEnabled(true);
         } else {
             bodyDesc = bodyDesc.replaceAll("\n", "<br/>");
             String bodyImgTxt = "<html><head>" +
@@ -741,7 +788,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             WebView view = (WebView) findViewById(R.id.articleWebView);
             view.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
             view.loadDataWithBaseURL("", bodyImgTxt, "text/html", "utf-8", "");
-
+            view.getSettings().setJavaScriptEnabled(true);
         }
         final Target target = new Target() {
             @Override
@@ -1096,4 +1143,113 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             }
         }).start();
     }
+
+    Callback<ParentingDetailResponse> parentingDetailResponseCallback = new Callback<ParentingDetailResponse>() {
+        @Override
+        public void onResponse(Call<ParentingDetailResponse> call, retrofit2.Response<ParentingDetailResponse> response) {
+            removeProgressDialog();
+            if (response == null) {
+                showToast("Something went wrong from server");
+                return;
+            }
+            String commentMessage = "";
+            ParentingDetailResponse responseData = (ParentingDetailResponse) response.body();
+
+            if (responseData.getResponseCode() == 200) {
+                newCommentLayout.setVisibility(View.VISIBLE);
+                getResponseUpdateUi(responseData);
+                if (isCommingFromCommentAPI) {
+                    if (StringUtils.isNullOrEmpty(commentMessage)) {
+                        showToast("Your comment has been added!");
+                    } else {
+                        Toast.makeText(ArticlesAndBlogsDetailsActivity.this, commentMessage, Toast.LENGTH_SHORT).show();
+                    }
+                    sendScrollDown();
+                    isCommingFromCommentAPI = false;
+                }
+            } else if (responseData.getResponseCode() == 400) {
+                isCommingFromCommentAPI = false;
+                finish();
+                String message = responseData.getResult().getMessage();
+                if (!StringUtils.isNullOrEmpty(message)) {
+                    showToast(message);
+                } else {
+                    showToast(getString(R.string.went_wrong));
+                }
+            }
+        }
+
+        @Override
+        public void onFailure(Call<ParentingDetailResponse> call, Throwable t) {
+            showToast(getString(R.string.went_wrong));
+        }
+    };
+
+    Callback<ResponseBody> articleCommentsResponseCallback = new Callback<ResponseBody>() {
+        @Override
+        public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+            removeProgressDialog();
+            if (response == null) {
+                showToast("Something went wrong from server");
+                return;
+            }
+            try {
+                mLodingView.setVisibility(View.GONE);
+                isLoading = false;
+                String resData = new String(response.body().bytes());
+                JSONObject jsonObject = new JSONObject(resData);
+                JSONArray commentsJson = new JSONArray();
+                int commCount = 0;
+                if (!StringUtils.isNullOrEmpty(commentTypeToFetch) && AppConstants.COMMENT_TYPE_DB.equals(commentTypeToFetch)) {
+                    commCount = jsonObject.getJSONObject("result").getJSONObject("data").getJSONObject("db").getInt("count");
+                    commentsJson = jsonObject.getJSONObject("result").getJSONObject("data").getJSONObject("db").getJSONArray("comments");
+                    if (commCount == 0) {
+                        commentTypeToFetch = AppConstants.COMMENT_TYPE_FB_PLUGIN;
+                        getMoreComments();
+
+                    }
+                    offset = offset + 1;
+                    if (offset * AppConstants.COMMENT_LIMIT >= commCount) {
+                        commentTypeToFetch = AppConstants.COMMENT_TYPE_FB_PLUGIN;
+                        offset = 0;
+                    }
+                } else if (!StringUtils.isNullOrEmpty(commentTypeToFetch) && AppConstants.COMMENT_TYPE_FB_PLUGIN.equals(commentTypeToFetch)) {
+                    commCount = jsonObject.getJSONObject("result").getJSONObject("data").getJSONObject("fb").getInt("count");
+                    commentsJson = jsonObject.getJSONObject("result").getJSONObject("data").getJSONObject("fb").getJSONArray("comments");
+                    offset = offset + 1;
+                    if (offset * AppConstants.COMMENT_LIMIT >= commCount) {
+                        commentTypeToFetch = AppConstants.COMMENT_TYPE_FB_PAGE;
+                        offset = 0;
+                    }
+                } else if (!StringUtils.isNullOrEmpty(commentTypeToFetch) && AppConstants.COMMENT_TYPE_FB_PAGE.equals(commentTypeToFetch)) {
+                    commCount = jsonObject.getJSONObject("result").getJSONObject("data").getJSONObject("fan").getInt("count");
+                    commentsJson = jsonObject.getJSONObject("result").getJSONObject("data").getJSONObject("fan").getJSONArray("comments");
+                    offset = offset + 1;
+                    if (offset * AppConstants.COMMENT_LIMIT >= commCount) {
+                        commentTypeToFetch = "";
+                        offset = 0;
+                    }
+                }
+
+                LinearLayout commentLayout = ((LinearLayout) findViewById(R.id.commnetLout));
+                ViewHolder viewHolder = null;
+                viewHolder = new ViewHolder();
+                for (int i = 0; i < commentsJson.length(); i++) {
+                    CommentsData cData = new Gson().fromJson(commentsJson.get(i).toString(), CommentsData.class);
+                    displayComments(viewHolder, cData, commentLayout);
+                }
+            } catch (JSONException jsonexception) {
+                Log.e("details", jsonexception.getMessage());
+                showToast("Something went wrong while parsing response from server");
+            } catch (Exception ex) {
+                Log.e("details", ex.getMessage());
+                showToast("Something went wrong from server");
+            }
+        }
+
+        @Override
+        public void onFailure(Call<ResponseBody> call, Throwable t) {
+            showToast(getString(R.string.went_wrong));
+        }
+    };
 }
