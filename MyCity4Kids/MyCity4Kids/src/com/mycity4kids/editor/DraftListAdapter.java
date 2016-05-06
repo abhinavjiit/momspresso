@@ -3,8 +3,6 @@ package com.mycity4kids.editor;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -32,7 +30,7 @@ public class DraftListAdapter extends BaseAdapter {
     Context context;
     ArrayList<ArticleDraftList> draftlist;
     private LayoutInflater mInflator;
-    DraftListView draftListView;
+    DraftListViewActivity draftListView;
     TimeZone tz = TimeZone.getDefault();
 
     DraftListAdapter(Context context, ArrayList<ArticleDraftList> draftlist) {
@@ -69,7 +67,7 @@ public class DraftListAdapter extends BaseAdapter {
             holder.txvUnapproved = (TextView) view.findViewById(R.id.unapproved);
             holder.popupButton.setTag(getItem(position));
 
-            //    popupButton.setOnClickListener((DraftListView)context);
+            //    popupButton.setOnClickListener((DraftListViewActivity)context);
             holder.popupButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -88,7 +86,7 @@ public class DraftListAdapter extends BaseAdapter {
                                 return true;
                             } else if (i == R.id.delete) {
                                 //do something
-                                ((DraftListView) context).deleteDraftAPI((ArticleDraftList) getItem(position), position);
+                                ((DraftListViewActivity) context).deleteDraftAPI((ArticleDraftList) getItem(position), position);
                                 Log.e("delete", "clicked");
                                 return true;
                             } else {

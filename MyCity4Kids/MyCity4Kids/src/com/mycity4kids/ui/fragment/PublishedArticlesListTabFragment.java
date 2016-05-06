@@ -12,11 +12,14 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
+import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.ArticleBlogDetailsController;
@@ -26,12 +29,25 @@ import com.mycity4kids.enums.ParentingFilterType;
 import com.mycity4kids.models.parentingdetails.ImageData;
 import com.mycity4kids.models.parentingdetails.ParentingDetailResponse;
 import com.mycity4kids.models.parentingdetails.ParentingDetailsData;
+import com.mycity4kids.models.parentingstop.CommonParentingResponse;
 import com.mycity4kids.newmodels.PublishedArticlesModel;
+import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
 import com.mycity4kids.ui.activity.BloggerDashboardActivity;
 import com.mycity4kids.ui.adapter.PublishedArticlesListAdapter;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
 
 /**
  * Created by hemant on 18/3/16.
@@ -155,7 +171,7 @@ public class PublishedArticlesListTabFragment extends BaseFragment {
 
         switch (response.getDataType()) {
             case AppConstants.GET_BLOGGER_PUBLISHED_ARTICLES_REQUEST:
-                responseData = (PublishedArticlesModel) response.getResponseObject();
+           /*     responseData = (PublishedArticlesModel) response.getResponseObject();
                 if (responseData.getResponseCode() == 200) {
                     processPublishedArticleResponse(responseData);
                 } else if (responseData.getResponseCode() == 400) {
@@ -168,7 +184,7 @@ public class PublishedArticlesListTabFragment extends BaseFragment {
                 }
 
                 isReuqestRunning = false;
-                mLodingView.setVisibility(View.GONE);
+                mLodingView.setVisibility(View.GONE);*/
                 break;
             case AppConstants.ARTICLES_DETAILS_REQUEST:
                 ParentingDetailResponse responseData1 = (ParentingDetailResponse) response.getResponseObject();
@@ -221,9 +237,83 @@ public class PublishedArticlesListTabFragment extends BaseFragment {
     }
 
     private void getAllPublishedArticles(int pPageCount) {
-        BloggerDashboardAndPublishedArticlesController _controller =
+       /* BloggerDashboardAndPublishedArticlesController _controller =
                 new BloggerDashboardAndPublishedArticlesController(getActivity(), this);
-        _controller.getData(AppConstants.GET_BLOGGER_PUBLISHED_ARTICLES_REQUEST, pPageCount);
+        _controller.getData(AppConstants.GET_BLOGGER_PUBLISHED_ARTICLES_REQUEST, pPageCount);*/
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        // prepare call in Retrofit 2.0
+        BloggerDashboardAPI publishedArticleAPI = retrofit.create(BloggerDashboardAPI.class);
+        if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
+            ToastUtils.showToast(getActivity(), "");
+            return;
+        }
+        Call<ResponseBody> call = publishedArticleAPI.getPublishedArticleList("" + SharedPrefUtils.getUserDetailModel(getActivity()).getId(),
+                "" + pPageCount );
+
+
+        //asynchronous call
+        call.enqueue(new Callback<ResponseBody>() {
+                         @Override
+                         public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+
+
+                             String responseData = null;
+                             try {
+                                 responseData = new String(response.body().bytes());
+                             } catch (IOException e) {
+                                 e.printStackTrace();
+                             }
+                             JSONObject jsonObject = null;
+                             try {
+                                 jsonObject = new JSONObject(responseData);
+
+                             JSONArray dataObj = null;
+
+                                 dataObj = jsonObject.getJSONObject("result").optJSONArray("data");
+
+
+                             if (null == dataObj) {
+
+                                     jsonObject.getJSONObject("result").remove("data");
+
+
+                                     jsonObject.getJSONObject("result").put("data", new JSONArray());
+
+                                 }
+
+                                 responseData = jsonObject.toString();
+                             }catch (JSONException e) {
+                                 e.printStackTrace();
+                             }
+                             PublishedArticlesModel blogResponse = new Gson().fromJson(responseData, PublishedArticlesModel.class);
+
+                           /*  PublishedArticlesModel responseData = (PublishedArticlesModel) response.body();
+
+                             String st = new String(response.body().bytes());*/
+
+                             if (blogResponse.getResponseCode() == 200) {
+                                 processPublishedArticleResponse(blogResponse);
+                             } else if (blogResponse.getResponseCode() == 400) {
+                                 String message = blogResponse.getResult().getMessage();
+                                 if (!StringUtils.isNullOrEmpty(message)) {
+                                     ToastUtils.showToast(getActivity(), message);
+                                 } else {
+                                     ToastUtils.showToast(getActivity(), getString(R.string.went_wrong));
+                                 }
+                             }
+
+                             isReuqestRunning = false;
+                             mLodingView.setVisibility(View.GONE);
+                         }
+
+
+                         @Override
+                         public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                         }
+                     }
+        );
+
 
     }
 

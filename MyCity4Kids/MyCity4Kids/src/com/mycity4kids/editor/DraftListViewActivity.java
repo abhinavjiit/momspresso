@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -23,8 +22,6 @@ import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
-import com.mycity4kids.controller.ArticleDraftController;
-import com.mycity4kids.controller.DraftListController;
 import com.mycity4kids.dbtable.UserTable;
 import com.mycity4kids.models.editor.ArticleDraftList;
 import com.mycity4kids.models.editor.ArticleDraftListResponse;
@@ -32,8 +29,6 @@ import com.mycity4kids.models.editor.ArticleDraftRequest;
 import com.mycity4kids.models.parentingdetails.ParentingDetailResponse;
 import com.mycity4kids.models.user.UserModel;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
-import com.mycity4kids.retrofitAPIsInterfaces.ArticlePublishAPI;
-import com.mycity4kids.ui.activity.BloggerDashboardActivity;
 
 import java.util.ArrayList;
 
@@ -44,7 +39,7 @@ import retrofit2.Retrofit;
 /**
  * Created by anshul on 3/15/16.
  */
-public class DraftListView extends BaseActivity implements View.OnClickListener, PopupMenu.OnMenuItemClickListener {
+public class DraftListViewActivity extends BaseActivity implements View.OnClickListener, PopupMenu.OnMenuItemClickListener {
     ArrayList<ArticleDraftList> draftList;
     private UserModel userModel;
     ListView draftListview;
@@ -78,7 +73,7 @@ public class DraftListView extends BaseActivity implements View.OnClickListener,
             */
             }
             case AppConstants.ARTICLE_DRAFT_REQUEST: {
-                if (response.getResponseObject() instanceof ParentingDetailResponse) {
+                /*if (response.getResponseObject() instanceof ParentingDetailResponse) {
                     ParentingDetailResponse responseModel = (ParentingDetailResponse) response
                             .getResponseObject();
                     removeProgressDialog();
@@ -94,7 +89,7 @@ public class DraftListView extends BaseActivity implements View.OnClickListener,
                         adapter.notifyDataSetChanged();
                     }
                 }
-                break;
+                break;*/
             }
 
         }
@@ -117,7 +112,7 @@ public class DraftListView extends BaseActivity implements View.OnClickListener,
             @Override
             public void onClick(View v) {
                 if (Build.VERSION.SDK_INT > 15) {
-                    Intent intent1 = new Intent(DraftListView.this, EditorPostActivity.class);
+                    Intent intent1 = new Intent(DraftListViewActivity.this, EditorPostActivity.class);
                     Bundle bundle5 = new Bundle();
                     bundle5.putString(EditorPostActivity.TITLE_PARAM, "");
                     bundle5.putString(EditorPostActivity.CONTENT_PARAM, "");
@@ -126,7 +121,7 @@ public class DraftListView extends BaseActivity implements View.OnClickListener,
                     bundle5.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
                             getString(R.string.example_post_content_placeholder));
                     bundle5.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
-                    bundle5.putString("from", "DraftListView");
+                    bundle5.putString("from", "DraftListViewActivity");
                     intent1.putExtras(bundle5);
                     startActivity(intent1);
                 } else {
@@ -165,7 +160,7 @@ public class DraftListView extends BaseActivity implements View.OnClickListener,
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (Build.VERSION.SDK_INT > 15) {
-                    Intent intent = new Intent(DraftListView.this, EditorPostActivity.class);
+                    Intent intent = new Intent(DraftListViewActivity.this, EditorPostActivity.class);
                     intent.putExtra("draftItem", draftList.get(position));
                     intent.putExtra("from", "draftList");
                     startActivity(intent);

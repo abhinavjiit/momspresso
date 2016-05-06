@@ -456,14 +456,14 @@
             android:screenOrientation="portrait"
             android:theme="@style/EditorTheme" />
         <activity
-            android:name=".editor.DraftListView"
+            android:name=".editor.DraftListViewActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.nnn" />
         <activity
-            android:name=".editor.BlogPage"
+            android:name=".editor.SetupBlogPageActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".editor.ArticleImageTagUpload"
+            android:name=".editor.ArticleImageTagUploadActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.mycity4kids.reminders.AlarmDialogActivity"

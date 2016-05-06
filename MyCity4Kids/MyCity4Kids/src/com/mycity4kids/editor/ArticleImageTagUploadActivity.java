@@ -2,14 +2,12 @@ package com.mycity4kids.editor;
 
 import android.app.Activity;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -23,7 +21,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -31,13 +28,11 @@ import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
-import com.mycity4kids.controller.ArticleDraftController;
 import com.mycity4kids.controller.ArticlePublishController;
 import com.mycity4kids.dbtable.UserTable;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.editor.ArticleDraftList;
-import com.mycity4kids.models.editor.ArticleDraftRequest;
 import com.mycity4kids.models.editor.ArticlePublishRequest;
 import com.mycity4kids.models.editor.BlogDataResponse;
 import com.mycity4kids.models.forgot.CommonResponse;
@@ -45,49 +40,25 @@ import com.mycity4kids.models.parentingdetails.ParentingDetailResponse;
 import com.mycity4kids.models.user.UserModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticlePublishAPI;
-import com.mycity4kids.retrofitAPIsInterfaces.GetBlogPageAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
 import com.mycity4kids.ui.activity.BloggerDashboardActivity;
 import com.squareup.picasso.Picasso;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
 
-import okhttp3.Cache;
-import okhttp3.Interceptor;
 import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by anshul on 3/18/16.
  */
-public class ArticleImageTagUpload extends BaseActivity {
+public class ArticleImageTagUploadActivity extends BaseActivity {
     Toolbar mToolbar;
     ImageView articleImage;
     public static final int ADD_MEDIA_ACTIVITY_REQUEST_CODE = 1111;
@@ -118,7 +89,7 @@ public class ArticleImageTagUpload extends BaseActivity {
                             return;
                         } else {
                             if (!StringUtils.isNullOrEmpty(responseModel.getResult().getMessage())) {
-                                SharedPrefUtils.setProfileImgUrl(BlogPage.this, responseModel.getResult().getMessage());
+                                SharedPrefUtils.setProfileImgUrl(SetupBlogPageActivity.this, responseModel.getResult().getMessage());
                                 Log.i("Uploaded Image URL", responseModel.getResult().getMessage());
                             }
 
@@ -153,7 +124,7 @@ public class ArticleImageTagUpload extends BaseActivity {
                             handler.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Intent intent = new Intent(ArticleImageTagUpload.this, BloggerDashboardActivity.class);
+                                    Intent intent = new Intent(ArticleImageTagUploadActivity.this, BloggerDashboardActivity.class);
                                     startActivity(intent);
                                     finish();
                                 }
@@ -207,12 +178,12 @@ public class ArticleImageTagUpload extends BaseActivity {
                               /*
                               articleDraftRequest.setCity_id(SharedPrefUtils.getCurrentCityModel(getActivity()).getId());
                               _parentingModel.setPage("" + pPageCount);*/
-                            ArticlePublishController _controller = new ArticlePublishController(ArticleImageTagUpload.this, ArticleImageTagUpload.this);
+                            ArticlePublishController _controller = new ArticlePublishController(ArticleImageTagUploadActivity.this, ArticleImageTagUploadActivity.this);
 
                             _controller.getData(AppConstants.ARTICLE_PUBLISH_REQUEST, articlePublishRequestRequest);
 
                         } else {
-                            Intent intent = new Intent(ArticleImageTagUpload.this, BlogPage.class);
+                            Intent intent = new Intent(ArticleImageTagUploadActivity.this, SetupBlogPageActivity.class);
                             startActivity(intent);
                         }
                         // removeProgressDialog();
@@ -257,7 +228,7 @@ public class ArticleImageTagUpload extends BaseActivity {
         UserTable userTable = new UserTable((BaseApplication) this.getApplication());
         userModel = userTable.getAllUserData();
         baseApplication = (BaseApplication) getApplication();
-        Utils.pushOpenScreenEvent(ArticleImageTagUpload.this, "Article Image Upload", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+        Utils.pushOpenScreenEvent(ArticleImageTagUploadActivity.this, "Article Image Upload", SharedPrefUtils.getUserDetailModel(this).getId() + "");
         if ((getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) || (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("draftList"))) {
             String thumbnailUrl = getIntent().getStringExtra("imageUrl");
             articleId = getIntent().getStringExtra("articleId");
@@ -282,7 +253,7 @@ public class ArticleImageTagUpload extends BaseActivity {
         publish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.pushEvent(ArticleImageTagUpload.this, GTMEventType.PUBLISH_ARTICLE_BUTTON_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(ArticleImageTagUpload.this).getId() + "", "");
+                Utils.pushEvent(ArticleImageTagUploadActivity.this, GTMEventType.PUBLISH_ARTICLE_BUTTON_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(ArticleImageTagUploadActivity.this).getId() + "", "");
                 pref = getSharedPreferences(COMMON_PREF_FILE, MODE_PRIVATE);
                 blogSetup = pref.getBoolean("blogSetup", false);
                 Log.e("blogsetup", blogSetup + "");
@@ -327,7 +298,7 @@ public class ArticleImageTagUpload extends BaseActivity {
                         file = new File(new URI("file://"
                                 + filePath.replaceAll(" ", "%20")));
 
-                        Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(ArticleImageTagUpload.this.getContentResolver(), imageUri);
+                        Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(ArticleImageTagUploadActivity.this.getContentResolver(), imageUri);
                         //  sendUploadProfileImageRequest(imageBitmap);
                         float actualHeight = imageBitmap.getHeight();
                         float actualWidth = imageBitmap.getWidth();
@@ -434,14 +405,14 @@ public class ArticleImageTagUpload extends BaseActivity {
                                      //setProfileImage(originalImage);
                                      alertDialog(responseModel.getResult().getMessage());
                                      Handler handler = new Handler();
-                                     handler.postDelayed(new Runnable() {
+                                     /*handler.postDelayed(new Runnable() {
                                          @Override
                                          public void run() {
-                                             Intent intent = new Intent(ArticleImageTagUpload.this, BloggerDashboardActivity.class);
+                                             Intent intent = new Intent(ArticleImageTagUploadActivity.this, BloggerDashboardActivity.class);
                                              startActivity(intent);
                                              finish();
                                          }
-                                     }, 2000);
+                                     }, 2000);*/
                                  } else {
                                      showToast(responseModel.getResult().getMessage().toString());
                                  }
@@ -462,7 +433,7 @@ public class ArticleImageTagUpload extends BaseActivity {
         showProgressDialog(getResources().getString(R.string.please_wait));
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
 
-        GetBlogPageAPI getBlogPageAPI = retrofit.create(GetBlogPageAPI.class);
+        BlogPageAPI getBlogPageAPI = retrofit.create(BlogPageAPI.class);
 
         Call<BlogDataResponse> call = getBlogPageAPI.getBlogPage("" + userModel.getUser().getId(),
                 "" + 2);
@@ -491,7 +462,7 @@ public class ArticleImageTagUpload extends BaseActivity {
                         publishArticleRequest();
 
                     } else {
-                        Intent intent = new Intent(ArticleImageTagUpload.this, BlogPage.class);
+                        Intent intent = new Intent(ArticleImageTagUploadActivity.this, SetupBlogPageActivity.class);
                         startActivity(intent);
                     }
                     // removeProgressDialog();
@@ -516,10 +487,14 @@ public class ArticleImageTagUpload extends BaseActivity {
         new AlertDialog.Builder(this)
                 .setTitle("MyCity4Kids")
                 .setMessage(msg)
+                .setCancelable(false)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // continue with delete
-                        dialog.dismiss();
+                      //  dialog.dismiss();
+                        Intent intent = new Intent(ArticleImageTagUploadActivity.this, BloggerDashboardActivity.class);
+                        startActivity(intent);
+                        finish();
                     }
                 })
                 .show();
@@ -559,7 +534,7 @@ public class ArticleImageTagUpload extends BaseActivity {
                                      Log.i("IMAGE_UPLOAD_REQUEST", responseModel.getResult().getMessage());
                                  }
                                  setProfileImage(responseModel.getResult().getMessage());
-                                 Picasso.with(ArticleImageTagUpload.this).load(responseModel.getResult().getMessage()).error(R.drawable.default_article).into(articleImage);
+                                 Picasso.with(ArticleImageTagUploadActivity.this).load(responseModel.getResult().getMessage()).error(R.drawable.default_article).into(articleImage);
                                  showToast("Image successfully uploaded!");
                                  // ((BaseActivity) this()).showSnackbar(getView().findViewById(R.id.root), "You have successfully uploaded an image.");
                              }

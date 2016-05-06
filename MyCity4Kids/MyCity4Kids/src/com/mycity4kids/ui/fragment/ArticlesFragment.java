@@ -107,7 +107,7 @@ public class ArticlesFragment extends BaseFragment {
                     bundle5.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
                             getString(R.string.example_post_content_placeholder));
                     bundle5.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
-                    bundle5.putString("from", "DraftListView");
+                    bundle5.putString("from", "DraftListViewActivity");
                     intent1.putExtras(bundle5);
                     startActivity(intent1);
                 } else {

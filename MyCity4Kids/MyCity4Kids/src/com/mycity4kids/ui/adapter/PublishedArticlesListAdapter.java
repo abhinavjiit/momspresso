@@ -1,15 +1,11 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -17,19 +13,10 @@ import android.widget.TextView;
 
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
-import com.mycity4kids.constants.Constants;
-import com.mycity4kids.editor.DraftListView;
-import com.mycity4kids.editor.EditorPostActivity;
-import com.mycity4kids.enums.ParentingFilterType;
-import com.mycity4kids.models.editor.ArticleDraftList;
-import com.mycity4kids.models.parentingstop.CommonParentingList;
 import com.mycity4kids.newmodels.PublishedArticlesModel;
-import com.mycity4kids.newmodels.bloggermodel.BlogArticleList.BlogArticleModel;
-import com.mycity4kids.ui.activity.BlogDetailActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by hemant on 19/3/16.
@@ -75,7 +62,7 @@ public class PublishedArticlesListAdapter extends BaseAdapter {
             {
                 holder.popupButton.setVisibility(View.GONE);
             }
-            //    popupButton.setOnClickListener((DraftListView)context);
+            //    popupButton.setOnClickListener((DraftListViewActivity)context);
 
             view.setTag(holder);
         } else {

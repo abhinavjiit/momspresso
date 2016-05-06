@@ -2,6 +2,7 @@ package com.mycity4kids.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +15,11 @@ import android.widget.TextView;
 
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
+import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.ParentingStopController;
@@ -24,12 +27,19 @@ import com.mycity4kids.enums.ParentingFilterType;
 import com.mycity4kids.models.parentingstop.CommonParentingList;
 import com.mycity4kids.models.parentingstop.CommonParentingResponse;
 import com.mycity4kids.models.parentingstop.ParentingRequest;
+import com.mycity4kids.newmodels.BloggerDashboardModel;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
 import com.mycity4kids.ui.activity.BloggerDashboardActivity;
 import com.mycity4kids.ui.adapter.ArticlesListingAdapter;
+import com.mycity4kids.ui.adapter.BloggerDashboardPagerAdapter;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
 
 /**
  * Created by hemant on 18/3/16.
@@ -127,7 +137,7 @@ public class BookmarkedBlogsListTabFragment extends BaseFragment {
 
         switch (response.getDataType()) {
             case AppConstants.BOOKMARKED_ARTICLE_LIST_REQUEST:
-                responseData = (CommonParentingResponse) response.getResponseObject();
+        /*        responseData = (CommonParentingResponse) response.getResponseObject();
                 if (responseData.getResponseCode() == 200) {
 
                     processBookmarkResponse(responseData);
@@ -142,7 +152,7 @@ public class BookmarkedBlogsListTabFragment extends BaseFragment {
                 }
 
                 isReuqestRunning = false;
-                mLodingView.setVisibility(View.GONE);
+                mLodingView.setVisibility(View.GONE);*/
                 break;
 
             default:
@@ -176,14 +186,60 @@ public class BookmarkedBlogsListTabFragment extends BaseFragment {
     }
 
     private void hitBookmarkedArticleListingAPI(int page) {
-        ParentingRequest _parentingModel = new ParentingRequest();
+        /*ParentingRequest _parentingModel = new ParentingRequest();
         _parentingModel.setSoty_by("bookmark");
 
         _parentingModel.setCity_id(SharedPrefUtils.getCurrentCityModel(getActivity()).getId());
         _parentingModel.setPage("" + page);
         ParentingStopController _controller = new ParentingStopController(getActivity(), this);
 //        mIsRequestRunning = true;
-        _controller.getData(AppConstants.BOOKMARKED_ARTICLE_LIST_REQUEST, _parentingModel);
+        _controller.getData(AppConstants.BOOKMARKED_ARTICLE_LIST_REQUEST, _parentingModel);*/
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        // prepare call in Retrofit 2.0
+        BloggerDashboardAPI bookmarkedList = retrofit.create(BloggerDashboardAPI.class);
+        if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
+            ToastUtils.showToast(getActivity(), "");
+            return;
+        }
+        Call<CommonParentingResponse> call = bookmarkedList.getBookmarkedList("" + SharedPrefUtils.getUserDetailModel(getActivity()).getId(),
+                ""+page );
+
+
+        //asynchronous call
+        call.enqueue(new Callback<CommonParentingResponse>() {
+                         @Override
+                         public void onResponse(Call<CommonParentingResponse> call, retrofit2.Response<CommonParentingResponse> response) {
+                             int statusCode = response.code();
+
+                             CommonParentingResponse responseData = (CommonParentingResponse) response.body();
+
+
+
+                             if (responseData.getResponseCode() == 200) {
+
+                                 processBookmarkResponse(responseData);
+
+                             } else if (responseData.getResponseCode() == 400) {
+                                 String message = responseData.getResult().getMessage();
+                                 if (!StringUtils.isNullOrEmpty(message)) {
+                                     ToastUtils.showToast(getActivity(), message);
+                                 } else {
+                                     ToastUtils.showToast(getActivity(), getString(R.string.went_wrong));
+                                 }
+                             }
+
+                             isReuqestRunning = false;
+                             mLodingView.setVisibility(View.GONE);
+
+                         }
+
+
+                         @Override
+                         public void onFailure(Call<CommonParentingResponse> call, Throwable t) {
+
+                         }
+                     }
+        );
 
     }
 

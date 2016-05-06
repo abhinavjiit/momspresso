@@ -23,7 +23,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,7 +58,7 @@ import com.mycity4kids.dbtable.TaskTableAttendee;
 import com.mycity4kids.dbtable.TaskTableFile;
 import com.mycity4kids.dbtable.TaskTableNotes;
 import com.mycity4kids.dbtable.TaskTableWhoToRemind;
-import com.mycity4kids.editor.DraftListView;
+import com.mycity4kids.editor.DraftListViewActivity;
 import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.enums.DialogButtonEvent;
 import com.mycity4kids.enums.DialogEnum;
@@ -1737,7 +1736,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 }
                 break;
             case R.id.drafts:
-                Intent intent5 = new Intent(DashboardActivity.this, DraftListView.class);
+                Intent intent5 = new Intent(DashboardActivity.this, DraftListViewActivity.class);
               /*  Bundle bundle5 = new Bundle();
                 bundle5.putString(EditorPostActivity.TITLE_PARAM, "");
                 bundle5.putString(EditorPostActivity.CONTENT_PARAM, "");
