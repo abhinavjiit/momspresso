@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
+import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -29,8 +31,15 @@ import com.mycity4kids.models.editor.ArticleDraftListResponse;
 import com.mycity4kids.models.editor.ArticleDraftRequest;
 import com.mycity4kids.models.parentingdetails.ParentingDetailResponse;
 import com.mycity4kids.models.user.UserModel;
+import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.ArticlePublishAPI;
+import com.mycity4kids.ui.activity.BloggerDashboardActivity;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
 
 /**
  * Created by anshul on 3/15/16.
@@ -50,7 +59,7 @@ public class DraftListView extends BaseActivity implements View.OnClickListener,
         switch (response.getDataType()) {
 
             case AppConstants.ARTICLE_DRAFT_LIST_REQUEST: {
-                if (response.getResponseObject() instanceof ArticleDraftListResponse) {
+            /*    if (response.getResponseObject() instanceof ArticleDraftListResponse) {
                     ArticleDraftListResponse responseModel = (ArticleDraftListResponse) response
                             .getResponseObject();
                     removeProgressDialog();
@@ -66,6 +75,7 @@ public class DraftListView extends BaseActivity implements View.OnClickListener,
                     }
                 }
                 break;
+            */
             }
             case AppConstants.ARTICLE_DRAFT_REQUEST: {
                 if (response.getResponseObject() instanceof ParentingDetailResponse) {
@@ -171,14 +181,50 @@ public class DraftListView extends BaseActivity implements View.OnClickListener,
 
     private void hitDraftListingApi() {
         showProgressDialog(getResources().getString(R.string.please_wait));
-        ArticleDraftRequest articleDraftRequest = new ArticleDraftRequest();
-        /**
+       /* ArticleDraftRequest articleDraftRequest = new ArticleDraftRequest();
+        *//**
          * this case will case in pagination case: for sorting
-         */
+         *//*
         articleDraftRequest.setUser_id("" + userModel.getUser().getId());
         DraftListController _controller = new DraftListController(this, this);
 
-        _controller.getData(AppConstants.ARTICLE_DRAFT_LIST_REQUEST, articleDraftRequest);
+        _controller.getData(AppConstants.ARTICLE_DRAFT_LIST_REQUEST, articleDraftRequest);*/
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        // prepare call in Retrofit 2.0
+        ArticleDraftAPI getDraftListAPI = retrofit.create(ArticleDraftAPI.class);
+        if (!ConnectivityUtils.isNetworkEnabled(this)) {
+            showToast("");
+            return;
+        }
+        Call<ArticleDraftListResponse> call = getDraftListAPI.getDraftsList("" + userModel.getUser().getId());
+        //asynchronous call
+        call.enqueue(new Callback<ArticleDraftListResponse>() {
+                         @Override
+                         public void onResponse(Call<ArticleDraftListResponse> call, retrofit2.Response<ArticleDraftListResponse> response) {
+                             int statusCode = response.code();
+                             removeProgressDialog();
+                             ArticleDraftListResponse responseModel = (ArticleDraftListResponse) response.body();
+
+                             if (responseModel.getResponseCode() != 200) {
+                                 showToast(getString(R.string.toast_response_error));
+                                 return;
+                             } else {
+                                 if (!StringUtils.isNullOrEmpty(responseModel.getResult().getMessage())) {
+                                     Log.i("Draft message", responseModel.getResult().getMessage());
+                                 }
+
+                                processDraftResponse(responseModel);
+
+                         }}
+
+
+                         @Override
+                         public void onFailure(Call<ArticleDraftListResponse> call, Throwable t) {
+
+                         }
+                     }
+        );
+
     }
 
     public void deleteDraftAPI(ArticleDraftList draftObject, int p) {
@@ -188,14 +234,60 @@ public class DraftListView extends BaseActivity implements View.OnClickListener,
         /**
          * this case will case in pagination case: for sorting
          */
-        articleDraftRequest.setUser_id("" + userModel.getUser().getId());
+        /*articleDraftRequest.setUser_id("" + userModel.getUser().getId());
         articleDraftRequest.setId(draftObject.getId());
         articleDraftRequest.setBody(draftObject.getBody());
         articleDraftRequest.setTitle(draftObject.getTitle());
         articleDraftRequest.setStatus("1");
         ArticleDraftController _controller = new ArticleDraftController(this, this);
 
-        _controller.getData(AppConstants.ARTICLE_DRAFT_REQUEST, articleDraftRequest);
+        _controller.getData(AppConstants.ARTICLE_DRAFT_REQUEST, articleDraftRequest);*/
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        // prepare call in Retrofit 2.0
+        ArticleDraftAPI articleDraftAPI = retrofit.create(ArticleDraftAPI.class);
+        if (!ConnectivityUtils.isNetworkEnabled(this)) {
+            showToast("");
+            return;
+        }
+        Call<ParentingDetailResponse> call = articleDraftAPI.draftArticle("" + userModel.getUser().getId(),
+                draftObject.getTitle(),
+                draftObject.getBody(),
+                draftObject.getId(),
+                "1",
+                AppConstants.Source_Id);
+
+
+        //asynchronous call
+        call.enqueue(new Callback<ParentingDetailResponse>() {
+                         @Override
+                         public void onResponse(Call<ParentingDetailResponse> call, retrofit2.Response<ParentingDetailResponse> response) {
+                             int statusCode = response.code();
+
+                             ParentingDetailResponse responseModel = (ParentingDetailResponse) response.body();
+
+                             removeProgressDialog();
+
+                             if (responseModel.getResponseCode() != 200) {
+                                 showToast(getString(R.string.toast_response_error));
+                                 return;
+                             } else {
+                                 if (!StringUtils.isNullOrEmpty(responseModel.getResult().getMessage())) {
+                                     //  SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
+                                     Log.i("Draft message", responseModel.getResult().getMessage());
+                                 }
+                                 draftList.remove(position);
+                                 adapter.notifyDataSetChanged();
+                             }
+
+                         }
+
+
+                         @Override
+                         public void onFailure(Call<ParentingDetailResponse> call, Throwable t) {
+
+                         }
+                     }
+        );
     }
 
     @Override
