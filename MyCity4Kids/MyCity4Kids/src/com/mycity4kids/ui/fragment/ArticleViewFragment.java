@@ -81,7 +81,7 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
 //        } else {
         articleDataModelsNew = new ArrayList<CommonParentingList>();
         nextPageNumber = 1;
-        hitArticleListingApi(nextPageNumber, sortType, false);
+        hitArticleListingApi(nextPageNumber, sortType, true);
 //        }
         swipeRefreshLayout.setOnRefreshListener((SwipeRefreshLayout.OnRefreshListener) ArticleViewFragment.this);
 
@@ -102,7 +102,7 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
                 if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && (nextPageNumber < 2 || nextPageNumber <= totalPageCount)) {
 //                    if (!"bookmark".equals(sortType)) {
                     mLodingView.setVisibility(View.VISIBLE);
-                    hitArticleListingApi(nextPageNumber, sortType, false);
+                    hitArticleListingApi(nextPageNumber, sortType, true);
 //                    } else {
 //                        mLodingView.setVisibility(View.VISIBLE);
 //                        hitBookmarkedArticleListingAPI(nextPageNumber, "bookmark");
@@ -213,7 +213,7 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
 
     }
 
-    private void hitArticleListingApi(int pPageCount, String SortKey, boolean shouldRefreshCache) {
+    private void hitArticleListingApi(int pPageCount, String SortKey, boolean isCacheRequired) {
 
         String url;
         StringBuilder builder = new StringBuilder();
@@ -222,12 +222,12 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
             builder.append("&page=").append(pPageCount);
             builder.append("&sort=").append(SortKey);
             url = AppConstants.PARENTING_STOP_ARTICLE_URL + builder.toString().replace(" ", "%20");
-            HttpVolleyRequest.getStringResponse(getActivity(), url, null, mGetArticleListingListener, Request.Method.GET, shouldRefreshCache);
+            HttpVolleyRequest.getStringResponse(getActivity(), url, null, mGetArticleListingListener, Request.Method.GET, isCacheRequired);
         } else {
             builder.append("user_id=").append(SharedPrefUtils.getUserDetailModel(getActivity()).getId());
             builder.append("&page=").append(pPageCount);
             url = AppConstants.FETCH_BOOKMARK_URL + builder.toString().replace(" ", "%20");
-            HttpVolleyRequest.getStringResponse(getActivity(), url, null, mGetArticleListingListener, Request.Method.GET, shouldRefreshCache);
+            HttpVolleyRequest.getStringResponse(getActivity(), url, null, mGetArticleListingListener, Request.Method.GET, false);
         }
 
     }
@@ -305,12 +305,12 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
 
     public void refreshBookmarkList() {
         nextPageNumber = 1;
-        hitArticleListingApi(nextPageNumber, "bookmark", true);
+        hitArticleListingApi(nextPageNumber, "bookmark", false);
     }
 
     @Override
     public void onRefresh() {
         nextPageNumber = 1;
-        hitArticleListingApi(nextPageNumber, sortType, true);
+        hitArticleListingApi(nextPageNumber, sortType, false);
     }
 }
