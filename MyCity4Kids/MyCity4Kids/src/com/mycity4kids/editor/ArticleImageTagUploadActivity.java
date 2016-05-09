@@ -367,7 +367,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
         // prepare call in Retrofit 2.0
         ArticlePublishAPI articlePublishAPI = retrofit.create(ArticlePublishAPI.class);
         if (!ConnectivityUtils.isNetworkEnabled(this)) {
-            showToast("");
+            showToast(getString(R.string.error_network));
             return;
         }
         Call<ParentingDetailResponse> call = articlePublishAPI.publishArticle("" + userModel.getUser().getId(),
@@ -435,6 +435,10 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
 
         BlogPageAPI getBlogPageAPI = retrofit.create(BlogPageAPI.class);
+        if (!ConnectivityUtils.isNetworkEnabled(this)) {
+            showToast(getString(R.string.error_network));
+            return;
+        }
 
         Call<BlogDataResponse> call = getBlogPageAPI.getBlogPage("" + userModel.getUser().getId(),
                 "" + 2);

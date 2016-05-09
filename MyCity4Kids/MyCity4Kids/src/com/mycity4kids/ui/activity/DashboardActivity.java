@@ -1709,6 +1709,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.editor:
                 if (Build.VERSION.SDK_INT > 15) {
+                    Utils.pushEvent(DashboardActivity.this, GTMEventType.ADD_BLOG_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Left Menu Screen");
                     Intent intent1 = new Intent(DashboardActivity.this, EditorPostActivity.class);
                     Bundle bundle5 = new Bundle();
                     bundle5.putString(EditorPostActivity.TITLE_PARAM, "");

@@ -147,7 +147,7 @@ public class SetupBlogPageActivity extends BaseActivity {
         createBlog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.pushEvent(SetupBlogPageActivity.this, GTMEventType.CALENDAR_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(SetupBlogPageActivity.this).getId() + "", "");
+                Utils.pushEvent(SetupBlogPageActivity.this, GTMEventType.CALENDAR_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(SetupBlogPageActivity.this).getId() + "", "Set Up Blog");
                 if (blogTitle.getText().toString().isEmpty()) {
                     // showToast("Please fill the required fields");
                     blogTitle.setFocusableInTouchMode(true);
@@ -183,7 +183,7 @@ public class SetupBlogPageActivity extends BaseActivity {
                     // prepare call in Retrofit 2.0
                     BlogPageAPI blogSetupAPI = retrofit.create(BlogPageAPI.class);
                     if (!ConnectivityUtils.isNetworkEnabled(SetupBlogPageActivity.this)) {
-                        showToast("");
+                        showToast(getString(R.string.error_network));
                         return;
                     }
                     Call<CommonResponse> call = blogSetupAPI.createBlogPage("" + userModel.getUser().getId(),

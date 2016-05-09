@@ -188,7 +188,7 @@ public class DraftListViewActivity extends BaseActivity implements View.OnClickL
         // prepare call in Retrofit 2.0
         ArticleDraftAPI getDraftListAPI = retrofit.create(ArticleDraftAPI.class);
         if (!ConnectivityUtils.isNetworkEnabled(this)) {
-            showToast("");
+            showToast(getString(R.string.error_network));
             return;
         }
         Call<ArticleDraftListResponse> call = getDraftListAPI.getDraftsList("" + userModel.getUser().getId());
@@ -241,7 +241,7 @@ public class DraftListViewActivity extends BaseActivity implements View.OnClickL
         // prepare call in Retrofit 2.0
         ArticleDraftAPI articleDraftAPI = retrofit.create(ArticleDraftAPI.class);
         if (!ConnectivityUtils.isNetworkEnabled(this)) {
-            showToast("");
+            showToast(getString(R.string.error_network));
             return;
         }
         Call<ParentingDetailResponse> call = articleDraftAPI.draftArticle("" + userModel.getUser().getId(),

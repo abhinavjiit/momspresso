@@ -490,7 +490,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
         // prepare call in Retrofit 2.0
         ArticleDraftAPI articleDraftAPI = retrofit.create(ArticleDraftAPI.class);
         if (!ConnectivityUtils.isNetworkEnabled(this)) {
-            showToast("");
+            showToast(getString(R.string.error_network));
             return;
         }
         Call<ParentingDetailResponse> call = articleDraftAPI.draftArticle("" + userModel.getUser().getId(),

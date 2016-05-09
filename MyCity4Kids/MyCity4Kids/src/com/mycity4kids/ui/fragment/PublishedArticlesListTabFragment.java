@@ -244,7 +244,7 @@ public class PublishedArticlesListTabFragment extends BaseFragment {
         // prepare call in Retrofit 2.0
         BloggerDashboardAPI publishedArticleAPI = retrofit.create(BloggerDashboardAPI.class);
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
-            ToastUtils.showToast(getActivity(), "");
+            ToastUtils.showToast(getActivity(), getString(R.string.error_network));
             return;
         }
         Call<ResponseBody> call = publishedArticleAPI.getPublishedArticleList("" + SharedPrefUtils.getUserDetailModel(getActivity()).getId(),

@@ -342,6 +342,13 @@ public enum  GTMEventType {
                     return "setupBlogClicked";
                 }
             },
+    ADD_BLOG_CLICKED_EVENT
+            {
+                @Override
+                public String toString() {
+                    return "addBlogClicked";
+                }
+            },
 
 
 }
