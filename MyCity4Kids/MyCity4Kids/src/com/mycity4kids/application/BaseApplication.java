@@ -51,7 +51,8 @@ public class BaseApplication extends Application {
     private RequestQueue mRequestQueue;
     ;
     private static BaseApplication mInstance;
-    private Retrofit retrofit;
+    private static Retrofit retrofit;
+    private static OkHttpClient client;
     /*
      * Google Analytics configuration values.
      */
@@ -163,7 +164,7 @@ public class BaseApplication extends Application {
         Crashlytics.setUserEmail("" + SharedPrefUtils.getUserDetailModel(this).getEmail());*/
         setInstance(this);
 
-        createRetrofitInstance();
+        createRetrofitInstance(AppConstants.LIVE_URL);
 
         mRequestQueue = Volley.newRequestQueue(getApplicationContext());
 
@@ -217,7 +218,7 @@ public class BaseApplication extends Application {
         return filterList;
     }
 
-    public Retrofit createRetrofitInstance() {
+    public Retrofit createRetrofitInstance(String base_url) {
 
         Interceptor mainInterceptor = new Interceptor() {
             @Override
@@ -277,14 +278,14 @@ public class BaseApplication extends Application {
 // set your desired log level
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-        OkHttpClient client = new OkHttpClient
+        client = new OkHttpClient
                 .Builder()
                 .cache(new Cache(getCacheDir(), 10 * 1024 * 1024)) // 10 MB
                 .addInterceptor(mainInterceptor).addInterceptor(logging)
                 .build();
 
         retrofit = new Retrofit.Builder()
-                .baseUrl(AppConstants.BASE_URL)
+                .baseUrl(base_url)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();
@@ -293,8 +294,26 @@ public class BaseApplication extends Application {
 
     public Retrofit getRetrofit() {
         if (null == retrofit) {
-            createRetrofitInstance();
+            createRetrofitInstance(AppConstants.LIVE_URL);
         }
         return retrofit;
+    }
+
+    public static void changeApiBaseUrl() {
+
+
+        if (AppConstants.LIVE_URL.equals(retrofit.baseUrl().toString())) {
+            retrofit = new Retrofit.Builder()
+                    .baseUrl(AppConstants.DEV_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(client)
+                    .build();
+        } else {
+            retrofit = new Retrofit.Builder()
+                    .baseUrl(AppConstants.LIVE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(client)
+                    .build();
+        }
     }
 }

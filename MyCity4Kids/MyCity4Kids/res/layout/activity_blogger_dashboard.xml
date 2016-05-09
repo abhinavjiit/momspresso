@@ -44,7 +44,6 @@
         android:layout_toRightOf="@+id/bloggerImageView"
         android:drawableLeft="@drawable/ic_trending"
         android:drawablePadding="2dp"
-        android:hint="blogger rank"
         android:text="0"
         android:textColor="@color/dashboard.stats"
         android:visibility="invisible" />
@@ -69,7 +68,6 @@
         android:layout_toRightOf="@+id/vSeparator1"
         android:drawableLeft="@drawable/ic_views"
         android:drawablePadding="2dp"
-        android:hint="article views"
         android:text="0"
         android:textColor="@color/dashboard.stats"
         android:visibility="invisible" />
@@ -94,7 +92,6 @@
         android:layout_toRightOf="@+id/vSeparator2"
         android:drawableLeft="@drawable/ic_followers"
         android:drawablePadding="2dp"
-        android:hint="followers"
         android:text="0"
         android:textColor="@color/dashboard.stats"
         android:visibility="invisible" />

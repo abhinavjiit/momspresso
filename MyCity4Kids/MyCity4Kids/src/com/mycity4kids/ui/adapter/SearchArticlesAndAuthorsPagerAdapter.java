@@ -20,7 +20,7 @@ public class SearchArticlesAndAuthorsPagerAdapter extends FragmentStatePagerAdap
     ArticleModelNew.AllArticles articlelist;
     Activity activity;
     Context context;
-    private SearchArticlesTabFragment mRecentArticlefragment;
+    private SearchArticlesTabFragment mArticlefragment;
     private SearchArticlesTabFragment mPopularArticlefragment;
     private SearchArticlesTabFragment mTrendingArticlefragment;
     private SearchAuthorsTabFragment mAuthorsFragment;
@@ -43,7 +43,7 @@ public class SearchArticlesAndAuthorsPagerAdapter extends FragmentStatePagerAdap
 
     @Override
     public int getCount() {
-        return 4;
+        return 2;
     }
 
     @Override
@@ -56,11 +56,12 @@ public class SearchArticlesAndAuthorsPagerAdapter extends FragmentStatePagerAdap
     public CharSequence getPageTitle(int position) {
 
         if (position == 0) {
-            return "RECENT";
-        } else if (position == 1) {
-            return "TRENDING";
-        } else if (position == 2) {
-            return "POPULAR";
+            return "Articles";
+//        }
+//        else if (position == 1) {
+//            return "TRENDING";
+//        } else if (position == 2) {
+//            return "POPULAR";
         } else {
             //PERSONAL
             return "Authors";
@@ -76,44 +77,39 @@ public class SearchArticlesAndAuthorsPagerAdapter extends FragmentStatePagerAdap
         switch (position) {
 
             case 0:
-                if (mRecentArticlefragment == null) {
-                    mRecentArticlefragment = new SearchArticlesTabFragment();
-                    if (articlelist != null)
-                        bundle.putParcelableArrayList(Constants.ARTICLES_LIST, articlelist.getRecent());
-                    bundle.putInt(Constants.TAB_POSITION, 0);
-                    bundle.putString(Constants.SORT_TYPE, "recent");
+                if (mArticlefragment == null) {
+                    mArticlefragment = new SearchArticlesTabFragment();
                     bundle.putString(Constants.SEARCH_PARAM, searchName);
-                    mRecentArticlefragment.setArguments(bundle);
+                    mArticlefragment.setArguments(bundle);
                 }
-                return mRecentArticlefragment;
+                return mArticlefragment;
+//            case 1:
+//                if (mTrendingArticlefragment == null) {
+//                    mTrendingArticlefragment = new SearchArticlesTabFragment();
+//                    if (articlelist != null)
+//                        bundle.putParcelableArrayList(Constants.ARTICLES_LIST, articlelist.getTrending());
+//                    bundle.putInt(Constants.TAB_POSITION, 1);
+//                    bundle.putString(Constants.SORT_TYPE, "trending");
+//                    bundle.putString(Constants.SEARCH_PARAM, searchName);
+//                    mTrendingArticlefragment.setArguments(bundle);
+//                }
+//                return mTrendingArticlefragment;
+//
+//            case 2:
+//                if (mPopularArticlefragment == null) {
+//                    mPopularArticlefragment = new SearchArticlesTabFragment();
+//                    if (articlelist != null)
+//                        bundle.putParcelableArrayList(Constants.ARTICLES_LIST, articlelist.getPopular());
+//                    bundle.putInt(Constants.TAB_POSITION, 2);
+//                    bundle.putString(Constants.SORT_TYPE, "popular");
+//                    bundle.putString(Constants.SEARCH_PARAM, searchName);
+//                    mPopularArticlefragment.setArguments(bundle);
+//                }
+//                return mPopularArticlefragment;
+
             case 1:
-                if (mTrendingArticlefragment == null) {
-                    mTrendingArticlefragment = new SearchArticlesTabFragment();
-                    if (articlelist != null)
-                        bundle.putParcelableArrayList(Constants.ARTICLES_LIST, articlelist.getTrending());
-                    bundle.putInt(Constants.TAB_POSITION, 1);
-                    bundle.putString(Constants.SORT_TYPE, "trending");
-                    bundle.putString(Constants.SEARCH_PARAM, searchName);
-                    mTrendingArticlefragment.setArguments(bundle);
-                }
-                return mTrendingArticlefragment;
-
-            case 2:
-                if (mPopularArticlefragment == null) {
-                    mPopularArticlefragment = new SearchArticlesTabFragment();
-                    if (articlelist != null)
-                        bundle.putParcelableArrayList(Constants.ARTICLES_LIST, articlelist.getPopular());
-                    bundle.putInt(Constants.TAB_POSITION, 2);
-                    bundle.putString(Constants.SORT_TYPE, "popular");
-                    bundle.putString(Constants.SEARCH_PARAM, searchName);
-                    mPopularArticlefragment.setArguments(bundle);
-                }
-                return mPopularArticlefragment;
-
-            case 3:
                 if (mAuthorsFragment == null) {
                     mAuthorsFragment = new SearchAuthorsTabFragment();
-                    bundle.putInt(Constants.TAB_POSITION, 3);
                     bundle.putString(Constants.SEARCH_PARAM, searchName);
                     mAuthorsFragment.setArguments(bundle);
                 }
@@ -127,28 +123,28 @@ public class SearchArticlesAndAuthorsPagerAdapter extends FragmentStatePagerAdap
         switch (pos) {
 
             case 0:
-                mRecentArticlefragment.refreshAllArticles(searchText, Constants.KEY_RECENT);
-                mTrendingArticlefragment.resetOnceLoadedFlag(searchText);
-                mPopularArticlefragment.resetOnceLoadedFlag(searchText);
+                mArticlefragment.refreshAllArticles(searchText, Constants.KEY_RECENT);
+//                mTrendingArticlefragment.resetOnceLoadedFlag(searchText);
+//                mPopularArticlefragment.resetOnceLoadedFlag(searchText);
                 mAuthorsFragment.resetOnceLoadedFlag(searchText);
                 break;
+//            case 1:
+//                mTrendingArticlefragment.refreshAllArticles(searchText, Constants.KEY_TRENDING);
+//                mArticlefragment.resetOnceLoadedFlag(searchText);
+//                mPopularArticlefragment.resetOnceLoadedFlag(searchText);
+//                mAuthorsFragment.resetOnceLoadedFlag(searchText);
+//                break;
+//            case 2:
+//                mPopularArticlefragment.refreshAllArticles(searchText, Constants.KEY_POPULAR);
+//                mArticlefragment.resetOnceLoadedFlag(searchText);
+//                mTrendingArticlefragment.resetOnceLoadedFlag(searchText);
+//                mAuthorsFragment.resetOnceLoadedFlag(searchText);
+//                break;
             case 1:
-                mTrendingArticlefragment.refreshAllArticles(searchText, Constants.KEY_TRENDING);
-                mRecentArticlefragment.resetOnceLoadedFlag(searchText);
-                mPopularArticlefragment.resetOnceLoadedFlag(searchText);
-                mAuthorsFragment.resetOnceLoadedFlag(searchText);
-                break;
-            case 2:
-                mPopularArticlefragment.refreshAllArticles(searchText, Constants.KEY_POPULAR);
-                mRecentArticlefragment.resetOnceLoadedFlag(searchText);
-                mTrendingArticlefragment.resetOnceLoadedFlag(searchText);
-                mAuthorsFragment.resetOnceLoadedFlag(searchText);
-                break;
-            case 3:
                 mAuthorsFragment.refreshAllAuthors(searchText);
-                mRecentArticlefragment.resetOnceLoadedFlag(searchText);
-                mTrendingArticlefragment.resetOnceLoadedFlag(searchText);
-                mPopularArticlefragment.resetOnceLoadedFlag(searchText);
+                mArticlefragment.resetOnceLoadedFlag(searchText);
+//                mTrendingArticlefragment.resetOnceLoadedFlag(searchText);
+//                mPopularArticlefragment.resetOnceLoadedFlag(searchText);
                 break;
         }
 

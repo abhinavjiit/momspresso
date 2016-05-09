@@ -11,10 +11,10 @@ import com.mycity4kids.preference.SharedPrefUtils;
 public class AppConstants {
 
 
-    //    public static final String STAGING_CLIENT_SERVER_URL = "http://54.169.17.138/";
+    public static final String DEV_URL = "http://54.169.17.138/";
 
- //   public static final String LIVE_URL = "http://webserve.mycity4kids.com/";
-    public static final String LIVE_URL = "http://54.169.17.138/";
+    public static final String LIVE_URL = "http://webserve.mycity4kids.com/";
+//    public static final String LIVE_URL = "http://54.169.17.138/";
 //    public static final String LIVE_URL = "http://10.42.0.1/";
 //    public static final String LIVE_URL = "http://192.168.1.12/";
 
@@ -181,6 +181,9 @@ public class AppConstants {
 
     //Search bloggers/authors
     public static final String SEARCH_AUTHORS_URL = BASE_URL + "apiparentingstop/searchWithBlogger?";
+
+    //Force_update
+    public static final String FORCE_UPDATE_URL = BASE_URL + "apiservices/forceUpdate?";
 
     //Comments Lazy loading
     public static final int COMMENT_LIMIT = 10;
@@ -367,6 +370,6 @@ public class AppConstants {
     public static final String AUTHOR_TYPE_EDITOR = "Editor";
     public static final String AUTHOR_TYPE_EDITORIAL = "Editorial";
     public static final String AUTHOR_TYPE_EXPERT = "Expert";
-    public static final String Source_Id=""+2;
+    public static final String Source_Id = "" + 2;
 
 }

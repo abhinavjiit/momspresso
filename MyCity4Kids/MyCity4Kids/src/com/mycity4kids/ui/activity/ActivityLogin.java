@@ -84,7 +84,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
 
     private String accessToken = "";
     private String googleToken = "";
-
+    private int changeBaseURL = 0;
     private GraphUser fbUser;
 
     private String loginMode = "";
@@ -110,6 +110,17 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
             signinTextView = (CustomFontTextView) findViewById(R.id.signinTextView);
             mEmailId.addTextChangedListener(mTextWatcher);
             mPassword.addTextChangedListener(mTextWatcher);
+            ((CustomFontTextView) findViewById(R.id.orTextView)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    changeBaseURL++;
+                    if (changeBaseURL > 9) {
+                        BaseApplication.changeApiBaseUrl();
+                        showToast("changed baseurl to " + BaseApplication.getInstance().getRetrofit().baseUrl());
+                        changeBaseURL = 0;
+                    }
+                }
+            });
 
             signinTextView.setEnabled(false);
 

@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
@@ -38,7 +39,6 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.controller.ConfigurationController;
 import com.mycity4kids.dbtable.TableAdult;
 import com.mycity4kids.fragmentdialog.FragmentAlertDialog;
-import com.mycity4kids.gcm.GCMUtil;
 import com.mycity4kids.gtmutils.ContainerHolderSingleton;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.OnUIView;
@@ -48,13 +48,19 @@ import com.mycity4kids.models.city.City;
 import com.mycity4kids.models.city.MetroCity;
 import com.mycity4kids.models.configuration.ConfigurationApiModel;
 import com.mycity4kids.models.user.UserInfo;
+import com.mycity4kids.newmodels.ForceUpdateModel;
 import com.mycity4kids.newmodels.UserInviteModel;
+import com.mycity4kids.newmodels.bloggermodel.ParentingBlogResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.sync.PushTokenService;
+import com.mycity4kids.retrofitAPIsInterfaces.ForceUpdateAPI;
 import com.mycity4kids.utils.NearMyCity;
 import com.mycity4kids.utils.location.GPSTracker;
 
 import java.util.concurrent.TimeUnit;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
 
 public class SplashActivity extends BaseActivity {
     private boolean isLocationScreen = false;
@@ -180,8 +186,6 @@ public class SplashActivity extends BaseActivity {
                             }
                             isFirstLaunch = 1;
                             _controller.getData(AppConstants.CONFIGURATION_REQUEST, versionApiModel);
-
-
                         }
 
                     }
@@ -199,18 +203,32 @@ public class SplashActivity extends BaseActivity {
                 if (ConnectivityUtils.isNetworkEnabled(SplashActivity.this)) {
 
                     _controller.getData(AppConstants.CONFIGURATION_REQUEST, versionApiModel);
-                    final Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            isFirstLaunch = 0;
-                            navigateToNextScreen(true);
-                        }
-                    }, 500);
+                    Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+                    ForceUpdateAPI forceUpdateAPI = retrofit.create(ForceUpdateAPI.class);
+                    Call<ForceUpdateModel> call = forceUpdateAPI.checkForceUpdateRequired(version, "android");
+                    call.enqueue(checkForceUpdateResponseCallback);
+
+//                    final Handler handler = new Handler();
+//                    handler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            isFirstLaunch = 0;
+//                            navigateToNextScreen(true);
+//                        }
+//                    }, 500);
 
                     //ToastUtils.showToast(SplashActivity.this, getString(R.string.error_network));
                     //return;
                 } else {
+                    if (SharedPrefUtils.getAppUpgrade(SplashActivity.this)) {
+                        String message = "Please update your app to continue";
+                        showUpgradeAppAlertDialog("mycity4kids", message, new OnButtonClicked() {
+                            @Override
+                            public void onButtonCLick(int buttonId) {
+                            }
+                        });
+                        return;
+                    }
                     isFirstLaunch = 0;
                     navigateToNextScreen(true);
                 }
@@ -360,14 +378,6 @@ public class SplashActivity extends BaseActivity {
                 if (responseObject instanceof ConfigurationApiModel) {
                     ConfigurationApiModel _configurationResponse = (ConfigurationApiModel) responseObject;
 
-                    if (_configurationResponse.getResult().getData().getIsAppUpdateRequired() == 1) {
-                        showUpgradeAppAlertDialog("Error", "Please upgrade your app to continue", new OnButtonClicked() {
-                            @Override
-                            public void onButtonCLick(int buttonId) {
-                            }
-                        });
-                        return;
-                    }
                     /**
                      * Save data into tables :-
                      */
@@ -376,8 +386,20 @@ public class SplashActivity extends BaseActivity {
 
                         @Override
                         public void comeBackOnUI() {
-                            if (isFirstLaunch == 1)
-                                navigateToNextScreen(true);
+                            if (isFirstLaunch == 1) {
+                                PackageInfo pInfo = null;
+                                try {
+                                    pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+                                } catch (PackageManager.NameNotFoundException e) {
+                                    e.printStackTrace();
+                                }
+                                String version = pInfo.versionName;
+                                Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+                                ForceUpdateAPI forceUpdateAPI = retrofit.create(ForceUpdateAPI.class);
+                                Call<ForceUpdateModel> call = forceUpdateAPI.checkForceUpdateRequired(version, "android");
+                                call.enqueue(checkForceUpdateResponseCallback);
+                            }
+
                         }
                     });
                     _heavyDbTask.execute();
@@ -389,70 +411,6 @@ public class SplashActivity extends BaseActivity {
         }
 
     }
-
-//    public void saveData(AppoitmentDataModel model) {
-//
-//        TableAppointmentData apponntmentTable = new TableAppointmentData((BaseApplication) getApplicationContext());
-//        TableFile FileTable = new TableFile((BaseApplication) getApplicationContext());
-//        TableNotes NoteTable = new TableNotes((BaseApplication) getApplicationContext());
-//        TableWhoToRemind WhoToRemindTable = new TableWhoToRemind((BaseApplication) getApplicationContext());
-//        TableAttendee attendeeTable = new TableAttendee((BaseApplication) getApplicationContext());
-//
-////        apponntmentTable.deleteAll();
-////        FileTable.deleteAll();
-////        NoteTable.deleteAll();
-////        WhoToRemindTable.deleteAll();
-////        attendeeTable.deleteAll();
-//
-//
-//        try {
-//
-//            for (AppoitmentDataModel.AppointmentData data : model.getAppointment()) { // appoitment array loop
-//
-//
-//                int appointmentid = data.getAppointment().getId();
-//
-//                // first  delete
-//
-//                apponntmentTable.deleteAppointment(appointmentid);
-//                FileTable.deleteAppointment(appointmentid);
-//                attendeeTable.deleteAppointment(appointmentid);
-//                NoteTable.deleteAppointment(appointmentid);
-//                WhoToRemindTable.deleteAppointment(appointmentid);
-//
-//                // data is saving here
-//                apponntmentTable.insertData(data.getAppointment());
-//
-//
-//                for (AppoitmentDataModel.Files filesList : data.getAppointmentFile()) {
-//
-//                    FileTable.insertData(filesList);
-//
-//                }
-//
-//
-//                for (AppoitmentDataModel.Attendee attendeeList : data.getAppointmentAttendee()) {
-//
-//                    attendeeTable.insertData(attendeeList);
-//
-//                }
-//                for (AppoitmentDataModel.Notes notesList : data.getAppointmentNote()) {
-//
-//                    NoteTable.insertData(notesList);
-//
-//                }
-//                for (AppoitmentDataModel.WhoToRemind whotoRemind : data.getAppointmentWhomRemind()) {
-//
-//                    WhoToRemindTable.insertData(whotoRemind);
-//
-//                }
-//            }
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
 
     @Override
     public void onBackPressed() {
@@ -500,7 +458,7 @@ public class SplashActivity extends BaseActivity {
                 ContainerHolderSingleton.setContainerHolder(containerHolder);
                 Container container = containerHolder.getContainer();
                 if (!containerHolder.getStatus().isSuccess()) {
-                    Log.e("CuteAnimals", "failure loading container");
+//                    Log.e("CuteAnimals", "failure loading container");
                     displayErrorToUser(R.string.load_error);
                     return;
                 }
@@ -543,4 +501,52 @@ public class SplashActivity extends BaseActivity {
                 });
         alertDialog.show();
     }
+
+    Callback<ForceUpdateModel> checkForceUpdateResponseCallback = new Callback<ForceUpdateModel>() {
+        @Override
+        public void onResponse(Call<ForceUpdateModel> call, retrofit2.Response<ForceUpdateModel> response) {
+            if (response == null) {
+                showToast("Something went wrong from server");
+                return;
+            }
+            try {
+                ForceUpdateModel responseData = (ForceUpdateModel) response.body();
+                if (responseData.getResponseCode() == 200) {
+                    if (responseData.getResult().getData().getIsAppUpdateRequired() == 1) {
+                        SharedPrefUtils.setAppUgrade(SplashActivity.this, true);
+                        String message = responseData.getResult().getData().getMessage();
+                        if (StringUtils.isNullOrEmpty(message)) {
+                            message = "Please update your app to continue";
+                        }
+                        showUpgradeAppAlertDialog("mycity4kids", message, new OnButtonClicked() {
+                            @Override
+                            public void onButtonCLick(int buttonId) {
+                            }
+                        });
+                        return;
+                    } else {
+                        SharedPrefUtils.setAppUgrade(SplashActivity.this, false);
+                        isFirstLaunch = 0;
+                        navigateToNextScreen(true);
+                    }
+                } else if (responseData.getResponseCode() == 400) {
+                    String message = responseData.getResult().getMessage();
+                    if (!StringUtils.isNullOrEmpty(message)) {
+                        showToast(message);
+                    } else {
+                        showToast(getString(R.string.went_wrong));
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                showToast(getString(R.string.went_wrong));
+            }
+
+        }
+
+        @Override
+        public void onFailure(Call<ForceUpdateModel> call, Throwable t) {
+            showToast(getString(R.string.went_wrong));
+        }
+    };
 }

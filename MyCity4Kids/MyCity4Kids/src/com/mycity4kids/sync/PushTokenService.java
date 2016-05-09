@@ -8,6 +8,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.DataUtils;
 import com.kelltontech.utils.StringUtils;
@@ -15,6 +16,8 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.newmodels.PushNotificationModel;
 import com.mycity4kids.preference.SharedPrefUtils;
+
+import org.json.JSONException;
 
 /**
  * Created by kapil.vij on 17-07-2015.
@@ -58,13 +61,17 @@ public class PushTokenService extends IntentService implements UpdateListener {
     public void updateView(String jsonString, int requestType) {
         switch (requestType) {
             case AppConstants.PUSH_TOKEN_REQUEST:
-                CommonResponse responseData = new Gson().fromJson(jsonString, CommonResponse.class);
-                if (null!=responseData&&responseData.getResponseCode() == 200) {
-                    SharedPrefUtils.setPushTokenUpdateToServer(this, true);
-                    Log.e("push", "token updated");
+                try {
+                    CommonResponse responseData = new Gson().fromJson(jsonString, CommonResponse.class);
+                    if (null != responseData && responseData.getResponseCode() == 200) {
+                        SharedPrefUtils.setPushTokenUpdateToServer(this, true);
+                        Log.e("push", "token updated");
 
-                } else {
-                    Log.e("push", "token failed");
+                    } else {
+                        Log.e("push", "token failed");
+                    }
+                } catch (JsonSyntaxException jse) {
+                    Log.e("Json Syntex Exception push", "token failed");
                 }
 
                 break;

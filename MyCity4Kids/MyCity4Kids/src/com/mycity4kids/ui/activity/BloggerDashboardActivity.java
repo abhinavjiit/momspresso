@@ -79,6 +79,24 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
 
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Profile");
@@ -108,6 +126,11 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         });
 
 
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
     }
 
     private void getBloggerDashboardDetails() {
@@ -250,28 +273,12 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
 
                         tabLayout.getTabAt(0).setText("Bookmarks (" + responseData.getResult().getData().getBookmarkCount() + ")");
                         tabLayout.getTabAt(1).setText("Published (" + responseData.getResult().getData().getArticleCount() + ")");
-
+                        tabLayout.getTabAt(0).select();
                         final BloggerDashboardPagerAdapter adapter = new BloggerDashboardPagerAdapter
                                 (getSupportFragmentManager(), this, responseData.getResult().getData().getBookmarkCount(),
                                         responseData.getResult().getData().getArticleCount());
                         viewPager.setAdapter(adapter);
-                        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-                        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-                            @Override
-                            public void onTabSelected(TabLayout.Tab tab) {
-                                viewPager.setCurrentItem(tab.getPosition());
-                            }
 
-                            @Override
-                            public void onTabUnselected(TabLayout.Tab tab) {
-
-                            }
-
-                            @Override
-                            public void onTabReselected(TabLayout.Tab tab) {
-
-                            }
-                        });
                     } else if (responseData.getResponseCode() == 400) {
                         String message = responseData.getResult().getMessage();
                         if (!StringUtils.isNullOrEmpty(message)) {

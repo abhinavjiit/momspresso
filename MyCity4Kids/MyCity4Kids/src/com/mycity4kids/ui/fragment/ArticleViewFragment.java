@@ -3,6 +3,7 @@ package com.mycity4kids.ui.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,21 +15,24 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.controller.ParentingStopController;
 import com.mycity4kids.enums.ParentingFilterType;
+import com.mycity4kids.interfaces.OnWebServiceCompleteListener;
 import com.mycity4kids.models.parentingstop.CommonParentingList;
 import com.mycity4kids.models.parentingstop.CommonParentingResponse;
-import com.mycity4kids.models.parentingstop.ParentingRequest;
+import com.mycity4kids.newmodels.VolleyBaseResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.adapter.ArticlesListingAdapter;
+import com.mycity4kids.volley.HttpVolleyRequest;
 
 import java.util.ArrayList;
 
@@ -70,15 +74,15 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
             articleDataModelsNew = getArguments().getParcelableArrayList(Constants.ARTICLES_LIST);
             sortType = getArguments().getString(Constants.SORT_TYPE);
         }
-        if ("bookmark".equals(sortType)) {
-            articleDataModelsNew = new ArrayList<CommonParentingList>();
-            nextPageNumber = 1;
-            hitBookmarkedArticleListingAPI(nextPageNumber, "bookmark");
-        } else {
-            articleDataModelsNew = new ArrayList<CommonParentingList>();
-            nextPageNumber = 1;
-            hitArticleListingApi(nextPageNumber, sortType);
-        }
+//        if ("bookmark".equals(sortType)) {
+//            articleDataModelsNew = new ArrayList<CommonParentingList>();
+//            nextPageNumber = 1;
+//            hitBookmarkedArticleListingAPI(nextPageNumber, "bookmark");
+//        } else {
+        articleDataModelsNew = new ArrayList<CommonParentingList>();
+        nextPageNumber = 1;
+        hitArticleListingApi(nextPageNumber, sortType, false);
+//        }
         swipeRefreshLayout.setOnRefreshListener((SwipeRefreshLayout.OnRefreshListener) ArticleViewFragment.this);
 
         articlesListingAdapter = new ArticlesListingAdapter(getActivity(), true);
@@ -96,13 +100,13 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
 
                 boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
                 if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && (nextPageNumber < 2 || nextPageNumber <= totalPageCount)) {
-                    if (!"bookmark".equals(sortType)) {
-                        mLodingView.setVisibility(View.VISIBLE);
-                        hitArticleListingApi(nextPageNumber, sortType);
-                    } else {
-                        mLodingView.setVisibility(View.VISIBLE);
-                        hitBookmarkedArticleListingAPI(nextPageNumber, "bookmark");
-                    }
+//                    if (!"bookmark".equals(sortType)) {
+                    mLodingView.setVisibility(View.VISIBLE);
+                    hitArticleListingApi(nextPageNumber, sortType, false);
+//                    } else {
+//                        mLodingView.setVisibility(View.VISIBLE);
+//                        hitBookmarkedArticleListingAPI(nextPageNumber, "bookmark");
+//                    }
                     isReuqestRunning = true;
                 }
             }
@@ -209,39 +213,65 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
 
     }
 
-    private void hitArticleListingApi(int pPageCount, String SortKey) {
-        ParentingRequest _parentingModel = new ParentingRequest();
-        /**
-         * this case will case in pagination case: for sorting
-         */
-        if (SortKey != null) {
-            _parentingModel.setSoty_by(SortKey);
-        }
+    private void hitArticleListingApi(int pPageCount, String SortKey, boolean shouldRefreshCache) {
 
-        _parentingModel.setCity_id(SharedPrefUtils.getCurrentCityModel(getActivity()).getId());
-        _parentingModel.setPage("" + pPageCount);
-        ParentingStopController _controller = new ParentingStopController(getActivity(), this);
-//        mIsRequestRunning = true;
-        _controller.getData(AppConstants.PARENTING_STOP_ARTICLES_REQUEST, _parentingModel);
+        String url;
+        StringBuilder builder = new StringBuilder();
+        if (!"bookmark".equals(sortType)) {
+            builder.append("city_id=").append(SharedPrefUtils.getCurrentCityModel(getActivity()).getId());
+            builder.append("&page=").append(pPageCount);
+            builder.append("&sort=").append(SortKey);
+            url = AppConstants.PARENTING_STOP_ARTICLE_URL + builder.toString().replace(" ", "%20");
+            HttpVolleyRequest.getStringResponse(getActivity(), url, null, mGetArticleListingListener, Request.Method.GET, shouldRefreshCache);
+        } else {
+            builder.append("user_id=").append(SharedPrefUtils.getUserDetailModel(getActivity()).getId());
+            builder.append("&page=").append(pPageCount);
+            url = AppConstants.FETCH_BOOKMARK_URL + builder.toString().replace(" ", "%20");
+            HttpVolleyRequest.getStringResponse(getActivity(), url, null, mGetArticleListingListener, Request.Method.GET, shouldRefreshCache);
+        }
 
     }
 
-    private void hitBookmarkedArticleListingAPI(int pPageCount, String SortKey) {
-        ParentingRequest _parentingModel = new ParentingRequest();
-        /**
-         * this case will case in pagination case: for sorting
-         */
-        if (SortKey != null) {
-            _parentingModel.setSoty_by(SortKey);
+    private OnWebServiceCompleteListener mGetArticleListingListener = new OnWebServiceCompleteListener() {
+        @Override
+        public void onWebServiceComplete(VolleyBaseResponse response, boolean isError) {
+            progressBar.setVisibility(View.GONE);
+            Log.d("Response back =", " " + response.getResponseBody());
+            if (isError) {
+                if (null != getActivity())
+                    ((DashboardActivity) getActivity()).showToast("Something went wrong from server");
+            } else {
+                Log.d("Response = ", response.getResponseBody());
+                String temp = "";
+//                progressBar.setVisibility(View.INVISIBLE);
+                if (response == null) {
+                    ((DashboardActivity) getActivity()).showToast("Something went wrong from server");
+                    removeProgressDialog();
+                    isReuqestRunning = false;
+                    mLodingView.setVisibility(View.GONE);
+                    return;
+                }
+                CommonParentingResponse responseData = new Gson().fromJson(response.getResponseBody(), CommonParentingResponse.class);
+
+                swipeRefreshLayout.setRefreshing(false);
+                if (responseData.getResponseCode() == 200) {
+                    getArticleResponse(responseData);
+                } else if (responseData.getResponseCode() == 400) {
+                    String message = responseData.getResult().getMessage();
+                    totalPageCount = 0;
+                    if (!StringUtils.isNullOrEmpty(message)) {
+                        ((DashboardActivity) getActivity()).showToast(message);
+                    } else {
+                        ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
+                    }
+                }
+
+                isReuqestRunning = false;
+                mLodingView.setVisibility(View.GONE);
+            }
+
         }
-
-        _parentingModel.setCity_id(SharedPrefUtils.getCurrentCityModel(getActivity()).getId());
-        _parentingModel.setPage("" + pPageCount);
-        ParentingStopController _controller = new ParentingStopController(getActivity(), this);
-//        mIsRequestRunning = true;
-        _controller.getData(AppConstants.BOOKMARKED_ARTICLE_LIST_REQUEST, _parentingModel);
-
-    }
+    };
 
     public void refreshSubList(ArrayList<CommonParentingList> newList) {
         articleDataModelsNew = newList;
@@ -275,18 +305,12 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
 
     public void refreshBookmarkList() {
         nextPageNumber = 1;
-        hitBookmarkedArticleListingAPI(nextPageNumber, "bookmark");
+        hitArticleListingApi(nextPageNumber, "bookmark", true);
     }
 
     @Override
     public void onRefresh() {
-        if (!"bookmark".equals(sortType)) {
-            nextPageNumber = 1;
-            hitArticleListingApi(nextPageNumber, sortType);
-        } else {
-            nextPageNumber = 1;
-            hitBookmarkedArticleListingAPI(1, sortType);
-        }
-
+        nextPageNumber = 1;
+        hitArticleListingApi(nextPageNumber, sortType, true);
     }
 }

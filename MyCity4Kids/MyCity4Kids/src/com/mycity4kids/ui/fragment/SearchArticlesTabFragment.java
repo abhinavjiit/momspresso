@@ -2,6 +2,7 @@ package com.mycity4kids.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,21 +16,25 @@ import android.widget.TextView;
 
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
+import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.controller.ParentingStopController;
 import com.mycity4kids.enums.ParentingFilterType;
 import com.mycity4kids.models.parentingstop.CommonParentingList;
 import com.mycity4kids.models.parentingstop.CommonParentingResponse;
-import com.mycity4kids.models.parentingstop.ParentingRequest;
-import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.retrofitAPIsInterfaces.SearchArticlesAuthorsAPI;
 import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
 import com.mycity4kids.ui.activity.SearchArticlesAndAuthorsActivity;
 import com.mycity4kids.ui.adapter.ArticlesListingAdapter;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
 
 /**
  * Created by hemant.parmar on 21-04-2016.
@@ -51,6 +56,8 @@ public class SearchArticlesTabFragment extends BaseFragment {
     private boolean fragmentOnCreated = false;
     private boolean isDataLoadedOnce = false;
     private ProgressBar progressBar;
+    boolean isLastPageReached = true;
+    private SwipeRefreshLayout swipe_refresh_layout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,12 +68,13 @@ public class SearchArticlesTabFragment extends BaseFragment {
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        swipe_refresh_layout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
+        swipe_refresh_layout.setEnabled(false);
         view.findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_indefinitely));
 
         articlesListingAdapter = new ArticlesListingAdapter(getActivity(), true);
         listView.setAdapter(articlesListingAdapter);
         if (getArguments() != null) {
-            sortType = getArguments().getString(Constants.SORT_TYPE);
             searchName = getArguments().getString(Constants.SEARCH_PARAM);
         }
         articleDataModelsNew = new ArrayList<CommonParentingList>();
@@ -89,14 +97,9 @@ public class SearchArticlesTabFragment extends BaseFragment {
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
                 boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
-                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && (nextPageNumber < 2 || nextPageNumber <= totalPageCount)) {
-                    if (!"bookmark".equals(sortType)) {
-                        mLodingView.setVisibility(View.VISIBLE);
-                        newSearchTopicArticleListingApi(searchName, sortType);
-                    } else {
-                        mLodingView.setVisibility(View.VISIBLE);
-                        newSearchTopicArticleListingApi(searchName, sortType);
-                    }
+                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && isLastPageReached) {
+                    mLodingView.setVisibility(View.VISIBLE);
+                    newSearchTopicArticleListingApi(searchName, sortType);
                     isReuqestRunning = true;
                 }
             }
@@ -131,8 +134,8 @@ public class SearchArticlesTabFragment extends BaseFragment {
             fragmentResume = true;
             fragmentVisible = false;
             fragmentOnCreated = true;
-            nextPageNumber = 1;
             if (!isDataLoadedOnce && !StringUtils.isNullOrEmpty(searchName)) {
+                nextPageNumber = 1;
                 newSearchTopicArticleListingApi(searchName, sortType);
                 isDataLoadedOnce = true;
             }
@@ -225,11 +228,25 @@ public class SearchArticlesTabFragment extends BaseFragment {
         ArrayList<CommonParentingList> dataList = responseData.getResult().getData().getData();
 
         if (dataList.size() == 0) {
-            articleDataModelsNew = dataList;
-            articlesListingAdapter.setNewListData(articleDataModelsNew);
-            articlesListingAdapter.notifyDataSetChanged();
-            noBlogsTextView.setVisibility(View.VISIBLE);
-            noBlogsTextView.setText("No articles found");
+
+            isLastPageReached = false;
+            if (null != articleDataModelsNew && !articleDataModelsNew.isEmpty()) {
+                //No more next results for search from pagination
+
+            } else {
+                // No results for search
+                articleDataModelsNew = dataList;
+                articlesListingAdapter.setNewListData(dataList);
+                articlesListingAdapter.notifyDataSetChanged();
+                noBlogsTextView.setVisibility(View.VISIBLE);
+                noBlogsTextView.setText("No articles found");
+            }
+
+//            articleDataModelsNew = dataList;
+//            articlesListingAdapter.setNewListData(articleDataModelsNew);
+//            articlesListingAdapter.notifyDataSetChanged();
+//            noBlogsTextView.setVisibility(View.VISIBLE);
+//            noBlogsTextView.setText("No articles found");
         } else {
             noBlogsTextView.setVisibility(View.GONE);
             totalPageCount = responseData.getResult().getData().getPage_count();
@@ -248,14 +265,29 @@ public class SearchArticlesTabFragment extends BaseFragment {
         if (nextPageNumber == 1) {
             progressBar.setVisibility(View.VISIBLE);
         }
-        ParentingRequest _parentingModel = new ParentingRequest();
-        _parentingModel.setSearchName(searchName);
-        _parentingModel.setCity_id(SharedPrefUtils.getCurrentCityModel(getActivity()).getId());
-        _parentingModel.setPage("" + nextPageNumber);
+        if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
+            ((SearchArticlesAndAuthorsActivity) getActivity()).showToast("No connectivity available");
+            return;
+        }
+//        mLodingView.setVisibility(View.VISIBLE);
 
-        _parentingModel.setSoty_by(sortby);
-        ParentingStopController _controller = new ParentingStopController(getActivity(), this);
-        _controller.getData(AppConstants.TOP_PICKS_REQUEST, _parentingModel);
+        Retrofit retro = BaseApplication.getInstance().getRetrofit();
+        SearchArticlesAuthorsAPI searchArticlesAuthorsAPI = retro.create(SearchArticlesAuthorsAPI.class);
+
+        Call<CommonParentingResponse> call = searchArticlesAuthorsAPI.getSearchArticlesResult(searchName,
+                "article", "" + nextPageNumber);
+
+        call.enqueue(searchArticlesResponseCallback);
+
+
+//        ParentingRequest _parentingModel = new ParentingRequest();
+//        _parentingModel.setSearchName(searchName);
+//        _parentingModel.setCity_id(SharedPrefUtils.getCurrentCityModel(getActivity()).getId());
+//        _parentingModel.setPage("" + nextPageNumber);
+//
+//        _parentingModel.setSoty_by(sortby);
+//        ParentingStopController _controller = new ParentingStopController(getActivity(), this);
+//        _controller.getData(AppConstants.TOP_PICKS_REQUEST, _parentingModel);
     }
 
     public void refreshAllArticles(String searchText, String sortType) {
@@ -263,7 +295,10 @@ public class SearchArticlesTabFragment extends BaseFragment {
             articleDataModelsNew.clear();
         }
         nextPageNumber = 1;
-        newSearchTopicArticleListingApi(searchText, sortType);
+        isLastPageReached = true;
+        searchName = searchText;
+        isDataLoadedOnce = true;
+        newSearchTopicArticleListingApi(searchName, sortType);
     }
 
     public void resetOnceLoadedFlag(String searchTxt) {
@@ -271,6 +306,58 @@ public class SearchArticlesTabFragment extends BaseFragment {
             articleDataModelsNew.clear();
         }
         isDataLoadedOnce = false;
+        isLastPageReached = true;
         searchName = searchTxt;
     }
+
+    Callback<CommonParentingResponse> searchArticlesResponseCallback = new Callback<CommonParentingResponse>() {
+        @Override
+        public void onResponse(Call<CommonParentingResponse> call, retrofit2.Response<CommonParentingResponse> response) {
+            isReuqestRunning = false;
+            progressBar.setVisibility(View.INVISIBLE);
+            if (mLodingView.getVisibility() == View.VISIBLE) {
+                mLodingView.setVisibility(View.GONE);
+            }
+            if (response == null) {
+                ((SearchArticlesAndAuthorsActivity) getActivity()).showToast("Something went wrong from server");
+                return;
+            }
+            try {
+                CommonParentingResponse responseData = (CommonParentingResponse) response.body();
+                if (responseData.getResponseCode() == 200) {
+                    getArticleResponse(responseData);
+                } else if (responseData.getResponseCode() == 400) {
+                    String message = responseData.getResult().getMessage();
+                    if (!StringUtils.isNullOrEmpty(message)) {
+                        ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(message);
+                    } else {
+                        ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(getString(R.string.went_wrong));
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(getString(R.string.went_wrong));
+            }
+
+        }
+
+        @Override
+        public void onFailure(Call<CommonParentingResponse> call, Throwable t) {
+            ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(getString(R.string.went_wrong));
+        }
+    };
+
+//    @Override
+//    public void onRefresh() {
+//        if (StringUtils.isNullOrEmpty(searchName)) {
+//            ((SearchArticlesAndAuthorsActivity) getActivity()).showToast("Please enter search text");
+//            return;
+//        }
+//        if (null != articleDataModelsNew) {
+//            articleDataModelsNew.clear();
+//        }
+//        nextPageNumber = 1;
+//        isLastPageReached = true;
+//        newSearchTopicArticleListingApi(searchName, sortType);
+//    }
 }

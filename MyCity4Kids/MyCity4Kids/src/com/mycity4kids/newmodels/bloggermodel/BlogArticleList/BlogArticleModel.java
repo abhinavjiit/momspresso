@@ -50,7 +50,7 @@ public class BlogArticleModel extends BaseModel implements Parcelable {
     }
 
 
-    public Creator<BlogArticleModel> CREATOR = new Creator<BlogArticleModel>() {
+    public static Creator<BlogArticleModel> CREATOR = new Creator<BlogArticleModel>() {
         @Override
         public BlogArticleModel createFromParcel(Parcel source) {
             return new BlogArticleModel(source);

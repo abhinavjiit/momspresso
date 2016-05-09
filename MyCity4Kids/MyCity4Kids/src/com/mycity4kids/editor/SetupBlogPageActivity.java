@@ -1,7 +1,6 @@
 package com.mycity4kids.editor;
 
 import android.app.Activity;
-import android.support.v7.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -9,6 +8,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
@@ -191,7 +191,7 @@ public class SetupBlogPageActivity extends BaseActivity {
                             bloggerBio.getText().toString(),
                             url,
                             AppConstants.Source_Id
-                            );
+                    );
 
                     //asynchronous call
                     call.enqueue(new Callback<CommonResponse>() {
@@ -351,7 +351,7 @@ public class SetupBlogPageActivity extends BaseActivity {
         originalImage.compress(Bitmap.CompressFormat.PNG, 75, bao);
         byte[] ba = bao.toByteArray();
         String imageString = Base64.encodeToString(ba, Base64.DEFAULT);
-        Retrofit retrofit  = new Retrofit.Builder()
+        Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(AppConstants.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();

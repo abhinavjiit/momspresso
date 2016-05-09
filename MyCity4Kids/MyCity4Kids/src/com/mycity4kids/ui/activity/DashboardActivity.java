@@ -98,7 +98,6 @@ import com.mycity4kids.ui.fragment.FragmentFamilyProfile;
 import com.mycity4kids.ui.fragment.FragmentHomeCategory;
 import com.mycity4kids.ui.fragment.FragmentKidProfile;
 import com.mycity4kids.ui.fragment.FragmentMC4KHome;
-import com.mycity4kids.ui.fragment.FragmentParenting;
 import com.mycity4kids.ui.fragment.FragmentSetting;
 import com.mycity4kids.ui.fragment.FragmentTaskHome;
 import com.mycity4kids.ui.fragment.NotificationFragment;
@@ -507,12 +506,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     findViewById(R.id.month_popup).setVisibility(View.GONE);
                     findViewById(R.id.task_popup).setVisibility(View.GONE);
 
-                } else if (currentFrag instanceof FragmentParenting) {
-
-                    changeVisibiltyOfArrow(false);
-                    findViewById(R.id.month_popup).setVisibility(View.GONE);
-                    findViewById(R.id.task_popup).setVisibility(View.GONE);
-                    setTitle("Articles");
                 } else if (currentFrag instanceof FragmentFamilyDetail) {
 
                     setTitle("Family Details");
@@ -2170,10 +2163,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     if (data.getBooleanExtra(Constants.IS_MEET_CONTRIBUTORS_SELECTED, false)) {
 
                         replaceFragment(new ParentingBlogFragment(), null, true);
-                    } else {
-                        if (topFragment instanceof ArticlesFragment) {
-//                            ((ArticlesFragment) topFragment).filterListByTopics(data.getStringExtra(Constants.FILTER_NAME), data.getBooleanExtra(Constants.RESET_FILTER, false), data.getBooleanExtra(Constants.IS_FIRST_RUN, false));
-                        }
                     }
                 case Constants.FILTER_BLOG:
                     if (topFragment instanceof ParentingBlogFragment) {
@@ -2228,8 +2217,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     } else if (topFragment instanceof FragmentTaskHome) {
                         ((FragmentTaskHome) topFragment).refreshTaskList();
                         notiftTaskList();
-                    } else if (topFragment instanceof ArticlesFragment) {
-//                        ((ArticlesFragment) topFragment).filterListByTopics(data.getStringExtra(Constants.FILTER_NAME), data.getBooleanExtra(Constants.RESET_FILTER, false), data.getBooleanExtra(Constants.IS_FIRST_RUN, false));
                     }
 
                     break;

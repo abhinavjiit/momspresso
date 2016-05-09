@@ -224,7 +224,7 @@ public class ExpendedBlogDescriptionActivity extends BaseActivity implements Vie
         authorRank.setText(String.valueOf(blogDetails.getAuthor_rank()));
 
         authorType.setText(blogDetails.getAuthor_type().toUpperCase());
-        authorType.setBackgroundColor(Color.parseColor(blogDetails.getAuthor_color_code()));
+        authorType.setTextColor(Color.parseColor(blogDetails.getAuthor_color_code()));
 
         if (StringUtils.isNullOrEmpty(blogDetails.getAbout_user())) {
             aboutLayout.setVisibility(View.GONE);

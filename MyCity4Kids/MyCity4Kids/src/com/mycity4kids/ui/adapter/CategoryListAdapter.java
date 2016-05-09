@@ -14,14 +14,12 @@ import android.widget.TextView;
 
 import com.mycity4kids.R;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.enums.ParentingFilterType;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.category.CategoryModel;
 import com.mycity4kids.models.category.GroupCategoryModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.BusinessListActivityKidsResources;
-import com.mycity4kids.ui.activity.ParentingArticlesActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -217,8 +215,8 @@ public class CategoryListAdapter extends BaseExpandableListAdapter {
 
     private void activityAccordingToCategoty(GroupCategoryModel _categoryData) {
         if (_categoryData.getCategoryGroup().contains("Parenting") || _categoryData.getCategoryGroup().equalsIgnoreCase("Parenting")) {
-            Intent intent = new Intent(mContext, ParentingArticlesActivity.class);
-            mContext.startActivity(intent);
+//            Intent intent = new Intent(mContext, ParentingArticlesActivity.class);
+//            mContext.startActivity(intent);
 
         }/*else if(_categoryData.getCategoryGroup().contains("Shop")||_categoryData.getCategoryGroup().equalsIgnoreCase("Where to Shop")){
 			//mContext.startActivity(new Intent(mContext,ParentingArticlesActivity.class));
@@ -275,15 +273,15 @@ public class CategoryListAdapter extends BaseExpandableListAdapter {
 
     private void activityStartAccordingToChildCategory(CategoryModel subCategory) {
         if (subCategory.getCategoryName().contains("Articles") || subCategory.getCategoryName().equalsIgnoreCase("Articles")) {
-            Intent intent = new Intent(mContext, ParentingArticlesActivity.class);
-            intent.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.ARTICLES);
-            Log.e("Category Name", subCategory.getCategoryName());
-            mContext.startActivity(intent);
+//            Intent intent = new Intent(mContext, ParentingArticlesActivity.class);
+//            intent.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.ARTICLES);
+//            Log.e("Category Name", subCategory.getCategoryName());
+//            mContext.startActivity(intent);
 
         } else if (subCategory.getCategoryName().contains("Blogs") || subCategory.getCategoryName().equalsIgnoreCase("Blogs")) {
-            Intent intent = new Intent(mContext, ParentingArticlesActivity.class);
-            intent.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.BLOGS);
-            mContext.startActivity(intent);
+//            Intent intent = new Intent(mContext, ParentingArticlesActivity.class);
+//            intent.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.BLOGS);
+//            mContext.startActivity(intent);
         } else {
             Intent intent = new Intent(mContext, BusinessListActivityKidsResources.class);
             intent.putExtra(Constants.EXTRA_CATEGORY_ID, subCategory.getCategoryId());

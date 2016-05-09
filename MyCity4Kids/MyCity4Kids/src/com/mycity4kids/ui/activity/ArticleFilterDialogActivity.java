@@ -46,7 +46,7 @@ public class ArticleFilterDialogActivity extends BaseActivity implements View.On
     EditText searchText;
     ImageView searchBtn;
     TextWatcher textWatcher;
-    TextView cancel, reset, meetContributors;
+    TextView cancel, meetContributors;
     LinearLayout filterCancel;
     View divider1, divider2, divider3;
 
@@ -63,7 +63,7 @@ public class ArticleFilterDialogActivity extends BaseActivity implements View.On
         searchText = (EditText) findViewById(R.id.search_text);
         searchBtn = (ImageView) findViewById(R.id.search_btn);
         cancel = (TextView) findViewById(R.id.cancel_filter);
-        reset = (TextView) findViewById(R.id.reset_filter);
+//        reset = (TextView) findViewById(R.id.reset_filter);
         filterCancel = (LinearLayout) findViewById(R.id.cancel_reset);
         meetContributors = (TextView) findViewById(R.id.meet_contributors);
         divider1 = (View) findViewById(R.id.view1);
@@ -74,7 +74,7 @@ public class ArticleFilterDialogActivity extends BaseActivity implements View.On
 
         searchText.setVisibility(View.GONE);
         cancel.setVisibility(View.GONE);
-        reset.setVisibility(View.GONE);
+//        reset.setVisibility(View.GONE);
         filterCancel.setVisibility(View.GONE);
         meetContributors.setVisibility(View.GONE);
         divider1.setVisibility(View.GONE);
@@ -118,13 +118,15 @@ public class ArticleFilterDialogActivity extends BaseActivity implements View.On
             public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i1, long l) {
 
                 ArticleFilterListModel.SubFilerList selectedItem = (ArticleFilterListModel.SubFilerList) articleFilterExpendableAdaper.getChild(i, i1);
-
-                Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
+//
+//                Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
+//                intent.putExtra(Constants.FILTER_NAME, selectedItem.getName());
+//                intent.putExtra(Constants.RESET_FILTER, false);
+//                setResult(RESULT_OK, intent);
+                Intent intent = new Intent(getApplicationContext(), SearchArticlesAndAuthorsActivity.class);
                 intent.putExtra(Constants.FILTER_NAME, selectedItem.getName());
-                intent.putExtra(Constants.RESET_FILTER, false);
-                setResult(RESULT_OK, intent);
-                finish();
-
+                startActivity(intent);
+//                finish();
                 return false;
             }
         });
@@ -153,7 +155,7 @@ public class ArticleFilterDialogActivity extends BaseActivity implements View.On
 
 
         searchBtn.setOnClickListener(this);
-        reset.setOnClickListener(this);
+//        reset.setOnClickListener(this);
         cancel.setOnClickListener(this);
 
         finalData = ((BaseApplication) getApplication()).getFilterList();
@@ -259,7 +261,7 @@ public class ArticleFilterDialogActivity extends BaseActivity implements View.On
 
         searchText.setVisibility(View.VISIBLE);
         cancel.setVisibility(View.VISIBLE);
-        reset.setVisibility(View.VISIBLE);
+//        reset.setVisibility(View.VISIBLE);
         filterCancel.setVisibility(View.VISIBLE);
         meetContributors.setVisibility(View.VISIBLE);
         divider1.setVisibility(View.VISIBLE);
@@ -291,17 +293,17 @@ public class ArticleFilterDialogActivity extends BaseActivity implements View.On
                 }
 
                 break;
-            case R.id.reset_filter:
-
-                intent = new Intent(getApplicationContext(), DashboardActivity.class);
-                intent.putExtra(Constants.FILTER_NAME, searchText.getText().toString());
-                intent.putExtra(Constants.RESET_FILTER, true);
-                intent.putExtra(Constants.IS_MEET_CONTRIBUTORS_SELECTED, false);
-                intent.putExtra(Constants.IS_FIRST_RUN, false);
-                setResult(RESULT_OK, intent);
-                finish();
-
-                break;
+//            case R.id.reset_filter:
+//
+//                intent = new Intent(getApplicationContext(), DashboardActivity.class);
+//                intent.putExtra(Constants.FILTER_NAME, searchText.getText().toString());
+//                intent.putExtra(Constants.RESET_FILTER, true);
+//                intent.putExtra(Constants.IS_MEET_CONTRIBUTORS_SELECTED, false);
+//                intent.putExtra(Constants.IS_FIRST_RUN, false);
+//                setResult(RESULT_OK, intent);
+//                finish();
+//
+//                break;
             case R.id.cancel_filter:
 
                 finish();

@@ -15,21 +15,27 @@ import android.widget.TextView;
 
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
+import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.NewParentingBlogController;
-import com.mycity4kids.models.parentingstop.CommonParentingList;
 import com.mycity4kids.models.parentingstop.ParentingRequest;
 import com.mycity4kids.newmodels.bloggermodel.BlogItemModel;
 import com.mycity4kids.newmodels.bloggermodel.ParentingBlogResponse;
+import com.mycity4kids.retrofitAPIsInterfaces.SearchArticlesAuthorsAPI;
 import com.mycity4kids.ui.activity.BlogDetailActivity;
 import com.mycity4kids.ui.activity.SearchArticlesAndAuthorsActivity;
 import com.mycity4kids.ui.adapter.AuthorsListingAdapter;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
 
 /**
  * Created by hemant.parmar on 21-04-2016.
@@ -134,18 +140,14 @@ public class SearchAuthorsTabFragment extends BaseFragment {
                 responseData = (ParentingBlogResponse) response.getResponseObject();
 
                 try {
+                    if (mLodingView.getVisibility() == View.VISIBLE) {
+                        mLodingView.setVisibility(View.GONE);
+                    }
                     if (responseData.getResponseCode() == 200) {
-                        if (mLodingView.getVisibility() == View.VISIBLE) {
-                            mLodingView.setVisibility(View.GONE);
-                        }
                         isReuqestRunning = false;
 //                        totalPageCount = Integer.parseInt(responseData.getResult().getData().getPage_count());
                         updateBloggerResponse(responseData);
-
                     } else if (responseData.getResponseCode() == 400) {
-                        if (mLodingView.getVisibility() == View.VISIBLE) {
-                            mLodingView.setVisibility(View.GONE);
-                        }
                         isReuqestRunning = false;
                         String message = responseData.getResult().getMessage();
                         if (!StringUtils.isNullOrEmpty(message)) {
@@ -177,8 +179,8 @@ public class SearchAuthorsTabFragment extends BaseFragment {
             fragmentResume = true;
             fragmentVisible = false;
             fragmentOnCreated = true;
-            nextPageNumber = 1;
             if (!isDataLoadedOnce && !StringUtils.isNullOrEmpty(searchName)) {
+                nextPageNumber = 1;
                 hitBloggerAPIrequest(nextPageNumber);
                 isDataLoadedOnce = true;
             }
@@ -199,7 +201,7 @@ public class SearchAuthorsTabFragment extends BaseFragment {
         if (dataList.size() == 0) {
             loadMore = false;
             if (null != listingData && !listingData.isEmpty()) {
-                //No more next results for search
+                //No more next results for search from pagination
 
             } else {
                 // No results for search
@@ -228,13 +230,29 @@ public class SearchAuthorsTabFragment extends BaseFragment {
         if (nextPageNumber == 1) {
             progressBar.setVisibility(View.VISIBLE);
         }
-//        showProgressDialog(getString(R.string.please_wait));
-        ParentingRequest _parentingModel = new ParentingRequest();
-        _parentingModel.setSearchName(searchName);
-        _parentingModel.setPage("" + nextPageNumber);
 
-        NewParentingBlogController newParentingBlogController = new NewParentingBlogController(getActivity(), this);
-        newParentingBlogController.getData(AppConstants.SEARCH_AUTHORS_REQUEST, _parentingModel);
+        if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
+            ((SearchArticlesAndAuthorsActivity) getActivity()).showToast("No connectivity available");
+            return;
+        }
+//        mLodingView.setVisibility(View.VISIBLE);
+
+        Retrofit retro = BaseApplication.getInstance().getRetrofit();
+        SearchArticlesAuthorsAPI searchArticlesAuthorsAPI = retro.create(SearchArticlesAuthorsAPI.class);
+
+        Call<ParentingBlogResponse> call = searchArticlesAuthorsAPI.getSearchAuthorsResult(searchName,
+                "author", "" + nextPageNumber);
+
+        call.enqueue(searchAuthorsResponseCallback);
+
+
+//        showProgressDialog(getString(R.string.please_wait));
+//        ParentingRequest _parentingModel = new ParentingRequest();
+//        _parentingModel.setSearchName(searchName);
+//        _parentingModel.setPage("" + nextPageNumber);
+//
+//        NewParentingBlogController newParentingBlogController = new NewParentingBlogController(getActivity(), this);
+//        newParentingBlogController.getData(AppConstants.SEARCH_AUTHORS_REQUEST, _parentingModel);
     }
 
     public void refreshAllAuthors(String searchTxt) {
@@ -244,6 +262,7 @@ public class SearchAuthorsTabFragment extends BaseFragment {
         nextPageNumber = 1;
         loadMore = true;
         searchName = searchTxt;
+        isDataLoadedOnce = true;
         hitBloggerAPIrequest(nextPageNumber);
     }
 
@@ -255,4 +274,42 @@ public class SearchAuthorsTabFragment extends BaseFragment {
         loadMore = true;
         searchName = searchTxt;
     }
+
+
+    Callback<ParentingBlogResponse> searchAuthorsResponseCallback = new Callback<ParentingBlogResponse>() {
+        @Override
+        public void onResponse(Call<ParentingBlogResponse> call, retrofit2.Response<ParentingBlogResponse> response) {
+            isReuqestRunning = false;
+            progressBar.setVisibility(View.INVISIBLE);
+            if (mLodingView.getVisibility() == View.VISIBLE) {
+                mLodingView.setVisibility(View.GONE);
+            }
+            if (response == null) {
+                ((SearchArticlesAndAuthorsActivity) getActivity()).showToast("Something went wrong from server");
+                return;
+            }
+            try {
+                ParentingBlogResponse responseData = (ParentingBlogResponse) response.body();
+                if (responseData.getResponseCode() == 200) {
+                    updateBloggerResponse(responseData);
+                } else if (responseData.getResponseCode() == 400) {
+                    String message = responseData.getResult().getMessage();
+                    if (!StringUtils.isNullOrEmpty(message)) {
+                        ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(message);
+                    } else {
+                        ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(getString(R.string.went_wrong));
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(getString(R.string.went_wrong));
+            }
+
+        }
+
+        @Override
+        public void onFailure(Call<ParentingBlogResponse> call, Throwable t) {
+            ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(getString(R.string.went_wrong));
+        }
+    };
 }

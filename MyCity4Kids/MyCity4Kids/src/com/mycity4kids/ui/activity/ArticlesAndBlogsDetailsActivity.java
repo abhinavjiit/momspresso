@@ -253,7 +253,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 ArticleBlogDetailsController _controller = new ArticleBlogDetailsController(this, this);
 //                _controller.getData(AppConstants.ARTICLES_DETAILS_REQUEST, articleId);
                 if (!ConnectivityUtils.isNetworkEnabled(this)) {
-                    showToast("No connectivity available");
+                    showToast(getString(R.string.error_network));
                     return;
                 }
                 showProgressDialog(getString(R.string.fetching_data));
@@ -283,7 +283,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     private void getMoreComments() {
         isLoading = true;
         if (!ConnectivityUtils.isNetworkEnabled(this)) {
-            showToast("No connectivity available");
+            showToast(getString(R.string.error_network));
             return;
         }
         mLodingView.setVisibility(View.VISIBLE);

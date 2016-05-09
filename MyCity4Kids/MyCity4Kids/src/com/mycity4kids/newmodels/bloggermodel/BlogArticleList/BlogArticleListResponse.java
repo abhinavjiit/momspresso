@@ -118,7 +118,7 @@ public class BlogArticleListResponse extends BaseModel {
         public SortArticleBlogList(Parcel parcel) {
             this.page_count = parcel.readString();
             this.total_articles = parcel.readString();
-            this.data = parcel.readArrayList(BlogArticleModel.class.getClassLoader());
+            this.data = parcel.createTypedArrayList(BlogArticleModel.CREATOR);
         }
 
         @Override
@@ -130,7 +130,7 @@ public class BlogArticleListResponse extends BaseModel {
         public void writeToParcel(Parcel parcel, int i) {
             parcel.writeString(page_count);
             parcel.writeString(total_articles);
-            parcel.writeList(data);
+            parcel.writeTypedList(data);
         }
 
         public Creator<SortArticleBlogList> CREATOR = new Creator<SortArticleBlogList>() {

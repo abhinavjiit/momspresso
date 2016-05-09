@@ -18,6 +18,8 @@ import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.adapter.SearchArticlesAndAuthorsPagerAdapter;
 import com.mycity4kids.ui.adapter.TabsPagerAdapter;
 
@@ -37,6 +39,8 @@ public class SearchArticlesAndAuthorsActivity extends BaseActivity implements Vi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Utils.pushOpenScreenEvent(SearchArticlesAndAuthorsActivity.this, "Search Articles/Authors", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+
         setContentView(R.layout.search_articles_authors_activity);
 
         searchParam = getIntent().getStringExtra(Constants.FILTER_NAME);

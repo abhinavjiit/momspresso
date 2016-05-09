@@ -16,6 +16,8 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -32,6 +34,7 @@ import com.mycity4kids.dbtable.TableTaskData;
 import com.mycity4kids.dbtable.TaskCompletedTable;
 import com.mycity4kids.enums.ParentingFilterType;
 import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.interfaces.OnWebServiceCompleteListener;
 import com.mycity4kids.models.businesslist.BusinessDataListing;
 import com.mycity4kids.models.businesslist.BusinessListRequest;
 import com.mycity4kids.models.businesslist.BusinessListResponse;
@@ -43,6 +46,7 @@ import com.mycity4kids.newmodels.AppointmentMappingModel;
 import com.mycity4kids.newmodels.AttendeeModel;
 import com.mycity4kids.newmodels.TaskDataModel;
 import com.mycity4kids.newmodels.TaskMappingModel;
+import com.mycity4kids.newmodels.VolleyBaseResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.ActivityCreateAppointment;
 import com.mycity4kids.ui.activity.ActivityCreateTask;
@@ -56,6 +60,7 @@ import com.mycity4kids.ui.adapter.AdapterHomeAppointment;
 import com.mycity4kids.ui.adapter.AdapterHomeTask;
 import com.mycity4kids.ui.adapter.ArticlesListingAdapter;
 import com.mycity4kids.ui.adapter.BusinessListingAdapterevent;
+import com.mycity4kids.volley.HttpVolleyRequest;
 import com.mycity4kids.widget.CustomListView;
 
 import java.text.DateFormat;
@@ -84,7 +89,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     ImageView imgGoToCal, imgGoToEvents, imgGoToBlogs;
     ImageView addAppointment;
     java.sql.Timestamp firsttamp;
-//    AdapterHomeTask adapterHomeTask;
+    //    AdapterHomeTask adapterHomeTask;
     ScrollView baseScroll;
     private ProgressBar progressBar, blogProgessBar;
     private BusinessListingAdapterevent businessAdapter;
@@ -510,19 +515,76 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     }
 
     public void hitBlogListingApi() {
-        if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
-            return;
-        }
-//        blogProgessBar.setVisibility(View.VISIBLE);
-        ParentingRequest _parentingModel = new ParentingRequest();
-        _parentingModel.setCity_id(SharedPrefUtils.getCurrentCityModel(getActivity()).getId());
-        _parentingModel.setPage("1");
+//        if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
+//            return;
+//        }
 
-        ParentingStopController _controller = new ParentingStopController(getActivity(), this);
-        _controller.getData(AppConstants.ARTICLES_TODAY_REQUEST, _parentingModel);
+        blogProgessBar.setVisibility(View.VISIBLE);
+        String url;
+        StringBuilder builder = new StringBuilder();
+        builder.append("city_id=").append(SharedPrefUtils.getCurrentCityModel(getActivity()).getId());
+        builder.append("&page=").append(1);
+        builder.append("&sort=").append("trending_today");
+        url = AppConstants.NEW_ALL_ARTICLE_URL + builder.toString().replace(" ", "%20");
+        HttpVolleyRequest.getStringResponse(getActivity(), url, null, mGetArticleListingListener, Request.Method.GET, true);
+//        ParentingRequest _parentingModel = new ParentingRequest();
+//        _parentingModel.setCity_id(SharedPrefUtils.getCurrentCityModel(getActivity()).getId());
+//        _parentingModel.setPage("1");
+//
+//        ParentingStopController _controller = new ParentingStopController(getActivity(), this);
+//        _controller.getData(AppConstants.ARTICLES_TODAY_REQUEST, _parentingModel);
 
 
     }
+
+    private OnWebServiceCompleteListener mGetArticleListingListener = new OnWebServiceCompleteListener() {
+        @Override
+        public void onWebServiceComplete(VolleyBaseResponse response, boolean isError) {
+            progressBar.setVisibility(View.GONE);
+            Log.d("Response back =", " " + response.getResponseBody());
+            if (isError) {
+                if (null != getActivity())
+                    ((DashboardActivity) getActivity()).showToast("Something went wrong from server");
+            } else {
+                Log.d("Response = ", response.getResponseBody());
+                String temp = "";
+//                progressBar.setVisibility(View.INVISIBLE);
+                if (response == null) {
+                    ((DashboardActivity) getActivity()).showToast("Something went wrong from server");
+                    removeProgressDialog();
+                    return;
+                }
+
+                blogProgessBar.setVisibility(View.GONE);
+                CommonParentingResponse responseBlogData = new Gson().fromJson(response.getResponseBody(), CommonParentingResponse.class);
+
+                if (responseBlogData.getResponseCode() == Constants.HTTP_RESPONSE_SUCCESS) {
+
+                    mArticleDataListing.addAll(responseBlogData.getResult().getData().getData());
+                    BaseApplication.setBlogResponse(mArticleDataListing);
+                    articlesListingAdapter.setNewListData(mArticleDataListing);
+                    articlesListingAdapter.notifyDataSetChanged();
+
+                    if (mArticleDataListing.isEmpty()) {
+                        ((TextView) view.findViewById(R.id.go_to_blog)).setVisibility(View.VISIBLE);
+                        ((TextView) view.findViewById(R.id.no_blog)).setVisibility(View.VISIBLE);
+                        //  ((LinearLayout) view.findViewById(R.id.blogHeader)).setVisibility(View.GONE);
+                        //  eventListView.setVisibility(View.GONE);
+                    }
+                    baseScroll.smoothScrollTo(0, 0);
+
+                } else if (responseBlogData.getResponseCode() == 400) {
+                    ((TextView) view.findViewById(R.id.go_to_blog)).setVisibility(View.VISIBLE);
+                    ((TextView) view.findViewById(R.id.no_blog)).setVisibility(View.VISIBLE);
+                    //blogListView.setVisibility(View.GONE);
+                    // ((LinearLayout) view.findViewById(R.id.blogHeader)).setVisibility(View.GONE);
+
+                }
+
+            }
+
+        }
+    };
 
     public boolean calcAgeGroup(int kidAge, String ageGroup) {
         boolean result = false;

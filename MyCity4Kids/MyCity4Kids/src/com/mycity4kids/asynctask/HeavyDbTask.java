@@ -66,8 +66,8 @@ public class HeavyDbTask extends AsyncTask<Void, Void, String>{
 				 * which we save in shared preference 
 				 * & check on HomeCategoryActivity.deepanker.chaudhary
 				 */
-				boolean isAutoUpdateAvailable=_configurationData.getAppVersionApi().getData().isAuto_update();
-                 SharedPrefUtils.setAppUgrade(mContext, isAutoUpdateAvailable);
+//				boolean isAutoUpdateAvailable=_configurationData.getAppVersionApi().getData().isAuto_update();
+//                 SharedPrefUtils.setAppUgrade(mContext, isAutoUpdateAvailable);
 
 				/**
 				 * this is a utility class in which i have created save & delete method for tables . 

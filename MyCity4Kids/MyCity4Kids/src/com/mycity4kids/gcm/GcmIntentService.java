@@ -91,6 +91,7 @@ public class
             return;
         }
 
+
         try {
             PushNotificationModel pushNotificationModel = new Gson().fromJson(msg, PushNotificationModel.class);
             if (pushNotificationModel != null) {
@@ -155,28 +156,32 @@ public class
                     String message = Html.fromHtml(pushNotificationModel.getMessage_id()).toString();
                     String title = Html.fromHtml(pushNotificationModel.getTitle()).toString();
 
-                    NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-
-                    Intent intent = new Intent(getApplicationContext(), ArticlesAndBlogsDetailsActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra(Constants.ARTICLE_ID, "" + pushNotificationModel.getId());
-                    intent.putExtra(AppConstants.NOTIFICATION_ID, requestID);
-                    intent.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.ARTICLES);
-                    intent.putExtra(Constants.BLOG_NAME, pushNotificationModel.getBlog_name());
-                    if (pushNotificationModel.getFilter_type().trim().equals("Blogger")) {
-                        intent.putExtra(Constants.FILTER_TYPE, "blogs");
+                    Intent intent;
+                    PendingIntent contentIntent;
+                    if (SharedPrefUtils.getAppUpgrade(this)) {
+                        intent = new Intent(getApplicationContext(), SplashActivity.class);
+                        contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                     } else {
-                        intent.putExtra(Constants.FILTER_TYPE, "authors");
+                        intent = new Intent(getApplicationContext(), ArticlesAndBlogsDetailsActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra(Constants.ARTICLE_ID, "" + pushNotificationModel.getId());
+                        intent.putExtra(AppConstants.NOTIFICATION_ID, requestID);
+                        intent.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.ARTICLES);
+                        intent.putExtra(Constants.BLOG_NAME, pushNotificationModel.getBlog_name());
+                        if (pushNotificationModel.getFilter_type().trim().equals("Blogger")) {
+                            intent.putExtra(Constants.FILTER_TYPE, "blogs");
+                        } else {
+                            intent.putExtra(Constants.FILTER_TYPE, "authors");
+                        }
+
+                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+                        // Adds the back stack
+                        stackBuilder.addParentStack(ArticlesAndBlogsDetailsActivity.class);
+                        // Adds the Intent to the top of the stack
+                        stackBuilder.addNextIntent(intent);
+                        contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
                     }
-
-                    TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-                    // Adds the back stack
-                    stackBuilder.addParentStack(ArticlesAndBlogsDetailsActivity.class);
-                    // Adds the Intent to the top of the stack
-                    stackBuilder.addNextIntent(intent);
-
-                    //PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                    PendingIntent contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
                     NotificationCompat.BigPictureStyle notiStyle = new
                             NotificationCompat.BigPictureStyle();
@@ -314,16 +319,22 @@ public class
 
                     int requestID = (int) System.currentTimeMillis();
 
-                    // Creates an explicit intent for an ResultActivity to receive.
-                    Intent resultIntent = new Intent(getApplicationContext(), BusinessDetailsActivity.class);
-                    resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    resultIntent.putExtra(Constants.CATEGORY_ID, SharedPrefUtils.getEventIdForCity(getApplication()));
-                    resultIntent.putExtra(Constants.BUSINESS_OR_EVENT_ID, pushNotificationModel.getId());
-                    resultIntent.putExtra(Constants.PAGE_TYPE, Constants.EVENT_PAGE_TYPE);
-                    resultIntent.putExtra(Constants.DISTANCE, "0");
-                    resultIntent.putExtra(AppConstants.NOTIFICATION_ID, requestID);
+                    Intent resultIntent;
+                    PendingIntent contentIntent;
+                    if (SharedPrefUtils.getAppUpgrade(this)) {
+                        resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
+                    } else {
+                        // Creates an explicit intent for an ResultActivity to receive.
+                        resultIntent = new Intent(getApplicationContext(), BusinessDetailsActivity.class);
+                        resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        resultIntent.putExtra(Constants.CATEGORY_ID, SharedPrefUtils.getEventIdForCity(getApplication()));
+                        resultIntent.putExtra(Constants.BUSINESS_OR_EVENT_ID, pushNotificationModel.getId());
+                        resultIntent.putExtra(Constants.PAGE_TYPE, Constants.EVENT_PAGE_TYPE);
+                        resultIntent.putExtra(Constants.DISTANCE, "0");
+                        resultIntent.putExtra(AppConstants.NOTIFICATION_ID, requestID);
+                    }
+                    contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-                    PendingIntent contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
                     NotificationCompat.BigPictureStyle notiStyle = new
                             NotificationCompat.BigPictureStyle();
@@ -359,13 +370,21 @@ public class
 
                     NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 
-                    // Creates an explicit intent for an ResultActivity to receive.
-                    Intent resultIntent = new Intent(getApplicationContext(), DashboardActivity.class);
-                    resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    resultIntent.putExtra(AppConstants.NOTIFICATION_ID, requestID);
-                    resultIntent.putExtra(Constants.LOAD_FRAGMENT, Constants.BUSINESS_EVENTLIST_FRAGMENT);
+                    Intent resultIntent;
+                    PendingIntent contentIntent;
+                    if (SharedPrefUtils.getAppUpgrade(this)) {
+                        resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
+                    } else {
+                        // Creates an explicit intent for an ResultActivity to receive.
+                        resultIntent = new Intent(getApplicationContext(), DashboardActivity.class);
+                        resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        resultIntent.putExtra(AppConstants.NOTIFICATION_ID, requestID);
+                        resultIntent.putExtra(Constants.LOAD_FRAGMENT, Constants.BUSINESS_EVENTLIST_FRAGMENT);
+                    }
+                    contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-                    PendingIntent contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    // Creates an explicit intent for an ResultActivity to receive.
+
                     NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
                             .setLargeIcon(icon).setSmallIcon(R.drawable.iconnotify)
                             .setContentTitle(title).setStyle(new NotificationCompat.BigTextStyle().bigText(message)).setContentText(message);
@@ -389,7 +408,7 @@ public class
                     PendingIntent contentIntent;
                     NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
                     TableAdult _table = new TableAdult(BaseApplication.getInstance());
-                    if (_table.getAdultCount() > 0) { // if he signup
+                    if (_table.getAdultCount() > 0 && !SharedPrefUtils.getAppUpgrade(this)) { // if he signup
                         cIntent = new Intent(getApplicationContext(), PlanYourWeekActivity.class);
                         cIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
@@ -416,7 +435,6 @@ public class
                     mNotificationManager.notify(requestID, mBuilder.build());
 
                 }
-
 
             }
         } catch (Exception e) {

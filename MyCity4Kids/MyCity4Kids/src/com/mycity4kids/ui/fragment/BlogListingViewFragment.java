@@ -27,8 +27,8 @@ import com.mycity4kids.newmodels.bloggermodel.BlogArticleList.BlogArticleModel;
 import com.mycity4kids.newmodels.bloggermodel.BlogArticleList.NewArticleListingResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
+import com.mycity4kids.ui.activity.BlogDetailActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
-import com.mycity4kids.ui.activity.ParentingArticlesActivity;
 import com.mycity4kids.ui.adapter.BloggerListingAdapter;
 
 import java.util.ArrayList;
@@ -67,7 +67,6 @@ public class BlogListingViewFragment extends BaseFragment {
 
         progressBar.setVisibility(View.INVISIBLE);
         view.findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_indefinitely));
-
 
         if (getArguments() != null) {
             articleDataModelsNew = getArguments().getParcelable(Constants.BLOG_ARTICLES_LIST);
@@ -131,7 +130,7 @@ public class BlogListingViewFragment extends BaseFragment {
 
         NewArticleListingResponse responseData;
         if (response == null) {
-            ((ParentingArticlesActivity) getActivity()).showToast("Something went wrong from server");
+            ((BlogDetailActivity) getActivity()).showToast("Something went wrong from server");
             removeProgressDialog();
             isReuqestRunning = false;
             mLodingView.setVisibility(View.GONE);
