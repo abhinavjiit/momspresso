@@ -247,19 +247,19 @@ public class CategoryListAdapter extends BaseExpandableListAdapter {
             {
                 case 7:
                     Log.e("Category", _categoryData.getCategoryGroup());
-                    Utils.pushEvent(mContext, GTMEventType.FUNPLACES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getId()+"", "");
+                    Utils.pushEvent(mContext, GTMEventType.FUNPLACES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getId()+"", "Kids Resources");
                     break;
                 case 8:
                     Log.e("Category", _categoryData.getCategoryGroup());
-                    Utils.pushEvent(mContext, GTMEventType.BIRTHDAY_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getId()+"", "");
+                    Utils.pushEvent(mContext, GTMEventType.BIRTHDAY_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getId()+"", "Kids Resources");
                     break;
                 case 9:
                     Log.e("Category", _categoryData.getCategoryGroup());
-                    Utils.pushEvent(mContext, GTMEventType.WHERETOSHOP_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getId()+"", "");
+                    Utils.pushEvent(mContext, GTMEventType.WHERETOSHOP_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getId()+"", "Kids Resources");
                     break;
                 case 2:
                     Log.e("Category", _categoryData.getCategoryGroup());
-                    Utils.pushEvent(mContext, GTMEventType.DAYCARE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getId()+"", "");
+                    Utils.pushEvent(mContext, GTMEventType.DAYCARE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getId()+"", "Kids Resources");
                     break;
                 case 55:
                     Log.e("Category", _categoryData.getCategoryGroup());
@@ -293,27 +293,27 @@ public class CategoryListAdapter extends BaseExpandableListAdapter {
             {
                 case 4:
                     Log.e("Category", subCategory.getCategoryName());
-                    Utils.pushEvent(mContext, GTMEventType.HOBBIES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getId()+"", "");
+                    Utils.pushEvent(mContext, GTMEventType.HOBBIES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getId()+"", "Kids Resources");
                     break;
                 case 5:
                     Log.e("Category", subCategory.getCategoryName());
-                    Utils.pushEvent(mContext, GTMEventType.SPORTS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getId()+"", "");
+                    Utils.pushEvent(mContext, GTMEventType.SPORTS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getId()+"", "Kids Resources");
                     break;
                 case 57:
                     Log.e("Category", subCategory.getCategoryName());
-                    Utils.pushEvent(mContext, GTMEventType.ENHANCED_LEARNING_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getId()+"", "");
+                    Utils.pushEvent(mContext, GTMEventType.ENHANCED_LEARNING_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getId()+"", "Kids Resources");
                     break;
                 case 3:
                     Log.e("Category",subCategory.getCategoryName());
-                    Utils.pushEvent(mContext, GTMEventType.TUTIONS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getId()+"", "");
+                    Utils.pushEvent(mContext, GTMEventType.TUTIONS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getId()+"", "Kids Resources");
                     break;
                 case 248:
                     Log.e("Category", subCategory.getCategoryName());
-                    Utils.pushEvent(mContext, GTMEventType.PLAY_SCHOOLS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getId()+"", "");
+                    Utils.pushEvent(mContext, GTMEventType.PLAY_SCHOOLS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getId()+"", "Kids Resources");
                     break;
                 case 53:
                     Log.e("Category", subCategory.getCategoryName());
-                    Utils.pushEvent(mContext, GTMEventType.SCHOOLS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getId()+"", "");
+                    Utils.pushEvent(mContext, GTMEventType.SCHOOLS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getId()+"", "Kids Resources");
                     break;
 
             }

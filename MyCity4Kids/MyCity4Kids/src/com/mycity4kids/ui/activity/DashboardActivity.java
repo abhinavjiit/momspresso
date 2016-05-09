@@ -1648,7 +1648,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
             case R.id.rdBtnToday:
                 changeVisibiltyOfArrow(false);
-                Utils.pushEvent(DashboardActivity.this, GTMEventType.MC4KToday_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "");
+                Utils.pushEvent(DashboardActivity.this, GTMEventType.MC4KToday_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Left Menu Screen");
                 //TableAppointmentData data = new TableAppointmentData(BaseApplication.getInstance());
                 //TableTaskData taskData = new TableTaskData(BaseApplication.getInstance());
                 //int count = data.getRowsCount() + taskData.getRowsCount();
@@ -1660,7 +1660,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
             case R.id.rdBtnCalender:
                 // title show current month
-                Utils.pushEvent(DashboardActivity.this, GTMEventType.CALENDAR_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "");
+                Utils.pushEvent(DashboardActivity.this, GTMEventType.CALENDAR_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Left Menu Screen");
                 if (StringUtils.isNullOrEmpty("" + SharedPrefUtils.getUserDetailModel(this).getFamily_id()) ||
                         SharedPrefUtils.getUserDetailModel(this).getFamily_id() == 0) {
                     showCreateFamilyAlert();
@@ -1689,7 +1689,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
             break;*/
             case R.id.rdBtnUpcoming:
-                Utils.pushEvent(DashboardActivity.this, GTMEventType.UPCOMING_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "");
+                Utils.pushEvent(DashboardActivity.this, GTMEventType.UPCOMING_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Left Menu Screen");
                 Constants.IS_SEARCH_LISTING = false;
                 changeVisibiltyOfArrow(false);
                 setTitle("Upcoming Events");
@@ -1702,14 +1702,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 replaceFragment(fragment, bundle, true);
                 break;
             case R.id.rdBtnKids:
-                Utils.pushEvent(DashboardActivity.this, GTMEventType.RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "");
+                Utils.pushEvent(DashboardActivity.this, GTMEventType.RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Left Menu Screen");
                 Constants.IS_SEARCH_LISTING = false;
                 changeVisibiltyOfArrow(false);
                 setTitle("Kids Resources");
                 replaceFragment(new FragmentHomeCategory(), null, true);
                 break;
             case R.id.rdBtnParentingBlogs:
-                Utils.pushEvent(DashboardActivity.this, GTMEventType.BLOGS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "");
+                Utils.pushEvent(DashboardActivity.this, GTMEventType.BLOGS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Left Menu Screen");
                 changeVisibiltyOfArrow(false);
                 setTitle("Articles");
                 replaceFragment(new ArticlesFragment(), null, true);
@@ -1753,7 +1753,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 startActivity(intent);
                 break;
             case R.id.txvSettings:
-                Utils.pushEvent(DashboardActivity.this, GTMEventType.SETTINGS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "");
+                Utils.pushEvent(DashboardActivity.this, GTMEventType.SETTINGS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Left Menu Screen");
                 changeVisibiltyOfArrow(false);
                 setTitle("Settings");
                 replaceFragment(new FragmentSetting(), null, true);
@@ -1801,7 +1801,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;*/
 
             case R.id.feed_back:
-                Utils.pushEvent(DashboardActivity.this, GTMEventType.FEEDBACK_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "");
+                Utils.pushEvent(DashboardActivity.this, GTMEventType.FEEDBACK_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Left Menu Screen");
                 changeVisibiltyOfArrow(false);
                 setTitle("Send Feedback");
                 replaceFragment(new SendFeedbackFragment(), null, true);

@@ -161,7 +161,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Utils.pushOpenScreenEvent(ArticlesAndBlogsDetailsActivity.this, "Blog Details", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+        Utils.pushOpenScreenEvent(ArticlesAndBlogsDetailsActivity.this, "Article Details", SharedPrefUtils.getUserDetailModel(this).getId() + "");
 
         deepLinkURL = getIntent().getStringExtra(Constants.DEEPLINK_URL);
         TAG = ArticlesAndBlogsDetailsActivity.this.getClass().getSimpleName();
@@ -390,7 +390,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 addRemoveBookmark();
                 return true;
             case R.id.share:
-                Utils.pushEvent(ArticlesAndBlogsDetailsActivity.this, GTMEventType.SHARE_BLOG_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "");
+                Utils.pushEvent(ArticlesAndBlogsDetailsActivity.this, GTMEventType.SHARE_BLOG_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Article Details");
 
                 Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
@@ -926,7 +926,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     break;
 
                 case R.id.share_spouse:
-                    Utils.pushEvent(ArticlesAndBlogsDetailsActivity.this, GTMEventType.SHARE_SPOUCE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "");
+                    Utils.pushEvent(ArticlesAndBlogsDetailsActivity.this, GTMEventType.SHARE_SPOUCE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Article Details");
 
                     ArrayList<Integer> idlist = new ArrayList<>();
                     idlist = new ArrayList<>();

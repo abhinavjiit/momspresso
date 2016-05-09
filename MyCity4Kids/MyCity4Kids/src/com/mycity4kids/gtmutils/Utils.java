@@ -34,7 +34,7 @@ public class Utils {
     public static void pushEvent(Context context,GTMEventType event,String user,String eventValue) {
         DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
         // dataLayer.push("user", "monitor1");
-        dataLayer.push(DataLayer.mapOf("event", event , GTMTags.USER_ID,user,GTMTags.SELECTED_OPTION,eventValue));
+        dataLayer.push(DataLayer.mapOf("event", event , GTMTags.USER_ID,user,GTMTags.ScreenName,eventValue));
 
     }
 }

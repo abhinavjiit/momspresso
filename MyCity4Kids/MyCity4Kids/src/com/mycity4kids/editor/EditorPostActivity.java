@@ -50,6 +50,7 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by anshul on 2/29/16.
@@ -665,7 +666,10 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
         originalImage.compress(Bitmap.CompressFormat.PNG, 75, bao);
         byte[] ba = bao.toByteArray();
         String imageString = Base64.encodeToString(ba, Base64.DEFAULT);
-        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        Retrofit retrofit  = new Retrofit.Builder()
+                .baseUrl(AppConstants.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
         MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
         RequestBody requestBodyFile = RequestBody.create(MEDIA_TYPE_PNG, imageString);
         RequestBody userId = RequestBody.create(MediaType.parse("text/plain"), "" + userModel.getUser().getId());

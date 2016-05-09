@@ -1777,7 +1777,7 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
                 finish();
                 break;
             case R.id.filterres:
-                Utils.pushEvent(BusinessListActivityKidsResources.this, GTMEventType.FILTER_RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
+                Utils.pushEvent(BusinessListActivityKidsResources.this, GTMEventType.FILTER_RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "Resources List");
 
                 if (chosen_tab == TabType.Filter) {
                     ((TextView) findViewById(R.id.txt_no_data_business)).setVisibility(View.GONE);

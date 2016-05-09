@@ -76,6 +76,9 @@
     <screenName name="com.mycity4kids.ui.activity.SocialSignUpActivity">Social Media Signup</screenName>
     <screenName name="com.mycity4kids.ui.activity.CreateFamilyActivity">Create Family</screenName>
     <screenName name="com.mycity4kids.ui.activity.ActivityVerifyOTP">OTP Verification</screenName>
-    <screenName name="com.mycity4kids.ui.activity.UpdateMobileNumberActivity">Update Mobile No</screenName>
+    <screenName name="com.mycity4kids.ui.activity.BloggerDashboardActivity">Blogger Dashboard</screenName>
+    <screenName name="com.mycity4kids.editor.EditorPostActivity">Text Editor</screenName>
+    <screenName name="com.mycity4kids.editor.ArticleImageTagUploadActivity">Article Image Upload</screenName>
+    <screenName name="com.mycity4kids.editor.DraftListViewActivity">Drafts List</screenName>
 
 </resources>

@@ -54,6 +54,7 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by anshul on 3/18/16.
@@ -253,7 +254,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
         publish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.pushEvent(ArticleImageTagUploadActivity.this, GTMEventType.PUBLISH_ARTICLE_BUTTON_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(ArticleImageTagUploadActivity.this).getId() + "", "");
+                Utils.pushEvent(ArticleImageTagUploadActivity.this, GTMEventType.PUBLISH_ARTICLE_BUTTON_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(ArticleImageTagUploadActivity.this).getId() + "", "Article Image Upload");
                 pref = getSharedPreferences(COMMON_PREF_FILE, MODE_PRIVATE);
                 blogSetup = pref.getBoolean("blogSetup", false);
                 Log.e("blogsetup", blogSetup + "");
@@ -491,7 +492,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // continue with delete
-                      //  dialog.dismiss();
+                        //  dialog.dismiss();
                         Intent intent = new Intent(ArticleImageTagUploadActivity.this, BloggerDashboardActivity.class);
                         startActivity(intent);
                         finish();
@@ -507,7 +508,10 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
         originalImage.compress(Bitmap.CompressFormat.PNG, 75, bao);
         byte[] ba = bao.toByteArray();
         String imageString = Base64.encodeToString(ba, Base64.DEFAULT);
-        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        Retrofit retrofit  = new Retrofit.Builder()
+                .baseUrl(AppConstants.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
         MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
         RequestBody requestBodyFile = RequestBody.create(MEDIA_TYPE_PNG, imageString);
         RequestBody userId = RequestBody.create(MediaType.parse("text/plain"), "" + userModel.getUser().getId());

@@ -971,7 +971,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
             switch (v.getId()) {
                 case R.id.txvCall: {
                     Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + information.getPhone()));
-                    Utils.pushEvent(BusinessDetailsActivity.this, GTMEventType.CALL_RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "");
+                    Utils.pushEvent(BusinessDetailsActivity.this, GTMEventType.CALL_RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Resource/Event Details");
 
                     startActivity(intent);
                 }
@@ -981,7 +981,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
                         goToLoginDialog();
                         return;
                     }
-                    Utils.pushEvent(BusinessDetailsActivity.this, GTMEventType.WRITEREVIEW_RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "");
+                    Utils.pushEvent(BusinessDetailsActivity.this, GTMEventType.WRITEREVIEW_RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Resource/Event Details");
                     writeReviewFromHeader(AddReviewOrPhoto.WriteAReview);
                 }
                 break;
@@ -999,7 +999,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
                         goToLoginDialog();
                         return;
                     }
-                    Utils.pushEvent(BusinessDetailsActivity.this, GTMEventType.ADDPHOTOS_RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "");
+                    Utils.pushEvent(BusinessDetailsActivity.this, GTMEventType.ADDPHOTOS_RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Resource/Event Details");
 
                     CameraFragmentDialog fragmentDialog = new CameraFragmentDialog();
                     fragmentDialog.setSubmitListner((IOnSubmitGallery) BusinessDetailsActivity.this);
@@ -1079,7 +1079,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
             switch (v.getId()) {
                 case R.id.txvCall: {
                     Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + information.getPhone()));
-                    Utils.pushEvent(BusinessDetailsActivity.this, GTMEventType.CALL_EVENT_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
+                    Utils.pushEvent(BusinessDetailsActivity.this, GTMEventType.CALL_EVENT_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "Resource/Event Details");
                     startActivity(intent);
                 }
                 break;
@@ -1098,7 +1098,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
 
                     String shareMessage = "mycity4kids\n\nCheck out this interesting event " + "\"" + titleName + "\" on " + shareDate + " at " + shareTime + ".\n" + webUrl;
                     shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
-                    Utils.pushEvent(BusinessDetailsActivity.this, GTMEventType.SHARE_EVENT_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "");
+                    Utils.pushEvent(BusinessDetailsActivity.this, GTMEventType.SHARE_EVENT_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Resource/Event Details");
                     startActivity(Intent.createChooser(shareIntent, "mycity4kids"));
                 }
                 break;
@@ -1118,7 +1118,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
                     i.putExtra(Constants.EVENT_LOCATION, information.getLocality());
                     i.putExtra(Constants.EVENT_START_DATE, information.getEvent_date().getStart_date());
                     i.putExtra(Constants.EVENT_END_DATE, information.getEvent_date().getEnd_date());
-                    Utils.pushEvent(BusinessDetailsActivity.this, GTMEventType.ADDCALENDAR_EVENT_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "");
+                    Utils.pushEvent(BusinessDetailsActivity.this, GTMEventType.ADDCALENDAR_EVENT_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Resource/Event Details");
                     startActivity(i);
                     //saveCalendarEvent(information);
                 }

@@ -492,7 +492,7 @@ public class BusinessListingAdapterevent extends BaseAdapter implements Filterab
                     i.putExtra(Constants.EVENT_LOCATION, mBusinessData.get(position).getLocality());
                     i.putExtra(Constants.EVENT_START_DATE, mBusinessData.get(position).getStart_date());
                     i.putExtra(Constants.EVENT_END_DATE, mBusinessData.get(position).getEnd_date());
-                    Utils.pushEvent(mContext, GTMEventType.EVENTLIST_PLUS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getId() + "", "");
+                    Utils.pushEvent(mContext, GTMEventType.EVENTLIST_PLUS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getId() + "", "Upcoming Events");
                     mContext.startActivity(i);
                 }
 
