@@ -490,6 +490,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
         // prepare call in Retrofit 2.0
         ArticleDraftAPI articleDraftAPI = retrofit.create(ArticleDraftAPI.class);
         if (!ConnectivityUtils.isNetworkEnabled(this)) {
+            removeProgressDialog();
             showToast(getString(R.string.error_network));
             return;
         }

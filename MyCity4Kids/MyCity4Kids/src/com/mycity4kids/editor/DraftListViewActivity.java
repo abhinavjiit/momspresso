@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -28,10 +29,17 @@ import com.mycity4kids.models.editor.ArticleDraftListResponse;
 import com.mycity4kids.models.editor.ArticleDraftRequest;
 import com.mycity4kids.models.parentingdetails.ParentingDetailResponse;
 import com.mycity4kids.models.user.UserModel;
+import com.mycity4kids.newmodels.PublishedArticlesModel;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -188,18 +196,47 @@ public class DraftListViewActivity extends BaseActivity implements View.OnClickL
         // prepare call in Retrofit 2.0
         ArticleDraftAPI getDraftListAPI = retrofit.create(ArticleDraftAPI.class);
         if (!ConnectivityUtils.isNetworkEnabled(this)) {
+            removeProgressDialog();
             showToast(getString(R.string.error_network));
             return;
         }
-        Call<ArticleDraftListResponse> call = getDraftListAPI.getDraftsList("" + userModel.getUser().getId());
+        Call<ResponseBody> call = getDraftListAPI.getDraftsList("" + userModel.getUser().getId());
         //asynchronous call
-        call.enqueue(new Callback<ArticleDraftListResponse>() {
+        call.enqueue(new Callback<ResponseBody>() {
                          @Override
-                         public void onResponse(Call<ArticleDraftListResponse> call, retrofit2.Response<ArticleDraftListResponse> response) {
+                         public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
                              int statusCode = response.code();
                              removeProgressDialog();
-                             ArticleDraftListResponse responseModel = (ArticleDraftListResponse) response.body();
+                            // ResponseBody responseModel = (ResponseBody) response.body();
+                             String responseData = null;
+                             try {
+                                 responseData = new String(response.body().bytes());
+                             } catch (IOException e) {
+                                 e.printStackTrace();
+                             }
+                             JSONObject jsonObject = null;
+                             try {
+                                 jsonObject = new JSONObject(responseData);
 
+                                 JSONArray dataObj = null;
+
+                                 dataObj = jsonObject.getJSONObject("result").optJSONArray("data");
+
+
+                                 if (null == dataObj) {
+
+                                     jsonObject.getJSONObject("result").remove("data");
+
+
+                                     jsonObject.getJSONObject("result").put("data", new JSONArray());
+
+                                 }
+
+                                 responseData = jsonObject.toString();
+                             }catch (JSONException e) {
+                                 e.printStackTrace();
+                             }
+                             ArticleDraftListResponse responseModel = new Gson().fromJson(responseData, ArticleDraftListResponse.class);
                              if (responseModel.getResponseCode() != 200) {
                                  showToast(getString(R.string.toast_response_error));
                                  return;
@@ -214,7 +251,8 @@ public class DraftListViewActivity extends BaseActivity implements View.OnClickL
 
 
                          @Override
-                         public void onFailure(Call<ArticleDraftListResponse> call, Throwable t) {
+                         public void onFailure(Call<ResponseBody> call, Throwable t) {
+                             removeProgressDialog();
 
                          }
                      }

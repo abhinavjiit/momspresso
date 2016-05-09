@@ -198,6 +198,7 @@ public class BookmarkedBlogsListTabFragment extends BaseFragment {
         // prepare call in Retrofit 2.0
         BloggerDashboardAPI bookmarkedList = retrofit.create(BloggerDashboardAPI.class);
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
+            removeProgressDialog();
             ToastUtils.showToast(getActivity(), "");
             return;
         }

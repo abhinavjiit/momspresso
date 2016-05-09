@@ -3,6 +3,7 @@ package com.mycity4kids.retrofitAPIsInterfaces;
 import com.mycity4kids.models.editor.ArticleDraftListResponse;
 import com.mycity4kids.models.parentingdetails.ParentingDetailResponse;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -23,5 +24,5 @@ public interface ArticleDraftAPI {
 
     @FormUrlEncoded
     @POST("apiblogs/getDraftLists")
-    Call<ArticleDraftListResponse> getDraftsList(@Field("userId") String userId);
+    Call<ResponseBody> getDraftsList(@Field("userId") String userId);
 }

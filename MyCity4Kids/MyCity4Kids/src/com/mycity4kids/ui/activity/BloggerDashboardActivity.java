@@ -142,6 +142,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         // prepare call in Retrofit 2.0
         BloggerDashboardAPI bloggerDashboardAPI = retrofit.create(BloggerDashboardAPI.class);
         if (!ConnectivityUtils.isNetworkEnabled(this)) {
+            removeProgressDialog();
             showToast(getString(R.string.error_network));
             return;
         }

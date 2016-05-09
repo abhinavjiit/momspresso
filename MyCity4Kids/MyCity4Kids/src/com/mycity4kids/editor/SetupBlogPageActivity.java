@@ -183,6 +183,7 @@ public class SetupBlogPageActivity extends BaseActivity {
                     // prepare call in Retrofit 2.0
                     BlogPageAPI blogSetupAPI = retrofit.create(BlogPageAPI.class);
                     if (!ConnectivityUtils.isNetworkEnabled(SetupBlogPageActivity.this)) {
+                        removeProgressDialog();
                         showToast(getString(R.string.error_network));
                         return;
                     }

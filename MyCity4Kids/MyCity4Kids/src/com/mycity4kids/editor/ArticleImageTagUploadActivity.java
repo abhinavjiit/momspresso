@@ -367,6 +367,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
         // prepare call in Retrofit 2.0
         ArticlePublishAPI articlePublishAPI = retrofit.create(ArticlePublishAPI.class);
         if (!ConnectivityUtils.isNetworkEnabled(this)) {
+            removeProgressDialog();
             showToast(getString(R.string.error_network));
             return;
         }
@@ -436,6 +437,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
 
         BlogPageAPI getBlogPageAPI = retrofit.create(BlogPageAPI.class);
         if (!ConnectivityUtils.isNetworkEnabled(this)) {
+            removeProgressDialog();
             showToast(getString(R.string.error_network));
             return;
         }
