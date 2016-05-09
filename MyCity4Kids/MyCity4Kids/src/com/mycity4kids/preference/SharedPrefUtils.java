@@ -50,6 +50,7 @@ public class SharedPrefUtils {
     public static final String APP_RATE = "appRate";
     public static final String IS_APP_RATE_COMPLETE = "isAppRateComplete";
     public static final String IS_APP_WANT_UPGRADE = "isAppWantUpgrade";
+    public static final String APP_UPGRADE_MESSAGE = "appUpgradeMessage";
 
     public static final String PUSH_TOKEN_UPGRADE = "isTokenUpdate";
 
@@ -359,12 +360,22 @@ public class SharedPrefUtils {
         _editor.commit();
     }
 
-
     public static boolean getAppUpgrade(Context pContext) {
         SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         return _sharedPref.getBoolean(IS_APP_WANT_UPGRADE, false);
     }
 
+    public static String getAppUgradeMessage(Context pContext) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return _sharedPref.getString(APP_UPGRADE_MESSAGE, "Please update your app to continue");
+    }
+
+    public static void setAppUgradeMessage(Context pContext, String appUpgradeMessage) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        _editor.putString(APP_UPGRADE_MESSAGE, appUpgradeMessage);
+        _editor.commit();
+    }
 
     public static void setPushTokenUpdateToServer(Context pContext, boolean isAppWantsUpgrade) {
         SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);

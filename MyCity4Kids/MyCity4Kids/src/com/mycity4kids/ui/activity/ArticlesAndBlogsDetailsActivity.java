@@ -1181,6 +1181,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
         @Override
         public void onFailure(Call<ParentingDetailResponse> call, Throwable t) {
+            removeProgressDialog();
             showToast(getString(R.string.went_wrong));
         }
     };

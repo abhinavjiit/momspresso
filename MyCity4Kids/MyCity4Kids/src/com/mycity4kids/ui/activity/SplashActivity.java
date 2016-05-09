@@ -7,13 +7,10 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
-
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
@@ -21,12 +18,12 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.gson.Gson;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.tagmanager.Container;
 import com.google.android.gms.tagmanager.ContainerHolder;
 import com.google.android.gms.tagmanager.TagManager;
+import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -50,7 +47,6 @@ import com.mycity4kids.models.configuration.ConfigurationApiModel;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.newmodels.ForceUpdateModel;
 import com.mycity4kids.newmodels.UserInviteModel;
-import com.mycity4kids.newmodels.bloggermodel.ParentingBlogResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ForceUpdateAPI;
 import com.mycity4kids.utils.NearMyCity;
@@ -221,7 +217,7 @@ public class SplashActivity extends BaseActivity {
                     //return;
                 } else {
                     if (SharedPrefUtils.getAppUpgrade(SplashActivity.this)) {
-                        String message = "Please update your app to continue";
+                        String message = SharedPrefUtils.getAppUgradeMessage(SplashActivity.this);
                         showUpgradeAppAlertDialog("mycity4kids", message, new OnButtonClicked() {
                             @Override
                             public void onButtonCLick(int buttonId) {
@@ -515,10 +511,8 @@ public class SplashActivity extends BaseActivity {
                     if (responseData.getResult().getData().getIsAppUpdateRequired() == 1) {
                         SharedPrefUtils.setAppUgrade(SplashActivity.this, true);
                         String message = responseData.getResult().getData().getMessage();
-                        if (StringUtils.isNullOrEmpty(message)) {
-                            message = "Please update your app to continue";
-                        }
-                        showUpgradeAppAlertDialog("mycity4kids", message, new OnButtonClicked() {
+                        SharedPrefUtils.setAppUgradeMessage(SplashActivity.this, message);
+                        showUpgradeAppAlertDialog("mycity4kids", SharedPrefUtils.getAppUgradeMessage(SplashActivity.this), new OnButtonClicked() {
                             @Override
                             public void onButtonCLick(int buttonId) {
                             }

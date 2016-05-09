@@ -106,7 +106,7 @@ public class ArticlesListingAdapter extends BaseAdapter {
             holder.txvAuthorName.setTextColor(Color.parseColor(articleDataModelsNew.get(position).getAuthor_color_code()));
             holder.txvPublishDate.setText(articleDataModelsNew.get(position).getCreated());
             if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getThumbnail_image())) {
-                Picasso.with(mContext).load(articleDataModelsNew.get(position).getThumbnail_image()).placeholder(R.drawable.article_default).resize((int) (101 * density), (int) (67 * density)).centerCrop().into(holder.imvAuthorThumb);
+                Picasso.with(mContext).load(articleDataModelsNew.get(position).getThumbnail_image()).placeholder(R.drawable.default_article).resize((int) (101 * density), (int) (67 * density)).centerCrop().into(holder.imvAuthorThumb);
             } else {
                 holder.imvAuthorThumb.setBackgroundResource(R.drawable.article_default);
             }

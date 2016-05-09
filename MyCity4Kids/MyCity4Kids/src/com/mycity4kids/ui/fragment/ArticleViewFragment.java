@@ -238,7 +238,7 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
             progressBar.setVisibility(View.GONE);
             Log.d("Response back =", " " + response.getResponseBody());
             if (isError) {
-                if (null != getActivity())
+                if (null != getActivity() && response.getResponseCode() != 999)
                     ((DashboardActivity) getActivity()).showToast("Something went wrong from server");
             } else {
                 Log.d("Response = ", response.getResponseBody());
