@@ -24,6 +24,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.comscore.analytics.comScore;
 import com.google.android.gms.analytics.Tracker;
 import com.kelltontech.network.Response;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -196,7 +197,15 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen 
     @Override
     protected void onResume() {
         super.onResume();
+        comScore.onEnterForeground();
         Log.i(getClass().getSimpleName(), "onResume()");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        comScore.onExitForeground();
+
     }
 
     @Override

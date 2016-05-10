@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.comscore.analytics.comScore;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
@@ -159,15 +160,19 @@ public class BaseApplication extends Application {
             Class.forName("android.os.AsyncTask");
         } catch (ClassNotFoundException e) {
         }
-       /* Fabric.with(this, new Crashlytics());
+        Fabric.with(this, new Crashlytics());
         Crashlytics.setUserIdentifier("" + SharedPrefUtils.getUserDetailModel(this).getId());
-        Crashlytics.setUserEmail("" + SharedPrefUtils.getUserDetailModel(this).getEmail());*/
+        Crashlytics.setUserEmail("" + SharedPrefUtils.getUserDetailModel(this).getEmail());
         setInstance(this);
 
         createRetrofitInstance(AppConstants.LIVE_URL);
 
         mRequestQueue = Volley.newRequestQueue(getApplicationContext());
-
+// Initialize comScore Application Tag library
+        comScore.setAppContext(this.getApplicationContext());
+        // Include any of the comScore Application Tag library initialization settings here.
+        comScore.setCustomerC2("18705325");
+        comScore.setPublisherSecret("6116f207ac5e9f9226f6b98e088a22ea");
         //initializeGa();
         // startService(new Intent(this,ReplicationService.class))
         // For Google Analytics initialization.
@@ -281,7 +286,8 @@ public class BaseApplication extends Application {
         client = new OkHttpClient
                 .Builder()
                 .cache(new Cache(getCacheDir(), 10 * 1024 * 1024)) // 10 MB
-                .addInterceptor(mainInterceptor).addInterceptor(logging)
+                .addInterceptor(mainInterceptor)
+                .addInterceptor(logging)
                 .build();
 
         retrofit = new Retrofit.Builder()
