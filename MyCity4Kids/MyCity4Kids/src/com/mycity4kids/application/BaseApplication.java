@@ -287,7 +287,7 @@ public class BaseApplication extends Application {
                 .Builder()
                 .cache(new Cache(getCacheDir(), 10 * 1024 * 1024)) // 10 MB
                 .addInterceptor(mainInterceptor)
-                .addInterceptor(logging)
+//                .addInterceptor(logging)
                 .build();
 
         retrofit = new Retrofit.Builder()

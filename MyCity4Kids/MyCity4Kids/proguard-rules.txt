@@ -1,6 +1,8 @@
+-dontobfuscate
 -dontwarn com.squareup.picasso.OkHttpDownloader
 -dontwarn com.google.api.client.googleapis.testing.TestUtils
 -dontwarn java.nio.file.*
 -dontwarn java.lang.invoke.*
 -dontwarn org.codehaus.mojo.animal_sniffer.*
 -dontwarn java.lang.reflect.Method
+-dontwarn com.comscore.instrumentation.InstrumentedMapActivity

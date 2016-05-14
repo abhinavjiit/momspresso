@@ -519,7 +519,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
 //            return;
 //        }
 
-        blogProgessBar.setVisibility(View.VISIBLE);
+//        blogProgessBar.setVisibility(View.VISIBLE);
         String url;
         StringBuilder builder = new StringBuilder();
         builder.append("city_id=").append(SharedPrefUtils.getCurrentCityModel(getActivity()).getId());
