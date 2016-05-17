@@ -106,7 +106,7 @@
                 android:fontFamily="sans-serif-light"
                 android:padding="10dp"
                 android:textColor="@color/black_color"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/more_text"

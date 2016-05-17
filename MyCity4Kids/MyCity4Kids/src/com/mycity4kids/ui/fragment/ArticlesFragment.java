@@ -6,12 +6,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
@@ -72,10 +74,11 @@ public class ArticlesFragment extends BaseFragment {
         try {
             setRetainInstance(true);
         } catch (Exception e) {
-            e.printStackTrace();
+            Crashlytics.logException(e);
+            Log.d("Exception", Log.getStackTraceString(e));
         }
 
-        tabsPagerAdapter = new TabsPagerAdapter(getFragmentManager(), getActivity(), null, getActivity(), searchName);
+        tabsPagerAdapter = new TabsPagerAdapter(getChildFragmentManager(), getActivity(), null, getActivity(), searchName);
         mViewPager.setAdapter(tabsPagerAdapter);
         mSlidingTabLayout.setupWithViewPager(mViewPager);
         mViewPager.setOffscreenPageLimit(4);

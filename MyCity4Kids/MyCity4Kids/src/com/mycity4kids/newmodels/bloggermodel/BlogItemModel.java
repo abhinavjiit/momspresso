@@ -28,6 +28,7 @@ public class BlogItemModel extends BaseModel implements Parcelable {
     String blog_title;
     int maxLineCount = 0;
     String user_following_status;
+    String author_follwers_count;
 
     public String getUser_following_status() {
         return user_following_status;
@@ -149,6 +150,14 @@ public class BlogItemModel extends BaseModel implements Parcelable {
         this.blog_title = blog_title;
     }
 
+    public String getAuthor_follwers_count() {
+        return author_follwers_count;
+    }
+
+    public void setAuthor_follwers_count(String author_follwers_count) {
+        this.author_follwers_count = author_follwers_count;
+    }
+
     public BlogItemModel(Parcel parcel) {
         this.id = parcel.readInt();
         this.first_name = parcel.readString();
@@ -164,6 +173,7 @@ public class BlogItemModel extends BaseModel implements Parcelable {
         this.twitter_id = parcel.readString();
         this.blog_title = parcel.readString();
         this.user_following_status = parcel.readString();
+        this.author_follwers_count = parcel.readString();
     }
 
     @Override
@@ -182,6 +192,7 @@ public class BlogItemModel extends BaseModel implements Parcelable {
         parcel.writeString(twitter_id);
         parcel.writeString(blog_title);
         parcel.writeString(user_following_status);
+        parcel.writeString(author_follwers_count);
 
     }
 

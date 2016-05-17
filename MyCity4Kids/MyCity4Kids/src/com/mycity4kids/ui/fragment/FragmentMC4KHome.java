@@ -17,7 +17,9 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
+import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -170,24 +172,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                 }
             });
         }
-//
-//        TableTaskData tTask = new TableTaskData(BaseApplication.getInstance());
-//        List<TaskDataModel.TaskDetail> allTaskList = tTask.getAll();
-//        if (null != allTaskList && allTaskList.size() == 0) {
-//            goToTask.setText("ADD A TASK");
-//            goToTask.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    if (StringUtils.isNullOrEmpty("" + SharedPrefUtils.getUserDetailModel(getActivity()).getFamily_id()) ||
-//                            SharedPrefUtils.getUserDetailModel(getActivity()).getFamily_id() == 0) {
-//                        showCreateFamilyAlert();
-//                    } else {
-//                        Intent TaskIntent = new Intent(getActivity(), ActivityCreateTask.class);
-//                        startActivity(TaskIntent);
-//                    }
-//                }
-//            });
-//        }
+
 
         appointmentList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -209,62 +194,6 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                 }
             }
         });
-
-//        taskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//
-//                TaskMappingModel taskMappingModel = (TaskMappingModel) adapterHomeTask.getItem(i);
-//
-//                if (taskMappingModel.getTaskName() == null) {
-//
-//                } else {
-//                    ((DashboardActivity) getActivity()).UploadCompleteTasks();
-//
-//                    Intent intent = new Intent(getActivity(), ActivityShowTask.class);
-//                    intent.putExtra(AppConstants.EXTRA_TASK_ID, taskMappingModel.getTask_id());
-//                    startActivityForResult(intent, 1);
-//                }
-//
-//            }
-//        });
-
-//        eventListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-//
-//            @Override
-//            public void onScrollStateChanged(AbsListView view, int scrollState) {
-//                // TODO Auto-generated method stub
-//
-//            }
-//
-//            @Override
-//            public void onScroll(AbsListView view, int firstVisibleItem,
-//                                 int visibleItemCount, int totalItemCount) {
-//
-//                if (!mEventDataAvalble) {
-//                    if (Constants.IS_PAGE_AVAILABLE) {
-//                        if (view.getCount() < mBusinessListCount) {
-//
-//                            boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
-//                            if (visibleItemCount != 0 && loadMore && !mIsRequestRunning && firstVisibleItem != 0) {
-//                                rltLoadingView.setVisibility(View.VISIBLE);
-//
-//                                int currentPageCount = ++mPageCount;
-//                                if (mTotalPageCount >= currentPageCount) {
-//                                    hitBusinessListingApi(categoryId, currentPageCount);
-//                                } else {
-//                                    rltLoadingView.setVisibility(View.GONE);
-//                                }
-//                            }
-//                        }
-//                    }
-//
-//
-//                }
-//
-//            }
-//        });
-
 
         eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -346,21 +275,21 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         articlesListingAdapter = new ArticlesListingAdapter(getActivity(), true);
         blogListView.setAdapter(articlesListingAdapter);
 
-        if (BaseApplication.getBlogResponse() == null || BaseApplication.getBlogResponse().isEmpty()) {
+//        if (BaseApplication.getBlogResponse() == null || BaseApplication.getBlogResponse().isEmpty()) {
+//
+//            Thread thread = new Thread(new Runnable() {
+//                @Override
+//                public void run() {
 
-            Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-
-                    hitBlogListingApi();
-                }
-            });
-            thread.start();
-        } else {
-            mArticleDataListing.addAll(BaseApplication.getBlogResponse());
-            articlesListingAdapter.setNewListData(mArticleDataListing);
-            articlesListingAdapter.notifyDataSetChanged();
-        }
+        hitBlogListingApi();
+//                }
+//            });
+//            thread.start();
+//        } else {
+//            mArticleDataListing.addAll(BaseApplication.getBlogResponse());
+//            articlesListingAdapter.setNewListData(mArticleDataListing);
+//            articlesListingAdapter.notifyDataSetChanged();
+//        }
 
         if (!SharedPrefUtils.isCityFetched(getActivity())) {
             view.findViewById(R.id.eventsss).setVisibility(View.GONE);
@@ -381,14 +310,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
             if (BaseApplication.getBusinessREsponse() == null || BaseApplication.getBusinessREsponse().isEmpty()) {
 
                 hitBusinessListingApi(SharedPrefUtils.getEventIdForCity(getActivity()), 1);
-//                Thread thread = new Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//
-//                        hitBusinessListingApi(SharedPrefUtils.getEventIdForCity(getActivity()), 1);
-//                    }
-//                });
-                // thread.start();
+
             } else {
                 mEventDataAvalble = true;
                 mBusinessDataListings.addAll(BaseApplication.getBusinessREsponse());
@@ -450,56 +372,11 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
 
                 selectedageGroups.add("" + age);
 
-
-                // previously age group logic commented
-//                for (int j = 0; j < mAgeGroupList.size(); j++) {
-//
-//                    if (calcAgeGroup(age, mAgeGroupList.get(j).getValue())) {
-//                        selectedageGroups.add(mAgeGroupList.get(j).getKey());
-//                    }
-//
-//                }
-
-
             } catch (ParseException e) {
                 e.printStackTrace();
             }
         }
 
-        // new logic
-
-//        String finalString = "&age[]=";
-//
-//        boolean flag = false;
-//        for (int i = 0; i < ageArray.size(); i++) {
-//
-//            if (flag) {
-//                finalString = finalString + "&age[]=";
-//            }
-//
-//            finalString = finalString + ageArray.get(i).toString();
-//            flag = true;
-//
-//        }
-
-
-        // previously age group logic commented
-
-//        Object[] myArr = selectedageGroups.toArray();
-
-//        String finalString = "&age[]=";
-//
-//        boolean flag = false;
-//        for (int i = 0; i < myArr.length; i++) {
-//
-//            if (flag) {
-//                finalString = finalString + "&age[]=";
-//            }
-//
-//            finalString = finalString + myArr[i].toString();
-//            flag = true;
-//
-//        }
         BusinessListController businessListController = new BusinessListController(getActivity(), this);
         BusinessListRequest businessListRequest = new BusinessListRequest();
         businessListRequest.setCategory_id(categoryId + "");
@@ -519,7 +396,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
 //            return;
 //        }
 
-//        blogProgessBar.setVisibility(View.VISIBLE);
+        blogProgessBar.setVisibility(View.VISIBLE);
         String url;
         StringBuilder builder = new StringBuilder();
         builder.append("city_id=").append(SharedPrefUtils.getCurrentCityModel(getActivity()).getId());
@@ -527,13 +404,6 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         builder.append("&sort=").append("trending_today");
         url = AppConstants.NEW_ALL_ARTICLE_URL + builder.toString().replace(" ", "%20");
         HttpVolleyRequest.getStringResponse(getActivity(), url, null, mGetArticleListingListener, Request.Method.GET, true);
-//        ParentingRequest _parentingModel = new ParentingRequest();
-//        _parentingModel.setCity_id(SharedPrefUtils.getCurrentCityModel(getActivity()).getId());
-//        _parentingModel.setPage("1");
-//
-//        ParentingStopController _controller = new ParentingStopController(getActivity(), this);
-//        _controller.getData(AppConstants.ARTICLES_TODAY_REQUEST, _parentingModel);
-
 
     }
 
@@ -556,9 +426,20 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                 }
 
                 blogProgessBar.setVisibility(View.GONE);
-                CommonParentingResponse responseBlogData = new Gson().fromJson(response.getResponseBody(), CommonParentingResponse.class);
+                CommonParentingResponse responseBlogData;
+                try {
+                    responseBlogData = new Gson().fromJson(response.getResponseBody(), CommonParentingResponse.class);
+                } catch (JsonSyntaxException jse) {
+                    Crashlytics.logException(jse);
+                    Log.d("JsonSyntaxException", Log.getStackTraceString(jse));
+                    ((DashboardActivity) getActivity()).showToast("Something went wrong from server");
+                    removeProgressDialog();
+                    return;
+                }
 
                 if (responseBlogData.getResponseCode() == Constants.HTTP_RESPONSE_SUCCESS) {
+                    //clear list to avoid duplicates due to volley caching
+                    mArticleDataListing.clear();
 
                     mArticleDataListing.addAll(responseBlogData.getResult().getData().getData());
                     BaseApplication.setBlogResponse(mArticleDataListing);
@@ -723,17 +604,6 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                 }
                 break;
 
-//            case R.id.go_to_task:
-//            case R.id.img_go_to_todo:
-//            case R.id.txtTodo:
-//                if (StringUtils.isNullOrEmpty("" + SharedPrefUtils.getUserDetailModel(getActivity()).getFamily_id()) ||
-//                        SharedPrefUtils.getUserDetailModel(getActivity()).getFamily_id() == 0) {
-//                    showCreateFamilyAlert();
-//                } else {
-//                    ((DashboardActivity) getActivity()).setTitle("All Task");
-//                    ((DashboardActivity) getActivity()).replaceFragment(new FragmentTaskHome(), null, true);
-//                }
-//                break;
             case R.id.go_to_events:
             case R.id.img_go_to_events:
             case R.id.txtEvents:
@@ -754,32 +624,6 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
 
 
                 break;
-//            case R.id.no_events:
-//                Constants.IS_SEARCH_LISTING = false;
-//                fragment = new FragmentBusinesslistEvents();
-//                bundle = new Bundle();
-//                bundle.putInt(Constants.PAGE_TYPE, Constants.EVENT_PAGE_TYPE);
-//                bundle.putInt(Constants.EXTRA_CATEGORY_ID, SharedPrefUtils.getEventIdForCity(getActivity()));
-//                bundle.putString(Constants.CATEGOTY_NAME, "Events & workshop");
-//                fragment.setArguments(bundle);
-//                ((DashboardActivity) getActivity()).replaceFragment(fragment, bundle, true);
-//                break;
-//            case R.id.no_blog:
-//                ((DashboardActivity) getActivity()).replaceFragment(new ArticlesFragment(), null, true);
-//
-//
-//                break;
-
-//
-//            case R.id.add_task:
-//                if (StringUtils.isNullOrEmpty("" + SharedPrefUtils.getUserDetailModel(getActivity()).getFamily_id()) ||
-//                        SharedPrefUtils.getUserDetailModel(getActivity()).getFamily_id() == 0) {
-//                    showCreateFamilyAlert();
-//                } else {
-//                    intent = new Intent(getActivity(), ActivityCreateTask.class);
-//                    startActivity(intent);
-//                }
-//                break;
         }
 
     }

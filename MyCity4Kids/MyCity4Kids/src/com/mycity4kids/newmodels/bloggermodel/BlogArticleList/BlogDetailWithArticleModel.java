@@ -56,7 +56,7 @@ public class BlogDetailWithArticleModel extends BaseModel {
         BlogArticleListResponse.SortArticleBlogList recent;
         BlogArticleListResponse.SortArticleBlogList popular;
         BlogItemModel author_details;
-        String author_follwers_count;
+
 
         public BlogArticleListResponse.SortArticleBlogList getRecent() {
             return recent;
@@ -82,13 +82,6 @@ public class BlogDetailWithArticleModel extends BaseModel {
             this.author_details = author_details;
         }
 
-        public String getAuthor_follwers_count() {
-            return author_follwers_count;
-        }
-
-        public void setAuthor_follwers_count(String author_follwers_count) {
-            this.author_follwers_count = author_follwers_count;
-        }
     }
 
     public class BlogArticleListing {

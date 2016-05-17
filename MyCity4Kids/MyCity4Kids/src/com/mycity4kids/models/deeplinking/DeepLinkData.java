@@ -19,6 +19,7 @@ public class DeepLinkData {
     private String author_name = "";
     private String agegroup = "";
     private String blog_title = "";
+    private String author_id = "";
 
     public String getId() {
         return id;
@@ -122,5 +123,13 @@ public class DeepLinkData {
 
     public void setBlog_title(String blog_title) {
         this.blog_title = blog_title;
+    }
+
+    public String getAuthor_id() {
+        return author_id;
+    }
+
+    public void setAuthor_id(String author_id) {
+        this.author_id = author_id;
     }
 }

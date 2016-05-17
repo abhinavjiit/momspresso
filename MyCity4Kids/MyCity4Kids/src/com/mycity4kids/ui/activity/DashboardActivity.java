@@ -2633,6 +2633,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             Intent _authorListIntent = new Intent(DashboardActivity.this, BlogDetailActivity.class);
             _authorListIntent.putExtra(Constants.IS_COMMING_FROM_LISTING, false);
             _authorListIntent.putExtra(Constants.ARTICLE_NAME, Uri.encode(data.getAuthor_name()) + "");
+            _authorListIntent.putExtra(Constants.AUTHOR_ID, data.getAuthor_id());
             _authorListIntent.putExtra(Constants.FILTER_TYPE, "authors");
             _authorListIntent.putExtra(Constants.DEEPLINK_URL, data.getUrl());
             startActivity(_authorListIntent);
@@ -2645,6 +2646,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             _bloggerListIntent.putExtra(Constants.IS_COMMING_FROM_LISTING, false);
             _bloggerListIntent.putExtra(Constants.ARTICLE_NAME, Uri.encode(data.getBlog_title()) + "");
             _bloggerListIntent.putExtra(Constants.FILTER_TYPE, "blogs");
+            _bloggerListIntent.putExtra(Constants.AUTHOR_ID, data.getAuthor_id());
             _bloggerListIntent.putExtra(Constants.DEEPLINK_URL, data.getUrl());
             startActivity(_bloggerListIntent);
         }

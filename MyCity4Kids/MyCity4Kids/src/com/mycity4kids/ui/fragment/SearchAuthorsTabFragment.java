@@ -105,16 +105,17 @@ public class SearchAuthorsTabFragment extends BaseFragment {
 
                 BlogItemModel itemSelected = (BlogItemModel) adapterView.getItemAtPosition(position);
 
-                if (!StringUtils.isNullOrEmpty(itemSelected.getBlog_title())) {
-                    Intent intent = new Intent(getActivity(), BlogDetailActivity.class);
-                    Bundle bundle = new Bundle();
-                    intent.putExtra(Constants.IS_COMMING_FROM_LISTING, false);
-                    intent.putExtra(Constants.ARTICLE_NAME, listingData.get(position).getBlog_title());
-                    intent.putExtra(Constants.FILTER_TYPE, "blogs");
-                    getActivity().startActivityForResult(intent, Constants.BLOG_FOLLOW_STATUS);
-                } else {
-                    ToastUtils.showToast(getActivity(), "Blogger details not available at this moment, please try again later...");
-                }
+//                if (!StringUtils.isNullOrEmpty(itemSelected.getBlog_title())) {
+                Intent intent = new Intent(getActivity(), BlogDetailActivity.class);
+                Bundle bundle = new Bundle();
+                intent.putExtra(Constants.IS_COMMING_FROM_LISTING, false);
+                intent.putExtra(Constants.AUTHOR_ID, "" + itemSelected.getId());
+                intent.putExtra(Constants.ARTICLE_NAME, listingData.get(position).getBlog_title());
+                intent.putExtra(Constants.FILTER_TYPE, "blogs");
+                getActivity().startActivityForResult(intent, Constants.BLOG_FOLLOW_STATUS);
+//                } else {
+//                    ToastUtils.showToast(getActivity(), "Blogger details not available at this moment, please try again later...");
+//                }
             }
         });
 
@@ -227,7 +228,7 @@ public class SearchAuthorsTabFragment extends BaseFragment {
 
     public void hitBloggerAPIrequest(int page) {
 
-        if (nextPageNumber == 1) {
+        if (nextPageNumber == 1 && null != progressBar) {
             progressBar.setVisibility(View.VISIBLE);
         }
 

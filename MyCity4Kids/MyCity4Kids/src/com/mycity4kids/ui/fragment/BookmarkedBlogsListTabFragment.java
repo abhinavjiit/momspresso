@@ -68,9 +68,6 @@ public class BookmarkedBlogsListTabFragment extends BaseFragment {
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
         view.findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_indefinitely));
 
-
-
-
         return view;
     }
 

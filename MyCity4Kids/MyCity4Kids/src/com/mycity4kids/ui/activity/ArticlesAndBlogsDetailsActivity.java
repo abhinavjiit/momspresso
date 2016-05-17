@@ -41,6 +41,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.UiLifecycleHelper;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -264,7 +265,8 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 try {
                     pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
                 } catch (PackageManager.NameNotFoundException e) {
-                    e.printStackTrace();
+                    Crashlytics.logException(e);
+                    Log.d("PackageManager.NameNotFoundException", Log.getStackTraceString(e));
                 }
                 versionName = pInfo.versionName;
 
@@ -275,7 +277,8 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Crashlytics.logException(e);
+            Log.d("Exception", Log.getStackTraceString(e));
         }
 
     }
@@ -666,7 +669,8 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
             Log.i("resultCount", String.valueOf(resultCode));
         } catch (Exception e) {
-            Log.i("OnActivityResult", e.getMessage());
+            Crashlytics.logException(e);
+            Log.d("Exception", Log.getStackTraceString(e));
         }
     }
 
@@ -730,7 +734,8 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 author_type.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_blogger));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Crashlytics.logException(e);
+            Log.d("Exception", Log.getStackTraceString(e));
         }
 
 
@@ -760,7 +765,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     "}\n" +
                     "body {\n" +
                     "    font-family: MyFont;\n" +
-                    "    font-size: medium;\n" +
+                    "    font-size: 16px;\n" +
                     "    text-align: left;\n" +
                     "}\n" +
                     "</style>" +
@@ -780,7 +785,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     "}\n" +
                     "body {\n" +
                     "    font-family: MyFont;\n" +
-                    "    font-size: medium;\n" +
+                    "    font-size: 16px;\n" +
                     "    text-align: left;\n" +
                     "}\n" +
                     "</style>" +
@@ -866,7 +871,8 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 //                    holder.networkImg.setImageDrawable(new BitmapDrawable(getResources(),defaultCommentorBitmap));
                     Picasso.with(this).load(commentList.getProfile_image()).into(holder.networkImg);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Crashlytics.logException(e);
+                    Log.d("Exception", Log.getStackTraceString(e));
                     Picasso.with(this).load(R.drawable.default_commentor_img).into(holder.networkImg);
                 }
             } else {
@@ -890,7 +896,8 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                         Picasso.with(this).load(commentList.getReplies().get(0).getProfile_image())
                                 .placeholder(R.drawable.default_commentor_img).into(holder.replierImageView);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        Crashlytics.logException(e);
+                        Log.d("Exception", Log.getStackTraceString(e));
                         Picasso.with(this).load(R.drawable.default_commentor_img).into(holder.replierImageView);
                     }
                 } else {
@@ -920,7 +927,8 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                         FragmentManager fm = getSupportFragmentManager();
                         commentFragment.show(fm, "Replies");
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        Crashlytics.logException(e);
+                        Log.d("Exception", Log.getStackTraceString(e));
                     }
 //                    onShowPopup(coordinatorLayout);
                     break;
@@ -986,6 +994,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     Intent intentn = new Intent(this, BlogDetailActivity.class);
                     intentn.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intentn.putExtra(Constants.IS_COMMING_FROM_LISTING, false);
+                    intentn.putExtra(Constants.AUTHOR_ID, detailData.getAuthor_id());
                     if (!StringUtils.isNullOrEmpty(authorType)) {
                         if (authorType.trim().equalsIgnoreCase("Blogger")) {
                             intentn.putExtra(Constants.ARTICLE_NAME, blogName);
@@ -1002,6 +1011,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     Intent intentnn = new Intent(this, BlogDetailActivity.class);
                     intentnn.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intentnn.putExtra(Constants.IS_COMMING_FROM_LISTING, false);
+                    intentnn.putExtra(Constants.AUTHOR_ID, detailData.getAuthor_id());
                     if (!StringUtils.isNullOrEmpty(authorType)) {
                         if (authorType.trim().equalsIgnoreCase("Blogger")) {
                             intentnn.putExtra(Constants.ARTICLE_NAME, blogName);
@@ -1023,14 +1033,16 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                         FragmentManager fm = getSupportFragmentManager();
                         commentFragment.show(fm, "Replies");
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        Crashlytics.logException(e);
+                        Log.d("Exception", Log.getStackTraceString(e));
                     }
 //                    onShowPopup(coordinatorLayout);
                     break;
 
             }
         } catch (Exception e) {
-            Log.i("onClick", e.getMessage());
+            Crashlytics.logException(e);
+            Log.d("Exception", Log.getStackTraceString(e));
         }
     }
 
@@ -1148,7 +1160,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         @Override
         public void onResponse(Call<ParentingDetailResponse> call, retrofit2.Response<ParentingDetailResponse> response) {
             removeProgressDialog();
-            if (response == null) {
+            if (response == null || response.body() == null) {
                 showToast("Something went wrong from server");
                 return;
             }
@@ -1240,10 +1252,12 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     displayComments(viewHolder, cData, commentLayout);
                 }
             } catch (JSONException jsonexception) {
-                Log.e("details", jsonexception.getMessage());
+                Crashlytics.logException(jsonexception);
+                Log.d("Exception", Log.getStackTraceString(jsonexception));
                 showToast("Something went wrong while parsing response from server");
             } catch (Exception ex) {
-                Log.e("details", ex.getMessage());
+                Crashlytics.logException(ex);
+                Log.d("Exception", Log.getStackTraceString(ex));
                 showToast("Something went wrong from server");
             }
         }

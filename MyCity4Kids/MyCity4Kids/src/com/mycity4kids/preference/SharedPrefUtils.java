@@ -484,7 +484,7 @@ public class SharedPrefUtils {
 
     public static String getBaseURL(Context context) {
         SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        return _sharedPref.getString("BASE_URL", "dwdwdwdwdw");
+        return _sharedPref.getString("BASE_URL", AppConstants.LIVE_URL);
     }
 
     public static void setUserFamilyInvites(Context context, String userInviteModel) {

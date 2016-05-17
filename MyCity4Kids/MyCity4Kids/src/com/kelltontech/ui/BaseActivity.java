@@ -389,7 +389,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen 
     public void showToast(String message) {
         if (toast != null)
             toast.cancel();
-        toast = Toast.makeText(BaseActivity.this, message, Toast.LENGTH_LONG);
+        toast = Toast.makeText(BaseActivity.this, ""+message, Toast.LENGTH_LONG);
         toast.show();
     }
 

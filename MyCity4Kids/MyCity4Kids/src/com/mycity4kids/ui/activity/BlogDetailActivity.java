@@ -31,6 +31,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -44,6 +45,7 @@ import com.kelltontech.utils.StringUtils;
 import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.NewParentingBlogController;
@@ -59,9 +61,14 @@ import com.mycity4kids.observablescrollview.ScrollUtils;
 import com.mycity4kids.observablescrollview.Scrollable;
 import com.mycity4kids.observablescrollview.TouchInterceptionFrameLayout;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.retrofitAPIsInterfaces.AuthorDetailsAPI;
 import com.mycity4kids.ui.adapter.BlogTapPagerAdapter;
 import com.nineoldandroids.view.ViewHelper;
 import com.squareup.picasso.Picasso;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
 
 /**
  * Created by manish.soni on 27-07-2015.
@@ -102,10 +109,10 @@ public class BlogDetailActivity extends BaseActivity implements View.OnClickList
     private Toolbar mToolbar;
     private int mTopHeaderHeight;
     private String autFollow = "";
-    String blogName = "";
     private boolean isFollowing;
     private int listPosition;
     String lastFollowStatus;
+    String authorId;
 
     Boolean isCommingFromListing = false;
 
@@ -156,21 +163,10 @@ public class BlogDetailActivity extends BaseActivity implements View.OnClickList
         mViewPager.setVisibility(View.VISIBLE);
         mSlidingTabLayout.setVisibility(View.VISIBLE);
 
-        blogTapPagerAdapter = new BlogTapPagerAdapter(getSupportFragmentManager(), this, null, getApplicationContext(), "");
+        authorId = getIntent().getStringExtra(Constants.AUTHOR_ID);
+        blogTapPagerAdapter = new BlogTapPagerAdapter(getSupportFragmentManager(), this, getApplicationContext(), authorId);
 
-        if (getIntent().getBooleanExtra(Constants.IS_COMMING_FROM_LISTING, true)) {
-            isCommingFromListing = true;
-            blogDetails = getIntent().getParcelableExtra(Constants.BLOG_DETAILS);
-            setBlogData();
-            hitDetailArticleListingapi();
-            listPosition = getIntent().getIntExtra(Constants.BLOG_LIST_POSITION, 0);
-            lastFollowStatus = blogDetails.getUser_following_status();
-        } else {
-            isCommingFromListing = false;
-            blogName = getIntent().getStringExtra(Constants.ARTICLE_NAME);
-            hitBlogDetail_with_article_listibg_API(getIntent().getStringExtra(Constants.ARTICLE_NAME), getIntent().getStringExtra(Constants.FILTER_TYPE));
-        }
-
+        getBlogDetails(authorId);
 
         // observable scrollview code
         mImageView = findViewById(R.id.blogger_bg);
@@ -494,17 +490,12 @@ public class BlogDetailActivity extends BaseActivity implements View.OnClickList
         lastFollowStatus = blogDetails.getUser_following_status();
         setBlogData();
 
-        if (!StringUtils.isNullOrEmpty(data.getResult().getData().getAuthor_follwers_count())) {
-            autFollow = data.getResult().getData().getAuthor_follwers_count();
-            authorFollower.setVisibility(View.VISIBLE);
-            authorFollower.setText(data.getResult().getData().getAuthor_follwers_count());
-        }
 
         BlogArticleListResponse.BlogArticleListing articlelist = new BlogArticleListResponse().new BlogArticleListing();
 
         articlelist.setPopular(data.getResult().getData().getPopular());
         articlelist.setRecent(data.getResult().getData().getRecent());
-        blogTapPagerAdapter = new BlogTapPagerAdapter(getSupportFragmentManager(), this, articlelist, getApplicationContext(), blogName);
+        blogTapPagerAdapter = new BlogTapPagerAdapter(getSupportFragmentManager(), this, getApplicationContext(), authorId);
         mViewPager.setAdapter(blogTapPagerAdapter);
         mSlidingTabLayout.setupWithViewPager(mViewPager);
         mSlidingTabLayout.post(new Runnable() {
@@ -572,7 +563,11 @@ public class BlogDetailActivity extends BaseActivity implements View.OnClickList
             }
         }
 
-
+        if (!StringUtils.isNullOrEmpty(blogDetails.getAuthor_follwers_count())) {
+            autFollow = blogDetails.getAuthor_follwers_count();
+            authorFollower.setVisibility(View.VISIBLE);
+            authorFollower.setText(blogDetails.getAuthor_follwers_count());
+        }
     }
 
     public void hitDetailArticleListingapi() {
@@ -590,6 +585,58 @@ public class BlogDetailActivity extends BaseActivity implements View.OnClickList
         NewParentingBlogController newParentingBlogController = new NewParentingBlogController(this, this);
         newParentingBlogController.getData(AppConstants.PARRENTING_BLOG_ARTICLE_LISTING, _parentingModel);
     }
+
+    private void getBlogDetails(String authorId) {
+        if (!ConnectivityUtils.isNetworkEnabled(this)) {
+            ToastUtils.showToast(this, "Device is out of network coverage");
+            return;
+        }
+        showProgressDialog(getString(R.string.please_wait));
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        AuthorDetailsAPI authorDetailsAPI = retrofit.create(AuthorDetailsAPI.class);
+
+        Call<BlogDetailWithArticleModel> call = authorDetailsAPI.getAuthorDetails("" + SharedPrefUtils.getUserDetailModel(this).getId(),
+                authorId);
+
+        call.enqueue(authorDetailsResponseCallback);
+    }
+
+    Callback<BlogDetailWithArticleModel> authorDetailsResponseCallback = new Callback<BlogDetailWithArticleModel>() {
+        @Override
+        public void onResponse(Call<BlogDetailWithArticleModel> call, retrofit2.Response<BlogDetailWithArticleModel> response) {
+            removeProgressDialog();
+            if (response == null || response.body() == null) {
+                showToast("Something went wrong from server");
+                return;
+            }
+
+            BlogDetailWithArticleModel responseData_new = (BlogDetailWithArticleModel) response.body();
+            if (responseData_new.getResponseCode() == 200) {
+                try {
+                    updateNewData(responseData_new);
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Log.d("Exception", Log.getStackTraceString(e));
+                    showToast(getString(R.string.went_wrong));
+                    finish();
+                }
+            } else if (responseData_new.getResponseCode() == 400) {
+                String message = responseData_new.getResult().getMessage();
+                if (!StringUtils.isNullOrEmpty(message)) {
+                    showToast(message);
+                } else {
+                    showToast(getString(R.string.went_wrong));
+                    finish();
+                }
+            }
+        }
+
+        @Override
+        public void onFailure(Call<BlogDetailWithArticleModel> call, Throwable t) {
+            removeProgressDialog();
+            showToast(getString(R.string.went_wrong));
+        }
+    };
 
     public void hitBlogDetail_with_article_listibg_API(String blog_name, String filtertype) {
         if (!ConnectivityUtils.isNetworkEnabled(this)) {
@@ -615,7 +662,8 @@ public class BlogDetailActivity extends BaseActivity implements View.OnClickList
             authorFollower.setText(responseData.getResult().getData().getAuthor_follwers_count());
         }
 
-        blogTapPagerAdapter = new BlogTapPagerAdapter(getSupportFragmentManager(), this, responseData.getResult().getData(), getApplicationContext(), blogDetails.getBlog_title());
+        blogTapPagerAdapter = new BlogTapPagerAdapter(getSupportFragmentManager(), this,
+                getApplicationContext(), authorId);
         mViewPager.setAdapter(blogTapPagerAdapter);
         mSlidingTabLayout.setupWithViewPager(mViewPager);
         mSlidingTabLayout.post(new Runnable() {
@@ -725,7 +773,8 @@ public class BlogDetailActivity extends BaseActivity implements View.OnClickList
                     }
                 });
             } catch (Exception e) {
-                e.printStackTrace();
+                Crashlytics.logException(e);
+                Log.d("Exception", Log.getStackTraceString(e));
             }
 
         }
@@ -847,7 +896,8 @@ public class BlogDetailActivity extends BaseActivity implements View.OnClickList
             authorFollower.setText(responseData.getResult().getData().getAuthor_follwers_count());
         }
 
-        blogTapPagerAdapter = new BlogTapPagerAdapter(getSupportFragmentManager(), this, responseData.getResult().getData(), getApplicationContext(), blogDetails.getBlog_title());
+        blogTapPagerAdapter = new BlogTapPagerAdapter(getSupportFragmentManager(), this,
+                getApplicationContext(), authorId);
         mViewPager.setAdapter(blogTapPagerAdapter);
         mSlidingTabLayout.setupWithViewPager(mViewPager);
         changeTabsFont();
@@ -893,13 +943,11 @@ public class BlogDetailActivity extends BaseActivity implements View.OnClickList
         if (requestCode == Constants.BLOG_FOLLOW_STATUS) {
 
             if (data.getStringExtra(Constants.BLOG_STATUS).equalsIgnoreCase("0")) {
-//                ((ImageView) findViewById(R.id.blog_follow)).setBackgroundResource((R.drawable.follow_blog));
                 ((TextView) findViewById(R.id.blog_follow)).setText("FOLLOW");
                 isFollowing = false;
                 blogDetails.setUser_following_status("0");
 
             } else {
-//                ((ImageView) findViewById(R.id.blog_follow)).setBackgroundResource((R.drawable.un_follow_icon));
                 ((TextView) findViewById(R.id.blog_follow)).setText("UNFOLLOW");
                 isFollowing = true;
                 blogDetails.setUser_following_status("1");

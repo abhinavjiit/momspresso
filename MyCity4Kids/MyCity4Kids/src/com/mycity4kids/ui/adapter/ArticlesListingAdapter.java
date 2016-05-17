@@ -121,6 +121,7 @@ public class ArticlesListingAdapter extends BaseAdapter {
                 public void onClick(View view) {
                     Intent intent = new Intent(mContext, BlogDetailActivity.class);
                     intent.putExtra(Constants.IS_COMMING_FROM_LISTING, false);
+                    intent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(position).getAuthor_id());
                     if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getAuthor_type())) {
                         if (articleDataModelsNew.get(position).getAuthor_type().trim().equalsIgnoreCase("Blogger")) {
                             intent.putExtra(Constants.ARTICLE_NAME, articleDataModelsNew.get(position).getBlog_name());
