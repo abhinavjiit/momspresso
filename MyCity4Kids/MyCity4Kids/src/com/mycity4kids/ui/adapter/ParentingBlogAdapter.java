@@ -111,9 +111,9 @@ public class ParentingBlogAdapter extends BaseAdapter {
 //            Picasso.with(context).load(R.drawable.default_img).resize((int) (90 * density), (int) (100 * density)).centerCrop().into(holder.bloggerImage);
 //        }
         if (StringUtils.isNullOrEmpty(datalist.get(position).getProfile_image())) {
-            Picasso.with(context).load(R.drawable.blog_bgnew).resize(screenWidth, (int) (200 * density)).centerCrop().placeholder(R.drawable.blog_bgnew).into(holder.bloggerCover);
+            Picasso.with(context).load(R.drawable.blog_bgnew).fit().placeholder(R.drawable.blog_bgnew).into(holder.bloggerCover);
         } else {
-            Picasso.with(context).load(datalist.get(position).getProfile_image()).resize(screenWidth, (int) (200 * density)).centerCrop().placeholder(R.drawable.blog_bgnew).into(holder.bloggerCover);
+            Picasso.with(context).load(datalist.get(position).getProfile_image()).fit().placeholder(R.drawable.blog_bgnew).into(holder.bloggerCover);
         }
         if (StringUtils.isNullOrEmpty(datalist.get(position).getAbout_user())) {
             holder.aboutLayout.setVisibility(View.GONE);
