@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -71,7 +72,8 @@ public class PushTokenService extends IntentService implements UpdateListener {
                         Log.e("push", "token failed");
                     }
                 } catch (JsonSyntaxException jse) {
-                    Log.e("Json Syntex Exception push", "token failed");
+                    Crashlytics.logException(jse);
+                    Log.d("JsonSyntaxException", Log.getStackTraceString(jse));
                 }
 
                 break;

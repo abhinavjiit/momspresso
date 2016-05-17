@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -214,7 +215,8 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                                  }
                              } catch (Exception e) {
                                  removeProgressDialog();
-                                 e.printStackTrace();
+                                 Crashlytics.logException(e);
+                                 Log.d("Exception", Log.getStackTraceString(e));
                                  showToast(getString(R.string.went_wrong));
                              }
 

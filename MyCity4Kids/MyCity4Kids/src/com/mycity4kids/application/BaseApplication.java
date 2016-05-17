@@ -7,12 +7,15 @@ import android.support.multidex.MultiDex;
 import android.util.Log;
 
 import com.android.volley.RequestQueue;
+import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.Volley;
 import com.comscore.analytics.comScore;
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.kelltontech.utils.ConnectivityUtils;
+import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.database.BaseDbHelper;
@@ -160,11 +163,14 @@ public class BaseApplication extends Application {
             Class.forName("android.os.AsyncTask");
         } catch (ClassNotFoundException e) {
         }
-        Fabric.with(this, new Crashlytics());
+
+        CrashlyticsCore core = new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build();
+        Fabric.with(this, new Crashlytics.Builder().core(core).build());
         Crashlytics.setUserIdentifier("" + SharedPrefUtils.getUserDetailModel(this).getId());
         Crashlytics.setUserEmail("" + SharedPrefUtils.getUserDetailModel(this).getEmail());
-        setInstance(this);
 
+        setInstance(this);
+        VolleyLog.setTag("VolleyLogs");
         createRetrofitInstance(AppConstants.LIVE_URL);
 
         mRequestQueue = Volley.newRequestQueue(getApplicationContext());
@@ -283,12 +289,20 @@ public class BaseApplication extends Application {
 // set your desired log level
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-        client = new OkHttpClient
-                .Builder()
-                .cache(new Cache(getCacheDir(), 10 * 1024 * 1024)) // 10 MB
-                .addInterceptor(mainInterceptor)
-//                .addInterceptor(logging)
-                .build();
+        if (BuildConfig.DEBUG) {
+            client = new OkHttpClient
+                    .Builder()
+                    .cache(new Cache(getCacheDir(), 10 * 1024 * 1024)) // 10 MB
+                    .addInterceptor(mainInterceptor)
+                    .addInterceptor(logging)
+                    .build();
+        } else {
+            client = new OkHttpClient
+                    .Builder()
+                    .cache(new Cache(getCacheDir(), 10 * 1024 * 1024)) // 10 MB
+                    .addInterceptor(mainInterceptor)
+                    .build();
+        }
 
         retrofit = new Retrofit.Builder()
                 .baseUrl(base_url)
@@ -300,21 +314,22 @@ public class BaseApplication extends Application {
 
     public Retrofit getRetrofit() {
         if (null == retrofit) {
-            createRetrofitInstance(AppConstants.LIVE_URL);
+            createRetrofitInstance(SharedPrefUtils.getBaseURL(this));
         }
         return retrofit;
     }
 
     public static void changeApiBaseUrl() {
 
-
         if (AppConstants.LIVE_URL.equals(retrofit.baseUrl().toString())) {
+            SharedPrefUtils.setBaseURL(getAppContext(), AppConstants.DEV_URL);
             retrofit = new Retrofit.Builder()
                     .baseUrl(AppConstants.DEV_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(client)
                     .build();
         } else {
+            SharedPrefUtils.setBaseURL(getAppContext(), AppConstants.LIVE_URL);
             retrofit = new Retrofit.Builder()
                     .baseUrl(AppConstants.LIVE_URL)
                     .addConverterFactory(GsonConverterFactory.create())

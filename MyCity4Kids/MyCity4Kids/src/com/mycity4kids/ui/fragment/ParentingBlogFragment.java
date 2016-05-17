@@ -103,16 +103,17 @@ public class ParentingBlogFragment extends BaseFragment implements View.OnClickL
 
                 BlogItemModel itemSelected = (BlogItemModel) adapterView.getItemAtPosition(position);
 
-                if (!StringUtils.isNullOrEmpty(itemSelected.getBlog_title())) {
+//                if (!StringUtils.isNullOrEmpty(itemSelected.getBlog_title())) {
                     Intent intent = new Intent(getActivity(), BlogDetailActivity.class);
                     Bundle bundle = new Bundle();
                     intent.putExtra(Constants.IS_COMMING_FROM_LISTING, true);
+                    intent.putExtra(Constants.AUTHOR_ID, ""+itemSelected.getId());
                     intent.putExtra(Constants.BLOG_DETAILS, itemSelected);
                     intent.putExtra(Constants.BLOG_LIST_POSITION, position);
                     getActivity().startActivityForResult(intent, Constants.BLOG_FOLLOW_STATUS);
-                } else {
-                    ToastUtils.showToast(getActivity(), "Blogger details not available at this moment, please try again later...");
-                }
+//                } else {
+//                    ToastUtils.showToast(getActivity(), "Blogger details not available at this moment, please try again later...");
+//                }
 
             }
         });

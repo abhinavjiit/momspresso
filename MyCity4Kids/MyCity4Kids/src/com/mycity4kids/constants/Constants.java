@@ -35,6 +35,7 @@ public class Constants {
     public static final String RESOURCE_BOOKMARK_STATUS = "resource_bookmark_status";
     public static final String SHOW_BOOKMARK_RESOURCES = "show_bookmark_resources";
     public static final String ARTICLE_NAME = "article_name";
+    public static final String AUTHOR_ID = "authorId";
 
     public static final String SIGNUP_DATA = "signup_data";
     public static final String SIGNUP_FLAG = "signup_flag";

@@ -249,7 +249,7 @@ public class SearchArticlesTabFragment extends BaseFragment {
 //            noBlogsTextView.setText("No articles found");
         } else {
             noBlogsTextView.setVisibility(View.GONE);
-            totalPageCount = responseData.getResult().getData().getPage_count();
+//            totalPageCount = responseData.getResult().getData().getPage_count();
             if (nextPageNumber == 1) {
                 articleDataModelsNew = dataList;
             } else {
@@ -262,7 +262,7 @@ public class SearchArticlesTabFragment extends BaseFragment {
     }
 
     private void newSearchTopicArticleListingApi(String searchName, String sortby) {
-        if (nextPageNumber == 1) {
+        if (nextPageNumber == 1 && null != progressBar) {
             progressBar.setVisibility(View.VISIBLE);
         }
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {

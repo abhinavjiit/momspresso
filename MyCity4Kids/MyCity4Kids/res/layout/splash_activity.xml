@@ -52,12 +52,12 @@
 
 
             <LinearLayout
-                android:visibility="gone"
                 android:id="@+id/indicator_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/one"
@@ -137,7 +137,7 @@
                 android:gravity="center_horizontal|top"
                 android:maxLines="3"
                 android:minLines="3"
-                android:text="Family Organizer"
+                android:text="Parenting made easy"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@color/white_color" />
 

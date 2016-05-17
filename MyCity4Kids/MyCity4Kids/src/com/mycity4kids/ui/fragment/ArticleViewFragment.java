@@ -16,11 +16,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request;
+import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.enums.ParentingFilterType;
@@ -100,13 +103,8 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
 
                 boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
                 if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && (nextPageNumber < 2 || nextPageNumber <= totalPageCount)) {
-//                    if (!"bookmark".equals(sortType)) {
                     mLodingView.setVisibility(View.VISIBLE);
-                    hitArticleListingApi(nextPageNumber, sortType, true);
-//                    } else {
-//                        mLodingView.setVisibility(View.VISIBLE);
-//                        hitBookmarkedArticleListingAPI(nextPageNumber, "bookmark");
-//                    }
+                    hitArticleListingApi(nextPageNumber, sortType, false);
                     isReuqestRunning = true;
                 }
             }
@@ -236,22 +234,27 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
         @Override
         public void onWebServiceComplete(VolleyBaseResponse response, boolean isError) {
             progressBar.setVisibility(View.GONE);
-            Log.d("Response back =", " " + response.getResponseBody());
             if (isError) {
                 if (null != getActivity() && response.getResponseCode() != 999)
                     ((DashboardActivity) getActivity()).showToast("Something went wrong from server");
             } else {
-                Log.d("Response = ", response.getResponseBody());
-                String temp = "";
-//                progressBar.setVisibility(View.INVISIBLE);
+
                 if (response == null) {
                     ((DashboardActivity) getActivity()).showToast("Something went wrong from server");
-                    removeProgressDialog();
                     isReuqestRunning = false;
                     mLodingView.setVisibility(View.GONE);
                     return;
                 }
-                CommonParentingResponse responseData = new Gson().fromJson(response.getResponseBody(), CommonParentingResponse.class);
+                Log.d("Response back =", " " + response.getResponseBody());
+                CommonParentingResponse responseData;
+                try {
+                    responseData = new Gson().fromJson(response.getResponseBody(), CommonParentingResponse.class);
+                } catch (JsonSyntaxException jse) {
+                    Crashlytics.logException(jse);
+                    Log.d("JsonSyntaxException", Log.getStackTraceString(jse));
+                    ((DashboardActivity) getActivity()).showToast("Something went wrong from server");
+                    return;
+                }
 
                 swipeRefreshLayout.setRefreshing(false);
                 if (responseData.getResponseCode() == 200) {
@@ -295,7 +298,22 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
             if (nextPageNumber == 1) {
                 articleDataModelsNew = dataList;
             } else {
-                articleDataModelsNew.addAll(dataList);
+
+                //cache refresh request response and response from pagination may overlap causing duplication
+                // to prevent check the page number in response
+                //-- open article listing and immediately scroll to next page to reproduce.
+                if (!"bookmark".equals(sortType) && responseData.getResult().getData().getPageNumber() < nextPageNumber) {
+                    //Response from cache refresh request. Update the dataset and refresh list
+                    int articleNumber = (responseData.getResult().getData().getPageNumber() - 1) * 15;
+                    for (int i = 0; i < dataList.size(); i++) {
+                        articleDataModelsNew.set(articleNumber + i, dataList.get(i));
+                    }
+                    articlesListingAdapter.setNewListData(articleDataModelsNew);
+                    articlesListingAdapter.notifyDataSetChanged();
+                    return;
+                } else {
+                    articleDataModelsNew.addAll(dataList);
+                }
             }
             articlesListingAdapter.setNewListData(articleDataModelsNew);
             nextPageNumber = nextPageNumber + 1;
@@ -310,7 +328,28 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
 
     @Override
     public void onRefresh() {
+        removeVolleyCache(sortType);
         nextPageNumber = 1;
         hitArticleListingApi(nextPageNumber, sortType, false);
+    }
+
+    private void removeVolleyCache(String sortType) {
+        if ("bookmark".equals(sortType))
+            return;
+
+        StringBuilder builder = new StringBuilder();
+        int cachePageNumber = 1;
+        builder.append("city_id=").append(SharedPrefUtils.getCurrentCityModel(getActivity()).getId());
+        builder.append("&page=").append(cachePageNumber);
+        builder.append("&sort=").append(sortType);
+        builder.append("&user_id=").append(SharedPrefUtils.getUserDetailModel(getActivity()).getId());
+        String cacheKey = Request.Method.GET + ":" + AppConstants.PARENTING_STOP_ARTICLE_URL + builder.toString().replace(" ", "%20");
+
+        while (null != BaseApplication.getInstance().getRequestQueue().getCache().get(cacheKey)) {
+            BaseApplication.getInstance().getRequestQueue().getCache().remove(cacheKey);
+            cacheKey = cacheKey.replace("&page=" + cachePageNumber, "&page=" + (cachePageNumber + 1));
+            cachePageNumber++;
+        }
+
     }
 }

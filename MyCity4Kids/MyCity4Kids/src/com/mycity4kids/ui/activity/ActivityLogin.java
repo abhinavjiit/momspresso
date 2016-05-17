@@ -36,6 +36,7 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
+import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -115,9 +116,11 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                 public void onClick(View v) {
                     changeBaseURL++;
                     if (changeBaseURL > 9) {
-                        BaseApplication.changeApiBaseUrl();
-                        showToast("changed baseurl to " + BaseApplication.getInstance().getRetrofit().baseUrl());
-                        changeBaseURL = 0;
+                        if (BuildConfig.DEBUG) {
+                            BaseApplication.changeApiBaseUrl();
+                            showToast("changed baseurl to " + BaseApplication.getInstance().getRetrofit().baseUrl());
+                            changeBaseURL = 0;
+                        }
                     }
                 }
             });

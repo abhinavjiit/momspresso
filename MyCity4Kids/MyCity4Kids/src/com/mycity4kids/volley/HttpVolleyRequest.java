@@ -21,17 +21,14 @@ import com.mycity4kids.interfaces.OnWebServiceCompleteListener;
 import com.mycity4kids.newmodels.VolleyBaseResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONObject;
-
-import java.net.URI;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by hemant on 4/10/15.
  */
 public class HttpVolleyRequest {
+
+    static StringRequest stringRequest;
 
     public static void getStringResponse(final Context context, String url, final Map<String, String> paramsMap,
                                          final OnWebServiceCompleteListener listener, int requestMethod, boolean isCacheEnabled) {
@@ -52,12 +49,14 @@ public class HttpVolleyRequest {
             }
         }
 
-        StringRequest stringRequest = new StringRequest(requestMethod, url,
+        stringRequest = new StringRequest(requestMethod, url,
                 new Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         // Do something with the response
                         baseResponse.setResponseBody(response);
+                        Log.d("responseHeader:", "" + baseResponse.getResponseHeader());
+                        Log.d("responseCode:", "" + baseResponse.getResponseCode());
                         Log.d("response:", response.toString());
                         listener.onWebServiceComplete(baseResponse, false);
                     }
@@ -89,40 +88,36 @@ public class HttpVolleyRequest {
 
                 Map<String, String> responseHeader = response.headers;
                 baseResponse.setResponseHeader(responseHeader);
-
+                baseResponse.setResponseCode(response.statusCode);
                 String rData = new String(response.data);
                 return Response.success(rData, parseIgnoreCacheHeaders(response));
             }
 
             public Cache.Entry parseIgnoreCacheHeaders(NetworkResponse response) {
-                long now = System.currentTimeMillis();
-
-                Map<String, String> headers = response.headers;
-                long serverDate = 0;
-                String serverEtag = null;
-                String headerValue;
-
-                headerValue = headers.get("Date");
-                if (headerValue != null) {
-                    serverDate = HttpHeaderParser.parseDateAsEpoch(headerValue);
+                Cache.Entry cacheEntry = HttpHeaderParser.parseCacheHeaders(response);
+                if (cacheEntry == null) {
+                    cacheEntry = new Cache.Entry();
                 }
-
-                serverEtag = headers.get("ETag");
-
-                final long cacheHitButRefreshed = 5 * 60 * 1000; // in 5 minutes cache will be hit, but also refreshed on background
-                final long cacheExpired = 4 * 24 * 60 * 60 * 1000; // in 4 days this cache entry expires completely
+                final long cacheHitButRefreshed = 20 * 1000; // in 5 minutes cache will be hit, but also refreshed on background
+                final long cacheExpired = 24 * 60 * 60 * 1000; // in 24 hours this cache entry expires completely
+                long now = System.currentTimeMillis();
                 final long softExpire = now + cacheHitButRefreshed;
                 final long ttl = now + cacheExpired;
+                cacheEntry.data = response.data;
+                cacheEntry.softTtl = softExpire;
+                cacheEntry.ttl = ttl;
+                String headerValue;
+                headerValue = response.headers.get("Date");
+                if (headerValue != null) {
+                    cacheEntry.serverDate = HttpHeaderParser.parseDateAsEpoch(headerValue);
+                }
+                headerValue = response.headers.get("Last-Modified");
+                if (headerValue != null) {
+                    cacheEntry.lastModified = HttpHeaderParser.parseDateAsEpoch(headerValue);
+                }
+                cacheEntry.responseHeaders = response.headers;
 
-                Cache.Entry entry = new Cache.Entry();
-                entry.data = response.data;
-                entry.etag = serverEtag;
-                entry.softTtl = softExpire;
-                entry.ttl = ttl;
-                entry.serverDate = serverDate;
-                entry.responseHeaders = headers;
-
-                return entry;
+                return cacheEntry;
             }
 
             @Override

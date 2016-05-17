@@ -8,6 +8,7 @@ public class CommonParentingData {
      */
     private int total_articles;
     private int page_count;
+    private int pageNumber;
     private ArrayList<CommonParentingList> data;
     private ArrayList<ParentingSort> sort;
     /**
@@ -29,6 +30,14 @@ public class CommonParentingData {
 
     public void setTotal_articles(int total_articles) {
         this.total_articles = total_articles;
+    }
+
+    public int getPageNumber() {
+        return pageNumber;
+    }
+
+    public void setPageNumber(int pageNumber) {
+        this.pageNumber = pageNumber;
     }
 
     public ArrayList<CommonParentingList> getData() {
