@@ -175,9 +175,11 @@ public class SetupBlogPageActivity extends BaseActivity {
 /*
         articleDraftRequest.setCity_id(SharedPrefUtils.getCurrentCityModel(getActivity()).getId());
         _parentingModel.setPage("" + pPageCount);*/
-//                    BlogSetupController _controller = new BlogSetupController(SetupBlogPageActivity.this, SetupBlogPageActivity.this);
-//
-//                    _controller.getData(AppConstants.BLOG_SETUP_REQUEST, articleDraftRequest);
+
+                   /* BlogSetupController _controller = new BlogSetupController(SetupBlogPageActivity.this, SetupBlogPageActivity.this);
+
+                    _controller.getData(AppConstants.BLOG_SETUP_REQUEST, articleDraftRequest);*/
+
                     Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
                     // prepare call in Retrofit 2.0
                     BlogPageAPI blogSetupAPI = retrofit.create(BlogPageAPI.class);

@@ -18,12 +18,13 @@ repositories {
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
-
     compile 'com.squareup.picasso:picasso:2.5.2'
     //    compile project(':google-play-services_lib')
+
     //    compile ('com.facebook.android:facebook-android-sdk:3.23.1')
     compile project(':facebook-android-sdk-3.6.0')
     //    compile files('libs/AndroidEasingFunctions-1.0.0.jar')
+
     //    compile files('libs/AndroidViewAnimations-1.1.3.jar')
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'org.apache.httpcomponents:httpmime:4.5'
@@ -99,7 +100,7 @@ android {
     }
     configurations {
         all*.exclude group: 'com.google.guava', module: 'guava-jdk5'
-        all*.exclude group:'com.android.volley'
+        all*.exclude group: 'com.android.volley'
     }
     packagingOptions {
         exclude 'META-INF/ASL2.0'

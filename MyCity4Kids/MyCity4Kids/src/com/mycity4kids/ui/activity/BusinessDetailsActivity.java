@@ -49,9 +49,12 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.ui.IScreen;
 import com.kelltontech.utils.BitmapUtils;
+import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.DataUtils;
 import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
+import com.kelltontech.utils.ToastUtils;
+import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -76,6 +79,7 @@ import com.mycity4kids.models.businesseventdetails.DetailsReviews;
 import com.mycity4kids.models.businesslist.BusinessDataListing;
 import com.mycity4kids.models.favorite.FavoriteRequest;
 import com.mycity4kids.models.forgot.CommonResponse;
+import com.mycity4kids.models.parentingdetails.ParentingDetailResponse;
 import com.mycity4kids.models.user.BusinessImageUploadRequest;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.models.user.UserModel;
@@ -85,6 +89,8 @@ import com.mycity4kids.observablescrollview.ScrollUtils;
 import com.mycity4kids.observablescrollview.Scrollable;
 import com.mycity4kids.observablescrollview.TouchInterceptionFrameLayout;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.retrofitAPIsInterfaces.ArticlePublishAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.ResourcesAPI;
 import com.mycity4kids.slidingtab.SlidingTabLayout;
 import com.mycity4kids.ui.adapter.ViewPagerAdapterEventdetail;
 import com.mycity4kids.ui.fragment.MapFragment;
@@ -101,6 +107,10 @@ import java.net.URI;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.TimeZone;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
 
 /**
  * @author Deepanker Chaudhary
@@ -1237,8 +1247,66 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
             bookmarkRequest.setAction("remove");
         }
 //        followAPICall(followAuthorId);
-        BookmarkController bookmarkController = new BookmarkController(this, this);
-        bookmarkController.getData(AppConstants.BOOKMARK_RESOURCE_REQUEST, bookmarkRequest);
+       /* BookmarkController bookmarkController = new BookmarkController(this, this);
+        bookmarkController.getData(AppConstants.BOOKMARK_RESOURCE_REQUEST, bookmarkRequest);*/
+
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        // prepare call in Retrofit 2.0
+        ResourcesAPI bookmarkAPI = retrofit.create(ResourcesAPI.class);
+        if (!ConnectivityUtils.isNetworkEnabled(this)) {
+            removeProgressDialog();
+            showToast(getString(R.string.error_network));
+            return;
+        }
+        Call<CommonResponse> call = bookmarkAPI.addRemoveBookmark(SharedPrefUtils.getUserDetailModel(this).getId()+"",
+                bookmarkRequest.getAction(),
+                bookmarkRequest.getId()
+               );
+
+
+        //asynchronous call
+        call.enqueue(new Callback<CommonResponse>() {
+                         @Override
+                         public void onResponse(Call<CommonResponse> call, retrofit2.Response<CommonResponse> response) {
+                             int statusCode = response.code();
+
+                             CommonResponse bookmarkResponse = (CommonResponse) response.body();
+
+                             removeProgressDialog();
+                             if (bookmarkResponse.getResponseCode() == 200) {
+                                 ToastUtils.showToast(getApplicationContext(), bookmarkResponse.getResult().getMessage(), Toast.LENGTH_SHORT);
+                                 if (BuildConfig.DEBUG) {
+                                     Log.e("Bookmark response", bookmarkResponse.getResult().getMessage());
+                                 }
+                             } else if (bookmarkResponse.getResponseCode() == 400) {
+                                 String message = bookmarkResponse.getResult().getMessage();
+                                 if (BuildConfig.DEBUG) {
+                                     Log.e("Bookmark response", bookmarkResponse.getResult().getMessage());
+                                 }
+                                 if (!StringUtils.isNullOrEmpty(message)) {
+                                     showToast(message);
+                                 } else {
+                                     showToast(getString(R.string.went_wrong));
+                                 }
+
+                                 if (bookmarkStatus == 0) {
+                                     bookmarkStatus = 1;
+                                     imgBookmark.setImageResource(R.drawable.ic_favorite_border_white_48dp_fill);
+                                 } else {
+                                     bookmarkStatus = 0;
+                                     imgBookmark.setImageResource(R.drawable.ic_favorite_border_white_48dp);
+                                 }
+                             }
+
+                         }
+
+
+                         @Override
+                         public void onFailure(Call<CommonResponse> call, Throwable t) {
+
+                         }
+                     }
+        );
     }
 
     /**

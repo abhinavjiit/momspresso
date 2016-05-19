@@ -78,12 +78,12 @@
                     android:paddingLeft="10dp">
 
                     <!--<ImageView-->
-                        <!--android:id="@+id/author_pic"-->
-                        <!--android:layout_width="13dp"-->
-                        <!--android:layout_height="13dp"-->
-                        <!--android:layout_gravity="bottom"-->
-                        <!--android:gravity="bottom"-->
-                        <!--android:background="@color/hint_txt_color" />-->
+                    <!--android:id="@+id/author_pic"-->
+                    <!--android:layout_width="13dp"-->
+                    <!--android:layout_height="13dp"-->
+                    <!--android:layout_gravity="bottom"-->
+                    <!--android:gravity="bottom"-->
+                    <!--android:background="@color/hint_txt_color" />-->
 
                     <TextView
                         android:id="@+id/txvAuthorName"

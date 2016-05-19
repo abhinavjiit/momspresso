@@ -14,7 +14,7 @@ public class AppConstants {
     public static final String DEV_URL = "http://54.169.17.138/";
 
     public static final String LIVE_URL = "http://webserve.mycity4kids.com/";
-//    public static final String LIVE_URL = "http://54.169.17.138/";
+ //   public static final String LIVE_URL = "http://54.169.17.138/";
 //    public static final String LIVE_URL = "http://10.42.0.1/";
 //    public static final String LIVE_URL = "http://192.168.1.12/";
 
@@ -178,6 +178,9 @@ public class AppConstants {
     //New Text Editor and Blogs Changes APIs
     public static final String GET_BLOGGER_DASHBOARD_URL = BASE_URL + "apiblogs/bloggerDashboardData?";
     public static final String GET_BLOGGER_PUBLISHED_ARTICLES_URL = BASE_URL + "apiblogs/publishedArticle?";
+
+    //Editor's Pick API
+    public static final String GET_EDITOR_ARTICLES_URL = BASE_URL + "apiparentingstop/editorPickArticle?";
 
     //Search bloggers/authors
     public static final String SEARCH_AUTHORS_URL = BASE_URL + "apiparentingstop/searchWithBlogger?";
