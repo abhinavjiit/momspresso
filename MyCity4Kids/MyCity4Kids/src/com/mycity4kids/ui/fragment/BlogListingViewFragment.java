@@ -2,6 +2,7 @@ package com.mycity4kids.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
+import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -198,15 +200,21 @@ public class BlogListingViewFragment extends BaseFragment {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
-                ((BlogDetailActivity) getActivity()).showToast(getString(R.string.went_wrong));
+                Crashlytics.logException(e);
+                Log.d("Exception", Log.getStackTraceString(e));
+                if (isAdded()) {
+                    ((BlogDetailActivity) getActivity()).showToast(getString(R.string.went_wrong));
+                }
             }
         }
 
         @Override
         public void onFailure(Call<NewArticleListingResponse> call, Throwable t) {
-            t.printStackTrace();
-            ((BlogDetailActivity) getActivity()).showToast(getString(R.string.went_wrong));
+            Crashlytics.logException(t);
+            Log.d("Exception", Log.getStackTraceString(t));
+            if (isAdded()) {
+                ((BlogDetailActivity) getActivity()).showToast(getString(R.string.went_wrong));
+            }
         }
     };
 

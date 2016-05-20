@@ -113,7 +113,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     private boolean mEventDataAvalble;
     TextView txtCal, txtEvents, txtBlogs;
     private LayoutInflater mInflator;
-    private LinearLayout hzScrollLinearLayout, hzScrollLinearLayoutEvent, hzScrollLinearLayout1;
+    private LinearLayout hzScrollLinearLayout, hzScrollLinearLayoutEvent, hzScrollLinearLayout1, blogHeader1;
     private float density;
     CardView cardView;
 
@@ -152,6 +152,9 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         eventListView = (CustomListView) view.findViewById(R.id.eventList);
         blogListView = (HorizontalScrollView) view.findViewById(R.id.bloglist);
         rltLoadingView = (RelativeLayout) view.findViewById(R.id.rltLoadingView);
+        blogHeader1 = (LinearLayout) view.findViewById(R.id.blogHeader1);
+
+
 //        goToTask.setOnClickListener(this);
 //        addTask.setOnClickListener(this);
         goToCal.setOnClickListener(this);
@@ -164,6 +167,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
 //        txtTodo.setOnClickListener(this);
         txtEvents.setOnClickListener(this);
         txtBlogs.setOnClickListener(this);
+        blogHeader1.setOnClickListener(this);
 
         view.findViewById(R.id.go_to_blog).setOnClickListener(this);
         view.findViewById(R.id.go_to_events).setOnClickListener(this);
@@ -627,7 +631,8 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                     customViewMore.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ((DashboardActivity) getActivity()).replaceFragment(new ArticlesFragment(), null, true);
+                            FragmentEditorsPick editorsfragment = new FragmentEditorsPick();
+                            ((DashboardActivity) getActivity()).replaceFragment(editorsfragment, null, true);
                         }
                     });
                     if (mArticleDataListing1.isEmpty()) {
@@ -912,11 +917,11 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
             case R.id.img_go_to_blogs:
             case R.id.txtBlogs:
                 ((DashboardActivity) getActivity()).replaceFragment(new ArticlesFragment(), null, true);
-
-
                 break;
-
-
+            case R.id.blogHeader1:
+                FragmentEditorsPick editorsfragment = new FragmentEditorsPick();
+                ((DashboardActivity) getActivity()).replaceFragment(editorsfragment, null, true);
+                break;
         }
 
     }
@@ -1932,12 +1937,12 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
 
         dialog.setMessage(getResources().getString(R.string.create_family)).setNegativeButton(getResources().getString(R.string.yes)
                 , new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent createFamilyIntent = new Intent(getActivity(), CreateFamilyActivity.class);
-                        startActivity(createFamilyIntent);
-                        dialog.cancel();
-                    }
-                }).setPositiveButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Intent createFamilyIntent = new Intent(getActivity(), CreateFamilyActivity.class);
+                startActivity(createFamilyIntent);
+                dialog.cancel();
+            }
+        }).setPositiveButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // do nothing
                 dialog.cancel();
@@ -1963,7 +1968,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     }
 
     public void inflateEventCardsScroll() {
-        for (int i = 0; i <Math.min( 10,mBusinessDataListings.size()); i++) {
+        for (int i = 0; i < Math.min(10, mBusinessDataListings.size()); i++) {
             final View view = mInflator.inflate(R.layout.card_item_event_dashboard, null);
             view.setTag(i);
             ImageView articleImage = (ImageView) view.findViewById(R.id.eventThumbnail);

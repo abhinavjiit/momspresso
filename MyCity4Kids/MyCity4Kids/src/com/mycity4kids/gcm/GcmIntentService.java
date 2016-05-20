@@ -328,7 +328,7 @@ public class
                         resultIntent = new Intent(getApplicationContext(), BusinessDetailsActivity.class);
                         resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         resultIntent.putExtra(Constants.CATEGORY_ID, SharedPrefUtils.getEventIdForCity(getApplication()));
-                        resultIntent.putExtra(Constants.BUSINESS_OR_EVENT_ID, pushNotificationModel.getId());
+                        resultIntent.putExtra(Constants.BUSINESS_OR_EVENT_ID, ""+pushNotificationModel.getId());
                         resultIntent.putExtra(Constants.PAGE_TYPE, Constants.EVENT_PAGE_TYPE);
                         resultIntent.putExtra(Constants.DISTANCE, "0");
                         resultIntent.putExtra(AppConstants.NOTIFICATION_ID, requestID);

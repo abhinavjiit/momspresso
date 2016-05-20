@@ -19,9 +19,9 @@ public interface BloggerDashboardAPI {
 
     @GET("apiparentingstop/fav_blogs?")
     Call<CommonParentingResponse> getBookmarkedList(@Query("userId") String userId,
-                                                  @Query("&page") String page);
+                                                    @Query("page") String page);
 
     @GET("apiblogs/publishedArticle?")
     Call<ResponseBody> getPublishedArticleList(@Query("userId") String userId,
-                                                    @Query("&page") String page);
+                                               @Query("page") String page);
 }

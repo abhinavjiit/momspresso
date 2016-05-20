@@ -74,7 +74,7 @@ public class PublishedArticlesListAdapter extends BaseAdapter {
         holder.txvPublishDate.setText(mPublishedArticlesList.get(position).getCreated());
         if (!StringUtils.isNullOrEmpty(mPublishedArticlesList.get(position).getThumbnail_image())) {
             Picasso.with(mContext).load(mPublishedArticlesList.get(position).getThumbnail_image())
-                    .placeholder(R.drawable.article_default)
+                    .placeholder(R.drawable.default_article)
                     .into(holder.imvAuthorThumb);
         } else {
             holder.imvAuthorThumb.setBackgroundResource(R.drawable.article_default);

@@ -188,6 +188,9 @@ public class AppConstants {
     //Force_update
     public static final String FORCE_UPDATE_URL = BASE_URL + "apiservices/forceUpdate?";
 
+    //Force_update
+    public static final String EDITOR_PICKS_ARTICLES = BASE_URL + "apiparentingstop/editorPickArticle?";
+
     //Comments Lazy loading
     public static final int COMMENT_LIMIT = 10;
     public static final String COMMENT_TYPE_DB = "db";

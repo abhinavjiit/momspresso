@@ -79,7 +79,7 @@ public class BloggerListingAdapter extends BaseAdapter {
         holder.txvPublishDate.setText(articleDataModelsNew.get(position).getCreated());
         if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getThumbnail_image())) {
             Picasso.with(mContext).load(articleDataModelsNew.get(position).getThumbnail_image())
-                    .resize((int) (100 * density), (int) (66 * density)).centerCrop().placeholder(R.drawable.article_default)
+                    .resize((int) (100 * density), (int) (66 * density)).centerCrop().placeholder(R.drawable.default_article)
                     .into(holder.imvAuthorThumb);
         } else {
             Picasso.with(mContext).load(R.drawable.article_default).resize((int) (100 * density), (int) (66 * density))

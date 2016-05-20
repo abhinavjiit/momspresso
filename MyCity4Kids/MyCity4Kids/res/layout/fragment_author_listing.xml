@@ -8,8 +8,8 @@
         android:id="@+id/authorListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@color/grey"
-        android:dividerHeight="1px" />
+        android:background="@color/grey_light"
+        android:drawSelectorOnTop="true" />
 
     <TextView
         android:id="@+id/noAuthorsTextView"

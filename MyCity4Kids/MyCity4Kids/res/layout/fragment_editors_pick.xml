@@ -11,29 +11,34 @@
         android:layout_alignParentTop="true"
         android:background="#DEDEDE" />
 
-    <com.mycity4kids.observablescrollview.ObservableListView
-        android:id="@+id/scroll"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/dummy_line"
-        android:background="@color/grey_light"
-        android:divider="@color/transparent"
-        android:drawSelectorOnTop="true"
-        android:nestedScrollingEnabled="true" />
+        android:layout_height="wrap_content">
+
+        <com.mycity4kids.observablescrollview.ObservableListView
+            android:id="@+id/scroll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/dummy_line"
+            android:background="@color/grey_light"
+            android:divider="@color/transparent"
+            android:drawSelectorOnTop="true" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <TextView
         android:id="@+id/noBlogsTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="No blogs have been bookmarked yet."
+        android:text="No blogs have been added yet."
         android:visibility="gone" />
 
     <RelativeLayout
         android:id="@+id/relativeLoadingView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/scroll"
+        android:layout_alignParentBottom="true"
         android:background="#80000000"
         android:paddingBottom="5dp"
         android:visibility="gone">
@@ -72,9 +77,8 @@
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/dummy_line"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
+        android:layout_centerVertical="true"
         android:visibility="invisible" />
 
 </RelativeLayout>

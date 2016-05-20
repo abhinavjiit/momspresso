@@ -93,6 +93,7 @@ import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
 import com.mycity4kids.ui.fragment.FragmentCalMonth;
 import com.mycity4kids.ui.fragment.FragmentCalender;
 import com.mycity4kids.ui.fragment.FragmentCityForKids;
+import com.mycity4kids.ui.fragment.FragmentEditorsPick;
 import com.mycity4kids.ui.fragment.FragmentFamilyDetail;
 import com.mycity4kids.ui.fragment.FragmentFamilyProfile;
 import com.mycity4kids.ui.fragment.FragmentHomeCategory;
@@ -590,6 +591,16 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     findViewById(R.id.month_popup).setVisibility(View.GONE);
                     findViewById(R.id.task_popup).setVisibility(View.GONE);
                     setTitle("Blogs");
+
+                } else if (currentFrag instanceof FragmentEditorsPick) {
+
+                    changeVisibiltyOfArrow(false);
+                    mDrawerToggle.setDrawerIndicatorEnabled(true);
+                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                    mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_UNLOCKED);
+                    findViewById(R.id.month_popup).setVisibility(View.GONE);
+                    findViewById(R.id.task_popup).setVisibility(View.GONE);
+                    setTitle("Editors Pick");
 
                 } else if (currentFrag instanceof SendFeedbackFragment) {
 
