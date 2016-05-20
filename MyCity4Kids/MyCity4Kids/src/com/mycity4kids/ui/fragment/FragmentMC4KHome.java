@@ -91,7 +91,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     TableAppointmentData tableAppointment;
     ArrayList<AppointmentMappingModel> appointmentListData;
     AdapterHomeAppointment adapterHomeAppointment;
-    TextView goToCal, current, goToBlogs;
+    TextView goToCal, current, goToBlogs,txtBlogs1;
     ImageView imgGoToCal, imgGoToEvents, imgGoToBlogs;
     ImageView addAppointment;
     java.sql.Timestamp firsttamp;
@@ -142,7 +142,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
 //        txtTodo = (TextView) view.findViewById(R.id.txtTodo);
         txtEvents = (TextView) view.findViewById(R.id.txtEvents);
         txtBlogs = (TextView) view.findViewById(R.id.txtBlogs);
-
+        txtBlogs1=(TextView)view.findViewById(R.id.txtBlogs1);
 
 //        addTask = (ImageView) view.findViewById(R.id.add_task);
         progressBar = (ProgressBar) view.findViewById(R.id.eventprogressbar);
@@ -154,7 +154,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         rltLoadingView = (RelativeLayout) view.findViewById(R.id.rltLoadingView);
         blogHeader1 = (LinearLayout) view.findViewById(R.id.blogHeader1);
 
-
+        txtBlogs1.setText("Best of "+SharedPrefUtils.getCurrentCityModel(getActivity()).toString());
 //        goToTask.setOnClickListener(this);
 //        addTask.setOnClickListener(this);
         goToCal.setOnClickListener(this);

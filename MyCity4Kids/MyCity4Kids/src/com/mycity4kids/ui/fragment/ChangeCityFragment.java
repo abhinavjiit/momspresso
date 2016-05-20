@@ -23,6 +23,7 @@ import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.asynctask.HeavyDbTask;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.controller.ConfigurationController;
@@ -117,6 +118,7 @@ public class ChangeCityFragment extends BaseFragment {
                     /**
                      * Save data into tables :-
                      */
+                    BaseApplication.setBusinessREsponse(null);
                     HeavyDbTask _heavyDbTask = new HeavyDbTask(getActivity(),
                             _configurationResponse, new OnUIView() {
 

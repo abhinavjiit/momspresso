@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.comscore.analytics.comScore;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
@@ -366,6 +367,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         findViewById(R.id.drafts).setOnClickListener(this);
         findViewById(R.id.bloggerDashboard).setOnClickListener(this);
         findViewById(R.id.txvSettings).setOnClickListener(this);
+        findViewById(R.id.txvMeetContributors).setOnClickListener(this);
         //  findViewById(R.id.txvHelp).setOnClickListener(this);
         findViewById(R.id.imgProfile).setOnClickListener(this);
         findViewById(R.id.txvUserName).setOnClickListener(this);
@@ -600,7 +602,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_UNLOCKED);
                     findViewById(R.id.month_popup).setVisibility(View.GONE);
                     findViewById(R.id.task_popup).setVisibility(View.GONE);
-                    setTitle("Editors Pick");
+                    setTitle("Best of "+SharedPrefUtils.getCurrentCityModel(DashboardActivity.this).toString());
 
                 } else if (currentFrag instanceof SendFeedbackFragment) {
 
@@ -833,7 +835,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
-
         updateImageProfile();
         final Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
         findViewById(R.id.month_popup).setVisibility(View.GONE);
@@ -1762,6 +1763,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 changeVisibiltyOfArrow(false);
                 setTitle("Settings");
                 replaceFragment(new FragmentSetting(), null, true);
+                break;
+            case R.id.txvMeetContributors:
+                Utils.pushEvent(DashboardActivity.this, GTMEventType.MEETCONTRIBUTORS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Left Menu Screen");
+                changeVisibiltyOfArrow(false);
+                replaceFragment(new ParentingBlogFragment(), null, true);
                 break;
 
            /* case R.id.txvHelp:

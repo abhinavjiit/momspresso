@@ -46,6 +46,13 @@ public enum  GTMEventType {
                     return "blogsClicked";
                 }
             },
+    MEETCONTRIBUTORS_CLICKED_EVENT
+            {
+                @Override
+                public String toString() {
+                    return "meetContributorsClicked";
+                }
+            },
     SETTINGS_CLICKED_EVENT
             {
                 @Override

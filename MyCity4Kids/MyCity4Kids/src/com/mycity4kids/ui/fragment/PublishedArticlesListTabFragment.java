@@ -114,7 +114,8 @@ public class PublishedArticlesListTabFragment extends BaseFragment {
 
                 boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
 
-                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && (nextPageNumber < 2 || nextPageNumber <= totalPageCount)) {
+                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning &&
+                        (nextPageNumber < 2 || nextPageNumber <= totalPageCount)) {
 
                     mLodingView.setVisibility(View.VISIBLE);
                     getAllPublishedArticles(nextPageNumber);

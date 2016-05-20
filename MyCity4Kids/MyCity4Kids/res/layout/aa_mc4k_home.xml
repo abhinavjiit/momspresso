@@ -49,7 +49,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:layout_weight=".15"
+                            android:layout_weight=".12"
                             android:src="@drawable/blog_listxxhdpi" />
 
                         <TextView
@@ -146,7 +146,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_weight=".15"
+                        android:layout_weight=".12"
                         android:src="@drawable/blog_listxxhdpi" />
 
                     <TextView
@@ -435,7 +435,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:layout_weight=".15"
+                            android:layout_weight=".13"
                             android:src="@drawable/zoom_list" />
 
                         <TextView

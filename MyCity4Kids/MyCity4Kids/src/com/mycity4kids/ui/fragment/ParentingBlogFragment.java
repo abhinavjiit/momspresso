@@ -233,7 +233,7 @@ public class ParentingBlogFragment extends BaseFragment implements View.OnClickL
             if (nextPageNumber == 0) {
                 parentingBlogAdapter.setListData(responseData.getResult().getData().getData());
             } else {
-                listingData = parentingBlogAdapter.getListData();
+               // listingData = parentingBlogAdapter.getListData();
                 listingData.addAll(responseData.getResult().getData().getData());
                 parentingBlogAdapter.setListData(listingData);
             }
