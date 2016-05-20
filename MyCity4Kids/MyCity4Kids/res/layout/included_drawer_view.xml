@@ -254,12 +254,13 @@
             android:text="SETTINGS"
             android:textColor="@color/white_color"
             android:textSize="12sp" />
+
         <TextView
             android:id="@+id/txvMeetContributors"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="17dp"
-            android:drawableLeft="@drawable/settings_new"
+            android:drawableLeft="@drawable/icon_contributor"
             android:drawablePadding="10dp"
             android:paddingBottom="5dp"
             android:paddingLeft="12dp"
@@ -272,8 +273,8 @@
             android:id="@+id/feed_back"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="17dp"
             android:layout_marginBottom="8dp"
+            android:layout_marginTop="17dp"
             android:drawableLeft="@drawable/feedback_xxhdpi"
             android:drawablePadding="10dp"
             android:paddingBottom="5dp"

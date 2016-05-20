@@ -35,6 +35,7 @@ public class SearchArticlesAndAuthorsActivity extends BaseActivity implements Vi
     private ImageView searchImageView;
     private EditText searchEditText;
     String searchParam;
+    int tabPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +45,7 @@ public class SearchArticlesAndAuthorsActivity extends BaseActivity implements Vi
         setContentView(R.layout.search_articles_authors_activity);
 
         searchParam = getIntent().getStringExtra(Constants.FILTER_NAME);
+        tabPosition = getIntent().getIntExtra(Constants.TAB_POSITION, 0);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -61,6 +63,7 @@ public class SearchArticlesAndAuthorsActivity extends BaseActivity implements Vi
         mViewPager.setAdapter(tabsPagerAdapter);
         mViewPager.setOffscreenPageLimit(4);
         mSlidingTabLayout.setupWithViewPager(mViewPager);
+        mViewPager.setCurrentItem(tabPosition);
 
         searchEditText.setText(searchParam);
         searchImageView.setOnClickListener(this);
