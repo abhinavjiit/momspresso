@@ -1124,6 +1124,13 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 //                    ((FragmentBusinesslistEvents) topFragment).toggleFilter();
                     Intent intent = new Intent(getApplicationContext(), SearchArticlesAndAuthorsActivity.class);
                     intent.putExtra(Constants.FILTER_NAME, "");
+                    intent.putExtra(Constants.TAB_POSITION, 0);
+                    startActivity(intent);
+                } else if (topFragment instanceof ParentingBlogFragment) {
+//                    ((FragmentBusinesslistEvents) topFragment).toggleFilter();
+                    Intent intent = new Intent(getApplicationContext(), SearchArticlesAndAuthorsActivity.class);
+                    intent.putExtra(Constants.FILTER_NAME, "");
+                    intent.putExtra(Constants.TAB_POSITION, 1);
                     startActivity(intent);
                 }
                 break;

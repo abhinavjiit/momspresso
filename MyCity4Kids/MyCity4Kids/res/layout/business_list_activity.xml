@@ -120,7 +120,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/searchline1"
         android:background="@color/white_color"
-        android:visibility="gone"></ListView>
+        android:visibility="gone" />
 
     <ListView
         android:id="@+id/eventListView"
@@ -128,9 +128,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/searchline1"
         android:layout_marginTop="1.5dp"
-        android:background="#ffffff"
+        android:background="@color/grey_light"
         android:cacheColorHint="@color/transparent"
-        android:visibility="visible" />
+        android:divider="@color/transparent"
+        android:drawSelectorOnTop="true" />
 
     <TabHost
         android:id="@android:id/tabhost"

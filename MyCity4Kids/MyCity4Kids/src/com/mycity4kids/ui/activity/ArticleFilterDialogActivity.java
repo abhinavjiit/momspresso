@@ -118,15 +118,10 @@ public class ArticleFilterDialogActivity extends BaseActivity implements View.On
             public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i1, long l) {
 
                 ArticleFilterListModel.SubFilerList selectedItem = (ArticleFilterListModel.SubFilerList) articleFilterExpendableAdaper.getChild(i, i1);
-//
-//                Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
-//                intent.putExtra(Constants.FILTER_NAME, selectedItem.getName());
-//                intent.putExtra(Constants.RESET_FILTER, false);
-//                setResult(RESULT_OK, intent);
                 Intent intent = new Intent(getApplicationContext(), SearchArticlesAndAuthorsActivity.class);
                 intent.putExtra(Constants.FILTER_NAME, selectedItem.getName());
+                intent.putExtra(Constants.TAB_POSITION, 0);
                 startActivity(intent);
-//                finish();
                 return false;
             }
         });
@@ -144,6 +139,7 @@ public class ArticleFilterDialogActivity extends BaseActivity implements View.On
                     if (model.getSubcategory() == null || model.getSubcategory().size() == 0) {
                         Intent searchIntent = new Intent(getApplicationContext(), SearchArticlesAndAuthorsActivity.class);
                         searchIntent.putExtra(Constants.FILTER_NAME, model.getName());
+                        searchIntent.putExtra(Constants.TAB_POSITION, 1);
                         startActivity(searchIntent);
                     } else {
 
