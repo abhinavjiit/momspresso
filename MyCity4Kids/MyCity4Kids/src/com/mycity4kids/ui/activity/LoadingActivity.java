@@ -18,10 +18,13 @@ import com.mycity4kids.controller.ConfigurationController;
 import com.mycity4kids.controller.ControllerCityByPincode;
 import com.mycity4kids.interfaces.OnUIView;
 import com.mycity4kids.models.VersionApiModel;
+import com.mycity4kids.models.city.City;
 import com.mycity4kids.models.city.MetroCity;
 import com.mycity4kids.models.configuration.ConfigurationApiModel;
 import com.mycity4kids.newmodels.parentingmodel.CityByPinCodeModel;
 import com.mycity4kids.preference.SharedPrefUtils;
+
+import java.util.ArrayList;
 
 /**
  * Created by kapil.vij on 13-08-2015.
@@ -32,7 +35,7 @@ public class LoadingActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-       setContentView(R.layout.fetch_pincode_config);
+        setContentView(R.layout.fetch_pincode_config);
 
         if (!ConnectivityUtils.isNetworkEnabled(LoadingActivity.this) || SharedPrefUtils.getpinCode(this).equals("")) {
             navigateToDashboard();
@@ -59,7 +62,38 @@ public class LoadingActivity extends BaseActivity {
                 if (cityByPinCodeModel.getResponseCode() == 200) {
                     MetroCity model = new MetroCity();
                     model.setId(cityByPinCodeModel.getResult().getData().getCity_id());
-                    model.setName("");
+                    switch (cityByPinCodeModel.getResult().getData().getCity_id()) {
+                        case 1:
+                            model.setName("Delhi-Ncr");
+                            break;
+                        case 2:
+                            model.setName("Bangalore");
+                            break;
+                        case 3:
+                            model.setName("Mumbai");
+                            break;
+                        case 4:
+                            model.setName("Pune");
+                            break;
+                        case 5:
+                            model.setName("Hyderabad");
+                            break;
+                        case 6:
+                            model.setName("Chennai");
+                            break;
+                        case 7:
+                            model.setName("Kolkata");
+                            break;
+                        case 8:
+                            model.setName("Jaipur");
+                            break;
+                        case 9:
+                            model.setName("Ahmedabad");
+                            break;
+                        default:
+                            model.setName("Delhi-Ncr");
+                            break;
+                    }
 
                     int lastCityIdUsed = SharedPrefUtils.getCurrentCityModel(this).getId();
                     SharedPrefUtils.setCurrentCityModel(this, model);

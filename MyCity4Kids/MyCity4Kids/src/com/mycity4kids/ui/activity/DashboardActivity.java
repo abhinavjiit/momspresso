@@ -602,7 +602,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_UNLOCKED);
                     findViewById(R.id.month_popup).setVisibility(View.GONE);
                     findViewById(R.id.task_popup).setVisibility(View.GONE);
-                    setTitle("Best of "+SharedPrefUtils.getCurrentCityModel(DashboardActivity.this).toString());
+                    setTitle("Best of "+SharedPrefUtils.getCurrentCityModel(DashboardActivity.this).getName());
 
                 } else if (currentFrag instanceof SendFeedbackFragment) {
 

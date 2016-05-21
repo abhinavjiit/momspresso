@@ -513,7 +513,12 @@ public class BlogDetailActivity extends BaseActivity implements View.OnClickList
         bloggerName.setText(blogDetails.getFirst_name() + " " + blogDetails.getLast_name());
         bloggerName.setTextColor(Color.WHITE);
         bloggerTitle.setText(blogDetails.getBlog_title());
-        mTitleView.setText(blogDetails.getBlog_title() + "");
+        if (null == blogDetails.getBlog_title()) {
+            mTitleView.setText("Editorial");
+        } else {
+            mTitleView.setText(blogDetails.getBlog_title() + "");
+        }
+
 
         if (!StringUtils.isNullOrEmpty(blogDetails.getProfile_image())) {
             Picasso.with(this).load(blogDetails.getProfile_image()).resize((int) (90 * density), (int) (100 * density)).centerCrop().into(bloggerImage);
