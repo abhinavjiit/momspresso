@@ -153,8 +153,43 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         blogListView = (HorizontalScrollView) view.findViewById(R.id.bloglist);
         rltLoadingView = (RelativeLayout) view.findViewById(R.id.rltLoadingView);
         blogHeader1 = (LinearLayout) view.findViewById(R.id.blogHeader1);
+if (SharedPrefUtils.getCurrentCityModel(getActivity()).getName().isEmpty())
+{
+    switch (SharedPrefUtils.getCurrentCityModel(getActivity()).getId()) {
+        case 1:
+            txtBlogs1.setText("Best of " +"Delhi-Ncr");
+            break;
+        case 2:
+            txtBlogs1.setText("Best of " +"Bangalore");
+            break;
+        case 3:
+            txtBlogs1.setText("Best of " +"Mumbai");
+            break;
+        case 4:
+            txtBlogs1.setText("Best of " +"Pune");
+            break;
+        case 5:
+            txtBlogs1.setText("Best of " +"Hyderabad");
+            break;
+        case 6:
+            txtBlogs1.setText("Best of " +"Chennai");
+            break;
+        case 7:
+            txtBlogs1.setText("Best of " +"Kolkata");
+            break;
+        case 8:
+            txtBlogs1.setText("Best of " +"Jaipur");
+            break;
+        case 9:
+            txtBlogs1.setText("Best of " +"Ahmedabad");
+            break;
+        default:
+            txtBlogs1.setText("Best of " +"Delhi-Ncr");
+            break;
+    }
 
-        txtBlogs1.setText("Best of " + SharedPrefUtils.getCurrentCityModel(getActivity()).getName());
+} else {
+        txtBlogs1.setText("Best of " + SharedPrefUtils.getCurrentCityModel(getActivity()).getName());}
 //        goToTask.setOnClickListener(this);
 //        addTask.setOnClickListener(this);
         goToCal.setOnClickListener(this);

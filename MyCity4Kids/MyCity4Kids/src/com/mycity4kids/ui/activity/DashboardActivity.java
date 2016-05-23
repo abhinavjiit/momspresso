@@ -602,7 +602,44 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_UNLOCKED);
                     findViewById(R.id.month_popup).setVisibility(View.GONE);
                     findViewById(R.id.task_popup).setVisibility(View.GONE);
-                    setTitle("Best of "+SharedPrefUtils.getCurrentCityModel(DashboardActivity.this).getName());
+                    if (SharedPrefUtils.getCurrentCityModel(DashboardActivity.this).getName().isEmpty())
+                    {
+                        switch (SharedPrefUtils.getCurrentCityModel(DashboardActivity.this).getId()) {
+                            case 1:
+                                setTitle("Best of " +"Delhi-Ncr");
+                                break;
+                            case 2:
+                                setTitle("Best of " +"Bangalore");
+                                break;
+                            case 3:
+                                setTitle("Best of " +"Mumbai");
+                                break;
+                            case 4:
+                                setTitle("Best of " +"Pune");
+                                break;
+                            case 5:
+                                setTitle("Best of " +"Hyderabad");
+                                break;
+                            case 6:
+                                setTitle("Best of " +"Chennai");
+                                break;
+                            case 7:
+                                setTitle("Best of " +"Kolkata");
+                                break;
+                            case 8:
+                                setTitle("Best of " +"Jaipur");
+                                break;
+                            case 9:
+                                setTitle("Best of " +"Ahmedabad");
+                                break;
+                            default:
+                                setTitle("Best of " +"Delhi-Ncr");
+                                break;
+                        }
+
+                    } else {
+                        setTitle("Best of "+SharedPrefUtils.getCurrentCityModel(DashboardActivity.this).getName());}
+
 
                 } else if (currentFrag instanceof SendFeedbackFragment) {
 
