@@ -197,6 +197,24 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         t.send(new HitBuilders.ScreenViewBuilder().build());
         onNewIntent(getIntent());
         Intent intent = getIntent();
+        Bundle notificationExtras=intent.getParcelableExtra("notificationExtras");
+        if (notificationExtras!=null)
+        {
+            if (notificationExtras.getString("type").equalsIgnoreCase("article"))
+            {
+                String articleId=notificationExtras.getString("articleId");
+                Intent intent1=new Intent(DashboardActivity.this, ArticlesAndBlogsDetailsActivity.class);
+                intent1.putExtra("article_id",articleId);
+                intent1.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.ARTICLES);
+                intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent1);
+                finish();
+            }
+            else if (notificationExtras.getString("type").equalsIgnoreCase("event"))
+            {
+
+            }
+        }
         Bundle extras = intent.getExtras();
         String fragmentToLoad = "";
         if (null != extras)
@@ -249,7 +267,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         setSupportActionBar(mToolbar);
 
 //        if (!SharedPrefUtils.getPushTokenUpdateToServer(DashboardActivity.this)) {
-        GCMUtil.initializeGCM(DashboardActivity.this);
+      //  GCMUtil.initializeGCM(DashboardActivity.this);
 //        }
 
 //        set task list

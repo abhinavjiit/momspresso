@@ -508,7 +508,7 @@ if (SharedPrefUtils.getCurrentCityModel(getActivity()).getName().isEmpty())
                     BaseApplication.setBlogResponse(mArticleDataListing);
                     //  articlesListingAdapter.setNewListData(mArticleDataListing);
                     // articlesListingAdapter.notifyDataSetChanged();
-                    for (int i = 0; i < 5; i++) {
+                    for (int i = 0; i < mArticleDataListing.size(); i++) {
                         final View view = mInflator.inflate(R.layout.card_item_article_dashboard, null);
                         view.setTag(i);
                         ImageView articleImage = (ImageView) view.findViewById(R.id.imvAuthorThumb);
@@ -626,7 +626,7 @@ if (SharedPrefUtils.getCurrentCityModel(getActivity()).getName().isEmpty())
                     BaseApplication.setBlogResponse(mArticleDataListing1);
                     //  articlesListingAdapter.setNewListData(mArticleDataListing1);
                     // articlesListingAdapter.notifyDataSetChanged();
-                    for (int i = 0; i < 5; i++) {
+                    for (int i = 0; i < mArticleDataListing1.size(); i++) {
                         final View view1 = mInflator.inflate(R.layout.card_item_article_dashboard, null);
                         view1.setTag(i);
                         ImageView articleImage = (ImageView) view1.findViewById(R.id.imvAuthorThumb);
