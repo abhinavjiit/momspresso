@@ -3,7 +3,10 @@ package org.wordpress.android.editor;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
+import android.text.InputType;
 import android.util.AttributeSet;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputConnection;
 
 public class EditorWebView extends EditorWebViewAbstract {
 
@@ -20,4 +23,20 @@ public class EditorWebView extends EditorWebViewAbstract {
         }
     }
 
+    // Disable/Filter Keyboard inputs
+//    @Override
+//    public InputConnection onCreateInputConnection(EditorInfo attrs) {
+//        InputConnection inputConnection = super.onCreateInputConnection(attrs);
+//
+//        if ((attrs.inputType & InputType.TYPE_CLASS_TEXT) == InputType.TYPE_CLASS_TEXT) {
+//            attrs.inputType |= InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS;
+//            attrs.inputType &= ~InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE;
+//            attrs.inputType &= ~InputType.TYPE_TEXT_FLAG_AUTO_CORRECT;
+//
+//            attrs.inputType &= ~EditorInfo.TYPE_MASK_VARIATION;
+//            attrs.inputType |= InputType.TYPE_TEXT_VARIATION_PASSWORD;
+//        }
+//
+//        return inputConnection;
+//    }
 }

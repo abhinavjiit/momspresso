@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -380,7 +381,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
                 "" + 2,
                 draftObject.getModeration_status() + "",
                 draftObject.getNode_id() + "");
-        Log.e("Publish Request",draftObject.getBody());
+        Log.e("Publish Request", draftObject.getBody());
 
         //asynchronous call
         call.enqueue(new Callback<ParentingDetailResponse>() {
@@ -391,7 +392,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
                              ParentingDetailResponse responseModel = (ParentingDetailResponse) response.body();
 
                              removeProgressDialog();
-                             if (responseModel.getResponseCode() != 200) {
+                             if (null == responseModel || responseModel.getResponseCode() != 200) {
                                  showToast(getString(R.string.toast_response_error));
                                  return;
                              } else {
@@ -425,7 +426,8 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
 
                          @Override
                          public void onFailure(Call<ParentingDetailResponse> call, Throwable t) {
-
+                             Crashlytics.logException(t);
+                             Log.d("Exception", Log.getStackTraceString(t));
                          }
                      }
         );
@@ -514,7 +516,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
         originalImage.compress(Bitmap.CompressFormat.PNG, 75, bao);
         byte[] ba = bao.toByteArray();
         String imageString = Base64.encodeToString(ba, Base64.DEFAULT);
-        Retrofit retrofit  = new Retrofit.Builder()
+        Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(AppConstants.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();

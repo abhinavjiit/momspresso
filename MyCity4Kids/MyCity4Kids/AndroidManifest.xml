@@ -445,9 +445,6 @@
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".ui.activity.NewLoginActivity"
-            android:label="@string/title_activity_new_login" />
-        <activity
             android:name=".editor.EditorPostActivity"
             android:screenOrientation="portrait"
             android:theme="@style/EditorTheme" />
@@ -484,6 +481,10 @@
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.activity.TopicsFilterActivity"
+            android:screenOrientation="portrait" />
 
         <receiver
             android:name="com.mycity4kids.reminders.BootCompleteReceiver"

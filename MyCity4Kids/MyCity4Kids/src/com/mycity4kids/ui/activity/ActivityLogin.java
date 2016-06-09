@@ -73,6 +73,8 @@ import java.util.ArrayList;
  */
 public class ActivityLogin extends BaseActivity implements View.OnClickListener, IPlusClient, IFacebookUser {
 
+    public static final int RECOVERABLE_REQUEST_CODE = 98;
+
     private GooglePlusUtils mGooglePlusUtils;
     private CustomFontEditText mEmailId, mPassword;
     CustomFontTextView signinTextView;
@@ -150,6 +152,26 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                 removeProgressDialog();
             }
 
+        } else if (_requestCode == RECOVERABLE_REQUEST_CODE) {
+            removeProgressDialog();
+
+            Bundle extra = _data.getExtras();
+            googleToken = extra.getString("authtoken");
+
+            if (StringUtils.isNullOrEmpty(googleToken))
+                return;
+
+            UserRequest _userModel = new UserRequest();
+            _userModel.setEmailId(googleEmailId);
+            _userModel.setProfileId(userId);
+            _userModel.setNetworkName("google");
+            _userModel.setFirstName(currentPersonName);
+            _userModel.setLastName("");
+            _userModel.setAccessToken(googleToken);
+
+            Log.i("onActivityResult data", new Gson().toJson(_userModel).toString());
+            final LoginController _controller = new LoginController(ActivityLogin.this, ActivityLogin.this);
+            _controller.getData(AppConstants.NEW_LOGIN_REQUEST, _userModel);
         } else {
             if (_resultCode == 0) {
                 removeProgressDialog();
@@ -385,6 +407,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                 userId = currentPerson.getId();
                 googleEmailId = Plus.AccountApi.getAccountName(plusClient);
                 personPhotoUrl = currentPerson.getImage().getUrl();
+
                 personPhotoUrl = personPhotoUrl.substring(0, personPhotoUrl.lastIndexOf("?"));
 
                 if (StringUtils.isNullOrEmpty(googleEmailId)) {
@@ -631,7 +654,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
             } catch (UserRecoverableAuthException userAuthEx) {
                 userAuthEx.printStackTrace();
                 Log.d("UserRecoverableAuthException", userAuthEx.toString());
-                startActivityForResult(userAuthEx.getIntent(), 98);
+                startActivityForResult(userAuthEx.getIntent(), RECOVERABLE_REQUEST_CODE);
                 // Start the user recoverable action using the intent returned by
             } catch (Exception e) {
                 e.printStackTrace();

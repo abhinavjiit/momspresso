@@ -35,7 +35,7 @@ public class PublishedArticlesListAdapter extends BaseAdapter {
         TextView txvViewCount;
         TextView txvPublishDate;
         ImageView imvAuthorThumb;
-        View  popupButton;
+        View popupButton;
     }
 
     public PublishedArticlesListAdapter(Context context, BtnClickListener listener) {
@@ -56,10 +56,9 @@ public class PublishedArticlesListAdapter extends BaseAdapter {
             holder.txvPublishDate = (TextView) view.findViewById(R.id.txvPublishDate);
             holder.imvAuthorThumb = (ImageView) view.findViewById(R.id.imvAuthorThumb);
             holder.txvViewCount = (TextView) view.findViewById(R.id.txvViewCount);
-             holder.popupButton = view.findViewById(R.id.img_menu);
+            holder.popupButton = view.findViewById(R.id.img_menu);
             holder.popupButton.setTag(getItem(position));
-            if (Build.VERSION.SDK_INT==15)
-            {
+            if (Build.VERSION.SDK_INT == 15) {
                 holder.popupButton.setVisibility(View.GONE);
             }
             //    popupButton.setOnClickListener((DraftListViewActivity)context);
@@ -131,8 +130,7 @@ public class PublishedArticlesListAdapter extends BaseAdapter {
         return position;
     }
 
-    public interface BtnClickListener
-    {
+    public interface BtnClickListener {
         void onBtnClick(int position);
     }
 }
