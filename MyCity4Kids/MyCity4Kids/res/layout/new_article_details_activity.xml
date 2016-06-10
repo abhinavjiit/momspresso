@@ -128,7 +128,7 @@
                 android:padding="10dp"
                 android:text="FOLLOW"
                 android:textColor="@color/blog.comments.follow_reply_btn"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
 
             <WebView
                 android:id="@+id/articleWebView"
@@ -142,11 +142,111 @@
                 android:fontFamily="sans-serif-light"
                 android:minHeight="1000dp" />
 
+            <LinearLayout
+                android:id="@+id/recentAuthorArticles"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/articleWebView"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/recentAuthorArticleHeading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Recent Blogs from Author:"
+                    android:textSize="14sp"
+                    android:textColor="@color/black_color"/>
+
+                <TextView
+                    android:id="@+id/recentAuthorArticle1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:padding="3dp"
+                    android:text="Recent Articles from Author"
+                    android:textColor="@color/new_blue"
+                    android:singleLine="true"/>
+
+                <TextView
+                    android:id="@+id/recentAuthorArticle2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:padding="3dp"
+                    android:text="Recent Articles from Author"
+                    android:textColor="@color/new_blue"
+                    android:singleLine="true"/>
+
+                <TextView
+                    android:id="@+id/recentAuthorArticle3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:padding="3dp"
+                    android:text="Recent Articles from Author"
+                    android:textColor="@color/new_blue"
+                    android:singleLine="true"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/trendingArticles"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/recentAuthorArticles"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="5dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/trendingArticlesHeading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Trending Blogs:"
+                    android:textSize="14sp"
+                    android:textColor="@color/black_color"
+                    />
+
+                <TextView
+                    android:id="@+id/trendingArticle1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:padding="3dp"
+                    android:text="Recent Articles from Author"
+                    android:textColor="@color/new_blue"
+                    android:singleLine="true"/>
+
+                <TextView
+                    android:id="@+id/trendingArticle2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:padding="3dp"
+                    android:text="Recent Articles from Author"
+                    android:textColor="@color/new_blue"
+                    android:singleLine="true"/>
+
+                <TextView
+                    android:id="@+id/trendingArticle3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:padding="3dp"
+                    android:text="Recent Articles from Author"
+                    android:textColor="@color/new_blue"
+                    android:singleLine="true"/>
+            </LinearLayout>
+
             <Button
                 android:id="@+id/share_spouse"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/articleWebView"
+                android:layout_below="@+id/trendingArticles"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="5dp"

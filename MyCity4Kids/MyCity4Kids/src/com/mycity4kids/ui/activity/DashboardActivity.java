@@ -606,7 +606,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     {
                         switch (SharedPrefUtils.getCurrentCityModel(DashboardActivity.this).getId()) {
                             case 1:
-                                setTitle("Best of " +"Delhi-Ncr");
+                                setTitle("Best of " +"Delhi-NCR");
                                 break;
                             case 2:
                                 setTitle("Best of " +"Bangalore");
@@ -633,7 +633,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 setTitle("Best of " +"Ahmedabad");
                                 break;
                             default:
-                                setTitle("Best of " +"Delhi-Ncr");
+                                setTitle("Best of " +"Delhi-NCR");
                                 break;
                         }
 

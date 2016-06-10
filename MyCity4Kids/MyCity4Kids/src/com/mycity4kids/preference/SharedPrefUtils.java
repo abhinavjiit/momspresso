@@ -230,7 +230,7 @@ public class SharedPrefUtils {
         SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         MetroCity city = new MetroCity();
         city.setId(_sharedPref.getInt(SELECTED_CITY_ID, 1));
-        city.setName(_sharedPref.getString(SELECTED_CITY_NAME, "Delhi-Ncr"));
+        city.setName(_sharedPref.getString(SELECTED_CITY_NAME, "Delhi-NCR"));
         return city;
     }
 

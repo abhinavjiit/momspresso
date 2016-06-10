@@ -156,7 +156,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         if (SharedPrefUtils.getCurrentCityModel(getActivity()).getName().isEmpty()) {
             switch (SharedPrefUtils.getCurrentCityModel(getActivity()).getId()) {
                 case 1:
-                    txtBlogs1.setText("Best of " + "Delhi-Ncr");
+                    txtBlogs1.setText("Best of " + "Delhi-NCR");
                     break;
                 case 2:
                     txtBlogs1.setText("Best of " + "Bangalore");
@@ -183,7 +183,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                     txtBlogs1.setText("Best of " + "Ahmedabad");
                     break;
                 default:
-                    txtBlogs1.setText("Best of " + "Delhi-Ncr");
+                    txtBlogs1.setText("Best of " + "Delhi-NCR");
                     break;
             }
 

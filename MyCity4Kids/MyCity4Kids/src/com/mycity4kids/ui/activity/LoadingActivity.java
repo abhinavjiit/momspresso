@@ -64,7 +64,7 @@ public class LoadingActivity extends BaseActivity {
                     model.setId(cityByPinCodeModel.getResult().getData().getCity_id());
                     switch (cityByPinCodeModel.getResult().getData().getCity_id()) {
                         case 1:
-                            model.setName("Delhi-Ncr");
+                            model.setName("Delhi-NCR");
                             break;
                         case 2:
                             model.setName("Bangalore");
@@ -91,7 +91,7 @@ public class LoadingActivity extends BaseActivity {
                             model.setName("Ahmedabad");
                             break;
                         default:
-                            model.setName("Delhi-Ncr");
+                            model.setName("Delhi-NCR");
                             break;
                     }
 
