@@ -79,6 +79,57 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
     BaseApplication baseApplication;
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.article_image_tag_publish);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        publish = (Button) findViewById(R.id.publish);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Publish Blog");
+        articleImage = (ImageView) findViewById(R.id.articleImage);
+        UserTable userTable = new UserTable((BaseApplication) this.getApplication());
+        userModel = userTable.getAllUserData();
+        baseApplication = (BaseApplication) getApplication();
+        Utils.pushOpenScreenEvent(ArticleImageTagUploadActivity.this, "Article Image Upload", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+        if ((getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList"))) {
+            String thumbnailUrl = getIntent().getStringExtra("imageUrl");
+            articleId = getIntent().getStringExtra("articleId");
+            if (thumbnailUrl != null) {
+                Picasso.with(this).load(thumbnailUrl).into(articleImage);
+                String[] seperated = thumbnailUrl.split("/");
+                if (seperated.length != 0) {
+                    url = seperated[seperated.length - 1];
+                    Log.e("url", url);
+                }
+            }
+
+        }
+        articleImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                startActivityForResult(intent, ADD_MEDIA_ACTIVITY_REQUEST_CODE);
+            }
+        });
+        publish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.pushEvent(ArticleImageTagUploadActivity.this, GTMEventType.PUBLISH_ARTICLE_BUTTON_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(ArticleImageTagUploadActivity.this).getId() + "", "Article Image Upload");
+                pref = getSharedPreferences(COMMON_PREF_FILE, MODE_PRIVATE);
+                blogSetup = pref.getBoolean("blogSetup", false);
+                Log.e("blogsetup", blogSetup + "");
+                if (blogSetup == false) {
+                    getBlogPage();
+                } else {
+                    publishArticleRequest();
+                }
+            }
+        });
+    }
+
+    @Override
     protected void updateUi(Response response) {
         switch (response.getDataType()) {
 
@@ -215,58 +266,6 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
                 break;
 
         }
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.article_image_tag_publish);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        publish = (Button) findViewById(R.id.publish);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Publish Blog");
-        articleImage = (ImageView) findViewById(R.id.articleImage);
-        UserTable userTable = new UserTable((BaseApplication) this.getApplication());
-        userModel = userTable.getAllUserData();
-        baseApplication = (BaseApplication) getApplication();
-        Utils.pushOpenScreenEvent(ArticleImageTagUploadActivity.this, "Article Image Upload", SharedPrefUtils.getUserDetailModel(this).getId() + "");
-        if ((getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) || (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("draftList"))) {
-            String thumbnailUrl = getIntent().getStringExtra("imageUrl");
-            articleId = getIntent().getStringExtra("articleId");
-            if (thumbnailUrl != null) {
-                Picasso.with(this).load(thumbnailUrl).into(articleImage);
-                String[] seperated = thumbnailUrl.split("/");
-                if (seperated.length != 0) {
-                    url = seperated[seperated.length - 1];
-                    Log.e("url", url);
-                }
-            }
-
-        }
-        articleImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK);
-                intent.setType("image/*");
-                startActivityForResult(intent, ADD_MEDIA_ACTIVITY_REQUEST_CODE);
-            }
-        });
-        publish.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Utils.pushEvent(ArticleImageTagUploadActivity.this, GTMEventType.PUBLISH_ARTICLE_BUTTON_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(ArticleImageTagUploadActivity.this).getId() + "", "Article Image Upload");
-                pref = getSharedPreferences(COMMON_PREF_FILE, MODE_PRIVATE);
-                blogSetup = pref.getBoolean("blogSetup", false);
-                Log.e("blogsetup", blogSetup + "");
-                if (blogSetup == false) {
-                    getBlogPage();
-                } else {
-                    publishArticleRequest();
-
-                }
-            }
-        });
     }
 
     @Override

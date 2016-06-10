@@ -20,7 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class TopicsParentExpandableListAdapter extends BaseExpandableListAdapter {
+public class AddTopicsParentExpandableListAdapter extends BaseExpandableListAdapter {
 
     private Context context;
     ArrayList<Topics> topicList;
@@ -30,10 +30,10 @@ public class TopicsParentExpandableListAdapter extends BaseExpandableListAdapter
     private TopicsExpandableListView listViewCache[];
     private static final String LOG_TAG = "ParentExpandableAdapter";
 
-    public TopicsParentExpandableListAdapter(Context context,
-                                             ExpandableListView topExpList,
-                                             ArrayList<Topics> topicList,
-                                             HashMap<Topics, List<Topics>> map) {
+    public AddTopicsParentExpandableListAdapter(Context context,
+                                                ExpandableListView topExpList,
+                                                ArrayList<Topics> topicList,
+                                                HashMap<Topics, List<Topics>> map) {
         this.context = context;
         this.topExpList = topExpList;
         this.topicList = topicList;
@@ -58,7 +58,7 @@ public class TopicsParentExpandableListAdapter extends BaseExpandableListAdapter
         else {
             TopicsExpandableListView dev = new TopicsExpandableListView(context);
             dev.setRows(calculateRowCount(groupPosition, null));
-            TopicsChildExpandableListAdapter adapter = new TopicsChildExpandableListAdapter(context);
+            AddTopicsChildExpandableListAdapter adapter = new AddTopicsChildExpandableListAdapter(context);
             adapter.setTopicsData(createGroupList(groupPosition), createChildList(groupPosition));
             dev.setAdapter(adapter);
             dev.setOnGroupClickListener(new Level2GroupExpandListener(groupPosition));
@@ -207,7 +207,7 @@ public class TopicsParentExpandableListAdapter extends BaseExpandableListAdapter
         for (int i = 0; i < listViewCache.length; i++) {
             if (null != listViewCache[i]) {
                 HashMap<Topics, List<Topics>> selectedTopics =
-                        ((TopicsChildExpandableListAdapter) listViewCache[i].getExpandableListAdapter()).getUpdatedMap();
+                        ((AddTopicsChildExpandableListAdapter) listViewCache[i].getExpandableListAdapter()).getUpdatedMap();
                 Iterator it = selectedTopics.entrySet().iterator();
                 while (it.hasNext()) {
                     Map.Entry pair = (Map.Entry) it.next();
@@ -219,7 +219,7 @@ public class TopicsParentExpandableListAdapter extends BaseExpandableListAdapter
                         sb.append("," + ((Topics) pair.getKey()).getId());
                     }
                     //subcategories children
-                    for (int j = 1; j < tList.size(); j++) {
+                    for (int j = 0; j < tList.size(); j++) {
                         if (tList.get(j).isSelected()) {
                             System.out.println(tList.get(j).getTitle() + " = ");
                             sb.append("," + tList.get(j).getId());

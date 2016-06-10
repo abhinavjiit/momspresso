@@ -142,7 +142,7 @@ public class ArticleFilterDialogActivity extends BaseActivity implements View.On
 //                        searchIntent.putExtra(Constants.TAB_POSITION, 1);
 //                        startActivity(searchIntent);
 
-                        Intent searchIntent = new Intent(getApplicationContext(), TopicsFilterActivity.class);
+                        Intent searchIntent = new Intent(getApplicationContext(), AddArticleTopicsActivity.class);
                         searchIntent.putExtra(Constants.FILTER_NAME, model.getName());
                         searchIntent.putExtra(Constants.TAB_POSITION, 1);
                         startActivity(searchIntent);

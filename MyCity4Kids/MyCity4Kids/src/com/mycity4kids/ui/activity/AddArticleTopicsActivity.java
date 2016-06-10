@@ -1,7 +1,11 @@
 package com.mycity4kids.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
@@ -11,12 +15,15 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.editor.ArticleImageTagUploadActivity;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
+import com.mycity4kids.models.editor.ArticleDraftList;
 import com.mycity4kids.models.parentingstop.CommonParentingResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
-import com.mycity4kids.ui.adapter.TopicsParentExpandableListAdapter;
+import com.mycity4kids.ui.adapter.AddTopicsParentExpandableListAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,11 +33,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
-public class TopicsFilterActivity extends BaseActivity {
+public class AddArticleTopicsActivity extends BaseActivity {
 
     ExpandableListView parentExpandableListView;
     int pageNum;
-    private TopicsParentExpandableListAdapter topicsParentExpandableListAdapter;
+    private AddTopicsParentExpandableListAdapter topicsParentExpandableListAdapter;
+    private Toolbar mToolbar;
+    ArticleDraftList draftObject;
 
     /**
      * Called when the activity is first created.
@@ -38,80 +47,17 @@ public class TopicsFilterActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
+        Utils.pushOpenScreenEvent(AddArticleTopicsActivity.this, "Add Topics", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+        setContentView(R.layout.add_article_topics_activity);
 
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Topics");
 
-//        ArrayList<SubCategoryChild> companyHyundai = new ArrayList<>();
-//        companyHyundai.add(new SubCategoryChild("all", false));
-//        companyHyundai.add(new SubCategoryChild("verna", false));
-//        companyHyundai.add(new SubCategoryChild("city", false));
-//        companyHyundai.add(new SubCategoryChild("cruz", false));
-//
-//        ArrayList<SubCategoryChild> companyMaruti = new ArrayList<>();
-//        companyMaruti.add(new SubCategoryChild("all", false));
-//        companyMaruti.add(new SubCategoryChild("ciaz", false));
-//        companyMaruti.add(new SubCategoryChild("baleno", false));
-//        companyMaruti.add(new SubCategoryChild("breza", false));
-//        companyMaruti.add(new SubCategoryChild("800", false));
-//
-//        ArrayList<SubCategoryChild> companyNissan = new ArrayList<>();
-//        companyNissan.add(new SubCategoryChild("all", false));
-//        companyNissan.add(new SubCategoryChild("sunny", false));
-//        companyNissan.add(new SubCategoryChild("pulse", false));
-//        companyNissan.add(new SubCategoryChild("terrano", false));
-//
-//        ArrayList<SubCategoryChild> companyBajaj = new ArrayList<>();
-//        companyBajaj.add(new SubCategoryChild("all", false));
-//        companyBajaj.add(new SubCategoryChild("discover", false));
-//        companyBajaj.add(new SubCategoryChild("pulsar", false));
-//        companyBajaj.add(new SubCategoryChild("platina", false));
-//
-//        ArrayList<SubCategoryChild> companyHero = new ArrayList<>();
-//        companyHero.add(new SubCategoryChild("all", false));
-//        companyHero.add(new SubCategoryChild("splendor", false));
-//        companyHero.add(new SubCategoryChild("passion", false));
-//        companyHero.add(new SubCategoryChild("glamour", false));
-//
-//        ArrayList<String> vehicles = new ArrayList<>();
-//        vehicles.add("car");
-//        vehicles.add("bike");
-//
-//        SubCategories marutiCar = new SubCategories();
-//        marutiCar.setSubCategoryName("maruti");
-//        marutiCar.setSubCategoryChildren(companyMaruti);
-//
-//        SubCategories hyundaiCar = new SubCategories();
-//        hyundaiCar.setSubCategoryName("hyundai");
-//        hyundaiCar.setSubCategoryChildren(companyHyundai);
-//
-//        SubCategories nissanCar = new SubCategories();
-//        nissanCar.setSubCategoryName("nissan");
-//        nissanCar.setSubCategoryChildren(companyNissan);
-//
-//        SubCategories heroBike = new SubCategories();
-//        heroBike.setSubCategoryName("hero");
-//        heroBike.setSubCategoryChildren(companyHero);
-//
-//        SubCategories bajajBike = new SubCategories();
-//        bajajBike.setSubCategoryName("bajaj");
-//        bajajBike.setSubCategoryChildren(companyBajaj);
-//
-//
-//        ArrayList<SubCategories> typeCar = new ArrayList<>();
-//        typeCar.add(marutiCar);
-//        typeCar.add(hyundaiCar);
-//        typeCar.add(nissanCar);
-//
-//
-//        ArrayList<SubCategories> typeBike = new ArrayList<>();
-//        typeBike.add(heroBike);
-//        typeBike.add(bajajBike);
-//
-//        HashMap vehicleMap = new HashMap<String, List<SubCategories>>();
-//        vehicleMap.put(vehicles.get(0), typeCar);
-//        vehicleMap.put(vehicles.get(1), typeBike);
+        draftObject = (ArticleDraftList) getIntent().getSerializableExtra("draftItem");
 
-        setContentView(R.layout.topics_filter_activity);
-        TextView empty = (TextView) findViewById(R.id.empty);
+        TextView empty = (TextView) findViewById(R.id.done);
         parentExpandableListView = (ExpandableListView) findViewById(R.id.parentExpandableListView);
 
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
@@ -123,8 +69,12 @@ public class TopicsFilterActivity extends BaseActivity {
         empty.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Call<CommonParentingResponse> filterCall = topicsAPI.filterCategories(topicsParentExpandableListAdapter.getAllSelectedElements(), "category", pageNum);
-                filterCall.enqueue(getArticlesForSelectedCategories);
+//                Call<CommonParentingResponse> filterCall = topicsAPI.filterCategories(topicsParentExpandableListAdapter.getAllSelectedElements(), "category", pageNum);
+//                filterCall.enqueue(getArticlesForSelectedCategories);
+                Intent intent_1 = new Intent(AddArticleTopicsActivity.this, EditSelectedTopicsActivity.class);
+                intent_1.putExtra("draftItem", draftObject);
+                intent_1.putExtra("from", "editor");
+                startActivity(intent_1);
             }
         });
 
@@ -151,18 +101,18 @@ public class TopicsFilterActivity extends BaseActivity {
                     ArrayList<Topics> tempList = new ArrayList<>();
 
                     //add All option to select all sub-categories-childrens only if there are more then 0 child in a subcategory.
-                    if (responseData.getResult().getData().get(i).getChild().get(j).getChild().size() > 0)
-                        tempList.add(new Topics(-1, "all", false, new ArrayList<Topics>(), responseData.getResult().getData().get(i).getId(),
-                                responseData.getResult().getData().get(i).getTitle()));
+//                    if (responseData.getResult().getData().get(i).getChild().get(j).getChild().size() > 0)
+//                        tempList.add(new Topics(-1, "all", false, new ArrayList<Topics>(), responseData.getResult().getData().get(i).getId(),
+//                                responseData.getResult().getData().get(i).getTitle()));
 
                     //add All option to select all sub-categories only if there are more then 0 subcategories.
                     tempList.addAll(responseData.getResult().getData().get(i).getChild().get(j).getChild());
                     responseData.getResult().getData().get(i).getChild().get(j).setChild(tempList);
                 }
 
-                if (responseData.getResult().getData().get(i).getChild().size() > 0)
-                    tempUpList.add(new Topics(-1, "all", false, new ArrayList<Topics>(), responseData.getResult().getData().get(i).getId(),
-                            responseData.getResult().getData().get(i).getTitle()));
+//                if (responseData.getResult().getData().get(i).getChild().size() > 0)
+//                    tempUpList.add(new Topics(-1, "all", false, new ArrayList<Topics>(), responseData.getResult().getData().get(i).getId(),
+//                            responseData.getResult().getData().get(i).getTitle()));
 
                 tempUpList.addAll(responseData.getResult().getData().get(i).getChild());
                 topicList.add(responseData.getResult().getData().get(i));
@@ -170,8 +120,8 @@ public class TopicsFilterActivity extends BaseActivity {
                         tempUpList);
             }
             topicsParentExpandableListAdapter =
-                    new TopicsParentExpandableListAdapter(
-                            TopicsFilterActivity.this,
+                    new AddTopicsParentExpandableListAdapter(
+                            AddArticleTopicsActivity.this,
                             parentExpandableListView,
                             topicList, topicsMap
                     );
@@ -216,6 +166,23 @@ public class TopicsFilterActivity extends BaseActivity {
             Log.d("Exception", Log.getStackTraceString(t));
         }
     };
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        // according to fragment change it
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+        }
+        return true;
+    }
 
     @Override
     protected void updateUi(Response response) {

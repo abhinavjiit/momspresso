@@ -37,7 +37,7 @@
          android:name="com.mycity4kids.gcm.permission.C2D_MESSAGE"
          android:protectionLevel="signature" />-->
 
-  <!--  <uses-permission android:name="com.mycity4kids.gcm.permission.C2D_MESSAGE" />-->
+    <!--  <uses-permission android:name="com.mycity4kids.gcm.permission.C2D_MESSAGE" />-->
 
 
     !-- Maps API needs OpenGL ES 2.0. -->
@@ -486,6 +486,14 @@
             android:name=".ui.activity.TopicsFilterActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".ui.activity.AddArticleTopicsActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.activity.EditSelectedTopicsActivity"
+            android:screenOrientation="portrait" />
+
         <receiver
             android:name="com.mycity4kids.reminders.BootCompleteReceiver"
             android:enabled="true"
@@ -501,7 +509,7 @@
         <receiver android:name="com.mycity4kids.reminders.ShareNotificationReceiver" />
         <receiver android:name="com.mycity4kids.reminders.ShareArticleReceiver" />
 
-       <!-- <service android:name="com.mycity4kids.gcm.GcmIntentService" />-->
+        <!-- <service android:name="com.mycity4kids.gcm.GcmIntentService" />-->
         <service android:name="com.mycity4kids.sync.PushTokenService" />
         <service android:name="com.mycity4kids.sync.SyncService" />
         <service android:name="com.mycity4kids.sync.RemainderEmailService" />
@@ -533,29 +541,27 @@
             android:name="io.fabric.ApiKey"
             android:value="0955a2855f4c5641b7994b98f58aef7eadbf4cd5" />
 
-   <!--  FirebaseInstanceIdService performs security checks at runtime,
-          no need for explicit permissions despite exported="true"
-    <service android:name=".MyFirebaseInstanceIdService" android:exported="true">
-        <intent-filter>
-            <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
-        </intent-filter>
-    </service>-->
-    <!-- [START firebase_service] -->
-        <service
-            android:name=".fcm.MyFcmListenerService">
+        <!--  FirebaseInstanceIdService performs security checks at runtime,
+               no need for explicit permissions despite exported="true"
+         <service android:name=".MyFirebaseInstanceIdService" android:exported="true">
+             <intent-filter>
+                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+             </intent-filter>
+         </service>-->
+        <!-- [START firebase_service] -->
+        <service android:name=".fcm.MyFcmListenerService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-    <!-- [END firebase_service] -->
-    <!-- [START firebase_iid_service] -->
-    <service
-        android:name=".fcm.MyInstanceIDListenerService">
-        <intent-filter>
-            <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
-        </intent-filter>
-    </service>
-    <!-- [END firebase_iid_service] -->
+        <!-- [END firebase_service] -->
+        <!-- [START firebase_iid_service] -->
+        <service android:name=".fcm.MyInstanceIDListenerService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+        <!-- [END firebase_iid_service] -->
 
     </application>
 </manifest>

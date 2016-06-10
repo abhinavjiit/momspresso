@@ -4,15 +4,24 @@
     android:layout_height="fill_parent"
     android:orientation="vertical">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize" />
+
     <ExpandableListView
         android:id="@+id/parentExpandableListView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_above="@+id/empty"
+        android:layout_above="@+id/done"
+        android:layout_below="@+id/toolbar"
         android:groupIndicator="@null" />
 
     <TextView
-        android:id="@+id/empty"
+        android:id="@+id/done"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"

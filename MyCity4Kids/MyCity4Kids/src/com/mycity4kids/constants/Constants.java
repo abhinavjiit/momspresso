@@ -259,4 +259,7 @@ public class Constants {
 
     /*Kids Birthday Constants*/
     public static String KIDS_NAME = "kids_name";
+
+    /*Maximum tags allowed on a article*/
+    public static int MAX_ARTICLE_CATEGORIES = 8;
 }

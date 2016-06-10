@@ -32,6 +32,7 @@ import com.mycity4kids.models.user.UserModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
+import com.mycity4kids.ui.activity.AddArticleTopicsActivity;
 
 import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.editor.EditorMediaUploadListener;
@@ -94,66 +95,6 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     private Map<String, String> mFailedUploads;
     String title;
     String content;
-
-
-    @Override
-    protected void updateUi(Response response) {
-        switch (response.getDataType()) {
-
-            case AppConstants.ARTICLE_DRAFT_REQUEST: {
-             /*   if (response.getResponseObject() instanceof ParentingDetailResponse) {
-                    ParentingDetailResponse responseModel = (ParentingDetailResponse) response
-                            .getResponseObject();
-                    removeProgressDialog();
-
-                    if (responseModel.getResponseCode() != 200) {
-                        showToast(getString(R.string.toast_response_error));
-                        return;
-                    } else {
-                        if (!StringUtils.isNullOrEmpty(responseModel.getResult().getMessage())) {
-                            //  SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
-                            Log.i("Draft message", responseModel.getResult().getMessage());
-                        }
-                        draftId = responseModel.getResult().getData().getId() + "";
-
-                        //setProfileImage(originalImage);
-                        showToast("Draft Successfully saved");
-                        if (fromBackpress) {
-                            super.onBackPressed();
-                        }
-                        //  finish();
-                    }
-                }
-                break;*/
-            }
-            case AppConstants.IMAGE_EDITOR_UPLOAD_REQUEST: {
-               /* if (response.getResponseObject() instanceof CommonResponse) {
-                    CommonResponse responseModel = (CommonResponse) response
-                            .getResponseObject();
-                    if (responseModel.getResponseCode() != 200) {
-                        showToast(getString(R.string.toast_response_error));
-                        removeProgressDialog();
-                        return;
-                    } else {
-                        if (!StringUtils.isNullOrEmpty(responseModel.getResult().getMessage())) {
-                            //      SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
-                            Log.i("Uploaded Image URL", responseModel.getResult().getMessage());
-                        }
-                        mediaFile.setFileURL(responseModel.getResult().getMessage());
-
-                        ((EditorMediaUploadListener) mEditorFragment).onMediaUploadSucceeded(mediaId, mediaFile);
-                        removeProgressDialog();
-                        //setProfileImage(originalImage);
-                        //  showToast("You have successfully uploaded image.");
-                    }
-                }
-                break;*/
-            }
-
-        }
-
-    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -447,21 +388,45 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                     draftObject.setId(draftId);
                     draftObject.setNode_id(node_id);
                     draftObject.setModeration_status(moderation_status);
-                    Log.e("dtaftId", draftId + "");
-                    Log.e("publish", "clicked");
-                    Intent intent = new Intent(EditorPostActivity.this, ArticleImageTagUploadActivity.class);
-                    intent.putExtra("draftItem", draftObject);
+                    Log.d("dtaftId = ", draftId + "");
+
+//                    Intent intent = new Intent(EditorPostActivity.this, ArticleImageTagUploadActivity.class);
+//                    intent.putExtra("draftItem", draftObject);
                     if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) {
-                        intent.putExtra("imageUrl", thumbnailUrl);
-                        intent.putExtra("from", "publishedList");
-                        intent.putExtra("articleId", articleId);
-                    } else if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("draftList")) {
-                        intent.putExtra("imageUrl", path);
-                        intent.putExtra("from", "draftList");
-                    } else {
-                        intent.putExtra("from", "editor");
+                        Intent intent_1 = new Intent(EditorPostActivity.this, ArticleImageTagUploadActivity.class);
+                        intent_1.putExtra("draftItem", draftObject);
+                        intent_1.putExtra("imageUrl", thumbnailUrl);
+                        intent_1.putExtra("from", "publishedList");
+                        intent_1.putExtra("articleId", articleId);
+                        startActivity(intent_1);
                     }
-                    startActivity(intent);
+//                    else if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("draftList")) {
+//                        Intent intent_2 = new Intent(EditorPostActivity.this, ArticleImageTagUploadActivity.class);
+//                        intent_2.putExtra("draftItem", draftObject);
+//                        intent_2.putExtra("imageUrl", path);
+//                        intent_2.putExtra("from", "draftList");
+//                    }
+                    else {
+                        Intent intent_3 = new Intent(EditorPostActivity.this, AddArticleTopicsActivity.class);
+                        intent_3.putExtra("draftItem", draftObject);
+                        intent_3.putExtra("from", "editor");
+                        startActivity(intent_3);
+                    }
+//                    startActivity(intent);
+
+//                    Intent intent = new Intent(EditorPostActivity.this, ArticleImageTagUploadActivity.class);
+//                    intent.putExtra("draftItem", draftObject);
+//                    if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) {
+//                        intent.putExtra("imageUrl", thumbnailUrl);
+//                        intent.putExtra("from", "publishedList");
+//                        intent.putExtra("articleId", articleId);
+//                    } else if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("draftList")) {
+//                        intent.putExtra("imageUrl", path);
+//                        intent.putExtra("from", "draftList");
+//                    } else {
+//                        intent.putExtra("from", "editor");
+//                    }
+//                    startActivity(intent);
                 }
             }
             break;
@@ -667,7 +632,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
         originalImage.compress(Bitmap.CompressFormat.PNG, 75, bao);
         byte[] ba = bao.toByteArray();
         String imageString = Base64.encodeToString(ba, Base64.DEFAULT);
-        Retrofit retrofit  = new Retrofit.Builder()
+        Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(AppConstants.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
@@ -741,5 +706,61 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
         controller.getData(AppConstants.IMAGE_EDITOR_UPLOAD_REQUEST, requestData);*/
     }
 
+    @Override
+    protected void updateUi(Response response) {
+        switch (response.getDataType()) {
 
+            case AppConstants.ARTICLE_DRAFT_REQUEST: {
+             /*   if (response.getResponseObject() instanceof ParentingDetailResponse) {
+                    ParentingDetailResponse responseModel = (ParentingDetailResponse) response
+                            .getResponseObject();
+                    removeProgressDialog();
+
+                    if (responseModel.getResponseCode() != 200) {
+                        showToast(getString(R.string.toast_response_error));
+                        return;
+                    } else {
+                        if (!StringUtils.isNullOrEmpty(responseModel.getResult().getMessage())) {
+                            //  SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
+                            Log.i("Draft message", responseModel.getResult().getMessage());
+                        }
+                        draftId = responseModel.getResult().getData().getId() + "";
+
+                        //setProfileImage(originalImage);
+                        showToast("Draft Successfully saved");
+                        if (fromBackpress) {
+                            super.onBackPressed();
+                        }
+                        //  finish();
+                    }
+                }
+                break;*/
+            }
+            case AppConstants.IMAGE_EDITOR_UPLOAD_REQUEST: {
+               /* if (response.getResponseObject() instanceof CommonResponse) {
+                    CommonResponse responseModel = (CommonResponse) response
+                            .getResponseObject();
+                    if (responseModel.getResponseCode() != 200) {
+                        showToast(getString(R.string.toast_response_error));
+                        removeProgressDialog();
+                        return;
+                    } else {
+                        if (!StringUtils.isNullOrEmpty(responseModel.getResult().getMessage())) {
+                            //      SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
+                            Log.i("Uploaded Image URL", responseModel.getResult().getMessage());
+                        }
+                        mediaFile.setFileURL(responseModel.getResult().getMessage());
+
+                        ((EditorMediaUploadListener) mEditorFragment).onMediaUploadSucceeded(mediaId, mediaFile);
+                        removeProgressDialog();
+                        //setProfileImage(originalImage);
+                        //  showToast("You have successfully uploaded image.");
+                    }
+                }
+                break;*/
+            }
+
+        }
+
+    }
 }
