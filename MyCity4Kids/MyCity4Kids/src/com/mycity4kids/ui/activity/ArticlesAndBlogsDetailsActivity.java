@@ -138,7 +138,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     EditText commentText;
     ImageView commentBtn;
     TextView followClick;
-    TextView recentAuthorArticle1,recentAuthorArticle2,recentAuthorArticle3;
+    TextView recentAuthorArticleHeading,recentAuthorArticle1,recentAuthorArticle2,recentAuthorArticle3;
     LinearLayout trendingArticles,recentAuthorArticles;
     TextView trendingArticle1,trendingArticle2,trendingArticle3;
     Toolbar mToolbar;
@@ -148,7 +148,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     private TextView article_title;
     private TextView author_type;
     private String followAuthorId;
-    String authorType;
+    String authorType,author;
     private String blogName;
     private int bookmarkStatus;
 
@@ -203,6 +203,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             followClick.setOnClickListener(this);
             article_title = (TextView) findViewById(R.id.article_title);
             String coverImageUrl = getIntent().getStringExtra(Constants.ARTICLE_COVER_IMAGE);
+            recentAuthorArticleHeading=(TextView)findViewById(R.id.recentAuthorArticleHeading);
             recentAuthorArticle1=(TextView)findViewById(R.id.recentAuthorArticle1);
             recentAuthorArticle2=(TextView)findViewById(R.id.recentAuthorArticle2);
             recentAuthorArticle3=(TextView)findViewById(R.id.recentAuthorArticle3);
@@ -715,6 +716,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         imageList = detailData.getBody().getImage();
         blogName = detailData.getBlog_title();
         authorType = detailData.getAuthor_type();
+        author=detailData.getAuthor_name();
         if (StringUtils.isNullOrEmpty(blogName)) {
             blogName = "mycity4kids team";
         }
@@ -1344,6 +1346,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     {
 
                     } else {
+                        recentAuthorArticleHeading.setText("RECENT BLOGS FROM "+author);
                         // No results for search
                         if (dataList.size()>=3)
                         {  recentAuthorArticles.setVisibility(View.VISIBLE);

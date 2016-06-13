@@ -157,39 +157,40 @@
                     android:id="@+id/recentAuthorArticleHeading"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Recent Blogs from Author:"
+                    android:text="RECENT BLOGS FROM"
                     android:textSize="14sp"
-                    android:textColor="@color/black_color"/>
+                    android:textColor="@color/black_color"
+                    android:textAllCaps="true"/>
 
                 <TextView
                     android:id="@+id/recentAuthorArticle1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:padding="3dp"
                     android:text="Recent Articles from Author"
                     android:textColor="@color/new_blue"
-                    android:singleLine="true"/>
+                    android:singleLine="true"
+                    android:fontFamily="sans-serif-light"/>
 
                 <TextView
                     android:id="@+id/recentAuthorArticle2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:padding="3dp"
                     android:text="Recent Articles from Author"
                     android:textColor="@color/new_blue"
-                    android:singleLine="true"/>
+                    android:singleLine="true"
+                    android:fontFamily="sans-serif-light"/>
 
                 <TextView
                     android:id="@+id/recentAuthorArticle3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:padding="3dp"
                     android:text="Recent Articles from Author"
                     android:textColor="@color/new_blue"
-                    android:singleLine="true"/>
+                    android:singleLine="true"
+                    android:fontFamily="sans-serif-light"/>
             </LinearLayout>
 
             <LinearLayout
@@ -199,6 +200,7 @@
                 android:layout_below="@+id/recentAuthorArticles"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="5dp"
+                android:layout_marginTop="7dp"
                 android:orientation="vertical"
                 android:visibility="gone">
 
@@ -206,7 +208,7 @@
                     android:id="@+id/trendingArticlesHeading"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Trending Blogs:"
+                    android:text="TRENDING BLOGS"
                     android:textSize="14sp"
                     android:textColor="@color/black_color"
                     />
@@ -216,30 +218,31 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:padding="3dp"
                     android:text="Recent Articles from Author"
                     android:textColor="@color/new_blue"
-                    android:singleLine="true"/>
+                    android:singleLine="true"
+                    android:fontFamily="sans-serif-light"/>
 
                 <TextView
                     android:id="@+id/trendingArticle2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:padding="3dp"
                     android:text="Recent Articles from Author"
                     android:textColor="@color/new_blue"
-                    android:singleLine="true"/>
+                    android:singleLine="true"
+                    android:fontFamily="sans-serif-light"/>
 
                 <TextView
                     android:id="@+id/trendingArticle3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:padding="3dp"
                     android:text="Recent Articles from Author"
                     android:textColor="@color/new_blue"
-                    android:singleLine="true"/>
+                    android:singleLine="true"
+                    android:layout_marginBottom="2dp"
+                    android:fontFamily="sans-serif-light"/>
             </LinearLayout>
 
             <Button
