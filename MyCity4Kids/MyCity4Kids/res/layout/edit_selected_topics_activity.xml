@@ -1,8 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.apmem.tools.layouts.FlowLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rootView"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
 
+    <org.apmem.tools.layouts.FlowLayout
+        android:id="@+id/rootView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/nextButton">
 
-</org.apmem.tools.layouts.FlowLayout>
+    </org.apmem.tools.layouts.FlowLayout>
+
+    <TextView
+        android:id="@+id/emptyTopicsTextView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/home_green"
+        android:text="Please select atleast one Topics to continue"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/nextButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/articleImage"
+        android:layout_margin="10dp"
+        android:background="@color/primary"
+        android:text="PUBLISH" />
+</RelativeLayout>

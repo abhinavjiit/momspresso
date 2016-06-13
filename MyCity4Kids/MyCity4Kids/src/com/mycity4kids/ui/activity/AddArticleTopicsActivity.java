@@ -15,7 +15,6 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
-import com.mycity4kids.editor.ArticleImageTagUploadActivity;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
@@ -74,6 +73,7 @@ public class AddArticleTopicsActivity extends BaseActivity {
                 Intent intent_1 = new Intent(AddArticleTopicsActivity.this, EditSelectedTopicsActivity.class);
                 intent_1.putExtra("draftItem", draftObject);
                 intent_1.putExtra("from", "editor");
+                intent_1.putParcelableArrayListExtra("selectedTopics", topicsParentExpandableListAdapter.getAllSelectedElements());
                 startActivity(intent_1);
             }
         });
@@ -100,21 +100,27 @@ public class AddArticleTopicsActivity extends BaseActivity {
                 for (int j = 0; j < responseData.getResult().getData().get(i).getChild().size(); j++) {
                     ArrayList<Topics> tempList = new ArrayList<>();
 
-                    //add All option to select all sub-categories-childrens only if there are more then 0 child in a subcategory.
-//                    if (responseData.getResult().getData().get(i).getChild().get(j).getChild().size() > 0)
-//                        tempList.add(new Topics(-1, "all", false, new ArrayList<Topics>(), responseData.getResult().getData().get(i).getId(),
-//                                responseData.getResult().getData().get(i).getTitle()));
+//                    tempList.addAll(responseData.getResult().getData().get(i).getChild().get(j).getChild());
+                    for (int k = 0; k < responseData.getResult().getData().get(i).getChild().get(j).getChild().size(); k++) {
+                        responseData.getResult().getData().get(i).getChild().get(j).getChild().get(k)
+                                .setParentId(responseData.getResult().getData().get(i).getId());
+                        responseData.getResult().getData().get(i).getChild().get(j).getChild().get(k)
+                                .setParentName(responseData.getResult().getData().get(i).getTitle());
+                        tempList.add(responseData.getResult().getData().get(i).getChild().get(j).getChild().get(k));
+                    }
 
-                    //add All option to select all sub-categories only if there are more then 0 subcategories.
-                    tempList.addAll(responseData.getResult().getData().get(i).getChild().get(j).getChild());
                     responseData.getResult().getData().get(i).getChild().get(j).setChild(tempList);
                 }
 
-//                if (responseData.getResult().getData().get(i).getChild().size() > 0)
-//                    tempUpList.add(new Topics(-1, "all", false, new ArrayList<Topics>(), responseData.getResult().getData().get(i).getId(),
-//                            responseData.getResult().getData().get(i).getTitle()));
+//                tempUpList.addAll(responseData.getResult().getData().get(i).getChild());
+                for (int k = 0; k < responseData.getResult().getData().get(i).getChild().size(); k++) {
+                    responseData.getResult().getData().get(i).getChild().get(k)
+                            .setParentId(responseData.getResult().getData().get(i).getId());
+                    responseData.getResult().getData().get(i).getChild().get(k)
+                            .setParentName(responseData.getResult().getData().get(i).getTitle());
+                    tempUpList.add(responseData.getResult().getData().get(i).getChild().get(k));
+                }
 
-                tempUpList.addAll(responseData.getResult().getData().get(i).getChild());
                 topicList.add(responseData.getResult().getData().get(i));
                 topicsMap.put(responseData.getResult().getData().get(i),
                         tempUpList);

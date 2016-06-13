@@ -155,11 +155,11 @@ public class TopicsFilterActivity extends BaseActivity {
                         tempList.add(new Topics(-1, "all", false, new ArrayList<Topics>(), responseData.getResult().getData().get(i).getId(),
                                 responseData.getResult().getData().get(i).getTitle()));
 
-                    //add All option to select all sub-categories only if there are more then 0 subcategories.
                     tempList.addAll(responseData.getResult().getData().get(i).getChild().get(j).getChild());
                     responseData.getResult().getData().get(i).getChild().get(j).setChild(tempList);
                 }
 
+                //add All option to select all sub-categories only if there are more then 0 subcategories.
                 if (responseData.getResult().getData().get(i).getChild().size() > 0)
                     tempUpList.add(new Topics(-1, "all", false, new ArrayList<Topics>(), responseData.getResult().getData().get(i).getId(),
                             responseData.getResult().getData().get(i).getTitle()));

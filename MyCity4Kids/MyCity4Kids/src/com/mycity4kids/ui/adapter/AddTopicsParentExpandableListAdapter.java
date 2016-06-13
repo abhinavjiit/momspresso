@@ -201,8 +201,9 @@ public class AddTopicsParentExpandableListAdapter extends BaseExpandableListAdap
 
     }
 
-    public String getAllSelectedElements() {
-        List<SelectedTopic> list = new ArrayList<>();
+    public ArrayList<Topics> getAllSelectedElements() {
+        ArrayList<Topics> list = new ArrayList<>();
+
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < listViewCache.length; i++) {
             if (null != listViewCache[i]) {
@@ -217,12 +218,14 @@ public class AddTopicsParentExpandableListAdapter extends BaseExpandableListAdap
                     if (tList.size() == 0 && !(((Topics) pair.getKey()).getId() == -1) && ((Topics) pair.getKey()).isSelected()) {
                         System.out.println(((Topics) pair.getKey()).getTitle() + " = ");
                         sb.append("," + ((Topics) pair.getKey()).getId());
+                        list.add((Topics) pair.getKey());
                     }
                     //subcategories children
                     for (int j = 0; j < tList.size(); j++) {
                         if (tList.get(j).isSelected()) {
                             System.out.println(tList.get(j).getTitle() + " = ");
                             sb.append("," + tList.get(j).getId());
+                            list.add(tList.get(j));
                         }
                     }
 //                    list.add(new SelectedTopic())
@@ -231,7 +234,8 @@ public class AddTopicsParentExpandableListAdapter extends BaseExpandableListAdap
             }
         }
         Log.d("CSV = ", sb.substring(1));
-        return sb.substring(1);
+//        return sb.substring(1);
+        return list;
     }
 
     public class SelectedTopic {

@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import com.mycity4kids.R;
 
+import org.apmem.tools.layouts.FlowLayout;
+
 /**
  * Created by hemant on 10/6/16.
  */
@@ -56,12 +58,12 @@ public class TopicView extends RelativeLayout {
         subcategoryTextView = (TextView) findViewById(R.id.subcategoryTextView);
         removeTopicImageView = (ImageView) findViewById(R.id.removeTopicImageView);
 
-        removeTopicImageView.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((RelativeLayout) containerView).removeView(containerView);
-            }
-        });
+//        removeTopicImageView.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                ((FlowLayout) containerView.getParent()).removeView(containerView);
+//            }
+//        });
     }
 
 //    @Override
@@ -92,6 +94,10 @@ public class TopicView extends RelativeLayout {
      */
     public void setSubcategory(String subcategoryName) {
         this.subcategoryTextView.setText(subcategoryName);
+    }
+
+    public void removeTopic(){
+        ((FlowLayout) containerView.getParent()).removeView(containerView);
     }
 
 

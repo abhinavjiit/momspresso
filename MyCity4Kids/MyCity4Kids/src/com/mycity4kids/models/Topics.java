@@ -1,8 +1,11 @@
 package com.mycity4kids.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 
-public class Topics {
+public class Topics implements Parcelable {
 
     private int id;
     private String title;
@@ -19,6 +22,27 @@ public class Topics {
         this.parentId = parentId;
         this.parentName = parentName;
     }
+
+    protected Topics(Parcel in) {
+        id = in.readInt();
+        title = in.readString();
+        child = in.createTypedArrayList(Topics.CREATOR);
+        parentId = in.readInt();
+        parentName = in.readString();
+        isSelected = in.readByte() != 0;
+    }
+
+    public static final Creator<Topics> CREATOR = new Creator<Topics>() {
+        @Override
+        public Topics createFromParcel(Parcel in) {
+            return new Topics(in);
+        }
+
+        @Override
+        public Topics[] newArray(int size) {
+            return new Topics[size];
+        }
+    };
 
     public int getId() {
         return id;
@@ -68,4 +92,18 @@ public class Topics {
         this.isSelected = isSelected;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(title);
+        dest.writeTypedList(child);
+        dest.writeInt(parentId);
+        dest.writeString(parentName);
+        dest.writeByte((byte) (isSelected ? 1 : 0));
+    }
 }
