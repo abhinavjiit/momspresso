@@ -1,14 +1,19 @@
 package com.mycity4kids.ui.activity;
 
 import android.app.AlertDialog;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
+import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.animation.AnimationUtils;
@@ -23,6 +28,7 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.tagmanager.Container;
 import com.google.android.gms.tagmanager.ContainerHolder;
 import com.google.android.gms.tagmanager.TagManager;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
@@ -33,8 +39,11 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.asynctask.HeavyDbTask;
 import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.ConfigurationController;
 import com.mycity4kids.dbtable.TableAdult;
+import com.mycity4kids.editor.EditorPostActivity;
+import com.mycity4kids.enums.ParentingFilterType;
 import com.mycity4kids.fragmentdialog.FragmentAlertDialog;
 import com.mycity4kids.gtmutils.ContainerHolderSingleton;
 import com.mycity4kids.gtmutils.Utils;
@@ -49,6 +58,7 @@ import com.mycity4kids.newmodels.ForceUpdateModel;
 import com.mycity4kids.newmodels.UserInviteModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ForceUpdateAPI;
+import com.mycity4kids.sync.PushTokenService;
 import com.mycity4kids.utils.NearMyCity;
 import com.mycity4kids.utils.location.GPSTracker;
 
@@ -67,6 +77,8 @@ public class SplashActivity extends BaseActivity {
     private Uri mUrl;
     private String mTitle;
     private String mDescription;
+    Bundle extras;
+    FirebaseAnalytics mFirebaseAnalytics;
 
 //    private DeepLinkData _deepLinkData;
 //    private GetAppointmentController _appointmentcontroller;
@@ -81,7 +93,20 @@ public class SplashActivity extends BaseActivity {
 //            DeepLinkingController _deepLinkingController = new DeepLinkingController(this, this);
 //            _deepLinkingController.getData(AppConstants.DEEP_LINK_RESOLVER_REQUEST, data);
         }
-        super.onNewIntent(intent);
+   /*     if (intent.getExtras()!=null&&intent.getExtras().getString("articleId")!=null)
+        {
+            if (intent.getExtras().getString("type").equalsIgnoreCase("article"))
+            {  Log.e("extra New Intent ", intent.getExtras().toString());
+            String articleId=intent.getExtras().getString("articleId");
+//            Log.e("articleId",articleId);
+            Intent intent1=new Intent(SplashActivity.this, ArticlesAndBlogsDetailsActivity.class);
+            intent1.putExtra("article_id",articleId);
+            intent1.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.ARTICLES);
+            startActivity(intent1);
+            finish();
+                return;
+        }}*/
+      //  super.onNewIntent(intent);
     }
 
     @Override
@@ -89,7 +114,10 @@ public class SplashActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         Utils.pushOpenScreenEvent(SplashActivity.this, "Splash Screen", SharedPrefUtils.getUserDetailModel(this).getId() + "");
         onNewIntent(getIntent());
+        extras=getIntent().getExtras();
         setUpGTM();
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+       /* mFirebaseAnalytics.setUserProperty("CityId","1");*/
         mClient = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
         // mUrl = Uri.parse("http://www.mycity4kids.com/parenting/kalpana---without-boundaries/article/From-the-Bicycle-to-the-Recycle-days...");
         mUrl = Uri.parse("android-app://com.mycity4kids/http/mycity4kids.com");
@@ -143,7 +171,8 @@ public class SplashActivity extends BaseActivity {
 
 
                         int cityId = cityModel.getCityId();
-
+                       // mFirebaseAnalytics = FirebaseAnalytics.getInstance(SplashActivity.this);
+                        mFirebaseAnalytics.setUserProperty("CityId",cityId+"");
                         /**
                          * save current city id in shared preference
                          */
@@ -158,7 +187,7 @@ public class SplashActivity extends BaseActivity {
 
                         if (cityId > 0) {
                             versionApiModel.setCityId(cityId);
-
+                            mFirebaseAnalytics.setUserProperty("CityId",cityId+"");
                             /**
                              * get current version code ::
                              */
@@ -195,6 +224,7 @@ public class SplashActivity extends BaseActivity {
                 String version = pInfo.versionName;
 
                 versionApiModel.setCityId(SharedPrefUtils.getCurrentCityModel(this).getId());
+                mFirebaseAnalytics.setUserProperty("CityId",SharedPrefUtils.getCurrentCityModel(this).getId()+"");
                 versionApiModel.setAppUpdateVersion(version);
                 if (ConnectivityUtils.isNetworkEnabled(SplashActivity.this)) {
 
@@ -277,7 +307,8 @@ public class SplashActivity extends BaseActivity {
         TableAdult _table = new TableAdult(BaseApplication.getInstance());
         if (null != userInfo && !StringUtils.isNullOrEmpty(userInfo.getEmail())) { // if he signup
             Log.e("MYCITY4KIDS", "USER logged In");
-
+            Intent intent5 = new Intent(this, PushTokenService.class);
+            startService(intent5);
             startSyncing();
             startSyncingUserInfo();
 
@@ -308,6 +339,10 @@ public class SplashActivity extends BaseActivity {
                 if (!StringUtils.isNullOrEmpty(_deepLinkURL)) {
                     intent.putExtra(AppConstants.DEEP_LINK_URL, _deepLinkURL);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP/*|Intent.FLAG_ACTIVITY_NEW_TASK*/);
+                } else if (extras!=null && extras.getString("type")!=null)
+                {
+                    //String articleId=extras.getString("articleId");
+                   intent.putExtra("notificationExtras",extras);
                 }
                 startActivity(intent);
                 finish();

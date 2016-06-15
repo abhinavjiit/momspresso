@@ -17,6 +17,7 @@ import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -47,6 +48,7 @@ public class ChangeCityFragment extends BaseFragment {
     Double _latitude;
     Double _longitude;
     int cityId;
+    FirebaseAnalytics mFirebaseAnalytics;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -54,6 +56,7 @@ public class ChangeCityFragment extends BaseFragment {
         Utils.pushOpenScreenEvent(getActivity(), "City Change", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
 
         ((DashboardActivity) getActivity()).setTitle("Change City");
+        mFirebaseAnalytics=FirebaseAnalytics.getInstance(getActivity());
         setHasOptionsMenu(true);
         radioGroup=(RadioGroup)view.findViewById(R.id.radioGroup);
         cityId=SharedPrefUtils.getCurrentCityModel(getActivity()).getId();
@@ -219,7 +222,7 @@ public class ChangeCityFragment extends BaseFragment {
 
                 if (cityId > 0) {
                     versionApiModel.setCityId(cityId);
-
+                    mFirebaseAnalytics.setUserProperty("CityId",cityId+"");
                     /**
                      * get current version code ::
                      */

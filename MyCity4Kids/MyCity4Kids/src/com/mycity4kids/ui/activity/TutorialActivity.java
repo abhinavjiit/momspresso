@@ -11,6 +11,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mycity4kids.R;
+import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.adapter.TutorialAdapter;
 
 
@@ -25,7 +27,7 @@ public class TutorialActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         Handler handler = new Handler();
         setContentView(R.layout.activity_view_pager);
-
+        Utils.pushOpenScreenEvent(TutorialActivity.this, "Tutorial Screen", SharedPrefUtils.getUserDetailModel(this).getId() + "");
         mViewPager = (ViewPager) findViewById(R.id.pager);
         btnSkip = (TextView) findViewById(R.id.txvSkip);
         mViewPagerAdapter = new TutorialAdapter(getSupportFragmentManager(), this);

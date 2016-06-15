@@ -14,6 +14,7 @@ import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
