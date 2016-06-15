@@ -200,9 +200,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         Bundle notificationExtras=intent.getParcelableExtra("notificationExtras");
         if (notificationExtras!=null)
         {
-            if (notificationExtras.getString("type").equalsIgnoreCase("article"))
+            if (notificationExtras.getString("type").equalsIgnoreCase("article_details"))
             {
-                String articleId=notificationExtras.getString("articleId");
+                String articleId=notificationExtras.getString("id");
                 Intent intent1=new Intent(DashboardActivity.this, ArticlesAndBlogsDetailsActivity.class);
                 intent1.putExtra("article_id",articleId);
                 intent1.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.ARTICLES);
@@ -210,9 +210,22 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 startActivity(intent1);
                 finish();
             }
-            else if (notificationExtras.getString("type").equalsIgnoreCase("event"))
+            else if (notificationExtras.getString("type").equalsIgnoreCase("event_details"))
+            { String eventId=notificationExtras.getString("id");
+               Intent resultIntent = new Intent(getApplicationContext(), BusinessDetailsActivity.class);
+                resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                resultIntent.putExtra(Constants.CATEGORY_ID, SharedPrefUtils.getEventIdForCity(getApplication()));
+                resultIntent.putExtra(Constants.BUSINESS_OR_EVENT_ID, eventId+"");
+                resultIntent.putExtra(Constants.PAGE_TYPE, Constants.EVENT_PAGE_TYPE);
+                resultIntent.putExtra(Constants.DISTANCE, "0");
+                startActivity(resultIntent);
+            }
+            else if (notificationExtras.getString("type").equalsIgnoreCase("webView"))
             {
-
+                String url=notificationExtras.getString("url");
+                Intent intent1=new Intent(this, LoadWebViewActivity.class);
+                intent1.putExtra(Constants.WEB_VIEW_URL, url);
+                startActivity(intent1);
             }
         }
         Bundle extras = intent.getExtras();

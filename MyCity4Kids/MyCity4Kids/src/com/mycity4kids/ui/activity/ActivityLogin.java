@@ -60,6 +60,7 @@ import com.mycity4kids.models.user.UserResponse;
 import com.mycity4kids.newmodels.FamilyInvites;
 import com.mycity4kids.newmodels.UserInviteModel;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.sync.PushTokenService;
 import com.mycity4kids.widget.CustomFontEditText;
 import com.mycity4kids.widget.CustomFontTextView;
 
@@ -332,7 +333,8 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                         // then call getappoitmnt service
                         removeProgressDialog();
                         startSyncing();
-
+                        Intent intent = new Intent(this, PushTokenService.class);
+                        startService(intent);
                         Intent intent1 = new Intent(this, LoadingActivity.class);
                         // intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent1);
