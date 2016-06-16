@@ -668,8 +668,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 break;
                         }
 
-                    } else {
-                        setTitle("Best of "+SharedPrefUtils.getCurrentCityModel(DashboardActivity.this).getName());}
+                    } else { if (SharedPrefUtils.getCurrentCityModel(DashboardActivity.this).getName().equals("Delhi-Ncr"))
+                    {
+                        SharedPrefUtils.getCurrentCityModel(DashboardActivity.this).setName("Delhi-NCR");
+                    }
+                        setTitle("Best of "+SharedPrefUtils.getCurrentCityModel(DashboardActivity.this).getName());
+                    }
 
 
                 } else if (currentFrag instanceof SendFeedbackFragment) {

@@ -112,7 +112,7 @@ android {
         exclude 'META-INF/NOTICE.txt'
 
     }
-/*    buildTypes {
+    buildTypes {
         release {
             minifyEnabled true
             shrinkResources true
@@ -123,6 +123,6 @@ android {
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
-    }*/
+    }
 }
 apply plugin: 'com.google.gms.google-services'
