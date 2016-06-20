@@ -1,9 +1,12 @@
 package com.mycity4kids.fcm;
 
+import android.content.Intent;
 import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
+import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.sync.PushTokenService;
 
 /**
  * Created by anshul on 5/26/16.
@@ -25,5 +28,9 @@ public class MyInstanceIDListenerService extends FirebaseInstanceIdService {
         Log.e("Refreshed token", "Refreshed token: " + refreshedToken);
         // TODO: Implement this method to send any registration to your app's servers.
         // sendRegistrationToServer(refreshedToken);
+        SharedPrefUtils.setDeviceToken(this, refreshedToken);
+        Log.e("token in preferences",SharedPrefUtils.getDeviceToken(this));
+        Intent intent = new Intent(this, PushTokenService.class);
+               startService(intent);
     }
 }

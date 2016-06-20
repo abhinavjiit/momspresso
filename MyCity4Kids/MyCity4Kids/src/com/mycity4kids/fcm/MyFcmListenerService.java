@@ -18,6 +18,7 @@ import android.util.Log;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -36,6 +37,7 @@ import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
 import com.mycity4kids.ui.activity.BloggerDashboardActivity;
 import com.mycity4kids.ui.activity.BusinessDetailsActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
+import com.mycity4kids.ui.activity.LoadWebViewActivity;
 import com.mycity4kids.ui.activity.NewsLetterWebviewActivity;
 import com.mycity4kids.ui.activity.PlanYourWeekActivity;
 import com.mycity4kids.ui.activity.SplashActivity;
@@ -95,10 +97,14 @@ public class MyFcmListenerService extends FirebaseMessagingService {
         if (StringUtils.isNullOrEmpty(msg)) {
             return;
         }
-
-
+        PushNotificationModel pushNotificationModel;
         try {
-            PushNotificationModel pushNotificationModel = new Gson().fromJson(msg, PushNotificationModel.class);
+             pushNotificationModel = new Gson().fromJson(msg, PushNotificationModel.class);
+        }catch (JsonSyntaxException jse){
+             pushNotificationModel = new Gson().fromJson(new Gson().toJson(remoteMessage.getData()), PushNotificationModel.class);
+        }
+        try {
+
             if (pushNotificationModel != null) {
 
                 String type = pushNotificationModel.getType();
@@ -439,6 +445,147 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     mBuilder.setAutoCancel(true);
                     mBuilder.setContentIntent(contentIntent);
                     mNotificationManager.notify(requestID, mBuilder.build());
+
+                }
+                else if (type.equalsIgnoreCase("article_details"))
+                { int requestID = (int) System.currentTimeMillis();
+                    Intent intent;
+                    PendingIntent contentIntent;
+                    if (SharedPrefUtils.getAppUpgrade(this)) {
+                        intent = new Intent(getApplicationContext(), SplashActivity.class);
+                        contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    } else {
+                        intent = new Intent(getApplicationContext(), ArticlesAndBlogsDetailsActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra(Constants.ARTICLE_ID, "" + pushNotificationModel.getId());
+                        intent.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.ARTICLES);
+
+                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+                        // Adds the back stack
+                        stackBuilder.addParentStack(ArticlesAndBlogsDetailsActivity.class);
+                        // Adds the Intent to the top of the stack
+                        stackBuilder.addNextIntent(intent);
+                        contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                    }
+String title=remoteMessage.getNotification().getTitle();
+                    String body=remoteMessage.getNotification().getBody();
+                /*    NotificationCompat.BigPictureStyle notiStyle = new
+                            NotificationCompat.BigPictureStyle();
+                    notiStyle.setBigContentTitle(title);
+                    notiStyle.setSummaryText(message);
+                    notiStyle.bigPicture(bitmap);
+*/
+                    Bitmap icon = BitmapFactory.decodeResource(getResources(),
+                            R.drawable.ic_launcher);
+                    NotificationCompat.Builder mBuilder =
+                            new NotificationCompat.Builder(this)
+                                    .setLargeIcon(icon)
+                                    .setSmallIcon(R.drawable.iconnotify)
+                                    .setContentTitle(title)
+                                    .setContentIntent(contentIntent)
+                                    .setContentText(body)
+                                    .setAutoCancel(true);
+                                    //.setStyle(notiStyle);
+                    ;
+                    // Gets an instance of the NotificationManager service
+                    NotificationManager mNotifyMgr =
+                            (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                    // Builds the notification and issues it.
+                    mNotifyMgr.notify(requestID, mBuilder.build());
+                }
+                else if (type.equalsIgnoreCase("event_details"))
+                { int requestID = (int) System.currentTimeMillis();
+                    Intent resultIntent;
+                    PendingIntent contentIntent;
+                    if (SharedPrefUtils.getAppUpgrade(this)) {
+                        resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
+                        contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    } else {
+                        resultIntent = new Intent(getApplicationContext(), BusinessDetailsActivity.class);
+                        resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        resultIntent.putExtra(Constants.CATEGORY_ID, SharedPrefUtils.getEventIdForCity(getApplication()));
+                        resultIntent.putExtra(Constants.BUSINESS_OR_EVENT_ID, pushNotificationModel.getId()+"");
+                        resultIntent.putExtra(Constants.PAGE_TYPE, Constants.EVENT_PAGE_TYPE);
+                        resultIntent.putExtra(Constants.DISTANCE, "0");
+                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+                        // Adds the back stack
+                        stackBuilder.addParentStack(ArticlesAndBlogsDetailsActivity.class);
+                        // Adds the Intent to the top of the stack
+                        stackBuilder.addNextIntent(resultIntent);
+                        contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                    }
+                    String title=remoteMessage.getNotification().getTitle();
+                    String body=remoteMessage.getNotification().getBody();
+                /*    NotificationCompat.BigPictureStyle notiStyle = new
+                            NotificationCompat.BigPictureStyle();
+                    notiStyle.setBigContentTitle(title);
+                    notiStyle.setSummaryText(message);
+                    notiStyle.bigPicture(bitmap);
+*/
+                    Bitmap icon = BitmapFactory.decodeResource(getResources(),
+                            R.drawable.ic_launcher);
+                    NotificationCompat.Builder mBuilder =
+                            new NotificationCompat.Builder(this)
+                                    .setLargeIcon(icon)
+                                    .setSmallIcon(R.drawable.iconnotify)
+                                    .setContentTitle(title)
+                                    .setContentIntent(contentIntent)
+                                    .setContentText(body)
+                                    .setAutoCancel(true);
+                            //.setStyle(notiStyle);
+                            ;
+                    // Gets an instance of the NotificationManager service
+                    NotificationManager mNotifyMgr =
+                            (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                    // Builds the notification and issues it.
+                    mNotifyMgr.notify(requestID, mBuilder.build());
+                }
+                else if (type.equalsIgnoreCase("webView"))
+                { int requestID = (int) System.currentTimeMillis();
+                    Intent resultIntent;
+                    PendingIntent contentIntent;
+                    if (SharedPrefUtils.getAppUpgrade(this)) {
+                        resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
+                        contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    } else {
+                        resultIntent = new Intent(getApplicationContext(), LoadWebViewActivity.class);
+                        resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        resultIntent.putExtra(Constants.WEB_VIEW_URL, pushNotificationModel.getUrl());
+                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+                        // Adds the back stack
+                        stackBuilder.addParentStack(LoadWebViewActivity.class);
+                        // Adds the Intent to the top of the stack
+                        stackBuilder.addNextIntent(resultIntent);
+                        contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                    }
+                    String title=remoteMessage.getNotification().getTitle();
+                    String body=remoteMessage.getNotification().getBody();
+                /*    NotificationCompat.BigPictureStyle notiStyle = new
+                            NotificationCompat.BigPictureStyle();
+                    notiStyle.setBigContentTitle(title);
+                    notiStyle.setSummaryText(message);
+                    notiStyle.bigPicture(bitmap);
+*/
+                    Bitmap icon = BitmapFactory.decodeResource(getResources(),
+                            R.drawable.ic_launcher);
+                    NotificationCompat.Builder mBuilder =
+                            new NotificationCompat.Builder(this)
+                                    .setLargeIcon(icon)
+                                    .setSmallIcon(R.drawable.iconnotify)
+                                    .setContentTitle(title)
+                                    .setContentIntent(contentIntent)
+                                    .setContentText(body)
+                                    .setAutoCancel(true);
+                            //.setStyle(notiStyle);
+
+                    // Gets an instance of the NotificationManager service
+                    NotificationManager mNotifyMgr =
+                            (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                    // Builds the notification and issues it.
+                    mNotifyMgr.notify(requestID, mBuilder.build());
 
                 }
 

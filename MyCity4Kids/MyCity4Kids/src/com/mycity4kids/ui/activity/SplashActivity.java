@@ -58,6 +58,7 @@ import com.mycity4kids.newmodels.ForceUpdateModel;
 import com.mycity4kids.newmodels.UserInviteModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ForceUpdateAPI;
+import com.mycity4kids.sync.PushTokenService;
 import com.mycity4kids.utils.NearMyCity;
 import com.mycity4kids.utils.location.GPSTracker;
 
@@ -116,7 +117,7 @@ public class SplashActivity extends BaseActivity {
         extras=getIntent().getExtras();
         setUpGTM();
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-        mFirebaseAnalytics.setUserProperty("CityId","1");
+       /* mFirebaseAnalytics.setUserProperty("CityId","1");*/
         mClient = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
         // mUrl = Uri.parse("http://www.mycity4kids.com/parenting/kalpana---without-boundaries/article/From-the-Bicycle-to-the-Recycle-days...");
         mUrl = Uri.parse("android-app://com.mycity4kids/http/mycity4kids.com");
@@ -170,7 +171,8 @@ public class SplashActivity extends BaseActivity {
 
 
                         int cityId = cityModel.getCityId();
-
+                       // mFirebaseAnalytics = FirebaseAnalytics.getInstance(SplashActivity.this);
+                        mFirebaseAnalytics.setUserProperty("CityId",cityId+"");
                         /**
                          * save current city id in shared preference
                          */
@@ -222,6 +224,7 @@ public class SplashActivity extends BaseActivity {
                 String version = pInfo.versionName;
 
                 versionApiModel.setCityId(SharedPrefUtils.getCurrentCityModel(this).getId());
+                mFirebaseAnalytics.setUserProperty("CityId",SharedPrefUtils.getCurrentCityModel(this).getId()+"");
                 versionApiModel.setAppUpdateVersion(version);
                 if (ConnectivityUtils.isNetworkEnabled(SplashActivity.this)) {
 
@@ -304,7 +307,8 @@ public class SplashActivity extends BaseActivity {
         TableAdult _table = new TableAdult(BaseApplication.getInstance());
         if (null != userInfo && !StringUtils.isNullOrEmpty(userInfo.getEmail())) { // if he signup
             Log.e("MYCITY4KIDS", "USER logged In");
-
+            Intent intent5 = new Intent(this, PushTokenService.class);
+            startService(intent5);
             startSyncing();
             startSyncingUserInfo();
 

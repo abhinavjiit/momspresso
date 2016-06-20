@@ -85,7 +85,7 @@ public class NearMyCity {
 		City nearMe = null ;
 		ArrayList<City> addresses = new ArrayList<City>() ;
 		
-		addresses.add(new City("Delhi-Ncr", 28.6100 , 77.2300 ,1 )) ;
+		addresses.add(new City("Delhi-NCR", 28.6100 , 77.2300 ,1 )) ;
 		addresses.add(new City("Bangalore", 12.9667 , 77.5667,2 )) ; 
 		addresses.add(new City("Mumbai", 18.9750 , 72.8258 ,3)) ; 
 		addresses.add(new City("Pune", 18.5203 , 73.8567 ,4)) ; 
@@ -107,7 +107,7 @@ public class NearMyCity {
 			 * by default city id curresponds to city name others will be 1 right now means by default it 
 			 * will Dehli-Ncr
 			 */
-			nearMe = new City("Delhi-Ncr", 0.0, 0.0, 1) ;
+			nearMe = new City("Delhi-NCR", 0.0, 0.0, 1) ;
 		}
 		return nearMe ; 
 	}

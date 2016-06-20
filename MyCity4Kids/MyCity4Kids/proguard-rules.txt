@@ -6,3 +6,14 @@
 -dontwarn org.codehaus.mojo.animal_sniffer.*
 -dontwarn java.lang.reflect.Method
 -dontwarn com.comscore.instrumentation.InstrumentedMapActivity
+-dontwarn org.apache.http.entity.mime.content.FileBody
+-dontwarn org.apache.http.entity.mime.AbstractMultipartForm
+-dontwarn org.apache.http.entity.mime.FormBodyPart
+-dontwarn org.apache.http.entity.mime.FormBodyPartBuilder
+-dontwarn org.apache.http.entity.mime.MIME
+-dontwarn org.apache.http.entity.mime.MultipartEntityBuilder
+-dontwarn org.apache.http.entity.mime.MultipartFormEntity
+-dontwarn org.apache.http.entity.mime.content.AbstractContentBody
+-dontwarn org.apache.http.entity.mime.content.ByteArrayBody
+-dontwarn org.apache.http.entity.mime.content.InputStreamBody
+-dontwarn org.apache.http.entity.mime.content.StringBody
