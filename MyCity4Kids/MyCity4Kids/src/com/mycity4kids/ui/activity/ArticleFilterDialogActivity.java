@@ -137,12 +137,7 @@ public class ArticleFilterDialogActivity extends BaseActivity implements View.On
                     startActivity(intent);
                 } else {
                     if (model.getSubcategory() == null || model.getSubcategory().size() == 0) {
-//                        Intent searchIntent = new Intent(getApplicationContext(), SearchArticlesAndAuthorsActivity.class);
-//                        searchIntent.putExtra(Constants.FILTER_NAME, model.getName());
-//                        searchIntent.putExtra(Constants.TAB_POSITION, 1);
-//                        startActivity(searchIntent);
-
-                        Intent searchIntent = new Intent(getApplicationContext(), AddArticleTopicsActivity.class);
+                        Intent searchIntent = new Intent(getApplicationContext(), SearchArticlesAndAuthorsActivity.class);
                         searchIntent.putExtra(Constants.FILTER_NAME, model.getName());
                         searchIntent.putExtra(Constants.TAB_POSITION, 1);
                         startActivity(searchIntent);

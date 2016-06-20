@@ -7,14 +7,14 @@ import java.util.ArrayList;
 
 public class Topics implements Parcelable {
 
-    private int id;
+    private String id;
     private String title;
     private ArrayList<Topics> child;
-    private int parentId;
+    private String parentId;
     private String parentName;
     private boolean isSelected;
 
-    public Topics(int id, String title, boolean isSelected, ArrayList<Topics> child, int parentId, String parentName) {
+    public Topics(String id, String title, boolean isSelected, ArrayList<Topics> child, String parentId, String parentName) {
         this.id = id;
         this.title = title;
         this.isSelected = isSelected;
@@ -24,10 +24,10 @@ public class Topics implements Parcelable {
     }
 
     protected Topics(Parcel in) {
-        id = in.readInt();
+        id = in.readString();
         title = in.readString();
         child = in.createTypedArrayList(Topics.CREATOR);
-        parentId = in.readInt();
+        parentId = in.readString();
         parentName = in.readString();
         isSelected = in.readByte() != 0;
     }
@@ -44,11 +44,11 @@ public class Topics implements Parcelable {
         }
     };
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -68,11 +68,11 @@ public class Topics implements Parcelable {
         this.child = child;
     }
 
-    public int getParentId() {
+    public String getParentId() {
         return parentId;
     }
 
-    public void setParentId(int parentId) {
+    public void setParentId(String parentId) {
         this.parentId = parentId;
     }
 
@@ -99,10 +99,10 @@ public class Topics implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
+        dest.writeString(id);
         dest.writeString(title);
         dest.writeTypedList(child);
-        dest.writeInt(parentId);
+        dest.writeString(parentId);
         dest.writeString(parentName);
         dest.writeByte((byte) (isSelected ? 1 : 0));
     }

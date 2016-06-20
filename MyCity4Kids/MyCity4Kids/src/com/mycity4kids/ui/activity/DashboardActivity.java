@@ -27,7 +27,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.comscore.analytics.comScore;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
@@ -65,7 +64,6 @@ import com.mycity4kids.enums.DialogButtonEvent;
 import com.mycity4kids.enums.DialogEnum;
 import com.mycity4kids.enums.ParentingFilterType;
 import com.mycity4kids.facebook.FacebookUtils;
-import com.mycity4kids.gcm.GCMUtil;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.IGetRateAndUpdateEvent;
@@ -197,33 +195,28 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         t.send(new HitBuilders.ScreenViewBuilder().build());
         onNewIntent(getIntent());
         Intent intent = getIntent();
-        Bundle notificationExtras=intent.getParcelableExtra("notificationExtras");
-        if (notificationExtras!=null)
-        {
-            if (notificationExtras.getString("type").equalsIgnoreCase("article_details"))
-            {
-                String articleId=notificationExtras.getString("id");
-                Intent intent1=new Intent(DashboardActivity.this, ArticlesAndBlogsDetailsActivity.class);
-                intent1.putExtra("article_id",articleId);
+        Bundle notificationExtras = intent.getParcelableExtra("notificationExtras");
+        if (notificationExtras != null) {
+            if (notificationExtras.getString("type").equalsIgnoreCase("article_details")) {
+                String articleId = notificationExtras.getString("id");
+                Intent intent1 = new Intent(DashboardActivity.this, ArticlesAndBlogsDetailsActivity.class);
+                intent1.putExtra("article_id", articleId);
                 intent1.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.ARTICLES);
                 intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent1);
                 finish();
-            }
-            else if (notificationExtras.getString("type").equalsIgnoreCase("event_details"))
-            { String eventId=notificationExtras.getString("id");
-               Intent resultIntent = new Intent(getApplicationContext(), BusinessDetailsActivity.class);
+            } else if (notificationExtras.getString("type").equalsIgnoreCase("event_details")) {
+                String eventId = notificationExtras.getString("id");
+                Intent resultIntent = new Intent(getApplicationContext(), BusinessDetailsActivity.class);
                 resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 resultIntent.putExtra(Constants.CATEGORY_ID, SharedPrefUtils.getEventIdForCity(getApplication()));
-                resultIntent.putExtra(Constants.BUSINESS_OR_EVENT_ID, eventId+"");
+                resultIntent.putExtra(Constants.BUSINESS_OR_EVENT_ID, eventId + "");
                 resultIntent.putExtra(Constants.PAGE_TYPE, Constants.EVENT_PAGE_TYPE);
                 resultIntent.putExtra(Constants.DISTANCE, "0");
                 startActivity(resultIntent);
-            }
-            else if (notificationExtras.getString("type").equalsIgnoreCase("webView"))
-            {
-                String url=notificationExtras.getString("url");
-                Intent intent1=new Intent(this, LoadWebViewActivity.class);
+            } else if (notificationExtras.getString("type").equalsIgnoreCase("webView")) {
+                String url = notificationExtras.getString("url");
+                Intent intent1 = new Intent(this, LoadWebViewActivity.class);
                 intent1.putExtra(Constants.WEB_VIEW_URL, url);
                 startActivity(intent1);
             }
@@ -280,7 +273,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         setSupportActionBar(mToolbar);
 
 //        if (!SharedPrefUtils.getPushTokenUpdateToServer(DashboardActivity.this)) {
-      //  GCMUtil.initializeGCM(DashboardActivity.this);
+        //  GCMUtil.initializeGCM(DashboardActivity.this);
 //        }
 
 //        set task list
@@ -633,46 +626,45 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_UNLOCKED);
                     findViewById(R.id.month_popup).setVisibility(View.GONE);
                     findViewById(R.id.task_popup).setVisibility(View.GONE);
-                    if (SharedPrefUtils.getCurrentCityModel(DashboardActivity.this).getName().isEmpty())
-                    {
+                    if (SharedPrefUtils.getCurrentCityModel(DashboardActivity.this).getName().isEmpty()) {
                         switch (SharedPrefUtils.getCurrentCityModel(DashboardActivity.this).getId()) {
                             case 1:
-                                setTitle("Best of " +"Delhi-NCR");
+                                setTitle("Best of " + "Delhi-NCR");
                                 break;
                             case 2:
-                                setTitle("Best of " +"Bangalore");
+                                setTitle("Best of " + "Bangalore");
                                 break;
                             case 3:
-                                setTitle("Best of " +"Mumbai");
+                                setTitle("Best of " + "Mumbai");
                                 break;
                             case 4:
-                                setTitle("Best of " +"Pune");
+                                setTitle("Best of " + "Pune");
                                 break;
                             case 5:
-                                setTitle("Best of " +"Hyderabad");
+                                setTitle("Best of " + "Hyderabad");
                                 break;
                             case 6:
-                                setTitle("Best of " +"Chennai");
+                                setTitle("Best of " + "Chennai");
                                 break;
                             case 7:
-                                setTitle("Best of " +"Kolkata");
+                                setTitle("Best of " + "Kolkata");
                                 break;
                             case 8:
-                                setTitle("Best of " +"Jaipur");
+                                setTitle("Best of " + "Jaipur");
                                 break;
                             case 9:
-                                setTitle("Best of " +"Ahmedabad");
+                                setTitle("Best of " + "Ahmedabad");
                                 break;
                             default:
-                                setTitle("Best of " +"Delhi-NCR");
+                                setTitle("Best of " + "Delhi-NCR");
                                 break;
                         }
 
-                    } else { if (SharedPrefUtils.getCurrentCityModel(DashboardActivity.this).getName().equals("Delhi-Ncr"))
-                    {
-                        SharedPrefUtils.getCurrentCityModel(DashboardActivity.this).setName("Delhi-NCR");
-                    }
-                        setTitle("Best of "+SharedPrefUtils.getCurrentCityModel(DashboardActivity.this).getName());
+                    } else {
+                        if (SharedPrefUtils.getCurrentCityModel(DashboardActivity.this).getName().equals("Delhi-Ncr")) {
+                            SharedPrefUtils.getCurrentCityModel(DashboardActivity.this).setName("Delhi-NCR");
+                        }
+                        setTitle("Best of " + SharedPrefUtils.getCurrentCityModel(DashboardActivity.this).getName());
                     }
 
 
@@ -1184,8 +1176,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     ((FragmentBusinesslistEvents) topFragment).toggleFilter();
                 } else if (topFragment instanceof ArticlesFragment) {
 //                    ((FragmentBusinesslistEvents) topFragment).toggleFilter();
-                    Intent intent = new Intent(getApplicationContext(), ArticleFilterDialogActivity.class);
-                    startActivityForResult(intent, Constants.FILTER_ARTICLE);
+                    Intent intent = new Intent(getApplicationContext(), TopicsFilterActivity.class);
+                    startActivity(intent);
+//                    startActivityForResult(intent, Constants.FILTER_ARTICLE);
                 } else if (topFragment instanceof ParentingBlogFragment) {
                     Intent intent = new Intent(getApplicationContext(), BlogFilterActivity.class);
                     startActivityForResult(intent, Constants.FILTER_BLOG);
@@ -1249,24 +1242,24 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
                     dialog.setMessage(getResources().getString(R.string.delete_list)).setNegativeButton(R.string.new_yes
                             , new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
+                                public void onClick(DialogInterface dialog, int which) {
 
-                            dialog.cancel();
-                            TaskListModel taskListModel = new TaskListModel();
+                                    dialog.cancel();
+                                    TaskListModel taskListModel = new TaskListModel();
 
-                            taskListModel.setId(taskListID);
-                            if (ConnectivityUtils.isNetworkEnabled(DashboardActivity.this)) {
-                                showProgressDialog(getString(R.string.please_wait));
+                                    taskListModel.setId(taskListID);
+                                    if (ConnectivityUtils.isNetworkEnabled(DashboardActivity.this)) {
+                                        showProgressDialog(getString(R.string.please_wait));
 
-                                TaskListController _controller = new TaskListController(DashboardActivity.this, DashboardActivity.this);
-                                _controller.getData(AppConstants.DELETE_LIST_REQUEST, taskListModel);
-                            } else {
-                                showToast(getString(R.string.error_network));
-                            }
+                                        TaskListController _controller = new TaskListController(DashboardActivity.this, DashboardActivity.this);
+                                        _controller.getData(AppConstants.DELETE_LIST_REQUEST, taskListModel);
+                                    } else {
+                                        showToast(getString(R.string.error_network));
+                                    }
 
 
-                        }
-                    }).setPositiveButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                                }
+                            }).setPositiveButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             // do nothing
                             dialog.cancel();
@@ -2763,12 +2756,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
         dialog.setMessage(getResources().getString(R.string.create_family)).setNegativeButton(getResources().getString(R.string.yes)
                 , new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                Intent createFamilyIntent = new Intent(DashboardActivity.this, CreateFamilyActivity.class);
-                startActivity(createFamilyIntent);
-                dialog.cancel();
-            }
-        }).setPositiveButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent createFamilyIntent = new Intent(DashboardActivity.this, CreateFamilyActivity.class);
+                        startActivity(createFamilyIntent);
+                        dialog.cancel();
+                    }
+                }).setPositiveButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // do nothing
                 dialog.cancel();

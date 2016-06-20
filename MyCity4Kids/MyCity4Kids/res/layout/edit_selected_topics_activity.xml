@@ -1,23 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white_color">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize" />
 
     <org.apmem.tools.layouts.FlowLayout
         android:id="@+id/rootView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/nextButton">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:layout_marginTop="4dp"
+        android:background="@color/white_color">
 
     </org.apmem.tools.layouts.FlowLayout>
 
-    <TextView
-        android:id="@+id/emptyTopicsTextView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/home_green"
-        android:text="Please select atleast one Topics to continue"
-        android:visibility="gone" />
+    <LinearLayout
+        android:id="@+id/emptyTopicsContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/emptyTopicsTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="You need to choose atleast one topic"
+            android:textColor="@color/grey"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/addTopicsTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="Add Topic"
+            android:textColor="@color/black_color"
+            android:textSize="18sp" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/nextButton"
@@ -27,5 +62,13 @@
         android:layout_below="@+id/articleImage"
         android:layout_margin="10dp"
         android:background="@color/primary"
-        android:text="PUBLISH" />
+        android:text="Next" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="gone" />
 </RelativeLayout>

@@ -122,12 +122,10 @@ public class PublishedArticlesListTabFragment extends BaseFragment {
                     isReuqestRunning = true;
 
                 }
-                if (firstVisibleItem==0)
-                {
-                    ((BloggerDashboardActivity)getActivity()).hidefloatingbutton(false);
-                }
-                else {
-                    ((BloggerDashboardActivity)getActivity()).hidefloatingbutton(true);
+                if (firstVisibleItem == 0) {
+                    ((BloggerDashboardActivity) getActivity()).hidefloatingbutton(false);
+                } else {
+                    ((BloggerDashboardActivity) getActivity()).hidefloatingbutton(true);
                 }
 
             }
@@ -250,7 +248,7 @@ public class PublishedArticlesListTabFragment extends BaseFragment {
             return;
         }
         Call<ResponseBody> call = publishedArticleAPI.getPublishedArticleList("" + SharedPrefUtils.getUserDetailModel(getActivity()).getId(),
-                "" + pPageCount );
+                "" + pPageCount);
 
 
         //asynchronous call
@@ -269,12 +267,12 @@ public class PublishedArticlesListTabFragment extends BaseFragment {
                              try {
                                  jsonObject = new JSONObject(responseData);
 
-                             JSONArray dataObj = null;
+                                 JSONArray dataObj = null;
 
                                  dataObj = jsonObject.getJSONObject("result").optJSONArray("data");
 
 
-                             if (null == dataObj) {
+                                 if (null == dataObj) {
 
                                      jsonObject.getJSONObject("result").remove("data");
 
@@ -284,7 +282,7 @@ public class PublishedArticlesListTabFragment extends BaseFragment {
                                  }
 
                                  responseData = jsonObject.toString();
-                             }catch (JSONException e) {
+                             } catch (JSONException e) {
                                  e.printStackTrace();
                              }
                              PublishedArticlesModel blogResponse = new Gson().fromJson(responseData, PublishedArticlesModel.class);
@@ -352,6 +350,7 @@ public class PublishedArticlesListTabFragment extends BaseFragment {
         intent.putExtra("content", content);
         intent.putExtra("thumbnailUrl", thumbnailUrl);
         intent.putExtra("articleId", articleId);
+        intent.putExtra("tag", detailData.getTag());
         getActivity().startActivity(intent);
 
     }

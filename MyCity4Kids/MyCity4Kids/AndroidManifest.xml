@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mycity4kids"
     android:versionCode="34"
-    android:versionName="4.4">
+    android:versionName="4.5">
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -117,10 +117,10 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.SplashActivity"
+            android:icon="@drawable/myicon"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppBaseTheme"
-            android:icon="@drawable/myicon">
+            android:theme="@style/AppBaseTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -238,9 +238,9 @@
             android:name=".ui.activity.LoadWebViewActivity"
             android:configChanges="keyboardHidden|screenSize|orientation"
             android:label="@string/app_name"
+            android:parentActivityName=".ui.activity.DashboardActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"
-            android:parentActivityName=".ui.activity.DashboardActivity"/>
+            android:windowSoftInputMode="adjustPan" />
 
         <activity
             android:name=".cropimage.CropImage"
@@ -494,6 +494,10 @@
 
         <activity
             android:name=".ui.activity.EditSelectedTopicsActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.activity.FilteredTopicsArticleListingActivity"
             android:screenOrientation="portrait" />
 
         <receiver

@@ -1,19 +1,14 @@
 package com.mycity4kids.ui.activity;
 
 import android.app.AlertDialog;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
-import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.animation.AnimationUtils;
@@ -39,11 +34,8 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.asynctask.HeavyDbTask;
 import com.mycity4kids.constants.AppConstants;
-import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.ConfigurationController;
 import com.mycity4kids.dbtable.TableAdult;
-import com.mycity4kids.editor.EditorPostActivity;
-import com.mycity4kids.enums.ParentingFilterType;
 import com.mycity4kids.fragmentdialog.FragmentAlertDialog;
 import com.mycity4kids.gtmutils.ContainerHolderSingleton;
 import com.mycity4kids.gtmutils.Utils;
@@ -106,7 +98,7 @@ public class SplashActivity extends BaseActivity {
             finish();
                 return;
         }}*/
-      //  super.onNewIntent(intent);
+        //  super.onNewIntent(intent);
     }
 
     @Override
@@ -114,7 +106,7 @@ public class SplashActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         Utils.pushOpenScreenEvent(SplashActivity.this, "Splash Screen", SharedPrefUtils.getUserDetailModel(this).getId() + "");
         onNewIntent(getIntent());
-        extras=getIntent().getExtras();
+        extras = getIntent().getExtras();
         setUpGTM();
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
        /* mFirebaseAnalytics.setUserProperty("CityId","1");*/
@@ -171,8 +163,8 @@ public class SplashActivity extends BaseActivity {
 
 
                         int cityId = cityModel.getCityId();
-                       // mFirebaseAnalytics = FirebaseAnalytics.getInstance(SplashActivity.this);
-                        mFirebaseAnalytics.setUserProperty("CityId",cityId+"");
+                        // mFirebaseAnalytics = FirebaseAnalytics.getInstance(SplashActivity.this);
+                        mFirebaseAnalytics.setUserProperty("CityId", cityId + "");
                         /**
                          * save current city id in shared preference
                          */
@@ -187,7 +179,7 @@ public class SplashActivity extends BaseActivity {
 
                         if (cityId > 0) {
                             versionApiModel.setCityId(cityId);
-                            mFirebaseAnalytics.setUserProperty("CityId",cityId+"");
+                            mFirebaseAnalytics.setUserProperty("CityId", cityId + "");
                             /**
                              * get current version code ::
                              */
@@ -224,7 +216,7 @@ public class SplashActivity extends BaseActivity {
                 String version = pInfo.versionName;
 
                 versionApiModel.setCityId(SharedPrefUtils.getCurrentCityModel(this).getId());
-                mFirebaseAnalytics.setUserProperty("CityId",SharedPrefUtils.getCurrentCityModel(this).getId()+"");
+                mFirebaseAnalytics.setUserProperty("CityId", SharedPrefUtils.getCurrentCityModel(this).getId() + "");
                 versionApiModel.setAppUpdateVersion(version);
                 if (ConnectivityUtils.isNetworkEnabled(SplashActivity.this)) {
 
@@ -339,10 +331,9 @@ public class SplashActivity extends BaseActivity {
                 if (!StringUtils.isNullOrEmpty(_deepLinkURL)) {
                     intent.putExtra(AppConstants.DEEP_LINK_URL, _deepLinkURL);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP/*|Intent.FLAG_ACTIVITY_NEW_TASK*/);
-                } else if (extras!=null && extras.getString("type")!=null)
-                {
+                } else if (extras != null && extras.getString("type") != null) {
                     //String articleId=extras.getString("articleId");
-                   intent.putExtra("notificationExtras",extras);
+                    intent.putExtra("notificationExtras", extras);
                 }
                 startActivity(intent);
                 finish();
@@ -425,6 +416,8 @@ public class SplashActivity extends BaseActivity {
                                     e.printStackTrace();
                                 }
                                 String version = pInfo.versionName;
+
+                                //First launch or logout or Shared prefs cleared scenario.
                                 Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
                                 ForceUpdateAPI forceUpdateAPI = retrofit.create(ForceUpdateAPI.class);
                                 Call<ForceUpdateModel> call = forceUpdateAPI.checkForceUpdateRequired(version, "android");
@@ -569,6 +562,12 @@ public class SplashActivity extends BaseActivity {
             } catch (Exception e) {
                 e.printStackTrace();
                 showToast(getString(R.string.went_wrong));
+
+                //Uncomment to run on test server
+                SharedPrefUtils.setAppUgrade(SplashActivity.this, false);
+                isFirstLaunch = 0;
+                navigateToNextScreen(true);
+
             }
 
         }

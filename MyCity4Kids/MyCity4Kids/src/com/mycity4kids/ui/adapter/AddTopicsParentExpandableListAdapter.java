@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mycity4kids.R;
+import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.widget.TopicsExpandableListView;
 
@@ -20,7 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class AddTopicsParentExpandableListAdapter extends BaseExpandableListAdapter {
+public class AddTopicsParentExpandableListAdapter extends BaseExpandableListAdapter implements AddTopicsChildExpandableListAdapter.TotalSelectedItems {
 
     private Context context;
     ArrayList<Topics> topicList;
@@ -29,6 +30,8 @@ public class AddTopicsParentExpandableListAdapter extends BaseExpandableListAdap
     private ExpandableListView topExpList;
     private TopicsExpandableListView listViewCache[];
     private static final String LOG_TAG = "ParentExpandableAdapter";
+    AddTopicsChildExpandableListAdapter adapter;
+    private int totalSelectedItems;
 
     public AddTopicsParentExpandableListAdapter(Context context,
                                                 ExpandableListView topExpList,
@@ -42,50 +45,7 @@ public class AddTopicsParentExpandableListAdapter extends BaseExpandableListAdap
         listViewCache = new TopicsExpandableListView[topicList.size()];
     }
 
-    public Object getChild(int groupPosition, int childPosition) {
-        return map.get(topicList.get(groupPosition)).get(childPosition);
-    }
-
-    public long getChildId(int groupPosition, int childPosition) {
-        return (long) (groupPosition + childPosition);  // Max 1024 children per group
-    }
-
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        Log.d(LOG_TAG, "getChildView: groupPositon: " + groupPosition + "; childPosition: " + childPosition);
-        View v = null;
-        if (listViewCache[groupPosition] != null)
-            v = listViewCache[groupPosition];
-        else {
-            TopicsExpandableListView dev = new TopicsExpandableListView(context);
-            dev.setRows(calculateRowCount(groupPosition, null));
-            AddTopicsChildExpandableListAdapter adapter = new AddTopicsChildExpandableListAdapter(context);
-            adapter.setTopicsData(createGroupList(groupPosition), createChildList(groupPosition));
-            dev.setAdapter(adapter);
-            dev.setOnGroupClickListener(new Level2GroupExpandListener(groupPosition));
-            listViewCache[groupPosition] = dev;
-            v = dev;
-        }
-        return v;
-    }
-
-    public int getChildrenCount(int groupPosition) {
-        return 1;
-    }
-
-    public Object getGroup(int groupPosition) {
-        return topicList.get(groupPosition);
-    }
-
-    public int getGroupCount() {
-        return topicList.size();
-    }
-
-    public long getGroupId(int groupPosition) {
-        return (long) (groupPosition);  // To be consistent with getChildId
-    }
-
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        Log.d(LOG_TAG, "getGroupView: groupPositon: " + groupPosition + "; isExpanded: " + isExpanded);
         View v = null;
         if (convertView != null)
             v = convertView;
@@ -105,18 +65,53 @@ public class AddTopicsParentExpandableListAdapter extends BaseExpandableListAdap
         return v;
     }
 
+    public Object getGroup(int groupPosition) {
+        return topicList.get(groupPosition);
+    }
+
+    public int getGroupCount() {
+        return topicList.size();
+    }
+
+    public long getGroupId(int groupPosition) {
+        return (long) (groupPosition);  // To be consistent with getChildId
+    }
+
+    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+        View v = null;
+        if (listViewCache[groupPosition] != null)
+            v = listViewCache[groupPosition];
+        else {
+            TopicsExpandableListView dev = new TopicsExpandableListView(context);
+            dev.setRows(calculateRowCount(groupPosition, null));
+            adapter = new AddTopicsChildExpandableListAdapter(context);
+            adapter.setTopicsData(createGroupList(groupPosition), createChildList(groupPosition), this);
+            dev.setAdapter(adapter);
+            dev.setOnGroupClickListener(new Level2GroupExpandListener(groupPosition));
+            listViewCache[groupPosition] = dev;
+            v = dev;
+        }
+        return v;
+    }
+
+    public Object getChild(int groupPosition, int childPosition) {
+        return map.get(topicList.get(groupPosition)).get(childPosition);
+    }
+
+    public long getChildId(int groupPosition, int childPosition) {
+        return (long) (groupPosition + childPosition);  // Max 1024 children per group
+    }
+
+    public int getChildrenCount(int groupPosition) {
+        return 1;
+    }
+
     public boolean hasStableIds() {
         return true;
     }
 
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
-    }
-
-    public void onGroupCollapsed(int groupPosition) {
-    }
-
-    public void onGroupExpanded(int groupPosition) {
     }
 
     /**
@@ -149,7 +144,7 @@ public class AddTopicsParentExpandableListAdapter extends BaseExpandableListAdap
         HashMap child = new HashMap();
         ArrayList result = new ArrayList();
         for (int i = 0; i < map.get(topicList.get(level1)).size(); ++i) {
-// Second-level lists
+            // Second-level lists
             ArrayList secList = new ArrayList();
             if (map.get(topicList.get(level1)).get(i).getChild().size() == 0) {
                 child.put(map.get(topicList.get(level1)).get(i), map.get(topicList.get(level1)).get(i).getChild());
@@ -166,7 +161,7 @@ public class AddTopicsParentExpandableListAdapter extends BaseExpandableListAdap
     }
 
     // Calculates the row count for a level1 expandable list adapter. Each level2 group counts 1 row (group row) plus any child row that
-// belongs to the group
+    // belongs to the group
     private int calculateRowCount(int level1, ExpandableListView level2view) {
         int level2GroupCount = map.get(topicList.get(level1)).size();
         int rowCtr = 0;
@@ -201,10 +196,67 @@ public class AddTopicsParentExpandableListAdapter extends BaseExpandableListAdap
 
     }
 
+
+    /*
+    * WHILE PUBLISHING A NEW BLOG.
+    * When returning to expandable listview screen from selected topics screen
+    * update the list with remaining selected topics
+    * */
+    public ArrayList<Topics> counttotalSelected() {
+        totalSelectedItems = 0;
+        ArrayList<Topics> list = new ArrayList<>();
+
+        Iterator it = map.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry) it.next();
+            ArrayList<Topics> tList = ((ArrayList) pair.getValue());
+
+            for (int j = 0; j < tList.size(); j++) {
+
+                //subcategories with no child
+                if (tList.get(j).getChild().size() == 0 && tList.get(j).isSelected()) {
+                    list.add(tList.get(j));
+                    totalSelectedItems++;
+                }
+
+                //subcategories children
+                for (int k = 0; k < tList.get(j).getChild().size(); k++) {
+                    if (tList.get(j).getChild().get(k).isSelected()) {
+                        list.add(tList.get(j).getChild().get(k));
+                        totalSelectedItems++;
+
+                    }
+                }
+            }
+        }
+
+        return list;
+    }
+
+
+    /*
+    * WHILE PUBLISHING A NEW BLOG.
+    * When returning to expandable listview screen from selected topics screen
+    * notify all child adapters to update the data.
+    * */
+    public void updateChildAdapter() {
+        if (null != adapter)
+            adapter.notifyDataSetChanged();
+
+        for (int i = 0; i < listViewCache.length; i++) {
+            if (null != listViewCache[i])
+                ((AddTopicsChildExpandableListAdapter) listViewCache[i].getExpandableListAdapter()).notifyDataSetChanged();
+        }
+    }
+
+
+    /*
+    * returns a list of Selected Topics.
+    * Used only when Publishing a new Article.
+    * */
     public ArrayList<Topics> getAllSelectedElements() {
         ArrayList<Topics> list = new ArrayList<>();
 
-        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < listViewCache.length; i++) {
             if (null != listViewCache[i]) {
                 HashMap<Topics, List<Topics>> selectedTopics =
@@ -215,52 +267,44 @@ public class AddTopicsParentExpandableListAdapter extends BaseExpandableListAdap
                     ArrayList<Topics> tList = ((ArrayList) pair.getValue());
 
                     //Include subcategories with no child.
-                    if (tList.size() == 0 && !(((Topics) pair.getKey()).getId() == -1) && ((Topics) pair.getKey()).isSelected()) {
-                        System.out.println(((Topics) pair.getKey()).getTitle() + " = ");
-                        sb.append("," + ((Topics) pair.getKey()).getId());
+                    if (tList.size() == 0 && !(((Topics) pair.getKey()).getId().equals("-1")) && ((Topics) pair.getKey()).isSelected()) {
                         list.add((Topics) pair.getKey());
                     }
                     //subcategories children
                     for (int j = 0; j < tList.size(); j++) {
                         if (tList.get(j).isSelected()) {
-                            System.out.println(tList.get(j).getTitle() + " = ");
-                            sb.append("," + tList.get(j).getId());
                             list.add(tList.get(j));
                         }
                     }
-//                    list.add(new SelectedTopic())
-//                    it.remove(); // avoids a ConcurrentModificationException
                 }
             }
         }
-        Log.d("CSV = ", sb.substring(1));
-//        return sb.substring(1);
         return list;
     }
 
-    public class SelectedTopic {
-        private String id;
-        private String title;
-
-        SelectedTopic(String id, String title) {
-            this.id = id;
-            this.title = title;
+    /*
+     * called when a checkbox state changes inside the child adapter
+     * to update the total items selected
+     * */
+    @Override
+    public boolean updateTotalSelectedItems(boolean status) {
+        if (status) {
+            totalSelectedItems++;
+        } else {
+            totalSelectedItems--;
         }
-
-        public String getId() {
-            return id;
+        if (totalSelectedItems > Constants.MAX_ARTICLE_CATEGORIES) {
+            totalSelectedItems--;
+            return true;
         }
+        return false;
+    }
 
-        public void setId(String id) {
-            this.id = id;
-        }
+    public void setTotalSelectedItem(int totalSelectedItem) {
+        totalSelectedItems = totalSelectedItem;
+    }
 
-        public String getTitle() {
-            return title;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
-        }
+    public int getTotalSelectedItem() {
+        return totalSelectedItems;
     }
 }

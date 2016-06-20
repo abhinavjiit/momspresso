@@ -585,10 +585,10 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
 
         dialog.setMessage(message).setNegativeButton(android.R.string.ok
                 , new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(DialogInterface dialog, int which) {
 
-                dialog.cancel();
-                String data = "";
+                        dialog.cancel();
+                        String data = "";
 
 //                if (response.getResponse().equalsIgnoreCase("failure")) {
 //                    data = "";
@@ -597,15 +597,15 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
 //                    data = new Gson().toJson(response);
 //                }
 
-                Intent intent = new Intent(ActivityLogin.this, ActivitySignUp.class);
-                intent.putExtra(Constants.SIGNUP_DATA, new Gson().toJson(response));
+                        Intent intent = new Intent(ActivityLogin.this, ActivitySignUp.class);
+                        intent.putExtra(Constants.SIGNUP_DATA, new Gson().toJson(response));
 //                intent.putExtra(Constants.SIGNUP_FLAG, true);
-                startActivity(intent);
-                finish();
+                        startActivity(intent);
+                        finish();
 
 
-            }
-        }).setPositiveButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    }
+                }).setPositiveButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // do nothing
                 dialog.cancel();
@@ -655,7 +655,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
 
             } catch (UserRecoverableAuthException userAuthEx) {
                 userAuthEx.printStackTrace();
-                Log.d("UserRecoverableAuthException", userAuthEx.toString());
+                Log.d("UserRecoverAuthExceptin", userAuthEx.toString());
                 startActivityForResult(userAuthEx.getIntent(), RECOVERABLE_REQUEST_CODE);
                 // Start the user recoverable action using the intent returned by
             } catch (Exception e) {

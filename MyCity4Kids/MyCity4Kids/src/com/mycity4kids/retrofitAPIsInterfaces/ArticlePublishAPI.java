@@ -18,6 +18,7 @@ public interface ArticlePublishAPI  {
                                                  @Field("body") String body,
                                                  @Field("id") String id,
                                                  @Field("draftId") String draftId,
+                                                 @Field("tag") String tag,
                                                  @Field("imageUrl") String imageUrl,
                                                  @Field("sourceId") String sourceId,
                                                  @Field("moderationStatus") String moderationStatus,

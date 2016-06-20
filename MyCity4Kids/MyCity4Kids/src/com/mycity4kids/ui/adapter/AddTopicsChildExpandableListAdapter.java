@@ -11,7 +11,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mycity4kids.R;
-import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.Topics;
 
 import java.util.HashMap;
@@ -27,6 +26,7 @@ public class AddTopicsChildExpandableListAdapter extends BaseExpandableListAdapt
     private List<Topics> mSubCategoriesList;
     private HashMap<Topics, List<Topics>> mSubCategoriesChildMap;
     private int totalItemsSelected = 0;
+    TotalSelectedItems totalSelectedItems;
 
     public AddTopicsChildExpandableListAdapter(Context context) {
         mInflator = LayoutInflater.from(context);
@@ -37,9 +37,10 @@ public class AddTopicsChildExpandableListAdapter extends BaseExpandableListAdapt
      * @param mSubCategoriesList
      * @param mSubCategoriesChildMap
      */
-    public void setTopicsData(List<Topics> mSubCategoriesList, HashMap<Topics, List<Topics>> mSubCategoriesChildMap) {
+    public void setTopicsData(List<Topics> mSubCategoriesList, HashMap<Topics, List<Topics>> mSubCategoriesChildMap, AddTopicsParentExpandableListAdapter totalSelectedItems) {
         this.mSubCategoriesList = mSubCategoriesList;
         this.mSubCategoriesChildMap = mSubCategoriesChildMap;
+        this.totalSelectedItems = (TotalSelectedItems) totalSelectedItems;
     }
 
     @Override
@@ -175,14 +176,8 @@ public class AddTopicsChildExpandableListAdapter extends BaseExpandableListAdapt
     private void handleSubCategoryCheckBoxClick(CheckBox pChildCheckBox) {
         boolean isChecked = pChildCheckBox.isChecked();
 
-        if (isChecked) {
-            totalItemsSelected++;
-        } else {
-            totalItemsSelected--;
-        }
-        if (totalItemsSelected > Constants.MAX_ARTICLE_CATEGORIES) {
+        if (totalSelectedItems.updateTotalSelectedItems(isChecked)) {
             pChildCheckBox.setChecked(false);
-            totalItemsSelected--;
             Toast.makeText(mContext, "maximum applicable categories reached", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -197,14 +192,8 @@ public class AddTopicsChildExpandableListAdapter extends BaseExpandableListAdapt
         int groupPos = ((Positions) pChildCheckBox.getTag()).groupPosition;
         int childPos = ((Positions) pChildCheckBox.getTag()).childPosition;
 
-        if (isChecked) {
-            totalItemsSelected++;
-        } else {
-            totalItemsSelected--;
-        }
-        if (totalItemsSelected > Constants.MAX_ARTICLE_CATEGORIES) {
+        if (totalSelectedItems.updateTotalSelectedItems(isChecked)) {
             pChildCheckBox.setChecked(false);
-            totalItemsSelected--;
             Toast.makeText(mContext, "maximum applicable categories reached", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -215,5 +204,9 @@ public class AddTopicsChildExpandableListAdapter extends BaseExpandableListAdapt
 
     public HashMap<Topics, List<Topics>> getUpdatedMap() {
         return mSubCategoriesChildMap;
+    }
+
+    interface TotalSelectedItems {
+        boolean updateTotalSelectedItems(boolean status);
     }
 }

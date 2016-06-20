@@ -33,6 +33,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
 import com.mycity4kids.ui.activity.AddArticleTopicsActivity;
+import com.mycity4kids.ui.activity.EditSelectedTopicsActivity;
 
 import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.editor.EditorMediaUploadListener;
@@ -95,6 +96,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     private Map<String, String> mFailedUploads;
     String title;
     String content;
+    private String tag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -393,12 +395,15 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
 //                    Intent intent = new Intent(EditorPostActivity.this, ArticleImageTagUploadActivity.class);
 //                    intent.putExtra("draftItem", draftObject);
                     if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) {
-                        Intent intent_1 = new Intent(EditorPostActivity.this, ArticleImageTagUploadActivity.class);
+//                        Intent intent_1 = new Intent(EditorPostActivity.this, ArticleImageTagUploadActivity.class);
+                        Intent intent_1 = new Intent(EditorPostActivity.this, EditSelectedTopicsActivity.class);
                         intent_1.putExtra("draftItem", draftObject);
                         intent_1.putExtra("imageUrl", thumbnailUrl);
                         intent_1.putExtra("from", "publishedList");
                         intent_1.putExtra("articleId", articleId);
+                        intent_1.putExtra("tag", tag);
                         startActivity(intent_1);
+//                        finish();
                     }
 //                    else if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("draftList")) {
 //                        Intent intent_2 = new Intent(EditorPostActivity.this, ArticleImageTagUploadActivity.class);
@@ -581,6 +586,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             title = getIntent().getStringExtra("title");
             title = title.trim();
             content = getIntent().getStringExtra("content");
+            tag = getIntent().getStringExtra("tag");
             thumbnailUrl = getIntent().getStringExtra("thumbnailUrl");
             articleId = getIntent().getStringExtra("articleId");
             mEditorFragment.setTitle(title);

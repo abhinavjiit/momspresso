@@ -362,6 +362,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
 
     private void publishArticleRequest() {
         ArticleDraftList draftObject = (ArticleDraftList) getIntent().getSerializableExtra("draftItem");
+        String tags = getIntent().getStringExtra("tag");
         showProgressDialog(getResources().getString(R.string.please_wait));
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         // prepare call in Retrofit 2.0
@@ -376,6 +377,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
                 draftObject.getBody(),
                 articleId,
                 draftObject.getId(),
+                tags,
                 url,
                 "" + 2,
                 draftObject.getModeration_status() + "",
@@ -397,7 +399,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
                              } else {
                                  if (!StringUtils.isNullOrEmpty(responseModel.getResult().getMessage())) {
                                      //  SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
-                                     Log.i("Retrofit Publish Message", responseModel.getResult().getMessage());
+                                     Log.i("Retro Publish Message", responseModel.getResult().getMessage());
                                  }
                                  if (responseModel.getResponse().toString().equals("success")) {
 
