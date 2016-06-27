@@ -8,7 +8,7 @@ public class NotesModel {
     private String msg;
     private String addedby;
     private int id;
-    private int userid;
+    private String userid;
     private int appointmentid;
 
 
@@ -32,11 +32,11 @@ public class NotesModel {
         this.id = id;
     }
 
-    public int getUserid() {
+    public String getUserid() {
         return userid;
     }
 
-    public void setUserid(int userid) {
+    public void setUserid(String userid) {
         this.userid = userid;
     }
 

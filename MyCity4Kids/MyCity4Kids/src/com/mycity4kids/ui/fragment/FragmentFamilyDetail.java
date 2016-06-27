@@ -169,13 +169,13 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
                 if (attendeeModel.getType().equals("KID")) {
 
                     Bundle bundle = new Bundle();
-                    bundle.putInt("KID_ID", attendeeModel.getId());
+                    bundle.putString("KID_ID", attendeeModel.getId());
                     bundle.putSerializable("used_colors", used_colors);
                     ((DashboardActivity) getActivity()).replaceFragment(new FragmentKidProfile(), bundle, true);
 
                 } else if (attendeeModel.getType().equals("ADULT")) {
                     Bundle bundle = new Bundle();
-                    bundle.putInt("ADULT_ID", attendeeModel.getId());
+                    bundle.putString("ADULT_ID", attendeeModel.getId());
                     bundle.putSerializable("used_colors", used_colors);
                     ((DashboardActivity) getActivity()).replaceFragment(new FragmentAdultProfile(), bundle, true);
                 }

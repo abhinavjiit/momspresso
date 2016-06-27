@@ -15,6 +15,8 @@ import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
@@ -24,6 +26,7 @@ import com.mycity4kids.models.businesslist.BusinessDataListing;
 import com.mycity4kids.models.parentingstop.CommonParentingList;
 import com.mycity4kids.newmodels.parentingmodel.ArticleFilterListModel;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.utils.ArrayAdapterFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -172,7 +175,7 @@ public class BaseApplication extends Application {
 
         setInstance(this);
         VolleyLog.setTag("VolleyLogs");
-        createRetrofitInstance(AppConstants.LIVE_URL);
+        createRetrofitInstance(AppConstants.STAGING_URL);
 
         mRequestQueue = Volley.newRequestQueue(getApplicationContext());
 // Initialize comScore Application Tag library
@@ -244,26 +247,27 @@ public class BaseApplication extends Application {
                 } else {
                     original = original.newBuilder().header("Cache-Control", "public, only-if-cached, max-stale=" + 60 * 60 * 24 * 7).build();
                 }
+                requestBuilder.addHeader("mc4kToken", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
 
-                if (original.method().equals("GET")) {
-                    HttpUrl url = originalHttpUrl.newBuilder()
-                            .addQueryParameter("user_id", "" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getId())
-                            .build();
-                    requestBuilder = original.newBuilder().url(url)
-                            .method(original.method(), original.body());
-                } else if (original.method().equals("POST") || original.method().equals("PUT")) {
-                    RequestBody formBody = new FormBody.Builder()
-                            .add("user_id", "" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getId())
-                            .build();
-                    String postBodyString = bodyToString(original.body());
-                    postBodyString += ((postBodyString.length() > 0) ? "&" : "") + bodyToString(formBody);
-                    original = requestBuilder
-                            .post(RequestBody.create(MediaType.parse("application/x-www-form-urlencoded;charset=UTF-8"), postBodyString))
-                            .build();
-
-                    requestBuilder = original.newBuilder().url(originalHttpUrl).post(formBody)
-                            .method(original.method(), original.body());
-                }
+//                if (original.method().equals("GET")) {
+//                    HttpUrl url = originalHttpUrl.newBuilder()
+//                            .addQueryParameter("user_id", "" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getId())
+//                            .build();
+//                    requestBuilder = original.newBuilder().url(url)
+//                            .method(original.method(), original.body());
+//                } else if (original.method().equals("POST") || original.method().equals("PUT")) {
+//                    RequestBody formBody = new FormBody.Builder()
+//                            .add("user_id", "" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getId())
+//                            .build();
+//                    String postBodyString = bodyToString(original.body());
+//                    postBodyString += ((postBodyString.length() > 0) ? "&" : "") + bodyToString(formBody);
+//                    original = requestBuilder
+//                            .post(RequestBody.create(MediaType.parse("application/x-www-form-urlencoded;charset=UTF-8"), postBodyString))
+//                            .build();
+//
+//                    requestBuilder = original.newBuilder().url(originalHttpUrl).post(formBody)
+//                            .method(original.method(), original.body());
+//                }
 
                 // Request customization: add request headers
 
@@ -307,10 +311,20 @@ public class BaseApplication extends Application {
 
         retrofit = new Retrofit.Builder()
                 .baseUrl(base_url)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(buildGsonConverter())
                 .client(client)
                 .build();
         return retrofit;
+    }
+
+    private static GsonConverterFactory buildGsonConverter() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+
+        // Adding custom deserializers
+        gsonBuilder.registerTypeAdapterFactory(new ArrayAdapterFactory());
+        Gson myGson = gsonBuilder.create();
+
+        return GsonConverterFactory.create(myGson);
     }
 
     public Retrofit getRetrofit() {
@@ -325,7 +339,7 @@ public class BaseApplication extends Application {
         if (AppConstants.LIVE_URL.equals(retrofit.baseUrl().toString())) {
             SharedPrefUtils.setBaseURL(getAppContext(), AppConstants.DEV_URL);
             retrofit = new Retrofit.Builder()
-                    .baseUrl(AppConstants.DEV_URL)
+                    .baseUrl(AppConstants.STAGING_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(client)
                     .build();

@@ -15,14 +15,14 @@ public class PushNotificationModel implements Parcelable {
     private String title;
     private String share_content;
     private String message_id;
-    private int user_id;
+    private String user_id;
     private int appointment_id;
     private int id;
     private String type;
     private String url;
-    private String article_cover_image_url="";
-    private String filter_type="";
-    private String blog_name="";
+    private String article_cover_image_url = "";
+    private String filter_type = "";
+    private String blog_name = "";
 
     public String getUrl() {
         return url;
@@ -72,11 +72,11 @@ public class PushNotificationModel implements Parcelable {
         this.message_id = message_id;
     }
 
-    public int getUser_id() {
+    public String getUser_id() {
         return user_id;
     }
 
-    public void setUser_id(int user_id) {
+    public void setUser_id(String user_id) {
         this.user_id = user_id;
     }
 
@@ -159,7 +159,7 @@ public class PushNotificationModel implements Parcelable {
         share_content = in.readString();
         url = in.readString();
         family_id = in.readInt();
-        user_id = in.readInt();
+        user_id = in.readString();
         appointment_id = in.readInt();
         id = in.readInt();
         calendar_items = in.readString();
@@ -179,7 +179,7 @@ public class PushNotificationModel implements Parcelable {
         dest.writeString(share_content);
         dest.writeString(url);
         dest.writeInt(family_id);
-        dest.writeInt(user_id);
+        dest.writeString(user_id);
         dest.writeInt(appointment_id);
         dest.writeInt(id);
         dest.writeString(calendar_items);

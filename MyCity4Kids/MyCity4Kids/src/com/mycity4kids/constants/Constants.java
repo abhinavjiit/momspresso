@@ -59,6 +59,12 @@ public class Constants {
     public static final int HTTP_RESPONSE_SUCCESS = 200;
 
     /**
+     * Response code constants for token expired
+     * Log out user if logged in.
+     */
+    public static final int HTTP_RESPONSE_TOKEN_EXPIRED = 401;
+
+    /**
      * Sort by categories to be used in business listing api
      */
     public static final String SORT_BY_RATING = "rating";
@@ -262,4 +268,9 @@ public class Constants {
 
     /*Maximum tags allowed on a article*/
     public static int MAX_ARTICLE_CATEGORIES = 8;
+
+    //API Failure status
+    public static String FAILURE = "failure";
+    //API Success status
+    public static String SUCCESS = "success";
 }

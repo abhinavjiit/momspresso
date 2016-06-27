@@ -57,7 +57,7 @@ public class TaskTableNotes extends BaseTable {
     }
 
 
-    public void AddNotes(String notes, int eventid, int userid, int serverid) {
+    public void AddNotes(String notes, int eventid, String userid, int serverid) {
         try {
             mWritableDatabase.beginTransaction();
             ContentValues _contentValue = new ContentValues();
@@ -143,7 +143,7 @@ public class TaskTableNotes extends BaseTable {
                 TaskDataModel.Notes files = new TaskDataModel().new Notes();
                 files.setTask_id(id);
                 files.setNote(_cursor.getString(_cursor.getColumnIndex(NOTES)));
-                files.setUser_id(_cursor.getInt(_cursor.getColumnIndex(USER_ID)));
+                files.setUser_id(_cursor.getString(_cursor.getColumnIndex(USER_ID)));
                 files.setId(_cursor.getInt(_cursor.getColumnIndex(SERVER_ID)));
 
                 fileList.add(files);
@@ -173,7 +173,7 @@ public class TaskTableNotes extends BaseTable {
         return _cursor_noteCount.getCount();
     }
 
-    public ArrayList<TaskDataModel.Notes> getDataByUserId(int id, int userid) {
+    public ArrayList<TaskDataModel.Notes> getDataByUserId(int id, String userid) {
         ArrayList<TaskDataModel.Notes> fileList = new ArrayList<>();
 
 
@@ -188,7 +188,7 @@ public class TaskTableNotes extends BaseTable {
 
                 files.setTask_id(id);
                 files.setNote(_cursor.getString(_cursor.getColumnIndex(NOTES)));
-                files.setUser_id(_cursor.getInt(_cursor.getColumnIndex(USER_ID)));
+                files.setUser_id(_cursor.getString(_cursor.getColumnIndex(USER_ID)));
                 files.setId(_cursor.getInt(_cursor.getColumnIndex(SERVER_ID)));
 
                 fileList.add(files);

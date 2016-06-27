@@ -37,7 +37,7 @@ public class LoadingActivity extends BaseActivity {
 
         setContentView(R.layout.fetch_pincode_config);
 
-        if (!ConnectivityUtils.isNetworkEnabled(LoadingActivity.this) || SharedPrefUtils.getpinCode(this).equals("")) {
+        if (!ConnectivityUtils.isNetworkEnabled(LoadingActivity.this)) {
             navigateToDashboard();
 //            ToastUtils.showToast(LoadingActivity.this, getString(R.string.error_network));
             return;

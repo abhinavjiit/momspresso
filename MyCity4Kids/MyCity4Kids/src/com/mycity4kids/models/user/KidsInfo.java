@@ -7,7 +7,7 @@ public class KidsInfo extends BaseDataModel{
     private String name;
     private String date_of_birth;
     private String color_code;
-    private int id;
+    private String id;
     private int age;
 
 
@@ -27,11 +27,11 @@ public class KidsInfo extends BaseDataModel{
         this.color_code = color_code;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

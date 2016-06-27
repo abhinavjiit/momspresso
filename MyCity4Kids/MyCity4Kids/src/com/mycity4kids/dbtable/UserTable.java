@@ -133,7 +133,7 @@ public class
 				userInfo.setEmail(_cursor.getString(_cursor.getColumnIndex(USER_EMAIL)));
 				userInfo.setFirst_name(_cursor.getString(_cursor.getColumnIndex(USER_FIRST_NAME)));
 				userInfo.setLast_name(_cursor.getString(_cursor.getColumnIndex(USER_LAST_NAME)));
-				userInfo.setId(_cursor.getInt(_cursor.getColumnIndex(USER_ID)));
+				userInfo.setId(_cursor.getString(_cursor.getColumnIndex(USER_ID)));
 				userInfo.setMobile_number(_cursor.getString(_cursor.getColumnIndex(USER_MOBILE)));
 				userInfo.setSessionId(_cursor.getString(_cursor.getColumnIndex(SESSION_ID)));
 				userInfo.setProfileId(_cursor.getString(_cursor.getColumnIndex(PROFILE_ID)));

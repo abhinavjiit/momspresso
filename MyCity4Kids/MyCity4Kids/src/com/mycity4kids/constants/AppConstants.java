@@ -12,7 +12,7 @@ public class AppConstants {
 
 
     public static final String DEV_URL = "http://54.169.17.138/";
-
+    public static final String STAGING_URL = "http://52.77.116.39:8080/";
     public static final String LIVE_URL = "http://webserve.mycity4kids.com/";
 //    public static final String LIVE_URL = "http://54.169.17.138/";
 //    public static final String LIVE_URL = "http://10.42.0.1/";
@@ -326,6 +326,7 @@ public class AppConstants {
     public static final int ARTICLE_PUBLISH_REQUEST = 5001;
     public static final int BLOG_DATA_REQUEST = 6001;
 
+    public static final String VALIDATED_USER = "1";
 
     public static final String PREF_ACCOUNT_NAME = "accountName";
 
@@ -378,4 +379,7 @@ public class AppConstants {
     public static final String AUTHOR_TYPE_EXPERT = "Expert";
     public static final String Source_Id = "" + 2;
 
+    public static final String FROM_ACTIVITY = "fromActivity";
+    public static final String ACTIVITY_LOGIN = "ActivityLogin";
+    public static final String SPLASH_ACTIVITY = "SplashActivity";
 }

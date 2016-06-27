@@ -339,7 +339,7 @@ public class TableAppointmentData extends BaseTable {
                                 AttendeeModel attendee = new AttendeeModel();
 
                                 attendee.setAppoitmentId(appointmentModel.getEventId());
-                                attendee.setId(_cursorAttendee.getInt(_cursorAttendee.getColumnIndex("userkid_id")));
+                                attendee.setId(_cursorAttendee.getString(_cursorAttendee.getColumnIndex("userkid_id")));
                                 attendee.setServerid(_cursorAttendee.getInt(_cursorAttendee.getColumnIndex("server_id")));
 
                                 String type = _cursorAttendee.getString(_cursorAttendee.getColumnIndex("type"));
@@ -465,7 +465,7 @@ public class TableAppointmentData extends BaseTable {
                                 AttendeeModel attendee = new AttendeeModel();
 
                                 attendee.setAppoitmentId(appointmentModel.getEventId());
-                                attendee.setId(_cursorAttendee.getInt(_cursorAttendee.getColumnIndex("userkid_id")));
+                                attendee.setId(_cursorAttendee.getString(_cursorAttendee.getColumnIndex("userkid_id")));
                                 attendee.setServerid(_cursorAttendee.getInt(_cursorAttendee.getColumnIndex("server_id")));
 
                                 String type = _cursorAttendee.getString(_cursorAttendee.getColumnIndex("type"));
@@ -566,7 +566,7 @@ public class TableAppointmentData extends BaseTable {
 
     }
 
-    public ArrayList<AppointmentMappingModel> filterByName(int id, String type, long first, long second) {
+    public ArrayList<AppointmentMappingModel> filterByName(String id, String type, long first, long second) {
 
         ArrayList<AppointmentMappingModel> allData = new ArrayList<AppointmentMappingModel>();
         Cursor _cursor = null;
@@ -619,7 +619,7 @@ public class TableAppointmentData extends BaseTable {
                                             AttendeeModel attendee = new AttendeeModel();
 
                                             attendee.setAppoitmentId(appointmentModel.getEventId());
-                                            attendee.setId(_cursorAttendee.getInt(_cursorAttendee.getColumnIndex("userkid_id")));
+                                            attendee.setId(_cursorAttendee.getString(_cursorAttendee.getColumnIndex("userkid_id")));
                                             attendee.setServerid(_cursorAttendee.getInt(_cursorAttendee.getColumnIndex("server_id")));
 
                                             String type_uk = _cursorAttendee.getString(_cursorAttendee.getColumnIndex("type"));
@@ -756,7 +756,7 @@ public class TableAppointmentData extends BaseTable {
                                         AttendeeModel attendee = new AttendeeModel();
 
                                         attendee.setAppoitmentId(appointmentModel.getEventId());
-                                        attendee.setId(_cursorAttendee.getInt(_cursorAttendee.getColumnIndex("userkid_id")));
+                                        attendee.setId(_cursorAttendee.getString(_cursorAttendee.getColumnIndex("userkid_id")));
                                         attendee.setServerid(_cursorAttendee.getInt(_cursorAttendee.getColumnIndex("server_id")));
 
                                         String type_uk = _cursorAttendee.getString(_cursorAttendee.getColumnIndex("type"));
@@ -835,7 +835,7 @@ public class TableAppointmentData extends BaseTable {
         return allData;
     }
 
-    public ArrayList<AppointmentMappingModel> filterByName_1(int id, String type, long first, long second) {
+    public ArrayList<AppointmentMappingModel> filterByName_1(String id, String type, long first, long second) {
 
         ArrayList<AppointmentMappingModel> allData = new ArrayList<AppointmentMappingModel>();
         Cursor _cursor = null;
@@ -919,7 +919,7 @@ public class TableAppointmentData extends BaseTable {
                                         AttendeeModel attendee = new AttendeeModel();
 
                                         attendee.setAppoitmentId(appointmentModel.getEventId());
-                                        attendee.setId(_cursorAttendee.getInt(_cursorAttendee.getColumnIndex("userkid_id")));
+                                        attendee.setId(_cursorAttendee.getString(_cursorAttendee.getColumnIndex("userkid_id")));
                                         attendee.setServerid(_cursorAttendee.getInt(_cursorAttendee.getColumnIndex("server_id")));
 
                                         String type_uk = _cursorAttendee.getString(_cursorAttendee.getColumnIndex("type"));
@@ -965,7 +965,7 @@ public class TableAppointmentData extends BaseTable {
         return allData;
     }
 
-    public ArrayList<AppointmentMappingModel> filterByName_2(int id, String type) {
+    public ArrayList<AppointmentMappingModel> filterByName_2(String id, String type) {
 
         ArrayList<AppointmentMappingModel> allData = new ArrayList<AppointmentMappingModel>();
         Cursor _cursor = null;
@@ -1016,7 +1016,7 @@ public class TableAppointmentData extends BaseTable {
                                         AttendeeModel attendee = new AttendeeModel();
 
                                         attendee.setAppoitmentId(appointmentModel.getEventId());
-                                        attendee.setId(_cursorAttendee.getInt(_cursorAttendee.getColumnIndex("userkid_id")));
+                                        attendee.setId(_cursorAttendee.getString(_cursorAttendee.getColumnIndex("userkid_id")));
                                         attendee.setServerid(_cursorAttendee.getInt(_cursorAttendee.getColumnIndex("server_id")));
 
                                         String type_uk = _cursorAttendee.getString(_cursorAttendee.getColumnIndex("type"));
@@ -1173,7 +1173,7 @@ public class TableAppointmentData extends BaseTable {
                                 AttendeeModel attendee = new AttendeeModel();
 
                                 attendee.setAppoitmentId(appointmentModel.getEventId());
-                                attendee.setId(_cursorAttendee.getInt(_cursorAttendee.getColumnIndex("userkid_id")));
+                                attendee.setId(_cursorAttendee.getString(_cursorAttendee.getColumnIndex("userkid_id")));
                                 attendee.setServerid(_cursorAttendee.getInt(_cursorAttendee.getColumnIndex("server_id")));
 
                                 String type = _cursorAttendee.getString(_cursorAttendee.getColumnIndex("type"));

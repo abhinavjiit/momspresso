@@ -756,7 +756,7 @@ public class ActivityEditTask extends BaseActivity implements View.OnClickListen
                         boolean isReminder = false;
                         // craete reminder
                         for (TaskDataModel.WhoToRemind model : responseData.getResult().getData().getTask().get(0).getTaskWhomRemind()) {
-                            if (model.getUser_id() == SharedPrefUtils.getUserDetailModel(this).getId()) {
+                            if (model.getUser_id().equals(SharedPrefUtils.getUserDetailModel(this).getId())) {
                                 isReminder = true;
                                 break;
 
@@ -1069,7 +1069,7 @@ public class ActivityEditTask extends BaseActivity implements View.OnClickListen
 
                 boolean all = false;
 
-                ArrayList<Integer> idlist = new ArrayList<>();
+                ArrayList<String> idlist = new ArrayList<>();
 
                 for (TaskDataModel.Attendee model : attendeeDataList) {
 
@@ -1083,7 +1083,7 @@ public class ActivityEditTask extends BaseActivity implements View.OnClickListen
                 AttendeeDialogFragment dialogFragment = new AttendeeDialogFragment();
 
                 Bundle args = new Bundle();
-                args.putIntegerArrayList("chkValues", idlist);
+                args.putStringArrayList("chkValues", idlist);
                 args.putBoolean("edit", true);
                 args.putBoolean("All", all);
                 args.putString("iftask", "iftask");
@@ -1112,7 +1112,7 @@ public class ActivityEditTask extends BaseActivity implements View.OnClickListen
                 WhoToRemindDialogFragment dialogFragment1 = new WhoToRemindDialogFragment();
 
                 args = new Bundle();
-                args.putIntegerArrayList("chkValues", idlist);
+                args.putStringArrayList("chkValues", idlist);
                 args.putBoolean("All", all);
                 args.putBoolean("edit", true);
                 args.putString("iftask", "iftask");

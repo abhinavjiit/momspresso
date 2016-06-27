@@ -521,7 +521,7 @@ public class ActivityCreateAppointment extends BaseActivity implements View.OnCl
                         String appointmentName = responseData.getResult().getData().getAppointment().get(0).getAppointment().getAppointment_name();
 
                         for (AppoitmentDataModel.WhoToRemind model : responseData.getResult().getData().getAppointment().get(0).getAppointmentWhomRemind()) {
-                            if (model.getUser_id() == SharedPrefUtils.getUserDetailModel(this).getId()) {
+                            if (model.getUser_id().equals(SharedPrefUtils.getUserDetailModel(this).getId())) {
                                 Reminder.with(this).info(Constants.REMINDER_TYPE_APPOINTMENT, appointmentName).startTime(startTimeMillis).setRepeatBehavior(repeat, repeatUntill, repeatFrequency, repeatNum).remindBefore(reminderBefore).setRecurring(recurring).create(reminderId);
                                 break;
 
@@ -648,7 +648,7 @@ public class ActivityCreateAppointment extends BaseActivity implements View.OnCl
 
                 boolean all = false;
 
-                ArrayList<Integer> idlist = new ArrayList<>();
+                ArrayList<String> idlist = new ArrayList<>();
 
                 for (AppoitmentDataModel.Attendee model : attendeeDataList) {
 
@@ -662,7 +662,7 @@ public class ActivityCreateAppointment extends BaseActivity implements View.OnCl
                 AttendeeDialogFragment dialogFragment = new AttendeeDialogFragment();
 
                 Bundle args = new Bundle();
-                args.putIntegerArrayList("chkValues", idlist);
+                args.putStringArrayList("chkValues", idlist);
                 args.putBoolean("All", all);
                 args.putBoolean("edit", false);
                 args.putString("iftask", "");
@@ -691,7 +691,7 @@ public class ActivityCreateAppointment extends BaseActivity implements View.OnCl
                 WhoToRemindDialogFragment dialogFragment1 = new WhoToRemindDialogFragment();
 
                 args = new Bundle();
-                args.putIntegerArrayList("chkValues", idlist);
+                args.putStringArrayList("chkValues", idlist);
                 args.putBoolean("All", all);
                 args.putBoolean("edit", false);
                 args.putString("iftask", "");

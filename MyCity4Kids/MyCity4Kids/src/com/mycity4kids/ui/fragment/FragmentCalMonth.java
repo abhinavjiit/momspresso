@@ -85,7 +85,7 @@ public class FragmentCalMonth extends BaseFragment implements View.OnClickListen
     CustomListView listAttendee;
     FrameLayout attendeeFrame;
     AttendeeListAdapter attendeeAdapter;
-    int id_uk;
+    String id_uk;
     String type;
     Calendar tempCal;
     SimpleDateFormat formatter;
@@ -925,7 +925,7 @@ public class FragmentCalMonth extends BaseFragment implements View.OnClickListen
     }
 
 
-    public ArrayList<AppointmentMappingModel> filterList(int id, String type, String first, String last) throws ParseException {
+    public ArrayList<AppointmentMappingModel> filterList(String id, String type, String first, String last) throws ParseException {
 
         ArrayList<AppointmentMappingModel> appointmentListData;
 
@@ -1205,7 +1205,7 @@ public class FragmentCalMonth extends BaseFragment implements View.OnClickListen
         return finaldata;
     }
 
-    public LinkedHashMap<String, ArrayList<AppointmentMappingModel>> getFilteredDatafromDB(List<String> allDays, int id, String type) throws ParseException {
+    public LinkedHashMap<String, ArrayList<AppointmentMappingModel>> getFilteredDatafromDB(List<String> allDays, String id, String type) throws ParseException {
 
         ArrayList<AppointmentMappingModel> appointmentModels;
         ArrayList<AppointmentMappingModel> tempAppointmentModels;
@@ -1738,7 +1738,7 @@ public class FragmentCalMonth extends BaseFragment implements View.OnClickListen
         return time_stamp;
     }
 
-    public ArrayList<AppointmentMappingModel> getFilteredAppointmentByDay(String Date, int id, String type, Boolean flag) throws ParseException {
+    public ArrayList<AppointmentMappingModel> getFilteredAppointmentByDay(String Date, String id, String type, Boolean flag) throws ParseException {
 
         ArrayList<AppointmentMappingModel> appointmentModels;
         ArrayList<AppointmentMappingModel> tempAppointmentModels;
@@ -3243,7 +3243,7 @@ public class FragmentCalMonth extends BaseFragment implements View.OnClickListen
 
                     for (int k = 0; k < tempList.get(listdays.get(i)).get(j).getAttendee().size(); k++) {
 
-                        if (tempList.get(listdays.get(i)).get(j).getAttendee().get(k).getId() == id_uk) {
+                        if (tempList.get(listdays.get(i)).get(j).getAttendee().get(k).getId().equals(id_uk)) {
                             appointmentList.add(tempList.get(listdays.get(i)).get(j));
                         }
                     }

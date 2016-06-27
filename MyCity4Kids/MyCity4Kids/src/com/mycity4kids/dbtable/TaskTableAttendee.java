@@ -117,7 +117,7 @@ public class TaskTableAttendee extends BaseTable {
                 AttendeeModel attendee = new AttendeeModel();
 
                 attendee.setAppoitmentId(id);
-                attendee.setId(_cursor.getInt(_cursor.getColumnIndex(USERKID_ID)));
+                attendee.setId(_cursor.getString(_cursor.getColumnIndex(USERKID_ID)));
                 attendee.setServerid(_cursor.getInt(_cursor.getColumnIndex(SERVER_ID)));
 
 

@@ -221,7 +221,7 @@ public class TableTaskData extends BaseTable {
     }
 
 
-    public ArrayList<TaskMappingModel> allDataBTWNdays(long first, long second, Boolean isListSelected, int IdList, int userId) {
+    public ArrayList<TaskMappingModel> allDataBTWNdays(long first, long second, Boolean isListSelected, int IdList, String userId) {
 
         ArrayList<TaskMappingModel> allData = new ArrayList<TaskMappingModel>();
 
@@ -269,7 +269,7 @@ public class TableTaskData extends BaseTable {
                             AttendeeModel attendee = new AttendeeModel();
 
                             attendee.setAppoitmentId(taskMappingModel.getTask_id());
-                            attendee.setId(_cursorAttendee.getInt(_cursorAttendee.getColumnIndex("userkid_id")));
+                            attendee.setId(_cursorAttendee.getString(_cursorAttendee.getColumnIndex("userkid_id")));
                             attendee.setServerid(_cursorAttendee.getInt(_cursorAttendee.getColumnIndex("server_id")));
 
                             String type = _cursorAttendee.getString(_cursorAttendee.getColumnIndex("type"));
@@ -374,7 +374,7 @@ public class TableTaskData extends BaseTable {
     }
 
 
-    public ArrayList<TaskMappingModel> getBackDaysData(long first, Boolean isListSelected, int idList, int userId) {
+    public ArrayList<TaskMappingModel> getBackDaysData(long first, Boolean isListSelected, int idList, String userId) {
 
         ArrayList<TaskMappingModel> allData = new ArrayList<TaskMappingModel>();
 
@@ -427,7 +427,7 @@ public class TableTaskData extends BaseTable {
                             AttendeeModel attendee = new AttendeeModel();
 
                             attendee.setAppoitmentId(taskMappingModel.getTask_id());
-                            attendee.setId(_cursorAttendee.getInt(_cursorAttendee.getColumnIndex("userkid_id")));
+                            attendee.setId(_cursorAttendee.getString(_cursorAttendee.getColumnIndex("userkid_id")));
                             attendee.setServerid(_cursorAttendee.getInt(_cursorAttendee.getColumnIndex("server_id")));
 
                             String type = _cursorAttendee.getString(_cursorAttendee.getColumnIndex("type"));
@@ -535,7 +535,7 @@ public class TableTaskData extends BaseTable {
 
                             AttendeeModel attendee = new AttendeeModel();
                             attendee.setAppoitmentId(taskMappingModel.getTask_id());
-                            attendee.setId(_cursorAttendee.getInt(_cursorAttendee.getColumnIndex("userkid_id")));
+                            attendee.setId(_cursorAttendee.getString(_cursorAttendee.getColumnIndex("userkid_id")));
                             attendee.setServerid(_cursorAttendee.getInt(_cursorAttendee.getColumnIndex("server_id")));
                             String type = _cursorAttendee.getString(_cursorAttendee.getColumnIndex("type"));
 
@@ -641,7 +641,7 @@ public class TableTaskData extends BaseTable {
                             AttendeeModel attendee = new AttendeeModel();
 
                             attendee.setAppoitmentId(taskMappingModel.getTask_id());
-                            attendee.setId(_cursorAttendee.getInt(_cursorAttendee.getColumnIndex("userkid_id")));
+                            attendee.setId(_cursorAttendee.getString(_cursorAttendee.getColumnIndex("userkid_id")));
                             attendee.setServerid(_cursorAttendee.getInt(_cursorAttendee.getColumnIndex("server_id")));
 
                             String type = _cursorAttendee.getString(_cursorAttendee.getColumnIndex("type"));
@@ -1172,7 +1172,7 @@ public class TableTaskData extends BaseTable {
                             AttendeeModel attendee = new AttendeeModel();
 
                             attendee.setAppoitmentId(taskMappingModel.getTask_id());
-                            attendee.setId(_cursorAttendee.getInt(_cursorAttendee.getColumnIndex("userkid_id")));
+                            attendee.setId(_cursorAttendee.getString(_cursorAttendee.getColumnIndex("userkid_id")));
                             attendee.setServerid(_cursorAttendee.getInt(_cursorAttendee.getColumnIndex("server_id")));
 
                             String type = _cursorAttendee.getString(_cursorAttendee.getColumnIndex("type"));

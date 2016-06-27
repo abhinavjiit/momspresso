@@ -57,7 +57,7 @@ public class TableNotes extends BaseTable {
     }
 
 
-    public void AddNotes(String notes, int eventid, int userid, int serverid) {
+    public void AddNotes(String notes, int eventid, String userid, int serverid) {
         try {
             mWritableDatabase.beginTransaction();
             ContentValues _contentValue = new ContentValues();
@@ -146,7 +146,7 @@ public class TableNotes extends BaseTable {
 
                 files.setAppointment_id(id);
                 files.setNote(_cursor.getString(_cursor.getColumnIndex(NOTES)));
-                files.setUser_id(_cursor.getInt(_cursor.getColumnIndex(USER_ID)));
+                files.setUser_id(_cursor.getString(_cursor.getColumnIndex(USER_ID)));
                 files.setId(_cursor.getInt(_cursor.getColumnIndex(SERVER_ID)));
 
                 fileList.add(files);
@@ -160,7 +160,7 @@ public class TableNotes extends BaseTable {
 
     }
 
-    public ArrayList<AppoitmentDataModel.Notes> getDataByUserId(int id, int userid) {
+    public ArrayList<AppoitmentDataModel.Notes> getDataByUserId(int id, String userid) {
         ArrayList<AppoitmentDataModel.Notes> fileList = new ArrayList<>();
 
 
@@ -175,7 +175,7 @@ public class TableNotes extends BaseTable {
 
                 files.setAppointment_id(id);
                 files.setNote(_cursor.getString(_cursor.getColumnIndex(NOTES)));
-                files.setUser_id(_cursor.getInt(_cursor.getColumnIndex(USER_ID)));
+                files.setUser_id(_cursor.getString(_cursor.getColumnIndex(USER_ID)));
                 files.setId(_cursor.getInt(_cursor.getColumnIndex(SERVER_ID)));
 
                 fileList.add(files);

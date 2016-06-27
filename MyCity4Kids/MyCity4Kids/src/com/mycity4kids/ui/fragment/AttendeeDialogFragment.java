@@ -33,7 +33,7 @@ public class AttendeeDialogFragment extends android.app.DialogFragment {
     ListView listView;
     TextView cancel, done;
     AttendeeCustomAdapter adapter;
-    public ArrayList<Integer> chklist;
+    public ArrayList<String> chklist;
     private boolean all;
     private boolean edit;
     String iftask = "";
@@ -51,7 +51,7 @@ public class AttendeeDialogFragment extends android.app.DialogFragment {
 
         Bundle extras = getArguments();
         if (extras != null) {
-            chklist = extras.getIntegerArrayList("chkValues");
+            chklist = extras.getStringArrayList("chkValues");
             all = extras.getBoolean("All");
             edit = extras.getBoolean("edit");
             iftask = extras.getString("iftask");
@@ -86,7 +86,7 @@ public class AttendeeDialogFragment extends android.app.DialogFragment {
         done = (TextView) rootView.findViewById(R.id.done);
 
 
-        AttendeeModel data1 = new AttendeeModel(0, "ALL", "All", "#3949ab");
+        AttendeeModel data1 = new AttendeeModel("0", "ALL", "All", "#3949ab");
         attendeeList.add(0, data1);
         // chking values
         if (all) {
@@ -98,7 +98,7 @@ public class AttendeeDialogFragment extends android.app.DialogFragment {
         } else {
             for (int i = 0; i < attendeeList.size(); i++) {
                 for (int j = 0; j < chklist.size(); j++) {
-                    if (attendeeList.get(i).getId() == chklist.get(j)) {
+                    if (attendeeList.get(i).getId().equals(chklist.get(j))) {
                         attendeeList.get(i).setCheck(true);
                     }
                 }

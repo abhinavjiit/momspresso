@@ -158,7 +158,7 @@ public class TableTaskList extends BaseTable {
 //
 //    }
 
-    public ArrayList<TaskListModel> getAllList(int userId) {
+    public ArrayList<TaskListModel> getAllList(String userId) {
 
         ArrayList<TaskListModel> taskListModel = new ArrayList<>();
 

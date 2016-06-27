@@ -68,7 +68,7 @@ public class TableKids extends BaseTable {
                 kidModel.setName(_cursor.getString(_cursor.getColumnIndex(KID_NAME)));
                 kidModel.setColor_code(_cursor.getString(_cursor.getColumnIndex(KID_COLOR_CODE)));
                 kidModel.setDate_of_birth(_cursor.getString(_cursor.getColumnIndex(KID_BDAY)));
-                kidModel.setId(_cursor.getInt(_cursor.getColumnIndex(KIDID)));
+                kidModel.setId(_cursor.getString(_cursor.getColumnIndex(KIDID)));
                 kidlist.add(kidModel);
             }
         } catch (Exception e) {
@@ -79,7 +79,7 @@ public class TableKids extends BaseTable {
         return kidlist;
     }
 
-    public KidsInfo getKids(int id) {
+    public KidsInfo getKids(String id) {
         KidsInfo kid = new KidsInfo();
         Cursor _cursor = null;
         try {
@@ -89,7 +89,7 @@ public class TableKids extends BaseTable {
                 kid.setName(_cursor.getString(_cursor.getColumnIndex(KID_NAME)));
                 kid.setColor_code(_cursor.getString(_cursor.getColumnIndex(KID_COLOR_CODE)));
                 kid.setDate_of_birth(_cursor.getString(_cursor.getColumnIndex(KID_BDAY)));
-                kid.setId(_cursor.getInt(_cursor.getColumnIndex(KIDID)));
+                kid.setId(_cursor.getString(_cursor.getColumnIndex(KIDID)));
             }
         } catch (Exception e) {
             Log.e("", "" + e);

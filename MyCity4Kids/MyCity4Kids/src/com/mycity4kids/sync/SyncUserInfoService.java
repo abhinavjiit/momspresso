@@ -99,7 +99,7 @@ public class SyncUserInfoService extends IntentService implements UpdateListener
         switch (requestType) {
             case AppConstants.SYNC_USER_INFO_REQUEST:
                 builder.append(AppConstants.GET_SYNC_USER_INFO_URL);
-                int userId = SharedPrefUtils.getUserDetailModel(this).getId();
+                String userId = SharedPrefUtils.getUserDetailModel(this).getId();
                 builder.append("user_id:").append(userId);
                 Log.i("User sync request url", builder.toString());
                 break;

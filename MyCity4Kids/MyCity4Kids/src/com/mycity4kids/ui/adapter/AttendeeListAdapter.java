@@ -21,7 +21,7 @@ public class AttendeeListAdapter extends BaseAdapter {
     public AttendeeListAdapter(Activity context, ArrayList<AttendeeModel> list_data) {
         this.context = context;
         this.list = list_data;
-        this.list.add(0, new AttendeeModel(0, " ", "All", "#1C55F1"));
+        this.list.add(0, new AttendeeModel("0", " ", "All", "#1C55F1"));
     }
 
     @Override

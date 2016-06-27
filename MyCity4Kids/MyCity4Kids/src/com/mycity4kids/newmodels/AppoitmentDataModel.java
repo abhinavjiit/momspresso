@@ -74,7 +74,6 @@ public class AppoitmentDataModel extends BaseDataModel {
     }
 
 
-
     public class AppointmentDetail extends BaseDataModel {
 
 
@@ -129,7 +128,7 @@ public class AppoitmentDataModel extends BaseDataModel {
         String repeate_untill = "";
         String repeate_num = "";
         String repeate_frequency;
-        private int user_id;
+        private String user_id;
         private int family_id;
 
         public String getExternal_id() {
@@ -140,11 +139,11 @@ public class AppoitmentDataModel extends BaseDataModel {
             this.external_id = external_id;
         }
 
-        public int getUser_id() {
+        public String getUser_id() {
             return user_id;
         }
 
-        public void setUser_id(int user_id) {
+        public void setUser_id(String user_id) {
             this.user_id = user_id;
         }
 
@@ -256,7 +255,7 @@ public class AppoitmentDataModel extends BaseDataModel {
     }
 
     public class Attendee extends BaseDataModel {
-        private int uk_id;
+        private String uk_id;
         private String uk_type;
         private int id;
         private int appointment_id;
@@ -287,11 +286,11 @@ public class AppoitmentDataModel extends BaseDataModel {
             this.appointment_id = appointment_id;
         }
 
-        public int getUk_id() {
+        public String getUk_id() {
             return uk_id;
         }
 
-        public void setUk_id(int uk_id) {
+        public void setUk_id(String uk_id) {
             this.uk_id = uk_id;
         }
 
@@ -356,10 +355,10 @@ public class AppoitmentDataModel extends BaseDataModel {
 
         }
 
-        public Files()
-        {
+        public Files() {
 
         }
+
         public Files(Parcel in) {
             // TODO Auto-generated constructor stub
             super();
@@ -394,7 +393,7 @@ public class AppoitmentDataModel extends BaseDataModel {
 
     public class WhoToRemind extends BaseDataModel {
 
-        int user_id;
+        String user_id;
         int appointment_id;
         private int id;
 
@@ -406,11 +405,11 @@ public class AppoitmentDataModel extends BaseDataModel {
             this.id = id;
         }
 
-        public int getUser_id() {
+        public String getUser_id() {
             return user_id;
         }
 
-        public void setUser_id(int user_id) {
+        public void setUser_id(String user_id) {
             this.user_id = user_id;
         }
 
@@ -425,7 +424,7 @@ public class AppoitmentDataModel extends BaseDataModel {
 
     public class Notes extends BaseDataModel {
 
-        private int user_id;
+        private String user_id;
         private int id;
         private String note;
         private int appointment_id;
@@ -447,11 +446,11 @@ public class AppoitmentDataModel extends BaseDataModel {
             this.appointment_id = appointment_id;
         }
 
-        public int getUser_id() {
+        public String getUser_id() {
             return user_id;
         }
 
-        public void setUser_id(int user_id) {
+        public void setUser_id(String user_id) {
             this.user_id = user_id;
         }
 
@@ -465,9 +464,9 @@ public class AppoitmentDataModel extends BaseDataModel {
     }
 
 
-    public class AppointmentDelete
-    {
+    public class AppointmentDelete {
         public AppoitmentDel Appointment;
+
         public AppoitmentDel getAppointment() {
             return Appointment;
         }
@@ -487,8 +486,7 @@ public class AppoitmentDataModel extends BaseDataModel {
         ApppointmentDeleted = apppointmentDeleted;
     }
 
-    public class AppoitmentDel
-    {
+    public class AppoitmentDel {
         public int getId() {
             return id;
         }

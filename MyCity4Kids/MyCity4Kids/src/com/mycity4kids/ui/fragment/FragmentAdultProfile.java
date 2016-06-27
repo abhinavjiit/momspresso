@@ -42,7 +42,7 @@ public class FragmentAdultProfile extends BaseFragment implements View.OnClickLi
 
     View view;
     EditText name, email, pincode;
-    int id;
+    String id;
     private Dialog mColorPickerDialog;
     private String color_selected = "";
     private HashMap<String, String> used_colors = new HashMap<>();
@@ -55,7 +55,7 @@ public class FragmentAdultProfile extends BaseFragment implements View.OnClickLi
         view = inflater.inflate(R.layout.aa_adult_profile, container, false);
 
         if (getArguments() != null) {
-            id = (int) getArguments().get("ADULT_ID");
+            id = (String) getArguments().get("ADULT_ID");
             used_colors = (HashMap) getArguments().getSerializable("used_colors");
         }
 

@@ -122,7 +122,7 @@ public class TableWhoToRemind extends BaseTable {
                 AttendeeModel attendee = new AttendeeModel();
 
                 attendee.setAppoitmentId(id);
-                attendee.setId(_cursor.getInt(_cursor.getColumnIndex(ADULT_ID)));
+                attendee.setId(_cursor.getString(_cursor.getColumnIndex(ADULT_ID)));
                 attendee.setName(_cursor.getString(_cursor.getColumnIndex("name")));
                 attendee.setColorCode(_cursor.getString(_cursor.getColumnIndex("colorCode")));
                 attendee.setServerid(_cursor.getInt(_cursor.getColumnIndex(SERVER_ID)));

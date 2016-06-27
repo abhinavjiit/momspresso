@@ -196,7 +196,7 @@ public class SyncService extends IntentService implements UpdateListener {
                 String appointmentName = data.getAppointment().getAppointment_name();
 
                 for (AppoitmentDataModel.WhoToRemind dataModel : data.getAppointmentWhomRemind()) {
-                    if (dataModel.getUser_id() == SharedPrefUtils.getUserDetailModel(this).getId()) {
+                    if (dataModel.getUser_id().equals(SharedPrefUtils.getUserDetailModel(this).getId())) {
                         Reminder.with(this).info(Constants.REMINDER_TYPE_APPOINTMENT, appointmentName).startTime(startTimeMillis).setRepeatBehavior(repeat, repeatUntill, repeatFrequency, repeatNum).remindBefore(reminderBefore).setRecurring(recurring).create(reminderId);
                         break;
 
@@ -438,7 +438,7 @@ public class SyncService extends IntentService implements UpdateListener {
                 String taskName = data.getTask().getTask_name();
 
                 for (TaskDataModel.WhoToRemind dataModel : data.getTaskWhomRemind()) {
-                    if (dataModel.getUser_id() == SharedPrefUtils.getUserDetailModel(this).getId()) {
+                    if (dataModel.getUser_id().equals(SharedPrefUtils.getUserDetailModel(this).getId())) {
                         Reminder.with(this).info(Constants.REMINDER_TYPE_TASKS, taskName).startTime(startTimeMillis).setRepeatBehavior(repeat, repeatUntill, repeatFrequency, repeatNum).remindBefore(reminderBefore).setRecurring(recurring).create(reminderId);
                         break;
 

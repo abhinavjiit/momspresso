@@ -43,7 +43,7 @@ public class PushTokenService extends IntentService implements UpdateListener {
         if (ConnectivityUtils.isNetworkEnabled(this)) {
             if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getDeviceToken(this))) {
                 // hit api
-                if (SharedPrefUtils.getUserDetailModel(this).getId() > 0) {
+                if (!SharedPrefUtils.getUserDetailModel(this).getId().equals("0")) {
                     hitApiRequest(AppConstants.PUSH_TOKEN_REQUEST);
 
                 }

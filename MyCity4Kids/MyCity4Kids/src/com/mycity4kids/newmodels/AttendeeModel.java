@@ -9,7 +9,7 @@ public class AttendeeModel extends BaseModel {
 
     String name;
     String colorCode;
-    int id;
+    String id;
     String type;
     Boolean check = false;
     int appoitmentId;
@@ -46,18 +46,18 @@ public class AttendeeModel extends BaseModel {
     }
 
 
-    public AttendeeModel(String colorCode){
+    public AttendeeModel(String colorCode) {
         this.colorCode = colorCode;
     }
 
-    public AttendeeModel(int id, String type, String name, String code) {
+    public AttendeeModel(String id, String type, String name, String code) {
         this.id = id;
         this.type = type;
         this.colorCode = code;
         this.name = name;
     }
 
-    public AttendeeModel(int id, String type, String name, String code,boolean selected) {
+    public AttendeeModel(String id, String type, String name, String code, boolean selected) {
         this.id = id;
         this.type = type;
         this.colorCode = code;
@@ -65,11 +65,11 @@ public class AttendeeModel extends BaseModel {
         this.check = selected;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -118,6 +118,6 @@ public class AttendeeModel extends BaseModel {
 
     @Override
     public int hashCode() {
-        return id;
+        return id.hashCode();
     }
 }

@@ -47,7 +47,7 @@ public class BootCompleteReceiver extends WakefulBroadcastReceiver {
             ArrayList<AttendeeModel> whoToRemindList = whotoRemindTable.getDataByAppointment(reminderId);
 
             for (AttendeeModel dataModel : whoToRemindList) {
-                if (dataModel.getId() == SharedPrefUtils.getUserDetailModel(context).getId()) {
+                if (dataModel.getId().equals(SharedPrefUtils.getUserDetailModel(context).getId())) {
                     Reminder.with(context).info(Constants.REMINDER_TYPE_APPOINTMENT, appointmentName).startTime(startTimeMillis).setRepeatBehavior(repeat, repeatUntill, repeatFrequency, repeatNum).remindBefore(reminderBefore).setRecurring(recurring).create(reminderId);
                     break;
                 }
@@ -74,7 +74,7 @@ public class BootCompleteReceiver extends WakefulBroadcastReceiver {
             ArrayList<AttendeeModel> whoToRemindList = whotoRemindTable.getDataByTask(reminderId);
 
             for (AttendeeModel dataModel : whoToRemindList) {
-                if (dataModel.getId() == SharedPrefUtils.getUserDetailModel(context).getId()) {
+                if (dataModel.getId().equals(SharedPrefUtils.getUserDetailModel(context).getId())) {
                     Reminder.with(context).info(Constants.REMINDER_TYPE_TASKS, taskName).startTime(startTimeMillis).setRepeatBehavior(repeat, repeatUntill, repeatFrequency, repeatNum).remindBefore(reminderBefore).setRecurring(recurring).create(reminderId);
                     break;
 

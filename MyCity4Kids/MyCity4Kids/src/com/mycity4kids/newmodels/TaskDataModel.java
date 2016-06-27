@@ -238,16 +238,16 @@ public class TaskDataModel extends BaseDataModel {
     }
 
     public class Attendee extends BaseDataModel {
-        private int uk_id;
+        private String uk_id;
         private String uk_type;
         private int id;
         private int task_id;
 
-        public int getUk_id() {
+        public String getUk_id() {
             return uk_id;
         }
 
-        public void setUk_id(int uk_id) {
+        public void setUk_id(String uk_id) {
             this.uk_id = uk_id;
         }
 
@@ -370,15 +370,15 @@ public class TaskDataModel extends BaseDataModel {
 
     public class WhoToRemind extends BaseDataModel {
 
-        int user_id;
+        String user_id;
         int task_id;
         private int id;
 
-        public int getUser_id() {
+        public String getUser_id() {
             return user_id;
         }
 
-        public void setUser_id(int user_id) {
+        public void setUser_id(String user_id) {
             this.user_id = user_id;
         }
 
@@ -401,16 +401,16 @@ public class TaskDataModel extends BaseDataModel {
 
     public class Notes extends BaseDataModel {
 
-        private int user_id;
+        private String user_id;
         private int id;
         private String note;
         private int task_id;
 
-        public int getUser_id() {
+        public String getUser_id() {
             return user_id;
         }
 
-        public void setUser_id(int user_id) {
+        public void setUser_id(String user_id) {
             this.user_id = user_id;
         }
 

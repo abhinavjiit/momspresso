@@ -49,7 +49,7 @@ import java.util.Iterator;
 public class FragmentKidProfile extends BaseFragment implements View.OnClickListener {
 
     View view;
-    int id;
+    String id;
     EditText name;
     static TextView kidBdy;
     private TextView mColorfrKid;
@@ -64,7 +64,7 @@ public class FragmentKidProfile extends BaseFragment implements View.OnClickList
         view = inflater.inflate(R.layout.aa_kid_profile, container, false);
 
         if (getArguments() != null) {
-            id = (int) getArguments().get("KID_ID");
+            id = (String) getArguments().get("KID_ID");
             used_colors = (HashMap) getArguments().getSerializable("used_colors");
         }
 

@@ -177,10 +177,10 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen 
 
     public void onAppStart() {
         if (ConnectivityUtils.isNetworkEnabled(this)) {
-            if (SharedPrefUtils.getUserDetailModel(this).getId() > 0) {
+//            if (SharedPrefUtils.getUserDetailModel(this).getId() > 0) {
 //                startSyncing();
 //                startSyncingUserInfo();
-            }
+//            }
 
         }
     }
@@ -238,6 +238,27 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen 
     }
 
     public void showAlertDialog(String title, String message, final OnButtonClicked onButtonClicked) {
+        new AlertDialog.Builder(this)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // continue with delete
+                        dialog.dismiss();
+                        onButtonClicked.onButtonCLick(0);
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                        dialog.dismiss();
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
+
+    public void showUpdateEmailDialog(String title, String message, final OnButtonClicked onButtonClicked) {
         new AlertDialog.Builder(this)
                 .setTitle(title)
                 .setMessage(message)

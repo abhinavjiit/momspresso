@@ -120,7 +120,7 @@ public class TableAttendee extends BaseTable {
                 AttendeeModel attendee = new AttendeeModel();
 
                 attendee.setAppoitmentId(id);
-                attendee.setId(_cursor.getInt(_cursor.getColumnIndex(USERKID_ID)));
+                attendee.setId(_cursor.getString(_cursor.getColumnIndex(USERKID_ID)));
                 attendee.setServerid(_cursor.getInt(_cursor.getColumnIndex(SERVER_ID)));
 
 
@@ -163,7 +163,7 @@ public class TableAttendee extends BaseTable {
                 AppoitmentDataModel.Attendee attendee = new AppoitmentDataModel().new Attendee();
 
                 attendee.setAppointment_id(id);
-                attendee.setUk_id(_cursor.getInt(_cursor.getColumnIndex(USERKID_ID)));
+                attendee.setUk_id(_cursor.getString(_cursor.getColumnIndex(USERKID_ID)));
                 attendee.setId(_cursor.getInt(_cursor.getColumnIndex(SERVER_ID)));
 
                 String type = _cursor.getString(_cursor.getColumnIndex(TYPE));

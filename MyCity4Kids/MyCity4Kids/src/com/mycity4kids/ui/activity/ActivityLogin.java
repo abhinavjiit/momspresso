@@ -1,29 +1,19 @@
 package com.mycity4kids.ui.activity;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Paint;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.Session;
 import com.facebook.model.GraphUser;
 import com.google.android.gms.auth.GoogleAuthUtil;
@@ -32,6 +22,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -52,6 +43,9 @@ import com.mycity4kids.google.GooglePlusUtils;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.IFacebookUser;
 import com.mycity4kids.interfaces.IPlusClient;
+import com.mycity4kids.models.request.LoginRegistrationRequest;
+import com.mycity4kids.models.request.VerifyEmailRequest;
+import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.models.user.KidsInfo;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.models.user.UserModel;
@@ -60,14 +54,18 @@ import com.mycity4kids.models.user.UserResponse;
 import com.mycity4kids.newmodels.FamilyInvites;
 import com.mycity4kids.newmodels.UserInviteModel;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
 import com.mycity4kids.sync.PushTokenService;
+import com.mycity4kids.ui.fragment.VerifyEmailDialogFragment;
+import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.widget.CustomFontEditText;
 import com.mycity4kids.widget.CustomFontTextView;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
 
 /**
  * Created by khushboo.goyal on 19-06-2015.
@@ -90,6 +88,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
     private String googleToken = "";
     private int changeBaseURL = 0;
     private GraphUser fbUser;
+    VerifyEmailDialogFragment dialogFragment;
 
     private String loginMode = "";
 
@@ -99,15 +98,16 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         Utils.pushOpenScreenEvent(ActivityLogin.this, "Login Screen", SharedPrefUtils.getUserDetailModel(this).getId() + "");
         setContentView(R.layout.aa_loginform);
 
+        String success = "{\"code\":200,\"status\":\"success\",\"data\":{\"id\":\"c08af7fb45e84ce8853369ba047fc307\",\"mc4kToken\":null,\"firstName\":\"Ndh\",\"lastName\":\" \",\"email\":\"hpmycity23@yahoo.com\",\"cityId\":\"1 \",\"userType\":\"0\"},\"reason\":\"\"}";
+        String failure = "{\"code\":200,\"status\":\"failure\",\"data\":[],\"reason\":\"unable to process request !!\"}";
+
+        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+        UserDetailResponse successResponse = gson.fromJson(success, UserDetailResponse.class);
+        UserDetailResponse failureResponse = gson.fromJson(failure, UserDetailResponse.class);
+
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Sign In");
-
-//        forgotView = (LinearLayout) findViewById(R.id.forgot_view);
-//
-//        ((LinearLayout) findViewById(R.id.forgot_view)).setGravity(Gravity.CENTER);
-
         try {
             mEmailId = (CustomFontEditText) findViewById(R.id.email_login);
             mPassword = (CustomFontEditText) findViewById(R.id.password_login);
@@ -134,8 +134,6 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
             ((CustomFontTextView) findViewById(R.id.forgot_password)).setOnClickListener(this);
             ((CustomFontTextView) findViewById(R.id.connect_facebook)).setOnClickListener(this);
             ((CustomFontTextView) findViewById(R.id.connect_googleplus)).setOnClickListener(this);
-//            forgotPassword.setPaintFlags(forgotPassword.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -145,41 +143,159 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
     }
 
     @Override
-    protected void onActivityResult(int _requestCode, int _resultCode, Intent _data) {
-        super.onActivityResult(_requestCode, _resultCode, _data);//64206,0  -1
-        if (_requestCode == GooglePlusUtils.REQUEST_CODE_SIGN_IN) {
-            mGooglePlusUtils.onActivityResult(this, _requestCode, _resultCode, _data);
-            if (_resultCode != -1) {
-                removeProgressDialog();
-            }
+    public void onClick(View v) {
+        Intent intent = null;
+        switch (v.getId()) {
+            case R.id.connect_facebook:
+                if (ConnectivityUtils.isNetworkEnabled(this)) {
+                    showProgressDialog(getString(R.string.please_wait));
+                    FacebookUtils.facebookLogin(this, this);
+                } else {
+                    showToast(getString(R.string.error_network));
+                }
+                break;
 
-        } else if (_requestCode == RECOVERABLE_REQUEST_CODE) {
-            removeProgressDialog();
+            case R.id.connect_googleplus:
+                if (ConnectivityUtils.isNetworkEnabled(this)) {
+                    showProgressDialog("Please Wait");
+                    mGooglePlusUtils.googlePlusLogin();
+                } else {
+                    showToast(getString(R.string.error_network));
+                }
+                break;
 
-            Bundle extra = _data.getExtras();
-            googleToken = extra.getString("authtoken");
+            case R.id.forgot_password:
+                intent = new Intent(this, ForgotPasswordActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.signinTextView:
+                if (isDataValid()) {
+                    if (ConnectivityUtils.isNetworkEnabled(this)) {
+                        showProgressDialog(getString(R.string.please_wait));
+                        //mProgressDialog=ProgressDialog.show(this, "", "Please Wait...",true,false);
+                        loginMode = "email";
+                        String emailId_or_mobile = mEmailId.getText().toString().trim();
+                        String password = mPassword.getText().toString().trim();
+                        UserRequest _requestModel = new UserRequest();
+                        _requestModel.setEmailId(emailId_or_mobile);
+                        _requestModel.setPassword(password);
 
-            if (StringUtils.isNullOrEmpty(googleToken))
-                return;
+                        LoginRegistrationRequest lr = new LoginRegistrationRequest();
+                        lr.setEmail(emailId_or_mobile);
+                        lr.setPassword(password);
+                        lr.setRequestMedium("custom");
 
-            UserRequest _userModel = new UserRequest();
-            _userModel.setEmailId(googleEmailId);
-            _userModel.setProfileId(userId);
-            _userModel.setNetworkName("google");
-            _userModel.setFirstName(currentPersonName);
-            _userModel.setLastName("");
-            _userModel.setAccessToken(googleToken);
+                        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+                        LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
+                        Call<UserDetailResponse> call = loginRegistrationAPI.login(lr);
+                        call.enqueue(onLoginResponseReceivedListener);
+//                        _requestModel.setNetworkName("throughMail");
+//                        _requestModel.setPush_token(SharedPrefUtils.getDeviceToken(this));
+//                        _requestModel.setPlatform("android");
+//                        _requestModel.setDevice_model(Build.MODEL + "");
+//                        _requestModel.setDevice_os(Build.VERSION.SDK_INT + "");
+//                        _requestModel.setImei_no(getImeiNumber() + "");
+//                        _requestModel.setManufacturer(Build.MANUFACTURER + "");
+//                        LoginController _controller = new LoginController(this, this);
+//                        _controller.getData(AppConstants.NEW_LOGIN_REQUEST, _requestModel);
+                    } else {
+                        showToast(getString(R.string.error_network));
+                    }
+                }
+                break;
+            default:
+                break;
 
-            Log.i("onActivityResult data", new Gson().toJson(_userModel).toString());
-            final LoginController _controller = new LoginController(ActivityLogin.this, ActivityLogin.this);
-            _controller.getData(AppConstants.NEW_LOGIN_REQUEST, _userModel);
-        } else {
-            if (_resultCode == 0) {
-                removeProgressDialog();
-            }
-            FacebookUtils.onActivityResult(this, _requestCode, _resultCode, _data);
         }
+    }
 
+    /**
+     * this is a call back method which will give facebook user details
+     */
+    @Override
+    public void getFacebookUser(GraphUser user) {
+        //showProgressDialog(getString(R.string.please_wait));
+        try {
+            if (user != null) {
+                fbUser = user;
+                loginMode = "fb";
+
+                Session session = Session.getActiveSession();
+                if (session.isOpened()) {
+                    accessToken = session.getAccessToken();
+                }
+
+                LoginRegistrationRequest lr = new LoginRegistrationRequest();
+                lr.setCityId("" + SharedPrefUtils.getCurrentCityModel(this).getId());
+                lr.setRequestMedium("fb");
+                lr.setSocialToken(accessToken);
+
+                Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+                LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
+                Call<UserDetailResponse> call = loginRegistrationAPI.login(lr);
+                call.enqueue(onLoginResponseReceivedListener);
+
+//                personPhotoUrl = "https://graph.facebook.com/" + user.getId() + "/picture?type=large";
+
+
+//                final LoginController _controller = new LoginController(this, this);
+//                String fbEmailId = user.asMap().get("email").toString();
+//
+//                UserRequest _userModel = new UserRequest();
+//                _userModel.setEmailId(fbEmailId);
+//                _userModel.setProfileId(user.getId());
+//                _userModel.setNetworkName("facebook");
+//                _userModel.setFirstName(user.getFirstName());
+//                _userModel.setLastName(user.getLastName());
+//                _userModel.setAccessToken(accessToken);
+//                _controller.getData(AppConstants.NEW_LOGIN_REQUEST, _userModel);
+            }
+        } catch (Exception e) {
+            // e.printStackTrace();
+            removeProgressDialog();
+            showToast("Try again later.");
+        }
+    }
+
+    @Override
+    public void getGooglePlusInfo(GoogleApiClient plusClient) {
+        try {
+            if (isFinishing())
+                return;
+            showProgressDialog(getString(R.string.please_wait));
+            final LoginController _controller = new LoginController(this, this);
+            if (Plus.PeopleApi.getCurrentPerson(plusClient) != null) {
+                loginMode = "gp";
+                Person currentPerson = Plus.PeopleApi.getCurrentPerson(plusClient);
+                currentPersonName = currentPerson.getDisplayName();
+                userId = currentPerson.getId();
+                googleEmailId = Plus.AccountApi.getAccountName(plusClient);
+                personPhotoUrl = currentPerson.getImage().getUrl();
+
+                personPhotoUrl = personPhotoUrl.substring(0, personPhotoUrl.lastIndexOf("?"));
+
+                if (StringUtils.isNullOrEmpty(googleEmailId)) {
+                    googleEmailId = "Email not fetch from google.";
+                }
+                if (StringUtils.isNullOrEmpty(currentPersonName)) {
+                    currentPersonName = getString(R.string.unknown_person);
+                }
+                if (StringUtils.isNullOrEmpty(userId)) {
+                    userId = getString(R.string.unknown_person);
+                }
+
+                new GetGoogleToken().execute();
+
+            } else {
+                removeProgressDialog();
+                Log.i("ActivityLogin", "GoogleApiClient persona information is null");
+            }
+            removeProgressDialog();
+        } catch (Exception e) {
+            removeProgressDialog();
+            showToast("Try again later.");
+            e.printStackTrace();
+        }
 
     }
 
@@ -258,35 +374,6 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         }
 
     }
-
-    public static String readFromFile(Context context, String fileName) {
-
-        String ret = "";
-
-        try {
-            InputStream inputStream = context.getAssets().open("countries.json");
-
-            if (inputStream != null) {
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                String receiveString = "";
-                StringBuilder stringBuilder = new StringBuilder();
-
-                while ((receiveString = bufferedReader.readLine()) != null) {
-                    stringBuilder.append(receiveString);
-                }
-
-                inputStream.close();
-                ret = stringBuilder.toString();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.e("login activity", "File not found: " + e.toString());
-        }
-
-        return ret;
-    }
-
 
     @Override
     protected void updateUi(Response response) {
@@ -376,123 +463,9 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
 
     }
 
-    public void addPassword(String pswd) {
-
-        showProgressDialog(getString(R.string.please_wait));
-        String emailId = socialEmailid;
-        String password = pswd;
-        UserRequest _requestModel = new UserRequest();
-        _requestModel.setEmailId(emailId);
-        _requestModel.setPassword(password);
-        _requestModel.setNetworkName("throughMail");
-        _requestModel.setPush_token(SharedPrefUtils.getDeviceToken(this));
-        _requestModel.setPlatform("android");
-        _requestModel.setDevice_model(Build.MODEL + "");
-        _requestModel.setDevice_os(Build.VERSION.SDK_INT + "");
-        _requestModel.setImei_no(getImeiNumber() + "");
-        _requestModel.setManufacturer(Build.MANUFACTURER + "");
-        LoginController _controller = new LoginController(this, this);
-        _controller.getData(AppConstants.NEW_LOGIN_REQUEST, _requestModel);
-    }
-
-    @Override
-    public void getGooglePlusInfo(GoogleApiClient plusClient) {
-        try {
-            if (isFinishing())
-                return;
-            showProgressDialog(getString(R.string.please_wait));
-            final LoginController _controller = new LoginController(this, this);
-            if (Plus.PeopleApi.getCurrentPerson(plusClient) != null) {
-                loginMode = "gp";
-                Person currentPerson = Plus.PeopleApi.getCurrentPerson(plusClient);
-                currentPersonName = currentPerson.getDisplayName();
-                userId = currentPerson.getId();
-                googleEmailId = Plus.AccountApi.getAccountName(plusClient);
-                personPhotoUrl = currentPerson.getImage().getUrl();
-
-                personPhotoUrl = personPhotoUrl.substring(0, personPhotoUrl.lastIndexOf("?"));
-
-                if (StringUtils.isNullOrEmpty(googleEmailId)) {
-                    googleEmailId = "Email not fetch from google.";
-                }
-                if (StringUtils.isNullOrEmpty(currentPersonName)) {
-                    currentPersonName = getString(R.string.unknown_person);
-                }
-                if (StringUtils.isNullOrEmpty(userId)) {
-                    userId = getString(R.string.unknown_person);
-                }
-
-                new GetGoogleToken().execute();
-
-//                socialEmailid = googleEmailId;
-//
-//                System.out.println(currentPersonName + "user ID" + userId);
-//                UserRequest _userModel = new UserRequest();
-//                _userModel.setEmailId(googleEmailId);
-//                _userModel.setProfileId(userId);
-//                _userModel.setNetworkName("google");
-//                _userModel.setFirstName(currentPersonName);
-//                _userModel.setLastName("");
-//
-//                Log.i("login data", new Gson().toJson(_userModel).toString());
-//                _controller.getData(AppConstants.NEW_LOGIN_REQUEST, _userModel);
-            } else {
-                removeProgressDialog();
-                Log.i("ActivityLogin", "GoogleApiClient persona information is null");
-            }
-            removeProgressDialog();
-        } catch (Exception e) {
-            removeProgressDialog();
-            showToast("Try again later.");
-            e.printStackTrace();
-        }
-
-    }
-
     @Override
     public void onGooglePlusLoginFailed() {
         removeProgressDialog();
-    }
-
-    /**
-     * this is a call back method which will give facebook user details
-     */
-
-    @Override
-    public void getFacebookUser(GraphUser user) {
-        //showProgressDialog(getString(R.string.please_wait));
-        try {
-            if (user != null) {
-                fbUser = user;
-                loginMode = "fb";
-
-                Session session = Session.getActiveSession();
-                if (session.isOpened()) {
-                    accessToken = session.getAccessToken();
-                }
-                personPhotoUrl = "https://graph.facebook.com/" + user.getId() + "/picture?type=large";
-
-
-                final LoginController _controller = new LoginController(this, this);
-                String fbEmailId = user.asMap().get("email").toString();
-
-                UserRequest _userModel = new UserRequest();
-                _userModel.setEmailId(fbEmailId);
-                _userModel.setProfileId(user.getId());
-                _userModel.setNetworkName("facebook");
-                _userModel.setFirstName(user.getFirstName());
-                _userModel.setLastName(user.getLastName());
-                _userModel.setAccessToken(accessToken);
-                _controller.getData(AppConstants.NEW_LOGIN_REQUEST, _userModel);
-
-//                socialEmailid = fbEmailId;
-//                Log.i("fbUsernameUserId", user.getId() + " " + user.getUsername() + " " + user.asMap().get("email"));
-            }
-        } catch (Exception e) {
-            // e.printStackTrace();
-            removeProgressDialog();
-            showToast("Try again later.");
-        }
     }
 
     private boolean isDataValid() {
@@ -521,64 +494,6 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         return isLoginOk;
     }
 
-
-    @Override
-    public void onClick(View v) {
-        Intent intent = null;
-        switch (v.getId()) {
-            case R.id.connect_facebook:
-                if (ConnectivityUtils.isNetworkEnabled(this)) {
-                    showProgressDialog(getString(R.string.please_wait));
-                    FacebookUtils.facebookLogin(this, this);
-                } else {
-                    showToast(getString(R.string.error_network));
-                }
-                break;
-
-            case R.id.connect_googleplus:
-                if (ConnectivityUtils.isNetworkEnabled(this)) {
-                    showProgressDialog("Please Wait");
-                    mGooglePlusUtils.googlePlusLogin();
-                } else {
-                    showToast(getString(R.string.error_network));
-                }
-                break;
-
-            case R.id.forgot_password:
-                intent = new Intent(this, ForgotPasswordActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.signinTextView:
-                if (isDataValid()) {
-                    if (ConnectivityUtils.isNetworkEnabled(this)) {
-                        showProgressDialog(getString(R.string.please_wait));
-                        //mProgressDialog=ProgressDialog.show(this, "", "Please Wait...",true,false);
-                        loginMode = "email";
-                        String emailId_or_mobile = mEmailId.getText().toString().trim();
-                        String password = mPassword.getText().toString().trim();
-                        UserRequest _requestModel = new UserRequest();
-                        _requestModel.setEmailId(emailId_or_mobile);
-                        _requestModel.setPassword(password);
-//                        _requestModel.setNetworkName("throughMail");
-//                        _requestModel.setPush_token(SharedPrefUtils.getDeviceToken(this));
-//                        _requestModel.setPlatform("android");
-//                        _requestModel.setDevice_model(Build.MODEL + "");
-//                        _requestModel.setDevice_os(Build.VERSION.SDK_INT + "");
-//                        _requestModel.setImei_no(getImeiNumber() + "");
-//                        _requestModel.setManufacturer(Build.MANUFACTURER + "");
-                        LoginController _controller = new LoginController(this, this);
-                        _controller.getData(AppConstants.NEW_LOGIN_REQUEST, _requestModel);
-                    } else {
-                        showToast(getString(R.string.error_network));
-                    }
-                }
-                break;
-            default:
-                break;
-
-        }
-    }
-
     public void showSignUpDialog(String message, final UserResponse response) {
 
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
@@ -589,14 +504,6 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
 
                         dialog.cancel();
                         String data = "";
-
-//                if (response.getResponse().equalsIgnoreCase("failure")) {
-//                    data = "";
-//                } else {
-//
-//                    data = new Gson().toJson(response);
-//                }
-
                         Intent intent = new Intent(ActivityLogin.this, ActivitySignUp.class);
                         intent.putExtra(Constants.SIGNUP_DATA, new Gson().toJson(response));
 //                intent.putExtra(Constants.SIGNUP_FLAG, true);
@@ -656,8 +563,8 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
             } catch (UserRecoverableAuthException userAuthEx) {
                 userAuthEx.printStackTrace();
                 Log.d("UserRecoverAuthExceptin", userAuthEx.toString());
+                // Start the user recoverable action using the intent returned
                 startActivityForResult(userAuthEx.getIntent(), RECOVERABLE_REQUEST_CODE);
-                // Start the user recoverable action using the intent returned by
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -674,33 +581,148 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
             if (StringUtils.isNullOrEmpty(result))
                 return;
 
-            UserRequest _userModel = new UserRequest();
-            _userModel.setEmailId(googleEmailId);
-            _userModel.setProfileId(userId);
-            _userModel.setNetworkName("google");
-            _userModel.setFirstName(currentPersonName);
-            _userModel.setLastName("");
-            _userModel.setAccessToken(googleToken);
+            LoginRegistrationRequest lr = new LoginRegistrationRequest();
+            lr.setCityId("" + SharedPrefUtils.getCurrentCityModel(ActivityLogin.this).getId());
+            lr.setRequestMedium("gp");
+            lr.setSocialToken(googleToken);
 
-            Log.i("login data", new Gson().toJson(_userModel).toString());
-            final LoginController _controller = new LoginController(ActivityLogin.this, ActivityLogin.this);
-            _controller.getData(AppConstants.NEW_LOGIN_REQUEST, _userModel);
+            Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+            LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
+            Call<UserDetailResponse> call = loginRegistrationAPI.login(lr);
+            call.enqueue(onLoginResponseReceivedListener);
 
-//            Intent i = new Intent(LandingLoginActivity.this, ActivitySignUp.class);
-//            Bundle bundle = new Bundle();
-//            bundle.putString(Constants.USER_ID, userId);
-//            bundle.putString(Constants.USER_NAME, currentPersonName);
-//            bundle.putString(Constants.USER_EMAIL, googleEmailId);
-//            bundle.putString(Constants.ACCESS_TOKEN, result);
-//            bundle.putString(Constants.MODE, "google");
-//            bundle.putString(Constants.PROFILE_IMAGE, personPhotoUrl);
-//            i.putExtra("userbundle", bundle);
-//            startActivity(i);
+//            UserRequest _userModel = new UserRequest();
+//            _userModel.setEmailId(googleEmailId);
+//            _userModel.setProfileId(userId);
+//            _userModel.setNetworkName("google");
+//            _userModel.setFirstName(currentPersonName);
+//            _userModel.setLastName("");
+//            _userModel.setAccessToken(googleToken);
+//
+//            Log.i("login data", new Gson().toJson(_userModel).toString());
+//            final LoginController _controller = new LoginController(ActivityLogin.this, ActivityLogin.this);
+//            _controller.getData(AppConstants.NEW_LOGIN_REQUEST, _userModel);
 
-            //removeProgressDialog();
         }
 
     }
+
+    Callback<UserDetailResponse> onLoginResponseReceivedListener = new Callback<UserDetailResponse>() {
+        @Override
+        public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
+            Log.d("SUCCESS", "" + response);
+            if (response == null || response.body() == null) {
+                showToast(getString(R.string.went_wrong));
+                return;
+            }
+
+            try {
+                UserDetailResponse responseData = (UserDetailResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    UserInfo model = new UserInfo();
+                    model.setId(responseData.getData().get(0).getId());
+                    model.setEmail(responseData.getData().get(0).getEmail());
+                    model.setMc4kToken(responseData.getData().get(0).getMc4kToken());
+                    model.setIsValidated(responseData.getData().get(0).getIsValidated());
+                    model.setFirst_name(responseData.getData().get(0).getFirstName() + " " + responseData.getData().get(0).getLastName());
+                    SharedPrefUtils.setUserDetailModel(ActivityLogin.this, model);
+
+                    //Custom Sign up or facebook login with an account without email and user email is not verfifed yet.
+                    if (!AppConstants.VALIDATED_USER.equals(model.getIsValidated())) {
+                        dialogFragment = new VerifyEmailDialogFragment();
+                        dialogFragment.setTargetFragment(dialogFragment, 2);
+                        Bundle bundle = new Bundle();
+                        bundle.putString(AppConstants.FROM_ACTIVITY, AppConstants.ACTIVITY_LOGIN);
+                        dialogFragment.setArguments(bundle);
+                        dialogFragment.show(getFragmentManager(), "verify email");
+                    } else {
+                        Intent intent = new Intent(ActivityLogin.this, PushTokenService.class);
+                        startService(intent);
+                        Intent intent1 = new Intent(ActivityLogin.this, LoadingActivity.class);
+                        startActivity(intent1);
+                    }
+                } else {
+                    showToast(responseData.getReason());
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("Exception", Log.getStackTraceString(e));
+                showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<UserDetailResponse> call, Throwable t) {
+            Log.d("MC4kException", Log.getStackTraceString(t));
+            Crashlytics.logException(t);
+            showToast(getString(R.string.went_wrong));
+        }
+    };
+
+    public void addEmail(String email) {
+
+        showProgressDialog(getString(R.string.please_wait));
+        String emailId = email;
+        VerifyEmailRequest _requestModel = new VerifyEmailRequest();
+        _requestModel.setAttributeName("email");
+        _requestModel.setAttributeValue(email);
+        _requestModel.setAttributeType("S");
+
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
+        Call<UserDetailResponse> call = loginRegistrationAPI.verifyEmail(_requestModel);
+        call.enqueue(onVerifyEmailResponseReceived);
+
+//        LoginController _controller = new LoginController(this, this);
+//        _controller.getData(AppConstants.NEW_LOGIN_REQUEST, _requestModel);
+    }
+
+    public void addEmailLater() {
+        dialogFragment.dismiss();
+        Intent intent = new Intent(ActivityLogin.this, PushTokenService.class);
+        startService(intent);
+        Intent intent1 = new Intent(ActivityLogin.this, LoadingActivity.class);
+        startActivity(intent1);
+    }
+
+    Callback<UserDetailResponse> onVerifyEmailResponseReceived = new Callback<UserDetailResponse>() {
+        @Override
+        public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
+            Log.d("SUCCESS", "" + response);
+            if (response == null || response.body() == null) {
+                showToast(getString(R.string.went_wrong));
+                return;
+            }
+
+            try {
+                UserDetailResponse responseData = (UserDetailResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+
+                    dialogFragment.dismiss();
+                    showToast("Mail sent to email address Please click and verify");
+
+                    Intent intent = new Intent(ActivityLogin.this, PushTokenService.class);
+                    startService(intent);
+                    Intent intent1 = new Intent(ActivityLogin.this, LoadingActivity.class);
+                    startActivity(intent1);
+                } else {
+                    showToast(responseData.getReason());
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("Exception", Log.getStackTraceString(e));
+                showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<UserDetailResponse> call, Throwable t) {
+            Log.d("MC4kException", Log.getStackTraceString(t));
+            Crashlytics.logException(t);
+            showToast(getString(R.string.went_wrong));
+        }
+    };
+
 
     //  create a textWatcher member
     private TextWatcher mTextWatcher = new TextWatcher() {
@@ -729,6 +751,55 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         } else {
             signinTextView.setEnabled(true);
         }
+    }
+
+    @Override
+    protected void onActivityResult(int _requestCode, int _resultCode, Intent _data) {
+        super.onActivityResult(_requestCode, _resultCode, _data);//64206,0  -1
+        if (_requestCode == GooglePlusUtils.REQUEST_CODE_SIGN_IN) {
+            mGooglePlusUtils.onActivityResult(this, _requestCode, _resultCode, _data);
+            if (_resultCode != -1) {
+                removeProgressDialog();
+            }
+
+        } else if (_requestCode == RECOVERABLE_REQUEST_CODE) {
+            removeProgressDialog();
+
+            Bundle extra = _data.getExtras();
+            googleToken = extra.getString("authtoken");
+
+            if (StringUtils.isNullOrEmpty(googleToken))
+                return;
+
+            LoginRegistrationRequest lr = new LoginRegistrationRequest();
+            lr.setCityId("" + SharedPrefUtils.getCurrentCityModel(this).getId());
+            lr.setRequestMedium("gp");
+            lr.setSocialToken(googleToken);
+
+            Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+            LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
+            Call<UserDetailResponse> call = loginRegistrationAPI.login(lr);
+            call.enqueue(onLoginResponseReceivedListener);
+
+//            UserRequest _userModel = new UserRequest();
+//            _userModel.setEmailId(googleEmailId);
+//            _userModel.setProfileId(userId);
+//            _userModel.setNetworkName("google");
+//            _userModel.setFirstName(currentPersonName);
+//            _userModel.setLastName("");
+//            _userModel.setAccessToken(googleToken);
+//
+//            Log.i("onActivityResult data", new Gson().toJson(_userModel).toString());
+//            final LoginController _controller = new LoginController(ActivityLogin.this, ActivityLogin.this);
+//            _controller.getData(AppConstants.NEW_LOGIN_REQUEST, _userModel);
+        } else {
+            if (_resultCode == 0) {
+                removeProgressDialog();
+            }
+            FacebookUtils.onActivityResult(this, _requestCode, _resultCode, _data);
+        }
+
+
     }
 
 }

@@ -93,7 +93,7 @@ public class TableAdult extends BaseTable {
                 userModel.setFirst_name(_cursor.getString(_cursor.getColumnIndex(ADULT_NAME)));
                 userModel.setColor_code(_cursor.getString(_cursor.getColumnIndex(ADULT_COLOR_CODE)));
                 userModel.setEmail(_cursor.getString(_cursor.getColumnIndex(ADULT_EMAIL)));
-                userModel.setId(_cursor.getInt(_cursor.getColumnIndex(ADULT_ID)));
+                userModel.setId(_cursor.getString(_cursor.getColumnIndex(ADULT_ID)));
                 userModel.setPincode(_cursor.getString(_cursor.getColumnIndex(PINCODE)));
 
                 adultList.add(userModel);
@@ -106,7 +106,7 @@ public class TableAdult extends BaseTable {
         return adultList;
     }
 
-    public UserInfo getAdults(int id) {
+    public UserInfo getAdults(String id) {
         UserInfo adult = new UserInfo();
         Cursor _cursor = null;
         try {
@@ -117,7 +117,7 @@ public class TableAdult extends BaseTable {
                 adult.setFirst_name(_cursor.getString(_cursor.getColumnIndex(ADULT_NAME)));
                 adult.setColor_code(_cursor.getString(_cursor.getColumnIndex(ADULT_COLOR_CODE)));
                 adult.setEmail(_cursor.getString(_cursor.getColumnIndex(ADULT_EMAIL)));
-                adult.setId(_cursor.getInt(_cursor.getColumnIndex(ADULT_ID)));
+                adult.setId(_cursor.getString(_cursor.getColumnIndex(ADULT_ID)));
                 adult.setPincode(_cursor.getString(_cursor.getColumnIndex(PINCODE)));
 
             }

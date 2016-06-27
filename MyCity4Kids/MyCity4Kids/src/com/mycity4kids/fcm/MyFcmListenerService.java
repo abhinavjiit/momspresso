@@ -110,7 +110,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                 String type = pushNotificationModel.getType();
                 if (type.equalsIgnoreCase("Appointment")) {
 
-                    if (!(pushNotificationModel.getUser_id() == SharedPrefUtils.getUserDetailModel(this).getId())) {
+                    if (!(pushNotificationModel.getUser_id().equals(SharedPrefUtils.getUserDetailModel(this).getId()))) {
                         Utils.pushEvent(getApplicationContext(), GTMEventType.APPOINTMENT_NOTIFICATION_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getApplicationContext()).getId() + "", "");
                         Intent intent = new Intent(this, SyncService.class);
                         intent.putExtra(Constants.PUSH_MODEL, pushNotificationModel);
@@ -119,7 +119,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         startService(intent);
                     }
                 } else if (type.equalsIgnoreCase("task")) {
-                    if (!(pushNotificationModel.getUser_id() == SharedPrefUtils.getUserDetailModel(this).getId())) {
+                    if (!(pushNotificationModel.getUser_id().equals(SharedPrefUtils.getUserDetailModel(this).getId()))) {
                         Utils.pushEvent(getApplicationContext(), GTMEventType.TASK_NOTIFICATION_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getApplicationContext()).getId() + "", "");
                         Intent intent = new Intent(this, SyncService.class);
                         intent.putExtra(Constants.PUSH_MODEL, pushNotificationModel);
@@ -129,7 +129,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     }
                 } else if (type.equalsIgnoreCase("family")) {
                     // update family too
-                    if (!(pushNotificationModel.getUser_id() == SharedPrefUtils.getUserDetailModel(this).getId())) {
+                    if (!(pushNotificationModel.getUser_id().equals(SharedPrefUtils.getUserDetailModel(this).getId()))) {
                         Utils.pushEvent(getApplicationContext(), GTMEventType.FAMILY_NOTICATION_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getApplicationContext()).getId() + "", "");
 
                         Intent intent = new Intent(this, SyncUserInfoService.class);

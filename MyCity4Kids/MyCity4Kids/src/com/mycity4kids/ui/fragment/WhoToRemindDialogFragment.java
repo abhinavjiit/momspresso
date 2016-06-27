@@ -34,7 +34,7 @@ public class WhoToRemindDialogFragment extends android.app.DialogFragment {
     ListView listView;
     TextView cancel, done;
     AttendeeCustomAdapter adapter;
-    public ArrayList<Integer> chklist;
+    public ArrayList<String> chklist;
     private boolean all;
     private boolean edit;
     String iftask = "";
@@ -55,7 +55,7 @@ public class WhoToRemindDialogFragment extends android.app.DialogFragment {
 
         Bundle extras = getArguments();
         if (extras != null) {
-            chklist = extras.getIntegerArrayList("chkValues");
+            chklist = extras.getStringArrayList("chkValues");
             all = extras.getBoolean("All");
             edit = extras.getBoolean("edit");
             iftask = extras.getString("iftask");
@@ -98,7 +98,7 @@ public class WhoToRemindDialogFragment extends android.app.DialogFragment {
         cancel = (TextView) rootView.findViewById(R.id.cancel);
         done = (TextView) rootView.findViewById(R.id.done);
 
-        AttendeeModel data1 = new AttendeeModel(0, "ALL", "All", "#3949ab");
+        AttendeeModel data1 = new AttendeeModel("0", "ALL", "All", "#3949ab");
         if(userInfos.size()<2) {
             System.out.println("Hello");
         }
@@ -121,7 +121,7 @@ public class WhoToRemindDialogFragment extends android.app.DialogFragment {
         } else {
             for (int i = 0; i < attendeeList.size(); i++) {
                 for (int j = 0; j < chklist.size(); j++) {
-                    if (attendeeList.get(i).getId() == chklist.get(j)) {
+                    if (attendeeList.get(i).getId().equals(chklist.get(j))) {
                         attendeeList.get(i).setCheck(true);
                     }
                 }
@@ -211,7 +211,7 @@ public class WhoToRemindDialogFragment extends android.app.DialogFragment {
         AddAdultDialogFragment dialogFragment = new AddAdultDialogFragment();
 
         Bundle args = new Bundle();
-        args.putIntegerArrayList("chkValues", chklist);
+        args.putStringArrayList("chkValues", chklist);
         args.putBoolean("All", all);
         args.putBoolean("edit", edit);
         args.putString("iftask", iftask);
