@@ -1,9 +1,13 @@
 package com.mycity4kids.ui.activity;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -23,19 +27,29 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.controller.BloggerDashboardAndPublishedArticlesController;
 import com.mycity4kids.editor.EditorPostActivity;
+import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.parentingdetails.ParentingDetailResponse;
+import com.mycity4kids.models.response.ImageUploadResponse;
 import com.mycity4kids.newmodels.BloggerDashboardModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
 import com.mycity4kids.ui.adapter.BloggerDashboardPagerAdapter;
 import com.mycity4kids.utils.RoundedTransformation;
 import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.net.URI;
+
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by hemant on 16/3/16.
@@ -49,6 +63,10 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     TabLayout tabLayout;
     ViewPager viewPager;
     ImageView addDraft;
+    public static final int ADD_MEDIA_ACTIVITY_REQUEST_CODE = 1111;
+    Uri imageUri;
+    Bitmap finalBitmap;
+    File file;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +91,14 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
             Picasso.with(this).load(SharedPrefUtils.getProfileImgUrl(this)).placeholder(R.drawable.family_xxhdpi)
                     .error(R.drawable.family_xxhdpi).transform(new RoundedTransformation()).into(bloggerImageView);
         }
-
+        bloggerImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                startActivityForResult(intent, ADD_MEDIA_ACTIVITY_REQUEST_CODE);
+            }
+        });
         tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.addTab(tabLayout.newTab().setText("Bookmarks (0)"));
         tabLayout.addTab(tabLayout.newTab().setText("Published (0)"));
@@ -335,4 +360,135 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
             addDraft.setVisibility(View.VISIBLE);
         }
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (data == null) {
+            return;
+        }
+
+        //   mediaFile.setVideo(imageUri.toString().contains("video"));
+
+        switch (requestCode) {
+            case ADD_MEDIA_ACTIVITY_REQUEST_CODE:
+                imageUri = data.getData();
+
+                if (resultCode == Activity.RESULT_OK) {
+                    try {
+                        Uri selectedImage = data.getData();
+                        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+
+                        Cursor cursor = this.getContentResolver().query(
+                                selectedImage, filePathColumn, null, null, null);
+                        cursor.moveToFirst();
+
+                        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                        String filePath = cursor.getString(columnIndex);
+                        cursor.close();
+                        Log.e("File", "filePath: " + filePath);
+                        filePath = filePath.replaceAll("[^a-zA-Z0-9.-/_]", "_");
+                        file = new File(new URI("file://"
+                                + filePath.replaceAll(" ", "%20")));
+
+                        Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(BloggerDashboardActivity.this.getContentResolver(), imageUri);
+                        //  sendUploadProfileImageRequest(imageBitmap);
+                        float actualHeight = imageBitmap.getHeight();
+                        float actualWidth = imageBitmap.getWidth();
+                        float maxHeight = 243;
+                        float maxWidth = 423;
+                       /* float maxHeight = 1300;
+                        float maxWidth = 700;*/
+                        float imgRatio = actualWidth / actualHeight;
+                        float maxRatio = maxWidth / maxHeight;
+
+                        if (actualHeight > maxHeight || actualWidth > maxWidth) {
+                            if (imgRatio < maxRatio) {
+                                //adjust width according to maxHeight
+                                imgRatio = maxHeight / actualHeight;
+                                actualWidth = imgRatio * actualWidth;
+                                actualHeight = maxHeight;
+                            } else if (imgRatio > maxRatio) {
+                                //adjust height according to maxWidth
+                                imgRatio = maxWidth / actualWidth;
+                                actualHeight = imgRatio * actualHeight;
+                                actualWidth = maxWidth;
+                            } else {
+                                actualHeight = maxHeight;
+                                actualWidth = maxWidth;
+                            }
+                        }
+                        finalBitmap = Bitmap.createScaledBitmap(imageBitmap, (int) actualWidth, (int) actualHeight, true);
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        finalBitmap.compress(Bitmap.CompressFormat.PNG, 75, stream);
+                        //     byte[] byteArrayFromGallery = stream.toByteArray();
+
+                        //   imageString = Base64.encodeToString(byteArrayFromGallery, Base64.DEFAULT);
+                        String path = MediaStore.Images.Media.insertImage(BloggerDashboardActivity.this.getContentResolver(), finalBitmap, "Title", null);
+                        Uri imageUriTemp=Uri.parse(path);
+                        File file2= FileUtils.getFile(this,imageUriTemp);
+                        sendUploadProfileImageRequest(file2);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+
+                }
+                break;
+        }
+    }
+    public void sendUploadProfileImageRequest(File file) {
+        showProgressDialog(getString(R.string.please_wait));
+        ByteArrayOutputStream bao = new ByteArrayOutputStream();
+       /* originalImage.compress(Bitmap.CompressFormat.PNG, 75, bao);
+        byte[] ba = bao.toByteArray();
+        String imageString = Base64.encodeToString(ba, Base64.DEFAULT);*/
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(AppConstants.STAGING_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
+        RequestBody requestBodyFile = RequestBody.create(MEDIA_TYPE_PNG, file);
+   //     RequestBody userId = RequestBody.create(MediaType.parse("text/plain"), "" + userModel.getUser().getId());
+        RequestBody imageType = RequestBody.create(MediaType.parse("text/plain"), "jpg");
+        // prepare call in Retrofit 2.0
+        ImageUploadAPI imageUploadAPI = retrofit.create(ImageUploadAPI.class);
+
+        Call<ImageUploadResponse> call = imageUploadAPI.uploadImage(//userId,
+                //  imageType,
+                requestBodyFile);
+        //asynchronous call
+        call.enqueue(new Callback<ImageUploadResponse>() {
+                         @Override
+                         public void onResponse(Call<ImageUploadResponse> call, retrofit2.Response<ImageUploadResponse> response) {
+                             int statusCode = response.code();
+                             ImageUploadResponse responseModel = response.body();
+
+                             removeProgressDialog();
+                             if (responseModel.getCode() != 200) {
+                                 showToast(getString(R.string.toast_response_error));
+                                 return;
+                             } else {
+                                 if (!StringUtils.isNullOrEmpty(responseModel.getData().getUrl())) {
+                                     Log.i("IMAGE_UPLOAD_REQUEST", responseModel.getData().getUrl());
+                                 }
+                              //   setProfileImage(responseModel.getData().getUrl());
+                                 Picasso.with(BloggerDashboardActivity.this).load(responseModel.getData().getUrl()).placeholder(R.drawable.family_xxhdpi)
+                                         .error(R.drawable.family_xxhdpi).transform(new RoundedTransformation()).into(bloggerImageView);
+                                 showToast("Image successfully uploaded!");
+                                 // ((BaseActivity) this()).showSnackbar(getView().findViewById(R.id.root), "You have successfully uploaded an image.");
+                             }
+                         }
+
+                         @Override
+                         public void onFailure(Call<ImageUploadResponse> call, Throwable t) {
+
+                         }
+                     }
+        );
+
+    }
+
 }

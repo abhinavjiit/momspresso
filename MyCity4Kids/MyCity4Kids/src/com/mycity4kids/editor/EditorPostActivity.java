@@ -24,10 +24,12 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.dbtable.UserTable;
+import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.editor.ArticleDraftList;
 import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.models.parentingdetails.ParentingDetailResponse;
+import com.mycity4kids.models.response.ImageUploadResponse;
 import com.mycity4kids.models.user.UserModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
@@ -43,12 +45,16 @@ import org.wordpress.android.util.helpers.MediaFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+import okhttp3.Cache;
 import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -273,14 +279,17 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                             }
                         }
                         Bitmap finalBitmap = Bitmap.createScaledBitmap(imageBitmap, (int) actualWidth, (int) actualHeight, true);
-                       /* ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
                         finalBitmap.compress(Bitmap.CompressFormat.PNG, 75, stream);
                         byte[] byteArrayFromGallery = stream.toByteArray();
-                        byteArrayToSend = byteArrayFromGallery;
-                        imageString = Base64.encodeToString(byteArrayToSend, Base64.DEFAULT);*/
+                    //    byteArrayToSend = byteArrayFromGallery;
+                    //    imageString = Base64.encodeToString(byteArrayToSend, Base64.DEFAULT);
+                        String path = MediaStore.Images.Media.insertImage(EditorPostActivity.this.getContentResolver(), finalBitmap, "Title", null);
+                        Uri imageUriTemp=Uri.parse(path);
                         mEditorFragment.imageUploading = 0;
                         //new FileUploadTask().execute();
-                        sendUploadProfileImageRequest(finalBitmap);
+                        File file2= FileUtils.getFile(this,imageUriTemp);
+                        sendUploadProfileImageRequest(file2);
                         // compressImage(filePath);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -324,19 +333,19 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                                 actualWidth = maxWidth;
                             }
                         }
+
                         Bitmap finalBitmap = Bitmap.createScaledBitmap(imageBitmap, (int) actualWidth, (int) actualHeight, true);
-
-                       /* ByteArrayOutputStream stream = new ByteArrayOutputStream();
-
-
-                        finalBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        finalBitmap.compress(Bitmap.CompressFormat.PNG, 75, stream);
                         byte[] byteArrayFromGallery = stream.toByteArray();
-                        byteArrayToSend = byteArrayFromGallery;
-                        imageString = Base64.encodeToString(byteArrayToSend, Base64.DEFAULT);*/
-                        // imageString = Base64.encodeToString(array, Base64.DEFAULT);
+                        //    byteArrayToSend = byteArrayFromGallery;
+                        //    imageString = Base64.encodeToString(byteArrayToSend, Base64.DEFAULT);
+                        String path = MediaStore.Images.Media.insertImage(EditorPostActivity.this.getContentResolver(), finalBitmap, "Title", null);
+                        Uri imageUriTemp=Uri.parse(path);
                         mEditorFragment.imageUploading = 0;
-                        //   new FileUploadTask().execute();
-                        sendUploadProfileImageRequest(finalBitmap);
+                        //new FileUploadTask().execute();
+                        File file2= FileUtils.getFile(this,imageUriTemp);
+                        sendUploadProfileImageRequest(file2);
                         // compressImage(filePath);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -632,43 +641,58 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
 
     }
 
-    public void sendUploadProfileImageRequest(Bitmap originalImage) {
+    //public void sendUploadProfileImageRequest(Bitmap originalImage) {
+    public void sendUploadProfileImageRequest(File file) {
         showProgressDialog(getString(R.string.please_wait));
-        ByteArrayOutputStream bao = new ByteArrayOutputStream();
+       /* ByteArrayOutputStream bao = new ByteArrayOutputStream();
         originalImage.compress(Bitmap.CompressFormat.PNG, 75, bao);
         byte[] ba = bao.toByteArray();
-        String imageString = Base64.encodeToString(ba, Base64.DEFAULT);
+        String imageString = Base64.encodeToString(ba, Base64.DEFAULT);*/
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+// set your desired log level
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient client = new OkHttpClient
+                .Builder()
+                .cache(new Cache(getCacheDir(), 10 * 1024 * 1024)) // 10 MB
+                .addInterceptor(logging)
+                .build();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(AppConstants.BASE_URL)
+                .baseUrl(AppConstants.STAGING_URL)
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
                 .build();
         MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
-        RequestBody requestBodyFile = RequestBody.create(MEDIA_TYPE_PNG, imageString);
-        RequestBody userId = RequestBody.create(MediaType.parse("text/plain"), "" + userModel.getUser().getId());
+        RequestBody requestBodyFile = RequestBody.create(MEDIA_TYPE_PNG, file);
+        RequestBody userId = RequestBody.create(MediaType.parse("text/plain"), //"" + userModel.getUser().getId());
+                0+"");
         RequestBody imageType = RequestBody.create(MediaType.parse("text/plain"), "jpg");
         // prepare call in Retrofit 2.0
         ImageUploadAPI imageUploadAPI = retrofit.create(ImageUploadAPI.class);
 
-        Call<CommonResponse> call = imageUploadAPI.uploadImage(userId,
-                imageType,
+        Call<ImageUploadResponse> call = imageUploadAPI.uploadImage(//userId,
+             //   imageType,
                 requestBodyFile);
         //asynchronous call
-        call.enqueue(new Callback<CommonResponse>() {
+        call.enqueue(new Callback<ImageUploadResponse>() {
                          @Override
-                         public void onResponse(Call<CommonResponse> call, retrofit2.Response<CommonResponse> response) {
-                             CommonResponse responseModel = response.body();
-
+                         public void onResponse(Call<ImageUploadResponse> call, retrofit2.Response<ImageUploadResponse> response) {
+                             if (response == null || response.body() == null) {
+                                 showToast(getString(R.string.went_wrong));
+                                 return;
+                             }
+                             ImageUploadResponse responseModel = response.body();
+Log.e("responseURL",responseModel.getData().getUrl());
                              removeProgressDialog();
-                             if (responseModel.getResponseCode() != 200) {
+                             if (responseModel.getCode() != 200) {
                                  showToast(getString(R.string.toast_response_error));
                                  removeProgressDialog();
                                  return;
                              } else {
-                                 if (!StringUtils.isNullOrEmpty(responseModel.getResult().getMessage())) {
+                                 if (!StringUtils.isNullOrEmpty(responseModel.getData().getUrl())) {
                                      //      SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
-                                     Log.i("Uploaded Image URL", responseModel.getResult().getMessage());
+                                     Log.i("Uploaded Image URL", responseModel.getData().getUrl());
                                  }
-                                 mediaFile.setFileURL(responseModel.getResult().getMessage());
+                                 mediaFile.setFileURL(responseModel.getData().getUrl());
 
                                  ((EditorMediaUploadListener) mEditorFragment).onMediaUploadSucceeded(mediaId, mediaFile);
                                  removeProgressDialog();
@@ -678,8 +702,9 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                          }
 
                          @Override
-                         public void onFailure(Call<CommonResponse> call, Throwable t) {
-
+                         public void onFailure(Call<ImageUploadResponse> call, Throwable t) {
+                            t.printStackTrace();
+                             Log.e("infailure","test");
                          }
                      }
         );

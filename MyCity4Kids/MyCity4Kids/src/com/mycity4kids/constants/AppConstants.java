@@ -12,7 +12,7 @@ public class AppConstants {
 
 
     public static final String DEV_URL = "http://54.169.17.138/";
-    public static final String STAGING_URL = "http://52.77.116.39:8080/";
+    public static final String STAGING_URL = "http://52.77.116.39:8081/";
     public static final String LIVE_URL = "http://webserve.mycity4kids.com/";
 //    public static final String LIVE_URL = "http://54.169.17.138/";
 //    public static final String LIVE_URL = "http://10.42.0.1/";

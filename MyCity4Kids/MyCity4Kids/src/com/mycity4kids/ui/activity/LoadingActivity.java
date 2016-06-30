@@ -58,6 +58,7 @@ public class LoadingActivity extends BaseActivity {
         }
         switch (response.getDataType()) {
             case AppConstants.CITY_BY_PINCODE_REQUEST:
+                navigateToDashboard();
                 CityByPinCodeModel cityByPinCodeModel = (CityByPinCodeModel) response.getResponseObject();
                 if (cityByPinCodeModel.getResponseCode() == 200) {
                     MetroCity model = new MetroCity();

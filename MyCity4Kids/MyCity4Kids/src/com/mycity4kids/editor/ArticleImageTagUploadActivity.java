@@ -31,6 +31,7 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.controller.ArticlePublishController;
 import com.mycity4kids.dbtable.UserTable;
+import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.editor.ArticleDraftList;
@@ -38,6 +39,7 @@ import com.mycity4kids.models.editor.ArticlePublishRequest;
 import com.mycity4kids.models.editor.BlogDataResponse;
 import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.models.parentingdetails.ParentingDetailResponse;
+import com.mycity4kids.models.response.ImageUploadResponse;
 import com.mycity4kids.models.user.UserModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticlePublishAPI;
@@ -327,12 +329,15 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
                             }
                         }
                         finalBitmap = Bitmap.createScaledBitmap(imageBitmap, (int) actualWidth, (int) actualHeight, true);
-                      /*  ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                        byte[] byteArrayFromGallery = stream.toByteArray();
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        finalBitmap.compress(Bitmap.CompressFormat.PNG, 75, stream);
+                   //     byte[] byteArrayFromGallery = stream.toByteArray();
 
-                        imageString = Base64.encodeToString(byteArrayFromGallery, Base64.DEFAULT);*/
-                        sendUploadProfileImageRequest(finalBitmap);
+                     //   imageString = Base64.encodeToString(byteArrayFromGallery, Base64.DEFAULT);
+                        String path = MediaStore.Images.Media.insertImage(ArticleImageTagUploadActivity.this.getContentResolver(), finalBitmap, "Title", null);
+                        Uri imageUriTemp=Uri.parse(path);
+                        File file2= FileUtils.getFile(this,imageUriTemp);
+                        sendUploadProfileImageRequest(file2);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -511,50 +516,51 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
 
     }
 
-    public void sendUploadProfileImageRequest(Bitmap originalImage) {
+    public void sendUploadProfileImageRequest(File file) {
         showProgressDialog(getString(R.string.please_wait));
         ByteArrayOutputStream bao = new ByteArrayOutputStream();
-        originalImage.compress(Bitmap.CompressFormat.PNG, 75, bao);
+       /* originalImage.compress(Bitmap.CompressFormat.PNG, 75, bao);
         byte[] ba = bao.toByteArray();
-        String imageString = Base64.encodeToString(ba, Base64.DEFAULT);
+        String imageString = Base64.encodeToString(ba, Base64.DEFAULT);*/
+
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(AppConstants.BASE_URL)
+                .baseUrl(AppConstants.STAGING_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
-        RequestBody requestBodyFile = RequestBody.create(MEDIA_TYPE_PNG, imageString);
+        RequestBody requestBodyFile = RequestBody.create(MEDIA_TYPE_PNG, file);
         RequestBody userId = RequestBody.create(MediaType.parse("text/plain"), "" + userModel.getUser().getId());
         RequestBody imageType = RequestBody.create(MediaType.parse("text/plain"), "jpg");
         // prepare call in Retrofit 2.0
         ImageUploadAPI imageUploadAPI = retrofit.create(ImageUploadAPI.class);
 
-        Call<CommonResponse> call = imageUploadAPI.uploadImage(userId,
-                imageType,
+        Call<ImageUploadResponse> call = imageUploadAPI.uploadImage(//userId,
+              //  imageType,
                 requestBodyFile);
         //asynchronous call
-        call.enqueue(new Callback<CommonResponse>() {
+        call.enqueue(new Callback<ImageUploadResponse>() {
                          @Override
-                         public void onResponse(Call<CommonResponse> call, retrofit2.Response<CommonResponse> response) {
+                         public void onResponse(Call<ImageUploadResponse> call, retrofit2.Response<ImageUploadResponse> response) {
                              int statusCode = response.code();
-                             CommonResponse responseModel = response.body();
+                             ImageUploadResponse responseModel = response.body();
 
                              removeProgressDialog();
-                             if (responseModel.getResponseCode() != 200) {
+                             if (responseModel.getCode() != 200) {
                                  showToast(getString(R.string.toast_response_error));
                                  return;
                              } else {
-                                 if (!StringUtils.isNullOrEmpty(responseModel.getResult().getMessage())) {
-                                     Log.i("IMAGE_UPLOAD_REQUEST", responseModel.getResult().getMessage());
+                                 if (!StringUtils.isNullOrEmpty(responseModel.getData().getUrl())) {
+                                     Log.i("IMAGE_UPLOAD_REQUEST", responseModel.getData().getUrl());
                                  }
-                                 setProfileImage(responseModel.getResult().getMessage());
-                                 Picasso.with(ArticleImageTagUploadActivity.this).load(responseModel.getResult().getMessage()).error(R.drawable.default_article).into(articleImage);
+                                 setProfileImage(responseModel.getData().getUrl());
+                                 Picasso.with(ArticleImageTagUploadActivity.this).load(responseModel.getData().getUrl()).error(R.drawable.default_article).into(articleImage);
                                  showToast("Image successfully uploaded!");
                                  // ((BaseActivity) this()).showSnackbar(getView().findViewById(R.id.root), "You have successfully uploaded an image.");
                              }
                          }
 
                          @Override
-                         public void onFailure(Call<CommonResponse> call, Throwable t) {
+                         public void onFailure(Call<ImageUploadResponse> call, Throwable t) {
 
                          }
                      }
