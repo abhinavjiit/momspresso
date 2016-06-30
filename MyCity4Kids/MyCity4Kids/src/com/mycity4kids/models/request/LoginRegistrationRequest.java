@@ -5,7 +5,7 @@ import com.mycity4kids.models.BaseResponseModel;
 /**
  * Created by hemant on 21/6/16.
  */
-public class LoginRegistrationRequest extends BaseResponseModel {
+public class LoginRegistrationRequest {
 
     private String cityId;
     private String email;

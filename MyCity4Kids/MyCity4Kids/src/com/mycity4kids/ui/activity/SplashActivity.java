@@ -546,10 +546,10 @@ public class SplashActivity extends BaseActivity {
                 showToast(getString(R.string.went_wrong));
                 Crashlytics.logException(e);
                 Log.d("Exception", Log.getStackTraceString(e));
-                //Uncomment to run on test server
-//                SharedPrefUtils.setAppUgrade(SplashActivity.this, false);
-//                isFirstLaunch = 0;
-//                navigateToNextScreen(true);
+                //Uncomment to run on phoenix
+                SharedPrefUtils.setAppUgrade(SplashActivity.this, false);
+                isFirstLaunch = 0;
+                navigateToNextScreen(true);
 
             }
 

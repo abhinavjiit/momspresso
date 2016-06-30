@@ -641,13 +641,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                     }
                     //Custom sign up user but email is not yet verfifed.
                     else if (!AppConstants.VALIDATED_USER.equals(model.getIsValidated())) {
-                        showAlertDialog("Error", "Please verify your account to login", new OnButtonClicked() {
-                            @Override
-                            public void onButtonCLick(int buttonId) {
-                                Log.d("jiij","jhuijij");
-//                                removeProgressDialog();
-                            }
-                        });
+                        showVerifyEmailDialog("Error", "Please verify your account to login");
                     }
                     //Verified User
                     else {
@@ -674,18 +668,80 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         }
     };
 
+    public void showVerifyEmailDialog(String title, String message) {
+        new AlertDialog.Builder(this)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton(R.string.resend_email, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // resend verification link
+                        LoginRegistrationRequest lr = new LoginRegistrationRequest();
+                        lr.setEmail(SharedPrefUtils.getUserDetailModel(ActivityLogin.this).getEmail());
+
+                        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+                        LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
+                        Call<UserDetailResponse> call = loginRegistrationAPI.resendVerificationLink(lr);
+                        call.enqueue(onVerifyEmailLinkResendResponseReceived);
+                        dialog.dismiss();
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
+
+    Callback<UserDetailResponse> onVerifyEmailLinkResendResponseReceived = new Callback<UserDetailResponse>() {
+        @Override
+        public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
+            Log.d("SUCCESS", "" + response);
+            removeProgressDialog();
+            if (response == null || response.body() == null) {
+                showToast(getString(R.string.went_wrong));
+                return;
+            }
+
+            try {
+                UserDetailResponse responseData = (UserDetailResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+
+                } else {
+                    showToast(responseData.getReason());
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("Exception", Log.getStackTraceString(e));
+                showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<UserDetailResponse> call, Throwable t) {
+            Log.d("MC4kException", Log.getStackTraceString(t));
+            Crashlytics.logException(t);
+            showToast(getString(R.string.went_wrong));
+        }
+    };
+
     public void addEmail(String email) {
 
         showProgressDialog(getString(R.string.please_wait));
         String emailId = email;
-        AddFacebookEmailModel _requestModel = new AddFacebookEmailModel();
-        _requestModel.setAttributeName("email");
-        _requestModel.setAttributeValue(email);
-        _requestModel.setAttributeType("S");
+//        AddFacebookEmailModel _requestModel = new AddFacebookEmailModel();
+//        _requestModel.setAttributeName("email");
+//        _requestModel.setAttributeValue(email);
+//        _requestModel.setAttributeType("S");
+
+        LoginRegistrationRequest lr = new LoginRegistrationRequest();
+        lr.setEmail(emailId);
 
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
-        Call<UserDetailResponse> call = loginRegistrationAPI.addFacebookEmail(_requestModel);
+        Call<UserDetailResponse> call = loginRegistrationAPI.addFacebookEmail(lr);
         call.enqueue(onAddFacebookEmailResponseReceived);
 
 //        LoginController _controller = new LoginController(this, this);

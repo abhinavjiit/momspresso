@@ -33,7 +33,6 @@ public class AddNotesController extends BaseController {
     public AddNotesController(Activity activity, IScreen screen) {
         super(activity, screen);
         context = activity;
-        // TODO Auto-generated constructor stub
     }
 
     @Override
@@ -130,7 +129,6 @@ public class AddNotesController extends BaseController {
             // encodedEntity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE,
             // "application/x-www-form-urlencoded"));
         } catch (Exception e) {
-            // TODO: handle exception
         }
 
         return nameValuePairs;
