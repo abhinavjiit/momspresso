@@ -5,21 +5,35 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
+import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.ForgotPasswordController;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.forgot.CommonResponse;
+import com.mycity4kids.models.request.LoginRegistrationRequest;
+import com.mycity4kids.models.response.UserDetailResponse;
+import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
+import com.mycity4kids.sync.PushTokenService;
+import com.mycity4kids.ui.fragment.FacebookAddEmailDialogFragment;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
 
 public class ForgotPasswordActivity extends BaseActivity {
     private EditText mEmailId;
@@ -71,8 +85,16 @@ public class ForgotPasswordActivity extends BaseActivity {
                                 getString(R.string.error_network));
                     } else {
                         showProgressDialog(getString(R.string.please_wait));
-                        _controller.getData(AppConstants.FORGOT_REQUEST, mEmailId
-                                .getText().toString().trim());
+//                        _controller.getData(AppConstants.FORGOT_REQUEST, mEmailId
+//                                .getText().toString().trim());
+
+                        LoginRegistrationRequest lr = new LoginRegistrationRequest();
+                        lr.setEmail(SharedPrefUtils.getUserDetailModel(this).getEmail());
+
+                        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+                        LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
+                        Call<UserDetailResponse> call = loginRegistrationAPI.resetPassword(lr);
+                        call.enqueue(onForgotPasswordResponseReceived);
                     }
                 }
 
@@ -82,6 +104,38 @@ public class ForgotPasswordActivity extends BaseActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    Callback<UserDetailResponse> onForgotPasswordResponseReceived = new Callback<UserDetailResponse>() {
+        @Override
+        public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
+            Log.d("SUCCESS", "" + response);
+            removeProgressDialog();
+            if (response == null || response.body() == null) {
+                showToast(getString(R.string.went_wrong));
+                return;
+            }
+
+            try {
+                UserDetailResponse responseData = (UserDetailResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+
+                } else {
+                    showToast(responseData.getReason());
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("Exception", Log.getStackTraceString(e));
+                showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<UserDetailResponse> call, Throwable t) {
+            Log.d("MC4kException", Log.getStackTraceString(t));
+            Crashlytics.logException(t);
+            showToast(getString(R.string.went_wrong));
+        }
+    };
 
     @Override
     protected void updateUi(Response response) {
@@ -102,16 +156,16 @@ public class ForgotPasswordActivity extends BaseActivity {
 
                     dialog.setMessage(message + "").setNegativeButton(android.R.string.yes
                             , new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
+                                public void onClick(DialogInterface dialog, int which) {
 
-                            dialog.cancel();
-                            Intent intent = new Intent(ForgotPasswordActivity.this, ActivityLogin.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                            startActivity(intent);
+                                    dialog.cancel();
+                                    Intent intent = new Intent(ForgotPasswordActivity.this, ActivityLogin.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                    startActivity(intent);
 
 
-                        }
-                    }).setIcon(android.R.drawable.ic_dialog_alert).show();
+                                }
+                            }).setIcon(android.R.drawable.ic_dialog_alert).show();
 //                    Toast.makeText(this,message,Toast.LENGTH_LONG).show();
 
 

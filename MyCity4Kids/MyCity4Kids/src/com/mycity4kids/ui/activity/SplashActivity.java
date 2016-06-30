@@ -47,16 +47,12 @@ import com.mycity4kids.models.VersionApiModel;
 import com.mycity4kids.models.city.City;
 import com.mycity4kids.models.city.MetroCity;
 import com.mycity4kids.models.configuration.ConfigurationApiModel;
-import com.mycity4kids.models.request.VerifyEmailRequest;
-import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.newmodels.ForceUpdateModel;
 import com.mycity4kids.newmodels.UserInviteModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ForceUpdateAPI;
-import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
 import com.mycity4kids.sync.PushTokenService;
-import com.mycity4kids.ui.fragment.VerifyEmailDialogFragment;
 import com.mycity4kids.utils.NearMyCity;
 import com.mycity4kids.utils.location.GPSTracker;
 
@@ -77,7 +73,6 @@ public class SplashActivity extends BaseActivity {
     private String mDescription;
     Bundle extras;
     FirebaseAnalytics mFirebaseAnalytics;
-    private VerifyEmailDialogFragment dialogFragment;
 
 //    private DeepLinkData _deepLinkData;
 //    private GetAppointmentController _appointmentcontroller;
@@ -233,6 +228,17 @@ public class SplashActivity extends BaseActivity {
                     Call<ForceUpdateModel> call = forceUpdateAPI.checkForceUpdateRequired(version, "android");
                     call.enqueue(checkForceUpdateResponseCallback);
 
+//                    final Handler handler = new Handler();
+//                    handler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            isFirstLaunch = 0;
+//                            navigateToNextScreen(true);
+//                        }
+//                    }, 500);
+
+                    //ToastUtils.showToast(SplashActivity.this, getString(R.string.error_network));
+                    //return;
                 } else {
                     if (SharedPrefUtils.getAppUpgrade(SplashActivity.this)) {
                         String message = SharedPrefUtils.getAppUgradeMessage(SplashActivity.this);
@@ -293,35 +299,23 @@ public class SplashActivity extends BaseActivity {
 
         UserInfo userInfo = SharedPrefUtils.getUserDetailModel(this);
         TableAdult _table = new TableAdult(BaseApplication.getInstance());
-        if (null != userInfo && !StringUtils.isNullOrEmpty(userInfo.getMc4kToken())) { // if he signup
+        if (null != userInfo && !StringUtils.isNullOrEmpty(userInfo.getMc4kToken()) && AppConstants.VALIDATED_USER.equals(userInfo.getIsValidated())) { // if he signup
             Log.e("MYCITY4KIDS", "USER logged In");
             Intent intent5 = new Intent(this, PushTokenService.class);
             startService(intent5);
 //            startSyncing();
 //            startSyncingUserInfo();
 
-            if (!AppConstants.VALIDATED_USER.equals(SharedPrefUtils.getUserDetailModel(SplashActivity.this).getIsValidated())) {
-
-                dialogFragment = new VerifyEmailDialogFragment();
-                dialogFragment.setTargetFragment(dialogFragment, 2);
-                Bundle bundle = new Bundle();
-                bundle.putString(AppConstants.FROM_ACTIVITY, AppConstants.SPLASH_ACTIVITY);
-                dialogFragment.setArguments(bundle);
-                dialogFragment.show(getFragmentManager(), "verify email");
-
-            } else {
-
-                Intent intent = new Intent(SplashActivity.this, DashboardActivity.class);
-                if (!StringUtils.isNullOrEmpty(_deepLinkURL)) {
-                    intent.putExtra(AppConstants.DEEP_LINK_URL, _deepLinkURL);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP/*|Intent.FLAG_ACTIVITY_NEW_TASK*/);
-                } else if (extras != null && extras.getString("type") != null) {
-                    //String articleId=extras.getString("articleId");
-                    intent.putExtra("notificationExtras", extras);
-                }
-                startActivity(intent);
-                finish();
+            Intent intent = new Intent(SplashActivity.this, DashboardActivity.class);
+            if (!StringUtils.isNullOrEmpty(_deepLinkURL)) {
+                intent.putExtra(AppConstants.DEEP_LINK_URL, _deepLinkURL);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP/*|Intent.FLAG_ACTIVITY_NEW_TASK*/);
+            } else if (extras != null && extras.getString("type") != null) {
+                //String articleId=extras.getString("articleId");
+                intent.putExtra("notificationExtras", extras);
             }
+            startActivity(intent);
+            finish();
 
         } else {
             Log.e("MYCITY4KIDS", "USER logged Out");
@@ -477,66 +471,6 @@ public class SplashActivity extends BaseActivity {
         }, 2, TimeUnit.SECONDS);
     }
 
-    public void addOrVerifyEmail(String email) {
-
-        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
-        Call<UserDetailResponse> userDetailCall = loginRegistrationAPI.getUserDetails(SharedPrefUtils.getUserDetailModel(SplashActivity.this).getId());
-        userDetailCall.enqueue(onUserDetailResponseReceived);
-    }
-
-    public void addEmailLater() {
-        Intent intent = new Intent(SplashActivity.this, DashboardActivity.class);
-        if (!StringUtils.isNullOrEmpty(_deepLinkURL)) {
-            intent.putExtra(AppConstants.DEEP_LINK_URL, _deepLinkURL);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP/*|Intent.FLAG_ACTIVITY_NEW_TASK*/);
-        } else if (extras != null && extras.getString("type") != null) {
-            //String articleId=extras.getString("articleId");
-            intent.putExtra("notificationExtras", extras);
-        }
-        startActivity(intent);
-        finish();
-
-    }
-
-    Callback<UserDetailResponse> onVerifyEmailResponseReceived = new Callback<UserDetailResponse>() {
-        @Override
-        public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
-            Log.d("SUCCESS", "" + response);
-            if (response == null || response.body() == null) {
-                showToast(getString(R.string.went_wrong));
-                return;
-            }
-
-            try {
-                UserDetailResponse responseData = (UserDetailResponse) response.body();
-                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-
-                    dialogFragment.dismiss();
-                    showToast("Mail sent to email address Please click and verify");
-
-                    Intent intent = new Intent(SplashActivity.this, PushTokenService.class);
-                    startService(intent);
-                    Intent intent1 = new Intent(SplashActivity.this, LoadingActivity.class);
-                    startActivity(intent1);
-                } else {
-                    showToast(responseData.getReason());
-                }
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                Log.d("Exception", Log.getStackTraceString(e));
-                showToast(getString(R.string.went_wrong));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<UserDetailResponse> call, Throwable t) {
-            Log.d("MC4kException", Log.getStackTraceString(t));
-            Crashlytics.logException(t);
-            showToast(getString(R.string.went_wrong));
-        }
-    };
-
     private static class ContainerLoadedCallback implements ContainerHolder.ContainerAvailableListener {
         @Override
         public void onContainerAvailable(ContainerHolder containerHolder, String containerVersion) {
@@ -577,7 +511,6 @@ public class SplashActivity extends BaseActivity {
                 return;
             }
             try {
-
                 ForceUpdateModel responseData = (ForceUpdateModel) response.body();
                 if (responseData.getResponseCode() == 200) {
                     if (responseData.getResult().getData().getIsAppUpdateRequired() == 1) {
@@ -603,17 +536,17 @@ public class SplashActivity extends BaseActivity {
                         showToast(getString(R.string.went_wrong));
                     }
                 }
-                //Comment after Phoenix Testing
+                //TODO to be removed used only because force update API not available on Phoenix.
                 else {
                     SharedPrefUtils.setAppUgrade(SplashActivity.this, false);
                     isFirstLaunch = 0;
                     navigateToNextScreen(true);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
                 showToast(getString(R.string.went_wrong));
-
-                //Uncomment to run on test server
+                Crashlytics.logException(e);
+                Log.d("Exception", Log.getStackTraceString(e));
+                //Uncomment to run on phoenix
                 SharedPrefUtils.setAppUgrade(SplashActivity.this, false);
                 isFirstLaunch = 0;
                 navigateToNextScreen(true);
@@ -627,54 +560,4 @@ public class SplashActivity extends BaseActivity {
             showToast(getString(R.string.went_wrong));
         }
     };
-
-    Callback<UserDetailResponse> onUserDetailResponseReceived = new Callback<UserDetailResponse>() {
-        @Override
-        public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
-            Log.d("SUCCESS", "" + response);
-            if (response == null || response.body() == null) {
-                showToast(getString(R.string.went_wrong));
-                return;
-            }
-
-            try {
-                UserDetailResponse responseData = (UserDetailResponse) response.body();
-                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    UserInfo model = new UserInfo();
-                    model.setId(responseData.getData().get(0).getId());
-                    model.setEmail(responseData.getData().get(0).getEmail());
-                    model.setMc4kToken(responseData.getData().get(0).getMc4kToken());
-                    model.setIsValidated(responseData.getData().get(0).getIsValidated());
-                    model.setFirst_name(responseData.getData().get(0).getFirstName() + " " + responseData.getData().get(0).getLastName());
-                    SharedPrefUtils.setUserDetailModel(SplashActivity.this, model);
-
-                    Intent intent = new Intent(SplashActivity.this, DashboardActivity.class);
-                    if (!StringUtils.isNullOrEmpty(_deepLinkURL)) {
-                        intent.putExtra(AppConstants.DEEP_LINK_URL, _deepLinkURL);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP/*|Intent.FLAG_ACTIVITY_NEW_TASK*/);
-                    } else if (extras != null && extras.getString("type") != null) {
-                        //String articleId=extras.getString("articleId");
-                        intent.putExtra("notificationExtras", extras);
-                    }
-                    startActivity(intent);
-                    finish();
-
-                } else {
-                    showToast(responseData.getReason());
-                }
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                Log.d("Exception", Log.getStackTraceString(e));
-                showToast(getString(R.string.went_wrong));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<UserDetailResponse> call, Throwable t) {
-            Log.d("MC4kException", Log.getStackTraceString(t));
-            Crashlytics.logException(t);
-            showToast(getString(R.string.went_wrong));
-        }
-    };
-
 }

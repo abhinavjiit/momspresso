@@ -5,7 +5,7 @@ import com.mycity4kids.models.response.BaseResponse;
 /**
  * Created by hemant on 24/6/16.
  */
-public class VerifyEmailRequest extends BaseResponse {
+public class AddFacebookEmailModel extends BaseResponse {
 
     private String attributeName;
     private String attributeValue;

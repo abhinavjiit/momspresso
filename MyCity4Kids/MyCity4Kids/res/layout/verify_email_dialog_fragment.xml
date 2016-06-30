@@ -6,6 +6,14 @@
     android:orientation="vertical"
     android:padding="15dp">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingBottom="10dp"
+        android:text="Your facebook account does not have an email associated with it. Please enter email to continue."
+        android:textColor="@color/black_color"
+        android:textSize="16sp" />
 
     <EditText
         android:id="@+id/emailTextView"
@@ -15,7 +23,7 @@
         android:background="@null"
         android:drawableBottom="@drawable/underline"
         android:hint="Enter Email"
-        android:inputType="textPassword"
+        android:inputType="textEmailAddress"
         android:padding="10dp"
         android:singleLine="true"
         android:textColor="@color/black_color" />
