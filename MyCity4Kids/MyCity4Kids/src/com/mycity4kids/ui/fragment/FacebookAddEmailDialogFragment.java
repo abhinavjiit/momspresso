@@ -18,7 +18,7 @@ import com.mycity4kids.ui.activity.SplashActivity;
 /**
  * Created by manish.soni on 08-09-2015.
  */
-public class VerifyEmailDialogFragment extends android.app.DialogFragment implements View.OnClickListener {
+public class FacebookAddEmailDialogFragment extends android.app.DialogFragment implements View.OnClickListener {
 
     TextView ok, cancel;
     EditText emailEditText;
@@ -51,21 +51,33 @@ public class VerifyEmailDialogFragment extends android.app.DialogFragment implem
                 if (StringUtils.isNullOrEmpty((emailEditText.getText().toString()))) {
                     ToastUtils.showToast(getActivity(), "Please enter your email");
                 } else {
+                    if (!isValidEmail()) {
+                        return;
+                    }
                     if (AppConstants.ACTIVITY_LOGIN.equals(fromActivity)) {
                         ((ActivityLogin) getActivity()).addEmail(emailEditText.getText().toString());
-                    } else {
-                        ((SplashActivity) getActivity()).addOrVerifyEmail(emailEditText.getText().toString());
                     }
 //                    getDialog().dismiss();
                 }
                 break;
             case R.id.cancel:
                 if (AppConstants.ACTIVITY_LOGIN.equals(fromActivity)) {
-                    ((ActivityLogin) getActivity()).addEmailLater();
-                } else {
-                    ((SplashActivity) getActivity()).addEmailLater();
+                    ((ActivityLogin) getActivity()).cancelAddEmail();
                 }
                 break;
         }
+    }
+
+    private boolean isValidEmail() {
+        boolean isLoginOk = true;
+        String email_id = emailEditText.getText().toString().trim();
+
+        if (email_id.trim().length() == 0 || ((!StringUtils.isValidEmail(email_id)))) {
+            emailEditText.setFocusableInTouchMode(true);
+            emailEditText.setError("Please enter valid email id");
+            emailEditText.requestFocus();
+            isLoginOk = false;
+        }
+        return isLoginOk;
     }
 }

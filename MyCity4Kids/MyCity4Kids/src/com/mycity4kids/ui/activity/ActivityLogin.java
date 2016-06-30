@@ -43,8 +43,9 @@ import com.mycity4kids.google.GooglePlusUtils;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.IFacebookUser;
 import com.mycity4kids.interfaces.IPlusClient;
+import com.mycity4kids.listener.OnButtonClicked;
 import com.mycity4kids.models.request.LoginRegistrationRequest;
-import com.mycity4kids.models.request.VerifyEmailRequest;
+import com.mycity4kids.models.request.AddFacebookEmailModel;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.models.user.KidsInfo;
 import com.mycity4kids.models.user.UserInfo;
@@ -56,7 +57,7 @@ import com.mycity4kids.newmodels.UserInviteModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
 import com.mycity4kids.sync.PushTokenService;
-import com.mycity4kids.ui.fragment.VerifyEmailDialogFragment;
+import com.mycity4kids.ui.fragment.FacebookAddEmailDialogFragment;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.widget.CustomFontEditText;
 import com.mycity4kids.widget.CustomFontTextView;
@@ -88,7 +89,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
     private String googleToken = "";
     private int changeBaseURL = 0;
     private GraphUser fbUser;
-    VerifyEmailDialogFragment dialogFragment;
+    FacebookAddEmailDialogFragment dialogFragment;
 
     private String loginMode = "";
 
@@ -611,6 +612,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         @Override
         public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
             Log.d("SUCCESS", "" + response);
+            removeProgressDialog();
             if (response == null || response.body() == null) {
                 showToast(getString(R.string.went_wrong));
                 return;
@@ -621,21 +623,34 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     UserInfo model = new UserInfo();
                     model.setId(responseData.getData().get(0).getId());
+                    model.setDynamoId(responseData.getData().get(0).getDynamoId());
                     model.setEmail(responseData.getData().get(0).getEmail());
                     model.setMc4kToken(responseData.getData().get(0).getMc4kToken());
                     model.setIsValidated(responseData.getData().get(0).getIsValidated());
                     model.setFirst_name(responseData.getData().get(0).getFirstName() + " " + responseData.getData().get(0).getLastName());
                     SharedPrefUtils.setUserDetailModel(ActivityLogin.this, model);
 
-                    //Custom Sign up or facebook login with an account without email and user email is not verfifed yet.
-                    if (!AppConstants.VALIDATED_USER.equals(model.getIsValidated())) {
-                        dialogFragment = new VerifyEmailDialogFragment();
+                    //facebook login with an account without email
+                    if (!AppConstants.VALIDATED_USER.equals(model.getIsValidated()) && "fb".equals(loginMode)) {
+                        dialogFragment = new FacebookAddEmailDialogFragment();
                         dialogFragment.setTargetFragment(dialogFragment, 2);
                         Bundle bundle = new Bundle();
                         bundle.putString(AppConstants.FROM_ACTIVITY, AppConstants.ACTIVITY_LOGIN);
                         dialogFragment.setArguments(bundle);
                         dialogFragment.show(getFragmentManager(), "verify email");
-                    } else {
+                    }
+                    //Custom sign up user but email is not yet verfifed.
+                    else if (!AppConstants.VALIDATED_USER.equals(model.getIsValidated())) {
+                        showAlertDialog("Error", "Please verify your account to login", new OnButtonClicked() {
+                            @Override
+                            public void onButtonCLick(int buttonId) {
+                                Log.d("jiij","jhuijij");
+//                                removeProgressDialog();
+                            }
+                        });
+                    }
+                    //Verified User
+                    else {
                         Intent intent = new Intent(ActivityLogin.this, PushTokenService.class);
                         startService(intent);
                         Intent intent1 = new Intent(ActivityLogin.this, LoadingActivity.class);
@@ -663,31 +678,29 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
 
         showProgressDialog(getString(R.string.please_wait));
         String emailId = email;
-        VerifyEmailRequest _requestModel = new VerifyEmailRequest();
+        AddFacebookEmailModel _requestModel = new AddFacebookEmailModel();
         _requestModel.setAttributeName("email");
         _requestModel.setAttributeValue(email);
         _requestModel.setAttributeType("S");
 
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
-        Call<UserDetailResponse> call = loginRegistrationAPI.verifyEmail(_requestModel);
-        call.enqueue(onVerifyEmailResponseReceived);
+        Call<UserDetailResponse> call = loginRegistrationAPI.addFacebookEmail(_requestModel);
+        call.enqueue(onAddFacebookEmailResponseReceived);
 
 //        LoginController _controller = new LoginController(this, this);
 //        _controller.getData(AppConstants.NEW_LOGIN_REQUEST, _requestModel);
     }
 
-    public void addEmailLater() {
+    public void cancelAddEmail() {
+        removeProgressDialog();
         dialogFragment.dismiss();
-        Intent intent = new Intent(ActivityLogin.this, PushTokenService.class);
-        startService(intent);
-        Intent intent1 = new Intent(ActivityLogin.this, LoadingActivity.class);
-        startActivity(intent1);
     }
 
-    Callback<UserDetailResponse> onVerifyEmailResponseReceived = new Callback<UserDetailResponse>() {
+    Callback<UserDetailResponse> onAddFacebookEmailResponseReceived = new Callback<UserDetailResponse>() {
         @Override
         public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
+            removeProgressDialog();
             Log.d("SUCCESS", "" + response);
             if (response == null || response.body() == null) {
                 showToast(getString(R.string.went_wrong));

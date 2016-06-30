@@ -53,6 +53,7 @@ public class SharedPrefUtils {
     // user detail model
 
     public static final String USER_ID = "userid";
+    public static final String DYNAMO_USER_ID = "dynamoUserid";
     public static final String FAMILY_ID = "familyid";
     public static final String EMAIL = "email";
     public static final String MOBILE = "mobile";
@@ -60,6 +61,7 @@ public class SharedPrefUtils {
     public static final String USER_NAME = "username";
     public static final String SESSIONID = "sessionid";
     public static final String MC4KTOKEN = "mc4kToken";
+    public static final String IS_USER_VALIDATED = "isValidated";
 
 
     public static final String APPOINTMENT_TIMESTAMP = "appointment_timestamp";
@@ -237,6 +239,7 @@ public class SharedPrefUtils {
         SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         Editor _editor = _sharedPref.edit();
         _editor.putString(USER_ID, pModel.getId());
+        _editor.putString(DYNAMO_USER_ID, pModel.getDynamoId());
         _editor.putString(EMAIL, pModel.getEmail());
         _editor.putString(MOBILE, pModel.getMobile_number());
         _editor.putString(COLOR_CODE, pModel.getColor_code());
@@ -244,6 +247,7 @@ public class SharedPrefUtils {
         _editor.putString(USER_NAME, pModel.getFirst_name());
         _editor.putString(SESSIONID, pModel.getSessionId());
         _editor.putString(MC4KTOKEN, pModel.getMc4kToken());
+        _editor.putString(IS_USER_VALIDATED, pModel.getIsValidated());
         _editor.commit();
     }
 
@@ -252,6 +256,7 @@ public class SharedPrefUtils {
         SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         UserInfo user = new UserInfo();
         user.setId(_sharedPref.getString(USER_ID, "0"));
+        user.setDynamoId(_sharedPref.getString(DYNAMO_USER_ID, "0"));
         user.setFamily_id(_sharedPref.getInt(FAMILY_ID, 0));
         user.setEmail(_sharedPref.getString(EMAIL, ""));
         user.setMobile_number(_sharedPref.getString(MOBILE, ""));
@@ -259,6 +264,7 @@ public class SharedPrefUtils {
         user.setFirst_name(_sharedPref.getString(USER_NAME, "user"));
         user.setSessionId(_sharedPref.getString(SESSIONID, ""));
         user.setMc4kToken(_sharedPref.getString(MC4KTOKEN, ""));
+        user.setIsValidated(_sharedPref.getString(IS_USER_VALIDATED, ""));
         return user;
     }
 

@@ -5,6 +5,7 @@ package com.mycity4kids.models.response;
  */
 public class UserDetailData {
     private String id;
+    private String dynamoId;
     private String mc4kToken;
     private String firstName;
     private String lastName;
@@ -20,6 +21,14 @@ public class UserDetailData {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getDynamoId() {
+        return dynamoId;
+    }
+
+    public void setDynamoId(String dynamoId) {
+        this.dynamoId = dynamoId;
     }
 
     public String getMc4kToken() {

@@ -1,9 +1,8 @@
 package com.mycity4kids.retrofitAPIsInterfaces;
 
 import com.mycity4kids.models.request.LoginRegistrationRequest;
-import com.mycity4kids.models.request.VerifyEmailRequest;
+import com.mycity4kids.models.request.AddFacebookEmailModel;
 import com.mycity4kids.models.response.UserDetailResponse;
-import com.mycity4kids.models.user.UserInfo;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -21,7 +20,7 @@ public interface LoginRegistrationAPI {
     Call<UserDetailResponse> login(@Body LoginRegistrationRequest body);
 
     @PUT("v1/users/email/")
-    Call<UserDetailResponse> verifyEmail(@Body VerifyEmailRequest body);
+    Call<UserDetailResponse> addFacebookEmail(@Body AddFacebookEmailModel body);
 
     @GET("v1/users/{userId}")
     Call<UserDetailResponse> getUserDetails(@Path("userId") String userId);

@@ -7,6 +7,7 @@ import com.mycity4kids.models.basemodel.BaseDataModel;
 
 public class UserInfo extends BaseDataModel implements Parcelable {
     private String id;
+    private String dynamoId;
     private String first_name;
     private String last_name;
     private String email;
@@ -32,6 +33,14 @@ public class UserInfo extends BaseDataModel implements Parcelable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getDynamoId() {
+        return dynamoId;
+    }
+
+    public void setDynamoId(String dynamoId) {
+        this.dynamoId = dynamoId;
     }
 
     public String getName() {
@@ -148,6 +157,7 @@ public class UserInfo extends BaseDataModel implements Parcelable {
 
     protected UserInfo(Parcel in) {
         id = in.readString();
+        dynamoId = in.readString();
         mobile_number = in.readString();
         first_name = in.readString();
         name = in.readString();
@@ -167,6 +177,7 @@ public class UserInfo extends BaseDataModel implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
+        dest.writeString(dynamoId);
         dest.writeString(mobile_number);
         dest.writeString(first_name);
         dest.writeString(name);
