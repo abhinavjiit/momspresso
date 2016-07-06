@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Base64;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
@@ -27,8 +26,7 @@ import com.mycity4kids.dbtable.UserTable;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.editor.ArticleDraftList;
-import com.mycity4kids.models.forgot.CommonResponse;
-import com.mycity4kids.models.parentingdetails.ParentingDetailResponse;
+import com.mycity4kids.models.response.DraftResponse;
 import com.mycity4kids.models.response.ImageUploadResponse;
 import com.mycity4kids.models.user.UserModel;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -45,7 +43,6 @@ import org.wordpress.android.util.helpers.MediaFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
@@ -473,33 +470,33 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             showToast(getString(R.string.error_network));
             return;
         }
-        Call<ParentingDetailResponse> call = articleDraftAPI.draftArticle("" + userModel.getUser().getId(),
+        if (draftId1.isEmpty()){
+        Call<DraftResponse> call = articleDraftAPI.saveDraft(
                 title,
                 body,
-                draftId1,
-                null,
-                AppConstants.Source_Id);
+                "0"
+                );
 
 
         //asynchronous call
-        call.enqueue(new Callback<ParentingDetailResponse>() {
+        call.enqueue(new Callback<DraftResponse>() {
                          @Override
-                         public void onResponse(Call<ParentingDetailResponse> call, retrofit2.Response<ParentingDetailResponse> response) {
+                         public void onResponse(Call<DraftResponse> call, retrofit2.Response<DraftResponse> response) {
                              int statusCode = response.code();
 
-                             ParentingDetailResponse responseModel = (ParentingDetailResponse) response.body();
-
+                             DraftResponse responseModel = (DraftResponse) response.body();
+                            // Result<DraftResult> result=responseModel.getData().getResult();
                              removeProgressDialog();
 
-                             if (responseModel.getResponseCode() != 200) {
+                             if (responseModel.getCode() != 200) {
                                  showToast(getString(R.string.toast_response_error));
                                  return;
                              } else {
-                                 if (!StringUtils.isNullOrEmpty(responseModel.getResult().getMessage())) {
+                                 if (!StringUtils.isNullOrEmpty(responseModel.getData().getMsg())) {
                                      //  SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
-                                     Log.i("Draft message", responseModel.getResult().getMessage());
+                                     Log.i("Draft message", responseModel.getData().getMsg());
                                  }
-                                 draftId = responseModel.getResult().getData().getId() + "";
+                                 draftId = responseModel.getData().getResult().getId()+ "";
 
                                  //setProfileImage(originalImage);
                                  showToast("Draft Successfully saved");
@@ -514,11 +511,53 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
 
 
                          @Override
-                         public void onFailure(Call<ParentingDetailResponse> call, Throwable t) {
+                         public void onFailure(Call<DraftResponse> call, Throwable t) {
 
                          }
                      }
-        );
+        );}else
+        {
+            Call<DraftResponse> call = articleDraftAPI.updateDraft(
+                    AppConstants.STAGING_URL+"v1/articles/"+draftId1,
+                    title,
+                    body,
+                    "0"
+                    );
+            call.enqueue(new Callback<DraftResponse>() {
+                @Override
+                public void onResponse(Call<DraftResponse> call, retrofit2.Response<DraftResponse> response) {
+                    int statusCode = response.code();
+
+                    DraftResponse responseModel = (DraftResponse) response.body();
+                    // Result<DraftResult> result=responseModel.getData().getResult();
+                    removeProgressDialog();
+
+                    if (responseModel.getCode() != 200) {
+                        showToast(getString(R.string.toast_response_error));
+                        return;
+                    } else {
+                        if (!StringUtils.isNullOrEmpty(responseModel.getData().getMsg())) {
+                            //  SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
+                            Log.i("Draft message", responseModel.getData().getMsg());
+                        }
+                        draftId = responseModel.getData().getResult().getId()+ "";
+
+                        //setProfileImage(originalImage);
+                        showToast("Draft Successfully saved");
+                        if (fromBackpress) {
+                            //onBackPressed();
+                            finish();
+                        }
+                        //  finish();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<DraftResponse> call, Throwable t) {
+
+                }
+            });
+        }
 
     }
 

@@ -16,7 +16,8 @@ private String id;
     private String moderation_status;
     private String node_id;
     private String source_id;
-
+    private String draftType;
+    private String createdTime;
     public ArticleDraftList() {
     }
 
@@ -98,5 +99,21 @@ private String id;
 
     public void setSource_id(String source_id) {
         this.source_id = source_id;
+    }
+
+    public String getDraftType() {
+        return draftType;
+    }
+
+    public void setDraftType(String draftType) {
+        this.draftType = draftType;
+    }
+
+    public String getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(String createdTime) {
+        this.createdTime = createdTime;
     }
 }

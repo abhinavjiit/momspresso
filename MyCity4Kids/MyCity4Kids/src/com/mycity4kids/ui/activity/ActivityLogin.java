@@ -43,9 +43,7 @@ import com.mycity4kids.google.GooglePlusUtils;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.IFacebookUser;
 import com.mycity4kids.interfaces.IPlusClient;
-import com.mycity4kids.listener.OnButtonClicked;
 import com.mycity4kids.models.request.LoginRegistrationRequest;
-import com.mycity4kids.models.request.AddFacebookEmailModel;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.models.user.KidsInfo;
 import com.mycity4kids.models.user.UserInfo;
@@ -628,6 +626,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                     model.setMc4kToken(responseData.getData().get(0).getMc4kToken());
                     model.setIsValidated(responseData.getData().get(0).getIsValidated());
                     model.setFirst_name(responseData.getData().get(0).getFirstName() + " " + responseData.getData().get(0).getLastName());
+                    model.setProfilePicUrl(responseData.getData().get(0).getProfilePicUrl());
                     SharedPrefUtils.setUserDetailModel(ActivityLogin.this, model);
 
                     //facebook login with an account without email
@@ -731,7 +730,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
 
         showProgressDialog(getString(R.string.please_wait));
         String emailId = email;
-//        AddFacebookEmailModel _requestModel = new AddFacebookEmailModel();
+//        UpdateUserDetail _requestModel = new UpdateUserDetail();
 //        _requestModel.setAttributeName("email");
 //        _requestModel.setAttributeValue(email);
 //        _requestModel.setAttributeType("S");

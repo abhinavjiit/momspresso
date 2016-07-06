@@ -30,12 +30,15 @@ import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.parentingdetails.ParentingDetailResponse;
+import com.mycity4kids.models.request.UpdateUserDetail;
 import com.mycity4kids.models.response.ImageUploadResponse;
+import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.newmodels.BloggerDashboardModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.UserAttributeUpdateAPI;
 import com.mycity4kids.ui.adapter.BloggerDashboardPagerAdapter;
 import com.mycity4kids.utils.RoundedTransformation;
 import com.squareup.picasso.Picasso;
@@ -150,7 +153,6 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                 }
             }
         });
-
 
     }
 
@@ -474,6 +476,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                                  if (!StringUtils.isNullOrEmpty(responseModel.getData().getUrl())) {
                                      Log.i("IMAGE_UPLOAD_REQUEST", responseModel.getData().getUrl());
                                  }
+                                 setProfileImage( responseModel.getData().getUrl());
                               //   setProfileImage(responseModel.getData().getUrl());
                                  Picasso.with(BloggerDashboardActivity.this).load(responseModel.getData().getUrl()).placeholder(R.drawable.family_xxhdpi)
                                          .error(R.drawable.family_xxhdpi).transform(new RoundedTransformation()).into(bloggerImageView);
@@ -490,5 +493,30 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         );
 
     }
+  public void   setProfileImage(String url)
+  {
+      UpdateUserDetail updateUserDetail=new UpdateUserDetail();
+      updateUserDetail.setAttributeName("profilePicUrl");
+      updateUserDetail.setAttributeValue(url);
+      updateUserDetail.setAttributeType("S");
+      Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+      UserAttributeUpdateAPI userAttributeUpdateAPI= retrofit.create(UserAttributeUpdateAPI.class);
+      Call<UserDetailResponse> call=userAttributeUpdateAPI.updateProfilePic(updateUserDetail);
+      call.enqueue(new Callback<UserDetailResponse>() {
+          @Override
+          public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
+              if (!response.body().getStatus().equals("success"))
+              {
+                  showToast(getString(R.string.toast_response_error));
+              }
+          }
+
+          @Override
+          public void onFailure(Call<UserDetailResponse> call, Throwable t) {
+
+          }
+      });
+
+  }
 
 }

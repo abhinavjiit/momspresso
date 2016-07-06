@@ -27,9 +27,8 @@ import com.mycity4kids.dbtable.UserTable;
 import com.mycity4kids.models.editor.ArticleDraftList;
 import com.mycity4kids.models.editor.ArticleDraftListResponse;
 import com.mycity4kids.models.editor.ArticleDraftRequest;
-import com.mycity4kids.models.parentingdetails.ParentingDetailResponse;
+import com.mycity4kids.models.response.BaseResponse;
 import com.mycity4kids.models.user.UserModel;
-import com.mycity4kids.newmodels.PublishedArticlesModel;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
 
 import org.json.JSONArray;
@@ -282,7 +281,7 @@ public class DraftListViewActivity extends BaseActivity implements View.OnClickL
             showToast(getString(R.string.error_network));
             return;
         }
-        Call<ParentingDetailResponse> call = articleDraftAPI.draftArticle("" + userModel.getUser().getId(),
+        Call<BaseResponse> call = articleDraftAPI.draftArticle(
                 draftObject.getTitle(),
                 draftObject.getBody(),
                 draftObject.getId(),
@@ -291,32 +290,32 @@ public class DraftListViewActivity extends BaseActivity implements View.OnClickL
 
 
         //asynchronous call
-        call.enqueue(new Callback<ParentingDetailResponse>() {
+        call.enqueue(new Callback<BaseResponse>() {
                          @Override
-                         public void onResponse(Call<ParentingDetailResponse> call, retrofit2.Response<ParentingDetailResponse> response) {
+                         public void onResponse(Call<BaseResponse> call, retrofit2.Response<BaseResponse> response) {
                              int statusCode = response.code();
 
-                             ParentingDetailResponse responseModel = (ParentingDetailResponse) response.body();
+                             BaseResponse responseModel = (BaseResponse) response.body();
 
                              removeProgressDialog();
 
-                             if (responseModel.getResponseCode() != 200) {
+                             if (responseModel.getCode() != 200) {
                                  showToast(getString(R.string.toast_response_error));
                                  return;
                              } else {
-                                 if (!StringUtils.isNullOrEmpty(responseModel.getResult().getMessage())) {
+                                /* if (!StringUtils.isNullOrEmpty(responseModel.getData().getMessage())) {
                                      //  SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
                                      Log.i("Draft message", responseModel.getResult().getMessage());
                                  }
                                  draftList.remove(position);
-                                 adapter.notifyDataSetChanged();
+                                 adapter.notifyDataSetChanged();*/
                              }
 
                          }
 
 
                          @Override
-                         public void onFailure(Call<ParentingDetailResponse> call, Throwable t) {
+                         public void onFailure(Call<BaseResponse> call, Throwable t) {
 
                          }
                      }

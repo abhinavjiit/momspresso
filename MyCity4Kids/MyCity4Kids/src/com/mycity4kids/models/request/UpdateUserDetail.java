@@ -5,7 +5,7 @@ import com.mycity4kids.models.response.BaseResponse;
 /**
  * Created by hemant on 24/6/16.
  */
-public class AddFacebookEmailModel extends BaseResponse {
+public class UpdateUserDetail extends BaseResponse {
 
     private String attributeName;
     private String attributeValue;

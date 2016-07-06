@@ -1,7 +1,6 @@
 package com.mycity4kids.retrofitAPIsInterfaces;
 
 import com.mycity4kids.models.request.LoginRegistrationRequest;
-import com.mycity4kids.models.request.AddFacebookEmailModel;
 import com.mycity4kids.models.response.UserDetailResponse;
 
 import retrofit2.Call;
