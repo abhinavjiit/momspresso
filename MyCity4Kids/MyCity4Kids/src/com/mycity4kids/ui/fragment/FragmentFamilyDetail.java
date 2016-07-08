@@ -8,7 +8,9 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -31,7 +33,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.ui.BaseFragment;
@@ -57,6 +61,11 @@ import com.mycity4kids.listener.OnButtonClicked;
 import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.models.profile.KidsInformation;
 import com.mycity4kids.models.profile.SignUpModel;
+import com.mycity4kids.models.request.AddEditKidsInformationRequest;
+import com.mycity4kids.models.request.LoginRegistrationRequest;
+import com.mycity4kids.models.response.KidsModel;
+import com.mycity4kids.models.response.UserDetailData;
+import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.models.user.ImageUploadRequest;
 import com.mycity4kids.models.user.KidsInfo;
 import com.mycity4kids.models.user.UserInfo;
@@ -64,7 +73,10 @@ import com.mycity4kids.models.user.UserModel;
 import com.mycity4kids.models.user.UserResponse;
 import com.mycity4kids.newmodels.AttendeeModel;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
+import com.mycity4kids.sync.PushTokenService;
 import com.mycity4kids.ui.activity.DashboardActivity;
+import com.mycity4kids.ui.activity.LoadingActivity;
 import com.mycity4kids.ui.adapter.AdapterKidAdultList;
 import com.mycity4kids.ui.dialog.PhotoOptionsDialog;
 import com.mycity4kids.utils.RoundedTransformation;
@@ -83,7 +95,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
+import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -93,6 +107,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+
 /**
  * Created by manish.soni on 25-06-2015.
  */
@@ -100,30 +118,31 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
 
 
     View view;
-    TextView additionalAdult, additionalChild;
+    //    TextView additionalAdult;
+    TextView additionalChild;
     CustomListView addChildAdult;
     AdapterKidAdultList adapterKidAdultList;
-    private LinearLayout mAdultContainer;
+    //    private LinearLayout mAdultContainer;
     private LinearLayout mChildContainer;
     private HashMap<String, String> used_colors = new HashMap<>();
     private int childCount = 0;
-    int adultCount = 0;
+    //    int adultCount = 0;
     private static TextView BdayView;
     private Dialog mColorPickerDialog;
     private String color_selected = "";
     private SignUpModel signupModel;
-    private ImageView imgProfile;
-    private EditText edtFamilyName;
-    private Bitmap originalImage;
+    //    private ImageView imgProfile;
+//    private EditText edtFamilyName;
+//    private Bitmap originalImage;
     private SignUpModel.Family mFamilyModel;
     private File photo;
     private boolean mAddKidsApiComleted, mUpdateProfileRequestCompleted;
     private float density;
     private File mFileTemp;
-    public String profileimgUrl = "";
+    //    public String profileimgUrl = "";
     private ScrollView scrollview;
     private boolean ifAdultAdded = false;
-
+    ArrayList<KidsModel> kidsModelArrayList;
 
     @Nullable
     @Override
@@ -133,25 +152,25 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
 
         density = getActivity().getResources().getDisplayMetrics().density;
 
-        imgProfile = (ImageView) view.findViewById(R.id.imgProfile);
-        edtFamilyName = (EditText) view.findViewById(R.id.edtFamilyName);
+//        imgProfile = (ImageView) view.findViewById(R.id.imgProfile);
+//        edtFamilyName = (EditText) view.findViewById(R.id.edtFamilyName);
 //        familyProfile = (TextView) view.findViewById(R.id.family_profile);
-        additionalAdult = (TextView) view.findViewById(R.id.additional_adult);
+//        additionalAdult = (TextView) view.findViewById(R.id.additional_adult);
         additionalChild = (TextView) view.findViewById(R.id.additional_child);
         addChildAdult = (CustomListView) view.findViewById(R.id.add_kid_adult);
         scrollview = (ScrollView) view.findViewById(R.id.scroll_view);
 
         setHasOptionsMenu(true);
 
-        setUserProfile();
+//        setUserProfile();
 
         addChildAdult.isExpanded();
 
-        mAdultContainer = (LinearLayout) view.findViewById(R.id.internal_adult_layout);
+//        mAdultContainer = (LinearLayout) view.findViewById(R.id.internal_adult_layout);
         mChildContainer = (LinearLayout) view.findViewById(R.id.internal_kid_layout);
 
         additionalChild.setOnClickListener(this);
-        additionalAdult.setOnClickListener(this);
+//        additionalAdult.setOnClickListener(this);
         ((DashboardActivity) getActivity()).setTitle("Family Details");
 
 //        familyProfile.setOnClickListener(this);
@@ -164,21 +183,25 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
 
-                AttendeeModel attendeeModel = (AttendeeModel) adapterKidAdultList.getItem(i);
+                KidsInfo attendeeModel = (KidsInfo) adapterKidAdultList.getItem(i);
 
-                if (attendeeModel.getType().equals("KID")) {
+//                if (attendeeModel.getType().equals("KID")) {
 
-                    Bundle bundle = new Bundle();
-                    bundle.putString("KID_ID", attendeeModel.getId());
-                    bundle.putSerializable("used_colors", used_colors);
-                    ((DashboardActivity) getActivity()).replaceFragment(new FragmentKidProfile(), bundle, true);
-
-                } else if (attendeeModel.getType().equals("ADULT")) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("ADULT_ID", attendeeModel.getId());
-                    bundle.putSerializable("used_colors", used_colors);
-                    ((DashboardActivity) getActivity()).replaceFragment(new FragmentAdultProfile(), bundle, true);
-                }
+                Bundle bundle = new Bundle();
+                bundle.putInt("KID_ID", i);
+                bundle.putString("KID_NAME", attendeeModel.getName());
+//                    bundle.putString("KID_NAME", attendeeModel.get);
+                bundle.putString("KID_DOB", attendeeModel.getDate_of_birth());
+                bundle.putParcelable("KID_INFO", attendeeModel);
+                bundle.putSerializable("used_colors", used_colors);
+                ((DashboardActivity) getActivity()).replaceFragment(new FragmentKidProfile(), bundle, true);
+//
+//                } else if (attendeeModel.getType().equals("ADULT")) {
+//                    Bundle bundle = new Bundle();
+//                    bundle.putString("ADULT_ID", attendeeModel.getId());
+//                    bundle.putSerializable("used_colors", used_colors);
+//                    ((DashboardActivity) getActivity()).replaceFragment(new FragmentAdultProfile(), bundle, true);
+//                }
             }
         });
 
@@ -187,19 +210,20 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
     }
 
     private void setUserProfile() {
-        imgProfile.setOnClickListener(this);
+//        imgProfile.setOnClickListener(this);
 
         TableFamily familyTable = new TableFamily(BaseApplication.getInstance());
         UserModel.FamilyInfo family = familyTable.getFamily();
 
-        if (family != null) {
-            edtFamilyName.setText(family.getFamily_name());
-        }
+//        if (family != null) {
+//            edtFamilyName.setText(family.getFamily_name());
+//        }
 
-        profileimgUrl = SharedPrefUtils.getProfileImgUrl(getActivity());
+//        profileimgUrl = SharedPrefUtils.getProfileImgUrl(getActivity());
 
-        if (!StringUtils.isNullOrEmpty(profileimgUrl))
-            Picasso.with(getActivity()).load(profileimgUrl).placeholder(R.drawable.family_xxhdpi).error(R.drawable.family_xxhdpi).resize((int) (150 * density), (int) (150 * density)).centerCrop().transform(new RoundedTransformation()).into(imgProfile);
+//        if (!StringUtils.isNullOrEmpty(profileimgUrl))
+//            Picasso.with(getActivity()).load(profileimgUrl).placeholder(R.drawable.family_xxhdpi).error(R.drawable.family_xxhdpi).resize((int) (150 * density), (int) (150 * density)).centerCrop().transform(new RoundedTransformation()).into(imgProfile);
+
     }
 
     public void setList() {
@@ -207,28 +231,28 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
         TableKids tableKids = new TableKids(BaseApplication.getInstance());
         ArrayList<KidsInfo> kidsInformations = (ArrayList<KidsInfo>) tableKids.getAllKids();
 
-        TableAdult tableAdult = new TableAdult(BaseApplication.getInstance());
-        ArrayList<UserInfo> userInfos = (ArrayList<UserInfo>) tableAdult.getAllAdults();
+//        TableAdult tableAdult = new TableAdult(BaseApplication.getInstance());
+//        ArrayList<UserInfo> userInfos = (ArrayList<UserInfo>) tableAdult.getAllAdults();
 
-        ArrayList<AttendeeModel> attendeeList = new ArrayList<AttendeeModel>();
+//        ArrayList<AttendeeModel> attendeeList = new ArrayList<AttendeeModel>();
+//
+//        for (int i = 0; i < kidsInformations.size(); i++) {
+//            attendeeList.add(new AttendeeModel(kidsInformations.get(i).getId(), "KID", kidsInformations.get(i).getName(), kidsInformations.get(i).getColor_code()));
+//        }
 
-        for (int i = 0; i < kidsInformations.size(); i++) {
-            attendeeList.add(new AttendeeModel(kidsInformations.get(i).getId(), "KID", kidsInformations.get(i).getName(), kidsInformations.get(i).getColor_code()));
-        }
+//        for (int i = 0; i < userInfos.size(); i++) {
+//            attendeeList.add(new AttendeeModel(userInfos.get(i).getId(), "ADULT", userInfos.get(i).getFirst_name(), userInfos.get(i).getColor_code()));
+//        }
 
-        for (int i = 0; i < userInfos.size(); i++) {
-            attendeeList.add(new AttendeeModel(userInfos.get(i).getId(), "ADULT", userInfos.get(i).getFirst_name(), userInfos.get(i).getColor_code()));
-        }
-
-        adapterKidAdultList = new AdapterKidAdultList(getActivity(), attendeeList);
+        adapterKidAdultList = new AdapterKidAdultList(getActivity(), kidsInformations);
         addChildAdult.setAdapter(adapterKidAdultList);
 
         // setting used colors
 
         used_colors.clear();
-        for (int i = 0; i < attendeeList.size(); i++) {
+        for (int i = 0; i < kidsInformations.size(); i++) {
 
-            String key = new ColorCode().getKey(attendeeList.get(i).getColorCode());
+            String key = new ColorCode().getKey(kidsInformations.get(i).getColor_code());
             used_colors.put("" + i, key);
 
         }
@@ -245,7 +269,7 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
 //                break;
             case R.id.additional_adult:
                 ifAdultAdded = true;
-                addNewAdult();
+//                addNewAdult();
                 sendScroll();
                 break;
             case R.id.additional_child:
@@ -447,6 +471,30 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
 
     }
 
+    private ArrayList<KidsInfo> getEnteredKidsInfo() {
+        ArrayList<KidsInfo> kidsInfoList = new ArrayList<KidsInfo>();
+
+
+        for (int position = 0; position < mChildContainer.getChildCount(); position++) {
+            View innerLayout = (View) mChildContainer.getChildAt(position);
+
+            EditText nameOfKidEdt = (EditText) innerLayout.findViewById(R.id.kids_name);
+            TextView dobOfKidSpn = (TextView) innerLayout.findViewById(R.id.kids_bdy);
+            final TextView kidcolor = (TextView) innerLayout.findViewById(R.id.kidcolor);
+
+
+            if ((nameOfKidEdt.getText().toString().trim().equals("")) || (dobOfKidSpn.getText().toString().trim().equals(""))) {
+            } else {
+                KidsInfo kidsInformation = new KidsInfo();
+                kidsInformation.setName((nameOfKidEdt).getText().toString().trim());
+                kidsInformation.setDate_of_birth((dobOfKidSpn).getText().toString().trim());
+                kidsInformation.setColor_code(new ColorCode().getValue("" + kidcolor.getTag()));
+                kidsInfoList.add(kidsInformation);
+            }
+        }
+        return kidsInfoList;
+    }
+
 
     private ArrayList<KidsInformation> getKidsInfo() {
         ArrayList<KidsInformation> kidsInfoList = new ArrayList<KidsInformation>();
@@ -473,75 +521,75 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
     }
 
 
-    private ArrayList<SignUpModel.User> getAdultInfo() {
-        ArrayList<SignUpModel.User> userInfoList = new ArrayList<>();
-
-        for (int position = 0; position < mAdultContainer.getChildCount(); position++) {
-            View innerLayout = (View) mAdultContainer.getChildAt(position);
-
-            EditText adultname = (EditText) innerLayout.findViewById(R.id.spouse_name);
-            EditText adultemail = (EditText) innerLayout.findViewById(R.id.spouse_email);
-            final TextView adultColor = (TextView) innerLayout.findViewById(R.id.color_spouse);
-
-            if ((adultname.getText().toString().trim().equals("")) || (adultemail.getText().toString().trim().equals(""))) {
-            } else {
-                SignUpModel.User usersInformation = new SignUpModel().new User();
-                usersInformation.setUsername((adultname.getText().toString().trim()));
-                if (StringUtils.isValidEmail(adultemail.getText().toString())) {
-                    usersInformation.setEmail((adultemail.getText().toString().trim()));
-                } else {
-                    usersInformation.setMobile((adultemail.getText().toString().trim()));
-                }
-                usersInformation.setColor_code(new ColorCode().getValue("" + adultColor.getTag()));
-                usersInformation.setPincode(SharedPrefUtils.getpinCode(getActivity()));
-                userInfoList.add(usersInformation);
-            }
-        }
-        return userInfoList;
-    }
+//    private ArrayList<SignUpModel.User> getAdultInfo() {
+//        ArrayList<SignUpModel.User> userInfoList = new ArrayList<>();
+//
+//        for (int position = 0; position < mAdultContainer.getChildCount(); position++) {
+//            View innerLayout = (View) mAdultContainer.getChildAt(position);
+//
+//            EditText adultname = (EditText) innerLayout.findViewById(R.id.spouse_name);
+//            EditText adultemail = (EditText) innerLayout.findViewById(R.id.spouse_email);
+//            final TextView adultColor = (TextView) innerLayout.findViewById(R.id.color_spouse);
+//
+//            if ((adultname.getText().toString().trim().equals("")) || (adultemail.getText().toString().trim().equals(""))) {
+//            } else {
+//                SignUpModel.User usersInformation = new SignUpModel().new User();
+//                usersInformation.setUsername((adultname.getText().toString().trim()));
+//                if (StringUtils.isValidEmail(adultemail.getText().toString())) {
+//                    usersInformation.setEmail((adultemail.getText().toString().trim()));
+//                } else {
+//                    usersInformation.setMobile((adultemail.getText().toString().trim()));
+//                }
+//                usersInformation.setColor_code(new ColorCode().getValue("" + adultColor.getTag()));
+//                usersInformation.setPincode(SharedPrefUtils.getpinCode(getActivity()));
+//                userInfoList.add(usersInformation);
+//            }
+//        }
+//        return userInfoList;
+//    }
 
     private SignUpModel getSignUpRequestModel() {
 
         ArrayList<KidsInformation> kidsArray = new ArrayList<KidsInformation>();
         kidsArray = getKidsInfo();
 
-        ArrayList<SignUpModel.User> userArray = new ArrayList<>();
+//        ArrayList<SignUpModel.User> userArray = new ArrayList<>();
 
-        userArray = getAdultInfo();
+//        userArray = getAdultInfo();
 
         SignUpModel _requestModel = new SignUpModel();
         _requestModel.setKidInformation(kidsArray);
-        _requestModel.setUser(userArray);
+//        _requestModel.setUser(userArray);
 
         return _requestModel;
     }
 
 
-    public boolean checkDuplicateEmailIds() {
-
-        ArrayList<String> emailIdlist = new ArrayList<String>();
-
-        for (int position = 0; position < mAdultContainer.getChildCount(); position++) {
-            View innerLayout = (View) mAdultContainer.getChildAt(position);
-            EditText adultemail = (EditText) innerLayout.findViewById(R.id.spouse_email);
-            emailIdlist.add((adultemail.getText().toString().trim()));
-        }
-
-
-        int listSize = emailIdlist.size();
-        HashSet<String> hashset = new HashSet<>();
-        hashset.addAll(emailIdlist);
-
-        int actualSize = hashset.size();
-
-        if (listSize == actualSize)
-            return true;
-        else
-            ToastUtils.showToast(getActivity(), Constants.DUPLICATE_EMAIL);
-
-
-        return false;
-    }
+//    public boolean checkDuplicateEmailIds() {
+//
+//        ArrayList<String> emailIdlist = new ArrayList<String>();
+//
+//        for (int position = 0; position < mAdultContainer.getChildCount(); position++) {
+//            View innerLayout = (View) mAdultContainer.getChildAt(position);
+//            EditText adultemail = (EditText) innerLayout.findViewById(R.id.spouse_email);
+//            emailIdlist.add((adultemail.getText().toString().trim()));
+//        }
+//
+//
+//        int listSize = emailIdlist.size();
+//        HashSet<String> hashset = new HashSet<>();
+//        hashset.addAll(emailIdlist);
+//
+//        int actualSize = hashset.size();
+//
+//        if (listSize == actualSize)
+//            return true;
+//        else
+//            ToastUtils.showToast(getActivity(), Constants.DUPLICATE_EMAIL);
+//
+//
+//        return false;
+//    }
 
 
     public boolean checkCustomLayoutValidations() {
@@ -573,37 +621,37 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
             }
 
         }
-        for (int position = 0; position < mAdultContainer.getChildCount(); position++) {
-            View innerLayout = (View) mAdultContainer.getChildAt(position);
-
-            EditText adultname = (EditText) innerLayout.findViewById(R.id.spouse_name);
-            EditText adultemail = (EditText) innerLayout.findViewById(R.id.spouse_email);
-
-            if (!adultname.getText().toString().trim().equals("")) {
-                if (adultemail.getText().toString().trim().equals("")) {
-
-                    adultemail.setError(getResources().getString(R.string.please_enter_valid_email_or_mobile));
-                    adultemail.setFocusableInTouchMode(true);
-                    adultemail.requestFocus();
-                    return false;
-                } else {
-                    if (!StringUtils.isValidEmail(adultemail.getText().toString())
-                            && (!StringUtils.checkMobileNumber(adultemail.getText().toString()))) {
-                        adultemail.setError(getResources().getString(R.string.please_enter_valid_email_or_mobile));
-                        adultemail.setFocusableInTouchMode(true);
-                        adultemail.requestFocus();
-                        return false;
-                    }
-
-                }
-            } else {
-                adultname.setError(getResources().getString(R.string.please_enter_name));
-                adultname.setFocusableInTouchMode(true);
-                adultname.requestFocus();
-                return false;
-            }
-
-        }
+//        for (int position = 0; position < mAdultContainer.getChildCount(); position++) {
+//            View innerLayout = (View) mAdultContainer.getChildAt(position);
+//
+//            EditText adultname = (EditText) innerLayout.findViewById(R.id.spouse_name);
+//            EditText adultemail = (EditText) innerLayout.findViewById(R.id.spouse_email);
+//
+//            if (!adultname.getText().toString().trim().equals("")) {
+//                if (adultemail.getText().toString().trim().equals("")) {
+//
+//                    adultemail.setError(getResources().getString(R.string.please_enter_valid_email_or_mobile));
+//                    adultemail.setFocusableInTouchMode(true);
+//                    adultemail.requestFocus();
+//                    return false;
+//                } else {
+//                    if (!StringUtils.isValidEmail(adultemail.getText().toString())
+//                            && (!StringUtils.checkMobileNumber(adultemail.getText().toString()))) {
+//                        adultemail.setError(getResources().getString(R.string.please_enter_valid_email_or_mobile));
+//                        adultemail.setFocusableInTouchMode(true);
+//                        adultemail.requestFocus();
+//                        return false;
+//                    }
+//
+//                }
+//            } else {
+//                adultname.setError(getResources().getString(R.string.please_enter_name));
+//                adultname.setFocusableInTouchMode(true);
+//                adultname.requestFocus();
+//                return false;
+//            }
+//
+//        }
         return result;
     }
 
@@ -624,12 +672,14 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
 
                 break;
             case AppConstants.EDIT_FAMILY_REQUEST:
-                if (checkCustomLayoutValidations() && checkDuplicateEmailIds()) {
+                if (checkCustomLayoutValidations()
+//                        && checkDuplicateEmailIds()
+                        ) {
                     showProgressDialog(getString(R.string.please_wait));
                     mFamilyModel = new SignUpModel().new Family();
-                    mFamilyModel.setFamily_name(edtFamilyName.getText().toString().trim());
+//                    mFamilyModel.setFamily_name(edtFamilyName.getText().toString().trim());
 //                    _requestModel.setFamily_password(mFamilysharepswd.getText().toString().trim());
-                    mFamilyModel.setFamily_image(profileimgUrl);
+//                    mFamilyModel.setFamily_image(profileimgUrl);
 
                     EditProfileController _editcontroller = new EditProfileController(getActivity(), this);
                     _editcontroller.getData(AppConstants.EDIT_FAMILY_REQUEST, mFamilyModel);
@@ -640,7 +690,7 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
 
     }
 
-    public void saveDatainDB(UserResponse model) {
+    public void saveDatainDB() {
 
 //        TableAdult adultTable = new TableAdult((BaseApplication) getActivity().getApplicationContext());
 //        adultTable.deleteAll();
@@ -661,7 +711,19 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
         kidsTable.deleteAll();
         try {
             kidsTable.beginTransaction();
-            for (KidsInfo kids : model.getResult().getData().getKidsInformation()) {
+
+            ArrayList<KidsInfo> kidsInfoArrayList = new ArrayList<>();
+
+            for (KidsModel kid : kidsModelArrayList) {
+                KidsInfo kidsInfo = new KidsInfo();
+                kidsInfo.setName(kid.getName());
+                kidsInfo.setDate_of_birth(convertTime(kid.getBirthDay()));
+                kidsInfo.setColor_code(kid.getColorCode());
+                kidsInfo.setGender(kid.getGender());
+
+                kidsInfoArrayList.add(kidsInfo);
+            }
+            for (KidsInfo kids : kidsInfoArrayList) {
 
                 kidsTable.insertData(kids);
 
@@ -673,21 +735,27 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
 
         // saving family
 
-        TableFamily familyTable = new TableFamily((BaseApplication) getActivity().getApplicationContext());
-        familyTable.deleteAll();
-        try {
-
-            familyTable.insertData(model.getResult().getData().getFamily());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        TableFamily familyTable = new TableFamily((BaseApplication) getActivity().getApplicationContext());
+//        familyTable.deleteAll();
+//        try {
+//
+//            familyTable.insertData(model.getResult().getData().getFamily());
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         // update listview
 
-        mAdultContainer.removeAllViews();
+//        mAdultContainer.removeAllViews();
         mChildContainer.removeAllViews();
         setList();
 
+    }
+
+    public String convertTime(String time) {
+        Date date = new Date(Long.parseLong(time));
+        Format format = new SimpleDateFormat("dd-MM-yyyy");
+        return format.format(date);
     }
 
     protected void updateUi(Response response) {
@@ -705,10 +773,10 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
                 UserResponse responseData = (UserResponse) response.getResponseObject();
                 if (responseData.getResponseCode() == 200) {
                     // db update
-                    saveDatainDB(responseData);
+//                    saveDatainDB(responseData);
                     //if (mUpdateProfileRequestCompleted) {
                     removeProgressDialog();
-                    mAdultContainer.removeAllViews();
+//                    mAdultContainer.removeAllViews();
                     mChildContainer.removeAllViews();
 
                     ((BaseActivity) getActivity()).showSnackbar(getView().findViewById(R.id.root), responseData.getResult().getMessage());
@@ -725,23 +793,23 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
                 }
                 break;
 
-            case AppConstants.IMAGE_UPLOAD_REQUEST:
-                removeProgressDialog();
-                if (response.getResponseObject() instanceof CommonResponse) {
-                    CommonResponse responseModel = (CommonResponse) response
-                            .getResponseObject();
-                    if (responseModel.getResponseCode() != 200) {
-                        ((BaseActivity) getActivity()).showSnackbar(getView().findViewById(R.id.root), getString(R.string.toast_response_error));
-                        return;
-                    } else {
-                        if (!StringUtils.isNullOrEmpty(responseModel.getResult().getMessage())) {
-                            Log.i("IMAGE_UPLOAD_REQUEST", responseModel.getResult().getMessage());
-                        }
-                        setProfileImage(responseModel.getResult().getMessage());
-                        ((BaseActivity) getActivity()).showSnackbar(getView().findViewById(R.id.root), "You have successfully uploaded an image.");
-                    }
-                }
-                break;
+//            case AppConstants.IMAGE_UPLOAD_REQUEST:
+//                removeProgressDialog();
+//                if (response.getResponseObject() instanceof CommonResponse) {
+//                    CommonResponse responseModel = (CommonResponse) response
+//                            .getResponseObject();
+//                    if (responseModel.getResponseCode() != 200) {
+//                        ((BaseActivity) getActivity()).showSnackbar(getView().findViewById(R.id.root), getString(R.string.toast_response_error));
+//                        return;
+//                    } else {
+//                        if (!StringUtils.isNullOrEmpty(responseModel.getResult().getMessage())) {
+//                            Log.i("IMAGE_UPLOAD_REQUEST", responseModel.getResult().getMessage());
+//                        }
+//                        setProfileImage(responseModel.getResult().getMessage());
+//                        ((BaseActivity) getActivity()).showSnackbar(getView().findViewById(R.id.root), "You have successfully uploaded an image.");
+//                    }
+//                }
+//                break;
 
 
             case AppConstants.EDIT_FAMILY_REQUEST:
@@ -752,11 +820,13 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
                     TableFamily tableKids = new TableFamily(BaseApplication.getInstance());
                     tableKids.updateVal(mFamilyModel);
 
-                    SharedPrefUtils.setProfileImgUrl(getActivity(), profileimgUrl);
+//                    SharedPrefUtils.setProfileImgUrl(getActivity(), profileimgUrl);
                     ((DashboardActivity) getActivity()).updateImageProfile();
 
 
-                    if (mAdultContainer.getChildCount() > 0 || mChildContainer.getChildCount() > 0) {
+                    if (
+//                            mAdultContainer.getChildCount() > 0 ||
+                            mChildContainer.getChildCount() > 0) {
                         hitApiRequest(AppConstants.ADD_ADDITIONAL_USERKID_REQ);
                     } else {
                         removeProgressDialog();
@@ -775,82 +845,82 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
         }
     }
 
-    private void addDynamicAdult() {
-        ++adultCount;
-        LayoutInflater layoutInflater = (LayoutInflater) getActivity().getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View convertView = (View) layoutInflater.inflate(R.layout.aa_addadult, null);
-        convertView.setTag("adult" + adultCount);
-        convertView.setId(adultCount);
+//    private void addDynamicAdult() {
+//        ++adultCount;
+//        LayoutInflater layoutInflater = (LayoutInflater) getActivity().getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//        final View convertView = (View) layoutInflater.inflate(R.layout.aa_addadult, null);
+//        convertView.setTag("adult" + adultCount);
+//        convertView.setId(adultCount);
+//
+//        EditText adultname = (EditText) convertView.findViewById(R.id.spouse_name);
+//        EditText adultemail = (EditText) convertView.findViewById(R.id.spouse_email);
+//        final TextView adultColor = (TextView) convertView.findViewById(R.id.color_spouse);
+//
+//
+//        final TextView deleteView = (TextView) convertView.findViewById(R.id.cross);
+//
+//        deleteView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mAdultContainer.removeView(convertView);
+//                used_colors.remove("adult" + convertView.getId());
+//            }
+//        });
+//
+//        adultColor.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                showColorPickerDialog("adult" + convertView.getId(), adultColor);
+//            }
+//        });
+//
+//        int digit = getRandomNumber();
+//        Drawable drawable = getResources().getDrawable(getResources()
+//                .getIdentifier("color_" + digit + "xxhdpi", "drawable", getActivity().getPackageName()));
+//        adultColor.setCompoundDrawablesWithIntrinsicBounds(null, null, null, drawable);
+//        used_colors.put("adult" + convertView.getId(), "" + digit);
+//
+//        adultColor.setTag("" + digit);
+//
+//        mAdultContainer.addView(convertView);
+//        //scrollToBottom();
+//
+//    }
 
-        EditText adultname = (EditText) convertView.findViewById(R.id.spouse_name);
-        EditText adultemail = (EditText) convertView.findViewById(R.id.spouse_email);
-        final TextView adultColor = (TextView) convertView.findViewById(R.id.color_spouse);
-
-
-        final TextView deleteView = (TextView) convertView.findViewById(R.id.cross);
-
-        deleteView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mAdultContainer.removeView(convertView);
-                used_colors.remove("adult" + convertView.getId());
-            }
-        });
-
-        adultColor.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showColorPickerDialog("adult" + convertView.getId(), adultColor);
-            }
-        });
-
-        int digit = getRandomNumber();
-        Drawable drawable = getResources().getDrawable(getResources()
-                .getIdentifier("color_" + digit + "xxhdpi", "drawable", getActivity().getPackageName()));
-        adultColor.setCompoundDrawablesWithIntrinsicBounds(null, null, null, drawable);
-        used_colors.put("adult" + convertView.getId(), "" + digit);
-
-        adultColor.setTag("" + digit);
-
-        mAdultContainer.addView(convertView);
-        //scrollToBottom();
-
-    }
-
-    private void addNewAdult() {
-
-        boolean addAdult = false;
-
-        if (mAdultContainer.getChildCount() > 0) {
-
-
-            for (int position = 0; position < mAdultContainer.getChildCount(); position++) {
-                View innerLayout = (View) mAdultContainer.getChildAt(position);
-
-                EditText adultname = (EditText) innerLayout.findViewById(R.id.spouse_name);
-                EditText adultemail = (EditText) innerLayout.findViewById(R.id.spouse_email);
-
-                if ((adultname.getText().toString().trim().equals("")) || (adultemail.getText().toString().trim().equals(""))) {
-
-                    addAdult = false;
-                    ToastUtils.showToast(getActivity(), getResources().getString(R.string.enter_adult));
-                    break;
-
-                } else {
-                    addAdult = true;
-                }
-            }
-
-
-            if (addAdult)
-                addDynamicAdult();
-
-        } else {
-            addDynamicAdult();
-        }
-
-
-    }
+//    private void addNewAdult() {
+//
+//        boolean addAdult = false;
+//
+//        if (mAdultContainer.getChildCount() > 0) {
+//
+//
+//            for (int position = 0; position < mAdultContainer.getChildCount(); position++) {
+//                View innerLayout = (View) mAdultContainer.getChildAt(position);
+//
+//                EditText adultname = (EditText) innerLayout.findViewById(R.id.spouse_name);
+//                EditText adultemail = (EditText) innerLayout.findViewById(R.id.spouse_email);
+//
+//                if ((adultname.getText().toString().trim().equals("")) || (adultemail.getText().toString().trim().equals(""))) {
+//
+//                    addAdult = false;
+//                    ToastUtils.showToast(getActivity(), getResources().getString(R.string.enter_adult));
+//                    break;
+//
+//                } else {
+//                    addAdult = true;
+//                }
+//            }
+//
+//
+//            if (addAdult)
+//                addDynamicAdult();
+//
+//        } else {
+//            addDynamicAdult();
+//        }
+//
+//
+//    }
 
     public void showDatePickerDialog() {
         DialogFragment newFragment = new DatePickerFragment();
@@ -883,8 +953,107 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
 
     public void onHeaderButtonTapped() {
 
-        hitApiRequest(AppConstants.EDIT_FAMILY_REQUEST);
+        ArrayList<KidsInfo> kidsList = getEnteredKidsInfo();
+        TableKids tableKids = new TableKids(BaseApplication.getInstance());
+        ArrayList<KidsInfo> kidsInformations = (ArrayList<KidsInfo>) tableKids.getAllKids();
+
+//        kidsList.addAll(kidsInformations);
+        kidsModelArrayList = new ArrayList<>();
+        for (KidsInfo ki : kidsList) {
+            KidsModel kmodel = new KidsModel();
+            kmodel.setName(ki.getName());
+
+            long bdaytimestamp = convertStringToTimestamp(ki.getDate_of_birth());
+            if (bdaytimestamp != 0) {
+                kmodel.setBirthDay("" + bdaytimestamp);
+            } else {
+                Toast.makeText(getActivity(), "incorrect kids bday", Toast.LENGTH_SHORT).show();
+            }
+
+            kmodel.setColorCode(ki.getColor_code());
+            kmodel.setGender(ki.getGender());
+
+            kidsModelArrayList.add(kmodel);
+        }
+
+        for (KidsInfo ki : kidsInformations) {
+            KidsModel kmodel = new KidsModel();
+            kmodel.setName(ki.getName());
+            long bdaytimestamp = convertStringToTimestamp(ki.getDate_of_birth());
+            if (bdaytimestamp != 0) {
+                kmodel.setBirthDay("" + bdaytimestamp);
+            } else {
+                Toast.makeText(getActivity(), "incorrect kids bday", Toast.LENGTH_SHORT).show();
+            }
+
+            kmodel.setColorCode(ki.getColor_code());
+            kmodel.setGender(ki.getGender());
+
+            kidsModelArrayList.add(kmodel);
+        }
+
+        addEditKidsDetails();
+//        hitApiRequest(AppConstants.EDIT_FAMILY_REQUEST);
+
+
         //hitApiRequest(AppConstants.ADD_ADDITIONAL_USERKID_REQ);
+    }
+
+    private void addEditKidsDetails() {
+        AddEditKidsInformationRequest addEditKidsInformationRequest = new AddEditKidsInformationRequest();
+        addEditKidsInformationRequest.setKids(kidsModelArrayList);
+
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
+        Call<UserDetailResponse> call = loginRegistrationAPI.addEditKidsInformation(addEditKidsInformationRequest);
+        call.enqueue(onAddEditKidsResponseReceived);
+    }
+
+    Callback<UserDetailResponse> onAddEditKidsResponseReceived = new Callback<UserDetailResponse>() {
+        @Override
+        public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
+            Log.d("SUCCESS", "" + response);
+            removeProgressDialog();
+            if (response == null || response.body() == null) {
+                Toast.makeText(getActivity(), getString(R.string.went_wrong), Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            try {
+                UserDetailResponse responseData = (UserDetailResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    saveDatainDB();
+                    Toast.makeText(getActivity(), "dwadawdawdadawdawdawdawdawdawdawdawd", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity(), responseData.getReason(), Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("Exception", Log.getStackTraceString(e));
+                Toast.makeText(getActivity(), getString(R.string.went_wrong), Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onFailure(Call<UserDetailResponse> call, Throwable t) {
+            Log.d("MC4kException", Log.getStackTraceString(t));
+            Crashlytics.logException(t);
+            Toast.makeText(getActivity(), getString(R.string.went_wrong), Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    public long convertStringToTimestamp(String str_date) {
+        try {
+            DateFormat formatter;
+            formatter = new SimpleDateFormat("dd-MM-yyyy");
+            // you can change format of date
+            Date date = formatter.parse(str_date);
+
+            return date.getTime();
+        } catch (ParseException e) {
+            System.out.println("Exception :" + e);
+            return 0;
+        }
     }
 
     public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
@@ -901,7 +1070,9 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             // Use the current date as the default date in the picker
 
-            DatePickerDialog dlg = new DatePickerDialog(getActivity(), this, curent_year, current_month, current_day);
+//            DatePickerDialog dlg = new DatePickerDialog(getActivity(), this, curent_year, current_month, current_day);
+            DatePickerDialog dlg = new DatePickerDialog(getActivity(), android.R.style.Theme_Holo_Light_Dialog_NoActionBar, this, curent_year, current_month, current_day);
+            dlg.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             dlg.getDatePicker().setMaxDate(c.getTimeInMillis());
             return dlg;
 
@@ -1085,18 +1256,18 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
     }
 
 
-    private boolean isDataValid() {
-        boolean isLoginOk = true;
-        String email_id = edtFamilyName.getText().toString();
-
-        if (edtFamilyName.getText().toString().length() == 0) {
-            edtFamilyName.setFocusableInTouchMode(true);
-            edtFamilyName.requestFocus();
-            edtFamilyName.setError("Please enter family name");
-            isLoginOk = false;
-        }
-        return isLoginOk;
-    }
+//    private boolean isDataValid() {
+//        boolean isLoginOk = true;
+//        String email_id = edtFamilyName.getText().toString();
+//
+//        if (edtFamilyName.getText().toString().length() == 0) {
+//            edtFamilyName.setFocusableInTouchMode(true);
+//            edtFamilyName.requestFocus();
+//            edtFamilyName.setError("Please enter family name");
+//            isLoginOk = false;
+//        }
+//        return isLoginOk;
+//    }
 
     private void startCropImage() {
 
@@ -1120,80 +1291,20 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
         }
     }
 
-    public void onActivityResultDelegate(int requestCode, int resultCode, Intent data) {
-
-        if (getActivity() == null) {
-            return;
-        }
-        switch (requestCode) {
-
-            case Constants.CROP_IMAGE:
-                if (requestCode == Constants.CROP_IMAGE && data != null) {
-                    try {
-                        String filePath = data.getStringExtra(CropImage.IMAGE_PATH);
-                        if (filePath == null) {
-                            return;
-                        }
-                        Log.e("File", "filePath: " + filePath);
-
-                        File file = new File(new URI("file://"
-                                + filePath.replaceAll(" ", "%20")));
-                        int maxImageSize = BitmapUtils.getMaxSize(getActivity());
-                        Bitmap sourceBitmap = BitmapUtils.getScaledBitmap(file,
-                                maxImageSize);
-
-                        ExifInterface exif = new ExifInterface(file.getPath());
-                        int orientation = exif.getAttributeInt(
-                                ExifInterface.TAG_ORIENTATION,
-                                ExifInterface.ORIENTATION_NORMAL);
-                        Matrix matrix = new Matrix();
-                        switch (orientation) {
-                            case ExifInterface.ORIENTATION_ROTATE_90:
-                                matrix.postRotate(90);
-                                break;
-                            case ExifInterface.ORIENTATION_ROTATE_180:
-                                matrix.postRotate(180);
-                                break;
-                            case ExifInterface.ORIENTATION_ROTATE_270:
-                                matrix.postRotate(270);
-                                break;
-                        }
-
-                        originalImage = Bitmap.createBitmap(sourceBitmap, 0, 0,
-                                sourceBitmap.getWidth(), sourceBitmap.getHeight(),
-                                matrix, true);
-                        sendUploadProfileImageRequest(originalImage);
-
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                }
-                break;
-
-            case Constants.OPEN_GALLERY:
-                if (resultCode == Activity.RESULT_OK) {
-                    try {
-
-                        InputStream inputStream = getActivity().getContentResolver().openInputStream(data.getData());
-                        FileOutputStream fileOutputStream = new FileOutputStream(mFileTemp);
-                        copyStream(inputStream, fileOutputStream);
-                        fileOutputStream.close();
-                        inputStream.close();
-
-                        startCropImage();
-
-//                        Uri selectedImage = data.getData();
-//                        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+//    public void onActivityResultDelegate(int requestCode, int resultCode, Intent data) {
 //
-//                        Cursor cursor = getActivity().getContentResolver().query(
-//                                selectedImage, filePathColumn, null, null, null);
-//                        cursor.moveToFirst();
+//        if (getActivity() == null) {
+//            return;
+//        }
+//        switch (requestCode) {
 //
-//                        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-//                        String filePath = cursor.getString(columnIndex);
-//                        cursor.close();
+//            case Constants.CROP_IMAGE:
+//                if (requestCode == Constants.CROP_IMAGE && data != null) {
+//                    try {
+//                        String filePath = data.getStringExtra(CropImage.IMAGE_PATH);
+//                        if (filePath == null) {
+//                            return;
+//                        }
 //                        Log.e("File", "filePath: " + filePath);
 //
 //                        File file = new File(new URI("file://"
@@ -1223,46 +1334,106 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
 //                                sourceBitmap.getWidth(), sourceBitmap.getHeight(),
 //                                matrix, true);
 //                        sendUploadProfileImageRequest(originalImage);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                break;
-            case Constants.TAKE_PICTURE:
-                try {
-
-                    startCropImage();
-//                    int maxImageSize = BitmapUtils.getMaxSize(getActivity());
-//                    Bitmap sourceBitmap = BitmapUtils.getScaledBitmap(photo,
-//                            maxImageSize);
 //
-//                    ExifInterface exif = new ExifInterface(photo.getPath());
-//                    int orientation = exif.getAttributeInt(
-//                            ExifInterface.TAG_ORIENTATION,
-//                            ExifInterface.ORIENTATION_NORMAL);
-//                    Matrix matrix = new Matrix();
-//                    switch (orientation) {
-//                        case ExifInterface.ORIENTATION_ROTATE_90:
-//                            matrix.postRotate(90);
-//                            break;
-//                        case ExifInterface.ORIENTATION_ROTATE_180:
-//                            matrix.postRotate(180);
-//                            break;
-//                        case ExifInterface.ORIENTATION_ROTATE_270:
-//                            matrix.postRotate(270);
-//                            break;
+//
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
 //                    }
 //
-//                    originalImage = Bitmap.createBitmap(sourceBitmap, 0, 0,
-//                            sourceBitmap.getWidth(), sourceBitmap.getHeight(),
-//                            matrix, true);
-//                    sendUploadProfileImageRequest(originalImage);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-                break;
-        }
-    }
+//                }
+//                break;
+//
+//            case Constants.OPEN_GALLERY:
+//                if (resultCode == Activity.RESULT_OK) {
+//                    try {
+//
+//                        InputStream inputStream = getActivity().getContentResolver().openInputStream(data.getData());
+//                        FileOutputStream fileOutputStream = new FileOutputStream(mFileTemp);
+//                        copyStream(inputStream, fileOutputStream);
+//                        fileOutputStream.close();
+//                        inputStream.close();
+//
+//                        startCropImage();
+//
+////                        Uri selectedImage = data.getData();
+////                        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+////
+////                        Cursor cursor = getActivity().getContentResolver().query(
+////                                selectedImage, filePathColumn, null, null, null);
+////                        cursor.moveToFirst();
+////
+////                        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+////                        String filePath = cursor.getString(columnIndex);
+////                        cursor.close();
+////                        Log.e("File", "filePath: " + filePath);
+////
+////                        File file = new File(new URI("file://"
+////                                + filePath.replaceAll(" ", "%20")));
+////                        int maxImageSize = BitmapUtils.getMaxSize(getActivity());
+////                        Bitmap sourceBitmap = BitmapUtils.getScaledBitmap(file,
+////                                maxImageSize);
+////
+////                        ExifInterface exif = new ExifInterface(file.getPath());
+////                        int orientation = exif.getAttributeInt(
+////                                ExifInterface.TAG_ORIENTATION,
+////                                ExifInterface.ORIENTATION_NORMAL);
+////                        Matrix matrix = new Matrix();
+////                        switch (orientation) {
+////                            case ExifInterface.ORIENTATION_ROTATE_90:
+////                                matrix.postRotate(90);
+////                                break;
+////                            case ExifInterface.ORIENTATION_ROTATE_180:
+////                                matrix.postRotate(180);
+////                                break;
+////                            case ExifInterface.ORIENTATION_ROTATE_270:
+////                                matrix.postRotate(270);
+////                                break;
+////                        }
+////
+////                        originalImage = Bitmap.createBitmap(sourceBitmap, 0, 0,
+////                                sourceBitmap.getWidth(), sourceBitmap.getHeight(),
+////                                matrix, true);
+////                        sendUploadProfileImageRequest(originalImage);
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//                break;
+//            case Constants.TAKE_PICTURE:
+//                try {
+//
+//                    startCropImage();
+////                    int maxImageSize = BitmapUtils.getMaxSize(getActivity());
+////                    Bitmap sourceBitmap = BitmapUtils.getScaledBitmap(photo,
+////                            maxImageSize);
+////
+////                    ExifInterface exif = new ExifInterface(photo.getPath());
+////                    int orientation = exif.getAttributeInt(
+////                            ExifInterface.TAG_ORIENTATION,
+////                            ExifInterface.ORIENTATION_NORMAL);
+////                    Matrix matrix = new Matrix();
+////                    switch (orientation) {
+////                        case ExifInterface.ORIENTATION_ROTATE_90:
+////                            matrix.postRotate(90);
+////                            break;
+////                        case ExifInterface.ORIENTATION_ROTATE_180:
+////                            matrix.postRotate(180);
+////                            break;
+////                        case ExifInterface.ORIENTATION_ROTATE_270:
+////                            matrix.postRotate(270);
+////                            break;
+////                    }
+////
+////                    originalImage = Bitmap.createBitmap(sourceBitmap, 0, 0,
+////                            sourceBitmap.getWidth(), sourceBitmap.getHeight(),
+////                            matrix, true);
+////                    sendUploadProfileImageRequest(originalImage);
+//                } catch (Exception ex) {
+//                    ex.printStackTrace();
+//                }
+//                break;
+//        }
+//    }
 
     public void sendUploadProfileImageRequest(Bitmap originalImage) {
         showProgressDialog(getString(R.string.please_wait));
@@ -1297,14 +1468,14 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
         controller.getData(AppConstants.IMAGE_UPLOAD_REQUEST, requestData);
     }
 
-    public void setProfileImage(String url) {
-        if (!StringUtils.isNullOrEmpty(url)) {
-            profileimgUrl = url;
-             SharedPrefUtils.setProfileImgUrl(getActivity(), url);
-            //((DashboardActivity) getActivity()).updateImageProfile();
-            Picasso.with(getActivity()).load(url).placeholder(R.drawable.family_xxhdpi).error(R.drawable.family_xxhdpi).resize((int) (150 * density), (int) (150 * density)).centerCrop().transform(new RoundedTransformation()).into(imgProfile);
-        }
-    }
+//    public void setProfileImage(String url) {
+//        if (!StringUtils.isNullOrEmpty(url)) {
+//            profileimgUrl = url;
+//             SharedPrefUtils.setProfileImgUrl(getActivity(), url);
+//            //((DashboardActivity) getActivity()).updateImageProfile();
+//            Picasso.with(getActivity()).load(url).placeholder(R.drawable.family_xxhdpi).error(R.drawable.family_xxhdpi).resize((int) (150 * density), (int) (150 * density)).centerCrop().transform(new RoundedTransformation()).into(imgProfile);
+//        }
+//    }
 
     private void sendScroll() {
         final Handler handler = new Handler();

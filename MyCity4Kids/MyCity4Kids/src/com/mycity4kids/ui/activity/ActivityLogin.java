@@ -34,20 +34,17 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.LoginController;
 import com.mycity4kids.controller.UpdateMobileController;
-import com.mycity4kids.dbtable.TableAdult;
-import com.mycity4kids.dbtable.TableFamily;
 import com.mycity4kids.dbtable.TableKids;
-import com.mycity4kids.dbtable.UserTable;
 import com.mycity4kids.facebook.FacebookUtils;
 import com.mycity4kids.google.GooglePlusUtils;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.IFacebookUser;
 import com.mycity4kids.interfaces.IPlusClient;
 import com.mycity4kids.models.request.LoginRegistrationRequest;
+import com.mycity4kids.models.response.KidsModel;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.models.user.KidsInfo;
 import com.mycity4kids.models.user.UserInfo;
-import com.mycity4kids.models.user.UserModel;
 import com.mycity4kids.models.user.UserRequest;
 import com.mycity4kids.models.user.UserResponse;
 import com.mycity4kids.newmodels.FamilyInvites;
@@ -60,7 +57,10 @@ import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.widget.CustomFontEditText;
 import com.mycity4kids.widget.CustomFontTextView;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -311,66 +311,6 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         super.onStart();
         if (mGooglePlusUtils != null)
             mGooglePlusUtils.onStart();
-
-    }
-
-    public void saveDatainDB(UserResponse model) {
-
-        UserTable table = new UserTable(BaseApplication.getInstance());
-        if (table.getRowsCount() > 0) {
-
-            try {
-                String profileimg = table.getAllUserData().getProfile().getProfile_image();
-                if (!StringUtils.isNullOrEmpty(profileimg)) {
-                    SharedPrefUtils.setProfileImgUrl(this, profileimg);
-                }
-            } catch (Exception e) {
-            }
-
-        }
-
-
-        TableAdult adultTable = new TableAdult((BaseApplication) getApplicationContext());
-        adultTable.deleteAll();
-        try {
-
-            adultTable.beginTransaction();
-            for (UserModel.AdultsInfo user : model.getResult().getData().getAdult()) {
-
-                adultTable.insertData(user.getUser());
-            }
-            adultTable.setTransactionSuccessful();
-        } finally {
-            adultTable.endTransaction();
-        }
-
-        // saving child data
-        TableKids kidsTable = new TableKids((BaseApplication) getApplicationContext());
-        kidsTable.deleteAll();
-        try {
-            kidsTable.beginTransaction();
-            for (KidsInfo kids : model.getResult().getData().getKidsInformation()) {
-
-                kidsTable.insertData(kids);
-
-            }
-            kidsTable.setTransactionSuccessful();
-        } finally {
-            kidsTable.endTransaction();
-        }
-
-        // saving family
-
-        TableFamily familyTable = new TableFamily((BaseApplication) getApplicationContext());
-        familyTable.deleteAll();
-        try {
-
-            SharedPrefUtils.setpinCode(ActivityLogin.this, model.getResult().getData().getUser().getPincode());
-            familyTable.insertData(model.getResult().getData().getFamily());
-
-        } catch (Exception e) {
-            e.getMessage();
-        }
 
     }
 
@@ -644,6 +584,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                     }
                     //Verified User
                     else {
+                        saveKidsInformation(responseData.getData().get(0).getKids());
                         Intent intent = new Intent(ActivityLogin.this, PushTokenService.class);
                         startService(intent);
                         Intent intent1 = new Intent(ActivityLogin.this, LoadingActivity.class);
@@ -666,6 +607,102 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
             showToast(getString(R.string.went_wrong));
         }
     };
+
+    private void saveKidsInformation(ArrayList<KidsModel> kidsList) {
+
+        ArrayList<KidsInfo> kidsInfoArrayList = new ArrayList<>();
+
+        for (KidsModel kid : kidsList) {
+            KidsInfo kidsInfo = new KidsInfo();
+            kidsInfo.setName(kid.getName());
+            kidsInfo.setDate_of_birth(convertTime(kid.getBirthDay()));
+            kidsInfo.setColor_code(kid.getColorCode());
+            kidsInfo.setGender(kid.getGender());
+
+            kidsInfoArrayList.add(kidsInfo);
+        }
+
+        // saving child data
+        TableKids kidsTable = new TableKids((BaseApplication) getApplicationContext());
+        kidsTable.deleteAll();
+        try {
+            kidsTable.beginTransaction();
+            for (KidsInfo kids : kidsInfoArrayList) {
+
+                kidsTable.insertData(kids);
+
+            }
+            kidsTable.setTransactionSuccessful();
+        } finally {
+            kidsTable.endTransaction();
+        }
+    }
+
+    public String convertTime(String time) {
+        Date date = new Date(Long.parseLong(time));
+        Format format = new SimpleDateFormat("dd-MM-yyyy");
+        return format.format(date);
+    }
+
+    public void saveDatainDB(UserResponse model) {
+
+//        UserTable table = new UserTable(BaseApplication.getInstance());
+//        if (table.getRowsCount() > 0) {
+//
+//            try {
+//                String profileimg = table.getAllUserData().getProfile().getProfile_image();
+//                if (!StringUtils.isNullOrEmpty(profileimg)) {
+//                    SharedPrefUtils.setProfileImgUrl(this, profileimg);
+//                }
+//            } catch (Exception e) {
+//            }
+//
+//        }
+
+
+//        TableAdult adultTable = new TableAdult((BaseApplication) getApplicationContext());
+//        adultTable.deleteAll();
+//        try {
+//
+//            adultTable.beginTransaction();
+//            for (UserModel.AdultsInfo user : model.getResult().getData().getAdult()) {
+//
+//                adultTable.insertData(user.getUser());
+//            }
+//            adultTable.setTransactionSuccessful();
+//        } finally {
+//            adultTable.endTransaction();
+//        }
+
+        // saving child data
+        TableKids kidsTable = new TableKids((BaseApplication) getApplicationContext());
+        kidsTable.deleteAll();
+        try {
+            kidsTable.beginTransaction();
+            for (KidsInfo kids : model.getResult().getData().getKidsInformation()) {
+
+                kidsTable.insertData(kids);
+
+            }
+            kidsTable.setTransactionSuccessful();
+        } finally {
+            kidsTable.endTransaction();
+        }
+
+        // saving family
+
+//        TableFamily familyTable = new TableFamily((BaseApplication) getApplicationContext());
+//        familyTable.deleteAll();
+//        try {
+//
+//            SharedPrefUtils.setpinCode(ActivityLogin.this, model.getResult().getData().getUser().getPincode());
+//            familyTable.insertData(model.getResult().getData().getFamily());
+//
+//        } catch (Exception e) {
+//            e.getMessage();
+//        }
+
+    }
 
     public void showVerifyEmailDialog(String title, String message) {
         new AlertDialog.Builder(this)

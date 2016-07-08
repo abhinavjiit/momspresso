@@ -1,15 +1,57 @@
 package com.mycity4kids.models.user;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.mycity4kids.models.basemodel.BaseDataModel;
 
-public class KidsInfo extends BaseDataModel{
+public class KidsInfo extends BaseDataModel implements Parcelable {
 
     private String name;
     private String date_of_birth;
     private String color_code;
     private String id;
     private int age;
+    private String gender;
 
+    public KidsInfo() {
+    }
+
+    public KidsInfo(Parcel in) {
+        name = in.readString();
+        date_of_birth = in.readString();
+        color_code = in.readString();
+        id = in.readString();
+        age = in.readInt();
+        gender = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(date_of_birth);
+        dest.writeString(color_code);
+        dest.writeString(id);
+        dest.writeInt(age);
+        dest.writeString(gender);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<KidsInfo> CREATOR = new Creator<KidsInfo>() {
+        @Override
+        public KidsInfo createFromParcel(Parcel in) {
+            return new KidsInfo(in);
+        }
+
+        @Override
+        public KidsInfo[] newArray(int size) {
+            return new KidsInfo[size];
+        }
+    };
 
     public String getDate_of_birth() {
         return date_of_birth;
@@ -51,4 +93,11 @@ public class KidsInfo extends BaseDataModel{
         this.age = age;
     }
 
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
 }

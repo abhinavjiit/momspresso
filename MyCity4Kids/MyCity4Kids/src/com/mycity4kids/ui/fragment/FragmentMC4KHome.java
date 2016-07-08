@@ -50,6 +50,9 @@ import com.mycity4kids.models.businesslist.BusinessListRequest;
 import com.mycity4kids.models.businesslist.BusinessListResponse;
 import com.mycity4kids.models.parentingstop.CommonParentingList;
 import com.mycity4kids.models.parentingstop.CommonParentingResponse;
+import com.mycity4kids.models.response.ArticleListingData;
+import com.mycity4kids.models.response.ArticleListingResponse;
+import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.user.KidsInfo;
 import com.mycity4kids.newmodels.AppointmentMappingModel;
 import com.mycity4kids.newmodels.AttendeeModel;
@@ -104,8 +107,11 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     private int mTotalPageCount = 0;
     private int mPageCount = 1;
     private int businessOrEventType;
+    private int from = 1;
+    private int to = 10;
     private ArrayList<BusinessDataListing> mBusinessDataListings;
-    private ArrayList<CommonParentingList> mArticleDataListing, mArticleDataListing1;
+    private ArrayList<CommonParentingList>  mArticleDataListing1;
+    private ArrayList<ArticleListingResult>  mArticleDataListing;
     private CustomListView eventListView;
     private HorizontalScrollView blogListView;
     private View rltLoadingView;
@@ -461,10 +467,11 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         blogProgessBar.setVisibility(View.VISIBLE);
         String url;
         StringBuilder builder = new StringBuilder();
-        builder.append("city_id=").append(SharedPrefUtils.getCurrentCityModel(getActivity()).getId());
-        builder.append("&page=").append(1);
-        builder.append("&sort=").append("trending_today");
-        url = AppConstants.NEW_ALL_ARTICLE_URL + builder.toString().replace(" ", "%20");
+//        builder.append("city_id=").append(SharedPrefUtils.getCurrentCityModel(getActivity()).getId());
+//        builder.append("&page=").append(1);
+//        builder.append("&sort=").append("trending_today");
+//        url = AppConstants.NEW_ALL_ARTICLE_URL + builder.toString().replace(" ", "%20");
+        url = AppConstants.PHOENIX_ARTICLE_STAGING_URL + "v1/articles/recent/" + from + "/" + to;
         HttpVolleyRequest.getStringResponse(getActivity(), url, null, mGetArticleListingListener, Request.Method.GET, true);
 
     }
@@ -488,9 +495,9 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                 }
 
                 blogProgessBar.setVisibility(View.GONE);
-                CommonParentingResponse responseBlogData;
+                ArticleListingResponse responseBlogData;
                 try {
-                    responseBlogData = new Gson().fromJson(response.getResponseBody(), CommonParentingResponse.class);
+                    responseBlogData = new Gson().fromJson(response.getResponseBody(), ArticleListingResponse.class);
                 } catch (JsonSyntaxException jse) {
                     Crashlytics.logException(jse);
                     Log.d("JsonSyntaxException", Log.getStackTraceString(jse));
@@ -499,13 +506,13 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                     return;
                 }
 
-                if (responseBlogData.getResponseCode() == Constants.HTTP_RESPONSE_SUCCESS) {
+                if (responseBlogData.getCode() == Constants.HTTP_RESPONSE_SUCCESS) {
                     //clear list to avoid duplicates due to volley caching
                     mArticleDataListing.clear();
 
-                    mArticleDataListing.addAll(responseBlogData.getResult().getData().getData());
+                    mArticleDataListing.addAll(responseBlogData.getData().getResult());
                     hzScrollLinearLayout.removeAllViews();
-                    BaseApplication.setBlogResponse(mArticleDataListing);
+//                    BaseApplication.setBlogResponse(mArticleDataListing);
                     //  articlesListingAdapter.setNewListData(mArticleDataListing);
                     // articlesListingAdapter.notifyDataSetChanged();
                     for (int i = 0; i < mArticleDataListing.size(); i++) {
@@ -514,7 +521,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                         ImageView articleImage = (ImageView) view.findViewById(R.id.imvAuthorThumb);
                         TextView title = (TextView) view.findViewById(R.id.txvArticleTitle);
                         cardView = (CardView) view.findViewById(R.id.cardViewWidget);
-                        Picasso.with(getActivity()).load(mArticleDataListing.get(i).getThumbnail_image()).placeholder(R.drawable.default_article).into(articleImage);
+                        Picasso.with(getActivity()).load(mArticleDataListing.get(i).getImageUrl()).placeholder(R.drawable.default_article).into(articleImage);
                         title.setText(mArticleDataListing.get(i).getTitle());
 
                         // cardView.setMinimumWidth((int)width);
@@ -524,13 +531,13 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                             public void onClick(View v) {
                                 Intent intent = new Intent(getActivity(), ArticlesAndBlogsDetailsActivity.class);
 
-                                CommonParentingList parentingListData = (CommonParentingList) (mArticleDataListing.get((int) view.getTag()));
-                                intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
-                                intent.putExtra(Constants.ARTICLE_COVER_IMAGE, parentingListData.getThumbnail_image());
-                                intent.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.ARTICLES);
-                                intent.putExtra(Constants.FILTER_TYPE, parentingListData.getAuthor_type());
-                                intent.putExtra(Constants.BLOG_NAME, parentingListData.getBlog_name());
-                                startActivity(intent);
+//                                CommonParentingList parentingListData = (CommonParentingList) (mArticleDataListing.get((int) view.getTag()));
+//                                intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
+//                                intent.putExtra(Constants.ARTICLE_COVER_IMAGE, parentingListData.getThumbnail_image());
+//                                intent.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.ARTICLES);
+//                                intent.putExtra(Constants.FILTER_TYPE, parentingListData.getAuthor_type());
+//                                intent.putExtra(Constants.BLOG_NAME, parentingListData.getBlog_name());
+//                                startActivity(intent);
                                 Log.e("Tag", "" + view.getTag());
                             }
                         });
@@ -559,7 +566,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                     }
                     baseScroll.smoothScrollTo(0, 0);
 
-                } else if (responseBlogData.getResponseCode() == 400) {
+                } else if (responseBlogData.getCode() == 400) {
                     ((TextView) view.findViewById(R.id.go_to_blog)).setVisibility(View.VISIBLE);
                     ((TextView) view.findViewById(R.id.no_blog)).setVisibility(View.VISIBLE);
                     //blogListView.setVisibility(View.GONE);
@@ -877,9 +884,9 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                 CommonParentingResponse responseBlogData = (CommonParentingResponse) response.getResponseObject();
                 if (responseBlogData.getResponseCode() == Constants.HTTP_RESPONSE_SUCCESS) {
 
-                    mArticleDataListing.addAll(responseBlogData.getResult().getData().getData());
-                    BaseApplication.setBlogResponse(mArticleDataListing);
-                    articlesListingAdapter.setNewListData(mArticleDataListing);
+//                    mArticleDataListing.addAll(responseBlogData.getResult().getData().getData());
+//                    BaseApplication.setBlogResponse(mArticleDataListing);
+//                    articlesListingAdapter.setNewListData(mArticleDataListing);
                     articlesListingAdapter.notifyDataSetChanged();
 
                     if (mArticleDataListing.isEmpty()) {
@@ -1972,12 +1979,12 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
 
         dialog.setMessage(getResources().getString(R.string.create_family)).setNegativeButton(getResources().getString(R.string.yes)
                 , new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                Intent createFamilyIntent = new Intent(getActivity(), CreateFamilyActivity.class);
-                startActivity(createFamilyIntent);
-                dialog.cancel();
-            }
-        }).setPositiveButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent createFamilyIntent = new Intent(getActivity(), CreateFamilyActivity.class);
+                        startActivity(createFamilyIntent);
+                        dialog.cancel();
+                    }
+                }).setPositiveButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // do nothing
                 dialog.cancel();

@@ -12,8 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,12 +20,10 @@ import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.ui.IScreen;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
-import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.ColorCode;
-import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.AddUserKidsController;
 import com.mycity4kids.dbtable.TableAdult;
 import com.mycity4kids.dbtable.TableFamily;
@@ -39,16 +35,10 @@ import com.mycity4kids.models.user.UserModel;
 import com.mycity4kids.models.user.UserResponse;
 import com.mycity4kids.newmodels.AttendeeModel;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.ui.activity.ActivityCreateAppointment;
-import com.mycity4kids.ui.activity.ActivityCreateTask;
-import com.mycity4kids.ui.activity.ActivityEditAppointment;
-import com.mycity4kids.ui.activity.ActivityEditTask;
-import com.mycity4kids.ui.adapter.AdapterKidAdultList;
 import com.mycity4kids.ui.adapter.AttendeeCustomAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 
 /**

@@ -38,6 +38,7 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.ConfigurationController;
 import com.mycity4kids.dbtable.TableAdult;
+import com.mycity4kids.dbtable.TableKids;
 import com.mycity4kids.fragmentdialog.FragmentAlertDialog;
 import com.mycity4kids.gtmutils.ContainerHolderSingleton;
 import com.mycity4kids.gtmutils.Utils;
@@ -110,6 +111,7 @@ public class SplashActivity extends BaseActivity {
         onNewIntent(getIntent());
         extras = getIntent().getExtras();
         setUpGTM();
+
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
        /* mFirebaseAnalytics.setUserProperty("CityId","1");*/
         mClient = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();

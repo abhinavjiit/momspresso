@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -27,21 +28,32 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.ColorCode;
+import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.EditProfileController;
 import com.mycity4kids.dbtable.TableKids;
 import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.models.profile.KidsInformation;
+import com.mycity4kids.models.request.AddEditKidsInformationRequest;
+import com.mycity4kids.models.response.KidsModel;
+import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.models.user.KidsInfo;
 import com.mycity4kids.reminders.AppointmentManager;
+import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
 import com.mycity4kids.ui.activity.DashboardActivity;
 
 import java.text.DateFormat;
+import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
 
 /**
  * Created by manish.soni on 25-06-2015.
@@ -49,7 +61,10 @@ import java.util.Iterator;
 public class FragmentKidProfile extends BaseFragment implements View.OnClickListener {
 
     View view;
-    String id;
+    int id;
+    String kids_name, kids_dob, kids_gender;
+    KidsInfo selectedKidsInfo;
+    ArrayList<KidsInfo> allKidsInfo;
     EditText name;
     static TextView kidBdy;
     private TextView mColorfrKid;
@@ -57,6 +72,7 @@ public class FragmentKidProfile extends BaseFragment implements View.OnClickList
     private String color_selected = "";
     private HashMap<String, String> used_colors = new HashMap<>();
     KidsInformation _requestModel;
+    private ArrayList<KidsModel> kidsModelArrayList;
 
     @Nullable
     @Override
@@ -64,19 +80,22 @@ public class FragmentKidProfile extends BaseFragment implements View.OnClickList
         view = inflater.inflate(R.layout.aa_kid_profile, container, false);
 
         if (getArguments() != null) {
-            id = (String) getArguments().get("KID_ID");
+            id = getArguments().getInt("KID_ID");
+            kids_name = getArguments().getString("KID_NAME");
+            kids_dob = getArguments().getString("KID_DOB");
+            selectedKidsInfo = getArguments().getParcelable("KID_INFO");
             used_colors = (HashMap) getArguments().getSerializable("used_colors");
         }
 
         TableKids tableKids = new TableKids(BaseApplication.getInstance());
-        KidsInfo kidsInfo = (KidsInfo) tableKids.getKids(id);
-        ((DashboardActivity) getActivity()).setTitle(kidsInfo.getName());
+        allKidsInfo = tableKids.getAllKids();
+        ((DashboardActivity) getActivity()).setTitle(selectedKidsInfo.getName());
 
         name = (EditText) view.findViewById(R.id.kids_name);
         kidBdy = (TextView) view.findViewById(R.id.kids_bdy);
         mColorfrKid = (TextView) view.findViewById(R.id.kidcolor);
 
-        String key = new ColorCode().getKey(kidsInfo.getColor_code());
+        String key = new ColorCode().getKey(selectedKidsInfo.getColor_code());
         Drawable drawable = getResources().getDrawable(getResources()
                 .getIdentifier("color_" + key + "xxhdpi", "drawable", getActivity().getPackageName()));
         mColorfrKid.setCompoundDrawablesWithIntrinsicBounds(null, null, null, drawable);
@@ -86,8 +105,8 @@ public class FragmentKidProfile extends BaseFragment implements View.OnClickList
 
         kidBdy.setOnClickListener(this);
 
-        name.setText(kidsInfo.getName());
-        kidBdy.setText(kidsInfo.getDate_of_birth());
+        name.setText(selectedKidsInfo.getName());
+        kidBdy.setText(selectedKidsInfo.getDate_of_birth());
 
         return view;
     }
@@ -246,6 +265,20 @@ public class FragmentKidProfile extends BaseFragment implements View.OnClickList
         return timestamp;
     }
 
+    public String convertDateFormat(String _date) {
+        DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
+        DateFormat df1 = new SimpleDateFormat("dd-mm-yyyy");
+
+        Date date = new Date();
+        try {
+            date = df.parse(_date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return df1.format(date.getTime());
+    }
+
+
     public static boolean chkTime(String time) {
         boolean result = true;
 
@@ -269,7 +302,7 @@ public class FragmentKidProfile extends BaseFragment implements View.OnClickList
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             // Use the current date as the default date in the picker
-            DatePickerDialog dlg = new DatePickerDialog(getActivity(),android.R.style.Theme_Holo_Light_Dialog_NoActionBar, this, curent_year, current_month, current_day);
+            DatePickerDialog dlg = new DatePickerDialog(getActivity(), android.R.style.Theme_Holo_Light_Dialog_NoActionBar, this, curent_year, current_month, current_day);
             dlg.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             dlg.getDatePicker().setMaxDate(c.getTimeInMillis());
             return dlg;
@@ -295,14 +328,44 @@ public class FragmentKidProfile extends BaseFragment implements View.OnClickList
             if (isDataValid()) {
 
                 showProgressDialog(getString(R.string.please_wait));
-                _requestModel = new KidsInformation();
-                _requestModel.setDob(kidBdy.getText().toString().trim());
-                _requestModel.setName(name.getText().toString().trim());
-                _requestModel.setColor_code(new ColorCode().getValue("" + mColorfrKid.getTag()));
-                _requestModel.setKidid("" + id);
+                AddEditKidsInformationRequest addEditKidsInformationRequest = new AddEditKidsInformationRequest();
+//                ArrayList<KidsInfo> kidsList = getEnteredKidsInfo();
+                TableKids tableKids = new TableKids(BaseApplication.getInstance());
+                ArrayList<KidsInfo> kidsInformations = (ArrayList<KidsInfo>) tableKids.getAllKids();
 
-                EditProfileController _controller = new EditProfileController(getActivity(), this);
-                _controller.getData(AppConstants.EDIT_KIDPROFILE_REQUEST, _requestModel);
+//                kidsList.addAll(kidsInformations);
+                kidsModelArrayList = new ArrayList<>();
+
+                for (int i = 0; i < allKidsInfo.size(); i++) {
+                    KidsModel kmodel = new KidsModel();
+                    if (id == i) {
+                        kmodel.setName(name.getText().toString().trim());
+                        kmodel.setBirthDay("" + convertStringToTimestamp(kidBdy.getText().toString().trim()));
+                        kmodel.setColorCode(new ColorCode().getValue("" + mColorfrKid.getTag()));
+//                        kmodel.setGender();
+                    } else {
+                        kmodel.setName(allKidsInfo.get(i).getName());
+                        kmodel.setBirthDay("" + convertStringToTimestamp(allKidsInfo.get(i).getDate_of_birth()));
+                        kmodel.setColorCode(allKidsInfo.get(i).getColor_code());
+                    }
+                    kidsModelArrayList.add(kmodel);
+                }
+
+
+                addEditKidsInformationRequest.setKids(kidsModelArrayList);
+
+                Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+                LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
+                Call<UserDetailResponse> call = loginRegistrationAPI.addEditKidsInformation(addEditKidsInformationRequest);
+                call.enqueue(onAddEditKidsResponseReceived);
+//                _requestModel = new KidsInformation();
+//                _requestModel.setDob(kidBdy.getText().toString().trim());
+//                _requestModel.setName(name.getText().toString().trim());
+//                _requestModel.setColor_code(new ColorCode().getValue("" + mColorfrKid.getTag()));
+//                _requestModel.setKidid("" + id);
+//
+//                EditProfileController _controller = new EditProfileController(getActivity(), this);
+//                _controller.getData(AppConstants.EDIT_KIDPROFILE_REQUEST, _requestModel);
             }
 
 
@@ -312,6 +375,123 @@ public class FragmentKidProfile extends BaseFragment implements View.OnClickList
             // showToast(getActivity().getString(R.string.error_network));
         }
 
+    }
+
+    Callback<UserDetailResponse> onAddEditKidsResponseReceived = new Callback<UserDetailResponse>() {
+        @Override
+        public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
+            Log.d("SUCCESS", "" + response);
+            removeProgressDialog();
+            if (response == null || response.body() == null) {
+                Toast.makeText(getActivity(), getString(R.string.went_wrong), Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            try {
+                UserDetailResponse responseData = (UserDetailResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    saveDatainDB();
+                    Toast.makeText(getActivity(), "dwadawdawdadawdawdawdawdawdawdawdawd", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity(), responseData.getReason(), Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("Exception", Log.getStackTraceString(e));
+                Toast.makeText(getActivity(), getString(R.string.went_wrong), Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onFailure(Call<UserDetailResponse> call, Throwable t) {
+            Log.d("MC4kException", Log.getStackTraceString(t));
+            Crashlytics.logException(t);
+            Toast.makeText(getActivity(), getString(R.string.went_wrong), Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    public void saveDatainDB() {
+
+//        TableAdult adultTable = new TableAdult((BaseApplication) getActivity().getApplicationContext());
+//        adultTable.deleteAll();
+//        try {
+//
+//            adultTable.beginTransaction();
+//            for (UserModel.AdultsInfo user : model.getResult().getData().getAdult()) {
+//
+//                adultTable.insertData(user.getUser());
+//            }
+//            adultTable.setTransactionSuccessful();
+//        } finally {
+//            adultTable.endTransaction();
+//        }
+
+        // saving child data
+        TableKids kidsTable = new TableKids((BaseApplication) getActivity().getApplicationContext());
+        kidsTable.deleteAll();
+        try {
+            kidsTable.beginTransaction();
+
+            ArrayList<KidsInfo> kidsInfoArrayList = new ArrayList<>();
+
+            for (KidsModel kid : kidsModelArrayList) {
+                KidsInfo kidsInfo = new KidsInfo();
+                kidsInfo.setName(kid.getName());
+                kidsInfo.setDate_of_birth(convertTime(kid.getBirthDay()));
+                kidsInfo.setColor_code(kid.getColorCode());
+                kidsInfo.setGender(kid.getGender());
+
+                kidsInfoArrayList.add(kidsInfo);
+            }
+            for (KidsInfo kids : kidsInfoArrayList) {
+
+                kidsTable.insertData(kids);
+
+            }
+            kidsTable.setTransactionSuccessful();
+        } finally {
+            kidsTable.endTransaction();
+        }
+
+        ((DashboardActivity) getActivity()).replaceFragment(new FragmentFamilyDetail(), null, true);
+
+        // saving family
+
+//        TableFamily familyTable = new TableFamily((BaseApplication) getActivity().getApplicationContext());
+//        familyTable.deleteAll();
+//        try {
+//
+//            familyTable.insertData(model.getResult().getData().getFamily());
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+        // update listview
+
+//        mAdultContainer.removeAllViews();
+//        mChildContainer.removeAllViews();
+//        setList();
+
+    }
+
+    public long convertStringToTimestamp(String str_date) {
+        try {
+            DateFormat formatter;
+            formatter = new SimpleDateFormat("dd-MM-yyyy");
+            // you can change format of date
+            Date date = formatter.parse(str_date);
+
+            return date.getTime();
+        } catch (ParseException e) {
+            System.out.println("Exception :" + e);
+            return 0;
+        }
+    }
+
+    public String convertTime(String time) {
+        Date date = new Date(Long.parseLong(time));
+        Format format = new SimpleDateFormat("dd-MM-yyyy");
+        return format.format(date);
     }
 
     protected void updateUi(Response response) {
@@ -391,44 +571,44 @@ public class FragmentKidProfile extends BaseFragment implements View.OnClickList
     }
 
 
-    public void datePicket(final TextView startDate) {
-
-        final Calendar c = Calendar.getInstance();
-        int mYear = c.get(Calendar.YEAR);
-        int mMonth = c.get(Calendar.MONTH);
-        int mDay = c.get(Calendar.DAY_OF_MONTH);
-
-        long maxdate = Long.parseLong(convertDate(mDay + "-" + (mMonth + 1) + "-" + mYear)) * 1000;
-
-
-        // Launch Date Picker Dialog
-        DatePickerDialog dpd = new DatePickerDialog(getActivity(),android.R.style.Theme_Holo_Light_Dialog_NoActionBar,
-                new DatePickerDialog.OnDateSetListener() {
-
-                    @Override
-                    public void onDateSet(DatePicker view, int year,
-                                          int monthOfYear, int dayOfMonth) {
-                        // Display Selected date in textbox
-
-                        Calendar caltemp = Calendar.getInstance();
-                        caltemp.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                        caltemp.set(Calendar.MONTH, monthOfYear);
-                        caltemp.set(Calendar.YEAR, year);
-
-                        SimpleDateFormat format = new SimpleDateFormat("dd MMMM yyyy");
-
+//    public void datePicket(final TextView startDate) {
 //
-//                        startDate.setText(dayOfMonth + "-"
-//                                + (monthOfYear + 1) + "-" + year);
-                        startDate.setText(format.format(caltemp.getTime()));
-
-                        Log.d("Date ", (String) startDate.getText());
-                    }
-                }, mYear, mMonth, mDay);
-        dpd.getDatePicker().setMaxDate(maxdate);
-        dpd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dpd.show();
-
-    }
+//        final Calendar c = Calendar.getInstance();
+//        int mYear = c.get(Calendar.YEAR);
+//        int mMonth = c.get(Calendar.MONTH);
+//        int mDay = c.get(Calendar.DAY_OF_MONTH);
+//
+//        long maxdate = Long.parseLong(convertDate(mDay + "-" + (mMonth + 1) + "-" + mYear)) * 1000;
+//
+//
+//        // Launch Date Picker Dialog
+//        DatePickerDialog dpd = new DatePickerDialog(getActivity(), android.R.style.Theme_Holo_Light_Dialog_NoActionBar,
+//                new DatePickerDialog.OnDateSetListener() {
+//
+//                    @Override
+//                    public void onDateSet(DatePicker view, int year,
+//                                          int monthOfYear, int dayOfMonth) {
+//                        // Display Selected date in textbox
+//
+//                        Calendar caltemp = Calendar.getInstance();
+//                        caltemp.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+//                        caltemp.set(Calendar.MONTH, monthOfYear);
+//                        caltemp.set(Calendar.YEAR, year);
+//
+//                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+//
+////
+////                        startDate.setText(dayOfMonth + "-"
+////                                + (monthOfYear + 1) + "-" + year);
+//                        startDate.setText(format.format(caltemp.getTime()));
+//
+//                        Log.d("Date ", (String) startDate.getText());
+//                    }
+//                }, mYear, mMonth, mDay);
+//        dpd.getDatePicker().setMaxDate(maxdate);
+//        dpd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//        dpd.show();
+//
+//    }
 
 }

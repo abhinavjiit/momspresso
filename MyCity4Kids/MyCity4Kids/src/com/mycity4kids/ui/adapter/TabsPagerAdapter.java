@@ -90,10 +90,10 @@ public class TabsPagerAdapter extends FragmentStatePagerAdapter {
                     bundle.putBoolean(Constants.IS_SEARCH_ACTIVE, false);
                     mRecentArticlefragment.setArguments(bundle);
                 } else {
-                    if (articlelist != null)
+                    if (articlelist != null){}
 
 //                        if (isSearchActive() == false)
-                        mRecentArticlefragment.refreshSubList(articlelist.getRecent());
+//                        mRecentArticlefragment.refreshSubList(articlelist.getRecent());
 
 
                 }
@@ -108,8 +108,8 @@ public class TabsPagerAdapter extends FragmentStatePagerAdapter {
                     bundle.putBoolean(Constants.IS_SEARCH_ACTIVE, false);
                     mPopularArticlefragment.setArguments(bundle);
                 } else {
-                    if (articlelist != null)
-                        mPopularArticlefragment.refreshSubList(articlelist.getTrending());
+                    if (articlelist != null){}
+//                        mPopularArticlefragment.refreshSubList(articlelist.getTrending());
                 }
                 return mPopularArticlefragment;
 
@@ -123,8 +123,8 @@ public class TabsPagerAdapter extends FragmentStatePagerAdapter {
                     bundle.putBoolean(Constants.IS_SEARCH_ACTIVE, false);
                     mTrendingArticlefragment.setArguments(bundle);
                 } else {
-                    if (articlelist != null)
-                        mTrendingArticlefragment.refreshSubList(articlelist.getPopular());
+                    if (articlelist != null){}
+//                        mTrendingArticlefragment.refreshSubList(articlelist.getPopular());
                 }
 
                 return mTrendingArticlefragment;
@@ -136,8 +136,8 @@ public class TabsPagerAdapter extends FragmentStatePagerAdapter {
                     bundle.putBoolean(Constants.IS_SEARCH_ACTIVE, false);
                     mBookmarkedArticlefragment.setArguments(bundle);
                 } else {
-                    if (articlelist != null)
-                        mBookmarkedArticlefragment.refreshSubList(articlelist.getPopular());
+                    if (articlelist != null){}
+//                        mBookmarkedArticlefragment.refreshSubList(articlelist.getPopular());
                 }
 
                 return mBookmarkedArticlefragment;

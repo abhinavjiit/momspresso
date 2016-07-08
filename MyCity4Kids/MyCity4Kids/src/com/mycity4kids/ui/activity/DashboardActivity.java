@@ -2223,14 +2223,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     if (topFragment instanceof FragmentFamilyProfile) {
                         topFragment.onActivityResult(requestCode, resultCode, data);
                     } else if (topFragment instanceof FragmentFamilyDetail) {
-                        ((FragmentFamilyDetail) topFragment).onActivityResultDelegate(requestCode, resultCode, data);
+//                        ((FragmentFamilyDetail) topFragment).onActivityResultDelegate(requestCode, resultCode, data);
                     }
                     break;
                 case Constants.TAKE_PICTURE:
                     if (topFragment instanceof FragmentFamilyProfile) {
                         topFragment.onActivityResult(requestCode, resultCode, data);
                     } else if (topFragment instanceof FragmentFamilyDetail) {
-                        ((FragmentFamilyDetail) topFragment).onActivityResultDelegate(requestCode, resultCode, data);
+//                        ((FragmentFamilyDetail) topFragment).onActivityResultDelegate(requestCode, resultCode, data);
                     }
                     break;
 
@@ -2238,7 +2238,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     if (topFragment instanceof FragmentFamilyProfile) {
                         topFragment.onActivityResult(requestCode, resultCode, data);
                     } else if (topFragment instanceof FragmentFamilyDetail) {
-                        ((FragmentFamilyDetail) topFragment).onActivityResultDelegate(requestCode, resultCode, data);
+//                        ((FragmentFamilyDetail) topFragment).onActivityResultDelegate(requestCode, resultCode, data);
                     }
                     break;
                 case Constants.CREATE_TASK:

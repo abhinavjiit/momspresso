@@ -1,5 +1,7 @@
 package com.mycity4kids.models.response;
 
+import java.util.ArrayList;
+
 /**
  * Created by hemant on 22/6/16.
  */
@@ -14,6 +16,7 @@ public class UserDetailData {
     private String userType;
     private String isValidated;
     private String profilePicUrl;
+    private ArrayList<KidsModel> kids;
 
     public String getId() {
         return sqlId;
@@ -94,4 +97,14 @@ public class UserDetailData {
     public void setProfilePicUrl(String profilePicUrl) {
         this.profilePicUrl = profilePicUrl;
     }
+
+    public ArrayList<KidsModel> getKids() {
+        return kids;
+    }
+
+    public void setKids(ArrayList<KidsModel> kidsList) {
+        this.kids = kids;
+    }
+
+
 }

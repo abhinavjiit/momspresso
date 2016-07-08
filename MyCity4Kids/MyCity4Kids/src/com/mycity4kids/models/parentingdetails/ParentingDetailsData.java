@@ -18,6 +18,8 @@ public class ParentingDetailsData {
     private String is_bookmark;
     private String blog_title;
     private String tag;
+    private String userId;
+    private String imageUrl;
 
     public String getAuthor_type() {
         return author_type;
@@ -137,5 +139,21 @@ public class ParentingDetailsData {
 
     public void setTag(String tag) {
         this.tag = tag;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

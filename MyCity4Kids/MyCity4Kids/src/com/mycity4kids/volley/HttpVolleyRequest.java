@@ -34,20 +34,20 @@ public class HttpVolleyRequest {
                                          final OnWebServiceCompleteListener listener, int requestMethod, boolean isCacheEnabled) {
         final VolleyBaseResponse baseResponse = new VolleyBaseResponse();
         // Formulate the request and handle the response.
-        if (Request.Method.GET == requestMethod) {
-            if (null != SharedPrefUtils.getUserDetailModel(context)) {
-                url = url + "&user_id=" + SharedPrefUtils.getUserDetailModel(context).getId();
-            } else {
-                url = url + "&user_id=" + "";
-            }
-        } else if (Request.Method.POST == requestMethod || Request.Method.PUT == requestMethod) {
-            if (null != SharedPrefUtils.getUserDetailModel(context)) {
-                paramsMap.put("user_id", "" + SharedPrefUtils.getUserDetailModel(context).getId());
-            } else {
-                paramsMap.put("user_id", "");
-
-            }
-        }
+//        if (Request.Method.GET == requestMethod) {
+//            if (null != SharedPrefUtils.getUserDetailModel(context)) {
+//                url = url + "&user_id=" + SharedPrefUtils.getUserDetailModel(context).getId();
+//            } else {
+//                url = url + "&user_id=" + "";
+//            }
+//        } else if (Request.Method.POST == requestMethod || Request.Method.PUT == requestMethod) {
+//            if (null != SharedPrefUtils.getUserDetailModel(context)) {
+//                paramsMap.put("user_id", "" + SharedPrefUtils.getUserDetailModel(context).getId());
+//            } else {
+//                paramsMap.put("user_id", "");
+//
+//            }
+//        }
 
         stringRequest = new StringRequest(requestMethod, url,
                 new Listener<String>() {

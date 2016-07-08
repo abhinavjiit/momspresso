@@ -16,26 +16,4 @@ public class UserDetailResponse extends BaseResponse {
         this.data = data;
     }
 
-//    public static class MyModelDeserializer implements JsonDeserializer<ArrayList<UserDetailData>> {
-//
-//        @Override
-//        public ArrayList<UserDetailData> deserialize(JsonElement json, Type typeOfT,
-//                                     JsonDeserializationContext context) throws JsonParseException {
-//
-//            if (json instanceof JsonArray) {
-//
-//                return new Gson().fromJson(json, MyModel[].class);
-//
-//            }
-//
-//            MyModel child = context.deserialize(json, MyModel.class);
-//
-//            return new MyModel[] { child };
-//        }
-//
-//        @Override
-//        public ArrayList<UserDetailData> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-//            return null;
-//        }
-//    }
 }

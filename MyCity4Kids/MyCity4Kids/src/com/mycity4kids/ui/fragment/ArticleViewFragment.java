@@ -30,11 +30,15 @@ import com.mycity4kids.enums.ParentingFilterType;
 import com.mycity4kids.interfaces.OnWebServiceCompleteListener;
 import com.mycity4kids.models.parentingstop.CommonParentingList;
 import com.mycity4kids.models.parentingstop.CommonParentingResponse;
+import com.mycity4kids.models.response.ArticleListingData;
+import com.mycity4kids.models.response.ArticleListingResponse;
+import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.newmodels.VolleyBaseResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.adapter.ArticlesListingAdapter;
+import com.mycity4kids.ui.adapter.NewArticlesListingAdapter;
 import com.mycity4kids.volley.HttpVolleyRequest;
 
 import java.util.ArrayList;
@@ -44,8 +48,8 @@ import java.util.ArrayList;
  */
 public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
 
-    ArticlesListingAdapter articlesListingAdapter;
-    ArrayList<CommonParentingList> articleDataModelsNew;
+    NewArticlesListingAdapter articlesListingAdapter;
+    ArrayList<ArticleListingResult> articleDataModelsNew;
     ListView listView;
     TextView noBlogsTextView;
     String sortType;
@@ -54,9 +58,12 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
     private RelativeLayout mLodingView;
     private int totalPageCount = 3;
     private int nextPageNumber = 2;
+    private boolean isLastPageReached = true;
     private boolean isReuqestRunning = false;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ProgressBar progressBar;
+    private int from = 1;
+    private int to = 15;
 //    private ArrayList<CommonParentingList> mDataList;
 
 
@@ -82,13 +89,13 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
 //            nextPageNumber = 1;
 //            hitBookmarkedArticleListingAPI(nextPageNumber, "bookmark");
 //        } else {
-        articleDataModelsNew = new ArrayList<CommonParentingList>();
+        articleDataModelsNew = new ArrayList<ArticleListingResult>();
         nextPageNumber = 1;
         hitArticleListingApi(nextPageNumber, sortType, true);
 //        }
         swipeRefreshLayout.setOnRefreshListener((SwipeRefreshLayout.OnRefreshListener) ArticleViewFragment.this);
 
-        articlesListingAdapter = new ArticlesListingAdapter(getActivity(), true);
+        articlesListingAdapter = new NewArticlesListingAdapter(getActivity(), true);
         articlesListingAdapter.setNewListData(articleDataModelsNew);
         listView.setAdapter(articlesListingAdapter);
         articlesListingAdapter.notifyDataSetChanged();
@@ -102,7 +109,7 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
                 boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
-                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && (nextPageNumber < 2 || nextPageNumber <= totalPageCount)) {
+                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && isLastPageReached) {
                     mLodingView.setVisibility(View.VISIBLE);
                     hitArticleListingApi(nextPageNumber, sortType, false);
                     isReuqestRunning = true;
@@ -116,13 +123,13 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                 Intent intent = new Intent(getActivity(), ArticlesAndBlogsDetailsActivity.class);
-                if (adapterView.getAdapter() instanceof ArticlesListingAdapter) {
-                    CommonParentingList parentingListData = (CommonParentingList) ((ArticlesListingAdapter) adapterView.getAdapter()).getItem(i);
+                if (adapterView.getAdapter() instanceof NewArticlesListingAdapter) {
+                    ArticleListingResult parentingListData = (ArticleListingResult) ((NewArticlesListingAdapter) adapterView.getAdapter()).getItem(i);
                     intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
-                    intent.putExtra(Constants.ARTICLE_COVER_IMAGE, parentingListData.getThumbnail_image());
+                    intent.putExtra(Constants.ARTICLE_COVER_IMAGE, parentingListData.getImageUrl());
                     intent.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.ARTICLES);
-                    intent.putExtra(Constants.FILTER_TYPE, parentingListData.getAuthor_type());
-                    intent.putExtra(Constants.BLOG_NAME, parentingListData.getBlog_name());
+                    intent.putExtra(Constants.FILTER_TYPE, parentingListData.getUserType());
+                    intent.putExtra(Constants.BLOG_NAME, parentingListData.getBlogPageSlug());
                     startActivity(intent);
 
                 }
@@ -135,80 +142,6 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
     @Override
     protected void updateUi(Response response) {
 
-        String temp = "";
-        progressBar.setVisibility(View.INVISIBLE);
-        CommonParentingResponse responseData;
-        if (response == null) {
-            ((DashboardActivity) getActivity()).showToast("Something went wrong from server");
-            removeProgressDialog();
-            isReuqestRunning = false;
-            mLodingView.setVisibility(View.GONE);
-            return;
-        }
-
-        switch (response.getDataType()) {
-            case AppConstants.PARENTING_STOP_ARTICLES_REQUEST:
-                responseData = (CommonParentingResponse) response.getResponseObject();
-                swipeRefreshLayout.setRefreshing(false);
-                if (responseData.getResponseCode() == 200) {
-                    getArticleResponse(responseData);
-                } else if (responseData.getResponseCode() == 400) {
-                    String message = responseData.getResult().getMessage();
-                    totalPageCount = 0;
-                    if (!StringUtils.isNullOrEmpty(message)) {
-                        ((DashboardActivity) getActivity()).showToast(message);
-                    } else {
-                        ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
-                    }
-                }
-
-                isReuqestRunning = false;
-                mLodingView.setVisibility(View.GONE);
-                break;
-
-            case AppConstants.TOP_PICKS_REQUEST:
-                responseData = (CommonParentingResponse) response.getResponseObject();
-                if (responseData.getResponseCode() == 200) {
-                    getArticleResponse(responseData);
-                    removeProgressDialog();
-                } else if (responseData.getResponseCode() == 400) {
-                    removeProgressDialog();
-                    String message = responseData.getResult().getMessage();
-                    if (!StringUtils.isNullOrEmpty(message)) {
-                        ((DashboardActivity) getActivity()).showToast(message);
-                    } else {
-                        ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
-                    }
-                }
-
-                Constants.IS_REQUEST_RUNNING = false;
-                isReuqestRunning = false;
-                mLodingView.setVisibility(View.GONE);
-                break;
-
-            case AppConstants.BOOKMARKED_ARTICLE_LIST_REQUEST:
-                responseData = (CommonParentingResponse) response.getResponseObject();
-                swipeRefreshLayout.setRefreshing(false);
-                if (responseData.getResponseCode() == 200) {
-                    getArticleResponse(responseData);
-                } else if (responseData.getResponseCode() == 400) {
-                    String message = responseData.getResult().getMessage();
-                    totalPageCount = 0;
-                    if (!StringUtils.isNullOrEmpty(message)) {
-                        ((DashboardActivity) getActivity()).showToast(message);
-                    } else {
-                        ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
-                    }
-                }
-
-                isReuqestRunning = false;
-                mLodingView.setVisibility(View.GONE);
-                break;
-
-            default:
-                break;
-        }
-
     }
 
     private void hitArticleListingApi(int pPageCount, String SortKey, boolean isCacheRequired) {
@@ -219,12 +152,19 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
             builder.append("city_id=").append(SharedPrefUtils.getCurrentCityModel(getActivity()).getId());
             builder.append("&page=").append(pPageCount);
             builder.append("&sort=").append(SortKey);
-            url = AppConstants.PARENTING_STOP_ARTICLE_URL + builder.toString().replace(" ", "%20");
+//            to = pPageCount * 10;
+//            from = to - 9;
+//            url = AppConstants.PHOENIX_ARTICLE_STAGING_URL + "v1/articles/recent/" + from + "/" + to;
+            url = AppConstants.PHOENIX_ARTICLE_STAGING_URL + "v1/articles/" + SortKey + "/" + from + "/" + to;
+//            url = AppConstants.PHOENIX_ARTICLE_STAGING_URL + builder.toString().replace(" ", "%20");
             HttpVolleyRequest.getStringResponse(getActivity(), url, null, mGetArticleListingListener, Request.Method.GET, isCacheRequired);
         } else {
             builder.append("user_id=").append(SharedPrefUtils.getUserDetailModel(getActivity()).getId());
             builder.append("&page=").append(pPageCount);
-            url = AppConstants.FETCH_BOOKMARK_URL + builder.toString().replace(" ", "%20");
+//            url = AppConstants.FETCH_BOOKMARK_URL + builder.toString().replace(" ", "%20");
+            to = pPageCount * 10;
+            from = to - 9;
+            url = AppConstants.PHOENIX_ARTICLE_STAGING_URL + "v1/articles/recent/" + from + "/" + to;
             HttpVolleyRequest.getStringResponse(getActivity(), url, null, mGetArticleListingListener, Request.Method.GET, false);
         }
 
@@ -246,9 +186,9 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
                     return;
                 }
                 Log.d("Response back =", " " + response.getResponseBody());
-                CommonParentingResponse responseData;
+                ArticleListingResponse responseData;
                 try {
-                    responseData = new Gson().fromJson(response.getResponseBody(), CommonParentingResponse.class);
+                    responseData = new Gson().fromJson(response.getResponseBody(), ArticleListingResponse.class);
                 } catch (JsonSyntaxException jse) {
                     Crashlytics.logException(jse);
                     Log.d("JsonSyntaxException", Log.getStackTraceString(jse));
@@ -257,13 +197,13 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
                 }
 
                 swipeRefreshLayout.setRefreshing(false);
-                if (responseData.getResponseCode() == 200) {
-                    getArticleResponse(responseData);
-                } else if (responseData.getResponseCode() == 400) {
-                    String message = responseData.getResult().getMessage();
+                if (responseData.getCode() == 200) {
+                    processResponse(responseData);
+                } else if (responseData.getCode() == 400) {
+//                    String message = responseData.getResult().getMessage();
                     totalPageCount = 0;
-                    if (!StringUtils.isNullOrEmpty(message)) {
-                        ((DashboardActivity) getActivity()).showToast(message);
+                    if (!StringUtils.isNullOrEmpty("dwadw")) {
+                        ((DashboardActivity) getActivity()).showToast("dwadwdawdawd");
                     } else {
                         ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
                     }
@@ -276,35 +216,51 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
         }
     };
 
-    public void refreshSubList(ArrayList<CommonParentingList> newList) {
+    public void refreshSubList(ArrayList<ArticleListingResult> newList) {
         articleDataModelsNew = newList;
         articlesListingAdapter.setNewListData(newList);
         articlesListingAdapter.notifyDataSetChanged();
     }
 
-    private void getArticleResponse(CommonParentingResponse responseData) {
+    private void processResponse(ArticleListingResponse responseData) {
         //	parentingResponse = responseData ;
-        ArrayList<CommonParentingList> dataList = responseData.getResult().getData().getData();
+        ArrayList<ArticleListingResult> dataList = responseData.getData().getResult();
 
         if (dataList.size() == 0) {
-            articleDataModelsNew = dataList;
-            articlesListingAdapter.setNewListData(articleDataModelsNew);
-            articlesListingAdapter.notifyDataSetChanged();
-            noBlogsTextView.setVisibility(View.VISIBLE);
-            //((DashboardActivity) getActivity()).showToast(responseData.getResult().getMessage());
+
+            isLastPageReached = false;
+            if (null != articleDataModelsNew && !articleDataModelsNew.isEmpty()) {
+                //No more next results for search from pagination
+
+            } else {
+                // No results for search
+                articleDataModelsNew = dataList;
+                articlesListingAdapter.setNewListData(dataList);
+                articlesListingAdapter.notifyDataSetChanged();
+                noBlogsTextView.setVisibility(View.VISIBLE);
+                noBlogsTextView.setText("No articles found");
+            }
+
+//            articleDataModelsNew = dataList;
+//            articlesListingAdapter.setNewListData(articleDataModelsNew);
+//            articlesListingAdapter.notifyDataSetChanged();
+//            noBlogsTextView.setVisibility(View.VISIBLE);
+//            noBlogsTextView.setText("No articles found");
         } else {
             noBlogsTextView.setVisibility(View.GONE);
-            totalPageCount = responseData.getResult().getData().getPage_count();
-            if (nextPageNumber == 1) {
+//            totalPageCount = responseData.getResult().getData().getPage_count();
+            if (from == 1) {
                 articleDataModelsNew = dataList;
             } else {
 
+                int prevFrom = Integer.parseInt(responseData.getData().getChunks().split("-")[0]);
                 //cache refresh request response and response from pagination may overlap causing duplication
                 // to prevent check the page number in response
                 //-- open article listing and immediately scroll to next page to reproduce.
-                if (!"bookmark".equals(sortType) && responseData.getResult().getData().getPageNumber() < nextPageNumber) {
+                if (!"bookmark".equals(sortType) && prevFrom < from) {
                     //Response from cache refresh request. Update the dataset and refresh list
-                    int articleNumber = (responseData.getResult().getData().getPageNumber() - 1) * 15;
+//                    int articleNumber = (responseData.getResult().getData().getPageNumber() - 1) * 15;
+                    int articleNumber = prevFrom - 1;
                     for (int i = 0; i < dataList.size(); i++) {
                         articleDataModelsNew.set(articleNumber + i, dataList.get(i));
                     }
@@ -316,10 +272,51 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
                 }
             }
             articlesListingAdapter.setNewListData(articleDataModelsNew);
-            nextPageNumber = nextPageNumber + 1;
+            from = from + 15;
+            to = to + 15;
             articlesListingAdapter.notifyDataSetChanged();
         }
+
     }
+
+//    private void getArticleResponse(ArticleListingResponse responseData) {
+//        //	parentingResponse = responseData ;
+//        ArrayList<ArticleListingResult> dataList = responseData.getData().getResult();
+//
+//        if (dataList.size() == 0) {
+//            articleDataModelsNew = dataList;
+//            articlesListingAdapter.setNewListData(articleDataModelsNew);
+//            articlesListingAdapter.notifyDataSetChanged();
+//            noBlogsTextView.setVisibility(View.VISIBLE);
+//            //((DashboardActivity) getActivity()).showToast(responseData.getResult().getMessage());
+//        } else {
+//            noBlogsTextView.setVisibility(View.GONE);
+//            totalPageCount = 5;//responseData.getResult().getData().getPage_count();
+//            if (nextPageNumber == 1) {
+//                articleDataModelsNew = dataList;
+//            } else {
+//
+//                //cache refresh request response and response from pagination may overlap causing duplication
+//                // to prevent check the page number in response
+//                //-- open article listing and immediately scroll to next page to reproduce.
+//                if (!"bookmark".equals(sortType) && responseData.getData().getPageNumber() < nextPageNumber) {
+//                    //Response from cache refresh request. Update the dataset and refresh list
+//                    int articleNumber = (responseData.getResult().getData().getPageNumber() - 1) * 15;
+//                    for (int i = 0; i < dataList.size(); i++) {
+//                        articleDataModelsNew.set(articleNumber + i, dataList.get(i));
+//                    }
+//                    articlesListingAdapter.setNewListData(articleDataModelsNew);
+//                    articlesListingAdapter.notifyDataSetChanged();
+//                    return;
+//                } else {
+//                    articleDataModelsNew.addAll(dataList);
+//                }
+//            }
+//            articlesListingAdapter.setNewListData(articleDataModelsNew);
+//            nextPageNumber = nextPageNumber + 1;
+//            articlesListingAdapter.notifyDataSetChanged();
+//        }
+//    }
 
     public void refreshBookmarkList() {
         nextPageNumber = 1;

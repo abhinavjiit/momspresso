@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.mycity4kids.R;
+import com.mycity4kids.models.user.KidsInfo;
 import com.mycity4kids.newmodels.AttendeeModel;
 
 import java.util.ArrayList;
@@ -20,9 +21,9 @@ import java.util.ArrayList;
 public class AdapterKidAdultList extends BaseAdapter {
 
     Context context;
-    ArrayList<AttendeeModel> datalist;
+    ArrayList<KidsInfo> datalist;
 
-    public AdapterKidAdultList(Context context, ArrayList<AttendeeModel> datalist) {
+    public AdapterKidAdultList(Context context, ArrayList<KidsInfo> datalist) {
         this.context = context;
         this.datalist = datalist;
     }
@@ -63,8 +64,8 @@ public class AdapterKidAdultList extends BaseAdapter {
         holder.name.setText(datalist.get(i).getName());
         try {
 //            holder.name.setTextColor(Color.parseColor(datalist.get(i).getColorCode()));
-            if (null != datalist.get(i).getColorCode())
-                holder.viewColor.setBackgroundColor(Color.parseColor(datalist.get(i).getColorCode()));
+            if (null != datalist.get(i).getColor_code())
+                holder.viewColor.setBackgroundColor(Color.parseColor(datalist.get(i).getColor_code()));
         } catch (Exception e) {
             e.printStackTrace();
         }

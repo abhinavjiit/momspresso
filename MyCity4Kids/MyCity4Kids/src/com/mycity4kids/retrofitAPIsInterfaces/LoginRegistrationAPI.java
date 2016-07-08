@@ -1,5 +1,6 @@
 package com.mycity4kids.retrofitAPIsInterfaces;
 
+import com.mycity4kids.models.request.AddEditKidsInformationRequest;
 import com.mycity4kids.models.request.LoginRegistrationRequest;
 import com.mycity4kids.models.response.UserDetailResponse;
 
@@ -29,4 +30,7 @@ public interface LoginRegistrationAPI {
 
     @POST("v1/users/link/email/")
     Call<UserDetailResponse> resendVerificationLink(@Body LoginRegistrationRequest body);
+
+    @PUT("v1/users/kid/")
+    Call<UserDetailResponse> addEditKidsInformation(@Body AddEditKidsInformationRequest body);
 }
