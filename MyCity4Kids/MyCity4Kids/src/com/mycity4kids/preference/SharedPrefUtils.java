@@ -27,7 +27,7 @@ public class SharedPrefUtils {
     public static final String CITI_VERSION = "cityVersion";
     public static final String LOCALITY_VERSION = "localityVersion";
     public static final String CATEGORY_VERSION = "categoryVersion";
-
+    public static final String CONFIG_CATEGORY_VERSION = "configCategoryVersion";
     /**
      * Selected City related prefs constants
      */
@@ -144,6 +144,18 @@ public class SharedPrefUtils {
         Editor _editor = _sharedPref.edit();
         _editor.putInt(SELECTED_TASKLIST_ID, id);
         _editor.commit();
+    }
+    public static void setConfigCategoryVersion(Context pContext, int id) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        _editor.putInt(CONFIG_CATEGORY_VERSION, id);
+        _editor.commit();
+    }
+    public static int getConfigCategoryVersion(Context pContext) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        int id = 0;
+        id = (_sharedPref.getInt(CONFIG_CATEGORY_VERSION, 0));
+        return id;
     }
 
     public static int getSignupFlag(Context pContext) {

@@ -53,6 +53,7 @@ import com.mycity4kids.newmodels.ForceUpdateModel;
 import com.mycity4kids.newmodels.UserInviteModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ForceUpdateAPI;
+import com.mycity4kids.sync.CategorySyncService;
 import com.mycity4kids.sync.PushTokenService;
 import com.mycity4kids.utils.NearMyCity;
 import com.mycity4kids.utils.location.GPSTracker;
@@ -141,7 +142,9 @@ public class SplashActivity extends BaseActivity {
                     return;
                 }
             }
-
+         Intent   mServiceIntent = new Intent(SplashActivity.this, CategorySyncService.class);
+       //     mServiceIntent.setData(Uri.parse("test"));
+            startService(mServiceIntent);
             GPSTracker getCurrentLocation = new GPSTracker(this);
             double _latitude = getCurrentLocation.getLatitude();
             double _longitude = getCurrentLocation.getLongitude();

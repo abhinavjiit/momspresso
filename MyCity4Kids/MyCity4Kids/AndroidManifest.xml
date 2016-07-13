@@ -568,6 +568,9 @@
             </intent-filter>
         </service>
         <!-- [END firebase_iid_service] -->
+        <service
+            android:name=".sync.CategorySyncService"
+            android:exported="false"/>
 
     </application>
 </manifest>
