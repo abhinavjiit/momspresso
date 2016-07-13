@@ -39,6 +39,7 @@ import com.mycity4kids.models.editor.ArticlePublishRequest;
 import com.mycity4kids.models.editor.BlogDataResponse;
 import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.models.parentingdetails.ParentingDetailResponse;
+import com.mycity4kids.models.response.BlogPageResponse;
 import com.mycity4kids.models.response.ImageUploadResponse;
 import com.mycity4kids.models.user.UserModel;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -450,24 +451,23 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
             return;
         }
 
-        Call<BlogDataResponse> call = getBlogPageAPI.getBlogPage("" + userModel.getUser().getId(),
-                "" + 2);
-        call.enqueue(new Callback<BlogDataResponse>() {
+        Call<BlogPageResponse> call = getBlogPageAPI.getBlogPage("v1/users/blogPage/"+ SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
+        call.enqueue(new Callback<BlogPageResponse>() {
             @Override
-            public void onResponse(Call<BlogDataResponse> call, retrofit2.Response<BlogDataResponse> response) {
-                BlogDataResponse responseModel = (BlogDataResponse) response
+            public void onResponse(Call<BlogPageResponse> call, retrofit2.Response<BlogPageResponse> response) {
+                BlogPageResponse responseModel = (BlogPageResponse) response
                         .body();
                 removeProgressDialog();
-                if (responseModel.getResponseCode() != 200) {
+                if (responseModel.getCode() != 200) {
                     showToast(getString(R.string.toast_response_error));
                     return;
                 } else {
-                    if (!StringUtils.isNullOrEmpty(responseModel.getResult().getMessage())) {
+                    if (!StringUtils.isNullOrEmpty(responseModel.getData().getMsg())) {
                         //  SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
-                        Log.i("BlogResponse message", responseModel.getResult().getMessage());
+                        Log.i("BlogResponse message", responseModel.getData().getMsg());
 
                     }
-                    if (responseModel.getResponse().equals("success")) {
+                    if (responseModel.getData().getResult().getIsSetup()==1) {
                         showProgressDialog(getResources().getString(R.string.please_wait));
                         pref = getApplicationContext().getSharedPreferences(COMMON_PREF_FILE, MODE_PRIVATE);
                         SharedPreferences.Editor editor = pref.edit();
@@ -476,8 +476,10 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
                         editor.commit();
                         publishArticleRequest();
 
-                    } else {
+                    } else if(responseModel.getData().getResult().getIsSetup()==0) {
                         Intent intent = new Intent(ArticleImageTagUploadActivity.this, SetupBlogPageActivity.class);
+                        if (responseModel.getData().getResult().getUserBio()!=null&& !responseModel.getData().getResult().getUserBio().isEmpty())
+                            intent.putExtra("userBio",responseModel.getData().getResult().getUserBio());
                         startActivity(intent);
                     }
                     // removeProgressDialog();
@@ -486,7 +488,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
             }
 
             @Override
-            public void onFailure(Call<BlogDataResponse> call, Throwable t) {
+            public void onFailure(Call<BlogPageResponse> call, Throwable t) {
 
             }
         });

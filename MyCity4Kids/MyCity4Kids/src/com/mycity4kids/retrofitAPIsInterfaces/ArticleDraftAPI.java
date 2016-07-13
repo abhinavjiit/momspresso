@@ -1,12 +1,15 @@
 package com.mycity4kids.retrofitAPIsInterfaces;
 
 import com.mycity4kids.models.response.BaseResponse;
+import com.mycity4kids.models.response.DraftListResponse;
 import com.mycity4kids.models.response.DraftResponse;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Url;
@@ -39,7 +42,9 @@ public interface ArticleDraftAPI {
                                     @Field("articleType") String articleType
     );
 
-    @FormUrlEncoded
-    @POST("apiblogs/getDraftLists")
-    Call<ResponseBody> getDraftsList(@Field("userId") String userId);
+
+    @GET
+    Call<DraftListResponse> getDraftsList(@Url String url);
+    @DELETE
+    Call<DraftResponse> deleteDraft(@Url String url);
 }

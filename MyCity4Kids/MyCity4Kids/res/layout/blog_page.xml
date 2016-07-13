@@ -60,6 +60,7 @@
         android:layout_below="@id/blogTitle"
         android:src="@drawable/default_blogger"
         android:layout_marginTop="10dp"
+        android:visibility="gone"
 
         />
     <TextView
@@ -74,10 +75,11 @@
         android:layout_below="@+id/blogImage"
         android:gravity="center"
         android:textColor="@color/black_color"
+        android:visibility="gone"
         />
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="114dp"
+        android:layout_height="144dp"
         android:id="@+id/bloggerBio"
         android:layout_below="@+id/imageMessage"
         android:hint="Let our readers get to know you"

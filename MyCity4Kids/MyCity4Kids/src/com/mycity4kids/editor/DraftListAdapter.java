@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.mycity4kids.R;
 import com.mycity4kids.models.editor.ArticleDraftList;
+import com.mycity4kids.models.response.DraftListResult;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,12 +29,12 @@ import java.util.TimeZone;
  */
 public class DraftListAdapter extends BaseAdapter {
     Context context;
-    ArrayList<ArticleDraftList> draftlist;
+    ArrayList<DraftListResult> draftlist;
     private LayoutInflater mInflator;
     DraftListViewActivity draftListView;
     TimeZone tz = TimeZone.getDefault();
 
-    DraftListAdapter(Context context, ArrayList<ArticleDraftList> draftlist) {
+    DraftListAdapter(Context context, ArrayList<DraftListResult> draftlist) {
         this.context = context;
         this.draftlist = draftlist;
         mInflator = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -78,7 +79,7 @@ public class DraftListAdapter extends BaseAdapter {
                             int i = item.getItemId();
                             if (i == R.id.edit) {
                                 Intent intent = new Intent(context, EditorPostActivity.class);
-                                intent.putExtra("draftItem", (ArticleDraftList) getItem(position));
+                                intent.putExtra("draftItem", (DraftListResult) getItem(position));
                                 intent.putExtra("from", "draftList");
                                 context.startActivity(intent);
                                 Log.e("edit", "clicked");
@@ -86,7 +87,7 @@ public class DraftListAdapter extends BaseAdapter {
                                 return true;
                             } else if (i == R.id.delete) {
                                 //do something
-                                ((DraftListViewActivity) context).deleteDraftAPI((ArticleDraftList) getItem(position), position);
+                                ((DraftListViewActivity) context).deleteDraftAPI((DraftListResult) getItem(position), position);
                                 Log.e("delete", "clicked");
                                 return true;
                             } else {
@@ -108,7 +109,7 @@ public class DraftListAdapter extends BaseAdapter {
         } else {
             holder.txvArticleTitle.setText("Untitled Draft");
         }
-        if (draftlist.get(position).getModeration_status() == null) {
+        if (draftlist.get(position).getArticleType() == null) {
             holder.txvUnapproved.setVisibility(View.INVISIBLE);
             view.setBackgroundColor(Color.WHITE);
             view.setClickable(false);
@@ -116,7 +117,7 @@ public class DraftListAdapter extends BaseAdapter {
             holder.txvArticleTitle.setTextColor(Color.BLACK);
             holder.txvUpdateDate.setTextColor(context.getResources().getColor(R.color.gray2));
         } else {
-            switch (draftlist.get(position).getModeration_status()) {
+            switch (draftlist.get(position).getArticleType()) {
                 case "0": {
                     holder.txvUnapproved.setVisibility(View.INVISIBLE);
                     view.setBackgroundColor(Color.WHITE);
@@ -168,12 +169,19 @@ public class DraftListAdapter extends BaseAdapter {
         try {
 
             Calendar calendar1 = Calendar.getInstance();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
-            calendar1.setTime(sdf.parse(draftlist.get(position).getUpdatedDate()));
-            calendar1.add(Calendar.MILLISECOND, tz.getOffset(calendar1.getTimeInMillis()));
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+            SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm", Locale.US);
+        //    calendar1.setTime(sdf.parse(draftlist.get(position).getUpdatedTime()));
+         //   calendar1.add(Calendar.MILLISECOND, tz.getOffset(calendar1.getTimeInMillis()));
+        calendar1.setTimeInMillis(draftlist.get(position).getUpdatedTime()* 1000);
 
-            holder.txvUpdateDate.setText(sdf.format(calendar1.getTime()));
-        } catch (ParseException e) {
+        Long diff=    System.currentTimeMillis()-draftlist.get(position).getUpdatedTime()*1000;
+            if (diff/(1000 * 60 * 60)>24&&!sdf.format(System.currentTimeMillis()).equals(sdf.format((draftlist.get(position).getUpdatedTime()* 1000))))
+            {  holder.txvUpdateDate.setText(sdf.format(calendar1.getTime()));}
+            else {
+                holder.txvUpdateDate.setText(sdf1.format(calendar1.getTime()));
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return view;

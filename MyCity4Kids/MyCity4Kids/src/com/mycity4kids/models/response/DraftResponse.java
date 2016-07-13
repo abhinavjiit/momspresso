@@ -5,7 +5,7 @@ package com.mycity4kids.models.response;
  */
 public class DraftResponse extends BaseResponse {
 
-DraftData data;
+    DraftData data;
 
     public DraftData getData() {
         return data;

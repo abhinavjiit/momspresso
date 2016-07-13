@@ -34,6 +34,7 @@ import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.editor.ArticleDraftRequest;
 import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.models.response.ImageUploadResponse;
+import com.mycity4kids.models.response.SetupBlogResponse;
 import com.mycity4kids.models.user.UserModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
@@ -137,6 +138,10 @@ public class SetupBlogPageActivity extends BaseActivity {
         Utils.pushOpenScreenEvent(SetupBlogPageActivity.this, "Article Image Upload", SharedPrefUtils.getUserDetailModel(this).getId() + "");
         UserTable userTable = new UserTable((BaseApplication) this.getApplication());
         userModel = userTable.getAllUserData();
+        if (getIntent().getStringExtra("userBio")!=null&&!getIntent().getStringExtra("userBio").isEmpty())
+        {
+            bloggerBio.setText(getIntent().getStringExtra("userBio"));
+        }
         blogImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -168,12 +173,12 @@ public class SetupBlogPageActivity extends BaseActivity {
                     /**
                      * this case will case in pagination case: for sorting
                      */
-                    articleDraftRequest.setUser_id("" + userModel.getUser().getId());
+                    /*articleDraftRequest.setUser_id("" + userModel.getUser().getId());
 
                     articleDraftRequest.setImageName(url);
                     articleDraftRequest.setTitle(blogTitle.getText().toString());
                     articleDraftRequest.setBody(bloggerBio.getText().toString());
-                    articleDraftRequest.setSourceId("" + 2);
+                    articleDraftRequest.setSourceId("" + 2);*/
 /*
         articleDraftRequest.setCity_id(SharedPrefUtils.getCurrentCityModel(getActivity()).getId());
         _parentingModel.setPage("" + pPageCount);*/
@@ -190,34 +195,32 @@ public class SetupBlogPageActivity extends BaseActivity {
                         showToast(getString(R.string.error_network));
                         return;
                     }
-                    Call<CommonResponse> call = blogSetupAPI.createBlogPage("" + userModel.getUser().getId(),
+                    Call<SetupBlogResponse> call = blogSetupAPI.createBlogPage(
                             blogTitle.getText().toString(),
-                            bloggerBio.getText().toString(),
-                            url,
-                            AppConstants.Source_Id
+                            bloggerBio.getText().toString()
                     );
 
                     //asynchronous call
-                    call.enqueue(new Callback<CommonResponse>() {
+                    call.enqueue(new Callback<SetupBlogResponse>() {
                                      @Override
-                                     public void onResponse(Call<CommonResponse> call, retrofit2.Response<CommonResponse> response) {
+                                     public void onResponse(Call<SetupBlogResponse> call, retrofit2.Response<SetupBlogResponse> response) {
                                          int statusCode = response.code();
 
-                                         CommonResponse responseModel = (CommonResponse) response.body();
+                                         SetupBlogResponse responseModel = (SetupBlogResponse) response.body();
 
                                          removeProgressDialog();
-                                         if (responseModel.getResponseCode() != 200) {
+                                         if (responseModel.getCode() != 200) {
                                              showToast(getString(R.string.toast_response_error));
                                              return;
                                          } else {
-                                             if (!StringUtils.isNullOrEmpty(responseModel.getResult().getMessage())) {
+                                             if (!StringUtils.isNullOrEmpty(responseModel.getReason())) {
                                                  //   SharedPrefUtils.setProfileImgUrl(SetupBlogPageActivity.this, responseModel.getResult().getMessage());
-                                                 Log.i("Blog Setup Response", responseModel.getResult().getMessage());
-                                                 if (responseModel.getResponse().equals("failure")) {
+                                                 Log.i("Blog Setup Response", responseModel.getReason());
+                                                 if (responseModel.getStatus().equals("failure")) {
                                                      // showToast(responseModel.getResult().getMessage());
-                                                     alertDialog(responseModel.getResult().getMessage());
+                                                     alertDialog(responseModel.getReason());
                                                  } else {
-                                                     showToast(responseModel.getResult().getMessage());
+                                                     showToast(responseModel.getReason());
                                                      finish();
                                                  }
                                              }
@@ -230,7 +233,7 @@ public class SetupBlogPageActivity extends BaseActivity {
 
 
                                      @Override
-                                     public void onFailure(Call<CommonResponse> call, Throwable t) {
+                                     public void onFailure(Call<SetupBlogResponse> call, Throwable t) {
 
                                      }
                                  }

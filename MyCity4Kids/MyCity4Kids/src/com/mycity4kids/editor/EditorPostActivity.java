@@ -26,6 +26,7 @@ import com.mycity4kids.dbtable.UserTable;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.editor.ArticleDraftList;
+import com.mycity4kids.models.response.DraftListResult;
 import com.mycity4kids.models.response.DraftResponse;
 import com.mycity4kids.models.response.ImageUploadResponse;
 import com.mycity4kids.models.user.UserModel;
@@ -418,7 +419,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
 //                        intent_2.putExtra("from", "draftList");
 //                    }
                     else {
-                        Intent intent_3 = new Intent(EditorPostActivity.this, AddArticleTopicsActivity.class);
+                        Intent intent_3 = new Intent(EditorPostActivity.this, ArticleImageTagUploadActivity.class);
                         intent_3.putExtra("draftItem", draftObject);
                         intent_3.putExtra("from", "editor");
                         startActivity(intent_3);
@@ -610,18 +611,18 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
         content = getIntent().getStringExtra(CONTENT_PARAM);
         boolean isLocalDraft = getIntent().getBooleanExtra(DRAFT_PARAM, true);
         if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("draftList")) {
-            ArticleDraftList draftObject = (ArticleDraftList) getIntent().getSerializableExtra("draftItem");
+            DraftListResult draftObject = (DraftListResult) getIntent().getSerializableExtra("draftItem");
             title = draftObject.getTitle();
             title = title.trim();
             content = draftObject.getBody();
             draftId = draftObject.getId();
-            path = draftObject.getPath();
-            moderation_status = draftObject.getModeration_status();
+          //  path = draftObject.getPath();
+          //  moderation_status = draftObject.getModeration_status();
             if (null == moderation_status) {
                 moderation_status = "0";
             }
             Log.e("moderation_status", "" + moderation_status);
-            node_id = draftObject.getNode_id();
+           // node_id = draftObject.getNode_id();
             mEditorFragment.setTitle(title);
             mEditorFragment.setContent(content);
             if (null == moderation_status) {

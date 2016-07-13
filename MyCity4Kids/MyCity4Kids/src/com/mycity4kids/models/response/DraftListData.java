@@ -8,13 +8,13 @@ import java.util.ArrayList;
  * Created by anshul on 7/5/16.
  */
 public class DraftListData extends BaseData {
-    private ArrayList<ArticleDraftList> result;
+    private ArrayList<DraftListResult> result;
 
-    public ArrayList<ArticleDraftList> getResult() {
+    public ArrayList<DraftListResult> getResult() {
         return result;
     }
 
-    public void setResult(ArrayList<ArticleDraftList> data) {
+    public void setResult(ArrayList<DraftListResult> data) {
         this.result = data;
     }
 }
