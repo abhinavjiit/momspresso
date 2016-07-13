@@ -70,6 +70,7 @@
     <string name="please_wait">Please Wait...</string>
     <string name="no_result_txt">No result found.</string>
     <string name="went_wrong">Something went wrong.</string>
+    <string name="server_went_wrong">Something went wrong from server.</string>
     <string name="no_data">Data not found.</string>
     <string name="toast_network_error">Device is out of network coverage.</string>
     <string name="toast_response_error">Some error occurred, please try again later!</string>

@@ -16,6 +16,7 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
@@ -132,7 +133,7 @@ public class AddArticleTopicsActivity extends BaseActivity {
             }
             try {
                 TopicsResponse responseData = (TopicsResponse) response.body();
-                if (responseData.getResponseCode() == 200) {
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
                     nextButton.setVisibility(View.VISIBLE);
 
@@ -140,36 +141,36 @@ public class AddArticleTopicsActivity extends BaseActivity {
                     topicList = new ArrayList<>();
 
                     //Prepare structure for multi-expandable listview.
-                    for (int i = 0; i < responseData.getResult().getData().size(); i++) {
+                    for (int i = 0; i < responseData.getData().size(); i++) {
                         ArrayList<Topics> tempUpList = new ArrayList<>();
 
-                        for (int j = 0; j < responseData.getResult().getData().get(i).getChild().size(); j++) {
+                        for (int j = 0; j < responseData.getData().get(i).getChild().size(); j++) {
                             ArrayList<Topics> tempList = new ArrayList<>();
 
-                            for (int k = 0; k < responseData.getResult().getData().get(i).getChild().get(j).getChild().size(); k++) {
+                            for (int k = 0; k < responseData.getData().get(i).getChild().get(j).getChild().size(); k++) {
 
                                 //Adding All sub-subcategories
-                                responseData.getResult().getData().get(i).getChild().get(j).getChild().get(k)
-                                        .setParentId(responseData.getResult().getData().get(i).getId());
-                                responseData.getResult().getData().get(i).getChild().get(j).getChild().get(k)
-                                        .setParentName(responseData.getResult().getData().get(i).getTitle());
-                                tempList.add(responseData.getResult().getData().get(i).getChild().get(j).getChild().get(k));
+                                responseData.getData().get(i).getChild().get(j).getChild().get(k)
+                                        .setParentId(responseData.getData().get(i).getId());
+                                responseData.getData().get(i).getChild().get(j).getChild().get(k)
+                                        .setParentName(responseData.getData().get(i).getTitle());
+                                tempList.add(responseData.getData().get(i).getChild().get(j).getChild().get(k));
                             }
 
-                            responseData.getResult().getData().get(i).getChild().get(j).setChild(tempList);
+                            responseData.getData().get(i).getChild().get(j).setChild(tempList);
                         }
 
-                        for (int k = 0; k < responseData.getResult().getData().get(i).getChild().size(); k++) {
+                        for (int k = 0; k < responseData.getData().get(i).getChild().size(); k++) {
                             //Adding All subcategories
-                            responseData.getResult().getData().get(i).getChild().get(k)
-                                    .setParentId(responseData.getResult().getData().get(i).getId());
-                            responseData.getResult().getData().get(i).getChild().get(k)
-                                    .setParentName(responseData.getResult().getData().get(i).getTitle());
-                            tempUpList.add(responseData.getResult().getData().get(i).getChild().get(k));
+                            responseData.getData().get(i).getChild().get(k)
+                                    .setParentId(responseData.getData().get(i).getId());
+                            responseData.getData().get(i).getChild().get(k)
+                                    .setParentName(responseData.getData().get(i).getTitle());
+                            tempUpList.add(responseData.getData().get(i).getChild().get(k));
                         }
 
-                        topicList.add(responseData.getResult().getData().get(i));
-                        topicsMap.put(responseData.getResult().getData().get(i),
+                        topicList.add(responseData.getData().get(i));
+                        topicsMap.put(responseData.getData().get(i),
                                 tempUpList);
                     }
 
@@ -201,13 +202,13 @@ public class AddArticleTopicsActivity extends BaseActivity {
                         }
                     }
 
-                } else if (responseData.getResponseCode() == 400) {
-                    showToast("Something went wrong from server");
+                } else {
+                    showToast(getString(R.string.server_error));
                 }
             } catch (Exception e) {
                 progressBar.setVisibility(View.GONE);
                 Crashlytics.logException(e);
-                Log.d("Exception", Log.getStackTraceString(e));
+                Log.d("MC4kException", Log.getStackTraceString(e));
                 showToast(getString(R.string.went_wrong));
             }
         }
@@ -217,7 +218,7 @@ public class AddArticleTopicsActivity extends BaseActivity {
             progressBar.setVisibility(View.GONE);
             showToast(getString(R.string.went_wrong));
             Crashlytics.logException(t);
-            Log.d("Exception", Log.getStackTraceString(t));
+            Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
 

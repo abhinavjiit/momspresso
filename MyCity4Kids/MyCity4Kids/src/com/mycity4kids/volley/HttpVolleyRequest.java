@@ -98,7 +98,7 @@ public class HttpVolleyRequest {
                 if (cacheEntry == null) {
                     cacheEntry = new Cache.Entry();
                 }
-                final long cacheHitButRefreshed = 20 * 1000; // in 5 minutes cache will be hit, but also refreshed on background
+                final long cacheHitButRefreshed = 20 * 1000; // in 20 seconds cache will be hit, but also refreshed on background
                 final long cacheExpired = 24 * 60 * 60 * 1000; // in 24 hours this cache entry expires completely
                 long now = System.currentTimeMillis();
                 final long softExpire = now + cacheHitButRefreshed;

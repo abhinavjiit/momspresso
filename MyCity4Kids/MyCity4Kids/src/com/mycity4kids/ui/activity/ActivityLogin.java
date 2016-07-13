@@ -413,7 +413,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
 
         if (email_id.trim().length() == 0 || ((!StringUtils.isValidEmail(email_id)) && (!StringUtils.checkMobileNumber(email_id)))) {
             mEmailId.setFocusableInTouchMode(true);
-            mEmailId.setError("Please enter valid email id or mobile number");
+            mEmailId.setError("Please enter valid email id");
             mEmailId.requestFocus();
             isLoginOk = false;
         } else if (mPassword.getText().toString().length() == 0) {
@@ -584,7 +584,9 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                     }
                     //Verified User
                     else {
-                        saveKidsInformation(responseData.getData().get(0).getKids());
+                        if (null != responseData.getData().get(0).getKids()) {
+                            saveKidsInformation(responseData.getData().get(0).getKids());
+                        }
                         Intent intent = new Intent(ActivityLogin.this, PushTokenService.class);
                         startService(intent);
                         Intent intent1 = new Intent(ActivityLogin.this, LoadingActivity.class);
@@ -595,7 +597,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
-                Log.d("Exception", Log.getStackTraceString(e));
+                Log.d("MC4kException", Log.getStackTraceString(e));
                 showToast(getString(R.string.went_wrong));
             }
         }
@@ -750,7 +752,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
-                Log.d("Exception", Log.getStackTraceString(e));
+                Log.d("MC4kException", Log.getStackTraceString(e));
                 showToast(getString(R.string.went_wrong));
             }
         }

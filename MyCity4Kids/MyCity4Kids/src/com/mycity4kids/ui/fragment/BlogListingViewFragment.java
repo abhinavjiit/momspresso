@@ -201,7 +201,7 @@ public class BlogListingViewFragment extends BaseFragment {
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
-                Log.d("Exception", Log.getStackTraceString(e));
+                Log.d("MC4KException", Log.getStackTraceString(e));
                 if (isAdded()) {
                     ((BlogDetailActivity) getActivity()).showToast(getString(R.string.went_wrong));
                 }
@@ -211,7 +211,7 @@ public class BlogListingViewFragment extends BaseFragment {
         @Override
         public void onFailure(Call<NewArticleListingResponse> call, Throwable t) {
             Crashlytics.logException(t);
-            Log.d("Exception", Log.getStackTraceString(t));
+            Log.d("MC4KException", Log.getStackTraceString(t));
             if (isAdded()) {
                 ((BlogDetailActivity) getActivity()).showToast(getString(R.string.went_wrong));
             }

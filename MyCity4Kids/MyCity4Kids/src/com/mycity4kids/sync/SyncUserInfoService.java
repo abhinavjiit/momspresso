@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
@@ -23,14 +24,31 @@ import com.mycity4kids.dbtable.TableAdult;
 import com.mycity4kids.dbtable.TableFamily;
 import com.mycity4kids.dbtable.TableKids;
 import com.mycity4kids.dbtable.UserTable;
+import com.mycity4kids.models.request.LoginRegistrationRequest;
+import com.mycity4kids.models.response.KidsModel;
+import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.models.user.KidsInfo;
+import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.models.user.UserModel;
 import com.mycity4kids.models.user.UserResponse;
+import com.mycity4kids.newmodels.ForceUpdateModel;
 import com.mycity4kids.newmodels.PushNotificationModel;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.retrofitAPIsInterfaces.ForceUpdateAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
 import com.mycity4kids.ui.activity.DashboardActivity;
+import com.mycity4kids.ui.activity.LoadingActivity;
+import com.mycity4kids.ui.fragment.FacebookAddEmailDialogFragment;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Random;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
 
 /**
  * Created by manish.soni on 04-08-2015.
@@ -53,17 +71,58 @@ public class SyncUserInfoService extends IntentService implements UpdateListener
     }
 
     private void hitApiRequest(int requestType) {
-        ApiHandler handler = new ApiHandler(this, this, requestType);
-        handler.execute(getApiUrl(requestType));
+
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+
+        LoginRegistrationAPI usersAPI = retrofit.create(LoginRegistrationAPI.class);
+        Call<UserDetailResponse> call = usersAPI.getUserDetails(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+        call.enqueue(onLoginResponseReceivedListener);
+
+
+//        ApiHandler handler = new ApiHandler(this, this, requestType);
+//        handler.execute(getApiUrl(requestType));
     }
+
+    Callback<UserDetailResponse> onLoginResponseReceivedListener = new Callback<UserDetailResponse>() {
+        @Override
+        public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
+            Log.d("SUCCESS", "" + response);
+//            removeProgressDialog();
+            if (response == null || response.body() == null) {
+//                showToast(getString(R.string.went_wrong));
+                return;
+            }
+
+            try {
+                UserDetailResponse responseData = (UserDetailResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    SharedPrefUtils.setProfileImgUrl(SyncUserInfoService.this, responseData.getData().get(0).getProfilePicUrl());
+                    new SaveUserInfoinDB().execute(responseData);
+                } else {
+//                    showToast(responseData.getReason());
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+//                showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<UserDetailResponse> call, Throwable t) {
+            Log.d("MC4kException", Log.getStackTraceString(t));
+            Crashlytics.logException(t);
+//            showToast(getString(R.string.went_wrong));
+        }
+    };
 
     @Override
     public void onStart(Intent intent, int startId) {
         super.onStart(intent, startId);
         try {
             Bundle b = intent.getExtras();
-            if(b!=null)
-            pushNotificationModel = b.getParcelable(Constants.PUSH_MODEL);
+            if (b != null)
+                pushNotificationModel = b.getParcelable(Constants.PUSH_MODEL);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -77,15 +136,15 @@ public class SyncUserInfoService extends IntentService implements UpdateListener
             case AppConstants.SYNC_USER_INFO_REQUEST:
                 try {
 
-                    UserResponse responseData = new Gson().fromJson(jsonString, UserResponse.class);
-                    if (responseData.getResponseCode() == 200) {
-                        // save in db
-//                        saveDatainDB(responseData);
-                        new SaveUserInfoinDB().execute(responseData);
-
-                    } else if (responseData.getResponseCode() == 400) {
-                        Log.e(TAG, "response failed sync Userinfo");
-                    }
+//                    UserResponse responseData = new Gson().fromJson(jsonString, UserResponse.class);
+//                    if (responseData.getResponseCode() == 200) {
+//                        // save in db
+////                        saveDatainDB(responseData);
+//                        new SaveUserInfoinDB().execute(responseData);
+//
+//                    } else if (responseData.getResponseCode() == 400) {
+//                        Log.e(TAG, "response failed sync Userinfo");
+//                    }
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -107,107 +166,109 @@ public class SyncUserInfoService extends IntentService implements UpdateListener
         return builder.toString();
     }
 
-    public void saveDatainDB(UserResponse model) {
+//    public void saveDatainDB(UserDetailResponse model) {
+//
+//        // saving adult data
+//        TableAdult adultTable = new TableAdult((BaseApplication) getApplicationContext());
+//        adultTable.deleteAll();
+//        try {
+//
+//            adultTable.beginTransaction();
+//            for (UserModel.AdultsInfo user : model.getResult().getData().getAdult()) {
+//
+//                adultTable.insertData(user.getUser());
+//            }
+//            adultTable.setTransactionSuccessful();
+//        }
+//        catch (Exception e)
+//        {
+//
+//            Log.e("adult table",e.getMessage());
+//        }
+//        finally {
+//            adultTable.endTransaction();
+//        }
+//
+//        // saving child data
+//        TableKids kidsTable = new TableKids((BaseApplication) getApplicationContext());
+//        kidsTable.deleteAll();
+//        try {
+//            kidsTable.beginTransaction();
+//            for (KidsInfo kids : model.getResult().getData().getKidsInformation()) {
+//
+//                kidsTable.insertData(kids);
+//
+//            }
+//            kidsTable.setTransactionSuccessful();
+//        } finally {
+//            kidsTable.endTransaction();
+//        }
+//
+//        // saving family
+//
+//        TableFamily familyTable = new TableFamily((BaseApplication) getApplicationContext());
+//        familyTable.deleteAll();
+//        try {
+//            familyTable.insertData(model.getResult().getData().getFamily());
+//
+//        } catch (Exception e) {
+//            e.getMessage();
+//        }
+//
+//        // user table
+//        UserTable userTable = new UserTable((BaseApplication) getApplicationContext());
+//        userTable.deleteAll();
+//        userTable.insertData(model);
+//        // for profile image
+//        UserTable table = new UserTable(BaseApplication.getInstance());
+//        if (table.getRowsCount() > 0) {
+//
+//            try {
+//                String profileimg = table.getAllUserData().getProfile().getProfile_image();
+//                if (!StringUtils.isNullOrEmpty(profileimg)) {
+//                    SharedPrefUtils.setProfileImgUrl(this, profileimg);
+//
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        // handling notification
+//
+//        if (pushNotificationModel != null) {
+//
+//            Bitmap icon = BitmapFactory.decodeResource(getResources(),
+//                    R.drawable.ic_launcher);
+//
+//            int requestID = (int) System.currentTimeMillis();
+//
+//            String message = pushNotificationModel.getMessage_id();
+//            String title = pushNotificationModel.getTitle();
+//            NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+//
+//            Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
+//            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            intent.putExtra("push", true);
+//            intent.putExtra(AppConstants.NOTIFICATION_ID, requestID);
+//
+//            PendingIntent contentIntent = PendingIntent.getActivity(this, getUniqueRequestCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setLargeIcon(icon).setSmallIcon(R.drawable.iconnotify).setContentTitle(title).setStyle(new NotificationCompat.BigTextStyle().bigText(message)).setContentText(message);
+//            mBuilder.setDefaults(NotificationCompat.DEFAULT_ALL);
+//            mBuilder.setAutoCancel(true);
+//            mBuilder.setContentIntent(contentIntent);
+//            mNotificationManager.notify(requestID, mBuilder.build());
+//        }
+//
+//    }
 
-        // saving adult data
-        TableAdult adultTable = new TableAdult((BaseApplication) getApplicationContext());
-        adultTable.deleteAll();
-        try {
-
-            adultTable.beginTransaction();
-            for (UserModel.AdultsInfo user : model.getResult().getData().getAdult()) {
-
-                adultTable.insertData(user.getUser());
-            }
-            adultTable.setTransactionSuccessful();
-        }
-        catch (Exception e)
-        {
-
-            Log.e("adult table",e.getMessage());
-        }
-        finally {
-            adultTable.endTransaction();
-        }
-
-        // saving child data
-        TableKids kidsTable = new TableKids((BaseApplication) getApplicationContext());
-        kidsTable.deleteAll();
-        try {
-            kidsTable.beginTransaction();
-            for (KidsInfo kids : model.getResult().getData().getKidsInformation()) {
-
-                kidsTable.insertData(kids);
-
-            }
-            kidsTable.setTransactionSuccessful();
-        } finally {
-            kidsTable.endTransaction();
-        }
-
-        // saving family
-
-        TableFamily familyTable = new TableFamily((BaseApplication) getApplicationContext());
-        familyTable.deleteAll();
-        try {
-            familyTable.insertData(model.getResult().getData().getFamily());
-
-        } catch (Exception e) {
-            e.getMessage();
-        }
-
-        // user table
-        UserTable userTable = new UserTable((BaseApplication) getApplicationContext());
-        userTable.deleteAll();
-        userTable.insertData(model);
-        // for profile image
-        UserTable table = new UserTable(BaseApplication.getInstance());
-        if (table.getRowsCount() > 0) {
-
-            try {
-                String profileimg = table.getAllUserData().getProfile().getProfile_image();
-                if (!StringUtils.isNullOrEmpty(profileimg)) {
-                    SharedPrefUtils.setProfileImgUrl(this, profileimg);
-
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        // handling notification
-
-        if (pushNotificationModel != null) {
-
-           Bitmap icon = BitmapFactory.decodeResource(getResources(),
-                    R.drawable.ic_launcher);
-
-            int requestID = (int) System.currentTimeMillis();
-
-            String message = pushNotificationModel.getMessage_id();
-            String title = pushNotificationModel.getTitle();
-            NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-
-            Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra("push", true);
-            intent.putExtra(AppConstants.NOTIFICATION_ID, requestID);
-
-            PendingIntent contentIntent = PendingIntent.getActivity(this, getUniqueRequestCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setLargeIcon(icon).setSmallIcon(R.drawable.iconnotify).setContentTitle(title).setStyle(new NotificationCompat.BigTextStyle().bigText(message)).setContentText(message);
-            mBuilder.setDefaults(NotificationCompat.DEFAULT_ALL);
-            mBuilder.setAutoCancel(true);
-            mBuilder.setContentIntent(contentIntent);
-            mNotificationManager.notify(requestID, mBuilder.build());
-        }
-
-    }
-    private int getUniqueRequestCode(){
+    private int getUniqueRequestCode() {
         Random randomGenerator = new Random();
         return randomGenerator.nextInt(1000);
     }
-    public class SaveUserInfoinDB extends AsyncTask<UserResponse, Void, Void> {
+
+    public class SaveUserInfoinDB extends AsyncTask<UserDetailResponse, Void, Void> {
 
         @Override
         protected void onPreExecute() {
@@ -216,9 +277,11 @@ public class SyncUserInfoService extends IntentService implements UpdateListener
         }
 
         @Override
-        protected Void doInBackground(UserResponse... userResponses) {
+        protected Void doInBackground(UserDetailResponse... userResponses) {
 
-            saveDatainDB(userResponses[0]);
+            if (null != userResponses[0].getData().get(0).getKids()) {
+                saveKidsInformation(userResponses[0].getData().get(0).getKids());
+            }
             return null;
         }
 
@@ -229,5 +292,41 @@ public class SyncUserInfoService extends IntentService implements UpdateListener
 
         }
 
+    }
+
+    private void saveKidsInformation(ArrayList<KidsModel> kidsList) {
+
+        ArrayList<KidsInfo> kidsInfoArrayList = new ArrayList<>();
+
+        for (KidsModel kid : kidsList) {
+            KidsInfo kidsInfo = new KidsInfo();
+            kidsInfo.setName(kid.getName());
+            kidsInfo.setDate_of_birth(convertTime(kid.getBirthDay()));
+            kidsInfo.setColor_code(kid.getColorCode());
+            kidsInfo.setGender(kid.getGender());
+
+            kidsInfoArrayList.add(kidsInfo);
+        }
+
+        // saving child data
+        TableKids kidsTable = new TableKids((BaseApplication) getApplicationContext());
+        kidsTable.deleteAll();
+        try {
+            kidsTable.beginTransaction();
+            for (KidsInfo kids : kidsInfoArrayList) {
+
+                kidsTable.insertData(kids);
+
+            }
+            kidsTable.setTransactionSuccessful();
+        } finally {
+            kidsTable.endTransaction();
+        }
+    }
+
+    public String convertTime(String time) {
+        Date date = new Date(Long.parseLong(time));
+        Format format = new SimpleDateFormat("dd-MM-yyyy");
+        return format.format(date);
     }
 }

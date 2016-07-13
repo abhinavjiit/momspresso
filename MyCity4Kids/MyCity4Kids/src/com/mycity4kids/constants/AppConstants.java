@@ -383,4 +383,10 @@ public class AppConstants {
     public static final String FROM_ACTIVITY = "fromActivity";
     public static final String ACTIVITY_LOGIN = "ActivityLogin";
     public static final String SPLASH_ACTIVITY = "SplashActivity";
+
+    public static final String SORT_TYPE_BOOKMARK = "bookmark";
+    public static final String SERVICE_TYPE_ARTICLE = "v1/articles/";
+    public static final String SEPARATOR_BACKSLASH = "/";
+
+    public static final String CATEGORIES_JSON_FILE = "categories.json";
 }

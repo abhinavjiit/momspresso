@@ -174,7 +174,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
-                Log.d("Exception", Log.getStackTraceString(e));
+                Log.d("MC4KException", Log.getStackTraceString(e));
                 showToast(getString(R.string.went_wrong));
             }
         }
@@ -182,7 +182,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         @Override
         public void onFailure(Call<CommonParentingResponse> call, Throwable t) {
             Crashlytics.logException(t);
-            Log.d("Exception", Log.getStackTraceString(t));
+            Log.d("MC4KException", Log.getStackTraceString(t));
             showToast(getString(R.string.went_wrong));
         }
     };

@@ -259,47 +259,51 @@ public class FragmentEditorsPick extends BaseFragment implements SwipeRefreshLay
 
     private void getArticleResponse(CommonParentingResponse responseData) {
         //	parentingResponse = responseData ;
-        ArrayList<CommonParentingList> dataList = responseData.getResult().getData().getData();
+        try {
+            ArrayList<CommonParentingList> dataList = responseData.getResult().getData().getData();
 
-        if (dataList.size() == 0) {
-            isLastPageReached = false;
-            if (null != articleDataModelsNew && !articleDataModelsNew.isEmpty()) {
-                //No more next results for search from pagination
+            if (dataList.size() == 0) {
+                isLastPageReached = false;
+                if (null != articleDataModelsNew && !articleDataModelsNew.isEmpty()) {
+                    //No more next results for search from pagination
 
-            } else {
-                // No results for search
-                articleDataModelsNew = dataList;
-                articlesListingAdapter.setNewListData(dataList);
-                articlesListingAdapter.notifyDataSetChanged();
-                noBlogsTextView.setVisibility(View.VISIBLE);
-                noBlogsTextView.setText("No articles found");
-            }
-            //((DashboardActivity) getActivity()).showToast(responseData.getResult().getMessage());
-        } else {
-            noBlogsTextView.setVisibility(View.GONE);
-            if (nextPageNumber == 1) {
-                articleDataModelsNew = dataList;
-            } else {
-
-                //cache refresh request response and response from pagination may overlap causing duplication
-                // to prevent check the page number in response
-                //-- open article listing and immediately scroll to next page to reproduce.
-                if (responseData.getResult().getData().getPageNumber() < nextPageNumber) {
-                    //Response from cache refresh request. Update the dataset and refresh list
-                    int articleNumber = (responseData.getResult().getData().getPageNumber() - 1) * 15;
-                    for (int i = 0; i < dataList.size(); i++) {
-                        articleDataModelsNew.set(articleNumber + i, dataList.get(i));
-                    }
-                    articlesListingAdapter.setNewListData(articleDataModelsNew);
-                    articlesListingAdapter.notifyDataSetChanged();
-                    return;
                 } else {
-                    articleDataModelsNew.addAll(dataList);
+                    // No results for search
+                    articleDataModelsNew = dataList;
+                    articlesListingAdapter.setNewListData(dataList);
+                    articlesListingAdapter.notifyDataSetChanged();
+                    noBlogsTextView.setVisibility(View.VISIBLE);
+                    noBlogsTextView.setText("No articles found");
                 }
+                //((DashboardActivity) getActivity()).showToast(responseData.getResult().getMessage());
+            } else {
+                noBlogsTextView.setVisibility(View.GONE);
+                if (nextPageNumber == 1) {
+                    articleDataModelsNew = dataList;
+                } else {
+
+                    //cache refresh request response and response from pagination may overlap causing duplication
+                    // to prevent check the page number in response
+                    //-- open article listing and immediately scroll to next page to reproduce.
+                    if (responseData.getResult().getData().getPageNumber() < nextPageNumber) {
+                        //Response from cache refresh request. Update the dataset and refresh list
+                        int articleNumber = (responseData.getResult().getData().getPageNumber() - 1) * 10;
+                        for (int i = 0; i < dataList.size(); i++) {
+                            articleDataModelsNew.set(articleNumber + i, dataList.get(i));
+                        }
+                        articlesListingAdapter.setNewListData(articleDataModelsNew);
+                        articlesListingAdapter.notifyDataSetChanged();
+                        return;
+                    } else {
+                        articleDataModelsNew.addAll(dataList);
+                    }
+                }
+                articlesListingAdapter.setNewListData(articleDataModelsNew);
+                nextPageNumber = nextPageNumber + 1;
+                articlesListingAdapter.notifyDataSetChanged();
             }
-            articlesListingAdapter.setNewListData(articleDataModelsNew);
-            nextPageNumber = nextPageNumber + 1;
-            articlesListingAdapter.notifyDataSetChanged();
+        } catch (Exception ex) {
+            removeVolleyCache();
         }
     }
 
@@ -324,6 +328,19 @@ public class FragmentEditorsPick extends BaseFragment implements SwipeRefreshLay
             cacheKey = cacheKey.replace("&page=" + cachePageNumber, "&page=" + (cachePageNumber + 1));
             cachePageNumber++;
         }
+
+//        int cacheFrom = 1;
+//        int cacheTo = 15;
+//
+//        String baseCacheKey = Request.Method.GET + ":" + AppConstants.PHOENIX_ARTICLE_STAGING_URL + AppConstants.SERVICE_TYPE_ARTICLE + sortType +
+//                AppConstants.SEPARATOR_BACKSLASH;
+//        String cachedPage = cacheFrom + AppConstants.SEPARATOR_BACKSLASH + cacheTo;
+//        while (null != BaseApplication.getInstance().getRequestQueue().getCache().get(baseCacheKey + cachedPage)) {
+//            BaseApplication.getInstance().getRequestQueue().getCache().remove(baseCacheKey + cachedPage);
+//            cacheFrom = cacheFrom + 15;
+//            cacheTo = cacheTo + 15;
+//            cachedPage = cacheFrom + AppConstants.SEPARATOR_BACKSLASH + cacheTo;
+//        }
 
     }
 }

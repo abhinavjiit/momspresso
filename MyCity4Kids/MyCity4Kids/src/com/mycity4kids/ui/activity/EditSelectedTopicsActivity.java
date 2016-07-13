@@ -18,6 +18,7 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.constants.Constants;
 import com.mycity4kids.editor.ArticleImageTagUploadActivity;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
@@ -205,63 +206,63 @@ public class EditSelectedTopicsActivity extends BaseActivity {
             }
 
             TopicsResponse responseData = (TopicsResponse) response.body();
-            if (responseData.getResponseCode() == 200) {
+            if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                 nextButton.setVisibility(View.VISIBLE);
 
                 allTopicsMap = new HashMap<Topics, List<Topics>>();
                 allTopicList = new ArrayList<>();
 
                 //Prepare structure for multi-expandable listview.
-                for (int i = 0; i < responseData.getResult().getData().size(); i++) {
+                for (int i = 0; i < responseData.getData().size(); i++) {
                     ArrayList<Topics> tempUpList = new ArrayList<>();
 
                     //Set Subcategories selected for choosen tags
-                    for (int j = 0; j < responseData.getResult().getData().get(i).getChild().size(); j++) {
+                    for (int j = 0; j < responseData.getData().get(i).getChild().size(); j++) {
                         ArrayList<Topics> tempList = new ArrayList<>();
-                        if (responseData.getResult().getData().get(i).getChild().get(j).getChild().size() == 0) {
+                        if (responseData.getData().get(i).getChild().get(j).getChild().size() == 0) {
                             for (int l = 0; l < selectedTopicsIdList.size(); l++) {
-                                if (selectedTopicsIdList.get(l).equals(responseData.getResult().getData().get(i).getChild().get(j).getId())) {
-                                    Log.d("Change SUB to SELECTED ", "" + responseData.getResult().getData().get(i).getChild().get(j).getTitle());
-                                    responseData.getResult().getData().get(i).getChild().get(j).setIsSelected(true);
-                                    selectedTopics.add(responseData.getResult().getData().get(i).getChild().get(j));
+                                if (selectedTopicsIdList.get(l).equals(responseData.getData().get(i).getChild().get(j).getId())) {
+                                    Log.d("Change SUB to SELECTED ", "" + responseData.getData().get(i).getChild().get(j).getTitle());
+                                    responseData.getData().get(i).getChild().get(j).setIsSelected(true);
+                                    selectedTopics.add(responseData.getData().get(i).getChild().get(j));
                                 }
                             }
                         }
 
                         //Set Subcategories-children selected for choosen tags
-                        for (int k = 0; k < responseData.getResult().getData().get(i).getChild().get(j).getChild().size(); k++) {
+                        for (int k = 0; k < responseData.getData().get(i).getChild().get(j).getChild().size(); k++) {
                             for (int l = 0; l < selectedTopicsIdList.size(); l++) {
-                                if (selectedTopicsIdList.get(l).equals(responseData.getResult().getData().get(i).getChild().get(j).getChild().get(k).getId())) {
-                                    Log.d("Change to SELECTED ", "" + responseData.getResult().getData().get(i).getChild().get(j).getChild().get(k).getTitle());
-                                    responseData.getResult().getData().get(i).getChild().get(j).getChild().get(k).setIsSelected(true);
-                                    selectedTopics.add(responseData.getResult().getData().get(i).getChild().get(j).getChild().get(k));
+                                if (selectedTopicsIdList.get(l).equals(responseData.getData().get(i).getChild().get(j).getChild().get(k).getId())) {
+                                    Log.d("Change to SELECTED ", "" + responseData.getData().get(i).getChild().get(j).getChild().get(k).getTitle());
+                                    responseData.getData().get(i).getChild().get(j).getChild().get(k).setIsSelected(true);
+                                    selectedTopics.add(responseData.getData().get(i).getChild().get(j).getChild().get(k));
                                 }
                             }
-                            responseData.getResult().getData().get(i).getChild().get(j).getChild().get(k)
-                                    .setParentId(responseData.getResult().getData().get(i).getId());
-                            responseData.getResult().getData().get(i).getChild().get(j).getChild().get(k)
-                                    .setParentName(responseData.getResult().getData().get(i).getTitle());
-                            tempList.add(responseData.getResult().getData().get(i).getChild().get(j).getChild().get(k));
+                            responseData.getData().get(i).getChild().get(j).getChild().get(k)
+                                    .setParentId(responseData.getData().get(i).getId());
+                            responseData.getData().get(i).getChild().get(j).getChild().get(k)
+                                    .setParentName(responseData.getData().get(i).getTitle());
+                            tempList.add(responseData.getData().get(i).getChild().get(j).getChild().get(k));
                         }
 
-                        responseData.getResult().getData().get(i).getChild().get(j).setChild(tempList);
+                        responseData.getData().get(i).getChild().get(j).setChild(tempList);
                     }
 
-                    for (int k = 0; k < responseData.getResult().getData().get(i).getChild().size(); k++) {
-                        responseData.getResult().getData().get(i).getChild().get(k)
-                                .setParentId(responseData.getResult().getData().get(i).getId());
-                        responseData.getResult().getData().get(i).getChild().get(k)
-                                .setParentName(responseData.getResult().getData().get(i).getTitle());
-                        tempUpList.add(responseData.getResult().getData().get(i).getChild().get(k));
+                    for (int k = 0; k < responseData.getData().get(i).getChild().size(); k++) {
+                        responseData.getData().get(i).getChild().get(k)
+                                .setParentId(responseData.getData().get(i).getId());
+                        responseData.getData().get(i).getChild().get(k)
+                                .setParentName(responseData.getData().get(i).getTitle());
+                        tempUpList.add(responseData.getData().get(i).getChild().get(k));
                     }
 
-                    allTopicList.add(responseData.getResult().getData().get(i));
-                    allTopicsMap.put(responseData.getResult().getData().get(i),
+                    allTopicList.add(responseData.getData().get(i));
+                    allTopicsMap.put(responseData.getData().get(i),
                             tempUpList);
                 }
                 createSelectedTagsView();
 
-            } else if (responseData.getResponseCode() == 400) {
+            } else {
                 showToast("Something went wrong from server");
             }
         }
@@ -271,7 +272,7 @@ public class EditSelectedTopicsActivity extends BaseActivity {
             showToast(getString(R.string.went_wrong));
             progressBar.setVisibility(View.GONE);
             Crashlytics.logException(t);
-            Log.d("Exception", Log.getStackTraceString(t));
+            Log.d("MC4KException", Log.getStackTraceString(t));
         }
     };
 

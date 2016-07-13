@@ -2,7 +2,7 @@ package com.mycity4kids.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -20,20 +21,16 @@ import com.kelltontech.utils.StringUtils;
 import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
-import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.controller.ParentingStopController;
 import com.mycity4kids.enums.ParentingFilterType;
 import com.mycity4kids.models.parentingstop.CommonParentingList;
-import com.mycity4kids.models.parentingstop.CommonParentingResponse;
-import com.mycity4kids.models.parentingstop.ParentingRequest;
-import com.mycity4kids.newmodels.BloggerDashboardModel;
-import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.models.response.ArticleListingResponse;
+import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
 import com.mycity4kids.ui.activity.BloggerDashboardActivity;
 import com.mycity4kids.ui.adapter.ArticlesListingAdapter;
-import com.mycity4kids.ui.adapter.BloggerDashboardPagerAdapter;
+import com.mycity4kids.ui.adapter.NewArticlesListingAdapter;
 
 import java.util.ArrayList;
 
@@ -45,18 +42,18 @@ import retrofit2.Retrofit;
  * Created by hemant on 18/3/16.
  */
 public class BookmarkedBlogsListTabFragment extends BaseFragment {
-    ArticlesListingAdapter articlesListingAdapter;
+    NewArticlesListingAdapter articlesListingAdapter;
     ListView listView;
-    ArrayList<CommonParentingList> articleDataModelsNew;
+    ArrayList<ArticleListingResult> articleDataModelsNew;
 
-    String sortType;
     private RelativeLayout mLodingView;
     private TextView noBlogsTextView;
 
-    private int totalPageCount = 3;
-    private int nextPageNumber = 1;
+    //    private int nextPageNumber = 1;
+    private boolean isLastPageReached = true;
     private boolean isReuqestRunning = false;
-
+    private int from = 1;
+    private int to = 15;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -75,10 +72,12 @@ public class BookmarkedBlogsListTabFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
 
-        nextPageNumber=1;
-        hitBookmarkedArticleListingAPI(nextPageNumber);
+        from = 1;
+        to = 15;
+//        nextPageNumber=1;
+        hitBookmarkedArticleListingAPI();
 
-        articlesListingAdapter = new ArticlesListingAdapter(getActivity(), true);
+        articlesListingAdapter = new NewArticlesListingAdapter(getActivity(), true);
         articlesListingAdapter.setNewListData(articleDataModelsNew);
         listView.setAdapter(articlesListingAdapter);
         articlesListingAdapter.notifyDataSetChanged();
@@ -92,9 +91,9 @@ public class BookmarkedBlogsListTabFragment extends BaseFragment {
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
                 boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
-                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && (nextPageNumber < 2 || nextPageNumber <= totalPageCount)) {
+                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && isLastPageReached) {
                     mLodingView.setVisibility(View.VISIBLE);
-                    hitBookmarkedArticleListingAPI(nextPageNumber);
+                    hitBookmarkedArticleListingAPI();
                     isReuqestRunning = true;
                 }
             }
@@ -123,74 +122,50 @@ public class BookmarkedBlogsListTabFragment extends BaseFragment {
 
     @Override
     protected void updateUi(Response response) {
-
-        CommonParentingResponse responseData;
-        if (response == null) {
-            ((BloggerDashboardActivity) getActivity()).showToast("Something went wrong from server");
-            removeProgressDialog();
-            mLodingView.setVisibility(View.GONE);
-            return;
-        }
-
-        switch (response.getDataType()) {
-            case AppConstants.BOOKMARKED_ARTICLE_LIST_REQUEST:
-        /*        responseData = (CommonParentingResponse) response.getResponseObject();
-                if (responseData.getResponseCode() == 200) {
-
-                    processBookmarkResponse(responseData);
-
-                } else if (responseData.getResponseCode() == 400) {
-                    String message = responseData.getResult().getMessage();
-                    if (!StringUtils.isNullOrEmpty(message)) {
-                        ToastUtils.showToast(getActivity(), message);
-                    } else {
-                        ToastUtils.showToast(getActivity(), getString(R.string.went_wrong));
-                    }
-                }
-
-                isReuqestRunning = false;
-                mLodingView.setVisibility(View.GONE);*/
-                break;
-
-            default:
-                break;
-        }
     }
 
-    private void processBookmarkResponse(CommonParentingResponse responseData) {
+    private void processBookmarkResponse(ArticleListingResponse responseData) {
 
-        ArrayList<CommonParentingList> dataList = responseData.getResult().getData().getData();
+        //	parentingResponse = responseData ;
+        ArrayList<ArticleListingResult> dataList = responseData.getData().getResult();
 
         if (dataList.size() == 0) {
-            articleDataModelsNew = dataList;
-            articlesListingAdapter.setNewListData(articleDataModelsNew);
-            articlesListingAdapter.notifyDataSetChanged();
-            noBlogsTextView.setVisibility(View.VISIBLE);
-            //((DashboardActivity) getActivity()).showToast(responseData.getResult().getMessage());
+
+            isLastPageReached = false;
+            if (null != articleDataModelsNew && !articleDataModelsNew.isEmpty()) {
+                //No more next results for search from pagination
+
+            } else {
+                // No results for search
+                articleDataModelsNew = dataList;
+                articlesListingAdapter.setNewListData(dataList);
+                articlesListingAdapter.notifyDataSetChanged();
+                noBlogsTextView.setVisibility(View.VISIBLE);
+                noBlogsTextView.setText("No articles found");
+            }
+
+//            articleDataModelsNew = dataList;
+//            articlesListingAdapter.setNewListData(articleDataModelsNew);
+//            articlesListingAdapter.notifyDataSetChanged();
+//            noBlogsTextView.setVisibility(View.VISIBLE);
+//            noBlogsTextView.setText("No articles found");
         } else {
             noBlogsTextView.setVisibility(View.GONE);
-            totalPageCount = responseData.getResult().getData().getPage_count();
-            if (nextPageNumber == 1) {
+//            totalPageCount = responseData.getResult().getData().getPage_count();
+            if (from == 1) {
                 articleDataModelsNew = dataList;
             } else {
                 articleDataModelsNew.addAll(dataList);
             }
             articlesListingAdapter.setNewListData(articleDataModelsNew);
-            nextPageNumber = nextPageNumber + 1;
+            from = from + 15;
+            to = to + 15;
             articlesListingAdapter.notifyDataSetChanged();
         }
 
     }
 
-    private void hitBookmarkedArticleListingAPI(int page) {
-        /*ParentingRequest _parentingModel = new ParentingRequest();
-        _parentingModel.setSoty_by("bookmark");
-
-        _parentingModel.setCity_id(SharedPrefUtils.getCurrentCityModel(getActivity()).getId());
-        _parentingModel.setPage("" + page);
-        ParentingStopController _controller = new ParentingStopController(getActivity(), this);
-//        mIsRequestRunning = true;
-        _controller.getData(AppConstants.BOOKMARKED_ARTICLE_LIST_REQUEST, _parentingModel);*/
+    private void hitBookmarkedArticleListingAPI() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         // prepare call in Retrofit 2.0
         BloggerDashboardAPI bookmarkedList = retrofit.create(BloggerDashboardAPI.class);
@@ -199,46 +174,42 @@ public class BookmarkedBlogsListTabFragment extends BaseFragment {
             ToastUtils.showToast(getActivity(), "");
             return;
         }
-        Call<CommonParentingResponse> call = bookmarkedList.getBookmarkedList("" + SharedPrefUtils.getUserDetailModel(getActivity()).getId(),
-                ""+page );
-
-
+        Call<ArticleListingResponse> call = bookmarkedList.getBookmarkedList(from, to);
         //asynchronous call
-        call.enqueue(new Callback<CommonParentingResponse>() {
-                         @Override
-                         public void onResponse(Call<CommonParentingResponse> call, retrofit2.Response<CommonParentingResponse> response) {
-                             int statusCode = response.code();
-
-                             CommonParentingResponse responseData = (CommonParentingResponse) response.body();
-
-
-
-                             if (responseData.getResponseCode() == 200) {
-
-                                 processBookmarkResponse(responseData);
-
-                             } else if (responseData.getResponseCode() == 400) {
-                                 String message = responseData.getResult().getMessage();
-                                 if (!StringUtils.isNullOrEmpty(message)) {
-                                     ToastUtils.showToast(getActivity(), message);
-                                 } else {
-                                     ToastUtils.showToast(getActivity(), getString(R.string.went_wrong));
-                                 }
-                             }
-
-                             isReuqestRunning = false;
-                             mLodingView.setVisibility(View.GONE);
-
-                         }
-
-
-                         @Override
-                         public void onFailure(Call<CommonParentingResponse> call, Throwable t) {
-
-                         }
-                     }
-        );
+        call.enqueue(mBookmarkListingResponseReceiver);
 
     }
+
+    Callback<ArticleListingResponse> mBookmarkListingResponseReceiver = new Callback<ArticleListingResponse>() {
+        @Override
+        public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
+            try {
+                ArticleListingResponse responseData = (ArticleListingResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    processBookmarkResponse(responseData);
+                } else {
+                    String message = responseData.getReason();
+                    if (!StringUtils.isNullOrEmpty(message)) {
+                        ToastUtils.showToast(getActivity(), message);
+                    } else {
+                        ToastUtils.showToast(getActivity(), getString(R.string.went_wrong));
+                    }
+                }
+                isReuqestRunning = false;
+                mLodingView.setVisibility(View.GONE);
+            } catch (Exception ex) {
+                Crashlytics.logException(ex);
+                Log.d("MC4kException", Log.getStackTraceString(ex));
+                ((BloggerDashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
+            Log.d("MC4kException", Log.getStackTraceString(t));
+            Crashlytics.logException(t);
+            ((BloggerDashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
+        }
+    };
 
 }

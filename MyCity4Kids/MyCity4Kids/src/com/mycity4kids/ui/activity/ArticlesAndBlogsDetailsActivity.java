@@ -310,7 +310,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             }
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Log.d("Exception", Log.getStackTraceString(e));
+            Log.d("MC4kException", Log.getStackTraceString(e));
         }
 
     }
@@ -702,7 +702,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             Log.i("resultCount", String.valueOf(resultCode));
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Log.d("Exception", Log.getStackTraceString(e));
+            Log.d("MC4kException", Log.getStackTraceString(e));
         }
     }
 
@@ -768,7 +768,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             }
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Log.d("Exception", Log.getStackTraceString(e));
+            Log.d("MC4kException", Log.getStackTraceString(e));
         }
 
 
@@ -905,7 +905,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     Picasso.with(this).load(commentList.getProfile_image()).into(holder.networkImg);
                 } catch (Exception e) {
                     Crashlytics.logException(e);
-                    Log.d("Exception", Log.getStackTraceString(e));
+                    Log.d("MC4kException", Log.getStackTraceString(e));
                     Picasso.with(this).load(R.drawable.default_commentor_img).into(holder.networkImg);
                 }
             } else {
@@ -930,7 +930,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                                 .placeholder(R.drawable.default_commentor_img).into(holder.replierImageView);
                     } catch (Exception e) {
                         Crashlytics.logException(e);
-                        Log.d("Exception", Log.getStackTraceString(e));
+                        Log.d("MC4kException", Log.getStackTraceString(e));
                         Picasso.with(this).load(R.drawable.default_commentor_img).into(holder.replierImageView);
                     }
                 } else {
@@ -961,7 +961,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                         commentFragment.show(fm, "Replies");
                     } catch (Exception e) {
                         Crashlytics.logException(e);
-                        Log.d("Exception", Log.getStackTraceString(e));
+                        Log.d("MC4kException", Log.getStackTraceString(e));
                     }
 //                    onShowPopup(coordinatorLayout);
                     break;
@@ -1067,7 +1067,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                         commentFragment.show(fm, "Replies");
                     } catch (Exception e) {
                         Crashlytics.logException(e);
-                        Log.d("Exception", Log.getStackTraceString(e));
+                        Log.d("MC4kException", Log.getStackTraceString(e));
                     }
 //                    onShowPopup(coordinatorLayout);
                     break;
@@ -1104,7 +1104,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             }
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Log.d("Exception", Log.getStackTraceString(e));
+            Log.d("MC4kException", Log.getStackTraceString(e));
         }
     }
 
@@ -1383,7 +1383,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
-                Log.d("Exception", Log.getStackTraceString(e));
+                Log.d("MC4kException", Log.getStackTraceString(e));
                 {
                     showToast(getString(R.string.went_wrong));
                 }
@@ -1393,7 +1393,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         @Override
         public void onFailure(Call<NewArticleListingResponse> call, Throwable t) {
             Crashlytics.logException(t);
-            Log.d("Exception", Log.getStackTraceString(t));
+            Log.d("MC4kException", Log.getStackTraceString(t));
 
             showToast(getString(R.string.went_wrong));
 
@@ -1456,11 +1456,11 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 }
             } catch (JSONException jsonexception) {
                 Crashlytics.logException(jsonexception);
-                Log.d("Exception", Log.getStackTraceString(jsonexception));
+                Log.d("JSONException", Log.getStackTraceString(jsonexception));
                 showToast("Something went wrong while parsing response from server");
             } catch (Exception ex) {
                 Crashlytics.logException(ex);
-                Log.d("Exception", Log.getStackTraceString(ex));
+                Log.d("MC4kException", Log.getStackTraceString(ex));
                 showToast("Something went wrong from server");
             }
         }

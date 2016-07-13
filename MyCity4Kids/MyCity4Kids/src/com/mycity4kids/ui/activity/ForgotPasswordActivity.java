@@ -89,7 +89,7 @@ public class ForgotPasswordActivity extends BaseActivity {
 //                                .getText().toString().trim());
 
                         LoginRegistrationRequest lr = new LoginRegistrationRequest();
-                        lr.setEmail(SharedPrefUtils.getUserDetailModel(this).getEmail());
+                        lr.setEmail(mEmailId.getText().toString().trim());
 
                         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
                         LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
@@ -124,7 +124,7 @@ public class ForgotPasswordActivity extends BaseActivity {
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
-                Log.d("Exception", Log.getStackTraceString(e));
+                Log.d("MC4KException", Log.getStackTraceString(e));
                 showToast(getString(R.string.went_wrong));
             }
         }

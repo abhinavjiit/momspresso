@@ -471,7 +471,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
 //        builder.append("&page=").append(1);
 //        builder.append("&sort=").append("trending_today");
 //        url = AppConstants.NEW_ALL_ARTICLE_URL + builder.toString().replace(" ", "%20");
-        url = AppConstants.PHOENIX_ARTICLE_STAGING_URL + "v1/articles/recent/" + from + "/" + to;
+        url = AppConstants.PHOENIX_ARTICLE_STAGING_URL + "v1/articles/trending/" + from + "/" + to;
         HttpVolleyRequest.getStringResponse(getActivity(), url, null, mGetArticleListingListener, Request.Method.GET, true);
 
     }
@@ -479,7 +479,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     private OnWebServiceCompleteListener mGetArticleListingListener = new OnWebServiceCompleteListener() {
         @Override
         public void onWebServiceComplete(VolleyBaseResponse response, boolean isError) {
-            progressBar.setVisibility(View.GONE);
+            blogProgessBar.setVisibility(View.GONE);
             Log.d("Response back =", " " + response.getResponseBody());
             if (isError) {
                 if (null != getActivity() && response.getResponseCode() != 999)
@@ -494,7 +494,6 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                     return;
                 }
 
-                blogProgessBar.setVisibility(View.GONE);
                 ArticleListingResponse responseBlogData;
                 try {
                     responseBlogData = new Gson().fromJson(response.getResponseBody(), ArticleListingResponse.class);
@@ -566,7 +565,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                     }
                     baseScroll.smoothScrollTo(0, 0);
 
-                } else if (responseBlogData.getCode() == 400) {
+                } else {
                     ((TextView) view.findViewById(R.id.go_to_blog)).setVisibility(View.VISIBLE);
                     ((TextView) view.findViewById(R.id.no_blog)).setVisibility(View.VISIBLE);
                     //blogListView.setVisibility(View.GONE);
@@ -597,7 +596,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     private OnWebServiceCompleteListener mGetArticleListingListener1 = new OnWebServiceCompleteListener() {
         @Override
         public void onWebServiceComplete(VolleyBaseResponse response, boolean isError) {
-            progressBar.setVisibility(View.GONE);
+            blogProgessBar1.setVisibility(View.GONE);
             Log.d("Response back =", " " + response.getResponseBody());
             if (isError) {
                 if (null != getActivity() && response.getResponseCode() != 999)
@@ -612,7 +611,6 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                     return;
                 }
 
-                blogProgessBar1.setVisibility(View.GONE);
                 CommonParentingResponse responseBlogData;
                 try {
                     responseBlogData = new Gson().fromJson(response.getResponseBody(), CommonParentingResponse.class);

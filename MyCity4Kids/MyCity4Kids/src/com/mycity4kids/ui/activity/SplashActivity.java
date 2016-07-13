@@ -306,7 +306,7 @@ public class SplashActivity extends BaseActivity {
             Intent intent5 = new Intent(this, PushTokenService.class);
             startService(intent5);
 //            startSyncing();
-//            startSyncingUserInfo();
+            startSyncingUserInfo();
 
             Intent intent = new Intent(SplashActivity.this, DashboardActivity.class);
             if (!StringUtils.isNullOrEmpty(_deepLinkURL)) {
@@ -547,7 +547,7 @@ public class SplashActivity extends BaseActivity {
             } catch (Exception e) {
                 showToast(getString(R.string.went_wrong));
                 Crashlytics.logException(e);
-                Log.d("Exception", Log.getStackTraceString(e));
+                Log.d("MC4KException", Log.getStackTraceString(e));
                 //Uncomment to run on phoenix
                 SharedPrefUtils.setAppUgrade(SplashActivity.this, false);
                 isFirstLaunch = 0;

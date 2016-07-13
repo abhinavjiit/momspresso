@@ -292,11 +292,11 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
                     String locality = mLocalitySearchEtxt.getText().toString();
 
                     if (!queryData.equals("")) {
-                        mLocalitySearchEtxt.setText(listItem);
                         Intent intent = new Intent(BusinessListActivityKidsResources.this, BusinessListActivityKidsResources.class);
                         intent.putExtra("query", queryData);
                         if (locality.equals("") || !isContainCommaQuery) {
                             String localityData = (String) parent.getAdapter().getItem(pos);
+                            mLocalitySearchEtxt.setText(listItem);
                             if (!StringUtils.isNullOrEmpty(localityData)) {
 
                                 if (pos != 0) {
@@ -1370,7 +1370,7 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
                 //layout.setBackgroundResource(R.drawable.detail_tab_selector);
                 //	}
                 /*	if(this.tab_host.getTabWidget().getTabCount()==1){
-				layout.setBackgroundResource(R.color.tab_color);*/
+                layout.setBackgroundResource(R.color.tab_color);*/
 
 				/*	}else{
 
@@ -1777,7 +1777,7 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
                 finish();
                 break;
             case R.id.filterres:
-                Utils.pushEvent(BusinessListActivityKidsResources.this, GTMEventType.FILTER_RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "Resources List");
+                Utils.pushEvent(BusinessListActivityKidsResources.this, GTMEventType.FILTER_RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Resources List");
 
                 if (chosen_tab == TabType.Filter) {
                     ((TextView) findViewById(R.id.txt_no_data_business)).setVisibility(View.GONE);

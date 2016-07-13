@@ -434,7 +434,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
                          @Override
                          public void onFailure(Call<ParentingDetailResponse> call, Throwable t) {
                              Crashlytics.logException(t);
-                             Log.d("Exception", Log.getStackTraceString(t));
+                             Log.d("MC4kException", Log.getStackTraceString(t));
                          }
                      }
         );

@@ -1,5 +1,6 @@
 package com.mycity4kids.ui.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -12,26 +13,33 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
-import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
-import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
-import com.mycity4kids.models.parentingstop.CommonParentingResponse;
-import com.mycity4kids.newmodels.bloggermodel.BlogArticleList.NewArticleListingResponse;
-import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.retrofitAPIsInterfaces.AuthorDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.FilterTopicsParentExpandableListAdapter;
 
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -44,11 +52,6 @@ public class TopicsFilterActivity extends BaseActivity {
     private ProgressBar progressBar;
     private Toolbar mToolbar;
 
-    int pageNum;
-
-    /**
-     * Called when the activity is first created.
-     */
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -64,14 +67,8 @@ public class TopicsFilterActivity extends BaseActivity {
         parentExpandableListView = (ExpandableListView) findViewById(R.id.parentExpandableListView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
-        Retrofit retro = BaseApplication.getInstance().getRetrofit();
-        final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
-
         progressBar.setVisibility(View.VISIBLE);
         filterButtton.setVisibility(View.GONE);
-
-        Call<TopicsResponse> call = topicsAPI.getTopicsCategory("" + SharedPrefUtils.getUserDetailModel(this).getId());
-        call.enqueue(getAllTopicsResponseCallback);
 
         filterButtton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,108 +84,188 @@ public class TopicsFilterActivity extends BaseActivity {
             }
         });
 
+        try {
+            FileInputStream fileInputStream = openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+            String fileContent = convertStreamToString(fileInputStream);
+            TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
+            createTopicsData(res);
+        } catch (FileNotFoundException e) {
+            Crashlytics.logException(e);
+            Log.d("FileNotFoundException", Log.getStackTraceString(e));
+            Retrofit retro = BaseApplication.getInstance().createRetrofitInstance("http://52.77.116.39:8086/");
+            final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
+
+            Call<ResponseBody> call = topicsAPI.downloadCategoriesJSON();
+            call.enqueue(downloadCategoriesJSONCallback);
+        }
     }
 
-    Callback<TopicsResponse> getAllTopicsResponseCallback = new Callback<TopicsResponse>() {
+    private void createTopicsData(TopicsResponse responseData) {
+        try {
+            progressBar.setVisibility(View.GONE);
+            if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+
+                filterButtton.setVisibility(View.VISIBLE);
+
+                HashMap<Topics, List<Topics>> topicsMap = new HashMap<Topics, List<Topics>>();
+                ArrayList<Topics> topicList = new ArrayList<>();
+
+                //Prepare structure for multi-expandable listview.
+                for (int i = 0; i < responseData.getData().size(); i++) {
+                    ArrayList<Topics> tempUpList = new ArrayList<>();
+
+                    for (int j = 0; j < responseData.getData().get(i).getChild().size(); j++) {
+                        ArrayList<Topics> tempList = new ArrayList<>();
+
+                        //add All option to select all sub-categories-childrens only if there are more then 0 child in a subcategory.
+                        if (responseData.getData().get(i).getChild().get(j).getChild().size() > 0)
+                            tempList.add(new Topics("-1", "all", false, new ArrayList<Topics>(), responseData.getData().get(i).getId(),
+                                    responseData.getData().get(i).getTitle()));
+
+                        tempList.addAll(responseData.getData().get(i).getChild().get(j).getChild());
+                        responseData.getData().get(i).getChild().get(j).setChild(tempList);
+                    }
+
+                    //add All option to select all sub-categories only if there are more then 0 subcategories.
+                    if (responseData.getData().get(i).getChild().size() > 0)
+                        tempUpList.add(new Topics("-1", "all", false, new ArrayList<Topics>(), responseData.getData().get(i).getId(),
+                                responseData.getData().get(i).getTitle()));
+
+                    tempUpList.addAll(responseData.getData().get(i).getChild());
+                    topicList.add(responseData.getData().get(i));
+                    topicsMap.put(responseData.getData().get(i),
+                            tempUpList);
+                }
+                filterTopicsParentExpandableListAdapter =
+                        new FilterTopicsParentExpandableListAdapter(
+                                TopicsFilterActivity.this,
+                                parentExpandableListView,
+                                topicList, topicsMap
+                        );
+                parentExpandableListView.setAdapter(filterTopicsParentExpandableListAdapter);
+            } else {
+                showToast(getString(R.string.server_error));
+            }
+        } catch (Exception e) {
+            progressBar.setVisibility(View.GONE);
+            Crashlytics.logException(e);
+            Log.d("MC4KException", Log.getStackTraceString(e));
+            showToast(getString(R.string.went_wrong));
+        }
+    }
+
+    Callback<ResponseBody> downloadCategoriesJSONCallback = new Callback<ResponseBody>() {
         @Override
-        public void onResponse(Call<TopicsResponse> call, retrofit2.Response<TopicsResponse> response) {
+        public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
             progressBar.setVisibility(View.GONE);
             if (response == null || response.body() == null) {
                 showToast("Something went wrong from server");
                 return;
             }
             try {
-                TopicsResponse responseData = (TopicsResponse) response.body();
-                if (responseData.getResponseCode() == 200) {
+                String resData = new String(response.body().bytes());
+                JSONObject jsonObject = new JSONObject(resData);
 
-                    filterButtton.setVisibility(View.VISIBLE);
+                Retrofit retro = BaseApplication.getInstance().createRetrofitInstance("http://52.77.116.39:8086/");
+                final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
 
-                    HashMap<Topics, List<Topics>> topicsMap = new HashMap<Topics, List<Topics>>();
-                    ArrayList<Topics> topicList = new ArrayList<>();
+                Call<ResponseBody> caller = topicsAPI.downloadFileWithDynamicUrlSync(jsonObject.getJSONObject("data").getJSONObject("result").getJSONObject("category").getString("location"));
 
-                    //Prepare structure for multi-expandable listview.
-                    for (int i = 0; i < responseData.getResult().getData().size(); i++) {
-                        ArrayList<Topics> tempUpList = new ArrayList<>();
+                caller.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                        boolean writtenToDisk = writeResponseBodyToDisk(response.body());
+                        Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
 
-                        for (int j = 0; j < responseData.getResult().getData().get(i).getChild().size(); j++) {
-                            ArrayList<Topics> tempList = new ArrayList<>();
-
-                            //add All option to select all sub-categories-childrens only if there are more then 0 child in a subcategory.
-                            if (responseData.getResult().getData().get(i).getChild().get(j).getChild().size() > 0)
-                                tempList.add(new Topics("-1", "all", false, new ArrayList<Topics>(), responseData.getResult().getData().get(i).getId(),
-                                        responseData.getResult().getData().get(i).getTitle()));
-
-                            tempList.addAll(responseData.getResult().getData().get(i).getChild().get(j).getChild());
-                            responseData.getResult().getData().get(i).getChild().get(j).setChild(tempList);
+                        try {
+                            FileInputStream fileInputStream = openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                            String fileContent = convertStreamToString(fileInputStream);
+                            TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
+                            createTopicsData(res);
+                        } catch (FileNotFoundException e) {
+                            Crashlytics.logException(e);
+                            Log.d("FileNotFoundException", Log.getStackTraceString(e));
                         }
-
-                        //add All option to select all sub-categories only if there are more then 0 subcategories.
-                        if (responseData.getResult().getData().get(i).getChild().size() > 0)
-                            tempUpList.add(new Topics("-1", "all", false, new ArrayList<Topics>(), responseData.getResult().getData().get(i).getId(),
-                                    responseData.getResult().getData().get(i).getTitle()));
-
-                        tempUpList.addAll(responseData.getResult().getData().get(i).getChild());
-                        topicList.add(responseData.getResult().getData().get(i));
-                        topicsMap.put(responseData.getResult().getData().get(i),
-                                tempUpList);
                     }
-                    filterTopicsParentExpandableListAdapter =
-                            new FilterTopicsParentExpandableListAdapter(
-                                    TopicsFilterActivity.this,
-                                    parentExpandableListView,
-                                    topicList, topicsMap
-                            );
-                    parentExpandableListView.setAdapter(filterTopicsParentExpandableListAdapter);
-                } else if (responseData.getResponseCode() == 400) {
 
-                }
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Crashlytics.logException(t);
+                        Log.d("MC4KException", Log.getStackTraceString(t));
+                    }
+                });
             } catch (Exception e) {
                 progressBar.setVisibility(View.GONE);
                 Crashlytics.logException(e);
-                Log.d("Exception", Log.getStackTraceString(e));
+                Log.d("MC4KException", Log.getStackTraceString(e));
                 showToast(getString(R.string.went_wrong));
             }
         }
 
         @Override
-        public void onFailure(Call<TopicsResponse> call, Throwable t) {
+        public void onFailure(Call<ResponseBody> call, Throwable t) {
             progressBar.setVisibility(View.GONE);
             showToast(getString(R.string.went_wrong));
             Crashlytics.logException(t);
-            Log.d("Exception", Log.getStackTraceString(t));
+            Log.d("MC4KException", Log.getStackTraceString(t));
         }
     };
 
-    Callback<CommonParentingResponse> getArticlesForSelectedCategories = new Callback<CommonParentingResponse>() {
-        @Override
-        public void onResponse(Call<CommonParentingResponse> call, retrofit2.Response<CommonParentingResponse> response) {
-            if (response == null || response.body() == null) {
-                showToast("Something went wrong from server");
-                return;
+    public static String convertStreamToString(InputStream is) {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        StringBuilder sb = new StringBuilder();
+        String line = null;
+        try {
+            while ((line = reader.readLine()) != null) {
+                sb.append(line).append("\n");
             }
+            reader.close();
+        } catch (IOException e) {
+            Crashlytics.logException(e);
+            Log.d("IOException", Log.getStackTraceString(e));
+        }
+        return sb.toString();
+    }
 
+    private boolean writeResponseBodyToDisk(ResponseBody body) {
+        try {
+            InputStream inputStream = null;
+            OutputStream outputStream = null;
             try {
-                CommonParentingResponse responseData = (CommonParentingResponse) response.body();
+                byte[] fileReader = new byte[4096];
+                long fileSize = body.contentLength();
+                long fileSizeDownloaded = 0;
 
-                if (responseData.getResponseCode() == 200) {
+                inputStream = body.byteStream();
+                outputStream = openFileOutput(AppConstants.CATEGORIES_JSON_FILE, Context.MODE_PRIVATE);
 
-                } else if (responseData.getResponseCode() == 400) {
-
+                while (true) {
+                    int read = inputStream.read(fileReader);
+                    if (read == -1) {
+                        break;
+                    }
+                    outputStream.write(fileReader, 0, read);
+                    fileSizeDownloaded += read;
+                    Log.d("TopicsFilterActivity", "file download: " + fileSizeDownloaded + " of " + fileSize);
                 }
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                Log.d("Exception", Log.getStackTraceString(e));
-                showToast(getString(R.string.went_wrong));
-            }
-        }
 
-        @Override
-        public void onFailure(Call<CommonParentingResponse> call, Throwable t) {
-            showToast(getString(R.string.went_wrong));
-            Crashlytics.logException(t);
-            Log.d("Exception", Log.getStackTraceString(t));
+                outputStream.flush();
+                return true;
+            } catch (IOException e) {
+                return false;
+            } finally {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+            }
+        } catch (IOException e) {
+            return false;
         }
-    };
+    }
 
     @Override
     protected void updateUi(Response response) {

@@ -188,32 +188,32 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                              removeProgressDialog();
 
                              try {
-                                 if (responseData.getResponseCode() == 200) {
+                                 if (true) {
                                      removeProgressDialog();
 
-                                     if (responseData.getResult().getData().getRank() == 0) {
-                                         rankingTextView.setVisibility(View.INVISIBLE);
-                                         viewCountTextView.setVisibility(View.INVISIBLE);
-                                         followersViewCount.setVisibility(View.INVISIBLE);
-                                         vSeparator1.setVisibility(View.INVISIBLE);
-                                         vSeparator2.setVisibility(View.INVISIBLE);
-                                     } else {
-                                         rankingTextView.setVisibility(View.VISIBLE);
-                                         viewCountTextView.setVisibility(View.VISIBLE);
-                                         followersViewCount.setVisibility(View.VISIBLE);
-                                         vSeparator1.setVisibility(View.VISIBLE);
-                                         vSeparator2.setVisibility(View.VISIBLE);
-                                         rankingTextView.setText("" + responseData.getResult().getData().getRank());
-                                         viewCountTextView.setText("" + responseData.getResult().getData().getViews());
-                                         followersViewCount.setText("" + responseData.getResult().getData().getFollowers());
-                                     }
+//                                     if (responseData.getResult().getData().getRank() == 0) {
+//                                         rankingTextView.setVisibility(View.INVISIBLE);
+//                                         viewCountTextView.setVisibility(View.INVISIBLE);
+//                                         followersViewCount.setVisibility(View.INVISIBLE);
+//                                         vSeparator1.setVisibility(View.INVISIBLE);
+//                                         vSeparator2.setVisibility(View.INVISIBLE);
+//                                     } else {
+//                                         rankingTextView.setVisibility(View.VISIBLE);
+//                                         viewCountTextView.setVisibility(View.VISIBLE);
+//                                         followersViewCount.setVisibility(View.VISIBLE);
+//                                         vSeparator1.setVisibility(View.VISIBLE);
+//                                         vSeparator2.setVisibility(View.VISIBLE);
+//                                         rankingTextView.setText("" + responseData.getResult().getData().getRank());
+//                                         viewCountTextView.setText("" + responseData.getResult().getData().getViews());
+//                                         followersViewCount.setText("" + responseData.getResult().getData().getFollowers());
+//                                     }
 
-                                     tabLayout.getTabAt(0).setText("Bookmarks (" + responseData.getResult().getData().getBookmarkCount() + ")");
-                                     tabLayout.getTabAt(1).setText("Published (" + responseData.getResult().getData().getArticleCount() + ")");
+                                     tabLayout.getTabAt(0).setText("Bookmarks (" + 1 + ")");
+                                     tabLayout.getTabAt(1).setText("Published (" + 11 + ")");
 
                                      final BloggerDashboardPagerAdapter adapter = new BloggerDashboardPagerAdapter
-                                             (getSupportFragmentManager(), BloggerDashboardActivity.this, responseData.getResult().getData().getBookmarkCount(),
-                                                     responseData.getResult().getData().getArticleCount());
+                                             (getSupportFragmentManager(), BloggerDashboardActivity.this, 11,
+                                                     22);
                                      viewPager.setAdapter(adapter);
                                      viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
                                      tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -243,7 +243,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                              } catch (Exception e) {
                                  removeProgressDialog();
                                  Crashlytics.logException(e);
-                                 Log.d("Exception", Log.getStackTraceString(e));
+                                 Log.d("MC4KException", Log.getStackTraceString(e));
                                  showToast(getString(R.string.went_wrong));
                              }
 

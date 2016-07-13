@@ -621,7 +621,7 @@ public class BlogDetailActivity extends BaseActivity implements View.OnClickList
                     updateNewData(responseData_new);
                 } catch (Exception e) {
                     Crashlytics.logException(e);
-                    Log.d("Exception", Log.getStackTraceString(e));
+                    Log.d("MC4KException", Log.getStackTraceString(e));
                     showToast(getString(R.string.went_wrong));
                     finish();
                 }
@@ -779,7 +779,7 @@ public class BlogDetailActivity extends BaseActivity implements View.OnClickList
                 });
             } catch (Exception e) {
                 Crashlytics.logException(e);
-                Log.d("Exception", Log.getStackTraceString(e));
+                Log.d("MC4KException", Log.getStackTraceString(e));
             }
 
         }

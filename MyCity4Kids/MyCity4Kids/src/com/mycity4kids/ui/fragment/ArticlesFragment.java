@@ -75,7 +75,7 @@ public class ArticlesFragment extends BaseFragment {
             setRetainInstance(true);
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Log.d("Exception", Log.getStackTraceString(e));
+            Log.d("MC4KException", Log.getStackTraceString(e));
         }
 
         tabsPagerAdapter = new TabsPagerAdapter(getChildFragmentManager(), getActivity(), null, getActivity(), searchName);
