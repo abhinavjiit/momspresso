@@ -173,27 +173,27 @@ public class SearchAuthorsTabFragment extends BaseFragment {
         }
     }
 
-    @Override
-    public void setUserVisibleHint(boolean visible) {
-        super.setUserVisibleHint(visible);
-        if (visible && isResumed()) {   // only at fragment screen is resumed
-            fragmentResume = true;
-            fragmentVisible = false;
-            fragmentOnCreated = true;
-            if (!isDataLoadedOnce && !StringUtils.isNullOrEmpty(searchName)) {
-                nextPageNumber = 1;
-                hitBloggerAPIrequest(nextPageNumber);
-                isDataLoadedOnce = true;
-            }
-        } else if (visible) {        // only at fragment onCreated
-            fragmentResume = false;
-            fragmentVisible = true;
-            fragmentOnCreated = true;
-        } else if (!visible && fragmentOnCreated) {// only when you go out of fragment screen
-            fragmentVisible = false;
-            fragmentResume = false;
-        }
-    }
+//    @Override
+//    public void setUserVisibleHint(boolean visible) {
+//        super.setUserVisibleHint(visible);
+//        if (visible && isResumed()) {   // only at fragment screen is resumed
+//            fragmentResume = true;
+//            fragmentVisible = false;
+//            fragmentOnCreated = true;
+//            if (!isDataLoadedOnce && !StringUtils.isNullOrEmpty(searchName)) {
+//                nextPageNumber = 1;
+//                hitBloggerAPIrequest(nextPageNumber);
+//                isDataLoadedOnce = true;
+//            }
+//        } else if (visible) {        // only at fragment onCreated
+//            fragmentResume = false;
+//            fragmentVisible = true;
+//            fragmentOnCreated = true;
+//        } else if (!visible && fragmentOnCreated) {// only when you go out of fragment screen
+//            fragmentVisible = false;
+//            fragmentResume = false;
+//        }
+//    }
 
     private void updateBloggerResponse(ParentingBlogResponse responseData) {
 
@@ -241,10 +241,10 @@ public class SearchAuthorsTabFragment extends BaseFragment {
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
         SearchArticlesAuthorsAPI searchArticlesAuthorsAPI = retro.create(SearchArticlesAuthorsAPI.class);
 
-        Call<ParentingBlogResponse> call = searchArticlesAuthorsAPI.getSearchAuthorsResult(searchName,
-                "author", "" + nextPageNumber);
-
-        call.enqueue(searchAuthorsResponseCallback);
+//        Call<ParentingBlogResponse> call = searchArticlesAuthorsAPI.getSearchAuthorsResult(searchName,
+//                "author", "" + nextPageNumber);
+//
+//        call.enqueue(searchAuthorsResponseCallback);
 
 
 //        showProgressDialog(getString(R.string.please_wait));

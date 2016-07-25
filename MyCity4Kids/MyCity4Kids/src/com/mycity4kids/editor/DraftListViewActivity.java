@@ -203,7 +203,7 @@ public class DraftListViewActivity extends BaseActivity implements View.OnClickL
             showToast(getString(R.string.error_network));
             return;
         }
-        Call<DraftListResponse> call = getDraftListAPI.getDraftsList( AppConstants.STAGING_URL+"v1/articles/"+ SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
+        Call<DraftListResponse> call = getDraftListAPI.getDraftsList( AppConstants.LIVE_URL+"v1/articles/"+ SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
         //asynchronous call
         call.enqueue(new Callback<DraftListResponse>() {
                          @Override
@@ -287,7 +287,7 @@ public class DraftListViewActivity extends BaseActivity implements View.OnClickL
             return;
         }
         Call<DraftResponse> call = articleDraftAPI.deleteDraft(
-                AppConstants.STAGING_URL+"v1/articles/"+draftObject.getId());
+                AppConstants.LIVE_URL+"v1/articles/"+draftObject.getId());
 
 
         //asynchronous call

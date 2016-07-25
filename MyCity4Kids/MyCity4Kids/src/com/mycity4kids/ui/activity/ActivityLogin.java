@@ -560,13 +560,13 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                 UserDetailResponse responseData = (UserDetailResponse) response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     UserInfo model = new UserInfo();
-                    model.setId(responseData.getData().get(0).getId());
-                    model.setDynamoId(responseData.getData().get(0).getDynamoId());
-                    model.setEmail(responseData.getData().get(0).getEmail());
-                    model.setMc4kToken(responseData.getData().get(0).getMc4kToken());
-                    model.setIsValidated(responseData.getData().get(0).getIsValidated());
-                    model.setFirst_name(responseData.getData().get(0).getFirstName() + " " + responseData.getData().get(0).getLastName());
-                    model.setProfilePicUrl(responseData.getData().get(0).getProfilePicUrl());
+                    model.setId(responseData.getData().getResult().getId());
+                    model.setDynamoId(responseData.getData().getResult().getDynamoId());
+                    model.setEmail(responseData.getData().getResult().getEmail());
+                    model.setMc4kToken(responseData.getData().getResult().getMc4kToken());
+                    model.setIsValidated(responseData.getData().getResult().getIsValidated());
+                    model.setFirst_name(responseData.getData().getResult().getFirstName() + " " + responseData.getData().getResult().getLastName());
+                    model.setProfilePicUrl(responseData.getData().getResult().getProfilePicUrl());
                     SharedPrefUtils.setUserDetailModel(ActivityLogin.this, model);
 
                     //facebook login with an account without email
@@ -584,8 +584,8 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                     }
                     //Verified User
                     else {
-                        if (null != responseData.getData().get(0).getKids()) {
-                            saveKidsInformation(responseData.getData().get(0).getKids());
+                        if (null != responseData.getData().getResult().getKids()) {
+                            saveKidsInformation(responseData.getData().getResult().getKids());
                         }
                         Intent intent = new Intent(ActivityLogin.this, PushTokenService.class);
                         startService(intent);

@@ -13,12 +13,12 @@ public class AppConstants {
 
     public static final String DEV_URL = "http://54.169.17.138/";
     public static final String STAGING_URL = "http://52.77.116.39:8080/";
-    public static final String LIVE_URL = "http://webserve.mycity4kids.com/";
+    public static final String LIVE_URL = "http://52.77.116.39/";
 //    public static final String LIVE_URL = "http://54.169.17.138/";
 //    public static final String LIVE_URL = "http://10.42.0.1/";
 //    public static final String LIVE_URL = "http://192.168.1.12/";
 
-    public static final String PHOENIX_ARTICLE_STAGING_URL = "http://52.77.116.39:8082/";
+    public static final String PHOENIX_STAGING_URL = "http://52.77.116.39";
 
     //Enable For Testing
     //public static final String LIVE_URL = SharedPrefUtils.getBaseURL(BaseApplication.getAppContext());
@@ -378,6 +378,11 @@ public class AppConstants {
     public static final String AUTHOR_TYPE_EDITOR = "Editor";
     public static final String AUTHOR_TYPE_EDITORIAL = "Editorial";
     public static final String AUTHOR_TYPE_EXPERT = "Expert";
+    public static final String USER_TYPE_EDITOR = "0";
+    public static final String USER_TYPE_EXPERT = "1";
+    public static final String USER_TYPE_BLOGGER = "2";
+    public static final String USER_TYPE_EDITORIAL = "3";
+
     public static final String Source_Id = "" + 2;
 
     public static final String FROM_ACTIVITY = "fromActivity";
@@ -386,7 +391,11 @@ public class AppConstants {
 
     public static final String SORT_TYPE_BOOKMARK = "bookmark";
     public static final String SERVICE_TYPE_ARTICLE = "v1/articles/";
+    public static final String SERVICE_TYPE_USER = "v1/users/";
     public static final String SEPARATOR_BACKSLASH = "/";
 
     public static final String CATEGORIES_JSON_FILE = "categories.json";
+    public static final String PHOENIX_RELEASE_VERSION = "4.5";
+
+    public static final String PAGINATION_END_VALUE = "NA";
 }

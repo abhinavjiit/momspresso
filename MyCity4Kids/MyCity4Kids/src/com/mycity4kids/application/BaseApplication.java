@@ -175,7 +175,7 @@ public class BaseApplication extends Application {
 
         setInstance(this);
         VolleyLog.setTag("VolleyLogs");
-        createRetrofitInstance(AppConstants.STAGING_URL);
+        createRetrofitInstance(AppConstants.LIVE_URL);
 
         mRequestQueue = Volley.newRequestQueue(getApplicationContext());
 // Initialize comScore Application Tag library
@@ -242,11 +242,6 @@ public class BaseApplication extends Application {
                 HttpUrl originalHttpUrl = original.url();
                 Request.Builder requestBuilder = original.newBuilder();
 
-                if (ConnectivityUtils.isNetworkEnabled(getApplicationContext())) {
-                    original = original.newBuilder().header("Cache-Control", "public, max-age=" + 60).build();
-                } else {
-                    original = original.newBuilder().header("Cache-Control", "public, only-if-cached, max-stale=" + 60 * 60 * 24 * 7).build();
-                }
                 requestBuilder.addHeader("id", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
                 requestBuilder.addHeader("mc4kToken", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
 
@@ -298,14 +293,12 @@ public class BaseApplication extends Application {
         if (BuildConfig.DEBUG) {
             client = new OkHttpClient
                     .Builder()
-                    .cache(new Cache(getCacheDir(), 10 * 1024 * 1024)) // 10 MB
                     .addInterceptor(mainInterceptor)
                     .addInterceptor(logging)
                     .build();
         } else {
             client = new OkHttpClient
                     .Builder()
-                    .cache(new Cache(getCacheDir(), 10 * 1024 * 1024)) // 10 MB
                     .addInterceptor(mainInterceptor)
                     .build();
         }

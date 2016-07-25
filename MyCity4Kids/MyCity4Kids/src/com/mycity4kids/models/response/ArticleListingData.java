@@ -12,6 +12,7 @@ public class ArticleListingData extends BaseData {
 
     private ArrayList<ArticleListingResult> result;
     private String chunks;
+    private String pagination;
 
     public ArrayList<ArticleListingResult> getResult() {
         return result;
@@ -27,5 +28,13 @@ public class ArticleListingData extends BaseData {
 
     public void setChunks(String chunks) {
         this.chunks = chunks;
+    }
+
+    public String getPagination() {
+        return pagination;
+    }
+
+    public void setPagination(String pagination) {
+        this.pagination = pagination;
     }
 }

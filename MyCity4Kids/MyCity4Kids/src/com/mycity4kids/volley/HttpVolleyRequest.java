@@ -123,6 +123,8 @@ public class HttpVolleyRequest {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> mHeaders = new ArrayMap<String, String>();
+                mHeaders.put("id", SharedPrefUtils.getUserDetailModel(context).getDynamoId());
+                mHeaders.put("mc4kToken", SharedPrefUtils.getUserDetailModel(context).getMc4kToken());
                 return mHeaders;
             }
         };

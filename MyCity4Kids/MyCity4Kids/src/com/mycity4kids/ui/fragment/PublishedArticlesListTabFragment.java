@@ -255,8 +255,10 @@ public class PublishedArticlesListTabFragment extends BaseFragment {
         call.enqueue(new Callback<ResponseBody>() {
                          @Override
                          public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-
-
+                             if (response == null || response.body() == null) {
+                                 ((BloggerDashboardActivity) getActivity()).showToast("Something went wrong from server");
+                                 return;
+                             }
                              String responseData = null;
                              try {
                                  responseData = new String(response.body().bytes());
@@ -266,21 +268,12 @@ public class PublishedArticlesListTabFragment extends BaseFragment {
                              JSONObject jsonObject = null;
                              try {
                                  jsonObject = new JSONObject(responseData);
-
                                  JSONArray dataObj = null;
-
                                  dataObj = jsonObject.getJSONObject("result").optJSONArray("data");
-
-
                                  if (null == dataObj) {
-
                                      jsonObject.getJSONObject("result").remove("data");
-
-
                                      jsonObject.getJSONObject("result").put("data", new JSONArray());
-
                                  }
-
                                  responseData = jsonObject.toString();
                              } catch (JSONException e) {
                                  e.printStackTrace();

@@ -23,13 +23,15 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.enums.ParentingFilterType;
 import com.mycity4kids.models.parentingstop.CommonParentingList;
-import com.mycity4kids.models.response.SearchArticleResult;
+import com.mycity4kids.models.response.SearchBlogResult;
 import com.mycity4kids.models.response.SearchResponse;
+import com.mycity4kids.models.response.SearchTopicResult;
 import com.mycity4kids.retrofitAPIsInterfaces.SearchArticlesAuthorsAPI;
 import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
 import com.mycity4kids.ui.activity.SearchArticlesAndAuthorsActivity;
 import com.mycity4kids.ui.adapter.ArticlesListingAdapter;
-import com.mycity4kids.ui.adapter.SearchArticlesListingAdapter;
+import com.mycity4kids.ui.adapter.SearchBlogsListingAdapter;
+import com.mycity4kids.ui.adapter.SearchTopicsListingAdapter;
 
 import java.util.ArrayList;
 
@@ -40,19 +42,22 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant.parmar on 21-04-2016.
  */
-public class SearchArticlesTabFragment extends BaseFragment {
+public class SearchBlogsTabFragment extends BaseFragment {
 
-    SearchArticlesListingAdapter articlesListingAdapter;
-    ArrayList<SearchArticleResult> articleDataModelsNew;
+    SearchBlogsListingAdapter articlesListingAdapter;
+    ArrayList<SearchBlogResult> articleDataModelsNew;
     ListView listView;
     TextView noBlogsTextView;
     String sortType;
     String searchName = "";
     private RelativeLayout mLodingView;
+    private int totalPageCount = 3;
     private int nextPageNumber = 2;
     private boolean isReuqestRunning = false;
     private boolean fragmentResume = false;
     private boolean fragmentVisible = false;
+    private boolean fragmentOnCreated = false;
+    private boolean isDataLoadedOnce = false;
     private ProgressBar progressBar;
     boolean isLastPageReached = true;
     private SwipeRefreshLayout swipe_refresh_layout;
@@ -70,12 +75,12 @@ public class SearchArticlesTabFragment extends BaseFragment {
         swipe_refresh_layout.setEnabled(false);
         view.findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_indefinitely));
 
-        articlesListingAdapter = new SearchArticlesListingAdapter(getActivity());
+        articlesListingAdapter = new SearchBlogsListingAdapter(getActivity());
         listView.setAdapter(articlesListingAdapter);
         if (getArguments() != null) {
             searchName = getArguments().getString(Constants.SEARCH_PARAM);
         }
-        articleDataModelsNew = new ArrayList<SearchArticleResult>();
+        articleDataModelsNew = new ArrayList<SearchBlogResult>();
 
         if (StringUtils.isNullOrEmpty(searchName)) {
 
@@ -83,6 +88,7 @@ public class SearchArticlesTabFragment extends BaseFragment {
             //only when first time fragment is created
             nextPageNumber = 1;
             newSearchTopicArticleListingApi(searchName, sortType);
+            isDataLoadedOnce = true;
         }
 
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -124,6 +130,35 @@ public class SearchArticlesTabFragment extends BaseFragment {
         return view;
     }
 
+    private void newSearchTopicArticleListingApi(String searchName, String sortby) {
+        if (nextPageNumber == 1 && null != progressBar) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+        if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
+            ((SearchArticlesAndAuthorsActivity) getActivity()).showToast("No connectivity available");
+            return;
+        }
+//        mLodingView.setVisibility(View.VISIBLE);
+
+        Retrofit retro = BaseApplication.getInstance().getRetrofit();
+        SearchArticlesAuthorsAPI searchAPI = retro.create(SearchArticlesAuthorsAPI.class);
+        int from = (nextPageNumber - 1) * 15 + 1;
+        Call<SearchResponse> call = searchAPI.getSearchBlogsResult(searchName,
+                "blog", from, from + 15);
+
+        call.enqueue(searchTopicsResponseCallback);
+
+
+//        ParentingRequest _parentingModel = new ParentingRequest();
+//        _parentingModel.setSearchName(searchName);
+//        _parentingModel.setCity_id(SharedPrefUtils.getCurrentCityModel(getActivity()).getId());
+//        _parentingModel.setPage("" + nextPageNumber);
+//
+//        _parentingModel.setSoty_by(sortby);
+//        ParentingStopController _controller = new ParentingStopController(getActivity(), this);
+//        _controller.getData(AppConstants.TOP_PICKS_REQUEST, _parentingModel);
+    }
+
 //    @Override
 //    public void setUserVisibleHint(boolean visible) {
 //        super.setUserVisibleHint(visible);
@@ -153,7 +188,7 @@ public class SearchArticlesTabFragment extends BaseFragment {
 
     private void getArticleResponse(SearchResponse responseData) {
         //	parentingResponse = responseData ;
-        ArrayList<SearchArticleResult> dataList = responseData.getData().getResult().getArticle();
+        ArrayList<SearchBlogResult> dataList = responseData.getData().getResult().getBlog();
 
         if (dataList.size() == 0) {
 
@@ -167,14 +202,9 @@ public class SearchArticlesTabFragment extends BaseFragment {
                 articlesListingAdapter.setListData(dataList);
                 articlesListingAdapter.notifyDataSetChanged();
                 noBlogsTextView.setVisibility(View.VISIBLE);
-                noBlogsTextView.setText("No articles found");
+                noBlogsTextView.setText("No blogs found");
             }
 
-//            articleDataModelsNew = dataList;
-//            articlesListingAdapter.setNewListData(articleDataModelsNew);
-//            articlesListingAdapter.notifyDataSetChanged();
-//            noBlogsTextView.setVisibility(View.VISIBLE);
-//            noBlogsTextView.setText("No articles found");
         } else {
             noBlogsTextView.setVisibility(View.GONE);
 //            totalPageCount = responseData.getResult().getData().getPage_count();
@@ -189,35 +219,6 @@ public class SearchArticlesTabFragment extends BaseFragment {
         }
     }
 
-    private void newSearchTopicArticleListingApi(String searchName, String sortby) {
-        if (nextPageNumber == 1 && null != progressBar) {
-            progressBar.setVisibility(View.VISIBLE);
-        }
-        if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
-            ((SearchArticlesAndAuthorsActivity) getActivity()).showToast("No connectivity available");
-            return;
-        }
-//        mLodingView.setVisibility(View.VISIBLE);
-
-        Retrofit retro = BaseApplication.getInstance().getRetrofit();
-        SearchArticlesAuthorsAPI searchArticlesAuthorsAPI = retro.create(SearchArticlesAuthorsAPI.class);
-        int from = (nextPageNumber - 1) * 15 + 1;
-        Call<SearchResponse> call = searchArticlesAuthorsAPI.getSearchArticlesResult(searchName,
-                "article", from, from + 15);
-
-        call.enqueue(searchArticlesResponseCallback);
-
-
-//        ParentingRequest _parentingModel = new ParentingRequest();
-//        _parentingModel.setSearchName(searchName);
-//        _parentingModel.setCity_id(SharedPrefUtils.getCurrentCityModel(getActivity()).getId());
-//        _parentingModel.setPage("" + nextPageNumber);
-//
-//        _parentingModel.setSoty_by(sortby);
-//        ParentingStopController _controller = new ParentingStopController(getActivity(), this);
-//        _controller.getData(AppConstants.TOP_PICKS_REQUEST, _parentingModel);
-    }
-
     public void refreshAllArticles(String searchText, String sortType) {
         if (null != articleDataModelsNew) {
             articleDataModelsNew.clear();
@@ -225,6 +226,7 @@ public class SearchArticlesTabFragment extends BaseFragment {
         nextPageNumber = 1;
         isLastPageReached = true;
         searchName = searchText;
+        isDataLoadedOnce = true;
         newSearchTopicArticleListingApi(searchName, sortType);
     }
 
@@ -232,11 +234,12 @@ public class SearchArticlesTabFragment extends BaseFragment {
         if (null != articleDataModelsNew) {
             articleDataModelsNew.clear();
         }
+        isDataLoadedOnce = false;
         isLastPageReached = true;
         searchName = searchTxt;
     }
 
-    Callback<SearchResponse> searchArticlesResponseCallback = new Callback<SearchResponse>() {
+    Callback<SearchResponse> searchTopicsResponseCallback = new Callback<SearchResponse>() {
         @Override
         public void onResponse(Call<SearchResponse> call, retrofit2.Response<SearchResponse> response) {
             isReuqestRunning = false;
@@ -268,17 +271,4 @@ public class SearchArticlesTabFragment extends BaseFragment {
         }
     };
 
-//    @Override
-//    public void onRefresh() {
-//        if (StringUtils.isNullOrEmpty(searchName)) {
-//            ((SearchArticlesAndAuthorsActivity) getActivity()).showToast("Please enter search text");
-//            return;
-//        }
-//        if (null != articleDataModelsNew) {
-//            articleDataModelsNew.clear();
-//        }
-//        nextPageNumber = 1;
-//        isLastPageReached = true;
-//        newSearchTopicArticleListingApi(searchName, sortType);
-//    }
 }

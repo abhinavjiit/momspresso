@@ -84,6 +84,7 @@ public class SharedPrefUtils {
 
     private static final String RATE_NOW_FIRST_CHECK = "ratenow_Chk";
 
+    private static final String PHOENIX_FIRST_LAUNCH_FLAG = "phoenixFirstLaunchFlag";
 
     /**
      * this shared preference save current versions for control city,locality,category APIs .
@@ -513,5 +514,17 @@ public class SharedPrefUtils {
     public static String getUserFamilyInvites(Context context) {
         SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         return _sharedPref.getString("userInviteModel", "");
+    }
+
+    public static void setPhoenixFirstLaunch(Context context, boolean flag) {
+        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        _editor.putBoolean(PHOENIX_FIRST_LAUNCH_FLAG, flag);
+        _editor.commit();
+    }
+
+    public static boolean isPhoenixFirstLaunch(Context context) {
+        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return _sharedPref.getBoolean(PHOENIX_FIRST_LAUNCH_FLAG, true);
     }
 }

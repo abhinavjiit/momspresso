@@ -419,7 +419,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
 //                        intent_2.putExtra("from", "draftList");
 //                    }
                     else {
-                        Intent intent_3 = new Intent(EditorPostActivity.this, ArticleImageTagUploadActivity.class);
+                        Intent intent_3 = new Intent(EditorPostActivity.this, AddArticleTopicsActivity.class);
                         intent_3.putExtra("draftItem", draftObject);
                         intent_3.putExtra("from", "editor");
                         startActivity(intent_3);
@@ -519,7 +519,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
         );}else
         {
             Call<DraftResponse> call = articleDraftAPI.updateDraft(
-                    AppConstants.STAGING_URL+"v1/articles/"+draftId1,
+                    AppConstants.LIVE_URL+"v1/articles/"+draftId1,
                     title,
                     body,
                     "0"
@@ -697,7 +697,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                 .addInterceptor(logging)
                 .build();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(AppConstants.STAGING_URL)
+                .baseUrl(AppConstants.LIVE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();

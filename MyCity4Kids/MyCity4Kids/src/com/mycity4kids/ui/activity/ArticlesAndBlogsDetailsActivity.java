@@ -20,9 +20,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -74,7 +72,6 @@ import com.mycity4kids.controller.BookmarkController;
 import com.mycity4kids.controller.CommentController;
 import com.mycity4kids.dbtable.UserTable;
 import com.mycity4kids.enums.ParentingFilterType;
-import com.mycity4kids.fragmentdialog.LoginFragmentDialog;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.OnWebServiceCompleteListener;
@@ -83,17 +80,16 @@ import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.models.parentingdetails.CommentRequest;
 import com.mycity4kids.models.parentingdetails.CommentsData;
 import com.mycity4kids.models.parentingdetails.ImageData;
-import com.mycity4kids.models.parentingdetails.ParentingDetailResponse;
-import com.mycity4kids.models.parentingdetails.ParentingDetailsData;
 import com.mycity4kids.models.parentingstop.ArticleBlogFollowRequest;
 import com.mycity4kids.models.parentingstop.CommonParentingList;
 import com.mycity4kids.models.parentingstop.CommonParentingResponse;
+import com.mycity4kids.models.request.ArticleDetailRequest;
+import com.mycity4kids.models.response.AddCommentResponse;
 import com.mycity4kids.models.response.ArticleDetailData;
 import com.mycity4kids.models.response.ArticleDetailResponse;
 import com.mycity4kids.models.user.UserModel;
 import com.mycity4kids.newmodels.AttendeeModel;
 import com.mycity4kids.newmodels.BlogShareSpouseModel;
-import com.mycity4kids.newmodels.GetCommentsRequestModel;
 import com.mycity4kids.newmodels.VolleyBaseResponse;
 import com.mycity4kids.newmodels.bloggermodel.BlogArticleList.BlogArticleModel;
 import com.mycity4kids.newmodels.bloggermodel.BlogArticleList.NewArticleListingResponse;
@@ -101,7 +97,6 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.AuthorDetailsAPI;
 import com.mycity4kids.ui.CircleTransformation;
-import com.mycity4kids.ui.fragment.ArticlesFragment;
 import com.mycity4kids.ui.fragment.CommentRepliesDialogFragment;
 import com.mycity4kids.ui.fragment.WhoToRemindDialogFragment;
 import com.mycity4kids.volley.HttpVolleyRequest;
@@ -112,13 +107,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * @author deepanker.chaudhary
@@ -177,7 +173,9 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     LinearLayout commLayout;
     CoordinatorLayout coordinatorLayout;
     Bitmap defaultBloggerBitmap, defaultCommentorBitmap;
+    private String bookmarkFlag = "0";
 
+    private String commentURL = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -276,7 +274,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     }
                     int diff = (view.getBottom() - (mScrollView.getHeight() + mScrollView.getScrollY()));
 
-                    if (diff <= 10 && !isLoading && !StringUtils.isNullOrEmpty(commentTypeToFetch)) {
+                    if (diff <= 10 && !isLoading && !StringUtils.isNullOrEmpty(commentURL)) {
                         getMoreComments();
                     }
                 }
@@ -285,10 +283,10 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             Bundle bundle = getIntent().getExtras();
             if (bundle != null) {
                 articleId = bundle.getString(Constants.ARTICLE_ID);
-                if (!ConnectivityUtils.isNetworkEnabled(this)) {
-                    showToast(getString(R.string.error_network));
-                    return;
-                }
+//                if (!ConnectivityUtils.isNetworkEnabled(this)) {
+//                    showToast(getString(R.string.error_network));
+//                    return;
+//                }
                 showProgressDialog(getString(R.string.fetching_data));
                 Retrofit retro = BaseApplication.getInstance().getRetrofit();
                 ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
@@ -301,14 +299,19 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     Log.d("NameNotFoundException", Log.getStackTraceString(e));
                 }
                 versionName = pInfo.versionName;
-
-                Call<ArticleDetailResponse> call = articleDetailsAPI.getDemoArticle(articleId,
-                        "" + SharedPrefUtils.getUserDetailModel(this).getId(), versionName);
-
+//                String test = "{\"id\":\"article-2535488b90f248eab3e6cabcbf9b4468\",\"userId\":\"7e9e7cfb2a904ce28e48dcdc6b1ba537\",\"title\":\"Life is the most uncertain of all!\",\"titleSlug\":\"life-is-the-most-uncertain-of-all\",\"body\":\"  <p>Firstly, I pay my condolences to the ones who lost their friends and dear ones in the high magnitude earthquake that hit Nepal last Saturday.</p>  <p>Such catastrophic incidents always leave me wondering how uncertain life is. We plan for the future keeping in mind our family and few moments like this bring everything, every dream, every aspiration just crumbling down to the ground.</p>  <p>So much of destruction and loss! Both of life, emotions and faith apart from material. Why does life hold so much uncertainty with it? There must be hundreds of people and kids gone out or maybe just enjoying at their warm and cozy abode in Nepal this morning, who would not be able to see and feel the sunshine today or ever.</p>  <p>We have no option but to bow down before god at such times and thank the almighty of being so kind enough on us that our families have made it to their homes safe and sound today. And also pray and ask him to have his mercy on us always.</p>  <p>My heart goes out to the ones who must have lost their loved ones. And again my curious heart wants to know why is life so uncertain...</p>  <p>Today my daughter held me so tightly while we in North India were feeling the tremors of what was devastating Nepal. I could sense her little heart fearing for life and safety and the worry to have her mother safe at that time. It makes me think time and again that we have progressed so much as mankind but life is one thing that still holds so much uncertainty...</p>  <p>Is this god's way of controlling the universe, is that why mother nature plays such tricks on us like tsunami, earthquake, flood, hurricane etc</p>  <p>I am not being a pessimistic but I still wonder what happens to the dream of a secure future and plannings when such times hit <i><u>:(</u></i></p>  <p>What happens to those unsaid words and expressions we never made that our dear ones never heard us say. What happens to the promises and certainty of our words held on any plan in the future.</p>  <p>Life is really short, you get out of the house and you don't know whether you will make it safe home or not, whether you leave for office or to complete some errands. With so much violence already encasing our lives in the form of terrorist attacks, thefts, road rages etc if the nature too starts playing tricks, what happens then....</p>  <p>I think we need to work towards our environment and its an awakening call to pull up all your relations and dreams. Don't think about saying or expressing something tomorrow. For tomorrow may never come!</p>  <p>Live today.. I'm not asking to spend each penny today and have nothing for tomorrow. Do remember even in catastrophes many lucky/ unlucky ones survive the worst even if it means being a sole survivor <i><u>:(</u></i></p>  <p>As I end this blog, I can still feel tremors of the aftershock shaking my home. I whole heartedly pray almighty to bless us all with the support and companionship of our family always and always. To bless us and keep us safe, give us wisdom to acknowledge all good relations and respect the ones who love and care for us. Amen!</p>  <p>Love &amp; Smiles Always,</p>  <p>&nbsp;</p><p>Subita Vikram Rooprai <em><u>:)</u></em></p>  <p>&nbsp;</p>  <br>\",\"excerpt\":\"Firstly, I pay my condolences to the ones who lost their friends and dear ones in the high magnitude earthquake that hit Nepal last Saturday. Such catastrophic incidents always leave me wondering how uncertain life is. We plan for the future keeping in mind our family and few moments like this bring everything, every... \",\"imageUrl\":\"/uploads/resized/2Rm8biAYF39MIGL2nofh0i2vUnV2kWchPWR-1Fi7sN_FOJ3Bc_SCpw1_9Shm3sSArAVgNszdcIp2iKVdv_bxOXmF_SZVhFgscg7c8WWpnqMV2jeRFokP_GSipzn8L6rIzDGD5nw2CkKeVqlQRIHFIqGj7GMc_-0PQRd723-bCA=w280-h385-nc.jpeg\",\"commentUri\":\"modif\"}";
+//                ArticleDetailData add = new Gson().fromJson(test, ArticleDetailData.class);
+                articleId = "article-7b83891e32ca41d08adbbea1e4efb29d";
+                Call<ArticleDetailData> call = articleDetailsAPI.getDemoArticle(articleId);
                 call.enqueue(articleDetailResponseCallback);
 
+                ArticleDetailRequest articleDetailRequest = new ArticleDetailRequest();
+                articleDetailRequest.setArticleId(articleId);
+                Call<ArticleDetailData> callBookmark = articleDetailsAPI.checkBookmarkStatus(articleDetailRequest);
+                callBookmark.enqueue(isBookmarkedResponseCallback);
             }
         } catch (Exception e) {
+            removeProgressDialog();
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
@@ -326,11 +329,14 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
         ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
 
-        Call<ResponseBody> call = articleDetailsAPI.getArticleComments(articleId,
-                "" + AppConstants.COMMENT_LIMIT, "" + offset, commentTypeToFetch,
-                "" + SharedPrefUtils.getUserDetailModel(this).getId(), versionName);
+//        Call<ResponseBody> call = articleDetailsAPI.getArticleComments(articleId,
+//                "" + AppConstants.COMMENT_LIMIT, "" + offset, commentTypeToFetch,
+//                "" + SharedPrefUtils.getUserDetailModel(this).getId(), versionName);
+//
+//        call.enqueue(articleCommentsResponseCallback);
 
-        call.enqueue(articleCommentsResponseCallback);
+        Call<ResponseBody> call = articleDetailsAPI.getComments(commentURL);
+        call.enqueue(commentsCallback);
 
 //        GetCommentsRequestModel getCommentsRequestModel = new GetCommentsRequestModel();
 //        getCommentsRequestModel.setArticleId(articleId);
@@ -402,8 +408,8 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         // according to fragment change it
         getMenuInflater().inflate(R.menu.aa_new_show_article, menu);
         this.menu = menu;
-        if (null != detailData) {
-            if ("0".equals(detailData.getBookmarkStatus())) {
+        if (null != bookmarkFlag) {
+            if ("0".equals(bookmarkFlag)) {
                 menu.getItem(0).setIcon(R.drawable.ic_favorite_border_white_48dp);
                 bookmarkStatus = 0;
             } else {
@@ -750,15 +756,19 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         }
 
         try {
-            if (!StringUtils.isNullOrEmpty(detailData.getAuthor_type())) {
-                author_type.setText(detailData.getAuthor_type().toUpperCase());
-                if (AppConstants.AUTHOR_TYPE_BLOGGER.equals(detailData.getAuthor_type())) {
+            if (!StringUtils.isNullOrEmpty(detailData.getUserType())) {
+
+                if (AppConstants.USER_TYPE_BLOGGER.equals(detailData.getUserType())) {
+                    author_type.setText(AppConstants.AUTHOR_TYPE_BLOGGER);
                     author_type.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_blogger));
-                } else if (AppConstants.AUTHOR_TYPE_EXPERT.equals(detailData.getAuthor_type())) {
+                } else if (AppConstants.USER_TYPE_EXPERT.equals(detailData.getUserType())) {
+                    author_type.setText(AppConstants.AUTHOR_TYPE_EXPERT);
                     author_type.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_expert));
-                } else if (AppConstants.AUTHOR_TYPE_EDITOR.equals(detailData.getAuthor_type())) {
+                } else if (AppConstants.USER_TYPE_EDITOR.equals(detailData.getUserType())) {
+                    author_type.setText(AppConstants.AUTHOR_TYPE_EDITOR);
                     author_type.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_editor));
-                } else if (AppConstants.AUTHOR_TYPE_EDITORIAL.equals(detailData.getAuthor_type())) {
+                } else if (AppConstants.USER_TYPE_EDITORIAL.equals(detailData.getUserType())) {
+                    author_type.setText(AppConstants.AUTHOR_TYPE_EDITORIAL);
                     author_type.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_editorial));
                 }
             } else {
@@ -772,8 +782,8 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         }
 
 
-        if (!StringUtils.isNullOrEmpty(detailData.getAuthor_name())) {
-            ((TextView) findViewById(R.id.user_name)).setText(detailData.getAuthor_name());
+        if (!StringUtils.isNullOrEmpty(detailData.getUserName())) {
+            ((TextView) findViewById(R.id.user_name)).setText(detailData.getUserName());
         }
 
         if (!StringUtils.isNullOrEmpty(detailData.getCreated())) {
@@ -991,25 +1001,32 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     } else {
                         String contentData = commentText.getText().toString();
                         String parentId1 = "";
-                        UserTable _table1 = new UserTable((BaseApplication) getApplication());
-                        int count1 = _table1.getCount();
 
-                        if (count1 > 0) {
-                            UserModel userData = _table1.getAllUserData();
-                            CommentRequest _commentRequest = new CommentRequest();
-                            _commentRequest.setArticleId(articleId);
-                            /**
-                             * in case of comment parentId will be empty.
-                             *
-                             */
-                            _commentRequest.setParentId(parentId1);
-                            _commentRequest.setContent(contentData);
-                            _commentRequest.setUserId("" + userData.getUser().getId());
-                            _commentRequest.setSessionId(userData.getUser().getSessionId());
-                            CommentController _controller = new CommentController(this, this);
-                            showProgressDialog("Adding a comment...");
-                            _controller.getData(AppConstants.COMMENT_REPLY_REQUEST, _commentRequest);
-                        }
+                        Retrofit retro = BaseApplication.getInstance().getRetrofit();
+                        ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
+
+                        Call<AddCommentResponse> callBookmark = articleDetailsAPI.addComment(articleId);
+                        callBookmark.enqueue(addCommentsResponseCallback);
+//                        UserTable _table1 = new UserTable((BaseApplication) getApplication());
+//                        int count1 = _table1.getCount();
+//
+//                        if (count1 > 0) {
+//                            UserModel userData = _table1.getAllUserData();
+//                            CommentRequest _commentRequest = new CommentRequest();
+//                            _commentRequest.setArticleId(articleId);
+//                            /**
+//                             * in case of comment parentId will be empty.
+//                             *
+//                             */
+//                            _commentRequest.setParentId(parentId1);
+//                            _commentRequest.setContent(contentData);
+//                            _commentRequest.setUserId("" + userData.getUser().getId());
+//                            _commentRequest.setSessionId(userData.getUser().getSessionId());
+//                            CommentController _controller = new CommentController(this, this);
+//                            showProgressDialog("Adding a comment...");
+//                            _controller.getData(AppConstants.COMMENT_REPLY_REQUEST, _commentRequest);
+//                        }
+
                     }
                     break;
 
@@ -1033,7 +1050,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                             intentn.putExtra(Constants.ARTICLE_NAME, blogName);
                             intentn.putExtra(Constants.FILTER_TYPE, "blogs");
                         } else {
-                            intentn.putExtra(Constants.ARTICLE_NAME, detailData.getAuthor_name());
+                            intentn.putExtra(Constants.ARTICLE_NAME, detailData.getUserName());
                             intentn.putExtra(Constants.FILTER_TYPE, "authors");
                         }
                     }
@@ -1050,7 +1067,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                             intentnn.putExtra(Constants.ARTICLE_NAME, blogName);
                             intentnn.putExtra(Constants.FILTER_TYPE, "blogs");
                         } else {
-                            intentnn.putExtra(Constants.ARTICLE_NAME, detailData.getAuthor_name());
+                            intentnn.putExtra(Constants.ARTICLE_NAME, detailData.getUserName());
                             intentnn.putExtra(Constants.FILTER_TYPE, "authors");
                         }
                     }
@@ -1218,20 +1235,23 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         }).start();
     }
 
-    Callback<ArticleDetailResponse> articleDetailResponseCallback = new Callback<ArticleDetailResponse>() {
+    Callback<ArticleDetailData> articleDetailResponseCallback = new Callback<ArticleDetailData>() {
         @Override
-        public void onResponse(Call<ArticleDetailResponse> call, retrofit2.Response<ArticleDetailResponse> response) {
+        public void onResponse(Call<ArticleDetailData> call, retrofit2.Response<ArticleDetailData> response) {
             removeProgressDialog();
             if (response == null || response.body() == null) {
                 showToast("Something went wrong from server");
                 return;
             }
             String commentMessage = "";
-            ArticleDetailResponse responseData = (ArticleDetailResponse) response.body();
+            ArticleDetailData responseData = (ArticleDetailData) response.body();
 
-            if (responseData.getCode() == 200) {
+            if (responseData != null) {
                 newCommentLayout.setVisibility(View.VISIBLE);
-                getResponseUpdateUi(responseData);
+//                getResponseUpdateUi(responseData);
+
+                commentURL = responseData.getCommentsUri();
+                getMoreComments();
                 Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
                 AuthorDetailsAPI authorDetailsAPI = retrofit.create(AuthorDetailsAPI.class);
                 Call<NewArticleListingResponse> call1 = authorDetailsAPI.getBloggersRecentArticle(followAuthorId, 1);
@@ -1246,10 +1266,10 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     sendScrollDown();
                     isCommingFromCommentAPI = false;
                 }
-            } else if (responseData.getCode() == 400) {
+            } else {
                 isCommingFromCommentAPI = false;
                 finish();
-                String message = responseData.getReason();
+                String message = "dddd";
                 if (!StringUtils.isNullOrEmpty(message)) {
                     showToast(message);
                 } else {
@@ -1259,9 +1279,15 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         }
 
         @Override
-        public void onFailure(Call<ArticleDetailResponse> call, Throwable t) {
+        public void onFailure(Call<ArticleDetailData> call, Throwable t) {
             removeProgressDialog();
-            showToast(getString(R.string.went_wrong));
+            if (t instanceof UnknownHostException) {
+                showToast(getString(R.string.error_network));
+            } else if (t instanceof SocketTimeoutException) {
+                showToast("connection timed out");
+            } else {
+                showToast(getString(R.string.server_went_wrong));
+            }
         }
     };
 
@@ -1384,9 +1410,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-                {
-                    showToast(getString(R.string.went_wrong));
-                }
+                showToast(getString(R.string.went_wrong));
             }
         }
 
@@ -1394,9 +1418,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         public void onFailure(Call<NewArticleListingResponse> call, Throwable t) {
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
-
             showToast(getString(R.string.went_wrong));
-
         }
     };
 
@@ -1405,7 +1427,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         @Override
         public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
             removeProgressDialog();
-            if (response == null) {
+            if (response == null || null == response.body()) {
                 showToast("Something went wrong from server");
                 return;
             }
@@ -1468,6 +1490,114 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         @Override
         public void onFailure(Call<ResponseBody> call, Throwable t) {
             showToast(getString(R.string.went_wrong));
+        }
+    };
+
+
+    Callback<ResponseBody> commentsCallback = new Callback<ResponseBody>() {
+        @Override
+        public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+            removeProgressDialog();
+            if (response == null || null == response.body()) {
+                showToast("Something went wrong from server");
+                return;
+            }
+            try {
+                mLodingView.setVisibility(View.GONE);
+                isLoading = false;
+                String resData = new String(response.body().bytes());
+//                JSONObject jsonObject = new JSONObject(resData);
+                ArrayList<CommentsData> arrayList = new ArrayList<>();
+                JSONArray commentsJson = new JSONArray(resData);
+                commentURL = "";
+                for (int i = 0; i < commentsJson.length(); i++) {
+                    if (commentsJson.getJSONObject(i).has("next")) {
+                        commentURL = commentsJson.getJSONObject(i).getString("next");
+                    } else {
+                        CommentsData cData = new Gson().fromJson(commentsJson.get(i).toString(), CommentsData.class);
+//                        CommentsData commentsData = new CommentsData();
+//                        commentsData.setId(commentsJson.getJSONObject(i).getString("id"));
+//                        commentsData.setName(commentsJson.getJSONObject(i).getString("userName"));
+//                        commentsData.setParent_id(commentsJson.getJSONObject(i).getString("parentId"));
+//                        commentsData.setBody(commentsJson.getJSONObject(i).getString("userComment"));
+//                        commentsData.setCreate(commentsJson.getJSONObject(i).getString("date"));
+//                        commentsData.setProfile_image(commentsJson.getJSONObject(i).getString("userImage"));
+
+                        arrayList.add(cData);
+                    }
+
+                }
+
+                LinearLayout commentLayout = ((LinearLayout) findViewById(R.id.commnetLout));
+                ViewHolder viewHolder = null;
+                viewHolder = new ViewHolder();
+                for (int i = 0; i < arrayList.size(); i++) {
+//                    CommentsData cData = new Gson().fromJson(commentsJson.get(i).toString(), CommentsData.class);
+                    displayComments(viewHolder, arrayList.get(i), commentLayout);
+                }
+            } catch (JSONException jsonexception) {
+                Crashlytics.logException(jsonexception);
+                Log.d("JSONException", Log.getStackTraceString(jsonexception));
+                showToast("Something went wrong while parsing response from server");
+            } catch (Exception ex) {
+                Crashlytics.logException(ex);
+                Log.d("MC4kException", Log.getStackTraceString(ex));
+                showToast("Something went wrong from server");
+            }
+        }
+
+        @Override
+        public void onFailure(Call<ResponseBody> call, Throwable t) {
+            showToast(getString(R.string.went_wrong));
+        }
+    };
+
+    private Callback<ArticleDetailData> isBookmarkedResponseCallback = new Callback<ArticleDetailData>() {
+        @Override
+        public void onResponse(Call<ArticleDetailData> call, retrofit2.Response<ArticleDetailData> response) {
+            if (response == null || null == response.body()) {
+                showToast("Something went wrong from server");
+                return;
+            }
+
+            ArticleDetailData responseData = (ArticleDetailData) response.body();
+            bookmarkFlag = responseData.getBookmarkStatus();
+            if ("0".equals(bookmarkFlag)) {
+                menu.getItem(0).setIcon(R.drawable.ic_favorite_border_white_48dp);
+                bookmarkStatus = 0;
+            } else {
+                menu.getItem(0).setIcon(R.drawable.ic_favorite_border_white_48dp_fill);
+                bookmarkStatus = 1;
+            }
+        }
+
+        @Override
+        public void onFailure(Call<ArticleDetailData> call, Throwable t) {
+
+        }
+    };
+
+    private Callback<AddCommentResponse> addCommentsResponseCallback = new Callback<AddCommentResponse>() {
+        @Override
+        public void onResponse(Call<AddCommentResponse> call, retrofit2.Response<AddCommentResponse> response) {
+            AddCommentResponse baseResponse = (AddCommentResponse) response.body();
+            if (response.isSuccessful()) {
+                showToast("Comment added successfully!");
+            } else {
+                showToast(baseResponse.getReason());
+            }
+        }
+
+        @Override
+        public void onFailure(Call<AddCommentResponse> call, Throwable t) {
+            removeProgressDialog();
+            if (t instanceof UnknownHostException) {
+                showToast(getString(R.string.error_network));
+            } else if (t instanceof SocketTimeoutException) {
+                showToast("connection timed out");
+            } else {
+                showToast(getString(R.string.server_went_wrong));
+            }
         }
     };
 }

@@ -61,7 +61,7 @@ public class SearchArticlesAndAuthorsActivity extends BaseActivity implements Vi
         getSupportActionBar().setHomeAsUpIndicator(upArrow);
 
         mViewPager.setAdapter(tabsPagerAdapter);
-        mViewPager.setOffscreenPageLimit(4);
+        mViewPager.setOffscreenPageLimit(3);
         mSlidingTabLayout.setupWithViewPager(mViewPager);
         mViewPager.setCurrentItem(tabPosition);
 

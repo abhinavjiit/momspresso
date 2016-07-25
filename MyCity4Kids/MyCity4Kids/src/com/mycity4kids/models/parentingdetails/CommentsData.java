@@ -7,13 +7,15 @@ import java.util.ArrayList;
 
 public class CommentsData implements Parcelable {
     private String id;
-    private String node_id;
-    private String parent_id;
-    private String name;
-    private String body;
-    private String created;
+    private String parentId;
+    private String articleId;
+    private String userName;
+    private String userComment;
+    private String createdTime;
+    private String updatedTime;
+    private String userId;
     private String comment_type;
-    private String profile_image;
+    private String profilePic;
     private ArrayList<CommentsData> replies;
 
     public CommentsData() {
@@ -22,13 +24,15 @@ public class CommentsData implements Parcelable {
 
     protected CommentsData(Parcel in) {
         id = in.readString();
-        node_id = in.readString();
-        parent_id = in.readString();
-        name = in.readString();
-        body = in.readString();
-        created = in.readString();
+        userId = in.readString();
+        articleId = in.readString();
+        parentId = in.readString();
+        userName = in.readString();
+        userComment = in.readString();
+        createdTime = in.readString();
+        updatedTime = in.readString();
         comment_type = in.readString();
-        profile_image = in.readString();
+        profilePic = in.readString();
         replies = in.createTypedArrayList(CommentsData.CREATOR);
     }
 
@@ -48,36 +52,52 @@ public class CommentsData implements Parcelable {
         this.id = id;
     }
 
-    public String getNode_id() {
-        return node_id;
+    public String getArticleId() {
+        return articleId;
     }
 
-    public void setNode_id(String node_id) {
-        this.node_id = node_id;
+    public void setArticleId(String articleId) {
+        this.articleId = articleId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getUpdatedTime() {
+        return updatedTime;
+    }
+
+    public void setUpdatedTime(String updatedTime) {
+        this.updatedTime = updatedTime;
     }
 
     public String getParent_id() {
-        return parent_id;
+        return parentId;
     }
 
     public void setParent_id(String parent_id) {
-        this.parent_id = parent_id;
+        this.parentId = parent_id;
     }
 
     public String getName() {
-        return name;
+        return userName;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.userName = name;
     }
 
     public String getBody() {
-        return body;
+        return userComment;
     }
 
     public void setBody(String body) {
-        this.body = body;
+        this.userComment = body;
     }
 
     public String getComment_type() {
@@ -89,19 +109,19 @@ public class CommentsData implements Parcelable {
     }
 
     public String getCreate() {
-        return created;
+        return createdTime;
     }
 
     public void setCreate(String create) {
-        this.created = create;
+        this.createdTime = create;
     }
 
     public String getProfile_image() {
-        return profile_image;
+        return profilePic;
     }
 
     public void setProfile_image(String profile_image) {
-        this.profile_image = profile_image;
+        this.profilePic = profile_image;
     }
 
 
@@ -113,13 +133,15 @@ public class CommentsData implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
-        dest.writeString(node_id);
-        dest.writeString(parent_id);
-        dest.writeString(name);
-        dest.writeString(body);
-        dest.writeString(created);
+        dest.writeString(userId);
+        dest.writeString(articleId);
+        dest.writeString(parentId);
+        dest.writeString(userName);
+        dest.writeString(userComment);
+        dest.writeString(createdTime);
+        dest.writeString(updatedTime);
         dest.writeString(comment_type);
-        dest.writeString(profile_image);
+        dest.writeString(profilePic);
         dest.writeTypedList(replies);
     }
 

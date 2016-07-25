@@ -92,7 +92,7 @@ public class TopicsFilterActivity extends BaseActivity {
         } catch (FileNotFoundException e) {
             Crashlytics.logException(e);
             Log.d("FileNotFoundException", Log.getStackTraceString(e));
-            Retrofit retro = BaseApplication.getInstance().createRetrofitInstance("http://52.77.116.39:8086/");
+            Retrofit retro = BaseApplication.getInstance().getRetrofit();
             final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
 
             Call<ResponseBody> call = topicsAPI.downloadCategoriesJSON();
@@ -166,7 +166,7 @@ public class TopicsFilterActivity extends BaseActivity {
                 String resData = new String(response.body().bytes());
                 JSONObject jsonObject = new JSONObject(resData);
 
-                Retrofit retro = BaseApplication.getInstance().createRetrofitInstance("http://52.77.116.39:8086/");
+                Retrofit retro = BaseApplication.getInstance().getRetrofit();
                 final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
 
                 Call<ResponseBody> caller = topicsAPI.downloadFileWithDynamicUrlSync(jsonObject.getJSONObject("data").getJSONObject("result").getJSONObject("category").getString("location"));

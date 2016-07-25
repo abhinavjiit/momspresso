@@ -555,7 +555,7 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
                     String localitysearch = "";
 
                     if (!queryData.equals("")) {
-                        mLocalitySearchEtxt.setText(listItem);
+
                        /* FragmentBusinesslistEvents infoFragment = new FragmentBusinesslistEvents();
                         Bundle args = new Bundle() ;
                        // Intent intent =new Intent(BusinessListActivityKidsResources.this,BusinessListActivityKidsResources.class);
@@ -563,6 +563,7 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
                         args.putString("query", queryData);*/
                         if (locality.equals("") || !isContainCommaQuery) {
                             String localityData = (String) parent.getAdapter().getItem(pos);
+                            mLocalitySearchEtxt.setText(listItem);
                             if (!StringUtils.isNullOrEmpty(localityData)) {
 
                                 if (pos != 0) {

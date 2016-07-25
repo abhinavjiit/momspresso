@@ -11,6 +11,8 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.newmodels.parentingmodel.ArticleModelNew;
 import com.mycity4kids.ui.fragment.SearchArticlesTabFragment;
 import com.mycity4kids.ui.fragment.SearchAuthorsTabFragment;
+import com.mycity4kids.ui.fragment.SearchBlogsTabFragment;
+import com.mycity4kids.ui.fragment.SearchTopicsTabFragment;
 
 /**
  * Created by hemant on 19/4/16.
@@ -22,6 +24,8 @@ public class SearchArticlesAndAuthorsPagerAdapter extends FragmentStatePagerAdap
     Context context;
     private SearchArticlesTabFragment mArticlefragment;
     private SearchAuthorsTabFragment mAuthorsFragment;
+    private SearchTopicsTabFragment mTopicsFragment;
+    private SearchBlogsTabFragment mBlogsFragment;
     String searchName = "";
 
     int currentPosition = 0;
@@ -41,7 +45,7 @@ public class SearchArticlesAndAuthorsPagerAdapter extends FragmentStatePagerAdap
 
     @Override
     public int getCount() {
-        return 2;
+        return 4;
     }
 
     @Override
@@ -55,8 +59,12 @@ public class SearchArticlesAndAuthorsPagerAdapter extends FragmentStatePagerAdap
 
         if (position == 0) {
             return "Articles";
-        } else {
+        } else if (position == 1) {
             return "Authors";
+        } else if (position == 2) {
+            return "Topics";
+        } else {
+            return "Blogs";
         }
     }
 
@@ -82,30 +90,53 @@ public class SearchArticlesAndAuthorsPagerAdapter extends FragmentStatePagerAdap
                 bundle.putString(Constants.SEARCH_PARAM, searchName);
                 mAuthorsFragment.setArguments(bundle);
                 return mAuthorsFragment;
+            case 2:
+                if (mTopicsFragment == null) {
+                    mTopicsFragment = new SearchTopicsTabFragment();
+                }
+                bundle.putString(Constants.SEARCH_PARAM, searchName);
+                mTopicsFragment.setArguments(bundle);
+                return mTopicsFragment;
+            case 3:
+                if (mBlogsFragment == null) {
+                    mBlogsFragment = new SearchBlogsTabFragment();
+                }
+                bundle.putString(Constants.SEARCH_PARAM, searchName);
+                mBlogsFragment.setArguments(bundle);
+                return mBlogsFragment;
         }
 
         return null;
     }
 
     public void refreshArticlesAuthors(String searchText, int pos) {
-        switch (pos) {
-
-            case 0:
-                if (null == mArticlefragment) {
-                    mArticlefragment = new SearchArticlesTabFragment();
-                }
-                mArticlefragment.refreshAllArticles(searchText, Constants.KEY_RECENT);
-                mAuthorsFragment.resetOnceLoadedFlag(searchText);
-                break;
-            case 1:
-                if (null == mAuthorsFragment) {
-                    mAuthorsFragment = new SearchAuthorsTabFragment();
-                }
-                mAuthorsFragment.refreshAllAuthors(searchText);
-                mArticlefragment.resetOnceLoadedFlag(searchText);
-                break;
+//        switch (pos) {
+//
+//            case 0:
+        if (null == mArticlefragment) {
+            mArticlefragment = new SearchArticlesTabFragment();
         }
-
+        mArticlefragment.refreshAllArticles(searchText, Constants.KEY_RECENT);
+        mAuthorsFragment.resetOnceLoadedFlag(searchText);
+//                break;
+//            case 1:
+        if (null == mAuthorsFragment) {
+            mAuthorsFragment = new SearchAuthorsTabFragment();
+        }
+        mAuthorsFragment.refreshAllAuthors(searchText);
+        mArticlefragment.resetOnceLoadedFlag(searchText);
+//                break;
+//            case 2:
+        if (mTopicsFragment == null) {
+            mTopicsFragment = new SearchTopicsTabFragment();
+        }
+        mTopicsFragment.refreshAllArticles(searchText, Constants.KEY_RECENT);
+//                break;
+//        }
+        if (mBlogsFragment == null) {
+            mBlogsFragment = new SearchBlogsTabFragment();
+        }
+        mBlogsFragment.refreshAllArticles(searchText, Constants.KEY_RECENT);
 
     }
 

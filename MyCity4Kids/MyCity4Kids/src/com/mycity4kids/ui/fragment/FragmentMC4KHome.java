@@ -471,7 +471,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
 //        builder.append("&page=").append(1);
 //        builder.append("&sort=").append("trending_today");
 //        url = AppConstants.NEW_ALL_ARTICLE_URL + builder.toString().replace(" ", "%20");
-        url = AppConstants.PHOENIX_ARTICLE_STAGING_URL + "v1/articles/trending/" + from + "/" + to;
+        url = AppConstants.LIVE_URL + "v1/articles/trending/" + from + "/" + to;
         HttpVolleyRequest.getStringResponse(getActivity(), url, null, mGetArticleListingListener, Request.Method.GET, true);
 
     }

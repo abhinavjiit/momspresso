@@ -2,6 +2,8 @@ package com.mycity4kids.retrofitAPIsInterfaces;
 
 import com.mycity4kids.models.parentingdetails.ParentingDetailResponse;
 import com.mycity4kids.models.parentingstop.CommonParentingResponse;
+import com.mycity4kids.models.response.SearchResponse;
+import com.mycity4kids.models.response.SearchTopicResult;
 import com.mycity4kids.newmodels.bloggermodel.ParentingBlogResponse;
 
 import retrofit2.Call;
@@ -13,13 +15,29 @@ import retrofit2.http.Query;
  */
 public interface SearchArticlesAuthorsAPI {
 
-    @GET("apiparentingstop/searchV1")
-    Call<CommonParentingResponse> getSearchArticlesResult(@Query("q") String searchString,
+    //    @GET("apiparentingstop/searchV1")
+    @GET("/v1/search/find")
+    Call<SearchResponse> getSearchArticlesResult(@Query("q") String searchString,
                                                           @Query("type") String type,
-                                                          @Query("page") String page);
+                                                          @Query("start") int start,
+                                                          @Query("end") int end);
 
-    @GET("apiparentingstop/searchV1")
-    Call<ParentingBlogResponse> getSearchAuthorsResult(@Query("q") String searchString,
-                                                          @Query("type") String type,
-                                                          @Query("page") String page);
+    //    @GET("apiparentingstop/searchV1")
+    @GET("/v1/search/find")
+    Call<SearchResponse> getSearchAuthorsResult(@Query("q") String searchString,
+                                                       @Query("type") String type,
+                                                       @Query("start") int start,
+                                                       @Query("end") int end);
+
+    @GET("/v1/search/find")
+    Call<SearchResponse> getSearchBlogsResult(@Query("q") String searchString,
+                                              @Query("type") String type,
+                                              @Query("start") int start,
+                                              @Query("end") int end);
+
+    @GET("/v1/search/find")
+    Call<SearchResponse> getSearchTopicssResult(@Query("q") String searchString,
+                                                @Query("type") String type,
+                                                @Query("start") int start,
+                                                @Query("end") int end);
 }

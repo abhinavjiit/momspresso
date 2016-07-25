@@ -57,12 +57,14 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
     Boolean isSearchActive = false;
     private RelativeLayout mLodingView;
     private int nextPageNumber = 2;
-    private boolean isLastPageReached = true;
+    private boolean isLastPageReached = false;
     private boolean isReuqestRunning = false;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ProgressBar progressBar;
     private int from = 1;
     private int to = 15;
+    private int limit = 6;
+    private String paginationValue = "";
 //    private ArrayList<CommonParentingList> mDataList;
 
 
@@ -108,7 +110,7 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
                 boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
-                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && isLastPageReached) {
+                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && !isLastPageReached) {
                     mLodingView.setVisibility(View.VISIBLE);
                     //caching enabled only for page 1. so disabling it here for all other pages by passing false.
                     hitArticleListingApi(nextPageNumber, sortType, false);
@@ -148,13 +150,12 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
 
         String url;
         if (!AppConstants.SORT_TYPE_BOOKMARK.equals(sortType)) {
-            url = AppConstants.PHOENIX_ARTICLE_STAGING_URL + AppConstants.SERVICE_TYPE_ARTICLE + sortKey +
+            url = AppConstants.LIVE_URL + AppConstants.SERVICE_TYPE_ARTICLE + sortKey +
                     AppConstants.SEPARATOR_BACKSLASH + from + AppConstants.SEPARATOR_BACKSLASH + to;
             HttpVolleyRequest.getStringResponse(getActivity(), url, null, mGetArticleListingListener, Request.Method.GET, isCacheRequired);
         } else {
             // caching disabled for bookmarked articles as we need to refresh it everytime an article is bookmarked/unbookmarked.
-            url = AppConstants.PHOENIX_ARTICLE_STAGING_URL + AppConstants.SERVICE_TYPE_ARTICLE + sortKey +
-                    AppConstants.SEPARATOR_BACKSLASH + from + AppConstants.SEPARATOR_BACKSLASH + to;
+            url = AppConstants.LIVE_URL + AppConstants.SERVICE_TYPE_USER + sortKey + "/?limit=" + limit + "&pagination=" + paginationValue;
             HttpVolleyRequest.getStringResponse(getActivity(), url, null, mGetArticleListingListener, Request.Method.GET, false);
         }
 
@@ -218,7 +219,7 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
 
             if (dataList.size() == 0) {
 
-                isLastPageReached = false;
+                isLastPageReached = true;
                 if (null != articleDataModelsNew && !articleDataModelsNew.isEmpty()) {
                     //No more next results for search from pagination
 
@@ -239,31 +240,44 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
             } else {
                 noBlogsTextView.setVisibility(View.GONE);
 //            totalPageCount = responseData.getResult().getData().getPage_count();
-                if (from == 1) {
-                    articleDataModelsNew = dataList;
-                } else {
 
-                    int prevFrom = Integer.parseInt(responseData.getData().getChunks().split("-")[0]);
-                    //cache refresh request response and response from pagination may overlap causing duplication
-                    // to prevent check the page number in response
-                    //-- open article listing and immediately scroll to next page to reproduce.
-                    if (!"bookmark".equals(sortType) && prevFrom < from) {
-                        //Response from cache refresh request. Update the dataset and refresh list
-//                    int articleNumber = (responseData.getResult().getData().getPageNumber() - 1) * 15;
-                        int articleNumber = prevFrom - 1;
-                        for (int i = 0; i < dataList.size(); i++) {
-                            articleDataModelsNew.set(articleNumber + i, dataList.get(i));
-                        }
-                        articlesListingAdapter.setNewListData(articleDataModelsNew);
-                        articlesListingAdapter.notifyDataSetChanged();
-                        return;
+                if (AppConstants.SORT_TYPE_BOOKMARK.equals(sortType)) {
+                    if (StringUtils.isNullOrEmpty(paginationValue)) {
+                        articleDataModelsNew = dataList;
                     } else {
                         articleDataModelsNew.addAll(dataList);
                     }
+                    paginationValue = responseData.getData().getPagination();
+                    if (AppConstants.PAGINATION_END_VALUE.equals(paginationValue)) {
+                        isLastPageReached = true;
+                    }
+
+                } else {
+                    if (from == 1) {
+                        articleDataModelsNew = dataList;
+                    } else {
+                        int prevFrom = Integer.parseInt(responseData.getData().getChunks().split("-")[0]);
+                        if (prevFrom < from) {
+                            //Response from cache refresh request. Update the dataset and refresh list
+                            //cache refresh request response and response from pagination may overlap causing duplication
+                            // to prevent check the page number in response
+                            //-- open article listing and immediately scroll to next page to reproduce.
+                            int articleNumber = prevFrom - 1;
+                            for (int i = 0; i < dataList.size(); i++) {
+                                articleDataModelsNew.set(articleNumber + i, dataList.get(i));
+                            }
+                            articlesListingAdapter.setNewListData(articleDataModelsNew);
+                            articlesListingAdapter.notifyDataSetChanged();
+                            return;
+                        } else {
+                            articleDataModelsNew.addAll(dataList);
+                        }
+
+                    }
+                    from = from + 15;
+                    to = to + 15;
                 }
                 articlesListingAdapter.setNewListData(articleDataModelsNew);
-                from = from + 15;
-                to = to + 15;
                 articlesListingAdapter.notifyDataSetChanged();
             }
         } catch (Exception ex) {
@@ -315,12 +329,16 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
 
     public void refreshBookmarkList() {
         nextPageNumber = 1;
+        isLastPageReached = false;
+        paginationValue = "";
         hitArticleListingApi(nextPageNumber, AppConstants.SORT_TYPE_BOOKMARK, false);
     }
 
     @Override
     public void onRefresh() {
+        isLastPageReached = false;
         removeVolleyCache(sortType);
+        paginationValue = "";
         from = 1;
         to = 15;
         hitArticleListingApi(nextPageNumber, sortType, false);
@@ -333,7 +351,7 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
         int cacheFrom = 1;
         int cacheTo = 15;
 
-        String baseCacheKey = Request.Method.GET + ":" + AppConstants.PHOENIX_ARTICLE_STAGING_URL + AppConstants.SERVICE_TYPE_ARTICLE + sortType +
+        String baseCacheKey = Request.Method.GET + ":" + AppConstants.LIVE_URL + AppConstants.SERVICE_TYPE_ARTICLE + sortType +
                 AppConstants.SEPARATOR_BACKSLASH;
         String cachedPage = cacheFrom + AppConstants.SEPARATOR_BACKSLASH + cacheTo;
         while (null != BaseApplication.getInstance().getRequestQueue().getCache().get(baseCacheKey + cachedPage)) {

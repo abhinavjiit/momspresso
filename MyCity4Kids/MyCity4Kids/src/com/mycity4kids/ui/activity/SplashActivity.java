@@ -126,6 +126,13 @@ public class SplashActivity extends BaseActivity {
 
            /* AnalyticsHelper.logEvent("Application Launch...");*/
 
+            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            String version = pInfo.versionName;
+            if (!"0".equals(SharedPrefUtils.getUserDetailModel(this).getId()) && version.equals(AppConstants.PHOENIX_RELEASE_VERSION) && SharedPrefUtils.isPhoenixFirstLaunch(this)) {
+                SharedPrefUtils.clearPrefrence(this);
+                SharedPrefUtils.setPhoenixFirstLaunch(this, false);
+            }
+
             ImageView _spin = (ImageView) findViewById(R.id.spin);
             _spin.startAnimation(AnimationUtils.loadAnimation(this,
                     R.anim.rotate_indefinitely));
@@ -218,9 +225,6 @@ public class SplashActivity extends BaseActivity {
                 /**
                  * this will call every time on splash:
                  */
-
-                PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-                String version = pInfo.versionName;
 
                 versionApiModel.setCityId(SharedPrefUtils.getCurrentCityModel(this).getId());
                 mFirebaseAnalytics.setUserProperty("CityId", SharedPrefUtils.getCurrentCityModel(this).getId() + "");

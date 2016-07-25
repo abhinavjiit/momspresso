@@ -362,7 +362,7 @@ public class SetupBlogPageActivity extends BaseActivity {
         byte[] ba = bao.toByteArray();
         String imageString = Base64.encodeToString(ba, Base64.DEFAULT);*/
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(AppConstants.STAGING_URL)
+                .baseUrl(AppConstants.LIVE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");

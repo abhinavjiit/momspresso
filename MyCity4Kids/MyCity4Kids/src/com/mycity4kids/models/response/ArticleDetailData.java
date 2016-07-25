@@ -8,18 +8,19 @@ import com.mycity4kids.models.parentingdetails.DetailsBody;
 public class ArticleDetailData {
     private String id;
     private String title;
-    private DetailsBody body;
+    private DetailsBody bodys;
     private String imageUrl;
     private String excerpt;
     private String userId;
     private String titleSlug;
     private String authorImage;
     private String created;
-    private String author_type;
-    private String author_name;
-    private String is_bookmark;
+    private String userType;
+    private String userName;
+    private String isBookmarked;
     private String url;
     private String author_image;
+    private String commentUri;
 
     public String getId() {
         return id;
@@ -38,11 +39,11 @@ public class ArticleDetailData {
     }
 
     public DetailsBody getBody() {
-        return body;
+        return bodys;
     }
 
     public void setBody(DetailsBody body) {
-        this.body = body;
+        this.bodys = body;
     }
 
     public String getImageUrl() {
@@ -93,28 +94,28 @@ public class ArticleDetailData {
         this.created = created;
     }
 
-    public String getAuthor_type() {
-        return author_type;
+    public String getUserType() {
+        return userType;
     }
 
-    public void setAuthor_type(String author_type) {
-        this.author_type = author_type;
+    public void setUserType(String userType) {
+        this.userType = userType;
     }
 
-    public String getAuthor_name() {
-        return author_name;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setAuthor_name(String author_name) {
-        this.author_name = author_name;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getBookmarkStatus() {
-        return is_bookmark;
+        return isBookmarked;
     }
 
-    public void setBookmarkStatus(String is_bookmark) {
-        this.is_bookmark = is_bookmark;
+    public void setBookmarkStatus(String isBookmarked) {
+        this.isBookmarked = isBookmarked;
     }
 
     public String getUrl() {
@@ -131,5 +132,13 @@ public class ArticleDetailData {
 
     public void setAuthor_image(String author_image) {
         this.author_image = author_image;
+    }
+
+    public String getCommentsUri() {
+        return commentUri;
+    }
+
+    public void setCommentsUri(String commentsUri) {
+        this.commentUri = commentsUri;
     }
 }
