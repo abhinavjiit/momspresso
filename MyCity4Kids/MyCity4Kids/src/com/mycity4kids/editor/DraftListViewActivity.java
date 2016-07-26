@@ -15,7 +15,6 @@ import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -24,25 +23,16 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.dbtable.UserTable;
-import com.mycity4kids.models.editor.ArticleDraftList;
-import com.mycity4kids.models.editor.ArticleDraftListResponse;
+import com.mycity4kids.enums.ArticleType;
 import com.mycity4kids.models.editor.ArticleDraftRequest;
-import com.mycity4kids.models.response.BaseResponse;
 import com.mycity4kids.models.response.DraftListResponse;
-import com.mycity4kids.models.response.DraftListResult;
-import com.mycity4kids.models.response.DraftResponse;
+import com.mycity4kids.models.response.PublishDraftObject;
+import com.mycity4kids.models.response.ArticleDraftResponse;
 import com.mycity4kids.models.user.UserModel;
-import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.ArrayList;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -51,7 +41,7 @@ import retrofit2.Retrofit;
  * Created by anshul on 3/15/16.
  */
 public class DraftListViewActivity extends BaseActivity implements View.OnClickListener, PopupMenu.OnMenuItemClickListener {
-    ArrayList<DraftListResult> draftList;
+    ArrayList<PublishDraftObject> draftList;
     private UserModel userModel;
     ListView draftListview;
     DraftListAdapter adapter;
@@ -203,7 +193,9 @@ public class DraftListViewActivity extends BaseActivity implements View.OnClickL
             showToast(getString(R.string.error_network));
             return;
         }
-        Call<DraftListResponse> call = getDraftListAPI.getDraftsList( AppConstants.LIVE_URL+"v1/articles/"+ SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
+
+        Call<DraftListResponse> call = getDraftListAPI.getDraftsList(ArticleType.DRAFT.getValue()+"'"+ArticleType.UNDER_MODERATION.getValue()+"'"+ArticleType.UNAPPROVED.getValue()+"'"+ArticleType.UNPUBLISHED.getValue());
+
         //asynchronous call
         call.enqueue(new Callback<DraftListResponse>() {
                          @Override
@@ -264,7 +256,7 @@ public class DraftListViewActivity extends BaseActivity implements View.OnClickL
 
     }
 
-    public void deleteDraftAPI(DraftListResult draftObject, int p) {
+    public void deleteDraftAPI(PublishDraftObject draftObject, int p) {
         position = p;
         showProgressDialog(getResources().getString(R.string.please_wait));
         ArticleDraftRequest articleDraftRequest = new ArticleDraftRequest();
@@ -286,17 +278,19 @@ public class DraftListViewActivity extends BaseActivity implements View.OnClickL
             showToast(getString(R.string.error_network));
             return;
         }
-        Call<DraftResponse> call = articleDraftAPI.deleteDraft(
+
+        Call<ArticleDraftResponse> call = articleDraftAPI.deleteDraft(
                 AppConstants.LIVE_URL+"v1/articles/"+draftObject.getId());
 
 
+
         //asynchronous call
-        call.enqueue(new Callback<DraftResponse>() {
+        call.enqueue(new Callback<ArticleDraftResponse>() {
                          @Override
-                         public void onResponse(Call<DraftResponse> call, retrofit2.Response<DraftResponse> response) {
+                         public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
                              int statusCode = response.code();
 
-                             DraftResponse responseModel = (DraftResponse) response.body();
+                             ArticleDraftResponse responseModel = (ArticleDraftResponse) response.body();
 
                              removeProgressDialog();
 
@@ -316,7 +310,7 @@ public class DraftListViewActivity extends BaseActivity implements View.OnClickL
 
 
                          @Override
-                         public void onFailure(Call<DraftResponse> call, Throwable t) {
+                         public void onFailure(Call<ArticleDraftResponse> call, Throwable t) {
 
                          }
                      }

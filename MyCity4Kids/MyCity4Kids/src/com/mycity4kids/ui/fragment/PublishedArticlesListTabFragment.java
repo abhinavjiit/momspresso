@@ -123,9 +123,9 @@ public class PublishedArticlesListTabFragment extends BaseFragment {
 
                 }
                 if (firstVisibleItem == 0) {
-                    ((BloggerDashboardActivity) getActivity()).hidefloatingbutton(false);
+                 //   ((BloggerDashboardActivity) getActivity()).hidefloatingbutton(false);
                 } else {
-                    ((BloggerDashboardActivity) getActivity()).hidefloatingbutton(true);
+                   // ((BloggerDashboardActivity) getActivity()).hidefloatingbutton(true);
                 }
 
             }

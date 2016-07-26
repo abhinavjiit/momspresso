@@ -5,13 +5,44 @@ import java.io.Serializable;
 /**
  * Created by anshul on 7/5/16.
  */
-public class DraftListResult implements Serializable{
+public class PublishDraftObject implements Serializable{
     String id;
     String articleType;
     Long updatedTime;
     String createdTime;
     String body;
     String title;
+    String imageUrl;
+    String tags;
+
+    public int getItemType() {
+        return itemType;
+    }
+
+    public void setItemType(int itemType) {
+        this.itemType = itemType;
+    }
+
+    int itemType=1;
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
+
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+
 
     public String getId() {
         return id;

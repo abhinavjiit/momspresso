@@ -544,7 +544,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     getSupportActionBar().setHomeButtonEnabled(true);
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.setHomeAsUpIndicator(android.support.v7.appcompat.R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arrow);
                     changeVisibiltyOfArrow(false);
                 } else if (currentFrag instanceof FragmentFamilyProfile) {
 
@@ -554,7 +554,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.setHomeAsUpIndicator(android.support.v7.appcompat.R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arrow);
                     getSupportActionBar().setHomeButtonEnabled(true);
 
                     changeVisibiltyOfArrow(false);
@@ -567,7 +567,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     getSupportActionBar().setHomeButtonEnabled(true);
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.setHomeAsUpIndicator(android.support.v7.appcompat.R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arrow);
                     changeVisibiltyOfArrow(false);
                 } else if (currentFrag instanceof FragmentKidProfile) {
 
@@ -578,7 +578,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     getSupportActionBar().setHomeButtonEnabled(true);
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.setHomeAsUpIndicator(android.support.v7.appcompat.R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arrow);
                     changeVisibiltyOfArrow(false);
                 } else if (currentFrag instanceof FragmentTaskHome) {
 
@@ -604,7 +604,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     getSupportActionBar().setHomeButtonEnabled(true);
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.setHomeAsUpIndicator(android.support.v7.appcompat.R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arrow);
                     changeVisibiltyOfArrow(false);
                     setTitle("Meet Our Contributors");
 
@@ -687,7 +687,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.setHomeAsUpIndicator(android.support.v7.appcompat.R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arrow);
                     changeVisibiltyOfArrow(false);
                 } else if (currentFrag instanceof ChangeCityFragment) {
                     setTitle("Change City");
@@ -697,7 +697,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.setHomeAsUpIndicator(android.support.v7.appcompat.R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arrow);
                     changeVisibiltyOfArrow(false);
                 } else if (currentFrag instanceof ExternalCalFragment) {
                     setTitle("External Calendars");
@@ -708,7 +708,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.setHomeAsUpIndicator(android.support.v7.appcompat.R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arrow);
                     changeVisibiltyOfArrow(false);
                 } else if (currentFrag instanceof SyncSettingFragment) {
                     setTitle("Sync Settings");
@@ -718,7 +718,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.setHomeAsUpIndicator(android.support.v7.appcompat.R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arrow);
                     changeVisibiltyOfArrow(false);
                 }
                 invalidateOptionsMenu();

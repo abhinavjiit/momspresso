@@ -17,3 +17,6 @@
 -dontwarn org.apache.http.entity.mime.content.ByteArrayBody
 -dontwarn org.apache.http.entity.mime.content.InputStreamBody
 -dontwarn org.apache.http.entity.mime.content.StringBody
+-dontwarn com.yalantis.ucrop**
+-keep class com.yalantis.ucrop** { *; }
+-keep interface com.yalantis.ucrop** { *; }

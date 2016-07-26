@@ -55,7 +55,7 @@ public class SearchArticlesAndAuthorsActivity extends BaseActivity implements Vi
         tabsPagerAdapter = new SearchArticlesAndAuthorsPagerAdapter(getSupportFragmentManager(), this, null, this, searchParam);
 
         setSupportActionBar(mToolbar);
-        final Drawable upArrow = ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+        final Drawable upArrow = ContextCompat.getDrawable(this, R.drawable.back_arroow);
         upArrow.setColorFilter(ContextCompat.getColor(this, R.color.black_color), PorterDuff.Mode.SRC_ATOP);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(upArrow);

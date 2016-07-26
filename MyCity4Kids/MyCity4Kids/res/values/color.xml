@@ -13,7 +13,7 @@
     <color name="black_color">#000000</color>
     <color name="dividercolor">#E9E9E9</color>
     <color name="color_control_activated">@color/wp_blue_light</color>
-
+<color name="grey_faded">#9b9b9b</color>
     <color name="grey">#878787</color>
     <color name="dark_grey">#464646</color>
     <color name="grey_light">#eeeeee</color>

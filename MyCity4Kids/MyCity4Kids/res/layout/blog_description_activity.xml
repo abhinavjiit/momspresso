@@ -174,7 +174,7 @@
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:padding="12dp"
-                android:src="@drawable/abc_ic_ab_back_mtrl_am_alpha" />
+                android:src="@drawable/back_arroow" />
         </RelativeLayout>
 
         <RelativeLayout

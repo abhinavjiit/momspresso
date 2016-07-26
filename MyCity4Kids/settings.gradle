@@ -1,3 +1,3 @@
-include ':facebook-android-sdk-3.6.0'
+include ':facebook-android-sdk-3.6.0', ':PinnedSectionListView'
 include ':MyCity4Kids'
 include ':WordPressEditor'

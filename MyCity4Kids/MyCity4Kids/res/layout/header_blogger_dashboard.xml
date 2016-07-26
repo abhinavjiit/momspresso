@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize">
+
+    </android.support.v7.widget.Toolbar>
+
+    <ImageView
+        android:id="@+id/bloggerImageView"
+        android:layout_width="95dp"
+        android:layout_height="95dp"
+        android:layout_below="@+id/toolbar"
+        android:layout_margin="15dp"
+        android:src="@drawable/family_xxhdpi"
+        android:layout_marginTop="10dp"/>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:layout_toRightOf="@id/bloggerImageView"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="22.67dp"
+        android:layout_marginRight="1dp"
+        android:id="@+id/infoRelativeLL"
+
+        >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/rankLinearLL"
+            android:layout_alignParentLeft="true">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="--"
+                android:textSize="32sp"
+                android:id="@+id/rankingTextView"
+                android:fontFamily="sans-serif-thin"
+
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Rank"
+                android:textSize="13sp"
+                android:textColor="@color/grey_faded"
+                android:layout_marginTop="8.33dp"
+
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/FollowersLinearLL"
+            android:layout_centerHorizontal="true"
+
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="--"
+                android:textSize="32sp"
+                android:id="@+id/followersTextView"
+                android:fontFamily="sans-serif-thin"
+
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Followers"
+                android:textSize="13sp"
+                android:textColor="@color/grey_faded"
+                android:layout_marginTop="8.33dp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/FollowingLinearLL"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="--"
+                android:textSize="32sp"
+                android:id="@+id/followingTextView"
+                android:fontFamily="sans-serif-thin"
+
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Followings"
+                android:textSize="13sp"
+                android:textColor="@color/grey_faded"
+                android:layout_marginTop="8.33dp"/>
+        </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="33dp"
+            android:layout_below="@+id/rankLinearLL"
+            android:text="EDIT YOUR PROFILE"
+            android:textColor="#525252"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif"
+            android:layout_marginRight="5dp"
+            android:gravity="center"
+            android:background="#ededed"
+            android:layout_marginTop="5dp"/>
+    </RelativeLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="Blogger Bio is written here"
+        android:fontFamily="sans-serif-light"
+        android:textSize="15sp"
+        android:maxLines="2"
+        android:layout_below="@+id/infoRelativeLL"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="5dp"
+        android:id="@+id/userBio"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Blog Name"
+        android:fontFamily="sans-serif"
+        android:textSize="17sp"
+        android:maxLines="1"
+        android:layout_below="@+id/userBio"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="5dp"
+        android:gravity="center"
+        android:textColor="@color/black_color"
+        android:id="@+id/blogName"
+        android:layout_marginBottom="10dp"/>
+
+</RelativeLayout>

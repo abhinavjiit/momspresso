@@ -24,6 +24,7 @@ import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.editor.ArticleDraftList;
+import com.mycity4kids.models.response.PublishDraftObject;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.AddTopicsParentExpandableListAdapter;
@@ -54,7 +55,7 @@ public class AddArticleTopicsActivity extends BaseActivity {
     int pageNum;
     private AddTopicsParentExpandableListAdapter topicsParentExpandableListAdapter;
     private Toolbar mToolbar;
-    ArticleDraftList draftObject;
+    PublishDraftObject draftObject;
     private ProgressBar progressBar;
     Button nextButton;
     ArrayList<Topics> topicList;
@@ -83,7 +84,7 @@ public class AddArticleTopicsActivity extends BaseActivity {
         parentExpandableListView = (ExpandableListView) findViewById(R.id.parentExpandableListView);
 
         userNavigatingFrom = getIntent().getStringExtra("from");
-        draftObject = (ArticleDraftList) getIntent().getSerializableExtra("draftItem");
+        draftObject = (PublishDraftObject) getIntent().getSerializableExtra("draftItem");
         imageURL = getIntent().getStringExtra("imageUrl");
         articleId = getIntent().getStringExtra("articleId");
 

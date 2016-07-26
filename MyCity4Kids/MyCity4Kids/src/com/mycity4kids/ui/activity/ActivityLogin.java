@@ -97,12 +97,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         Utils.pushOpenScreenEvent(ActivityLogin.this, "Login Screen", SharedPrefUtils.getUserDetailModel(this).getId() + "");
         setContentView(R.layout.aa_loginform);
 
-        String success = "{\"code\":200,\"status\":\"success\",\"data\":{\"id\":\"c08af7fb45e84ce8853369ba047fc307\",\"mc4kToken\":null,\"firstName\":\"Ndh\",\"lastName\":\" \",\"email\":\"hpmycity23@yahoo.com\",\"cityId\":\"1 \",\"userType\":\"0\"},\"reason\":\"\"}";
-        String failure = "{\"code\":200,\"status\":\"failure\",\"data\":[],\"reason\":\"unable to process request !!\"}";
 
-        Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
-        UserDetailResponse successResponse = gson.fromJson(success, UserDetailResponse.class);
-        UserDetailResponse failureResponse = gson.fromJson(failure, UserDetailResponse.class);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);

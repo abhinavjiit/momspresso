@@ -26,8 +26,8 @@ import com.mycity4kids.dbtable.UserTable;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.editor.ArticleDraftList;
-import com.mycity4kids.models.response.DraftListResult;
-import com.mycity4kids.models.response.DraftResponse;
+import com.mycity4kids.models.response.PublishDraftObject;
+import com.mycity4kids.models.response.ArticleDraftResponse;
 import com.mycity4kids.models.response.ImageUploadResponse;
 import com.mycity4kids.models.user.UserModel;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -385,25 +385,32 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                     showToast("Title can't be empty");
                 } else if (mEditorFragment.getContent().toString().isEmpty()) {
                     showToast("Body can't be empty");
-                } else if (mEditorFragment.imageUploading == 0) {
+                }
+                else if (mEditorFragment.getContent().toString().split(" ").length<300)
+                {
+                    showToast("Please write atleast 300 words to publish");
+                }
+                else if (mEditorFragment.imageUploading == 0) {
                     Log.e("imageuploading", mEditorFragment.imageUploading + "");
                     showToast("Please wait while image is being uploaded");
                 } else {
 
-                    ArticleDraftList draftObject = new ArticleDraftList();
+                    PublishDraftObject draftObject = new PublishDraftObject();
 
                     draftObject.setBody(contentFormatting(mEditorFragment.getContent().toString()));
                     draftObject.setTitle(titleFormatting(mEditorFragment.getTitle().toString()));
-                    draftObject.setId(draftId);
-                    draftObject.setNode_id(node_id);
-                    draftObject.setModeration_status(moderation_status);
-                    Log.d("dtaftId = ", draftId + "");
+                  //  draftObject.setId(draftId);
+                    draftObject.setImageUrl(thumbnailUrl);
+                  //  draftObject.setArticleType(moderation_status);
+                    Log.d("draftId = ", draftId + "");
 
 //                    Intent intent = new Intent(EditorPostActivity.this, ArticleImageTagUploadActivity.class);
 //                    intent.putExtra("draftItem", draftObject);
                     if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) {
-//                        Intent intent_1 = new Intent(EditorPostActivity.this, ArticleImageTagUploadActivity.class);
+                        // coming from edit published articles
+//
                         Intent intent_1 = new Intent(EditorPostActivity.this, EditSelectedTopicsActivity.class);
+                        draftObject.setId(articleId);
                         intent_1.putExtra("draftItem", draftObject);
                         intent_1.putExtra("imageUrl", thumbnailUrl);
                         intent_1.putExtra("from", "publishedList");
@@ -420,6 +427,9 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
 //                    }
                     else {
                         Intent intent_3 = new Intent(EditorPostActivity.this, AddArticleTopicsActivity.class);
+
+              //          draftObject.setId(draftId);
+
                         intent_3.putExtra("draftItem", draftObject);
                         intent_3.putExtra("from", "editor");
                         startActivity(intent_3);
@@ -472,7 +482,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             return;
         }
         if (draftId1.isEmpty()){
-        Call<DraftResponse> call = articleDraftAPI.saveDraft(
+        Call<ArticleDraftResponse> call = articleDraftAPI.saveDraft(
                 title,
                 body,
                 "0"
@@ -480,13 +490,13 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
 
 
         //asynchronous call
-        call.enqueue(new Callback<DraftResponse>() {
+        call.enqueue(new Callback<ArticleDraftResponse>() {
                          @Override
-                         public void onResponse(Call<DraftResponse> call, retrofit2.Response<DraftResponse> response) {
+                         public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
                              int statusCode = response.code();
 
-                             DraftResponse responseModel = (DraftResponse) response.body();
-                            // Result<DraftResult> result=responseModel.getData().getResult();
+                             ArticleDraftResponse responseModel = (ArticleDraftResponse) response.body();
+                            // Result<ArticleDraftResult> result=responseModel.getData().getResult();
                              removeProgressDialog();
 
                              if (responseModel.getCode() != 200) {
@@ -512,25 +522,27 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
 
 
                          @Override
-                         public void onFailure(Call<DraftResponse> call, Throwable t) {
+                         public void onFailure(Call<ArticleDraftResponse> call, Throwable t) {
 
                          }
                      }
         );}else
         {
-            Call<DraftResponse> call = articleDraftAPI.updateDraft(
+
+            Call<ArticleDraftResponse> call = articleDraftAPI.updateDraft(
                     AppConstants.LIVE_URL+"v1/articles/"+draftId1,
+
                     title,
                     body,
                     "0"
                     );
-            call.enqueue(new Callback<DraftResponse>() {
+            call.enqueue(new Callback<ArticleDraftResponse>() {
                 @Override
-                public void onResponse(Call<DraftResponse> call, retrofit2.Response<DraftResponse> response) {
+                public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
                     int statusCode = response.code();
 
-                    DraftResponse responseModel = (DraftResponse) response.body();
-                    // Result<DraftResult> result=responseModel.getData().getResult();
+                    ArticleDraftResponse responseModel = (ArticleDraftResponse) response.body();
+                    // Result<ArticleDraftResult> result=responseModel.getData().getResult();
                     removeProgressDialog();
 
                     if (responseModel.getCode() != 200) {
@@ -554,7 +566,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                 }
 
                 @Override
-                public void onFailure(Call<DraftResponse> call, Throwable t) {
+                public void onFailure(Call<ArticleDraftResponse> call, Throwable t) {
 
                 }
             });
@@ -611,7 +623,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
         content = getIntent().getStringExtra(CONTENT_PARAM);
         boolean isLocalDraft = getIntent().getBooleanExtra(DRAFT_PARAM, true);
         if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("draftList")) {
-            DraftListResult draftObject = (DraftListResult) getIntent().getSerializableExtra("draftItem");
+            PublishDraftObject draftObject = (PublishDraftObject) getIntent().getSerializableExtra("draftItem");
             title = draftObject.getTitle();
             title = title.trim();
             content = draftObject.getBody();
@@ -627,9 +639,9 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             mEditorFragment.setContent(content);
             if (null == moderation_status) {
             }
-            if (moderation_status.equals("3")) {
+          /*  if (moderation_status.equals("3")) {
                 mEditorFragment.toggleTitleView(true);
-            }
+            }*/
         } else if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) {
             //  PublishedArticlesModel.PublishedArticleData draftObject=(PublishedArticlesModel.PublishedArticleData) getIntent().getSerializableExtra("publishedItem");
             title = getIntent().getStringExtra("title");
@@ -640,7 +652,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             articleId = getIntent().getStringExtra("articleId");
             mEditorFragment.setTitle(title);
             mEditorFragment.setContent(content);
-            mEditorFragment.toggleTitleView(true);
+          //  mEditorFragment.toggleTitleView(true);
             //  mEditorFragment.setTitle(title);
             //    mEditorFragment.setContent(content);
         } else /*if (getIntent().getStringExtra("from").equals("dashboard"))*/ {
@@ -749,89 +761,11 @@ Log.e("responseURL",responseModel.getData().getUrl());
                      }
         );
 
-   /*     JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("extension", "image/png");
-            jsonObject.put("size", ba.length);
-            jsonObject.put("byteCode", imageString);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
-        UserTable userTable = new UserTable((BaseApplication) this.getApplication());
-        UserModel userModel = userTable.getAllUserData();
-
-        JSONArray jsonArray = new JSONArray();
-        jsonArray.put(jsonObject);
-
-        ImageUploadRequest requestData = new ImageUploadRequest();
-        //  requestData.setFile(jsonArray.toString());
-        requestData.setFile(imageString);
-        requestData.setUser_id("" + userModel.getUser().getId());
-        // requestData.setSessionId("" + userModel.getUser().getSessionId());
-        // requestData.setProfileId("" + userModel.getUser().getProfileId());
-        requestData.setImageType("jpg");
-        //  requestData.setType(AppConstants.IMAGE_TYPE_USER_PROFILE);
-
-        ImageUploadController controller = new ImageUploadController(this, this);
-        controller.getData(AppConstants.IMAGE_EDITOR_UPLOAD_REQUEST, requestData);*/
     }
 
     @Override
     protected void updateUi(Response response) {
-        switch (response.getDataType()) {
-
-            case AppConstants.ARTICLE_DRAFT_REQUEST: {
-             /*   if (response.getResponseObject() instanceof ParentingDetailResponse) {
-                    ParentingDetailResponse responseModel = (ParentingDetailResponse) response
-                            .getResponseObject();
-                    removeProgressDialog();
-
-                    if (responseModel.getResponseCode() != 200) {
-                        showToast(getString(R.string.toast_response_error));
-                        return;
-                    } else {
-                        if (!StringUtils.isNullOrEmpty(responseModel.getResult().getMessage())) {
-                            //  SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
-                            Log.i("Draft message", responseModel.getResult().getMessage());
-                        }
-                        draftId = responseModel.getResult().getData().getId() + "";
-
-                        //setProfileImage(originalImage);
-                        showToast("Draft Successfully saved");
-                        if (fromBackpress) {
-                            super.onBackPressed();
-                        }
-                        //  finish();
-                    }
-                }
-                break;*/
-            }
-            case AppConstants.IMAGE_EDITOR_UPLOAD_REQUEST: {
-               /* if (response.getResponseObject() instanceof CommonResponse) {
-                    CommonResponse responseModel = (CommonResponse) response
-                            .getResponseObject();
-                    if (responseModel.getResponseCode() != 200) {
-                        showToast(getString(R.string.toast_response_error));
-                        removeProgressDialog();
-                        return;
-                    } else {
-                        if (!StringUtils.isNullOrEmpty(responseModel.getResult().getMessage())) {
-                            //      SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
-                            Log.i("Uploaded Image URL", responseModel.getResult().getMessage());
-                        }
-                        mediaFile.setFileURL(responseModel.getResult().getMessage());
-
-                        ((EditorMediaUploadListener) mEditorFragment).onMediaUploadSucceeded(mediaId, mediaFile);
-                        removeProgressDialog();
-                        //setProfileImage(originalImage);
-                        //  showToast("You have successfully uploaded image.");
-                    }
-                }
-                break;*/
-            }
-
-        }
 
     }
 }

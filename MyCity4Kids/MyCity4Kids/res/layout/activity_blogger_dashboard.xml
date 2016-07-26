@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/white_color">
 
-    <android.support.v7.widget.Toolbar
+   <!-- <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,13 +17,235 @@
 
     <ImageView
         android:id="@+id/bloggerImageView"
-        android:layout_width="84dp"
-        android:layout_height="84dp"
+        android:layout_width="95dp"
+        android:layout_height="95dp"
         android:layout_below="@+id/toolbar"
         android:layout_margin="15dp"
-        android:src="@drawable/family_xxhdpi" />
+        android:src="@drawable/family_xxhdpi"
+        android:layout_marginTop="10dp"/>
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/toolbar"
+    android:layout_toRightOf="@id/bloggerImageView"
+    android:layout_marginLeft="30dp"
+    android:layout_marginTop="22.67dp"
+    android:layout_marginRight="1dp"
+    android:id="@+id/infoRelativeLL"
 
+    >
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:id="@+id/rankLinearLL"
+    android:layout_alignParentLeft="true">
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text="&#45;&#45;"
+        android:textSize="32sp"
+        android:id="@+id/rankingTextView"
+        android:fontFamily="sans-serif-thin"
+
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text="Rank"
+        android:textSize="13sp"
+        android:textColor="@color/grey_faded"
+        android:layout_marginTop="8.33dp"
+
+        />
+</LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/FollowersLinearLL"
+       android:layout_centerHorizontal="true"
+
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="&#45;&#45;"
+            android:textSize="32sp"
+            android:id="@+id/followersTextView"
+            android:fontFamily="sans-serif-thin"
+
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Followers"
+            android:textSize="13sp"
+            android:textColor="@color/grey_faded"
+            android:layout_marginTop="8.33dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/FollowingLinearLL"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="5dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="&#45;&#45;"
+            android:textSize="32sp"
+            android:id="@+id/followingTextView"
+            android:fontFamily="sans-serif-thin"
+
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Followings"
+            android:textSize="13sp"
+            android:textColor="@color/grey_faded"
+            android:layout_marginTop="8.33dp"/>
+    </LinearLayout>
+ <TextView
+     android:layout_width="match_parent"
+     android:layout_height="33dp"
+     android:layout_below="@+id/rankLinearLL"
+     android:text="EDIT YOUR PROFILE"
+     android:textColor="#525252"
+     android:textSize="14sp"
+     android:fontFamily="sans-serif"
+     android:layout_marginRight="5dp"
+     android:gravity="center"
+     android:background="#ededed"
+     android:layout_marginTop="5dp"/>
+</RelativeLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="Blogger Bio is written here"
+        android:fontFamily="sans-serif-light"
+        android:textSize="15sp"
+        android:maxLines="2"
+        android:layout_below="@+id/infoRelativeLL"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="5dp"
+        android:id="@+id/userBio"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Blog Name"
+        android:fontFamily="sans-serif"
+        android:textSize="17sp"
+        android:maxLines="1"
+        android:layout_below="@+id/userBio"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="5dp"
+        android:gravity="center"
+        android:textColor="@color/black_color"
+        android:id="@+id/blogName"
+        android:layout_marginBottom="10dp"/>-->
+   <!-- <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/login_grey"
+        android:layout_below="@+id/blogName"
+
+        ></View>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/blogName"
+        android:weightSum="4"
+        android:orientation="horizontal"
+        android:id="@+id/tabs">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="66dp"
+            android:layout_weight="1"
+            >
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/test_icon_2"
+                android:tint="#f1455f"
+                android:layout_gravity="center"/>
+        </LinearLayout>
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/login_grey"
+            ></View>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="66dp"
+            android:layout_weight="1">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_publish"
+                android:layout_gravity="center"
+
+                />
+        </LinearLayout>
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/login_grey"
+            ></View>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="66dp"
+            android:layout_weight="1">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_comments"
+                android:layout_gravity="center"
+               />
+        </LinearLayout>
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/login_grey"
+            ></View>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="66dp"
+            android:layout_weight="1">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_review"
+                android:layout_gravity="center"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/login_grey"
+        android:layout_below="@id/tabs"
+        ></View>-->
+    <TextView
+        android:id="@+id/noDraftsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="No Drafts have been saved yet"
+        android:visibility="gone" />
+    <com.hb.views.PinnedSectionListView
+        android:id="@+id/draftListview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tabs"
+        />
+  <!--  <TextView
         android:id="@+id/bloggerNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -94,9 +316,12 @@
         android:drawablePadding="2dp"
         android:text="0"
         android:textColor="@color/dashboard.stats"
-        android:visibility="invisible" />
+        android:visibility="invisible"
+        />
 
+-->
 
+<!--
     <View
         android:id="@+id/separator1"
         android:layout_width="match_parent"
@@ -142,7 +367,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
-        android:layout_below="@+id/separator2" />
+        android:layout_below="@+id/separator2" />-->
 
     <ImageView
         android:id="@+id/addDraft"

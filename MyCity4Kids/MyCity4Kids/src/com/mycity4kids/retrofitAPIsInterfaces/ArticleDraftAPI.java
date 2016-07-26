@@ -2,9 +2,8 @@ package com.mycity4kids.retrofitAPIsInterfaces;
 
 import com.mycity4kids.models.response.BaseResponse;
 import com.mycity4kids.models.response.DraftListResponse;
-import com.mycity4kids.models.response.DraftResponse;
+import com.mycity4kids.models.response.ArticleDraftResponse;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.DELETE;
 import retrofit2.http.Field;
@@ -12,6 +11,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Query;
 import retrofit2.http.Url;
 
 /**
@@ -29,22 +29,22 @@ public interface ArticleDraftAPI {
 
     @FormUrlEncoded
     @POST("v1/articles/")
-    Call<DraftResponse> saveDraft(
+    Call<ArticleDraftResponse> saveDraft(
             @Field("title") String title,
             @Field("body") String body,
             @Field("articleType") String articleType);
 
     @FormUrlEncoded
     @PUT
-    Call<DraftResponse> updateDraft(@Url String url,
-                                    @Field("title") String title,
-                                    @Field("body") String body,
-                                    @Field("articleType") String articleType
+    Call<ArticleDraftResponse> updateDraft(@Url String url,
+                                           @Field("title") String title,
+                                           @Field("body") String body,
+                                           @Field("articleType") String articleType
     );
 
 
-    @GET
-    Call<DraftListResponse> getDraftsList(@Url String url);
+    @GET("v1/articles/")
+    Call<DraftListResponse> getDraftsList(@Query("aType") String aType);
     @DELETE
-    Call<DraftResponse> deleteDraft(@Url String url);
+    Call<ArticleDraftResponse> deleteDraft(@Url String url);
 }

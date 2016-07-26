@@ -5,7 +5,12 @@
     android:background="@color/a_bg_blue"
     android:orientation="vertical">
 
-
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="General"
+    android:textAllCaps="true"
+    android:textSize="17.5sp"/>
     <TextView
         android:id="@+id/family_details"
         android:layout_width="match_parent"

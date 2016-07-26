@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
@@ -26,11 +27,13 @@ import com.mycity4kids.editor.ArticleImageTagUploadActivity;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.editor.ArticleDraftList;
+import com.mycity4kids.models.response.PublishDraftObject;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.widget.TopicView;
 
 import org.apmem.tools.layouts.FlowLayout;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -64,7 +67,7 @@ public class EditSelectedTopicsActivity extends BaseActivity {
     private ProgressBar progressBar;
 
     ArrayList<Topics> selectedTopics;
-    ArticleDraftList draftObject;
+    PublishDraftObject draftObject;
     ArrayList<Topics> allTopicList;
     HashMap<Topics, List<Topics>> allTopicsMap;
     ArrayList<String> selectedTopicsIdList = new ArrayList<>();
@@ -92,7 +95,7 @@ public class EditSelectedTopicsActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Topics");
 
-        draftObject = (ArticleDraftList) getIntent().getSerializableExtra("draftItem");
+        draftObject = (PublishDraftObject) getIntent().getSerializableExtra("draftItem");
         userNavigatingFrom = getIntent().getStringExtra("from");
         selectedTopics = getIntent().getParcelableArrayListExtra("selectedTopics");
 
@@ -116,10 +119,11 @@ public class EditSelectedTopicsActivity extends BaseActivity {
                     progressBar.setVisibility(View.VISIBLE);
                     nextButton.setVisibility(View.GONE);
 
-                    JSONObject jObject = new JSONObject(tags);
-                    Iterator<?> keys = jObject.keys();
+                    JSONArray jsonArray = new JSONArray(tags);
 
-                    while (keys.hasNext()) {
+                    for(int i=0;i<jsonArray.length();i++)
+                    {
+                        Iterator<?> keys = jsonArray.getJSONObject(i).keys();
                         selectedTopicsIdList.add((String) keys.next());
                     }
 
@@ -492,15 +496,18 @@ public class EditSelectedTopicsActivity extends BaseActivity {
     * Sent as tag to server as post param.
     * */
     private void createTagObjectFromList() {
-        JSONObject jObject = new JSONObject();
+//        JSONObject jObject = new JSONObject();
+        JSONArray jArray = new JSONArray();
         try {
             for (int i = 0; i < selectedTopics.size(); i++) {
+                JSONObject jObject = new JSONObject();
                 jObject.put("" + selectedTopics.get(i).getId(), selectedTopics.get(i).getTitle());
+                jArray.put(jObject);
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        tags = jObject.toString();
+        tags = jArray.toString();
     }
 
     @Override

@@ -7,12 +7,9 @@ import android.util.Log;
 
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
-import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.models.response.ConfigResponse;
-import com.mycity4kids.models.response.DraftResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ConfigAPIs;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 
@@ -65,8 +62,10 @@ public CategorySyncService()
                                  int statusCode = response.code();
 
                                  ConfigResponse responseModel = (ConfigResponse) response.body();
-                                 // Result<DraftResult> result=responseModel.getData().getResult();
+                                 // Result<ArticleDraftResult> result=responseModel.getData().getResult();
                              //    removeProgressDialog();
+try {
+
 
                                  if (responseModel.getCode() != 200) {
                                    //  showToast(getString(R.string.toast_response_error));
@@ -106,7 +105,9 @@ public CategorySyncService()
                                          }
                                      }
 
-                                 }
+                                 }}
+catch (Exception e)
+{e.printStackTrace();}
 
                              }
 

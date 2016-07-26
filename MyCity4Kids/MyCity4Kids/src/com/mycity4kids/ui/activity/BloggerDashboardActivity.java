@@ -14,24 +14,35 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.hb.views.PinnedSectionListView;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
+
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.controller.BloggerDashboardAndPublishedArticlesController;
+import com.mycity4kids.editor.DraftListAdapter;
 import com.mycity4kids.editor.EditorPostActivity;
+import com.mycity4kids.enums.ArticleType;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.models.editor.ArticleDraftRequest;
 import com.mycity4kids.models.parentingdetails.ParentingDetailResponse;
 import com.mycity4kids.models.request.UpdateUserDetail;
+import com.mycity4kids.models.response.ArticleDraftResponse;
+import com.mycity4kids.models.response.DraftListResponse;
 import com.mycity4kids.models.response.ImageUploadResponse;
+import com.mycity4kids.models.response.PublishDraftObject;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.newmodels.BloggerDashboardModel;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -46,6 +57,7 @@ import com.squareup.picasso.Picasso;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.net.URI;
+import java.util.ArrayList;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -57,7 +69,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * Created by hemant on 16/3/16.
  */
-public class BloggerDashboardActivity extends BaseActivity implements View.OnClickListener {
+public class BloggerDashboardActivity extends BaseActivity implements View.OnClickListener, PopupMenu.OnMenuItemClickListener {
+    @Override
+    protected void updateUi(Response response) {
+
+    }
+
+
 
     private Toolbar mToolbar;
     private TextView bloggerNameTextView, rankingTextView, viewCountTextView, followersViewCount;
@@ -70,13 +88,243 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     Uri imageUri;
     Bitmap finalBitmap;
     File file;
+    PinnedSectionListView draftListview;
+    ArrayList<PublishDraftObject> draftList;
+    int position;
+    TextView noDrafts;
+    DraftListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blogger_dashboard);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        draftListview = (PinnedSectionListView) findViewById(R.id.draftListview);
+        noDrafts = (TextView) findViewById(R.id.noDraftsTextView);
+        View header = getLayoutInflater().inflate(R.layout.header_blogger_dashboard, null);
+        draftListview.addHeaderView(header);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        hitDraftListingApi();
+        draftListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (Build.VERSION.SDK_INT > 15) {
+                    Intent intent = new Intent(BloggerDashboardActivity.this, EditorPostActivity.class);
+                    intent.putExtra("draftItem", draftList.get(position));
+                    intent.putExtra("from", "draftList");
+                    startActivity(intent);
+                } else {
+                    Intent viewIntent =
+                            new Intent("android.intent.action.VIEW",
+                                    Uri.parse("http://www.mycity4kids.com/parenting/admin/setupablog"));
+                    startActivity(viewIntent);
+                }
+            }
+        });
+    }
+
+    private void hitDraftListingApi() {
+        showProgressDialog(getResources().getString(R.string.please_wait));
+       /* ArticleDraftRequest articleDraftRequest = new ArticleDraftRequest();
+        *//**
+         * this case will case in pagination case: for sorting
+         *//*
+        articleDraftRequest.setUser_id("" + userModel.getUser().getId());
+        DraftListController _controller = new DraftListController(this, this);
+
+        _controller.getData(AppConstants.ARTICLE_DRAFT_LIST_REQUEST, articleDraftRequest);*/
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        // prepare call in Retrofit 2.0
+        ArticleDraftAPI getDraftListAPI = retrofit.create(ArticleDraftAPI.class);
+        if (!ConnectivityUtils.isNetworkEnabled(this)) {
+            removeProgressDialog();
+            showToast(getString(R.string.error_network));
+            return;
+        }
+
+        Call<DraftListResponse> call = getDraftListAPI.getDraftsList(ArticleType.DRAFT.getValue()+"'"+ArticleType.UNDER_MODERATION.getValue()+"'"+ArticleType.UNAPPROVED.getValue()+"'"+ArticleType.UNPUBLISHED.getValue());
+
+        //asynchronous call
+        call.enqueue(new Callback<DraftListResponse>() {
+                         @Override
+                         public void onResponse(Call<DraftListResponse> call, retrofit2.Response<DraftListResponse> response) {
+                             int statusCode = response.code();
+                             removeProgressDialog();
+                             // ResponseBody responseModel = (ResponseBody) response.body();
+                    /*         String responseData = null;
+                             try {
+                                 responseData = new String(response.body().bytes());
+                             } catch (IOException e) {
+                                 e.printStackTrace();
+                             }
+                             JSONObject jsonObject = null;
+                             try {
+                                 jsonObject = new JSONObject(responseData);
+
+                                 JSONArray dataObj = null;
+
+                                 dataObj = jsonObject.getJSONObject("result").optJSONArray("data");
+
+
+                                 if (null == dataObj) {
+
+                                     jsonObject.getJSONObject("result").remove("data");
+
+
+                                     jsonObject.getJSONObject("result").put("data", new JSONArray());
+
+                                 }
+
+                                 responseData = jsonObject.toString();
+                             }catch (JSONException e) {
+                                 e.printStackTrace();
+                             }*/
+                             //     ArticleDraftListResponse responseModel = new Gson().fromJson(responseData, ArticleDraftListResponse.class);
+                             DraftListResponse responseModel=response.body();
+                             if (responseModel.getCode() != 200) {
+                                 showToast(getString(R.string.toast_response_error));
+                                 return;
+                             } else {
+                                 if (!StringUtils.isNullOrEmpty(responseModel.getData().getMsg())) {
+                                     Log.i("Draft message",responseModel.getData().getMsg());
+                                 }
+
+                                 processDraftResponse(responseModel);
+
+                             }}
+
+
+                         @Override
+                         public void onFailure(Call<DraftListResponse> call, Throwable t) {
+                             removeProgressDialog();
+
+                         }
+                     }
+        );
+
+    }
+
+    public void deleteDraftAPI(PublishDraftObject draftObject, int p) {
+        position = p;
+        showProgressDialog(getResources().getString(R.string.please_wait));
+        ArticleDraftRequest articleDraftRequest = new ArticleDraftRequest();
+        /**
+         * this case will case in pagination case: for sorting
+         */
+        /*articleDraftRequest.setUser_id("" + userModel.getUser().getId());
+        articleDraftRequest.setId(draftObject.getId());
+        articleDraftRequest.setBody(draftObject.getBody());
+        articleDraftRequest.setTitle(draftObject.getTitle());
+        articleDraftRequest.setStatus("1");
+        ArticleDraftController _controller = new ArticleDraftController(this, this);
+
+        _controller.getData(AppConstants.ARTICLE_DRAFT_REQUEST, articleDraftRequest);*/
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        // prepare call in Retrofit 2.0
+        ArticleDraftAPI articleDraftAPI = retrofit.create(ArticleDraftAPI.class);
+        if (!ConnectivityUtils.isNetworkEnabled(this)) {
+            showToast(getString(R.string.error_network));
+            return;
+        }
+
+        Call<ArticleDraftResponse> call = articleDraftAPI.deleteDraft(
+                AppConstants.LIVE_URL+"v1/articles/"+draftObject.getId());
+
+
+
+        //asynchronous call
+        call.enqueue(new Callback<ArticleDraftResponse>() {
+                         @Override
+                         public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
+                             int statusCode = response.code();
+
+                             ArticleDraftResponse responseModel = (ArticleDraftResponse) response.body();
+
+                             removeProgressDialog();
+
+                             if (responseModel.getCode() != 200) {
+                                 showToast(getString(R.string.toast_response_error));
+                                 return;
+                             } else {
+                                 if (!StringUtils.isNullOrEmpty(responseModel.getData().getMsg())) {
+                                     //  SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
+                                     Log.i("Draft message", responseModel.getData().getMsg());
+                                 }
+                                 draftList.remove(position);
+                                 adapter.notifyDataSetChanged();
+                             }
+
+                         }
+
+
+                         @Override
+                         public void onFailure(Call<ArticleDraftResponse> call, Throwable t) {
+
+                         }
+                     }
+        );
+    }
+
+    @Override
+    public void onClick(final View v) {
+        v.post(new Runnable() {
+            @Override
+            public void run() {
+                showPopupMenu(v);
+            }
+        });
+    }
+
+    private void showPopupMenu(View view) {
+
+        PopupMenu popup = new PopupMenu(this, view);
+
+        popup.getMenuInflater().inflate(R.menu.pop_menu_draft, popup.getMenu());
+
+        popup.show();
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.edit:
+                Log.e("huhuhu", "bhbhbhbhb");
+                //    archive(item);
+                return true;
+            case R.id.delete:
+                Log.e("huhuhu", "nnnnnnn");
+                //   delete(item);
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    private void processDraftResponse(DraftListResponse responseModel) {
+        draftList = responseModel.getData().getResult();
+
+        if (draftList.size() == 0) {
+            noDrafts.setVisibility(View.VISIBLE);
+        } else {
+            ArrayList<PublishDraftObject> draftListNew=new ArrayList<PublishDraftObject>();
+
+            PublishDraftObject draftObject=new PublishDraftObject();
+            draftObject.setItemType(0);
+            draftListNew.add(0,draftObject);
+            draftListNew.addAll(draftList);
+            noDrafts.setVisibility(View.GONE);
+            adapter = new DraftListAdapter(this, draftListNew);
+            draftListview.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        }
+
+    }
+
+    /*
         Utils.pushOpenScreenEvent(BloggerDashboardActivity.this, "Blogger Dashboard", SharedPrefUtils.getUserDetailModel(this).getId() + "");
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         rankingTextView = (TextView) findViewById(R.id.rankingTextView);
@@ -98,7 +346,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_PICK);
-                intent.setType("image/*");
+                intent.setType("image*//*");
                 startActivityForResult(intent, ADD_MEDIA_ACTIVITY_REQUEST_CODE);
             }
         });
@@ -164,8 +412,8 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     private void getBloggerDashboardDetails() {
 
         showProgressDialog("please wait ...");
-       /* BloggerDashboardAndPublishedArticlesController _controller = new BloggerDashboardAndPublishedArticlesController(this, this);
-        _controller.getData(AppConstants.GET_BLOGGER_DASHBOARD_REQUEST, 0);*/
+       *//* BloggerDashboardAndPublishedArticlesController _controller = new BloggerDashboardAndPublishedArticlesController(this, this);
+        _controller.getData(AppConstants.GET_BLOGGER_DASHBOARD_REQUEST, 0);*//*
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         // prepare call in Retrofit 2.0
         BloggerDashboardAPI bloggerDashboardAPI = retrofit.create(BloggerDashboardAPI.class);
@@ -279,7 +527,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
 
         switch (response.getDataType()) {
             case AppConstants.GET_BLOGGER_DASHBOARD_REQUEST:
-           /*     responseData = (BloggerDashboardModel) response.getResponseObject();
+           *//*     responseData = (BloggerDashboardModel) response.getResponseObject();
                 try {
                     if (responseData.getResponseCode() == 200) {
                         removeProgressDialog();
@@ -325,7 +573,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                 break;
 
             default:
-                break;*/
+                break;*//*
         }
     }
 
@@ -400,8 +648,8 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                         float actualWidth = imageBitmap.getWidth();
                         float maxHeight = 243;
                         float maxWidth = 423;
-                       /* float maxHeight = 1300;
-                        float maxWidth = 700;*/
+                       *//* float maxHeight = 1300;
+                        float maxWidth = 700;*//*
                         float imgRatio = actualWidth / actualHeight;
                         float maxRatio = maxWidth / maxHeight;
 
@@ -443,9 +691,9 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     public void sendUploadProfileImageRequest(File file) {
         showProgressDialog(getString(R.string.please_wait));
         ByteArrayOutputStream bao = new ByteArrayOutputStream();
-       /* originalImage.compress(Bitmap.CompressFormat.PNG, 75, bao);
+       *//* originalImage.compress(Bitmap.CompressFormat.PNG, 75, bao);
         byte[] ba = bao.toByteArray();
-        String imageString = Base64.encodeToString(ba, Base64.DEFAULT);*/
+        String imageString = Base64.encodeToString(ba, Base64.DEFAULT);*//*
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(AppConstants.LIVE_URL)
@@ -518,5 +766,5 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
       });
 
   }
-
+*/
 }
