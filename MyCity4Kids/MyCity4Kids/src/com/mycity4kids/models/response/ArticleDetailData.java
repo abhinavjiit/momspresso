@@ -18,6 +18,7 @@ public class ArticleDetailData {
     private String userType;
     private String userName;
     private String isBookmarked;
+    private String isFollowing;
     private String url;
     private String author_image;
     private String commentUri;
@@ -116,6 +117,22 @@ public class ArticleDetailData {
 
     public void setBookmarkStatus(String isBookmarked) {
         this.isBookmarked = isBookmarked;
+    }
+
+    public String getIsFollowing() {
+        return isFollowing;
+    }
+
+    public void setIsFollowing(String isFollowing) {
+        this.isFollowing = isFollowing;
+    }
+
+    public String getCommentUri() {
+        return commentUri;
+    }
+
+    public void setCommentUri(String commentUri) {
+        this.commentUri = commentUri;
     }
 
     public String getUrl() {

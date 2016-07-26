@@ -97,8 +97,6 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         Utils.pushOpenScreenEvent(ActivityLogin.this, "Login Screen", SharedPrefUtils.getUserDetailModel(this).getId() + "");
         setContentView(R.layout.aa_loginform);
 
-
-
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("Sign In");

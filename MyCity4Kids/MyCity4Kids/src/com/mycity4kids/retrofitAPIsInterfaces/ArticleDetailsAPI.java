@@ -36,8 +36,9 @@ public interface ArticleDetailsAPI {
     @GET("https://s3-ap-northeast-1.amazonaws.com/microservices-sync-test/articles-data/{article_id}.json")
     Call<ArticleDetailData> getDemoArticle(@Path("article_id") String article_id);
 
-    @POST("v1/users/isbookmark/")
-    Call<ArticleDetailData> checkBookmarkStatus(@Body ArticleDetailRequest body);
+    @GET("v1/users/checkFollowingBookmarkStatus/")
+    Call<ArticleDetailData> checkFollowingBookmarkStatus(@Query("articleId") String articleId,
+                                                         @Query("authorId") String authorId);
 
     @GET
     Call<ResponseBody> getComments(@Url String url);

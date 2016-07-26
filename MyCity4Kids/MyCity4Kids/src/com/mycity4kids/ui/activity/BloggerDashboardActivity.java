@@ -1,13 +1,10 @@
 package com.mycity4kids.ui.activity;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -16,55 +13,36 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.ListView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
 import com.hb.views.PinnedSectionListView;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
-
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
-import com.mycity4kids.controller.BloggerDashboardAndPublishedArticlesController;
 import com.mycity4kids.editor.DraftListAdapter;
 import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.enums.ArticleType;
-import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
-import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.editor.ArticleDraftRequest;
-import com.mycity4kids.models.parentingdetails.ParentingDetailResponse;
-import com.mycity4kids.models.request.UpdateUserDetail;
 import com.mycity4kids.models.response.ArticleDraftResponse;
 import com.mycity4kids.models.response.DraftListResponse;
-import com.mycity4kids.models.response.ImageUploadResponse;
 import com.mycity4kids.models.response.PublishDraftObject;
-import com.mycity4kids.models.response.UserDetailResponse;
-import com.mycity4kids.newmodels.BloggerDashboardModel;
-import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
-import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
-import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
-import com.mycity4kids.retrofitAPIsInterfaces.UserAttributeUpdateAPI;
-import com.mycity4kids.ui.adapter.BloggerDashboardPagerAdapter;
-import com.mycity4kids.utils.RoundedTransformation;
-import com.squareup.picasso.Picasso;
+import com.mycity4kids.ui.adapter.CommentsListAdapter;
+import com.mycity4kids.ui.adapter.PublishedArticleListAdapter;
+import com.mycity4kids.ui.adapter.ReviewsListAdapter;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.net.URI;
 import java.util.ArrayList;
 
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by hemant on 16/3/16.
@@ -75,7 +53,10 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
 
     }
 
-
+    private static final int LIST_TYPE_DRAFT = 0;
+    private static final int LIST_TYPE_PUBLISHED = 1;
+    private static final int LIST_TYPE_COMMENTS = 2;
+    private static final int LIST_TYPE_REVIEWS = 3;
 
     private Toolbar mToolbar;
     private TextView bloggerNameTextView, rankingTextView, viewCountTextView, followersViewCount;
@@ -88,18 +69,26 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     Uri imageUri;
     Bitmap finalBitmap;
     File file;
-    PinnedSectionListView draftListview;
+    PinnedSectionListView draftListview, publishedArticleListView, bookmarksListView, reviewsCommentsListView;
     ArrayList<PublishDraftObject> draftList;
     int position;
     TextView noDrafts;
     DraftListAdapter adapter;
+    PublishedArticleListAdapter publishedArticleListAdapter;
+    CommentsListAdapter commentsListAdapter;
+    ReviewsListAdapter reviewsListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blogger_dashboard);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        draftListview = (PinnedSectionListView) findViewById(R.id.draftListview);
+
+        draftListview = (PinnedSectionListView) findViewById(R.id.draftListView);
+        publishedArticleListView = (PinnedSectionListView) findViewById(R.id.publishedArticleListView);
+        bookmarksListView = (PinnedSectionListView) findViewById(R.id.bookmarkedListView);
+        reviewsCommentsListView = (PinnedSectionListView) findViewById(R.id.reviewCommentsListView);
+
         noDrafts = (TextView) findViewById(R.id.noDraftsTextView);
         View header = getLayoutInflater().inflate(R.layout.header_blogger_dashboard, null);
         draftListview.addHeaderView(header);
@@ -109,22 +98,193 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     protected void onResume() {
         super.onResume();
         hitDraftListingApi();
+        hitPublishedArticleApi();
+        hitBookmarkedArticlesApi();
+        hitReviewCommentsApi();
+
         draftListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (Build.VERSION.SDK_INT > 15) {
-                    Intent intent = new Intent(BloggerDashboardActivity.this, EditorPostActivity.class);
-                    intent.putExtra("draftItem", draftList.get(position));
-                    intent.putExtra("from", "draftList");
-                    startActivity(intent);
+
+
+                if (position == 0) {
+                    // Header Item
+
+                } else if (position == 1) {
+                    // Pinned Section Item
+                    ((LinearLayout) findViewById(R.id.publishedItemLinearlayout)).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            onSectionHeaderItemClick(LIST_TYPE_PUBLISHED);
+                        }
+                    });
+                    ((LinearLayout) findViewById(R.id.commentsItemLinearlayout)).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            onSectionHeaderItemClick(LIST_TYPE_COMMENTS);
+                        }
+                    });
+                    ((LinearLayout) findViewById(R.id.reviewItemLinearLayout)).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            onSectionHeaderItemClick(LIST_TYPE_REVIEWS);
+                        }
+                    });
                 } else {
-                    Intent viewIntent =
-                            new Intent("android.intent.action.VIEW",
-                                    Uri.parse("http://www.mycity4kids.com/parenting/admin/setupablog"));
-                    startActivity(viewIntent);
+                    // List view items
+                    if (Build.VERSION.SDK_INT > 15) {
+                        Intent intent = new Intent(BloggerDashboardActivity.this, EditorPostActivity.class);
+                        intent.putExtra("draftItem", draftList.get(position));
+                        intent.putExtra("from", "draftList");
+                        startActivity(intent);
+                    } else {
+                        Intent viewIntent =
+                                new Intent("android.intent.action.VIEW",
+                                        Uri.parse("http://www.mycity4kids.com/parenting/admin/setupablog"));
+                        startActivity(viewIntent);
+                    }
                 }
             }
         });
+    }
+
+    private void onSectionHeaderItemClick(int listType) {
+
+        if (listType == LIST_TYPE_DRAFT) {
+
+        } else if (listType == LIST_TYPE_PUBLISHED) {
+
+        } else if (listType == LIST_TYPE_COMMENTS) {
+
+        } else if (listType == LIST_TYPE_COMMENTS) {
+
+        }
+    }
+
+    private void hitReviewCommentsApi() {
+        showProgressDialog(getResources().getString(R.string.please_wait));
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        // prepare call in Retrofit 2.0
+        ArticleDraftAPI getDraftListAPI = retrofit.create(ArticleDraftAPI.class);
+        if (!ConnectivityUtils.isNetworkEnabled(this)) {
+            removeProgressDialog();
+            showToast(getString(R.string.error_network));
+            return;
+        }
+
+        Call<DraftListResponse> call = getDraftListAPI.getDraftsList(ArticleType.DRAFT.getValue() + "'" + ArticleType.UNDER_MODERATION.getValue()
+                + "'" + ArticleType.UNAPPROVED.getValue() + "'" + ArticleType.UNPUBLISHED.getValue());
+//asynchronous call
+        call.enqueue(new Callback<DraftListResponse>() {
+                         @Override
+                         public void onResponse(Call<DraftListResponse> call, retrofit2.Response<DraftListResponse> response) {
+                             int statusCode = response.code();
+                             removeProgressDialog();
+
+                             DraftListResponse responseModel = response.body();
+                             if (responseModel.getCode() != 200) {
+                                 showToast(getString(R.string.toast_response_error));
+                                 return;
+                             } else {
+                                 if (!StringUtils.isNullOrEmpty(responseModel.getData().getMsg())) {
+                                     Log.i("Draft message", responseModel.getData().getMsg());
+                                 }
+                                 processReviewsResponse(responseModel);
+
+                             }
+                         }
+
+                         @Override
+                         public void onFailure(Call<DraftListResponse> call, Throwable t) {
+                             removeProgressDialog();
+
+                         }
+                     }
+        );
+    }
+
+    private void hitBookmarkedArticlesApi() {
+        showProgressDialog(getResources().getString(R.string.please_wait));
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        // prepare call in Retrofit 2.0
+        ArticleDraftAPI getDraftListAPI = retrofit.create(ArticleDraftAPI.class);
+        if (!ConnectivityUtils.isNetworkEnabled(this)) {
+            removeProgressDialog();
+            showToast(getString(R.string.error_network));
+            return;
+        }
+
+        Call<DraftListResponse> call = getDraftListAPI.getDraftsList(ArticleType.DRAFT.getValue() + "'" + ArticleType.UNDER_MODERATION.getValue()
+                + "'" + ArticleType.UNAPPROVED.getValue() + "'" + ArticleType.UNPUBLISHED.getValue());
+//asynchronous call
+        call.enqueue(new Callback<DraftListResponse>() {
+                         @Override
+                         public void onResponse(Call<DraftListResponse> call, retrofit2.Response<DraftListResponse> response) {
+                             int statusCode = response.code();
+                             removeProgressDialog();
+
+                             DraftListResponse responseModel = response.body();
+                             if (responseModel.getCode() != 200) {
+                                 showToast(getString(R.string.toast_response_error));
+                                 return;
+                             } else {
+                                 if (!StringUtils.isNullOrEmpty(responseModel.getData().getMsg())) {
+                                     Log.i("Draft message", responseModel.getData().getMsg());
+                                 }
+                                 processCommentsResponse(responseModel);
+
+                             }
+                         }
+
+                         @Override
+                         public void onFailure(Call<DraftListResponse> call, Throwable t) {
+                             removeProgressDialog();
+
+                         }
+                     }
+        );
+    }
+
+    private void hitPublishedArticleApi() {
+        showProgressDialog(getResources().getString(R.string.please_wait));
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        // prepare call in Retrofit 2.0
+        ArticleDraftAPI getDraftListAPI = retrofit.create(ArticleDraftAPI.class);
+        if (!ConnectivityUtils.isNetworkEnabled(this)) {
+            removeProgressDialog();
+            showToast(getString(R.string.error_network));
+            return;
+        }
+
+        Call<DraftListResponse> call = getDraftListAPI.getDraftsList(ArticleType.DRAFT.getValue() + "'" + ArticleType.UNDER_MODERATION.getValue()
+                + "'" + ArticleType.UNAPPROVED.getValue() + "'" + ArticleType.UNPUBLISHED.getValue());
+//asynchronous call
+        call.enqueue(new Callback<DraftListResponse>() {
+                         @Override
+                         public void onResponse(Call<DraftListResponse> call, retrofit2.Response<DraftListResponse> response) {
+                             int statusCode = response.code();
+                             removeProgressDialog();
+
+                             DraftListResponse responseModel = response.body();
+                             if (responseModel.getCode() != 200) {
+                                 showToast(getString(R.string.toast_response_error));
+                                 return;
+                             } else {
+                                 if (!StringUtils.isNullOrEmpty(responseModel.getData().getMsg())) {
+                                     Log.i("Draft message", responseModel.getData().getMsg());
+                                 }
+                                 processPublisedArticlesResponse(responseModel);
+
+                             }
+                         }
+
+                         @Override
+                         public void onFailure(Call<DraftListResponse> call, Throwable t) {
+                             removeProgressDialog();
+
+                         }
+                     }
+        );
     }
 
     private void hitDraftListingApi() {
@@ -146,7 +306,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
             return;
         }
 
-        Call<DraftListResponse> call = getDraftListAPI.getDraftsList(ArticleType.DRAFT.getValue()+"'"+ArticleType.UNDER_MODERATION.getValue()+"'"+ArticleType.UNAPPROVED.getValue()+"'"+ArticleType.UNPUBLISHED.getValue());
+        Call<DraftListResponse> call = getDraftListAPI.getDraftsList(ArticleType.DRAFT.getValue() + "'" + ArticleType.UNDER_MODERATION.getValue() + "'" + ArticleType.UNAPPROVED.getValue() + "'" + ArticleType.UNPUBLISHED.getValue());
 
         //asynchronous call
         call.enqueue(new Callback<DraftListResponse>() {
@@ -184,18 +344,19 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                                  e.printStackTrace();
                              }*/
                              //     ArticleDraftListResponse responseModel = new Gson().fromJson(responseData, ArticleDraftListResponse.class);
-                             DraftListResponse responseModel=response.body();
+                             DraftListResponse responseModel = response.body();
                              if (responseModel.getCode() != 200) {
                                  showToast(getString(R.string.toast_response_error));
                                  return;
                              } else {
                                  if (!StringUtils.isNullOrEmpty(responseModel.getData().getMsg())) {
-                                     Log.i("Draft message",responseModel.getData().getMsg());
+                                     Log.i("Draft message", responseModel.getData().getMsg());
                                  }
 
                                  processDraftResponse(responseModel);
 
-                             }}
+                             }
+                         }
 
 
                          @Override
@@ -232,8 +393,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         }
 
         Call<ArticleDraftResponse> call = articleDraftAPI.deleteDraft(
-                AppConstants.LIVE_URL+"v1/articles/"+draftObject.getId());
-
+                AppConstants.LIVE_URL + "v1/articles/" + draftObject.getId());
 
 
         //asynchronous call
@@ -310,11 +470,11 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         if (draftList.size() == 0) {
             noDrafts.setVisibility(View.VISIBLE);
         } else {
-            ArrayList<PublishDraftObject> draftListNew=new ArrayList<PublishDraftObject>();
+            ArrayList<PublishDraftObject> draftListNew = new ArrayList<PublishDraftObject>();
 
-            PublishDraftObject draftObject=new PublishDraftObject();
+            PublishDraftObject draftObject = new PublishDraftObject();
             draftObject.setItemType(0);
-            draftListNew.add(0,draftObject);
+            draftListNew.add(0, draftObject);
             draftListNew.addAll(draftList);
             noDrafts.setVisibility(View.GONE);
             adapter = new DraftListAdapter(this, draftListNew);
@@ -324,6 +484,65 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
 
     }
 
+    private void processPublisedArticlesResponse(DraftListResponse responseModel) {
+        draftList = responseModel.getData().getResult();
+
+        if (draftList.size() == 0) {
+            noDrafts.setVisibility(View.VISIBLE);
+        } else {
+            ArrayList<PublishDraftObject> draftListNew = new ArrayList<PublishDraftObject>();
+
+            PublishDraftObject draftObject = new PublishDraftObject();
+            draftObject.setItemType(0);
+            draftListNew.add(0, draftObject);
+            draftListNew.addAll(draftList);
+            noDrafts.setVisibility(View.GONE);
+            publishedArticleListAdapter = new PublishedArticleListAdapter(this, draftListNew);
+            publishedArticleListView.setAdapter(publishedArticleListAdapter);
+            publishedArticleListAdapter.notifyDataSetChanged();
+        }
+
+    }
+
+    private void processCommentsResponse(DraftListResponse responseModel) {
+        draftList = responseModel.getData().getResult();
+
+        if (draftList.size() == 0) {
+            noDrafts.setVisibility(View.VISIBLE);
+        } else {
+            ArrayList<PublishDraftObject> draftListNew = new ArrayList<PublishDraftObject>();
+
+            PublishDraftObject draftObject = new PublishDraftObject();
+            draftObject.setItemType(0);
+            draftListNew.add(0, draftObject);
+            draftListNew.addAll(draftList);
+            noDrafts.setVisibility(View.GONE);
+            commentsListAdapter = new CommentsListAdapter(this, draftListNew);
+            bookmarksListView.setAdapter(commentsListAdapter);
+            commentsListAdapter.notifyDataSetChanged();
+        }
+
+    }
+
+    private void processReviewsResponse(DraftListResponse responseModel) {
+        draftList = responseModel.getData().getResult();
+
+        if (draftList.size() == 0) {
+            noDrafts.setVisibility(View.VISIBLE);
+        } else {
+            ArrayList<PublishDraftObject> draftListNew = new ArrayList<PublishDraftObject>();
+
+            PublishDraftObject draftObject = new PublishDraftObject();
+            draftObject.setItemType(0);
+            draftListNew.add(0, draftObject);
+            draftListNew.addAll(draftList);
+            noDrafts.setVisibility(View.GONE);
+            reviewsListAdapter = new ReviewsListAdapter(this, draftListNew);
+            reviewsCommentsListView.setAdapter(reviewsListAdapter);
+            reviewsListAdapter.notifyDataSetChanged();
+        }
+
+    }
     /*
         Utils.pushOpenScreenEvent(BloggerDashboardActivity.this, "Blogger Dashboard", SharedPrefUtils.getUserDetailModel(this).getId() + "");
         viewPager = (ViewPager) findViewById(R.id.viewpager);

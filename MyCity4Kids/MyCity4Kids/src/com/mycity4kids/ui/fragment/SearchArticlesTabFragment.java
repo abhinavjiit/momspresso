@@ -108,16 +108,12 @@ public class SearchArticlesTabFragment extends BaseFragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                 Intent intent = new Intent(getActivity(), ArticlesAndBlogsDetailsActivity.class);
-                if (adapterView.getAdapter() instanceof ArticlesListingAdapter) {
-                    CommonParentingList parentingListData = (CommonParentingList) ((ArticlesListingAdapter) adapterView.getAdapter()).getItem(i);
-                    intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
-                    intent.putExtra(Constants.ARTICLE_COVER_IMAGE, parentingListData.getThumbnail_image());
-                    intent.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.ARTICLES);
-                    intent.putExtra(Constants.FILTER_TYPE, parentingListData.getAuthor_type());
-                    intent.putExtra(Constants.BLOG_NAME, parentingListData.getBlog_name());
-                    startActivity(intent);
+                SearchArticleResult parentingListData = (SearchArticleResult) ((SearchArticlesListingAdapter) adapterView.getAdapter()).getItem(i);
+                intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
+                intent.putExtra(Constants.ARTICLE_COVER_IMAGE, parentingListData.getImage());
+                intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
+                startActivity(intent);
 
-                }
             }
         });
 
@@ -244,7 +240,7 @@ public class SearchArticlesTabFragment extends BaseFragment {
             if (mLodingView.getVisibility() == View.VISIBLE) {
                 mLodingView.setVisibility(View.GONE);
             }
-            if (response == null) {
+            if (response == null || response.body() == null) {
                 ((SearchArticlesAndAuthorsActivity) getActivity()).showToast("Something went wrong from server");
                 return;
             }

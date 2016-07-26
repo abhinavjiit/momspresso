@@ -17,19 +17,16 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
-import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
-import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.controller.NewParentingBlogController;
-import com.mycity4kids.models.parentingstop.ParentingRequest;
+import com.mycity4kids.models.response.SearchAuthorResult;
+import com.mycity4kids.models.response.SearchResponse;
 import com.mycity4kids.newmodels.bloggermodel.BlogItemModel;
-import com.mycity4kids.newmodels.bloggermodel.ParentingBlogResponse;
 import com.mycity4kids.retrofitAPIsInterfaces.SearchArticlesAuthorsAPI;
 import com.mycity4kids.ui.activity.BlogDetailActivity;
 import com.mycity4kids.ui.activity.SearchArticlesAndAuthorsActivity;
-import com.mycity4kids.ui.adapter.AuthorsListingAdapter;
+import com.mycity4kids.ui.adapter.SearchAuthorsListingAdapter;
 
 import java.util.ArrayList;
 
@@ -42,13 +39,13 @@ import retrofit2.Retrofit;
  */
 public class SearchAuthorsTabFragment extends BaseFragment {
 
-    AuthorsListingAdapter authorsListingAdapter;
+    SearchAuthorsListingAdapter authorsListingAdapter;
     ListView listView;
     TextView noAuthorsTextView;
     String searchName = "";
     private RelativeLayout mLodingView;
     private int nextPageNumber = 0;
-    ArrayList<BlogItemModel> listingData;
+    ArrayList<SearchAuthorResult> listingData;
     private boolean isReuqestRunning = false;
     private boolean fragmentResume = false;
     private boolean fragmentVisible = false;
@@ -68,8 +65,8 @@ public class SearchAuthorsTabFragment extends BaseFragment {
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         view.findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_indefinitely));
 
-        listingData = new ArrayList<BlogItemModel>();
-        authorsListingAdapter = new AuthorsListingAdapter(getActivity());
+        listingData = new ArrayList<SearchAuthorResult>();
+        authorsListingAdapter = new SearchAuthorsListingAdapter(getActivity());
         listView.setAdapter(authorsListingAdapter);
         if (getArguments() != null) {
             searchName = getArguments().getString(Constants.SEARCH_PARAM);
@@ -110,7 +107,7 @@ public class SearchAuthorsTabFragment extends BaseFragment {
                 Bundle bundle = new Bundle();
                 intent.putExtra(Constants.IS_COMMING_FROM_LISTING, false);
                 intent.putExtra(Constants.AUTHOR_ID, "" + itemSelected.getId());
-                intent.putExtra(Constants.ARTICLE_NAME, listingData.get(position).getBlog_title());
+//                intent.putExtra(Constants.ARTICLE_NAME, listingData.get(position).getBlog_title());
                 intent.putExtra(Constants.FILTER_TYPE, "blogs");
                 getActivity().startActivityForResult(intent, Constants.BLOG_FOLLOW_STATUS);
 //                } else {
@@ -125,52 +122,6 @@ public class SearchAuthorsTabFragment extends BaseFragment {
     @Override
     protected void updateUi(Response response) {
 
-        ParentingBlogResponse responseData;
-        progressBar.setVisibility(View.INVISIBLE);
-        if (response == null) {
-            ((SearchArticlesAndAuthorsActivity) getActivity()).showToast("Something went wrong from server");
-            removeProgressDialog();
-            isReuqestRunning = false;
-            mLodingView.setVisibility(View.GONE);
-            return;
-        }
-
-        switch (response.getDataType()) {
-
-            case AppConstants.SEARCH_AUTHORS_REQUEST:
-                responseData = (ParentingBlogResponse) response.getResponseObject();
-
-                try {
-                    if (mLodingView.getVisibility() == View.VISIBLE) {
-                        mLodingView.setVisibility(View.GONE);
-                    }
-                    if (responseData.getResponseCode() == 200) {
-                        isReuqestRunning = false;
-//                        totalPageCount = Integer.parseInt(responseData.getResult().getData().getPage_count());
-                        updateBloggerResponse(responseData);
-                    } else if (responseData.getResponseCode() == 400) {
-                        isReuqestRunning = false;
-                        String message = responseData.getResult().getMessage();
-                        if (!StringUtils.isNullOrEmpty(message)) {
-                            ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(message);
-                        } else {
-                            ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(getString(R.string.went_wrong));
-                        }
-                    }
-
-                    removeProgressDialog();
-                    break;
-                } catch (Exception e) {
-                    removeProgressDialog();
-                    e.printStackTrace();
-                    if (mLodingView.getVisibility() == View.VISIBLE) {
-                        mLodingView.setVisibility(View.GONE);
-                    }
-                    isReuqestRunning = false;
-                    ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(getString(R.string.went_wrong));
-                    break;
-                }
-        }
     }
 
 //    @Override
@@ -195,9 +146,9 @@ public class SearchAuthorsTabFragment extends BaseFragment {
 //        }
 //    }
 
-    private void updateBloggerResponse(ParentingBlogResponse responseData) {
+    private void updateBloggerResponse(SearchResponse responseData) {
 
-        ArrayList<BlogItemModel> dataList = responseData.getResult().getData().getData();
+        ArrayList<SearchAuthorResult> dataList = responseData.getData().getResult().getAuthor();
 
         if (dataList.size() == 0) {
             loadMore = false;
@@ -236,24 +187,14 @@ public class SearchAuthorsTabFragment extends BaseFragment {
             ((SearchArticlesAndAuthorsActivity) getActivity()).showToast("No connectivity available");
             return;
         }
-//        mLodingView.setVisibility(View.VISIBLE);
 
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
         SearchArticlesAuthorsAPI searchArticlesAuthorsAPI = retro.create(SearchArticlesAuthorsAPI.class);
+        int from = (nextPageNumber - 1) * 15 + 1;
+        Call<SearchResponse> call = searchArticlesAuthorsAPI.getSearchAuthorsResult(searchName,
+                "author", from, from + 15);
 
-//        Call<ParentingBlogResponse> call = searchArticlesAuthorsAPI.getSearchAuthorsResult(searchName,
-//                "author", "" + nextPageNumber);
-//
-//        call.enqueue(searchAuthorsResponseCallback);
-
-
-//        showProgressDialog(getString(R.string.please_wait));
-//        ParentingRequest _parentingModel = new ParentingRequest();
-//        _parentingModel.setSearchName(searchName);
-//        _parentingModel.setPage("" + nextPageNumber);
-//
-//        NewParentingBlogController newParentingBlogController = new NewParentingBlogController(getActivity(), this);
-//        newParentingBlogController.getData(AppConstants.SEARCH_AUTHORS_REQUEST, _parentingModel);
+        call.enqueue(searchAuthorsResponseCallback);
     }
 
     public void refreshAllAuthors(String searchTxt) {
@@ -277,9 +218,9 @@ public class SearchAuthorsTabFragment extends BaseFragment {
     }
 
 
-    Callback<ParentingBlogResponse> searchAuthorsResponseCallback = new Callback<ParentingBlogResponse>() {
+    Callback<SearchResponse> searchAuthorsResponseCallback = new Callback<SearchResponse>() {
         @Override
-        public void onResponse(Call<ParentingBlogResponse> call, retrofit2.Response<ParentingBlogResponse> response) {
+        public void onResponse(Call<SearchResponse> call, retrofit2.Response<SearchResponse> response) {
             isReuqestRunning = false;
             progressBar.setVisibility(View.INVISIBLE);
             if (mLodingView.getVisibility() == View.VISIBLE) {
@@ -290,16 +231,11 @@ public class SearchAuthorsTabFragment extends BaseFragment {
                 return;
             }
             try {
-                ParentingBlogResponse responseData = (ParentingBlogResponse) response.body();
-                if (responseData.getResponseCode() == 200) {
+                SearchResponse responseData = (SearchResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     updateBloggerResponse(responseData);
-                } else if (responseData.getResponseCode() == 400) {
-                    String message = responseData.getResult().getMessage();
-                    if (!StringUtils.isNullOrEmpty(message)) {
-                        ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(message);
-                    } else {
-                        ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(getString(R.string.went_wrong));
-                    }
+                } else {
+                    ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(responseData.getReason());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -309,7 +245,7 @@ public class SearchAuthorsTabFragment extends BaseFragment {
         }
 
         @Override
-        public void onFailure(Call<ParentingBlogResponse> call, Throwable t) {
+        public void onFailure(Call<SearchResponse> call, Throwable t) {
             ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(getString(R.string.went_wrong));
         }
     };

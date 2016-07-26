@@ -27,7 +27,7 @@ public interface ArticlePublishAPI  {
                                                  @Field("moderationStatus") String moderationStatus,
                                                  @Field("nodeId") String nodeId);
     @FormUrlEncoded
-    @POST("v1/articles/")
+    @POST("192.168.1.14/v1/articles/")
     Call<ArticleDraftResponse> publishArticle(
                                                  @Field("title") String title,
                                                  @Field("body") String body,

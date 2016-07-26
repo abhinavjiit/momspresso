@@ -4,14 +4,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
-import com.mycity4kids.models.parentingstop.CommonParentingList;
+import com.mycity4kids.models.response.SearchAuthorResult;
 import com.mycity4kids.newmodels.bloggermodel.BlogItemModel;
 import com.squareup.picasso.Picasso;
 
@@ -21,19 +20,19 @@ import java.util.List;
 /**
  * Created by hemant on 19/4/16.
  */
-public class AuthorsListingAdapter extends BaseAdapter {
+public class SearchAuthorsListingAdapter extends BaseAdapter {
 
     private LayoutInflater mLayoutInflater;
     private Context mContext;
-    private List<BlogItemModel> mDatalist;
+    private List<SearchAuthorResult> mDatalist;
     Boolean newChanges = false;
 
-    public AuthorsListingAdapter(Context context) {
+    public SearchAuthorsListingAdapter(Context context) {
         mContext = context;
         mLayoutInflater = LayoutInflater.from(context);
     }
 
-    public void setNewListData(ArrayList<BlogItemModel> mDatalist) {
+    public void setNewListData(ArrayList<SearchAuthorResult> mDatalist) {
         this.mDatalist = mDatalist;
     }
 
@@ -62,7 +61,7 @@ public class AuthorsListingAdapter extends BaseAdapter {
 
         Viewholder viewholder;
         if (convertView == null) {
-            convertView = mLayoutInflater.inflate(R.layout.author_list_item, null);
+            convertView = mLayoutInflater.inflate(R.layout.search_author_list_item, null);
             viewholder = new Viewholder();
             viewholder.authorImageView = (ImageView) convertView.findViewById(R.id.authorImageView);
             viewholder.authorNameTextView = (TextView) convertView.findViewById(R.id.authorNameTextView);

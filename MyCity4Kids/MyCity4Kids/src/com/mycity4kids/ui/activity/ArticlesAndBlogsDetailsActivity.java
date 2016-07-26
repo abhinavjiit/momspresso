@@ -148,7 +148,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     private TextView author_type;
     private String followAuthorId;
     String authorType, author;
-    private String blogName;
+    //    private String blogName;
     private int bookmarkStatus;
 
     private String deepLinkURL;
@@ -283,6 +283,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             Bundle bundle = getIntent().getExtras();
             if (bundle != null) {
                 articleId = bundle.getString(Constants.ARTICLE_ID);
+                followAuthorId = bundle.getString(Constants.AUTHOR_ID);
 //                if (!ConnectivityUtils.isNetworkEnabled(this)) {
 //                    showToast(getString(R.string.error_network));
 //                    return;
@@ -307,7 +308,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
                 ArticleDetailRequest articleDetailRequest = new ArticleDetailRequest();
                 articleDetailRequest.setArticleId(articleId);
-                Call<ArticleDetailData> callBookmark = articleDetailsAPI.checkBookmarkStatus(articleDetailRequest);
+                Call<ArticleDetailData> callBookmark = articleDetailsAPI.checkFollowingBookmarkStatus(articleId, followAuthorId);
                 callBookmark.enqueue(isBookmarkedResponseCallback);
             }
         } catch (Exception e) {
@@ -522,7 +523,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
                         newCommentLayout.setVisibility(View.VISIBLE);
 
-                        getResponseUpdateUi(responseData);
+                        getResponseUpdateUi(responseData.getData());
                         if (isCommingFromCommentAPI) {
                             if (StringUtils.isNullOrEmpty(commentMessage)) {
                                 showToast("Your comment has been added!");
@@ -718,12 +719,12 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
      * @param detailsResponse
      */
 
-    private void getResponseUpdateUi(ArticleDetailResponse detailsResponse) {
-        detailData = detailsResponse.getData();
-        imageList = detailData.getBody().getImage();
+    private void getResponseUpdateUi(ArticleDetailData detailsResponse) {
+        detailData = detailsResponse;
+//        imageList = detailData.getBody().getImage();
 //        blogName = detailData.getBlog_title();
-//        authorType = detailData.getAuthor_type();
-//        author = detailData.getAuthor_name();
+        authorType = detailData.getUserType();
+        author = detailData.getUserName();
 //        if (StringUtils.isNullOrEmpty(blogName)) {
 //            blogName = "mycity4kids team";
 //        }
@@ -738,6 +739,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 //            }
 //            bookmarkStatus = 1;
 //        }
+
 //        if (!StringUtils.isNullOrEmpty(detailsResponse.getResult().getData().getUser_following_status())) {
 //            if (detailsResponse.getResult().getData().getUser_following_status().equalsIgnoreCase("0")) {
 ////                ((ImageView) findViewById(R.id.follow_article)).setBackgroundResource(R.drawable.follow_blog);
@@ -790,54 +792,54 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             ((TextView) findViewById(R.id.article_date)).setText(detailData.getCreated());
         }
 
-        String bodyDescription = detailData.getBody().getText();
-        String bodyDesc = bodyDescription;
-        if (imageList.size() > 0) {
-            for (ImageData images : imageList) {
-                if (bodyDescription.contains(images.getKey())) {
-                    bodyDesc = bodyDesc.replace(images.getKey(), "<p style='text-align:center'><img src=" + images.getValue() + " style=\"width: 100%;\"+></p>");
-                }
-            }
-
-            String bodyImgTxt = "<html><head>" +
-                    "" +
-                    "<style type=\"text/css\">\n" +
-                    "@font-face {\n" +
-                    "    font-family: MyFont;\n" +
-                    "    src: url(\"file:///android_asset/fonts/georgia.ttf\")\n" +
-                    "}\n" +
-                    "body {\n" +
-                    "    font-family: MyFont;\n" +
-                    "    font-size: 16px;\n" +
-                    "    text-align: left;\n" +
-                    "}\n" +
-                    "</style>" +
-                    "</head><body>" + bodyDesc + "</body></html>";
-            WebView view = (WebView) findViewById(R.id.articleWebView);
-            view.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-            view.loadDataWithBaseURL("", bodyImgTxt, "text/html", "utf-8", "");
-            view.getSettings().setJavaScriptEnabled(true);
-        } else {
-            bodyDesc = bodyDesc.replaceAll("\n", "<br/>");
-            String bodyImgTxt = "<html><head>" +
-                    "" +
-                    "<style type=\"text/css\">\n" +
-                    "@font-face {\n" +
-                    "    font-family: MyFont;\n" +
-                    "    src: url(\"file:///android_asset/fonts/georgia.ttf\")\n" +
-                    "}\n" +
-                    "body {\n" +
-                    "    font-family: MyFont;\n" +
-                    "    font-size: 16px;\n" +
-                    "    text-align: left;\n" +
-                    "}\n" +
-                    "</style>" +
-                    "</head><body>" + bodyDesc + "</body></html>";
-            WebView view = (WebView) findViewById(R.id.articleWebView);
-            view.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-            view.loadDataWithBaseURL("", bodyImgTxt, "text/html", "utf-8", "");
-            view.getSettings().setJavaScriptEnabled(true);
-        }
+//        String bodyDescription = detailData.getBody().getText();
+//        String bodyDesc = bodyDescription;
+//        if (imageList.size() > 0) {
+//            for (ImageData images : imageList) {
+//                if (bodyDescription.contains(images.getKey())) {
+//                    bodyDesc = bodyDesc.replace(images.getKey(), "<p style='text-align:center'><img src=" + images.getValue() + " style=\"width: 100%;\"+></p>");
+//                }
+//            }
+//
+//            String bodyImgTxt = "<html><head>" +
+//                    "" +
+//                    "<style type=\"text/css\">\n" +
+//                    "@font-face {\n" +
+//                    "    font-family: MyFont;\n" +
+//                    "    src: url(\"file:///android_asset/fonts/georgia.ttf\")\n" +
+//                    "}\n" +
+//                    "body {\n" +
+//                    "    font-family: MyFont;\n" +
+//                    "    font-size: 16px;\n" +
+//                    "    text-align: left;\n" +
+//                    "}\n" +
+//                    "</style>" +
+//                    "</head><body>" + bodyDesc + "</body></html>";
+//            WebView view = (WebView) findViewById(R.id.articleWebView);
+//            view.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+//            view.loadDataWithBaseURL("", bodyImgTxt, "text/html", "utf-8", "");
+//            view.getSettings().setJavaScriptEnabled(true);
+//        } else {
+//            bodyDesc = bodyDesc.replaceAll("\n", "<br/>");
+//            String bodyImgTxt = "<html><head>" +
+//                    "" +
+//                    "<style type=\"text/css\">\n" +
+//                    "@font-face {\n" +
+//                    "    font-family: MyFont;\n" +
+//                    "    src: url(\"file:///android_asset/fonts/georgia.ttf\")\n" +
+//                    "}\n" +
+//                    "body {\n" +
+//                    "    font-family: MyFont;\n" +
+//                    "    font-size: 16px;\n" +
+//                    "    text-align: left;\n" +
+//                    "}\n" +
+//                    "</style>" +
+//                    "</head><body>" + bodyDesc + "</body></html>";
+//            WebView view = (WebView) findViewById(R.id.articleWebView);
+//            view.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+//            view.loadDataWithBaseURL("", bodyImgTxt, "text/html", "utf-8", "");
+//            view.getSettings().setJavaScriptEnabled(true);
+//        }
         final Target target = new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -865,7 +867,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             Picasso.with(this).load(detailData.getImageUrl()).placeholder(R.drawable.blog_bgnew).fit().into(cover_image);
         }
 
-        followAuthorId = detailData.getUserId();
+//        followAuthorId = detailData.getUserId();
 
     }
 
@@ -1029,48 +1031,15 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
                     }
                     break;
-
-                case R.id.follow_article:
-//                    followAPICall(articleId);
-
-                    break;
-
                 case R.id.follow_click:
                     followAPICall(followAuthorId);
                     break;
 
                 case R.id.user_image:
-
-                    Intent intentn = new Intent(this, BlogDetailActivity.class);
-                    intentn.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intentn.putExtra(Constants.IS_COMMING_FROM_LISTING, false);
-                    intentn.putExtra(Constants.AUTHOR_ID, detailData.getUserId());
-                    if (!StringUtils.isNullOrEmpty(authorType)) {
-                        if (authorType.trim().equalsIgnoreCase("Blogger")) {
-                            intentn.putExtra(Constants.ARTICLE_NAME, blogName);
-                            intentn.putExtra(Constants.FILTER_TYPE, "blogs");
-                        } else {
-                            intentn.putExtra(Constants.ARTICLE_NAME, detailData.getUserName());
-                            intentn.putExtra(Constants.FILTER_TYPE, "authors");
-                        }
-                    }
-                    startActivityForResult(intentn, Constants.BLOG_FOLLOW_STATUS);
-                    break;
-
                 case R.id.user_name:
                     Intent intentnn = new Intent(this, BlogDetailActivity.class);
                     intentnn.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intentnn.putExtra(Constants.IS_COMMING_FROM_LISTING, false);
                     intentnn.putExtra(Constants.AUTHOR_ID, detailData.getUserId());
-                    if (!StringUtils.isNullOrEmpty(authorType)) {
-                        if (authorType.trim().equalsIgnoreCase("Blogger")) {
-                            intentnn.putExtra(Constants.ARTICLE_NAME, blogName);
-                            intentnn.putExtra(Constants.FILTER_TYPE, "blogs");
-                        } else {
-                            intentnn.putExtra(Constants.ARTICLE_NAME, detailData.getUserName());
-                            intentnn.putExtra(Constants.FILTER_TYPE, "authors");
-                        }
-                    }
                     startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
                     break;
                 case R.id.replyRelativeLayout:
@@ -1248,7 +1217,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
             if (responseData != null) {
                 newCommentLayout.setVisibility(View.VISIBLE);
-//                getResponseUpdateUi(responseData);
+                getResponseUpdateUi(responseData);
 
                 commentURL = responseData.getCommentsUri();
                 getMoreComments();
@@ -1568,6 +1537,14 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             } else {
                 menu.getItem(0).setIcon(R.drawable.ic_favorite_border_white_48dp_fill);
                 bookmarkStatus = 1;
+            }
+
+            if ("0".equals(responseData.getIsFollowing())) {
+                ((TextView) findViewById(R.id.follow_click)).setText("UNFOLLOW");
+                isFollowing = false;
+            } else {
+                ((TextView) findViewById(R.id.follow_click)).setText("FOLLOW");
+                isFollowing = true;
             }
         }
 
