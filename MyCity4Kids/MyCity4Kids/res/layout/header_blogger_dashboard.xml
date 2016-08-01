@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <android.support.v7.widget.Toolbar
+    <!--<android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -10,7 +10,7 @@
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize">
 
-    </android.support.v7.widget.Toolbar>
+    </android.support.v7.widget.Toolbar>-->
 
     <ImageView
         android:id="@+id/bloggerImageView"
@@ -116,7 +116,8 @@
             android:layout_marginRight="5dp"
             android:gravity="center"
             android:background="#ededed"
-            android:layout_marginTop="5dp"/>
+            android:layout_marginTop="5dp"
+            android:id="@+id/editProfileTextView"/>
     </RelativeLayout>
     <TextView
         android:layout_width="match_parent"
@@ -145,5 +146,97 @@
         android:textColor="@color/black_color"
         android:id="@+id/blogName"
         android:layout_marginBottom="10dp"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/blogName"
+        android:background="@color/login_grey" />
+
+    <LinearLayout
+        android:id="@+id/tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/blogName"
+        android:orientation="horizontal"
+        android:weightSum="4">
+
+        <LinearLayout
+            android:id="@+id/draftItemLinearlayout"
+            android:layout_width="0dp"
+            android:layout_height="66dp"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/draftImageView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/icon_draft"
+                android:tint="#f1455f" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/login_grey" />
+
+        <LinearLayout
+            android:id="@+id/publishedItemLinearlayout"
+            android:layout_width="0dp"
+            android:layout_height="66dp"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/publishedImageView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/icon_publish" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/login_grey" />
+
+        <LinearLayout
+            android:id="@+id/commentsItemLinearlayout"
+            android:layout_width="0dp"
+            android:layout_height="66dp"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/commentsImageView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/icon_comments" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/login_grey" />
+
+        <LinearLayout
+            android:id="@+id/reviewItemLinearLayout"
+            android:layout_width="0dp"
+            android:layout_height="66dp"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/reviewImageView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/icon_review" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/tabs"
+        android:background="@color/login_grey" />
 
 </RelativeLayout>

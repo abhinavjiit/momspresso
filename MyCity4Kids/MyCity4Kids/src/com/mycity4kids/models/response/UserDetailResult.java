@@ -17,7 +17,21 @@ public class UserDetailResult {
     private String isValidated;
     private String profilePicUrl;
     private ArrayList<KidsModel> kids;
+    private String blogTitle="";
+    private String followersCount;
+    private String followingCount;
+    private String rank;
+    private String userBio="";
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    private String phoneNumber;
     public String getId() {
         return sqlId;
     }
@@ -106,5 +120,43 @@ public class UserDetailResult {
         this.kids = kids;
     }
 
+    public String getBlogTitle() {
+        return blogTitle;
+    }
 
+    public void setBlogTitle(String blogTitle) {
+        this.blogTitle = blogTitle;
+    }
+
+    public String getFollowersCount() {
+        return followersCount;
+    }
+
+    public void setFollowersCount(String followersCount) {
+        this.followersCount = followersCount;
+    }
+
+    public String getFollowingCount() {
+        return followingCount;
+    }
+
+    public void setFollowingCount(String followingCount) {
+        this.followingCount = followingCount;
+    }
+
+    public String getRank() {
+        return rank;
+    }
+
+    public void setRank(String rank) {
+        this.rank = rank;
+    }
+
+    public String getUserBio() {
+        return userBio;
+    }
+
+    public void setUserBio(String userBio) {
+        this.userBio = userBio;
+    }
 }

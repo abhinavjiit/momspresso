@@ -483,7 +483,12 @@
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
         </activity>
-
+        <activity
+            android:name=".ui.activity.BookmarkListActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.activity.EditProfieActivity"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ui.activity.TopicsFilterActivity"
             android:screenOrientation="portrait" />
@@ -512,7 +517,8 @@
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
         <receiver android:name="com.mycity4kids.reminders.AlarmReceiver" />
         <receiver android:name="com.mycity4kids.reminders.CancelNotificationReceiver" />
         <receiver android:name="com.mycity4kids.reminders.ShareNotificationReceiver" />
@@ -573,7 +579,7 @@
         <!-- [END firebase_iid_service] -->
         <service
             android:name=".sync.CategorySyncService"
-            android:exported="false"/>
+            android:exported="false" />
 
     </application>
 </manifest>

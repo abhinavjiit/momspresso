@@ -91,7 +91,8 @@
     <color name="gray_color">#e5e5e5</color>
     <color name="faded_text">#a5a5a5</color>
     <color name="faded_italic">#c1c1c1</color>
-
+    <color name="red_selected">#f1455f</color>
+    <color name="grey_icon_unselected">#7f7f7f </color>
     <!--anupama -->
     <color name="tabsScrollColor">#ec3b55</color>
     <color name="ColorPrimary">#00897B</color>

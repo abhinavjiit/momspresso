@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@color/primary"
+        android:minHeight="?attr/actionBarSize">
+    </android.support.v7.widget.Toolbar>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+<EditText
+    android:layout_width="match_parent"
+    android:layout_height="45dp"
+    android:drawableLeft="@drawable/edit_user_icon"
+    android:id="@+id/editFirstName"
+    android:hint=" First Name"
+    android:textColor="@color/black_color"
+    android:background="@null"
+    android:drawablePadding="10dp"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray_color" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:drawableLeft="@drawable/edit_user_icon"
+            android:hint=" Last Name"
+            android:id="@+id/editLastName"
+            android:textColor="@color/black_color"
+            android:background="@null"
+            android:drawablePadding="10dp"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_color" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:drawableLeft="@drawable/phone_icon"
+        android:hint=" Phone Number"
+        android:id="@+id/phoneEditText"
+        android:textColor="@color/black_color"
+        android:background="@null"
+        android:drawablePadding="10dp"
+        android:inputType="number"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray_color" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:drawableLeft="@drawable/bio_icon"
+        android:hint=" Bio"
+        android:id="@+id/userBioEditText"
+        android:textColor="@color/black_color"
+        android:background="@null"
+        android:maxLines="3"
+        android:drawablePadding="10dp"
+       />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray_color" />
+    </LinearLayout>
+</LinearLayout>
