@@ -1,11 +1,13 @@
 package com.mycity4kids.models.response;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by anshul on 7/5/16.
  */
-public class PublishDraftObject implements Serializable{
+public class PublishDraftObject implements Serializable {
     String id;
     String articleType;
     Long updatedTime;
@@ -13,7 +15,8 @@ public class PublishDraftObject implements Serializable{
     String body;
     String title;
     String imageUrl;
-    String tags;
+    private List<Map<String, String>> tags;
+    int itemType = 1;
 
     public int getItemType() {
         return itemType;
@@ -23,16 +26,13 @@ public class PublishDraftObject implements Serializable{
         this.itemType = itemType;
     }
 
-    int itemType=1;
-    public String getTags() {
+    public List<Map<String, String>> getTags() {
         return tags;
     }
 
-    public void setTags(String tags) {
+    public void setTags(List<Map<String, String>> tags) {
         this.tags = tags;
     }
-
-
 
     public String getImageUrl() {
         return imageUrl;
@@ -41,8 +41,6 @@ public class PublishDraftObject implements Serializable{
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
-
-
 
     public String getId() {
         return id;
@@ -91,6 +89,5 @@ public class PublishDraftObject implements Serializable{
     public void setTitle(String title) {
         this.title = title;
     }
-
 
 }

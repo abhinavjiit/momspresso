@@ -57,6 +57,9 @@ import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.widget.CustomFontEditText;
 import com.mycity4kids.widget.CustomFontTextView;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -161,6 +164,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                 startActivity(intent);
                 break;
             case R.id.signinTextView:
+//                try {
                 if (isDataValid()) {
                     if (ConnectivityUtils.isNetworkEnabled(this)) {
                         showProgressDialog(getString(R.string.please_wait));
@@ -168,9 +172,14 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                         loginMode = "email";
                         String emailId_or_mobile = mEmailId.getText().toString().trim();
                         String password = mPassword.getText().toString().trim();
-                        UserRequest _requestModel = new UserRequest();
-                        _requestModel.setEmailId(emailId_or_mobile);
-                        _requestModel.setPassword(password);
+
+//                            byte[] bytesOfMessage = null;
+//                            MessageDigest md = null;
+//
+//                            md = MessageDigest.getInstance("MD5");
+//                            bytesOfMessage = password.getBytes("UTF-8");
+//
+//                            byte[] thedigest = md.digest(bytesOfMessage);
 
                         LoginRegistrationRequest lr = new LoginRegistrationRequest();
                         lr.setEmail(emailId_or_mobile);
@@ -181,19 +190,15 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                         LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
                         Call<UserDetailResponse> call = loginRegistrationAPI.login(lr);
                         call.enqueue(onLoginResponseReceivedListener);
-//                        _requestModel.setNetworkName("throughMail");
-//                        _requestModel.setPush_token(SharedPrefUtils.getDeviceToken(this));
-//                        _requestModel.setPlatform("android");
-//                        _requestModel.setDevice_model(Build.MODEL + "");
-//                        _requestModel.setDevice_os(Build.VERSION.SDK_INT + "");
-//                        _requestModel.setImei_no(getImeiNumber() + "");
-//                        _requestModel.setManufacturer(Build.MANUFACTURER + "");
-//                        LoginController _controller = new LoginController(this, this);
-//                        _controller.getData(AppConstants.NEW_LOGIN_REQUEST, _requestModel);
                     } else {
                         showToast(getString(R.string.error_network));
                     }
                 }
+//                } catch (NoSuchAlgorithmException e) {
+//                    e.printStackTrace();
+//                } catch (UnsupportedEncodingException e) {
+//                    e.printStackTrace();
+//                }
                 break;
             default:
                 break;
@@ -597,6 +602,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
 
         @Override
         public void onFailure(Call<UserDetailResponse> call, Throwable t) {
+            removeProgressDialog();
             Log.d("MC4kException", Log.getStackTraceString(t));
             Crashlytics.logException(t);
             showToast(getString(R.string.went_wrong));

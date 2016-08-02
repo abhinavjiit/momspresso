@@ -102,10 +102,11 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     PublishedArticleListAdapter publishedArticleListAdapter;
     CommentsListAdapter commentsListAdapter;
     ReviewsListAdapter reviewsListAdapter;
-    TextView rankingTextView, followersTextView,followingTextView,userBio, blogTitle,editProfileTextView;
-    ImageView draftImageView, publishedImageView,commentsImageView,reviewImageView;
-LinearLayout draftItemLinearLayout, publishedItemLinearLayout,commentsItemLinearLayout,reviewItemLinearLayout;
-    private String firstName, lastName,Bio,phoneNumber;
+    TextView rankingTextView, followersTextView, followingTextView, userBio, blogTitle, editProfileTextView;
+    ImageView draftImageView, publishedImageView, commentsImageView, reviewImageView;
+    LinearLayout draftItemLinearLayout, publishedItemLinearLayout, commentsItemLinearLayout, reviewItemLinearLayout;
+    private String firstName, lastName, Bio, phoneNumber;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,25 +121,25 @@ LinearLayout draftItemLinearLayout, publishedItemLinearLayout,commentsItemLinear
         noDrafts = (TextView) findViewById(R.id.noDraftsTextView);
         View header = getLayoutInflater().inflate(R.layout.header_blogger_dashboard, null);
         header.setClickable(false);
-        rankingTextView=(TextView) header.findViewById(R.id.rankingTextView);
-        followersTextView=(TextView) header.findViewById(R.id.followersTextView);
-        followingTextView=(TextView) header.findViewById(R.id.followingTextView);
-        userBio=(TextView) header.findViewById(R.id.userBio);
-        blogTitle=(TextView) header.findViewById(R.id.blogName);
-        draftItemLinearLayout=(LinearLayout) header.findViewById(R.id.draftItemLinearlayout);
-        publishedItemLinearLayout=(LinearLayout) header.findViewById(R.id.publishedItemLinearlayout);
-        commentsItemLinearLayout=(LinearLayout) header.findViewById(R.id.commentsItemLinearlayout);
-        reviewItemLinearLayout=(LinearLayout) header.findViewById(R.id.reviewItemLinearLayout);
-        draftImageView=(ImageView) header.findViewById(R.id.draftImageView);
-        publishedImageView=(ImageView) header.findViewById(R.id.publishedImageView);
-        commentsImageView=(ImageView) header.findViewById(R.id.commentsImageView);
-        reviewImageView=(ImageView) header.findViewById(R.id.reviewImageView);
-        editProfileTextView=(TextView)header.findViewById(R.id.editProfileTextView);
+        rankingTextView = (TextView) header.findViewById(R.id.rankingTextView);
+        followersTextView = (TextView) header.findViewById(R.id.followersTextView);
+        followingTextView = (TextView) header.findViewById(R.id.followingTextView);
+        userBio = (TextView) header.findViewById(R.id.userBio);
+        blogTitle = (TextView) header.findViewById(R.id.blogName);
+        draftItemLinearLayout = (LinearLayout) header.findViewById(R.id.draftItemLinearlayout);
+        publishedItemLinearLayout = (LinearLayout) header.findViewById(R.id.publishedItemLinearlayout);
+        commentsItemLinearLayout = (LinearLayout) header.findViewById(R.id.commentsItemLinearlayout);
+        reviewItemLinearLayout = (LinearLayout) header.findViewById(R.id.reviewItemLinearLayout);
+        draftImageView = (ImageView) header.findViewById(R.id.draftImageView);
+        publishedImageView = (ImageView) header.findViewById(R.id.publishedImageView);
+        commentsImageView = (ImageView) header.findViewById(R.id.commentsImageView);
+        reviewImageView = (ImageView) header.findViewById(R.id.reviewImageView);
+        editProfileTextView = (TextView) header.findViewById(R.id.editProfileTextView);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Profile");
         draftListview.addHeaderView(header);
-        draftList=new ArrayList<>();
+        draftList = new ArrayList<>();
         adapter = new DraftListAdapter(this, draftList);
         draftListview.setAdapter(adapter);
         bloggerImageView = (ImageView) findViewById(R.id.bloggerImageView);
@@ -193,13 +194,13 @@ LinearLayout draftItemLinearLayout, publishedItemLinearLayout,commentsItemLinear
         editProfileTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(BloggerDashboardActivity.this,EditProfieActivity.class);
-                if (Bio!=null&&firstName!=null&&lastName!=null)
-                {intent.putExtra("bio",Bio);
-                    intent.putExtra("firstName",firstName);
-                    intent.putExtra("lastName",lastName);
-                startActivity(intent);}
-                else {
+                Intent intent = new Intent(BloggerDashboardActivity.this, EditProfieActivity.class);
+                if (Bio != null && firstName != null && lastName != null) {
+                    intent.putExtra("bio", Bio);
+                    intent.putExtra("firstName", firstName);
+                    intent.putExtra("lastName", lastName);
+                    startActivity(intent);
+                } else {
                     showToast("Please Wait");
                 }
             }
@@ -285,7 +286,7 @@ LinearLayout draftItemLinearLayout, publishedItemLinearLayout,commentsItemLinear
             return;
         }
 
-        Call<ReviewResponse> call = getReviewList.getUserReview(AppConstants.LIVE_URL+"apiservices/getUserReviews?userId=46c7b0da39444240bfeda73e41ef00c6");
+        Call<ReviewResponse> call = getReviewList.getUserReview(AppConstants.LIVE_URL + "apiservices/getUserReviews?userId=46c7b0da39444240bfeda73e41ef00c6");
 //asynchronous call
         call.enqueue(new Callback<ReviewResponse>() {
                          @Override
@@ -650,6 +651,7 @@ LinearLayout draftItemLinearLayout, publishedItemLinearLayout,commentsItemLinear
         }*/
 
     }
+
     /*
         Utils.pushOpenScreenEvent(BloggerDashboardActivity.this, "Blogger Dashboard", SharedPrefUtils.getUserDetailModel(this).getId() + "");
         viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -746,7 +748,7 @@ LinearLayout draftItemLinearLayout, publishedItemLinearLayout,commentsItemLinear
             showToast(getString(R.string.error_network));
             return;
         }
-        Call<UserDetailResponse> call = bloggerDashboardAPI.getBloggerData(AppConstants.LIVE_URL+"v1/users/dashboard/"+ SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
+        Call<UserDetailResponse> call = bloggerDashboardAPI.getBloggerData(AppConstants.LIVE_URL + "v1/users/dashboard/" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
 
 
         //asynchronous call
@@ -759,7 +761,7 @@ LinearLayout draftItemLinearLayout, publishedItemLinearLayout,commentsItemLinear
 
                              removeProgressDialog();
 
-                               if (responseData.getCode() != 200) {
+                             if (responseData.getCode() != 200) {
                                  showToast(getString(R.string.toast_response_error));
                                  return;
                              } else {
@@ -769,12 +771,12 @@ LinearLayout draftItemLinearLayout, publishedItemLinearLayout,commentsItemLinear
                                  userBio.setText(responseData.getData().getResult().getUserBio());
                                  blogTitle.setText(responseData.getData().getResult().getBlogTitle());
                                  getSupportActionBar().setTitle(responseData.getData().getResult().getFirstName());
-                                   Bio=responseData.getData().getResult().getUserBio();
-                                   firstName=responseData.getData().getResult().getFirstName();
-                                   lastName=responseData.getData().getResult().getLastName();
-                                   phoneNumber=responseData.getData().getResult().getPhoneNumber();
+                                 Bio = responseData.getData().getResult().getUserBio();
+                                 firstName = responseData.getData().getResult().getFirstName();
+                                 lastName = responseData.getData().getResult().getLastName();
+                                 phoneNumber = responseData.getData().getResult().getPhoneNumber();
 
-                                                          }
+                             }
 
                          }
 
@@ -786,43 +788,44 @@ LinearLayout draftItemLinearLayout, publishedItemLinearLayout,commentsItemLinear
                      }
         );
     }
-/*
+
+    /*
 
 
-    @Override
-    public void onClick(View v) {
+        @Override
+        public void onClick(View v) {
 
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Intent intent = new Intent(BloggerDashboardActivity.this, DashboardActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
         }
-    }
 
-    public void hidefloatingbutton(Boolean b) {
-        if (b == true) {
-            addDraft.setVisibility(View.INVISIBLE);
-        } else {
-            addDraft.setVisibility(View.VISIBLE);
+        @Override
+        public void onBackPressed() {
+            super.onBackPressed();
+            Intent intent = new Intent(BloggerDashboardActivity.this, DashboardActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
         }
-    }
-*/
+
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+            switch (item.getItemId()) {
+                case android.R.id.home:
+                    onBackPressed();
+                    finish();
+                    return true;
+                default:
+                    return super.onOptionsItemSelected(item);
+            }
+        }
+
+        public void hidefloatingbutton(Boolean b) {
+            if (b == true) {
+                addDraft.setVisibility(View.INVISIBLE);
+            } else {
+                addDraft.setVisibility(View.VISIBLE);
+            }
+        }
+    */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -888,8 +891,8 @@ LinearLayout draftItemLinearLayout, publishedItemLinearLayout,commentsItemLinear
 
                         //   imageString = Base64.encodeToString(byteArrayFromGallery, Base64.DEFAULT);
                         String path = MediaStore.Images.Media.insertImage(BloggerDashboardActivity.this.getContentResolver(), finalBitmap, "Title", null);
-                        Uri imageUriTemp=Uri.parse(path);
-                        File file2= FileUtils.getFile(this,imageUriTemp);
+                        Uri imageUriTemp = Uri.parse(path);
+                        File file2 = FileUtils.getFile(this, imageUriTemp);
                         sendUploadProfileImageRequest(file2);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -900,6 +903,7 @@ LinearLayout draftItemLinearLayout, publishedItemLinearLayout,commentsItemLinear
                 break;
         }
     }
+
     public void sendUploadProfileImageRequest(File file) {
         showProgressDialog(getString(R.string.please_wait));
         ByteArrayOutputStream bao = new ByteArrayOutputStream();
@@ -913,7 +917,7 @@ LinearLayout draftItemLinearLayout, publishedItemLinearLayout,commentsItemLinear
                 .build();
         MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
         RequestBody requestBodyFile = RequestBody.create(MEDIA_TYPE_PNG, file);
-   //     RequestBody userId = RequestBody.create(MediaType.parse("text/plain"), "" + userModel.getUser().getId());
+        //     RequestBody userId = RequestBody.create(MediaType.parse("text/plain"), "" + userModel.getUser().getId());
         RequestBody imageType = RequestBody.create(MediaType.parse("text/plain"), "jpg");
         // prepare call in Retrofit 2.0
         ImageUploadAPI imageUploadAPI = retrofit.create(ImageUploadAPI.class);
@@ -936,8 +940,8 @@ LinearLayout draftItemLinearLayout, publishedItemLinearLayout,commentsItemLinear
                                  if (!StringUtils.isNullOrEmpty(responseModel.getData().getUrl())) {
                                      Log.i("IMAGE_UPLOAD_REQUEST", responseModel.getData().getUrl());
                                  }
-                                 setProfileImage( responseModel.getData().getUrl());
-                              //   setProfileImage(responseModel.getData().getUrl());
+                                 setProfileImage(responseModel.getData().getUrl());
+                                 //   setProfileImage(responseModel.getData().getUrl());
                                  Picasso.with(BloggerDashboardActivity.this).load(responseModel.getData().getUrl()).placeholder(R.drawable.family_xxhdpi)
                                          .error(R.drawable.family_xxhdpi).transform(new RoundedTransformation()).into(bloggerImageView);
                                  showToast("Image successfully uploaded!");
@@ -953,31 +957,30 @@ LinearLayout draftItemLinearLayout, publishedItemLinearLayout,commentsItemLinear
         );
 
     }
-  public void   setProfileImage(String url)
-  {
-      UpdateUserDetail updateUserDetail=new UpdateUserDetail();
-      updateUserDetail.setAttributeName("profilePicUrl");
-      updateUserDetail.setAttributeValue(url);
-      updateUserDetail.setAttributeType("S");
-      Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-      UserAttributeUpdateAPI userAttributeUpdateAPI= retrofit.create(UserAttributeUpdateAPI.class);
-      Call<UserDetailResponse> call=userAttributeUpdateAPI.updateProfilePic(updateUserDetail);
-      call.enqueue(new Callback<UserDetailResponse>() {
-          @Override
-          public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
-              if (!response.body().getStatus().equals("success"))
-              {
-                  showToast(getString(R.string.toast_response_error));
-              }
-          }
 
-          @Override
-          public void onFailure(Call<UserDetailResponse> call, Throwable t) {
+    public void setProfileImage(String url) {
+        UpdateUserDetail updateUserDetail = new UpdateUserDetail();
+        updateUserDetail.setAttributeName("profilePicUrl");
+        updateUserDetail.setAttributeValue(url);
+        updateUserDetail.setAttributeType("S");
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        UserAttributeUpdateAPI userAttributeUpdateAPI = retrofit.create(UserAttributeUpdateAPI.class);
+        Call<UserDetailResponse> call = userAttributeUpdateAPI.updateProfilePic(updateUserDetail);
+        call.enqueue(new Callback<UserDetailResponse>() {
+            @Override
+            public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
+                if (!response.body().getStatus().equals("success")) {
+                    showToast(getString(R.string.toast_response_error));
+                }
+            }
 
-          }
-      });
+            @Override
+            public void onFailure(Call<UserDetailResponse> call, Throwable t) {
 
-  }
+            }
+        });
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -985,27 +988,29 @@ LinearLayout draftItemLinearLayout, publishedItemLinearLayout,commentsItemLinear
         inflater.inflate(R.menu.user_profile_menu, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.bookmarkListItem:
-              //  newGame();
-                Intent intent= new Intent(BloggerDashboardActivity.this, BookmarkListActivity.class);
+                //  newGame();
+                Intent intent = new Intent(BloggerDashboardActivity.this, BookmarkListActivity.class);
                 startActivity(intent);
                 return true;
             case R.id.settings:
-               // showHelp();
-                Intent intent1= new Intent(BloggerDashboardActivity.this, EditProfieActivity.class);
-                if (Bio!=null&&firstName!=null&&lastName!=null)
-                {  intent1.putExtra("bio",Bio);
-                intent1.putExtra("firstName",firstName);
-                intent1.putExtra("lastName",lastName);
-                    intent1.putExtra("phoneNumber",phoneNumber);
-                startActivity(intent1);}
+                // showHelp();
+                Intent intent1 = new Intent(BloggerDashboardActivity.this, EditProfieActivity.class);
+                if (Bio != null && firstName != null && lastName != null) {
+                    intent1.putExtra("bio", Bio);
+                    intent1.putExtra("firstName", firstName);
+                    intent1.putExtra("lastName", lastName);
+                    intent1.putExtra("phoneNumber", phoneNumber);
+                    startActivity(intent1);
+                }
                 return true;
             case android.R.id.home:
-                finish();
+                onBackPressed();
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -1021,4 +1026,12 @@ LinearLayout draftItemLinearLayout, publishedItemLinearLayout,commentsItemLinear
         super.onCreateOptionsMenu(menu, inflater);
     }*/
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(BloggerDashboardActivity.this, DashboardActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
 }

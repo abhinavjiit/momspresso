@@ -1,11 +1,11 @@
 package com.mycity4kids.models.response;
 
 /**
- * Created by anshul on 7/12/16.
+ * Created by hemant on 29/7/16.
  */
-public class SetupBlogData {
+public class AddBookmarkData {
     private String msg;
-    private SetupBlogResult result;
+    private AddBookmarkResult result;
 
     public String getMsg() {
         return msg;
@@ -15,11 +15,11 @@ public class SetupBlogData {
         this.msg = msg;
     }
 
-    public SetupBlogResult getResult() {
+    public AddBookmarkResult getResult() {
         return result;
     }
 
-    public void setResult(SetupBlogResult result) {
+    public void setResult(AddBookmarkResult result) {
         this.result = result;
     }
 }

@@ -3,6 +3,7 @@ package com.mycity4kids.ui.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -141,7 +143,7 @@ public class SearchTopicsTabFragment extends BaseFragment {
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
         SearchArticlesAuthorsAPI searchAPI = retro.create(SearchArticlesAuthorsAPI.class);
         int from = (nextPageNumber - 1) * 15 + 1;
-        Call<SearchResponse> call = searchAPI.getSearchTopicssResult(searchName,
+        Call<SearchResponse> call = searchAPI.getSearchTopicsResult(searchName,
                 "topic", from, from + 15);
 
         call.enqueue(searchTopicsResponseCallback);
@@ -245,7 +247,7 @@ public class SearchTopicsTabFragment extends BaseFragment {
             if (mLodingView.getVisibility() == View.VISIBLE) {
                 mLodingView.setVisibility(View.GONE);
             }
-            if (response == null) {
+            if (response == null || response.body() == null) {
                 ((SearchArticlesAndAuthorsActivity) getActivity()).showToast("Something went wrong from server");
                 return;
             }
@@ -257,7 +259,8 @@ public class SearchTopicsTabFragment extends BaseFragment {
                     ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(responseData.getReason());
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                Crashlytics.logException(e);
+                Log.d("MC4KException", Log.getStackTraceString(e));
                 ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(getString(R.string.went_wrong));
             }
 
@@ -265,6 +268,8 @@ public class SearchTopicsTabFragment extends BaseFragment {
 
         @Override
         public void onFailure(Call<SearchResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4KException", Log.getStackTraceString(t));
             ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(getString(R.string.went_wrong));
         }
     };

@@ -36,8 +36,8 @@ public interface SearchArticlesAuthorsAPI {
                                               @Query("end") int end);
 
     @GET("/v1/search/find")
-    Call<SearchResponse> getSearchTopicssResult(@Query("q") String searchString,
-                                                @Query("type") String type,
-                                                @Query("start") int start,
-                                                @Query("end") int end);
+    Call<SearchResponse> getSearchTopicsResult(@Query("q") String searchString,
+                                               @Query("type") String type,
+                                               @Query("start") int start,
+                                               @Query("end") int end);
 }

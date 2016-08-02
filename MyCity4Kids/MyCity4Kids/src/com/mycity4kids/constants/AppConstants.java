@@ -398,4 +398,10 @@ public class AppConstants {
     public static final String PHOENIX_RELEASE_VERSION = "4.5";
 
     public static final String PAGINATION_END_VALUE = "NA";
+    public static final String FOLLOW_LIST_TYPE = "followListType";
+    public static final String FOLLOWER_LIST = "follower";
+    public static final String FOLLOWING_LIST = "following";
+    public static final String PUBLIC_PROFILE_FLAG = "publicProfileFlag";
+    public static final String PUBLIC_PROFILE_USER_ID = "publicProfileUserId";
+    public static final String USER_ID_FOR_FOLLOWING_FOLLOWERS = "userIdFollowingFollowers";
 }

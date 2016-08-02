@@ -20,16 +20,17 @@ import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
-import com.kelltontech.utils.StringUtils;
 import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.enums.ParentingFilterType;
 import com.mycity4kids.models.parentingstop.CommonParentingList;
-import com.mycity4kids.models.parentingstop.CommonParentingResponse;
+import com.mycity4kids.models.response.ArticleListingResponse;
+import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.ArticlesListingAdapter;
+import com.mycity4kids.ui.adapter.NewArticlesListingAdapter;
 
 import java.util.ArrayList;
 
@@ -49,11 +50,11 @@ import retrofit2.Retrofit;
 
 public class FilteredTopicsArticleListingActivity extends BaseActivity implements OnClickListener {
 
-    ArticlesListingAdapter articlesListingAdapter;
+    NewArticlesListingAdapter articlesListingAdapter;
     ListView listView;
 
-    ArrayList<CommonParentingList> articleDataModelsNew;
-    String sortType;
+    ArrayList<ArticleListingResult> articleDataModelsNew;
+    int sortType;
     private RelativeLayout mLodingView;
 
     private int nextPageNumber = 2;
@@ -85,11 +86,11 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         selectedTopics = getIntent().getStringExtra("selectedTopics");
         progressBar.setVisibility(View.VISIBLE);
 
-        articleDataModelsNew = new ArrayList<CommonParentingList>();
+        articleDataModelsNew = new ArrayList<ArticleListingResult>();
         nextPageNumber = 1;
-        hitFilteredTopicsArticleListingApi(nextPageNumber);
+        hitFilteredTopicsArticleListingApi(sortType);
 
-        articlesListingAdapter = new ArticlesListingAdapter(this, true);
+        articlesListingAdapter = new NewArticlesListingAdapter(this, true);
         articlesListingAdapter.setNewListData(articleDataModelsNew);
         listView.setAdapter(articlesListingAdapter);
         articlesListingAdapter.notifyDataSetChanged();
@@ -131,7 +132,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         });
     }
 
-    private void hitFilteredTopicsArticleListingApi(int pPageCount) {
+    private void hitFilteredTopicsArticleListingApi(int sortType) {
         if (!ConnectivityUtils.isNetworkEnabled(this)) {
             ToastUtils.showToast(this, getString(R.string.error_network));
             return;
@@ -142,14 +143,16 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
 
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
-        Call<CommonParentingResponse> filterCall = topicsAPI.filterCategories(selectedTopics, "category", pPageCount);
+
+        int from = (nextPageNumber - 1) * 15 + 1;
+        Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(selectedTopics, sortType, from, from + 15);
         filterCall.enqueue(articleListingResponseCallback);
 
     }
 
-    private Callback<CommonParentingResponse> articleListingResponseCallback = new Callback<CommonParentingResponse>() {
+    private Callback<ArticleListingResponse> articleListingResponseCallback = new Callback<ArticleListingResponse>() {
         @Override
-        public void onResponse(Call<CommonParentingResponse> call, retrofit2.Response<CommonParentingResponse> response) {
+        public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
             isReuqestRunning = false;
             progressBar.setVisibility(View.INVISIBLE);
             if (mLodingView.getVisibility() == View.VISIBLE) {
@@ -161,16 +164,11 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             }
 
             try {
-                CommonParentingResponse responseData = (CommonParentingResponse) response.body();
-                if (responseData.getResponseCode() == 200) {
-                    updateBlogArticleListingPG(responseData);
-                } else if (responseData.getResponseCode() == 400) {
-                    String message = responseData.getResult().getMessage();
-                    if (!StringUtils.isNullOrEmpty(message)) {
-                        showToast(message);
-                    } else {
-                        showToast(getString(R.string.went_wrong));
-                    }
+                ArticleListingResponse responseData = (ArticleListingResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    processArticleListingResponse(responseData);
+                } else {
+                    showToast(getString(R.string.went_wrong));
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
@@ -180,16 +178,16 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         }
 
         @Override
-        public void onFailure(Call<CommonParentingResponse> call, Throwable t) {
+        public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
             Crashlytics.logException(t);
             Log.d("MC4KException", Log.getStackTraceString(t));
             showToast(getString(R.string.went_wrong));
         }
     };
 
-    private void updateBlogArticleListingPG(CommonParentingResponse responseData) {
+    private void processArticleListingResponse(ArticleListingResponse responseData) {
 
-        ArrayList<CommonParentingList> dataList = responseData.getResult().getData().getData();
+        ArrayList<ArticleListingResult> dataList = responseData.getData().getResult();
 
         if (dataList.size() == 0) {
             isLastPageReached = false;

@@ -1,12 +1,9 @@
 package com.mycity4kids.editor;
 
 import android.app.Activity;
-
-import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,35 +12,27 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
-import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.controller.ArticlePublishController;
 import com.mycity4kids.dbtable.UserTable;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
-import com.mycity4kids.models.editor.ArticleDraftList;
-import com.mycity4kids.models.editor.ArticlePublishRequest;
-import com.mycity4kids.models.editor.BlogDataResponse;
-import com.mycity4kids.models.forgot.CommonResponse;
-import com.mycity4kids.models.parentingdetails.ParentingDetailResponse;
+import com.mycity4kids.models.editor.ArticleDraftRequest;
 import com.mycity4kids.models.response.ArticleDraftResponse;
 import com.mycity4kids.models.response.BlogPageResponse;
 import com.mycity4kids.models.response.ImageUploadResponse;
@@ -57,9 +46,14 @@ import com.mycity4kids.ui.activity.BloggerDashboardActivity;
 import com.squareup.picasso.Picasso;
 import com.yalantis.ucrop.UCrop;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -111,7 +105,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
             articleId = getIntent().getStringExtra("articleId");
             if (thumbnailUrl != null) {
                 Picasso.with(this).load(thumbnailUrl).into(articleImage);
-                url=thumbnailUrl;
+                url = thumbnailUrl;
                /* String[] seperated = thumbnailUrl.split("/");
                 if (seperated.length != 0) {
                     url = seperated[seperated.length - 1];
@@ -169,10 +163,10 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
                         Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(ArticleImageTagUploadActivity.this.getContentResolver(), imageUri);
                         float actualHeight = imageBitmap.getHeight();
                         float actualWidth = imageBitmap.getWidth();
-                        if (actualHeight<405||actualWidth<720)
-                        {
+                        if (actualHeight < 405 || actualWidth < 720) {
                             showToast("Please upload bigger image");
-                            return;}
+                            return;
+                        }
                         startCropActivity(imageUri);
                       /*  Uri selectedImage = data.getData();
                         String[] filePathColumn = {MediaStore.Images.Media.DATA};
@@ -277,41 +271,59 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
             showToast(getString(R.string.error_network));
             return;
         }
-        if (draftObject.getId()==null||draftObject.getId().isEmpty())
-        {
-        Call<ArticleDraftResponse> call = articlePublishAPI.publishArticle(
-                draftObject.getTitle().trim(),
-                draftObject.getBody(),
-                tags,
-                url,
-               "1"
-              );
-        Log.e("Publish Request", draftObject.getBody());
+        if (draftObject.getId() == null || draftObject.getId().isEmpty()) {
+            ArticleDraftRequest articleDraftRequest = new ArticleDraftRequest();
+            articleDraftRequest.setTitle(draftObject.getTitle().trim());
+            articleDraftRequest.setBody(draftObject.getBody());
+            ArrayList<Map<String, String>> list = new ArrayList<Map<String, String>>();
 
-        //asynchronous call
-        call.enqueue(new Callback<ArticleDraftResponse>() {
-                         @Override
-                         public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
-                             int statusCode = response.code();
+            JSONArray jsonArray = null;
+            try {
+                jsonArray = new JSONArray(tags);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    HashMap<String, String> map = new HashMap<>();
+                    String key = (String) jsonArray.getJSONObject(i).keys().next();
+                    map.put(key, jsonArray.getJSONObject(i).getString(key));
+                    list.add(map);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
-                             ArticleDraftResponse responseModel = (ArticleDraftResponse) response.body();
+            articleDraftRequest.setTags(list);
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+            articleDraftRequest.setImageUrl(url);
+            articleDraftRequest.setArticleType("1");
 
-                             removeProgressDialog();
-                             if (response == null || response.body() == null) {
-                                 showToast(getString(R.string.went_wrong));
-                                 return;
-                             } if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
-                                 if (!StringUtils.isNullOrEmpty(responseModel.getData().getMsg())) {
-                                     //  SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
-                                     Log.i("Retro Publish Message", responseModel.getData().getMsg());
+            Call<ArticleDraftResponse> call = articlePublishAPI.publishArticle(articleDraftRequest);
+            Log.e("Publish Request", draftObject.getBody());
+
+            //asynchronous call
+            call.enqueue(new Callback<ArticleDraftResponse>() {
+                             @Override
+                             public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
+                                 int statusCode = response.code();
+
+                                 ArticleDraftResponse responseModel = (ArticleDraftResponse) response.body();
+
+                                 removeProgressDialog();
+                                 if (response == null || response.body() == null) {
+                                     showToast(getString(R.string.went_wrong));
+                                     return;
+                                 }
+                                 if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
+                                     if (!StringUtils.isNullOrEmpty(responseModel.getData().getMsg())) {
+                                         //  SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
+                                         Log.i("Retro Publish Message", responseModel.getData().getMsg());
 
 
+                                         // draftId=responseModel.getResult().getData().getId()+"";
 
-                                     // draftId=responseModel.getResult().getData().getId()+"";
-
-                                     //setProfileImage(originalImage);
-                                     alertDialog(responseModel.getData().getMsg());
-                                     Handler handler = new Handler();
+                                         //setProfileImage(originalImage);
+                                         alertDialog(responseModel.getData().getMsg());
+                                         Handler handler = new Handler();
                                      /*handler.postDelayed(new Runnable() {
                                          @Override
                                          public void run() {
@@ -320,23 +332,25 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
                                              finish();
                                          }
                                      }, 2000);*/
-                                 } else {
-                                     showToast(responseModel.getReason().toString());
+                                     } else {
+                                         removeProgressDialog();
+                                         showToast(responseModel.getReason().toString());
+                                     }
                                  }
+
                              }
 
-                         }
 
-
-                         @Override
-                         public void onFailure(Call<ArticleDraftResponse> call, Throwable t) {
-                             Crashlytics.logException(t);
-                             Log.d("MC4kException", Log.getStackTraceString(t));
+                             @Override
+                             public void onFailure(Call<ArticleDraftResponse> call, Throwable t) {
+                                 removeProgressDialog();
+                                 Crashlytics.logException(t);
+                                 Log.d("MC4kException", Log.getStackTraceString(t));
+                             }
                          }
-                     }
-        );}
-        else {
-            id=draftObject.getId();
+            );
+        } else {
+            id = draftObject.getId();
             Call<ArticleDraftResponse> call1 = articlePublishAPI.updateArticle(
                     AppConstants.STAGING_URL + "v1/articles/" + id,
                     draftObject.getTitle().trim(),
@@ -428,7 +442,9 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<BlogPageResponse> call, Throwable t) {
-
+                removeProgressDialog();
+                Crashlytics.logException(t);
+                Log.d("MC4KException", Log.getStackTraceString(t));
             }
         });
 
@@ -449,6 +465,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
                         // continue with delete
                         //  dialog.dismiss();
                         Intent intent = new Intent(ArticleImageTagUploadActivity.this, BloggerDashboardActivity.class);
+//                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                         finish();
                     }
@@ -494,7 +511,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
                                  if (!StringUtils.isNullOrEmpty(responseModel.getData().getUrl())) {
                                      Log.i("IMAGE_UPLOAD_REQUEST", responseModel.getData().getUrl());
                                  }
-                                 url=(responseModel.getData().getUrl());
+                                 url = (responseModel.getData().getUrl());
                                  Picasso.with(ArticleImageTagUploadActivity.this).load(responseModel.getData().getUrl()).error(R.drawable.default_article).into(articleImage);
                                  showToast("Image successfully uploaded!");
                                  // ((BaseActivity) this()).showSnackbar(getView().findViewById(R.id.root), "You have successfully uploaded an image.");
@@ -503,7 +520,9 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
 
                          @Override
                          public void onFailure(Call<ImageUploadResponse> call, Throwable t) {
-
+                             Crashlytics.logException(t);
+                             Log.d("MC4KException", Log.getStackTraceString(t));
+                             showToast(getString(R.string.went_wrong));
                          }
                      }
         );

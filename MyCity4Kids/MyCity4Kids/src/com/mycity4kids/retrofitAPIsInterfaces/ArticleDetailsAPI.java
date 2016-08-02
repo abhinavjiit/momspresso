@@ -1,9 +1,13 @@
 package com.mycity4kids.retrofitAPIsInterfaces;
 
+import com.mycity4kids.models.request.AddCommentRequest;
 import com.mycity4kids.models.request.ArticleDetailRequest;
+import com.mycity4kids.models.request.UpdateViewCountRequest;
+import com.mycity4kids.models.response.AddBookmarkResponse;
 import com.mycity4kids.models.response.AddCommentResponse;
 import com.mycity4kids.models.response.ArticleDetailData;
 import com.mycity4kids.models.response.ArticleDetailResponse;
+import com.mycity4kids.models.response.ArticleDetailResult;
 import com.mycity4kids.models.response.BaseResponse;
 
 import okhttp3.ResponseBody;
@@ -11,6 +15,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.Url;
@@ -34,15 +39,21 @@ public interface ArticleDetailsAPI {
                                           @Query("app_version") String app_version);
 
     @GET("https://s3-ap-northeast-1.amazonaws.com/microservices-sync-test/articles-data/{article_id}.json")
-    Call<ArticleDetailData> getDemoArticle(@Path("article_id") String article_id);
+    Call<ArticleDetailResult> getArticleDetails(@Path("article_id") String article_id);
 
     @GET("v1/users/checkFollowingBookmarkStatus/")
-    Call<ArticleDetailData> checkFollowingBookmarkStatus(@Query("articleId") String articleId,
+    Call<ArticleDetailResponse> checkFollowingBookmarkStatus(@Query("articleId") String articleId,
                                                          @Query("authorId") String authorId);
 
     @GET
     Call<ResponseBody> getComments(@Url String url);
 
-    @POST("v1/comments/{articleId}")
-    Call<AddCommentResponse> addComment(@Path("articleId") String articleId);
+    @PUT("v1/articles/views/{articleId}")
+    Call<ResponseBody> updateViewCount(@Path("articleId") String articleId, @Body UpdateViewCountRequest body);
+
+    @POST("v1/comments/")
+    Call<AddCommentResponse> addComment(@Body AddCommentRequest body);
+
+    @POST("v1/users/bookmark/")
+    Call<AddBookmarkResponse> addBookmark(@Body ArticleDetailRequest body);
 }

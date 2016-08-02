@@ -19,7 +19,6 @@ import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
-import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.LogoutController;
 import com.mycity4kids.dbtable.ExternalCalendarTable;
 import com.mycity4kids.dbtable.TableAdult;
@@ -45,7 +44,6 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.reminders.AppointmentManager;
 import com.mycity4kids.ui.activity.ActivityLogin;
 import com.mycity4kids.ui.activity.DashboardActivity;
-import com.mycity4kids.ui.activity.JoinFamilyActivity;
 
 /**
  * Created by khushboo.goyal on 08-06-2015.

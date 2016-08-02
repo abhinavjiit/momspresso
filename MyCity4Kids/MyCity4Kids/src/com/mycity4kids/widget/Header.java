@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -32,7 +31,6 @@ import com.mycity4kids.models.user.UserModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.AddBusinesEventActivity;
 import com.mycity4kids.ui.activity.HomeCategoryActivity;
-import com.mycity4kids.ui.activity.LandingLoginActivity;
 import com.mycity4kids.ui.activity.ProfileActivity;
 import com.mycity4kids.ui.activity.RecentlyViewedActivity;
 import com.mycity4kids.ui.activity.SelectLocationActivity;
@@ -280,7 +278,7 @@ public class Header extends RelativeLayout implements OnClickListener {
 			break;
 		case R.id.login_txt:
 
-			getContext().startActivity(new Intent(getContext(), LandingLoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+//			getContext().startActivity(new Intent(getContext(), LandingLoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
 			// ((HomeCategoryActivity)getContext()).finish();
 			break;
 		case R.id.facebook_txt:

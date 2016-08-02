@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -194,7 +195,7 @@ public class DraftListViewActivity extends BaseActivity implements View.OnClickL
             return;
         }
 
-        Call<DraftListResponse> call = getDraftListAPI.getDraftsList(ArticleType.DRAFT.getValue()+"'"+ArticleType.UNDER_MODERATION.getValue()+"'"+ArticleType.UNAPPROVED.getValue()+"'"+ArticleType.UNPUBLISHED.getValue());
+        Call<DraftListResponse> call = getDraftListAPI.getDraftsList(ArticleType.DRAFT.getValue() + "'" + ArticleType.UNDER_MODERATION.getValue() + "'" + ArticleType.UNAPPROVED.getValue() + "'" + ArticleType.UNPUBLISHED.getValue());
 
         //asynchronous call
         call.enqueue(new Callback<DraftListResponse>() {
@@ -202,7 +203,7 @@ public class DraftListViewActivity extends BaseActivity implements View.OnClickL
                          public void onResponse(Call<DraftListResponse> call, retrofit2.Response<DraftListResponse> response) {
                              int statusCode = response.code();
                              removeProgressDialog();
-                            // ResponseBody responseModel = (ResponseBody) response.body();
+                             // ResponseBody responseModel = (ResponseBody) response.body();
                     /*         String responseData = null;
                              try {
                                  responseData = new String(response.body().bytes());
@@ -231,25 +232,26 @@ public class DraftListViewActivity extends BaseActivity implements View.OnClickL
                              }catch (JSONException e) {
                                  e.printStackTrace();
                              }*/
-                        //     ArticleDraftListResponse responseModel = new Gson().fromJson(responseData, ArticleDraftListResponse.class);
-                             DraftListResponse responseModel=response.body();
+                             //     ArticleDraftListResponse responseModel = new Gson().fromJson(responseData, ArticleDraftListResponse.class);
+                             DraftListResponse responseModel = response.body();
                              if (responseModel.getCode() != 200) {
                                  showToast(getString(R.string.toast_response_error));
                                  return;
                              } else {
                                  if (!StringUtils.isNullOrEmpty(responseModel.getData().getMsg())) {
-                                     Log.i("Draft message",responseModel.getData().getMsg());
+                                     Log.i("Draft message", responseModel.getData().getMsg());
                                  }
+                                 processDraftResponse(responseModel);
 
-                                processDraftResponse(responseModel);
-
-                         }}
+                             }
+                         }
 
 
                          @Override
                          public void onFailure(Call<DraftListResponse> call, Throwable t) {
                              removeProgressDialog();
-
+                             Crashlytics.logException(t);
+                             Log.d("MC4KException", Log.getStackTraceString(t));
                          }
                      }
         );
@@ -280,8 +282,7 @@ public class DraftListViewActivity extends BaseActivity implements View.OnClickL
         }
 
         Call<ArticleDraftResponse> call = articleDraftAPI.deleteDraft(
-                AppConstants.LIVE_URL+"v1/articles/"+draftObject.getId());
-
+                AppConstants.LIVE_URL + "v1/articles/" + draftObject.getId());
 
 
         //asynchronous call

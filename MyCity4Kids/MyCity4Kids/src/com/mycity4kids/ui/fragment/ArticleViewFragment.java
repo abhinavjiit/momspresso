@@ -128,6 +128,7 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
                 if (adapterView.getAdapter() instanceof NewArticlesListingAdapter) {
                     ArticleListingResult parentingListData = (ArticleListingResult) ((NewArticlesListingAdapter) adapterView.getAdapter()).getItem(i);
                     intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
+                    intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
                     intent.putExtra(Constants.ARTICLE_COVER_IMAGE, parentingListData.getImageUrl());
                     intent.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.ARTICLES);
                     intent.putExtra(Constants.FILTER_TYPE, parentingListData.getUserType());
@@ -281,6 +282,7 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
                 articlesListingAdapter.notifyDataSetChanged();
             }
         } catch (Exception ex) {
+            mLodingView.setVisibility(View.GONE);
             removeVolleyCache(sortType);
             Crashlytics.logException(ex);
             Log.d("MC4kException", Log.getStackTraceString(ex));

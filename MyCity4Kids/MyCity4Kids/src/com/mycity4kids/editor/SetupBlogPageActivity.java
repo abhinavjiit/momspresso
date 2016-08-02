@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.BitmapUtils;
@@ -32,7 +32,6 @@ import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.editor.ArticleDraftRequest;
-import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.models.response.ImageUploadResponse;
 import com.mycity4kids.models.response.SetupBlogResponse;
 import com.mycity4kids.models.user.UserModel;
@@ -138,8 +137,7 @@ public class SetupBlogPageActivity extends BaseActivity {
         Utils.pushOpenScreenEvent(SetupBlogPageActivity.this, "Article Image Upload", SharedPrefUtils.getUserDetailModel(this).getId() + "");
         UserTable userTable = new UserTable((BaseApplication) this.getApplication());
         userModel = userTable.getAllUserData();
-        if (getIntent().getStringExtra("userBio")!=null&&!getIntent().getStringExtra("userBio").isEmpty())
-        {
+        if (getIntent().getStringExtra("userBio") != null && !getIntent().getStringExtra("userBio").isEmpty()) {
             bloggerBio.setText(getIntent().getStringExtra("userBio"));
         }
         blogImage.setOnClickListener(new View.OnClickListener() {
@@ -224,17 +222,17 @@ public class SetupBlogPageActivity extends BaseActivity {
                                                      finish();
                                                  }
                                              }
-
-                                             //setProfileImage(originalImage);
-                                             //   showToast("You have successfully uploaded image.");
                                          }
 
                                      }
 
-
                                      @Override
                                      public void onFailure(Call<SetupBlogResponse> call, Throwable t) {
-
+                                         Crashlytics.logException(t);
+                                         removeProgressDialog();
+                                         Log.d("MC4KException", Log.getStackTraceString(t));
+                                         showToast(getString(R.string.went_wrong));
+//                                         finish();
                                      }
                                  }
                     );
@@ -304,12 +302,12 @@ public class SetupBlogPageActivity extends BaseActivity {
                         finalBitmap = Bitmap.createScaledBitmap(imageBitmap, (int) actualWidth, (int) actualHeight, true);
                         ByteArrayOutputStream stream = new ByteArrayOutputStream();
                         finalBitmap.compress(Bitmap.CompressFormat.PNG, 75, stream);
-                      // byte[] byteArrayFromGallery = stream.toByteArray();
+                        // byte[] byteArrayFromGallery = stream.toByteArray();
 
-                     //   imageString = Base64.encodeToString(byteArrayFromGallery, Base64.DEFAULT);
+                        //   imageString = Base64.encodeToString(byteArrayFromGallery, Base64.DEFAULT);
                         String path = MediaStore.Images.Media.insertImage(SetupBlogPageActivity.this.getContentResolver(), finalBitmap, "Title", null);
-                        Uri imageUriTemp=Uri.parse(path);
-                        File file2= FileUtils.getFile(this,imageUriTemp);
+                        Uri imageUriTemp = Uri.parse(path);
+                        File file2 = FileUtils.getFile(this, imageUriTemp);
                         //    new FileUploadTask().execute();
                         sendUploadProfileImageRequest(file2);
                         // compressImage(filePath);
@@ -373,7 +371,7 @@ public class SetupBlogPageActivity extends BaseActivity {
         ImageUploadAPI imageUploadAPI = retrofit.create(ImageUploadAPI.class);
 
         Call<ImageUploadResponse> call = imageUploadAPI.uploadImage(//userId,
-              //  imageType,
+                //  imageType,
                 requestBodyFile);
         //asynchronous call
         call.enqueue(new Callback<ImageUploadResponse>() {

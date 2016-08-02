@@ -37,7 +37,6 @@ import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
-import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.ArticleBlogFollowController;
 import com.mycity4kids.listener.OnButtonClicked;
 import com.mycity4kids.models.parentingstop.ArticleBlogFollowRequest;
@@ -46,19 +45,11 @@ import com.mycity4kids.sync.SyncService;
 import com.mycity4kids.sync.SyncSocialMediaEventService;
 import com.mycity4kids.sync.SyncUserInfoService;
 import com.mycity4kids.ui.activity.DashboardActivity;
-import com.mycity4kids.ui.activity.LandingLoginActivity;
-/*import com.mycity4kids.utils.AnalyticsHelper;*/
 
-import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import okhttp3.Cache;
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+/*import com.mycity4kids.utils.AnalyticsHelper;*/
 
 /**
  * This class is used as base-class for application-base-activity.
@@ -389,7 +380,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen 
     public void showToast(String message) {
         if (toast != null)
             toast.cancel();
-        toast = Toast.makeText(BaseActivity.this, ""+message, Toast.LENGTH_LONG);
+        toast = Toast.makeText(BaseActivity.this, "" + message, Toast.LENGTH_LONG);
         toast.show();
     }
 
@@ -399,21 +390,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen 
 //                .setAction(R.string.snackbar_action, myOnClickListener)
                 .show(); // Don’t forget to show!
     }
-
-
-    public void goToLanding() {
-        Intent intent = new Intent(this, LandingLoginActivity.class);
-        if (Constants.IS_COMING_FROM_INSIDE) {
-            intent.putExtra(Constants.LOGIN_REQUIRED, true);
-        } else {
-            intent.putExtra(Constants.LOGIN_REQUIRED, false);
-        }
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        finish();
-    }
-
 
     public void sendToHomeScreen() {
         Intent intent1 = new Intent(this, DashboardActivity.class);

@@ -1,16 +1,13 @@
 package com.mycity4kids.models.response;
 
-import com.mycity4kids.models.parentingdetails.DetailsBody;
-
 import java.util.ArrayList;
-import java.util.Map;
 
 /**
- * Created by hemant on 6/7/16.
+ * Created by hemant on 1/8/16.
  */
-public class ArticleDetailData {
+public class FollowersFollowingData {
     private String msg;
-    private ArticleDetailResult result;
+    private ArrayList<FollowersFollowingResult> result;
 
     public String getMsg() {
         return msg;
@@ -20,11 +17,11 @@ public class ArticleDetailData {
         this.msg = msg;
     }
 
-    public ArticleDetailResult getResult() {
+    public ArrayList<FollowersFollowingResult> getResult() {
         return result;
     }
 
-    public void setResult(ArticleDetailResult result) {
+    public void setResult(ArrayList<FollowersFollowingResult> result) {
         this.result = result;
     }
 }

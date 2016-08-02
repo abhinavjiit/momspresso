@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.mycity4kids.constants.AppConstants;
-import com.mycity4kids.ui.fragment.JoinFamilyFragment;
 import com.mycity4kids.ui.fragment.TutorialFragment;
 
 

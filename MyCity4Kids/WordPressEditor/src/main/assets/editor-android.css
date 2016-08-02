@@ -29,6 +29,10 @@ video::-webkit-media-controls-fullscreen-button {
     background-color: rgba(0, 0, 0, 0.5);
 }
 
+.img {
+width:95%;
+}
+
 /* Used only on older APIs (API<19), where using inline-block is buggy and sometimes displays a very small container */
 span.img_container.compat,
 span.video_container.compat {

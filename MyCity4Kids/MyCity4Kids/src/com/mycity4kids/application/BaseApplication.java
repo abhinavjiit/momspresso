@@ -31,6 +31,7 @@ import com.mycity4kids.utils.ArrayAdapterFactory;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 import io.fabric.sdk.android.Fabric;
 import okhttp3.Cache;
@@ -295,11 +296,17 @@ public class BaseApplication extends Application {
                     .Builder()
                     .addInterceptor(mainInterceptor)
                     .addInterceptor(logging)
+                    .connectTimeout(20, TimeUnit.SECONDS)
+                    .readTimeout(20, TimeUnit.SECONDS)
+                    .writeTimeout(20, TimeUnit.SECONDS)
                     .build();
         } else {
             client = new OkHttpClient
                     .Builder()
                     .addInterceptor(mainInterceptor)
+                    .connectTimeout(20, TimeUnit.SECONDS)
+                    .readTimeout(20, TimeUnit.SECONDS)
+                    .writeTimeout(20, TimeUnit.SECONDS)
                     .build();
         }
 

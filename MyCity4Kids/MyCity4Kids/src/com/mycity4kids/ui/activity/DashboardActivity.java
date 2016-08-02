@@ -1827,7 +1827,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 startActivity(intent5);
                 break;
             case R.id.bloggerDashboard:
-                Intent intent = new Intent(DashboardActivity.this, BloggerDashboardActivity.class);
+                Intent intent = new Intent(DashboardActivity.this, FollowersAndFollowingListActivity.class);
+                intent.putExtra(AppConstants.FOLLOW_LIST_TYPE, AppConstants.FOLLOWER_LIST);
                 startActivity(intent);
                 break;
             case R.id.txvSettings:

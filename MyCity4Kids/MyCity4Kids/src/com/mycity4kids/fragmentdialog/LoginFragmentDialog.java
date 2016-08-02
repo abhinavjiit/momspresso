@@ -2,7 +2,6 @@ package com.mycity4kids.fragmentdialog;
 
 
 import android.app.Dialog;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -15,7 +14,6 @@ import android.widget.Button;
 
 import com.mycity4kids.R;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.ui.activity.LandingLoginActivity;
 
 public class LoginFragmentDialog extends DialogFragment implements OnClickListener{
 	private int mCategoryId;
@@ -52,16 +50,6 @@ public class LoginFragmentDialog extends DialogFragment implements OnClickListen
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.login_btn:
-			getDialog().dismiss();
-			Intent intent=new Intent(getActivity(),LandingLoginActivity.class);
-			intent.putExtra(Constants.LOGIN_REQUIRED,true);
-			intent.putExtra(Constants.CATEGORY_ID, mCategoryId);
-			intent.putExtra(Constants.BUSINESS_OR_EVENT_ID, mBusinessOrEventId);
-			intent.putExtra(Constants.PAGE_TYPE, mBusinessOrEventType);
-			intent.putExtra(Constants.DISTANCE,mDistance);
-			startActivity(intent);
-			break;
 		case R.id.cancelBtn:
 			getDialog().dismiss();
 			break;

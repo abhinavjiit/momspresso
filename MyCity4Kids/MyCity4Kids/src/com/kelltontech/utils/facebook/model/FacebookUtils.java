@@ -1,15 +1,8 @@
 package com.kelltontech.utils.facebook.model;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import com.facebook.FacebookAuthorizationException;
@@ -17,8 +10,6 @@ import com.facebook.FacebookOperationCanceledException;
 import com.facebook.FacebookRequestError;
 import com.facebook.HttpMethod;
 import com.facebook.Request;
-import com.facebook.Request.GraphUserCallback;
-import com.facebook.Request.GraphUserListCallback;
 import com.facebook.RequestAsyncTask;
 import com.facebook.Response;
 import com.facebook.Session;
@@ -31,8 +22,13 @@ import com.kelltontech.utils.facebook.listener.FacebookFriendListListener;
 import com.kelltontech.utils.facebook.listener.FacebookLoginListener;
 import com.kelltontech.utils.facebook.listener.FacebookPostListener;
 import com.mycity4kids.R;
-import com.mycity4kids.enums.ParentingFilterType;
-import com.mycity4kids.interfaces.IFacebookUser;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * 
@@ -64,7 +60,7 @@ public class FacebookUtils {
 	}
 
 	public static void postOnWall(Activity pActivity,
-			final FacebookPostListener facebookPostListener,final String appUrl,final String title) {
+                                  final FacebookPostListener facebookPostListener, final String appUrl, final String title) {
 		mActivity = pActivity;
 
 		Session session = Session.getActiveSession();
@@ -84,7 +80,7 @@ public class FacebookUtils {
 				Bundle postParams = new Bundle();
 				postParams.putString("name", pActivity.getString(R.string.post_title));
 				postParams.putString("caption","");
-				
+
 				postParams.putString("description",title+ " on mycity4kids. Check it out here " +appUrl);
 				postParams.putString("link","https://www.facebook.com/mycity4kids");
 				postParams.putString("picture","http://cdn1.mycity4kids.com/img/mycity4kids-logo.png");
@@ -92,7 +88,7 @@ public class FacebookUtils {
 				Request.Callback callback = new Request.Callback() {
 					public void onCompleted(Response response) {
 						JSONObject graphResponse = response.getGraphObject().getInnerJSONObject();
-								
+
 						String postId = null;
 						try {
 							postId = graphResponse.getString("id");
@@ -140,7 +136,7 @@ public class FacebookUtils {
 		Session activeSession = Session.getActiveSession();
 		if (activeSession.getState().isOpened()) {
 			Request friendRequest = Request.newMyFriendsRequest(activeSession,
-					new GraphUserListCallback() {
+					new Request.GraphUserListCallback() {
 
 						@Override
 						public void onCompleted(List<GraphUser> users,
@@ -180,8 +176,8 @@ public class FacebookUtils {
 		}
 
 	}
-	
-	
+
+
 
 	public static void loginFacebook(Activity pActivity,
 			final FacebookLoginListener facebookListener) {
@@ -197,7 +193,7 @@ public class FacebookUtils {
 						// TODO Auto-generated method stub
 						if (session.isOpened()) {
 							Request.newMeRequest(session,
-									new GraphUserCallback() {
+									new Request.GraphUserCallback() {
 
 										@Override
 										public void onCompleted(GraphUser user,
