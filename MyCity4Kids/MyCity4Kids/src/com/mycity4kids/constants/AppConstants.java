@@ -260,7 +260,7 @@ public class AppConstants {
     public static final int CREATE_TASK_REQUEST = 50;
     public static final int DELETE_TASK_REQUEST = 51;
     public static final int EDIT_TASK_REQUEST = 52;
-
+    public static final int FOLLOW_REQUEST = 7001;
 
     public static final int CREATE_TASKLIST_REQUEST = 53;
     public static final int GET_ALL_TASK_REQ = 54;

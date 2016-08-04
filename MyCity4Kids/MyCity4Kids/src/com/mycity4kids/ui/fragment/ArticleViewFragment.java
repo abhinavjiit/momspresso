@@ -63,7 +63,7 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
     private ProgressBar progressBar;
     private int from = 1;
     private int to = 15;
-    private int limit = 6;
+    private int limit = 15;
     private String paginationValue = "";
 //    private ArrayList<CommonParentingList> mDataList;
 

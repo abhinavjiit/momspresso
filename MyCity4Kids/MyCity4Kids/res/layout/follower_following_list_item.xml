@@ -61,10 +61,29 @@
         android:layout_marginRight="10dp"
         android:gravity="center"
         android:paddingBottom="8dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
+        android:paddingRight="10dp"
         android:paddingTop="8dp"
         android:text="FOLLOWING"
         android:textColor="@color/blog.comments.follow_reply_btn"
         android:textSize="14sp" />
+
+    <RelativeLayout
+        android:id="@+id/relativeLoadingView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/followTextView"
+        android:layout_alignRight="@+id/followTextView"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/authorNameTextView"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/imgLoader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sepaartorView"
+            android:layout_centerInParent="true"
+            android:src="@drawable/progress_spinner" />
+    </RelativeLayout>
+
 </RelativeLayout>

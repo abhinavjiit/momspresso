@@ -285,6 +285,4 @@ public class TopicsFilterActivity extends BaseActivity {
         }
         return true;
     }
-
-
 }

@@ -20,7 +20,8 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.FollowersFollowingResponse;
 import com.mycity4kids.models.response.FollowersFollowingResult;
-import com.mycity4kids.retrofitAPIsInterfaces.FollowListAPI;
+import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
 import com.mycity4kids.ui.adapter.FollowerFollowingListAdapter;
 
 import java.util.ArrayList;
@@ -43,14 +44,19 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
 
     ArrayList<FollowersFollowingResult> mDatalist;
     private String userId;
+    private String followListType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.follower_following_list_activity);
 
-        String followListType = getIntent().getStringExtra(AppConstants.FOLLOW_LIST_TYPE);
+        followListType = getIntent().getStringExtra(AppConstants.FOLLOW_LIST_TYPE);
+        userId = getIntent().getStringExtra(AppConstants.USER_ID_FOR_FOLLOWING_FOLLOWERS);
 
+        if (null == userId) {
+            userId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
+        }
         followerFollowingListView = (ListView) findViewById(R.id.followerFollowingListView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         noResultTextView = (TextView) findViewById(R.id.emptyList);
@@ -58,21 +64,20 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        userId = getIntent().getStringExtra(AppConstants.USER_ID_FOR_FOLLOWING_FOLLOWERS);
 
         mDatalist = new ArrayList<>();
 
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        FollowListAPI followListAPI = retrofit.create(FollowListAPI.class);
+        FollowAPI followListAPI = retrofit.create(FollowAPI.class);
 
-        if (!AppConstants.FOLLOWER_LIST.equals(followListType)) {
+        if (AppConstants.FOLLOWER_LIST.equals(followListType)) {
             Call<FollowersFollowingResponse> callFollowerList = followListAPI.getFollowersList(userId);
             callFollowerList.enqueue(getFollowersListResponseCallback);
-            getSupportActionBar().setTitle("Follower List");
+            getSupportActionBar().setTitle("Followers");
         } else {
             Call<FollowersFollowingResponse> callFollowingList = followListAPI.getFollowingList(userId);
             callFollowingList.enqueue(getFollowersListResponseCallback);
-            getSupportActionBar().setTitle("People Following You");
+            getSupportActionBar().setTitle("Following");
         }
 
         followerFollowingListAdapter = new FollowerFollowingListAdapter(this);

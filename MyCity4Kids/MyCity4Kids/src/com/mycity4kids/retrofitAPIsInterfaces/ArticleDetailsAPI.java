@@ -2,13 +2,12 @@ package com.mycity4kids.retrofitAPIsInterfaces;
 
 import com.mycity4kids.models.request.AddCommentRequest;
 import com.mycity4kids.models.request.ArticleDetailRequest;
+import com.mycity4kids.models.request.DeleteBookmarkRequest;
 import com.mycity4kids.models.request.UpdateViewCountRequest;
 import com.mycity4kids.models.response.AddBookmarkResponse;
 import com.mycity4kids.models.response.AddCommentResponse;
-import com.mycity4kids.models.response.ArticleDetailData;
 import com.mycity4kids.models.response.ArticleDetailResponse;
 import com.mycity4kids.models.response.ArticleDetailResult;
-import com.mycity4kids.models.response.BaseResponse;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -43,7 +42,7 @@ public interface ArticleDetailsAPI {
 
     @GET("v1/users/checkFollowingBookmarkStatus/")
     Call<ArticleDetailResponse> checkFollowingBookmarkStatus(@Query("articleId") String articleId,
-                                                         @Query("authorId") String authorId);
+                                                             @Query("authorId") String authorId);
 
     @GET
     Call<ResponseBody> getComments(@Url String url);
@@ -56,4 +55,7 @@ public interface ArticleDetailsAPI {
 
     @POST("v1/users/bookmark/")
     Call<AddBookmarkResponse> addBookmark(@Body ArticleDetailRequest body);
+
+    @POST("v1/users/deleteBookmark/")
+    Call<AddBookmarkResponse> deleteBookmark(@Body DeleteBookmarkRequest body);
 }

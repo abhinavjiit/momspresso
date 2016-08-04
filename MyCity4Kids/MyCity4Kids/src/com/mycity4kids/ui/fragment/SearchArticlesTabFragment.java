@@ -260,6 +260,10 @@ public class SearchArticlesTabFragment extends BaseFragment {
 
         @Override
         public void onFailure(Call<SearchResponse> call, Throwable t) {
+            progressBar.setVisibility(View.GONE);
+            if (mLodingView.getVisibility() == View.VISIBLE) {
+                mLodingView.setVisibility(View.GONE);
+            }
             ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(getString(R.string.went_wrong));
         }
     };

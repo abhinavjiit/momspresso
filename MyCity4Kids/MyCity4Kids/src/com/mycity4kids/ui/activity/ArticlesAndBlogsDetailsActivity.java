@@ -83,6 +83,7 @@ import com.mycity4kids.models.parentingstop.CommonParentingList;
 import com.mycity4kids.models.parentingstop.CommonParentingResponse;
 import com.mycity4kids.models.request.AddCommentRequest;
 import com.mycity4kids.models.request.ArticleDetailRequest;
+import com.mycity4kids.models.request.DeleteBookmarkRequest;
 import com.mycity4kids.models.request.UpdateViewCountRequest;
 import com.mycity4kids.models.response.AddBookmarkResponse;
 import com.mycity4kids.models.response.AddCommentResponse;
@@ -124,6 +125,9 @@ import retrofit2.Retrofit;
  * @author deepanker.chaudhary
  */
 public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnClickListener {
+
+    private final static int DELETE_BOOKMARK = 0;
+    private final static int ADD_BOOKMARK = 1;
 
     ArticleDetailResult detailData;
     private UiLifecycleHelper mUiHelper;
@@ -1103,24 +1107,28 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     }
 
     private void addRemoveBookmark() {
-        BookmarkModel bookmarkRequest = new BookmarkModel();
-        bookmarkRequest.setId(articleId);
-        bookmarkRequest.setCategory("blogs");
+//        BookmarkModel bookmarkRequest = new BookmarkModel();
+//        bookmarkRequest.setId(articleId);
+//        bookmarkRequest.setCategory("blogs");
+
         if (bookmarkStatus == 0) {
+            ArticleDetailRequest articleDetailRequest = new ArticleDetailRequest();
+            articleDetailRequest.setArticleId(articleId);
             bookmarkStatus = 1;
             menu.getItem(0).setIcon(R.drawable.ic_favorite_border_white_48dp_fill);
-            bookmarkRequest.setAction("add");
+//            bookmarkRequest.setAction("add");
+            Call<AddBookmarkResponse> call = articleDetailsAPI.addBookmark(articleDetailRequest);
+            call.enqueue(addBookmarkResponseCallback);
         } else {
+            DeleteBookmarkRequest deleteBookmarkRequest = new DeleteBookmarkRequest();
+            deleteBookmarkRequest.setId(bookmarkId);
             bookmarkStatus = 0;
             menu.getItem(0).setIcon(R.drawable.ic_favorite_border_white_48dp);
-            bookmarkRequest.setAction("remove");
+//            bookmarkRequest.setAction("remove");
+            Call<AddBookmarkResponse> call = articleDetailsAPI.deleteBookmark(deleteBookmarkRequest);
+            call.enqueue(addBookmarkResponseCallback);
         }
 
-        ArticleDetailRequest articleDetailRequest = new ArticleDetailRequest();
-        articleDetailRequest.setArticleId(articleId);
-
-        Call<AddBookmarkResponse> call = articleDetailsAPI.addBookmark(articleDetailRequest);
-        call.enqueue(addBookmarkResponseCallback);
 //        followAPICall(followAuthorId);
 //        BookmarkController bookmarkController = new BookmarkController(this, this);
 //        bookmarkController.getData(AppConstants.BOOKMARK_BLOG_REQUEST, bookmarkRequest);
@@ -1433,7 +1441,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     menu.getItem(0).setIcon(R.drawable.ic_favorite_border_white_48dp_fill);
                     bookmarkStatus = 1;
                 }
-
+                bookmarkId = responseData.getData().getResult().getBookmarkId();
                 if (SharedPrefUtils.getUserDetailModel(ArticlesAndBlogsDetailsActivity.this).getDynamoId().equals(followAuthorId)) {
                     followClick.setVisibility(View.INVISIBLE);
                 } else {
@@ -1519,29 +1527,58 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 return;
             }
             AddBookmarkResponse responseData = (AddBookmarkResponse) response.body();
-            if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                bookmarkId = responseData.getData().getResult().getBookmarkId();
-            } else {
-                if (StringUtils.isNullOrEmpty(responseData.getReason())) {
-                    showToast(responseData.getReason());
-                } else {
-                    showToast(getString(R.string.went_wrong));
-                }
-            }
+            updateBookmarkStatus(ADD_BOOKMARK, responseData);
         }
 
         @Override
         public void onFailure(Call<AddBookmarkResponse> call, Throwable t) {
-            if (t instanceof UnknownHostException) {
-                showToast(getString(R.string.error_network));
-            } else if (t instanceof SocketTimeoutException) {
-                showToast("connection timed out");
-            } else {
-                showToast(getString(R.string.server_went_wrong));
-            }
-            Crashlytics.logException(t);
-            Log.d("MC4kException", Log.getStackTraceString(t));
+            handleNetworkException(t);
         }
     };
-}
 
+    private Callback<AddBookmarkResponse> deleteBookmarkResponseCallback = new Callback<AddBookmarkResponse>() {
+        @Override
+        public void onResponse(Call<AddBookmarkResponse> call, retrofit2.Response<AddBookmarkResponse> response) {
+            if (response == null || null == response.body()) {
+                showToast("Something went wrong from server");
+                return;
+            }
+            AddBookmarkResponse responseData = (AddBookmarkResponse) response.body();
+            updateBookmarkStatus(DELETE_BOOKMARK, responseData);
+        }
+
+        @Override
+        public void onFailure(Call<AddBookmarkResponse> call, Throwable t) {
+            handleNetworkException(t);
+        }
+    };
+
+    private void updateBookmarkStatus(int status, AddBookmarkResponse responseData) {
+
+        if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+            if (status == ADD_BOOKMARK) {
+                bookmarkId = responseData.getData().getResult().getBookmarkId();
+            } else {
+                bookmarkId = null;
+            }
+        } else {
+            if (StringUtils.isNullOrEmpty(responseData.getReason())) {
+                showToast(responseData.getReason());
+            } else {
+                showToast(getString(R.string.went_wrong));
+            }
+        }
+    }
+
+    private void handleNetworkException(Throwable t) {
+        if (t instanceof UnknownHostException) {
+            showToast(getString(R.string.error_network));
+        } else if (t instanceof SocketTimeoutException) {
+            showToast("connection timed out");
+        } else {
+            showToast(getString(R.string.server_went_wrong));
+        }
+        Crashlytics.logException(t);
+        Log.d("MC4kException", Log.getStackTraceString(t));
+    }
+}
