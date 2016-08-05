@@ -45,6 +45,10 @@ import com.mycity4kids.reminders.AppointmentManager;
 import com.mycity4kids.ui.activity.ActivityLogin;
 import com.mycity4kids.ui.activity.DashboardActivity;
 
+import com.mycity4kids.ui.activity.EditProfieActivity;
+import com.mycity4kids.ui.activity.SettingsActivity;
+
+
 /**
  * Created by khushboo.goyal on 08-06-2015.
  */
@@ -52,22 +56,26 @@ import com.mycity4kids.ui.activity.DashboardActivity;
 public class FragmentSetting extends BaseFragment implements View.OnClickListener {
 int cityId;
 TextView cityChange;
+    String bio,firstName,lastName;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.aa_setting, container, false);
         Utils.pushOpenScreenEvent(getActivity(), "Settings", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
 
-        ((DashboardActivity) getActivity()).refreshMenu();
-
+       // ((SettingsActivity) getActivity()).refreshMenu();
+        bio=  getArguments().getString("bio");
+        firstName=  getArguments().getString("firstName");
+        lastName=  getArguments().getString("lastName");
         ((TextView) view.findViewById(R.id.logout)).setOnClickListener(this);
         ((TextView) view.findViewById(R.id.family_details)).setOnClickListener(this);
       //  ((TextView) view.findViewById(R.id.sync_setting)).setOnClickListener(this);
-        ((TextView) view.findViewById(R.id.external_cal)).setOnClickListener(this);
+        ((TextView) view.findViewById(R.id.editProfile)).setOnClickListener(this);
 //        ((TextView) view.findViewById(R.id.notification)).setOnClickListener(this);
         cityChange=(TextView) view.findViewById(R.id.cityChange);
         cityChange.setOnClickListener(this);
         cityId=SharedPrefUtils.getCurrentCityModel(getActivity()).getId();
+        setHasOptionsMenu(false);
         switch (cityId)
         {
             case 1:
@@ -166,7 +174,7 @@ TextView cityChange;
 
             case R.id.family_details:
 
-                ((DashboardActivity) getActivity()).replaceFragment(new FragmentFamilyDetail(), null, true);
+                ((SettingsActivity) getActivity()).replaceFragment(new FragmentFamilyDetail(), null, true);
 
                 break;
 
@@ -175,10 +183,14 @@ TextView cityChange;
                 bundle.putBoolean(Constants.IS_COMMING_FROM_SETTING, true);
                 ((DashboardActivity) getActivity()).replaceFragment(new SyncSettingFragment(), bundle, true);
                 break;*/
+            case R.id.editProfile:
 
-            case R.id.external_cal:
+                Intent intent=new Intent(getActivity(),EditProfieActivity.class);
 
-                ((DashboardActivity) getActivity()).replaceFragment(new ExternalCalFragment(), null, true);
+                {intent.putExtra("bio",bio);
+                    intent.putExtra("firstName",firstName);
+                    intent.putExtra("lastName",lastName);
+                    startActivity(intent);}
                 break;
 
 //            case R.id.notification:
@@ -187,7 +199,7 @@ TextView cityChange;
 //                ((DashboardActivity) getActivity()).replaceFragment(new NotificationFragment(), bundle, true);
 //                break;
             case  R.id.cityChange:
-                ((DashboardActivity) getActivity()).replaceFragment(new ChangeCityFragment(),null,true);
+                ((SettingsActivity) getActivity()).replaceFragment(new ChangeCityFragment(),null,true);
             default:
                 break;
         }

@@ -40,6 +40,7 @@ import com.mycity4kids.models.user.KidsInfo;
 import com.mycity4kids.reminders.AppointmentManager;
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
 import com.mycity4kids.ui.activity.DashboardActivity;
+import com.mycity4kids.ui.activity.SettingsActivity;
 
 import java.text.DateFormat;
 import java.text.Format;
@@ -89,7 +90,7 @@ public class FragmentKidProfile extends BaseFragment implements View.OnClickList
 
         TableKids tableKids = new TableKids(BaseApplication.getInstance());
         allKidsInfo = tableKids.getAllKids();
-        ((DashboardActivity) getActivity()).setTitle(selectedKidsInfo.getName());
+        ((SettingsActivity) getActivity()).setTitle(selectedKidsInfo.getName());
 
         name = (EditText) view.findViewById(R.id.kids_name);
         kidBdy = (TextView) view.findViewById(R.id.kids_bdy);
@@ -453,7 +454,7 @@ public class FragmentKidProfile extends BaseFragment implements View.OnClickList
             kidsTable.endTransaction();
         }
 
-        ((DashboardActivity) getActivity()).replaceFragment(new FragmentFamilyDetail(), null, true);
+        ((SettingsActivity) getActivity()).replaceFragment(new FragmentFamilyDetail(), null, true);
 
         // saving family
 
@@ -522,7 +523,7 @@ public class FragmentKidProfile extends BaseFragment implements View.OnClickList
 
             AppointmentManager.getInstance(getActivity()).clearList();
 
-            ((DashboardActivity) getActivity()).replaceFragment(new FragmentFamilyDetail(), null, true);
+            ((SettingsActivity) getActivity()).replaceFragment(new FragmentFamilyDetail(), null, true);
 
         } else if (responseData.getResponseCode() == 400) {
             Toast.makeText(getActivity(), responseData.getResult().getMessage(), Toast.LENGTH_SHORT).show();

@@ -10,27 +10,27 @@
         android:layout_alignParentTop="true"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
-        android:visibility="gone">
+        android:visibility="visible"/>
 
-    </android.support.v7.widget.Toolbar>
-
-    <View
+   <!-- <View
         android:id="@+id/dummy_line"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_below="@id/toolbar"
         android:layout_alignParentTop="true"
-        android:background="#DEDEDE" />
+        android:background="#DEDEDE" />-->
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
+        android:layout_below="@+id/toolbar"
         android:layout_height="wrap_content">
 
         <com.mycity4kids.observablescrollview.ObservableListView
             android:id="@+id/scroll"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/dummy_line"
+            android:layout_below="@+id/toolbar"
             android:background="@color/grey_light"
             android:divider="@color/transparent"
             android:drawSelectorOnTop="true" />

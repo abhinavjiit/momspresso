@@ -32,7 +32,7 @@ public class DraftListAdapter extends BaseAdapter  {
     ArrayList<PublishDraftObject> draftlist;
     private LayoutInflater mInflator;
     DraftListViewActivity draftListView;
-    TimeZone tz = TimeZone.getDefault();
+
 
     public DraftListAdapter(Context context, ArrayList<PublishDraftObject> draftlist) {
         this.context = context;
@@ -55,11 +55,11 @@ public class DraftListAdapter extends BaseAdapter  {
         return position;
     }
 
-    ViewHolder holder = null;
+//    ViewHolder holder = null;
 
     @Override
     public View getView(final int position, View view, ViewGroup parent) {
-
+        final ViewHolder holder;
         if (view == null) {
 
                     view = mInflator.inflate(R.layout.draft_list_item, null);
@@ -72,41 +72,73 @@ public class DraftListAdapter extends BaseAdapter  {
                     holder.popupButton.setTag(getItem(position));
 
                     //    popupButton.setOnClickListener((DraftListViewActivity)context);
-                    holder.popupButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            final PopupMenu popup = new PopupMenu(context, holder.popupButton);
-                            popup.getMenuInflater().inflate(R.menu.pop_menu_draft, popup.getMenu());
-                            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                                public boolean onMenuItemClick(MenuItem item) {
-                                    int i = item.getItemId();
-                                    if (i == R.id.edit) {
-                                        Intent intent = new Intent(context, EditorPostActivity.class);
-                                        intent.putExtra("draftItem", (PublishDraftObject) getItem(position));
-                                        intent.putExtra("from", "draftList");
-                                        context.startActivity(intent);
-                                        Log.e("edit", "clicked");
-                                        //do something
-                                        return true;
-                                    } else if (i == R.id.delete) {
-                                        //do something
-                                        ((BloggerDashboardActivity) context).deleteDraftAPI((PublishDraftObject) getItem(position), position);
-                                        Log.e("delete", "clicked");
-                                        return true;
-                                    } else {
-                                        return onMenuItemClick(item);
-                                    }
-                                }
 
-                            });
-                            popup.show();
-                        }
-                    });
 
                     view.setTag(holder);}
         else {
             holder = (ViewHolder) view.getTag();
         }
+        holder.popupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final PopupMenu popup = new PopupMenu(context, holder.popupButton);
+                popup.getMenuInflater().inflate(R.menu.pop_menu_draft, popup.getMenu());
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        int i = item.getItemId();
+                        if (i == R.id.edit) {
+                            Intent intent = new Intent(context, EditorPostActivity.class);
+                            intent.putExtra("draftItem", (PublishDraftObject) getItem(position));
+                            intent.putExtra("from", "draftList");
+                            context.startActivity(intent);
+                            Log.e("edit", "clicked");
+                            //do something
+                            return true;
+                        } else if (i == R.id.delete) {
+                            //do something
+                            ((BloggerDashboardActivity) context).deleteDraftAPI((PublishDraftObject) getItem(position), position);
+                            Log.e("delete", "clicked");
+                            return true;
+
+                        //    mClickListener.onBtnClick(position);
+                       } else {
+                            return onMenuItemClick(item);
+                        }
+                    }
+
+                });
+                popup.show();
+            }
+        });
+      /*  holder.popupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final PopupMenu popup = new PopupMenu(context, holder.popupButton);
+                popup.getMenuInflater().inflate(R.menu.pop_up_menu_published, popup.getMenu());
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        int i = item.getItemId();
+                        if (i == R.id.edit) {
+                            mClickListener.onBtnClick(position);
+                               *//* Intent intent=new Intent(mContext,EditorPostActivity.class);
+                               // intent.putExtra("publishedItem",(PublishedArticlesModel.PublishedArticleData)getItem(position));
+                                intent.putExtra("from","publishedList");
+
+                                intent.putExtra(Constants.ARTICLE_ID, String.valueOf( ( (PublishedArticlesModel.PublishedArticleData)getItem(position)).getId()));
+                                intent.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.ARTICLES);
+                                mContext.startActivity(intent);
+                                Log.e("edit", "clicked");
+                                //do something*//*
+                            return true;
+                        } else {
+                            return onMenuItemClick(item);
+                        }
+                    }
+
+                });
+                popup.show();
+            }
+        });*/
                     if (!draftlist.get(position).getTitle().toString().isEmpty()) {
                         holder.txvArticleTitle.setText(draftlist.get(position).getTitle());
                     } else {
@@ -149,7 +181,7 @@ public class DraftListAdapter extends BaseAdapter  {
                                 holder.txvUpdateDate.setTextColor(context.getResources().getColor(R.color.gray2));
                                 break;
                             }
-                            case "3": {
+                            case "4": {
                                 holder.txvUnapproved.setVisibility(View.VISIBLE);
                                 view.setBackgroundColor(Color.WHITE);
                                 view.setClickable(false);
@@ -214,5 +246,6 @@ public class DraftListAdapter extends BaseAdapter  {
             View popupButton;
 
         }
+
 
     }

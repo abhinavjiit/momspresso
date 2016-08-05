@@ -29,22 +29,24 @@
                 android:layout_alignParentTop="true"
                 android:layout_gravity="top"
                 android:ellipsize="end"
-                android:fontFamily="sans-serif-medium"
+                android:fontFamily="sans-serif-light"
                 android:gravity="top"
                 android:maxLines="2"
                 android:paddingLeft="10dp"
                 android:singleLine="false"
                 android:text="@string/title"
                 android:textColor="@color/black_color"
-                android:textSize="20dp"
-                android:layout_marginRight="30dp"/>
+                android:textSize="14dp"
+                android:layout_marginRight="30dp"
+                />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
+               android:layout_below="@+id/txvArticleTitle"
                 android:layout_gravity="bottom"
                 android:gravity="bottom"
+                android:layout_marginTop="7dp"
                 >
 
 
@@ -67,12 +69,13 @@
                     android:id="@+id/unapproved"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="12dp"
+                    android:textSize="13dp"
                     android:text="UNAPPROVED"
                     android:paddingRight="19dp"
                     android:layout_below="@+id/img_menu"
                     android:textColor="@color/blue_color"
-                    android:gravity="right"
+                    android:gravity="left"
+                    android:layout_marginLeft="10dp"
 
 
 

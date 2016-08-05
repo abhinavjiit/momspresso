@@ -77,6 +77,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
 import com.mycity4kids.sync.PushTokenService;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.LoadingActivity;
+import com.mycity4kids.ui.activity.SettingsActivity;
 import com.mycity4kids.ui.adapter.AdapterKidAdultList;
 import com.mycity4kids.ui.dialog.PhotoOptionsDialog;
 import com.mycity4kids.utils.RoundedTransformation;
@@ -171,7 +172,7 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
 
         additionalChild.setOnClickListener(this);
 //        additionalAdult.setOnClickListener(this);
-        ((DashboardActivity) getActivity()).setTitle("Family Details");
+        ((SettingsActivity) getActivity()).setTitle("Family Details");
 
 //        familyProfile.setOnClickListener(this);
 
@@ -194,7 +195,7 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
                 bundle.putString("KID_DOB", attendeeModel.getDate_of_birth());
                 bundle.putParcelable("KID_INFO", attendeeModel);
                 bundle.putSerializable("used_colors", used_colors);
-                ((DashboardActivity) getActivity()).replaceFragment(new FragmentKidProfile(), bundle, true);
+                ((SettingsActivity) getActivity()).replaceFragment(new FragmentKidProfile(), bundle, true);
 //
 //                } else if (attendeeModel.getType().equals("ADULT")) {
 //                    Bundle bundle = new Bundle();
@@ -821,7 +822,7 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
                     tableKids.updateVal(mFamilyModel);
 
 //                    SharedPrefUtils.setProfileImgUrl(getActivity(), profileimgUrl);
-                    ((DashboardActivity) getActivity()).updateImageProfile();
+                  //  ((SettingsActivity) getActivity()).updateImageProfile();
 
 
                     if (

@@ -15,7 +15,7 @@
             android:layout_height="40dp"
             android:layout_centerVertical="true"
             android:padding="10dp"
-            android:src="@drawable/back_arrow" />
+            android:src="@drawable/back_arroow" />
 
         <TextView
             android:id="@+id/txvHeaderText"

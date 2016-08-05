@@ -183,7 +183,7 @@
         <activity
             android:name=".ui.activity.BloggerDashboardActivity"
             android:label="@string/app_name"
-            android:parentActivityName=".ui.activity.DashboardActivity"
+
             android:screenOrientation="portrait"
             android:theme="@style/Theme.nnn" />
 
@@ -454,6 +454,8 @@
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Dialog" />
+        <activity android:name=".ui.activity.SettingsActivity"
+            android:screenOrientation="portrait"></activity>
         <!--<activity-->
         <!--android:name="com.mycity4kids.ui.activity.EventsFilterActivity"-->
         <!--android:configChanges="keyboard|keyboardHidden|orientation|screenSize"-->

@@ -37,6 +37,7 @@ import com.mycity4kids.models.city.MetroCity;
 import com.mycity4kids.models.configuration.ConfigurationApiModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.DashboardActivity;
+import com.mycity4kids.ui.activity.SettingsActivity;
 import com.mycity4kids.utils.NearMyCity;
 
 /**
@@ -55,7 +56,7 @@ public class ChangeCityFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.change_city, container, false);
         Utils.pushOpenScreenEvent(getActivity(), "City Change", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
 
-        ((DashboardActivity) getActivity()).setTitle("Change City");
+        ((SettingsActivity) getActivity()).setTitle("Change City");
         mFirebaseAnalytics=FirebaseAnalytics.getInstance(getActivity());
         setHasOptionsMenu(true);
         radioGroup=(RadioGroup)view.findViewById(R.id.radioGroup);
@@ -128,7 +129,7 @@ public class ChangeCityFragment extends BaseFragment {
                         @Override
                         public void comeBackOnUI() {
                          //   navigateToNextScreen(true);
-                            ((DashboardActivity) getActivity()).replaceFragment(new FragmentSetting(), null, true);
+                            ((SettingsActivity) getActivity()).replaceFragment(new FragmentSetting(), null, true);
                             removeProgressDialog();
                           //  getActivity().getFragmentManager().beginTransaction().remove(this).commit();
                             Log.e("comeBackUi","hey");

@@ -232,13 +232,7 @@
          android:background="@color/login_grey"
          android:layout_below="@id/tabs"
          ></View>-->
-    <TextView
-        android:id="@+id/noDraftsTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="No Drafts have been saved yet"
-        android:visibility="gone" />
+
 
     <ListView
         android:id="@+id/draftListView"
@@ -251,22 +245,68 @@
         android:id="@+id/publishedArticleListView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tabs"
+        android:layout_below="@+id/toolbar"
         android:visibility="gone" />
 
     <ListView
-        android:id="@+id/bookmarkedListView"
+        android:id="@+id/commentsListView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tabs"
+        android:layout_below="@+id/toolbar"
         android:visibility="gone" />
 
     <ListView
-        android:id="@+id/reviewCommentsListView"
+        android:id="@+id/reviewsListView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tabs"
+        android:layout_below="@+id/toolbar"
         android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/relativeLoadingView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#80000000"
+        android:paddingBottom="5dp"
+        android:visibility="gone">
+
+        <View
+            android:id="@+id/sepaartorView"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="1dp"
+            android:background="#DEDEDE" />
+
+        <TextView
+            android:id="@+id/txvLoadMore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sepaartorView"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="@string/loading_txt"
+            android:textColor="@color/white_color" />
+
+        <ImageView
+            android:id="@+id/imgLoader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sepaartorView"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="4dp"
+            android:layout_toLeftOf="@id/txvLoadMore"
+            android:src="@drawable/progress_spinner" />
+    </RelativeLayout>
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="invisible" />
     <!--  <TextView
           android:id="@+id/bloggerNameTextView"
           android:layout_width="wrap_content"

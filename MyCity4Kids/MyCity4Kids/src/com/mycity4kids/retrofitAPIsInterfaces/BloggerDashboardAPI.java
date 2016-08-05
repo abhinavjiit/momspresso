@@ -4,6 +4,7 @@ import com.mycity4kids.models.parentingstop.CommonParentingResponse;
 import com.mycity4kids.models.response.ArticleDraftResponse;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ReviewResponse;
+import com.mycity4kids.models.response.UserCommentsResponse;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.newmodels.BloggerDashboardModel;
 import com.mycity4kids.newmodels.PublishedArticlesModel;
@@ -34,4 +35,8 @@ public interface BloggerDashboardAPI {
     Call<UserDetailResponse> getBloggerData(@Url String url);
     @GET
     Call<ReviewResponse> getUserReview(@Url String url);
+    @GET
+    Call<UserCommentsResponse> getUserComments(@Url String url);
+    @GET
+    Call<ArticleListingResponse> getPublishedArticles(@Url String url);
 }

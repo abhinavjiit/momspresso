@@ -96,7 +96,7 @@
             android:orientation="vertical"
             android:id="@+id/FollowingLinearLL"
             android:layout_alignParentRight="true"
-            >
+           >
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -126,12 +126,10 @@
             android:fontFamily="sans-serif"
             android:layout_marginRight="5dp"
             android:gravity="center"
-
+            android:background="#ededed"
             android:layout_marginTop="5dp"
             android:id="@+id/editProfileTextView"
-            android:visibility="visible"
-            android:background="@drawable/edit_button_bg"
-            android:backgroundTint="#ededed"/>
+            android:visibility="gone"/>
         <TextView
             android:id="@+id/followTextView"
             android:layout_width="wrap_content"
@@ -150,7 +148,7 @@
             android:textColor="@color/blog.comments.follow_reply_btn"
             android:textSize="14sp"
             android:layout_below="@+id/rankLinearLL"
-            android:visibility="invisible"/>
+            android:visibility="visible"/>
 
         <TextView
             android:id="@+id/followingTextView1"
@@ -168,11 +166,10 @@
             android:textColor="@color/blog.comments.follow_reply_btn"
             android:textSize="14sp"
             android:layout_below="@+id/rankLinearLL"
-            android:visibility="invisible"
+            android:visibility="visible"
             />
 
     </RelativeLayout>
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -225,13 +222,14 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/blogName"
         android:orientation="horizontal"
-        android:weightSum="4">
+        android:weightSum="3">
 
         <LinearLayout
             android:id="@+id/draftItemLinearlayout"
             android:layout_width="0dp"
             android:layout_height="66dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/draftImageView"

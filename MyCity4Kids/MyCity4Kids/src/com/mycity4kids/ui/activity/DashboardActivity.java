@@ -317,7 +317,18 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 setTitle("Weekly Calender");
                 replaceFragment(new FragmentCalender(), null, true);
             }
-        } else {
+        }
+        else if (Constants.SETTINGS_FRAGMENT.equals(fragmentToLoad))
+        {
+            changeVisibiltyOfArrow(false);
+            setTitle("Settings");
+            Bundle bundle=new Bundle();
+            bundle.putString("bio",getIntent().getStringExtra("bio"));
+            bundle.putString("firstName",getIntent().getStringExtra("firstName"));
+            bundle.putString("lastName",getIntent().getStringExtra("lastName"));
+            replaceFragment(new FragmentSetting(), bundle, true);
+        }
+        else {
             replaceFragment(new FragmentMC4KHome(), null, false);
         }
 
@@ -544,7 +555,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     getSupportActionBar().setHomeButtonEnabled(true);
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arrow);
+                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
                     changeVisibiltyOfArrow(false);
                 } else if (currentFrag instanceof FragmentFamilyProfile) {
 
@@ -554,7 +565,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arrow);
+                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
                     getSupportActionBar().setHomeButtonEnabled(true);
 
                     changeVisibiltyOfArrow(false);
@@ -567,7 +578,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     getSupportActionBar().setHomeButtonEnabled(true);
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arrow);
+                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
                     changeVisibiltyOfArrow(false);
                 } else if (currentFrag instanceof FragmentKidProfile) {
 
@@ -578,7 +589,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     getSupportActionBar().setHomeButtonEnabled(true);
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arrow);
+                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
                     changeVisibiltyOfArrow(false);
                 } else if (currentFrag instanceof FragmentTaskHome) {
 
@@ -604,7 +615,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     getSupportActionBar().setHomeButtonEnabled(true);
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arrow);
+                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
                     changeVisibiltyOfArrow(false);
                     setTitle("Meet Our Contributors");
 
@@ -687,7 +698,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arrow);
+                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
                     changeVisibiltyOfArrow(false);
                 } else if (currentFrag instanceof ChangeCityFragment) {
                     setTitle("Change City");
@@ -697,7 +708,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arrow);
+                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
                     changeVisibiltyOfArrow(false);
                 } else if (currentFrag instanceof ExternalCalFragment) {
                     setTitle("External Calendars");
@@ -708,7 +719,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arrow);
+                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
                     changeVisibiltyOfArrow(false);
                 } else if (currentFrag instanceof SyncSettingFragment) {
                     setTitle("Sync Settings");
@@ -718,7 +729,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arrow);
+                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
                     changeVisibiltyOfArrow(false);
                 }
                 invalidateOptionsMenu();

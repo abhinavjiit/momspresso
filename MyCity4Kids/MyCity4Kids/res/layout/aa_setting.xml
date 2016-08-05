@@ -2,42 +2,43 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/a_bg_blue"
+    android:background="@color/white_color"
     android:orientation="vertical">
 
-<TextView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="General"
-    android:textAllCaps="true"
-    android:textSize="17.5sp"/>
+
     <TextView
         android:id="@+id/family_details"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_marginBottom="1dp"
         android:background="@color/white_color"
-        android:drawablePadding="50dp"
         android:drawableRight="@drawable/arrow_xxhdpi"
         android:gravity="center_vertical"
-        android:padding="15dp"
+        android:padding="10dp"
         android:text="Family Details"
-        android:textColor="@color/new_grey"
-        android:textSize="15dp" />
+        android:textColor="@color/black_color"
+        android:textSize="15sp" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray_color" />
     <TextView
         android:id="@+id/cityChange"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_marginBottom="1dp"
         android:background="@color/white_color"
-        android:drawablePadding="50dp"
+
         android:drawableRight="@drawable/arrow_xxhdpi"
         android:gravity="center_vertical"
-        android:padding="15dp"
+        android:padding="10dp"
         android:text="Change City ()"
-        android:textColor="@color/new_grey"
-        android:textSize="15dp" />
-
+        android:textColor="@color/black_color"
+        android:textSize="15sp" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray_color" />
     <!--<TextView-->
         <!--android:id="@+id/notification"-->
         <!--android:layout_width="match_parent"-->
@@ -53,19 +54,22 @@
         <!--android:textSize="15dp" />-->
 
     <TextView
-        android:id="@+id/external_cal"
+        android:id="@+id/editProfile"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_marginBottom="1dp"
         android:background="@color/white_color"
         android:drawablePadding="50dp"
         android:drawableRight="@drawable/arrow_xxhdpi"
         android:gravity="center_vertical"
-        android:padding="15dp"
-        android:text="External Calendars"
-        android:textColor="@color/new_grey"
-        android:textSize="15dp" />
-
+        android:padding="10dp"
+        android:text="Edit Profile"
+        android:textColor="@color/black_color"
+        android:textSize="15sp" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray_color" />
    <!-- <TextView
         android:id="@+id/sync_setting"
         android:layout_width="match_parent"
@@ -85,14 +89,17 @@
     <TextView
         android:id="@+id/logout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_marginBottom="1dp"
         android:background="@color/white_color"
         android:gravity="center_vertical"
-        android:padding="15dp"
+        android:padding="10dp"
         android:text="Log Out"
-        android:textColor="@color/new_grey"
-        android:textSize="15dp" />
-
+        android:textColor="@color/black_color"
+        android:textSize="15sp" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray_color" />
 
 </LinearLayout>
