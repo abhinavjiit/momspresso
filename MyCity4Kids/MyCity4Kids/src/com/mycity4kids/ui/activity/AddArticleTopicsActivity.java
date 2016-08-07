@@ -116,8 +116,6 @@ public class AddArticleTopicsActivity extends BaseActivity {
         }
 
 
-
-
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -168,34 +166,41 @@ public class AddArticleTopicsActivity extends BaseActivity {
                 for (int i = 0; i < responseData.getData().size(); i++) {
                     ArrayList<Topics> tempUpList = new ArrayList<>();
 
+
                     for (int j = 0; j < responseData.getData().get(i).getChild().size(); j++) {
                         ArrayList<Topics> tempList = new ArrayList<>();
 
                         for (int k = 0; k < responseData.getData().get(i).getChild().get(j).getChild().size(); k++) {
 
-                            //Adding All sub-subcategories
-                            responseData.getData().get(i).getChild().get(j).getChild().get(k)
-                                    .setParentId(responseData.getData().get(i).getId());
-                            responseData.getData().get(i).getChild().get(j).getChild().get(k)
-                                    .setParentName(responseData.getData().get(i).getTitle());
-                            tempList.add(responseData.getData().get(i).getChild().get(j).getChild().get(k));
+                            if ("1".equals(responseData.getData().get(i).getChild().get(j).getPublicVisibility())) {
+                                //Adding All sub-subcategories
+                                responseData.getData().get(i).getChild().get(j).getChild().get(k)
+                                        .setParentId(responseData.getData().get(i).getId());
+                                responseData.getData().get(i).getChild().get(j).getChild().get(k)
+                                        .setParentName(responseData.getData().get(i).getTitle());
+                                tempList.add(responseData.getData().get(i).getChild().get(j).getChild().get(k));
+                            }
                         }
 
                         responseData.getData().get(i).getChild().get(j).setChild(tempList);
                     }
 
                     for (int k = 0; k < responseData.getData().get(i).getChild().size(); k++) {
-                        //Adding All subcategories
-                        responseData.getData().get(i).getChild().get(k)
-                                .setParentId(responseData.getData().get(i).getId());
-                        responseData.getData().get(i).getChild().get(k)
-                                .setParentName(responseData.getData().get(i).getTitle());
-                        tempUpList.add(responseData.getData().get(i).getChild().get(k));
+                        if ("1".equals(responseData.getData().get(i).getChild().get(k).getPublicVisibility())) {
+                            //Adding All subcategories
+                            responseData.getData().get(i).getChild().get(k)
+                                    .setParentId(responseData.getData().get(i).getId());
+                            responseData.getData().get(i).getChild().get(k)
+                                    .setParentName(responseData.getData().get(i).getTitle());
+                            tempUpList.add(responseData.getData().get(i).getChild().get(k));
+                        }
                     }
 
-                    topicList.add(responseData.getData().get(i));
-                    topicsMap.put(responseData.getData().get(i),
-                            tempUpList);
+                    if ("1".equals(responseData.getData().get(i).getPublicVisibility())) {
+                        topicList.add(responseData.getData().get(i));
+                        topicsMap.put(responseData.getData().get(i), tempUpList);
+                    }
+
                 }
 
                 int totalSelectedItems = 0;

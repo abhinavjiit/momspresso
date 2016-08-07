@@ -3,12 +3,19 @@ package com.mycity4kids.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 public class Topics implements Parcelable {
 
     private String id;
     private String title;
+    private String display_name;
+
+    @SerializedName("public")
+    private String publicVisibility;
+
     private ArrayList<Topics> child;
     private String parentId;
     private String parentName;
@@ -29,6 +36,8 @@ public class Topics implements Parcelable {
         child = in.createTypedArrayList(Topics.CREATOR);
         parentId = in.readString();
         parentName = in.readString();
+        display_name = in.readString();
+        publicVisibility = in.readString();
         isSelected = in.readByte() != 0;
     }
 
@@ -92,6 +101,22 @@ public class Topics implements Parcelable {
         this.isSelected = isSelected;
     }
 
+    public String getDisplay_name() {
+        return display_name;
+    }
+
+    public void setDisplay_name(String display_name) {
+        this.display_name = display_name;
+    }
+
+    public String getPublicVisibility() {
+        return publicVisibility;
+    }
+
+    public void setPublicVisibility(String publicVisibility) {
+        this.publicVisibility = publicVisibility;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -104,6 +129,8 @@ public class Topics implements Parcelable {
         dest.writeTypedList(child);
         dest.writeString(parentId);
         dest.writeString(parentName);
+        dest.writeString(display_name);
+        dest.writeString(publicVisibility);
         dest.writeByte((byte) (isSelected ? 1 : 0));
     }
 }

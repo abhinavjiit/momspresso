@@ -40,65 +40,62 @@ import com.mycity4kids.volley.HttpVolleyRequest;
 import java.util.ArrayList;
 
 /**
- * Created by anshul on 7/28/16.
+ * Created by hemant on 4/8/16.
  */
-public class BookmarkListActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
-    @Override
-    protected void updateUi(Response response) {
+public class ArticleListingActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
 
-    }
     NewArticlesListingAdapter articlesListingAdapter;
     ArrayList<ArticleListingResult> articleDataModelsNew;
+
     ListView listView;
-    TextView noBlogsTextView;
-    String sortType=AppConstants.SORT_TYPE_BOOKMARK;
-    String searchName = "";
-    Boolean isSearchActive = false;
     private RelativeLayout mLodingView;
-    private int nextPageNumber = 2;
+    TextView noBlogsTextView;
+    Toolbar mToolbar;
+
+    String sortType;
+    private int nextPageNumber;
     private boolean isLastPageReached = false;
     private boolean isReuqestRunning = false;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ProgressBar progressBar;
     private int from = 1;
     private int to = 15;
-    private int limit = 6;
-    private String paginationValue = "";
-    Toolbar mToolBar;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_article_layout);
-        sortType=AppConstants.SORT_TYPE_BOOKMARK;
-        mToolBar=(Toolbar) findViewById(R.id.toolbar);
-        mToolBar.setVisibility(View.VISIBLE);
-        setSupportActionBar(mToolBar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Bookmarks");
         listView = (ListView) findViewById(R.id.scroll);
         mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
         noBlogsTextView = (TextView) findViewById(R.id.noBlogsTextView);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mToolbar.setVisibility(View.VISIBLE);
+
         findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely));
 
         progressBar.setVisibility(View.VISIBLE);
-       /* if (getArguments() != null) {
-            articleDataModelsNew = getArguments().getParcelableArrayList(Constants.ARTICLES_LIST);
-            sortType = getArguments().getString(Constants.SORT_TYPE);
-        }*/
-//        if ("bookmark".equals(sortType)) {
-//            articleDataModelsNew = new ArrayList<CommonParentingList>();
-//            nextPageNumber = 1;
-//            hitBookmarkedArticleListingAPI(nextPageNumber, "bookmark");
-//        } else {
+        sortType = getIntent().getStringExtra(Constants.SORT_TYPE);
+        if (sortType.equals(Constants.KEY_RECENT)) {
+            getSupportActionBar().setTitle("Recent");
+        } else if (sortType.equals(Constants.KEY_POPULAR)) {
+            getSupportActionBar().setTitle("Popular");
+        } else {
+            getSupportActionBar().setTitle("Trending");
+        }
+
+
         articleDataModelsNew = new ArrayList<ArticleListingResult>();
         nextPageNumber = 1;
-        hitArticleListingApi(nextPageNumber, "bookmark", true);
-//        }
-        swipeRefreshLayout.setOnRefreshListener((SwipeRefreshLayout.OnRefreshListener) BookmarkListActivity.this);
+        hitArticleListingApi(nextPageNumber, sortType, true);
 
-        articlesListingAdapter = new NewArticlesListingAdapter(BookmarkListActivity.this, true);
+        swipeRefreshLayout.setOnRefreshListener((SwipeRefreshLayout.OnRefreshListener) this);
+
+        articlesListingAdapter = new NewArticlesListingAdapter(this, true);
         articlesListingAdapter.setNewListData(articleDataModelsNew);
         listView.setAdapter(articlesListingAdapter);
         articlesListingAdapter.notifyDataSetChanged();
@@ -126,10 +123,11 @@ public class BookmarkListActivity extends BaseActivity implements SwipeRefreshLa
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                Intent intent = new Intent(BookmarkListActivity.this, ArticlesAndBlogsDetailsActivity.class);
+                Intent intent = new Intent(ArticleListingActivity.this, ArticlesAndBlogsDetailsActivity.class);
                 if (adapterView.getAdapter() instanceof NewArticlesListingAdapter) {
                     ArticleListingResult parentingListData = (ArticleListingResult) ((NewArticlesListingAdapter) adapterView.getAdapter()).getItem(i);
                     intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
+                    intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
                     intent.putExtra(Constants.ARTICLE_COVER_IMAGE, parentingListData.getImageUrl());
                     intent.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.ARTICLES);
                     intent.putExtra(Constants.FILTER_TYPE, parentingListData.getUserType());
@@ -140,14 +138,132 @@ public class BookmarkListActivity extends BaseActivity implements SwipeRefreshLa
             }
         });
     }
-    public void refreshBookmarkList() {
-        nextPageNumber = 1;
-        isLastPageReached = false;
-        paginationValue = "";
-        hitArticleListingApi(nextPageNumber, AppConstants.SORT_TYPE_BOOKMARK, false);
+
+
+    @Override
+    protected void updateUi(Response response) {
+
     }
 
+    private void hitArticleListingApi(int pPageCount, String sortKey, boolean isCacheRequired) {
 
+        String url = AppConstants.LIVE_URL + AppConstants.SERVICE_TYPE_ARTICLE + sortKey +
+                AppConstants.SEPARATOR_BACKSLASH + from + AppConstants.SEPARATOR_BACKSLASH + to;
+        HttpVolleyRequest.getStringResponse(this, url, null, mGetArticleListingListener, Request.Method.GET, isCacheRequired);
+
+
+    }
+
+    private OnWebServiceCompleteListener mGetArticleListingListener = new OnWebServiceCompleteListener() {
+        @Override
+        public void onWebServiceComplete(VolleyBaseResponse response, boolean isError) {
+            progressBar.setVisibility(View.GONE);
+            if (isError) {
+                if (response.getResponseCode() != 999)
+                    showToast("Something went wrong from server");
+            } else {
+
+                if (response == null) {
+                    showToast("Something went wrong from server");
+                    isReuqestRunning = false;
+                    mLodingView.setVisibility(View.GONE);
+                    return;
+                }
+                Log.d("Response back =", " " + response.getResponseBody());
+                ArticleListingResponse responseData;
+                try {
+                    Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                    responseData = gson.fromJson(response.getResponseBody(), ArticleListingResponse.class);
+                } catch (JsonSyntaxException jse) {
+                    Crashlytics.logException(jse);
+                    Log.d("JsonSyntaxException", Log.getStackTraceString(jse));
+                    showToast(getString(R.string.server_error));
+                    return;
+                }
+
+                swipeRefreshLayout.setRefreshing(false);
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    processResponse(responseData);
+                } else if (responseData.getCode() == 400) {
+                    String message = responseData.getReason();
+                    if (!StringUtils.isNullOrEmpty(message)) {
+                        showToast(message);
+                    } else {
+                        showToast(getString(R.string.went_wrong));
+                    }
+                }
+
+                isReuqestRunning = false;
+                mLodingView.setVisibility(View.GONE);
+            }
+
+        }
+    };
+
+    private void processResponse(ArticleListingResponse responseData) {
+        try {
+            ArrayList<ArticleListingResult> dataList = responseData.getData().getResult();
+
+            if (dataList.size() == 0) {
+
+                isLastPageReached = true;
+                if (null != articleDataModelsNew && !articleDataModelsNew.isEmpty()) {
+                    //No more next results for search from pagination
+
+                } else {
+                    // No results for search
+                    articleDataModelsNew = dataList;
+                    articlesListingAdapter.setNewListData(dataList);
+                    articlesListingAdapter.notifyDataSetChanged();
+                    noBlogsTextView.setVisibility(View.VISIBLE);
+                    noBlogsTextView.setText("No articles found");
+                }
+
+            } else {
+                noBlogsTextView.setVisibility(View.GONE);
+                if (from == 1) {
+                    articleDataModelsNew = dataList;
+                } else {
+                    int prevFrom = Integer.parseInt(responseData.getData().getChunks().split("-")[0]);
+                    if (prevFrom < from) {
+                        //Response from cache refresh request. Update the dataset and refresh list
+                        //cache refresh request response and response from pagination may overlap causing duplication
+                        // to prevent check the page number in response
+                        //-- open article listing and immediately scroll to next page to reproduce.
+                        int articleNumber = prevFrom - 1;
+                        for (int i = 0; i < dataList.size(); i++) {
+                            articleDataModelsNew.set(articleNumber + i, dataList.get(i));
+                        }
+                        articlesListingAdapter.setNewListData(articleDataModelsNew);
+                        articlesListingAdapter.notifyDataSetChanged();
+                        return;
+                    } else {
+                        articleDataModelsNew.addAll(dataList);
+                    }
+
+                }
+                from = from + 15;
+                to = to + 15;
+                articlesListingAdapter.setNewListData(articleDataModelsNew);
+                articlesListingAdapter.notifyDataSetChanged();
+            }
+        } catch (Exception ex) {
+            mLodingView.setVisibility(View.GONE);
+            removeVolleyCache(sortType);
+            Crashlytics.logException(ex);
+            Log.d("MC4kException", Log.getStackTraceString(ex));
+        }
+
+    }
+
+    @Override
+    public void onRefresh() {
+        isLastPageReached = false;
+        removeVolleyCache(sortType);
+        from = 1;
+        to = 15;
+        hitArticleListingApi(nextPageNumber, sortType, false);
+    }
 
     private void removeVolleyCache(String sortType) {
         if (AppConstants.SORT_TYPE_BOOKMARK.equals(sortType))
@@ -167,153 +283,9 @@ public class BookmarkListActivity extends BaseActivity implements SwipeRefreshLa
         }
 
     }
-    private void hitArticleListingApi(int pPageCount, String sortKey, boolean isCacheRequired) {
-
-        String url;
-
-            // caching disabled for bookmarked articles as we need to refresh it everytime an article is bookmarked/unbookmarked.
-            url = AppConstants.LIVE_URL + AppConstants.SERVICE_TYPE_USER + AppConstants.SORT_TYPE_BOOKMARK + "/?limit=" + limit + "&pagination=" + paginationValue;
-            HttpVolleyRequest.getStringResponse(BookmarkListActivity.this, url, null, mGetArticleListingListener, Request.Method.GET, false);
-
-
-    }
-    private OnWebServiceCompleteListener mGetArticleListingListener = new OnWebServiceCompleteListener() {
-        @Override
-        public void onWebServiceComplete(VolleyBaseResponse response, boolean isError) {
-            progressBar.setVisibility(View.GONE);
-            if (isError) {
-                if (null != BookmarkListActivity.this && response.getResponseCode() != 999)
-                    (BookmarkListActivity.this).showToast("Something went wrong from server");
-            } else {
-
-                if (response == null) {
-                  showToast("Something went wrong from server");
-                    isReuqestRunning = false;
-                    mLodingView.setVisibility(View.GONE);
-                    return;
-                }
-                Log.d("Response back =", " " + response.getResponseBody());
-                ArticleListingResponse responseData;
-                try {
-                    Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
-                    responseData = gson.fromJson(response.getResponseBody(), ArticleListingResponse.class);
-                } catch (JsonSyntaxException jse) {
-                    Crashlytics.logException(jse);
-                    Log.d("JsonSyntaxException", Log.getStackTraceString(jse));
-                  showToast(getString(R.string.server_error));
-                    return;
-                }
-
-                swipeRefreshLayout.setRefreshing(false);
-                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    processResponse(responseData);
-                } else if (responseData.getCode() == 400) {
-                    String message = responseData.getReason();
-                    if (!StringUtils.isNullOrEmpty(message)) {
-                    showToast(message);
-                    } else {
-                        showToast(getString(R.string.went_wrong));
-                    }
-                }
-
-                isReuqestRunning = false;
-                mLodingView.setVisibility(View.GONE);
-            }
-
-        }
-    };
-    private void processResponse(ArticleListingResponse responseData) {
-        //	parentingResponse = responseData ;
-        try {
-            ArrayList<ArticleListingResult> dataList = responseData.getData().getResult();
-
-            if (dataList.size() == 0) {
-
-                isLastPageReached = true;
-                if (null != articleDataModelsNew && !articleDataModelsNew.isEmpty()) {
-                    //No more next results for search from pagination
-
-                } else {
-                    // No results for search
-                    articleDataModelsNew = dataList;
-                    articlesListingAdapter.setNewListData(dataList);
-                    articlesListingAdapter.notifyDataSetChanged();
-                    noBlogsTextView.setVisibility(View.VISIBLE);
-                    noBlogsTextView.setText("No articles found");
-                }
-
-//            articleDataModelsNew = dataList;
-//            articlesListingAdapter.setNewListData(articleDataModelsNew);
-//            articlesListingAdapter.notifyDataSetChanged();
-//            noBlogsTextView.setVisibility(View.VISIBLE);
-//            noBlogsTextView.setText("No articles found");
-            } else {
-                noBlogsTextView.setVisibility(View.GONE);
-//            totalPageCount = responseData.getResult().getData().getPage_count();
-
-                if (AppConstants.SORT_TYPE_BOOKMARK.equals(sortType)) {
-                    if (StringUtils.isNullOrEmpty(paginationValue)) {
-                        articleDataModelsNew = dataList;
-                    } else {
-                        articleDataModelsNew.addAll(dataList);
-                    }
-                    paginationValue = responseData.getData().getPagination();
-                    if (AppConstants.PAGINATION_END_VALUE.equals(paginationValue)) {
-                        isLastPageReached = true;
-                    }
-
-                } else {
-                    if (from == 1) {
-                        articleDataModelsNew = dataList;
-                    } else {
-                        int prevFrom = Integer.parseInt(responseData.getData().getChunks().split("-")[0]);
-                        if (prevFrom < from) {
-                            //Response from cache refresh request. Update the dataset and refresh list
-                            //cache refresh request response and response from pagination may overlap causing duplication
-                            // to prevent check the page number in response
-                            //-- open article listing and immediately scroll to next page to reproduce.
-                            int articleNumber = prevFrom - 1;
-                            for (int i = 0; i < dataList.size(); i++) {
-                                articleDataModelsNew.set(articleNumber + i, dataList.get(i));
-                            }
-                            articlesListingAdapter.setNewListData(articleDataModelsNew);
-                            articlesListingAdapter.notifyDataSetChanged();
-                            return;
-                        } else {
-                            articleDataModelsNew.addAll(dataList);
-                        }
-
-                    }
-                    from = from + 15;
-                    to = to + 15;
-                }
-                articlesListingAdapter.setNewListData(articleDataModelsNew);
-                articlesListingAdapter.notifyDataSetChanged();
-            }
-        } catch (Exception ex) {
-            removeVolleyCache(sortType);
-            Crashlytics.logException(ex);
-            Log.d("MC4kException", Log.getStackTraceString(ex));
-        }
-
-    }
-
-    @Override
-
-        public void onRefresh() {
-            isLastPageReached = false;
-            removeVolleyCache(sortType);
-            paginationValue = "";
-            from = 1;
-            to = 15;
-            hitArticleListingApi(nextPageNumber, sortType, false);
-        }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        // according to fragment change it
-
         return true;
     }
 

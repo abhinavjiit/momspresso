@@ -1,8 +1,11 @@
 package com.mycity4kids.ui.fragment;
 
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -21,14 +25,11 @@ import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.enums.ParentingFilterType;
-import com.mycity4kids.models.parentingstop.CommonParentingList;
 import com.mycity4kids.models.response.SearchArticleResult;
 import com.mycity4kids.models.response.SearchResponse;
 import com.mycity4kids.retrofitAPIsInterfaces.SearchArticlesAuthorsAPI;
 import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
 import com.mycity4kids.ui.activity.SearchArticlesAndAuthorsActivity;
-import com.mycity4kids.ui.adapter.ArticlesListingAdapter;
 import com.mycity4kids.ui.adapter.SearchArticlesListingAdapter;
 
 import java.util.ArrayList;
@@ -63,6 +64,11 @@ public class SearchArticlesTabFragment extends BaseFragment {
         View view = null;
         view = getActivity().getLayoutInflater().inflate(R.layout.new_article_layout, container, false);
         listView = (ListView) view.findViewById(R.id.scroll);
+
+        ColorDrawable sage = new ColorDrawable(ContextCompat.getColor(getActivity(), R.color.gray2));
+        listView.setDivider(sage);
+        listView.setDividerHeight(1);
+
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
@@ -252,8 +258,9 @@ public class SearchArticlesTabFragment extends BaseFragment {
                     ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(responseData.getReason());
                 }
             } catch (Exception e) {
-                e.printStackTrace();
-                ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(getString(R.string.went_wrong));
+                ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
             }
 
         }
@@ -264,21 +271,10 @@ public class SearchArticlesTabFragment extends BaseFragment {
             if (mLodingView.getVisibility() == View.VISIBLE) {
                 mLodingView.setVisibility(View.GONE);
             }
-            ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(getString(R.string.went_wrong));
+            ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
 
-//    @Override
-//    public void onRefresh() {
-//        if (StringUtils.isNullOrEmpty(searchName)) {
-//            ((SearchArticlesAndAuthorsActivity) getActivity()).showToast("Please enter search text");
-//            return;
-//        }
-//        if (null != articleDataModelsNew) {
-//            articleDataModelsNew.clear();
-//        }
-//        nextPageNumber = 1;
-//        isLastPageReached = true;
-//        newSearchTopicArticleListingApi(searchName, sortType);
-//    }
 }

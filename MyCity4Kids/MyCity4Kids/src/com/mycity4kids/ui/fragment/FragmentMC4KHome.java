@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
@@ -68,6 +69,7 @@ import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.adapter.AdapterHomeAppointment;
 import com.mycity4kids.ui.adapter.ArticlesListingAdapter;
 import com.mycity4kids.ui.adapter.BusinessListingAdapterevent;
+import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.volley.HttpVolleyRequest;
 import com.mycity4kids.widget.CustomListView;
 import com.squareup.picasso.Picasso;
@@ -496,7 +498,8 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
 
                 ArticleListingResponse responseBlogData;
                 try {
-                    responseBlogData = new Gson().fromJson(response.getResponseBody(), ArticleListingResponse.class);
+                    Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                    responseBlogData = gson.fromJson(response.getResponseBody(), ArticleListingResponse.class);
                 } catch (JsonSyntaxException jse) {
                     Crashlytics.logException(jse);
                     Log.d("JsonSyntaxException", Log.getStackTraceString(jse));
@@ -520,7 +523,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                         ImageView articleImage = (ImageView) view.findViewById(R.id.imvAuthorThumb);
                         TextView title = (TextView) view.findViewById(R.id.txvArticleTitle);
                         cardView = (CardView) view.findViewById(R.id.cardViewWidget);
-                        Picasso.with(getActivity()).load(mArticleDataListing.get(i).getImageUrl()).placeholder(R.drawable.default_article).into(articleImage);
+                        Picasso.with(getActivity()).load(mArticleDataListing.get(i).getImageUrl().getMobileWebThumbnail()).placeholder(R.drawable.default_article).into(articleImage);
                         title.setText(mArticleDataListing.get(i).getTitle());
 
                         // cardView.setMinimumWidth((int)width);

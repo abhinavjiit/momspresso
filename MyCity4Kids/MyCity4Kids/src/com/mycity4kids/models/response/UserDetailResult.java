@@ -15,13 +15,13 @@ public class UserDetailResult {
     private String cityId;
     private String userType;
     private String isValidated;
-    private String profilePicUrl;
+    private ProfilePic profilePicUrl;
     private ArrayList<KidsModel> kids;
-    private String blogTitle="";
+    private String blogTitle = "";
     private String followersCount;
     private String followingCount;
     private String rank;
-    private String userBio="";
+    private String userBio = "";
 
     public String getPhoneNumber() {
         return phoneNumber;
@@ -32,6 +32,7 @@ public class UserDetailResult {
     }
 
     private String phoneNumber;
+
     public String getId() {
         return sqlId;
     }
@@ -104,11 +105,11 @@ public class UserDetailResult {
         this.isValidated = isValidated;
     }
 
-    public String getProfilePicUrl() {
+    public ProfilePic getProfilePicUrl() {
         return profilePicUrl;
     }
 
-    public void setProfilePicUrl(String profilePicUrl) {
+    public void setProfilePicUrl(ProfilePic profilePicUrl) {
         this.profilePicUrl = profilePicUrl;
     }
 

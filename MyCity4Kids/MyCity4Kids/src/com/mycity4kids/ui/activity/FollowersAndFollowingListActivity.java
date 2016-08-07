@@ -73,10 +73,12 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
         if (AppConstants.FOLLOWER_LIST.equals(followListType)) {
             Call<FollowersFollowingResponse> callFollowerList = followListAPI.getFollowersList(userId);
             callFollowerList.enqueue(getFollowersListResponseCallback);
+            progressBar.setVisibility(View.VISIBLE);
             getSupportActionBar().setTitle("Followers");
         } else {
             Call<FollowersFollowingResponse> callFollowingList = followListAPI.getFollowingList(userId);
             callFollowingList.enqueue(getFollowersListResponseCallback);
+            progressBar.setVisibility(View.VISIBLE);
             getSupportActionBar().setTitle("Following");
         }
 
@@ -95,28 +97,6 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
         });
     }
 
-    private Callback<FollowersFollowingResponse> getFollowingListResponseCallback = new Callback<FollowersFollowingResponse>() {
-        @Override
-        public void onResponse(Call<FollowersFollowingResponse> call, retrofit2.Response<FollowersFollowingResponse> response) {
-            removeProgressDialog();
-            if (response == null || response.body() == null) {
-                showToast(getString(R.string.went_wrong));
-                return;
-            }
-            try {
-                FollowersFollowingResponse responseData = (FollowersFollowingResponse) response.body();
-                processFollowingListResponse(responseData);
-            } catch (Exception e) {
-
-            }
-        }
-
-        @Override
-        public void onFailure(Call<FollowersFollowingResponse> call, Throwable t) {
-
-        }
-    };
-
     private void processFollowingListResponse(FollowersFollowingResponse responseData) {
         if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
             followerFollowingListAdapter.setData(responseData.getData().getResult());
@@ -129,7 +109,7 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
     private Callback<FollowersFollowingResponse> getFollowersListResponseCallback = new Callback<FollowersFollowingResponse>() {
         @Override
         public void onResponse(Call<FollowersFollowingResponse> call, retrofit2.Response<FollowersFollowingResponse> response) {
-            removeProgressDialog();
+            progressBar.setVisibility(View.INVISIBLE);
             if (response == null || response.body() == null) {
                 showToast(getString(R.string.went_wrong));
                 return;
@@ -146,7 +126,8 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
 
         @Override
         public void onFailure(Call<FollowersFollowingResponse> call, Throwable t) {
-            removeProgressDialog();
+            progressBar.setVisibility(View.INVISIBLE);
+            noResultTextView.setVisibility(View.VISIBLE);
             showToast(getString(R.string.server_went_wrong));
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));

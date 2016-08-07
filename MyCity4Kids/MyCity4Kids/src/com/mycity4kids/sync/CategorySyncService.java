@@ -122,9 +122,6 @@ catch (Exception e)
     }
     private boolean writeResponseBodyToDisk(ResponseBody body) {
         try {
-            // todo change the file location/name according to your needs
-            File futureStudioIconFile = new File(getExternalFilesDir(null) + File.separator + "Future Studio Icon.png");
-
             InputStream inputStream = null;
             OutputStream outputStream = null;
             String filename = "categories.json";

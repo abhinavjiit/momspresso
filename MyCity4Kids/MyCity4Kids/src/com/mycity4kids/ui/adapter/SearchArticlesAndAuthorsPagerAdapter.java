@@ -45,7 +45,7 @@ public class SearchArticlesAndAuthorsPagerAdapter extends FragmentStatePagerAdap
 
     @Override
     public int getCount() {
-        return 4;
+        return 3;
     }
 
     @Override
@@ -61,11 +61,12 @@ public class SearchArticlesAndAuthorsPagerAdapter extends FragmentStatePagerAdap
             return "Articles";
         } else if (position == 1) {
             return "Authors";
-        } else if (position == 2) {
-            return "Topics";
         } else {
-            return "Blogs";
+            return "Topics";
         }
+//        else {
+//            return "Blogs";
+//        }
     }
 
     @Override
@@ -97,13 +98,13 @@ public class SearchArticlesAndAuthorsPagerAdapter extends FragmentStatePagerAdap
                 bundle.putString(Constants.SEARCH_PARAM, searchName);
                 mTopicsFragment.setArguments(bundle);
                 return mTopicsFragment;
-            case 3:
-                if (mBlogsFragment == null) {
-                    mBlogsFragment = new SearchBlogsTabFragment();
-                }
-                bundle.putString(Constants.SEARCH_PARAM, searchName);
-                mBlogsFragment.setArguments(bundle);
-                return mBlogsFragment;
+//            case 3:
+//                if (mBlogsFragment == null) {
+//                    mBlogsFragment = new SearchBlogsTabFragment();
+//                }
+//                bundle.putString(Constants.SEARCH_PARAM, searchName);
+//                mBlogsFragment.setArguments(bundle);
+//                return mBlogsFragment;
         }
 
         return null;
@@ -133,10 +134,10 @@ public class SearchArticlesAndAuthorsPagerAdapter extends FragmentStatePagerAdap
         mTopicsFragment.refreshAllArticles(searchText, Constants.KEY_RECENT);
 //                break;
 //        }
-        if (mBlogsFragment == null) {
-            mBlogsFragment = new SearchBlogsTabFragment();
-        }
-        mBlogsFragment.refreshAllArticles(searchText, Constants.KEY_RECENT);
+//        if (mBlogsFragment == null) {
+//            mBlogsFragment = new SearchBlogsTabFragment();
+//        }
+//        mBlogsFragment.refreshAllArticles(searchText, Constants.KEY_RECENT);
 
     }
 

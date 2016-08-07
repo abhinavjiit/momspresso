@@ -70,56 +70,60 @@ public class FilterTopicsChildExpandableListAdapter extends BaseExpandableListAd
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-
+        holder.childChkBox.setVisibility(View.GONE);
         final Topics subCategoryItem = (Topics) getGroup(groupPosition);
         if (groupPosition == 0) {
             int count = mSubCategoriesList.size() - 1;
             holder.txvZoneName.setText(subCategoryItem.getTitle() + " (" + count + ")");
             holder.groupCheckedTxv.setVisibility(View.GONE);
-            holder.childChkBox.setVisibility(View.VISIBLE);
-            for (int i = 1; i < mSubCategoriesList.size(); i++) {
-                if (!mSubCategoriesList.get(i).isSelected() || !areAllChecked(mSubCategoriesList.get(i))) {
-                    areAllCheckedFlag = false;
-                    break;
-                }
-            }
-            if (areAllCheckedFlag) {
-                holder.childChkBox.setChecked(true);
-            } else {
-                holder.childChkBox.setChecked(false);
-            }
-
-            holder.childChkBox.setTag(new Positions(groupPosition, 0));
-            holder.childChkBox.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    handleSubCategoryCheckBoxClick((CheckBox) v);
-                }
-            });
+            holder.childChkBox.setVisibility(View.GONE);
+//            for (int i = 1; i < mSubCategoriesList.size(); i++) {
+//                if (!mSubCategoriesList.get(i).isSelected() || !areAllChecked(mSubCategoriesList.get(i))) {
+//                    areAllCheckedFlag = false;
+//                    break;
+//                }
+//            }
+//            if (areAllCheckedFlag) {
+//                holder.childChkBox.setChecked(true);
+//            } else {
+//                holder.childChkBox.setChecked(false);
+//            }
+//
+//            holder.childChkBox.setTag(new Positions(groupPosition, 0));
+//            holder.childChkBox.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    handleSubCategoryCheckBoxClick((CheckBox) v);
+//                }
+//            });
 
         } else {
             if (mSubCategoriesChildMap.get(subCategoryItem).size() == 0) {
                 int count = mSubCategoriesChildMap.get(subCategoryItem).size();
                 holder.txvZoneName.setText(subCategoryItem.getTitle() + " (" + count + ")");
                 holder.groupCheckedTxv.setVisibility(View.GONE);
-                holder.childChkBox.setVisibility(View.VISIBLE);
-                holder.childChkBox.setChecked(subCategoryItem.isSelected());
-                holder.childChkBox.setTag(new Positions(groupPosition, 0));
-                holder.childChkBox.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        handleSubCategoryCheckBoxClick((CheckBox) v);
-                    }
-                });
+                holder.childChkBox.setVisibility(View.GONE);
+//                holder.childChkBox.setChecked(subCategoryItem.isSelected());
+//                holder.childChkBox.setTag(new Positions(groupPosition, 0));
+//                holder.childChkBox.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        handleSubCategoryCheckBoxClick((CheckBox) v);
+//                    }
+//                });
             } else {
                 int count = mSubCategoriesChildMap.get(subCategoryItem).size() - 1;
                 holder.txvZoneName.setText(subCategoryItem.getTitle() + " (" + count + ")");
                 holder.groupCheckedTxv.setVisibility(View.VISIBLE);
                 holder.childChkBox.setVisibility(View.GONE);
-                if (isExpanded) {
-                    holder.groupCheckedTxv.setImageResource(R.drawable.uparrow);
+                if (count == 0) {
+                    holder.groupCheckedTxv.setImageResource(0);
                 } else {
-                    holder.groupCheckedTxv.setImageResource(R.drawable.downarrow);
+                    if (isExpanded) {
+                        holder.groupCheckedTxv.setImageResource(R.drawable.uparrow);
+                    } else {
+                        holder.groupCheckedTxv.setImageResource(R.drawable.downarrow);
+                    }
                 }
             }
         }
@@ -162,16 +166,17 @@ public class FilterTopicsChildExpandableListAdapter extends BaseExpandableListAd
             int count = mSubCategoriesChildMap.get((Topics) getGroup(groupPosition)).size() - 1;
             holder.txtLocalityName.setText(localitySubCategoryChild.getTitle() + " (" + count + ")");
         }
+        holder.childChkBox.setVisibility(View.GONE);
 
-        holder.childChkBox.setChecked(localitySubCategoryChild.isSelected());
-        holder.childChkBox.setTag(new Positions(groupPosition, childPosition));
-
-        holder.childChkBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                handleChildCheckboxClick((CheckBox) v);
-            }
-        });
+//        holder.childChkBox.setChecked(localitySubCategoryChild.isSelected());
+//        holder.childChkBox.setTag(new Positions(groupPosition, childPosition));
+//
+//        holder.childChkBox.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                handleChildCheckboxClick((CheckBox) v);
+//            }
+//        });
         return convertView;
     }
 

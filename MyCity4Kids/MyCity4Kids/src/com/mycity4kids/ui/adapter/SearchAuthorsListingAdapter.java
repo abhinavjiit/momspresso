@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +12,7 @@ import android.widget.TextView;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.models.response.SearchAuthorResult;
-import com.mycity4kids.newmodels.bloggermodel.BlogItemModel;
+import com.mycity4kids.ui.CircleTransformation;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -70,13 +71,18 @@ public class SearchAuthorsListingAdapter extends BaseAdapter {
             viewholder = (Viewholder) convertView.getTag();
         }
 
-        if (!StringUtils.isNullOrEmpty(mDatalist.get(position).getProfile_image())) {
-            Picasso.with(mContext).load(mDatalist.get(position).getProfile_image()).placeholder(R.drawable.article_default).into(viewholder.authorImageView);
+        if (null != mDatalist.get(position).getProfile_image() && !StringUtils.isNullOrEmpty(mDatalist.get(position).getProfile_image().getClientApp())) {
+            try {
+                Picasso.with(mContext).load(mDatalist.get(position).getProfile_image().getClientApp()).placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img)
+                        .transform(new CircleTransformation()).into(viewholder.authorImageView);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Picasso.with(mContext).load(R.drawable.default_commentor_img).transform(new CircleTransformation()).into(viewholder.authorImageView);
+            }
         } else {
-            viewholder.authorImageView.setBackgroundResource(R.drawable.article_default);
+            Picasso.with(mContext).load(R.drawable.default_commentor_img).transform(new CircleTransformation()).into(viewholder.authorImageView);
         }
-        viewholder.authorNameTextView.setText(mDatalist.get(position).getFirst_name() + " " + mDatalist.get(position).getLast_name());
-
+        viewholder.authorNameTextView.setText(Html.fromHtml(mDatalist.get(position).getFirst_name() + " " + mDatalist.get(position).getLast_name()));
         return convertView;
     }
 }

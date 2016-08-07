@@ -1,7 +1,10 @@
 package com.mycity4kids.ui.fragment;
 
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,18 +16,20 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.SearchAuthorResult;
 import com.mycity4kids.models.response.SearchResponse;
 import com.mycity4kids.newmodels.bloggermodel.BlogItemModel;
 import com.mycity4kids.retrofitAPIsInterfaces.SearchArticlesAuthorsAPI;
-import com.mycity4kids.ui.activity.BlogDetailActivity;
+import com.mycity4kids.ui.activity.BloggerDashboardActivity;
 import com.mycity4kids.ui.activity.SearchArticlesAndAuthorsActivity;
 import com.mycity4kids.ui.adapter.SearchAuthorsListingAdapter;
 
@@ -60,6 +65,10 @@ public class SearchAuthorsTabFragment extends BaseFragment {
         View view = null;
         view = getActivity().getLayoutInflater().inflate(R.layout.fragment_author_listing, container, false);
         listView = (ListView) view.findViewById(R.id.authorListView);
+        ColorDrawable sage = new ColorDrawable(ContextCompat.getColor(getActivity(), R.color.gray2));
+        listView.setDivider(sage);
+        listView.setDividerHeight(1);
+
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
         noAuthorsTextView = (TextView) view.findViewById(R.id.noAuthorsTextView);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
@@ -100,19 +109,11 @@ public class SearchAuthorsTabFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
-                BlogItemModel itemSelected = (BlogItemModel) adapterView.getItemAtPosition(position);
 
-//                if (!StringUtils.isNullOrEmpty(itemSelected.getBlog_title())) {
-                Intent intent = new Intent(getActivity(), BlogDetailActivity.class);
-                Bundle bundle = new Bundle();
-                intent.putExtra(Constants.IS_COMMING_FROM_LISTING, false);
-                intent.putExtra(Constants.AUTHOR_ID, "" + itemSelected.getId());
-//                intent.putExtra(Constants.ARTICLE_NAME, listingData.get(position).getBlog_title());
-                intent.putExtra(Constants.FILTER_TYPE, "blogs");
+                BlogItemModel itemSelected = (BlogItemModel) adapterView.getItemAtPosition(position);
+                Intent intent = new Intent(getActivity(), BloggerDashboardActivity.class);
+                intent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, "" + itemSelected.getId());
                 getActivity().startActivityForResult(intent, Constants.BLOG_FOLLOW_STATUS);
-//                } else {
-//                    ToastUtils.showToast(getActivity(), "Blogger details not available at this moment, please try again later...");
-//                }
             }
         });
 
@@ -123,28 +124,6 @@ public class SearchAuthorsTabFragment extends BaseFragment {
     protected void updateUi(Response response) {
 
     }
-
-//    @Override
-//    public void setUserVisibleHint(boolean visible) {
-//        super.setUserVisibleHint(visible);
-//        if (visible && isResumed()) {   // only at fragment screen is resumed
-//            fragmentResume = true;
-//            fragmentVisible = false;
-//            fragmentOnCreated = true;
-//            if (!isDataLoadedOnce && !StringUtils.isNullOrEmpty(searchName)) {
-//                nextPageNumber = 1;
-//                hitBloggerAPIrequest(nextPageNumber);
-//                isDataLoadedOnce = true;
-//            }
-//        } else if (visible) {        // only at fragment onCreated
-//            fragmentResume = false;
-//            fragmentVisible = true;
-//            fragmentOnCreated = true;
-//        } else if (!visible && fragmentOnCreated) {// only when you go out of fragment screen
-//            fragmentVisible = false;
-//            fragmentResume = false;
-//        }
-//    }
 
     private void updateBloggerResponse(SearchResponse responseData) {
 
@@ -226,7 +205,7 @@ public class SearchAuthorsTabFragment extends BaseFragment {
             if (mLodingView.getVisibility() == View.VISIBLE) {
                 mLodingView.setVisibility(View.GONE);
             }
-            if (response == null) {
+            if (response == null || response.body() == null) {
                 ((SearchArticlesAndAuthorsActivity) getActivity()).showToast("Something went wrong from server");
                 return;
             }
@@ -238,15 +217,22 @@ public class SearchAuthorsTabFragment extends BaseFragment {
                     ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(responseData.getReason());
                 }
             } catch (Exception e) {
-                e.printStackTrace();
-                ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(getString(R.string.went_wrong));
+                ((SearchArticlesAndAuthorsActivity)getActivity()).showToast(getString(R.string.server_went_wrong));
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
             }
 
         }
 
         @Override
         public void onFailure(Call<SearchResponse> call, Throwable t) {
-            ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(getString(R.string.went_wrong));
+            progressBar.setVisibility(View.GONE);
+            if (mLodingView.getVisibility() == View.VISIBLE) {
+                mLodingView.setVisibility(View.GONE);
+            }
+            ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
 }

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.models.response.SearchArticleResult;
 
@@ -49,26 +50,34 @@ public class SearchArticlesListingAdapter extends BaseAdapter {
         return position;
     }
 
+    class ViewHolder {
+        TextView titleTextView;
+        TextView bodyTextView;
+    }
+
     @Override
     public View getView(final int position, View view, ViewGroup parent) {
 
         final ViewHolder holder;
         if (view == null) {
-            view = mInflator.inflate(R.layout.search_topics_item_layout, null);
+            view = mInflator.inflate(R.layout.search_article_item_layout, null);
             holder = new ViewHolder();
-            holder.tagTitleTextView = (TextView) view.findViewById(R.id.tagTitleTextView);
+            holder.titleTextView = (TextView) view.findViewById(R.id.titleTextView);
+            holder.bodyTextView = (TextView) view.findViewById(R.id.bodyTextView);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
         }
 
-        holder.tagTitleTextView.setText(Html.fromHtml(articleDataModelsNew.get(position).getBody()));
+        holder.titleTextView.setText(Html.fromHtml(articleDataModelsNew.get(position).getTitle()));
+        if (StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getBody())) {
+            holder.bodyTextView.setText("");
+        } else {
+            holder.bodyTextView.setText(Html.fromHtml(articleDataModelsNew.get(position).getBody()));
+        }
         return view;
     }
 
-    class ViewHolder {
-        TextView tagTitleTextView;
-    }
 
     public void refreshArticleList(ArrayList<SearchArticleResult> newList) {
         this.articleDataModelsNew = newList;

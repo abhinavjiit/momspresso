@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white_color"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-light"
+        android:gravity="center_vertical"
+        android:text="dawdad  d awd da ad  d dada adaw daw d ad awda wdawwds"
+        android:textColor="@color/black_color"
+        android:textSize="18sp" />
+
+
+    <TextView
+        android:id="@+id/bodyTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/titleTextView"
+        android:layout_marginTop="5dp"
+        android:fontFamily="sans-serif-light"
+        android:gravity="center_vertical"
+        android:text=" dwa d  aw dad ad aw d wd adawd ad ad ad awd a aca cac adac cdawc ac awdaw d awd"
+        android:textColor="@color/black_color"
+        android:textSize="12sp" />
+
+</RelativeLayout>

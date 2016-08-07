@@ -3,23 +3,17 @@ package com.mycity4kids.ui.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
-import com.mycity4kids.constants.Constants;
-import com.mycity4kids.editor.EditorPostActivity;
-import com.mycity4kids.enums.ParentingFilterType;
+import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.parentingstop.CommonParentingList;
-import com.mycity4kids.newmodels.PublishedArticlesModel;
 import com.mycity4kids.ui.activity.BlogDetailActivity;
 import com.squareup.picasso.Picasso;
 
@@ -120,17 +114,7 @@ public class ArticlesListingAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(mContext, BlogDetailActivity.class);
-                    intent.putExtra(Constants.IS_COMMING_FROM_LISTING, false);
-                    intent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(position).getAuthor_id());
-                    if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getAuthor_type())) {
-                        if (articleDataModelsNew.get(position).getAuthor_type().trim().equalsIgnoreCase("Blogger")) {
-                            intent.putExtra(Constants.ARTICLE_NAME, articleDataModelsNew.get(position).getBlog_name());
-                            intent.putExtra(Constants.FILTER_TYPE, "blogs");
-                        } else {
-                            intent.putExtra(Constants.ARTICLE_NAME, articleDataModelsNew.get(position).getAuthor_name());
-                            intent.putExtra(Constants.FILTER_TYPE, "authors");
-                        }
-                    }
+                    intent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, articleDataModelsNew.get(position).getAuthor_id());
                     mContext.startActivity(intent);
                 }
             });

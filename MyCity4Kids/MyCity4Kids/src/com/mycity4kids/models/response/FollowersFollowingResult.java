@@ -9,7 +9,7 @@ public class FollowersFollowingResult {
     private String followingId;
     private String firstName;
     private String lastName;
-    private String profilePicUrl;
+    private ProfilePic profilePicUrl;
     private int isFollowed;
 
     public String getUserId() {
@@ -52,11 +52,11 @@ public class FollowersFollowingResult {
         this.lastName = lastName;
     }
 
-    public String getProfilePicUrl() {
+    public ProfilePic getProfilePicUrl() {
         return profilePicUrl;
     }
 
-    public void setProfilePicUrl(String profilePicUrl) {
+    public void setProfilePicUrl(ProfilePic profilePicUrl) {
         this.profilePicUrl = profilePicUrl;
     }
 

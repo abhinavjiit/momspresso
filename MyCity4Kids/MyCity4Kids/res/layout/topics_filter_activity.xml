@@ -14,22 +14,10 @@
 
     <ExpandableListView
         android:id="@+id/parentExpandableListView"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_above="@+id/filterButtton"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
         android:groupIndicator="@null" />
-
-    <Button
-        android:id="@+id/filterButtton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@+id/articleImage"
-        android:layout_margin="10dp"
-        android:background="@color/primary"
-        android:text="Apply"
-        android:visibility="invisible" />
 
     <ProgressBar
         android:id="@+id/progressBar"

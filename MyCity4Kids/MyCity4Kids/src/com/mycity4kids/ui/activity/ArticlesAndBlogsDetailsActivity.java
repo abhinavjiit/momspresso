@@ -998,9 +998,8 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
                 case R.id.user_image:
                 case R.id.user_name:
-                    Intent intentnn = new Intent(this, BlogDetailActivity.class);
-                    intentnn.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intentnn.putExtra(Constants.AUTHOR_ID, detailData.getUserId());
+                    Intent intentnn = new Intent(this, BloggerDashboardActivity.class);
+                    intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, detailData.getUserId());
                     startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
                     break;
                 case R.id.replyRelativeLayout:

@@ -25,6 +25,7 @@ import com.mycity4kids.models.request.FollowUnfollowUserRequest;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
 import com.mycity4kids.models.response.FollowersFollowingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.ui.CircleTransformation;
 import com.mycity4kids.ui.activity.FollowersAndFollowingListActivity;
 import com.squareup.picasso.Picasso;
 
@@ -115,16 +116,16 @@ public class FollowerFollowingListAdapter extends BaseAdapter {
 //        holder.imgLoader.startAnimation(rotateAnimation);
         holder.authorNameTextView.setText(mDataList.get(position).getFirstName() + mDataList.get(position).getLastName());
         holder.position = position;
-        if (!StringUtils.isNullOrEmpty(mDataList.get(position).getProfilePicUrl())) {
+        if (!StringUtils.isNullOrEmpty(mDataList.get(position).getProfilePicUrl().getClientApp())) {
             try {
-                Picasso.with(mContext).load(mDataList.get(position).getProfilePicUrl()).into(holder.authorImageView);
+                Picasso.with(mContext).load(mDataList.get(position).getProfilePicUrl().getClientApp()).transform(new CircleTransformation()).into(holder.authorImageView);
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-                Picasso.with(mContext).load(R.drawable.default_commentor_img).into(holder.authorImageView);
+                Picasso.with(mContext).load(R.drawable.default_commentor_img).transform(new CircleTransformation()).into(holder.authorImageView);
             }
         } else {
-            Picasso.with(mContext).load(R.drawable.default_commentor_img).into(holder.authorImageView);
+            Picasso.with(mContext).load(R.drawable.default_commentor_img).transform(new CircleTransformation()).into(holder.authorImageView);
         }
         if (mDataList.get(position).getIsFollowed() == 0) {
             holder.followingTextView.setVisibility(View.INVISIBLE);

@@ -58,7 +58,6 @@ import com.mycity4kids.dbtable.TaskTableAttendee;
 import com.mycity4kids.dbtable.TaskTableFile;
 import com.mycity4kids.dbtable.TaskTableNotes;
 import com.mycity4kids.dbtable.TaskTableWhoToRemind;
-import com.mycity4kids.editor.DraftListViewActivity;
 import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.enums.DialogButtonEvent;
 import com.mycity4kids.enums.DialogEnum;
@@ -265,7 +264,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
         // onclick events
         findViewById(R.id.rdBtnToday).setOnClickListener(this);
-        findViewById(R.id.rdBtnCalender).setOnClickListener(this);
+//        findViewById(R.id.rdBtnCalender).setOnClickListener(this);
         //  findViewById(R.id.rdBtnTodo).setOnClickListener(this);
         findViewById(R.id.rdBtnUpcoming).setOnClickListener(this);
         findViewById(R.id.feed_back).setOnClickListener(this);
@@ -317,18 +316,15 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 setTitle("Weekly Calender");
                 replaceFragment(new FragmentCalender(), null, true);
             }
-        }
-        else if (Constants.SETTINGS_FRAGMENT.equals(fragmentToLoad))
-        {
+        } else if (Constants.SETTINGS_FRAGMENT.equals(fragmentToLoad)) {
             changeVisibiltyOfArrow(false);
             setTitle("Settings");
-            Bundle bundle=new Bundle();
-            bundle.putString("bio",getIntent().getStringExtra("bio"));
-            bundle.putString("firstName",getIntent().getStringExtra("firstName"));
-            bundle.putString("lastName",getIntent().getStringExtra("lastName"));
+            Bundle bundle = new Bundle();
+            bundle.putString("bio", getIntent().getStringExtra("bio"));
+            bundle.putString("firstName", getIntent().getStringExtra("firstName"));
+            bundle.putString("lastName", getIntent().getStringExtra("lastName"));
             replaceFragment(new FragmentSetting(), bundle, true);
-        }
-        else {
+        } else {
             replaceFragment(new FragmentMC4KHome(), null, false);
         }
 
@@ -399,16 +395,16 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         findViewById(R.id.rdBtnKids).setOnClickListener(this);
         findViewById(R.id.rdBtnParentingBlogs).setOnClickListener(this);
         findViewById(R.id.editor).setOnClickListener(this);
-        findViewById(R.id.drafts).setOnClickListener(this);
-        findViewById(R.id.bloggerDashboard).setOnClickListener(this);
-        findViewById(R.id.txvSettings).setOnClickListener(this);
-        findViewById(R.id.txvMeetContributors).setOnClickListener(this);
+//        findViewById(R.id.drafts).setOnClickListener(this);
+//        findViewById(R.id.bloggerDashboard).setOnClickListener(this);
+//        findViewById(R.id.txvSettings).setOnClickListener(this);
+//        findViewById(R.id.txvMeetContributors).setOnClickListener(this);
         //  findViewById(R.id.txvHelp).setOnClickListener(this);
         findViewById(R.id.imgProfile).setOnClickListener(this);
         findViewById(R.id.txvUserName).setOnClickListener(this);
 
-        findViewById(R.id.txvfeedback).setOnClickListener(this);
-        findViewById(R.id.txvrate).setOnClickListener(this);
+//        findViewById(R.id.txvfeedback).setOnClickListener(this);
+//        findViewById(R.id.txvrate).setOnClickListener(this);
         //     findViewById(R.id.txvtelfrnd).setOnClickListener(this);
 
         findViewById(R.id.back_month).setOnClickListener(this);
@@ -1746,23 +1742,24 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
                 break;
 
-            case R.id.rdBtnCalender:
-                // title show current month
-                Utils.pushEvent(DashboardActivity.this, GTMEventType.CALENDAR_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Left Menu Screen");
-                if (StringUtils.isNullOrEmpty("" + SharedPrefUtils.getUserDetailModel(this).getFamily_id()) ||
-                        SharedPrefUtils.getUserDetailModel(this).getFamily_id() == 0) {
-                    showCreateFamilyAlert();
-                } else {
-                    changeVisibiltyOfArrow(true);
-                    Calendar c = Calendar.getInstance();
-                    setTitle(form.format(c.getTime()).toString());
-
-                    replaceFragment(new FragmentCalender(), null, true);
-                }
-
-                //  startActivity(new Intent(this,ActivityCreateAppointment.class));
-
-                break;/*
+//            case R.id.rdBtnCalender:
+//                // title show current month
+//                Utils.pushEvent(DashboardActivity.this, GTMEventType.CALENDAR_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Left Menu Screen");
+//                if (StringUtils.isNullOrEmpty("" + SharedPrefUtils.getUserDetailModel(this).getFamily_id()) ||
+//                        SharedPrefUtils.getUserDetailModel(this).getFamily_id() == 0) {
+//                    showCreateFamilyAlert();
+//                } else {
+//                    changeVisibiltyOfArrow(true);
+//                    Calendar c = Calendar.getInstance();
+//                    setTitle(form.format(c.getTime()).toString());
+//
+//                    replaceFragment(new FragmentCalender(), null, true);
+//                }
+//
+//                //  startActivity(new Intent(this,ActivityCreateAppointment.class));
+//
+//                break;
+            /*
             case R.id.rdBtnTodo:
                 Utils.pushEvent(DashboardActivity.this, GTMEventType.TODO_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "");
             if (StringUtils.isNullOrEmpty("" + SharedPrefUtils.getUserDetailModel(this).getFamily_id()) ||
@@ -1797,10 +1794,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 replaceFragment(new FragmentHomeCategory(), null, true);
                 break;
             case R.id.rdBtnParentingBlogs:
-                Utils.pushEvent(DashboardActivity.this, GTMEventType.BLOGS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Left Menu Screen");
-                changeVisibiltyOfArrow(false);
-                setTitle("Articles");
-                replaceFragment(new ArticlesFragment(), null, true);
+//                Utils.pushEvent(DashboardActivity.this, GTMEventType.BLOGS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Left Menu Screen");
+//                changeVisibiltyOfArrow(false);
+//                setTitle("Articles");
+//                replaceFragment(new ArticlesFragment(), null, true);
+                Intent intent = new Intent(getApplicationContext(), TopicsFilterActivity.class);
+                startActivity(intent);
                 break;
             case R.id.editor:
                 if (Build.VERSION.SDK_INT > 15) {
@@ -1824,35 +1823,35 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     startActivity(viewIntent);
                 }
                 break;
-            case R.id.drafts:
-                Intent intent5 = new Intent(DashboardActivity.this, DraftListViewActivity.class);
-              /*  Bundle bundle5 = new Bundle();
-                bundle5.putString(EditorPostActivity.TITLE_PARAM, "");
-                bundle5.putString(EditorPostActivity.CONTENT_PARAM, "");
-                bundle5.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
-                        getString(R.string.example_post_title_placeholder));
-                bundle5.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
-                        getString(R.string.example_post_content_placeholder));
-                bundle5.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
-                intent1.putExtras(bundle5);*/
-                startActivity(intent5);
-                break;
-            case R.id.bloggerDashboard:
-                Intent intent = new Intent(DashboardActivity.this, FollowersAndFollowingListActivity.class);
-                intent.putExtra(AppConstants.FOLLOW_LIST_TYPE, AppConstants.FOLLOWER_LIST);
-                startActivity(intent);
-                break;
-            case R.id.txvSettings:
-                Utils.pushEvent(DashboardActivity.this, GTMEventType.SETTINGS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Left Menu Screen");
-                changeVisibiltyOfArrow(false);
-                setTitle("Settings");
-                replaceFragment(new FragmentSetting(), null, true);
-                break;
-            case R.id.txvMeetContributors:
-                Utils.pushEvent(DashboardActivity.this, GTMEventType.MEETCONTRIBUTORS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Left Menu Screen");
-                changeVisibiltyOfArrow(false);
-                replaceFragment(new ParentingBlogFragment(), null, true);
-                break;
+//            case R.id.drafts:
+//                Intent intent5 = new Intent(DashboardActivity.this, DraftListViewActivity.class);
+//              /*  Bundle bundle5 = new Bundle();
+//                bundle5.putString(EditorPostActivity.TITLE_PARAM, "");
+//                bundle5.putString(EditorPostActivity.CONTENT_PARAM, "");
+//                bundle5.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
+//                        getString(R.string.example_post_title_placeholder));
+//                bundle5.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
+//                        getString(R.string.example_post_content_placeholder));
+//                bundle5.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
+//                intent1.putExtras(bundle5);*/
+//                startActivity(intent5);
+//                break;
+//            case R.id.bloggerDashboard:
+//                Intent intent = new Intent(DashboardActivity.this, FollowersAndFollowingListActivity.class);
+//                intent.putExtra(AppConstants.FOLLOW_LIST_TYPE, AppConstants.FOLLOWER_LIST);
+//                startActivity(intent);
+//                break;
+//            case R.id.txvSettings:
+//                Utils.pushEvent(DashboardActivity.this, GTMEventType.SETTINGS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Left Menu Screen");
+//                changeVisibiltyOfArrow(false);
+//                setTitle("Settings");
+//                replaceFragment(new FragmentSetting(), null, true);
+//                break;
+//            case R.id.txvMeetContributors:
+//                Utils.pushEvent(DashboardActivity.this, GTMEventType.MEETCONTRIBUTORS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Left Menu Screen");
+//                changeVisibiltyOfArrow(false);
+//                replaceFragment(new ParentingBlogFragment(), null, true);
+//                break;
 
            /* case R.id.txvHelp:
                 Utils.pushEvent(DashboardActivity.this, GTMEventType.HELP_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
@@ -1863,27 +1862,27 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
                 break;*/
 
-            case R.id.txvfeedback:
-                Intent intentEmail = new Intent(Intent.ACTION_SEND);
-                String[] recipients = {"feedback@mycity4kids.com"};
-                intentEmail.putExtra(Intent.EXTRA_EMAIL, recipients);
-                intentEmail.putExtra(Intent.EXTRA_SUBJECT, "mycity4kids mobile app");
-                //intentEmail.putExtra(Intent.EXTRA_TEXT,"I just downloaded the amazing mycity4kids mobile app. Check it out @: http://www.mycity4kids.com/mobile ");
-                //intentEmail.putExtra(Intent.EXTRA_CC,"ghi");
-                intentEmail.setType("text/html");
-                startActivity(Intent.createChooser(intentEmail, "Send mail").setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                break;
+//            case R.id.txvfeedback:
+//                Intent intentEmail = new Intent(Intent.ACTION_SEND);
+//                String[] recipients = {"feedback@mycity4kids.com"};
+//                intentEmail.putExtra(Intent.EXTRA_EMAIL, recipients);
+//                intentEmail.putExtra(Intent.EXTRA_SUBJECT, "mycity4kids mobile app");
+//                //intentEmail.putExtra(Intent.EXTRA_TEXT,"I just downloaded the amazing mycity4kids mobile app. Check it out @: http://www.mycity4kids.com/mobile ");
+//                //intentEmail.putExtra(Intent.EXTRA_CC,"ghi");
+//                intentEmail.setType("text/html");
+//                startActivity(Intent.createChooser(intentEmail, "Send mail").setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+//                break;
 
-            case R.id.txvrate:
-                String appPackage = getPackageName();
-                try {
-                    Intent rateIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackage));
-                    startActivity(rateIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                } catch (Exception e) {
-                    Intent rateIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackage));
-                    startActivity(rateIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                }
-                break;
+//            case R.id.txvrate:
+//                String appPackage = getPackageName();
+//                try {
+//                    Intent rateIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackage));
+//                    startActivity(rateIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+//                } catch (Exception e) {
+//                    Intent rateIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackage));
+//                    startActivity(rateIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+//                }
+//                break;
 
             /*case R.id.txvtelfrnd:
                 Utils.pushEvent(DashboardActivity.this, GTMEventType.TELLFRIEND_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
@@ -1904,10 +1903,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
 
             case R.id.txvUserName:
-
-                startActivity(new Intent(this, ActivitySignUp.class));
-                break;
-
             case R.id.imgProfile:
                 Intent intent4 = new Intent(DashboardActivity.this, BloggerDashboardActivity.class);
                 startActivity(intent4);
@@ -2731,11 +2726,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     private void renderAuthorListingScreen(DeepLinkData data) {
         if (!StringUtils.isNullOrEmpty(data.getAuthor_name())) {
-            Intent _authorListIntent = new Intent(DashboardActivity.this, BlogDetailActivity.class);
-            _authorListIntent.putExtra(Constants.IS_COMMING_FROM_LISTING, false);
-            _authorListIntent.putExtra(Constants.ARTICLE_NAME, Uri.encode(data.getAuthor_name()) + "");
-            _authorListIntent.putExtra(Constants.AUTHOR_ID, data.getAuthor_id());
-            _authorListIntent.putExtra(Constants.FILTER_TYPE, "authors");
+            Intent _authorListIntent = new Intent(DashboardActivity.this, BloggerDashboardActivity.class);
+            _authorListIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, data.getAuthor_id());
             _authorListIntent.putExtra(Constants.DEEPLINK_URL, data.getUrl());
             startActivity(_authorListIntent);
         }
@@ -2743,11 +2735,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     private void renderBloggerListingScreen(DeepLinkData data) {
         if (!StringUtils.isNullOrEmpty(data.getBlog_title())) {
-            Intent _bloggerListIntent = new Intent(DashboardActivity.this, BlogDetailActivity.class);
-            _bloggerListIntent.putExtra(Constants.IS_COMMING_FROM_LISTING, false);
-            _bloggerListIntent.putExtra(Constants.ARTICLE_NAME, Uri.encode(data.getBlog_title()) + "");
-            _bloggerListIntent.putExtra(Constants.FILTER_TYPE, "blogs");
-            _bloggerListIntent.putExtra(Constants.AUTHOR_ID, data.getAuthor_id());
+            Intent _bloggerListIntent = new Intent(DashboardActivity.this, BloggerDashboardActivity.class);
+            _bloggerListIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, data.getAuthor_id());
             _bloggerListIntent.putExtra(Constants.DEEPLINK_URL, data.getUrl());
             startActivity(_bloggerListIntent);
         }

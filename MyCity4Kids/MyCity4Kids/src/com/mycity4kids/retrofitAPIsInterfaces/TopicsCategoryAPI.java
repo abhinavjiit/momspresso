@@ -35,4 +35,10 @@ public interface TopicsCategoryAPI {
                                                         @Query("sort") int sort,
                                                         @Query("start") int start,
                                                         @Query("end") int end);
+
+    @GET("/v1/articles/cities/{cityId}")
+    Call<ArticleListingResponse> getBestArticlesForCity(@Path("cityId") String cityId,
+                                                        @Query("sort") int sort,
+                                                        @Query("start") int start,
+                                                        @Query("end") int end);
 }

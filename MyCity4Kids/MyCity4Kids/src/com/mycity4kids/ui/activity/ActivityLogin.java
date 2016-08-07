@@ -564,7 +564,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                     model.setMc4kToken(responseData.getData().getResult().getMc4kToken());
                     model.setIsValidated(responseData.getData().getResult().getIsValidated());
                     model.setFirst_name(responseData.getData().getResult().getFirstName() + " " + responseData.getData().getResult().getLastName());
-                    model.setProfilePicUrl(responseData.getData().getResult().getProfilePicUrl());
+                    model.setProfilePicUrl(responseData.getData().getResult().getProfilePicUrl().getClientApp());
                     SharedPrefUtils.setUserDetailModel(ActivityLogin.this, model);
 
                     //facebook login with an account without email

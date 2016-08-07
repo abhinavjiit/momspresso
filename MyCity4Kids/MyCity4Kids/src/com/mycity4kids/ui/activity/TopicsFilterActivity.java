@@ -4,25 +4,25 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
-import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.FilterTopicsParentExpandableListAdapter;
 
@@ -47,7 +47,6 @@ import retrofit2.Retrofit;
 public class TopicsFilterActivity extends BaseActivity {
 
     ExpandableListView parentExpandableListView;
-    TextView filterButtton;
     private FilterTopicsParentExpandableListAdapter filterTopicsParentExpandableListAdapter;
     private ProgressBar progressBar;
     private Toolbar mToolbar;
@@ -63,26 +62,16 @@ public class TopicsFilterActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Choose Topics");
 
-        filterButtton = (TextView) findViewById(R.id.filterButtton);
         parentExpandableListView = (ExpandableListView) findViewById(R.id.parentExpandableListView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
-        progressBar.setVisibility(View.VISIBLE);
-        filterButtton.setVisibility(View.GONE);
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        int width = metrics.widthPixels;
 
-        filterButtton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String selectedTopics = filterTopicsParentExpandableListAdapter.getAllSelectedElements();
-                if (StringUtils.isNullOrEmpty(selectedTopics)) {
-                    showToast("Please select atleast one category to continue");
-                    return;
-                }
-                Intent intent = new Intent(TopicsFilterActivity.this, FilteredTopicsArticleListingActivity.class);
-                intent.putExtra("selectedTopics", selectedTopics);
-                startActivity(intent);
-            }
-        });
+        parentExpandableListView.setIndicatorBounds(width - GetDipsFromPixel(50), width - GetDipsFromPixel(10));
+
+        progressBar.setVisibility(View.VISIBLE);
 
         try {
             FileInputStream fileInputStream = openFileInput(AppConstants.CATEGORIES_JSON_FILE);
@@ -105,11 +94,22 @@ public class TopicsFilterActivity extends BaseActivity {
             progressBar.setVisibility(View.GONE);
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
-                filterButtton.setVisibility(View.VISIBLE);
-
                 HashMap<Topics, List<Topics>> topicsMap = new HashMap<Topics, List<Topics>>();
-                ArrayList<Topics> topicList = new ArrayList<>();
+                final ArrayList<Topics> topicList = new ArrayList<>();
 
+                ArrayList<Topics> firstList = new ArrayList<>();
+                firstList.add(new Topics("recent", "Recent", false, new ArrayList<Topics>(), "all", "All"));
+                firstList.add(new Topics("trending", "Trending", false, new ArrayList<Topics>(), "all", "All"));
+                firstList.add(new Topics("popular", "Popular", false, new ArrayList<Topics>(), "all", "All"));
+
+                Topics allTopics = new Topics("all", "All", false, firstList, null, null);
+                Topics bestInyoutCity = new Topics("bestInyourCity", "Best of " + SharedPrefUtils.getCurrentCityModel(this).getName(), false, new ArrayList<Topics>(), null, null);
+
+                topicList.add(allTopics);
+                topicList.add(bestInyoutCity);
+
+                topicsMap.put(allTopics, firstList);
+                topicsMap.put(bestInyoutCity, new ArrayList<Topics>());
                 //Prepare structure for multi-expandable listview.
                 for (int i = 0; i < responseData.getData().size(); i++) {
                     ArrayList<Topics> tempUpList = new ArrayList<>();
@@ -119,7 +119,7 @@ public class TopicsFilterActivity extends BaseActivity {
 
                         //add All option to select all sub-categories-childrens only if there are more then 0 child in a subcategory.
                         if (responseData.getData().get(i).getChild().get(j).getChild().size() > 0)
-                            tempList.add(new Topics("-1", "All", false, new ArrayList<Topics>(), responseData.getData().get(i).getId(),
+                            tempList.add(new Topics(responseData.getData().get(i).getChild().get(j).getId(), "All", false, new ArrayList<Topics>(), responseData.getData().get(i).getId(),
                                     responseData.getData().get(i).getTitle()));
 
                         tempList.addAll(responseData.getData().get(i).getChild().get(j).getChild());
@@ -128,7 +128,7 @@ public class TopicsFilterActivity extends BaseActivity {
 
                     //add All option to select all sub-categories only if there are more then 0 subcategories.
                     if (responseData.getData().get(i).getChild().size() > 0)
-                        tempUpList.add(new Topics("-1", "All", false, new ArrayList<Topics>(), responseData.getData().get(i).getId(),
+                        tempUpList.add(new Topics(responseData.getData().get(i).getId(), "All", false, new ArrayList<Topics>(), responseData.getData().get(i).getId(),
                                 responseData.getData().get(i).getTitle()));
 
                     tempUpList.addAll(responseData.getData().get(i).getChild());
@@ -136,6 +136,12 @@ public class TopicsFilterActivity extends BaseActivity {
                     topicsMap.put(responseData.getData().get(i),
                             tempUpList);
                 }
+
+                Topics contributorTopic = new Topics("contributor", "Meet our contributors",
+                        false, new ArrayList<Topics>(), null, null);
+                topicList.add(contributorTopic);
+                topicsMap.put(contributorTopic, new ArrayList<Topics>());
+
                 filterTopicsParentExpandableListAdapter =
                         new FilterTopicsParentExpandableListAdapter(
                                 TopicsFilterActivity.this,
@@ -143,6 +149,31 @@ public class TopicsFilterActivity extends BaseActivity {
                                 topicList, topicsMap
                         );
                 parentExpandableListView.setAdapter(filterTopicsParentExpandableListAdapter);
+                parentExpandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+                    @Override
+                    public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                        Log.d("Group Child", "" + topicList.get(groupPosition).getChild());
+                        if (topicList.get(groupPosition).getChild().size() == 0) {
+                            switch (topicList.get(groupPosition).getId()) {
+                                case "bestInyourCity":
+                                    Intent cityIntent = new Intent(TopicsFilterActivity.this, CityBestArticleListingActivity.class);
+                                    startActivity(cityIntent);
+                                    break;
+                                case "contributors":
+                                    Intent contributorIntent = new Intent(TopicsFilterActivity.this, CityBestArticleListingActivity.class);
+                                    startActivity(contributorIntent);
+                                    break;
+                                default:
+                                    Intent intent = new Intent(TopicsFilterActivity.this, FilteredTopicsArticleListingActivity.class);
+                                    intent.putExtra("selectedTopics", topicList.get(groupPosition).getId());
+                                    startActivity(intent);
+                                    break;
+                            }
+
+                        }
+                        return false;
+                    }
+                });
             } else {
                 showToast(getString(R.string.server_error));
             }
@@ -284,5 +315,12 @@ public class TopicsFilterActivity extends BaseActivity {
                 finish();
         }
         return true;
+    }
+
+    public int GetDipsFromPixel(float pixels) {
+        // Get the screen's density scale
+        final float scale = getResources().getDisplayMetrics().density;
+        // Convert the dps to pixels, based on density scale
+        return (int) (pixels * scale + 0.5f);
     }
 }

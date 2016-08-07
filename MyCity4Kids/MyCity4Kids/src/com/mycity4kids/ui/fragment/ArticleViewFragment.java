@@ -18,7 +18,9 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.StringUtils;
@@ -39,9 +41,13 @@ import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.adapter.ArticlesListingAdapter;
 import com.mycity4kids.ui.adapter.NewArticlesListingAdapter;
+import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.volley.HttpVolleyRequest;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by manish.soni on 21-07-2015.
@@ -53,8 +59,6 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
     ListView listView;
     TextView noBlogsTextView;
     String sortType;
-    String searchName = "";
-    Boolean isSearchActive = false;
     private RelativeLayout mLodingView;
     private int nextPageNumber = 2;
     private boolean isLastPageReached = false;
@@ -178,9 +182,15 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
                     return;
                 }
                 Log.d("Response back =", " " + response.getResponseBody());
+                swipeRefreshLayout.setRefreshing(false);
                 ArticleListingResponse responseData;
                 try {
+                    Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
                     responseData = new Gson().fromJson(response.getResponseBody(), ArticleListingResponse.class);
+//                    Type collectionType = new TypeToken<Collection<ArticleListingResponse>>() {
+//                    }.getType();
+//                    List<ArticleListingResponse> lcs = (List<ArticleListingResponse>) new Gson()
+//                            .fromJson(response.getResponseBody(), collectionType);
                 } catch (JsonSyntaxException jse) {
                     Crashlytics.logException(jse);
                     Log.d("JsonSyntaxException", Log.getStackTraceString(jse));
@@ -188,7 +198,6 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
                     return;
                 }
 
-                swipeRefreshLayout.setRefreshing(false);
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     processResponse(responseData);
                 } else if (responseData.getCode() == 400) {

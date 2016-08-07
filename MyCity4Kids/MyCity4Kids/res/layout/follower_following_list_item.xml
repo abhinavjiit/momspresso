@@ -5,14 +5,13 @@
     android:layout_height="60dp"
     android:orientation="vertical">
 
-    <com.mikhaellopez.circularimageview.CircularImageView
+    <ImageView
         android:id="@+id/authorImageView"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_centerVertical="true"
         android:layout_margin="10dp"
-        android:src="@drawable/default_commentor_img"
-        app:civ_border="true" />
+        android:src="@drawable/default_commentor_img" />
 
     <TextView
         android:id="@+id/authorNameTextView"
@@ -57,16 +56,15 @@
         android:layout_centerVertical="true"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
-        android:gravity="center"
-        android:text="FOLLOWING"
-        android:textColor="@color/white_color"
-        android:textSize="10sp"
         android:background="@drawable/follow_button_bg"
         android:backgroundTint="@color/blog.comments.follow_reply_btn"
         android:foregroundGravity="center"
+        android:gravity="center"
         android:paddingBottom="8dp"
         android:paddingTop="8dp"
-        />
+        android:text="FOLLOWING"
+        android:textColor="@color/white_color"
+        android:textSize="10sp" />
 
     <RelativeLayout
         android:id="@+id/relativeLoadingView"

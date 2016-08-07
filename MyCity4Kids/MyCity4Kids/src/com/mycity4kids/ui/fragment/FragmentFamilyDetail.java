@@ -1024,7 +1024,6 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
                 UserDetailResponse responseData = (UserDetailResponse) response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     saveDatainDB();
-                    Toast.makeText(getActivity(), "dwadawdawdadawdawdawdawdawdawdawdawd", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getActivity(), responseData.getReason(), Toast.LENGTH_SHORT).show();
                 }

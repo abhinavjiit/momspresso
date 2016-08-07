@@ -18,7 +18,6 @@ import android.widget.RelativeLayout;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.StringUtils;
-import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
@@ -26,7 +25,7 @@ import com.mycity4kids.controller.NewParentingBlogController;
 import com.mycity4kids.models.parentingstop.ParentingRequest;
 import com.mycity4kids.newmodels.bloggermodel.BlogItemModel;
 import com.mycity4kids.newmodels.bloggermodel.ParentingBlogResponse;
-import com.mycity4kids.ui.activity.BlogDetailActivity;
+import com.mycity4kids.ui.activity.BloggerDashboardActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.adapter.ParentingBlogAdapter;
 
@@ -103,17 +102,9 @@ public class ParentingBlogFragment extends BaseFragment implements View.OnClickL
 
                 BlogItemModel itemSelected = (BlogItemModel) adapterView.getItemAtPosition(position);
 
-//                if (!StringUtils.isNullOrEmpty(itemSelected.getBlog_title())) {
-                    Intent intent = new Intent(getActivity(), BlogDetailActivity.class);
-                    Bundle bundle = new Bundle();
-                    intent.putExtra(Constants.IS_COMMING_FROM_LISTING, true);
-                    intent.putExtra(Constants.AUTHOR_ID, ""+itemSelected.getId());
-                    intent.putExtra(Constants.BLOG_DETAILS, itemSelected);
-                    intent.putExtra(Constants.BLOG_LIST_POSITION, position);
-                    getActivity().startActivityForResult(intent, Constants.BLOG_FOLLOW_STATUS);
-//                } else {
-//                    ToastUtils.showToast(getActivity(), "Blogger details not available at this moment, please try again later...");
-//                }
+                Intent intent = new Intent(getActivity(), BloggerDashboardActivity.class);
+                intent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, "" + itemSelected.getId());
+                getActivity().startActivityForResult(intent, Constants.BLOG_FOLLOW_STATUS);
 
             }
         });
@@ -233,7 +224,7 @@ public class ParentingBlogFragment extends BaseFragment implements View.OnClickL
             if (nextPageNumber == 0) {
                 parentingBlogAdapter.setListData(responseData.getResult().getData().getData());
             } else {
-               // listingData = parentingBlogAdapter.getListData();
+                // listingData = parentingBlogAdapter.getListData();
                 listingData.addAll(responseData.getResult().getData().getData());
                 parentingBlogAdapter.setListData(listingData);
             }

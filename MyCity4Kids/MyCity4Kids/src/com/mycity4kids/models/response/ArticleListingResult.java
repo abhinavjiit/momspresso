@@ -12,9 +12,9 @@ public class ArticleListingResult implements Parcelable {
     private String title;
     private String excerpt;
     private String titleSlug;
-    private String imageUrl;
+    private ImageURL imageUrl;
     private String userName;
-    private String profilePic;
+    private ProfilePic profilePics;
     private String userId;
     private String userType;
     private String commentsCount;
@@ -28,9 +28,9 @@ public class ArticleListingResult implements Parcelable {
         title = in.readString();
         excerpt = in.readString();
         titleSlug = in.readString();
-        imageUrl = in.readString();
+        imageUrl = in.readParcelable(ImageURL.class.getClassLoader());
         userName = in.readString();
-        profilePic = in.readString();
+        profilePics = in.readParcelable(ProfilePic.class.getClassLoader());
         userId = in.readString();
         userType = in.readString();
         commentsCount = in.readString();
@@ -84,11 +84,11 @@ public class ArticleListingResult implements Parcelable {
         this.titleSlug = titleSlug;
     }
 
-    public String getImageUrl() {
+    public ImageURL getImageUrl() {
         return imageUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
+    public void setImageUrl(ImageURL imageUrl) {
         this.imageUrl = imageUrl;
     }
 
@@ -100,12 +100,12 @@ public class ArticleListingResult implements Parcelable {
         this.userName = userName;
     }
 
-    public String getProfilePic() {
-        return profilePic;
+    public ProfilePic getProfilePic() {
+        return profilePics;
     }
 
-    public void setProfilePic(String profilePic) {
-        this.profilePic = profilePic;
+    public void setProfilePic(ProfilePic profilePic) {
+        this.profilePics = profilePic;
     }
 
     public String getUserId() {
@@ -175,9 +175,9 @@ public class ArticleListingResult implements Parcelable {
         dest.writeString(title);
         dest.writeString(excerpt);
         dest.writeString(titleSlug);
-        dest.writeString(imageUrl);
+        dest.writeParcelable(imageUrl, flags);
         dest.writeString(userName);
-        dest.writeString(profilePic);
+        dest.writeParcelable(profilePics, flags);
         dest.writeString(userId);
         dest.writeString(userType);
         dest.writeString(commentsCount);
@@ -186,4 +186,67 @@ public class ArticleListingResult implements Parcelable {
         dest.writeLong(createdTime);
         dest.writeString(articleCount);
     }
+
+    public static class ImageURL implements Parcelable {
+
+        private String mobileWebThumbnail;
+        private String clientAppThumbnail;
+        private String webThumbnail;
+
+        protected ImageURL(Parcel in) {
+            mobileWebThumbnail = in.readString();
+            clientAppThumbnail = in.readString();
+            webThumbnail = in.readString();
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(mobileWebThumbnail);
+            dest.writeString(clientAppThumbnail);
+            dest.writeString(webThumbnail);
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        public static final Creator<ImageURL> CREATOR = new Creator<ImageURL>() {
+            @Override
+            public ImageURL createFromParcel(Parcel in) {
+                return new ImageURL(in);
+            }
+
+            @Override
+            public ImageURL[] newArray(int size) {
+                return new ImageURL[size];
+            }
+        };
+
+        public String getMobileWebThumbnail() {
+            return mobileWebThumbnail;
+        }
+
+        public void setMobileWebThumbnail(String mobileWebThumbnail) {
+            this.mobileWebThumbnail = mobileWebThumbnail;
+        }
+
+        public String getClientAppThumbnail() {
+            return clientAppThumbnail;
+        }
+
+        public void setClientAppThumbnail(String clientAppThumbnail) {
+            this.clientAppThumbnail = clientAppThumbnail;
+        }
+
+        public String getWebThumbnail() {
+            return webThumbnail;
+        }
+
+        public void setWebThumbnail(String webThumbnail) {
+            this.webThumbnail = webThumbnail;
+        }
+    }
+
+
 }

@@ -493,6 +493,12 @@
             android:screenOrientation="portrait" />
 
         <activity
+            android:name=".ui.activity.ArticleListingActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.CityBestArticleListingActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.activity.FilteredTopicsArticleListingActivity"
             android:screenOrientation="portrait" />
         <activity

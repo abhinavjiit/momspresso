@@ -38,7 +38,7 @@
                 <ImageView
                     android:id="@+id/imvAuthorThumb"
                     android:layout_width="101dp"
-                    android:layout_height="60dp"
+                    android:layout_height="67dp"
                     android:layout_alignParentTop="true"
                     android:layout_centerInParent="true"
                     android:contentDescription="@string/author_img" />
@@ -112,7 +112,7 @@
                         android:fontFamily="sans-serif"
                         android:gravity="right"
                         android:singleLine="true"
-                        android:text="@string/article_publish_date"
+                        android:text=""
                         android:textColor="@color/gray2"
                         android:textSize="12sp" />
 

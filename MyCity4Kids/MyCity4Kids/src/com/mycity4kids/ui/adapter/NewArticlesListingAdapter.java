@@ -11,13 +11,15 @@ import android.widget.TextView;
 
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
-import com.mycity4kids.constants.Constants;
-import com.mycity4kids.models.response.ArticleListingData;
+import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.response.ArticleListingResult;
-import com.mycity4kids.ui.activity.BlogDetailActivity;
+import com.mycity4kids.ui.activity.BloggerDashboardActivity;
 import com.squareup.picasso.Picasso;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * @author deepanker.chaudhary
@@ -80,8 +82,6 @@ public class NewArticlesListingAdapter extends BaseAdapter {
             holder.txvPublishDate = (TextView) view.findViewById(R.id.txvPublishDate);
             holder.imvAuthorThumb = (ImageView) view.findViewById(R.id.imvAuthorThumb);
 //            holder.authorPic = (ImageView) view.findViewById(R.id.author_pic);
-
-
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
@@ -98,33 +98,18 @@ public class NewArticlesListingAdapter extends BaseAdapter {
             }
 
 //            holder.txvAuthorName.setTextColor(Color.parseColor(articleDataModelsNew.get(position).getAuthor_color_code()));
-            holder.txvPublishDate.setText("" + position);
-            if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getImageUrl())) {
-                Picasso.with(mContext).load(articleDataModelsNew.get(position).getImageUrl()).placeholder(R.drawable.default_article).resize((int) (101 * density), (int) (67 * density)).centerCrop().into(holder.imvAuthorThumb);
+            holder.txvPublishDate.setText(getDate(articleDataModelsNew.get(position).getCreatedTime()));
+            if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getImageUrl().getMobileWebThumbnail())) {
+                Picasso.with(mContext).load(articleDataModelsNew.get(position).getImageUrl().getMobileWebThumbnail()).placeholder(R.drawable.default_article).resize((int) (101 * density), (int) (67 * density)).centerCrop().into(holder.imvAuthorThumb);
             } else {
                 holder.imvAuthorThumb.setBackgroundResource(R.drawable.article_default);
             }
-//            if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getAuthor_image())) {
-//                Picasso.with(mContext).load(articleDataModelsNew.get(position).getAuthor_image()).placeholder(R.drawable.blue_man_icon).resize((int) (14 * density), (int) (14 * density)).centerCrop().into(holder.authorPic);
-//            } else {
-//                holder.imvAuthorThumb.setBackgroundResource(R.drawable.default_user);
-//            }
 
             holder.txvAuthorName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(mContext, BlogDetailActivity.class);
-                    intent.putExtra(Constants.IS_COMMING_FROM_LISTING, false);
-                    intent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(position).getUserId());
-                    if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getUserType())) {
-                        if (articleDataModelsNew.get(position).getUserType().trim().equalsIgnoreCase("Blogger")) {
-                            intent.putExtra(Constants.ARTICLE_NAME, articleDataModelsNew.get(position).getUserName());
-                            intent.putExtra(Constants.FILTER_TYPE, "blogs");
-                        } else {
-                            intent.putExtra(Constants.ARTICLE_NAME, articleDataModelsNew.get(position).getUserName());
-                            intent.putExtra(Constants.FILTER_TYPE, "authors");
-                        }
-                    }
+                    Intent intent = new Intent(mContext, BloggerDashboardActivity.class);
+                    intent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, articleDataModelsNew.get(position).getUserId());
                     mContext.startActivity(intent);
                 }
             });
@@ -169,4 +154,14 @@ public class NewArticlesListingAdapter extends BaseAdapter {
         this.articleDataModelsNew = newList;
     }
 
+    private String getDate(long timeStampStr) {
+
+        try {
+            DateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
+            Date netDate = new Date(timeStampStr * 1000);
+            return sdf.format(netDate);
+        } catch (Exception ex) {
+            return "xx";
+        }
+    }
 }

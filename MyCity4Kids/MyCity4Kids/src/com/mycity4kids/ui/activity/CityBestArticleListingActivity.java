@@ -6,9 +6,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -18,8 +16,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.getbase.floatingactionbutton.FloatingActionButton;
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -28,11 +24,10 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.enums.ParentingFilterType;
-import com.mycity4kids.models.parentingstop.CommonParentingList;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
-import com.mycity4kids.ui.adapter.ArticlesListingAdapter;
 import com.mycity4kids.ui.adapter.NewArticlesListingAdapter;
 
 import java.util.ArrayList;
@@ -42,27 +37,22 @@ import retrofit2.Callback;
 import retrofit2.Retrofit;
 
 /**
- * @author Hemant Parmar
+ * Created by hemant on 4/8/16.
  */
-
-public class FilteredTopicsArticleListingActivity extends BaseActivity implements OnClickListener {
+public class CityBestArticleListingActivity extends BaseActivity {
 
     NewArticlesListingAdapter articlesListingAdapter;
-    ListView listView;
-
     ArrayList<ArticleListingResult> articleDataModelsNew;
+    ListView listView;
+    private Toolbar mToolbar;
+    TextView noBlogsTextView;
     int sortType = 0;
     private RelativeLayout mLodingView;
-
     private int nextPageNumber;
+    private boolean isLastPageReached = false;
     private boolean isReuqestRunning = false;
     private ProgressBar progressBar;
-    boolean isLastPageReached = true;
-    private TextView noBlogsTextView;
-    private String selectedTopics;
-    private Toolbar mToolbar;
     private int limit = 15;
-    FloatingActionButton popularSortFAB, recentSortFAB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,49 +61,25 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Topics");
+        setCityNameAsTitle();
+
 
         listView = (ListView) findViewById(R.id.scroll);
         mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
         noBlogsTextView = (TextView) findViewById(R.id.noBlogsTextView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely));
-        final FloatingActionsMenu fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
-        popularSortFAB = (FloatingActionButton) findViewById(R.id.popularSortFAB);
-        recentSortFAB = (FloatingActionButton) findViewById(R.id.recentSortFAB);
-        popularSortFAB.setOnClickListener(this);
-        recentSortFAB.setOnClickListener(this);
 
-        selectedTopics = getIntent().getStringExtra("selectedTopics");
         progressBar.setVisibility(View.VISIBLE);
 
         articleDataModelsNew = new ArrayList<ArticleListingResult>();
         nextPageNumber = 1;
-        hitFilteredTopicsArticleListingApi(sortType);
+        hitBestofCityArticleListingApi(sortType);
 
         articlesListingAdapter = new NewArticlesListingAdapter(this, true);
         articlesListingAdapter.setNewListData(articleDataModelsNew);
         listView.setAdapter(articlesListingAdapter);
         articlesListingAdapter.notifyDataSetChanged();
-
-        fabMenu.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
-            @Override
-            public void onMenuExpanded() {
-//                frameLayout.setOnTouchListener(new View.OnTouchListener() {
-//                    @Override
-//                    public boolean onTouch(View v, MotionEvent event) {
-//                        fabMenu.collapse();
-//                        return true;
-//                    }
-//                });
-            }
-
-            @Override
-            public void onMenuCollapsed() {
-//                frameLayout.getBackground().setAlpha(0);
-//                frameLayout.setOnTouchListener(null);
-            }
-        });
 
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -124,9 +90,9 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
                 boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
-                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && isLastPageReached) {
+                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && !isLastPageReached) {
                     mLodingView.setVisibility(View.VISIBLE);
-                    hitFilteredTopicsArticleListingApi(nextPageNumber);
+                    hitBestofCityArticleListingApi(sortType);
                     isReuqestRunning = true;
                 }
             }
@@ -137,14 +103,15 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                Intent intent = new Intent(FilteredTopicsArticleListingActivity.this, ArticlesAndBlogsDetailsActivity.class);
-                if (adapterView.getAdapter() instanceof ArticlesListingAdapter) {
-                    CommonParentingList parentingListData = (CommonParentingList) ((ArticlesListingAdapter) adapterView.getAdapter()).getItem(i);
+                Intent intent = new Intent(CityBestArticleListingActivity.this, ArticlesAndBlogsDetailsActivity.class);
+                if (adapterView.getAdapter() instanceof NewArticlesListingAdapter) {
+                    ArticleListingResult parentingListData = (ArticleListingResult) ((NewArticlesListingAdapter) adapterView.getAdapter()).getItem(i);
                     intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
-                    intent.putExtra(Constants.ARTICLE_COVER_IMAGE, parentingListData.getThumbnail_image());
+                    intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
+                    intent.putExtra(Constants.ARTICLE_COVER_IMAGE, parentingListData.getImageUrl());
                     intent.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.ARTICLES);
-                    intent.putExtra(Constants.FILTER_TYPE, parentingListData.getAuthor_type());
-                    intent.putExtra(Constants.BLOG_NAME, parentingListData.getBlog_name());
+                    intent.putExtra(Constants.FILTER_TYPE, parentingListData.getUserType());
+                    intent.putExtra(Constants.BLOG_NAME, parentingListData.getBlogPageSlug());
                     startActivity(intent);
 
                 }
@@ -152,7 +119,55 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         });
     }
 
-    private void hitFilteredTopicsArticleListingApi(int sortType) {
+    private void setCityNameAsTitle() {
+        if (SharedPrefUtils.getCurrentCityModel(this).getName().isEmpty()) {
+            switch (SharedPrefUtils.getCurrentCityModel(this).getId()) {
+                case 1:
+                    setTitle("Best of " + "Delhi-NCR");
+                    break;
+                case 2:
+                    setTitle("Best of " + "Bangalore");
+                    break;
+                case 3:
+                    setTitle("Best of " + "Mumbai");
+                    break;
+                case 4:
+                    setTitle("Best of " + "Pune");
+                    break;
+                case 5:
+                    setTitle("Best of " + "Hyderabad");
+                    break;
+                case 6:
+                    setTitle("Best of " + "Chennai");
+                    break;
+                case 7:
+                    setTitle("Best of " + "Kolkata");
+                    break;
+                case 8:
+                    setTitle("Best of " + "Jaipur");
+                    break;
+                case 9:
+                    setTitle("Best of " + "Ahmedabad");
+                    break;
+                default:
+                    setTitle("Best of " + "Delhi-NCR");
+                    break;
+            }
+
+        } else {
+            if (SharedPrefUtils.getCurrentCityModel(this).getName().equals("Delhi-Ncr")) {
+                SharedPrefUtils.getCurrentCityModel(this).setName("Delhi-NCR");
+            }
+            getSupportActionBar().setTitle("Best of " + SharedPrefUtils.getCurrentCityModel(this).getName());
+        }
+    }
+
+    @Override
+    protected void updateUi(Response response) {
+
+    }
+
+    private void hitBestofCityArticleListingApi(int sortType) {
         if (!ConnectivityUtils.isNetworkEnabled(this)) {
             ToastUtils.showToast(this, getString(R.string.error_network));
             return;
@@ -165,7 +180,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
 
         int from = (nextPageNumber - 1) * limit + 1;
-        Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1);
+        Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory("" + SharedPrefUtils.getCurrentCityModel(this).getId(), sortType, from, from + limit - 1);
         filterCall.enqueue(articleListingResponseCallback);
 
     }
@@ -199,10 +214,6 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
 
         @Override
         public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
-            if (mLodingView.getVisibility() == View.VISIBLE) {
-                mLodingView.setVisibility(View.GONE);
-            }
-            progressBar.setVisibility(View.INVISIBLE);
             Crashlytics.logException(t);
             Log.d("MC4KException", Log.getStackTraceString(t));
             showToast(getString(R.string.went_wrong));
@@ -240,25 +251,6 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
     }
 
     @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.recentSortFAB:
-                nextPageNumber = 1;
-                hitFilteredTopicsArticleListingApi(0);
-                break;
-            case R.id.popularSortFAB:
-                nextPageNumber = 1;
-                hitFilteredTopicsArticleListingApi(1);
-                break;
-        }
-    }
-
-    @Override
-    protected void updateUi(Response response) {
-
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         return true;
     }
@@ -271,4 +263,5 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         }
         return true;
     }
+
 }

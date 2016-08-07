@@ -5,7 +5,7 @@ package com.mycity4kids.models.response;
  */
 public class SearchAuthorResult {
     private String userId;
-    private String profile_image;
+    private ProfilePic profile_image;
     private String first_name;
     private String last_name;
 
@@ -17,11 +17,11 @@ public class SearchAuthorResult {
         this.userId = userId;
     }
 
-    public String getProfile_image() {
+    public ProfilePic getProfile_image() {
         return profile_image;
     }
 
-    public void setProfile_image(String profile_image) {
+    public void setProfile_image(ProfilePic profile_image) {
         this.profile_image = profile_image;
     }
 

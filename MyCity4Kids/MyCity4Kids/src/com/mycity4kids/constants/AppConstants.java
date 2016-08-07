@@ -393,6 +393,7 @@ public class AppConstants {
     public static final String SERVICE_TYPE_ARTICLE = "v1/articles/";
     public static final String SERVICE_TYPE_USER = "v1/users/";
     public static final String SEPARATOR_BACKSLASH = "/";
+    public static final String SEPARATOR_QMARK = "?";
 
     public static final String CATEGORIES_JSON_FILE = "categories.json";
     public static final String PHOENIX_RELEASE_VERSION = "4.5";

@@ -1,7 +1,9 @@
 package com.mycity4kids.ui.fragment;
 
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -68,6 +70,10 @@ public class SearchTopicsTabFragment extends BaseFragment {
         View view = null;
         view = getActivity().getLayoutInflater().inflate(R.layout.new_article_layout, container, false);
         listView = (ListView) view.findViewById(R.id.scroll);
+        ColorDrawable sage = new ColorDrawable(ContextCompat.getColor(getActivity(), R.color.gray2));
+        listView.setDivider(sage);
+        listView.setDividerHeight(1);
+
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
@@ -148,38 +154,8 @@ public class SearchTopicsTabFragment extends BaseFragment {
 
         call.enqueue(searchTopicsResponseCallback);
 
-
-//        ParentingRequest _parentingModel = new ParentingRequest();
-//        _parentingModel.setSearchName(searchName);
-//        _parentingModel.setCity_id(SharedPrefUtils.getCurrentCityModel(getActivity()).getId());
-//        _parentingModel.setPage("" + nextPageNumber);
-//
-//        _parentingModel.setSoty_by(sortby);
-//        ParentingStopController _controller = new ParentingStopController(getActivity(), this);
-//        _controller.getData(AppConstants.TOP_PICKS_REQUEST, _parentingModel);
     }
 
-//    @Override
-//    public void setUserVisibleHint(boolean visible) {
-//        super.setUserVisibleHint(visible);
-//        if (visible && isResumed()) {   // only at fragment screen is resumed
-//            fragmentResume = true;
-//            fragmentVisible = false;
-//            fragmentOnCreated = true;
-//            if (!isDataLoadedOnce && !StringUtils.isNullOrEmpty(searchName)) {
-//                nextPageNumber = 1;
-//                newSearchTopicArticleListingApi(searchName, sortType);
-//                isDataLoadedOnce = true;
-//            }
-//        } else if (visible) {        // only at fragment onCreated
-//            fragmentResume = false;
-//            fragmentVisible = true;
-//            fragmentOnCreated = true;
-//        } else if (!visible && fragmentOnCreated) {// only when you go out of fragment screen
-//            fragmentVisible = false;
-//            fragmentResume = false;
-//        }
-//    }
 
     @Override
     protected void updateUi(Response response) {
@@ -259,18 +235,22 @@ public class SearchTopicsTabFragment extends BaseFragment {
                     ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(responseData.getReason());
                 }
             } catch (Exception e) {
+                ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
                 Crashlytics.logException(e);
-                Log.d("MC4KException", Log.getStackTraceString(e));
-                ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(getString(R.string.went_wrong));
+                Log.d("MC4kException", Log.getStackTraceString(e));
             }
 
         }
 
         @Override
         public void onFailure(Call<SearchResponse> call, Throwable t) {
+            progressBar.setVisibility(View.GONE);
+            if (mLodingView.getVisibility() == View.VISIBLE) {
+                mLodingView.setVisibility(View.GONE);
+            }
+            ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
             Crashlytics.logException(t);
-            Log.d("MC4KException", Log.getStackTraceString(t));
-            ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(getString(R.string.went_wrong));
+            Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
 

@@ -27,6 +27,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -37,29 +38,31 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.editor.DraftListAdapter;
 import com.mycity4kids.editor.EditorPostActivity;
-import com.mycity4kids.enums.ArticleType;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.models.editor.ArticleDraftRequest;
+import com.mycity4kids.models.request.ArticleDetailRequest;
+import com.mycity4kids.models.request.FollowUnfollowUserRequest;
 import com.mycity4kids.models.request.UpdateUserDetail;
+import com.mycity4kids.models.response.ArticleDetailResponse;
 import com.mycity4kids.models.response.ArticleDraftResponse;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.DraftListResponse;
+import com.mycity4kids.models.response.FollowUnfollowUserResponse;
 import com.mycity4kids.models.response.ImageUploadResponse;
 import com.mycity4kids.models.response.PublishDraftObject;
 import com.mycity4kids.models.response.ReviewListingResult;
 import com.mycity4kids.models.response.ReviewResponse;
-import com.mycity4kids.models.response.SearchArticleResult;
 import com.mycity4kids.models.response.UserCommentsResponse;
 import com.mycity4kids.models.response.UserCommentsResult;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.UserAttributeUpdateAPI;
-import com.mycity4kids.ui.adapter.CommentsListAdapter;
-import com.mycity4kids.ui.adapter.PublishedArticleListAdapter;
 import com.mycity4kids.ui.adapter.PublishedArticleListingAdapter;
 import com.mycity4kids.ui.adapter.ReviewsListAdapter;
 import com.mycity4kids.ui.adapter.UserCommentsAdapter;
@@ -69,7 +72,9 @@ import com.yalantis.ucrop.UCrop;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.net.SocketTimeoutException;
 import java.net.URI;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import okhttp3.MediaType;
@@ -77,7 +82,6 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by hemant on 16/3/16.
@@ -104,7 +108,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     Uri imageUri;
     Bitmap finalBitmap;
     File file;
-    ListView draftListview, publishedArticleListView, bookmarksListView,commentsListView, reviewsListView;
+    ListView draftListview, publishedArticleListView, bookmarksListView, commentsListView, reviewsListView;
     ArrayList<PublishDraftObject> draftList;
     ArrayList<ReviewListingResult> reviewList;
     ArrayList<UserCommentsResult> commentList;
@@ -125,28 +129,29 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     boolean isLastPageReached = true;
     private ProgressBar progressBar;
     ArrayList<ArticleListingResult> articleDataModelsNew;
-    TextView noDraftTextView,noArticleTextView,noReviewsTextView,noCommentsTextView;
+    TextView noDraftTextView, noArticleTextView, noReviewsTextView, noCommentsTextView;
     TextView moreTextView;
     public String userId;
     public boolean isPrivateProfile;
-    TextView follow,following;
-    LinearLayout FollowersLinearLL,FollowingLinearLL;
+    TextView followButton, unfollowButton;
+    LinearLayout FollowersLinearLL, FollowingLinearLL;
     View header;
     private static final String SAMPLE_CROPPED_IMAGE_NAME = "SampleCropImage";
     private int limit = 10;
     private String paginationValue = "";
     boolean isLastPageCommentsReached = false;
+    Boolean isFollowing = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blogger_dashboard);
-        userId=getIntent().getStringExtra(AppConstants.PUBLIC_PROFILE_USER_ID);
-        if (userId==null||userId.equals(SharedPrefUtils.getUserDetailModel(BloggerDashboardActivity.this).getDynamoId()))
-        {isPrivateProfile=true;
-            userId=SharedPrefUtils.getUserDetailModel(BloggerDashboardActivity.this).getDynamoId();
-        }
-        else {
-            isPrivateProfile=false;
+        userId = getIntent().getStringExtra(AppConstants.PUBLIC_PROFILE_USER_ID);
+        if (userId == null || userId.equals(SharedPrefUtils.getUserDetailModel(BloggerDashboardActivity.this).getDynamoId())) {
+            isPrivateProfile = true;
+            userId = SharedPrefUtils.getUserDetailModel(BloggerDashboardActivity.this).getDynamoId();
+        } else {
+            isPrivateProfile = false;
         }
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         draftListview = (ListView) findViewById(R.id.draftListView);
@@ -156,10 +161,10 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         addDraft = (ImageView) findViewById(R.id.addDraft);
-      //  noDrafts = (TextView) findViewById(R.id.noDraftsTextView);
-        if (isPrivateProfile)
-        {     header = getLayoutInflater().inflate(R.layout.header_blogger_dashboard, null);}
-        else {
+        //  noDrafts = (TextView) findViewById(R.id.noDraftsTextView);
+        if (isPrivateProfile) {
+            header = getLayoutInflater().inflate(R.layout.header_blogger_dashboard, null);
+        } else {
             header = getLayoutInflater().inflate(R.layout.header_blogger_dashboard_public, null);
         }
         header.setClickable(false);
@@ -177,69 +182,74 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         commentsImageView = (ImageView) header.findViewById(R.id.commentsImageView);
         reviewImageView = (ImageView) header.findViewById(R.id.reviewImageView);
         editProfileTextView = (TextView) header.findViewById(R.id.editProfileTextView);
-        noDraftTextView=(TextView) header.findViewById(R.id.noDraftsTextView);
-        noArticleTextView=(TextView) header.findViewById(R.id.noArticlesTextView);
-        noCommentsTextView=(TextView) header.findViewById(R.id.noCommentsTextView);
-        noReviewsTextView=(TextView) header.findViewById(R.id.noReviewTextView);
-        moreTextView=(TextView) header.findViewById(R.id.more_text);
-        follow=(TextView) header.findViewById(R.id.followTextView);
-        following=(TextView) header.findViewById(R.id.followingTextView1);
-        FollowersLinearLL=(LinearLayout) header.findViewById(R.id.FollowersLinearLL);
-        FollowingLinearLL=(LinearLayout) header.findViewById(R.id.FollowingLinearLL);
+        noDraftTextView = (TextView) header.findViewById(R.id.noDraftsTextView);
+        noArticleTextView = (TextView) header.findViewById(R.id.noArticlesTextView);
+        noCommentsTextView = (TextView) header.findViewById(R.id.noCommentsTextView);
+        noReviewsTextView = (TextView) header.findViewById(R.id.noReviewTextView);
+        moreTextView = (TextView) header.findViewById(R.id.more_text);
+        followButton = (TextView) header.findViewById(R.id.followTextView);
+        unfollowButton = (TextView) header.findViewById(R.id.unfollowTextView);
+//        following = (TextView) header.findViewById(R.id.followingTextView1);
+        FollowersLinearLL = (LinearLayout) header.findViewById(R.id.FollowersLinearLL);
+        FollowingLinearLL = (LinearLayout) header.findViewById(R.id.FollowingLinearLL);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Profile");
-        draftList=new ArrayList<>();
-        reviewList=new ArrayList<>();
-        commentList=new ArrayList<>();
+        draftList = new ArrayList<>();
+        reviewList = new ArrayList<>();
+        commentList = new ArrayList<>();
         articleDataModelsNew = new ArrayList<>();
         adapter = new DraftListAdapter(this, draftList);
-        reviewsListAdapter=new ReviewsListAdapter(this,reviewList);
-        articlesListingAdapter= new PublishedArticleListingAdapter(this, new PublishedArticleListingAdapter.BtnClickListener() {
+        reviewsListAdapter = new ReviewsListAdapter(this, reviewList);
+        articlesListingAdapter = new PublishedArticleListingAdapter(this, new PublishedArticleListingAdapter.BtnClickListener() {
             @Override
             public void onBtnClick(int position) {
 
             }
         });
 
+        bloggerImageView = (ImageView) header.findViewById(R.id.bloggerImageView);
 
-        if (isPrivateProfile)
-        {
-            follow.setVisibility(View.INVISIBLE);
-            following.setVisibility(View.INVISIBLE);
+        if (isPrivateProfile) {
+//            follow.setVisibility(View.INVISIBLE);
+//            following.setVisibility(View.INVISIBLE);
             editProfileTextView.setVisibility(View.VISIBLE);
             draftItemLinearLayout.setVisibility(View.VISIBLE);
-            draftListview.addHeaderView(header,null,false);
-        }
-        else {
-            follow.setVisibility(View.VISIBLE);
-            following.setVisibility(View.VISIBLE);
+            draftListview.addHeaderView(header, null, false);
+            if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getProfileImgUrl(this))) {
+                Picasso.with(this).load(SharedPrefUtils.getProfileImgUrl(this)).placeholder(R.drawable.family_xxhdpi)
+                        .error(R.drawable.family_xxhdpi).transform(new RoundedTransformation()).into(bloggerImageView);
+            }
+            bloggerImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(Intent.ACTION_PICK);
+                    intent.setType("image/*");
+                    startActivityForResult(intent, ADD_MEDIA_ACTIVITY_REQUEST_CODE);
+                }
+            });
+        } else {
+            followButton.setVisibility(View.VISIBLE);
+            followButton.setEnabled(false);
+            unfollowButton.setVisibility(View.INVISIBLE);
+            unfollowButton.setEnabled(false);
+            followButton.setOnClickListener(this);
+            unfollowButton.setOnClickListener(this);
+
             editProfileTextView.setVisibility(View.GONE);
             draftListview.setVisibility(View.GONE);
 //            draftItemLinearLayout.setVisibility(View.GONE);
-            publishedArticleListView.addHeaderView(header,null,false);
+            publishedArticleListView.addHeaderView(header, null, false);
             publishedArticleListView.setVisibility(View.VISIBLE);
             draftListview.setVisibility(View.GONE);
             publishedImageView.setColorFilter(getResources().getColor(R.color.red_selected));
-
         }
 
 
         reviewsListView.setAdapter(reviewsListAdapter);
         draftListview.setAdapter(adapter);
-        bloggerImageView = (ImageView) findViewById(R.id.bloggerImageView);
-        if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getProfileImgUrl(this))) {
-            Picasso.with(this).load(SharedPrefUtils.getProfileImgUrl(this)).placeholder(R.drawable.family_xxhdpi)
-                    .error(R.drawable.family_xxhdpi).transform(new RoundedTransformation()).into(bloggerImageView);
-        }
-        bloggerImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK);
-                intent.setType("image/*");
-                startActivityForResult(intent, ADD_MEDIA_ACTIVITY_REQUEST_CODE);
-            }
-        });
+
+
         draftItemLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -248,13 +258,12 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                 commentsImageView.setColorFilter(getResources().getColor(R.color.grey_icon_unselected));
                 reviewImageView.setColorFilter(getResources().getColor(R.color.grey_icon_unselected));
                 draftListview.setVisibility(View.VISIBLE);
-                if(draftList.size()==0){
+                if (draftList.size() == 0) {
                     noDraftTextView.setVisibility(View.VISIBLE);
                     noArticleTextView.setVisibility(View.GONE);
                     noCommentsTextView.setVisibility(View.GONE);
                     noReviewsTextView.setVisibility(View.GONE);
-                }
-                else {
+                } else {
                     noDraftTextView.setVisibility(View.GONE);
                     noArticleTextView.setVisibility(View.GONE);
                     noCommentsTextView.setVisibility(View.GONE);
@@ -274,16 +283,15 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                 commentsImageView.setColorFilter(getResources().getColor(R.color.grey_icon_unselected));
                 reviewImageView.setColorFilter(getResources().getColor(R.color.grey_icon_unselected));
                 draftListview.setVisibility(View.GONE);
-                if (publishedArticleListView.getHeaderViewsCount()==0) {
-                    publishedArticleListView.addHeaderView(header,null,false);
+                if (publishedArticleListView.getHeaderViewsCount() == 0) {
+                    publishedArticleListView.addHeaderView(header, null, false);
                 }
-                if(articleDataModelsNew.size()==0){
+                if (articleDataModelsNew.size() == 0) {
                     noArticleTextView.setVisibility(View.VISIBLE);
                     noDraftTextView.setVisibility(View.GONE);
                     noCommentsTextView.setVisibility(View.GONE);
                     noReviewsTextView.setVisibility(View.GONE);
-                }
-                else {
+                } else {
                     noDraftTextView.setVisibility(View.GONE);
                     noArticleTextView.setVisibility(View.GONE);
                     noCommentsTextView.setVisibility(View.GONE);
@@ -304,16 +312,15 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                 reviewImageView.setColorFilter(getResources().getColor(R.color.grey_icon_unselected));
                 draftListview.setVisibility(View.GONE);
                 publishedArticleListView.setVisibility(View.GONE);
-                if (commentsListView.getHeaderViewsCount()==0) {
-                    commentsListView.addHeaderView(header,null,false);
+                if (commentsListView.getHeaderViewsCount() == 0) {
+                    commentsListView.addHeaderView(header, null, false);
                 }
-                if(commentList.size()==0){
+                if (commentList.size() == 0) {
                     noDraftTextView.setVisibility(View.GONE);
                     noArticleTextView.setVisibility(View.GONE);
                     noCommentsTextView.setVisibility(View.VISIBLE);
                     noReviewsTextView.setVisibility(View.GONE);
-                }
-                else {
+                } else {
                     noDraftTextView.setVisibility(View.GONE);
                     noArticleTextView.setVisibility(View.GONE);
                     noCommentsTextView.setVisibility(View.GONE);
@@ -334,16 +341,16 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                 draftListview.setVisibility(View.GONE);
                 publishedArticleListView.setVisibility(View.GONE);
                 commentsListView.setVisibility(View.GONE);
-                if (reviewsListView.getHeaderViewsCount()==0) {
-                reviewsListView.addHeaderView(header,null,false);}
+                if (reviewsListView.getHeaderViewsCount() == 0) {
+                    reviewsListView.addHeaderView(header, null, false);
+                }
                 header.setClickable(false);
-                if(reviewList.size()==0){
+                if (reviewList.size() == 0) {
                     noDraftTextView.setVisibility(View.GONE);
                     noArticleTextView.setVisibility(View.GONE);
                     noCommentsTextView.setVisibility(View.GONE);
                     noReviewsTextView.setVisibility(View.VISIBLE);
-                }
-                else {
+                } else {
                     noDraftTextView.setVisibility(View.GONE);
                     noArticleTextView.setVisibility(View.GONE);
                     noCommentsTextView.setVisibility(View.GONE);
@@ -377,7 +384,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                 boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
                 if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && isLastPageReached) {
                     mLodingView.setVisibility(View.VISIBLE);
-                  hitPublishedArticleApi();
+                    hitPublishedArticleApi();
                     isReuqestRunning = true;
                 }
             }
@@ -399,8 +406,9 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         FollowersLinearLL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent= new Intent(BloggerDashboardActivity.this,FollowersAndFollowingListActivity.class);
-                intent.putExtra(AppConstants.FOLLOW_LIST_TYPE,AppConstants.FOLLOWER_LIST);
+                Intent intent = new Intent(BloggerDashboardActivity.this, FollowersAndFollowingListActivity.class);
+                intent.putExtra(AppConstants.FOLLOW_LIST_TYPE, AppConstants.FOLLOWER_LIST);
+                intent.putExtra(AppConstants.USER_ID_FOR_FOLLOWING_FOLLOWERS, userId);
                 startActivity(intent);
 
             }
@@ -408,8 +416,9 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         FollowingLinearLL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent= new Intent(BloggerDashboardActivity.this,FollowersAndFollowingListActivity.class);
-                intent.putExtra(AppConstants.FOLLOW_LIST_TYPE,AppConstants.FOLLOWING_LIST);
+                Intent intent = new Intent(BloggerDashboardActivity.this, FollowersAndFollowingListActivity.class);
+                intent.putExtra(AppConstants.FOLLOW_LIST_TYPE, AppConstants.FOLLOWING_LIST);
+                intent.putExtra(AppConstants.USER_ID_FOR_FOLLOWING_FOLLOWERS, userId);
                 startActivity(intent);
             }
         });
@@ -439,15 +448,27 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         });
     }
 
+
+    private void checkFollowingStatusAPI() {
+        Retrofit retro = BaseApplication.getInstance().getRetrofit();
+        ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
+        ArticleDetailRequest articleDetailRequest = new ArticleDetailRequest();
+        articleDetailRequest.setArticleId("");
+        Call<ArticleDetailResponse> callBookmark = articleDetailsAPI.checkFollowingBookmarkStatus("0", userId);
+        callBookmark.enqueue(isFollowedResponseCallback);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
         getBloggerDashboardDetails();
         hitDraftListingApi();
         hitPublishedArticleApi();
-        if(!isLastPageCommentsReached)
-        {   hitCommentsApi();}
+        if (!isLastPageCommentsReached) {
+            hitCommentsApi();
+        }
         hitReviewApi();
+        checkFollowingStatusAPI();
 
         draftListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -499,11 +520,12 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                 if (position == 0) {
                     // Header Item
 
-                }else {
-                Intent intent=new Intent(BloggerDashboardActivity.this,ArticlesAndBlogsDetailsActivity.class);
-                intent.putExtra(Constants.ARTICLE_ID,commentList.get(position-1).getArticleId());
-                intent.putExtra(Constants.AUTHOR_ID,commentList.get(position-1).getUserId());
-                startActivity(intent);}
+                } else {
+                    Intent intent = new Intent(BloggerDashboardActivity.this, ArticlesAndBlogsDetailsActivity.class);
+                    intent.putExtra(Constants.ARTICLE_ID, commentList.get(position - 1).getArticleId());
+                    intent.putExtra(Constants.AUTHOR_ID, commentList.get(position - 1).getUserId());
+                    startActivity(intent);
+                }
             }
         });
         commentsListView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -518,7 +540,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                 if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestCommentsRunning && !isLastPageCommentsReached) {
                     mLodingView.setVisibility(View.VISIBLE);
                     //caching enabled only for page 1. so disabling it here for all other pages by passing false.
-                 //  hitArticleListingApi(nextPageNumber, sortType, false);
+                    //  hitArticleListingApi(nextPageNumber, sortType, false);
                     hitCommentsApi();
                     isReuqestCommentsRunning = true;
                 }
@@ -530,8 +552,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                 if (position == 0) {
                     // Header Item
 
-                }
-                else {
+                } else {
                     Bundle bundle = new Bundle();
                     Intent intent = new Intent(BloggerDashboardActivity.this, BusinessDetailsActivity.class);
                     if (reviewList.get(position - 1).getType().equals("business")) {
@@ -550,7 +571,8 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                     }
                     intent.putExtras(bundle);
                     startActivity(intent);
-                } }
+                }
+            }
         });
     }
 
@@ -578,7 +600,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
             return;
         }
 
-        Call<ReviewResponse> call = getReviewList.getUserReview(AppConstants.LIVE_URL + "apiservices/getUserReviews?userId="+userId);
+        Call<ReviewResponse> call = getReviewList.getUserReview(AppConstants.LIVE_URL + "apiservices/getUserReviews?userId=" + userId);
 //asynchronous call
         call.enqueue(new Callback<ReviewResponse>() {
                          @Override
@@ -618,7 +640,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
             showToast(getString(R.string.error_network));
             return;
         }
-        Call<UserCommentsResponse> call = getCommentsAPI.getUserComments(AppConstants.LIVE_URL+"v1/comments/"+userId+"?limit="+limit+ "&pagination=" + paginationValue);
+        Call<UserCommentsResponse> call = getCommentsAPI.getUserComments(AppConstants.LIVE_URL + "v1/comments/" + userId + "?limit=" + limit + "&pagination=" + paginationValue);
 //asynchronous call
         call.enqueue(new Callback<UserCommentsResponse>() {
                          @Override
@@ -635,7 +657,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                                      Log.i("Draft message", responseModel.getData().getMsg());
                                  }
                                  processCommentsResponse(responseModel);
-                        isReuqestCommentsRunning=false;
+                                 isReuqestCommentsRunning = false;
                              }
                          }
 
@@ -662,8 +684,8 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
             return;
         }
         int from = (nextPageNumber - 1) * 15 + 1;
-      //  Call<ArticleListingResponse> call = getPublishedArticles.getPublishedArticles(AppConstants.LIVE_URL+"v1/articles/user/"+ SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId()+"?sort=0&start="+from+"&end="+(from+14));
-        Call<ArticleListingResponse> call = getPublishedArticles.getPublishedArticles(AppConstants.LIVE_URL+"v1/articles/user/"+ userId+"?sort=0&start="+from+"&end="+(from+14));
+        //  Call<ArticleListingResponse> call = getPublishedArticles.getPublishedArticles(AppConstants.LIVE_URL+"v1/articles/user/"+ SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId()+"?sort=0&start="+from+"&end="+(from+14));
+        Call<ArticleListingResponse> call = getPublishedArticles.getPublishedArticles(AppConstants.LIVE_URL + "v1/articles/user/" + userId + "?sort=0&start=" + from + "&end=" + (from + 14));
 //asynchronous call
         call.enqueue(new Callback<ArticleListingResponse>() {
                          @Override
@@ -737,6 +759,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
 
                              }
                          }
+
                          @Override
                          public void onFailure(Call<DraftListResponse> call, Throwable t) {
                              removeProgressDialog();
@@ -796,12 +819,42 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
 
     @Override
     public void onClick(final View v) {
-        v.post(new Runnable() {
-            @Override
-            public void run() {
-                showPopupMenu(v);
-            }
-        });
+        switch (v.getId()) {
+            case R.id.unfollowTextView:
+            case R.id.followTextView:
+                hitFollowUnfollowAPI();
+                break;
+            default:
+                v.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        showPopupMenu(v);
+                    }
+                });
+                break;
+        }
+    }
+
+    private void hitFollowUnfollowAPI() {
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        FollowAPI followAPI = retrofit.create(FollowAPI.class);
+        FollowUnfollowUserRequest request = new FollowUnfollowUserRequest();
+        request.setFollowerId(userId);
+
+        if (isFollowing) {
+            isFollowing = false;
+            followButton.setVisibility(View.VISIBLE);
+            unfollowButton.setVisibility(View.INVISIBLE);
+            Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.unfollowUser(request);
+            followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback);
+        } else {
+            isFollowing = true;
+            followButton.setVisibility(View.INVISIBLE);
+            unfollowButton.setVisibility(View.VISIBLE);
+            Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.followUser(request);
+            followUnfollowUserResponseCall.enqueue(followUserResponseCallback);
+        }
+
     }
 
     private void showPopupMenu(View view) {
@@ -832,7 +885,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     private void processDraftResponse(DraftListResponse responseModel) {
         draftList = responseModel.getData().getResult();
 
-        if (draftList.size() == 0&&draftListview.getVisibility()==View.VISIBLE) {
+        if (draftList.size() == 0 && draftListview.getVisibility() == View.VISIBLE) {
             noDraftTextView.setVisibility(View.VISIBLE);
         } else {
 
@@ -853,7 +906,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
             if (null != articleDataModelsNew && !articleDataModelsNew.isEmpty()) {
                 //No more next results for search from pagination
 
-            } else  {
+            } else {
                 // No results for search
 
                 articleDataModelsNew = dataList;
@@ -861,7 +914,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                 publishedArticleListView.setAdapter(articlesListingAdapter);
                 articlesListingAdapter.setListData(dataList);
                 articlesListingAdapter.notifyDataSetChanged();
-                if(publishedArticleListView.getVisibility()==View.VISIBLE){
+                if (publishedArticleListView.getVisibility() == View.VISIBLE) {
                     noArticleTextView.setVisibility(View.VISIBLE);
                 }
 //                noDrafts.setVisibility(View.VISIBLE);
@@ -893,12 +946,12 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     }
 
     private void processCommentsResponse(UserCommentsResponse responseModel) {
-     //   commentList = responseModel.getData().getResult();
-        ArrayList<UserCommentsResult> dataCommentList =responseModel.getData().getResult();
+        //   commentList = responseModel.getData().getResult();
+        ArrayList<UserCommentsResult> dataCommentList = responseModel.getData().getResult();
 
-        if (dataCommentList.size() == 0 && commentsListView.getVisibility()==View.VISIBLE) {
-            isLastPageCommentsReached=true;
-          //  noDrafts.setVisibility(View.VISIBLE);
+        if (dataCommentList.size() == 0 && commentsListView.getVisibility() == View.VISIBLE) {
+            isLastPageCommentsReached = true;
+            //  noDrafts.setVisibility(View.VISIBLE);
             if (null != commentList && !commentList.isEmpty()) {
                 //No more next results for search from pagination
 
@@ -911,7 +964,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                 noCommentsTextView.setVisibility(View.VISIBLE);
             }
         } else {
-          //  noDrafts.setVisibility(View.GONE);
+            //  noDrafts.setVisibility(View.GONE);
             commentsListAdapter = new UserCommentsAdapter(this, dataCommentList);
             commentsListView.setAdapter(commentsListAdapter);
             commentsListAdapter.notifyDataSetChanged();
@@ -931,11 +984,11 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     private void processReviewsResponse(ReviewResponse responseModel) {
         reviewList = responseModel.getData().getResult();
 
-        if (reviewList.size() == 0 && reviewsListView.getVisibility()==View.VISIBLE) {
+        if (reviewList.size() == 0 && reviewsListView.getVisibility() == View.VISIBLE) {
             noReviewsTextView.setVisibility(View.VISIBLE);
-         //   noDrafts.setVisibility(View.VISIBLE);
+            //   noDrafts.setVisibility(View.VISIBLE);
         } else {
-        //    noDrafts.setVisibility(View.GONE);
+            //    noDrafts.setVisibility(View.GONE);
             reviewsListAdapter = new ReviewsListAdapter(this, reviewList);
             reviewsListView.setAdapter(reviewsListAdapter);
             reviewsListAdapter.notifyDataSetChanged();
@@ -1038,7 +1091,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
             showToast(getString(R.string.error_network));
             return;
         }
-    //    Call<UserDetailResponse> call = bloggerDashboardAPI.getBloggerData(AppConstants.LIVE_URL + "v1/users/dashboard/" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
+        //    Call<UserDetailResponse> call = bloggerDashboardAPI.getBloggerData(AppConstants.LIVE_URL + "v1/users/dashboard/" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
 
         Call<UserDetailResponse> call = bloggerDashboardAPI.getBloggerData(AppConstants.LIVE_URL + "v1/users/dashboard/" + userId);
         //asynchronous call
@@ -1064,11 +1117,15 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                                  firstName = responseData.getData().getResult().getFirstName();
                                  lastName = responseData.getData().getResult().getLastName();
                                  phoneNumber = responseData.getData().getResult().getPhoneNumber();
-                                 if (responseData.getData().getResult().getUserBio()==null || responseData.getData().getResult().getUserBio().isEmpty())
-                                 {
+                                 if (!StringUtils.isNullOrEmpty(responseData.getData().getResult().getProfilePicUrl().getClientApp())) {
+                                     Picasso.with(BloggerDashboardActivity.this).load(responseData.getData().getResult().getProfilePicUrl().getClientApp())
+                                             .placeholder(R.drawable.family_xxhdpi).error(R.drawable.family_xxhdpi).transform(new RoundedTransformation()).into(bloggerImageView);
+                                 }
+
+                                 if (responseData.getData().getResult().getUserBio() == null || responseData.getData().getResult().getUserBio().isEmpty()) {
                                      userBio.setVisibility(View.GONE);
                                      moreTextView.setVisibility(View.GONE);
-                                 }else{
+                                 } else {
                                      userBio.setText(responseData.getData().getResult().getUserBio());
                                      userBio.setVisibility(View.VISIBLE);
                                  }
@@ -1090,7 +1147,10 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
 
                          @Override
                          public void onFailure(Call<UserDetailResponse> call, Throwable t) {
-
+                             removeProgressDialog();
+                             showToast(getString(R.string.server_went_wrong));
+                             Crashlytics.logException(t);
+                             Log.d("MC4kException", Log.getStackTraceString(t));
                          }
                      }
         );
@@ -1244,7 +1304,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         ImageUploadAPI imageUploadAPI = retro.create(ImageUploadAPI.class);
 
         Call<ImageUploadResponse> call = imageUploadAPI.uploadImage(//userId,
-                  imageType,
+                imageType,
                 requestBodyFile);
         //asynchronous call
         call.enqueue(new Callback<ImageUploadResponse>() {
@@ -1305,9 +1365,10 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if(isPrivateProfile)
-        {  MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.user_profile_menu, menu);}
+        if (isPrivateProfile) {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.user_profile_menu, menu);
+        }
         return true;
     }
 
@@ -1322,12 +1383,12 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                 return true;
             case R.id.settings:
 
-               // showHelp();
-                Intent intent1= new Intent(BloggerDashboardActivity.this, SettingsActivity.class);
-                intent1.putExtra("load_fragment",Constants.SETTINGS_FRAGMENT);
-                intent1.putExtra("bio",Bio);
-                intent1.putExtra("firstName",firstName);
-                intent1.putExtra("lastName",lastName);
+                // showHelp();
+                Intent intent1 = new Intent(BloggerDashboardActivity.this, SettingsActivity.class);
+                intent1.putExtra("load_fragment", Constants.SETTINGS_FRAGMENT);
+                intent1.putExtra("bio", Bio);
+                intent1.putExtra("firstName", firstName);
+                intent1.putExtra("lastName", lastName);
                 startActivity(intent1);
 
                 return true;
@@ -1351,11 +1412,13 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+
 //        Intent intent = new Intent(BloggerDashboardActivity.this, DashboardActivity.class);
 //        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 //        startActivity(intent);
 //        finish();
     }
+
     private void startCropActivity(@NonNull Uri uri) {
         String destinationFileName = SAMPLE_CROPPED_IMAGE_NAME + ".jpg";
         Log.e("instartCropActivity", "test");
@@ -1367,4 +1430,113 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
 
 
     }
+
+    private Callback<ArticleDetailResponse> isFollowedResponseCallback = new Callback<ArticleDetailResponse>() {
+        @Override
+        public void onResponse(Call<ArticleDetailResponse> call, retrofit2.Response<ArticleDetailResponse> response) {
+            if (response == null || null == response.body()) {
+                showToast("Something went wrong from server");
+                return;
+            }
+
+            ArticleDetailResponse responseData = (ArticleDetailResponse) response.body();
+            if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+
+                if (SharedPrefUtils.getUserDetailModel(BloggerDashboardActivity.this).getDynamoId().equals(userId)) {
+//                    followButton.setVisibility(View.INVISIBLE);
+//                    unfollowButton.setVisibility(View.INVISIBLE);
+                } else {
+                    followButton.setEnabled(true);
+                    unfollowButton.setEnabled(true);
+                    if ("0".equals(responseData.getData().getResult().getIsFollowed())) {
+                        followButton.setVisibility(View.VISIBLE);
+                        unfollowButton.setVisibility(View.INVISIBLE);
+                        isFollowing = false;
+                    } else {
+                        followButton.setVisibility(View.INVISIBLE);
+                        unfollowButton.setVisibility(View.VISIBLE);
+                        isFollowing = true;
+                    }
+                }
+            } else {
+                showToast(getString(R.string.server_went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<ArticleDetailResponse> call, Throwable t) {
+            if (t instanceof UnknownHostException) {
+                showToast(getString(R.string.error_network));
+            } else if (t instanceof SocketTimeoutException) {
+                showToast("connection timed out");
+            } else {
+                showToast(getString(R.string.server_went_wrong));
+            }
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
+    Callback<FollowUnfollowUserResponse> followUserResponseCallback = new Callback<FollowUnfollowUserResponse>() {
+        @Override
+        public void onResponse(Call<FollowUnfollowUserResponse> call, retrofit2.Response<FollowUnfollowUserResponse> response) {
+            if (response == null || response.body() == null) {
+                showToast(getString(R.string.went_wrong));
+                return;
+            }
+            try {
+                FollowUnfollowUserResponse responseData = (FollowUnfollowUserResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+
+                } else {
+                    followButton.setVisibility(View.VISIBLE);
+                    unfollowButton.setVisibility(View.INVISIBLE);
+                    isFollowing = false;
+                }
+            } catch (Exception e) {
+                showToast(getString(R.string.server_went_wrong));
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<FollowUnfollowUserResponse> call, Throwable t) {
+            showToast(getString(R.string.server_went_wrong));
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
+    Callback<FollowUnfollowUserResponse> unfollowUserResponseCallback = new Callback<FollowUnfollowUserResponse>() {
+        @Override
+        public void onResponse(Call<FollowUnfollowUserResponse> call, retrofit2.Response<FollowUnfollowUserResponse> response) {
+            if (response == null || response.body() == null) {
+                showToast(getString(R.string.went_wrong));
+                return;
+            }
+            try {
+                FollowUnfollowUserResponse responseData = (FollowUnfollowUserResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+
+                } else {
+                    followButton.setVisibility(View.INVISIBLE);
+                    unfollowButton.setVisibility(View.VISIBLE);
+                    isFollowing = true;
+                }
+            } catch (Exception e) {
+                showToast(getString(R.string.server_went_wrong));
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<FollowUnfollowUserResponse> call, Throwable t) {
+            showToast(getString(R.string.server_went_wrong));
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
 }

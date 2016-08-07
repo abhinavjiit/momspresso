@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +13,11 @@ import android.widget.TextView;
 
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
+import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.Topics;
+import com.mycity4kids.ui.activity.ArticleListingActivity;
+import com.mycity4kids.ui.activity.CityBestArticleListingActivity;
+import com.mycity4kids.ui.activity.FilteredTopicsArticleListingActivity;
 import com.mycity4kids.widget.TopicsExpandableListView;
 
 import java.util.ArrayList;
@@ -52,7 +57,7 @@ public class FilterTopicsParentExpandableListAdapter extends BaseExpandableListA
     }
 
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        Log.d(LOG_TAG, "getChildView: groupPositon: " + groupPosition + "; childPosition: " + childPosition);
+//        Log.d(LOG_TAG, "getChildView: groupPositon: " + groupPosition + "; childPosition: " + childPosition);
         View v = null;
         if (listViewCache[groupPosition] != null)
             v = listViewCache[groupPosition];
@@ -63,6 +68,7 @@ public class FilterTopicsParentExpandableListAdapter extends BaseExpandableListA
             adapter.setTopicsData(createGroupList(groupPosition), createChildList(groupPosition));
             dev.setAdapter(adapter);
             dev.setOnGroupClickListener(new Level2GroupExpandListener(groupPosition));
+            dev.setOnChildClickListener(new Level2ChildClickListener(groupPosition));
             listViewCache[groupPosition] = dev;
             v = dev;
         }
@@ -86,7 +92,7 @@ public class FilterTopicsParentExpandableListAdapter extends BaseExpandableListA
     }
 
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        Log.d(LOG_TAG, "getGroupView: groupPositon: " + groupPosition + "; isExpanded: " + isExpanded);
+//        Log.d(LOG_TAG, "getGroupView: groupPositon: " + groupPosition + "; isExpanded: " + isExpanded);
         View v = null;
         if (convertView != null)
             v = convertView;
@@ -98,11 +104,17 @@ public class FilterTopicsParentExpandableListAdapter extends BaseExpandableListA
         if (gt != null)
             parentTopicName.setText(gt.getTitle());
 
-        if (isExpanded) {
-            groupCheckedTxv.setImageResource(R.drawable.uparrow);
+        if (topicList.get(groupPosition).getChild().size() == 0) {
+            groupCheckedTxv.setImageResource(0);
         } else {
-            groupCheckedTxv.setImageResource(R.drawable.downarrow);
+            if (isExpanded) {
+                groupCheckedTxv.setImageResource(R.drawable.uparrow);
+            } else {
+                groupCheckedTxv.setImageResource(R.drawable.downarrow);
+            }
         }
+
+//        Log.d("MainCategory ChildCount", "" + getChildrenCount(groupPosition));
         return v;
     }
 
@@ -195,11 +207,49 @@ public class FilterTopicsParentExpandableListAdapter extends BaseExpandableListA
                 TopicsExpandableListView dev = (TopicsExpandableListView) parent;
                 dev.setRows(calculateRowCount(level1GroupPosition, parent));
             }
-            Log.d(LOG_TAG, "onGroupClick");
+//            Log.d(LOG_TAG, "onGroupClick");
+//            Log.d("SubCategory ChildCount", "" + map.get(topicList.get(level1GroupPosition)).get(groupPosition).getChild().size());
+            if (map.get(topicList.get(level1GroupPosition)).get(groupPosition).getChild().size() == 0) {
+//                Log.d("SubCategory Child", "" + map.get(topicList.get(level1GroupPosition)).get(groupPosition).getTitle());
+
+                switch (map.get(topicList.get(level1GroupPosition)).get(groupPosition).getId()) {
+                    case "recent":
+                    case "popular":
+                    case "trending":
+                        Intent intent_1 = new Intent(context, ArticleListingActivity.class);
+                        intent_1.putExtra(Constants.SORT_TYPE, map.get(topicList.get(level1GroupPosition)).get(groupPosition).getId());
+                        context.startActivity(intent_1);
+                        break;
+                    default:
+                        Intent intent_3 = new Intent(context, FilteredTopicsArticleListingActivity.class);
+                        intent_3.putExtra("selectedTopics", map.get(topicList.get(level1GroupPosition)).get(groupPosition).getId());
+                        context.startActivity(intent_3);
+                        break;
+                }
+
+            }
             topExpList.requestLayout();
             return true;
         }
 
+    }
+
+    class Level2ChildClickListener implements ExpandableListView.OnChildClickListener {
+        private int level1GroupPosition;
+
+        public Level2ChildClickListener(int level1GroupPosition) {
+            this.level1GroupPosition = level1GroupPosition;
+        }
+
+        @Override
+        public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+//            Log.d("SubSub ChildCount", "" + map.get(topicList.get(level1GroupPosition)).get(groupPosition).getChild().get(childPosition));
+//            Log.d("SubSub Title", "" + map.get(topicList.get(level1GroupPosition)).get(groupPosition).getChild().get(childPosition).getTitle());
+            Intent intent = new Intent(context, FilteredTopicsArticleListingActivity.class);
+            intent.putExtra("selectedTopics", map.get(topicList.get(level1GroupPosition)).get(groupPosition).getChild().get(childPosition).getId());
+            context.startActivity(intent);
+            return false;
+        }
     }
 
     public String getAllSelectedElements() {
@@ -230,10 +280,10 @@ public class FilterTopicsParentExpandableListAdapter extends BaseExpandableListA
             }
         }
         if (StringUtils.isNullOrEmpty(sb.toString())) {
-            Log.d("CSV = ", "NOTHING SELECTED");
+//            Log.d("CSV = ", "NOTHING SELECTED");
             return sb.toString();
         } else {
-            Log.d("CSV = ", sb.substring(1));
+//            Log.d("CSV = ", sb.substring(1));
             return sb.substring(1);
         }
 
