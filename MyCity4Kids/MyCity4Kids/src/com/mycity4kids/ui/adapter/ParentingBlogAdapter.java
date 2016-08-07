@@ -75,20 +75,20 @@ public class ParentingBlogAdapter extends BaseAdapter {
         ViewHolder holder = null;
         if (view == null) {
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
-            view = inflater.inflate(R.layout.blog_list_item, viewGroup, false);
+            view = inflater.inflate(R.layout.contributor_list_item, viewGroup, false);
 
             holder = new ViewHolder();
-            holder.bloggerName = (TextView) view.findViewById(R.id.blogger_name);
-            holder.authorType = (TextView) view.findViewById(R.id.author_type);
-            holder.authorRank = (TextView) view.findViewById(R.id.blog_rank);
-            holder.shareBlogImageView = (ImageView) view.findViewById(R.id.shareBlogImageView);
-            holder.bloggerCover = (ImageView) view.findViewById(R.id.blogger_bg);
+            holder.bloggerName = (TextView) view.findViewById(R.id.bloggerName);
+            holder.authorType = (TextView) view.findViewById(R.id.userType);
+            holder.authorRank = (TextView) view.findViewById(R.id.rank);
+            holder.shareBlogImageView = (ImageView) view.findViewById(R.id.bloggerImageView);
+           // holder.bloggerCover = (ImageView) view.findViewById(R.id.blogger_bg);
             holder.bloggerFollow = (TextView) view.findViewById(R.id.blog_follow_text);
-            holder.description = (TextView) view.findViewById(R.id.blogger_desc);
-            holder.moreDesc = (TextView) view.findViewById(R.id.more_text);
-            holder.recentArticleLayout = (LinearLayout) view.findViewById(R.id.recent_article_frame);
-            holder.articleBlock = (LinearLayout) view.findViewById(R.id.article_block);
-            holder.aboutLayout = (RelativeLayout) view.findViewById(R.id.about_desc_layout);
+            holder.bloggerBio = (TextView) view.findViewById(R.id.bloggerBio);
+          //  holder.moreDesc = (TextView) view.findViewById(R.id.more_text);
+           // holder.recentArticleLayout = (LinearLayout) view.findViewById(R.id.recent_article_frame);
+          //  holder.articleBlock = (LinearLayout) view.findViewById(R.id.article_block);
+          //  holder.aboutLayout = (RelativeLayout) view.findViewById(R.id.about_desc_layout);
 
             view.setTag(holder);
         } else {
@@ -100,9 +100,9 @@ public class ParentingBlogAdapter extends BaseAdapter {
         holder.authorType.setText(datalist.get(position).getAuthor_type().toUpperCase());
         holder.authorType.setTextColor(Color.parseColor(datalist.get(position).getAuthor_color_code()));
 
-        holder.description.invalidate();
+        holder.bloggerBio.invalidate();
         if (datalist.get(position).getMaxLineCount() == 0) {
-            datalist.get(position).setMaxLineCount(holder.description.getLineCount());
+            datalist.get(position).setMaxLineCount(holder.bloggerBio.getLineCount());
         }
 
 //        if (!StringUtils.isNullOrEmpty(datalist.get(position).getProfile_image())) {
@@ -119,7 +119,7 @@ public class ParentingBlogAdapter extends BaseAdapter {
             holder.aboutLayout.setVisibility(View.GONE);
         } else {
             holder.aboutLayout.setVisibility(View.VISIBLE);
-            holder.description.setText(datalist.get(position).getAbout_user());
+            holder.bloggerBio.setText(datalist.get(position).getAbout_user());
         }
 
         if (!StringUtils.isNullOrEmpty(String.valueOf(datalist.get(position).getAuthor_rank()))) {
@@ -163,7 +163,7 @@ public class ParentingBlogAdapter extends BaseAdapter {
                 ((DashboardActivity) context).followAPICall_List(String.valueOf(datalist.get(position).getId()), position);
             }
         });
-
+/*
         if (datalist.get(position).getMaxLineCount() >= 4) {
             holder.moreDesc.setVisibility(View.VISIBLE);
             holder.description.setMaxLines(4);
@@ -173,10 +173,10 @@ public class ParentingBlogAdapter extends BaseAdapter {
             holder.description.setMaxLines(4);
             holder.description.setEllipsize(null);
             holder.moreDesc.setVisibility(View.GONE);
-        }
+        }*/
 
         final ViewHolder finalHolder = holder;
-        holder.moreDesc.setOnClickListener(new View.OnClickListener() {
+        /*holder.moreDesc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (finalHolder.moreDesc.getText().toString().equalsIgnoreCase("More")) {
@@ -189,7 +189,7 @@ public class ParentingBlogAdapter extends BaseAdapter {
                     finalHolder.moreDesc.setText("More");
                 }
             }
-        });
+        });*/
 
 
         //author: hemant@mc4k.com -- Share URL for blog not in response at present
@@ -237,7 +237,7 @@ public class ParentingBlogAdapter extends BaseAdapter {
         ImageView shareBlogImageView;
         ImageView bloggerCover;
         TextView bloggerFollow;
-        TextView description;
+        TextView bloggerBio;
         TextView moreDesc;
         LinearLayout recentArticleLayout;
         LinearLayout articleBlock;

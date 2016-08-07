@@ -18,16 +18,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/white_color"
+        android:background="#80000000"
         android:paddingBottom="5dp"
         android:visibility="gone">
 
         <View
             android:id="@+id/sepaartorView"
             android:layout_width="match_parent"
-            android:layout_height="0.7dp"
-            android:layout_marginBottom="5dp"
-            android:background="#5582F5" />
+            android:layout_height="1dp"
+            android:layout_marginBottom="1dp"
+            android:background="#DEDEDE" />
 
         <TextView
             android:id="@+id/txvLoadMore"
@@ -39,7 +39,7 @@
             android:gravity="center"
             android:padding="5dp"
             android:text="@string/loading_txt"
-            android:textColor="@color/black_color" />
+            android:textColor="@color/white_color" />
 
         <ImageView
             android:id="@+id/imgLoader"

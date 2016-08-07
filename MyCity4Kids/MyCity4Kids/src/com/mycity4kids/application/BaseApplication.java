@@ -245,6 +245,7 @@ public class BaseApplication extends Application {
 
                 requestBuilder.addHeader("id", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
                 requestBuilder.addHeader("mc4kToken", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
+                requestBuilder.addHeader("agent", "web");
 
 //                if (original.method().equals("GET")) {
 //                    HttpUrl url = originalHttpUrl.newBuilder()

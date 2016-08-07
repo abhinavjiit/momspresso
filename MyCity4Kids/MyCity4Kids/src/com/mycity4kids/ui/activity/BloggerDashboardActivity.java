@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -64,6 +65,7 @@ import com.mycity4kids.ui.adapter.ReviewsListAdapter;
 import com.mycity4kids.ui.adapter.UserCommentsAdapter;
 import com.mycity4kids.utils.RoundedTransformation;
 import com.squareup.picasso.Picasso;
+import com.yalantis.ucrop.UCrop;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -119,6 +121,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     private int nextPageNumber = 1;
     RelativeLayout mLodingView;
     private boolean isReuqestRunning = false;
+    private boolean isReuqestCommentsRunning = false;
     boolean isLastPageReached = true;
     private ProgressBar progressBar;
     ArrayList<ArticleListingResult> articleDataModelsNew;
@@ -129,6 +132,10 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     TextView follow,following;
     LinearLayout FollowersLinearLL,FollowingLinearLL;
     View header;
+    private static final String SAMPLE_CROPPED_IMAGE_NAME = "SampleCropImage";
+    private int limit = 10;
+    private String paginationValue = "";
+    boolean isLastPageCommentsReached = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -148,6 +155,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         reviewsListView = (ListView) findViewById(R.id.reviewsListView);
         mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        addDraft = (ImageView) findViewById(R.id.addDraft);
       //  noDrafts = (TextView) findViewById(R.id.noDraftsTextView);
         if (isPrivateProfile)
         {     header = getLayoutInflater().inflate(R.layout.header_blogger_dashboard, null);}
@@ -405,6 +413,30 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                 startActivity(intent);
             }
         });
+        addDraft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Build.VERSION.SDK_INT > 15) {
+                    Intent intent1 = new Intent(BloggerDashboardActivity.this, EditorPostActivity.class);
+                    Bundle bundle5 = new Bundle();
+                    bundle5.putString(EditorPostActivity.TITLE_PARAM, "");
+                    bundle5.putString(EditorPostActivity.CONTENT_PARAM, "");
+                    bundle5.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
+                            getString(R.string.example_post_title_placeholder));
+                    bundle5.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
+                            getString(R.string.example_post_content_placeholder));
+                    bundle5.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
+                    bundle5.putString("from", "DraftListViewActivity");
+                    intent1.putExtras(bundle5);
+                    startActivity(intent1);
+                } else {
+                    Intent viewIntent =
+                            new Intent("android.intent.action.VIEW",
+                                    Uri.parse("http://www.mycity4kids.com/parenting/admin/setupablog"));
+                    startActivity(viewIntent);
+                }
+            }
+        });
     }
 
     @Override
@@ -413,7 +445,8 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         getBloggerDashboardDetails();
         hitDraftListingApi();
         hitPublishedArticleApi();
-        hitCommentsApi();
+        if(!isLastPageCommentsReached)
+        {   hitCommentsApi();}
         hitReviewApi();
 
         draftListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -471,6 +504,24 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                 intent.putExtra(Constants.ARTICLE_ID,commentList.get(position-1).getArticleId());
                 intent.putExtra(Constants.AUTHOR_ID,commentList.get(position-1).getUserId());
                 startActivity(intent);}
+            }
+        });
+        commentsListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+                boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
+                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestCommentsRunning && !isLastPageCommentsReached) {
+                    mLodingView.setVisibility(View.VISIBLE);
+                    //caching enabled only for page 1. so disabling it here for all other pages by passing false.
+                 //  hitArticleListingApi(nextPageNumber, sortType, false);
+                    hitCommentsApi();
+                    isReuqestCommentsRunning = true;
+                }
             }
         });
         reviewsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -567,7 +618,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
             showToast(getString(R.string.error_network));
             return;
         }
-        Call<UserCommentsResponse> call = getCommentsAPI.getUserComments(AppConstants.LIVE_URL+"v1/comments/"+userId);
+        Call<UserCommentsResponse> call = getCommentsAPI.getUserComments(AppConstants.LIVE_URL+"v1/comments/"+userId+"?limit="+limit+ "&pagination=" + paginationValue);
 //asynchronous call
         call.enqueue(new Callback<UserCommentsResponse>() {
                          @Override
@@ -584,7 +635,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                                      Log.i("Draft message", responseModel.getData().getMsg());
                                  }
                                  processCommentsResponse(responseModel);
-
+                        isReuqestCommentsRunning=false;
                              }
                          }
 
@@ -842,16 +893,37 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     }
 
     private void processCommentsResponse(UserCommentsResponse responseModel) {
-        commentList = responseModel.getData().getResult();
+     //   commentList = responseModel.getData().getResult();
+        ArrayList<UserCommentsResult> dataCommentList =responseModel.getData().getResult();
 
-        if (commentList.size() == 0 && commentsListView.getVisibility()==View.VISIBLE) {
-            noCommentsTextView.setVisibility(View.VISIBLE);
+        if (dataCommentList.size() == 0 && commentsListView.getVisibility()==View.VISIBLE) {
+            isLastPageCommentsReached=true;
           //  noDrafts.setVisibility(View.VISIBLE);
+            if (null != commentList && !commentList.isEmpty()) {
+                //No more next results for search from pagination
+
+            } else {
+                // No results for search
+                commentList = dataCommentList;
+                commentsListAdapter = new UserCommentsAdapter(this, dataCommentList);
+                commentsListView.setAdapter(commentsListAdapter);
+                commentsListAdapter.notifyDataSetChanged();
+                noCommentsTextView.setVisibility(View.VISIBLE);
+            }
         } else {
           //  noDrafts.setVisibility(View.GONE);
-            commentsListAdapter = new UserCommentsAdapter(this, commentList);
+            commentsListAdapter = new UserCommentsAdapter(this, dataCommentList);
             commentsListView.setAdapter(commentsListAdapter);
             commentsListAdapter.notifyDataSetChanged();
+            if (StringUtils.isNullOrEmpty(paginationValue)) {
+                commentList = dataCommentList;
+            } else {
+                commentList.addAll(dataCommentList);
+            }
+            paginationValue = responseModel.getData().getPagination();
+            if (AppConstants.PAGINATION_END_VALUE.equals(paginationValue)) {
+                isLastPageCommentsReached = true;
+            }
         }
 
     }
@@ -1098,9 +1170,10 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                         float actualWidth = imageBitmap.getWidth();
                         float maxHeight = 243;
                         float maxWidth = 423;
+                        startCropActivity(imageUri);
                        /* float maxHeight = 1300;
                         float maxWidth = 700;*/
-                        float imgRatio = actualWidth / actualHeight;
+                    /*    float imgRatio = actualWidth / actualHeight;
                         float maxRatio = maxWidth / maxHeight;
 
                         if (actualHeight > maxHeight || actualWidth > maxWidth) {
@@ -1128,7 +1201,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                         String path = MediaStore.Images.Media.insertImage(BloggerDashboardActivity.this.getContentResolver(), finalBitmap, "Title", null);
                         Uri imageUriTemp = Uri.parse(path);
                         File file2 = FileUtils.getFile(this, imageUriTemp);
-                        sendUploadProfileImageRequest(file2);
+                        sendUploadProfileImageRequest(file2);*/
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1136,6 +1209,18 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
 
                 }
                 break;
+            case UCrop.REQUEST_CROP: {
+                {
+                    if (resultCode == RESULT_OK) {
+                        final Uri resultUri = UCrop.getOutput(data);
+                        Log.e("resultUri", resultUri.toString());
+                        File file2 = FileUtils.getFile(this, resultUri);
+                        sendUploadProfileImageRequest(file2);
+                    } else if (resultCode == UCrop.RESULT_ERROR) {
+                        final Throwable cropError = UCrop.getError(data);
+                    }
+                }
+            }
         }
     }
 
@@ -1146,19 +1231,20 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         byte[] ba = bao.toByteArray();
         String imageString = Base64.encodeToString(ba, Base64.DEFAULT);*/
 
-        Retrofit retrofit = new Retrofit.Builder()
+       /* Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(AppConstants.LIVE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
-                .build();
+                .build();*/
+        Retrofit retro = BaseApplication.getInstance().getRetrofit();
         MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
         RequestBody requestBodyFile = RequestBody.create(MEDIA_TYPE_PNG, file);
         //     RequestBody userId = RequestBody.create(MediaType.parse("text/plain"), "" + userModel.getUser().getId());
-        RequestBody imageType = RequestBody.create(MediaType.parse("text/plain"), "jpg");
+        RequestBody imageType = RequestBody.create(MediaType.parse("text/plain"), "0");
         // prepare call in Retrofit 2.0
-        ImageUploadAPI imageUploadAPI = retrofit.create(ImageUploadAPI.class);
+        ImageUploadAPI imageUploadAPI = retro.create(ImageUploadAPI.class);
 
         Call<ImageUploadResponse> call = imageUploadAPI.uploadImage(//userId,
-                //  imageType,
+                  imageType,
                 requestBodyFile);
         //asynchronous call
         call.enqueue(new Callback<ImageUploadResponse>() {
@@ -1172,12 +1258,12 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                                  showToast(getString(R.string.toast_response_error));
                                  return;
                              } else {
-                                 if (!StringUtils.isNullOrEmpty(responseModel.getData().getUrl())) {
-                                     Log.i("IMAGE_UPLOAD_REQUEST", responseModel.getData().getUrl());
+                                 if (!StringUtils.isNullOrEmpty(responseModel.getData().getResult().getUrl())) {
+                                     Log.i("IMAGE_UPLOAD_REQUEST", responseModel.getData().getResult().getUrl());
                                  }
-                                 setProfileImage(responseModel.getData().getUrl());
+                                 setProfileImage(responseModel.getData().getResult().getUrl());
                                  //   setProfileImage(responseModel.getData().getUrl());
-                                 Picasso.with(BloggerDashboardActivity.this).load(responseModel.getData().getUrl()).placeholder(R.drawable.family_xxhdpi)
+                                 Picasso.with(BloggerDashboardActivity.this).load(responseModel.getData().getResult().getUrl()).placeholder(R.drawable.family_xxhdpi)
                                          .error(R.drawable.family_xxhdpi).transform(new RoundedTransformation()).into(bloggerImageView);
                                  showToast("Image successfully uploaded!");
                                  // ((BaseActivity) this()).showSnackbar(getView().findViewById(R.id.root), "You have successfully uploaded an image.");
@@ -1269,5 +1355,16 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
 //        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 //        startActivity(intent);
 //        finish();
+    }
+    private void startCropActivity(@NonNull Uri uri) {
+        String destinationFileName = SAMPLE_CROPPED_IMAGE_NAME + ".jpg";
+        Log.e("instartCropActivity", "test");
+
+        UCrop uCrop = UCrop.of(uri, Uri.fromFile(new File(getCacheDir(), destinationFileName)));
+        uCrop.withAspectRatio(1, 1);
+        uCrop.withMaxResultSize(300, 300);
+        uCrop.start(BloggerDashboardActivity.this);
+
+
     }
 }

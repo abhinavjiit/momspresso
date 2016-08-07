@@ -15,5 +15,14 @@ public class UserCommentData  extends BaseData{
     }
 
     ArrayList<UserCommentsResult> result;
+    public String getPagination() {
+        return pagination;
+    }
+
+    public void setPagination(String pagination) {
+        this.pagination = pagination;
+    }
+
+    String pagination;
 
 }

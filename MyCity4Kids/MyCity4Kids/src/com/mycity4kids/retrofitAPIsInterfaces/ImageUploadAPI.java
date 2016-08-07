@@ -16,9 +16,9 @@ import retrofit2.http.Part;
 public interface ImageUploadAPI {
     @Multipart
   //  @POST("apiblogs/uploadImage")
-    @POST("uploadFile")
+    @POST("v1/uploadImage/")
     Call<ImageUploadResponse> uploadImage(
           //  @Part("user_id") RequestBody user_id,
-         //   @Part("imageType") RequestBody imageType,
+            @Part("type") RequestBody imageType,
             @Part("file\";filename=\"pp.png\" ") RequestBody image);
 }

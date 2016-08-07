@@ -8,6 +8,8 @@ public class UserCommentsResult {
     String articleId,parentId,userComment,createdTime,userId,userName,profilePic;
     Long updatedTime;
 
+
+
     public String getArticleTitle() {
         return articleTitle;
     }

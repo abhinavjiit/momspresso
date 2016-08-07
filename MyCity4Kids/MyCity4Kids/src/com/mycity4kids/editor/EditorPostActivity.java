@@ -255,7 +255,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                         float actualHeight = imageBitmap.getHeight();
                         float actualWidth = imageBitmap.getWidth();
                         float maxHeight = 1300;
-                        float maxWidth = 700;
+                        float maxWidth = 720;
                         float imgRatio = actualWidth / actualHeight;
                         float maxRatio = maxWidth / maxHeight;
 
@@ -697,7 +697,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
         originalImage.compress(Bitmap.CompressFormat.PNG, 75, bao);
         byte[] ba = bao.toByteArray();
         String imageString = Base64.encodeToString(ba, Base64.DEFAULT);*/
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+  /*      HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
 // set your desired log level
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient
@@ -709,17 +709,18 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                 .baseUrl(AppConstants.LIVE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
-                .build();
+                .build();*/
         MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
         RequestBody requestBodyFile = RequestBody.create(MEDIA_TYPE_PNG, file);
         RequestBody userId = RequestBody.create(MediaType.parse("text/plain"), //"" + userModel.getUser().getId());
                 0 + "");
-        RequestBody imageType = RequestBody.create(MediaType.parse("text/plain"), "jpg");
+        RequestBody imageType = RequestBody.create(MediaType.parse("text/plain"), "2");
+        Retrofit retro = BaseApplication.getInstance().getRetrofit();
         // prepare call in Retrofit 2.0
-        ImageUploadAPI imageUploadAPI = retrofit.create(ImageUploadAPI.class);
+        ImageUploadAPI imageUploadAPI = retro.create(ImageUploadAPI.class);
 
         Call<ImageUploadResponse> call = imageUploadAPI.uploadImage(//userId,
-                //   imageType,
+                   imageType,
                 requestBodyFile);
         //asynchronous call
         call.enqueue(new Callback<ImageUploadResponse>() {
@@ -730,18 +731,18 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                                  return;
                              }
                              ImageUploadResponse responseModel = response.body();
-                             Log.e("responseURL", responseModel.getData().getUrl());
+                             Log.e("responseURL", responseModel.getData().getResult().getUrl());
                              removeProgressDialog();
                              if (responseModel.getCode() != 200) {
                                  showToast(getString(R.string.toast_response_error));
                                  removeProgressDialog();
                                  return;
                              } else {
-                                 if (!StringUtils.isNullOrEmpty(responseModel.getData().getUrl())) {
+                                 if (!StringUtils.isNullOrEmpty(responseModel.getData().getResult().getUrl())) {
                                      //      SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
-                                     Log.i("Uploaded Image URL", responseModel.getData().getUrl());
+                                     Log.i("Uploaded Image URL", responseModel.getData().getResult().getUrl());
                                  }
-                                 mediaFile.setFileURL(responseModel.getData().getUrl());
+                                 mediaFile.setFileURL(responseModel.getData().getResult().getUrl());
 
                                  ((EditorMediaUploadListener) mEditorFragment).onMediaUploadSucceeded(mediaId, mediaFile);
                                  removeProgressDialog();

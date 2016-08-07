@@ -76,7 +76,7 @@ public class UserCommentsAdapter extends BaseAdapter {
                 Calendar calendar1 = Calendar.getInstance();
                 SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
             calendar1.setTimeInMillis(commentsList.get(position).getUpdatedTime() * 1000);
-                holder.commentNameDate.setText(commentsList.get(position).getAuthorName()+", "+sdf.format(calendar1.getTime()));
+                holder.commentNameDate.setText(commentsList.get(position).getUserName()+", "+sdf.format(calendar1.getTime()));
 
 
         } catch (Exception e) {

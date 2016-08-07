@@ -489,12 +489,15 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
         RequestBody requestBodyFile = RequestBody.create(MEDIA_TYPE_PNG, file);
         Log.e("requestBodyFile", requestBodyFile.toString());
         //   RequestBody userId = RequestBody.create(MediaType.parse("text/plain"), "" + userModel.getUser().getId());
-        //  RequestBody imageType = RequestBody.create(MediaType.parse("text/plain"), "jpg");
+          RequestBody imageType = RequestBody.create(MediaType.parse("text/plain"), "1");
         // prepare call in Retrofit 2.0
-        ImageUploadAPI imageUploadAPI = retrofit.create(ImageUploadAPI.class);
+
+        Retrofit retro = BaseApplication.getInstance().getRetrofit();
+        ImageUploadAPI imageUploadAPI = retro.create(ImageUploadAPI.class);
 
         Call<ImageUploadResponse> call = imageUploadAPI.uploadImage(//userId,
                 //  imageType,
+                imageType,
                 requestBodyFile);
         //asynchronous call
         call.enqueue(new Callback<ImageUploadResponse>() {
@@ -508,11 +511,11 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
                                  showToast(getString(R.string.toast_response_error));
                                  return;
                              } else {
-                                 if (!StringUtils.isNullOrEmpty(responseModel.getData().getUrl())) {
-                                     Log.i("IMAGE_UPLOAD_REQUEST", responseModel.getData().getUrl());
+                                 if (!StringUtils.isNullOrEmpty(responseModel.getData().getResult().getUrl())) {
+                                     Log.i("IMAGE_UPLOAD_REQUEST", responseModel.getData().getResult().getUrl());
                                  }
-                                 url = (responseModel.getData().getUrl());
-                                 Picasso.with(ArticleImageTagUploadActivity.this).load(responseModel.getData().getUrl()).error(R.drawable.default_article).into(articleImage);
+                                 url = (responseModel.getData().getResult().getUrl());
+                                 Picasso.with(ArticleImageTagUploadActivity.this).load(responseModel.getData().getResult().getUrl()).error(R.drawable.default_article).into(articleImage);
                                  showToast("Image successfully uploaded!");
                                  // ((BaseActivity) this()).showSnackbar(getView().findViewById(R.id.root), "You have successfully uploaded an image.");
                              }
