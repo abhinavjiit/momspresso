@@ -701,6 +701,12 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             holder.editTxt.setTag(commentList);
 //            holder.editTxt.setTag(0, view);
 
+            if (SharedPrefUtils.getUserDetailModel(this).getDynamoId().equals(commentList.getUserId())) {
+                holder.editTxt.setVisibility(View.VISIBLE);
+            } else {
+                holder.editTxt.setVisibility(View.INVISIBLE);
+            }
+
             if (!StringUtils.isNullOrEmpty(commentList.getComment_type()) &&
                     (commentList.getComment_type().equals("fan") || commentList.getComment_type().equals("fb"))) {
                 holder.replyTxt.setVisibility(View.GONE);
@@ -776,7 +782,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                         CommentRepliesDialogFragment commentFragment = new CommentRepliesDialogFragment();
                         Bundle _args = new Bundle();
                         _args.putParcelable("commentData", (CommentsData) v.getTag());
-                        _args.putString("articleId", articleId);
                         _args.putString("articleId", articleId);
                         commentFragment.setArguments(_args);
                         FragmentManager fm = getSupportFragmentManager();
@@ -858,6 +863,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                         Bundle commentArgs = new Bundle();
                         commentArgs.putParcelable("commentData", (CommentsData) v.getTag());
                         commentArgs.putString("articleId", articleId);
+                        commentArgs.putInt("fragmentReplyLevel", 0);
                         commentFragment.setArguments(commentArgs);
                         FragmentManager fm = getSupportFragmentManager();
                         commentFragment.show(fm, "Replies");

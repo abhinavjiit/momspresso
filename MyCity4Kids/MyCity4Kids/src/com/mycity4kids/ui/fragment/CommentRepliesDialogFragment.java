@@ -20,9 +20,11 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kelltontech.network.Response;
@@ -76,12 +78,13 @@ public class CommentRepliesDialogFragment extends DialogFragment implements OnCl
     String articleId;
     String parentId;
     private ProgressDialog mProgressDialog;
+    private int fragmentReplyLevel = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.comments_replies_dialog, container,
+        final View rootView = inflater.inflate(R.layout.comments_replies_dialog, container,
                 false);
         mToolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         mToolbar.setTitle("Replies");
@@ -105,12 +108,37 @@ public class CommentRepliesDialogFragment extends DialogFragment implements OnCl
         if (extras != null) {
             commentsData = extras.getParcelable("commentData");
             articleId = extras.getString("articleId");
+            fragmentReplyLevel = extras.getInt("fragmentReplyLevel", 0);
         }
         parentId = commentsData.getId();
         completeReplies.add(commentsData);
         prepareCompleteList(commentsData);
-        adapter = new CommentsReplyAdapter(getActivity(), R.layout.custom_comment_cell, completeReplies);
+        adapter = new CommentsReplyAdapter(getActivity(), R.layout.custom_comment_cell, completeReplies, fragmentReplyLevel);
         replyListView.setAdapter(adapter);
+        replyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                TextView textView = (TextView) view.findViewById(R.id.txvReply);
+                textView.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (position == 0) {
+                            Log.d("First Item", "0");
+                            addReplyEditText.requestFocus();
+                            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.showSoftInput(addReplyEditText, InputMethodManager.SHOW_IMPLICIT);
+                        } else {
+                            Log.d("Other Item", "" + position);
+                            addReplyEditText.requestFocus();
+                            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.showSoftInput(addReplyEditText, InputMethodManager.SHOW_IMPLICIT);
+                        }
+                    }
+                });
+            }
+        });
+
+
         return rootView;
     }
 
@@ -121,10 +149,10 @@ public class CommentRepliesDialogFragment extends DialogFragment implements OnCl
 //            prepareCompleteList(cData.getReplies().get(i));
 //        }
         for (int i = 0; i < cData.getReplies().size(); i++) {
-            cData.getReplies().get(i).setCommentLevel(1);
+            cData.getReplies().get(i).setCommentLevel(0);
             completeReplies.add(cData.getReplies().get(i));
             for (int j = 0; j < cData.getReplies().get(i).getReplies().size(); j++) {
-                cData.getReplies().get(i).getReplies().get(j).setCommentLevel(2);
+                cData.getReplies().get(i).getReplies().get(j).setCommentLevel(1);
                 completeReplies.add(cData.getReplies().get(i).getReplies().get(j));
             }
         }
