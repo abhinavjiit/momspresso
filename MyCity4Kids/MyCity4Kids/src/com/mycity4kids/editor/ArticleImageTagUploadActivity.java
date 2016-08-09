@@ -76,7 +76,6 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
     Bitmap finalBitmap;
     String url = "default-article-listing.jpg";
     Button publish;
-    private UserModel userModel;
     SharedPreferences pref;
     boolean blogSetup = false;
     public static final String COMMON_PREF_FILE = "my_city_prefs";
@@ -96,8 +95,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Publish Blog");
         articleImage = (ImageView) findViewById(R.id.articleImage);
-        UserTable userTable = new UserTable((BaseApplication) this.getApplication());
-        userModel = userTable.getAllUserData();
+
         baseApplication = (BaseApplication) getApplication();
         Utils.pushOpenScreenEvent(ArticleImageTagUploadActivity.this, "Article Image Upload", SharedPrefUtils.getUserDetailModel(this).getId() + "");
         if ((getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList"))) {
@@ -262,6 +260,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
     private void publishArticleRequest() {
         PublishDraftObject draftObject = (PublishDraftObject) getIntent().getSerializableExtra("draftItem");
         String tags = getIntent().getStringExtra("tag");
+        String cities = getIntent().getStringExtra("cities");
         showProgressDialog(getResources().getString(R.string.please_wait));
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         // prepare call in Retrofit 2.0
@@ -291,9 +290,6 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
             }
 
             articleDraftRequest.setTags(list);
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
             articleDraftRequest.setImageUrl(url);
             articleDraftRequest.setArticleType("1");
 
@@ -318,20 +314,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
                                          //  SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
                                          Log.i("Retro Publish Message", responseModel.getData().getMsg());
 
-
-                                         // draftId=responseModel.getResult().getData().getId()+"";
-
-                                         //setProfileImage(originalImage);
                                          alertDialog(responseModel.getData().getMsg());
-                                         Handler handler = new Handler();
-                                     /*handler.postDelayed(new Runnable() {
-                                         @Override
-                                         public void run() {
-                                             Intent intent = new Intent(ArticleImageTagUploadActivity.this, BloggerDashboardActivity.class);
-                                             startActivity(intent);
-                                             finish();
-                                         }
-                                     }, 2000);*/
                                      } else {
                                          removeProgressDialog();
                                          showToast(responseModel.getReason().toString());
@@ -350,44 +333,72 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
                          }
             );
         } else {
-            id = draftObject.getId();
-            Call<ArticleDraftResponse> call1 = articlePublishAPI.updateArticle(
-                    AppConstants.STAGING_URL + "v1/articles/" + id,
-                    draftObject.getTitle().trim(),
-                    draftObject.getBody(),
-                    tags,
-                    url,
-                    "1"
-            );
+            ArticleDraftRequest articleDraftRequest = new ArticleDraftRequest();
+//            articleDraftRequest.setId(draftObject.getId());
+            articleDraftRequest.setTitle(draftObject.getTitle().trim());
+            articleDraftRequest.setBody(draftObject.getBody());
+            ArrayList<Map<String, String>> tagList = new ArrayList<Map<String, String>>();
+            JSONArray tagsArray = null;
+            try {
+                tagsArray = new JSONArray(tags);
+                for (int i = 0; i < tagsArray.length(); i++) {
+                    HashMap<String, String> map = new HashMap<>();
+                    String key = (String) tagsArray.getJSONObject(i).keys().next();
+                    map.put(key, tagsArray.getJSONObject(i).getString(key));
+                    tagList.add(map);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            ArrayList<Map<String, String>> cityList = new ArrayList<Map<String, String>>();
+            JSONArray cityArray = null;
+            try {
+                cityArray = new JSONArray(cities);
+                for (int i = 0; i < cityArray.length(); i++) {
+                    HashMap<String, String> map = new HashMap<>();
+                    String key = (String) cityArray.getJSONObject(i).keys().next();
+                    map.put(key, cityArray.getJSONObject(i).getString(key));
+                    cityList.add(map);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            articleDraftRequest.setTags(tagList);
+            articleDraftRequest.setCities(cityList);
+            articleDraftRequest.setImageUrl(url);
+            articleDraftRequest.setArticleType("1");
+
+            Call<ArticleDraftResponse> call1 = articlePublishAPI.updateArticle(draftObject.getId(), articleDraftRequest);
             call1.enqueue(new Callback<ArticleDraftResponse>() {
                 @Override
                 public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
                     int statusCode = response.code();
-
-                    ArticleDraftResponse responseModel = (ArticleDraftResponse) response.body();
-                    // Result<ArticleDraftResult> result=responseModel.getData().getResult();
                     removeProgressDialog();
-
+                    if (response == null || response.body() == null) {
+                        showToast("Something went wrong from server");
+                        return;
+                    }
+                    ArticleDraftResponse responseModel = (ArticleDraftResponse) response.body();
                     if (responseModel.getCode() != 200) {
                         showToast(getString(R.string.toast_response_error));
                         return;
                     } else {
                         if (!StringUtils.isNullOrEmpty(responseModel.getData().getMsg())) {
-                            //  SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
                             Log.i("Draft message", responseModel.getData().getMsg());
                         }
                         id = responseModel.getData().getResult().getId() + "";
-
-                        //setProfileImage(originalImage);
-                        showToast("Article updated successfully");
-
-                        //  finish();
+                        alertDialog(responseModel.getData().getMsg());
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ArticleDraftResponse> call, Throwable t) {
-
+                    removeProgressDialog();
+                    Crashlytics.logException(t);
+                    Log.d("MC4KException", Log.getStackTraceString(t));
+                    showToast(getString(R.string.went_wrong));
                 }
             });
         }
@@ -465,7 +476,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
                         // continue with delete
                         //  dialog.dismiss();
                         Intent intent = new Intent(ArticleImageTagUploadActivity.this, BloggerDashboardActivity.class);
-//                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.putExtra(AppConstants.STACK_CLEAR_REQUIRED, true);
                         startActivity(intent);
                         finish();
                     }
@@ -489,7 +500,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
         RequestBody requestBodyFile = RequestBody.create(MEDIA_TYPE_PNG, file);
         Log.e("requestBodyFile", requestBodyFile.toString());
         //   RequestBody userId = RequestBody.create(MediaType.parse("text/plain"), "" + userModel.getUser().getId());
-          RequestBody imageType = RequestBody.create(MediaType.parse("text/plain"), "1");
+        RequestBody imageType = RequestBody.create(MediaType.parse("text/plain"), "1");
         // prepare call in Retrofit 2.0
 
         Retrofit retro = BaseApplication.getInstance().getRetrofit();

@@ -128,7 +128,7 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
         public void onFailure(Call<FollowersFollowingResponse> call, Throwable t) {
             progressBar.setVisibility(View.INVISIBLE);
             noResultTextView.setVisibility(View.VISIBLE);
-            showToast(getString(R.string.server_went_wrong));
+//            showToast(getString(R.string.server_went_wrong));
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }

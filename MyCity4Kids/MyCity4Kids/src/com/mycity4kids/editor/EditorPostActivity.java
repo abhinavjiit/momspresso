@@ -100,7 +100,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     private Map<String, String> mFailedUploads;
     String title;
     String content;
-    private String tag;
+    private String tag, cities;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -413,6 +413,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                         intent_1.putExtra("from", "publishedList");
                         intent_1.putExtra("articleId", articleId);
                         intent_1.putExtra("tag", tag);
+                        intent_1.putExtra("cities", cities);
                         startActivity(intent_1);
 //                        finish();
                     }
@@ -541,7 +542,10 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                     ArticleDraftResponse responseModel = (ArticleDraftResponse) response.body();
                     // Result<ArticleDraftResult> result=responseModel.getData().getResult();
                     removeProgressDialog();
-
+                    if (response == null || response.body() == null) {
+                        showToast(getString(R.string.went_wrong));
+                        return;
+                    }
                     if (responseModel.getCode() != 200) {
                         showToast(getString(R.string.toast_response_error));
                         return;
@@ -645,6 +649,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             title = title.trim();
             content = getIntent().getStringExtra("content");
             tag = getIntent().getStringExtra("tag");
+            cities = getIntent().getStringExtra("cities");
             thumbnailUrl = getIntent().getStringExtra("thumbnailUrl");
             articleId = getIntent().getStringExtra("articleId");
             mEditorFragment.setTitle(title);
@@ -720,7 +725,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
         ImageUploadAPI imageUploadAPI = retro.create(ImageUploadAPI.class);
 
         Call<ImageUploadResponse> call = imageUploadAPI.uploadImage(//userId,
-                   imageType,
+                imageType,
                 requestBodyFile);
         //asynchronous call
         call.enqueue(new Callback<ImageUploadResponse>() {

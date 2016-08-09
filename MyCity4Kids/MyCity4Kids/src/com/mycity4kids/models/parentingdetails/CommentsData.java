@@ -3,6 +3,8 @@ package com.mycity4kids.models.parentingdetails;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.mycity4kids.models.response.ProfilePic;
+
 import java.util.ArrayList;
 
 public class CommentsData implements Parcelable {
@@ -15,8 +17,9 @@ public class CommentsData implements Parcelable {
     private String updatedTime;
     private String userId;
     private String comment_type;
-    private String profilePic;
+    private ProfilePic profilePic;
     private ArrayList<CommentsData> replies;
+    private int commentLevel;
 
     public CommentsData() {
 
@@ -32,8 +35,9 @@ public class CommentsData implements Parcelable {
         createdTime = in.readString();
         updatedTime = in.readString();
         comment_type = in.readString();
-        profilePic = in.readString();
+        profilePic = in.readParcelable(ProfilePic.class.getClassLoader());
         replies = in.createTypedArrayList(CommentsData.CREATOR);
+        commentLevel = in.readInt();
     }
 
     public ArrayList<CommentsData> getReplies() {
@@ -116,14 +120,21 @@ public class CommentsData implements Parcelable {
         this.createdTime = create;
     }
 
-    public String getProfile_image() {
+    public ProfilePic getProfile_image() {
         return profilePic;
     }
 
-    public void setProfile_image(String profile_image) {
+    public void setProfile_image(ProfilePic profile_image) {
         this.profilePic = profile_image;
     }
 
+    public int getCommentLevel() {
+        return commentLevel;
+    }
+
+    public void setCommentLevel(int commentLevel) {
+        this.commentLevel = commentLevel;
+    }
 
     @Override
     public int describeContents() {
@@ -141,8 +152,9 @@ public class CommentsData implements Parcelable {
         dest.writeString(createdTime);
         dest.writeString(updatedTime);
         dest.writeString(comment_type);
-        dest.writeString(profilePic);
+        dest.writeParcelable(profilePic, flags);
         dest.writeTypedList(replies);
+        dest.writeInt(commentLevel);
     }
 
     public static final Creator<CommentsData> CREATOR = new Creator<CommentsData>() {

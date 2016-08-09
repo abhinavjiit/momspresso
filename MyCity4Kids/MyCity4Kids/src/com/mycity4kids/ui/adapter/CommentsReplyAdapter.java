@@ -2,6 +2,7 @@ package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +41,7 @@ public class CommentsReplyAdapter extends ArrayAdapter<CommentsData> {
         TextView replyDateTextView;
         TextView replyDescTextView;
         TextView replyBtnTextView;
+        TextView editBtnTextView;
     }
 
     @Override
@@ -53,9 +55,16 @@ public class CommentsReplyAdapter extends ArrayAdapter<CommentsData> {
             holder.replyDescTextView = (TextView) view.findViewById(R.id.txvCommentDescription);
             holder.replierImageView = (ImageView) view.findViewById(R.id.network_img);
             holder.replyBtnTextView = (TextView) view.findViewById(R.id.txvReply);
+            holder.editBtnTextView = (TextView) view.findViewById(R.id.txvEdit);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
+        }
+
+        if(replyList.get(position).getCommentLevel()==0){
+
+        }else{
+
         }
         if (position == 0) {
             view.setBackgroundColor(ContextCompat.getColor(mContext, R.color.white_color));
@@ -65,10 +74,15 @@ public class CommentsReplyAdapter extends ArrayAdapter<CommentsData> {
         holder.replierNameTextView.setText(replyList.get(position).getName());
         holder.replyDateTextView.setText(DateTimeUtils.getSeperateDate(replyList.get(position).getCreate()));
         holder.replyDescTextView.setText(replyList.get(position).getBody());
-        holder.replyBtnTextView.setVisibility(View.INVISIBLE);
-        if (!StringUtils.isNullOrEmpty(replyList.get(position).getProfile_image())) {
+        holder.replyBtnTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("Secon Level Reply", "dwad wd a");
+            }
+        });
+        if (replyList.get(position).getProfile_image() != null && !StringUtils.isNullOrEmpty(replyList.get(position).getProfile_image().getClientAppMin())) {
             try {
-                Picasso.with(mContext).load(replyList.get(position).getProfile_image()).placeholder(R.drawable.default_commentor_img)
+                Picasso.with(mContext).load(replyList.get(position).getProfile_image().getClientAppMin()).placeholder(R.drawable.default_commentor_img)
                         .transform(new CircleTransformation()).into(holder.replierImageView);
             } catch (Exception e) {
                 e.printStackTrace();

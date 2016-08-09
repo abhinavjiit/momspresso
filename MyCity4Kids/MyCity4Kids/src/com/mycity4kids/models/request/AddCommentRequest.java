@@ -6,6 +6,7 @@ package com.mycity4kids.models.request;
 public class AddCommentRequest {
     private String articleId;
     private String userComment;
+    private String parentId;
 
     public String getArticleId() {
         return articleId;
@@ -21,5 +22,13 @@ public class AddCommentRequest {
 
     public void setUserComment(String userComment) {
         this.userComment = userComment;
+    }
+
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 }

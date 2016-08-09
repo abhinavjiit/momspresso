@@ -58,23 +58,18 @@ import com.kelltontech.utils.StringUtils;
 import com.kelltontech.utils.ToastUtils;
 import com.kelltontech.utils.facebook.model.FacebookUtils;
 import com.mikhaellopez.circularimageview.CircularImageView;
-import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.controller.ArticleBlogDetailsController;
 import com.mycity4kids.controller.ArticleBlogFollowController;
 import com.mycity4kids.controller.BlogShareSpouseController;
-import com.mycity4kids.controller.BookmarkController;
 import com.mycity4kids.controller.CommentController;
 import com.mycity4kids.dbtable.UserTable;
 import com.mycity4kids.enums.ParentingFilterType;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.OnWebServiceCompleteListener;
-import com.mycity4kids.models.bookmark.BookmarkModel;
-import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.models.parentingdetails.CommentRequest;
 import com.mycity4kids.models.parentingdetails.CommentsData;
 import com.mycity4kids.models.parentingdetails.ImageData;
@@ -87,10 +82,8 @@ import com.mycity4kids.models.request.DeleteBookmarkRequest;
 import com.mycity4kids.models.request.UpdateViewCountRequest;
 import com.mycity4kids.models.response.AddBookmarkResponse;
 import com.mycity4kids.models.response.AddCommentResponse;
-import com.mycity4kids.models.response.ArticleDetailData;
 import com.mycity4kids.models.response.ArticleDetailResponse;
 import com.mycity4kids.models.response.ArticleDetailResult;
-import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.user.UserModel;
 import com.mycity4kids.newmodels.AttendeeModel;
 import com.mycity4kids.newmodels.BlogShareSpouseModel;
@@ -99,9 +92,9 @@ import com.mycity4kids.newmodels.bloggermodel.BlogArticleList.BlogArticleModel;
 import com.mycity4kids.newmodels.bloggermodel.BlogArticleList.NewArticleListingResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
-import com.mycity4kids.retrofitAPIsInterfaces.AuthorDetailsAPI;
 import com.mycity4kids.ui.CircleTransformation;
 import com.mycity4kids.ui.fragment.CommentRepliesDialogFragment;
+import com.mycity4kids.ui.fragment.EditCommentsRepliesFragment;
 import com.mycity4kids.ui.fragment.WhoToRemindDialogFragment;
 import com.mycity4kids.volley.HttpVolleyRequest;
 import com.squareup.picasso.Picasso;
@@ -109,7 +102,6 @@ import com.squareup.picasso.Target;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
@@ -134,6 +126,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     private boolean isCommingFromCommentAPI;
     private int ADD_COMMENT_OR_REPLY = 0;
     private String articleId;
+    int width;
 
     private NestedScrollView mScrollView;
     private ArrayList<ImageData> imageList;
@@ -148,6 +141,8 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     LinearLayout trendingArticles, recentAuthorArticles;
     TextView trendingArticle1, trendingArticle2, trendingArticle3;
     Toolbar mToolbar;
+    View commentEditView;
+
     private float density;
 
     private ImageView cover_image;
@@ -228,9 +223,9 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             trendingArticle3 = (TextView) findViewById(R.id.trendingArticle3);
             cover_image = (ImageView) findViewById(R.id.cover_image);
             density = getResources().getDisplayMetrics().density;
-            int width = getResources().getDisplayMetrics().widthPixels;
+            width = getResources().getDisplayMetrics().widthPixels;
             if (!StringUtils.isNullOrEmpty(coverImageUrl)) {
-                Picasso.with(this).load(coverImageUrl).placeholder(R.drawable.blog_bgnew).resize(width, (int) (220 * density)).centerCrop().into(cover_image);
+                Picasso.with(this).load(coverImageUrl).placeholder(R.drawable.default_article).resize(width, (int) (220 * density)).centerCrop().into(cover_image);
             }
 
             mToolbar = (Toolbar) findViewById(R.id.anim_toolbar);
@@ -347,22 +342,9 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
         ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
 
-//        Call<ResponseBody> call = articleDetailsAPI.getArticleComments(articleId,
-//                "" + AppConstants.COMMENT_LIMIT, "" + offset, commentTypeToFetch,
-//                "" + SharedPrefUtils.getUserDetailModel(this).getId(), versionName);
-//
-//        call.enqueue(articleCommentsResponseCallback);
-
         Call<ResponseBody> call = articleDetailsAPI.getComments(commentURL);
         call.enqueue(commentsCallback);
 
-//        GetCommentsRequestModel getCommentsRequestModel = new GetCommentsRequestModel();
-//        getCommentsRequestModel.setArticleId(articleId);
-//        getCommentsRequestModel.setLimit(AppConstants.COMMENT_LIMIT);
-//        getCommentsRequestModel.setOffset(offset);
-//        getCommentsRequestModel.setCommentType(commentTypeToFetch);
-//        ArticleBlogDetailsController _controller = new ArticleBlogDetailsController(this, this);
-//        _controller.getData(AppConstants.GET_MORE_COMMENTS, getCommentsRequestModel);
     }
 
 
@@ -481,145 +463,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
     @Override
     protected void updateUi(Response response) {
-        try {
-            if (response == null) {
-                removeProgressDialog();
-                showToast("Something went wrong from server");
-                return;
-            }
-            String commentMessage = "";
-            switch (response.getDataType()) {
-                case AppConstants.GET_MORE_COMMENTS:
-                    mLodingView.setVisibility(View.GONE);
-                    isLoading = false;
-                    String resData = (String) response.getResponseObject();
-                    JSONObject jsonObject = new JSONObject(resData);
-                    JSONArray commentsJson = new JSONArray();
-                    int commCount = 0;
-                    if (!StringUtils.isNullOrEmpty(commentTypeToFetch) && AppConstants.COMMENT_TYPE_DB.equals(commentTypeToFetch)) {
-                        commCount = jsonObject.getJSONObject("result").getJSONObject("data").getJSONObject("db").getInt("count");
-                        commentsJson = jsonObject.getJSONObject("result").getJSONObject("data").getJSONObject("db").getJSONArray("comments");
-                        if (commCount == 0) {
-                            commentTypeToFetch = AppConstants.COMMENT_TYPE_FB_PLUGIN;
-                            getMoreComments();
 
-                        }
-                        offset = offset + 1;
-                        if (offset * AppConstants.COMMENT_LIMIT >= commCount) {
-                            commentTypeToFetch = AppConstants.COMMENT_TYPE_FB_PLUGIN;
-                            offset = 0;
-                        }
-                    } else if (!StringUtils.isNullOrEmpty(commentTypeToFetch) && AppConstants.COMMENT_TYPE_FB_PLUGIN.equals(commentTypeToFetch)) {
-                        commCount = jsonObject.getJSONObject("result").getJSONObject("data").getJSONObject("fb").getInt("count");
-                        commentsJson = jsonObject.getJSONObject("result").getJSONObject("data").getJSONObject("fb").getJSONArray("comments");
-                        offset = offset + 1;
-                        if (offset * AppConstants.COMMENT_LIMIT >= commCount) {
-                            commentTypeToFetch = AppConstants.COMMENT_TYPE_FB_PAGE;
-                            offset = 0;
-                        }
-                    } else if (!StringUtils.isNullOrEmpty(commentTypeToFetch) && AppConstants.COMMENT_TYPE_FB_PAGE.equals(commentTypeToFetch)) {
-                        commCount = jsonObject.getJSONObject("result").getJSONObject("data").getJSONObject("fan").getInt("count");
-                        commentsJson = jsonObject.getJSONObject("result").getJSONObject("data").getJSONObject("fan").getJSONArray("comments");
-                        offset = offset + 1;
-                        if (offset * AppConstants.COMMENT_LIMIT >= commCount) {
-                            commentTypeToFetch = "";
-                            offset = 0;
-                        }
-                    }
-
-                    LinearLayout commentLayout = ((LinearLayout) findViewById(R.id.commnetLout));
-                    ViewHolder viewHolder = null;
-                    viewHolder = new ViewHolder();
-                    for (int i = 0; i < commentsJson.length(); i++) {
-                        CommentsData cData = new Gson().fromJson(commentsJson.get(i).toString(), CommentsData.class);
-                        displayComments(viewHolder, cData, commentLayout);
-                    }
-                    break;
-
-                case AppConstants.COMMENT_REPLY_REQUEST:
-                    CommonResponse commonData = (CommonResponse) response.getResponseObject();
-                    String messageComment = commonData.getResult().getMessage();
-                    commentMessage = messageComment;
-                    if (commonData.getResponseCode() == 200) {
-                        isCommingFromCommentAPI = true;
-
-                        //showProgressDialog(getString(R.string.fetching_data));
-                        ArticleBlogDetailsController _controller = new ArticleBlogDetailsController(this, this);
-                        _controller.getData(AppConstants.ARTICLES_DETAILS_REQUEST, articleId);
-
-                    } else if (commonData.getResponseCode() == 400) {
-                        isCommingFromCommentAPI = false;
-                        removeProgressDialog();
-                        String message = commonData.getResult().getMessage();
-                        if (!StringUtils.isNullOrEmpty(message)) {
-                            showToast(message);
-                        } else {
-                            showToast(getString(R.string.went_wrong));
-                        }
-                    }
-//                    removeProgressDialog();
-                    break;
-
-                case AppConstants.ARTICLE_BLOG_FOLLOW_REQUEST:
-                    CommonResponse followData = (CommonResponse) response.getResponseObject();
-                    removeProgressDialog();
-                    if (followData.getResponseCode() == 200) {
-                        ToastUtils.showToast(getApplicationContext(), followData.getResult().getMessage(), Toast.LENGTH_SHORT);
-                        if (isFollowing) {
-                            isFollowing = false;
-                            followClick.setText("FOLLOW");
-                        } else {
-                            isFollowing = true;
-                            followClick.setText("FOLLOWING");
-                        }
-                        if (BuildConfig.DEBUG) {
-                            Log.e("follow response", followData.getResult().getMessage());
-                        }
-                    } else if (followData.getResponseCode() == 400) {
-                        String message = followData.getResult().getMessage();
-                        if (BuildConfig.DEBUG) {
-                            Log.e("follow response", followData.getResult().getMessage());
-                        }
-                        if (!StringUtils.isNullOrEmpty(message)) {
-                            showToast(message);
-                        } else {
-                            showToast(getString(R.string.went_wrong));
-                        }
-                    }
-                    break;
-                case AppConstants.BOOKMARK_BLOG_REQUEST:
-                    CommonResponse bookmarkResponse = (CommonResponse) response.getResponseObject();
-                    if (bookmarkResponse.getResponseCode() == 200) {
-                        ToastUtils.showToast(getApplicationContext(), bookmarkResponse.getResult().getMessage(), Toast.LENGTH_SHORT);
-                        if (BuildConfig.DEBUG) {
-                            Log.e("Bookmark response", bookmarkResponse.getResult().getMessage());
-                        }
-                    } else if (bookmarkResponse.getResponseCode() == 400) {
-                        String message = bookmarkResponse.getResult().getMessage();
-                        if (BuildConfig.DEBUG) {
-                            Log.e("Bookmark response", bookmarkResponse.getResult().getMessage());
-                        }
-                        if (!StringUtils.isNullOrEmpty(message)) {
-                            showToast(message);
-                        } else {
-                            showToast(getString(R.string.went_wrong));
-                        }
-
-                        if (bookmarkStatus == 0) {
-                            bookmarkStatus = 1;
-                            menu.getItem(0).setIcon(R.drawable.ic_favorite_border_white_48dp_fill);
-                        } else {
-                            bookmarkStatus = 0;
-                            menu.getItem(0).setIcon(R.drawable.ic_favorite_border_white_48dp);
-                        }
-                    }
-                    break;
-                default:
-            }
-        } catch (Exception e) {
-            removeProgressDialog();
-            Log.i("details", e.getMessage());
-        }
     }
 
     @Override
@@ -710,6 +554,10 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         imageList = detailData.getBody().getImage();
         authorType = detailData.getUserType();
         author = detailData.getUserName();
+
+        if (!StringUtils.isNullOrEmpty(detailData.getImageUrl().getClientApp())) {
+            Picasso.with(this).load(detailData.getImageUrl().getClientApp()).placeholder(R.drawable.default_article).resize(width, (int) (220 * density)).centerCrop().into(cover_image);
+        }
 
         if (!StringUtils.isNullOrEmpty(detailData.getTitle())) {
             article_title.setText(detailData.getTitle());
@@ -817,12 +665,12 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         };
 
         floatingActionButton.setTag(target);
-        if (!StringUtils.isNullOrEmpty(detailData.getAuthor_image())) {
-            Picasso.with(this).load(detailData.getAuthor_image()).transform(new CircleTransformation()).into(target);
+        if (!StringUtils.isNullOrEmpty(detailData.getProfilePic().getClientApp())) {
+            Picasso.with(this).load(detailData.getProfilePic().getClientApp()).transform(new CircleTransformation()).into(target);
         }
 
-        if (!StringUtils.isNullOrEmpty(detailData.getImageUrl())) {
-            Picasso.with(this).load(detailData.getImageUrl()).placeholder(R.drawable.blog_bgnew).fit().into(cover_image);
+        if (!StringUtils.isNullOrEmpty(detailData.getImageUrl().getClientApp())) {
+            Picasso.with(this).load(detailData.getImageUrl().getClientApp()).placeholder(R.drawable.default_article).fit().into(cover_image);
         }
 
         hitUpdateViewCountAPI(detailData.getUserId(), detailData.getTags(), detailData.getCities());
@@ -839,6 +687,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             holder.commentDescription = (TextView) view.findViewById(R.id.txvCommentDescription);
             holder.dateTxt = (TextView) view.findViewById(R.id.txvDate);
             holder.replyTxt = (TextView) view.findViewById(R.id.txvReply);
+            holder.editTxt = (TextView) view.findViewById(R.id.txvEdit);
             holder.replierImageView = (CircularImageView) view.findViewById(R.id.replyUserImageView);
             holder.replyCountTextView = (TextView) view.findViewById(R.id.replyCountTextView);
             holder.replierUsernameTextView = (TextView) view.findViewById(R.id.replyUserNameTextView);
@@ -848,6 +697,9 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             holder.replyCommentView.setTag(commentList);
             holder.replyTxt.setOnClickListener(this);
             holder.replyTxt.setTag(commentList);
+            holder.editTxt.setOnClickListener(this);
+            holder.editTxt.setTag(commentList);
+//            holder.editTxt.setTag(0, view);
 
             if (!StringUtils.isNullOrEmpty(commentList.getComment_type()) &&
                     (commentList.getComment_type().equals("fan") || commentList.getComment_type().equals("fb"))) {
@@ -869,10 +721,10 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             } else
                 holder.dateTxt.setText(commentList.getCreate());
 
-            if (!StringUtils.isNullOrEmpty(commentList.getProfile_image())) {
+            if (commentList.getProfile_image() != null && !StringUtils.isNullOrEmpty(commentList.getProfile_image().getClientAppMin())) {
                 try {
 //                    holder.networkImg.setImageDrawable(new BitmapDrawable(getResources(),defaultCommentorBitmap));
-                    Picasso.with(this).load(commentList.getProfile_image()).into(holder.networkImg);
+                    Picasso.with(this).load(commentList.getProfile_image().getClientAppMin()).into(holder.networkImg);
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
@@ -894,9 +746,9 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 }
                 holder.replierUsernameTextView.setText("" + commentList.getReplies().get(0).getName());
 
-                if (!StringUtils.isNullOrEmpty(commentList.getProfile_image())) {
+                if (commentList.getProfile_image() != null && !StringUtils.isNullOrEmpty(commentList.getProfile_image().getClientAppMin())) {
                     try {
-                        Picasso.with(this).load(commentList.getReplies().get(0).getProfile_image())
+                        Picasso.with(this).load(commentList.getReplies().get(0).getProfile_image().getClientAppMin())
                                 .placeholder(R.drawable.default_commentor_img).into(holder.replierImageView);
                     } catch (Exception e) {
                         Crashlytics.logException(e);
@@ -919,16 +771,34 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
                 case R.id.add_comment:
                     break;
-
                 case R.id.txvReply:
                     try {
                         CommentRepliesDialogFragment commentFragment = new CommentRepliesDialogFragment();
                         Bundle _args = new Bundle();
                         _args.putParcelable("commentData", (CommentsData) v.getTag());
                         _args.putString("articleId", articleId);
+                        _args.putString("articleId", articleId);
                         commentFragment.setArguments(_args);
                         FragmentManager fm = getSupportFragmentManager();
                         commentFragment.show(fm, "Replies");
+                    } catch (Exception e) {
+                        Crashlytics.logException(e);
+                        Log.d("MC4kException", Log.getStackTraceString(e));
+                    }
+//                    onShowPopup(coordinatorLayout);
+                    break;
+                case R.id.txvEdit:
+                    try {
+                        EditCommentsRepliesFragment editCommentsRepliesFragment = new EditCommentsRepliesFragment();
+
+                        CommentsData cData = (CommentsData) v.getTag();
+                        commentEditView = (View) v.getParent().getParent();
+                        Bundle _args = new Bundle();
+                        _args.putParcelable("commentData", cData);
+                        _args.putString("articleId", articleId);
+                        editCommentsRepliesFragment.setArguments(_args);
+                        FragmentManager fm = getSupportFragmentManager();
+                        editCommentsRepliesFragment.show(fm, "Replies");
                     } catch (Exception e) {
                         Crashlytics.logException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
@@ -970,26 +840,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                         addCommentRequest.setUserComment(contentData);
                         Call<AddCommentResponse> callBookmark = articleDetailsAPI.addComment(addCommentRequest);
                         callBookmark.enqueue(addCommentsResponseCallback);
-//                        UserTable _table1 = new UserTable((BaseApplication) getApplication());
-//                        int count1 = _table1.getCount();
-//
-//                        if (count1 > 0) {
-//                            UserModel userData = _table1.getAllUserData();
-//                            CommentRequest _commentRequest = new CommentRequest();
-//                            _commentRequest.setArticleId(articleId);
-//                            /**
-//                             * in case of comment parentId will be empty.
-//                             *
-//                             */
-//                            _commentRequest.setParentId(parentId1);
-//                            _commentRequest.setContent(contentData);
-//                            _commentRequest.setUserId("" + userData.getUser().getId());
-//                            _commentRequest.setSessionId(userData.getUser().getSessionId());
-//                            CommentController _controller = new CommentController(this, this);
-//                            showProgressDialog("Adding a comment...");
-//                            _controller.getData(AppConstants.COMMENT_REPLY_REQUEST, _commentRequest);
-//                        }
-
                     }
                     break;
                 case R.id.follow_click:
@@ -1063,6 +913,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         private TextView dateTxt;
         //        private RelativeLayout mRelativeContainer;
         private TextView replyTxt;
+        private TextView editTxt;
         private CircularImageView replierImageView;
         private TextView replierUsernameTextView;
         private TextView replyCountTextView;
@@ -1183,19 +1034,18 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 return;
             }
             String commentMessage = "";
-            ArticleDetailResult responseData = (ArticleDetailResult) response.body();
-
-            if (responseData != null) {
+            try {
+                ArticleDetailResult responseData = (ArticleDetailResult) response.body();
                 newCommentLayout.setVisibility(View.VISIBLE);
                 getResponseUpdateUi(responseData);
 
                 commentURL = responseData.getCommentsUri();
                 getMoreComments();
-                Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-                AuthorDetailsAPI authorDetailsAPI = retrofit.create(AuthorDetailsAPI.class);
-                Call<NewArticleListingResponse> call1 = authorDetailsAPI.getBloggersRecentArticle(followAuthorId, 1);
-                call1.enqueue(bloggersArticleResponseCallback);
-                hitBlogListingApi();
+//                Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+//                AuthorDetailsAPI authorDetailsAPI = retrofit.create(AuthorDetailsAPI.class);
+//                Call<NewArticleListingResponse> call1 = authorDetailsAPI.getBloggersRecentArticle(followAuthorId, 1);
+//                call1.enqueue(bloggersArticleResponseCallback);
+//                hitBlogListingApi();
                 if (isCommingFromCommentAPI) {
                     if (StringUtils.isNullOrEmpty(commentMessage)) {
                         showToast("Your comment has been added!");
@@ -1205,16 +1055,12 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     sendScrollDown();
                     isCommingFromCommentAPI = false;
                 }
-            } else {
-                isCommingFromCommentAPI = false;
-                finish();
-                String message = "dddd";
-                if (!StringUtils.isNullOrEmpty(message)) {
-                    showToast(message);
-                } else {
-                    showToast(getString(R.string.went_wrong));
-                }
+            } catch (Exception e) {
+                removeProgressDialog();
+                Crashlytics.logException(e);
+                Log.d("JsonSyntaxException", Log.getStackTraceString(e));
             }
+
         }
 
         @Override
@@ -1366,12 +1212,12 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         @Override
         public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
             removeProgressDialog();
+            mLodingView.setVisibility(View.GONE);
             if (response == null || null == response.body()) {
                 showToast("Something went wrong from server");
                 return;
             }
             try {
-                mLodingView.setVisibility(View.GONE);
                 isLoading = false;
                 String resData = new String(response.body().bytes());
 //                JSONObject jsonObject = new JSONObject(resData);
@@ -1383,14 +1229,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                         commentURL = commentsJson.getJSONObject(i).getString("next");
                     } else {
                         CommentsData cData = new Gson().fromJson(commentsJson.get(i).toString(), CommentsData.class);
-//                        CommentsData commentsData = new CommentsData();
-//                        commentsData.setId(commentsJson.getJSONObject(i).getString("id"));
-//                        commentsData.setName(commentsJson.getJSONObject(i).getString("userName"));
-//                        commentsData.setParent_id(commentsJson.getJSONObject(i).getString("parentId"));
-//                        commentsData.setBody(commentsJson.getJSONObject(i).getString("userComment"));
-//                        commentsData.setCreate(commentsJson.getJSONObject(i).getString("date"));
-//                        commentsData.setProfile_image(commentsJson.getJSONObject(i).getString("userImage"));
-
                         arrayList.add(cData);
                     }
 
@@ -1400,7 +1238,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 ViewHolder viewHolder = null;
                 viewHolder = new ViewHolder();
                 for (int i = 0; i < arrayList.size(); i++) {
-//                    CommentsData cData = new Gson().fromJson(commentsJson.get(i).toString(), CommentsData.class);
                     displayComments(viewHolder, arrayList.get(i), commentLayout);
                 }
             } catch (JSONException jsonexception) {
@@ -1416,7 +1253,8 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
         @Override
         public void onFailure(Call<ResponseBody> call, Throwable t) {
-            showToast(getString(R.string.went_wrong));
+            mLodingView.setVisibility(View.GONE);
+            handleExceptions(t);
         }
     };
 
@@ -1461,15 +1299,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
         @Override
         public void onFailure(Call<ArticleDetailResponse> call, Throwable t) {
-            if (t instanceof UnknownHostException) {
-                showToast(getString(R.string.error_network));
-            } else if (t instanceof SocketTimeoutException) {
-                showToast("connection timed out");
-            } else {
-                showToast(getString(R.string.server_went_wrong));
-            }
-            Crashlytics.logException(t);
-            Log.d("MC4kException", Log.getStackTraceString(t));
+            handleExceptions(t);
         }
     };
 
@@ -1494,15 +1324,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         @Override
         public void onFailure(Call<AddCommentResponse> call, Throwable t) {
             removeProgressDialog();
-            if (t instanceof UnknownHostException) {
-                showToast(getString(R.string.error_network));
-            } else if (t instanceof SocketTimeoutException) {
-                showToast("connection timed out");
-            } else {
-                showToast(getString(R.string.server_went_wrong));
-            }
-            Crashlytics.logException(t);
-            Log.d("MC4kException", Log.getStackTraceString(t));
+            handleExceptions(t);
         }
     };
 
@@ -1531,24 +1353,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
         @Override
         public void onFailure(Call<AddBookmarkResponse> call, Throwable t) {
-            handleNetworkException(t);
-        }
-    };
-
-    private Callback<AddBookmarkResponse> deleteBookmarkResponseCallback = new Callback<AddBookmarkResponse>() {
-        @Override
-        public void onResponse(Call<AddBookmarkResponse> call, retrofit2.Response<AddBookmarkResponse> response) {
-            if (response == null || null == response.body()) {
-                showToast("Something went wrong from server");
-                return;
-            }
-            AddBookmarkResponse responseData = (AddBookmarkResponse) response.body();
-            updateBookmarkStatus(DELETE_BOOKMARK, responseData);
-        }
-
-        @Override
-        public void onFailure(Call<AddBookmarkResponse> call, Throwable t) {
-            handleNetworkException(t);
+            handleExceptions(t);
         }
     };
 
@@ -1569,7 +1374,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         }
     }
 
-    private void handleNetworkException(Throwable t) {
+    public void handleExceptions(Throwable t) {
         if (t instanceof UnknownHostException) {
             showToast(getString(R.string.error_network));
         } else if (t instanceof SocketTimeoutException) {
@@ -1579,5 +1384,9 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         }
         Crashlytics.logException(t);
         Log.d("MC4kException", Log.getStackTraceString(t));
+    }
+
+    public void updateComment(String updatedComment) {
+        ((TextView) commentEditView.findViewById(R.id.txvCommentDescription)).setText(updatedComment);
     }
 }

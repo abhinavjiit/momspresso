@@ -10,6 +10,7 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Path;
 import retrofit2.http.Url;
 
 /**
@@ -43,4 +44,7 @@ public interface ArticlePublishAPI {
                                              @Field("articleType") String articleType
     );
 
+    @PUT("v1/articles/{articleId}")
+    Call<ArticleDraftResponse> updateArticle(@Path("articleId") String articleId,
+                                             @Body ArticleDraftRequest body);
 }

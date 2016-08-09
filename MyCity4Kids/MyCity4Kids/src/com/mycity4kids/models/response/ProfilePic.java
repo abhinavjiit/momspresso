@@ -11,6 +11,10 @@ public class ProfilePic implements Parcelable {
     private String mobileWeb;
     private String clientApp;
 
+    public ProfilePic() {
+
+    }
+
     protected ProfilePic(Parcel in) {
         mobileWebMin = in.readString();
         clientAppMin = in.readString();

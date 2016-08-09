@@ -405,4 +405,6 @@ public class AppConstants {
     public static final String PUBLIC_PROFILE_FLAG = "publicProfileFlag";
     public static final String PUBLIC_PROFILE_USER_ID = "publicProfileUserId";
     public static final String USER_ID_FOR_FOLLOWING_FOLLOWERS = "userIdFollowingFollowers";
+    public static final String STACK_CLEAR_REQUIRED = "stackClearRequired";
+
 }

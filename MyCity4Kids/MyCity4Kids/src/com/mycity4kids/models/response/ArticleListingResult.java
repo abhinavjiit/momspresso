@@ -187,66 +187,7 @@ public class ArticleListingResult implements Parcelable {
         dest.writeString(articleCount);
     }
 
-    public static class ImageURL implements Parcelable {
 
-        private String mobileWebThumbnail;
-        private String clientAppThumbnail;
-        private String webThumbnail;
-
-        protected ImageURL(Parcel in) {
-            mobileWebThumbnail = in.readString();
-            clientAppThumbnail = in.readString();
-            webThumbnail = in.readString();
-        }
-
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-            dest.writeString(mobileWebThumbnail);
-            dest.writeString(clientAppThumbnail);
-            dest.writeString(webThumbnail);
-        }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        public static final Creator<ImageURL> CREATOR = new Creator<ImageURL>() {
-            @Override
-            public ImageURL createFromParcel(Parcel in) {
-                return new ImageURL(in);
-            }
-
-            @Override
-            public ImageURL[] newArray(int size) {
-                return new ImageURL[size];
-            }
-        };
-
-        public String getMobileWebThumbnail() {
-            return mobileWebThumbnail;
-        }
-
-        public void setMobileWebThumbnail(String mobileWebThumbnail) {
-            this.mobileWebThumbnail = mobileWebThumbnail;
-        }
-
-        public String getClientAppThumbnail() {
-            return clientAppThumbnail;
-        }
-
-        public void setClientAppThumbnail(String clientAppThumbnail) {
-            this.clientAppThumbnail = clientAppThumbnail;
-        }
-
-        public String getWebThumbnail() {
-            return webThumbnail;
-        }
-
-        public void setWebThumbnail(String webThumbnail) {
-            this.webThumbnail = webThumbnail;
-        }
-    }
 
 
 }

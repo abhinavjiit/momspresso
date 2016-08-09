@@ -28,7 +28,6 @@ public class ArrayAdapterFactory implements TypeAdapterFactory {
 
       return typeAdapter;
       
-
   }
 
 }

@@ -75,7 +75,7 @@ public class EditSelectedTopicsActivity extends BaseActivity {
     int initialListSize = 0;
     String imageURL;
     private String articleId;
-    private String tags;
+    private String tags, cities;
     String userNavigatingFrom;
 
 
@@ -104,6 +104,7 @@ public class EditSelectedTopicsActivity extends BaseActivity {
             imageURL = getIntent().getStringExtra("imageUrl");
             articleId = getIntent().getStringExtra("articleId");
             tags = getIntent().getStringExtra("tag");
+            cities = getIntent().getStringExtra("cities");
             if (null != selectedTopics && !selectedTopics.isEmpty()) {
                 //User is coming directly from Editor but from Expandable Listview where he has added or removed topics.
                 //selected tags will be null when coming directly from editing a published article
@@ -121,8 +122,7 @@ public class EditSelectedTopicsActivity extends BaseActivity {
 
                     JSONArray jsonArray = new JSONArray(tags);
 
-                    for(int i=0;i<jsonArray.length();i++)
-                    {
+                    for (int i = 0; i < jsonArray.length(); i++) {
                         Iterator<?> keys = jsonArray.getJSONObject(i).keys();
                         selectedTopicsIdList.add((String) keys.next());
                     }
@@ -131,6 +131,7 @@ public class EditSelectedTopicsActivity extends BaseActivity {
                         FileInputStream fileInputStream = openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                         String fileContent = convertStreamToString(fileInputStream);
                         TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
+                        selectedTopics = new ArrayList<>();
                         createTopicsData(res);
                     } catch (FileNotFoundException e) {
                         Crashlytics.logException(e);
@@ -148,7 +149,8 @@ public class EditSelectedTopicsActivity extends BaseActivity {
 //                    Call<TopicsResponse> call = topicsAPI.getTopicsCategory("" + SharedPrefUtils.getUserDetailModel(this).getId());
 //                    call.enqueue(getAllTopicsResponseCallback);
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    Crashlytics.logException(e);
+                    Log.d("JSONException", Log.getStackTraceString(e));
                 }
             }
         } else {
@@ -184,6 +186,7 @@ public class EditSelectedTopicsActivity extends BaseActivity {
                 intent_1.putExtra("from", userNavigatingFrom);
                 intent_1.putExtra("articleId", articleId);
                 intent_1.putExtra("tag", tags);
+                intent_1.putExtra("cities", cities);
                 startActivity(intent_1);
             }
         });
@@ -404,92 +407,6 @@ public class EditSelectedTopicsActivity extends BaseActivity {
             rootView.addView(topicView);
         }
     }
-
-//    Callback<TopicsResponse> getAllTopicsResponseCallback = new Callback<TopicsResponse>() {
-//        @Override
-//        public void onResponse(Call<TopicsResponse> call, retrofit2.Response<TopicsResponse> response) {
-//            progressBar.setVisibility(View.GONE);
-//
-//            if (response == null || response.body() == null) {
-//                showToast("Something went wrong from server");
-//                return;
-//            }
-//            if (null == selectedTopics) {
-//                selectedTopics = new ArrayList<>();
-//            } else {
-//                selectedTopics.clear();
-//            }
-//
-//            TopicsResponse responseData = (TopicsResponse) response.body();
-//            if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-//                nextButton.setVisibility(View.VISIBLE);
-//
-//                allTopicsMap = new HashMap<Topics, List<Topics>>();
-//                allTopicList = new ArrayList<>();
-//
-//                //Prepare structure for multi-expandable listview.
-//                for (int i = 0; i < responseData.getData().size(); i++) {
-//                    ArrayList<Topics> tempUpList = new ArrayList<>();
-//
-//                    //Set Subcategories selected for choosen tags
-//                    for (int j = 0; j < responseData.getData().get(i).getChild().size(); j++) {
-//                        ArrayList<Topics> tempList = new ArrayList<>();
-//                        if (responseData.getData().get(i).getChild().get(j).getChild().size() == 0) {
-//                            for (int l = 0; l < selectedTopicsIdList.size(); l++) {
-//                                if (selectedTopicsIdList.get(l).equals(responseData.getData().get(i).getChild().get(j).getId())) {
-//                                    Log.d("Change SUB to SELECTED ", "" + responseData.getData().get(i).getChild().get(j).getTitle());
-//                                    responseData.getData().get(i).getChild().get(j).setIsSelected(true);
-//                                    selectedTopics.add(responseData.getData().get(i).getChild().get(j));
-//                                }
-//                            }
-//                        }
-//
-//                        //Set Subcategories-children selected for choosen tags
-//                        for (int k = 0; k < responseData.getData().get(i).getChild().get(j).getChild().size(); k++) {
-//                            for (int l = 0; l < selectedTopicsIdList.size(); l++) {
-//                                if (selectedTopicsIdList.get(l).equals(responseData.getData().get(i).getChild().get(j).getChild().get(k).getId())) {
-//                                    Log.d("Change to SELECTED ", "" + responseData.getData().get(i).getChild().get(j).getChild().get(k).getTitle());
-//                                    responseData.getData().get(i).getChild().get(j).getChild().get(k).setIsSelected(true);
-//                                    selectedTopics.add(responseData.getData().get(i).getChild().get(j).getChild().get(k));
-//                                }
-//                            }
-//                            responseData.getData().get(i).getChild().get(j).getChild().get(k)
-//                                    .setParentId(responseData.getData().get(i).getId());
-//                            responseData.getData().get(i).getChild().get(j).getChild().get(k)
-//                                    .setParentName(responseData.getData().get(i).getTitle());
-//                            tempList.add(responseData.getData().get(i).getChild().get(j).getChild().get(k));
-//                        }
-//
-//                        responseData.getData().get(i).getChild().get(j).setChild(tempList);
-//                    }
-//
-//                    for (int k = 0; k < responseData.getData().get(i).getChild().size(); k++) {
-//                        responseData.getData().get(i).getChild().get(k)
-//                                .setParentId(responseData.getData().get(i).getId());
-//                        responseData.getData().get(i).getChild().get(k)
-//                                .setParentName(responseData.getData().get(i).getTitle());
-//                        tempUpList.add(responseData.getData().get(i).getChild().get(k));
-//                    }
-//
-//                    allTopicList.add(responseData.getData().get(i));
-//                    allTopicsMap.put(responseData.getData().get(i),
-//                            tempUpList);
-//                }
-//                createSelectedTagsView();
-//
-//            } else {
-//                showToast("Something went wrong from server");
-//            }
-//        }
-//
-//        @Override
-//        public void onFailure(Call<TopicsResponse> call, Throwable t) {
-//            showToast(getString(R.string.went_wrong));
-//            progressBar.setVisibility(View.GONE);
-//            Crashlytics.logException(t);
-//            Log.d("MC4KException", Log.getStackTraceString(t));
-//        }
-//    };
 
     /*
     * Create tags json from list of selected tags Arraylist

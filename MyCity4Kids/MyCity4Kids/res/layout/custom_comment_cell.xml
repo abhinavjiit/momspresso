@@ -6,7 +6,6 @@
     android:layout_height="wrap_content"
     android:background="@color/white_color">
 
-
     <RelativeLayout
         android:id="@+id/relativeMainContainer"
         android:layout_width="match_parent"
@@ -15,7 +14,6 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:paddingTop="8dp">
-
 
         <com.mikhaellopez.circularimageview.CircularImageView
             android:id="@+id/network_img"
@@ -32,7 +30,6 @@
             app:civ_shadow="true"
             app:civ_shadow_color="@color/grey"
             app:civ_shadow_radius="4" />
-
 
         <TextView
             android:id="@+id/txvCommentTitle"
@@ -75,6 +72,18 @@
             android:textSize="14sp" />
 
         <TextView
+            android:id="@+id/txvEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txvCommentDescription"
+            android:layout_marginRight="22dp"
+            android:layout_toLeftOf="@+id/txvReply"
+            android:padding="5dp"
+            android:text="EDIT"
+            android:textColor="@color/grey"
+            android:textSize="14sp" />
+
+        <TextView
             android:id="@+id/txvReply"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -83,7 +92,8 @@
             android:padding="5dp"
             android:text="REPLY"
             android:textColor="@color/blog.comments.follow_reply_btn"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:visibility="invisible" />
     </RelativeLayout>
 
     <RelativeLayout

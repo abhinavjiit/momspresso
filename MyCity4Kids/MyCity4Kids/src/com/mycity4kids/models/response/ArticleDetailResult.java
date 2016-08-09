@@ -12,7 +12,8 @@ public class ArticleDetailResult {
     private String id;
     private String title;
     private DetailsBody processedBody;
-    private String imageUrl;
+    private ImageURL imageUrl;
+    private ProfilePic profilePic;
     private String excerpt;
     private String userId;
     private String titleSlug;
@@ -53,11 +54,11 @@ public class ArticleDetailResult {
         this.processedBody = processedBody;
     }
 
-    public String getImageUrl() {
+    public ImageURL getImageUrl() {
         return imageUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
+    public void setImageUrl(ImageURL imageUrl) {
         this.imageUrl = imageUrl;
     }
 
@@ -91,6 +92,14 @@ public class ArticleDetailResult {
 
     public void setAuthorImage(String authorImage) {
         this.authorImage = authorImage;
+    }
+
+    public ProfilePic getProfilePic() {
+        return profilePic;
+    }
+
+    public void setProfilePic(ProfilePic profilePic) {
+        this.profilePic = profilePic;
     }
 
     public String getCreated() {

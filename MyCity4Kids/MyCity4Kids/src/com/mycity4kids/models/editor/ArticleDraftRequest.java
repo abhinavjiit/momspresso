@@ -19,6 +19,7 @@ public class ArticleDraftRequest {
     private String imageUrl;
     private String articleType;
     private List<Map<String, String>> tags;
+    private List<Map<String, String>> cities;
 
     public String getBody() {
         return body;
@@ -100,7 +101,11 @@ public class ArticleDraftRequest {
         this.articleType = articleType;
     }
 
-    public class Tags {
+    public List<Map<String, String>> getCities() {
+        return cities;
+    }
 
+    public void setCities(List<Map<String, String>> cities) {
+        this.cities = cities;
     }
 }
