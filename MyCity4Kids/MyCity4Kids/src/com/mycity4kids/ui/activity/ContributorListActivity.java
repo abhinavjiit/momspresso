@@ -6,8 +6,12 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
@@ -16,6 +20,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -26,11 +32,16 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.NewParentingBlogController;
 import com.mycity4kids.models.parentingstop.ParentingRequest;
+import com.mycity4kids.models.response.ArticleListingResult;
+import com.mycity4kids.models.response.ContributorListResponse;
+import com.mycity4kids.models.response.ContributorListResult;
 import com.mycity4kids.models.response.UserCommentsResponse;
 import com.mycity4kids.newmodels.bloggermodel.BlogItemModel;
 import com.mycity4kids.newmodels.bloggermodel.ParentingBlogResponse;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.ContributorListAPI;
 import com.mycity4kids.ui.adapter.ParentingBlogAdapter;
+import com.mycity4kids.ui.fragment.ParentingBlogFragment;
 
 import java.util.ArrayList;
 
@@ -41,34 +52,50 @@ import retrofit2.Retrofit;
 /**
  * Created by anshul on 8/7/16.
  */
-public class ContributorListActivity extends BaseActivity {
+public class ContributorListActivity extends BaseActivity implements View.OnClickListener {
     ListView blogListing;
     ParentingBlogAdapter parentingBlogAdapter;
     private RelativeLayout mLodingView;
     private int totalPageCount = 2;
     private int nextPageNumber = 0;
-    private String sortType = "";
     Boolean isSortEnable = false;
     ArrayList<BlogItemModel> listingData;
     ArrayList<BlogItemModel> orignalListingData;
     Boolean isReuqestRunning = false;
+    private Boolean isLastPageReached = false;
+    private int limit = 10;
+    private String paginationValue = "";
+    ArrayList<ContributorListResult> contributorArrayList;
+    Toolbar mToolBar;
+    FloatingActionButton rankFab, nameFab;
+    int sortType = 1;
+    String type=AppConstants.USER_TYPE_BLOGGER;
+    FloatingActionsMenu fab_menu;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.parenting_blog_home);
+        mToolBar = (Toolbar) findViewById(R.id.toolbar);
+        mToolBar.setVisibility(View.VISIBLE);
+        setSupportActionBar(mToolBar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("CONTRIBUTORS");
         blogListing = (ListView) findViewById(R.id.blog_listing);
         mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
+        rankFab = (FloatingActionButton) findViewById(R.id.rankSortFAB);
+        nameFab = (FloatingActionButton) findViewById(R.id.nameSortFAB);
+        fab_menu=(FloatingActionsMenu) findViewById(R.id.fab_menu);
+        final FloatingActionsMenu fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
         findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely));
-
+        contributorArrayList = new ArrayList<>();
         orignalListingData = new ArrayList<>();
-
-        parentingBlogAdapter = new ParentingBlogAdapter(this, null);
-        blogListing.setAdapter(parentingBlogAdapter);
+        rankFab.setOnClickListener(ContributorListActivity.this);
+        nameFab.setOnClickListener(this);
         listingData = new ArrayList<>();
 
         showProgressDialog(getString(R.string.please_wait));
-        hitBloggerAPIrequest(nextPageNumber);
+        hitBloggerAPIrequest(sortType,type);
 
         blogListing.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -83,18 +110,13 @@ public class ContributorListActivity extends BaseActivity {
 
                 if (isOnline()) {
 
-                    if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && nextPageNumber < totalPageCount) {
+                    if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && nextPageNumber < totalPageCount && !isLastPageReached) {
 
-                        if (isSortEnable == false) {
-                            isReuqestRunning = true;
-                            mLodingView.setVisibility(View.VISIBLE);
-                            hitBloggerAPIrequest(nextPageNumber);
 
-                        } else if (isSortEnable) {
-                            isReuqestRunning = true;
-                            mLodingView.setVisibility(View.VISIBLE);
-                            hitSortBloggerAPIrequest(nextPageNumber, sortType);
-                        }
+                        isReuqestRunning = true;
+                        mLodingView.setVisibility(View.VISIBLE);
+                        hitBloggerAPIrequest(sortType,type);
+
                     }
 
                 }
@@ -105,16 +127,12 @@ public class ContributorListActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
-                BlogItemModel itemSelected = (BlogItemModel) adapterView.getItemAtPosition(position);
+                ContributorListResult itemSelected = (ContributorListResult) adapterView.getItemAtPosition(position);
 
 //                if (!StringUtils.isNullOrEmpty(itemSelected.getBlog_title())) {
-                Intent intent = new Intent(ContributorListActivity.this, BlogDetailActivity.class);
-                Bundle bundle = new Bundle();
-                intent.putExtra(Constants.IS_COMMING_FROM_LISTING, true);
-                intent.putExtra(Constants.AUTHOR_ID, ""+itemSelected.getId());
-                intent.putExtra(Constants.BLOG_DETAILS, itemSelected);
-                intent.putExtra(Constants.BLOG_LIST_POSITION, position);
-                startActivityForResult(intent, Constants.BLOG_FOLLOW_STATUS);
+                Intent intent = new Intent(ContributorListActivity.this, BloggerDashboardActivity.class);
+                intent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, itemSelected.getId());
+                startActivity(intent);
 //                } else {
 //                    ToastUtils.showToast(getActivity(), "Blogger details not available at this moment, please try again later...");
 //                }
@@ -122,6 +140,8 @@ public class ContributorListActivity extends BaseActivity {
             }
         });
 
+        parentingBlogAdapter = new ParentingBlogAdapter(ContributorListActivity.this, contributorArrayList);
+        blogListing.setAdapter(parentingBlogAdapter);
 
     }
 
@@ -138,9 +158,9 @@ public class ContributorListActivity extends BaseActivity {
     protected void updateUi(Response response) {
 
         ParentingBlogResponse responseData;
-
+/*
         if (response == null) {
-         showToast("Something went wrong from server");
+            showToast("Something went wrong from server");
             removeProgressDialog();
             isReuqestRunning = false;
             mLodingView.setVisibility(View.GONE);
@@ -168,9 +188,9 @@ public class ContributorListActivity extends BaseActivity {
                         isReuqestRunning = false;
                         String message = responseData.getResult().getMessage();
                         if (!StringUtils.isNullOrEmpty(message)) {
-                           showToast(message);
+                            showToast(message);
                         } else {
-                     showToast(getString(R.string.went_wrong));
+                            showToast(getString(R.string.went_wrong));
                         }
                     }
 
@@ -183,7 +203,7 @@ public class ContributorListActivity extends BaseActivity {
                         mLodingView.setVisibility(View.GONE);
                     }
                     isReuqestRunning = false;
-                   showToast(getString(R.string.went_wrong));
+                    showToast(getString(R.string.went_wrong));
                     break;
                 }
 
@@ -211,15 +231,15 @@ public class ContributorListActivity extends BaseActivity {
                         isReuqestRunning = false;
                         String message = responseData.getResult().getMessage();
                         if (!StringUtils.isNullOrEmpty(message)) {
-                       showToast(message);
+                            showToast(message);
                         } else {
-                     showToast(getString(R.string.went_wrong));
+                            showToast(getString(R.string.went_wrong));
                         }
 
                     }
 
                 } catch (Exception e) {
-               showToast(getString(R.string.went_wrong));
+                    showToast(getString(R.string.went_wrong));
                     e.printStackTrace();
                 }
 
@@ -227,11 +247,11 @@ public class ContributorListActivity extends BaseActivity {
                 isReuqestRunning = false;
 
                 break;
-        }
+        }*/
     }
 
 
-    private void updatBloggerResponse(ParentingBlogResponse responseData) {
+ /*   private void updatBloggerResponse(ParentingBlogResponse responseData) {
 
         if (isSortEnable) {
             if (nextPageNumber == 0) {
@@ -262,88 +282,84 @@ public class ContributorListActivity extends BaseActivity {
         nextPageNumber = nextPageNumber + 1;
 
     }
+*/
 
+    public void hitBloggerAPIrequest(int sortType,String type) {
 
-    public void hitBloggerAPIrequest(int page) {
-
-//        showProgressDialog(getString(R.string.please_wait));
-   /*     ParentingRequest _parentingModel = new ParentingRequest();
-        if (!String.valueOf(page).equalsIgnoreCase("0"))
-            _parentingModel.setPage(String.valueOf(page));
-
-        NewParentingBlogController newParentingBlogController = new NewParentingBlogController(ContributorListActivity.this, this);
-        newParentingBlogController.getData(AppConstants.PARRENTING_BLOG_DATA, _parentingModel);*/
-   /*     showProgressDialog(getResources().getString(R.string.please_wait));
+        showProgressDialog(getResources().getString(R.string.please_wait));
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         // prepare call in Retrofit 2.0
-        BloggerDashboardAPI getCommentsAPI = retrofit.create(BloggerDashboardAPI.class);
+        ContributorListAPI contributorListAPI = retrofit.create(ContributorListAPI.class);
         if (!ConnectivityUtils.isNetworkEnabled(this)) {
             removeProgressDialog();
             showToast(getString(R.string.error_network));
             return;
         }
-        Call<UserCommentsResponse> call = getCommentsAPI.getUserComments(AppConstants.LIVE_URL+"v1/comments/"+userId+"?limit="+limit+ "&pagination=" + paginationValue);
+        Call<ContributorListResponse> call = contributorListAPI.getContributorList(AppConstants.LIVE_URL + "v1/users/?limit=" + limit + "&sortType=" + sortType + "&type="+type + "&pagination=" + paginationValue);
 //asynchronous call
-        call.enqueue(new Callback<UserCommentsResponse>() {
+        call.enqueue(new Callback<ContributorListResponse>() {
                          @Override
-                         public void onResponse(Call<UserCommentsResponse> call, retrofit2.Response<UserCommentsResponse> response) {
+                         public void onResponse(Call<ContributorListResponse> call, retrofit2.Response<ContributorListResponse> response) {
                              int statusCode = response.code();
                              removeProgressDialog();
 
-                             UserCommentsResponse responseModel = response.body();
+                             ContributorListResponse responseModel = response.body();
                              if (responseModel.getCode() != 200) {
                                  showToast(getString(R.string.toast_response_error));
+                                 mLodingView.setVisibility(View.GONE);
                                  return;
                              } else {
                                  if (!StringUtils.isNullOrEmpty(responseModel.getData().getMsg())) {
                                      Log.i("Draft message", responseModel.getData().getMsg());
                                  }
-                                 processCommentsResponse(responseModel);
-                                 isReuqestCommentsRunning=false;
+                                 processResponse(responseModel);
+                                 //     isReuqestCommentsRunning = false;
                              }
+                             isReuqestRunning = false;
+                             mLodingView.setVisibility(View.GONE);
                          }
 
                          @Override
-                         public void onFailure(Call<UserCommentsResponse> call, Throwable t) {
+                         public void onFailure(Call<ContributorListResponse> call, Throwable t) {
                              removeProgressDialog();
 
                          }
                      }
-        );*/
+        );
 
     }
 
-    public void hitSortBloggerAPIrequest(int page, String sort) {
+    /*    public void hitSortBloggerAPIrequest(int page, String sort) {
 
-        ParentingRequest _parentingModel = new ParentingRequest();
+            ParentingRequest _parentingModel = new ParentingRequest();
 
-        _parentingModel.setPage(String.valueOf(page));
-        _parentingModel.setSoty_by(sort);
+            _parentingModel.setPage(String.valueOf(page));
+            _parentingModel.setSoty_by(sort);
 
-        if (nextPageNumber == 0) {
-            showProgressDialog(getString(R.string.please_wait));
-        } else {
-            mLodingView.setVisibility(View.VISIBLE);
+            if (nextPageNumber == 0) {
+                showProgressDialog(getString(R.string.please_wait));
+            } else {
+                mLodingView.setVisibility(View.VISIBLE);
+            }
+
+            NewParentingBlogController newParentingBlogController = new NewParentingBlogController(ContributorListActivity.this, this);
+            newParentingBlogController.getData(AppConstants.PARRENTING_BLOG_SORT_DATA, _parentingModel);
+
         }
 
-        NewParentingBlogController newParentingBlogController = new NewParentingBlogController(ContributorListActivity.this, this);
-        newParentingBlogController.getData(AppConstants.PARRENTING_BLOG_SORT_DATA, _parentingModel);
+        public void sortParentingBlogListing(String sotyType) {
 
-    }
+            isSortEnable = true;
+            this.sortType = sotyType;
+            nextPageNumber = 0;
+            totalPageCount = 1;
+            orignalListingData = listingData;
+    //        listingData.clear();
+            isReuqestRunning = true;
+            hitSortBloggerAPIrequest(nextPageNumber, sotyType);
 
-    public void sortParentingBlogListing(String sotyType) {
-
-        isSortEnable = true;
-        this.sortType = sotyType;
-        nextPageNumber = 0;
-        totalPageCount = 1;
-        orignalListingData = listingData;
-//        listingData.clear();
-        isReuqestRunning = true;
-        hitSortBloggerAPIrequest(nextPageNumber, sotyType);
-
-    }
-
+        }
+    */
     public boolean isOnline() {
         ConnectivityManager cm =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -373,7 +389,57 @@ public class ContributorListActivity extends BaseActivity {
         }).start();
     }
 
-    public void updateList_followBtn(int blogListPosition) {
+    public void processResponse(ContributorListResponse responseModel) {
+        ArrayList<ContributorListResult> dataList = responseModel.getData().getResult();
+        if (dataList.size() == 0) {
+
+            isLastPageReached = true;
+            if (null != contributorArrayList && !contributorArrayList.isEmpty()) {
+                //No more next results for search from pagination
+
+            } else {
+                // No results for search
+                contributorArrayList.clear();
+                contributorArrayList.addAll(dataList);
+//                parentingBlogAdapter.setListData(contributorArrayList);
+
+                parentingBlogAdapter.notifyDataSetChanged();
+               /* noBlogsTextView.setVisibility(View.VISIBLE);
+                noBlogsTextView.setText("No articles found");*/
+            }
+
+//            articleDataModelsNew = dataList;
+//            articlesListingAdapter.setNewListData(articleDataModelsNew);
+//            articlesListingAdapter.notifyDataSetChanged();
+//            noBlogsTextView.setVisibility(View.VISIBLE);
+//            noBlogsTextView.setText("No articles found");
+        } else {
+            //  noBlogsTextView.setVisibility(View.GONE);
+//            totalPageCount = responseData.getResult().getData().getPage_count();
+
+
+            if (StringUtils.isNullOrEmpty(paginationValue)) {
+//                    contributorArrayList = dataList;
+                contributorArrayList.clear();
+                contributorArrayList.addAll(dataList);
+            } else {
+                contributorArrayList.addAll(dataList);
+            }
+//            parentingBlogAdapter.setListData(contributorArrayList);
+            paginationValue = responseModel.getData().getPagination();
+            if (AppConstants.PAGINATION_END_VALUE.equals(paginationValue)) {
+                isLastPageReached = true;
+            }
+          /*  parentingBlogAdapter=new ParentingBlogAdapter(ContributorListActivity.this,contributorArrayList);
+            blogListing.setAdapter(parentingBlogAdapter);*/
+
+            // parentingBlogAdapter.setNewListData(articleDataModelsNew);
+            parentingBlogAdapter.notifyDataSetChanged();
+
+        }
+    }
+
+   /* public void updateList_followBtn(int blogListPosition) {
 
         ArrayList<BlogItemModel> datalist = parentingBlogAdapter.getListData();
         BlogItemModel model = datalist.get(blogListPosition);
@@ -387,6 +453,74 @@ public class ContributorListActivity extends BaseActivity {
         datalist.set(blogListPosition, model);
         parentingBlogAdapter.setListData(datalist);
         parentingBlogAdapter.notifyDataSetChanged();
+
+    }*/
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //  return super.onCreateOptionsMenu(menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_filter, menu);
+        MenuItem item = menu.findItem(R.id.filter);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+            case R.id.filter:
+                Intent intent = new Intent(getApplicationContext(), BlogFilterActivity.class);
+                startActivityForResult(intent, Constants.FILTER_BLOG);
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+        case Constants.FILTER_BLOG:
+      sortParentingBlogListing(data.getStringExtra(Constants.FILTER_BLOG_SORT_TYPE));
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.rankSortFAB:
+                sortType = 0;
+                hitBloggerAPIrequest(sortType,type);
+                break;
+            case R.id.nameSortFAB:
+                sortType = 1;
+                hitBloggerAPIrequest(sortType,type);
+                break;
+        }
+
+    }
+    public void sortParentingBlogListing(String type) {
+
+        isSortEnable = true;
+        this.type = type;
+        contributorArrayList.clear();
+        parentingBlogAdapter.notifyDataSetChanged();
+
+//        listingData.clear();
+        isReuqestRunning = true;
+        if (!type.equals(AppConstants.USER_TYPE_BLOGGER))
+        {
+            fab_menu.setVisibility(View.GONE);
+        }
+        else
+        {
+            fab_menu.setVisibility(View.VISIBLE);
+        }
+        hitBloggerAPIrequest(sortType,type);
 
     }
 }

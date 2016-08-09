@@ -18,7 +18,8 @@
             android:layout_height="wrap_content"
             android:padding="15dp"
             android:text="Name (A-Z)"
-            android:textColor="@color/black_color" />
+            android:textColor="@color/black_color"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/rank_name"
@@ -26,7 +27,8 @@
             android:layout_height="wrap_content"
             android:padding="15dp"
             android:text="Rank"
-            android:textColor="@color/black_color" />
+            android:textColor="@color/black_color"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/bloggers"
@@ -34,7 +36,8 @@
             android:layout_height="wrap_content"
             android:padding="15dp"
             android:text="Bloggers"
-            android:textColor="@color/black_color" />
+            android:textColor="@color/black_color"
+       />
 
         <TextView
             android:id="@+id/experts"
@@ -50,6 +53,13 @@
             android:layout_height="wrap_content"
             android:padding="15dp"
             android:text="Editors"
+            android:textColor="@color/black_color" />
+        <TextView
+            android:id="@+id/editorialTeam"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:text="Editorial Team"
             android:textColor="@color/black_color" />
     </LinearLayout>
 

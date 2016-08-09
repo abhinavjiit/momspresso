@@ -35,7 +35,16 @@ import java.util.ArrayList;
  * Created by manish.soni on 27-07-2015.
  */
 public class ParentingBlogFragment extends BaseFragment implements View.OnClickListener {
+    @Override
+    protected void updateUi(Response response) {
 
+    }
+
+    @Override
+    public void onClick(View v) {
+
+    }
+/*
     ListView blogListing;
     ParentingBlogAdapter parentingBlogAdapter;
     private RelativeLayout mLodingView;
@@ -342,5 +351,5 @@ public class ParentingBlogFragment extends BaseFragment implements View.OnClickL
         parentingBlogAdapter.setListData(datalist);
         parentingBlogAdapter.notifyDataSetChanged();
 
-    }
+    }*/
 }

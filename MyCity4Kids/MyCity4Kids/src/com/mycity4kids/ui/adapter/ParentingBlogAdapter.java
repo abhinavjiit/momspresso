@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -16,17 +17,39 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
+import com.google.gson.Gson;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
+import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.enums.ParentingFilterType;
+import com.mycity4kids.models.request.FollowUnfollowUserRequest;
+import com.mycity4kids.models.response.ContributorListResult;
+import com.mycity4kids.models.response.FollowUnfollowUserResponse;
 import com.mycity4kids.newmodels.bloggermodel.BlogItemModel;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
+import com.mycity4kids.ui.activity.FollowersAndFollowingListActivity;
 import com.mycity4kids.ui.activity.LoadWebViewActivity;
+import com.mycity4kids.utils.RoundedTransformation;
 import com.squareup.picasso.Picasso;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by manish.soni on 27-07-2015.
@@ -35,23 +58,23 @@ public class ParentingBlogAdapter extends BaseAdapter {
     private final float density;
     private final int screenWidth;
     Context context;
-    ArrayList<BlogItemModel> datalist;
+    ArrayList<ContributorListResult> datalist;
 
-    public ParentingBlogAdapter(Context context, ArrayList<BlogItemModel> datalist) {
+    public ParentingBlogAdapter(Context context, ArrayList<ContributorListResult> datalist) {
         this.context = context;
         this.datalist = datalist;
         density = context.getResources().getDisplayMetrics().density;
         screenWidth = context.getResources().getDisplayMetrics().widthPixels;
     }
 
-    public void setListData(ArrayList<BlogItemModel> datalist) {
-        this.datalist = datalist;
-    }
+//    public void setListData(ArrayList<ContributorListResult> datalist) {
+//        this.datalist = datalist;
+//    }
 
 
-    public ArrayList<BlogItemModel> getListData() {
-        return datalist;
-    }
+//    public ArrayList<ContributorListResult> getListData() {
+//        return datalist;
+//    }
 
     @Override
     public int getCount() {
@@ -72,7 +95,7 @@ public class ParentingBlogAdapter extends BaseAdapter {
     public View getView(final int position, final View convertView, ViewGroup viewGroup) {
 
         View view = convertView;
-        ViewHolder holder = null;
+      final  ViewHolder holder ;
         if (view == null) {
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
             view = inflater.inflate(R.layout.contributor_list_item, viewGroup, false);
@@ -81,10 +104,13 @@ public class ParentingBlogAdapter extends BaseAdapter {
             holder.bloggerName = (TextView) view.findViewById(R.id.bloggerName);
             holder.authorType = (TextView) view.findViewById(R.id.userType);
             holder.authorRank = (TextView) view.findViewById(R.id.rank);
-            holder.shareBlogImageView = (ImageView) view.findViewById(R.id.bloggerImageView);
-           // holder.bloggerCover = (ImageView) view.findViewById(R.id.blogger_bg);
+          //  holder.shareBlogImageView = (ImageView) view.findViewById(R.id.bloggerImageView);
+            holder.bloggerCover = (ImageView) view.findViewById(R.id.bloggerImageView);
             holder.bloggerFollow = (TextView) view.findViewById(R.id.blog_follow_text);
             holder.bloggerBio = (TextView) view.findViewById(R.id.bloggerBio);
+            holder.followersCount=(TextView)view.findViewById(R.id.followersCount);
+            holder.relativeLoadingView=(RelativeLayout) view.findViewById(R.id.relativeLoadingView);
+            holder.rankText=(TextView) view.findViewById(R.id.rankText);
           //  holder.moreDesc = (TextView) view.findViewById(R.id.more_text);
            // holder.recentArticleLayout = (LinearLayout) view.findViewById(R.id.recent_article_frame);
           //  holder.articleBlock = (LinearLayout) view.findViewById(R.id.article_block);
@@ -95,40 +121,94 @@ public class ParentingBlogAdapter extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
 
-        holder.bloggerName.setText(datalist.get(position).getFirst_name() + " " + datalist.get(position).getLast_name());
-        holder.bloggerName.setTextColor(Color.WHITE);
-        holder.authorType.setText(datalist.get(position).getAuthor_type().toUpperCase());
-        holder.authorType.setTextColor(Color.parseColor(datalist.get(position).getAuthor_color_code()));
+        holder.bloggerName.setText(datalist.get(position).getFirstName() + " " + datalist.get(position).getLastName());
+      //  holder.bloggerName.setTextColor(Color.WHITE);
+       if( !StringUtils.isNullOrEmpty(datalist.get(position).getUserType()))
+       {
+           switch (datalist.get(position).getUserType()){
+               case AppConstants.USER_TYPE_USER:
+                   holder.authorType.setText("User");
+                   break;
+               case AppConstants.USER_TYPE_ADMIN:
+                   holder.authorType.setText("Admin");
+                   break;
+               case AppConstants.USER_TYPE_CITY_ADMIN:
+                   holder.authorType.setText("City Admin");
+                   break;
+               case AppConstants.USER_TYPE_BLOGGER:
+                   holder.authorType.setText("Blogger");
+                   break;
+               case AppConstants.USER_TYPE_BUSINESS:
+                   holder.authorType.setText("Business");
+                   break;
+               case AppConstants.USER_TYPE_EDITOR:
+                   holder.authorType.setText("Editor");
+                   break;
+               case AppConstants.USER_TYPE_EDITORIAL:
+                   holder.authorType.setText("Editorial Team");
+                   break;
+               case AppConstants.USER_TYPE_EXPERT:
+                   holder.authorType.setText("Expert");
+                   break;
+               case AppConstants.USER_TYPE_REPORT_MANAGER:
+                   holder.authorType.setText("Report Manager");
+                   break;
+               default:holder.authorType.setText("Blogger");
+                   break;
+           }
+           if (!datalist.get(position).getUserType().equals(AppConstants.USER_TYPE_BLOGGER))
+           {
+               holder.rankText.setVisibility(View.GONE);
+               holder.authorRank.setVisibility(View.GONE);
+           }
+           else
+           {
+               holder.rankText.setVisibility(View.VISIBLE);
+               holder.authorRank.setVisibility(View.VISIBLE);
+           }
 
-        holder.bloggerBio.invalidate();
+       }
+
+        holder.authorType.setTextColor(Color.parseColor(datalist.get(position).getColorCode()));
+
+      /*  holder.bloggerBio.invalidate();
         if (datalist.get(position).getMaxLineCount() == 0) {
             datalist.get(position).setMaxLineCount(holder.bloggerBio.getLineCount());
-        }
+        }*/
 
 //        if (!StringUtils.isNullOrEmpty(datalist.get(position).getProfile_image())) {
 //            Picasso.with(context).load(datalist.get(position).getProfile_image()).resize((int) (90 * density), (int) (100 * density)).centerCrop().into(holder.bloggerImage);
 //        } else {
 //            Picasso.with(context).load(R.drawable.default_img).resize((int) (90 * density), (int) (100 * density)).centerCrop().into(holder.bloggerImage);
 //        }
-        if (StringUtils.isNullOrEmpty(datalist.get(position).getProfile_image())) {
-            Picasso.with(context).load(R.drawable.blog_bgnew).fit().placeholder(R.drawable.blog_bgnew).into(holder.bloggerCover);
+        if (StringUtils.isNullOrEmpty(datalist.get(position).getProfilePic())) {
+            Picasso.with(context).load(R.drawable.default_commentor_img).fit().placeholder(R.drawable.default_commentor_img).transform(new RoundedTransformation()).into(holder.bloggerCover);
         } else {
-            Picasso.with(context).load(datalist.get(position).getProfile_image()).fit().placeholder(R.drawable.blog_bgnew).into(holder.bloggerCover);
+            try {
+                Picasso.with(context).load(datalist.get(position).getProfilePic()).fit().placeholder(R.drawable.default_commentor_img).transform(new RoundedTransformation()).into(holder.bloggerCover);
+            }
+            catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+                Picasso.with(context).load(R.drawable.blog_bgnew).fit().placeholder(R.drawable.blog_bgnew).transform(new RoundedTransformation()).into(holder.bloggerCover);            }
+
         }
-        if (StringUtils.isNullOrEmpty(datalist.get(position).getAbout_user())) {
-            holder.aboutLayout.setVisibility(View.GONE);
+        if (StringUtils.isNullOrEmpty(datalist.get(position).getAbout())) {
+            holder.bloggerBio.setVisibility(View.INVISIBLE);
         } else {
-            holder.aboutLayout.setVisibility(View.VISIBLE);
-            holder.bloggerBio.setText(datalist.get(position).getAbout_user());
+            holder.bloggerBio.setVisibility(View.VISIBLE);
+        //    holder.aboutLayout.setVisibility(View.VISIBLE);
+            holder.bloggerBio.setText(datalist.get(position).getAbout());
         }
 
-        if (!StringUtils.isNullOrEmpty(String.valueOf(datalist.get(position).getAuthor_rank()))) {
-            holder.authorRank.setText(String.valueOf(datalist.get(position).getAuthor_rank()));
+        if (!StringUtils.isNullOrEmpty(String.valueOf(datalist.get(position).getRank()))) {
+            holder.authorRank.setText(String.valueOf(datalist.get(position).getRank()));
         } else {
             holder.authorRank.setText("");
         }
+        holder.followersCount.setText(datalist.get(position).getFollowersCount()+"");
 
-        holder.recentArticleLayout.removeAllViews();
+     /*   holder.recentArticleLayout.removeAllViews();
         if (datalist.get(position).getRecent_articles().size() == 0) {
             holder.articleBlock.setVisibility(View.GONE);
 
@@ -155,7 +235,7 @@ public class ParentingBlogAdapter extends BaseAdapter {
                     }
                 });
             }
-        }
+        }*/
 
         holder.bloggerFollow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -163,72 +243,38 @@ public class ParentingBlogAdapter extends BaseAdapter {
                 ((DashboardActivity) context).followAPICall_List(String.valueOf(datalist.get(position).getId()), position);
             }
         });
-/*
-        if (datalist.get(position).getMaxLineCount() >= 4) {
-            holder.moreDesc.setVisibility(View.VISIBLE);
-            holder.description.setMaxLines(4);
-            holder.description.setEllipsize(null);
-            holder.moreDesc.setText("More");
-        } else {
-            holder.description.setMaxLines(4);
-            holder.description.setEllipsize(null);
-            holder.moreDesc.setVisibility(View.GONE);
-        }*/
 
-        final ViewHolder finalHolder = holder;
-        /*holder.moreDesc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (finalHolder.moreDesc.getText().toString().equalsIgnoreCase("More")) {
-                    finalHolder.description.setMaxLines(100);
-                    finalHolder.description.setEllipsize(null);
-                    finalHolder.moreDesc.setText("Less");
-                } else {
-                    finalHolder.description.setMaxLines(4);
-                    finalHolder.description.setEllipsize(null);
-                    finalHolder.moreDesc.setText("More");
-                }
-            }
-        });*/
-
-
-        //author: hemant@mc4k.com -- Share URL for blog not in response at present
-//        holder.shareBlogImageView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
-//                shareIntent.setType("text/plain");
-//                String shareUrl = "";
-//                if (StringUtils.isNullOrEmpty(datalist.get(position).getUrl())) {
-//                    shareUrl = "";
-//                } else {
-//                    shareUrl = datalist.get(position).getUrl();
-//                }
-//
-//                String author = datalist.get(position).getFirst_name() + " " + datalist.get(position).getLast_name();
-//                String shareMessage;
-//                if (StringUtils.isNullOrEmpty(shareUrl)) {
-//                    shareMessage = "mycity4kids\n\nCheck out this interesting blog " + "\"" + datalist.get(position).getBlog_title() + "\" by " + author + ".";
-//                } else {
-//                    shareMessage = "mycity4kids\n\nCheck out this interesting blog " + "\"" + datalist.get(position).getBlog_title() + "\" by " + author + ".\nRead Here: " + shareUrl;
-//                }
-//
-//                shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
-//                startActivity(Intent.createChooser(shareIntent, "mycity4kids"));
-//            }
-//        });
-
-        if (!StringUtils.isNullOrEmpty(datalist.get(position).getUser_following_status())) {
-            if (datalist.get(position).getUser_following_status().equalsIgnoreCase("0")) {
+            if (datalist.get(position).getIsFollowed()==0) {
                 holder.bloggerFollow.setText("FOLLOW");
             } else {
-                holder.bloggerFollow.setText("UNFOLLOW");
+                holder.bloggerFollow.setText("FOLLOWING");
             }
-        }
+        holder.bloggerFollow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("Follow", "Follow");
+                followUserAPI(position, holder);
+            }
+        });
+
 
         return view;
     }
-
+    private void followUserAPI(int position, ViewHolder holder) {
+        FollowUnfollowUserRequest followUnfollowUserRequest = new FollowUnfollowUserRequest();
+        followUnfollowUserRequest.setFollowerId(datalist.get(position).getId());
+        if (datalist.get(position).getIsFollowed() == 0) {
+            holder.relativeLoadingView.setVisibility(View.VISIBLE);
+            holder.bloggerFollow.setVisibility(View.GONE);
+            String jsonString = new Gson().toJson(followUnfollowUserRequest);
+            new FollowUnfollowAsyncTask(holder, "follow", position).execute(jsonString, "follow");
+        } else {
+            holder.relativeLoadingView.setVisibility(View.VISIBLE);
+            holder.bloggerFollow.setVisibility(View.GONE);
+            String jsonString = new Gson().toJson(followUnfollowUserRequest);
+            new FollowUnfollowAsyncTask(holder, "unfollow", position).execute(jsonString, "unfollow");
+        }
+    }
     public static class ViewHolder {
 
         TextView bloggerName;
@@ -238,10 +284,146 @@ public class ParentingBlogAdapter extends BaseAdapter {
         ImageView bloggerCover;
         TextView bloggerFollow;
         TextView bloggerBio;
+        TextView followersCount;
+        RelativeLayout relativeLoadingView;
+        TextView rankText;
         TextView moreDesc;
         LinearLayout recentArticleLayout;
         LinearLayout articleBlock;
         RelativeLayout aboutLayout;
 
     }
+
+    private class FollowUnfollowAsyncTask extends AsyncTask<String, String, String> {
+
+        // The variable is moved here, we only need it here while displaying the
+        // progress dialog.
+        ViewHolder viewHolder;
+        String type;
+        int pos;
+
+        public FollowUnfollowAsyncTask(ViewHolder viewHolder, String type, int position) {
+            this.viewHolder = viewHolder;
+            this.type = type;
+            pos = position;
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            String JsonResponse = null;
+            String JsonDATA = strings[0];
+
+            HttpURLConnection urlConnection = null;
+            BufferedReader reader = null;
+            try {
+                URL url;
+                if ("follow".equals(strings[1])) {
+                    url = new URL(AppConstants.BASE_URL + "/v1/users/followers/");
+                } else {
+                    url = new URL(AppConstants.BASE_URL + "/v1/users/unfollow/");
+                }
+
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setDoOutput(true);
+                // is output buffer writter
+                urlConnection.setRequestMethod("POST");
+                urlConnection.setRequestProperty("Content-Type", "application/json");
+                urlConnection.setRequestProperty("Accept", "application/json");
+                urlConnection.addRequestProperty("id", SharedPrefUtils.getUserDetailModel(context).getDynamoId());
+                urlConnection.addRequestProperty("mc4kToken", SharedPrefUtils.getUserDetailModel(context).getMc4kToken());
+
+//set headers and method
+                Writer writer = new BufferedWriter(new OutputStreamWriter(urlConnection.getOutputStream(), "UTF-8"));
+                writer.write(JsonDATA);
+// json data
+                writer.close();
+                InputStream inputStream = urlConnection.getInputStream();
+//input stream
+                StringBuffer buffer = new StringBuffer();
+                if (inputStream == null) {
+                    // Nothing to do.
+                    return null;
+                }
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String inputLine;
+                while ((inputLine = reader.readLine()) != null)
+                    buffer.append(inputLine + "\n");
+                if (buffer.length() == 0) {
+                    // Stream was empty. No point in parsing.
+                    return null;
+                }
+                JsonResponse = buffer.toString();
+
+                Log.i("RESPONSE " + type, JsonResponse);
+//send to post execute
+                return JsonResponse;
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e("TAAGG", "Error closing stream", e);
+                    }
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+
+            if (result == null) {
+                resetFollowUnfollowStatus();
+                return;
+            }
+            try {
+                FollowUnfollowUserResponse responseData = new Gson().fromJson(result, FollowUnfollowUserResponse.class);
+                if (responseData.getCode() == 200 & Constants.SUCCESS.equals(responseData.getStatus())) {
+                    for (int i = 0; i < datalist.size(); i++) {
+                        if (datalist.get(i).getId().equals(responseData.getData().getResult().getId())) {
+                            if ("follow".equals(type)) {
+                                datalist.get(i).setIsFollowed(1);
+                                viewHolder.relativeLoadingView.setVisibility(View.GONE);
+                                viewHolder.bloggerFollow.setVisibility(View.VISIBLE);
+                                viewHolder.bloggerFollow.setText("Following");
+                              //  viewHolder.followTextView.setVisibility(View.INVISIBLE);
+                            } else {
+                                datalist.get(i).setIsFollowed(0);
+                                viewHolder.relativeLoadingView.setVisibility(View.GONE);
+                                viewHolder.bloggerFollow.setVisibility(View.VISIBLE);
+                                viewHolder.bloggerFollow.setText("Following");
+                            }
+//                            notifyDataSetChanged();
+                        }
+                    }
+                } else {
+                    resetFollowUnfollowStatus();
+                }
+            } catch (Exception e) {
+                resetFollowUnfollowStatus();
+            }
+        }
+
+        void resetFollowUnfollowStatus() {
+            viewHolder.relativeLoadingView.setVisibility(View.GONE);
+            if (type.equals("follow")) {
+             //   viewHolder.followingTextView.setVisibility(View.INVISIBLE);
+                viewHolder.bloggerFollow.setVisibility(View.VISIBLE);
+                viewHolder.bloggerFollow.setText("Follow");
+
+            } else {
+                viewHolder.bloggerFollow.setVisibility(View.VISIBLE);
+                viewHolder.bloggerFollow.setText("Following");
+            }
+        }
+
+    }
+
 }

@@ -137,7 +137,7 @@ public class TopicsFilterActivity extends BaseActivity {
                             tempUpList);
                 }
 
-                Topics contributorTopic = new Topics("contributor", "Meet our contributors",
+                Topics contributorTopic = new Topics("contributors", "Meet our contributors",
                         false, new ArrayList<Topics>(), null, null);
                 topicList.add(contributorTopic);
                 topicsMap.put(contributorTopic, new ArrayList<Topics>());
@@ -160,7 +160,7 @@ public class TopicsFilterActivity extends BaseActivity {
                                     startActivity(cityIntent);
                                     break;
                                 case "contributors":
-                                    Intent contributorIntent = new Intent(TopicsFilterActivity.this, CityBestArticleListingActivity.class);
+                                    Intent contributorIntent = new Intent(TopicsFilterActivity.this, ContributorListActivity.class);
                                     startActivity(contributorIntent);
                                     break;
                                 default:

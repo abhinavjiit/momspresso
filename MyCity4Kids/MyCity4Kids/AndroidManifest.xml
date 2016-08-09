@@ -456,6 +456,8 @@
             android:theme="@android:style/Theme.Dialog" />
         <activity android:name=".ui.activity.SettingsActivity"
             android:screenOrientation="portrait"></activity>
+        <activity android:name=".ui.activity.ContributorListActivity"
+            android:screenOrientation="portrait"></activity>
         <!--<activity-->
         <!--android:name="com.mycity4kids.ui.activity.EventsFilterActivity"-->
         <!--android:configChanges="keyboard|keyboardHidden|orientation|screenSize"-->
