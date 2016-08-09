@@ -378,10 +378,10 @@ public class AppConstants {
     public static final String AUTHOR_TYPE_EDITOR = "Editor";
     public static final String AUTHOR_TYPE_EDITORIAL = "Editorial";
     public static final String AUTHOR_TYPE_EXPERT = "Expert";
-    public static final String USER_TYPE_EDITOR = "0";
+  /*  public static final String USER_TYPE_EDITOR = "0";
     public static final String USER_TYPE_EXPERT = "1";
     public static final String USER_TYPE_BLOGGER = "2";
-    public static final String USER_TYPE_EDITORIAL = "3";
+    public static final String USER_TYPE_EDITORIAL = "3";*/
 
     public static final String Source_Id = "" + 2;
 
@@ -407,4 +407,13 @@ public class AppConstants {
     public static final String USER_ID_FOR_FOLLOWING_FOLLOWERS = "userIdFollowingFollowers";
     public static final String STACK_CLEAR_REQUIRED = "stackClearRequired";
 
+    public static final String USER_TYPE_USER = "0";
+    public static final String USER_TYPE_ADMIN = "1";
+    public static final String USER_TYPE_BUSINESS = "2";
+    public static final String USER_TYPE_CITY_ADMIN = "3";
+    public static final String USER_TYPE_REPORT_MANAGER = "4";
+    public static final String USER_TYPE_EDITOR = "5";
+    public static final String USER_TYPE_EXPERT = "6";
+    public static final String USER_TYPE_BLOGGER = "7";
+    public static final String USER_TYPE_EDITORIAL = "8";
 }

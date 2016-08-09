@@ -1592,7 +1592,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     }
 
                     if (topFragment instanceof ParentingBlogFragment) {
-                        ((ParentingBlogFragment) topFragment).updateList_followBtn(blogListPosition);
+                     //   ((ParentingBlogFragment) topFragment).updateList_followBtn(blogListPosition);
                     }
 
                 } else if (followData.getResponseCode() == 400) {
@@ -1823,6 +1823,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     startActivity(viewIntent);
                 }
                 break;
+
 //            case R.id.drafts:
 //                Intent intent5 = new Intent(DashboardActivity.this, DraftListViewActivity.class);
 //              /*  Bundle bundle5 = new Bundle();
@@ -1852,6 +1853,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 //                changeVisibiltyOfArrow(false);
 //                replaceFragment(new ParentingBlogFragment(), null, true);
 //                break;
+
+
 
            /* case R.id.txvHelp:
                 Utils.pushEvent(DashboardActivity.this, GTMEventType.HELP_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
@@ -2263,7 +2266,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     }
                 case Constants.FILTER_BLOG:
                     if (topFragment instanceof ParentingBlogFragment) {
-                        ((ParentingBlogFragment) topFragment).sortParentingBlogListing(data.getStringExtra(Constants.FILTER_BLOG_SORT_TYPE));
+                    //    ((ParentingBlogFragment) topFragment).sortParentingBlogListing(data.getStringExtra(Constants.FILTER_BLOG_SORT_TYPE));
                     }
 
                     break;
@@ -2298,7 +2301,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     break;
                 case Constants.BLOG_FOLLOW_STATUS:
                     if (topFragment instanceof ParentingBlogFragment) {
-                        ((ParentingBlogFragment) topFragment).updateList_followBtn(data.getIntExtra(Constants.BLOG_LIST_POSITION, 0));
+                     //   ((ParentingBlogFragment) topFragment).updateList_followBtn(data.getIntExtra(Constants.BLOG_LIST_POSITION, 0));
                     }
                     break;
 
