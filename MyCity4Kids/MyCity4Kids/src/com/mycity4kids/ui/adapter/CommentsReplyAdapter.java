@@ -38,13 +38,13 @@ public class CommentsReplyAdapter extends ArrayAdapter<CommentsData> {
     private static final int TYPE_REPLY_LEVEL_TWO = 1;
     private static final int TYPE_MAX_COUNT = 2;
     private int fragmentReplyLevel;
-
-    public CommentsReplyAdapter(Context context, int resource, List<CommentsData> replyList, int fragmentReplyLevel) {
+    private ReplyCommentInterface replyCommentInterface;
+    public CommentsReplyAdapter(Context context, int resource, List<CommentsData> replyList, ReplyCommentInterface replyCommentInterface) {
         super(context, resource, replyList);
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.replyList = replyList;
         mContext = context;
-        this.fragmentReplyLevel = fragmentReplyLevel;
+        this.replyCommentInterface = replyCommentInterface;
     }
 
     static class ViewHolder {
@@ -115,18 +115,17 @@ public class CommentsReplyAdapter extends ArrayAdapter<CommentsData> {
                 holder.replyBtnTextView.setVisibility(View.INVISIBLE);
             }
         }
-
+        holder.replyBtnTextView.setTag(replyList.get(position).getParent_id());
 
         holder.replierNameTextView.setText(replyList.get(position).getName());
         holder.replyDateTextView.setText(DateTimeUtils.getSeperateDate(replyList.get(position).getCreate()));
         holder.replyDescTextView.setText(replyList.get(position).getBody());
-//        holder.replyBtnTextView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.d("Secon Level Reply", "dwad wd a");
-//
-//            }
-//        });
+        holder.replyBtnTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                replyCommentInterface.onReplyButtonClicked(position);
+            }
+        });
         if (replyList.get(position).getProfile_image() != null && !StringUtils.isNullOrEmpty(replyList.get(position).getProfile_image().getClientAppMin())) {
             try {
                 Picasso.with(mContext).load(replyList.get(position).getProfile_image().getClientAppMin()).placeholder(R.drawable.default_commentor_img)
@@ -150,5 +149,9 @@ public class CommentsReplyAdapter extends ArrayAdapter<CommentsData> {
     @Override
     public int getViewTypeCount() {
         return TYPE_MAX_COUNT;
+    }
+
+    public interface ReplyCommentInterface{
+        void onReplyButtonClicked(int posit);
     }
 }

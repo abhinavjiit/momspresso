@@ -65,7 +65,7 @@ import retrofit2.Retrofit;
 /**
  * Created by user on 08-06-2015.
  */
-public class CommentRepliesDialogFragment extends DialogFragment implements OnClickListener, IScreen {
+public class CommentRepliesDialogFragment extends DialogFragment implements OnClickListener, IScreen, CommentsReplyAdapter.ReplyCommentInterface {
 
     ArrayList<AttendeeModel> data;
     ListView replyListView;
@@ -79,6 +79,8 @@ public class CommentRepliesDialogFragment extends DialogFragment implements OnCl
     String parentId;
     private ProgressDialog mProgressDialog;
     private int fragmentReplyLevel = 0;
+    int pos;
+    private int replyLevelFlag = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -110,33 +112,24 @@ public class CommentRepliesDialogFragment extends DialogFragment implements OnCl
             articleId = extras.getString("articleId");
             fragmentReplyLevel = extras.getInt("fragmentReplyLevel", 0);
         }
-        parentId = commentsData.getId();
+
         completeReplies.add(commentsData);
         prepareCompleteList(commentsData);
-        adapter = new CommentsReplyAdapter(getActivity(), R.layout.custom_comment_cell, completeReplies, fragmentReplyLevel);
+        adapter = new CommentsReplyAdapter(getActivity(), R.layout.custom_comment_cell, completeReplies, this);
         replyListView.setAdapter(adapter);
-        replyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                TextView textView = (TextView) view.findViewById(R.id.txvReply);
-                textView.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (position == 0) {
-                            Log.d("First Item", "0");
-                            addReplyEditText.requestFocus();
-                            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                            imm.showSoftInput(addReplyEditText, InputMethodManager.SHOW_IMPLICIT);
-                        } else {
-                            Log.d("Other Item", "" + position);
-                            addReplyEditText.requestFocus();
-                            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                            imm.showSoftInput(addReplyEditText, InputMethodManager.SHOW_IMPLICIT);
-                        }
-                    }
-                });
-            }
-        });
+//        replyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+//                final TextView textView = (TextView) view.findViewById(R.id.txvReply);
+//                textView.setOnClickListener(new OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        pos = position;
+//
+//                    }
+//                });
+//            }
+//        });
 
 
         return rootView;
@@ -188,47 +181,75 @@ public class CommentRepliesDialogFragment extends DialogFragment implements OnCl
                     return;
                 }
 
-
                 if (isValid()) {
                     Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
                     ArticleDetailsAPI articleDetailsAPI = retrofit.create(ArticleDetailsAPI.class);
                     AddCommentRequest addCommentRequest = new AddCommentRequest();
                     addCommentRequest.setArticleId(articleId);
                     addCommentRequest.setUserComment(addReplyEditText.getText().toString());
-                    addCommentRequest.setParentId(parentId);
+//                    if (replyLevelFlag == 1) {
+                    addCommentRequest.setParentId(completeReplies.get(pos).getId());
+//                    } else {
+//
+//                    }
+//                    addCommentRequest.setParentId(parentId);
                     Call<AddCommentResponse> callBookmark = articleDetailsAPI.addComment(addCommentRequest);
                     callBookmark.enqueue(addCommentsResponseCallback);
 
-
-//                    UserTable _table = new UserTable((BaseApplication) getActivity().getApplication());
-//                    int count = _table.getCount();
-//
-//                    if (count > 0) {
-//                        UserModel userData = _table.getAllUserData();
-//                        CommentRequest _commentRequest = new CommentRequest();
-//                        _commentRequest.setArticleId(articleId);
-//                        /**
-//                         * in case of comment parentId will be empty.
-//                         *
-//                         */
-//                        _commentRequest.setParentId(commentsData.getId());
-//                        _commentRequest.setContent(addReplyEditText.getText().toString());
-//                        _commentRequest.setUserId("" + userData.getUser().getId());
-//                        _commentRequest.setSessionId(userData.getUser().getSessionId());
-//                        CommentController _controller = new CommentController(getActivity(), this);
-//                        View viewa = getActivity().getCurrentFocus();
-//                        if (viewa != null) {
-//                            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-//                            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-//                        }
-//
-//                        showProgressDialog("Adding a comment...");
-//                        _controller.getData(AppConstants.COMMENT_REPLY_REQUEST, _commentRequest);
-//                    }
                 }
                 break;
         }
 
+    }
+
+    private Callback<AddCommentResponse> addCommentsResponseCallback = new Callback<AddCommentResponse>() {
+        @Override
+        public void onResponse(Call<AddCommentResponse> call, retrofit2.Response<AddCommentResponse> response) {
+
+            if (response == null || null == response.body()) {
+                ((ArticlesAndBlogsDetailsActivity) getActivity()).showToast("Something went wrong from server");
+                return;
+            }
+
+            AddCommentResponse responseData = (AddCommentResponse) response.body();
+            if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+//            if (response.isSuccessful()) {
+                ((ArticlesAndBlogsDetailsActivity) getActivity()).showToast("Comment added successfully!");
+                if (replyLevelFlag == 1) {
+                    updateReplyListToShowComment(responseData.getData().getId());
+                } else {
+
+                }
+
+            } else {
+                ((ArticlesAndBlogsDetailsActivity) getActivity()).showToast(responseData.getReason());
+            }
+        }
+
+        @Override
+        public void onFailure(Call<AddCommentResponse> call, Throwable t) {
+            ((ArticlesAndBlogsDetailsActivity) getActivity()).handleExceptions(t);
+        }
+    };
+
+    private void updateReplyListToShowComment(String commentId) {
+
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String formattedDate = df.format(cal.getTime());
+
+        CommentsData cData = new CommentsData();
+        cData.setId(commentId);
+        cData.setBody(addReplyEditText.getText().toString());
+        cData.setName(SharedPrefUtils.getUserDetailModel(getActivity()).getFirst_name());
+        cData.setCreate(formattedDate);
+        cData.setParent_id(parentId);
+        ProfilePic profilePic = new ProfilePic();
+        profilePic.setClientApp(SharedPrefUtils.getProfileImgUrl(getActivity()));
+        cData.setProfile_image(profilePic);
+        addReplyEditText.setText("");
+        completeReplies.add(cData);
+        adapter.notifyDataSetChanged();
     }
 
     public void showProgressDialog(String bodyText) {
@@ -267,72 +288,25 @@ public class CommentRepliesDialogFragment extends DialogFragment implements OnCl
 
     @Override
     public void handleUiUpdate(Response response) {
-        removeProgressDialog();
-        if (response == null) {
-            Toast.makeText(getActivity(), getResources().getString(R.string.server_error), Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        switch (response.getDataType()) {
-            case AppConstants.COMMENT_REPLY_REQUEST:
-                CommonResponse commonData = (CommonResponse) response.getResponseObject();
-                String messageComment = commonData.getResult().getMessage();
-                Toast.makeText(getActivity(), messageComment, Toast.LENGTH_LONG).show();
-                if (commonData.getResponseCode() == 200) {
-                    ((ArticlesAndBlogsDetailsActivity) getActivity()).sendScrollUp();
-                    updateReplyListToShowComment();
-                } else if (commonData.getResponseCode() == 400) {
-                    String message = commonData.getResult().getMessage();
-                    if (!StringUtils.isNullOrEmpty(message)) {
-                        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(getActivity(), getString(R.string.went_wrong), Toast.LENGTH_LONG).show();
-                    }
-                }
-                break;
-        }
     }
 
-    private void updateReplyListToShowComment() {
-
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String formattedDate = df.format(cal.getTime());
-
-        CommentsData cData = new CommentsData();
-        cData.setBody(addReplyEditText.getText().toString());
-        cData.setName(SharedPrefUtils.getUserDetailModel(getActivity()).getFirst_name());
-        cData.setCreate(formattedDate);
-        ProfilePic profilePic = new ProfilePic();
-        profilePic.setClientApp(SharedPrefUtils.getProfileImgUrl(getActivity()));
-        cData.setProfile_image(profilePic);
-        addReplyEditText.setText("");
-        completeReplies.add(cData);
-        adapter.notifyDataSetChanged();
+    @Override
+    public void onReplyButtonClicked(int posit) {
+        pos = posit;
+        if (posit == 0) {
+            Log.d("First Item", "0");
+            addReplyEditText.requestFocus();
+            replyLevelFlag = 1;
+//            parentId = (String) textView.getTag();
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(addReplyEditText, InputMethodManager.SHOW_IMPLICIT);
+        } else {
+            Log.d("Other Item", "" + posit);
+            addReplyEditText.requestFocus();
+            replyLevelFlag = 2;
+//            parentId = (String) textView.getTag();
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(addReplyEditText, InputMethodManager.SHOW_IMPLICIT);
+        }
     }
-
-    private Callback<AddCommentResponse> addCommentsResponseCallback = new Callback<AddCommentResponse>() {
-        @Override
-        public void onResponse(Call<AddCommentResponse> call, retrofit2.Response<AddCommentResponse> response) {
-
-            if (response == null || null == response.body()) {
-                ((ArticlesAndBlogsDetailsActivity) getActivity()).showToast("Something went wrong from server");
-                return;
-            }
-
-            AddCommentResponse responseData = (AddCommentResponse) response.body();
-            if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-//            if (response.isSuccessful()) {
-                ((ArticlesAndBlogsDetailsActivity) getActivity()).showToast("Comment added successfully!");
-                updateReplyListToShowComment();
-            } else {
-                ((ArticlesAndBlogsDetailsActivity) getActivity()).showToast(responseData.getReason());
-            }
-        }
-
-        @Override
-        public void onFailure(Call<AddCommentResponse> call, Throwable t) {
-            ((ArticlesAndBlogsDetailsActivity) getActivity()).handleExceptions(t);
-        }
-    };
 }
