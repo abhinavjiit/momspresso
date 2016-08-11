@@ -38,7 +38,7 @@
             android:background="@drawable/edit_text"
             android:capitalize="sentences"
             android:gravity="top|left"
-            android:hint="@string/write_comment"
+            android:hint="@string/add_reply"
             android:padding="12dp"
             android:singleLine="false"
             android:textAppearance="?android:attr/textAppearanceSmall"

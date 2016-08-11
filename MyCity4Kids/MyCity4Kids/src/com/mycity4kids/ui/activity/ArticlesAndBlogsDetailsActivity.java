@@ -134,6 +134,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
 
     LinearLayout newCommentLayout;
+    LinearLayout commentLayout;
     EditText commentText;
     ImageView commentBtn;
     TextView followClick;
@@ -181,6 +182,9 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
     ArticleDetailsAPI articleDetailsAPI;
     private String bookmarkId;
+
+    EditCommentsRepliesFragment editCommentsRepliesFragment;
+    CommentRepliesDialogFragment commentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -242,6 +246,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             floatingActionButton.setPadding(-1, -1, -1, -1);
             floatingActionButton.setImageDrawable(new BitmapDrawable(getResources(), defaultBloggerBitmap));
 
+            commentLayout = ((LinearLayout) findViewById(R.id.commnetLout));
             newCommentLayout = (LinearLayout) findViewById(R.id.comment_layout);
             commentBtn = (ImageView) findViewById(R.id.add_comment_btn);
             commentBtn.setOnClickListener(this);
@@ -678,7 +683,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     }
 
 
-    private void displayComments(ViewHolder holder, CommentsData commentList, LinearLayout commentLayout) {
+    private void displayComments(ViewHolder holder, CommentsData commentList, LinearLayout commentLayout1) {
         if (holder != null) {
             LayoutInflater inflater = LayoutInflater.from(this);
             View view = inflater.inflate(R.layout.custom_comment_cell, null);
@@ -696,10 +701,11 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             holder.replyCommentView.setOnClickListener(this);
             holder.replyCommentView.setTag(commentList);
             holder.replyTxt.setOnClickListener(this);
-            holder.replyTxt.setTag(commentList);
+//            holder.replyTxt.setTag(commentList);
             holder.editTxt.setOnClickListener(this);
-            holder.editTxt.setTag(commentList);
+//            holder.editTxt.setTag(commentList);
 //            holder.editTxt.setTag(0, view);
+            view.setTag(commentList);
 
             if (SharedPrefUtils.getUserDetailModel(this).getDynamoId().equals(commentList.getUserId())) {
                 holder.editTxt.setVisibility(View.VISIBLE);
@@ -779,9 +785,9 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     break;
                 case R.id.txvReply:
                     try {
-                        CommentRepliesDialogFragment commentFragment = new CommentRepliesDialogFragment();
+                        commentFragment = new CommentRepliesDialogFragment();
                         Bundle _args = new Bundle();
-                        _args.putParcelable("commentData", (CommentsData) v.getTag());
+                        _args.putParcelable("commentData", (CommentsData) ((View) v.getParent().getParent()).getTag());
                         _args.putString("articleId", articleId);
                         commentFragment.setArguments(_args);
                         FragmentManager fm = getSupportFragmentManager();
@@ -792,15 +798,31 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     }
 //                    onShowPopup(coordinatorLayout);
                     break;
+                case R.id.replyRelativeLayout:
+                    try {
+                        commentFragment = new CommentRepliesDialogFragment();
+                        Bundle commentArgs = new Bundle();
+                        commentArgs.putParcelable("commentData", (CommentsData) ((View) v.getParent()).getTag());
+                        commentArgs.putString("articleId", articleId);
+                        commentFragment.setArguments(commentArgs);
+                        FragmentManager fm = getSupportFragmentManager();
+                        commentFragment.show(fm, "Replies");
+                    } catch (Exception e) {
+                        Crashlytics.logException(e);
+                        Log.d("MC4kException", Log.getStackTraceString(e));
+                    }
+//                    onShowPopup(coordinatorLayout);
+                    break;
                 case R.id.txvEdit:
                     try {
-                        EditCommentsRepliesFragment editCommentsRepliesFragment = new EditCommentsRepliesFragment();
+                        editCommentsRepliesFragment = new EditCommentsRepliesFragment();
 
-                        CommentsData cData = (CommentsData) v.getTag();
+                        CommentsData cData = (CommentsData) ((View) v.getParent().getParent()).getTag();
                         commentEditView = (View) v.getParent().getParent();
                         Bundle _args = new Bundle();
                         _args.putParcelable("commentData", cData);
                         _args.putString("articleId", articleId);
+                        _args.putInt(AppConstants.COMMENT_OR_REPLY_OR_NESTED_REPLY, 0);
                         editCommentsRepliesFragment.setArguments(_args);
                         FragmentManager fm = getSupportFragmentManager();
                         editCommentsRepliesFragment.show(fm, "Replies");
@@ -857,22 +879,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, detailData.getUserId());
                     startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
                     break;
-                case R.id.replyRelativeLayout:
-                    try {
-                        CommentRepliesDialogFragment commentFragment = new CommentRepliesDialogFragment();
-                        Bundle commentArgs = new Bundle();
-                        commentArgs.putParcelable("commentData", (CommentsData) v.getTag());
-                        commentArgs.putString("articleId", articleId);
-                        commentArgs.putInt("fragmentReplyLevel", 0);
-                        commentFragment.setArguments(commentArgs);
-                        FragmentManager fm = getSupportFragmentManager();
-                        commentFragment.show(fm, "Replies");
-                    } catch (Exception e) {
-                        Crashlytics.logException(e);
-                        Log.d("MC4kException", Log.getStackTraceString(e));
-                    }
-//                    onShowPopup(coordinatorLayout);
-                    break;
+
                 case R.id.recentAuthorArticle1:
                 case R.id.recentAuthorArticle2:
                 case R.id.recentAuthorArticle3: {
@@ -1240,7 +1247,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
                 }
 
-                LinearLayout commentLayout = ((LinearLayout) findViewById(R.id.commnetLout));
+                commentLayout = ((LinearLayout) findViewById(R.id.commnetLout));
                 ViewHolder viewHolder = null;
                 viewHolder = new ViewHolder();
                 for (int i = 0; i < arrayList.size(); i++) {
@@ -1392,7 +1399,74 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         Log.d("MC4kException", Log.getStackTraceString(t));
     }
 
-    public void updateComment(String updatedComment) {
-        ((TextView) commentEditView.findViewById(R.id.txvCommentDescription)).setText(updatedComment);
+    public void onReplyOrNestedReplyAddition(CommentsData updatedComment, int reply_level) {
+        for (int i = 0; i < commentLayout.getChildCount(); i++) {
+            CommentsData cdata = (CommentsData) commentLayout.getChildAt(i).getTag();
+            if (updatedComment.getParent_id().equals(cdata.getId())) {
+                Log.d("Comment ", "comment mil gaya");
+
+                if (reply_level == 2) {
+                    cdata.getReplies().set(i, updatedComment);
+                } else {
+                    cdata.getReplies().add(updatedComment);
+
+                    RelativeLayout replyCommentView = (RelativeLayout) commentLayout.getChildAt(i).findViewById(R.id.replyRelativeLayout);
+                    ImageView replierImageView = (ImageView) replyCommentView.findViewById(R.id.replyUserImageView);
+                    TextView replyCountTextView = (TextView) replyCommentView.findViewById(R.id.replyCountTextView);
+                    TextView replierUsernameTextView = (TextView) replyCommentView.findViewById(R.id.replyUserNameTextView);
+
+                    if (cdata.getReplies() != null && cdata.getReplies().size() > 0) {
+
+                        replyCommentView.setVisibility(View.VISIBLE);
+                        if (cdata.getReplies().size() > 1) {
+                            replyCountTextView.setText(cdata.getReplies().size() + " replies");
+                        } else {
+                            replyCountTextView.setText(cdata.getReplies().size() + " reply");
+                        }
+                        replierUsernameTextView.setText("" + cdata.getReplies().get(0).getName());
+
+                        if (cdata.getProfile_image() != null && !StringUtils.isNullOrEmpty(cdata.getProfile_image().getClientAppMin())) {
+                            try {
+                                Picasso.with(this).load(cdata.getReplies().get(0).getProfile_image().getClientAppMin())
+                                        .placeholder(R.drawable.default_commentor_img).into(replierImageView);
+                            } catch (Exception e) {
+                                Crashlytics.logException(e);
+                                Log.d("MC4kException", Log.getStackTraceString(e));
+                                Picasso.with(this).load(R.drawable.default_commentor_img).into(replierImageView);
+                            }
+                        } else {
+                            Picasso.with(this).load(R.drawable.default_commentor_img).into(replierImageView);
+                        }
+                    } else {
+                        replyCommentView.setVisibility(View.GONE);
+                    }
+                }
+
+            }
+        }
+//        commentFragment.update();
     }
+
+    public void updateCommentReplyNestedReply(CommentsData updatedComment, int editType) {
+        for (int i = 0; i < commentLayout.getChildCount(); i++) {
+            CommentsData cdata = (CommentsData) commentLayout.getChildAt(i).getTag();
+            if (editType == AppConstants.EDIT_COMMENT) {
+                if (updatedComment.getId().equals(cdata.getId())) {
+                    TextView bodyTextView = (TextView) commentLayout.getChildAt(i).findViewById(R.id.txvCommentDescription);
+                    Log.d("Comment ", "comment mil gaya");
+                    cdata = updatedComment;
+                    bodyTextView.setText(cdata.getBody());
+                }
+            } else {
+//                if (updatedComment.getParent_id().equals(cdata.getId())) {
+//                    Log.d("Comment ", "comment mil gaya");
+//                    cdata.getReplies().set(i, updatedComment);
+//                    commentFragment.updateAfterReplyEditing(cdata);
+//
+//                }
+            }
+
+        }
+    }
+
 }

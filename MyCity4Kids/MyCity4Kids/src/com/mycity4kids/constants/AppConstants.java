@@ -416,4 +416,8 @@ public class AppConstants {
     public static final String USER_TYPE_EXPERT = "6";
     public static final String USER_TYPE_BLOGGER = "7";
     public static final String USER_TYPE_EDITORIAL = "8";
+    public static final String COMMENT_OR_REPLY_OR_NESTED_REPLY = "editType";
+    public static final int EDIT_COMMENT = 0;
+    public static final int EDIT_REPLY = 1;
+    public static final int EDIT_NESTED_REPLY = 2;
 }

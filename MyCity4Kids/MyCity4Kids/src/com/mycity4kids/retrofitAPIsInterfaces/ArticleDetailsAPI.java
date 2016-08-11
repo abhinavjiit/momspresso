@@ -53,6 +53,10 @@ public interface ArticleDetailsAPI {
     @POST("v1/comments/")
     Call<AddCommentResponse> addComment(@Body AddCommentRequest body);
 
+    @PUT("v1/comments/{commentId}")
+    Call<AddCommentResponse> editComment(@Path("commentId") String commentId,
+                                         @Body AddCommentRequest body);
+
     @POST("v1/users/bookmark/")
     Call<AddBookmarkResponse> addBookmark(@Body ArticleDetailRequest body);
 

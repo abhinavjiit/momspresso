@@ -38,8 +38,9 @@ public class CommentsReplyAdapter extends ArrayAdapter<CommentsData> {
     private static final int TYPE_REPLY_LEVEL_TWO = 1;
     private static final int TYPE_MAX_COUNT = 2;
     private int fragmentReplyLevel;
-    private ReplyCommentInterface replyCommentInterface;
-    public CommentsReplyAdapter(Context context, int resource, List<CommentsData> replyList, ReplyCommentInterface replyCommentInterface) {
+    private EditReplyCommentInterface replyCommentInterface;
+
+    public CommentsReplyAdapter(Context context, int resource, List<CommentsData> replyList, EditReplyCommentInterface replyCommentInterface) {
         super(context, resource, replyList);
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.replyList = replyList;
@@ -79,11 +80,13 @@ public class CommentsReplyAdapter extends ArrayAdapter<CommentsData> {
         }
 
 
-        if (SharedPrefUtils.getUserDetailModel(mContext).getDynamoId().equals(replyList.get(position).getUserId())) {
+        if (SharedPrefUtils.getUserDetailModel(mContext).getDynamoId().equals(replyList.get(position).getUserId())
+                && position != 0) {
             holder.editBtnTextView.setVisibility(View.VISIBLE);
             holder.editBtnTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    replyCommentInterface.onEditButtonClicked(position);
 //                    try {
 //                        EditCommentsRepliesFragment editCommentsRepliesFragment = new EditCommentsRepliesFragment();
 //
@@ -151,7 +154,9 @@ public class CommentsReplyAdapter extends ArrayAdapter<CommentsData> {
         return TYPE_MAX_COUNT;
     }
 
-    public interface ReplyCommentInterface{
+    public interface EditReplyCommentInterface {
         void onReplyButtonClicked(int posit);
+
+        void onEditButtonClicked(int posit);
     }
 }

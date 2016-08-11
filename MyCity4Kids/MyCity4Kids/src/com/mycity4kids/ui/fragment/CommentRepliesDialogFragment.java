@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -18,35 +19,25 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.ui.IScreen;
 import com.kelltontech.utils.ConnectivityUtils;
-import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.controller.ArticleBlogDetailsController;
-import com.mycity4kids.controller.CommentController;
-import com.mycity4kids.dbtable.UserTable;
-import com.mycity4kids.models.forgot.CommonResponse;
-import com.mycity4kids.models.parentingdetails.CommentRequest;
 import com.mycity4kids.models.parentingdetails.CommentsData;
 import com.mycity4kids.models.request.AddCommentRequest;
 import com.mycity4kids.models.response.AddCommentResponse;
 import com.mycity4kids.models.response.ProfilePic;
-import com.mycity4kids.models.user.UserModel;
-import com.mycity4kids.models.user.UserResponse;
 import com.mycity4kids.newmodels.AttendeeModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
@@ -57,7 +48,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -65,7 +55,7 @@ import retrofit2.Retrofit;
 /**
  * Created by user on 08-06-2015.
  */
-public class CommentRepliesDialogFragment extends DialogFragment implements OnClickListener, IScreen, CommentsReplyAdapter.ReplyCommentInterface {
+public class CommentRepliesDialogFragment extends DialogFragment implements OnClickListener, IScreen, CommentsReplyAdapter.EditReplyCommentInterface {
 
     ArrayList<AttendeeModel> data;
     ListView replyListView;
@@ -78,9 +68,8 @@ public class CommentRepliesDialogFragment extends DialogFragment implements OnCl
     String articleId;
     String parentId;
     private ProgressDialog mProgressDialog;
-    private int fragmentReplyLevel = 0;
     int pos;
-    private int replyLevelFlag = 0;
+    private int replyLevelFlag = 1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -110,7 +99,6 @@ public class CommentRepliesDialogFragment extends DialogFragment implements OnCl
         if (extras != null) {
             commentsData = extras.getParcelable("commentData");
             articleId = extras.getString("articleId");
-            fragmentReplyLevel = extras.getInt("fragmentReplyLevel", 0);
         }
 
         completeReplies.add(commentsData);
@@ -141,6 +129,9 @@ public class CommentRepliesDialogFragment extends DialogFragment implements OnCl
 //            completeReplies.add(cData.getReplies().get(i));
 //            prepareCompleteList(cData.getReplies().get(i));
 //        }
+        if (cData == null) {
+            return;
+        }
         for (int i = 0; i < cData.getReplies().size(); i++) {
             cData.getReplies().get(i).setCommentLevel(0);
             completeReplies.add(cData.getReplies().get(i));
@@ -171,6 +162,57 @@ public class CommentRepliesDialogFragment extends DialogFragment implements OnCl
     }
 
     @Override
+    public void onReplyButtonClicked(int posit) {
+        pos = posit;
+        if (posit == 0) {
+            Log.d("First Item", "0");
+            addReplyEditText.setText("");
+            addReplyEditText.requestFocus();
+            replyLevelFlag = 1;
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(addReplyEditText, InputMethodManager.SHOW_IMPLICIT);
+        } else {
+            Log.d("Other Item", "" + posit);
+            addReplyEditText.setText("");
+            addReplyEditText.requestFocus();
+            replyLevelFlag = 2;
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(addReplyEditText, InputMethodManager.SHOW_IMPLICIT);
+        }
+    }
+
+    @Override
+    public void onEditButtonClicked(int posit) {
+        pos = posit;
+        try {
+            EditCommentsRepliesFragment editCommentsRepliesFragment = new EditCommentsRepliesFragment();
+            Bundle _args = new Bundle();
+            _args.putString("articleId", articleId);
+            if (completeReplies.get(pos).getCommentLevel() == 0) {
+                _args.putInt(AppConstants.COMMENT_OR_REPLY_OR_NESTED_REPLY, AppConstants.EDIT_REPLY);
+                _args.putParcelable("commentData", completeReplies.get(pos));
+            } else {
+                _args.putInt(AppConstants.COMMENT_OR_REPLY_OR_NESTED_REPLY, AppConstants.EDIT_NESTED_REPLY);
+                int temp = 0;
+                for (int i = 0; i < completeReplies.size(); i++) {
+                    if (completeReplies.get(i).getId().equals(completeReplies.get(pos).getParent_id())) {
+                        temp = i;
+                        break;
+                    }
+                }
+                _args.putParcelable("commentData", completeReplies.get(temp));
+                _args.putParcelable("replyData", completeReplies.get(pos));
+            }
+            editCommentsRepliesFragment.setArguments(_args);
+            FragmentManager fm = getActivity().getSupportFragmentManager();
+            editCommentsRepliesFragment.show(fm, "Replies");
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
+    }
+
+    @Override
     public void onClick(View view) {
 
         switch (view.getId()) {
@@ -193,6 +235,7 @@ public class CommentRepliesDialogFragment extends DialogFragment implements OnCl
 //
 //                    }
 //                    addCommentRequest.setParentId(parentId);
+                    parentId = completeReplies.get(pos).getId();
                     Call<AddCommentResponse> callBookmark = articleDetailsAPI.addComment(addCommentRequest);
                     callBookmark.enqueue(addCommentsResponseCallback);
 
@@ -216,9 +259,11 @@ public class CommentRepliesDialogFragment extends DialogFragment implements OnCl
 //            if (response.isSuccessful()) {
                 ((ArticlesAndBlogsDetailsActivity) getActivity()).showToast("Comment added successfully!");
                 if (replyLevelFlag == 1) {
-                    updateReplyListToShowComment(responseData.getData().getId());
+                    replyLevelFlag = 1;
+                    updateCommentReplyList(responseData.getData().getId());
                 } else {
-
+                    replyLevelFlag = 1;
+                    updateReplyReplyList(responseData.getData().getId());
                 }
 
             } else {
@@ -232,7 +277,7 @@ public class CommentRepliesDialogFragment extends DialogFragment implements OnCl
         }
     };
 
-    private void updateReplyListToShowComment(String commentId) {
+    private void updateCommentReplyList(String commentId) {
 
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -240,16 +285,60 @@ public class CommentRepliesDialogFragment extends DialogFragment implements OnCl
 
         CommentsData cData = new CommentsData();
         cData.setId(commentId);
+        cData.setCommentLevel(0);
         cData.setBody(addReplyEditText.getText().toString());
         cData.setName(SharedPrefUtils.getUserDetailModel(getActivity()).getFirst_name());
+        cData.setUserId(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId());
         cData.setCreate(formattedDate);
         cData.setParent_id(parentId);
         ProfilePic profilePic = new ProfilePic();
         profilePic.setClientApp(SharedPrefUtils.getProfileImgUrl(getActivity()));
+        profilePic.setClientAppMin(SharedPrefUtils.getProfileImgUrl(getActivity()));
         cData.setProfile_image(profilePic);
+        ArrayList<CommentsData> replyList = new ArrayList<>();
+        cData.setReplies(replyList);
+
         addReplyEditText.setText("");
         completeReplies.add(cData);
         adapter.notifyDataSetChanged();
+        ((ArticlesAndBlogsDetailsActivity) getActivity()).onReplyOrNestedReplyAddition(cData, 1);
+    }
+
+    private void updateReplyReplyList(String commentId) {
+
+        int parentPosition = 0;
+
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String formattedDate = df.format(cal.getTime());
+
+        CommentsData cData = new CommentsData();
+        cData.setId(commentId);
+        cData.setCommentLevel(1);
+        cData.setBody(addReplyEditText.getText().toString());
+        cData.setName(SharedPrefUtils.getUserDetailModel(getActivity()).getFirst_name());
+        cData.setCreate(formattedDate);
+        cData.setParent_id(parentId);
+        cData.setUserId(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId());
+        ProfilePic profilePic = new ProfilePic();
+        profilePic.setClientApp(SharedPrefUtils.getProfileImgUrl(getActivity()));
+        profilePic.setClientAppMin(SharedPrefUtils.getProfileImgUrl(getActivity()));
+        cData.setProfile_image(profilePic);
+        ArrayList<CommentsData> replyList = new ArrayList<>();
+        cData.setReplies(replyList);
+
+        addReplyEditText.setText("");
+        for (int i = 0; i < completeReplies.size(); i++) {
+            if (completeReplies.get(i).getId().equals(parentId)) {
+                completeReplies.add(i + 1, cData);
+                parentPosition = i;
+                break;
+            }
+        }
+//        completeReplies.add(cData);
+        completeReplies.get(parentPosition).getReplies().add(cData);
+        adapter.notifyDataSetChanged();
+        ((ArticlesAndBlogsDetailsActivity) getActivity()).onReplyOrNestedReplyAddition(completeReplies.get(parentPosition), 2);
     }
 
     public void showProgressDialog(String bodyText) {
@@ -290,23 +379,10 @@ public class CommentRepliesDialogFragment extends DialogFragment implements OnCl
     public void handleUiUpdate(Response response) {
     }
 
-    @Override
-    public void onReplyButtonClicked(int posit) {
-        pos = posit;
-        if (posit == 0) {
-            Log.d("First Item", "0");
-            addReplyEditText.requestFocus();
-            replyLevelFlag = 1;
-//            parentId = (String) textView.getTag();
-            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.showSoftInput(addReplyEditText, InputMethodManager.SHOW_IMPLICIT);
-        } else {
-            Log.d("Other Item", "" + posit);
-            addReplyEditText.requestFocus();
-            replyLevelFlag = 2;
-//            parentId = (String) textView.getTag();
-            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.showSoftInput(addReplyEditText, InputMethodManager.SHOW_IMPLICIT);
-        }
+    public void updateAfterReplyEditing(CommentsData cData) {
+        completeReplies.clear();
+        completeReplies.add(commentsData);
+        prepareCompleteList(commentsData);
+        adapter.notifyDataSetChanged();
     }
 }

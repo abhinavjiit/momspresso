@@ -22,14 +22,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kelltontech.network.Response;
+import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.ui.IScreen;
+import com.kelltontech.utils.ConnectivityUtils;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.parentingdetails.CommentsData;
+import com.mycity4kids.models.request.AddCommentRequest;
+import com.mycity4kids.models.response.AddCommentResponse;
 import com.mycity4kids.newmodels.AttendeeModel;
+import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
 import com.mycity4kids.ui.adapter.CommentsReplyAdapter;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
 
 /**
  * Created by user on 08-06-2015.
@@ -39,12 +51,13 @@ public class EditCommentsRepliesFragment extends DialogFragment implements OnCli
     ArrayList<AttendeeModel> data;
     ListView replyListView;
     CommentsReplyAdapter adapter;
-    private CommentsData commentsData;
+    private CommentsData commentsData, nestedReplyData;
     private EditText commentReplyEditText;
     private TextView updateCommentReplyTextView;
     Toolbar mToolbar;
     ArrayList<CommentsData> completeReplies = new ArrayList<>();
     String articleId;
+    int editType, position;
     private ProgressDialog mProgressDialog;
 
     @Override
@@ -75,8 +88,15 @@ public class EditCommentsRepliesFragment extends DialogFragment implements OnCli
         if (extras != null) {
             commentsData = extras.getParcelable("commentData");
             articleId = extras.getString("articleId");
+            editType = extras.getInt(AppConstants.COMMENT_OR_REPLY_OR_NESTED_REPLY);
+            position = extras.getInt("position", 1);
+            nestedReplyData = extras.getParcelable("replyData");
         }
-        commentReplyEditText.setText(commentsData.getBody());
+        if (editType == AppConstants.EDIT_NESTED_REPLY) {
+            commentReplyEditText.setText(nestedReplyData.getBody());
+        } else {
+            commentReplyEditText.setText(commentsData.getBody());
+        }
         return rootView;
     }
 
@@ -103,10 +123,73 @@ public class EditCommentsRepliesFragment extends DialogFragment implements OnCli
 
         switch (view.getId()) {
             case R.id.txvUpdate:
-                ((ArticlesAndBlogsDetailsActivity) getActivity()).updateComment(commentReplyEditText.getText().toString());
+                if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
+                    ((BaseActivity) getActivity()).showSnackbar(getView().findViewById(R.id.root), getString(R.string.error_network));
+                    return;
+                }
+
+                if (isValid()) {
+                    String commentId;
+                    Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+                    ArticleDetailsAPI articleDetailsAPI = retrofit.create(ArticleDetailsAPI.class);
+                    AddCommentRequest addCommentRequest = new AddCommentRequest();
+                    addCommentRequest.setUserComment(commentReplyEditText.getText().toString());
+                    if (editType == AppConstants.EDIT_NESTED_REPLY) {
+                        commentId = nestedReplyData.getId();
+                    } else {
+                        commentId = commentsData.getId();
+                    }
+
+                    Call<AddCommentResponse> callBookmark = articleDetailsAPI.editComment(commentId, addCommentRequest);
+                    callBookmark.enqueue(editCommentsResponseCallback);
+
+                }
                 break;
         }
     }
+
+    private Callback<AddCommentResponse> editCommentsResponseCallback = new Callback<AddCommentResponse>() {
+        @Override
+        public void onResponse(Call<AddCommentResponse> call, retrofit2.Response<AddCommentResponse> response) {
+
+            if (response == null || null == response.body()) {
+                ((ArticlesAndBlogsDetailsActivity) getActivity()).showToast("Something went wrong from server");
+                return;
+            }
+
+            AddCommentResponse responseData = (AddCommentResponse) response.body();
+            if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+//            if (response.isSuccessful()) {
+                ((ArticlesAndBlogsDetailsActivity) getActivity()).showToast("Comment edited successfully!");
+                if (editType == AppConstants.EDIT_NESTED_REPLY) {
+//                    updateReplyListToShowComment(responseData.getData().getId());
+                    nestedReplyData.setBody(commentReplyEditText.getText().toString());
+//                    for (int i = 0; i < commentsData.getReplies().size(); i++) {
+//                        if (commentsData.getReplies().get(i).getId().equals(nestedReplyData.getId())) {
+//                            commentsData.getReplies().set(i, nestedReplyData);
+//                        }
+//                    }
+                } else {
+                    commentsData.setBody(commentReplyEditText.getText().toString());
+                }
+                commentReplyEditText.setText("");
+                ((ArticlesAndBlogsDetailsActivity) getActivity()).updateCommentReplyNestedReply(commentsData, editType);
+//                } else if (editType == AppConstants.EDIT_REPLY) {
+//                    ((ArticlesAndBlogsDetailsActivity) getActivity()).updateCommentReplyNestedReply(commentsData);
+//                } else {
+//                    ((ArticlesAndBlogsDetailsActivity) getActivity()).updateCommentReplyNestedReply(commentsData);
+//                }
+                dismiss();
+            } else {
+                ((ArticlesAndBlogsDetailsActivity) getActivity()).showToast(responseData.getReason());
+            }
+        }
+
+        @Override
+        public void onFailure(Call<AddCommentResponse> call, Throwable t) {
+            ((ArticlesAndBlogsDetailsActivity) getActivity()).handleExceptions(t);
+        }
+    };
 
     public void showProgressDialog(String bodyText) {
         if (mProgressDialog == null) {
@@ -147,4 +230,7 @@ public class EditCommentsRepliesFragment extends DialogFragment implements OnCli
 
     }
 
+    public interface UpdateEditedComment {
+        void onCommentUpdated(int position);
+    }
 }
