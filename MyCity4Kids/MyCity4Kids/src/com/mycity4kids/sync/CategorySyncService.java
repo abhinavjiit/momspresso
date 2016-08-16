@@ -13,7 +13,6 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ConfigAPIs;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -34,13 +33,15 @@ public class CategorySyncService extends IntentService {
      */
     public int version;
     public String location;
+
     public CategorySyncService(String name) {
         super(name);
     }
-public CategorySyncService()
-    {
+
+    public CategorySyncService() {
         super("CategorySyncService");
     }
+
     @Override
     protected void onHandleIntent(Intent intent) {
 
@@ -52,33 +53,24 @@ public CategorySyncService()
             return;
         }
 
-            Call<ConfigResponse> call = configAPIs.getConfig();
+        Call<ConfigResponse> call = configAPIs.getConfig();
 
 
-            //asynchronous call
-            call.enqueue(new Callback<ConfigResponse>() {
-                             @Override
-                             public void onResponse(Call<ConfigResponse> call, retrofit2.Response<ConfigResponse> response) {
-                                 int statusCode = response.code();
-
-                                 ConfigResponse responseModel = (ConfigResponse) response.body();
-                                 // Result<ArticleDraftResult> result=responseModel.getData().getResult();
-                             //    removeProgressDialog();
-try {
-
-
+        //asynchronous call
+        call.enqueue(new Callback<ConfigResponse>() {
+                         @Override
+                         public void onResponse(Call<ConfigResponse> call, retrofit2.Response<ConfigResponse> response) {
+                             int statusCode = response.code();
+                             final ConfigResponse responseModel = (ConfigResponse) response.body();
+                             try {
                                  if (responseModel.getCode() != 200) {
-                                   //  showToast(getString(R.string.toast_response_error));
                                      return;
                                  } else {
                                      if (!StringUtils.isNullOrEmpty(responseModel.getData().getMsg())) {
-                                         //  SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
-                                     //    Log.i("Draft message", responseModel.getData().getMsg());
-                                       version=  SharedPrefUtils.getConfigCategoryVersion(CategorySyncService.this);
-                                         if (version==0||version!=responseModel.getData().getResult().getCategory().getVersion())
-                                         {
-                                             location=responseModel.getData().getResult().getCategory().getLocation();
-                                             TopicsCategoryAPI categoryAPI=retrofit.create(TopicsCategoryAPI.class);
+                                         version = SharedPrefUtils.getConfigCategoryVersion(CategorySyncService.this);
+                                         if (version == 0 || version != responseModel.getData().getResult().getCategory().getVersion()) {
+                                             location = responseModel.getData().getResult().getCategory().getLocation();
+                                             TopicsCategoryAPI categoryAPI = retrofit.create(TopicsCategoryAPI.class);
                                              if (!ConnectivityUtils.isNetworkEnabled(CategorySyncService.this)) {
                                                  //showToast(getString(R.string.error_network));
                                                  return;
@@ -90,11 +82,9 @@ try {
                                                  @Override
                                                  public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
                                                      Log.d("TAGA", "server contacted and has file");
-
                                                      boolean writtenToDisk = writeResponseBodyToDisk(response.body());
-
+                                                     SharedPrefUtils.setConfigCategoryVersion(CategorySyncService.this, responseModel.getData().getResult().getCategory().getVersion());
                                                      Log.d("TAGA", "file download was a success? " + writtenToDisk);
-
                                                  }
 
                                                  @Override
@@ -104,22 +94,21 @@ try {
                                              });
                                          }
                                      }
-
-                                 }}
-catch (Exception e)
-{e.printStackTrace();}
-
-                             }
-
-
-                             @Override
-                             public void onFailure(Call<ConfigResponse> call, Throwable t) {
-
+                                 }
+                             } catch (Exception e) {
+                                 e.printStackTrace();
                              }
                          }
-            );
+
+                         @Override
+                         public void onFailure(Call<ConfigResponse> call, Throwable t) {
+
+                         }
+                     }
+        );
 
     }
+
     private boolean writeResponseBodyToDisk(ResponseBody body) {
         try {
             InputStream inputStream = null;
@@ -136,20 +125,15 @@ catch (Exception e)
 
                 while (true) {
                     int read = inputStream.read(fileReader);
-
                     if (read == -1) {
                         break;
                     }
-
                     outputStream.write(fileReader, 0, read);
-
                     fileSizeDownloaded += read;
-
                     Log.d("dAWDdawwdawd", "file download: " + fileSizeDownloaded + " of " + fileSize);
                 }
 
                 outputStream.flush();
-
                 return true;
             } catch (IOException e) {
                 return false;

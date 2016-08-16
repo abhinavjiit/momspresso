@@ -74,7 +74,8 @@ public class FilterTopicsChildExpandableListAdapter extends BaseExpandableListAd
         final Topics subCategoryItem = (Topics) getGroup(groupPosition);
         if (groupPosition == 0) {
             int count = mSubCategoriesList.size() - 1;
-            holder.txvZoneName.setText(subCategoryItem.getTitle() + " (" + count + ")");
+//            holder.txvZoneName.setText(subCategoryItem.getTitle() + " (" + count + ")");
+            holder.txvZoneName.setText(subCategoryItem.getTitle());
             holder.groupCheckedTxv.setVisibility(View.GONE);
             holder.childChkBox.setVisibility(View.GONE);
 //            for (int i = 1; i < mSubCategoriesList.size(); i++) {
@@ -100,7 +101,8 @@ public class FilterTopicsChildExpandableListAdapter extends BaseExpandableListAd
         } else {
             if (mSubCategoriesChildMap.get(subCategoryItem).size() == 0) {
                 int count = mSubCategoriesChildMap.get(subCategoryItem).size();
-                holder.txvZoneName.setText(subCategoryItem.getTitle() + " (" + count + ")");
+//                holder.txvZoneName.setText(subCategoryItem.getTitle() + " (" + count + ")");
+                holder.txvZoneName.setText(subCategoryItem.getTitle());
                 holder.groupCheckedTxv.setVisibility(View.GONE);
                 holder.childChkBox.setVisibility(View.GONE);
 //                holder.childChkBox.setChecked(subCategoryItem.isSelected());
@@ -113,7 +115,8 @@ public class FilterTopicsChildExpandableListAdapter extends BaseExpandableListAd
 //                });
             } else {
                 int count = mSubCategoriesChildMap.get(subCategoryItem).size() - 1;
-                holder.txvZoneName.setText(subCategoryItem.getTitle() + " (" + count + ")");
+//                holder.txvZoneName.setText(subCategoryItem.getTitle() + " (" + count + ")");
+                holder.txvZoneName.setText(subCategoryItem.getTitle());
                 holder.groupCheckedTxv.setVisibility(View.VISIBLE);
                 holder.childChkBox.setVisibility(View.GONE);
                 if (count == 0) {
@@ -164,7 +167,8 @@ public class FilterTopicsChildExpandableListAdapter extends BaseExpandableListAd
             holder.txtLocalityName.setText(localitySubCategoryChild.getTitle());
         else {
             int count = mSubCategoriesChildMap.get((Topics) getGroup(groupPosition)).size() - 1;
-            holder.txtLocalityName.setText(localitySubCategoryChild.getTitle() + " (" + count + ")");
+//            holder.txtLocalityName.setText(localitySubCategoryChild.getTitle() + " (" + count + ")");
+            holder.txtLocalityName.setText(localitySubCategoryChild.getTitle());
         }
         holder.childChkBox.setVisibility(View.GONE);
 

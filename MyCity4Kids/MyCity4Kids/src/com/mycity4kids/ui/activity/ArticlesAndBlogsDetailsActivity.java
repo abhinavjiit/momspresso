@@ -84,6 +84,7 @@ import com.mycity4kids.models.response.AddBookmarkResponse;
 import com.mycity4kids.models.response.AddCommentResponse;
 import com.mycity4kids.models.response.ArticleDetailResponse;
 import com.mycity4kids.models.response.ArticleDetailResult;
+import com.mycity4kids.models.response.ProfilePic;
 import com.mycity4kids.models.user.UserModel;
 import com.mycity4kids.newmodels.AttendeeModel;
 import com.mycity4kids.newmodels.BlogShareSpouseModel;
@@ -683,7 +684,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     }
 
 
-    private void displayComments(ViewHolder holder, CommentsData commentList, LinearLayout commentLayout1) {
+    private void displayComments(ViewHolder holder, CommentsData commentList, boolean isNewComment) {
         if (holder != null) {
             LayoutInflater inflater = LayoutInflater.from(this);
             View view = inflater.inflate(R.layout.custom_comment_cell, null);
@@ -746,8 +747,11 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 Picasso.with(this).load(R.drawable.default_commentor_img).into(holder.networkImg);
             }
 
-            commentLayout.addView(view);
-
+            if (isNewComment) {
+                commentLayout.addView(view, 0);
+            } else {
+                commentLayout.addView(view);
+            }
             if (commentList.getReplies() != null && commentList.getReplies().size() > 0) {
 
                 holder.replyCommentView.setVisibility(View.VISIBLE);
@@ -1251,7 +1255,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 ViewHolder viewHolder = null;
                 viewHolder = new ViewHolder();
                 for (int i = 0; i < arrayList.size(); i++) {
-                    displayComments(viewHolder, arrayList.get(i), commentLayout);
+                    displayComments(viewHolder, arrayList.get(i), false);
                 }
             } catch (JSONException jsonexception) {
                 Crashlytics.logException(jsonexception);
@@ -1329,6 +1333,20 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 //            if (response.isSuccessful()) {
                 showToast("Comment added successfully!");
+                ViewHolder vh = new ViewHolder();
+                CommentsData cd = new CommentsData();
+                cd.setId(responseData.getData().getId());
+                cd.setBody(commentText.getText().toString().trim());
+                cd.setUserId(SharedPrefUtils.getUserDetailModel(ArticlesAndBlogsDetailsActivity.this).getDynamoId());
+                cd.setName(SharedPrefUtils.getUserDetailModel(ArticlesAndBlogsDetailsActivity.this).getFirst_name());
+                cd.setReplies(new ArrayList<CommentsData>());
+
+                ProfilePic profilePic = new ProfilePic();
+                profilePic.setClientApp(SharedPrefUtils.getProfileImgUrl(ArticlesAndBlogsDetailsActivity.this));
+                profilePic.setClientAppMin(SharedPrefUtils.getProfileImgUrl(ArticlesAndBlogsDetailsActivity.this));
+                cd.setProfile_image(profilePic);
+                displayComments(vh, cd, true);
+
             } else {
                 showToast(responseData.getReason());
             }

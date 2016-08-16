@@ -172,7 +172,7 @@ public class AddArticleTopicsActivity extends BaseActivity {
 
                         for (int k = 0; k < responseData.getData().get(i).getChild().get(j).getChild().size(); k++) {
 
-                            if ("1".equals(responseData.getData().get(i).getChild().get(j).getPublicVisibility())) {
+                            if ("1".equals(responseData.getData().get(i).getChild().get(j).getChild().get(k).getPublicVisibility())) {
                                 //Adding All sub-subcategories
                                 responseData.getData().get(i).getChild().get(j).getChild().get(k)
                                         .setParentId(responseData.getData().get(i).getId());

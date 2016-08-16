@@ -117,24 +117,38 @@ public class TopicsFilterActivity extends BaseActivity {
                     for (int j = 0; j < responseData.getData().get(i).getChild().size(); j++) {
                         ArrayList<Topics> tempList = new ArrayList<>();
 
-                        //add All option to select all sub-categories-childrens only if there are more then 0 child in a subcategory.
-                        if (responseData.getData().get(i).getChild().get(j).getChild().size() > 0)
-                            tempList.add(new Topics(responseData.getData().get(i).getChild().get(j).getId(), "All", false, new ArrayList<Topics>(), responseData.getData().get(i).getId(),
-                                    responseData.getData().get(i).getTitle()));
+                        if ("1".equals(responseData.getData().get(i).getChild().get(j).getShowInMenu())) {
+                            //add All option to select all sub-categories-childrens only if there are more then 0 child in a subcategory.
+                            if (responseData.getData().get(i).getChild().get(j).getChild().size() > 0)
+                                tempList.add(new Topics(responseData.getData().get(i).getChild().get(j).getId(), "All", false, new ArrayList<Topics>(), responseData.getData().get(i).getId(),
+                                        responseData.getData().get(i).getTitle()));
 
-                        tempList.addAll(responseData.getData().get(i).getChild().get(j).getChild());
-                        responseData.getData().get(i).getChild().get(j).setChild(tempList);
+                            for (int k = 0; k < responseData.getData().get(i).getChild().get(j).getChild().size(); k++) {
+                                if ("1".equals(responseData.getData().get(i).getChild().get(j).getChild().get(k).getShowInMenu())) {
+                                    tempList.add(responseData.getData().get(i).getChild().get(j).getChild().get(k));
+                                }
+                            }
+//                            tempList.addAll(responseData.getData().get(i).getChild().get(j).getChild());
+                            responseData.getData().get(i).getChild().get(j).setChild(tempList);
+                        }
                     }
 
-                    //add All option to select all sub-categories only if there are more then 0 subcategories.
-                    if (responseData.getData().get(i).getChild().size() > 0)
-                        tempUpList.add(new Topics(responseData.getData().get(i).getId(), "All", false, new ArrayList<Topics>(), responseData.getData().get(i).getId(),
-                                responseData.getData().get(i).getTitle()));
+                    if ("1".equals(responseData.getData().get(i).getShowInMenu())) {
+                        //add All option to select all sub-categories only if there are more then 0 subcategories.
+                        if (responseData.getData().get(i).getChild().size() > 0)
+                            tempUpList.add(new Topics(responseData.getData().get(i).getId(), "All", false, new ArrayList<Topics>(), responseData.getData().get(i).getId(),
+                                    responseData.getData().get(i).getTitle()));
 
-                    tempUpList.addAll(responseData.getData().get(i).getChild());
-                    topicList.add(responseData.getData().get(i));
-                    topicsMap.put(responseData.getData().get(i),
-                            tempUpList);
+                        for(int j=0;j<responseData.getData().get(i).getChild().size();j++){
+                            if ("1".equals(responseData.getData().get(i).getChild().get(j).getShowInMenu())) {
+                                tempUpList.add(responseData.getData().get(i).getChild().get(j));
+                            }
+                        }
+//                        tempUpList.addAll(responseData.getData().get(i).getChild());
+                        topicList.add(responseData.getData().get(i));
+                        topicsMap.put(responseData.getData().get(i),
+                                tempUpList);
+                    }
                 }
 
                 Topics contributorTopic = new Topics("contributors", "Meet our contributors",

@@ -16,6 +16,7 @@ public class Topics implements Parcelable {
     @SerializedName("public")
     private String publicVisibility;
 
+    private String showInMenu;
     private ArrayList<Topics> child;
     private String parentId;
     private String parentName;
@@ -38,6 +39,7 @@ public class Topics implements Parcelable {
         parentName = in.readString();
         display_name = in.readString();
         publicVisibility = in.readString();
+        showInMenu = in.readString();
         isSelected = in.readByte() != 0;
     }
 
@@ -117,6 +119,14 @@ public class Topics implements Parcelable {
         this.publicVisibility = publicVisibility;
     }
 
+    public String getShowInMenu() {
+        return showInMenu;
+    }
+
+    public void setShowInMenu(String showInMenu) {
+        this.showInMenu = showInMenu;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -131,6 +141,7 @@ public class Topics implements Parcelable {
         dest.writeString(parentName);
         dest.writeString(display_name);
         dest.writeString(publicVisibility);
+        dest.writeString(showInMenu);
         dest.writeByte((byte) (isSelected ? 1 : 0));
     }
 }

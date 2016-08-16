@@ -25,7 +25,6 @@ import com.google.android.gms.tagmanager.Container;
 import com.google.android.gms.tagmanager.ContainerHolder;
 import com.google.android.gms.tagmanager.TagManager;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -35,10 +34,8 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.asynctask.HeavyDbTask;
 import com.mycity4kids.constants.AppConstants;
-import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.ConfigurationController;
 import com.mycity4kids.dbtable.TableAdult;
-import com.mycity4kids.dbtable.TableKids;
 import com.mycity4kids.fragmentdialog.FragmentAlertDialog;
 import com.mycity4kids.gtmutils.ContainerHolderSingleton;
 import com.mycity4kids.gtmutils.Utils;
@@ -50,7 +47,6 @@ import com.mycity4kids.models.city.MetroCity;
 import com.mycity4kids.models.configuration.ConfigurationApiModel;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.newmodels.ForceUpdateModel;
-import com.mycity4kids.newmodels.UserInviteModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ForceUpdateAPI;
 import com.mycity4kids.sync.CategorySyncService;
@@ -149,8 +145,8 @@ public class SplashActivity extends BaseActivity {
                     return;
                 }
             }
-         Intent   mServiceIntent = new Intent(SplashActivity.this, CategorySyncService.class);
-       //     mServiceIntent.setData(Uri.parse("test"));
+            Intent mServiceIntent = new Intent(SplashActivity.this, CategorySyncService.class);
+            //     mServiceIntent.setData(Uri.parse("test"));
             startService(mServiceIntent);
             GPSTracker getCurrentLocation = new GPSTracker(this);
             double _latitude = getCurrentLocation.getLatitude();
