@@ -60,10 +60,12 @@ import com.mycity4kids.newmodels.AttendeeModel;
 import com.mycity4kids.newmodels.TaskMappingModel;
 import com.mycity4kids.newmodels.VolleyBaseResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.activity.ActivityCreateAppointment;
 import com.mycity4kids.ui.activity.ActivityShowAppointment;
 import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
 import com.mycity4kids.ui.activity.BusinessDetailsActivity;
+import com.mycity4kids.ui.activity.CityBestArticleListingActivity;
 import com.mycity4kids.ui.activity.CreateFamilyActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.adapter.AdapterHomeAppointment;
@@ -85,6 +87,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
 
 /**
  * Created by manish.soni on 17-06-2015.
@@ -114,6 +120,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     private ArrayList<BusinessDataListing> mBusinessDataListings;
     private ArrayList<CommonParentingList>  mArticleDataListing1;
     private ArrayList<ArticleListingResult>  mArticleDataListing;
+    private ArrayList<ArticleListingResult>  mArticleBestCityListing;
     private CustomListView eventListView;
     private HorizontalScrollView blogListView;
     private View rltLoadingView;
@@ -124,7 +131,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     private LinearLayout hzScrollLinearLayout, hzScrollLinearLayoutEvent, hzScrollLinearLayout1, blogHeader1;
     private float density;
     CardView cardView;
-
+    int sortType = 0;
 
     @Nullable
     @Override
@@ -317,6 +324,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         current.setText(currentForm.format(calendar.getTime()).toString());
 
         appointmentListData = new ArrayList<>();
+        mArticleBestCityListing=new ArrayList<>();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         formatter.setTimeZone(TimeZone.getTimeZone("GMT+0530"));
 
@@ -533,13 +541,13 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                             public void onClick(View v) {
                                 Intent intent = new Intent(getActivity(), ArticlesAndBlogsDetailsActivity.class);
 
-//                                CommonParentingList parentingListData = (CommonParentingList) (mArticleDataListing.get((int) view.getTag()));
-//                                intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
-//                                intent.putExtra(Constants.ARTICLE_COVER_IMAGE, parentingListData.getThumbnail_image());
+                                ArticleListingResult parentingListData = (ArticleListingResult) (mArticleDataListing.get((int) view.getTag()));
+                                intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
+                                intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
 //                                intent.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.ARTICLES);
 //                                intent.putExtra(Constants.FILTER_TYPE, parentingListData.getAuthor_type());
 //                                intent.putExtra(Constants.BLOG_NAME, parentingListData.getBlog_name());
-//                                startActivity(intent);
+                                startActivity(intent);
                                 Log.e("Tag", "" + view.getTag());
                             }
                         });
@@ -586,15 +594,152 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
 //            return;
 //        }
 
-        blogProgessBar1.setVisibility(View.VISIBLE);
+ /*       blogProgessBar1.setVisibility(View.VISIBLE);
         String url;
         StringBuilder builder = new StringBuilder();
         builder.append("cityId=").append(SharedPrefUtils.getCurrentCityModel(getActivity()).getId());
         builder.append("&page=").append(1);
         url = AppConstants.GET_EDITOR_ARTICLES_URL + builder.toString().replace(" ", "%20");
-        HttpVolleyRequest.getStringResponse(getActivity(), url, null, mGetArticleListingListener1, Request.Method.GET, true);
+        HttpVolleyRequest.getStringResponse(getActivity(), url, null, mGetArticleListingListener1, Request.Method.GET, true);*/
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
+
+       // int from = (nextPageNumber - 1) * limit + 1;
+        Call<ArticleListingResponse> filterCall = topicsAPI.getBestArticlesForCity("" + SharedPrefUtils.getCurrentCityModel(getActivity()).getId(), sortType, 1, 15);
+        filterCall.enqueue(articleListingResponseCallback);
+    }
+    private Callback<ArticleListingResponse> articleListingResponseCallback = new Callback<ArticleListingResponse>() {
+        @Override
+        public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
+//            isReuqestRunning = false;
+            progressBar.setVisibility(View.INVISIBLE);
+          /*  if (mLodingView.getVisibility() == View.VISIBLE) {
+                mLodingView.setVisibility(View.GONE);
+            }*/
+            if (response == null || response.body() == null) {
+                ((DashboardActivity) getActivity()).showToast("Something went wrong from server");
+                return;
+            }
+
+            try {
+                ArticleListingResponse responseData = (ArticleListingResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    processArticleListingResponse(responseData);
+                } else {
+                    ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4KException", Log.getStackTraceString(e));
+                ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4KException", Log.getStackTraceString(t));
+            ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
+        }
+    };
+
+    private void processArticleListingResponse(ArticleListingResponse responseData) {
+
+        ArrayList<ArticleListingResult> dataList = responseData.getData().getResult();
+
+        if (dataList.size() == 0) {
+        //    isLastPageReached = false;
+           /* if (null != articleDataModelsNew && !articleDataModelsNew.isEmpty()) {
+                //No more next results for search from pagination
+            } else {
+                // No results for search
+                noBlogsTextView.setVisibility(View.VISIBLE);
+                noBlogsTextView.setText("No articles found");
+                articleDataModelsNew = dataList;
+                articlesListingAdapter.setNewListData(articleDataModelsNew);
+                articlesListingAdapter.notifyDataSetChanged();
+            }*/
+            ((TextView) view.findViewById(R.id.no_blog1)).setVisibility(View.VISIBLE);
+        } else {
+           // noBlogsTextView.setVisibility(View.GONE);
+           /* if (nextPageNumber == 1) {
+                articleDataModelsNew = dataList;
+            } else {
+                articleDataModelsNew.addAll(dataList);
+            }*/
+           /* articlesListingAdapter.setNewListData(articleDataModelsNew);
+           // nextPageNumber = nextPageNumber + 1;
+            articlesListingAdapter.notifyDataSetChanged();*/
+            ((TextView) view.findViewById(R.id.no_blog1)).setVisibility(View.GONE);
+            mArticleBestCityListing.addAll(responseData.getData().getResult());
+            hzScrollLinearLayout1.removeAllViews();
+            BaseApplication.setBestCityResponse(mArticleBestCityListing);
+            //  articlesListingAdapter.setNewListData(mArticleDataListing1);
+            // articlesListingAdapter.notifyDataSetChanged();
+            for (int i = 0; i < mArticleBestCityListing.size(); i++) {
+                final View view1 = mInflator.inflate(R.layout.card_item_article_dashboard, null);
+                view1.setTag(i);
+                ImageView articleImage = (ImageView) view1.findViewById(R.id.imvAuthorThumb);
+                TextView title = (TextView) view1.findViewById(R.id.txvArticleTitle);
+                cardView = (CardView) view1.findViewById(R.id.cardViewWidget);
+                Picasso.with(getActivity()).load(mArticleBestCityListing.get(i).getProfilePic().getClientApp()).placeholder(R.drawable.default_article).into(articleImage);
+                title.setText(mArticleBestCityListing.get(i).getTitle());
+
+                // cardView.setMinimumWidth((int)width);
+//                        cardView.setLayoutParams(params);
+                view1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getActivity(), ArticlesAndBlogsDetailsActivity.class);
+
+                        ArticleListingResult parentingListData1 = (ArticleListingResult) (mArticleBestCityListing.get((int) view1.getTag()));
+                        intent.putExtra(Constants.ARTICLE_ID, parentingListData1.getId());
+                        intent.putExtra(Constants.AUTHOR_ID, parentingListData1.getUserId());
+                      //  intent.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.ARTICLES);
+                      /*  intent.putExtra(Constants.FILTER_TYPE, parentingListData1.getAuthor_type());
+                        intent.putExtra(Constants.BLOG_NAME, parentingListData1.getBlog_name());*/
+                        startActivity(intent);
+                        Log.e("Tag", "" + view1.getTag());
+                    }
+                });
+                hzScrollLinearLayout1.addView(view1);
+            }
+            View customViewMore = mInflator.inflate(R.layout.custom_view_more_dashboard, null);
+            DisplayMetrics metrics = new DisplayMetrics();
+            if (getActivity() != null) {
+                getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+                int widthPixels = metrics.widthPixels;
+                float width = (float) (widthPixels * 0.45);
+                customViewMore.setMinimumWidth((int) width);
+            }
+            hzScrollLinearLayout1.addView(customViewMore);
+            customViewMore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FragmentEditorsPick editorsfragment = new FragmentEditorsPick();
+                    ((DashboardActivity) getActivity()).replaceFragment(editorsfragment, null, true);
+                }
+            });
+            if (mArticleBestCityListing.isEmpty()) {
+                ((TextView) view.findViewById(R.id.go_to_blog)).setVisibility(View.VISIBLE);
+                ((TextView) view.findViewById(R.id.no_blog1)).setVisibility(View.VISIBLE);
+                //  ((LinearLayout) view.findViewById(R.id.blogHeader)).setVisibility(View.GONE);
+                //  eventListView.setVisibility(View.GONE);
+            }
+            baseScroll.smoothScrollTo(0, 0);
+
+     /*   } else if (responseBlogData.getResponseCode() == 400) {
+            ((TextView) view.findViewById(R.id.go_to_blog)).setVisibility(View.VISIBLE);
+            ((TextView) view.findViewById(R.id.no_blog)).setVisibility(View.VISIBLE);*/
+            //blogListView.setVisibility(View.GONE);
+            // ((LinearLayout) view.findViewById(R.id.blogHeader)).setVisibility(View.GONE);
+
+        }
 
     }
+
+
+
 
     private OnWebServiceCompleteListener mGetArticleListingListener1 = new OnWebServiceCompleteListener() {
         @Override
@@ -962,8 +1107,10 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                 ((DashboardActivity) getActivity()).replaceFragment(new ArticlesFragment(), null, true);
                 break;
             case R.id.blogHeader1:
-                FragmentEditorsPick editorsfragment = new FragmentEditorsPick();
-                ((DashboardActivity) getActivity()).replaceFragment(editorsfragment, null, true);
+           /*     FragmentEditorsPick editorsfragment = new FragmentEditorsPick();
+                ((DashboardActivity) getActivity()).replaceFragment(editorsfragment, null, true);*/
+                Intent intent1=new Intent(getActivity(), CityBestArticleListingActivity.class);
+                startActivity(intent1);
                 break;
         }
 

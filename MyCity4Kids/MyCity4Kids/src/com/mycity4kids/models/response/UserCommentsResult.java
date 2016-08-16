@@ -5,7 +5,7 @@ package com.mycity4kids.models.response;
  */
 public class UserCommentsResult {
     String id;
-    String articleId,parentId,userComment,createdTime,userId,userName,profilePic;
+    String articleId,parentId,userComment,createdTime,userId,userName;
     Long updatedTime;
 
 
@@ -93,13 +93,6 @@ public class UserCommentsResult {
         this.userName = userName;
     }
 
-    public String getProfilePic() {
-        return profilePic;
-    }
-
-    public void setProfilePic(String profilePic) {
-        this.profilePic = profilePic;
-    }
 
 
 

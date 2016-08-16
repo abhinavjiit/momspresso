@@ -142,6 +142,7 @@
                 android:fontFamily="sans-serif-light"
                 android:minHeight="1000dp" />
 
+
             <LinearLayout
                 android:id="@+id/recentAuthorArticles"
                 android:layout_width="match_parent"
@@ -255,7 +256,8 @@
                 android:background="#224cf0"
                 android:padding="10dp"
                 android:text="Share with Spouse/Guardian"
-                android:textAllCaps="false" />
+                android:textAllCaps="false"
+                android:visibility="gone"/>
 
             <LinearLayout
                 android:id="@+id/commnetLout"

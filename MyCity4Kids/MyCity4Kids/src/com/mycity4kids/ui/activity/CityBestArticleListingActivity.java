@@ -180,7 +180,7 @@ public class CityBestArticleListingActivity extends BaseActivity {
         TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
 
         int from = (nextPageNumber - 1) * limit + 1;
-        Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory("" + SharedPrefUtils.getCurrentCityModel(this).getId(), sortType, from, from + limit - 1);
+        Call<ArticleListingResponse> filterCall = topicsAPI.getBestArticlesForCity("" + SharedPrefUtils.getCurrentCityModel(this).getId(), sortType, from, from + limit - 1);
         filterCall.enqueue(articleListingResponseCallback);
 
     }

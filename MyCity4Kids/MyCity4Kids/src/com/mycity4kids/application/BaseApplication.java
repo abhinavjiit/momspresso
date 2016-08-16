@@ -24,6 +24,7 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.database.BaseDbHelper;
 import com.mycity4kids.models.businesslist.BusinessDataListing;
 import com.mycity4kids.models.parentingstop.CommonParentingList;
+import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.newmodels.parentingmodel.ArticleFilterListModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
@@ -98,6 +99,16 @@ public class BaseApplication extends Application {
     }
 
     private static ArrayList<CommonParentingList> blogResponse;
+
+    public static ArrayList<ArticleListingResult> getBestCityResponse() {
+        return bestCityResponse;
+    }
+
+    public static void setBestCityResponse(ArrayList<ArticleListingResult> bestCityResponse) {
+        BaseApplication.bestCityResponse = bestCityResponse;
+    }
+
+    private static ArrayList<ArticleListingResult> bestCityResponse;
 
     public enum TrackerName {
         APP_TRACKER, // Tracker used only in this app.

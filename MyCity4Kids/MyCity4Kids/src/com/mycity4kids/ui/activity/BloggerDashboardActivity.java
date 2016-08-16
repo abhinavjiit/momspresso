@@ -131,6 +131,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     RelativeLayout mLodingView;
     private boolean isReuqestRunning = false;
     private boolean isReuqestCommentsRunning = false;
+    private boolean isRequestReviewRunning=false;
     boolean isLastPageReached = true;
     private ProgressBar progressBar;
     ArrayList<ArticleListingResult> articleDataModelsNew;
@@ -145,8 +146,10 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     private int limit = 10;
     private String paginationValue = "";
     boolean isLastPageCommentsReached = false;
+    boolean isLastPageReviewsReached = false;
     Boolean isFollowing = false;
     boolean stackClearRequired = false;
+    private int nextPageNumberReview=1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -208,6 +211,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         articleDataModelsNew = new ArrayList<>();
         adapter = new DraftListAdapter(this, draftList);
         reviewsListAdapter = new ReviewsListAdapter(this, reviewList);
+        commentsListAdapter = new UserCommentsAdapter(this, commentList);
         articlesListingAdapter = new PublishedArticleListingAdapter(this, new PublishedArticleListingAdapter.BtnClickListener() {
             @Override
             public void onBtnClick(int position) {
@@ -256,7 +260,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
             publishedImageView.setColorFilter(ContextCompat.getColor(BloggerDashboardActivity.this, R.color.red_selected));
         }
 
-
+        commentsListView.setAdapter(commentsListAdapter);
         reviewsListView.setAdapter(reviewsListAdapter);
         draftListview.setAdapter(adapter);
 
@@ -489,13 +493,12 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                 if (position == 0) {
                     // Header Item
 
-                } else if (position == 1) {
 
                 } else {
                     // List view items
                     if (Build.VERSION.SDK_INT > 15) {
                         Intent intent = new Intent(BloggerDashboardActivity.this, EditorPostActivity.class);
-                        intent.putExtra("draftItem", draftList.get(position));
+                        intent.putExtra("draftItem", draftList.get(position - 1));
                         intent.putExtra("from", "draftList");
                         startActivity(intent);
                     } else {
@@ -505,6 +508,25 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                         startActivity(viewIntent);
                     }
                 }
+            }
+        });
+        publishedArticleListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) {
+                    // Header Item
+
+
+                } else {
+                    // List view items
+
+                    Intent intent = new Intent(BloggerDashboardActivity.this, ArticlesAndBlogsDetailsActivity.class);
+                    intent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(position - 1).getUserId());
+                    intent.putExtra(Constants.ARTICLE_ID, articleDataModelsNew.get(position - 1).getId());
+                    startActivity(intent);
+
+                }
+
             }
         });
         commentsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -536,6 +558,24 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                     //  hitArticleListingApi(nextPageNumber, sortType, false);
                     hitCommentsApi();
                     isReuqestCommentsRunning = true;
+                }
+            }
+        });
+        reviewsListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+                boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
+                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isRequestReviewRunning && !isLastPageReviewsReached) {
+                    mLodingView.setVisibility(View.VISIBLE);
+                    //caching enabled only for page 1. so disabling it here for all other pages by passing false.
+                    //  hitArticleListingApi(nextPageNumber, sortType, false);
+                    hitReviewApi();
+                    isRequestReviewRunning = true;
                 }
             }
         });
@@ -580,7 +620,8 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
             return;
         }
 
-        Call<ReviewResponse> call = getReviewList.getUserReview(AppConstants.LIVE_URL + "apiservices/getUserReviews?userId=" + userId);
+        int from = (nextPageNumberReview - 1) * limit + 1;
+        Call<ReviewResponse> call = getReviewList.getUserReview(AppConstants.LIVE_URL + "apiservices/getUserReviews?userId=" + userId+"&start="+from+"&end="+(from + limit - 1));
 //asynchronous call
         call.enqueue(new Callback<ReviewResponse>() {
                          @Override
@@ -633,6 +674,9 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                              if (response == null || response.body() == null) {
                                  showToast(getString(R.string.went_wrong));
                                  return;
+                             }
+                             if (mLodingView.getVisibility() == View.VISIBLE) {
+                                 mLodingView.setVisibility(View.GONE);
                              }
                              UserCommentsResponse responseModel = response.body();
                              if (responseModel.getCode() != 200) {
@@ -944,22 +988,25 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
 
             } else {
                 // No results for search
-                commentList = dataCommentList;
-                commentsListAdapter = new UserCommentsAdapter(this, dataCommentList);
-                commentsListView.setAdapter(commentsListAdapter);
+                commentList.clear();
+                commentList.addAll(dataCommentList);
+               /* commentsListAdapter = new UserCommentsAdapter(this, dataCommentList);
+                commentsListView.setAdapter(commentsListAdapter);*/
                 commentsListAdapter.notifyDataSetChanged();
                 noCommentsTextView.setVisibility(View.VISIBLE);
             }
         } else {
             //  noDrafts.setVisibility(View.GONE);
-            commentsListAdapter = new UserCommentsAdapter(this, dataCommentList);
-            commentsListView.setAdapter(commentsListAdapter);
-            commentsListAdapter.notifyDataSetChanged();
+           /* commentsListAdapter = new UserCommentsAdapter(this, dataCommentList);
+            commentsListView.setAdapter(commentsListAdapter);*/
+
             if (StringUtils.isNullOrEmpty(paginationValue)) {
-                commentList = dataCommentList;
+                commentList.clear();
+                commentList.addAll(dataCommentList);
             } else {
                 commentList.addAll(dataCommentList);
             }
+            commentsListAdapter.notifyDataSetChanged();
             paginationValue = responseModel.getData().getPagination();
             if (AppConstants.PAGINATION_END_VALUE.equals(paginationValue)) {
                 isLastPageCommentsReached = true;
@@ -969,15 +1016,23 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     }
 
     private void processReviewsResponse(ReviewResponse responseModel) {
-        reviewList = responseModel.getData().getResult();
-
+       // reviewList =
+        ArrayList<ReviewListingResult> dataReviewList=responseModel.getData().getResult();
+        if (dataReviewList.size()==0)
+        {
         if (reviewList.size() == 0 && reviewsListView.getVisibility() == View.VISIBLE) {
+            reviewList.clear();
+            reviewList.addAll(dataReviewList);
+            reviewsListAdapter.notifyDataSetChanged();
             noReviewsTextView.setVisibility(View.VISIBLE);
             //   noDrafts.setVisibility(View.VISIBLE);
-        } else {
+        }} else {
             //    noDrafts.setVisibility(View.GONE);
-            reviewsListAdapter = new ReviewsListAdapter(this, reviewList);
-            reviewsListView.setAdapter(reviewsListAdapter);
+       //     reviewsListAdapter = new ReviewsListAdapter(this, reviewList);
+       //     reviewsListView.setAdapter(reviewsListAdapter);
+            noReviewsTextView.setVisibility(View.GONE);
+            reviewList.addAll(dataReviewList);
+            nextPageNumberReview=nextPageNumberReview+1;
             reviewsListAdapter.notifyDataSetChanged();
         }
     }
