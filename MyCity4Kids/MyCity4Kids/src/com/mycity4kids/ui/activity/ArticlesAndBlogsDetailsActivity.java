@@ -30,12 +30,10 @@ import android.view.ViewTreeObserver;
 import android.view.animation.AnimationUtils;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,41 +60,32 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.controller.ArticleBlogFollowController;
-import com.mycity4kids.controller.BlogShareSpouseController;
-import com.mycity4kids.controller.CommentController;
-import com.mycity4kids.dbtable.UserTable;
-import com.mycity4kids.enums.ParentingFilterType;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.OnWebServiceCompleteListener;
-import com.mycity4kids.models.parentingdetails.CommentRequest;
 import com.mycity4kids.models.parentingdetails.CommentsData;
 import com.mycity4kids.models.parentingdetails.ImageData;
-import com.mycity4kids.models.parentingstop.ArticleBlogFollowRequest;
-import com.mycity4kids.models.parentingstop.CommonParentingList;
-import com.mycity4kids.models.parentingstop.CommonParentingResponse;
 import com.mycity4kids.models.request.AddCommentRequest;
 import com.mycity4kids.models.request.ArticleDetailRequest;
 import com.mycity4kids.models.request.DeleteBookmarkRequest;
+import com.mycity4kids.models.request.FollowUnfollowUserRequest;
 import com.mycity4kids.models.request.UpdateViewCountRequest;
 import com.mycity4kids.models.response.AddBookmarkResponse;
 import com.mycity4kids.models.response.AddCommentResponse;
 import com.mycity4kids.models.response.ArticleDetailResponse;
 import com.mycity4kids.models.response.ArticleDetailResult;
+import com.mycity4kids.models.response.ArticleListingResponse;
+import com.mycity4kids.models.response.ArticleListingResult;
+import com.mycity4kids.models.response.FollowUnfollowUserResponse;
 import com.mycity4kids.models.response.ProfilePic;
-import com.mycity4kids.models.user.UserModel;
-import com.mycity4kids.newmodels.AttendeeModel;
 import com.mycity4kids.newmodels.BlogShareSpouseModel;
 import com.mycity4kids.newmodels.VolleyBaseResponse;
-import com.mycity4kids.newmodels.bloggermodel.BlogArticleList.BlogArticleModel;
-import com.mycity4kids.newmodels.bloggermodel.BlogArticleList.NewArticleListingResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
 import com.mycity4kids.ui.CircleTransformation;
 import com.mycity4kids.ui.fragment.CommentRepliesDialogFragment;
 import com.mycity4kids.ui.fragment.EditCommentsRepliesFragment;
-import com.mycity4kids.ui.fragment.WhoToRemindDialogFragment;
 import com.mycity4kids.volley.HttpVolleyRequest;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -115,7 +104,7 @@ import retrofit2.Callback;
 import retrofit2.Retrofit;
 
 /**
- * @author deepanker.chaudhary
+ * @author Hemant.parmar
  */
 public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnClickListener {
 
@@ -150,7 +139,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     private ImageView cover_image;
     private TextView article_title;
     private TextView author_type;
-    private String followAuthorId;
+    private String authorId;
     String authorType, author;
     //    private String blogName;
     private int bookmarkStatus;
@@ -159,7 +148,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     private GoogleApiClient mClient;
     private String TAG;
     private String screenTitle = "Parenting Blogs";
-    Button share_spouse;
+    //    Button share_spouse;
     public ArrayList<BlogShareSpouseModel> whoToShareList;
 
     //Commments Lazy loading
@@ -207,8 +196,8 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             ((TextView) findViewById(R.id.user_name)).setOnClickListener(this);
             floatingActionButton = (FloatingActionButton) findViewById(R.id.user_image);
             floatingActionButton.setOnClickListener(this);
-            share_spouse = (Button) findViewById(R.id.share_spouse);
-            share_spouse.setOnClickListener(this);
+//            share_spouse = (Button) findViewById(R.id.share_spouse);
+//            share_spouse.setOnClickListener(this);
             author_type = (TextView) findViewById(R.id.blogger_type);
 
             followClick = (TextView) findViewById(R.id.follow_click);
@@ -265,7 +254,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             mScrollView = (NestedScrollView) findViewById(R.id.scroll_view);
             mUiHelper = new UiLifecycleHelper(this, FacebookUtils.callback);
             mUiHelper.onCreate(savedInstanceState);
-            share_spouse.setVisibility(View.INVISIBLE);
+//            share_spouse.setVisibility(View.INVISIBLE);
             commLayout = ((LinearLayout) findViewById(R.id.commnetLout));
             mScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
 
@@ -276,19 +265,10 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
                     Rect scrollBounds = new Rect();
                     mScrollView.getHitRect(scrollBounds);
-                    if (share_spouse.getVisibility() != View.VISIBLE) {
-                        if (commLayout.getLocalVisibleRect(scrollBounds)) {
-                            // Any portion of the imageView, even a single pixel, is within the visible window
-                            share_spouse.setAnimation((AnimationUtils.loadAnimation(ArticlesAndBlogsDetailsActivity.this, R.anim.right_to_left)));
-                            share_spouse.setVisibility(View.VISIBLE);
-                        } else {
-                            // NONE of the imageView is within the visible window
-                            share_spouse.setVisibility(View.INVISIBLE);
-                        }
-                    }
+
                     int diff = (view.getBottom() - (mScrollView.getHeight() + mScrollView.getScrollY()));
 
-                    if (diff <= 10 && !isLoading && !StringUtils.isNullOrEmpty(commentURL)) {
+                    if (diff <= 10 && !isLoading && !StringUtils.isNullOrEmpty(commentURL) && commentURL.contains("http")) {
                         getMoreComments();
                     }
                 }
@@ -297,7 +277,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             Bundle bundle = getIntent().getExtras();
             if (bundle != null) {
                 articleId = bundle.getString(Constants.ARTICLE_ID);
-                followAuthorId = bundle.getString(Constants.AUTHOR_ID);
+                authorId = bundle.getString(Constants.AUTHOR_ID);
                 if (!ConnectivityUtils.isNetworkEnabled(this)) {
                     showToast(getString(R.string.error_network));
                     return;
@@ -305,7 +285,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 showProgressDialog(getString(R.string.fetching_data));
                 Retrofit retro = BaseApplication.getInstance().getRetrofit();
                 articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
-                hitArticleDetailsAPI();
+                hitArticleDetailsS3API();
 
             }
         } catch (Exception e) {
@@ -316,17 +296,27 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
     }
 
-    private void hitArticleDetailsAPI() {
-        Call<ArticleDetailResult> call = articleDetailsAPI.getArticleDetails(articleId);
-        call.enqueue(articleDetailResponseCallback);
+    private void hitArticleDetailsS3API() {
+        Call<ArticleDetailResult> call = articleDetailsAPI.getArticleDetailsFromS3(articleId);
+        call.enqueue(articleDetailResponseCallbackS3);
     }
 
     private void hitBookmarkFollowingStatusAPI() {
         ArticleDetailRequest articleDetailRequest = new ArticleDetailRequest();
         articleDetailRequest.setArticleId(articleId);
-        Call<ArticleDetailResponse> callBookmark = articleDetailsAPI.checkFollowingBookmarkStatus(articleId, followAuthorId);
+        Call<ArticleDetailResponse> callBookmark = articleDetailsAPI.checkFollowingBookmarkStatus(articleId, authorId);
         callBookmark.enqueue(isBookmarkedFollowedResponseCallback);
     }
+
+    private void hitRelatedArticleAPI() {
+        String url = AppConstants.LIVE_URL + AppConstants.SERVICE_TYPE_ARTICLE + "recent" +
+                AppConstants.SEPARATOR_BACKSLASH + "1" + AppConstants.SEPARATOR_BACKSLASH + "3";
+        HttpVolleyRequest.getStringResponse(this, url, null, mGetArticleListingListener, Request.Method.GET, true);
+
+        Call<ArticleListingResponse> call = articleDetailsAPI.getPublishedArticles(authorId, 0, 1, 4);
+        call.enqueue(bloggersArticleResponseCallback);
+    }
+
 
     private void hitUpdateViewCountAPI(String userId, ArrayList<Map<String, String>> tagsList, ArrayList<Map<String, String>> cityList) {
         UpdateViewCountRequest updateViewCountRequest = new UpdateViewCountRequest();
@@ -415,15 +405,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         getMenuInflater().inflate(R.menu.aa_new_show_article, menu);
         this.menu = menu;
         menu.getItem(0).setEnabled(false);
-//        if (null != bookmarkFlag) {
-//            if ("0".equals(bookmarkFlag)) {
-//                menu.getItem(0).setIcon(R.drawable.ic_favorite_border_white_48dp);
-//                bookmarkStatus = 0;
-//            } else {
-//                menu.getItem(0).setIcon(R.drawable.ic_favorite_border_white_48dp_fill);
-//                bookmarkStatus = 1;
-//            }
-//        }
         hitBookmarkFollowingStatusAPI();
         return true;
     }
@@ -481,44 +462,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 return;
             }
 
-            if (requestCode == ADD_COMMENT_OR_REPLY) {
-                if (resultCode == RESULT_OK) {
-
-                    mScrollView.postDelayed(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            //	mScrollView.scrollTo(scrollX, scrollY+100);
-                            mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
-
-                        }
-                    }, 100);
-                    Bundle bundle = intent.getExtras();
-                    if (bundle != null) {
-                        String contentData = bundle.getString(Constants.ARTICLE_BLOG_CONTENT);
-                        String parentId = bundle.getString(Constants.PARENT_ID);
-                        UserTable _table = new UserTable((BaseApplication) getApplication());
-                        int count = _table.getCount();
-
-                        if (count > 0) {
-                            UserModel userData = _table.getAllUserData();
-                            CommentRequest _commentRequest = new CommentRequest();
-                            _commentRequest.setArticleId(articleId);
-                            /**
-                             * in case of comment parentId will be empty.
-                             *
-                             */
-                            _commentRequest.setParentId(parentId);
-                            _commentRequest.setContent(contentData);
-                            _commentRequest.setUserId("" + userData.getUser().getId());
-                            _commentRequest.setSessionId(userData.getUser().getSessionId());
-                            CommentController _controller = new CommentController(this, this);
-                            showProgressDialog("Adding a comment...");
-                            _controller.getData(AppConstants.COMMENT_REPLY_REQUEST, _commentRequest);
-                        }
-                    }
-                }
-            }
             if (mUiHelper != null) {
 
                 if (resultCode == 0) {
@@ -729,10 +672,11 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             if (!StringUtils.isNullOrEmpty(commentList.getBody())) {
                 holder.commentDescription.setText(commentList.getBody());
             }
-            if (!StringUtils.isNullOrEmpty(DateTimeUtils.getSeperateDate(commentList.getCreate()))) {
-                holder.dateTxt.setText(DateTimeUtils.getSeperateDate(commentList.getCreate()));
-            } else
-                holder.dateTxt.setText(commentList.getCreate());
+            if (!StringUtils.isNullOrEmpty(commentList.getCreate())) {
+                holder.dateTxt.setText(DateTimeUtils.getDateFromTimestamp(Long.parseLong(commentList.getCreate())));
+            } else {
+                holder.dateTxt.setText("NA");
+            }
 
             if (commentList.getProfile_image() != null && !StringUtils.isNullOrEmpty(commentList.getProfile_image().getClientAppMin())) {
                 try {
@@ -837,32 +781,30 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 //                    onShowPopup(coordinatorLayout);
                     break;
 
-                case R.id.share_spouse:
-                    Utils.pushEvent(ArticlesAndBlogsDetailsActivity.this, GTMEventType.SHARE_SPOUCE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Article Details");
-
-                    ArrayList<Integer> idlist = new ArrayList<>();
-                    idlist = new ArrayList<>();
-                    WhoToRemindDialogFragment dialogFragment1 = new WhoToRemindDialogFragment();
-
-                    Bundle args = new Bundle();
-                    args.putString("dialogTitle", "Share with");
-                    args.putIntegerArrayList("chkValues", idlist);
-                    dialogFragment1.setArguments(args);
-
-
-                    dialogFragment1.setTargetFragment(dialogFragment1, 2);
-                    dialogFragment1.show(getFragmentManager(), "whotoremind");
-
-                    break;
+//                case R.id.share_spouse:
+//                    Utils.pushEvent(ArticlesAndBlogsDetailsActivity.this, GTMEventType.SHARE_SPOUCE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Article Details");
+//
+//                    ArrayList<Integer> idlist = new ArrayList<>();
+//                    idlist = new ArrayList<>();
+//                    WhoToRemindDialogFragment dialogFragment1 = new WhoToRemindDialogFragment();
+//
+//                    Bundle args = new Bundle();
+//                    args.putString("dialogTitle", "Share with");
+//                    args.putIntegerArrayList("chkValues", idlist);
+//                    dialogFragment1.setArguments(args);
+//
+//
+//                    dialogFragment1.setTargetFragment(dialogFragment1, 2);
+//                    dialogFragment1.show(getFragmentManager(), "whotoremind");
+//
+//                    break;
 
                 case R.id.add_comment_btn:
 
                     if (commentText.getText().toString().trim().equalsIgnoreCase("")) {
-                        ToastUtils.showToast(getApplicationContext(), "Please write to comment...");
+                        ToastUtils.showToast(getApplicationContext(), "Please write to comment...", Toast.LENGTH_SHORT);
                     } else {
                         String contentData = commentText.getText().toString();
-                        String parentId1 = "";
-
                         Retrofit retro = BaseApplication.getInstance().getRetrofit();
                         ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
 
@@ -874,7 +816,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     }
                     break;
                 case R.id.follow_click:
-                    followAPICall(followAuthorId);
+                    followAPICall(authorId);
                     break;
 
                 case R.id.user_image:
@@ -889,11 +831,9 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 case R.id.recentAuthorArticle3: {
                     Intent intent = new Intent(this, ArticlesAndBlogsDetailsActivity.class);
 
-                    BlogArticleModel parentingListData = (BlogArticleModel) v.getTag();
-                    // int id=(int)  v.getTag();
+                    ArticleListingResult parentingListData = (ArticleListingResult) v.getTag();
                     intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId() + "");
-                    intent.putExtra(Constants.ARTICLE_COVER_IMAGE, parentingListData.getThumbnail_image());
-                    intent.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.ARTICLES);
+                    intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
                     startActivity(intent);
                     finish();
                     break;
@@ -903,12 +843,9 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 case R.id.trendingArticle3: {
                     Intent intent = new Intent(this, ArticlesAndBlogsDetailsActivity.class);
 
-                    CommonParentingList parentingListData = (CommonParentingList) v.getTag();
+                    ArticleListingResult parentingListData = (ArticleListingResult) v.getTag();
                     intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
-                    intent.putExtra(Constants.ARTICLE_COVER_IMAGE, parentingListData.getThumbnail_image());
-                    intent.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.ARTICLES);
-                    intent.putExtra(Constants.FILTER_TYPE, parentingListData.getAuthor_type());
-                    intent.putExtra(Constants.BLOG_NAME, parentingListData.getBlog_name());
+                    intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
                     startActivity(intent);
                     finish();
                     break;
@@ -939,44 +876,29 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         private RelativeLayout replyCommentView;
     }
 
-
-    public void setShareWith(ArrayList<AttendeeModel> attendeeList) {
-
-        whoToShareList = new ArrayList<>();
-        ArrayList<String> userList = new ArrayList<>();
-        BlogShareSpouseModel spouseModel = new BlogShareSpouseModel();
-        for (int i = 0; i < attendeeList.size(); i++) {
-            if (attendeeList.get(i).getCheck() == true) {
-                if (attendeeList.get(i).getType().equalsIgnoreCase("user")) {
-                    userList.add(String.valueOf(attendeeList.get(i).getId()));
-                    Log.d("Attendees are", String.valueOf(attendeeList.get(i).getId()));
-                }
-            }
-        }
-        //whoToShareList.add(spouseModel);
-
-        spouseModel.setSharedWithUserList(userList);
-        spouseModel.setArticleId(articleId);
-        BlogShareSpouseController blogShareSpouseContoller = new BlogShareSpouseController(this, this);
-        blogShareSpouseContoller.getData(AppConstants.SHARE_SPOUSE_BLOG, spouseModel);
-    }
-
     public void followAPICall(String id) {
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        FollowAPI followAPI = retrofit.create(FollowAPI.class);
+        FollowUnfollowUserRequest request = new FollowUnfollowUserRequest();
+        request.setFollowerId(authorId);
 
-        ArticleBlogFollowRequest _followRequest = new ArticleBlogFollowRequest();
-        _followRequest.setSessionId("" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getSessionId());
-        _followRequest.setUserId("" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getId());
-        _followRequest.setAuthorId("" + id);
-        ArticleBlogFollowController _followController = new ArticleBlogFollowController(this, this);
-//        showProgressDialog(getString(R.string.please_wait));
-        _followController.getData(AppConstants.ARTICLE_BLOG_FOLLOW_REQUEST, _followRequest);
+        if (isFollowing) {
+            isFollowing = false;
+            followClick.setText("Follow");
+//            unfollowButton.setVisibility(View.INVISIBLE);
+            Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.unfollowUser(request);
+            followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback);
+        } else {
+            isFollowing = true;
+            followClick.setText("Unfollow");
+//            unfollowButton.setVisibility(View.VISIBLE);
+            Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.followUser(request);
+            followUnfollowUserResponseCall.enqueue(followUserResponseCallback);
+        }
 
     }
 
     private void addRemoveBookmark() {
-//        BookmarkModel bookmarkRequest = new BookmarkModel();
-//        bookmarkRequest.setId(articleId);
-//        bookmarkRequest.setCategory("blogs");
 
         if (bookmarkStatus == 0) {
             ArticleDetailRequest articleDetailRequest = new ArticleDetailRequest();
@@ -996,9 +918,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             call.enqueue(addBookmarkResponseCallback);
         }
 
-//        followAPICall(followAuthorId);
-//        BookmarkController bookmarkController = new BookmarkController(this, this);
-//        bookmarkController.getData(AppConstants.BOOKMARK_BLOG_REQUEST, bookmarkRequest);
     }
 
     private void sendScrollDown() {
@@ -1042,40 +961,29 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         }).start();
     }
 
-    Callback<ArticleDetailResult> articleDetailResponseCallback = new Callback<ArticleDetailResult>() {
+    Callback<ArticleDetailResult> articleDetailResponseCallbackS3 = new Callback<ArticleDetailResult>() {
         @Override
         public void onResponse(Call<ArticleDetailResult> call, retrofit2.Response<ArticleDetailResult> response) {
             removeProgressDialog();
             if (response == null || response.body() == null) {
-                showToast("Something went wrong from server");
+                getArticleDetailsWebserviceAPI();
                 return;
             }
-            String commentMessage = "";
             try {
                 ArticleDetailResult responseData = (ArticleDetailResult) response.body();
                 newCommentLayout.setVisibility(View.VISIBLE);
                 getResponseUpdateUi(responseData);
-
+                hitRelatedArticleAPI();
                 commentURL = responseData.getCommentsUri();
-                getMoreComments();
-//                Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-//                AuthorDetailsAPI authorDetailsAPI = retrofit.create(AuthorDetailsAPI.class);
-//                Call<NewArticleListingResponse> call1 = authorDetailsAPI.getBloggersRecentArticle(followAuthorId, 1);
-//                call1.enqueue(bloggersArticleResponseCallback);
-//                hitBlogListingApi();
-                if (isCommingFromCommentAPI) {
-                    if (StringUtils.isNullOrEmpty(commentMessage)) {
-                        showToast("Your comment has been added!");
-                    } else {
-                        Toast.makeText(ArticlesAndBlogsDetailsActivity.this, commentMessage, Toast.LENGTH_SHORT).show();
-                    }
-                    sendScrollDown();
-                    isCommingFromCommentAPI = false;
+
+                if (!StringUtils.isNullOrEmpty(commentURL) && commentURL.contains("http")) {
+                    getMoreComments();
                 }
             } catch (Exception e) {
                 removeProgressDialog();
                 Crashlytics.logException(e);
-                Log.d("JsonSyntaxException", Log.getStackTraceString(e));
+                Log.d("MC4kException", Log.getStackTraceString(e));
+                getArticleDetailsWebserviceAPI();
             }
 
         }
@@ -1083,29 +991,52 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         @Override
         public void onFailure(Call<ArticleDetailResult> call, Throwable t) {
             removeProgressDialog();
-            if (t instanceof UnknownHostException) {
-                showToast(getString(R.string.error_network));
-            } else if (t instanceof SocketTimeoutException) {
-                showToast("connection timed out");
-            } else {
-                showToast(getString(R.string.server_went_wrong));
-            }
+            handleExceptions(t);
+            getArticleDetailsWebserviceAPI();
         }
     };
 
-    public void hitBlogListingApi() {
-//
-
-        // blogProgessBar.setVisibility(View.VISIBLE);
-        String url;
-        StringBuilder builder = new StringBuilder();
-        builder.append("city_id=").append(SharedPrefUtils.getCurrentCityModel(this).getId());
-        builder.append("&page=").append(1);
-        builder.append("&sort=").append("trending_today");
-        url = AppConstants.NEW_ALL_ARTICLE_URL + builder.toString().replace(" ", "%20");
-        HttpVolleyRequest.getStringResponse(this, url, null, mGetArticleListingListener, Request.Method.GET, true);
-
+    private void getArticleDetailsWebserviceAPI() {
+        Call<ArticleDetailResponse> call = articleDetailsAPI.getArticleDetailsFromWebservice(articleId);
+        call.enqueue(articleDetailResponseCallbackWebservice);
     }
+
+    Callback<ArticleDetailResponse> articleDetailResponseCallbackWebservice = new Callback<ArticleDetailResponse>() {
+        @Override
+        public void onResponse(Call<ArticleDetailResponse> call, retrofit2.Response<ArticleDetailResponse> response) {
+            removeProgressDialog();
+            if (response == null || response.body() == null) {
+                showToast("Something went wrong from server");
+                return;
+            }
+            try {
+                ArticleDetailResponse responseData = (ArticleDetailResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    newCommentLayout.setVisibility(View.VISIBLE);
+                    getResponseUpdateUi(responseData.getData().getResult());
+                    hitRelatedArticleAPI();
+                    commentURL = responseData.getData().getResult().getCommentsUri();
+
+                    if (!StringUtils.isNullOrEmpty(commentURL) && commentURL.contains("http")) {
+                        getMoreComments();
+                    }
+                } else {
+
+                }
+            } catch (Exception e) {
+                removeProgressDialog();
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+
+        }
+
+        @Override
+        public void onFailure(Call<ArticleDetailResponse> call, Throwable t) {
+            removeProgressDialog();
+            handleExceptions(t);
+        }
+    };
 
     private OnWebServiceCompleteListener mGetArticleListingListener = new OnWebServiceCompleteListener() {
         @Override
@@ -1117,18 +1048,15 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     showToast("Something went wrong from server");
             } else {
                 Log.d("Response = ", response.getResponseBody());
-                String temp = "";
-//                progressBar.setVisibility(View.INVISIBLE);
                 if (response == null) {
                     showToast("Something went wrong from server");
                     removeProgressDialog();
                     return;
                 }
 
-                //   blogProgessBar.setVisibility(View.GONE);
-                CommonParentingResponse responseBlogData;
+                ArticleListingResponse responseBlogData;
                 try {
-                    responseBlogData = new Gson().fromJson(response.getResponseBody(), CommonParentingResponse.class);
+                    responseBlogData = new Gson().fromJson(response.getResponseBody(), ArticleListingResponse.class);
                 } catch (JsonSyntaxException jse) {
                     Crashlytics.logException(jse);
                     Log.d("JsonSyntaxException", Log.getStackTraceString(jse));
@@ -1137,27 +1065,23 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     return;
                 }
 
-                if (responseBlogData.getResponseCode() == Constants.HTTP_RESPONSE_SUCCESS) {
-                    //clear list to avoid duplicates due to volley caching
-
-                    //  articlesListingAdapter.setNewListData(mArticleDataListing);
-                    // articlesListingAdapter.notifyDataSetChanged();
+                if (responseBlogData.getCode() == 200 && Constants.SUCCESS.equals(responseBlogData.getStatus())) {
                     trendingArticles.setVisibility(View.VISIBLE);
-                    trendingArticle1.setText(responseBlogData.getResult().getData().getData().get(0).getTitle());
-                    trendingArticle1.setTag(responseBlogData.getResult().getData().getData().get(0));
-                    trendingArticle2.setText(responseBlogData.getResult().getData().getData().get(1).getTitle());
-                    trendingArticle2.setTag(responseBlogData.getResult().getData().getData().get(1));
-                    trendingArticle3.setText(responseBlogData.getResult().getData().getData().get(2).getTitle());
-                    trendingArticle3.setTag(responseBlogData.getResult().getData().getData().get(2));
+                    trendingArticle1.setText(responseBlogData.getData().getResult().get(0).getTitle());
+                    trendingArticle1.setTag(responseBlogData.getData().getResult().get(0));
+                    trendingArticle2.setText(responseBlogData.getData().getResult().get(1).getTitle());
+                    trendingArticle2.setTag(responseBlogData.getData().getResult().get(1));
+                    trendingArticle3.setText(responseBlogData.getData().getResult().get(2).getTitle());
+                    trendingArticle3.setTag(responseBlogData.getData().getResult().get(2));
 
                 }
 
             }
         }
     };
-    private Callback<NewArticleListingResponse> bloggersArticleResponseCallback = new Callback<NewArticleListingResponse>() {
+    private Callback<ArticleListingResponse> bloggersArticleResponseCallback = new Callback<ArticleListingResponse>() {
         @Override
-        public void onResponse(Call<NewArticleListingResponse> call, retrofit2.Response<NewArticleListingResponse> response) {
+        public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
 
             //  progressBar.setVisibility(View.INVISIBLE);
             if (mLodingView.getVisibility() == View.VISIBLE) {
@@ -1169,9 +1093,15 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             }
 
             try {
-                NewArticleListingResponse responseData = (NewArticleListingResponse) response.body();
-                if (responseData.getResponseCode() == 200) {
-                    ArrayList<BlogArticleModel> dataList = responseData.getResult().getData().getData();
+                ArticleListingResponse responseData = (ArticleListingResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    ArrayList<ArticleListingResult> dataList = responseData.getData().getResult();
+                    for (int i = 0; i < dataList.size(); i++) {
+                        if (dataList.get(i).getId().equals(articleId)) {
+                            dataList.remove(i);
+                            break;
+                        }
+                    }
                     if (dataList.size() == 0) {
 
                     } else {
@@ -1201,13 +1131,8 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                         }
                     }
 
-                } else if (responseData.getResponseCode() == 400) {
-                    String message = responseData.getResult().getMessage();
-                    if (!StringUtils.isNullOrEmpty(message)) {
-                        showToast(message);
-                    } else {
-                        showToast(getString(R.string.went_wrong));
-                    }
+                } else {
+                    showToast(getString(R.string.server_went_wrong));
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
@@ -1217,10 +1142,8 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         }
 
         @Override
-        public void onFailure(Call<NewArticleListingResponse> call, Throwable t) {
-            Crashlytics.logException(t);
-            Log.d("MC4kException", Log.getStackTraceString(t));
-            showToast(getString(R.string.went_wrong));
+        public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
+            handleExceptions(t);
         }
     };
 
@@ -1296,7 +1219,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     bookmarkStatus = 1;
                 }
                 bookmarkId = responseData.getData().getResult().getBookmarkId();
-                if (SharedPrefUtils.getUserDetailModel(ArticlesAndBlogsDetailsActivity.this).getDynamoId().equals(followAuthorId)) {
+                if (SharedPrefUtils.getUserDetailModel(ArticlesAndBlogsDetailsActivity.this).getDynamoId().equals(authorId)) {
                     followClick.setVisibility(View.INVISIBLE);
                 } else {
                     if ("0".equals(responseData.getData().getResult().getIsFollowed())) {
@@ -1345,7 +1268,9 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 profilePic.setClientApp(SharedPrefUtils.getProfileImgUrl(ArticlesAndBlogsDetailsActivity.this));
                 profilePic.setClientAppMin(SharedPrefUtils.getProfileImgUrl(ArticlesAndBlogsDetailsActivity.this));
                 cd.setProfile_image(profilePic);
-                displayComments(vh, cd, true);
+                cd.setCreate("" + System.currentTimeMillis() / 1000);
+                commentText.setText("");
+                displayComments(vh, cd, false);
 
             } else {
                 showToast(responseData.getReason());
@@ -1487,4 +1412,64 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         }
     }
 
+
+    Callback<FollowUnfollowUserResponse> followUserResponseCallback = new Callback<FollowUnfollowUserResponse>() {
+        @Override
+        public void onResponse(Call<FollowUnfollowUserResponse> call, retrofit2.Response<FollowUnfollowUserResponse> response) {
+            if (response == null || response.body() == null) {
+                showToast(getString(R.string.went_wrong));
+                return;
+            }
+            try {
+                FollowUnfollowUserResponse responseData = (FollowUnfollowUserResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+
+                } else {
+                    followClick.setText("Follow");
+                    isFollowing = false;
+                }
+            } catch (Exception e) {
+                showToast(getString(R.string.server_went_wrong));
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<FollowUnfollowUserResponse> call, Throwable t) {
+            showToast(getString(R.string.server_went_wrong));
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
+    Callback<FollowUnfollowUserResponse> unfollowUserResponseCallback = new Callback<FollowUnfollowUserResponse>() {
+        @Override
+        public void onResponse(Call<FollowUnfollowUserResponse> call, retrofit2.Response<FollowUnfollowUserResponse> response) {
+            if (response == null || response.body() == null) {
+                showToast(getString(R.string.went_wrong));
+                return;
+            }
+            try {
+                FollowUnfollowUserResponse responseData = (FollowUnfollowUserResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+
+                } else {
+                    followClick.setText("Following");
+                    isFollowing = true;
+                }
+            } catch (Exception e) {
+                showToast(getString(R.string.server_went_wrong));
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<FollowUnfollowUserResponse> call, Throwable t) {
+            showToast(getString(R.string.server_went_wrong));
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
 }

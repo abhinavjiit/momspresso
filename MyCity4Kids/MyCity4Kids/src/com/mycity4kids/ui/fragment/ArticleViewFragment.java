@@ -185,12 +185,7 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
                 swipeRefreshLayout.setRefreshing(false);
                 ArticleListingResponse responseData;
                 try {
-                    Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
                     responseData = new Gson().fromJson(response.getResponseBody(), ArticleListingResponse.class);
-//                    Type collectionType = new TypeToken<Collection<ArticleListingResponse>>() {
-//                    }.getType();
-//                    List<ArticleListingResponse> lcs = (List<ArticleListingResponse>) new Gson()
-//                            .fromJson(response.getResponseBody(), collectionType);
                 } catch (JsonSyntaxException jse) {
                     Crashlytics.logException(jse);
                     Log.d("JsonSyntaxException", Log.getStackTraceString(jse));

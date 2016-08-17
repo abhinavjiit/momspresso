@@ -103,11 +103,6 @@ public class AddArticleTopicsActivity extends BaseActivity {
         } catch (FileNotFoundException e) {
             Crashlytics.logException(e);
             Log.d("FileNotFoundException", Log.getStackTraceString(e));
-//            Retrofit retro = BaseApplication.getInstance().getRetrofit();
-//            final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
-//            Call<TopicsResponse> call = topicsAPI.getTopicsCategory("" + SharedPrefUtils.getUserDetailModel(this).getId());
-//            call.enqueue(getAllTopicsResponseCallback);
-
             Retrofit retro = BaseApplication.getInstance().getRetrofit();
             final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
 

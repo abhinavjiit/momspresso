@@ -217,7 +217,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
             public void onBtnClick(int position) {
                 Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
                 ArticleDetailsAPI articleDetailsAPI = retrofit.create(ArticleDetailsAPI.class);
-                Call<ArticleDetailResult> call = articleDetailsAPI.getArticleDetails(articleDataModelsNew.get(position).getId());
+                Call<ArticleDetailResult> call = articleDetailsAPI.getArticleDetailsFromS3(articleDataModelsNew.get(position).getId());
                 call.enqueue(articleDetailResponseCallback);
 
             }
@@ -748,6 +748,9 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
 
                          @Override
                          public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
+                             if (mLodingView.getVisibility() == View.VISIBLE) {
+                                 mLodingView.setVisibility(View.GONE);
+                             }
                              removeProgressDialog();
                              Crashlytics.logException(t);
                              Log.d("MC4kException", Log.getStackTraceString(t));

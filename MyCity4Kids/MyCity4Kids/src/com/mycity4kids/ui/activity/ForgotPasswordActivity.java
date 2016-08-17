@@ -47,10 +47,9 @@ public class ForgotPasswordActivity extends BaseActivity {
         Utils.pushOpenScreenEvent(ForgotPasswordActivity.this, "Forgot Password", SharedPrefUtils.getUserDetailModel(this).getId() + "");
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-
         setSupportActionBar(mToolbar);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         mEmailId = (EditText) findViewById(R.id.editEmail);
         _controller = new ForgotPasswordController(this, this);
 
@@ -62,10 +61,7 @@ public class ForgotPasswordActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         // according to fragment change it
-
         getMenuInflater().inflate(R.menu.forgot_password, menu);
-
-
         return true;
     }
 
@@ -85,8 +81,6 @@ public class ForgotPasswordActivity extends BaseActivity {
                                 getString(R.string.error_network));
                     } else {
                         showProgressDialog(getString(R.string.please_wait));
-//                        _controller.getData(AppConstants.FORGOT_REQUEST, mEmailId
-//                                .getText().toString().trim());
 
                         LoginRegistrationRequest lr = new LoginRegistrationRequest();
                         lr.setEmail(mEmailId.getText().toString().trim());
@@ -97,7 +91,6 @@ public class ForgotPasswordActivity extends BaseActivity {
                         call.enqueue(onForgotPasswordResponseReceived);
                     }
                 }
-
 
                 return true;
             default:
@@ -131,6 +124,7 @@ public class ForgotPasswordActivity extends BaseActivity {
 
         @Override
         public void onFailure(Call<UserDetailResponse> call, Throwable t) {
+            removeProgressDialog();
             Log.d("MC4kException", Log.getStackTraceString(t));
             Crashlytics.logException(t);
             showToast(getString(R.string.went_wrong));
@@ -139,47 +133,6 @@ public class ForgotPasswordActivity extends BaseActivity {
 
     @Override
     protected void updateUi(Response response) {
-        if (response == null) {
-            removeProgressDialog();
-            showSnackbar(findViewById(R.id.root), getResources().getString(R.string.server_error));
-            return;
-        }
-        switch (response.getDataType()) {
-            case AppConstants.FORGOT_REQUEST:
-                removeProgressDialog();
-                CommonResponse responseData = (CommonResponse) response.getResponseObject();
-                String message = responseData.getResult().getMessage();
-                if (responseData.getResponseCode() == 200) {
-
-                    //showSnackbar(findViewById(R.id.root), message);
-                    AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-
-                    dialog.setMessage(message + "").setNegativeButton(android.R.string.yes
-                            , new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    dialog.cancel();
-                                    Intent intent = new Intent(ForgotPasswordActivity.this, ActivityLogin.class);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                                    startActivity(intent);
-
-
-                                }
-                            }).setIcon(android.R.drawable.ic_dialog_alert).show();
-//                    Toast.makeText(this,message,Toast.LENGTH_LONG).show();
-
-
-                } else if (responseData.getResponseCode() == 400) {
-
-                    showSnackbar(findViewById(R.id.root), message);
-
-
-                }
-                break;
-
-            default:
-                break;
-        }
 
     }
 

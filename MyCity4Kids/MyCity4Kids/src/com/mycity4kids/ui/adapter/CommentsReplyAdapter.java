@@ -121,7 +121,7 @@ public class CommentsReplyAdapter extends ArrayAdapter<CommentsData> {
         holder.replyBtnTextView.setTag(replyList.get(position).getParent_id());
 
         holder.replierNameTextView.setText(replyList.get(position).getName());
-        holder.replyDateTextView.setText(DateTimeUtils.getSeperateDate(replyList.get(position).getCreate()));
+        holder.replyDateTextView.setText(DateTimeUtils.getDateFromTimestamp(Long.parseLong(replyList.get(position).getCreate())));
         holder.replyDescTextView.setText(replyList.get(position).getBody());
         holder.replyBtnTextView.setOnClickListener(new View.OnClickListener() {
             @Override

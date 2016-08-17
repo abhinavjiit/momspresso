@@ -280,7 +280,7 @@ public class SyncUserInfoService extends IntentService implements UpdateListener
         protected Void doInBackground(UserDetailResponse... userResponses) {
 
             if (null != userResponses[0].getData().getResult().getKids()) {
-                saveKidsInformation(userResponses[0].getData().getResult().getKids());
+//                saveKidsInformation(userResponses[0].getData().getResult().getKids());
             }
             return null;
         }

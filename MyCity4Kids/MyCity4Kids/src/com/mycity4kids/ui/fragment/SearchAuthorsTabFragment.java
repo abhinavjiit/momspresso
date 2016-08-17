@@ -110,10 +110,16 @@ public class SearchAuthorsTabFragment extends BaseFragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
 
-                BlogItemModel itemSelected = (BlogItemModel) adapterView.getItemAtPosition(position);
-                Intent intent = new Intent(getActivity(), BloggerDashboardActivity.class);
-                intent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, "" + itemSelected.getId());
-                getActivity().startActivityForResult(intent, Constants.BLOG_FOLLOW_STATUS);
+                SearchAuthorResult itemSelected = (SearchAuthorResult) adapterView.getItemAtPosition(position);
+
+                Intent intentnn = new Intent(getActivity(), BloggerDashboardActivity.class);
+                intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, itemSelected.getUserId());
+                startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
+
+
+//                Intent intent = new Intent(getActivity(), BloggerDashboardActivity.class);
+//                intent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, "" + itemSelected.getId());
+//                getActivity().startActivityForResult(intent, Constants.BLOG_FOLLOW_STATUS);
             }
         });
 
@@ -217,7 +223,7 @@ public class SearchAuthorsTabFragment extends BaseFragment {
                     ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(responseData.getReason());
                 }
             } catch (Exception e) {
-                ((SearchArticlesAndAuthorsActivity)getActivity()).showToast(getString(R.string.server_went_wrong));
+                ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }

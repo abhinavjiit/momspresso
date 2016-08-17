@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
@@ -26,9 +25,7 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.editor.ArticleImageTagUploadActivity;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
-import com.mycity4kids.models.editor.ArticleDraftList;
 import com.mycity4kids.models.response.PublishDraftObject;
-import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.widget.TopicView;
 

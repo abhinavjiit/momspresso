@@ -14,7 +14,7 @@ public class PublishDraftObject implements Serializable {
     String createdTime;
     String body;
     String title;
-    String imageUrl;
+    ImageURL imageUrl;
     private List<Map<String, String>> tags;
     int itemType = 1;
 
@@ -34,11 +34,11 @@ public class PublishDraftObject implements Serializable {
         this.tags = tags;
     }
 
-    public String getImageUrl() {
+    public ImageURL getImageUrl() {
         return imageUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
+    public void setImageUrl(ImageURL imageUrl) {
         this.imageUrl = imageUrl;
     }
 

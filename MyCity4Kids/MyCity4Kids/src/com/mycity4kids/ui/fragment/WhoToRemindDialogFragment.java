@@ -172,19 +172,20 @@ public class WhoToRemindDialogFragment extends android.app.DialogFragment {
                     } else {
                         ToastUtils.showToast(getActivity(), "Please select atleast one user");
                     }
-                } else if (dialogTitle.equals("Share with")) {
-
-
-                    if (chkCondition()) {
-                        ((ArticlesAndBlogsDetailsActivity) getActivity()).setShareWith(adapter.getAttendeeList());
-
-                        ToastUtils.showToast(getActivity(), "Thanks for Sharing");
-                        getDialog().dismiss();
-
-                    } else {
-                        ToastUtils.showToast(getActivity(), "Please select atleast one user");
-                    }
                 }
+//                else if (dialogTitle.equals("Share with")) {
+//
+//
+//                    if (chkCondition()) {
+//                        ((ArticlesAndBlogsDetailsActivity) getActivity()).setShareWith(adapter.getAttendeeList());
+//
+//                        ToastUtils.showToast(getActivity(), "Thanks for Sharing");
+//                        getDialog().dismiss();
+//
+//                    } else {
+//                        ToastUtils.showToast(getActivity(), "Please select atleast one user");
+//                    }
+//                }
 
 
             }

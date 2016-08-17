@@ -8,6 +8,7 @@ import com.mycity4kids.models.response.AddBookmarkResponse;
 import com.mycity4kids.models.response.AddCommentResponse;
 import com.mycity4kids.models.response.ArticleDetailResponse;
 import com.mycity4kids.models.response.ArticleDetailResult;
+import com.mycity4kids.models.response.ArticleListingResponse;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -37,12 +38,26 @@ public interface ArticleDetailsAPI {
                                           @Query("user_id") String user_id,
                                           @Query("app_version") String app_version);
 
-    @GET("https://s3-ap-northeast-1.amazonaws.com/microservices-sync-test/articles-data/{article_id}.json")
-    Call<ArticleDetailResult> getArticleDetails(@Path("article_id") String article_id);
+
+    //    dev url for article details
+    //    @GET("https://s3-ap-northeast-1.amazonaws.com/microservices-sync-test/articles-data/{article_id}.json")
+
+    //Staging Url for article details
+    @GET("http://dziyfkwv8zf9m.cloudfront.net/articles-data/{articleId}.json")
+    Call<ArticleDetailResult> getArticleDetailsFromS3(@Path("articleId") String articleId);
+
+    @GET("/v1/articles/doc/")
+    Call<ArticleDetailResponse> getArticleDetailsFromWebservice(@Query("articleId") String articleId);
 
     @GET("v1/users/checkFollowingBookmarkStatus/")
     Call<ArticleDetailResponse> checkFollowingBookmarkStatus(@Query("articleId") String articleId,
                                                              @Query("authorId") String authorId);
+
+    @GET("v1/articles/user/{userId}")
+    Call<ArticleListingResponse> getPublishedArticles(@Path("userId") String userId,
+                                                      @Query("sort") int authorId,
+                                                      @Query("start") int start,
+                                                      @Query("end") int end);
 
     @GET
     Call<ResponseBody> getComments(@Url String url);

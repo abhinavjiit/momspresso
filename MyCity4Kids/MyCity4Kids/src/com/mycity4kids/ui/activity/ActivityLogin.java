@@ -583,7 +583,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                     //Verified User
                     else {
                         if (null != responseData.getData().getResult().getKids()) {
-                            saveKidsInformation(responseData.getData().getResult().getKids());
+//                            saveKidsInformation(responseData.getData().getResult().getKids());
                         }
                         Intent intent = new Intent(ActivityLogin.this, PushTokenService.class);
                         startService(intent);

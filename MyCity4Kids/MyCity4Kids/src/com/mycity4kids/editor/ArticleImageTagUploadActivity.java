@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -28,7 +27,6 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.dbtable.UserTable;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
@@ -37,7 +35,6 @@ import com.mycity4kids.models.response.ArticleDraftResponse;
 import com.mycity4kids.models.response.BlogPageResponse;
 import com.mycity4kids.models.response.ImageUploadResponse;
 import com.mycity4kids.models.response.PublishDraftObject;
-import com.mycity4kids.models.user.UserModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticlePublishAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
@@ -166,58 +163,6 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
                             return;
                         }
                         startCropActivity(imageUri);
-                      /*  Uri selectedImage = data.getData();
-                        String[] filePathColumn = {MediaStore.Images.Media.DATA};
-
-                        Cursor cursor = this.getContentResolver().query(
-                                selectedImage, filePathColumn, null, null, null);
-                        cursor.moveToFirst();
-
-                        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                        String filePath = cursor.getString(columnIndex);
-                        cursor.close();
-                        Log.e("File", "filePath: " + filePath);
-                        filePath = filePath.replaceAll("[^a-zA-Z0-9.-/_]", "_");
-                        file = new File(new URI("file://"
-                                + filePath.replaceAll(" ", "%20")));
-
-                        Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(ArticleImageTagUploadActivity.this.getContentResolver(), imageUri);
-                        //  sendUploadProfileImageRequest(imageBitmap);
-                        float actualHeight = imageBitmap.getHeight();
-                        float actualWidth = imageBitmap.getWidth();
-                        float maxHeight = 243;
-                        float maxWidth = 423;
-                       *//* float maxHeight = 1300;
-                        float maxWidth = 700;*//*
-                        float imgRatio = actualWidth / actualHeight;
-                        float maxRatio = maxWidth / maxHeight;
-
-                        if (actualHeight > maxHeight || actualWidth > maxWidth) {
-                            if (imgRatio < maxRatio) {
-                                //adjust width according to maxHeight
-                                imgRatio = maxHeight / actualHeight;
-                                actualWidth = imgRatio * actualWidth;
-                                actualHeight = maxHeight;
-                            } else if (imgRatio > maxRatio) {
-                                //adjust height according to maxWidth
-                                imgRatio = maxWidth / actualWidth;
-                                actualHeight = imgRatio * actualHeight;
-                                actualWidth = maxWidth;
-                            } else {
-                                actualHeight = maxHeight;
-                                actualWidth = maxWidth;
-                            }
-                        }
-                        finalBitmap = Bitmap.createScaledBitmap(imageBitmap, (int) actualWidth, (int) actualHeight, true);
-                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        finalBitmap.compress(Bitmap.CompressFormat.PNG, 75, stream);*/
-                        //     byte[] byteArrayFromGallery = stream.toByteArray();
-
-                        //   imageString = Base64.encodeToString(byteArrayFromGallery, Base64.DEFAULT);
-                        /*String path = MediaStore.Images.Media.insertImage(ArticleImageTagUploadActivity.this.getContentResolver(), finalBitmap, "Title", null);
-                        Uri imageUriTemp = Uri.parse(path);
-                        File file2 = FileUtils.getFile(this, imageUriTemp);
-                        sendUploadProfileImageRequest(file2);*/
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -459,11 +404,6 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
             }
         });
 
-       /* ArticleDraftRequest requestData = new ArticleDraftRequest();
-        requestData.setUser_id("" + userModel.getUser().getId());
-        requestData.setSourceId(""+2);
-        ArticleDraftController controller = new ArticleDraftController(this, this);
-        controller.getData(AppConstants.BLOG_DATA_REQUEST, requestData);*/
     }
 
     private void alertDialog(String msg) {
@@ -542,17 +482,6 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
         );
 
     }
-
-  /*  public void setProfileImage(String url1) {
-        if (!StringUtils.isNullOrEmpty(url1)) {
-            url = url1;
-            String[] seperated = url.split("/");
-            if (seperated.length != 0) {
-                url = seperated[seperated.length - 1];
-                Log.e("url", url);
-            }
-        }
-    }*/
 
     private void startCropActivity(@NonNull Uri uri) {
         String destinationFileName = SAMPLE_CROPPED_IMAGE_NAME + ".jpg";

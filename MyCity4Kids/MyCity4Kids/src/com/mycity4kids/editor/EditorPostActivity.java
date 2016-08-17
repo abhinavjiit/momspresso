@@ -397,7 +397,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                     draftObject.setBody(contentFormatting(mEditorFragment.getContent().toString()));
                     draftObject.setTitle(titleFormatting(mEditorFragment.getTitle().toString()));
                     //  draftObject.setId(draftId);
-                    draftObject.setImageUrl(thumbnailUrl);
+//                    draftObject.setImageUrl(thumbnailUrl);
                     //  draftObject.setArticleType(moderation_status);
                     Log.d("draftId = ", draftId + "");
 

@@ -1,25 +1,15 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import com.hb.views.PinnedSectionListView;
 import com.mycity4kids.R;
 import com.mycity4kids.editor.DraftListViewActivity;
-import com.mycity4kids.editor.EditorPostActivity;
-import com.mycity4kids.models.response.PublishDraftObject;
 import com.mycity4kids.models.response.ReviewListingResult;
-import com.mycity4kids.ui.activity.BloggerDashboardActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

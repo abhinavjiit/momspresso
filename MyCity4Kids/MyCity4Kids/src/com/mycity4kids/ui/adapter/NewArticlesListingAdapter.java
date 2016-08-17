@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
@@ -98,7 +99,7 @@ public class NewArticlesListingAdapter extends BaseAdapter {
             }
 
 //            holder.txvAuthorName.setTextColor(Color.parseColor(articleDataModelsNew.get(position).getAuthor_color_code()));
-            holder.txvPublishDate.setText(getDate(articleDataModelsNew.get(position).getCreatedTime()));
+            holder.txvPublishDate.setText(DateTimeUtils.getDateFromTimestamp(articleDataModelsNew.get(position).getCreatedTime()));
             if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getImageUrl().getMobileWebThumbnail())) {
                 Picasso.with(mContext).load(articleDataModelsNew.get(position).getImageUrl().getMobileWebThumbnail()).placeholder(R.drawable.default_article).resize((int) (101 * density), (int) (67 * density)).centerCrop().into(holder.imvAuthorThumb);
             } else {
@@ -154,14 +155,4 @@ public class NewArticlesListingAdapter extends BaseAdapter {
         this.articleDataModelsNew = newList;
     }
 
-    private String getDate(long timeStampStr) {
-
-        try {
-            DateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
-            Date netDate = new Date(timeStampStr * 1000);
-            return sdf.format(netDate);
-        } catch (Exception ex) {
-            return "xx";
-        }
-    }
 }
