@@ -14,6 +14,8 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.models.request.UpdateUserDetail;
 import com.mycity4kids.models.response.UserDetailResponse;
+import com.mycity4kids.models.user.UserInfo;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.UserAttributeUpdateAPI;
 
 import retrofit2.Call;
@@ -52,6 +54,7 @@ public class EditProfieActivity extends BaseActivity {
         editLastName.setText(lastName);
         userBioEditText.setText(bio);
         phoneEditText.setText(phoneNumber);
+
     }
 
     @Override
@@ -67,6 +70,14 @@ public class EditProfieActivity extends BaseActivity {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.save:
+                if (userBioEditText.getText().toString().split(" ").length>200)
+                {
+                    userBioEditText.setFocusableInTouchMode(true);
+                    userBioEditText.setError("Please write upto 200 words");
+                    userBioEditText.requestFocus();
+                    //showToast("Please write upto 200 words");
+                    return false;
+                }
                 UpdateUserDetail updateUserDetail = new UpdateUserDetail();
                 updateUserDetail.setFirstName((editFirstName.getText().toString()) + " ");
                 updateUserDetail.setLastName(editLastName.getText().toString() + " ");
@@ -84,6 +95,9 @@ public class EditProfieActivity extends BaseActivity {
                             showToast(getString(R.string.toast_response_error));
                         } else {
                             showToast("Successfully updated!");
+                            UserInfo model=SharedPrefUtils.getUserDetailModel(EditProfieActivity.this);
+                            model.setFirst_name(editFirstName.getText().toString()+" "+editLastName.getText().toString());
+                            SharedPrefUtils.setUserDetailModel(EditProfieActivity.this,model);
                         }
                     }
 

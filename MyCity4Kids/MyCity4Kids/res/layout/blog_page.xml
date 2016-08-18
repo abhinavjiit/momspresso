@@ -79,7 +79,7 @@
         />
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="144dp"
+        android:layout_height="150dp"
         android:id="@+id/bloggerBio"
         android:layout_below="@+id/imageMessage"
         android:hint="Let our readers get to know you"
@@ -90,6 +90,7 @@
         android:drawableBottom="@drawable/underline"
         android:background="@null"
         android:textColor="@color/black_color"
+
         />
     <TextView
         android:layout_width="match_parent"

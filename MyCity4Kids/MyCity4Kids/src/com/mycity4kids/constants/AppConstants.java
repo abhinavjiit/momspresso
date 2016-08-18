@@ -13,8 +13,15 @@ public class AppConstants {
 
     public static final String DEV_URL = "http://54.169.17.138/";
     public static final String STAGING_URL = "http://52.77.116.39:8080/";
-    public static final String LIVE_URL = "http://52.220.87.141/";
-//    public static final String LIVE_URL = "http://52.77.116.39/";
+
+ //   public static final String LIVE_URL = "http://52.77.116.39/";
+    public static final String LIVE_URL="http://52.220.87.141/";
+//    public static final String LIVE_URL = "http://54.169.17.138/";
+//    public static final String LIVE_URL = "http://10.42.0.1/";
+//    public static final String LIVE_URL = "http://192.168.1.12/";
+
+    public static final String PHOENIX_STAGING_URL = "http://52.77.116.39";
+
 
     //Enable For Testing
     //public static final String LIVE_URL = SharedPrefUtils.getBaseURL(BaseApplication.getAppContext());

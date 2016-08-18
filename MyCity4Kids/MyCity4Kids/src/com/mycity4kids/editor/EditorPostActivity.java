@@ -207,8 +207,9 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
 /*
                 intent1.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, imageUri);
                 intent1.putExtra("return-data", true);*/
-
-                startActivityForResult(intent1, ADD_MEDIA_CAMERA_ACTIVITY_REQUEST_CODE);
+if(intent1.resolveActivity(getPackageManager()) != null)
+{
+                startActivityForResult(intent1, ADD_MEDIA_CAMERA_ACTIVITY_REQUEST_CODE);}
                 return true;
             default:
                 return false;

@@ -50,22 +50,27 @@
         android:textColor="@color/black_color"
         android:background="@null"
         android:drawablePadding="10dp"
-        android:inputType="number"/>
+        android:inputType="number"
+        android:maxLength="14"/>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/gray_color" />
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:drawableLeft="@drawable/bio_icon"
+        android:layout_height="150dp"
+        android:drawableStart="@drawable/bio_icon"
         android:hint=" Bio"
         android:id="@+id/userBioEditText"
         android:textColor="@color/black_color"
         android:background="@null"
-        android:maxLines="3"
+        android:singleLine="false"
         android:drawablePadding="10dp"
-       />
+        android:minHeight="100dp"
+        android:drawableLeft="@drawable/bio_icon"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+     />
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"

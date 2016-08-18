@@ -906,6 +906,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
+        mUsernName.setText(SharedPrefUtils.getUserDetailModel(this).getFirst_name());
         updateImageProfile();
         final Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
         findViewById(R.id.month_popup).setVisibility(View.GONE);

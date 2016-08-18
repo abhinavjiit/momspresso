@@ -165,7 +165,13 @@ public class SetupBlogPageActivity extends BaseActivity {
                     blogTitle.setFocusableInTouchMode(true);
                     blogTitle.setError("Special characters are not allowed!");
                     blogTitle.requestFocus();
-                } else {
+                } else if (bloggerBio.getText().toString().split(" ").length>200)
+                {
+                    bloggerBio.setFocusableInTouchMode(true);
+                    bloggerBio.setError("Please enter less than 200 words");
+                    bloggerBio.requestFocus();
+                }
+                else {
                     showProgressDialog(getResources().getString(R.string.please_wait));
                     ArticleDraftRequest articleDraftRequest = new ArticleDraftRequest();
                     /**

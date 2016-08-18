@@ -682,7 +682,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                 ImageView articleImage = (ImageView) view1.findViewById(R.id.imvAuthorThumb);
                 TextView title = (TextView) view1.findViewById(R.id.txvArticleTitle);
                 cardView = (CardView) view1.findViewById(R.id.cardViewWidget);
-                Picasso.with(getActivity()).load(mArticleBestCityListing.get(i).getProfilePic().getClientApp()).placeholder(R.drawable.default_article).into(articleImage);
+                Picasso.with(getActivity()).load(mArticleBestCityListing.get(i).getImageUrl().getMobileWebThumbnail()).placeholder(R.drawable.default_article).into(articleImage);
                 title.setText(mArticleBestCityListing.get(i).getTitle());
 
                 // cardView.setMinimumWidth((int)width);
@@ -716,8 +716,10 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
             customViewMore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    FragmentEditorsPick editorsfragment = new FragmentEditorsPick();
-                    ((DashboardActivity) getActivity()).replaceFragment(editorsfragment, null, true);
+                  /*  FragmentEditorsPick editorsfragment = new FragmentEditorsPick();
+                    ((DashboardActivity) getActivity()).replaceFragment(editorsfragment, null, true);*/
+                    Intent intent1=new Intent(getActivity(), CityBestArticleListingActivity.class);
+                    startActivity(intent1);
                 }
             });
             if (mArticleBestCityListing.isEmpty()) {
