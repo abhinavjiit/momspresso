@@ -18,7 +18,7 @@ public class ArticleDetailResult {
     private String userId;
     private String titleSlug;
     private String authorImage;
-    private String created;
+    private String createdTime;
     private String userType;
     private String userName;
     private String isBookmarked;
@@ -103,11 +103,11 @@ public class ArticleDetailResult {
     }
 
     public String getCreated() {
-        return created;
+        return createdTime;
     }
 
-    public void setCreated(String created) {
-        this.created = created;
+    public void setCreated(String createdTime) {
+        this.createdTime = createdTime;
     }
 
     public String getUserType() {

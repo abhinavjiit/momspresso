@@ -131,7 +131,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     RelativeLayout mLodingView;
     private boolean isReuqestRunning = false;
     private boolean isReuqestCommentsRunning = false;
-    private boolean isRequestReviewRunning=false;
+    private boolean isRequestReviewRunning = false;
     boolean isLastPageReached = true;
     private ProgressBar progressBar;
     ArrayList<ArticleListingResult> articleDataModelsNew;
@@ -149,7 +149,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     boolean isLastPageReviewsReached = false;
     Boolean isFollowing = false;
     boolean stackClearRequired = false;
-    private int nextPageNumberReview=1;
+    private int nextPageNumberReview = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -621,7 +621,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         }
 
         int from = (nextPageNumberReview - 1) * limit + 1;
-        Call<ReviewResponse> call = getReviewList.getUserReview(AppConstants.LIVE_URL + "apiservices/getUserReviews?userId=" + userId+"&start="+from+"&end="+(from + limit - 1));
+        Call<ReviewResponse> call = getReviewList.getUserReview(AppConstants.LIVE_URL + "apiservices/getUserReviews?userId=" + userId + "&start=" + from + "&end=" + (from + limit - 1));
 //asynchronous call
         call.enqueue(new Callback<ReviewResponse>() {
                          @Override
@@ -1019,23 +1019,19 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     }
 
     private void processReviewsResponse(ReviewResponse responseModel) {
-       // reviewList =
-        ArrayList<ReviewListingResult> dataReviewList=responseModel.getData().getResult();
-        if (dataReviewList.size()==0)
-        {
-        if (reviewList.size() == 0 && reviewsListView.getVisibility() == View.VISIBLE) {
-            reviewList.clear();
-            reviewList.addAll(dataReviewList);
-            reviewsListAdapter.notifyDataSetChanged();
-            noReviewsTextView.setVisibility(View.VISIBLE);
-            //   noDrafts.setVisibility(View.VISIBLE);
-        }} else {
-            //    noDrafts.setVisibility(View.GONE);
-       //     reviewsListAdapter = new ReviewsListAdapter(this, reviewList);
-       //     reviewsListView.setAdapter(reviewsListAdapter);
+        ArrayList<ReviewListingResult> dataReviewList = responseModel.getData().getResult();
+        if (dataReviewList.size() == 0) {
+            if (reviewList.size() == 0 && reviewsListView.getVisibility() == View.VISIBLE) {
+                reviewList.clear();
+                reviewList.addAll(dataReviewList);
+                reviewsListAdapter.notifyDataSetChanged();
+                noReviewsTextView.setVisibility(View.VISIBLE);
+                //   noDrafts.setVisibility(View.VISIBLE);
+            }
+        } else {
             noReviewsTextView.setVisibility(View.GONE);
             reviewList.addAll(dataReviewList);
-            nextPageNumberReview=nextPageNumberReview+1;
+            nextPageNumberReview = nextPageNumberReview + 1;
             reviewsListAdapter.notifyDataSetChanged();
         }
     }
@@ -1088,21 +1084,26 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                                      userBio.setText(responseData.getData().getResult().getUserBio());
                                      userBio.setVisibility(View.VISIBLE);
                                  }
-                                 if (userBio.getLineCount() >= 3) {
-                                     moreTextView.setVisibility(View.VISIBLE);
-                                     userBio.setMaxLines(3);
-                                     userBio.setEllipsize(null);
-                                     moreTextView.setText("More");
-                                 } else {
-                                     userBio.setMaxLines(3);
-                                     userBio.setEllipsize(null);
-                                     moreTextView.setVisibility(View.GONE);
-                                 }
 
+                                 userBio.post(new Runnable() {
+                                     @Override
+                                     public void run() {
+                                         int lineCnt = userBio.getLineCount();
+                                         // Perform any actions you want based on the line count here.
+                                         if (lineCnt >= 3) {
+                                             moreTextView.setVisibility(View.VISIBLE);
+                                             userBio.setMaxLines(3);
+                                             userBio.setEllipsize(null);
+                                             moreTextView.setText("More");
+                                         } else {
+                                             userBio.setMaxLines(3);
+                                             userBio.setEllipsize(null);
+                                             moreTextView.setVisibility(View.GONE);
+                                         }
+                                     }
+                                 });
                              }
-
                          }
-
 
                          @Override
                          public void onFailure(Call<UserDetailResponse> call, Throwable t) {

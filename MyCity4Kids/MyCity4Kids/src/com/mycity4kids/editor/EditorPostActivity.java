@@ -44,7 +44,10 @@ import org.wordpress.android.util.helpers.MediaFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -193,37 +196,49 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                 startActivityForResult(intent, ADD_MEDIA_FAIL_ACTIVITY_REQUEST_CODE);
                 return true;
             case SELECT_IMAGE_CAMERA_MENU_POSITION:
-                Intent intent1 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-               /* String filename = "tmp_avatar_" + String.valueOf(System.currentTimeMillis()) + ".jpg";
-                file = new File(Environment.getExternalStorageDirectory(),
-                        filename);
-                imageUri = Uri.fromFile(file);*/
-                File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-
-                File output = new File(dir, "CameraContentDemo.jpeg");
-                imageUri = Uri.fromFile(output);
-                intent1.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-
-/*
-                intent1.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, imageUri);
-                intent1.putExtra("return-data", true);*/
-if(intent1.resolveActivity(getPackageManager()) != null)
-{
-                startActivityForResult(intent1, ADD_MEDIA_CAMERA_ACTIVITY_REQUEST_CODE);}
+                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+                    // Create the File where the photo should go
+                    File photoFile = null;
+                    try {
+                        photoFile = createImageFile();
+                    } catch (IOException ex) {
+                        // Error occurred while creating the File
+                        Log.i("TAG", "IOException");
+                    }
+                    // Continue only if the File was successfully created
+                    if (photoFile != null) {
+                        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                        startActivityForResult(cameraIntent, ADD_MEDIA_CAMERA_ACTIVITY_REQUEST_CODE);
+                    }
+                }
                 return true;
             default:
                 return false;
         }
     }
 
+    String mCurrentPhotoPath;
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+        File image = File.createTempFile(
+                imageFileName,  // prefix
+                ".jpg",         // suffix
+                dir      // directory
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+        return image;
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        if (data == null) {
-            return;
-        }
-
 
         mediaFile = new MediaFile();
         mediaId = String.valueOf(System.currentTimeMillis());
@@ -232,6 +247,9 @@ if(intent1.resolveActivity(getPackageManager()) != null)
 
         switch (requestCode) {
             case ADD_MEDIA_ACTIVITY_REQUEST_CODE:
+                if (data == null) {
+                    return;
+                }
                 imageUri = data.getData();
 
                 if (resultCode == Activity.RESULT_OK) {
@@ -306,8 +324,7 @@ if(intent1.resolveActivity(getPackageManager()) != null)
 
                 if (resultCode == Activity.RESULT_OK) {
                     try {
-
-                        Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(EditorPostActivity.this.getContentResolver(), imageUri);
+                        Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.parse(mCurrentPhotoPath));
                         float actualHeight = imageBitmap.getHeight();
                         float actualWidth = imageBitmap.getWidth();
                         float maxHeight = 1300;
@@ -336,14 +353,10 @@ if(intent1.resolveActivity(getPackageManager()) != null)
                         Bitmap finalBitmap = Bitmap.createScaledBitmap(imageBitmap, (int) actualWidth, (int) actualHeight, true);
                         ByteArrayOutputStream stream = new ByteArrayOutputStream();
                         finalBitmap.compress(Bitmap.CompressFormat.PNG, 75, stream);
-                        byte[] byteArrayFromGallery = stream.toByteArray();
-                        //    byteArrayToSend = byteArrayFromGallery;
-                        //    imageString = Base64.encodeToString(byteArrayToSend, Base64.DEFAULT);
-                        String path = MediaStore.Images.Media.insertImage(EditorPostActivity.this.getContentResolver(), finalBitmap, "Title", null);
-                        Uri imageUriTemp = Uri.parse(path);
+                        String path = MediaStore.Images.Media.insertImage(getContentResolver(), finalBitmap, "Title", null);
+                        imageUri = Uri.parse(path);
                         mEditorFragment.imageUploading = 0;
-                        //new FileUploadTask().execute();
-                        File file2 = FileUtils.getFile(this, imageUriTemp);
+                        File file2 = FileUtils.getFile(this, imageUri);
                         sendUploadProfileImageRequest(file2);
                         // compressImage(filePath);
                     } catch (Exception e) {

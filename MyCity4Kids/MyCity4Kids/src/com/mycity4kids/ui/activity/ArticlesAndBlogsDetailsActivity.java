@@ -11,10 +11,9 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
@@ -78,7 +77,6 @@ import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
 import com.mycity4kids.models.response.ProfilePic;
-import com.mycity4kids.newmodels.BlogShareSpouseModel;
 import com.mycity4kids.newmodels.VolleyBaseResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
@@ -86,6 +84,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
 import com.mycity4kids.ui.CircleTransformation;
 import com.mycity4kids.ui.fragment.CommentRepliesDialogFragment;
 import com.mycity4kids.ui.fragment.EditCommentsRepliesFragment;
+import com.mycity4kids.utils.FadingViewOffsetListener;
 import com.mycity4kids.volley.HttpVolleyRequest;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -108,20 +107,16 @@ import retrofit2.Retrofit;
  */
 public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnClickListener {
 
-    private final static int DELETE_BOOKMARK = 0;
     private final static int ADD_BOOKMARK = 1;
 
     ArticleDetailResult detailData;
     private UiLifecycleHelper mUiHelper;
-    private boolean isCommingFromCommentAPI;
-    private int ADD_COMMENT_OR_REPLY = 0;
     private String articleId;
     int width;
 
     private NestedScrollView mScrollView;
     private ArrayList<ImageData> imageList;
     Boolean isFollowing = false;
-
 
     LinearLayout newCommentLayout;
     LinearLayout commentLayout;
@@ -133,6 +128,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     TextView trendingArticle1, trendingArticle2, trendingArticle3;
     Toolbar mToolbar;
     View commentEditView;
+    AppBarLayout appBarLayout;
 
     private float density;
 
@@ -141,27 +137,19 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     private TextView author_type;
     private String authorId;
     String authorType, author;
-    //    private String blogName;
     private int bookmarkStatus;
 
     private String deepLinkURL;
     private GoogleApiClient mClient;
     private String TAG;
     private String screenTitle = "Parenting Blogs";
-    //    Button share_spouse;
-    public ArrayList<BlogShareSpouseModel> whoToShareList;
 
-    //Commments Lazy loading
-//    private ProgressBar progressBar;
-    private String commentTypeToFetch;
     Boolean isLoading = false;
-    private int offset = 0;
     private RelativeLayout mLodingView;
-    private String versionName;
 
     //New UI changes
     private CollapsingToolbarLayout collapsingToolbarLayout;
-    FloatingActionButton floatingActionButton;
+    ImageView floatingActionButton;
     private Menu menu;
     LinearLayout commLayout;
     CoordinatorLayout coordinatorLayout;
@@ -184,7 +172,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         deepLinkURL = getIntent().getStringExtra(Constants.DEEPLINK_URL);
         TAG = ArticlesAndBlogsDetailsActivity.this.getClass().getSimpleName();
         mClient = new GoogleApiClient.Builder(this).addApi(AppIndex.APP_INDEX_API).build();
-        commentTypeToFetch = AppConstants.COMMENT_TYPE_DB;
         try {
 
             NotificationManager nMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -194,10 +181,12 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
             ((TextView) findViewById(R.id.add_comment)).setOnClickListener(this);
             ((TextView) findViewById(R.id.user_name)).setOnClickListener(this);
-            floatingActionButton = (FloatingActionButton) findViewById(R.id.user_image);
+            appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
+
+            floatingActionButton = (ImageView) findViewById(R.id.user_image);
             floatingActionButton.setOnClickListener(this);
-//            share_spouse = (Button) findViewById(R.id.share_spouse);
-//            share_spouse.setOnClickListener(this);
+            FadingViewOffsetListener listener = new FadingViewOffsetListener((View) floatingActionButton);
+            appBarLayout.addOnOffsetChangedListener(listener);
             author_type = (TextView) findViewById(R.id.blogger_type);
 
             followClick = (TextView) findViewById(R.id.follow_click);
@@ -233,7 +222,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     R.drawable.default_blogger_profile_img));
             defaultCommentorBitmap = (new CircleTransformation()).transform(BitmapFactory.decodeResource(getResources(),
                     R.drawable.default_commentor_img));
-            floatingActionButton.setPadding(-1, -1, -1, -1);
             floatingActionButton.setImageDrawable(new BitmapDrawable(getResources(), defaultBloggerBitmap));
 
             commentLayout = ((LinearLayout) findViewById(R.id.commnetLout));
@@ -254,7 +242,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             mScrollView = (NestedScrollView) findViewById(R.id.scroll_view);
             mUiHelper = new UiLifecycleHelper(this, FacebookUtils.callback);
             mUiHelper.onCreate(savedInstanceState);
-//            share_spouse.setVisibility(View.INVISIBLE);
             commLayout = ((LinearLayout) findViewById(R.id.commnetLout));
             mScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
 
@@ -474,12 +461,10 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             if (requestCode == Constants.BLOG_FOLLOW_STATUS) {
 
                 if (intent.getStringExtra(Constants.BLOG_ISFOLLOWING).equalsIgnoreCase("0")) {
-//                    ((ImageView) findViewById(R.id.follow_article)).setBackgroundResource(R.drawable.follow_blog);
                     followClick.setText("FOLLOW");
                     isFollowing = false;
 
                 } else {
-//                    ((ImageView) findViewById(R.id.follow_article)).setBackgroundResource(R.drawable.un_follow_icon);
                     followClick.setText("FOLLOWING");
                     isFollowing = true;
                 }
@@ -545,7 +530,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         }
 
         if (!StringUtils.isNullOrEmpty(detailData.getCreated())) {
-            ((TextView) findViewById(R.id.article_date)).setText(detailData.getCreated());
+            ((TextView) findViewById(R.id.article_date)).setText(DateTimeUtils.getDateFromTimestamp(Long.parseLong(detailData.getCreated())));
         }
 
         String bodyDescription = detailData.getBody().getText();
@@ -640,15 +625,11 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             holder.replierImageView = (CircularImageView) view.findViewById(R.id.replyUserImageView);
             holder.replyCountTextView = (TextView) view.findViewById(R.id.replyCountTextView);
             holder.replierUsernameTextView = (TextView) view.findViewById(R.id.replyUserNameTextView);
-
             holder.replyCommentView = (RelativeLayout) view.findViewById(R.id.replyRelativeLayout);
             holder.replyCommentView.setOnClickListener(this);
             holder.replyCommentView.setTag(commentList);
             holder.replyTxt.setOnClickListener(this);
-//            holder.replyTxt.setTag(commentList);
             holder.editTxt.setOnClickListener(this);
-//            holder.editTxt.setTag(commentList);
-//            holder.editTxt.setTag(0, view);
             view.setTag(commentList);
 
             if (SharedPrefUtils.getUserDetailModel(this).getDynamoId().equals(commentList.getUserId())) {
@@ -680,7 +661,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
             if (commentList.getProfile_image() != null && !StringUtils.isNullOrEmpty(commentList.getProfile_image().getClientAppMin())) {
                 try {
-//                    holder.networkImg.setImageDrawable(new BitmapDrawable(getResources(),defaultCommentorBitmap));
                     Picasso.with(this).load(commentList.getProfile_image().getClientAppMin()).into(holder.networkImg);
                 } catch (Exception e) {
                     Crashlytics.logException(e);
@@ -744,7 +724,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                         Crashlytics.logException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
-//                    onShowPopup(coordinatorLayout);
                     break;
                 case R.id.replyRelativeLayout:
                     try {
@@ -759,7 +738,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                         Crashlytics.logException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
-//                    onShowPopup(coordinatorLayout);
                     break;
                 case R.id.txvEdit:
                     try {
@@ -778,27 +756,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                         Crashlytics.logException(e);
                         Log.d("MC4kException", Log.getStackTraceString(e));
                     }
-//                    onShowPopup(coordinatorLayout);
                     break;
-
-//                case R.id.share_spouse:
-//                    Utils.pushEvent(ArticlesAndBlogsDetailsActivity.this, GTMEventType.SHARE_SPOUCE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Article Details");
-//
-//                    ArrayList<Integer> idlist = new ArrayList<>();
-//                    idlist = new ArrayList<>();
-//                    WhoToRemindDialogFragment dialogFragment1 = new WhoToRemindDialogFragment();
-//
-//                    Bundle args = new Bundle();
-//                    args.putString("dialogTitle", "Share with");
-//                    args.putIntegerArrayList("chkValues", idlist);
-//                    dialogFragment1.setArguments(args);
-//
-//
-//                    dialogFragment1.setTargetFragment(dialogFragment1, 2);
-//                    dialogFragment1.show(getFragmentManager(), "whotoremind");
-//
-//                    break;
-
                 case R.id.add_comment_btn:
 
                     if (commentText.getText().toString().trim().equalsIgnoreCase("")) {
@@ -830,7 +788,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 case R.id.recentAuthorArticle2:
                 case R.id.recentAuthorArticle3: {
                     Intent intent = new Intent(this, ArticlesAndBlogsDetailsActivity.class);
-
                     ArticleListingResult parentingListData = (ArticleListingResult) v.getTag();
                     intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId() + "");
                     intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
@@ -850,7 +807,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     finish();
                     break;
                 }
-
             }
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -861,18 +817,14 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
     private class ViewHolder {
         private CircularImageView networkImg;
-        private ImageView localImg;
         private TextView commentName;
         private TextView commentDescription;
         private TextView dateTxt;
-        //        private RelativeLayout mRelativeContainer;
         private TextView replyTxt;
         private TextView editTxt;
         private CircularImageView replierImageView;
         private TextView replierUsernameTextView;
         private TextView replyCountTextView;
-        //        private View dividerLine;
-//        private RelativeLayout innerCommentView;
         private RelativeLayout replyCommentView;
     }
 
@@ -885,13 +837,11 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         if (isFollowing) {
             isFollowing = false;
             followClick.setText("Follow");
-//            unfollowButton.setVisibility(View.INVISIBLE);
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.unfollowUser(request);
             followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback);
         } else {
             isFollowing = true;
-            followClick.setText("Unfollow");
-//            unfollowButton.setVisibility(View.VISIBLE);
+            followClick.setText("Following");
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.followUser(request);
             followUnfollowUserResponseCall.enqueue(followUserResponseCallback);
         }
@@ -905,7 +855,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             articleDetailRequest.setArticleId(articleId);
             bookmarkStatus = 1;
             menu.getItem(0).setIcon(R.drawable.ic_favorite_border_white_48dp_fill);
-//            bookmarkRequest.setAction("add");
             Call<AddBookmarkResponse> call = articleDetailsAPI.addBookmark(articleDetailRequest);
             call.enqueue(addBookmarkResponseCallback);
         } else {
@@ -913,52 +862,10 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             deleteBookmarkRequest.setId(bookmarkId);
             bookmarkStatus = 0;
             menu.getItem(0).setIcon(R.drawable.ic_favorite_border_white_48dp);
-//            bookmarkRequest.setAction("remove");
             Call<AddBookmarkResponse> call = articleDetailsAPI.deleteBookmark(deleteBookmarkRequest);
             call.enqueue(addBookmarkResponseCallback);
         }
 
-    }
-
-    private void sendScrollDown() {
-        final Handler handler = new Handler();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                }
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mScrollView.fullScroll(View.FOCUS_DOWN);
-                    }
-                });
-            }
-        }).start();
-    }
-
-    public void sendScrollUp() {
-        LinearLayout commentLayout = ((LinearLayout) findViewById(R.id.commnetLout));
-        commentLayout.removeAllViews();
-        commentTypeToFetch = AppConstants.COMMENT_TYPE_DB;
-        final Handler handler = new Handler();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                }
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mScrollView.fullScroll(View.FOCUS_UP);
-                    }
-                });
-            }
-        }).start();
     }
 
     Callback<ArticleDetailResult> articleDetailResponseCallbackS3 = new Callback<ArticleDetailResult>() {
@@ -1041,7 +948,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     private OnWebServiceCompleteListener mGetArticleListingListener = new OnWebServiceCompleteListener() {
         @Override
         public void onWebServiceComplete(VolleyBaseResponse response, boolean isError) {
-            //  progressBar.setVisibility(View.GONE);
             Log.d("Response back =", " " + response.getResponseBody());
             if (isError) {
                 if (null != this && response.getResponseCode() != 999)
@@ -1083,7 +989,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         @Override
         public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
 
-            //  progressBar.setVisibility(View.INVISIBLE);
             if (mLodingView.getVisibility() == View.VISIBLE) {
                 mLodingView.setVisibility(View.GONE);
             }
@@ -1130,7 +1035,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                             recentAuthorArticle3.setVisibility(View.GONE);
                         }
                     }
-
                 } else {
                     showToast(getString(R.string.server_went_wrong));
                 }
@@ -1160,7 +1064,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             try {
                 isLoading = false;
                 String resData = new String(response.body().bytes());
-//                JSONObject jsonObject = new JSONObject(resData);
                 ArrayList<CommentsData> arrayList = new ArrayList<>();
                 JSONArray commentsJson = new JSONArray(resData);
                 commentURL = "";
@@ -1171,7 +1074,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                         CommentsData cData = new Gson().fromJson(commentsJson.get(i).toString(), CommentsData.class);
                         arrayList.add(cData);
                     }
-
                 }
 
                 commentLayout = ((LinearLayout) findViewById(R.id.commnetLout));
@@ -1254,7 +1156,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
             AddCommentResponse responseData = (AddCommentResponse) response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-//            if (response.isSuccessful()) {
                 showToast("Comment added successfully!");
                 ViewHolder vh = new ViewHolder();
                 CommentsData cd = new CommentsData();
@@ -1384,10 +1285,8 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                         replyCommentView.setVisibility(View.GONE);
                     }
                 }
-
             }
         }
-//        commentFragment.update();
     }
 
     public void updateCommentReplyNestedReply(CommentsData updatedComment, int editType) {
@@ -1401,12 +1300,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     bodyTextView.setText(cdata.getBody());
                 }
             } else {
-//                if (updatedComment.getParent_id().equals(cdata.getId())) {
-//                    Log.d("Comment ", "comment mil gaya");
-//                    cdata.getReplies().set(i, updatedComment);
-//                    commentFragment.updateAfterReplyEditing(cdata);
-//
-//                }
             }
 
         }

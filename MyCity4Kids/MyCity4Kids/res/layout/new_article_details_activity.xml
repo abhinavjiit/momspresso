@@ -380,7 +380,7 @@
             android:visibility="gone" />
     </LinearLayout>
 
-    <android.support.design.widget.FloatingActionButton
+    <ImageView
         android:id="@+id/user_image"
         android:layout_width="60dp"
         android:layout_height="60dp"
