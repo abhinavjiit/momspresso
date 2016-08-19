@@ -382,6 +382,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                     intent.putExtra("bio", Bio);
                     intent.putExtra("firstName", firstName);
                     intent.putExtra("lastName", lastName);
+                    intent.putExtra("phoneNumber",phoneNumber);
                     startActivity(intent);
                 } else {
                     showToast("Please Wait");
@@ -1276,6 +1277,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                 intent1.putExtra("bio", Bio);
                 intent1.putExtra("firstName", firstName);
                 intent1.putExtra("lastName", lastName);
+                intent1.putExtra("phoneNumber",phoneNumber);
                 startActivity(intent1);
 
                 return true;

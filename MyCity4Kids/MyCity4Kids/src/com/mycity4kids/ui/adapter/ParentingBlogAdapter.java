@@ -168,8 +168,14 @@ public class ParentingBlogAdapter extends BaseAdapter {
            }
 
        }
+try {
+    holder.authorType.setTextColor(Color.parseColor(datalist.get(position).getColorCode()));
+}
+catch (NullPointerException e)
+{
+    e.printStackTrace();
+}
 
-        holder.authorType.setTextColor(Color.parseColor(datalist.get(position).getColorCode()));
 
       /*  holder.bloggerBio.invalidate();
         if (datalist.get(position).getMaxLineCount() == 0) {

@@ -31,7 +31,7 @@ public class EditProfieActivity extends BaseActivity {
     }
 
     Toolbar mToolBar;
-    String bio, firstName, lastName,phoneNumber;
+    String bio, firstName, lastName, phoneNumber;
     EditText editFirstName, editLastName, userBioEditText, phoneEditText;
 
     @Override
@@ -49,7 +49,7 @@ public class EditProfieActivity extends BaseActivity {
         bio = getIntent().getStringExtra("bio");
         firstName = getIntent().getStringExtra("firstName");
         lastName = getIntent().getStringExtra("lastName");
-        phoneNumber=getIntent().getStringExtra("phoneNumber");
+        phoneNumber = getIntent().getStringExtra("phoneNumber");
         editFirstName.setText(firstName);
         editLastName.setText(lastName);
         userBioEditText.setText(bio);
@@ -70,8 +70,7 @@ public class EditProfieActivity extends BaseActivity {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.save:
-                if (userBioEditText.getText().toString().split(" ").length>200)
-                {
+                if (userBioEditText.getText().toString().split(" ").length > 200) {
                     userBioEditText.setFocusableInTouchMode(true);
                     userBioEditText.setError("Please write upto 200 words");
                     userBioEditText.requestFocus();
@@ -79,10 +78,10 @@ public class EditProfieActivity extends BaseActivity {
                     return false;
                 }
                 UpdateUserDetail updateUserDetail = new UpdateUserDetail();
-                updateUserDetail.setFirstName((editFirstName.getText().toString()) + " ");
-                updateUserDetail.setLastName(editLastName.getText().toString() + " ");
-                updateUserDetail.setPhoneNumber(phoneEditText.getText().toString() + " ");
-                updateUserDetail.setUserBio(userBioEditText.getText().toString() + " ");
+                updateUserDetail.setFirstName((editFirstName.getText().toString()) + "");
+                updateUserDetail.setLastName(editLastName.getText().toString() + "");
+                updateUserDetail.setPhoneNumber(phoneEditText.getText().toString() + "");
+                updateUserDetail.setUserBio(userBioEditText.getText().toString() + "");
                 Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
                 showProgressDialog(getResources().getString(R.string.please_wait));
                 UserAttributeUpdateAPI userAttributeUpdateAPI = retrofit.create(UserAttributeUpdateAPI.class);
@@ -95,15 +94,15 @@ public class EditProfieActivity extends BaseActivity {
                             showToast(getString(R.string.toast_response_error));
                         } else {
                             showToast("Successfully updated!");
-                            UserInfo model=SharedPrefUtils.getUserDetailModel(EditProfieActivity.this);
-                            model.setFirst_name(editFirstName.getText().toString()+" "+editLastName.getText().toString());
-                            SharedPrefUtils.setUserDetailModel(EditProfieActivity.this,model);
+                            UserInfo model = SharedPrefUtils.getUserDetailModel(EditProfieActivity.this);
+                            model.setFirst_name(editFirstName.getText().toString() + " " + editLastName.getText().toString());
+                            SharedPrefUtils.setUserDetailModel(EditProfieActivity.this, model);
                         }
                     }
 
                     @Override
                     public void onFailure(Call<UserDetailResponse> call, Throwable t) {
-removeProgressDialog();
+                        removeProgressDialog();
                     }
                 });
 
