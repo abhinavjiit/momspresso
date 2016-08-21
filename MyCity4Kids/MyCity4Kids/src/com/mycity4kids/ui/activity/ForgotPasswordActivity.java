@@ -53,7 +53,7 @@ public class ForgotPasswordActivity extends BaseActivity {
         mEmailId = (EditText) findViewById(R.id.editEmail);
         _controller = new ForgotPasswordController(this, this);
 
-        getSupportActionBar().setTitle("Forgot Family Password");
+        getSupportActionBar().setTitle("Forgot Password");
 
     }
 

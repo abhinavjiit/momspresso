@@ -1174,6 +1174,12 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     }
 
     public void refreshList() throws ParseException {
+        if (SharedPrefUtils.isChangeCity(getActivity()))
+        {
+            hitEditorPicksApi();
+            SharedPrefUtils.setChangeCityFlag(getActivity(),false);
+        }
+
 
         Calendar calendar = Calendar.getInstance();
         tableAppointment = new TableAppointmentData(BaseApplication.getInstance());

@@ -219,7 +219,7 @@ public class ChangeCityFragment extends BaseFragment {
                  * this city model will be save only one time on splash:
                  */
                 SharedPrefUtils.setCurrentCityModel(getActivity(), model);
-
+                SharedPrefUtils.setChangeCityFlag(getActivity(),true);
 
                 if (cityId > 0) {
                     versionApiModel.setCityId(cityId);
