@@ -221,7 +221,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                 call.enqueue(articleDetailResponseCallback);
 
             }
-        });
+        }, isPrivateProfile);
 
         bloggerImageView = (ImageView) header.findViewById(R.id.bloggerImageView);
 
@@ -263,8 +263,6 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         commentsListView.setAdapter(commentsListAdapter);
         reviewsListView.setAdapter(reviewsListAdapter);
         draftListview.setAdapter(adapter);
-
-
         draftItemLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -382,7 +380,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                     intent.putExtra("bio", Bio);
                     intent.putExtra("firstName", firstName);
                     intent.putExtra("lastName", lastName);
-                    intent.putExtra("phoneNumber",phoneNumber);
+                    intent.putExtra("phoneNumber", phoneNumber);
                     startActivity(intent);
                 } else {
                     showToast("Please Wait");
@@ -938,6 +936,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         if (draftList.size() == 0 && draftListview.getVisibility() == View.VISIBLE) {
             noDraftTextView.setVisibility(View.VISIBLE);
         } else {
+            noDraftTextView.setVisibility(View.GONE);
             adapter = new DraftListAdapter(this, draftList);
             draftListview.setAdapter(adapter);
             adapter.notifyDataSetChanged();
@@ -1277,7 +1276,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                 intent1.putExtra("bio", Bio);
                 intent1.putExtra("firstName", firstName);
                 intent1.putExtra("lastName", lastName);
-                intent1.putExtra("phoneNumber",phoneNumber);
+                intent1.putExtra("phoneNumber", phoneNumber);
                 startActivity(intent1);
 
                 return true;

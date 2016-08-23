@@ -56,7 +56,7 @@ import com.mycity4kids.ui.activity.SettingsActivity;
 public class FragmentSetting extends BaseFragment implements View.OnClickListener {
 int cityId;
 TextView cityChange;
-    String bio,firstName,lastName;
+    String bio,firstName,lastName,phoneNumber;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -67,6 +67,7 @@ TextView cityChange;
         bio=  getArguments().getString("bio");
         firstName=  getArguments().getString("firstName");
         lastName=  getArguments().getString("lastName");
+        phoneNumber=getArguments().getString("phoneNumber");
         ((TextView) view.findViewById(R.id.logout)).setOnClickListener(this);
         ((TextView) view.findViewById(R.id.family_details)).setOnClickListener(this);
       //  ((TextView) view.findViewById(R.id.sync_setting)).setOnClickListener(this);
@@ -190,6 +191,7 @@ TextView cityChange;
                 {intent.putExtra("bio",bio);
                     intent.putExtra("firstName",firstName);
                     intent.putExtra("lastName",lastName);
+                    intent.putExtra("phoneNumber",phoneNumber);
                     startActivity(intent);}
                 break;
 

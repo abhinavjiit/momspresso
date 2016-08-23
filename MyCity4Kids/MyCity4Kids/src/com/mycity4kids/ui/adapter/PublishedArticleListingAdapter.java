@@ -29,8 +29,9 @@ public class PublishedArticleListingAdapter extends BaseAdapter {
     Boolean newChanges = false;
     private BtnClickListener mClickListener = null;
     private final float density;
+    Boolean isPrivateProfile;
 
-    public PublishedArticleListingAdapter(Context pContext, BtnClickListener listener) {
+    public PublishedArticleListingAdapter(Context pContext, BtnClickListener listener,Boolean mIsPrivateProfile) {
 
         density = pContext.getResources().getDisplayMetrics().density;
 
@@ -38,6 +39,7 @@ public class PublishedArticleListingAdapter extends BaseAdapter {
         mContext = pContext;
         mClickListener = listener;
         this.newChanges = newChanges;
+        isPrivateProfile=mIsPrivateProfile;
     }
 
     public void setListData(ArrayList<ArticleListingResult> mParentingLists) {
@@ -82,6 +84,14 @@ public class PublishedArticleListingAdapter extends BaseAdapter {
             //   holder.imvAuthorThumb = (ImageView) view.findViewById(R.id.imvAuthorThumb);
 //            holder.authorPic = (ImageView) view.findViewById(R.id.author_pic);
             holder.popupButton = view.findViewById(R.id.img_menu);
+            if (!isPrivateProfile)
+            {
+                holder.popupButton.setVisibility(View.GONE);
+            }
+            else
+            {
+                holder.popupButton.setVisibility(View.VISIBLE);
+            }
             holder.popupButton.setTag(getItem(position));
             if (Build.VERSION.SDK_INT == 15) {
                 holder.popupButton.setVisibility(View.GONE);

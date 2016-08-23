@@ -78,10 +78,10 @@ public class EditProfieActivity extends BaseActivity {
                     return false;
                 }
                 UpdateUserDetail updateUserDetail = new UpdateUserDetail();
-                updateUserDetail.setFirstName((editFirstName.getText().toString()) + "");
-                updateUserDetail.setLastName(editLastName.getText().toString() + "");
-                updateUserDetail.setPhoneNumber(phoneEditText.getText().toString() + "");
-                updateUserDetail.setUserBio(userBioEditText.getText().toString() + "");
+                updateUserDetail.setFirstName((editFirstName.getText().toString()).trim() + "");
+                updateUserDetail.setLastName(editLastName.getText().toString().trim() + "");
+                updateUserDetail.setPhoneNumber(phoneEditText.getText().toString().trim() + "");
+                updateUserDetail.setUserBio(userBioEditText.getText().toString().trim() + "");
                 Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
                 showProgressDialog(getResources().getString(R.string.please_wait));
                 UserAttributeUpdateAPI userAttributeUpdateAPI = retrofit.create(UserAttributeUpdateAPI.class);

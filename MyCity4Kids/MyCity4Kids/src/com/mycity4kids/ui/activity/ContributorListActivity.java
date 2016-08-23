@@ -485,7 +485,7 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode){
         case Constants.FILTER_BLOG:
-      sortParentingBlogListing(data.getStringExtra(Constants.FILTER_BLOG_SORT_TYPE));
+            sortParentingBlogListing(data.getStringExtra(Constants.FILTER_BLOG_SORT_TYPE));
         }
     }
 

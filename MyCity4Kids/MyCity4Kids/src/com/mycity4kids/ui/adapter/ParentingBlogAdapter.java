@@ -171,7 +171,7 @@ public class ParentingBlogAdapter extends BaseAdapter {
 try {
     holder.authorType.setTextColor(Color.parseColor(datalist.get(position).getColorCode()));
 }
-catch (NullPointerException e)
+catch (Exception e)
 {
     e.printStackTrace();
 }
@@ -187,11 +187,11 @@ catch (NullPointerException e)
 //        } else {
 //            Picasso.with(context).load(R.drawable.default_img).resize((int) (90 * density), (int) (100 * density)).centerCrop().into(holder.bloggerImage);
 //        }
-        if (StringUtils.isNullOrEmpty(datalist.get(position).getProfilePic())) {
+        if ((datalist.get(position).getProfilePic()==null)) {
             Picasso.with(context).load(R.drawable.default_commentor_img).fit().placeholder(R.drawable.default_commentor_img).transform(new RoundedTransformation()).into(holder.bloggerCover);
         } else {
             try {
-                Picasso.with(context).load(datalist.get(position).getProfilePic()).fit().placeholder(R.drawable.default_commentor_img).transform(new RoundedTransformation()).into(holder.bloggerCover);
+                Picasso.with(context).load(datalist.get(position).getProfilePic().getClientApp()).fit().placeholder(R.drawable.default_commentor_img).transform(new RoundedTransformation()).into(holder.bloggerCover);
             }
             catch (Exception e) {
                 Crashlytics.logException(e);

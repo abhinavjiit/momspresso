@@ -431,7 +431,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         }
 
         if (page == 1) {
-            progressBar.setVisibility(View.VISIBLE);
+    //        progressBar.setVisibility(View.VISIBLE);
         }
 
         // child ages
@@ -561,7 +561,8 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                         float width = (float) (widthPixels * 0.45);
                         customViewMore.setMinimumWidth((int) width);
                     }
-                    hzScrollLinearLayout.addView(customViewMore);
+                    if (mArticleDataListing.size()!=0)
+                    {  hzScrollLinearLayout.addView(customViewMore);}
                     customViewMore.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -612,7 +613,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         @Override
         public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
 //            isReuqestRunning = false;
-            progressBar.setVisibility(View.INVISIBLE);
+         //   progressBar.setVisibility(View.INVISIBLE);
           /*  if (mLodingView.getVisibility() == View.VISIBLE) {
                 mLodingView.setVisibility(View.GONE);
             }*/
@@ -671,6 +672,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
            // nextPageNumber = nextPageNumber + 1;
             articlesListingAdapter.notifyDataSetChanged();*/
             ((TextView) view.findViewById(R.id.no_blog1)).setVisibility(View.GONE);
+            mArticleBestCityListing.clear();
             mArticleBestCityListing.addAll(responseData.getData().getResult());
             hzScrollLinearLayout1.removeAllViews();
             BaseApplication.setBestCityResponse(mArticleBestCityListing);
@@ -895,6 +897,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                     mTotalPageCount = responseData.getResult().getData().getPage_count();
                     //to add in already created list
                     // we neew to clear this list in case of sort by and filter
+                  //  mBusinessDataListings.clear();
                     mBusinessDataListings.addAll(responseData.getResult().getData().getData());
 
                     BaseApplication.setBusinessREsponse(mBusinessDataListings);
@@ -1177,7 +1180,14 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         if (SharedPrefUtils.isChangeCity(getActivity()))
         {
             hitEditorPicksApi();
+            txtBlogs1.setText("Best of " + SharedPrefUtils.getCurrentCityModel(getActivity()).getName());
             SharedPrefUtils.setChangeCityFlag(getActivity(),false);
+            mBusinessDataListings.clear();
+            BaseApplication.setBusinessREsponse(mBusinessDataListings);
+            businessAdapter.setListData(mBusinessDataListings, businessOrEventType);
+            businessAdapter.notifyDataSetChanged();
+            hzScrollLinearLayoutEvent.removeAllViews();
+            hitBusinessListingApi(SharedPrefUtils.getEventIdForCity(getActivity()), 1);
         }
 
 

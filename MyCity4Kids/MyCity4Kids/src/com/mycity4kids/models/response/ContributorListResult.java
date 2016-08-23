@@ -7,7 +7,7 @@ public class ContributorListResult  {
     String firstName;
     String lastName;
     String userType;
-    String about;
+    String UserBio;
     String id;
     Long followersCount;
     int isFollowed;
@@ -23,15 +23,15 @@ public class ContributorListResult  {
 
     Long rank;
 
-    public String getProfilePic() {
-        return profilePic;
+    public ProfilePic getProfilePic() {
+        return profilePicUrl;
     }
 
-    public void setProfilePic(String profilePic) {
-        this.profilePic = profilePic;
+    public void setProfilePic(ProfilePic profilePic) {
+        this.profilePicUrl = profilePic;
     }
 
-    String profilePic;
+    ProfilePic profilePicUrl;
     public String getColorCode() {
         return colorCode;
     }
@@ -65,11 +65,11 @@ public class ContributorListResult  {
     }
 
     public String getAbout() {
-        return about;
+        return UserBio;
     }
 
     public void setAbout(String about) {
-        this.about = about;
+        this.UserBio = about;
     }
 
     public String getUserType() {

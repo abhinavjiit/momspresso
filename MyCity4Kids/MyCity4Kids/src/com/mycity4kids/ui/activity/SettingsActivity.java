@@ -131,6 +131,7 @@ public class SettingsActivity extends BaseActivity  {
             bundle.putString("bio",getIntent().getStringExtra("bio"));
             bundle.putString("firstName",getIntent().getStringExtra("firstName"));
             bundle.putString("lastName",getIntent().getStringExtra("lastName"));
+            bundle.putString("phoneNumber",getIntent().getStringExtra("phoneNumber"));
             replaceFragment(new FragmentSetting(), bundle, false);
         }
         getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {

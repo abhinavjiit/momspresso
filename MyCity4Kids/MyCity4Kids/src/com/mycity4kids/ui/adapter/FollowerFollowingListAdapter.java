@@ -127,9 +127,15 @@ public class FollowerFollowingListAdapter extends BaseAdapter {
         } else {
             Picasso.with(mContext).load(R.drawable.default_commentor_img).transform(new CircleTransformation()).into(holder.authorImageView);
         }
+
         if (mDataList.get(position).getIsFollowed() == 0) {
             holder.followingTextView.setVisibility(View.INVISIBLE);
             holder.followTextView.setVisibility(View.VISIBLE);
+            if (mDataList.get(position).getUserId().equals(SharedPrefUtils.getUserDetailModel(mContext).getDynamoId()))
+            {
+                holder.followingTextView.setVisibility(View.INVISIBLE);
+                holder.followTextView.setVisibility(View.INVISIBLE);
+            }
         } else {
             holder.followingTextView.setVisibility(View.VISIBLE);
             holder.followTextView.setVisibility(View.INVISIBLE);
