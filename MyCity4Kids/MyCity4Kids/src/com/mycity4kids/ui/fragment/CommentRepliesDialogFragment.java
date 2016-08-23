@@ -279,17 +279,13 @@ public class CommentRepliesDialogFragment extends DialogFragment implements OnCl
 
     private void updateCommentReplyList(String commentId) {
 
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String formattedDate = df.format(cal.getTime());
-
         CommentsData cData = new CommentsData();
         cData.setId(commentId);
         cData.setCommentLevel(0);
         cData.setBody(addReplyEditText.getText().toString());
         cData.setName(SharedPrefUtils.getUserDetailModel(getActivity()).getFirst_name());
         cData.setUserId(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId());
-        cData.setCreate(formattedDate);
+        cData.setCreate("" + System.currentTimeMillis());
         cData.setParent_id(parentId);
         ProfilePic profilePic = new ProfilePic();
         profilePic.setClientApp(SharedPrefUtils.getProfileImgUrl(getActivity()));
@@ -308,16 +304,12 @@ public class CommentRepliesDialogFragment extends DialogFragment implements OnCl
 
         int parentPosition = 0;
 
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String formattedDate = df.format(cal.getTime());
-
         CommentsData cData = new CommentsData();
         cData.setId(commentId);
         cData.setCommentLevel(1);
         cData.setBody(addReplyEditText.getText().toString());
         cData.setName(SharedPrefUtils.getUserDetailModel(getActivity()).getFirst_name());
-        cData.setCreate(formattedDate);
+        cData.setCreate("" + System.currentTimeMillis());
         cData.setParent_id(parentId);
         cData.setUserId(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId());
         ProfilePic profilePic = new ProfilePic();

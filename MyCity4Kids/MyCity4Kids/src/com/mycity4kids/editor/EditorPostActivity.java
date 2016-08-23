@@ -5,6 +5,8 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -13,7 +15,9 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.BitmapUtils;
@@ -25,10 +29,9 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.dbtable.UserTable;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.gtmutils.Utils;
-import com.mycity4kids.models.editor.ArticleDraftList;
-import com.mycity4kids.models.response.PublishDraftObject;
 import com.mycity4kids.models.response.ArticleDraftResponse;
 import com.mycity4kids.models.response.ImageUploadResponse;
+import com.mycity4kids.models.response.PublishDraftObject;
 import com.mycity4kids.models.user.UserModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
@@ -44,6 +47,7 @@ import org.wordpress.android.util.helpers.MediaFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.text.SimpleDateFormat;
@@ -51,15 +55,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import okhttp3.Cache;
 import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by anshul on 2/29/16.
@@ -71,6 +71,8 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     private String articleId;
     private String thumbnailUrl;
     private String moderation_status, node_id, path;
+    String mCurrentPhotoPath, absoluteImagePath;
+    File photoFile;
 
     File file;
     MediaFile mediaFile;
@@ -199,7 +201,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                 Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                 if (cameraIntent.resolveActivity(getPackageManager()) != null) {
                     // Create the File where the photo should go
-                    File photoFile = null;
+                    photoFile = null;
                     try {
                         photoFile = createImageFile();
                     } catch (IOException ex) {
@@ -218,8 +220,6 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
         }
     }
 
-    String mCurrentPhotoPath;
-
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -233,6 +233,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
 
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+        absoluteImagePath = image.getAbsolutePath();
         return image;
     }
 
@@ -243,10 +244,10 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
         mediaFile = new MediaFile();
         mediaId = String.valueOf(System.currentTimeMillis());
         mediaFile.setMediaId(mediaId);
-        //   mediaFile.setVideo(imageUri.toString().contains("video"));
 
         switch (requestCode) {
             case ADD_MEDIA_ACTIVITY_REQUEST_CODE:
+
                 if (data == null) {
                     return;
                 }
@@ -324,7 +325,28 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
 
                 if (resultCode == Activity.RESULT_OK) {
                     try {
+//                        imageUri = data.getData();
+//                        Bitmap photo = (Bitmap) data.getExtras().get("data");
                         Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.parse(mCurrentPhotoPath));
+                        ExifInterface ei = new ExifInterface(absoluteImagePath);
+                        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                                ExifInterface.ORIENTATION_UNDEFINED);
+
+                        switch (orientation) {
+                            case ExifInterface.ORIENTATION_ROTATE_90:
+                                imageBitmap = rotateImage(imageBitmap, 90);
+                                break;
+                            case ExifInterface.ORIENTATION_ROTATE_180:
+                                imageBitmap = rotateImage(imageBitmap, 180);
+                                break;
+                            case ExifInterface.ORIENTATION_ROTATE_270:
+                                imageBitmap = rotateImage(imageBitmap, 270);
+                                break;
+                            case ExifInterface.ORIENTATION_NORMAL:
+                            default:
+                                break;
+                        }
+//                        Bitmap imageBitmap = (Bitmap) data.getExtras().get("data"); //MediaStore.Images.Media.getBitmap(EditorPostActivity.this.getContentResolver(), imageUri);
                         float actualHeight = imageBitmap.getHeight();
                         float actualWidth = imageBitmap.getWidth();
                         float maxHeight = 1300;
@@ -351,10 +373,17 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                         }
 
                         Bitmap finalBitmap = Bitmap.createScaledBitmap(imageBitmap, (int) actualWidth, (int) actualHeight, true);
-                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        finalBitmap.compress(Bitmap.CompressFormat.PNG, 75, stream);
-                        String path = MediaStore.Images.Media.insertImage(getContentResolver(), finalBitmap, "Title", null);
-                        imageUri = Uri.parse(path);
+
+                        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                        finalBitmap.compress(Bitmap.CompressFormat.JPEG, 75, bytes);
+                        byte[] bitmapData = bytes.toByteArray();
+
+                        //write the bytes in file
+                        FileOutputStream fos = new FileOutputStream(photoFile);
+                        fos.write(bitmapData);
+                        fos.flush();
+                        fos.close();
+                        imageUri = Uri.fromFile(photoFile);
                         mEditorFragment.imageUploading = 0;
                         File file2 = FileUtils.getFile(this, imageUri);
                         sendUploadProfileImageRequest(file2);
@@ -375,6 +404,12 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
         }
     }
 
+    public static Bitmap rotateImage(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix,
+                true);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -410,16 +445,9 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
 
                     draftObject.setBody(contentFormatting(mEditorFragment.getContent().toString()));
                     draftObject.setTitle(titleFormatting(mEditorFragment.getTitle().toString()));
-                    //  draftObject.setId(draftId);
-//                    draftObject.setImageUrl(thumbnailUrl);
-                    //  draftObject.setArticleType(moderation_status);
                     Log.d("draftId = ", draftId + "");
-
-//                    Intent intent = new Intent(EditorPostActivity.this, ArticleImageTagUploadActivity.class);
-//                    intent.putExtra("draftItem", draftObject);
                     if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) {
                         // coming from edit published articles
-//
                         Intent intent_1 = new Intent(EditorPostActivity.this, EditSelectedTopicsActivity.class);
                         draftObject.setId(articleId);
                         intent_1.putExtra("draftItem", draftObject);
@@ -429,38 +457,12 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                         intent_1.putExtra("tag", tag);
                         intent_1.putExtra("cities", cities);
                         startActivity(intent_1);
-//                        finish();
-                    }
-//                    else if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("draftList")) {
-//                        Intent intent_2 = new Intent(EditorPostActivity.this, ArticleImageTagUploadActivity.class);
-//                        intent_2.putExtra("draftItem", draftObject);
-//                        intent_2.putExtra("imageUrl", path);
-//                        intent_2.putExtra("from", "draftList");
-//                    }
-                    else {
+                    } else {
                         Intent intent_3 = new Intent(EditorPostActivity.this, AddArticleTopicsActivity.class);
-
-                        //          draftObject.setId(draftId);
-
                         intent_3.putExtra("draftItem", draftObject);
                         intent_3.putExtra("from", "editor");
                         startActivity(intent_3);
                     }
-//                    startActivity(intent);
-
-//                    Intent intent = new Intent(EditorPostActivity.this, ArticleImageTagUploadActivity.class);
-//                    intent.putExtra("draftItem", draftObject);
-//                    if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) {
-//                        intent.putExtra("imageUrl", thumbnailUrl);
-//                        intent.putExtra("from", "publishedList");
-//                        intent.putExtra("articleId", articleId);
-//                    } else if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("draftList")) {
-//                        intent.putExtra("imageUrl", path);
-//                        intent.putExtra("from", "draftList");
-//                    } else {
-//                        intent.putExtra("from", "editor");
-//                    }
-//                    startActivity(intent);
                 }
             }
             break;
@@ -469,22 +471,9 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
 
     }
 
-
     public void saveDraftRequest(String title, String body, String draftId1) {
         showProgressDialog(getResources().getString(R.string.please_wait));
 
-/*
-        ArticleDraftRequest requestData = new ArticleDraftRequest();
-        title = title.trim();
-        requestData.setUser_id("" + userModel.getUser().getId());
-        requestData.setBody("" + body);
-        requestData.setTitle("" + title);
-        requestData.setId("" + draftId1);
-        requestData.setSourceId("" + 2);
-
-        Log.e("userId", userModel.getUser().getId() + "");
-        ArticleDraftController controller = new ArticleDraftController(this, this);
-        controller.getData(AppConstants.ARTICLE_DRAFT_REQUEST, requestData);*/
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         // prepare call in Retrofit 2.0
         ArticleDraftAPI articleDraftAPI = retrofit.create(ArticleDraftAPI.class);
@@ -500,45 +489,41 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                     "0"
             );
 
-
             //asynchronous call
             call.enqueue(new Callback<ArticleDraftResponse>() {
-                             @Override
-                             public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
-                                 int statusCode = response.code();
+                @Override
+                public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
+                    int statusCode = response.code();
 
-                                 ArticleDraftResponse responseModel = (ArticleDraftResponse) response.body();
-                                 // Result<ArticleDraftResult> result=responseModel.getData().getResult();
-                                 removeProgressDialog();
+                    ArticleDraftResponse responseModel = (ArticleDraftResponse) response.body();
+                    // Result<ArticleDraftResult> result=responseModel.getData().getResult();
+                    removeProgressDialog();
 
-                                 if (responseModel.getCode() != 200) {
-                                     showToast(getString(R.string.toast_response_error));
-                                     return;
-                                 } else {
-                                     if (!StringUtils.isNullOrEmpty(responseModel.getData().getMsg())) {
-                                         //  SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
-                                         Log.i("Draft message", responseModel.getData().getMsg());
-                                     }
-                                     draftId = responseModel.getData().getResult().getId() + "";
+                    if (responseModel.getCode() != 200) {
+                        showToast(getString(R.string.toast_response_error));
+                        return;
+                    } else {
+                        if (!StringUtils.isNullOrEmpty(responseModel.getData().getMsg())) {
+                            //  SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
+                            Log.i("Draft message", responseModel.getData().getMsg());
+                        }
+                        draftId = responseModel.getData().getResult().getId() + "";
 
-                                     //setProfileImage(originalImage);
-                                     showToast("Draft Successfully saved");
-                                     if (fromBackpress) {
-                                         //onBackPressed();
-                                         finish();
-                                     }
-                                     //  finish();
-                                 }
+                        //setProfileImage(originalImage);
+                        showToast("Draft Successfully saved");
+                        if (fromBackpress) {
+                            //onBackPressed();
+                            finish();
+                        }
+                        //  finish();
+                    }
+                }
 
-                             }
+                @Override
+                public void onFailure(Call<ArticleDraftResponse> call, Throwable t) {
 
-
-                             @Override
-                             public void onFailure(Call<ArticleDraftResponse> call, Throwable t) {
-
-                             }
-                         }
-            );
+                }
+            });
         } else {
 
             Call<ArticleDraftResponse> call = articleDraftAPI.updateDraft(
@@ -668,10 +653,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             articleId = getIntent().getStringExtra("articleId");
             mEditorFragment.setTitle(title);
             mEditorFragment.setContent(content);
-            //  mEditorFragment.toggleTitleView(true);
-            //  mEditorFragment.setTitle(title);
-            //    mEditorFragment.setContent(content);
-        } else /*if (getIntent().getStringExtra("from").equals("dashboard"))*/ {
+        } else {
             title = title.trim();
             mEditorFragment.setTitle(title);
             mEditorFragment.setContent(content);
@@ -709,26 +691,8 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
 
     }
 
-    //public void sendUploadProfileImageRequest(Bitmap originalImage) {
     public void sendUploadProfileImageRequest(File file) {
         showProgressDialog(getString(R.string.please_wait));
-       /* ByteArrayOutputStream bao = new ByteArrayOutputStream();
-        originalImage.compress(Bitmap.CompressFormat.PNG, 75, bao);
-        byte[] ba = bao.toByteArray();
-        String imageString = Base64.encodeToString(ba, Base64.DEFAULT);*/
-  /*      HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-// set your desired log level
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient
-                .Builder()
-                .cache(new Cache(getCacheDir(), 10 * 1024 * 1024)) // 10 MB
-                .addInterceptor(logging)
-                .build();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(AppConstants.LIVE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
-                .build();*/
         MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
         RequestBody requestBodyFile = RequestBody.create(MEDIA_TYPE_PNG, file);
         RequestBody userId = RequestBody.create(MediaType.parse("text/plain"), //"" + userModel.getUser().getId());
@@ -745,13 +709,14 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
         call.enqueue(new Callback<ImageUploadResponse>() {
                          @Override
                          public void onResponse(Call<ImageUploadResponse> call, retrofit2.Response<ImageUploadResponse> response) {
+                             removeProgressDialog();
                              if (response == null || response.body() == null) {
                                  showToast(getString(R.string.went_wrong));
                                  return;
                              }
                              ImageUploadResponse responseModel = response.body();
                              Log.e("responseURL", responseModel.getData().getResult().getUrl());
-                             removeProgressDialog();
+
                              if (responseModel.getCode() != 200) {
                                  showToast(getString(R.string.toast_response_error));
                                  removeProgressDialog();
@@ -764,16 +729,15 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                                  mediaFile.setFileURL(responseModel.getData().getResult().getUrl());
 
                                  ((EditorMediaUploadListener) mEditorFragment).onMediaUploadSucceeded(mediaId, mediaFile);
-                                 removeProgressDialog();
-                                 //setProfileImage(originalImage);
-                                 //  showToast("You have successfully uploaded image.");
                              }
                          }
 
                          @Override
                          public void onFailure(Call<ImageUploadResponse> call, Throwable t) {
-                             t.printStackTrace();
-                             Log.e("infailure", "test");
+                             removeProgressDialog();
+                             Crashlytics.logException(t);
+                             Toast.makeText(EditorPostActivity.this, "Error while uploading image", Toast.LENGTH_SHORT).show();
+                             Log.d("MC4kException", Log.getStackTraceString(t));
                          }
                      }
         );

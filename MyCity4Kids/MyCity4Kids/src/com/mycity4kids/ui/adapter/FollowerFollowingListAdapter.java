@@ -6,15 +6,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.RotateAnimation;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -26,7 +23,6 @@ import com.mycity4kids.models.response.FollowUnfollowUserResponse;
 import com.mycity4kids.models.response.FollowersFollowingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.CircleTransformation;
-import com.mycity4kids.ui.activity.FollowersAndFollowingListActivity;
 import com.squareup.picasso.Picasso;
 
 import java.io.BufferedReader;
@@ -40,9 +36,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 
 /**
@@ -53,14 +46,14 @@ public class FollowerFollowingListAdapter extends BaseAdapter {
     private LayoutInflater mInflator;
     private Context mContext;
     private ArrayList<FollowersFollowingResult> mDataList;
-    private final float density;
     Retrofit retrofit;
+    String currentUserId;
 
     public FollowerFollowingListAdapter(Context mContext) {
-        density = mContext.getResources().getDisplayMetrics().density;
         mInflator = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.mContext = mContext;
         retrofit = BaseApplication.getInstance().getRetrofit();
+        currentUserId = SharedPrefUtils.getUserDetailModel(mContext).getDynamoId();
     }
 
     public void setData(ArrayList<FollowersFollowingResult> mDataList) {
@@ -110,35 +103,27 @@ public class FollowerFollowingListAdapter extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
         holder.imgLoader.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.rotate_indefinitely));
-//        RotateAnimation rotateAnimation = new RotateAnimation(30, 90,
-//                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-//        rotateAnimation.setRepeatCount(Animation.INFINITE);
-//        holder.imgLoader.startAnimation(rotateAnimation);
-        holder.authorNameTextView.setText(mDataList.get(position).getFirstName() + mDataList.get(position).getLastName());
+
+        holder.authorNameTextView.setText(mDataList.get(position).getFirstName() + " " + mDataList.get(position).getLastName());
         holder.position = position;
         if (!StringUtils.isNullOrEmpty(mDataList.get(position).getProfilePicUrl().getClientApp())) {
-            try {
-                Picasso.with(mContext).load(mDataList.get(position).getProfilePicUrl().getClientApp()).transform(new CircleTransformation()).into(holder.authorImageView);
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-                Picasso.with(mContext).load(R.drawable.default_commentor_img).transform(new CircleTransformation()).into(holder.authorImageView);
-            }
+            Picasso.with(mContext).load(mDataList.get(position).getProfilePicUrl().getClientApp()).transform(new CircleTransformation())
+                    .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img).into(holder.authorImageView);
         } else {
             Picasso.with(mContext).load(R.drawable.default_commentor_img).transform(new CircleTransformation()).into(holder.authorImageView);
         }
 
-        if (mDataList.get(position).getIsFollowed() == 0) {
+        if (mDataList.get(position).getUserId().equals(currentUserId)) {
             holder.followingTextView.setVisibility(View.INVISIBLE);
-            holder.followTextView.setVisibility(View.VISIBLE);
-            if (mDataList.get(position).getUserId().equals(SharedPrefUtils.getUserDetailModel(mContext).getDynamoId()))
-            {
+            holder.followTextView.setVisibility(View.INVISIBLE);
+        } else {
+            if (mDataList.get(position).getIsFollowed() == 0) {
                 holder.followingTextView.setVisibility(View.INVISIBLE);
+                holder.followTextView.setVisibility(View.VISIBLE);
+            } else {
+                holder.followingTextView.setVisibility(View.VISIBLE);
                 holder.followTextView.setVisibility(View.INVISIBLE);
             }
-        } else {
-            holder.followingTextView.setVisibility(View.VISIBLE);
-            holder.followTextView.setVisibility(View.INVISIBLE);
         }
 
         holder.followingTextView.setOnClickListener(new View.OnClickListener() {
@@ -155,8 +140,6 @@ public class FollowerFollowingListAdapter extends BaseAdapter {
             public void onClick(View v) {
                 Log.d("Follow", "Follow");
                 followUserAPI(position, holder);
-//                holder.followingTextView.setVisibility(View.VISIBLE);
-//                holder.followTextView.setVisibility(View.INVISIBLE);
             }
         });
         return view;
@@ -285,7 +268,6 @@ public class FollowerFollowingListAdapter extends BaseAdapter {
                                 viewHolder.followTextView.setVisibility(View.VISIBLE);
                                 viewHolder.followingTextView.setVisibility(View.INVISIBLE);
                             }
-//                            notifyDataSetChanged();
                         }
                     }
                 } else {
@@ -309,68 +291,4 @@ public class FollowerFollowingListAdapter extends BaseAdapter {
         }
 
     }
-
-    private Callback<FollowUnfollowUserResponse> followResponseCallback = new Callback<FollowUnfollowUserResponse>() {
-        @Override
-        public void onResponse(Call<FollowUnfollowUserResponse> call, Response<FollowUnfollowUserResponse> response) {
-            if (response == null || response.body() == null) {
-                ((FollowersAndFollowingListActivity) mContext).showToast("Something went wrong");
-                return;
-            }
-            try {
-                FollowUnfollowUserResponse responseData = (FollowUnfollowUserResponse) response.body();
-                if (responseData.getCode() == 200 & Constants.SUCCESS.equals(responseData.getStatus())) {
-//                    holder.followingTextView.setVisibility(View.VISIBLE);
-//                    holder.followTextView.setVisibility(View.INVISIBLE);
-                    for (int i = 0; i < mDataList.size(); i++) {
-                        if (mDataList.get(i).getUserId().equals(responseData.getData().getResult().getId())) {
-                            mDataList.get(i).setIsFollowed(1);
-                            notifyDataSetChanged();
-                        }
-                    }
-                }
-//                processFollowingListResponse(responseData);
-            } catch (Exception e) {
-//                holder.followingTextView.setVisibility(View.INVISIBLE);
-//                holder.followTextView.setVisibility(View.VISIBLE);
-            }
-        }
-
-        @Override
-        public void onFailure(Call<FollowUnfollowUserResponse> call, Throwable t) {
-
-        }
-    };
-
-    private Callback<FollowUnfollowUserResponse> unfollowResponseCallback = new Callback<FollowUnfollowUserResponse>() {
-        @Override
-        public void onResponse(Call<FollowUnfollowUserResponse> call, Response<FollowUnfollowUserResponse> response) {
-            if (response == null || response.body() == null) {
-                ((FollowersAndFollowingListActivity) mContext).showToast("Something went wrong");
-                return;
-            }
-            try {
-                FollowUnfollowUserResponse responseData = (FollowUnfollowUserResponse) response.body();
-                if (responseData.getCode() == 200 & Constants.SUCCESS.equals(responseData.getStatus())) {
-//                    holder.followingTextView.setVisibility(View.INVISIBLE);
-//                    holder.followTextView.setVisibility(View.VISIBLE);
-                    for (int i = 0; i < mDataList.size(); i++) {
-                        if (mDataList.get(i).getUserId().equals(responseData.getData().getResult().getId())) {
-                            mDataList.get(i).setIsFollowed(0);
-                            notifyDataSetChanged();
-                        }
-                    }
-                }
-//                processFollowingListResponse(responseData);
-            } catch (Exception e) {
-//                holder.followingTextView.setVisibility(View.VISIBLE);
-//                holder.followTextView.setVisibility(View.INVISIBLE);
-            }
-        }
-
-        @Override
-        public void onFailure(Call<FollowUnfollowUserResponse> call, Throwable t) {
-
-        }
-    };
 }

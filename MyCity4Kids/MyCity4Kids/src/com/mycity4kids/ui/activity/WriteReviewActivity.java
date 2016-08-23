@@ -556,16 +556,16 @@ public class WriteReviewActivity extends BaseActivity implements IOnSubmitGaller
         if (markArray != null) {
             wr_model.setImage(markArray);
         }
-        UserTable userTable = new UserTable((BaseApplication) getApplication());
-        int count = userTable.getCount();
-        if (count <= 0) {
-            removeProgressDialog();
-            showToast(getResources().getString(R.string.user_login));
-            return;
-        }
-        UserModel userModel = userTable.getAllUserData();
-        wr_model.setUserId("" + userModel.getUser().getId());
-        wr_model.setSessionId(userModel.getUser().getSessionId());
+//        UserTable userTable = new UserTable((BaseApplication) getApplication());
+//        int count = userTable.getCount();
+//        if (count <= 0) {
+//            removeProgressDialog();
+//            showToast(getResources().getString(R.string.user_login));
+//            return;
+//        }
+//        UserModel userModel = userTable.getAllUserData();
+        wr_model.setUserId("" + SharedPrefUtils.getUserDetailModel(this).getId());
+//        wr_model.setSessionId(userModel.getUser().getSessionId());
         if (currentAutoSuggestModel != null && !StringUtils.isNullOrEmpty(currentAutoSuggestModel.getType())) {
             wr_model.setType(currentAutoSuggestModel.getType());
         } else if (businessOrEvent == Constants.BUSINESS_PAGE_TYPE) {
@@ -722,13 +722,13 @@ public class WriteReviewActivity extends BaseActivity implements IOnSubmitGaller
                     return true;
                 }
 
-                UserTable userTable = new UserTable((BaseApplication) getApplication());
-                int count = userTable.getCount();
-                if (count <= 0) {
-                    removeProgressDialog();
-                    showToast(getResources().getString(R.string.user_login));
-                    return true;
-                }
+//                UserTable userTable = new UserTable((BaseApplication) getApplication());
+//                int count = userTable.getCount();
+//                if (count <= 0) {
+//                    removeProgressDialog();
+//                    showToast(getResources().getString(R.string.user_login));
+//                    return true;
+//                }
 
                 if (currentCategoryModel != null && currentCategoryModel.getCategoryId() == 0) {
                     showToast("What would you like to review?");

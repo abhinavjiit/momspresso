@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/camera"
+        android:actionMenuTextColor="@color/black_color"
+        android:title="Take picture from camera" />
+
+    <item
+        android:id="@+id/album"
+        android:actionMenuTextColor="@color/black_color"
+        android:title="Select an image" />
+</menu>

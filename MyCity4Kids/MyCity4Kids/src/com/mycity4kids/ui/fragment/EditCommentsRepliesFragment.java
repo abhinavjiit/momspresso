@@ -49,7 +49,6 @@ import retrofit2.Retrofit;
 public class EditCommentsRepliesFragment extends DialogFragment implements OnClickListener, IScreen {
 
     ArrayList<AttendeeModel> data;
-    ListView replyListView;
     CommentsReplyAdapter adapter;
     private CommentsData commentsData, nestedReplyData;
     private EditText commentReplyEditText;

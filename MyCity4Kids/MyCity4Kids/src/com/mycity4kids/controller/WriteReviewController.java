@@ -89,7 +89,7 @@ public class WriteReviewController extends BaseController {
             nameValuePairs.add(new BasicNameValuePair("userId", writeReviewModel.getUserId()));
             nameValuePairs.add(new BasicNameValuePair("type", writeReviewModel.getType()));
             nameValuePairs.add(new BasicNameValuePair("businessId", writeReviewModel.getBusinessId()));
-            nameValuePairs.add(new BasicNameValuePair("sessionId", writeReviewModel.getSessionId()));
+//            nameValuePairs.add(new BasicNameValuePair("sessionId", writeReviewModel.getSessionId()));
             encodedEntity = new UrlEncodedFormEntity(nameValuePairs);
 
 			 System.out.println("writeReqvieew ------------- " + nameValuePairs.toString());

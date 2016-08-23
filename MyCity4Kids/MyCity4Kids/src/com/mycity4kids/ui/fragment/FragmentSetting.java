@@ -43,8 +43,6 @@ import com.mycity4kids.models.logout.LogoutResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.reminders.AppointmentManager;
 import com.mycity4kids.ui.activity.ActivityLogin;
-import com.mycity4kids.ui.activity.DashboardActivity;
-
 import com.mycity4kids.ui.activity.EditProfieActivity;
 import com.mycity4kids.ui.activity.SettingsActivity;
 
@@ -54,31 +52,32 @@ import com.mycity4kids.ui.activity.SettingsActivity;
  */
 //
 public class FragmentSetting extends BaseFragment implements View.OnClickListener {
-int cityId;
-TextView cityChange;
-    String bio,firstName,lastName,phoneNumber;
+    int cityId;
+    TextView cityChange;
+    String bio, firstName, lastName, phoneNumber;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.aa_setting, container, false);
         Utils.pushOpenScreenEvent(getActivity(), "Settings", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
 
-       // ((SettingsActivity) getActivity()).refreshMenu();
-        bio=  getArguments().getString("bio");
-        firstName=  getArguments().getString("firstName");
-        lastName=  getArguments().getString("lastName");
-        phoneNumber=getArguments().getString("phoneNumber");
+        // ((SettingsActivity) getActivity()).refreshMenu();
+        bio = getArguments().getString("bio");
+        firstName = getArguments().getString("firstName");
+        lastName = getArguments().getString("lastName");
+        phoneNumber = getArguments().getString("phoneNumber");
+
         ((TextView) view.findViewById(R.id.logout)).setOnClickListener(this);
         ((TextView) view.findViewById(R.id.family_details)).setOnClickListener(this);
-      //  ((TextView) view.findViewById(R.id.sync_setting)).setOnClickListener(this);
+        //  ((TextView) view.findViewById(R.id.sync_setting)).setOnClickListener(this);
         ((TextView) view.findViewById(R.id.editProfile)).setOnClickListener(this);
 //        ((TextView) view.findViewById(R.id.notification)).setOnClickListener(this);
-        cityChange=(TextView) view.findViewById(R.id.cityChange);
+        cityChange = (TextView) view.findViewById(R.id.cityChange);
         cityChange.setOnClickListener(this);
-        cityId=SharedPrefUtils.getCurrentCityModel(getActivity()).getId();
+        cityId = SharedPrefUtils.getCurrentCityModel(getActivity()).getId();
         setHasOptionsMenu(false);
-        switch (cityId)
-        {
+        switch (cityId) {
             case 1:
                 cityChange.setText("Change City (Delhi-NCR)");
                 break;
@@ -106,9 +105,6 @@ TextView cityChange;
             case 9:
                 cityChange.setText("Change City (Ahmedabad)");
                 break;
-           /* case 100:
-                radioGroup.check(R.id.Others);
-                break;*/
         }
         return view;
     }
@@ -129,34 +125,15 @@ TextView cityChange;
 
                     dialog.setMessage(getResources().getString(R.string.logout_msg)).setNegativeButton(R.string.new_yes
                             , new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-
-                            dialog.cancel();
-
-                            showProgressDialog(getResources().getString(R.string.please_wait));
-
-                            _controller.getData(AppConstants.LOGOUT_REQUEST, "");
-
-//                            TableAdult _tables = new TableAdult((BaseApplication) getActivity().getApplicationContext());
-//                            if (_tables.getRowsCount() > 0) {
-//
-//                                showProgressDialog(getResources().getString(R.string.please_wait));
-//                                String sessionId = SharedPrefUtils.getUserDetailModel(getActivity()).getSessionId();
-//
-//                                if (!StringUtils.isNullOrEmpty(sessionId))
-//                                    _controller.getData(AppConstants.LOGOUT_REQUEST, sessionId);
-//
-//                            } else {
-//                                Toast.makeText(getActivity(), "User not logged in ", Toast.LENGTH_SHORT).show();
-//                            }
-
-                        }
-                    }).setPositiveButton(R.string.new_cancel, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                    showProgressDialog(getResources().getString(R.string.please_wait));
+                                    _controller.getData(AppConstants.LOGOUT_REQUEST, "");
+                                }
+                            }).setPositiveButton(R.string.new_cancel, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             // do nothing
                             dialog.cancel();
-
-
                         }
                     }).setIcon(android.R.drawable.ic_dialog_alert);
 
@@ -178,30 +155,21 @@ TextView cityChange;
                 ((SettingsActivity) getActivity()).replaceFragment(new FragmentFamilyDetail(), null, true);
 
                 break;
-
-         /*   case R.id.sync_setting:
-                bundle = new Bundle();
-                bundle.putBoolean(Constants.IS_COMMING_FROM_SETTING, true);
-                ((DashboardActivity) getActivity()).replaceFragment(new SyncSettingFragment(), bundle, true);
-                break;*/
             case R.id.editProfile:
 
-                Intent intent=new Intent(getActivity(),EditProfieActivity.class);
+                Intent intent = new Intent(getActivity(), EditProfieActivity.class);
 
-                {intent.putExtra("bio",bio);
-                    intent.putExtra("firstName",firstName);
-                    intent.putExtra("lastName",lastName);
-                    intent.putExtra("phoneNumber",phoneNumber);
-                    startActivity(intent);}
-                break;
+            {
+                intent.putExtra("bio", bio);
+                intent.putExtra("firstName", firstName);
+                intent.putExtra("lastName", lastName);
+                intent.putExtra("phoneNumber", phoneNumber);
+                startActivity(intent);
+            }
+            break;
 
-//            case R.id.notification:
-//                bundle = new Bundle();
-//                bundle.putBoolean(Constants.IS_COMMING_FROM_SETTING, true);
-//                ((DashboardActivity) getActivity()).replaceFragment(new NotificationFragment(), bundle, true);
-//                break;
-            case  R.id.cityChange:
-                ((SettingsActivity) getActivity()).replaceFragment(new ChangeCityFragment(),null,true);
+            case R.id.cityChange:
+                ((SettingsActivity) getActivity()).replaceFragment(new ChangeCityFragment(), null, true);
             default:
                 break;
         }
@@ -271,8 +239,10 @@ TextView cityChange;
 
             // set logout flag
             SharedPrefUtils.setLogoutFlag(getActivity(), true);
+            Intent intent = new Intent(getActivity(), ActivityLogin.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
 
-            startActivity(new Intent(getActivity(), ActivityLogin.class));
             getActivity().finish();
 
         } else if (responseData.getResponseCode() == 400) {

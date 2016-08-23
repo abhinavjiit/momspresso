@@ -67,10 +67,6 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
     ImageView articleImage;
     public static final int ADD_MEDIA_ACTIVITY_REQUEST_CODE = 1111;
     Uri imageUri;
-    String imageString;
-    File file;
-    String response;
-    Bitmap finalBitmap;
     String url = "default-article-listing.jpg";
     Button publish;
     SharedPreferences pref;
@@ -101,11 +97,6 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
             if (thumbnailUrl != null) {
                 Picasso.with(this).load(thumbnailUrl).into(articleImage);
                 url = thumbnailUrl;
-               /* String[] seperated = thumbnailUrl.split("/");
-                if (seperated.length != 0) {
-                    url = seperated[seperated.length - 1];
-                    Log.e("url", url);*/
-
             }
 
         }

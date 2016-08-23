@@ -252,7 +252,6 @@ public class CityBestArticleListingActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_search, menu);
         return true;
     }
 
@@ -261,12 +260,6 @@ public class CityBestArticleListingActivity extends BaseActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
-                break;
-            case R.id.search:
-                Intent intent = new Intent(getApplicationContext(), SearchArticlesAndAuthorsActivity.class);
-                intent.putExtra(Constants.FILTER_NAME, "");
-                intent.putExtra(Constants.TAB_POSITION, 0);
-                startActivity(intent);
         }
         return true;
     }

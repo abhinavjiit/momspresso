@@ -13,7 +13,7 @@ import com.mycity4kids.ui.fragment.TutorialFragment;
 public class TutorialAdapter extends FragmentStatePagerAdapter {
 
     Context mContext;
-    private final int PAGE_COUNT = 5;
+    private final int PAGE_COUNT = 3;
 
     public TutorialAdapter(FragmentManager fm, Context context) {
         super(fm);
@@ -24,20 +24,10 @@ public class TutorialAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         Bundle bundle = new Bundle();
 
-//        if (position == PAGE_COUNT) {
-//            bundle.putInt(AppConstants.SLIDER_POSITION, position);
-//            JoinFamilyFragment viewPagerFragment = new JoinFamilyFragment();
-//            viewPagerFragment.setArguments(bundle);
-//            return viewPagerFragment;
-//
-//
-//        } else {
         bundle.putInt(AppConstants.SLIDER_POSITION, position);
         TutorialFragment viewPagerFragment = new TutorialFragment();
         viewPagerFragment.setArguments(bundle);
         return viewPagerFragment;
-//        }
-
 
     }
 

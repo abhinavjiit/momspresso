@@ -2,6 +2,7 @@ package com.mycity4kids.ui.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -232,20 +233,6 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                 Call<UserDetailResponse> call = loginRegistrationAPI.login(lr);
                 call.enqueue(onLoginResponseReceivedListener);
 
-//                personPhotoUrl = "https://graph.facebook.com/" + user.getId() + "/picture?type=large";
-
-
-//                final LoginController _controller = new LoginController(this, this);
-//                String fbEmailId = user.asMap().get("email").toString();
-//
-//                UserRequest _userModel = new UserRequest();
-//                _userModel.setEmailId(fbEmailId);
-//                _userModel.setProfileId(user.getId());
-//                _userModel.setNetworkName("facebook");
-//                _userModel.setFirstName(user.getFirstName());
-//                _userModel.setLastName(user.getLastName());
-//                _userModel.setAccessToken(accessToken);
-//                _controller.getData(AppConstants.NEW_LOGIN_REQUEST, _userModel);
             }
         } catch (Exception e) {
             // e.printStackTrace();
@@ -314,90 +301,6 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
 
     @Override
     protected void updateUi(Response response) {
-        if (response == null) {
-            removeProgressDialog();
-            showToast(getResources().getString(R.string.server_error));
-            return;
-        }
-
-        switch (response.getDataType()) {
-
-            case AppConstants.NEW_LOGIN_REQUEST:
-                try {
-                    UserResponse responseData = (UserResponse) response.getResponseObject();
-                    if (responseData.getResponseCode() == 200) {
-
-                        // save in prefrences
-                        UserInfo model = new UserInfo();
-                        model.setId(responseData.getResult().getData().getUser().getId());
-                        model.setEmail(responseData.getResult().getData().getUser().getEmail());
-                        model.setMobile_number(responseData.getResult().getData().getUser().getMobile_number());
-                        model.setFamily_id(responseData.getResult().getData().getUser().getFamily_id());
-                        model.setColor_code(responseData.getResult().getData().getUser().getColor_code());
-                        model.setSessionId(responseData.getResult().getData().getUser().getSessionId());
-                        model.setFirst_name(responseData.getResult().getData().getUser().getFirst_name() + " " + responseData.getResult().getData().getUser().getLast_name());
-                        SharedPrefUtils.setUserDetailModel(ActivityLogin.this, model);
-
-                        ArrayList<FamilyInvites> familyInvitesList = responseData.getResult().getData().getFamilyInvites();
-
-                        // Check User already linked with a family or not.
-                        //then check for Invites if present or not
-                        if ((StringUtils.isNullOrEmpty("" + responseData.getResult().getData().getUser().getFamily_id()) ||
-                                responseData.getResult().getData().getUser().getFamily_id() == 0) && !familyInvitesList.isEmpty()) {
-                            removeProgressDialog();
-
-                            UserInviteModel userInviteModel = new UserInviteModel();
-                            userInviteModel.setUserId("" + responseData.getResult().getData().getUser().getId());
-                            userInviteModel.setEmail(responseData.getResult().getData().getUser().getEmail());
-                            userInviteModel.setMobile(responseData.getResult().getData().getUser().getMobile_number());
-                            userInviteModel.setFamilyInvites(responseData.getResult().getData().getFamilyInvites());
-                            SharedPrefUtils.setUserFamilyInvites(this, new Gson().toJson(userInviteModel).toString());
-
-                            Intent listFamilyInvitesIntent = new Intent(this, ListFamilyInvitesActivity.class);
-                            listFamilyInvitesIntent.putExtra("userInviteData", userInviteModel);
-                            listFamilyInvitesIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(listFamilyInvitesIntent);
-//                            Intent updateMobileIntent = new Intent(this, UpdateMobileNumberActivity.class);
-//                            updateMobileIntent.putExtra("isExistingUser", "1");
-//                            updateMobileIntent.putExtra("name", responseData.getResult().getData().getUser().getFirst_name());
-//                            updateMobileIntent.putExtra("colorCode", responseData.getResult().getData().getUser().getColor_code());
-//                            startActivity(updateMobileIntent);
-                            return;
-                        }
-                        Toast.makeText(ActivityLogin.this, responseData.getResult().getMessage(), Toast.LENGTH_SHORT).show();
-
-                        // if db not exists first save in db
-                        TableKids kidsTable = new TableKids((BaseApplication) getApplicationContext());
-                        ArrayList<KidsInfo> kidList = kidsTable.getAllKids();
-                        if (kidList.isEmpty()) {
-                            // db not exists
-                            saveDatainDB(responseData);
-                        }
-
-                        // set city also
-
-                        // then call getappoitmnt service
-                        removeProgressDialog();
-                        startSyncing();
-                        Intent intent = new Intent(this, PushTokenService.class);
-                        startService(intent);
-                        Intent intent1 = new Intent(this, LoadingActivity.class);
-                        // intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent1);
-                        // finish();
-                    } else if (responseData.getResponseCode() == 400) {
-                        removeProgressDialog();
-                        Toast.makeText(this, responseData.getResult().getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-
-                } catch (Exception e) {
-                    removeProgressDialog();
-                    e.printStackTrace();
-                }
-                break;
-        }
-
-
     }
 
     @Override
@@ -528,18 +431,6 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
             Call<UserDetailResponse> call = loginRegistrationAPI.login(lr);
             call.enqueue(onLoginResponseReceivedListener);
 
-//            UserRequest _userModel = new UserRequest();
-//            _userModel.setEmailId(googleEmailId);
-//            _userModel.setProfileId(userId);
-//            _userModel.setNetworkName("google");
-//            _userModel.setFirstName(currentPersonName);
-//            _userModel.setLastName("");
-//            _userModel.setAccessToken(googleToken);
-//
-//            Log.i("login data", new Gson().toJson(_userModel).toString());
-//            final LoginController _controller = new LoginController(ActivityLogin.this, ActivityLogin.this);
-//            _controller.getData(AppConstants.NEW_LOGIN_REQUEST, _userModel);
-
         }
 
     }
@@ -566,7 +457,13 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                     model.setFirst_name(responseData.getData().getResult().getFirstName() + " " + responseData.getData().getResult().getLastName());
                     model.setProfilePicUrl(responseData.getData().getResult().getProfilePicUrl().getClientApp());
                     SharedPrefUtils.setUserDetailModel(ActivityLogin.this, model);
+                    SharedPrefUtils.setProfileImgUrl(ActivityLogin.this, responseData.getData().getResult().getProfilePicUrl().getClientApp());
 
+                    PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+                    String version = pInfo.versionName;
+                    if (version.equals(AppConstants.PHOENIX_RELEASE_VERSION)) {
+                        SharedPrefUtils.setPhoenixFirstLaunch(ActivityLogin.this, false);
+                    }
                     //facebook login with an account without email
                     if (!AppConstants.VALIDATED_USER.equals(model.getIsValidated()) && "fb".equals(loginMode)) {
                         dialogFragment = new FacebookAddEmailDialogFragment();
@@ -887,25 +784,12 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
             Call<UserDetailResponse> call = loginRegistrationAPI.login(lr);
             call.enqueue(onLoginResponseReceivedListener);
 
-//            UserRequest _userModel = new UserRequest();
-//            _userModel.setEmailId(googleEmailId);
-//            _userModel.setProfileId(userId);
-//            _userModel.setNetworkName("google");
-//            _userModel.setFirstName(currentPersonName);
-//            _userModel.setLastName("");
-//            _userModel.setAccessToken(googleToken);
-//
-//            Log.i("onActivityResult data", new Gson().toJson(_userModel).toString());
-//            final LoginController _controller = new LoginController(ActivityLogin.this, ActivityLogin.this);
-//            _controller.getData(AppConstants.NEW_LOGIN_REQUEST, _userModel);
         } else {
             if (_resultCode == 0) {
                 removeProgressDialog();
             }
             FacebookUtils.onActivityResult(this, _requestCode, _resultCode, _data);
         }
-
-
     }
 
 }

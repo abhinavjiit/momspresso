@@ -2,16 +2,15 @@ package com.mycity4kids.ui.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -76,10 +75,12 @@ import com.yalantis.ucrop.UCrop;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.net.SocketTimeoutException;
-import java.net.URI;
 import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -97,28 +98,21 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
 
     }
 
-    private static final int LIST_TYPE_DRAFT = 0;
-    private static final int LIST_TYPE_PUBLISHED = 1;
-    private static final int LIST_TYPE_COMMENTS = 2;
-    private static final int LIST_TYPE_REVIEWS = 3;
-
     private Toolbar mToolbar;
-    private TextView bloggerNameTextView, viewCountTextView, followersViewCount;
     private ImageView bloggerImageView;
-    View vSeparator1, vSeparator2;
-    TabLayout tabLayout;
-    ViewPager viewPager;
     ImageView addDraft;
     public static final int ADD_MEDIA_ACTIVITY_REQUEST_CODE = 1111;
+    public static final int ADD_MEDIA_CAMERA_ACTIVITY_REQUEST_CODE = 1113;
+    String mCurrentPhotoPath, absoluteImagePath;
+    File photoFile;
+
     Uri imageUri;
-    Bitmap finalBitmap;
     File file;
-    ListView draftListview, publishedArticleListView, bookmarksListView, commentsListView, reviewsListView;
+    ListView draftListview, publishedArticleListView, commentsListView, reviewsListView;
     ArrayList<PublishDraftObject> draftList;
     ArrayList<ReviewListingResult> reviewList;
     ArrayList<UserCommentsResult> commentList;
     int position;
-    TextView noDrafts;
     DraftListAdapter adapter;
     PublishedArticleListingAdapter articlesListingAdapter;
     UserCommentsAdapter commentsListAdapter;
@@ -171,7 +165,6 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         addDraft = (ImageView) findViewById(R.id.addDraft);
-        //  noDrafts = (TextView) findViewById(R.id.noDraftsTextView);
         if (isPrivateProfile) {
             header = getLayoutInflater().inflate(R.layout.header_blogger_dashboard, null);
         } else {
@@ -226,8 +219,6 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         bloggerImageView = (ImageView) header.findViewById(R.id.bloggerImageView);
 
         if (isPrivateProfile) {
-//            follow.setVisibility(View.INVISIBLE);
-//            following.setVisibility(View.INVISIBLE);
             editProfileTextView.setVisibility(View.VISIBLE);
             draftItemLinearLayout.setVisibility(View.VISIBLE);
             draftListview.addHeaderView(header, null, false);
@@ -238,9 +229,10 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
             bloggerImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(Intent.ACTION_PICK);
-                    intent.setType("image/*");
-                    startActivityForResult(intent, ADD_MEDIA_ACTIVITY_REQUEST_CODE);
+//                    Intent intent = new Intent(Intent.ACTION_PICK);
+//                    intent.setType("image/*");
+//                    startActivityForResult(intent, ADD_MEDIA_ACTIVITY_REQUEST_CODE);
+                    chooseImageOptionPopUp(bloggerImageView);
                 }
             });
         } else {
@@ -253,7 +245,6 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
 
             editProfileTextView.setVisibility(View.GONE);
             draftListview.setVisibility(View.GONE);
-//            draftItemLinearLayout.setVisibility(View.GONE);
             publishedArticleListView.addHeaderView(header, null, false);
             publishedArticleListView.setVisibility(View.VISIBLE);
             draftListview.setVisibility(View.GONE);
@@ -514,11 +505,8 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
                     // Header Item
-
-
                 } else {
                     // List view items
-
                     Intent intent = new Intent(BloggerDashboardActivity.this, ArticlesAndBlogsDetailsActivity.class);
                     intent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(position - 1).getUserId());
                     intent.putExtra(Constants.ARTICLE_ID, articleDataModelsNew.get(position - 1).getId());
@@ -714,7 +702,6 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
             return;
         }
         int from = (nextPageNumber - 1) * 15 + 1;
-        //  Call<ArticleListingResponse> call = getPublishedArticles.getPublishedArticles(AppConstants.LIVE_URL+"v1/articles/user/"+ SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId()+"?sort=0&start="+from+"&end="+(from+14));
         Call<ArticleListingResponse> call = getPublishedArticles.getPublishedArticles(AppConstants.LIVE_URL + "v1/articles/user/" + userId + "?sort=0&start=" + from + "&end=" + (from + 14));
 //asynchronous call
         call.enqueue(new Callback<ArticleListingResponse>() {
@@ -760,14 +747,6 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
 
     private void hitDraftListingApi() {
         showProgressDialog(getResources().getString(R.string.please_wait));
-       /* ArticleDraftRequest articleDraftRequest = new ArticleDraftRequest();
-        *//**
-         * this case will case in pagination case: for sorting
-         *//*
-        articleDraftRequest.setUser_id("" + userModel.getUser().getId());
-        DraftListController _controller = new DraftListController(this, this);
-
-        _controller.getData(AppConstants.ARTICLE_DRAFT_LIST_REQUEST, articleDraftRequest);*/
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         // prepare call in Retrofit 2.0
         ArticleDraftAPI getDraftListAPI = retrofit.create(ArticleDraftAPI.class);
@@ -797,9 +776,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                                  if (!StringUtils.isNullOrEmpty(responseModel.getData().getMsg())) {
                                      Log.i("Draft message", responseModel.getData().getMsg());
                                  }
-
                                  processDraftResponse(responseModel);
-
                              }
                          }
 
@@ -811,7 +788,6 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                          }
                      }
         );
-
     }
 
     public void deleteDraftAPI(PublishDraftObject draftObject, int p) {
@@ -852,9 +828,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                                  draftList.remove(position);
                                  adapter.notifyDataSetChanged();
                              }
-
                          }
-
 
                          @Override
                          public void onFailure(Call<ArticleDraftResponse> call, Throwable t) {
@@ -906,11 +880,8 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     }
 
     private void showPopupMenu(View view) {
-
         PopupMenu popup = new PopupMenu(this, view);
-
         popup.getMenuInflater().inflate(R.menu.pop_menu_draft, popup.getMenu());
-
         popup.show();
     }
 
@@ -980,7 +951,6 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     }
 
     private void processCommentsResponse(UserCommentsResponse responseModel) {
-        //   commentList = responseModel.getData().getResult();
         ArrayList<UserCommentsResult> dataCommentList = responseModel.getData().getResult();
 
         if (dataCommentList.size() == 0 && commentsListView.getVisibility() == View.VISIBLE) {
@@ -993,16 +963,10 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                 // No results for search
                 commentList.clear();
                 commentList.addAll(dataCommentList);
-               /* commentsListAdapter = new UserCommentsAdapter(this, dataCommentList);
-                commentsListView.setAdapter(commentsListAdapter);*/
                 commentsListAdapter.notifyDataSetChanged();
                 noCommentsTextView.setVisibility(View.VISIBLE);
             }
         } else {
-            //  noDrafts.setVisibility(View.GONE);
-           /* commentsListAdapter = new UserCommentsAdapter(this, dataCommentList);
-            commentsListView.setAdapter(commentsListAdapter);*/
-
             if (StringUtils.isNullOrEmpty(paginationValue)) {
                 commentList.clear();
                 commentList.addAll(dataCommentList);
@@ -1120,45 +1084,29 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (data == null) {
-            return;
-        }
-
-        //   mediaFile.setVideo(imageUri.toString().contains("video"));
-
         switch (requestCode) {
             case ADD_MEDIA_ACTIVITY_REQUEST_CODE:
+                if (data == null) {
+                    return;
+                }
                 imageUri = data.getData();
 
                 if (resultCode == Activity.RESULT_OK) {
                     try {
-                        Uri selectedImage = data.getData();
-                        String[] filePathColumn = {MediaStore.Images.Media.DATA};
-
-                        Cursor cursor = this.getContentResolver().query(
-                                selectedImage, filePathColumn, null, null, null);
-                        cursor.moveToFirst();
-
-                        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                        String filePath = cursor.getString(columnIndex);
-                        cursor.close();
-                        Log.e("File", "filePath: " + filePath);
-                        filePath = filePath.replaceAll("[^a-zA-Z0-9.-/_]", "_");
-                        file = new File(new URI("file://"
-                                + filePath.replaceAll(" ", "%20")));
-
-                        Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(BloggerDashboardActivity.this.getContentResolver(), imageUri);
-                        //  sendUploadProfileImageRequest(imageBitmap);
-                        float actualHeight = imageBitmap.getHeight();
-                        float actualWidth = imageBitmap.getWidth();
-                        float maxHeight = 243;
-                        float maxWidth = 423;
                         startCropActivity(imageUri);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                }
+                break;
+            case ADD_MEDIA_CAMERA_ACTIVITY_REQUEST_CODE:
 
-
+                if (resultCode == Activity.RESULT_OK) {
+                    try {
+                        startCropActivity(Uri.parse(mCurrentPhotoPath));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 break;
             case UCrop.REQUEST_CROP: {
@@ -1485,7 +1433,67 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         intent.putExtra("tag", new Gson().toJson(detailData.getTags()));
         intent.putExtra("cities", new Gson().toJson(detailData.getCities()));
         startActivity(intent);
-
-
     }
+
+    public void chooseImageOptionPopUp(ImageView profileImageView) {
+        final PopupMenu popup = new PopupMenu(this, profileImageView);
+        popup.getMenuInflater().inflate(R.menu.profile_image_upload_options, popup.getMenu());
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                int i = item.getItemId();
+                if (i == R.id.camera) {
+//                    mClickListener.onBtnClick(position);
+                    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+                        // Create the File where the photo should go
+                        photoFile = null;
+                        try {
+                            photoFile = createImageFile();
+                        } catch (IOException ex) {
+                            // Error occurred while creating the File
+                            Log.i("TAG", "IOException");
+                        }
+                        // Continue only if the File was successfully created
+                        if (photoFile != null) {
+                            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                            startActivityForResult(cameraIntent, ADD_MEDIA_CAMERA_ACTIVITY_REQUEST_CODE);
+                        }
+                    }
+                    return true;
+                } else {
+                    Intent intent = new Intent(Intent.ACTION_PICK);
+                    intent.setType("image/*");
+                    startActivityForResult(intent, ADD_MEDIA_ACTIVITY_REQUEST_CODE);
+                    return true;
+                }
+            }
+
+        });
+        popup.show();
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+        File image = File.createTempFile(
+                imageFileName,  // prefix
+                ".jpg",         // suffix
+                dir      // directory
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+        absoluteImagePath = image.getAbsolutePath();
+        return image;
+    }
+
+    public static Bitmap rotateImage(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix,
+                true);
+    }
+
 }

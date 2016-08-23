@@ -899,16 +899,16 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
         String businessId = getIntent().getExtras().getString(Constants.BUSINESS_OR_EVENT_ID);
         requestData.setBusinessId(businessId);
 
-        UserTable userTable = new UserTable((BaseApplication) this.getApplication());
-        int count = userTable.getCount();
-        if (count <= 0) {
-            removeProgressDialog();
-            showToast(getResources().getString(R.string.user_login));
-            return;
-        }
-        UserModel userModel = userTable.getAllUserData();
-        requestData.setUserId("" + userModel.getUser().getId());
-        requestData.setSessionId(userModel.getUser().getSessionId());
+//        UserTable userTable = new UserTable((BaseApplication) this.getApplication());
+//        int count = userTable.getCount();
+//        if (count <= 0) {
+//            removeProgressDialog();
+//            showToast(getResources().getString(R.string.user_login));
+//            return;
+//        }
+//        UserModel userModel = userTable.getAllUserData();
+        requestData.setUserId("" + SharedPrefUtils.getCurrentCityModel(this).getId());
+//        requestData.setSessionId(userModel.getUser().getSessionId());
 
         ImageUploadController controller = new ImageUploadController(this, this);
         controller.getData(AppConstants.UPLOAD_BUSINESS_IMAGE_REQUEST, requestData);

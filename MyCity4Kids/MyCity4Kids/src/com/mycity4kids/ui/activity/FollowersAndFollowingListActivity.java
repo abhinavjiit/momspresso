@@ -67,20 +67,6 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
 
         mDatalist = new ArrayList<>();
 
-        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        FollowAPI followListAPI = retrofit.create(FollowAPI.class);
-
-        if (AppConstants.FOLLOWER_LIST.equals(followListType)) {
-            Call<FollowersFollowingResponse> callFollowerList = followListAPI.getFollowersList(userId);
-            callFollowerList.enqueue(getFollowersListResponseCallback);
-            progressBar.setVisibility(View.VISIBLE);
-            getSupportActionBar().setTitle("Followers");
-        } else {
-            Call<FollowersFollowingResponse> callFollowingList = followListAPI.getFollowingList(userId);
-            callFollowingList.enqueue(getFollowersListResponseCallback);
-            progressBar.setVisibility(View.VISIBLE);
-            getSupportActionBar().setTitle("Following");
-        }
 
         followerFollowingListAdapter = new FollowerFollowingListAdapter(this);
         followerFollowingListAdapter.setData(mDatalist);
@@ -97,12 +83,22 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
         });
     }
 
-    private void processFollowingListResponse(FollowersFollowingResponse responseData) {
-        if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-            followerFollowingListAdapter.setData(responseData.getData().getResult());
-            followerFollowingListAdapter.notifyDataSetChanged();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mDatalist.clear();
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        FollowAPI followListAPI = retrofit.create(FollowAPI.class);
+        if (AppConstants.FOLLOWER_LIST.equals(followListType)) {
+            Call<FollowersFollowingResponse> callFollowerList = followListAPI.getFollowersList(userId);
+            callFollowerList.enqueue(getFollowersListResponseCallback);
+            progressBar.setVisibility(View.VISIBLE);
+            getSupportActionBar().setTitle("Followers");
         } else {
-
+            Call<FollowersFollowingResponse> callFollowingList = followListAPI.getFollowingList(userId);
+            callFollowingList.enqueue(getFollowersListResponseCallback);
+            progressBar.setVisibility(View.VISIBLE);
+            getSupportActionBar().setTitle("Following");
         }
     }
 
@@ -138,6 +134,13 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
         if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
             noResultTextView.setVisibility(View.GONE);
             mDatalist = responseData.getData().getResult();
+
+//            for (int i = 0; i < mDatalist.size(); i++) {
+//                if (SharedPrefUtils.getUserDetailModel(this).getDynamoId().equals(mDatalist.get(i).getUserId())) {
+//                    mDatalist.remove(i);
+//                }
+//            }
+
             if (mDatalist.size() == 0) {
                 noResultTextView.setVisibility(View.VISIBLE);
                 followerFollowingListView.setVisibility(View.GONE);
