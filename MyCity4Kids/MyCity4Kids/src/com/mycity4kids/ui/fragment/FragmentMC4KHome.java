@@ -63,6 +63,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.activity.ActivityCreateAppointment;
 import com.mycity4kids.ui.activity.ActivityShowAppointment;
+import com.mycity4kids.ui.activity.ArticleListingActivity;
 import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
 import com.mycity4kids.ui.activity.BusinessDetailsActivity;
 import com.mycity4kids.ui.activity.CityBestArticleListingActivity;
@@ -566,7 +567,10 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                     customViewMore.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ((DashboardActivity) getActivity()).replaceFragment(new ArticlesFragment(), null, true);
+                         //   ((DashboardActivity) getActivity()).replaceFragment(new ArticlesFragment(), null, true);
+                            Intent intent=new Intent(getActivity(), ArticleListingActivity.class);
+                            intent.putExtra(Constants.SORT_TYPE,Constants.KEY_TRENDING);
+                            startActivity(intent);
                         }
                     });
                     if (mArticleDataListing.isEmpty()) {
@@ -1109,7 +1113,10 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
             case R.id.go_to_blog:
             case R.id.img_go_to_blogs:
             case R.id.txtBlogs:
-                ((DashboardActivity) getActivity()).replaceFragment(new ArticlesFragment(), null, true);
+              //  ((DashboardActivity) getActivity()).replaceFragment(new ArticlesFragment(), null, true);
+                Intent intent3=new Intent(getActivity(), ArticleListingActivity.class);
+                intent3.putExtra(Constants.SORT_TYPE,Constants.KEY_TRENDING);
+                startActivity(intent3);
                 break;
             case R.id.blogHeader1:
            /*     FragmentEditorsPick editorsfragment = new FragmentEditorsPick();
