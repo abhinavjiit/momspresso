@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
@@ -72,6 +73,8 @@ import com.mycity4kids.models.deeplinking.DeepLinkApiModel;
 import com.mycity4kids.models.deeplinking.DeepLinkData;
 import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.models.parentingstop.ArticleBlogFollowRequest;
+import com.mycity4kids.models.response.DeepLinkingResposnse;
+import com.mycity4kids.models.response.DeepLinkingResult;
 import com.mycity4kids.models.version.RateVersion;
 import com.mycity4kids.newmodels.CompleteTaskRequestModel;
 import com.mycity4kids.newmodels.DeleteTaskModel;
@@ -81,6 +84,8 @@ import com.mycity4kids.newmodels.TaskListResponse;
 import com.mycity4kids.newmodels.TaskResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.reminders.Reminder;
+import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.DeepLinkingAPI;
 import com.mycity4kids.ui.adapter.UserTaskListAdapter;
 import com.mycity4kids.ui.fragment.AddTaskListPopUp;
 import com.mycity4kids.ui.fragment.ArticlesFragment;
@@ -120,6 +125,10 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+
 public class DashboardActivity extends BaseActivity implements View.OnClickListener, IGetRateAndUpdateEvent {
 
     private Toolbar mToolbar;
@@ -153,12 +162,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private TableTaskData taskData;
     private int blogListPosition;
     Tracker t;
+    private String deepLinkUrl;
 
     // The onNewIntent() is overridden to get and resolve the data for deep linking
     @Override
     protected void onNewIntent(Intent intent) {
         if (!StringUtils.isNullOrEmpty(intent.getStringExtra(AppConstants.DEEP_LINK_URL)))
             getDeepLinkData(intent.getStringExtra(AppConstants.DEEP_LINK_URL));
+        deepLinkUrl = intent.getStringExtra(AppConstants.DEEP_LINK_URL);
         super.onNewIntent(intent);
     }
 
@@ -1593,7 +1604,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     }
 
                     if (topFragment instanceof ParentingBlogFragment) {
-                     //   ((ParentingBlogFragment) topFragment).updateList_followBtn(blogListPosition);
+                        //   ((ParentingBlogFragment) topFragment).updateList_followBtn(blogListPosition);
                     }
 
                 } else if (followData.getResponseCode() == 400) {
@@ -1610,7 +1621,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
 
             case AppConstants.DEEP_LINK_RESOLVER_REQUEST:
-                removeProgressDialog();
+         /*       removeProgressDialog();
                 Object result = response.getResponseObject();
                 if (result instanceof DeepLinkApiModel) {
                     DeepLinkApiModel _deepLinkResponse = (DeepLinkApiModel) result;
@@ -1618,7 +1629,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                             && _deepLinkResponse.getResult().getData() != null) {
                         identifyTargetScreen(_deepLinkResponse.getResult().getData());
                     }
-                }
+                }*/
                 break;
 
         }
@@ -2267,7 +2278,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     }
                 case Constants.FILTER_BLOG:
                     if (topFragment instanceof ParentingBlogFragment) {
-                    //    ((ParentingBlogFragment) topFragment).sortParentingBlogListing(data.getStringExtra(Constants.FILTER_BLOG_SORT_TYPE));
+                        //    ((ParentingBlogFragment) topFragment).sortParentingBlogListing(data.getStringExtra(Constants.FILTER_BLOG_SORT_TYPE));
                     }
 
                     break;
@@ -2302,7 +2313,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     break;
                 case Constants.BLOG_FOLLOW_STATUS:
                     if (topFragment instanceof ParentingBlogFragment) {
-                     //   ((ParentingBlogFragment) topFragment).updateList_followBtn(data.getIntExtra(Constants.BLOG_LIST_POSITION, 0));
+                        //   ((ParentingBlogFragment) topFragment).updateList_followBtn(data.getIntExtra(Constants.BLOG_LIST_POSITION, 0));
                     }
                     break;
 
@@ -2647,12 +2658,43 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void getDeepLinkData(String deepLinkURL) {
-        DeepLinkingController _deepLinkingController = new DeepLinkingController(this, this);
+        /*DeepLinkingController _deepLinkingController = new DeepLinkingController(this, this);
         _deepLinkingController.getData(AppConstants.DEEP_LINK_RESOLVER_REQUEST, deepLinkURL);
+        showProgressDialog("");*/
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        // prepare call in Retrofit 2.0
         showProgressDialog("");
+        DeepLinkingAPI deepLinkingAPI = retrofit.create(DeepLinkingAPI.class);
+        if (!ConnectivityUtils.isNetworkEnabled(this)) {
+            removeProgressDialog();
+            showToast(getString(R.string.error_network));
+            return;
+        }
+        Call<DeepLinkingResposnse> call = deepLinkingAPI.getUrlDetails(deepLinkURL);
+        call.enqueue(new Callback<DeepLinkingResposnse>() {
+            @Override
+            public void onResponse(Call<DeepLinkingResposnse> call, retrofit2.Response<DeepLinkingResposnse> response) {
+                DeepLinkingResposnse resposnseData = (DeepLinkingResposnse) response.body();
+                removeProgressDialog();
+                if (resposnseData.getCode() != 200) {
+                    showToast(getString(R.string.toast_response_error));
+                    return;
+                } else {
+                    identifyTargetScreen(resposnseData.getData().getResult());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DeepLinkingResposnse> call, Throwable t) {
+                removeProgressDialog();
+                showToast(getString(R.string.server_went_wrong));
+                Crashlytics.logException(t);
+                Log.d("MC4kException", Log.getStackTraceString(t));
+            }
+        });
     }
 
-    private void identifyTargetScreen(DeepLinkData data) {
+    private void identifyTargetScreen(DeepLinkingResult data) {
         switch (data.getType()) {
             case AppConstants.DEEP_LINK_BUSINESS_LISTING:
                 renderBusinessListingScreen(data);
@@ -2675,10 +2717,32 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             case AppConstants.DEEP_LINK_ARTICLE_DETAIL:
                 renderArticleDetailScreen(data);
                 break;
+            case AppConstants.DEEP_LINK_AUTHOR_DETAIL:
+                renderAuthorDetailScreen(data);
+                break;
+            case AppConstants.DEEP_LINK_ARTICLE_LISTING:
+                renderArticleListingScreen(data);
+                break;
+            case AppConstants.DEEP_LINK_TOPIC_LISTING:
+                renderArticleListingScreen(data);
+                break;
         }
     }
 
-    private void renderBusinessListingScreen(DeepLinkData data) {
+    private void renderArticleListingScreen(DeepLinkingResult data) {
+        replaceFragment(new ArticlesFragment(), null, true);
+    }
+
+    private void renderAuthorDetailScreen(DeepLinkingResult data) {
+        if (!StringUtils.isNullOrEmpty(data.getAuthor_id())) {
+            Intent intent = new Intent(DashboardActivity.this, BloggerDashboardActivity.class);
+            intent.putExtra(AppConstants.PUBLIC_PROFILE_FLAG, true);
+            intent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, data.getAuthor_id());
+            startActivity(intent);
+        }
+    }
+
+    private void renderBusinessListingScreen(DeepLinkingResult data) {
         if (!StringUtils.isNullOrEmpty(data.getCategory_id())) {
             Intent _businessListIntent = new Intent(DashboardActivity.this, BusinessListActivityKidsResources.class);
             _businessListIntent.putExtra(Constants.EXTRA_CATEGORY_ID, Integer.parseInt(data.getCategory_id()));
@@ -2689,7 +2753,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
-    private void renderBusinessDetailScreen(DeepLinkData data) {
+    private void renderBusinessDetailScreen(DeepLinkingResult data) {
         if (!StringUtils.isNullOrEmpty(data.getCategory_id()) && !StringUtils.isNullOrEmpty(data.getDetail_id())) {
             Intent _eventDetailIntent = new Intent(DashboardActivity.this, BusinessDetailsActivity.class);
             _eventDetailIntent.putExtra(Constants.CATEGORY_ID, Integer.parseInt(data.getCategory_id()));
@@ -2701,7 +2765,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     }
 
     // Pending for Indexing
-    private void renderEventListingScreen(DeepLinkData data) {
+    private void renderEventListingScreen(DeepLinkingResult data) {
         if (!StringUtils.isNullOrEmpty(data.getCategory_id())) {
             Constants.IS_SEARCH_LISTING = false;
             changeVisibiltyOfArrow(false);
@@ -2717,7 +2781,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
-    private void renderEventDetailScreen(DeepLinkData data) {
+    private void renderEventDetailScreen(DeepLinkingResult data) {
         if (!StringUtils.isNullOrEmpty(data.getCategory_id()) && !StringUtils.isNullOrEmpty(data.getDetail_id())) {
             Intent _eventDetailIntent = new Intent(DashboardActivity.this, BusinessDetailsActivity.class);
             _eventDetailIntent.putExtra(Constants.CATEGORY_ID, Integer.parseInt(data.getCategory_id()));
@@ -2728,31 +2792,31 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
-    private void renderAuthorListingScreen(DeepLinkData data) {
+    private void renderAuthorListingScreen(DeepLinkingResult data) {
         if (!StringUtils.isNullOrEmpty(data.getAuthor_name())) {
             Intent _authorListIntent = new Intent(DashboardActivity.this, BloggerDashboardActivity.class);
             _authorListIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, data.getAuthor_id());
-            _authorListIntent.putExtra(Constants.DEEPLINK_URL, data.getUrl());
+            _authorListIntent.putExtra(Constants.DEEPLINK_URL, deepLinkUrl);
             startActivity(_authorListIntent);
         }
     }
 
-    private void renderBloggerListingScreen(DeepLinkData data) {
+    private void renderBloggerListingScreen(DeepLinkingResult data) {
         if (!StringUtils.isNullOrEmpty(data.getBlog_title())) {
             Intent _bloggerListIntent = new Intent(DashboardActivity.this, BloggerDashboardActivity.class);
             _bloggerListIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, data.getAuthor_id());
-            _bloggerListIntent.putExtra(Constants.DEEPLINK_URL, data.getUrl());
+            _bloggerListIntent.putExtra(Constants.DEEPLINK_URL, deepLinkUrl);
             startActivity(_bloggerListIntent);
         }
     }
 
-    private void renderArticleDetailScreen(DeepLinkData data) {
+    private void renderArticleDetailScreen(DeepLinkingResult data) {
         if (!StringUtils.isNullOrEmpty(data.getArticle_id())) {
-            Intent _articleDetailIntent = new Intent(DashboardActivity.this, ArticlesAndBlogsDetailsActivity.class);
-            _articleDetailIntent.putExtra(Constants.ARTICLE_ID, data.getArticle_id());
-            _articleDetailIntent.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.ARTICLES);
-            _articleDetailIntent.putExtra(Constants.DEEPLINK_URL, data.getUrl());
-            startActivity(_articleDetailIntent);
+            Intent intent = new Intent(DashboardActivity.this, ArticlesAndBlogsDetailsActivity.class);
+            intent.putExtra(Constants.AUTHOR_ID, data.getAuthor_id());
+            intent.putExtra(Constants.ARTICLE_ID, data.getArticle_id());
+            intent.putExtra(Constants.DEEPLINK_URL, deepLinkUrl);
+            startActivity(intent);
         }
     }
 

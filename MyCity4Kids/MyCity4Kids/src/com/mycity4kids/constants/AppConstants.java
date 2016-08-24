@@ -374,6 +374,9 @@ public class AppConstants {
     public static final String DEEP_LINK_AUTHOR_LISTING = "author_listing";
     public static final String DEEP_LINK_BLOGGER_LISTING = "blogger_listing";
     public static final String DEEP_LINK_ARTICLE_DETAIL = "article_detail";
+   public static final String DEEP_LINK_AUTHOR_DETAIL="author_detail";
+   public static final String DEEP_LINK_ARTICLE_LISTING="article_listing";
+   public static final String DEEP_LINK_TOPIC_LISTING="category_listing";
     public static final String CONTAINER_ID = "GTM-MS864S";
 
     //Author Types
