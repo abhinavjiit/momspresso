@@ -79,6 +79,5 @@
     <screenName name="com.mycity4kids.ui.activity.BloggerDashboardActivity">Blogger Dashboard</screenName>
     <screenName name="com.mycity4kids.editor.EditorPostActivity">Text Editor</screenName>
     <screenName name="com.mycity4kids.editor.ArticleImageTagUploadActivity">Article Image Upload</screenName>
-    <screenName name="com.mycity4kids.editor.DraftListViewActivity">Drafts List</screenName>
 
 </resources>

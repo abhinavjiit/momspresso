@@ -13,7 +13,7 @@
     <color name="black_color">#000000</color>
     <color name="dividercolor">#E9E9E9</color>
     <color name="color_control_activated">@color/wp_blue_light</color>
-<color name="grey_faded">#9b9b9b</color>
+    <color name="grey_faded">#9b9b9b</color>
     <color name="grey">#878787</color>
     <color name="dark_grey">#464646</color>
     <color name="grey_light">#eeeeee</color>
@@ -69,7 +69,7 @@
     <color name="skyblue_color">#01acc0</color>
     <color name="purple_color">#ab48bd</color>
     <!-- new color strings -->
-   <!-- <color name="primary">#1d55f1</color>-->
+    <!-- <color name="primary">#1d55f1</color>-->
     <color name="primary">#4185f2</color>
     <color name="primary_dark">#1744c3</color>
     <color name="blue_light">#3366f3</color>
@@ -94,7 +94,7 @@
     <color name="faded_text">#a5a5a5</color>
     <color name="faded_italic">#c1c1c1</color>
     <color name="red_selected">#f1455f</color>
-    <color name="grey_icon_unselected">#7f7f7f </color>
+    <color name="grey_icon_unselected">#7f7f7f</color>
     <!--anupama -->
     <color name="tabsScrollColor">#ec3b55</color>
     <color name="ColorPrimary">#00897B</color>
@@ -118,5 +118,7 @@
     <color name="authortype.colorcode.editorial">#e96e01</color>
     <color name="authortype.colorcode.editor">#5d71ca</color>
     <color name="articlelist.background">#EBFFFFFF</color>
+
+    <color name="fab.pink">#ec3b57</color>
 
 </resources>

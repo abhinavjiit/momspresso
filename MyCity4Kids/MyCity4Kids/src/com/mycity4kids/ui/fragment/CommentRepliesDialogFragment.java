@@ -44,9 +44,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
 import com.mycity4kids.ui.adapter.CommentsReplyAdapter;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -105,30 +103,11 @@ public class CommentRepliesDialogFragment extends DialogFragment implements OnCl
         prepareCompleteList(commentsData);
         adapter = new CommentsReplyAdapter(getActivity(), R.layout.custom_comment_cell, completeReplies, this);
         replyListView.setAdapter(adapter);
-//        replyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-//                final TextView textView = (TextView) view.findViewById(R.id.txvReply);
-//                textView.setOnClickListener(new OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        pos = position;
-//
-//                    }
-//                });
-//            }
-//        });
-
-
         return rootView;
     }
 
     private void prepareCompleteList(CommentsData cData) {
 
-//        for (int i = 0; i < cData.getReplies().size(); i++) {
-//            completeReplies.add(cData.getReplies().get(i));
-//            prepareCompleteList(cData.getReplies().get(i));
-//        }
         if (cData == null) {
             return;
         }
@@ -229,16 +208,11 @@ public class CommentRepliesDialogFragment extends DialogFragment implements OnCl
                     AddCommentRequest addCommentRequest = new AddCommentRequest();
                     addCommentRequest.setArticleId(articleId);
                     addCommentRequest.setUserComment(addReplyEditText.getText().toString());
-//                    if (replyLevelFlag == 1) {
                     addCommentRequest.setParentId(completeReplies.get(pos).getId());
-//                    } else {
-//
-//                    }
-//                    addCommentRequest.setParentId(parentId);
                     parentId = completeReplies.get(pos).getId();
                     Call<AddCommentResponse> callBookmark = articleDetailsAPI.addComment(addCommentRequest);
                     callBookmark.enqueue(addCommentsResponseCallback);
-
+                    showProgressDialog("Please wait ...");
                 }
                 break;
         }
@@ -248,7 +222,7 @@ public class CommentRepliesDialogFragment extends DialogFragment implements OnCl
     private Callback<AddCommentResponse> addCommentsResponseCallback = new Callback<AddCommentResponse>() {
         @Override
         public void onResponse(Call<AddCommentResponse> call, retrofit2.Response<AddCommentResponse> response) {
-
+            removeProgressDialog();
             if (response == null || null == response.body()) {
                 ((ArticlesAndBlogsDetailsActivity) getActivity()).showToast("Something went wrong from server");
                 return;
@@ -273,6 +247,7 @@ public class CommentRepliesDialogFragment extends DialogFragment implements OnCl
 
         @Override
         public void onFailure(Call<AddCommentResponse> call, Throwable t) {
+            removeProgressDialog();
             ((ArticlesAndBlogsDetailsActivity) getActivity()).handleExceptions(t);
         }
     };
@@ -322,15 +297,16 @@ public class CommentRepliesDialogFragment extends DialogFragment implements OnCl
         addReplyEditText.setText("");
         for (int i = 0; i < completeReplies.size(); i++) {
             if (completeReplies.get(i).getId().equals(parentId)) {
-                completeReplies.add(i + 1, cData);
+                //adding size to add the reply at the end of all replies.
+                completeReplies.add(i + 1 + completeReplies.get(i).getReplies().size(), cData);
                 parentPosition = i;
                 break;
             }
         }
-//        completeReplies.add(cData);
+
         completeReplies.get(parentPosition).getReplies().add(cData);
         adapter.notifyDataSetChanged();
-        ((ArticlesAndBlogsDetailsActivity) getActivity()).onReplyOrNestedReplyAddition(completeReplies.get(parentPosition), 2);
+//        ((ArticlesAndBlogsDetailsActivity) getActivity()).onReplyOrNestedReplyAddition(completeReplies.get(parentPosition), 2);
     }
 
     public void showProgressDialog(String bodyText) {

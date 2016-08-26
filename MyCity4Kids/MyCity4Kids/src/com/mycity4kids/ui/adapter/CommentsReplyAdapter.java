@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -16,10 +17,12 @@ import com.crashlytics.android.Crashlytics;
 import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
+import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.parentingdetails.CommentsData;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.CircleTransformation;
 import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
+import com.mycity4kids.ui.activity.BloggerDashboardActivity;
 import com.mycity4kids.ui.fragment.CommentRepliesDialogFragment;
 import com.mycity4kids.ui.fragment.EditCommentsRepliesFragment;
 import com.squareup.picasso.Picasso;
@@ -37,7 +40,6 @@ public class CommentsReplyAdapter extends ArrayAdapter<CommentsData> {
     private static final int TYPE_REPLY_LEVEL_ONE = 0;
     private static final int TYPE_REPLY_LEVEL_TWO = 1;
     private static final int TYPE_MAX_COUNT = 2;
-    private int fragmentReplyLevel;
     private EditReplyCommentInterface replyCommentInterface;
 
     public CommentsReplyAdapter(Context context, int resource, List<CommentsData> replyList, EditReplyCommentInterface replyCommentInterface) {
@@ -79,7 +81,6 @@ public class CommentsReplyAdapter extends ArrayAdapter<CommentsData> {
             holder = (ViewHolder) view.getTag();
         }
 
-
         if (SharedPrefUtils.getUserDetailModel(mContext).getDynamoId().equals(replyList.get(position).getUserId())
                 && position != 0) {
             holder.editBtnTextView.setVisibility(View.VISIBLE);
@@ -87,32 +88,35 @@ public class CommentsReplyAdapter extends ArrayAdapter<CommentsData> {
                 @Override
                 public void onClick(View v) {
                     replyCommentInterface.onEditButtonClicked(position);
-//                    try {
-//                        EditCommentsRepliesFragment editCommentsRepliesFragment = new EditCommentsRepliesFragment();
-//
-//                        CommentsData cData = (CommentsData) v.getTag();
-////                        commentEditView = (View) v.getParent().getParent();
-//                        Bundle _args = new Bundle();
-//                        _args.putParcelable("commentData", cData);
-//                        _args.putString("articleId", articleId);
-//                        editCommentsRepliesFragment.setArguments(_args);
-//                        FragmentManager fm = ((ArticlesAndBlogsDetailsActivity) mContext).getSupportFragmentManager();
-//                        editCommentsRepliesFragment.show(fm, "Replies");
-//                    } catch (Exception e) {
-//                        Crashlytics.logException(e);
-//                        Log.d("MC4kException", Log.getStackTraceString(e));
-//                    }
                 }
             });
         } else {
             holder.editBtnTextView.setVisibility(View.INVISIBLE);
         }
 
+        holder.replierImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent userProfileIntent = new Intent(mContext, BloggerDashboardActivity.class);
+                userProfileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, replyList.get(position).getUserId());
+                mContext.startActivity(userProfileIntent);
+            }
+        });
+
+        holder.replierNameTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent userProfileIntent = new Intent(mContext, BloggerDashboardActivity.class);
+                userProfileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, replyList.get(position).getUserId());
+                mContext.startActivity(userProfileIntent);
+            }
+        });
+
         if (position == 0) {
             view.setBackgroundColor(ContextCompat.getColor(mContext, R.color.white_color));
         } else {
             view.setBackgroundColor(ContextCompat.getColor(mContext, R.color.blog_comments_reply_bg));
-            if (getItemViewType(position) == TYPE_REPLY_LEVEL_ONE && fragmentReplyLevel == 0) {
+            if (getItemViewType(position) == TYPE_REPLY_LEVEL_ONE) {
                 holder.replyBtnTextView.setVisibility(View.VISIBLE);
             } else {
                 holder.replyBtnTextView.setVisibility(View.INVISIBLE);

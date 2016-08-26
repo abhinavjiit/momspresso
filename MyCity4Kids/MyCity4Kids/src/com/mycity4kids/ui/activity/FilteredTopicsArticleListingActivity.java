@@ -12,6 +12,7 @@ import android.view.View.OnClickListener;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -28,11 +29,9 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.enums.ParentingFilterType;
-import com.mycity4kids.models.parentingstop.CommonParentingList;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
-import com.mycity4kids.ui.adapter.ArticlesListingAdapter;
 import com.mycity4kids.ui.adapter.NewArticlesListingAdapter;
 
 import java.util.ArrayList;
@@ -53,6 +52,8 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
     ArrayList<ArticleListingResult> articleDataModelsNew;
     int sortType = 0;
     private RelativeLayout mLodingView;
+    FrameLayout frameLayout;
+    FloatingActionsMenu fabMenu;
 
     private int nextPageNumber;
     private boolean isReuqestRunning = false;
@@ -63,6 +64,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
     private Toolbar mToolbar;
     private int limit = 15;
     FloatingActionButton popularSortFAB, recentSortFAB;
+    private String displayName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,13 +80,22 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         noBlogsTextView = (TextView) findViewById(R.id.noBlogsTextView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely));
-        final FloatingActionsMenu fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
+
+        frameLayout = (FrameLayout) findViewById(R.id.frame_layout);
+        frameLayout.getBackground().setAlpha(0);
+
+        fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
         popularSortFAB = (FloatingActionButton) findViewById(R.id.popularSortFAB);
         recentSortFAB = (FloatingActionButton) findViewById(R.id.recentSortFAB);
         popularSortFAB.setOnClickListener(this);
         recentSortFAB.setOnClickListener(this);
 
         selectedTopics = getIntent().getStringExtra("selectedTopics");
+        displayName = getIntent().getStringExtra("displayName");
+        if (null != displayName) {
+            getSupportActionBar().setTitle(displayName);
+        }
+
         progressBar.setVisibility(View.VISIBLE);
 
         articleDataModelsNew = new ArrayList<ArticleListingResult>();
@@ -99,19 +110,20 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         fabMenu.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
             @Override
             public void onMenuExpanded() {
-//                frameLayout.setOnTouchListener(new View.OnTouchListener() {
-//                    @Override
-//                    public boolean onTouch(View v, MotionEvent event) {
-//                        fabMenu.collapse();
-//                        return true;
-//                    }
-//                });
+                frameLayout.getBackground().setAlpha(240);
+                frameLayout.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        fabMenu.collapse();
+                        return true;
+                    }
+                });
             }
 
             @Override
             public void onMenuCollapsed() {
-//                frameLayout.getBackground().setAlpha(0);
-//                frameLayout.setOnTouchListener(null);
+                frameLayout.getBackground().setAlpha(0);
+                frameLayout.setOnTouchListener(null);
             }
         });
 
@@ -138,15 +150,15 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                 Intent intent = new Intent(FilteredTopicsArticleListingActivity.this, ArticlesAndBlogsDetailsActivity.class);
-                if (adapterView.getAdapter() instanceof ArticlesListingAdapter) {
-                    CommonParentingList parentingListData = (CommonParentingList) ((ArticlesListingAdapter) adapterView.getAdapter()).getItem(i);
+                if (adapterView.getAdapter() instanceof NewArticlesListingAdapter) {
+                    ArticleListingResult parentingListData = (ArticleListingResult) ((NewArticlesListingAdapter) adapterView.getAdapter()).getItem(i);
                     intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
-                    intent.putExtra(Constants.ARTICLE_COVER_IMAGE, parentingListData.getThumbnail_image());
+                    intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
+                    intent.putExtra(Constants.ARTICLE_COVER_IMAGE, parentingListData.getImageUrl());
                     intent.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.ARTICLES);
-                    intent.putExtra(Constants.FILTER_TYPE, parentingListData.getAuthor_type());
-                    intent.putExtra(Constants.BLOG_NAME, parentingListData.getBlog_name());
+                    intent.putExtra(Constants.FILTER_TYPE, parentingListData.getUserType());
+                    intent.putExtra(Constants.BLOG_NAME, parentingListData.getBlogPageSlug());
                     startActivity(intent);
-
                 }
             }
         });
@@ -243,10 +255,12 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.recentSortFAB:
+                fabMenu.collapse();
                 nextPageNumber = 1;
                 hitFilteredTopicsArticleListingApi(0);
                 break;
             case R.id.popularSortFAB:
+                fabMenu.collapse();
                 nextPageNumber = 1;
                 hitFilteredTopicsArticleListingApi(1);
                 break;

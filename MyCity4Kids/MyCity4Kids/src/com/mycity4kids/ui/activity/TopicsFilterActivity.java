@@ -119,10 +119,12 @@ public class TopicsFilterActivity extends BaseActivity {
 
                         if ("1".equals(responseData.getData().get(i).getChild().get(j).getShowInMenu())) {
                             //add All option to select all sub-categories-childrens only if there are more then 0 child in a subcategory.
-                            if (responseData.getData().get(i).getChild().get(j).getChild().size() > 0)
-                                tempList.add(new Topics(responseData.getData().get(i).getChild().get(j).getId(), "All", false, new ArrayList<Topics>(), responseData.getData().get(i).getId(),
-                                        responseData.getData().get(i).getTitle()));
-
+                            if (responseData.getData().get(i).getChild().get(j).getChild().size() > 0) {
+                                Topics allTopic = new Topics(responseData.getData().get(i).getChild().get(j).getId(), "All", false, new ArrayList<Topics>(), responseData.getData().get(i).getId(),
+                                        responseData.getData().get(i).getTitle());
+                                allTopic.setDisplay_name(responseData.getData().get(i).getChild().get(j).getDisplay_name());
+                                tempList.add(allTopic);
+                            }
                             for (int k = 0; k < responseData.getData().get(i).getChild().get(j).getChild().size(); k++) {
                                 if ("1".equals(responseData.getData().get(i).getChild().get(j).getChild().get(k).getShowInMenu())) {
                                     tempList.add(responseData.getData().get(i).getChild().get(j).getChild().get(k));
@@ -135,11 +137,13 @@ public class TopicsFilterActivity extends BaseActivity {
 
                     if ("1".equals(responseData.getData().get(i).getShowInMenu())) {
                         //add All option to select all sub-categories only if there are more then 0 subcategories.
-                        if (responseData.getData().get(i).getChild().size() > 0)
-                            tempUpList.add(new Topics(responseData.getData().get(i).getId(), "All", false, new ArrayList<Topics>(), responseData.getData().get(i).getId(),
-                                    responseData.getData().get(i).getTitle()));
-
-                        for(int j=0;j<responseData.getData().get(i).getChild().size();j++){
+                        if (responseData.getData().get(i).getChild().size() > 0) {
+                            Topics allTopic = new Topics(responseData.getData().get(i).getId(), "All", false, new ArrayList<Topics>(), responseData.getData().get(i).getId(),
+                                    responseData.getData().get(i).getTitle());
+                            allTopic.setDisplay_name(responseData.getData().get(i).getDisplay_name());
+                            tempUpList.add(allTopic);
+                        }
+                        for (int j = 0; j < responseData.getData().get(i).getChild().size(); j++) {
                             if ("1".equals(responseData.getData().get(i).getChild().get(j).getShowInMenu())) {
                                 tempUpList.add(responseData.getData().get(i).getChild().get(j));
                             }
@@ -180,6 +184,7 @@ public class TopicsFilterActivity extends BaseActivity {
                                 default:
                                     Intent intent = new Intent(TopicsFilterActivity.this, FilteredTopicsArticleListingActivity.class);
                                     intent.putExtra("selectedTopics", topicList.get(groupPosition).getId());
+                                    intent.putExtra("displayName", topicList.get(groupPosition).getDisplay_name());
                                     startActivity(intent);
                                     break;
                             }

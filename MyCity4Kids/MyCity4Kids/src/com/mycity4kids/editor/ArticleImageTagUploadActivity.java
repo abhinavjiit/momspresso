@@ -197,6 +197,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
         PublishDraftObject draftObject = (PublishDraftObject) getIntent().getSerializableExtra("draftItem");
         String tags = getIntent().getStringExtra("tag");
         String cities = getIntent().getStringExtra("cities");
+        String from = getIntent().getStringExtra("from");
         showProgressDialog(getResources().getString(R.string.please_wait));
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         // prepare call in Retrofit 2.0
@@ -270,9 +271,9 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
             );
         } else {
             ArticleDraftRequest articleDraftRequest = new ArticleDraftRequest();
-//            articleDraftRequest.setId(draftObject.getId());
             articleDraftRequest.setTitle(draftObject.getTitle().trim());
             articleDraftRequest.setBody(draftObject.getBody());
+
             ArrayList<Map<String, String>> tagList = new ArrayList<Map<String, String>>();
             JSONArray tagsArray = null;
             try {
@@ -287,22 +288,28 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
                 e.printStackTrace();
             }
 
-            ArrayList<Map<String, String>> cityList = new ArrayList<Map<String, String>>();
-            JSONArray cityArray = null;
-            try {
-                cityArray = new JSONArray(cities);
-                for (int i = 0; i < cityArray.length(); i++) {
-                    HashMap<String, String> map = new HashMap<>();
-                    String key = (String) cityArray.getJSONObject(i).keys().next();
-                    map.put(key, cityArray.getJSONObject(i).getString(key));
-                    cityList.add(map);
+            if ("editor".equals(from)) {
+                articleDraftRequest.setId(draftObject.getId());
+            } else {
+
+                ArrayList<Map<String, String>> cityList = new ArrayList<Map<String, String>>();
+                JSONArray cityArray = null;
+                try {
+                    cityArray = new JSONArray(cities);
+                    for (int i = 0; i < cityArray.length(); i++) {
+                        HashMap<String, String> map = new HashMap<>();
+                        String key = (String) cityArray.getJSONObject(i).keys().next();
+                        map.put(key, cityArray.getJSONObject(i).getString(key));
+                        cityList.add(map);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
+                articleDraftRequest.setCities(cityList);
+
             }
 
             articleDraftRequest.setTags(tagList);
-            articleDraftRequest.setCities(cityList);
             articleDraftRequest.setImageUrl(url);
             articleDraftRequest.setArticleType("1");
 

@@ -51,9 +51,9 @@ import com.mycity4kids.models.response.ArticleDraftResponse;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.DraftListResponse;
+import com.mycity4kids.models.response.DraftListResult;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
 import com.mycity4kids.models.response.ImageUploadResponse;
-import com.mycity4kids.models.response.PublishDraftObject;
 import com.mycity4kids.models.response.ReviewListingResult;
 import com.mycity4kids.models.response.ReviewResponse;
 import com.mycity4kids.models.response.UserCommentsResponse;
@@ -109,7 +109,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     Uri imageUri;
     File file;
     ListView draftListview, publishedArticleListView, commentsListView, reviewsListView;
-    ArrayList<PublishDraftObject> draftList;
+    ArrayList<DraftListResult> draftList;
     ArrayList<ReviewListingResult> reviewList;
     ArrayList<UserCommentsResult> commentList;
     int position;
@@ -790,7 +790,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         );
     }
 
-    public void deleteDraftAPI(PublishDraftObject draftObject, int p) {
+    public void deleteDraftAPI(DraftListResult draftObject, int p) {
         position = p;
         showProgressDialog(getResources().getString(R.string.please_wait));
         ArticleDraftRequest articleDraftRequest = new ArticleDraftRequest();
@@ -974,7 +974,9 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                 commentList.addAll(dataCommentList);
             }
             commentsListAdapter.notifyDataSetChanged();
-            paginationValue = responseModel.getData().getPagination();
+            if (null != responseModel.getData().getPagination()) {
+                paginationValue = responseModel.getData().getPagination();
+            }
             if (AppConstants.PAGINATION_END_VALUE.equals(paginationValue)) {
                 isLastPageCommentsReached = true;
             }
@@ -1022,7 +1024,11 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                              UserDetailResponse responseData = (UserDetailResponse) response.body();
 
                              removeProgressDialog();
-
+                             if (response == null || null == response.body()) {
+                                 showToast("Something went wrong from server");
+//                                 Crashlytics.log(Log.ERROR, "NULL", "blogger dashboard");
+                                 return;
+                             }
                              if (responseData.getCode() != 200) {
                                  showToast(getString(R.string.toast_response_error));
                                  return;

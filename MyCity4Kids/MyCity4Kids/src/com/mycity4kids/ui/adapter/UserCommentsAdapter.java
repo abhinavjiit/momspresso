@@ -8,8 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.mycity4kids.R;
-import com.mycity4kids.editor.DraftListViewActivity;
-import com.mycity4kids.models.response.ReviewListingResult;
 import com.mycity4kids.models.response.UserCommentsResult;
 
 import java.text.SimpleDateFormat;
@@ -25,7 +23,6 @@ public class UserCommentsAdapter extends BaseAdapter {
     Context context;
     ArrayList<UserCommentsResult> commentsList;
     private LayoutInflater mInflator;
-    DraftListViewActivity draftListView;
     TimeZone tz = TimeZone.getDefault();
 
     public UserCommentsAdapter(Context context, ArrayList<UserCommentsResult> commentsList) {

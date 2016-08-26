@@ -616,7 +616,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         if (holder != null) {
             LayoutInflater inflater = LayoutInflater.from(this);
             View view = inflater.inflate(R.layout.custom_comment_cell, null);
-            holder.networkImg = (CircularImageView) view.findViewById(R.id.network_img);
+            holder.commentorsImage = (CircularImageView) view.findViewById(R.id.network_img);
             holder.commentName = (TextView) view.findViewById(R.id.txvCommentTitle);
             holder.commentDescription = (TextView) view.findViewById(R.id.txvCommentDescription);
             holder.dateTxt = (TextView) view.findViewById(R.id.txvDate);
@@ -626,10 +626,14 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             holder.replyCountTextView = (TextView) view.findViewById(R.id.replyCountTextView);
             holder.replierUsernameTextView = (TextView) view.findViewById(R.id.replyUserNameTextView);
             holder.replyCommentView = (RelativeLayout) view.findViewById(R.id.replyRelativeLayout);
+
+            holder.commentorsImage.setOnClickListener(this);
+            holder.commentName.setOnClickListener(this);
             holder.replyCommentView.setOnClickListener(this);
             holder.replyCommentView.setTag(commentList);
             holder.replyTxt.setOnClickListener(this);
             holder.editTxt.setOnClickListener(this);
+
             view.setTag(commentList);
 
             if (SharedPrefUtils.getUserDetailModel(this).getDynamoId().equals(commentList.getUserId())) {
@@ -661,14 +665,14 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
             if (commentList.getProfile_image() != null && !StringUtils.isNullOrEmpty(commentList.getProfile_image().getClientAppMin())) {
                 try {
-                    Picasso.with(this).load(commentList.getProfile_image().getClientAppMin()).into(holder.networkImg);
+                    Picasso.with(this).load(commentList.getProfile_image().getClientAppMin()).into(holder.commentorsImage);
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
-                    Picasso.with(this).load(R.drawable.default_commentor_img).into(holder.networkImg);
+                    Picasso.with(this).load(R.drawable.default_commentor_img).into(holder.commentorsImage);
                 }
             } else {
-                Picasso.with(this).load(R.drawable.default_commentor_img).into(holder.networkImg);
+                Picasso.with(this).load(R.drawable.default_commentor_img).into(holder.commentorsImage);
             }
 
             if (isNewComment) {
@@ -742,7 +746,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 case R.id.txvEdit:
                     try {
                         editCommentsRepliesFragment = new EditCommentsRepliesFragment();
-
                         CommentsData cData = (CommentsData) ((View) v.getParent().getParent()).getTag();
                         commentEditView = (View) v.getParent().getParent();
                         Bundle _args = new Bundle();
@@ -771,7 +774,20 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                         addCommentRequest.setUserComment(contentData);
                         Call<AddCommentResponse> callBookmark = articleDetailsAPI.addComment(addCommentRequest);
                         callBookmark.enqueue(addCommentsResponseCallback);
+                        showProgressDialog("Please wait ...");
                     }
+                    break;
+                case R.id.network_img:
+                    CommentsData commentData = (CommentsData) ((View) v.getParent().getParent()).getTag();
+                    Intent profileIntent = new Intent(this, BloggerDashboardActivity.class);
+                    profileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, commentData.getUserId());
+                    startActivity(profileIntent);
+                    break;
+                case R.id.txvCommentTitle:
+                    CommentsData cData = (CommentsData) ((View) v.getParent().getParent()).getTag();
+                    Intent userProfileIntent = new Intent(this, BloggerDashboardActivity.class);
+                    userProfileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, cData.getUserId());
+                    startActivity(userProfileIntent);
                     break;
                 case R.id.follow_click:
                     followAPICall(authorId);
@@ -816,7 +832,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
 
     private class ViewHolder {
-        private CircularImageView networkImg;
+        private CircularImageView commentorsImage;
         private TextView commentName;
         private TextView commentDescription;
         private TextView dateTxt;
@@ -1148,7 +1164,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     private Callback<AddCommentResponse> addCommentsResponseCallback = new Callback<AddCommentResponse>() {
         @Override
         public void onResponse(Call<AddCommentResponse> call, retrofit2.Response<AddCommentResponse> response) {
-
+            removeProgressDialog();
             if (response == null || null == response.body()) {
                 showToast("Something went wrong from server");
                 return;
@@ -1243,14 +1259,22 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         Log.d("MC4kException", Log.getStackTraceString(t));
     }
 
+    /*
+    * Called to update the article details screen with number of replies to a comment.
+    * Reply of reply does not change anything on the article details screen hence no
+    * hadling for reply_level == 2 condition. Leaving it here for future use only.
+    * */
     public void onReplyOrNestedReplyAddition(CommentsData updatedComment, int reply_level) {
+        int replyReplyIndex = 0;
         for (int i = 0; i < commentLayout.getChildCount(); i++) {
             CommentsData cdata = (CommentsData) commentLayout.getChildAt(i).getTag();
             if (updatedComment.getParent_id().equals(cdata.getId())) {
                 Log.d("Comment ", "comment mil gaya");
-
+                replyReplyIndex++;
                 if (reply_level == 2) {
-                    cdata.getReplies().set(i, updatedComment);
+                    Log.d("cdata", " " + i + " " + cdata);
+                    Log.d("updatedComment", "" + updatedComment);
+
                 } else {
                     cdata.getReplies().add(updatedComment);
 

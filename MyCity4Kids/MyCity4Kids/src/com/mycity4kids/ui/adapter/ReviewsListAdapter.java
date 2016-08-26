@@ -8,7 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.mycity4kids.R;
-import com.mycity4kids.editor.DraftListViewActivity;
 import com.mycity4kids.models.response.ReviewListingResult;
 
 import java.text.SimpleDateFormat;
@@ -24,7 +23,6 @@ public class ReviewsListAdapter extends BaseAdapter {
     Context context;
     ArrayList<ReviewListingResult> reviewList;
     private LayoutInflater mInflator;
-    DraftListViewActivity draftListView;
     TimeZone tz = TimeZone.getDefault();
 
     public ReviewsListAdapter(Context context, ArrayList<ReviewListingResult> reviewList) {

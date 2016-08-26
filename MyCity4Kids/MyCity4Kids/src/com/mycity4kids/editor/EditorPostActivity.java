@@ -30,6 +30,7 @@ import com.mycity4kids.dbtable.UserTable;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.ArticleDraftResponse;
+import com.mycity4kids.models.response.DraftListResult;
 import com.mycity4kids.models.response.ImageUploadResponse;
 import com.mycity4kids.models.response.PublishDraftObject;
 import com.mycity4kids.models.user.UserModel;
@@ -446,7 +447,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                     draftObject.setBody(contentFormatting(mEditorFragment.getContent().toString()));
                     draftObject.setTitle(titleFormatting(mEditorFragment.getTitle().toString()));
                     Log.d("draftId = ", draftId + "");
-                    if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) {
+                    if ((getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) || ("4".equals(moderation_status))) {
                         // coming from edit published articles
                         Intent intent_1 = new Intent(EditorPostActivity.this, EditSelectedTopicsActivity.class);
                         draftObject.setId(articleId);
@@ -459,6 +460,9 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                         startActivity(intent_1);
                     } else {
                         Intent intent_3 = new Intent(EditorPostActivity.this, AddArticleTopicsActivity.class);
+                        if (!StringUtils.isNullOrEmpty(draftId)) {
+                            draftObject.setId(draftId);
+                        }
                         intent_3.putExtra("draftItem", draftObject);
                         intent_3.putExtra("from", "editor");
                         startActivity(intent_3);
@@ -498,7 +502,10 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                     ArticleDraftResponse responseModel = (ArticleDraftResponse) response.body();
                     // Result<ArticleDraftResult> result=responseModel.getData().getResult();
                     removeProgressDialog();
-
+                    if (response == null || response.body() == null) {
+                        showToast("Something went wrong from server");
+                        return;
+                    }
                     if (responseModel.getCode() != 200) {
                         showToast(getString(R.string.toast_response_error));
                         return;
@@ -623,21 +630,22 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
         content = getIntent().getStringExtra(CONTENT_PARAM);
         boolean isLocalDraft = getIntent().getBooleanExtra(DRAFT_PARAM, true);
         if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("draftList")) {
-            PublishDraftObject draftObject = (PublishDraftObject) getIntent().getSerializableExtra("draftItem");
+            DraftListResult draftObject = (DraftListResult) getIntent().getSerializableExtra("draftItem");
             title = draftObject.getTitle();
             title = title.trim();
             content = draftObject.getBody();
             draftId = draftObject.getId();
             //  path = draftObject.getPath();
             //  moderation_status = draftObject.getModeration_status();
-            if (null == moderation_status) {
+            if (StringUtils.isNullOrEmpty(moderation_status)) {
                 moderation_status = "0";
             }
             Log.e("moderation_status", "" + moderation_status);
             // node_id = draftObject.getNode_id();
             mEditorFragment.setTitle(title);
             mEditorFragment.setContent(content);
-            if (null == moderation_status) {
+            if ("4".equals(moderation_status)) {
+//                tag = getIntent().getStringExtra("tag");
             }
           /*  if (moderation_status.equals("3")) {
                 mEditorFragment.toggleTitleView(true);

@@ -17,7 +17,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +24,7 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.ui.IScreen;
 import com.kelltontech.utils.ConnectivityUtils;
+import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -53,6 +53,8 @@ public class EditCommentsRepliesFragment extends DialogFragment implements OnCli
     private CommentsData commentsData, nestedReplyData;
     private EditText commentReplyEditText;
     private TextView updateCommentReplyTextView;
+    private TextView cancelTextView;
+
     Toolbar mToolbar;
     ArrayList<CommentsData> completeReplies = new ArrayList<>();
     String articleId;
@@ -67,8 +69,10 @@ public class EditCommentsRepliesFragment extends DialogFragment implements OnCli
                 false);
 
         updateCommentReplyTextView = (TextView) rootView.findViewById(R.id.txvUpdate);
+        cancelTextView = (TextView) rootView.findViewById(R.id.txvCancel);
+
         mToolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-        mToolbar.setTitle("Replies");
+        mToolbar.setTitle("Edit Comment");
         mToolbar.setTitleTextColor(ContextCompat.getColor(getActivity(), R.color.white_color));
         Drawable upArrow = ContextCompat.getDrawable(getActivity(), R.drawable.back_arroow);
         upArrow.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white_color), PorterDuff.Mode.SRC_ATOP);
@@ -81,6 +85,8 @@ public class EditCommentsRepliesFragment extends DialogFragment implements OnCli
             }
         });
         updateCommentReplyTextView.setOnClickListener(this);
+        cancelTextView.setOnClickListener(this);
+
         commentReplyEditText = (EditText) rootView.findViewById(R.id.commentReplyEditText);
 
         Bundle extras = getArguments();
@@ -141,8 +147,12 @@ public class EditCommentsRepliesFragment extends DialogFragment implements OnCli
 
                     Call<AddCommentResponse> callBookmark = articleDetailsAPI.editComment(commentId, addCommentRequest);
                     callBookmark.enqueue(editCommentsResponseCallback);
+                    showProgressDialog("Please wait ...");
 
                 }
+                break;
+            case R.id.txvCancel:
+                dismiss();
                 break;
         }
     }
@@ -150,7 +160,7 @@ public class EditCommentsRepliesFragment extends DialogFragment implements OnCli
     private Callback<AddCommentResponse> editCommentsResponseCallback = new Callback<AddCommentResponse>() {
         @Override
         public void onResponse(Call<AddCommentResponse> call, retrofit2.Response<AddCommentResponse> response) {
-
+            removeProgressDialog();
             if (response == null || null == response.body()) {
                 ((ArticlesAndBlogsDetailsActivity) getActivity()).showToast("Something went wrong from server");
                 return;
@@ -158,26 +168,15 @@ public class EditCommentsRepliesFragment extends DialogFragment implements OnCli
 
             AddCommentResponse responseData = (AddCommentResponse) response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-//            if (response.isSuccessful()) {
                 ((ArticlesAndBlogsDetailsActivity) getActivity()).showToast("Comment edited successfully!");
                 if (editType == AppConstants.EDIT_NESTED_REPLY) {
-//                    updateReplyListToShowComment(responseData.getData().getId());
                     nestedReplyData.setBody(commentReplyEditText.getText().toString());
-//                    for (int i = 0; i < commentsData.getReplies().size(); i++) {
-//                        if (commentsData.getReplies().get(i).getId().equals(nestedReplyData.getId())) {
-//                            commentsData.getReplies().set(i, nestedReplyData);
-//                        }
-//                    }
+
                 } else {
                     commentsData.setBody(commentReplyEditText.getText().toString());
                 }
                 commentReplyEditText.setText("");
                 ((ArticlesAndBlogsDetailsActivity) getActivity()).updateCommentReplyNestedReply(commentsData, editType);
-//                } else if (editType == AppConstants.EDIT_REPLY) {
-//                    ((ArticlesAndBlogsDetailsActivity) getActivity()).updateCommentReplyNestedReply(commentsData);
-//                } else {
-//                    ((ArticlesAndBlogsDetailsActivity) getActivity()).updateCommentReplyNestedReply(commentsData);
-//                }
                 dismiss();
             } else {
                 ((ArticlesAndBlogsDetailsActivity) getActivity()).showToast(responseData.getReason());
@@ -186,6 +185,7 @@ public class EditCommentsRepliesFragment extends DialogFragment implements OnCli
 
         @Override
         public void onFailure(Call<AddCommentResponse> call, Throwable t) {
+            removeProgressDialog();
             ((ArticlesAndBlogsDetailsActivity) getActivity()).handleExceptions(t);
         }
     };
@@ -217,8 +217,8 @@ public class EditCommentsRepliesFragment extends DialogFragment implements OnCli
 
     private boolean isValid() {
 
-        if (commentReplyEditText.getText().toString().length() == 0) {
-            Toast.makeText(getActivity(), "Please add a reply", Toast.LENGTH_LONG).show();
+        if (StringUtils.isNullOrEmpty(commentReplyEditText.getText().toString())) {
+            Toast.makeText(getActivity(), "The text you have entered is invalid", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;

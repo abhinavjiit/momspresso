@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:background="@color/blogger_listing_bg"
     android:orientation="vertical">
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -12,17 +13,16 @@
         android:layout_alignParentTop="true"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
-        android:visibility="visible"
-        />
+        android:visibility="visible" />
 
     <ListView
         android:id="@+id/blog_listing"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
         android:background="@color/blogger_listing_bg"
         android:divider="@color/blogger_listing_bg"
-        android:dividerHeight="5dp"
-        android:layout_below="@+id/toolbar"/>
+        android:dividerHeight="5dp" />
 
     <RelativeLayout
         android:id="@+id/relativeLoadingView"
@@ -62,42 +62,50 @@
             android:layout_toLeftOf="@id/txvLoadMore"
             android:src="@drawable/progress_spinner" />
     </RelativeLayout>
-    <com.getbase.floatingactionbutton.FloatingActionsMenu
-        android:id="@+id/fab_menu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right|bottom"
-        fab:fab_addButtonColorNormal="@color/primary"
-        fab:fab_addButtonColorPressed="@color/primary_dark"
-        fab:fab_addButtonPlusIconColor="@color/white_color"
-        fab:fab_addButtonStrokeVisible="false"
-        fab:fab_labelStyle="@style/menu_labels_style"
-        fab:fab_labelsPosition="left"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true">
 
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/rankSortFAB"
+    <FrameLayout
+        android:id="@+id/frame_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#B3000000">
+
+        <com.getbase.floatingactionbutton.FloatingActionsMenu
+            android:id="@+id/fab_menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/primary"
-            fab:fab_colorPressed="@color/primary_dark"
-            fab:fab_icon="@drawable/threebar_nav"
-            fab:fab_plusIconColor="@color/white_color"
-            fab:fab_size="mini"
-            fab:fab_title="Rank" />
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="right|bottom"
+            fab:fab_addButtonColorNormal="@color/fab.pink"
+            fab:fab_addButtonColorPressed="@color/fab.pink"
+            fab:fab_addButtonPlusIconColor="@color/white_color"
+            fab:fab_addButtonStrokeVisible="false"
+            fab:fab_labelStyle="@style/menu_labels_style"
+            fab:fab_labelsPosition="left">
 
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/nameSortFAB"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/primary"
-            fab:fab_colorPressed="@color/primary_dark"
-            fab:fab_icon="@drawable/threebar_nav"
-            fab:fab_plusIconColor="@color/white_color"
-            fab:fab_size="mini"
-            fab:fab_title="Name" />
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/rankSortFAB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                fab:fab_colorNormal="@color/fab.pink"
+                fab:fab_colorPressed="@color/fab.pink"
+                fab:fab_icon="@drawable/rank"
+                fab:fab_plusIconColor="@color/white_color"
+                fab:fab_size="mini"
+                fab:fab_title="Rank" />
 
-    </com.getbase.floatingactionbutton.FloatingActionsMenu>
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/nameSortFAB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                fab:fab_colorNormal="@color/fab.pink"
+                fab:fab_colorPressed="@color/fab.pink"
+                fab:fab_icon="@drawable/name"
+                fab:fab_plusIconColor="@color/white_color"
+                fab:fab_size="mini"
+                fab:fab_title="Name" />
+
+        </com.getbase.floatingactionbutton.FloatingActionsMenu>
+    </FrameLayout>
 </RelativeLayout>
