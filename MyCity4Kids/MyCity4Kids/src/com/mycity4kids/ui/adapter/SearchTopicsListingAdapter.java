@@ -62,7 +62,8 @@ public class SearchTopicsListingAdapter extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
 
-        holder.tagTitleTextView.setText(Html.fromHtml(articleDataModelsNew.get(position).getTitle()));
+//        holder.tagTitleTextView.setText(Html.fromHtml(articleDataModelsNew.get(position).getTitle()));
+        holder.tagTitleTextView.setText(Html.fromHtml(articleDataModelsNew.get(position).getDisplay_name()));
         return view;
     }
 

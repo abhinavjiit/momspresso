@@ -27,6 +27,7 @@ import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.constants.Constants;
 import com.mycity4kids.dbtable.UserTable;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.gtmutils.GTMEventType;
@@ -70,56 +71,7 @@ public class SetupBlogPageActivity extends BaseActivity {
 
     @Override
     protected void updateUi(Response response) {
-        switch (response.getDataType()) {
 
-            case AppConstants.BLOG_SETUP_REQUEST: {
-              /*  if (response.getResponseObject() instanceof CommonResponse) {
-                    CommonResponse responseModel = (CommonResponse) response
-                            .getResponseObject();
-                    removeProgressDialog();
-                    if (responseModel.getResponseCode() != 200) {
-                        showToast(getString(R.string.toast_response_error));
-                        return;
-                    } else {
-                        if (!StringUtils.isNullOrEmpty(responseModel.getResult().getMessage())) {
-                            //   SharedPrefUtils.setProfileImgUrl(SetupBlogPageActivity.this, responseModel.getResult().getMessage());
-                            Log.i("Blog Setup Response", responseModel.getResult().getMessage());
-                            if (responseModel.getResponse().equals("failure")) {
-                                // showToast(responseModel.getResult().getMessage());
-                                alertDialog(responseModel.getResult().getMessage());
-                            } else {
-                                showToast(responseModel.getResult().getMessage());
-                                finish();
-                            }
-                        }
-
-                        //setProfileImage(originalImage);
-                        //   showToast("You have successfully uploaded image.");
-                    }
-                    //  removeProgressDialog();
-                }*/
-                break;
-            }
-            case AppConstants.IMAGE_EDITOR_UPLOAD_REQUEST:
-          /*      removeProgressDialog();
-                if (response.getResponseObject() instanceof CommonResponse) {
-                    CommonResponse responseModel = (CommonResponse) response
-                            .getResponseObject();
-                    if (responseModel.getResponseCode() != 200) {
-                        ((BaseActivity) this).showSnackbar(findViewById(R.id.root), getString(R.string.toast_response_error));
-                        return;
-                    } else {
-                        if (!StringUtils.isNullOrEmpty(responseModel.getResult().getMessage())) {
-                            Log.i("IMAGE_UPLOAD_REQUEST", responseModel.getResult().getMessage());
-                        }
-                        setProfileImage(responseModel.getResult().getMessage());
-                        Picasso.with(this).load(responseModel.getResult().getMessage()).error(R.drawable.default_article).into(blogImage);
-                        showToast("Image successfully uploaded!");
-                        // ((BaseActivity) this()).showSnackbar(getView().findViewById(R.id.root), "You have successfully uploaded an image.");
-                    }
-                }
-                break;*/
-        }
     }
 
     @Override
@@ -140,14 +92,7 @@ public class SetupBlogPageActivity extends BaseActivity {
         if (getIntent().getStringExtra("userBio") != null && !getIntent().getStringExtra("userBio").isEmpty()) {
             bloggerBio.setText(getIntent().getStringExtra("userBio"));
         }
-        blogImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_PICK);
-                intent.setType("image/*");
-                startActivityForResult(intent, ADD_MEDIA_ACTIVITY_REQUEST_CODE);
-            }
-        });
+
         createBlog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -165,31 +110,9 @@ public class SetupBlogPageActivity extends BaseActivity {
                     blogTitle.setFocusableInTouchMode(true);
                     blogTitle.setError("Special characters are not allowed!");
                     blogTitle.requestFocus();
-                } else if (bloggerBio.getText().toString().split(" ").length>200)
-                {
-                    bloggerBio.setFocusableInTouchMode(true);
-                    bloggerBio.setError("Please enter less than 200 words");
-                    bloggerBio.requestFocus();
-                }
-                else {
+                } else {
                     showProgressDialog(getResources().getString(R.string.please_wait));
                     ArticleDraftRequest articleDraftRequest = new ArticleDraftRequest();
-                    /**
-                     * this case will case in pagination case: for sorting
-                     */
-                    /*articleDraftRequest.setUser_id("" + userModel.getUser().getId());
-
-                    articleDraftRequest.setImageName(url);
-                    articleDraftRequest.setTitle(blogTitle.getText().toString());
-                    articleDraftRequest.setBody(bloggerBio.getText().toString());
-                    articleDraftRequest.setSourceId("" + 2);*/
-/*
-        articleDraftRequest.setCity_id(SharedPrefUtils.getCurrentCityModel(getActivity()).getId());
-        _parentingModel.setPage("" + pPageCount);*/
-
-                   /* BlogSetupController _controller = new BlogSetupController(SetupBlogPageActivity.this, SetupBlogPageActivity.this);
-
-                    _controller.getData(AppConstants.BLOG_SETUP_REQUEST, articleDraftRequest);*/
 
                     Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
                     // prepare call in Retrofit 2.0
@@ -208,28 +131,19 @@ public class SetupBlogPageActivity extends BaseActivity {
                     call.enqueue(new Callback<SetupBlogResponse>() {
                                      @Override
                                      public void onResponse(Call<SetupBlogResponse> call, retrofit2.Response<SetupBlogResponse> response) {
-                                         int statusCode = response.code();
-
-                                         SetupBlogResponse responseModel = (SetupBlogResponse) response.body();
-
                                          removeProgressDialog();
-                                         if (responseModel.getCode() != 200) {
-                                             showToast(getString(R.string.toast_response_error));
+                                         if (response == null || response.body() == null) {
+                                             showToast(getString(R.string.went_wrong));
                                              return;
-                                         } else {
-                                             if (!StringUtils.isNullOrEmpty(responseModel.getReason())) {
-                                                 //   SharedPrefUtils.setProfileImgUrl(SetupBlogPageActivity.this, responseModel.getResult().getMessage());
-                                                 Log.i("Blog Setup Response", responseModel.getReason());
-                                                 if (responseModel.getStatus().equals("failure")) {
-                                                     // showToast(responseModel.getResult().getMessage());
-                                                     alertDialog(responseModel.getReason());
-                                                 } else {
-                                                     showToast(responseModel.getReason());
-                                                     finish();
-                                                 }
-                                             }
                                          }
 
+                                         SetupBlogResponse responseData = (SetupBlogResponse) response.body();
+                                         if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                                             showToast(responseData.getData().getMsg());
+                                             finish();
+                                         } else {
+                                             showToast(responseData.getReason());
+                                         }
                                      }
 
                                      @Override
@@ -238,7 +152,6 @@ public class SetupBlogPageActivity extends BaseActivity {
                                          removeProgressDialog();
                                          Log.d("MC4KException", Log.getStackTraceString(t));
                                          showToast(getString(R.string.went_wrong));
-//                                         finish();
                                      }
                                  }
                     );
@@ -246,85 +159,6 @@ public class SetupBlogPageActivity extends BaseActivity {
                 }
             }
         });
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (data == null) {
-            return;
-        }
-
-        //   mediaFile.setVideo(imageUri.toString().contains("video"));
-
-        switch (requestCode) {
-            case ADD_MEDIA_ACTIVITY_REQUEST_CODE:
-                imageUri = data.getData();
-
-                if (resultCode == Activity.RESULT_OK) {
-                    try {
-                        Uri selectedImage = data.getData();
-                        String[] filePathColumn = {MediaStore.Images.Media.DATA};
-
-                        Cursor cursor = this.getContentResolver().query(
-                                selectedImage, filePathColumn, null, null, null);
-                        cursor.moveToFirst();
-
-                        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                        String filePath = cursor.getString(columnIndex);
-                        cursor.close();
-                        Log.e("File", "filePath: " + filePath);
-                        filePath = filePath.replaceAll("[^a-zA-Z0-9.-/_]", "_");
-                        file = new File(new URI("file://"
-                                + filePath.replaceAll(" ", "%20")));
-                        int maxImageSize = BitmapUtils.getMaxSize(this);
-                        maxImageSize = 512;
-                        Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(SetupBlogPageActivity.this.getContentResolver(), imageUri);
-                        float actualHeight = imageBitmap.getHeight();
-                        float actualWidth = imageBitmap.getWidth();
-                        float maxHeight = 243;
-                        float maxWidth = 423;
-                        float imgRatio = actualWidth / actualHeight;
-                        float maxRatio = maxWidth / maxHeight;
-
-
-                        if (actualHeight > maxHeight || actualWidth > maxWidth) {
-                            if (imgRatio < maxRatio) {
-                                //adjust width according to maxHeight
-                                imgRatio = maxHeight / actualHeight;
-                                actualWidth = imgRatio * actualWidth;
-                                actualHeight = maxHeight;
-                            } else if (imgRatio > maxRatio) {
-                                //adjust height according to maxWidth
-                                imgRatio = maxWidth / actualWidth;
-                                actualHeight = imgRatio * actualHeight;
-                                actualWidth = maxWidth;
-                            } else {
-                                actualHeight = maxHeight;
-                                actualWidth = maxWidth;
-                            }
-                        }
-                        finalBitmap = Bitmap.createScaledBitmap(imageBitmap, (int) actualWidth, (int) actualHeight, true);
-                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        finalBitmap.compress(Bitmap.CompressFormat.PNG, 75, stream);
-                        // byte[] byteArrayFromGallery = stream.toByteArray();
-
-                        //   imageString = Base64.encodeToString(byteArrayFromGallery, Base64.DEFAULT);
-                        String path = MediaStore.Images.Media.insertImage(SetupBlogPageActivity.this.getContentResolver(), finalBitmap, "Title", null);
-                        Uri imageUriTemp = Uri.parse(path);
-                        File file2 = FileUtils.getFile(this, imageUriTemp);
-                        //    new FileUploadTask().execute();
-                        sendUploadProfileImageRequest(file2);
-                        // compressImage(filePath);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-
-                }
-                break;
-        }
     }
 
     @Override
@@ -344,107 +178,4 @@ public class SetupBlogPageActivity extends BaseActivity {
         return true;
     }
 
-
-    private void alertDialog(String msg) {
-        new AlertDialog.Builder(this)
-                .setTitle("MyCity4Kids")
-                .setMessage(msg)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // continue with delete
-                        dialog.dismiss();
-                    }
-                })
-                .show();
-
-    }
-
-    public void sendUploadProfileImageRequest(File file) {
-        showProgressDialog(getString(R.string.please_wait));
-       /* ByteArrayOutputStream bao = new ByteArrayOutputStream();
-        originalImage.compress(Bitmap.CompressFormat.PNG, 75, bao);
-        byte[] ba = bao.toByteArray();
-        String imageString = Base64.encodeToString(ba, Base64.DEFAULT);*/
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(AppConstants.LIVE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
-        RequestBody requestBodyFile = RequestBody.create(MEDIA_TYPE_PNG, file);
-        RequestBody userId = RequestBody.create(MediaType.parse("text/plain"), "" + userModel.getUser().getId());
-        RequestBody imageType = RequestBody.create(MediaType.parse("text/plain"), "0");
-        // prepare call in Retrofit 2.0
-        ImageUploadAPI imageUploadAPI = retrofit.create(ImageUploadAPI.class);
-
-        Call<ImageUploadResponse> call = imageUploadAPI.uploadImage(//userId,
-                  imageType,
-                requestBodyFile);
-        //asynchronous call
-        call.enqueue(new Callback<ImageUploadResponse>() {
-                         @Override
-                         public void onResponse(Call<ImageUploadResponse> call, retrofit2.Response<ImageUploadResponse> response) {
-                             ImageUploadResponse responseModel = response.body();
-
-                             removeProgressDialog();
-                             if (responseModel.getCode() != 200) {
-                                 showToast(getString(R.string.toast_response_error));
-                                 return;
-                             } else {
-                                 if (!StringUtils.isNullOrEmpty(responseModel.getData().getResult().getUrl())) {
-                                     Log.i("IMAGE_UPLOAD_REQUEST", responseModel.getData().getResult().getUrl());
-                                 }
-                                 setProfileImage(responseModel.getData().getResult().getUrl());
-                                 Picasso.with(SetupBlogPageActivity.this).load(responseModel.getData().getResult().getUrl()).error(R.drawable.default_article).into(blogImage);
-                                 showToast("Image successfully uploaded!");
-                                 // ((BaseActivity) this()).showSnackbar(getView().findViewById(R.id.root), "You have successfully uploaded an image.");
-                             }
-                         }
-
-                         @Override
-                         public void onFailure(Call<ImageUploadResponse> call, Throwable t) {
-
-                         }
-                     }
-        );
-      /*  JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("extension", "image/png");
-            jsonObject.put("size", ba.length);
-            jsonObject.put("byteCode", imageString);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        UserTable userTable = new UserTable((BaseApplication) this.getApplication());
-        UserModel userModel = userTable.getAllUserData();
-
-        JSONArray jsonArray = new JSONArray();
-        jsonArray.put(jsonObject);
-
-        ImageUploadRequest requestData = new ImageUploadRequest();
-        //  requestData.setFile(jsonArray.toString());
-        requestData.setFile(imageString);
-        requestData.setUser_id("" + userModel.getUser().getId());
-        // requestData.setSessionId("" + userModel.getUser().getSessionId());
-        // requestData.setProfileId("" + userModel.getUser().getProfileId());
-        requestData.setImageType("jpg");
-        //  requestData.setType(AppConstants.IMAGE_TYPE_USER_PROFILE);
-
-        ImageUploadController controller = new ImageUploadController(this, this);
-        controller.getData(AppConstants.IMAGE_EDITOR_UPLOAD_REQUEST, requestData);*/
-    }
-
-    public void setProfileImage(String url1) {
-        if (!StringUtils.isNullOrEmpty(url1)) {
-            url = url1;
-            String[] seperated = url.split("/");
-            if (seperated.length != 0) {
-                url = seperated[seperated.length - 1];
-                Log.e("url", url);
-            }
-            // SharedPrefUtils.setProfileImgUrl(getActivity(), url);
-            //((DashboardActivity) getActivity()).updateImageProfile();
-
-        }
-    }
 }

@@ -12,6 +12,7 @@
             backward-compatibility can go here.
         -->
     </style>
+
     <style name="datepicker" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
@@ -57,11 +58,13 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
     </style>
+
     <style name="CustomRatingBarEvent" parent="@android:style/Widget.RatingBar">
         <item name="android:progressDrawable">@drawable/custom_ratingbar</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
     </style>
+
     <style name="CustomRatingInfoBar" parent="@android:style/Widget.RatingBar">
         <item name="android:progressDrawable">@drawable/custom_ratinginfobar</item>
         <item name="android:layout_height">wrap_content</item>
@@ -99,9 +102,10 @@
         <item name="android:itemTextAppearance">@style/test</item>
 
     </style>
-<style name="test">
-    <item name="android:textColor">@android:color/black</item>
-</style>
+
+    <style name="test">
+        <item name="android:textColor">@android:color/black</item>
+    </style>
 
     <style name="total_transparent_dialog" parent="AppBaseTheme">
         <item name="android:windowIsTranslucent">true</item>
@@ -148,8 +152,7 @@
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="transparent_status" parent="AppBaseTheme">
-    </style>
+    <style name="transparent_status" parent="AppBaseTheme"></style>
     -
 
     <style name="style_dialog_btn_cancel">
@@ -202,7 +205,10 @@
     </style>
 
     <style name="menu_labels_style">
-        <item name="android:background">@drawable/fab_label_background</item>
-        <item name="android:textColor">#727272</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
+    <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">18sp</item>
     </style>
 </resources>

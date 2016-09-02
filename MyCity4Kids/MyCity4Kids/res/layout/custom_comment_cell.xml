@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/network_img"
             android:ellipsize="end"
-            android:maxLines="2"
+            android:maxLines="1"
             android:paddingLeft="8dp"
             android:singleLine="false"
             android:text="@string/title"
@@ -130,7 +130,7 @@
             android:layout_toRightOf="@+id/replyUserImageView"
             android:ellipsize="marquee"
             android:maxLines="1"
-            android:maxWidth="190dp"
+            android:maxWidth="150dp"
             android:text="user d wad d dijiaw dawj9iad ikad"
             android:textColor="@color/black_color"
             android:textSize="14sp" />

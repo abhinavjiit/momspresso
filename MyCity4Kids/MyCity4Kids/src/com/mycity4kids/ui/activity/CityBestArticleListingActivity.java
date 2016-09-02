@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -53,6 +54,7 @@ public class CityBestArticleListingActivity extends BaseActivity {
     private boolean isReuqestRunning = false;
     private ProgressBar progressBar;
     private int limit = 15;
+    private FrameLayout frameLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +71,9 @@ public class CityBestArticleListingActivity extends BaseActivity {
         noBlogsTextView = (TextView) findViewById(R.id.noBlogsTextView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely));
+        frameLayout = (FrameLayout) findViewById(R.id.frame_layout);
+        frameLayout.setVisibility(View.GONE);
+
 
         progressBar.setVisibility(View.VISIBLE);
 

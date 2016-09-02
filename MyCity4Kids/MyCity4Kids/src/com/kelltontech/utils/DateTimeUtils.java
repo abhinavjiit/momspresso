@@ -2,6 +2,7 @@ package com.kelltontech.utils;
 
 import android.text.format.DateFormat;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -103,7 +104,7 @@ public class DateTimeUtils {
         fields[1] = calendar.get(Calendar.MONTH);
         fields[2] = calendar.get(Calendar.DAY_OF_MONTH);
         /*
-		 * fields[3] = calendar.get(Calendar.HOUR_OF_DAY); fields[4] =
+         * fields[3] = calendar.get(Calendar.HOUR_OF_DAY); fields[4] =
 		 * calendar.get(Calendar.MINUTE); fields[5] =
 		 * calendar.get(Calendar.SECOND); fields[6] =
 		 * calendar.get(Calendar.MILLISECOND); fields[7] =
@@ -220,5 +221,16 @@ public class DateTimeUtils {
         } catch (Exception ex) {
             return "xx";
         }
+    }
+
+    public static long getTimestampFromStringDate(String date) {
+        java.text.DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+        Date dated = null;
+        try {
+            dated = inputFormat.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return dated.getTime();
     }
 }

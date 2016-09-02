@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
@@ -16,11 +17,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.provider.CalendarContract;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.telephony.SmsManager;
+import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.util.Log;
 import android.util.TypedValue;
@@ -70,6 +74,7 @@ import com.mycity4kids.fragmentdialog.LoginFragmentDialog;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.IOnSubmitGallery;
+import com.mycity4kids.listener.OnButtonClicked;
 import com.mycity4kids.models.bookmark.BookmarkModel;
 import com.mycity4kids.models.businesseventdetails.Batches;
 import com.mycity4kids.models.businesseventdetails.DetailMap;
@@ -106,6 +111,7 @@ import java.io.File;
 import java.net.URI;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.TimeZone;
 
 import retrofit2.Call;
@@ -1089,7 +1095,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
             switch (v.getId()) {
                 case R.id.txvCall: {
                     Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + information.getPhone()));
-                    Utils.pushEvent(BusinessDetailsActivity.this, GTMEventType.CALL_EVENT_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "Resource/Event Details");
+                    Utils.pushEvent(BusinessDetailsActivity.this, GTMEventType.CALL_EVENT_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Resource/Event Details");
                     startActivity(intent);
                 }
                 break;
@@ -1123,13 +1129,21 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
                 }
 
                 case R.id.txvAddToCal: {
-                    Intent i = new Intent(BusinessDetailsActivity.this, ActivityCreateAppointment.class);
-                    i.putExtra(Constants.EVENT_NAME, information.getName());
-                    i.putExtra(Constants.EVENT_LOCATION, information.getLocality());
-                    i.putExtra(Constants.EVENT_START_DATE, information.getEvent_date().getStart_date());
-                    i.putExtra(Constants.EVENT_END_DATE, information.getEvent_date().getEnd_date());
-                    Utils.pushEvent(BusinessDetailsActivity.this, GTMEventType.ADDCALENDAR_EVENT_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Resource/Event Details");
-                    startActivity(i);
+
+                    showAlertDialog("Add Event to clarendar", "Do you want add this event to you personal calendar?", new OnButtonClicked() {
+                        @Override
+                        public void onButtonCLick(int buttonId) {
+                            saveCalendar(information.getName(), information.getDescription(), information.getEvent_date().getStart_date(), information.getEvent_date().getEnd_date(), information.getLocality());
+                        }
+                    });
+
+//                    Intent i = new Intent(BusinessDetailsActivity.this, ActivityCreateAppointment.class);
+//                    i.putExtra(Constants.EVENT_NAME, information.getName());
+//                    i.putExtra(Constants.EVENT_LOCATION, information.getLocality());
+//                    i.putExtra(Constants.EVENT_START_DATE, information.getEvent_date().getStart_date());
+//                    i.putExtra(Constants.EVENT_END_DATE, information.getEvent_date().getEnd_date());
+//                    Utils.pushEvent(BusinessDetailsActivity.this, GTMEventType.ADDCALENDAR_EVENT_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Resource/Event Details");
+//                    startActivity(i);
                     //saveCalendarEvent(information);
                 }
                 break;
@@ -1195,6 +1209,35 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
         }
     }
 
+
+    private void saveCalendar(String title, String desc, String sDate, String eDate, String location) {
+
+        ContentResolver cr = getContentResolver();
+        ContentValues values = new ContentValues();
+
+        values.put(CalendarContract.Events.DTSTART, "" + DateTimeUtils.getTimestampFromStringDate(sDate));
+        values.put(CalendarContract.Events.DTEND, "" + DateTimeUtils.getTimestampFromStringDate(eDate));
+        values.put(CalendarContract.Events.TITLE, title);
+        values.put(CalendarContract.Events.DESCRIPTION, desc);
+        values.put(CalendarContract.Events.EVENT_LOCATION, location);
+
+        TimeZone timeZone = TimeZone.getDefault();
+        values.put(CalendarContract.Events.EVENT_TIMEZONE, timeZone.getID());
+
+        // default calendar
+        values.put(CalendarContract.Events.CALENDAR_ID, 3);
+
+//        values.put(CalendarContract.Events.RRULE, "FREQ=DAILY;UNTIL="
+//                + dtUntill);
+
+        values.put(CalendarContract.Events.HAS_ALARM, 1);
+
+        // insert event to calendar
+        Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
+
+
+    }
+
     /**
      * use it later.
      */
@@ -1258,10 +1301,10 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
             showToast(getString(R.string.error_network));
             return;
         }
-        Call<CommonResponse> call = bookmarkAPI.addRemoveBookmark(SharedPrefUtils.getUserDetailModel(this).getId()+"",
+        Call<CommonResponse> call = bookmarkAPI.addRemoveBookmark(SharedPrefUtils.getUserDetailModel(this).getId() + "",
                 bookmarkRequest.getAction(),
                 bookmarkRequest.getId()
-               );
+        );
 
 
         //asynchronous call

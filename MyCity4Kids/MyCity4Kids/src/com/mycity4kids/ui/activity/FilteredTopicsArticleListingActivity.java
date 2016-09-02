@@ -138,7 +138,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                 boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
                 if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && isLastPageReached) {
                     mLodingView.setVisibility(View.VISIBLE);
-                    hitFilteredTopicsArticleListingApi(nextPageNumber);
+                    hitFilteredTopicsArticleListingApi(sortType);
                     isReuqestRunning = true;
                 }
             }

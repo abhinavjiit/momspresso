@@ -70,13 +70,6 @@ public class EditProfieActivity extends BaseActivity {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.save:
-                if (userBioEditText.getText().toString().split(" ").length > 200) {
-                    userBioEditText.setFocusableInTouchMode(true);
-                    userBioEditText.setError("Please write upto 200 words");
-                    userBioEditText.requestFocus();
-                    //showToast("Please write upto 200 words");
-                    return false;
-                }
                 UpdateUserDetail updateUserDetail = new UpdateUserDetail();
                 updateUserDetail.setFirstName((editFirstName.getText().toString()).trim() + "");
                 updateUserDetail.setLastName(editLastName.getText().toString().trim() + "");

@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/network_img"
             android:ellipsize="end"
-            android:maxLines="2"
+            android:maxLines="1"
             android:paddingLeft="8dp"
             android:singleLine="false"
             android:text="@string/title"

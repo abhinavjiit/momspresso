@@ -32,7 +32,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <!--<uses-permission android:name="android.permission.WAKE_LOCK" />-->
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-
+    <uses-permission android:name="android.permission.SEND_SMS" />
     <!-- <permission
          android:name="com.mycity4kids.gcm.permission.C2D_MESSAGE"
          android:protectionLevel="signature" />-->
@@ -437,8 +437,7 @@
 
         <activity
             android:name=".editor.EditorPostActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/EditorTheme" />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".editor.SetupBlogPageActivity"
             android:screenOrientation="portrait" />
@@ -452,10 +451,10 @@
             android:theme="@android:style/Theme.Dialog" />
         <activity
             android:name=".ui.activity.SettingsActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.activity.ContributorListActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <!--<activity-->
         <!--android:name="com.mycity4kids.ui.activity.EventsFilterActivity"-->
         <!--android:configChanges="keyboard|keyboardHidden|orientation|screenSize"-->

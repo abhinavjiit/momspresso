@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar"
         android:layout_marginLeft="20dp"
-        android:layout_marginRight="5dp"
+        android:layout_marginRight="10dp"
         android:layout_marginTop="15dp"
         android:layout_toRightOf="@+id/bloggerImageView">
 
@@ -45,17 +45,21 @@
                 android:id="@+id/rankingTextView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:ellipsize="marquee"
                 android:fontFamily="sans-serif-thin"
-                android:gravity="center"
-                android:text="--"
+                android:maxLines="1"
+                android:text="3"
+                android:textColor="@color/black_color"
                 android:textSize="32sp" />
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginTop="7dp"
+                android:layout_marginTop="2dp"
+                android:ellipsize="marquee"
                 android:gravity="center"
-                android:text="Rank"
+                android:maxLines="1"
+                android:text="rank"
                 android:textColor="@color/grey_faded"
                 android:textSize="13sp" />
         </LinearLayout>
@@ -75,17 +79,20 @@
                 android:id="@+id/followersTextView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:ellipsize="marquee"
                 android:fontFamily="sans-serif-thin"
-                android:gravity="center"
+                android:maxLines="1"
                 android:text="--"
+                android:textColor="@color/black_color"
                 android:textSize="32sp" />
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginTop="7dp"
-                android:gravity="center"
-                android:text="Followers"
+                android:layout_marginTop="2dp"
+                android:ellipsize="marquee"
+                android:maxLines="1"
+                android:text="followers"
                 android:textColor="@color/grey_faded"
                 android:textSize="13sp" />
         </LinearLayout>
@@ -101,17 +108,21 @@
                 android:id="@+id/followingTextView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:ellipsize="marquee"
                 android:fontFamily="sans-serif-thin"
-                android:gravity="center"
+                android:maxLines="1"
                 android:text="--"
+                android:textColor="@color/black_color"
                 android:textSize="32sp" />
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginTop="7dp"
+                android:layout_marginTop="2dp"
+                android:ellipsize="marquee"
                 android:gravity="center"
-                android:text="Followings"
+                android:maxLines="1"
+                android:text="followings"
                 android:textColor="@color/grey_faded"
                 android:textSize="13sp" />
         </LinearLayout>
@@ -122,7 +133,7 @@
             android:layout_height="33dp"
             android:layout_below="@+id/rankLinearLL"
             android:layout_marginRight="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/edit_button_bg"
             android:backgroundTint="#ededed"
             android:fontFamily="sans-serif"
@@ -195,7 +206,7 @@
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
         android:paddingTop="2dp"
-        android:text="More"
+        android:text="MORE"
         android:textColor="@color/red_selected"
         android:visibility="visible" />
 

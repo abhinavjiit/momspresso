@@ -272,6 +272,8 @@ public class TutorialActivity extends BaseActivity implements View.OnClickListen
                     model.setFirst_name(responseData.getData().getResult().getFirstName() + " " + responseData.getData().getResult().getLastName());
                     model.setProfilePicUrl(responseData.getData().getResult().getProfilePicUrl().getClientApp());
                     SharedPrefUtils.setUserDetailModel(TutorialActivity.this, model);
+                    SharedPrefUtils.setProfileImgUrl(TutorialActivity.this, responseData.getData().getResult().getProfilePicUrl().getClientApp());
+
                     PackageInfo pInfo = getPackageManager().getPackageInfo(TutorialActivity.this.getPackageName(), 0);
                     String version = pInfo.versionName;
                     if (version.equals(AppConstants.PHOENIX_RELEASE_VERSION)) {

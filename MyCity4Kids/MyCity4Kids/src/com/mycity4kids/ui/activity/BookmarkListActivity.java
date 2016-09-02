@@ -47,11 +47,12 @@ public class BookmarkListActivity extends BaseActivity implements SwipeRefreshLa
     protected void updateUi(Response response) {
 
     }
+
     NewArticlesListingAdapter articlesListingAdapter;
     ArrayList<ArticleListingResult> articleDataModelsNew;
     ListView listView;
     TextView noBlogsTextView;
-    String sortType=AppConstants.SORT_TYPE_BOOKMARK;
+    String sortType = AppConstants.SORT_TYPE_BOOKMARK;
     String searchName = "";
     Boolean isSearchActive = false;
     private RelativeLayout mLodingView;
@@ -65,12 +66,13 @@ public class BookmarkListActivity extends BaseActivity implements SwipeRefreshLa
     private int limit = 6;
     private String paginationValue = "";
     Toolbar mToolBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_article_layout);
-        sortType=AppConstants.SORT_TYPE_BOOKMARK;
-        mToolBar=(Toolbar) findViewById(R.id.toolbar);
+        sortType = AppConstants.SORT_TYPE_BOOKMARK;
+        mToolBar = (Toolbar) findViewById(R.id.toolbar);
         mToolBar.setVisibility(View.VISIBLE);
         setSupportActionBar(mToolBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -83,19 +85,10 @@ public class BookmarkListActivity extends BaseActivity implements SwipeRefreshLa
         findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely));
 
         progressBar.setVisibility(View.VISIBLE);
-       /* if (getArguments() != null) {
-            articleDataModelsNew = getArguments().getParcelableArrayList(Constants.ARTICLES_LIST);
-            sortType = getArguments().getString(Constants.SORT_TYPE);
-        }*/
-//        if ("bookmark".equals(sortType)) {
-//            articleDataModelsNew = new ArrayList<CommonParentingList>();
-//            nextPageNumber = 1;
-//            hitBookmarkedArticleListingAPI(nextPageNumber, "bookmark");
-//        } else {
+
         articleDataModelsNew = new ArrayList<ArticleListingResult>();
         nextPageNumber = 1;
         hitArticleListingApi(nextPageNumber, "bookmark", true);
-//        }
         swipeRefreshLayout.setOnRefreshListener((SwipeRefreshLayout.OnRefreshListener) BookmarkListActivity.this);
 
         articlesListingAdapter = new NewArticlesListingAdapter(BookmarkListActivity.this, true);
@@ -130,6 +123,7 @@ public class BookmarkListActivity extends BaseActivity implements SwipeRefreshLa
                 if (adapterView.getAdapter() instanceof NewArticlesListingAdapter) {
                     ArticleListingResult parentingListData = (ArticleListingResult) ((NewArticlesListingAdapter) adapterView.getAdapter()).getItem(i);
                     intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
+                    intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
                     intent.putExtra(Constants.ARTICLE_COVER_IMAGE, parentingListData.getImageUrl());
                     intent.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.ARTICLES);
                     intent.putExtra(Constants.FILTER_TYPE, parentingListData.getUserType());
@@ -140,13 +134,13 @@ public class BookmarkListActivity extends BaseActivity implements SwipeRefreshLa
             }
         });
     }
+
     public void refreshBookmarkList() {
         nextPageNumber = 1;
         isLastPageReached = false;
         paginationValue = "";
         hitArticleListingApi(nextPageNumber, AppConstants.SORT_TYPE_BOOKMARK, false);
     }
-
 
 
     private void removeVolleyCache(String sortType) {
@@ -167,16 +161,18 @@ public class BookmarkListActivity extends BaseActivity implements SwipeRefreshLa
         }
 
     }
+
     private void hitArticleListingApi(int pPageCount, String sortKey, boolean isCacheRequired) {
 
         String url;
 
-            // caching disabled for bookmarked articles as we need to refresh it everytime an article is bookmarked/unbookmarked.
-            url = AppConstants.LIVE_URL + AppConstants.SERVICE_TYPE_USER + AppConstants.SORT_TYPE_BOOKMARK + "/?limit=" + limit + "&pagination=" + paginationValue;
-            HttpVolleyRequest.getStringResponse(BookmarkListActivity.this, url, null, mGetArticleListingListener, Request.Method.GET, false);
+        // caching disabled for bookmarked articles as we need to refresh it everytime an article is bookmarked/unbookmarked.
+        url = AppConstants.LIVE_URL + AppConstants.SERVICE_TYPE_USER + AppConstants.SORT_TYPE_BOOKMARK + "/?limit=" + limit + "&pagination=" + paginationValue;
+        HttpVolleyRequest.getStringResponse(BookmarkListActivity.this, url, null, mGetArticleListingListener, Request.Method.GET, false);
 
 
     }
+
     private OnWebServiceCompleteListener mGetArticleListingListener = new OnWebServiceCompleteListener() {
         @Override
         public void onWebServiceComplete(VolleyBaseResponse response, boolean isError) {
@@ -187,7 +183,7 @@ public class BookmarkListActivity extends BaseActivity implements SwipeRefreshLa
             } else {
 
                 if (response == null) {
-                  showToast("Something went wrong from server");
+                    showToast("Something went wrong from server");
                     isReuqestRunning = false;
                     mLodingView.setVisibility(View.GONE);
                     return;
@@ -200,7 +196,7 @@ public class BookmarkListActivity extends BaseActivity implements SwipeRefreshLa
                 } catch (JsonSyntaxException jse) {
                     Crashlytics.logException(jse);
                     Log.d("JsonSyntaxException", Log.getStackTraceString(jse));
-                  showToast(getString(R.string.server_error));
+                    showToast(getString(R.string.server_error));
                     return;
                 }
 
@@ -210,7 +206,7 @@ public class BookmarkListActivity extends BaseActivity implements SwipeRefreshLa
                 } else if (responseData.getCode() == 400) {
                     String message = responseData.getReason();
                     if (!StringUtils.isNullOrEmpty(message)) {
-                    showToast(message);
+                        showToast(message);
                     } else {
                         showToast(getString(R.string.went_wrong));
                     }
@@ -222,6 +218,7 @@ public class BookmarkListActivity extends BaseActivity implements SwipeRefreshLa
 
         }
     };
+
     private void processResponse(ArticleListingResponse responseData) {
         //	parentingResponse = responseData ;
         try {
@@ -300,14 +297,14 @@ public class BookmarkListActivity extends BaseActivity implements SwipeRefreshLa
 
     @Override
 
-        public void onRefresh() {
-            isLastPageReached = false;
-            removeVolleyCache(sortType);
-            paginationValue = "";
-            from = 1;
-            to = 15;
-            hitArticleListingApi(nextPageNumber, sortType, false);
-        }
+    public void onRefresh() {
+        isLastPageReached = false;
+        removeVolleyCache(sortType);
+        paginationValue = "";
+        from = 1;
+        to = 15;
+        hitArticleListingApi(nextPageNumber, sortType, false);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

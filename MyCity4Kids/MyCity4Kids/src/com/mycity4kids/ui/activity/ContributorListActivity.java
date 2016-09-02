@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
@@ -64,6 +65,7 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
     String type = AppConstants.USER_TYPE_BLOGGER;
     FloatingActionsMenu fab_menu;
     FrameLayout frameLayout;
+    private TextView noBlogsTextView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,12 +76,14 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
         setSupportActionBar(mToolBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("CONTRIBUTORS");
+
         blogListing = (ListView) findViewById(R.id.blog_listing);
         mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
         rankFab = (FloatingActionButton) findViewById(R.id.rankSortFAB);
         nameFab = (FloatingActionButton) findViewById(R.id.nameSortFAB);
         fab_menu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
         frameLayout = (FrameLayout) findViewById(R.id.frame_layout);
+        noBlogsTextView = (TextView) findViewById(R.id.noBlogsTextView);
         frameLayout.getBackground().setAlpha(0);
 
         findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely));
@@ -220,8 +224,9 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
                 // No results for search
                 contributorArrayList.clear();
                 contributorArrayList.addAll(dataList);
-
                 parentingBlogAdapter.notifyDataSetChanged();
+                noBlogsTextView.setVisibility(View.VISIBLE);
+                noBlogsTextView.setText("No result found");
             }
         } else {
             if (StringUtils.isNullOrEmpty(paginationValue)) {
@@ -290,6 +295,7 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
     }
 
     public void sortParentingBlogListing(String type) {
+        paginationValue = "";
         isSortEnable = true;
         this.type = type;
         contributorArrayList.clear();

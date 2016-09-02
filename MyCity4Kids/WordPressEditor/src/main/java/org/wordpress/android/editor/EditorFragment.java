@@ -3,31 +3,21 @@ package org.wordpress.android.editor;
 import android.annotation.SuppressLint;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
-import android.text.SpannableString;
 import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.webkit.URLUtil;
 import android.webkit.WebView;
 import android.widget.TextView;
@@ -237,7 +227,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 && !getResources().getBoolean(R.bool.is_large_tablet_landscape)) {
             mIsKeyboardOpen = true;
             mHideActionBarOnSoftKeyboardUp = true;
-            hideActionBarIfNeeded();
+//            hideActionBarIfNeeded();
         }
     }
 
@@ -264,17 +254,17 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         outState.putCharSequence(KEY_CONTENT, getContent());
     }
 
-    private ActionBar getActionBar() {
-        if (!isAdded()) {
-            return null;
-        }
-
-        if (getActivity() instanceof AppCompatActivity) {
-            return ((AppCompatActivity) getActivity()).getSupportActionBar();
-        } else {
-            return null;
-        }
-    }
+//    private ActionBar getActionBar() {
+//        if (!isAdded()) {
+//            return null;
+//        }
+//
+//        if (getActivity() instanceof AppCompatActivity) {
+//            return ((AppCompatActivity) getActivity()).getSupportActionBar();
+//        } else {
+//            return null;
+//        }
+//    }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -334,10 +324,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE
                 && !getResources().getBoolean(R.bool.is_large_tablet_landscape)) {
             mHideActionBarOnSoftKeyboardUp = true;
-            hideActionBarIfNeeded();
+//            hideActionBarIfNeeded();
         } else {
             mHideActionBarOnSoftKeyboardUp = false;
-            showActionBarIfNeeded();
+//            showActionBarIfNeeded();
         }
     }
 
@@ -523,7 +513,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             // If the WebView or EditText has received a touch event, the keyboard will be displayed and the action bar
             // should hide
             mIsKeyboardOpen = true;
-            hideActionBarIfNeeded();
+//            hideActionBarIfNeeded();
         }
         return false;
     }
@@ -534,7 +524,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     @Override
     public void onImeBack() {
         mIsKeyboardOpen = false;
-        showActionBarIfNeeded();
+//        showActionBarIfNeeded();
     }
 
     @Override
@@ -638,16 +628,16 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         }
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-       /* menu.add(0, BUTTON_ID_LOG_HTML, 0, "Log HTML")
-                .setIcon(R.drawable.ic_log_html)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);*/
-        inflater.inflate(R.menu.menu_editor, menu);
-        getActionBar().setTitle("Write an Article");
-        getActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.primary)));
-        super.onCreateOptionsMenu(menu, inflater);
-    }
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//       /* menu.add(0, BUTTON_ID_LOG_HTML, 0, "Log HTML")
+//                .setIcon(R.drawable.ic_log_html)
+//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);*/
+//        inflater.inflate(R.menu.menu_editor, menu);
+//        getActionBar().setTitle("Write an Article");
+//        getActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.primary)));
+//        super.onCreateOptionsMenu(menu, inflater);
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -1010,7 +1000,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 // Update the list of failed media uploads
                 mWebView.execJavaScriptFromString("ZSSEditor.getFailedMedia();");
 
-                hideActionBarIfNeeded();
+//                hideActionBarIfNeeded();
 
                 // Reset all format bar buttons (in case they remained active through activity re-creation)
               /*  ToggleButton htmlButton = (ToggleButton) getActivity().findViewById(R.id.format_bar_button_html);
@@ -1279,29 +1269,29 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     /**
      * Hide the action bar if needed.
      */
-    private void hideActionBarIfNeeded() {
-
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null
-                && !isHardwareKeyboardPresent()
-                && mHideActionBarOnSoftKeyboardUp
-                && mIsKeyboardOpen
-                && actionBar.isShowing()) {
-            getActionBar().hide();
-        }
-    }
-
-    /**
-     * Show the action bar if needed.
-     */
-    private void showActionBarIfNeeded() {
-
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null && !actionBar.isShowing()) {
-            actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#1d55f1 ")));
-            actionBar.show();
-        }
-    }
+//    private void hideActionBarIfNeeded() {
+//
+//        ActionBar actionBar = getActionBar();
+//        if (actionBar != null
+//                && !isHardwareKeyboardPresent()
+//                && mHideActionBarOnSoftKeyboardUp
+//                && mIsKeyboardOpen
+//                && actionBar.isShowing()) {
+//            getActionBar().hide();
+//        }
+//    }
+//
+//    /**
+//     * Show the action bar if needed.
+//     */
+//    private void showActionBarIfNeeded() {
+//
+//        ActionBar actionBar = getActionBar();
+//        if (actionBar != null && !actionBar.isShowing()) {
+//            actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#1d55f1 ")));
+//            actionBar.show();
+//        }
+//    }
 
     /**
      * Returns true if a hardware keyboard is detected, otherwise false.

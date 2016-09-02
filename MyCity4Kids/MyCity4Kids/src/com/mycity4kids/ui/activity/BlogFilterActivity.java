@@ -20,7 +20,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
  */
 public class BlogFilterActivity extends BaseActivity implements View.OnClickListener {
 
-    TextView rankName, blogger, expert, editor, aTOz,editorialTeam;
+    TextView rankName, blogger, expert, editor, aTOz, editorialTeam;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,14 +36,14 @@ public class BlogFilterActivity extends BaseActivity implements View.OnClickList
         expert = (TextView) findViewById(R.id.experts);
         editor = (TextView) findViewById(R.id.editors);
         aTOz = (TextView) findViewById(R.id.atoz);
-editorialTeam=(TextView) findViewById(R.id.editorialTeam);
+        editorialTeam = (TextView) findViewById(R.id.editorialTeam);
         rankName.setOnClickListener(this);
         blogger.setOnClickListener(this);
         expert.setOnClickListener(this);
         editor.setOnClickListener(this);
 
         aTOz.setOnClickListener(this);
-editorialTeam.setOnClickListener(this);
+        editorialTeam.setOnClickListener(this);
 
     }
 

@@ -397,14 +397,14 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         moreTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (moreTextView.getText().toString().equalsIgnoreCase("More")) {
+                if (moreTextView.getText().toString().equalsIgnoreCase("MORE")) {
                     userBio.setMaxLines(100);
                     userBio.setEllipsize(null);
-                    moreTextView.setText("Less");
+                    moreTextView.setText("LESS");
                 } else {
                     userBio.setMaxLines(3);
                     userBio.setEllipsize(null);
-                    moreTextView.setText("More");
+                    moreTextView.setText("MORE");
                 }
             }
         });
@@ -867,12 +867,16 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
             isFollowing = false;
             followButton.setVisibility(View.VISIBLE);
             unfollowButton.setVisibility(View.INVISIBLE);
+            int followerCount = Integer.parseInt(followersTextView.getText().toString()) - 1;
+            followersTextView.setText("" + followerCount);
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.unfollowUser(request);
             followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback);
         } else {
             isFollowing = true;
             followButton.setVisibility(View.INVISIBLE);
             unfollowButton.setVisibility(View.VISIBLE);
+            int followerCount = Integer.parseInt(followersTextView.getText().toString()) + 1;
+            followersTextView.setText("" + followerCount);
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.followUser(request);
             followUnfollowUserResponseCall.enqueue(followUserResponseCallback);
         }
@@ -1064,7 +1068,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                                              moreTextView.setVisibility(View.VISIBLE);
                                              userBio.setMaxLines(3);
                                              userBio.setEllipsize(null);
-                                             moreTextView.setText("More");
+                                             moreTextView.setText("MORE");
                                          } else {
                                              userBio.setMaxLines(3);
                                              userBio.setEllipsize(null);
@@ -1326,6 +1330,8 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                     followButton.setVisibility(View.VISIBLE);
                     unfollowButton.setVisibility(View.INVISIBLE);
                     isFollowing = false;
+                    int followerCount = Integer.parseInt(followersTextView.getText().toString()) - 1;
+                    followersTextView.setText("" + followerCount);
                 }
             } catch (Exception e) {
                 showToast(getString(R.string.server_went_wrong));
@@ -1356,6 +1362,8 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                 } else {
                     followButton.setVisibility(View.INVISIBLE);
                     unfollowButton.setVisibility(View.VISIBLE);
+                    int followerCount = Integer.parseInt(followersTextView.getText().toString()) + 1;
+                    followersTextView.setText("" + followerCount);
                     isFollowing = true;
                 }
             } catch (Exception e) {

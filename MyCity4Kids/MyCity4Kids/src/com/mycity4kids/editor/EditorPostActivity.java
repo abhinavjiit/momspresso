@@ -6,13 +6,17 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.graphics.drawable.ColorDrawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -33,7 +37,6 @@ import com.mycity4kids.models.response.ArticleDraftResponse;
 import com.mycity4kids.models.response.DraftListResult;
 import com.mycity4kids.models.response.ImageUploadResponse;
 import com.mycity4kids.models.response.PublishDraftObject;
-import com.mycity4kids.models.user.UserModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
@@ -67,7 +70,6 @@ import retrofit2.Retrofit;
  */
 public class EditorPostActivity extends BaseActivity implements EditorFragmentAbstract.EditorFragmentListener {
 
-    private UserModel userModel;
     Uri imageUri;
     private String articleId;
     private String thumbnailUrl;
@@ -107,6 +109,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     String title;
     String content;
     private String tag, cities;
+    private Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,10 +117,13 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
         if (getIntent().getIntExtra(EDITOR_PARAM, USE_NEW_EDITOR) == USE_NEW_EDITOR) {
             // ToastUtils.showToast(this, R.string.starting_new_editor);
             setContentView(R.layout.activity_new_editor);
-            UserTable userTable = new UserTable((BaseApplication) this.getApplication());
-            userModel = userTable.getAllUserData();
             Utils.pushOpenScreenEvent(EditorPostActivity.this, "Text Editor", SharedPrefUtils.getUserDetailModel(this).getId() + "");
         }
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Write An Article");
         mFailedUploads = new HashMap<>();
     }
 
@@ -412,9 +418,31 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                 true);
     }
 
+    public boolean toggleDraftOptionVisibility() {
+        if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_editor, menu);
+        if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) {
+            MenuItem item = menu.findItem(R.id.draft);
+            item.setVisible(false);
+        }
+        return super.onCreateOptionsMenu(menu);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home: {
+                onBackPressed();
+            }
+            break;
             case R.id.draft: {
                 if (mEditorFragment.getTitle().toString().isEmpty() && mEditorFragment.getContent().toString().isEmpty()) {
                     showToast("There is nothing to save in draft");
@@ -485,6 +513,10 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             removeProgressDialog();
             showToast(getString(R.string.error_network));
             return;
+        }
+        if (StringUtils.isNullOrEmpty(body)) {
+            //dynamoDB can't handle empty spaces
+            body = " ";
         }
         if (draftId1.isEmpty()) {
             Call<ArticleDraftResponse> call = articleDraftAPI.saveDraft(

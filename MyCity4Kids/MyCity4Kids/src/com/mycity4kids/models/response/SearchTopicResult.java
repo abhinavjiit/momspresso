@@ -7,6 +7,7 @@ public class SearchTopicResult {
     private String id;
     private String slug;
     private String title;
+    private String display_name;
 
     public String getId() {
         return id;
@@ -30,5 +31,13 @@ public class SearchTopicResult {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getDisplay_name() {
+        return display_name;
+    }
+
+    public void setDisplay_name(String display_name) {
+        this.display_name = display_name;
     }
 }

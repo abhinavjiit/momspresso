@@ -296,7 +296,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     }
 
     private void hitRelatedArticleAPI() {
-        String url = AppConstants.LIVE_URL + AppConstants.SERVICE_TYPE_ARTICLE + "recent" +
+        String url = AppConstants.LIVE_URL + AppConstants.SERVICE_TYPE_ARTICLE + "trending" +
                 AppConstants.SEPARATOR_BACKSLASH + "1" + AppConstants.SEPARATOR_BACKSLASH + "3";
         HttpVolleyRequest.getStringResponse(this, url, null, mGetArticleListingListener, Request.Method.GET, true);
 
@@ -762,7 +762,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     break;
                 case R.id.add_comment_btn:
 
-                    if (commentText.getText().toString().trim().equalsIgnoreCase("")) {
+                    if (StringUtils.isNullOrEmpty(commentText.getText().toString())) {
                         ToastUtils.showToast(getApplicationContext(), "Please write to comment...", Toast.LENGTH_SHORT);
                     } else {
                         String contentData = commentText.getText().toString();

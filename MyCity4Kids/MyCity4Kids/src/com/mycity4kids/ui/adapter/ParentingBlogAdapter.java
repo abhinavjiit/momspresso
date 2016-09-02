@@ -79,7 +79,6 @@ public class ParentingBlogAdapter extends BaseAdapter {
             holder.bloggerName = (TextView) view.findViewById(R.id.bloggerName);
             holder.authorType = (TextView) view.findViewById(R.id.userType);
             holder.authorRank = (TextView) view.findViewById(R.id.rank);
-            //  holder.shareBlogImageView = (ImageView) view.findViewById(R.id.bloggerImageView);
             holder.bloggerCover = (ImageView) view.findViewById(R.id.bloggerImageView);
             holder.bloggerFollow = (TextView) view.findViewById(R.id.blog_follow_text);
             holder.bloggerBio = (TextView) view.findViewById(R.id.bloggerBio);

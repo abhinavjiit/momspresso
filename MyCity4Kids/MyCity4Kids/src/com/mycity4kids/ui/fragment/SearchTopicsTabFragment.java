@@ -25,14 +25,11 @@ import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.enums.ParentingFilterType;
-import com.mycity4kids.models.parentingstop.CommonParentingList;
 import com.mycity4kids.models.response.SearchResponse;
 import com.mycity4kids.models.response.SearchTopicResult;
 import com.mycity4kids.retrofitAPIsInterfaces.SearchArticlesAuthorsAPI;
-import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
+import com.mycity4kids.ui.activity.FilteredTopicsArticleListingActivity;
 import com.mycity4kids.ui.activity.SearchArticlesAndAuthorsActivity;
-import com.mycity4kids.ui.adapter.ArticlesListingAdapter;
 import com.mycity4kids.ui.adapter.SearchTopicsListingAdapter;
 
 import java.util.ArrayList;
@@ -53,13 +50,10 @@ public class SearchTopicsTabFragment extends BaseFragment {
     String sortType;
     String searchName = "";
     private RelativeLayout mLodingView;
-    private int totalPageCount = 3;
     private int nextPageNumber = 2;
     private boolean isReuqestRunning = false;
     private boolean fragmentResume = false;
     private boolean fragmentVisible = false;
-    private boolean fragmentOnCreated = false;
-    private boolean isDataLoadedOnce = false;
     private ProgressBar progressBar;
     boolean isLastPageReached = true;
     private SwipeRefreshLayout swipe_refresh_layout;
@@ -94,7 +88,6 @@ public class SearchTopicsTabFragment extends BaseFragment {
             //only when first time fragment is created
             nextPageNumber = 1;
             newSearchTopicArticleListingApi(searchName, sortType);
-            isDataLoadedOnce = true;
         }
 
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -119,14 +112,12 @@ public class SearchTopicsTabFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                Intent intent = new Intent(getActivity(), ArticlesAndBlogsDetailsActivity.class);
-                if (adapterView.getAdapter() instanceof ArticlesListingAdapter) {
-                    CommonParentingList parentingListData = (CommonParentingList) ((ArticlesListingAdapter) adapterView.getAdapter()).getItem(i);
-                    intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
-                    intent.putExtra(Constants.ARTICLE_COVER_IMAGE, parentingListData.getThumbnail_image());
-                    intent.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.ARTICLES);
-                    intent.putExtra(Constants.FILTER_TYPE, parentingListData.getAuthor_type());
-                    intent.putExtra(Constants.BLOG_NAME, parentingListData.getBlog_name());
+                Intent intent = new Intent(getActivity(), FilteredTopicsArticleListingActivity.class);
+                if (adapterView.getAdapter() instanceof SearchTopicsListingAdapter) {
+                    SearchTopicResult topic = (SearchTopicResult) ((SearchTopicsListingAdapter) adapterView.getAdapter()).getItem(i);
+                    intent.putExtra("selectedTopics", topic.getId());
+//                    intent.putExtra("displayName", topic.getTitle());
+                    intent.putExtra("displayName", topic.getDisplay_name());
                     startActivity(intent);
 
                 }
@@ -202,17 +193,7 @@ public class SearchTopicsTabFragment extends BaseFragment {
         nextPageNumber = 1;
         isLastPageReached = true;
         searchName = searchText;
-        isDataLoadedOnce = true;
         newSearchTopicArticleListingApi(searchName, sortType);
-    }
-
-    public void resetOnceLoadedFlag(String searchTxt) {
-        if (null != articleDataModelsNew) {
-            articleDataModelsNew.clear();
-        }
-        isDataLoadedOnce = false;
-        isLastPageReached = true;
-        searchName = searchTxt;
     }
 
     Callback<SearchResponse> searchTopicsResponseCallback = new Callback<SearchResponse>() {

@@ -1,79 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:background="@color/primary"
-        android:minHeight="?attr/actionBarSize">
-    </android.support.v7.widget.Toolbar>
+        android:minHeight="?attr/actionBarSize"></android.support.v7.widget.Toolbar>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-<EditText
-    android:layout_width="match_parent"
-    android:layout_height="45dp"
-    android:drawableLeft="@drawable/edit_user_icon"
-    android:id="@+id/editFirstName"
-    android:hint=" First Name"
-    android:textColor="@color/black_color"
-    android:background="@null"
-    android:drawablePadding="10dp"/>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/gray_color" />
+
         <EditText
+            android:id="@+id/editFirstName"
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:drawableLeft="@drawable/edit_user_icon"
-            android:hint=" Last Name"
-            android:id="@+id/editLastName"
-            android:textColor="@color/black_color"
             android:background="@null"
+            android:drawableLeft="@drawable/edit_user_icon"
             android:drawablePadding="10dp"
-            />
+            android:hint=" First Name"
+            android:textColor="@color/black_color" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/gray_color" />
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:drawableLeft="@drawable/phone_icon"
-        android:hint=" Phone Number"
-        android:id="@+id/phoneEditText"
-        android:textColor="@color/black_color"
-        android:background="@null"
-        android:drawablePadding="10dp"
-        android:inputType="number"
-        android:maxLength="14"/>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/gray_color" />
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:drawableStart="@drawable/bio_icon"
-        android:hint=" Bio"
-        android:id="@+id/userBioEditText"
-        android:textColor="@color/black_color"
-        android:background="@null"
-        android:singleLine="false"
-        android:drawablePadding="10dp"
-        android:minHeight="100dp"
-        android:drawableLeft="@drawable/bio_icon"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-     />
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/gray_color" />
+
+        <EditText
+            android:id="@+id/editLastName"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@null"
+            android:drawableLeft="@drawable/edit_user_icon"
+            android:drawablePadding="10dp"
+            android:hint=" Last Name"
+            android:textColor="@color/black_color" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_color" />
+
+        <EditText
+            android:id="@+id/phoneEditText"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@null"
+            android:drawableLeft="@drawable/phone_icon"
+            android:drawablePadding="10dp"
+            android:hint=" Phone Number"
+            android:inputType="number"
+            android:maxLength="14"
+            android:textColor="@color/black_color" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_color" />
+
+        <EditText
+            android:id="@+id/userBioEditText"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:background="@null"
+            android:drawableLeft="@drawable/bio_icon"
+            android:drawablePadding="10dp"
+            android:drawableStart="@drawable/bio_icon"
+            android:hint=" Bio"
+            android:maxLength="200"
+            android:minHeight="100dp"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:singleLine="false"
+            android:textColor="@color/black_color" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_color" />
     </LinearLayout>
 </LinearLayout>

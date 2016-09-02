@@ -30,6 +30,7 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.ui.IScreen;
 import com.kelltontech.utils.ConnectivityUtils;
+import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -260,7 +261,7 @@ public class CommentRepliesDialogFragment extends DialogFragment implements OnCl
         cData.setBody(addReplyEditText.getText().toString());
         cData.setName(SharedPrefUtils.getUserDetailModel(getActivity()).getFirst_name());
         cData.setUserId(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId());
-        cData.setCreate("" + System.currentTimeMillis());
+        cData.setCreate("" + System.currentTimeMillis() / 1000);
         cData.setParent_id(parentId);
         ProfilePic profilePic = new ProfilePic();
         profilePic.setClientApp(SharedPrefUtils.getProfileImgUrl(getActivity()));
@@ -284,7 +285,7 @@ public class CommentRepliesDialogFragment extends DialogFragment implements OnCl
         cData.setCommentLevel(1);
         cData.setBody(addReplyEditText.getText().toString());
         cData.setName(SharedPrefUtils.getUserDetailModel(getActivity()).getFirst_name());
-        cData.setCreate("" + System.currentTimeMillis());
+        cData.setCreate("" + System.currentTimeMillis() / 1000);
         cData.setParent_id(parentId);
         cData.setUserId(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId());
         ProfilePic profilePic = new ProfilePic();
@@ -336,7 +337,7 @@ public class CommentRepliesDialogFragment extends DialogFragment implements OnCl
 
     private boolean isValid() {
 
-        if (addReplyEditText.getText().toString().length() == 0) {
+        if (StringUtils.isNullOrEmpty(addReplyEditText.getText().toString())) {
             Toast.makeText(getActivity(), "Please add a reply", Toast.LENGTH_LONG).show();
             return false;
         }
