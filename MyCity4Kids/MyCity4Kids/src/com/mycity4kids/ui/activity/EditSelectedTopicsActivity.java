@@ -23,9 +23,11 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.editor.ArticleImageTagUploadActivity;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.response.PublishDraftObject;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.widget.TopicView;
 
@@ -80,7 +82,7 @@ public class EditSelectedTopicsActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_selected_topics_activity);
-
+        Utils.pushOpenScreenEvent(EditSelectedTopicsActivity.this, "Edit Topics", SharedPrefUtils.getUserDetailModel(this).getId() + "");
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         rootView = (FlowLayout) findViewById(R.id.rootView);
         emptyTopicsContainer = (LinearLayout) findViewById(R.id.emptyTopicsContainer);

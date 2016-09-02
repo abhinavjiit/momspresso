@@ -161,7 +161,7 @@ public class ParentingBlogAdapter extends BaseAdapter {
         if (!StringUtils.isNullOrEmpty(String.valueOf(datalist.get(position).getRank()))) {
             holder.authorRank.setText(String.valueOf(datalist.get(position).getRank()));
         } else {
-            holder.authorRank.setText("");
+            holder.authorRank.setText("--");
         }
         holder.followersCount.setText(datalist.get(position).getFollowersCount() + "");
 
@@ -310,7 +310,7 @@ public class ParentingBlogAdapter extends BaseAdapter {
         protected void onPostExecute(String result) {
 
             if (result == null) {
-                resetFollowUnfollowStatus();
+                resetFollowUnfollowStatus(pos);
                 return;
             }
             try {
@@ -322,35 +322,45 @@ public class ParentingBlogAdapter extends BaseAdapter {
                                 datalist.get(i).setIsFollowed(1);
                                 viewHolder.relativeLoadingView.setVisibility(View.GONE);
                                 viewHolder.bloggerFollow.setVisibility(View.VISIBLE);
-                                viewHolder.bloggerFollow.setText("Following");
+                                viewHolder.bloggerFollow.setText("FOLLOWING");
+                                long followersCount=datalist.get(i).getFollowersCount()+1;
+                                datalist.get(i).setFollowersCount(followersCount);
+                                viewHolder.followersCount.setText(followersCount+"");
                                 //  viewHolder.followTextView.setVisibility(View.INVISIBLE);
                             } else {
                                 datalist.get(i).setIsFollowed(0);
                                 viewHolder.relativeLoadingView.setVisibility(View.GONE);
                                 viewHolder.bloggerFollow.setVisibility(View.VISIBLE);
-                                viewHolder.bloggerFollow.setText("Following");
+                                long followersCount=datalist.get(i).getFollowersCount()-1;
+                                datalist.get(i).setFollowersCount(followersCount);
+                                viewHolder.followersCount.setText(followersCount+"");
+                                viewHolder.bloggerFollow.setText("FOLLOW");
                             }
 //                            notifyDataSetChanged();
                         }
                     }
                 } else {
-                    resetFollowUnfollowStatus();
+                    resetFollowUnfollowStatus(pos);
                 }
             } catch (Exception e) {
-                resetFollowUnfollowStatus();
+                resetFollowUnfollowStatus(pos);
             }
         }
 
-        void resetFollowUnfollowStatus() {
+        void resetFollowUnfollowStatus(int position) {
             viewHolder.relativeLoadingView.setVisibility(View.GONE);
             if (type.equals("follow")) {
                 //   viewHolder.followingTextView.setVisibility(View.INVISIBLE);
                 viewHolder.bloggerFollow.setVisibility(View.VISIBLE);
-                viewHolder.bloggerFollow.setText("Follow");
+                viewHolder.bloggerFollow.setText("FOLLOW");
+                viewHolder.followersCount.setText(datalist.get(position).getFollowersCount()-1+"");
+                datalist.get(position).setFollowersCount(datalist.get(position).getFollowersCount()-1);
 
             } else {
                 viewHolder.bloggerFollow.setVisibility(View.VISIBLE);
-                viewHolder.bloggerFollow.setText("Following");
+                viewHolder.bloggerFollow.setText("FOLLOWING");
+                viewHolder.followersCount.setText(datalist.get(position).getFollowersCount()+1+"");
+                datalist.get(position).setFollowersCount(datalist.get(position).getFollowersCount()+1);
             }
         }
 

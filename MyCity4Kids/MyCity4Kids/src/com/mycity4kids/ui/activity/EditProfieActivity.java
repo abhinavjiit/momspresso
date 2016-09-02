@@ -12,6 +12,7 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.UpdateUserDetail;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.models.user.UserInfo;
@@ -38,6 +39,7 @@ public class EditProfieActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_profile);
+        Utils.pushOpenScreenEvent(EditProfieActivity.this, "Edit Profile", SharedPrefUtils.getUserDetailModel(this).getId() + "");
         mToolBar = (Toolbar) findViewById(R.id.toolbar);
         editFirstName = (EditText) findViewById(R.id.editFirstName);
         editLastName = (EditText) findViewById(R.id.editLastName);

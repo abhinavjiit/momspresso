@@ -229,6 +229,7 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
                 noBlogsTextView.setText("No result found");
             }
         } else {
+            noBlogsTextView.setVisibility(View.GONE);
             if (StringUtils.isNullOrEmpty(paginationValue)) {
                 contributorArrayList.clear();
                 contributorArrayList.addAll(dataList);

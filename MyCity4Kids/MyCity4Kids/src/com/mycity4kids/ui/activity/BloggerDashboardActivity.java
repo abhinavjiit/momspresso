@@ -40,6 +40,7 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.editor.DraftListAdapter;
 import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.editor.ArticleDraftRequest;
 import com.mycity4kids.models.parentingdetails.ImageData;
 import com.mycity4kids.models.request.ArticleDetailRequest;
@@ -149,6 +150,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blogger_dashboard);
+        Utils.pushOpenScreenEvent(BloggerDashboardActivity.this, "User Profile", SharedPrefUtils.getUserDetailModel(this).getId() + "");
         userId = getIntent().getStringExtra(AppConstants.PUBLIC_PROFILE_USER_ID);
         stackClearRequired = getIntent().getBooleanExtra(AppConstants.STACK_CLEAR_REQUIRED, false);
         if (userId == null || userId.equals(SharedPrefUtils.getUserDetailModel(BloggerDashboardActivity.this).getDynamoId())) {

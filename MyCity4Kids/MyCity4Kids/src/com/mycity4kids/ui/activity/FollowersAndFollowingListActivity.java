@@ -18,6 +18,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.FollowersFollowingResponse;
 import com.mycity4kids.models.response.FollowersFollowingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -50,7 +51,7 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.follower_following_list_activity);
-
+        Utils.pushOpenScreenEvent(FollowersAndFollowingListActivity.this, "Followers/Following List", SharedPrefUtils.getUserDetailModel(this).getId() + "");
         followListType = getIntent().getStringExtra(AppConstants.FOLLOW_LIST_TYPE);
         userId = getIntent().getStringExtra(AppConstants.USER_ID_FOR_FOLLOWING_FOLLOWERS);
 

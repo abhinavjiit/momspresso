@@ -86,7 +86,7 @@ public class SetupBlogPageActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Setup your Blog");
         blogImage = (ImageView) findViewById(R.id.blogImage);
-        Utils.pushOpenScreenEvent(SetupBlogPageActivity.this, "Article Image Upload", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+        Utils.pushOpenScreenEvent(SetupBlogPageActivity.this, "Setup Blog", SharedPrefUtils.getUserDetailModel(this).getId() + "");
         UserTable userTable = new UserTable((BaseApplication) this.getApplication());
         userModel = userTable.getAllUserData();
         if (getIntent().getStringExtra("userBio") != null && !getIntent().getStringExtra("userBio").isEmpty()) {
