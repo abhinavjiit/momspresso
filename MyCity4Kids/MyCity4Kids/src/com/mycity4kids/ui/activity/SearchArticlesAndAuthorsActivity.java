@@ -7,11 +7,14 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
@@ -66,6 +69,16 @@ public class SearchArticlesAndAuthorsActivity extends BaseActivity implements Vi
         mViewPager.setCurrentItem(tabPosition);
 
         searchEditText.setText(searchParam);
+        searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+                    requestSearch();
+                }
+                return false;
+            }
+        });
+
         searchImageView.setOnClickListener(this);
     }
 
@@ -78,12 +91,16 @@ public class SearchArticlesAndAuthorsActivity extends BaseActivity implements Vi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.searchImageView:
-                if (StringUtils.isNullOrEmpty(searchEditText.getText().toString())) {
-                    showToast("Please enter a valid search parameter");
-                } else {
-                    tabsPagerAdapter.refreshArticlesAuthors(searchEditText.getText().toString(), mViewPager.getCurrentItem());
-                }
+                requestSearch();
                 break;
+        }
+    }
+
+    private void requestSearch() {
+        if (StringUtils.isNullOrEmpty(searchEditText.getText().toString())) {
+            showToast("Please enter a valid search parameter");
+        } else {
+            tabsPagerAdapter.refreshArticlesAuthors(searchEditText.getText().toString(), mViewPager.getCurrentItem());
         }
     }
 

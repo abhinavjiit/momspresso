@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import com.kelltontech.utils.DateTimeUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.models.response.ArticleListingResult;
 
@@ -26,20 +27,14 @@ public class PublishedArticleListingAdapter extends BaseAdapter {
     private Context mContext;
     private LayoutInflater mInflator;
     ArrayList<ArticleListingResult> articleDataModelsNew;
-    Boolean newChanges = false;
     private BtnClickListener mClickListener = null;
-    private final float density;
     Boolean isPrivateProfile;
 
-    public PublishedArticleListingAdapter(Context pContext, BtnClickListener listener,Boolean mIsPrivateProfile) {
-
-        density = pContext.getResources().getDisplayMetrics().density;
-
+    public PublishedArticleListingAdapter(Context pContext, BtnClickListener listener, Boolean mIsPrivateProfile) {
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = pContext;
         mClickListener = listener;
-        this.newChanges = newChanges;
-        isPrivateProfile=mIsPrivateProfile;
+        isPrivateProfile = mIsPrivateProfile;
     }
 
     public void setListData(ArrayList<ArticleListingResult> mParentingLists) {
@@ -48,10 +43,6 @@ public class PublishedArticleListingAdapter extends BaseAdapter {
 
     public void setNewListData(ArrayList<ArticleListingResult> mParentingLists_new) {
         articleDataModelsNew = mParentingLists_new;
-    }
-
-    public void addNewListData(ArrayList<ArticleListingResult> mParentingLists_new) {
-        articleDataModelsNew.addAll(mParentingLists_new);
     }
 
     @Override
@@ -77,19 +68,13 @@ public class PublishedArticleListingAdapter extends BaseAdapter {
             view = mInflator.inflate(R.layout.draft_list_item, null);
             holder = new ViewHolder();
             holder.txvArticleTitle = (TextView) view.findViewById(R.id.txvArticleTitle);
-            //  holder.txvAuthorName = (TextView) view.findViewById(R.id.txvAuthorName);
             holder.txvPublishDate = (TextView) view.findViewById(R.id.txvPublishDate);
             holder.unapproved = (TextView) view.findViewById(R.id.unapproved);
             holder.unapproved.setVisibility(View.GONE);
-            //   holder.imvAuthorThumb = (ImageView) view.findViewById(R.id.imvAuthorThumb);
-//            holder.authorPic = (ImageView) view.findViewById(R.id.author_pic);
             holder.popupButton = view.findViewById(R.id.img_menu);
-            if (!isPrivateProfile)
-            {
+            if (!isPrivateProfile) {
                 holder.popupButton.setVisibility(View.GONE);
-            }
-            else
-            {
+            } else {
                 holder.popupButton.setVisibility(View.VISIBLE);
             }
             holder.popupButton.setTag(getItem(position));
@@ -108,13 +93,11 @@ public class PublishedArticleListingAdapter extends BaseAdapter {
             Calendar calendar1 = Calendar.getInstance();
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
             SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm", Locale.US);
-            //    calendar1.setTime(sdf.parse(draftlist.get(position).getUpdatedTime()));
-            //   calendar1.add(Calendar.MILLISECOND, tz.getOffset(calendar1.getTimeInMillis()));
             calendar1.setTimeInMillis(articleDataModelsNew.get(position).getCreatedTime() * 1000);
 
             Long diff = System.currentTimeMillis() - articleDataModelsNew.get(position).getCreatedTime() * 1000;
             if (diff / (1000 * 60 * 60) > 24 && !sdf.format(System.currentTimeMillis()).equals(sdf.format((articleDataModelsNew.get(position).getCreatedTime() * 1000)))) {
-                holder.txvPublishDate.setText(sdf.format(calendar1.getTime()));
+                holder.txvPublishDate.setText(DateTimeUtils.getDateFromTimestamp(articleDataModelsNew.get(position).getCreatedTime()));
             } else {
                 holder.txvPublishDate.setText(sdf1.format(calendar1.getTime()));
             }
@@ -148,16 +131,9 @@ public class PublishedArticleListingAdapter extends BaseAdapter {
 
     class ViewHolder {
         TextView txvArticleTitle;
-        //   TextView txvAuthorName;
         TextView txvPublishDate;
-        //      ImageView imvAuthorThumb;
         TextView unapproved;
         View popupButton;
-//        ImageView authorPic;
-    }
-
-    public void refreshArticleList(ArrayList<ArticleListingResult> newList) {
-        this.articleDataModelsNew = newList;
     }
 
     public interface BtnClickListener {

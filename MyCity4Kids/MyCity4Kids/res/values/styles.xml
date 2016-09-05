@@ -199,9 +199,23 @@
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
     </style>
 
-    <style name="EditorTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="EditorTheme" parent="Theme.AppCompat.Light">
         <!-- Customize your theme here. -->
         <item name="colorControlActivated">@color/color_control_activated</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/primary</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:textColorSecondary">@android:color/white</item>
+        <item name="android:itemTextAppearance">@style/myCustomMenuTextApearance</item>
+        <!--<item name="android:actionMenuTextColor">@color/white_color</item>-->
+        <!--<item name="actionMenuTextColor">@color/white_color</item>-->
+    </style>
+
+    <style name="myCustomMenuTextApearance" parent="@android:style/TextAppearance.Widget.IconMenu.Item">
+        <item name="android:textColor">@android:color/black</item>
     </style>
 
     <style name="menu_labels_style">

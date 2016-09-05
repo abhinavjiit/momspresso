@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.kelltontech.utils.DateTimeUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.models.response.ReviewListingResult;
 
@@ -71,16 +72,10 @@ public class ReviewsListAdapter extends BaseAdapter {
             holder.ratingNo.setText(reviewList.get(position).getRating() + "/5");
             if (reviewList.get(position).getType().equals("business")) {
                 holder.txvReviewTitle.setText(reviewList.get(position).getBusinessName());
-                Calendar calendar1 = Calendar.getInstance();
-                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
-                calendar1.setTime(sdf.parse(reviewList.get(position).getDate()));
-                holder.reviewAddressDate.setText(reviewList.get(position).getBusinessAddress() + ", " + sdf.format(calendar1.getTime()));
+                holder.reviewAddressDate.setText(reviewList.get(position).getBusinessAddress() + ", " + DateTimeUtils.changeDate(reviewList.get(position).getDate()));
             } else {
                 holder.txvReviewTitle.setText(reviewList.get(position).getEventName());
-                Calendar calendar1 = Calendar.getInstance();
-                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
-                calendar1.setTime(sdf.parse(reviewList.get(position).getDate()));
-                holder.reviewAddressDate.setText(reviewList.get(position).getEventAddress() + ", " + sdf.format(calendar1.getTime()));
+                holder.reviewAddressDate.setText(reviewList.get(position).getEventAddress() + ", " + DateTimeUtils.changeDate(reviewList.get(position).getDate()));
             }
         } catch (Exception e) {
             e.printStackTrace();

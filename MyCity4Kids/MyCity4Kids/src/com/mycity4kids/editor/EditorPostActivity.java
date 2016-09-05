@@ -164,10 +164,8 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         menu.add(0, SELECT_IMAGE_MENU_POSITION, 0, getString(R.string.select_image));
-      /*  menu.add(0, SELECT_IMAGE_FAIL_MENU_POSITION, 0, getString(R.string.select_image_fail));
-        menu.add(0, SELECT_VIDEO_MENU_POSITION, 0, getString(R.string.select_video));
-        menu.add(0, SELECT_VIDEO_FAIL_MENU_POSITION, 0, getString(R.string.select_video_fail));*/
         menu.add(0, SELECT_IMAGE_CAMERA_MENU_POSITION, 0, getString(R.string.camera_pick));
+
     }
 
     @Override

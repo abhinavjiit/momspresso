@@ -392,7 +392,7 @@ public class FragmentKidProfile extends BaseFragment implements View.OnClickList
                 UserDetailResponse responseData = (UserDetailResponse) response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     saveDatainDB();
-                    Toast.makeText(getActivity(), "dwadawdawdadawdawdawdawdawdawdawdawd", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getActivity(), responseData.getReason(), Toast.LENGTH_SHORT).show();
                 }

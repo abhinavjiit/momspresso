@@ -3,6 +3,7 @@ package com.mycity4kids.editor;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -13,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.models.response.DraftListResult;
@@ -52,8 +54,6 @@ public class DraftListAdapter extends BaseAdapter {
         return position;
     }
 
-//    ViewHolder holder = null;
-
     @Override
     public View getView(final int position, View view, ViewGroup parent) {
         final ViewHolder holder;
@@ -67,10 +67,6 @@ public class DraftListAdapter extends BaseAdapter {
             holder.popupButton = view.findViewById(R.id.img_menu);
             holder.txvUnapproved = (TextView) view.findViewById(R.id.unapproved);
             holder.popupButton.setTag(getItem(position));
-
-            //    popupButton.setOnClickListener((DraftListViewActivity)context);
-
-
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
@@ -89,15 +85,11 @@ public class DraftListAdapter extends BaseAdapter {
                             intent.putExtra("from", "draftList");
                             context.startActivity(intent);
                             Log.e("edit", "clicked");
-                            //do something
                             return true;
                         } else if (i == R.id.delete) {
-                            //do something
                             ((BloggerDashboardActivity) context).deleteDraftAPI((DraftListResult) getItem(position), position);
                             Log.e("delete", "clicked");
                             return true;
-
-                            //    mClickListener.onBtnClick(position);
                         } else {
                             return onMenuItemClick(item);
                         }
@@ -118,7 +110,7 @@ public class DraftListAdapter extends BaseAdapter {
             view.setClickable(false);
             holder.popupButton.setClickable(true);
             holder.txvArticleTitle.setTextColor(Color.BLACK);
-            holder.txvUpdateDate.setTextColor(context.getResources().getColor(R.color.gray2));
+            holder.txvUpdateDate.setTextColor(ContextCompat.getColor(context, R.color.gray2));
         } else {
             switch (draftlist.get(position).getArticleType()) {
                 case "0": {
@@ -127,15 +119,15 @@ public class DraftListAdapter extends BaseAdapter {
                     view.setClickable(false);
                     holder.popupButton.setClickable(true);
                     holder.txvArticleTitle.setTextColor(Color.BLACK);
-                    holder.txvUpdateDate.setTextColor(context.getResources().getColor(R.color.gray2));
+                    holder.txvUpdateDate.setTextColor(ContextCompat.getColor(context, R.color.gray2));
                     break;
                 }
                 case "1": {
                     holder.txvUnapproved.setVisibility(View.VISIBLE);
                     holder.txvUnapproved.setText("Under Moderation");
-                    view.setBackgroundColor(context.getResources().getColor(R.color.gray_color));
-                    holder.txvArticleTitle.setTextColor(context.getResources().getColor(R.color.faded_text));
-                    holder.txvUpdateDate.setTextColor(context.getResources().getColor(R.color.faded_italic));
+                    view.setBackgroundColor(ContextCompat.getColor(context, R.color.gray_color));
+                    holder.txvArticleTitle.setTextColor(ContextCompat.getColor(context, R.color.faded_text));
+                    holder.txvUpdateDate.setTextColor(ContextCompat.getColor(context, R.color.faded_italic));
                     view.setClickable(true);
                     holder.popupButton.setClickable(false);
                     break;
@@ -146,7 +138,7 @@ public class DraftListAdapter extends BaseAdapter {
                     view.setClickable(false);
                     holder.popupButton.setClickable(true);
                     holder.txvArticleTitle.setTextColor(Color.BLACK);
-                    holder.txvUpdateDate.setTextColor(context.getResources().getColor(R.color.gray2));
+                    holder.txvUpdateDate.setTextColor(ContextCompat.getColor(context, R.color.gray2));
                     break;
                 }
                 case "4": {
@@ -155,7 +147,7 @@ public class DraftListAdapter extends BaseAdapter {
                     view.setClickable(false);
                     holder.popupButton.setClickable(true);
                     holder.txvArticleTitle.setTextColor(Color.BLACK);
-                    holder.txvUpdateDate.setTextColor(context.getResources().getColor(R.color.gray2));
+                    holder.txvUpdateDate.setTextColor(ContextCompat.getColor(context, R.color.gray2));
                     break;
                 }
                 default:
@@ -164,7 +156,7 @@ public class DraftListAdapter extends BaseAdapter {
                     view.setClickable(false);
                     holder.popupButton.setClickable(true);
                     holder.txvArticleTitle.setTextColor(Color.BLACK);
-                    holder.txvUpdateDate.setTextColor(context.getResources().getColor(R.color.gray2));
+                    holder.txvUpdateDate.setTextColor(ContextCompat.getColor(context, R.color.gray2));
                     break;
             }
         }
@@ -174,13 +166,11 @@ public class DraftListAdapter extends BaseAdapter {
             Calendar calendar1 = Calendar.getInstance();
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
             SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm", Locale.US);
-            //    calendar1.setTime(sdf.parse(draftlist.get(position).getUpdatedTime()));
-            //   calendar1.add(Calendar.MILLISECOND, tz.getOffset(calendar1.getTimeInMillis()));
             calendar1.setTimeInMillis(draftlist.get(position).getUpdatedTime() * 1000);
 
             Long diff = System.currentTimeMillis() - draftlist.get(position).getUpdatedTime() * 1000;
             if (diff / (1000 * 60 * 60) > 24 && !sdf.format(System.currentTimeMillis()).equals(sdf.format((draftlist.get(position).getUpdatedTime() * 1000)))) {
-                holder.txvUpdateDate.setText(sdf.format(calendar1.getTime()));
+                holder.txvUpdateDate.setText(DateTimeUtils.getDateFromTimestamp(draftlist.get(position).getUpdatedTime()));
             } else {
                 holder.txvUpdateDate.setText(sdf1.format(calendar1.getTime()));
             }
@@ -191,11 +181,9 @@ public class DraftListAdapter extends BaseAdapter {
         return view;
     }
 
-
     @Override
     public int getItemViewType(int position) {
         return draftlist.get(position).getItemType();
-
     }
 
     @Override
@@ -210,8 +198,6 @@ public class DraftListAdapter extends BaseAdapter {
         TextView txvUpdateDate;
         TextView txvUnapproved;
         View popupButton;
-
     }
-
 
 }

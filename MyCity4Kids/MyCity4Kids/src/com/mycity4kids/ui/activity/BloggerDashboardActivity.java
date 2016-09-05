@@ -394,6 +394,11 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                     hitPublishedArticleApi();
                     isReuqestRunning = true;
                 }
+                if (firstVisibleItem == 0) {
+                    hidefloatingbutton(false);
+                } else {
+                    hidefloatingbutton(true);
+                }
             }
         });
         moreTextView.setOnClickListener(new View.OnClickListener() {
@@ -502,6 +507,23 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                 }
             }
         });
+
+        draftListview.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (firstVisibleItem == 0) {
+                    hidefloatingbutton(false);
+                } else {
+                    hidefloatingbutton(true);
+                }
+            }
+        });
+
+
         publishedArticleListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -547,6 +569,12 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                     //  hitArticleListingApi(nextPageNumber, sortType, false);
                     hitCommentsApi();
                     isReuqestCommentsRunning = true;
+
+                }
+                if (firstVisibleItem == 0) {
+                    hidefloatingbutton(false);
+                } else {
+                    hidefloatingbutton(true);
                 }
             }
         });
@@ -565,6 +593,11 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                     //  hitArticleListingApi(nextPageNumber, sortType, false);
                     hitReviewApi();
                     isRequestReviewRunning = true;
+                }
+                if (firstVisibleItem == 0) {
+                    hidefloatingbutton(false);
+                } else {
+                    hidefloatingbutton(true);
                 }
             }
         });
@@ -617,6 +650,9 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                          public void onResponse(Call<ReviewResponse> call, retrofit2.Response<ReviewResponse> response) {
                              int statusCode = response.code();
                              removeProgressDialog();
+                             if (mLodingView.getVisibility() == View.VISIBLE) {
+                                 mLodingView.setVisibility(View.GONE);
+                             }
                              if (response == null || response.body() == null) {
                                  showToast(getString(R.string.went_wrong));
                                  return;
@@ -635,6 +671,9 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
 
                          @Override
                          public void onFailure(Call<ReviewResponse> call, Throwable t) {
+                             if (mLodingView.getVisibility() == View.VISIBLE) {
+                                 mLodingView.setVisibility(View.GONE);
+                             }
                              removeProgressDialog();
                              Crashlytics.logException(t);
                              Log.d("MC4kException", Log.getStackTraceString(t));
@@ -660,12 +699,12 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                          public void onResponse(Call<UserCommentsResponse> call, retrofit2.Response<UserCommentsResponse> response) {
                              int statusCode = response.code();
                              removeProgressDialog();
+                             if (mLodingView.getVisibility() == View.VISIBLE) {
+                                 mLodingView.setVisibility(View.GONE);
+                             }
                              if (response == null || response.body() == null) {
                                  showToast(getString(R.string.went_wrong));
                                  return;
-                             }
-                             if (mLodingView.getVisibility() == View.VISIBLE) {
-                                 mLodingView.setVisibility(View.GONE);
                              }
                              UserCommentsResponse responseModel = response.body();
                              if (responseModel.getCode() != 200) {
@@ -682,6 +721,9 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
 
                          @Override
                          public void onFailure(Call<UserCommentsResponse> call, Throwable t) {
+                             if (mLodingView.getVisibility() == View.VISIBLE) {
+                                 mLodingView.setVisibility(View.GONE);
+                             }
                              removeProgressDialog();
                              Crashlytics.logException(t);
                              Log.d("MC4kException", Log.getStackTraceString(t));
@@ -713,7 +755,6 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                              removeProgressDialog();
                              isReuqestRunning = false;
                              progressBar.setVisibility(View.INVISIBLE);
-
                              if (mLodingView.getVisibility() == View.VISIBLE) {
                                  mLodingView.setVisibility(View.GONE);
                              }
@@ -1039,7 +1080,11 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                                  showToast(getString(R.string.toast_response_error));
                                  return;
                              } else {
-                                 rankingTextView.setText(responseData.getData().getResult().getRank());
+                                 if (StringUtils.isNullOrEmpty(responseData.getData().getResult().getRank())) {
+                                     rankingTextView.setText("--");
+                                 } else {
+                                     rankingTextView.setText(responseData.getData().getResult().getRank());
+                                 }
                                  followersTextView.setText(responseData.getData().getResult().getFollowersCount());
                                  followingTextView.setText(responseData.getData().getResult().getFollowingCount());
                                  blogTitle.setText(responseData.getData().getResult().getBlogTitle());
@@ -1512,4 +1557,11 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                 true);
     }
 
+    public void hidefloatingbutton(Boolean b) {
+        if (b == true) {
+            addDraft.setVisibility(View.INVISIBLE);
+        } else {
+            addDraft.setVisibility(View.VISIBLE);
+        }
+    }
 }

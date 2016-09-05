@@ -136,12 +136,6 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
             noResultTextView.setVisibility(View.GONE);
             mDatalist = responseData.getData().getResult();
 
-//            for (int i = 0; i < mDatalist.size(); i++) {
-//                if (SharedPrefUtils.getUserDetailModel(this).getDynamoId().equals(mDatalist.get(i).getUserId())) {
-//                    mDatalist.remove(i);
-//                }
-//            }
-
             if (mDatalist.size() == 0) {
                 noResultTextView.setVisibility(View.VISIBLE);
                 followerFollowingListView.setVisibility(View.GONE);

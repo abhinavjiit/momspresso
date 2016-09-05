@@ -280,7 +280,7 @@ public class SyncUserInfoService extends IntentService implements UpdateListener
         protected Void doInBackground(UserDetailResponse... userResponses) {
 
             if (null != userResponses[0].getData().getResult().getKids()) {
-//                saveKidsInformation(userResponses[0].getData().getResult().getKids());
+                saveKidsInformation(userResponses[0].getData().getResult().getKids());
             }
             return null;
         }
@@ -296,6 +296,9 @@ public class SyncUserInfoService extends IntentService implements UpdateListener
 
     private void saveKidsInformation(ArrayList<KidsModel> kidsList) {
 
+        if (kidsList.size() == 1 && StringUtils.isNullOrEmpty(kidsList.get(0).getName())) {
+            return;
+        }
         ArrayList<KidsInfo> kidsInfoArrayList = new ArrayList<>();
 
         for (KidsModel kid : kidsList) {
@@ -325,8 +328,12 @@ public class SyncUserInfoService extends IntentService implements UpdateListener
     }
 
     public String convertTime(String time) {
-        Date date = new Date(Long.parseLong(time));
-        Format format = new SimpleDateFormat("dd-MM-yyyy");
-        return format.format(date);
+        try {
+            Date date = new Date(Long.parseLong(time));
+            Format format = new SimpleDateFormat("dd-MM-yyyy");
+            return format.format(date);
+        } catch (NumberFormatException nfe) {
+            return "";
+        }
     }
 }

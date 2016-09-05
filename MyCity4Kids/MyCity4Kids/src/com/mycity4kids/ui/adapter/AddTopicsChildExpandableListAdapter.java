@@ -114,7 +114,7 @@ public class AddTopicsChildExpandableListAdapter extends BaseExpandableListAdapt
 
         if (mSubCategoriesChildMap.get(subCategoryItem).size() == 0) {
             int count = mSubCategoriesChildMap.get(subCategoryItem).size();
-            holder.txvZoneName.setText(subCategoryItem.getTitle() + " (" + count + ")");
+            holder.txvZoneName.setText(subCategoryItem.getTitle().toUpperCase() + " (" + count + ")");
             holder.groupCheckedTxv.setVisibility(View.GONE);
             holder.childChkBox.setVisibility(View.VISIBLE);
             holder.childChkBox.setChecked(subCategoryItem.isSelected());
@@ -127,7 +127,7 @@ public class AddTopicsChildExpandableListAdapter extends BaseExpandableListAdapt
             });
         } else {
             int count = mSubCategoriesChildMap.get(subCategoryItem).size();
-            holder.txvZoneName.setText(subCategoryItem.getTitle() + " (" + count + ")");
+            holder.txvZoneName.setText(subCategoryItem.getTitle().toUpperCase() + " (" + count + ")");
             holder.groupCheckedTxv.setVisibility(View.VISIBLE);
             holder.childChkBox.setVisibility(View.GONE);
             if (isExpanded) {
@@ -154,7 +154,7 @@ public class AddTopicsChildExpandableListAdapter extends BaseExpandableListAdapt
         }
         Topics localitySubCategoryChild = (Topics) getChild(groupPosition, childPosition);
 
-        holder.txtLocalityName.setText(localitySubCategoryChild.getTitle());
+        holder.txtLocalityName.setText(localitySubCategoryChild.getTitle().toUpperCase());
 
         holder.childChkBox.setChecked(localitySubCategoryChild.isSelected());
         holder.childChkBox.setTag(new Positions(groupPosition, childPosition));

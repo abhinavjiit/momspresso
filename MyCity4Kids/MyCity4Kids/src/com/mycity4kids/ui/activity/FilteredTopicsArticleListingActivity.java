@@ -93,7 +93,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         selectedTopics = getIntent().getStringExtra("selectedTopics");
         displayName = getIntent().getStringExtra("displayName");
         if (null != displayName) {
-            getSupportActionBar().setTitle(displayName);
+            getSupportActionBar().setTitle(displayName.toUpperCase());
         }
 
         progressBar.setVisibility(View.VISIBLE);

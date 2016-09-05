@@ -12,7 +12,6 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.Session;
@@ -23,7 +22,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -48,19 +46,13 @@ import com.mycity4kids.models.user.KidsInfo;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.models.user.UserRequest;
 import com.mycity4kids.models.user.UserResponse;
-import com.mycity4kids.newmodels.FamilyInvites;
-import com.mycity4kids.newmodels.UserInviteModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
 import com.mycity4kids.sync.PushTokenService;
 import com.mycity4kids.ui.fragment.FacebookAddEmailDialogFragment;
-import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.widget.CustomFontEditText;
 import com.mycity4kids.widget.CustomFontTextView;
 
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -480,7 +472,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                     //Verified User
                     else {
                         if (null != responseData.getData().getResult().getKids()) {
-//                            saveKidsInformation(responseData.getData().getResult().getKids());
+                            saveKidsInformation(responseData.getData().getResult().getKids());
                         }
                         Intent intent = new Intent(ActivityLogin.this, PushTokenService.class);
                         startService(intent);
@@ -510,6 +502,9 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
 
         ArrayList<KidsInfo> kidsInfoArrayList = new ArrayList<>();
 
+        if (kidsList.size() == 1 && StringUtils.isNullOrEmpty(kidsList.get(0).getName())) {
+            return;
+        }
         for (KidsModel kid : kidsList) {
             KidsInfo kidsInfo = new KidsInfo();
             kidsInfo.setName(kid.getName());
@@ -537,9 +532,13 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
     }
 
     public String convertTime(String time) {
-        Date date = new Date(Long.parseLong(time));
-        Format format = new SimpleDateFormat("dd-MM-yyyy");
-        return format.format(date);
+        try {
+            Date date = new Date(Long.parseLong(time));
+            Format format = new SimpleDateFormat("dd-MM-yyyy");
+            return format.format(date);
+        } catch (NumberFormatException nfe) {
+            return "";
+        }
     }
 
     public void saveDatainDB(UserResponse model) {

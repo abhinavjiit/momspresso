@@ -437,7 +437,8 @@
 
         <activity
             android:name=".editor.EditorPostActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/EditorTheme" />
         <activity
             android:name=".editor.SetupBlogPageActivity"
             android:screenOrientation="portrait" />
@@ -451,16 +452,10 @@
             android:theme="@android:style/Theme.Dialog" />
         <activity
             android:name=".ui.activity.SettingsActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.ContributorListActivity"
-            android:screenOrientation="portrait"/>
-        <!--<activity-->
-        <!--android:name="com.mycity4kids.ui.activity.EventsFilterActivity"-->
-        <!--android:configChanges="keyboard|keyboardHidden|orientation|screenSize"-->
-        <!--android:screenOrientation="portrait"-->
-        <!--android:theme="@style/Theme.Transparent" />-->
-        <!--  Add preview activity. -->
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.google.android.gms.tagmanager.PreviewActivity"
             android:label="@string/app_name"

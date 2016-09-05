@@ -988,16 +988,32 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 }
 
                 if (responseBlogData.getCode() == 200 && Constants.SUCCESS.equals(responseBlogData.getStatus())) {
-                    trendingArticles.setVisibility(View.VISIBLE);
-                    trendingArticle1.setText(responseBlogData.getData().getResult().get(0).getTitle());
-                    trendingArticle1.setTag(responseBlogData.getData().getResult().get(0));
-                    trendingArticle2.setText(responseBlogData.getData().getResult().get(1).getTitle());
-                    trendingArticle2.setTag(responseBlogData.getData().getResult().get(1));
-                    trendingArticle3.setText(responseBlogData.getData().getResult().get(2).getTitle());
-                    trendingArticle3.setTag(responseBlogData.getData().getResult().get(2));
+                    ArrayList<ArticleListingResult> dataList = responseBlogData.getData().getResult();
+                    if (dataList == null || dataList.size() == 0) {
 
+                    } else {
+                        trendingArticles.setVisibility(View.VISIBLE);
+                        if (dataList.size() >= 3) {
+                            trendingArticle1.setText(dataList.get(0).getTitle());
+                            trendingArticle1.setTag(dataList.get(0));
+                            trendingArticle2.setText(dataList.get(1).getTitle());
+                            trendingArticle2.setTag(dataList.get(1));
+                            trendingArticle3.setText(dataList.get(2).getTitle());
+                            trendingArticle3.setTag(dataList.get(2));
+                        } else if (dataList.size() == 2) {
+                            trendingArticle1.setText(dataList.get(0).getTitle());
+                            trendingArticle1.setTag(dataList.get(0));
+                            trendingArticle2.setText(dataList.get(1).getTitle());
+                            trendingArticle2.setTag(dataList.get(1));
+                            trendingArticle3.setVisibility(View.GONE);
+                        } else if (dataList.size() == 1) {
+                            trendingArticle1.setText(dataList.get(0).getTitle());
+                            trendingArticle1.setTag(dataList.get(0));
+                            trendingArticle2.setVisibility(View.GONE);
+                            trendingArticle3.setVisibility(View.GONE);
+                        }
+                    }
                 }
-
             }
         }
     };
@@ -1027,9 +1043,9 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
                     } else {
                         recentAuthorArticleHeading.setText("RECENT BLOGS FROM " + author);
-                        // No results for search
+                        recentAuthorArticles.setVisibility(View.VISIBLE);
+
                         if (dataList.size() >= 3) {
-                            recentAuthorArticles.setVisibility(View.VISIBLE);
                             recentAuthorArticle1.setText(dataList.get(0).getTitle());
                             recentAuthorArticle1.setTag(dataList.get(0));
                             recentAuthorArticle2.setText(dataList.get(1).getTitle());
@@ -1037,14 +1053,12 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                             recentAuthorArticle3.setText(dataList.get(2).getTitle());
                             recentAuthorArticle3.setTag(dataList.get(2));
                         } else if (dataList.size() == 2) {
-                            recentAuthorArticles.setVisibility(View.VISIBLE);
                             recentAuthorArticle1.setText(dataList.get(0).getTitle());
                             recentAuthorArticle1.setTag(dataList.get(0));
                             recentAuthorArticle2.setText(dataList.get(1).getTitle());
                             recentAuthorArticle2.setTag(dataList.get(1));
                             recentAuthorArticle3.setVisibility(View.GONE);
                         } else if (dataList.size() == 1) {
-                            recentAuthorArticles.setVisibility(View.VISIBLE);
                             recentAuthorArticle1.setText(dataList.get(0).getTitle());
                             recentAuthorArticle1.setTag(dataList.get(0));
                             recentAuthorArticle2.setVisibility(View.GONE);

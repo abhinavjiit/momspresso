@@ -13,7 +13,7 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginRight="10dp"
-        android:src="@drawable/copy" />
+        android:src="@drawable/ic_launcher" />
 
     <TextView
         android:id="@+id/inviteeName"

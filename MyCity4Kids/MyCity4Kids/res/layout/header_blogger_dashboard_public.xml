@@ -6,8 +6,8 @@
 
     <ImageView
         android:id="@+id/bloggerImageView"
-        android:layout_width="95dp"
-        android:layout_height="95dp"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
         android:layout_below="@+id/toolbar"
         android:layout_margin="15dp"
         android:layout_marginTop="10dp"
@@ -17,101 +17,105 @@
         android:id="@+id/infoRelativeLL"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="15dp"
         android:layout_marginRight="5dp"
         android:layout_marginTop="15dp"
         android:layout_toRightOf="@id/bloggerImageView">
 
         <LinearLayout
-            android:id="@+id/rankLinearLL"
+            android:id="@+id/statsLinearLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentLeft="true"
-            android:layout_toLeftOf="@+id/followTextView"
-            android:layout_toRightOf="@+id/FollowersLinearLL"
-            android:layout_toStartOf="@+id/followTextView"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/rankingTextView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fontFamily="sans-serif-thin"
-                android:gravity="center"
-                android:text="--"
-                android:textSize="32sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="7dp"
-                android:gravity="center"
-                android:text="Rank"
-                android:textColor="@color/grey_faded"
-                android:textSize="13sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/FollowersLinearLL"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/followTextView"
-            android:layout_alignStart="@+id/followTextView"
-            android:layout_toLeftOf="@+id/FollowingLinearLL"
-            android:layout_toStartOf="@+id/FollowingLinearLL"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/followersTextView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fontFamily="sans-serif-thin"
-                android:gravity="center"
-                android:text="--"
-                android:textSize="32sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="7dp"
-                android:gravity="center"
-                android:text="Followers"
-                android:textColor="@color/grey_faded"
-                android:textSize="13sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/FollowingLinearLL"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:orientation="vertical">
+            android:layout_alignParentStart="true"
+            android:orientation="horizontal"
+            android:weightSum="3">
 
-            <TextView
-                android:id="@+id/followingTextView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fontFamily="sans-serif-thin"
-                android:gravity="center"
-                android:text="--"
-                android:textSize="32sp" />
+            <LinearLayout
+                android:id="@+id/rankLinearLL"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="7dp"
-                android:gravity="center"
-                android:text="Followings"
-                android:textColor="@color/grey_faded"
-                android:textSize="13sp" />
+                <TextView
+                    android:id="@+id/rankingTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="sans-serif-thin"
+                    android:text="--"
+                    android:textColor="@color/black_color"
+                    android:textSize="26sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="2dp"
+                    android:gravity="center"
+                    android:text="rank"
+                    android:textColor="@color/grey_faded"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/FollowersLinearLL"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/followersTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="sans-serif-thin"
+                    android:text="--"
+                    android:textColor="@color/black_color"
+                    android:textSize="26sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="2dp"
+                    android:text="followers"
+                    android:textColor="@color/grey_faded"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/FollowingLinearLL"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/followingTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="sans-serif-thin"
+                    android:text="--"
+                    android:textColor="@color/black_color"
+                    android:textSize="26sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="2dp"
+                    android:gravity="center"
+                    android:text="followings"
+                    android:textColor="@color/grey_faded"
+                    android:textSize="13sp" />
+            </LinearLayout>
         </LinearLayout>
 
         <TextView
             android:id="@+id/editProfileTextView"
             android:layout_width="match_parent"
             android:layout_height="33dp"
-            android:layout_below="@+id/rankLinearLL"
+            android:layout_below="@+id/statsLinearLayout"
             android:layout_marginRight="5dp"
             android:layout_marginTop="5dp"
             android:background="#ededed"
@@ -126,7 +130,7 @@
             android:id="@+id/followTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/rankLinearLL"
+            android:layout_below="@+id/statsLinearLayout"
             android:layout_centerInParent="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="10dp"
@@ -146,7 +150,7 @@
             android:id="@+id/unfollowTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/rankLinearLL"
+            android:layout_below="@+id/statsLinearLayout"
             android:layout_centerInParent="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="10dp"

@@ -2,7 +2,6 @@ package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,20 +10,16 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.ui.activity.ArticleListingActivity;
-import com.mycity4kids.ui.activity.CityBestArticleListingActivity;
 import com.mycity4kids.ui.activity.FilteredTopicsArticleListingActivity;
 import com.mycity4kids.widget.TopicsExpandableListView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 public class FilterTopicsParentExpandableListAdapter extends BaseExpandableListAdapter {
 
@@ -102,7 +97,7 @@ public class FilterTopicsParentExpandableListAdapter extends BaseExpandableListA
         TextView parentTopicName = (TextView) v.findViewById(R.id.parentTopicName);
         ImageView groupCheckedTxv = (ImageView) v.findViewById(R.id.plus_minus_topic);
         if (gt != null)
-            parentTopicName.setText(gt.getTitle());
+            parentTopicName.setText(gt.getTitle().toUpperCase());
 
         if (topicList.get(groupPosition).getChild().size() == 0) {
             groupCheckedTxv.setImageResource(0);

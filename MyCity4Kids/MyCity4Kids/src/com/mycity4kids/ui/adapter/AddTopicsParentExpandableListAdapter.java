@@ -55,7 +55,7 @@ public class AddTopicsParentExpandableListAdapter extends BaseExpandableListAdap
         TextView parentTopicName = (TextView) v.findViewById(R.id.parentTopicName);
         ImageView groupCheckedTxv = (ImageView) v.findViewById(R.id.plus_minus_topic);
         if (gt != null)
-            parentTopicName.setText(gt.getTitle());
+            parentTopicName.setText(gt.getTitle().toUpperCase());
 
         if (isExpanded) {
             groupCheckedTxv.setImageResource(R.drawable.uparrow);

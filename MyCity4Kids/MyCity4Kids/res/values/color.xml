@@ -71,7 +71,7 @@
     <!-- new color strings -->
     <!-- <color name="primary">#1d55f1</color>-->
     <color name="primary">#4185f2</color>
-    <color name="primary_dark">#1744c3</color>
+    <color name="primary_dark">#0c4cb1</color>
     <color name="blue_light">#3366f3</color>
     <color name="red_drawer_selected">#ec3b55</color>
     <color name="welcome_pink">#ea3a8d</color>

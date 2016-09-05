@@ -3,7 +3,6 @@ package com.mycity4kids.controller;
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.kelltontech.controller.BaseController;
@@ -11,16 +10,12 @@ import com.kelltontech.network.HttpClientConnection;
 import com.kelltontech.network.Response;
 import com.kelltontech.network.ServiceRequest;
 import com.kelltontech.ui.IScreen;
-import com.kelltontech.utils.DataUtils;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.dbtable.UserTable;
-import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.models.user.UserResponse;
 import com.mycity4kids.newmodels.FamilyInvites;
 import com.mycity4kids.newmodels.UserInviteModel;
-import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.ui.activity.ListFamilyInvitesActivity;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
