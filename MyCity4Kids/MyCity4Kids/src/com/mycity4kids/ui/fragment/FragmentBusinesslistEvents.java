@@ -134,7 +134,7 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Utils.pushOpenScreenEvent(getActivity(), "Upcoming Events", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
+        Utils.pushOpenScreenEvent(getActivity(), "Upcoming Events", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
 
         view = inflater.inflate(R.layout.business_list_activity, null);
 

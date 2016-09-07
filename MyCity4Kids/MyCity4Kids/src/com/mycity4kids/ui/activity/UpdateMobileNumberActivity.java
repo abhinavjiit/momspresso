@@ -42,7 +42,7 @@ public class UpdateMobileNumberActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.social_signup_layout);
-        Utils.pushOpenScreenEvent(UpdateMobileNumberActivity.this, "Update Mobile No", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+        Utils.pushOpenScreenEvent(UpdateMobileNumberActivity.this, "Update Mobile No", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);

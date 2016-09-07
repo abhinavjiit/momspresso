@@ -71,7 +71,7 @@ public class TutorialActivity extends BaseActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_pager);
-        Utils.pushOpenScreenEvent(TutorialActivity.this, "Tutorial Screen", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+        Utils.pushOpenScreenEvent(TutorialActivity.this, "Tutorial Screen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         mViewPager = (ViewPager) findViewById(R.id.pager);
 
         mViewPagerAdapter = new TutorialAdapter(getSupportFragmentManager(), this);

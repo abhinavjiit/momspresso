@@ -29,8 +29,10 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.enums.ParentingFilterType;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.NewArticlesListingAdapter;
 
@@ -74,7 +76,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Topics");
-
+        Utils.pushOpenScreenEvent(FilteredTopicsArticleListingActivity.this, "Topic Articles List", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         listView = (ListView) findViewById(R.id.scroll);
         mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
         noBlogsTextView = (TextView) findViewById(R.id.noBlogsTextView);

@@ -47,7 +47,7 @@ public class SelectLocationActivity extends BaseActivity implements FetchCity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_select_location);
-		Utils.pushOpenScreenEvent(SelectLocationActivity.this, "Select Location", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+		Utils.pushOpenScreenEvent(SelectLocationActivity.this, "Select Location", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
 		locationList = (ListView) findViewById(R.id.locationList);
 		GPSTracker getCurrentLocation = new GPSTracker(SelectLocationActivity.this);

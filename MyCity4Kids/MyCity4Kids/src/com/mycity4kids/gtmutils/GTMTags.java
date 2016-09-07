@@ -7,4 +7,6 @@ public class GTMTags {
     public static final String USER_ID="userId";
     //public static final String SELECTED_OPTION="selectedOption";
     public static final String ScreenName="screenName";
+    public static final String HandledUrl="handledUrl";
+    public static final String TopicChosen="topicChosen";
 }

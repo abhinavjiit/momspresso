@@ -45,7 +45,7 @@ public class SubCategoryFragment extends Fragment implements OnClickListener{
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_sub_category,container, false);
-		Utils.pushOpenScreenEvent(getActivity(), "Listing Sub Category Filter", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
+		Utils.pushOpenScreenEvent(getActivity(), "Listing Sub Category Filter", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
 
 		SubCategoryTable _table=new SubCategoryTable((BaseApplication)getActivity().getApplication());
 		categoryId=getArguments().getInt(Constants.CATEGORY_KEY);

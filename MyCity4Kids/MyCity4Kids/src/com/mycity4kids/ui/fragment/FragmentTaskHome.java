@@ -74,7 +74,7 @@ public class FragmentTaskHome extends BaseFragment implements View.OnClickListen
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 //        return super.onCreateView(inflater, container, savedInstanceState);
         view = inflater.inflate(R.layout.aa_task_home, container, false);
-        Utils.pushOpenScreenEvent(getActivity(), "To-Do Lists", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
+        Utils.pushOpenScreenEvent(getActivity(), "To-Do Lists", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
 
         tastMainList = (ExpandableListView) view.findViewById(R.id.task_main_list);
         //searchBtn = (ImageView) view.findViewById(R.id.search_btn);

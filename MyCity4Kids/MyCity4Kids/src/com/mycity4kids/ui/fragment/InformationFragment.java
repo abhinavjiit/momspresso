@@ -71,7 +71,7 @@ public class InformationFragment extends BaseFragment implements OnClickListener
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Utils.pushOpenScreenEvent(getActivity(), "Info resource/events", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
+        Utils.pushOpenScreenEvent(getActivity(), "Info resource/events", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
 
         try {
             mBusinessInfoModel = getArguments().getParcelable("BusinessInfo");

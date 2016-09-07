@@ -55,7 +55,7 @@ public class ArticleFilterDialogActivity extends BaseActivity implements View.On
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
-        Utils.pushOpenScreenEvent(ArticleFilterDialogActivity.this, "Blogs Filter Dialogue Screen", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+        Utils.pushOpenScreenEvent(ArticleFilterDialogActivity.this, "Blogs Filter Dialogue Screen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
         setContentView(R.layout.filter_dialog_activity);

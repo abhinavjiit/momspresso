@@ -78,7 +78,7 @@ public class FragmentHomeCategory extends BaseFragment implements OnClickListene
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.category_activity, null);
-        Utils.pushOpenScreenEvent(getActivity(), "Kids Resources Dashboard", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
+        Utils.pushOpenScreenEvent(getActivity(), "Kids Resources Dashboard", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
 
         try {
             mLocalitySearchEtxt = (EditText) view.findViewById(R.id.locality_search);

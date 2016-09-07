@@ -43,7 +43,7 @@ public class SearchArticlesAndAuthorsActivity extends BaseActivity implements Vi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Utils.pushOpenScreenEvent(SearchArticlesAndAuthorsActivity.this, "Search Articles/Authors", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+        Utils.pushOpenScreenEvent(SearchArticlesAndAuthorsActivity.this, "Search Articles/Authors", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
         setContentView(R.layout.search_articles_authors_activity);
 

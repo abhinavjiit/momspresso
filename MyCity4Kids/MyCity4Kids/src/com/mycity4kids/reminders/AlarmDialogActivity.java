@@ -28,7 +28,7 @@ public class AlarmDialogActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Utils.pushOpenScreenEvent(AlarmDialogActivity.this, "Alarm Dialogue", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+        Utils.pushOpenScreenEvent(AlarmDialogActivity.this, "Alarm Dialogue", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
         try {
             requestWindowFeature(Window.FEATURE_NO_TITLE);

@@ -169,7 +169,7 @@ public class DetailHeader extends RelativeLayout implements OnClickListener {
                 case R.id.write_a_review:
                     Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
                     shareIntent.setType("text/plain");
-                    Utils.pushEvent(getContext(), GTMEventType.SHARE_RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getContext()).getId() + "", "Resource/Event Details");
+                    Utils.pushEvent(getContext(), GTMEventType.SHARE_RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getContext()).getDynamoId() + "", "Resource/Event Details");
 
 
                     String titleName = detailsResponse.getName();
@@ -249,7 +249,7 @@ public class DetailHeader extends RelativeLayout implements OnClickListener {
                     fragmentDialog.setSubmitListner((IOnSubmitGallery) getContext());
                     fragmentDialog.show(((FragmentActivity) getContext()).getSupportFragmentManager(), "");
                     ((BusinessDetailsActivity) getContext()).writeReviewFromHeader(AddReviewOrPhoto.AddPhoto);
-                    Utils.pushEvent(getContext(), GTMEventType.ADDPHOTOS_EVENT_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getContext()).getId() + "", "");
+                    Utils.pushEvent(getContext(), GTMEventType.ADDPHOTOS_EVENT_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getContext()).getDynamoId() + "", "");
 
 
                     break;

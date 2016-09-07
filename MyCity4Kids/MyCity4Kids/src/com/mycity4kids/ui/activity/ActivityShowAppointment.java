@@ -119,7 +119,7 @@ public class ActivityShowAppointment extends BaseActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.aa_show_appointment);
-        Utils.pushOpenScreenEvent(ActivityShowAppointment.this, "Appointment Detail", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+        Utils.pushOpenScreenEvent(ActivityShowAppointment.this, "Appointment Detail", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         NotificationManager nMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         nMgr.cancel(getIntent().getIntExtra(AppConstants.NOTIFICATION_ID, 0));
 

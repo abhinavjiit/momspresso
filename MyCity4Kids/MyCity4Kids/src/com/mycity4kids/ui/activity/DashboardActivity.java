@@ -251,7 +251,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
         txvAllTaskPopup = (TextView) findViewById(R.id.all_tasklist);
 
-        Utils.pushOpenScreenEvent(DashboardActivity.this, "DashBoard", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+        Utils.pushOpenScreenEvent(DashboardActivity.this, "DashBoard", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
 //        Reminder.with(this).info(Constants.REMINDER_KIDS_BIRTHDAY, "RANDOM kids birthday")
 //                .startTime(1419318120000l).setRepeatBehavior("Yearly", "Forever", "", null)
@@ -1744,7 +1744,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
             case R.id.rdBtnToday:
                 changeVisibiltyOfArrow(false);
-                Utils.pushEvent(DashboardActivity.this, GTMEventType.MC4KToday_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Left Menu Screen");
+                Utils.pushEvent(DashboardActivity.this, GTMEventType.MC4KToday_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Left Menu Screen");
                 //TableAppointmentData data = new TableAppointmentData(BaseApplication.getInstance());
                 //TableTaskData taskData = new TableTaskData(BaseApplication.getInstance());
                 //int count = data.getRowsCount() + taskData.getRowsCount();
@@ -1786,7 +1786,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
             break;*/
             case R.id.rdBtnUpcoming:
-                Utils.pushEvent(DashboardActivity.this, GTMEventType.UPCOMING_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Left Menu Screen");
+                Utils.pushEvent(DashboardActivity.this, GTMEventType.UPCOMING_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Left Menu Screen");
                 Constants.IS_SEARCH_LISTING = false;
                 changeVisibiltyOfArrow(false);
                 setTitle("Upcoming Events");
@@ -1799,7 +1799,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 replaceFragment(fragment, bundle, true);
                 break;
             case R.id.rdBtnKids:
-                Utils.pushEvent(DashboardActivity.this, GTMEventType.RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Left Menu Screen");
+                Utils.pushEvent(DashboardActivity.this, GTMEventType.RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Left Menu Screen");
                 Constants.IS_SEARCH_LISTING = false;
                 changeVisibiltyOfArrow(false);
                 setTitle("Kids Resources");
@@ -1815,7 +1815,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.editor:
                 if (Build.VERSION.SDK_INT > 15) {
-                    Utils.pushEvent(DashboardActivity.this, GTMEventType.ADD_BLOG_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Left Menu Screen");
+                    Utils.pushEvent(DashboardActivity.this, GTMEventType.ADD_BLOG_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Left Menu Screen");
                     Intent intent1 = new Intent(DashboardActivity.this, EditorPostActivity.class);
                     Bundle bundle5 = new Bundle();
                     bundle5.putString(EditorPostActivity.TITLE_PARAM, "");
@@ -1910,7 +1910,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;*/
 
             case R.id.feed_back:
-                Utils.pushEvent(DashboardActivity.this, GTMEventType.FEEDBACK_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Left Menu Screen");
+                Utils.pushEvent(DashboardActivity.this, GTMEventType.FEEDBACK_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Left Menu Screen");
                 changeVisibiltyOfArrow(false);
                 setTitle("Send Feedback");
                 replaceFragment(new SendFeedbackFragment(), null, true);

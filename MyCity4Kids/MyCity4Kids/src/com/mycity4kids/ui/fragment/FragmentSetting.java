@@ -60,7 +60,7 @@ public class FragmentSetting extends BaseFragment implements View.OnClickListene
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.aa_setting, container, false);
-        Utils.pushOpenScreenEvent(getActivity(), "Settings", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
+        Utils.pushOpenScreenEvent(getActivity(), "Settings", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
 
         // ((SettingsActivity) getActivity()).refreshMenu();
         bio = getArguments().getString("bio");

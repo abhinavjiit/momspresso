@@ -43,7 +43,7 @@ public class YouTubeVideoActivity extends YouTubeFailureRecoveryActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.playerview_demo);
-        Utils.pushOpenScreenEvent(YouTubeVideoActivity.this, "Youtube Video", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+        Utils.pushOpenScreenEvent(YouTubeVideoActivity.this, "Youtube Video", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {

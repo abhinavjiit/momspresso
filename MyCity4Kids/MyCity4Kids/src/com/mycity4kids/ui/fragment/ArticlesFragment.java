@@ -37,7 +37,7 @@ public class ArticlesFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Utils.pushOpenScreenEvent(getActivity(), "Blogs Dashboard", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
+        Utils.pushOpenScreenEvent(getActivity(), "Blogs Dashboard", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
 
         View view = inflater.inflate(R.layout.aa_fragment_article_new, null);
         addDraft = (ImageView) view.findViewById(R.id.addDraft);

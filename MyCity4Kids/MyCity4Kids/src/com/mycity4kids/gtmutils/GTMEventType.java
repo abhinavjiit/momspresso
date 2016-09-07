@@ -356,6 +356,13 @@ public enum  GTMEventType {
                     return "addBlogClicked";
                 }
             },
+    TOPIC_FILTER_CHOSEN_EVENT
+            {
+                @Override
+                public String toString() {
+                    return "topicFilter";
+                }
+            },
 
 
 }

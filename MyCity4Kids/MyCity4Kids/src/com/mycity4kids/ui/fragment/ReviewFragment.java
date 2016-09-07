@@ -53,7 +53,7 @@ public class ReviewFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_review, null, false);
-        Utils.pushOpenScreenEvent(getActivity(), "Review resource/events", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
+        Utils.pushOpenScreenEvent(getActivity(), "Review resource/events", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
 
         try {
             _reviewLayout = (LinearLayout) view.findViewById(R.id.reviewLayout);

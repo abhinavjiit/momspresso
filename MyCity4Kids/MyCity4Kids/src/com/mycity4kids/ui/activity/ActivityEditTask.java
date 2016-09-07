@@ -147,7 +147,7 @@ public class ActivityEditTask extends BaseActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.aa_edit_task);
-        Utils.pushOpenScreenEvent(ActivityEditTask.this, "Edit task", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+        Utils.pushOpenScreenEvent(ActivityEditTask.this, "Edit task", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         NotificationManager nMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         nMgr.cancel(getIntent().getIntExtra(AppConstants.NOTIFICATION_ID, 0));
 

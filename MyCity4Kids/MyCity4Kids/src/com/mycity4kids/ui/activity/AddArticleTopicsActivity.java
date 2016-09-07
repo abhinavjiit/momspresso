@@ -70,7 +70,7 @@ public class AddArticleTopicsActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        Utils.pushOpenScreenEvent(AddArticleTopicsActivity.this, "Add Topics", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+        Utils.pushOpenScreenEvent(AddArticleTopicsActivity.this, "Add Topics", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         setContentView(R.layout.add_article_topics_activity);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);

@@ -95,7 +95,7 @@ public class CreateFamilyActivity extends BaseActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_family_activity);
-        Utils.pushOpenScreenEvent(CreateFamilyActivity.this, "Create Family", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+        Utils.pushOpenScreenEvent(CreateFamilyActivity.this, "Create Family", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 

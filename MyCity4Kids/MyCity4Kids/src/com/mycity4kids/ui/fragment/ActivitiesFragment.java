@@ -47,7 +47,7 @@ public class ActivitiesFragment extends Fragment implements OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_activities_group, container, false);
-        Utils.pushOpenScreenEvent(getActivity(), "Listing Activities Filter", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
+        Utils.pushOpenScreenEvent(getActivity(), "Listing Activities Filter", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
 
         query_search = (EditText) view.findViewById(R.id.query_search);
         ActivititiesTable _table = new ActivititiesTable((BaseApplication) getActivity().getApplication());

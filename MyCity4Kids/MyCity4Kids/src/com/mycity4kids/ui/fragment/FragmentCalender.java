@@ -104,7 +104,7 @@ public class FragmentCalender extends BaseFragment implements View.OnClickListen
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.aa_appointmentmain, container, false);
-        Utils.pushOpenScreenEvent(getActivity(), "Calendar", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
+        Utils.pushOpenScreenEvent(getActivity(), "Calendar", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
 
         mainLayout = (RelativeLayout) view.findViewById(R.id.mainlayout);
 

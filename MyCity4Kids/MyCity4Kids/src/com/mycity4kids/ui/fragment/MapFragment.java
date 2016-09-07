@@ -60,7 +60,7 @@ public class MapFragment extends BaseFragment implements OnClickListener, OnMapR
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, null, false);
-        Utils.pushOpenScreenEvent(getActivity(), "Map for resource/event", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
+        Utils.pushOpenScreenEvent(getActivity(), "Map for resource/event", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
 
         try {
 //			if(googleMap!=null){

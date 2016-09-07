@@ -135,7 +135,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.aa_mc4k_home, container, false);
-        Utils.pushOpenScreenEvent(getActivity(), "Dashboard Fragment", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
+        Utils.pushOpenScreenEvent(getActivity(), "Dashboard Fragment", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
         mInflator = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         hzScrollLinearLayout = (LinearLayout) view.findViewById(R.id.hzScrollLinearLayout);
         hzScrollLinearLayout1 = (LinearLayout) view.findViewById(R.id.hzScrollLinearLayout1);
@@ -1731,7 +1731,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                         i.putExtra(Constants.EVENT_LOCATION, mBusinessDataListings.get(finalI1).getLocality());
                         i.putExtra(Constants.EVENT_START_DATE, mBusinessDataListings.get(finalI1).getStart_date());
                         i.putExtra(Constants.EVENT_END_DATE, mBusinessDataListings.get(finalI1).getEnd_date());
-                        Utils.pushEvent(getActivity(), GTMEventType.EVENTLIST_PLUS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "", "Upcoming Events");
+                        Utils.pushEvent(getActivity(), GTMEventType.EVENTLIST_PLUS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", "Upcoming Events");
                         getActivity().startActivity(i);
                     }
                 }
@@ -1741,7 +1741,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + mBusinessDataListings.get(finalI2).getPhone()));
-                    Utils.pushEvent(getActivity(), GTMEventType.CALL_RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "", "Dashboard");
+                    Utils.pushEvent(getActivity(), GTMEventType.CALL_RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", "Dashboard");
 
                     startActivity(intent);
                 }

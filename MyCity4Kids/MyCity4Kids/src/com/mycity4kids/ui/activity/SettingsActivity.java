@@ -88,7 +88,7 @@ public class SettingsActivity extends BaseActivity  {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-      //  Utils.pushOpenScreenEvent(Se(), "Settings", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
+        Utils.pushOpenScreenEvent(SettingsActivity.this, "Settings", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
       //  ((DashboardActivity) getActivity()).refreshMenu();
 

@@ -51,7 +51,7 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.follower_following_list_activity);
-        Utils.pushOpenScreenEvent(FollowersAndFollowingListActivity.this, "Followers/Following List", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+        Utils.pushOpenScreenEvent(FollowersAndFollowingListActivity.this, "Followers/Following List", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         followListType = getIntent().getStringExtra(AppConstants.FOLLOW_LIST_TYPE);
         userId = getIntent().getStringExtra(AppConstants.USER_ID_FOR_FOLLOWING_FOLLOWERS);
 

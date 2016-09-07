@@ -150,7 +150,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blogger_dashboard);
-        Utils.pushOpenScreenEvent(BloggerDashboardActivity.this, "User Profile", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+        Utils.pushOpenScreenEvent(BloggerDashboardActivity.this, "User Profile", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         userId = getIntent().getStringExtra(AppConstants.PUBLIC_PROFILE_USER_ID);
         stackClearRequired = getIntent().getBooleanExtra(AppConstants.STACK_CLEAR_REQUIRED, false);
         if (userId == null || userId.equals(SharedPrefUtils.getUserDetailModel(BloggerDashboardActivity.this).getDynamoId())) {

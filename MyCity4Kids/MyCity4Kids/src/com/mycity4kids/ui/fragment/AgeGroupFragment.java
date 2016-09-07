@@ -39,7 +39,7 @@ public class AgeGroupFragment extends Fragment implements OnClickListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_age_group, container, false);
-		Utils.pushOpenScreenEvent(getActivity(), "Resources Age Group Filter", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
+		Utils.pushOpenScreenEvent(getActivity(), "Resources Age Group Filter", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
 
 		businessOrEvent=getArguments().getInt(Constants.PAGE_TYPE);
 		categoryId=getArguments().getInt(Constants.CATEGORY_KEY);

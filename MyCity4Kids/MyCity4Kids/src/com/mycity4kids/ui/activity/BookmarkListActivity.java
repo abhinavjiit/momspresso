@@ -73,7 +73,7 @@ public class BookmarkListActivity extends BaseActivity implements SwipeRefreshLa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_article_layout);
-        Utils.pushOpenScreenEvent(BookmarkListActivity.this, "Bookmark List", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+        Utils.pushOpenScreenEvent(BookmarkListActivity.this, "Bookmark List", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         sortType = AppConstants.SORT_TYPE_BOOKMARK;
         mToolBar = (Toolbar) findViewById(R.id.toolbar);
         mToolBar.setVisibility(View.VISIBLE);

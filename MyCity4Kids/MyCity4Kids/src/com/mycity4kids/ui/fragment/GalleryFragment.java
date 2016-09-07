@@ -54,7 +54,7 @@ public class GalleryFragment extends BaseFragment implements IOnSubmitGallery {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_gallery, null, false);
-        Utils.pushOpenScreenEvent(getActivity(), "Gallery resource/events", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
+        Utils.pushOpenScreenEvent(getActivity(), "Gallery resource/events", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
 
         try {
 

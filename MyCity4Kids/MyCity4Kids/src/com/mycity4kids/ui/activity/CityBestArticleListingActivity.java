@@ -25,6 +25,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.enums.ParentingFilterType;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -64,7 +65,7 @@ public class CityBestArticleListingActivity extends BaseActivity {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setCityNameAsTitle();
-
+        Utils.pushOpenScreenEvent(CityBestArticleListingActivity.this, "Best of City Listing", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
         listView = (ListView) findViewById(R.id.scroll);
         mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);

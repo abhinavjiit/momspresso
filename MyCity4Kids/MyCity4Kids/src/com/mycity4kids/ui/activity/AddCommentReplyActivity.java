@@ -30,7 +30,7 @@ public class AddCommentReplyActivity extends BaseActivity implements OnClickList
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Utils.pushOpenScreenEvent(AddCommentReplyActivity.this, "Comment Reply", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+		Utils.pushOpenScreenEvent(AddCommentReplyActivity.this, "Comment Reply", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
 		try {
 			setContentView(R.layout.activity_comment_reply);

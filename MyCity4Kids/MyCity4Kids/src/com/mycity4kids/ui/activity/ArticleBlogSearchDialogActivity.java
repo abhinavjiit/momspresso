@@ -51,7 +51,7 @@ public class ArticleBlogSearchDialogActivity<T> extends BaseActivity implements 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Utils.pushOpenScreenEvent(ArticleBlogSearchDialogActivity.this, "Blog Search", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+		Utils.pushOpenScreenEvent(ArticleBlogSearchDialogActivity.this, "Blog Search", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
 		try {
 			setContentView(R.layout.activity_article_blog_search);

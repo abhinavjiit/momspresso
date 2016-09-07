@@ -131,7 +131,7 @@ public class ActivityCreateAppointment extends BaseActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.aa_create_appointment);
         density = getResources().getDisplayMetrics().density;
-        Utils.pushOpenScreenEvent(ActivityCreateAppointment.this, "Create Appointment", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+        Utils.pushOpenScreenEvent(ActivityCreateAppointment.this, "Create Appointment", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

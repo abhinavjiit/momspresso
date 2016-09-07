@@ -105,7 +105,7 @@ public class ProfileActivity extends BaseActivity implements IOnSubmitGallery,On
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Utils.pushOpenScreenEvent(ProfileActivity.this, "Edit Profile", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+		Utils.pushOpenScreenEvent(ProfileActivity.this, "Edit Profile", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
 		try {
 			setContentView(R.layout.activity_view_edit_profile);

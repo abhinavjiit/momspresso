@@ -90,7 +90,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
         articleImage = (ImageView) findViewById(R.id.articleImage);
 
         baseApplication = (BaseApplication) getApplication();
-        Utils.pushOpenScreenEvent(ArticleImageTagUploadActivity.this, "Article Image Upload", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+        Utils.pushOpenScreenEvent(ArticleImageTagUploadActivity.this, "Article Image Upload", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         if ((getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList"))) {
             String thumbnailUrl = getIntent().getStringExtra("imageUrl");
             articleId = getIntent().getStringExtra("articleId");
@@ -111,7 +111,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
         publish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.pushEvent(ArticleImageTagUploadActivity.this, GTMEventType.PUBLISH_ARTICLE_BUTTON_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(ArticleImageTagUploadActivity.this).getId() + "", "Article Image Upload");
+                Utils.pushEvent(ArticleImageTagUploadActivity.this, GTMEventType.PUBLISH_ARTICLE_BUTTON_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(ArticleImageTagUploadActivity.this).getDynamoId() + "", "Article Image Upload");
                 pref = getSharedPreferences(COMMON_PREF_FILE, MODE_PRIVATE);
                 blogSetup = pref.getBoolean("blogSetup", false);
                 Log.e("blogsetup", blogSetup + "");

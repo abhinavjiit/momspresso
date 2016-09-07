@@ -52,7 +52,7 @@ public class AutoSuggestTransparentDialogActivity extends BaseActivity implement
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		Utils.pushOpenScreenEvent(AutoSuggestTransparentDialogActivity.this, "Resource Search", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+		Utils.pushOpenScreenEvent(AutoSuggestTransparentDialogActivity.this, "Resource Search", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
 		try {
 			setContentView(R.layout.transparent_auto_search_activity);

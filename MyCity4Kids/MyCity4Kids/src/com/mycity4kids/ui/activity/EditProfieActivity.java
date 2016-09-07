@@ -39,7 +39,7 @@ public class EditProfieActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_profile);
-        Utils.pushOpenScreenEvent(EditProfieActivity.this, "Edit Profile", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+        Utils.pushOpenScreenEvent(EditProfieActivity.this, "Edit Profile", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         mToolBar = (Toolbar) findViewById(R.id.toolbar);
         editFirstName = (EditText) findViewById(R.id.editFirstName);
         editLastName = (EditText) findViewById(R.id.editLastName);

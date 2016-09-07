@@ -74,7 +74,7 @@ public class RateAppDialogFragment extends android.app.DialogFragment implements
                 rateModel.setAppRateVersion(-7);
                 SharedPrefUtils.setAppRateVersion(getActivity(), rateModel);
                 getDialog().dismiss();
-                Utils.pushEvent(getActivity(), GTMEventType.NOT_RATE_EVENT_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "", "");
+                Utils.pushEvent(getActivity(), GTMEventType.NOT_RATE_EVENT_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", "");
 
                 break;
             case R.id.rate_now:
@@ -82,7 +82,7 @@ public class RateAppDialogFragment extends android.app.DialogFragment implements
                 rateModel.setAppRateVersion(0);
                 getDialog().dismiss();
                 SharedPrefUtils.setAppRateVersion(getActivity(), rateModel);
-                Utils.pushEvent(getActivity(), GTMEventType.RATE_APP_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "", "");
+                Utils.pushEvent(getActivity(), GTMEventType.RATE_APP_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", "");
 
                 /**
                  * a try/catch block here because an Exception will be thrown if the Play Store is not installed on the target device.

@@ -111,7 +111,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                 if (type.equalsIgnoreCase("Appointment")) {
 
                     if (!(pushNotificationModel.getUser_id().equals(SharedPrefUtils.getUserDetailModel(this).getId()))) {
-                        Utils.pushEvent(getApplicationContext(), GTMEventType.APPOINTMENT_NOTIFICATION_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getApplicationContext()).getId() + "", "");
+                        Utils.pushEvent(getApplicationContext(), GTMEventType.APPOINTMENT_NOTIFICATION_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId() + "", "");
                         Intent intent = new Intent(this, SyncService.class);
                         intent.putExtra(Constants.PUSH_MODEL, pushNotificationModel);
                         intent.putExtra("isAppointmentFlag", true);
@@ -120,7 +120,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     }
                 } else if (type.equalsIgnoreCase("task")) {
                     if (!(pushNotificationModel.getUser_id().equals(SharedPrefUtils.getUserDetailModel(this).getId()))) {
-                        Utils.pushEvent(getApplicationContext(), GTMEventType.TASK_NOTIFICATION_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getApplicationContext()).getId() + "", "");
+                        Utils.pushEvent(getApplicationContext(), GTMEventType.TASK_NOTIFICATION_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId() + "", "");
                         Intent intent = new Intent(this, SyncService.class);
                         intent.putExtra(Constants.PUSH_MODEL, pushNotificationModel);
                         intent.putExtra("isAppointmentFlag", false);
@@ -130,7 +130,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                 } else if (type.equalsIgnoreCase("family")) {
                     // update family too
                     if (!(pushNotificationModel.getUser_id().equals(SharedPrefUtils.getUserDetailModel(this).getId()))) {
-                        Utils.pushEvent(getApplicationContext(), GTMEventType.FAMILY_NOTICATION_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getApplicationContext()).getId() + "", "");
+                        Utils.pushEvent(getApplicationContext(), GTMEventType.FAMILY_NOTICATION_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId() + "", "");
 
                         Intent intent = new Intent(this, SyncUserInfoService.class);
                         intent.putExtra(Constants.PUSH_MODEL, pushNotificationModel);
@@ -138,7 +138,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     }
                 } else if (type.equalsIgnoreCase("Article")) {
                     // generate notifications
-                    Utils.pushEvent(getApplicationContext(), GTMEventType.BLOG_NOTIFICATION_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getApplicationContext()).getId() + "", "");
+                    Utils.pushEvent(getApplicationContext(), GTMEventType.BLOG_NOTIFICATION_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId() + "", "");
 
                     Log.i(TAG, " BANNER TRENDING " + msg);
                     Bitmap icon = BitmapFactory.decodeResource(getResources(),
@@ -216,7 +216,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
 
                 } else if (type.equalsIgnoreCase("Newsletter")) {
                     // generate notifications
-                    Utils.pushEvent(getApplicationContext(), GTMEventType.NEWSLETTER_NOTICATION_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getApplicationContext()).getId() + "", "");
+                    Utils.pushEvent(getApplicationContext(), GTMEventType.NEWSLETTER_NOTICATION_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId() + "", "");
 
                     Bitmap icon = BitmapFactory.decodeResource(getResources(),
                             R.drawable.ic_launcher);
@@ -249,7 +249,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     mNotificationManager.notify(requestID, mBuilder.build());
                 } else if (type.equalsIgnoreCase("weekly_calendar_todo")) {
                     int requestID = 2;
-                    Utils.pushEvent(getApplicationContext(), GTMEventType.WEEKLY_CALENDAR_NOTIFICATION_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getApplicationContext()).getId() + "", "");
+                    Utils.pushEvent(getApplicationContext(), GTMEventType.WEEKLY_CALENDAR_NOTIFICATION_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId() + "", "");
 
                     pushNotificationModel.getTodo_items();
                     String calendarBtnText, todoBtnText;
@@ -307,7 +307,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
 
                 } else if (type.equalsIgnoreCase("event_detail")) {
                     // generate notifications
-                    Utils.pushEvent(getApplicationContext(), GTMEventType.EVENT_DETAIL_NOTIFICATION_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getApplicationContext()).getId() + "", "");
+                    Utils.pushEvent(getApplicationContext(), GTMEventType.EVENT_DETAIL_NOTIFICATION_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId() + "", "");
 
                     Log.i(TAG, " INSIDE EVENTS DETAILS: " + msg);
                     Bitmap remote_picture = null;
@@ -370,7 +370,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     mNotifyMgr.notify(requestID, mBuilder.build());
 
                 } else if (type.equalsIgnoreCase("upcoming_event_list")) {
-                    Utils.pushEvent(getApplicationContext(), GTMEventType.UPCOMING_EVENTS_NOTIFICATION_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getApplicationContext()).getId() + "", "");
+                    Utils.pushEvent(getApplicationContext(), GTMEventType.UPCOMING_EVENTS_NOTIFICATION_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId() + "", "");
 
                     Log.i(TAG, " INSIDE EVENTS LIST: " + msg);
                     Bitmap icon = BitmapFactory.decodeResource(getResources(),

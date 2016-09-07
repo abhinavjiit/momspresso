@@ -27,7 +27,7 @@ public class SyncSettingFragment extends BaseFragment implements View.OnClickLis
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Utils.pushOpenScreenEvent(getActivity(), "Sync Settings", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
+        Utils.pushOpenScreenEvent(getActivity(), "Sync Settings", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
 
         View view = inflater.inflate(R.layout.aa_sync_settings, container, false);
 

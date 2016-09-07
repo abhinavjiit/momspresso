@@ -67,7 +67,7 @@ public class ActivityFamilyProfile extends BaseActivity implements OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.aa_family_profile);
-        Utils.pushOpenScreenEvent(ActivityFamilyProfile.this, "Family Profile", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+        Utils.pushOpenScreenEvent(ActivityFamilyProfile.this, "Family Profile", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 

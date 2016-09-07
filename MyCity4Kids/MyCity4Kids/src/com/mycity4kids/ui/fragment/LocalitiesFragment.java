@@ -50,7 +50,7 @@ public class LocalitiesFragment extends Fragment implements OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_locality, container, false);
-        Utils.pushOpenScreenEvent(getActivity(), "Listing Localities Filter", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
+        Utils.pushOpenScreenEvent(getActivity(), "Listing Localities Filter", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         businessOrEvent = getArguments().getInt(Constants.PAGE_TYPE);

@@ -54,7 +54,7 @@ public class ChangeCityFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.change_city, container, false);
-        Utils.pushOpenScreenEvent(getActivity(), "City Change", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
+        Utils.pushOpenScreenEvent(getActivity(), "City Change", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
 
         ((SettingsActivity) getActivity()).setTitle("Change City");
         mFirebaseAnalytics=FirebaseAnalytics.getInstance(getActivity());

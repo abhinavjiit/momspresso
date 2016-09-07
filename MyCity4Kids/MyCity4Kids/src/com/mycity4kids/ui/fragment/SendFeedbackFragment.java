@@ -25,7 +25,7 @@ public class SendFeedbackFragment extends BaseFragment implements View.OnClickLi
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Utils.pushOpenScreenEvent(getActivity(), "Feedback", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
+        Utils.pushOpenScreenEvent(getActivity(), "Feedback", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
 
         View view = inflater.inflate(R.layout.aa_feedback, null, false);
 

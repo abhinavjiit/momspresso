@@ -20,6 +20,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
@@ -62,7 +63,7 @@ public class TopicsFilterActivity extends BaseActivity {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Choose Topics");
-        Utils.pushOpenScreenEvent(TopicsFilterActivity.this, "Filter Topics", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+        Utils.pushOpenScreenEvent(TopicsFilterActivity.this, "Filter Topics", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         parentExpandableListView = (ExpandableListView) findViewById(R.id.parentExpandableListView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
@@ -175,14 +176,17 @@ public class TopicsFilterActivity extends BaseActivity {
                         if (topicList.get(groupPosition).getChild().size() == 0) {
                             switch (topicList.get(groupPosition).getId()) {
                                 case "bestInyourCity":
+                                    Utils.pushEventTopicChoose(TopicsFilterActivity.this, GTMEventType.TOPIC_FILTER_CHOSEN_EVENT, SharedPrefUtils.getUserDetailModel(TopicsFilterActivity.this).getDynamoId() + "","Filter Topics", "bestInyourCity");
                                     Intent cityIntent = new Intent(TopicsFilterActivity.this, CityBestArticleListingActivity.class);
                                     startActivity(cityIntent);
                                     break;
                                 case "contributors":
+                                    Utils.pushEventTopicChoose(TopicsFilterActivity.this, GTMEventType.TOPIC_FILTER_CHOSEN_EVENT, SharedPrefUtils.getUserDetailModel(TopicsFilterActivity.this).getDynamoId() + "","Filter Topics", "meetOurContributors");
                                     Intent contributorIntent = new Intent(TopicsFilterActivity.this, ContributorListActivity.class);
                                     startActivity(contributorIntent);
                                     break;
                                 default:
+                                    Utils.pushEventTopicChoose(TopicsFilterActivity.this, GTMEventType.TOPIC_FILTER_CHOSEN_EVENT, SharedPrefUtils.getUserDetailModel(TopicsFilterActivity.this).getDynamoId() + "","Filter Topics", topicList.get(groupPosition).getDisplay_name());
                                     Intent intent = new Intent(TopicsFilterActivity.this, FilteredTopicsArticleListingActivity.class);
                                     intent.putExtra("selectedTopics", topicList.get(groupPosition).getId());
                                     intent.putExtra("displayName", topicList.get(groupPosition).getDisplay_name());

@@ -30,7 +30,7 @@ public class BookOrPayWebActivity extends BaseActivity implements OnClickListene
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Utils.pushOpenScreenEvent(BookOrPayWebActivity.this, "Booking Payment Webpage", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+		Utils.pushOpenScreenEvent(BookOrPayWebActivity.this, "Booking Payment Webpage", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
 		try {
 			setContentView(R.layout.book_pay_web_view);

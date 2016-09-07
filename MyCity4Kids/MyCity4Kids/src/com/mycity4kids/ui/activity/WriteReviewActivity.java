@@ -104,7 +104,7 @@ public class WriteReviewActivity extends BaseActivity implements IOnSubmitGaller
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            Utils.pushOpenScreenEvent(WriteReviewActivity.this, "Write Review", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+            Utils.pushOpenScreenEvent(WriteReviewActivity.this, "Write Review", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
             setContentView(R.layout.activity_write_a_review);
             mToolbar = (Toolbar) findViewById(R.id.toolbar);

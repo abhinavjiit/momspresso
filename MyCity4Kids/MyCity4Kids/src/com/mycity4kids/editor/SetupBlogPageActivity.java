@@ -86,7 +86,7 @@ public class SetupBlogPageActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Setup your Blog");
         blogImage = (ImageView) findViewById(R.id.blogImage);
-        Utils.pushOpenScreenEvent(SetupBlogPageActivity.this, "Setup Blog", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+        Utils.pushOpenScreenEvent(SetupBlogPageActivity.this, "Setup Blog", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         UserTable userTable = new UserTable((BaseApplication) this.getApplication());
         userModel = userTable.getAllUserData();
         if (getIntent().getStringExtra("userBio") != null && !getIntent().getStringExtra("userBio").isEmpty()) {
@@ -96,7 +96,7 @@ public class SetupBlogPageActivity extends BaseActivity {
         createBlog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.pushEvent(SetupBlogPageActivity.this, GTMEventType.CALENDAR_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(SetupBlogPageActivity.this).getId() + "", "Set Up Blog");
+                Utils.pushEvent(SetupBlogPageActivity.this, GTMEventType.SETUP_BLOG_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(SetupBlogPageActivity.this).getDynamoId() + "", "Set Up Blog");
                 if (blogTitle.getText().toString().isEmpty()) {
                     // showToast("Please fill the required fields");
                     blogTitle.setFocusableInTouchMode(true);

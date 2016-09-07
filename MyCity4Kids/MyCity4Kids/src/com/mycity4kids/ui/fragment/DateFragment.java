@@ -41,7 +41,7 @@ public class DateFragment extends Fragment implements OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_date_group, container, false);
-        Utils.pushOpenScreenEvent(getActivity(), "Listing Date Filter", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
+        Utils.pushOpenScreenEvent(getActivity(), "Listing Date Filter", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
 
         categoryId = getArguments().getInt(Constants.CATEGORY_KEY, 0);
         businessOrEvent = getArguments().getInt(Constants.PAGE_TYPE, 0);

@@ -157,7 +157,7 @@ public class ActivitySignUp extends BaseActivity implements View.OnClickListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.aa_signup);
-        Utils.pushOpenScreenEvent(ActivitySignUp.this, "Sign up", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+        Utils.pushOpenScreenEvent(ActivitySignUp.this, "Sign up", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 

@@ -27,7 +27,7 @@ public class BlogFilterActivity extends BaseActivity implements View.OnClickList
         // TODO Auto-generated method stub
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
-        Utils.pushOpenScreenEvent(BlogFilterActivity.this, "Blogger Filter Dialogue Screen", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+        Utils.pushOpenScreenEvent(BlogFilterActivity.this, "Blogger Filter Dialogue Screen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
         setContentView(R.layout.blog_filter_activity_layout);

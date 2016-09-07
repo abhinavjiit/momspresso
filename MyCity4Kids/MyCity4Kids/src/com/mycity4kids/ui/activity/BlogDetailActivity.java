@@ -125,7 +125,7 @@ public class BlogDetailActivity extends BaseActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Utils.pushOpenScreenEvent(BlogDetailActivity.this, "Blogger Description Screen", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+        Utils.pushOpenScreenEvent(BlogDetailActivity.this, "Blogger Description Screen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         TAG = BlogDetailActivity.this.getClass().getSimpleName();
         mClient = new GoogleApiClient.Builder(this).addApi(AppIndex.APP_INDEX_API).build();
         deepLinkURL = getIntent().getStringExtra(Constants.DEEPLINK_URL);

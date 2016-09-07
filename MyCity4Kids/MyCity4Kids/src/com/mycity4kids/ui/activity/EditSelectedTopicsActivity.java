@@ -82,7 +82,7 @@ public class EditSelectedTopicsActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_selected_topics_activity);
-        Utils.pushOpenScreenEvent(EditSelectedTopicsActivity.this, "Edit Topics", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+        Utils.pushOpenScreenEvent(EditSelectedTopicsActivity.this, "Edit Selected Topics", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         rootView = (FlowLayout) findViewById(R.id.rootView);
         emptyTopicsContainer = (LinearLayout) findViewById(R.id.emptyTopicsContainer);

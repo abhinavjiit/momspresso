@@ -117,7 +117,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
         if (getIntent().getIntExtra(EDITOR_PARAM, USE_NEW_EDITOR) == USE_NEW_EDITOR) {
             // ToastUtils.showToast(this, R.string.starting_new_editor);
             setContentView(R.layout.activity_new_editor);
-            Utils.pushOpenScreenEvent(EditorPostActivity.this, "Text Editor", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+            Utils.pushOpenScreenEvent(EditorPostActivity.this, "Text Editor", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         }
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 

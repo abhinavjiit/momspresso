@@ -30,9 +30,11 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.ContributorListResponse;
 import com.mycity4kids.models.response.ContributorListResult;
 import com.mycity4kids.newmodels.bloggermodel.BlogItemModel;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ContributorListAPI;
 import com.mycity4kids.ui.adapter.ParentingBlogAdapter;
 
@@ -71,6 +73,7 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.parenting_blog_home);
+        Utils.pushOpenScreenEvent(ContributorListActivity.this, "Contributor List", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         mToolBar = (Toolbar) findViewById(R.id.toolbar);
         mToolBar.setVisibility(View.VISIBLE);
         setSupportActionBar(mToolBar);

@@ -67,7 +67,7 @@ public class ActivityVerifyOTP extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.confirm_otp_activity);
-        Utils.pushOpenScreenEvent(ActivityVerifyOTP.this, "OTP Verification", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+        Utils.pushOpenScreenEvent(ActivityVerifyOTP.this, "OTP Verification", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
         email = getIntent().getExtras().getString("email");
         mobileNumber = getIntent().getExtras().getString("mobile");

@@ -90,7 +90,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Utils.pushOpenScreenEvent(ActivityLogin.this, "Login Screen", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+        Utils.pushOpenScreenEvent(ActivityLogin.this, "Login Screen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         setContentView(R.layout.aa_loginform);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);

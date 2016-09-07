@@ -182,7 +182,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Utils.pushOpenScreenEvent(BusinessDetailsActivity.this, "Resource/Event Details", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+        Utils.pushOpenScreenEvent(BusinessDetailsActivity.this, "Resource/Event Details", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
         TAG = BusinessDetailsActivity.this.getClass().getSimpleName();
         mClient = new GoogleApiClient.Builder(this).addApi(AppIndex.APP_INDEX_API).build();
@@ -987,7 +987,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
             switch (v.getId()) {
                 case R.id.txvCall: {
                     Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + information.getPhone()));
-                    Utils.pushEvent(BusinessDetailsActivity.this, GTMEventType.CALL_RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Resource/Event Details");
+                    Utils.pushEvent(BusinessDetailsActivity.this, GTMEventType.CALL_RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Resource/Event Details");
 
                     startActivity(intent);
                 }
@@ -997,7 +997,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
                         goToLoginDialog();
                         return;
                     }
-                    Utils.pushEvent(BusinessDetailsActivity.this, GTMEventType.WRITEREVIEW_RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Resource/Event Details");
+                    Utils.pushEvent(BusinessDetailsActivity.this, GTMEventType.WRITEREVIEW_RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Resource/Event Details");
                     writeReviewFromHeader(AddReviewOrPhoto.WriteAReview);
                 }
                 break;
@@ -1015,7 +1015,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
                         goToLoginDialog();
                         return;
                     }
-                    Utils.pushEvent(BusinessDetailsActivity.this, GTMEventType.ADDPHOTOS_RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Resource/Event Details");
+                    Utils.pushEvent(BusinessDetailsActivity.this, GTMEventType.ADDPHOTOS_RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Resource/Event Details");
 
                     CameraFragmentDialog fragmentDialog = new CameraFragmentDialog();
                     fragmentDialog.setSubmitListner((IOnSubmitGallery) BusinessDetailsActivity.this);
@@ -1095,7 +1095,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
             switch (v.getId()) {
                 case R.id.txvCall: {
                     Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + information.getPhone()));
-                    Utils.pushEvent(BusinessDetailsActivity.this, GTMEventType.CALL_EVENT_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Resource/Event Details");
+                    Utils.pushEvent(BusinessDetailsActivity.this, GTMEventType.CALL_EVENT_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Resource/Event Details");
                     startActivity(intent);
                 }
                 break;
@@ -1114,7 +1114,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
 
                     String shareMessage = "mycity4kids\n\nCheck out this interesting event " + "\"" + titleName + "\" on " + shareDate + " at " + shareTime + ".\n" + webUrl;
                     shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
-                    Utils.pushEvent(BusinessDetailsActivity.this, GTMEventType.SHARE_EVENT_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Resource/Event Details");
+                    Utils.pushEvent(BusinessDetailsActivity.this, GTMEventType.SHARE_EVENT_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Resource/Event Details");
                     startActivity(Intent.createChooser(shareIntent, "mycity4kids"));
                 }
                 break;

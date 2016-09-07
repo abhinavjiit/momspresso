@@ -128,7 +128,7 @@ public class ActivityCreateTask extends BaseActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.aa_create_task);
-        Utils.pushOpenScreenEvent(ActivityCreateTask.this, "Create Task", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+        Utils.pushOpenScreenEvent(ActivityCreateTask.this, "Create Task", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         density = getResources().getDisplayMetrics().density;
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);

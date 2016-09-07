@@ -86,7 +86,7 @@ public class ExternalCalFragment extends BaseFragment implements OnListItemClick
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Utils.pushOpenScreenEvent(getActivity(), "External Calendar ", SharedPrefUtils.getUserDetailModel(getActivity()).getId() + "");
+        Utils.pushOpenScreenEvent(getActivity(), "External Calendar ", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
 
         View view = inflater.inflate(R.layout.aa_external_cal, container, false);
         ((DashboardActivity) getActivity()).setTitle("External Calendars");
