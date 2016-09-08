@@ -12,8 +12,8 @@ import com.kelltontech.ui.IScreen;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.WriteReviewModel;
 import com.mycity4kids.models.forgot.CommonResponse;
+import com.mycity4kids.preference.SharedPrefUtils;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.message.BasicNameValuePair;
@@ -74,11 +74,6 @@ public class WriteReviewController extends BaseController {
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         try {
 
-			 	/*
-			 	private String title,reviewType,rating,descriptionuserId,type,businessId,sessionId;
-				public JsonArray image;
-				*/
-
             nameValuePairs.add(new BasicNameValuePair("title", writeReviewModel.getTitle()));
             nameValuePairs.add(new BasicNameValuePair("reviewType", writeReviewModel.getReviewType()));
             nameValuePairs.add(new BasicNameValuePair("rating", writeReviewModel.getRating()));
@@ -89,14 +84,7 @@ public class WriteReviewController extends BaseController {
             nameValuePairs.add(new BasicNameValuePair("userId", writeReviewModel.getUserId()));
             nameValuePairs.add(new BasicNameValuePair("type", writeReviewModel.getType()));
             nameValuePairs.add(new BasicNameValuePair("businessId", writeReviewModel.getBusinessId()));
-//            nameValuePairs.add(new BasicNameValuePair("sessionId", writeReviewModel.getSessionId()));
-            encodedEntity = new UrlEncodedFormEntity(nameValuePairs);
-
-			 System.out.println("writeReqvieew ------------- " + nameValuePairs.toString());
-			 /*nameValuePairs.add(new BasicNameValuePair("emailId",emailId ));
-		     encodedEntity = new UrlEncodedFormEntity(nameValuePairs, "UTF-8");*/
-
-//		  encodedEntity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded"));
+            nameValuePairs.add(new BasicNameValuePair("sessionId", SharedPrefUtils.getUserDetailModel(context).getSessionId()));
         } catch (Exception e) {
             e.printStackTrace();
         }

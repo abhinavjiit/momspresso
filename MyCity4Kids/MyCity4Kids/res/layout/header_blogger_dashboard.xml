@@ -63,10 +63,10 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="2dp"
                     android:ellipsize="marquee"
+                    android:fontFamily="sans-serif-light"
                     android:gravity="center"
                     android:maxLines="1"
                     android:text="rank"
-                    android:textColor="@color/grey_faded"
                     android:textSize="13sp" />
             </LinearLayout>
 
@@ -93,9 +93,9 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="2dp"
                     android:ellipsize="marquee"
+                    android:fontFamily="sans-serif-light"
                     android:maxLines="1"
                     android:text="followers"
-                    android:textColor="@color/grey_faded"
                     android:textSize="13sp" />
             </LinearLayout>
 
@@ -123,10 +123,10 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="2dp"
                     android:ellipsize="marquee"
+                    android:fontFamily="sans-serif-light"
                     android:gravity="center"
                     android:maxLines="1"
                     android:text="followings"
-                    android:textColor="@color/grey_faded"
                     android:textSize="13sp" />
             </LinearLayout>
         </LinearLayout>

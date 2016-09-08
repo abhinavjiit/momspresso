@@ -22,6 +22,7 @@ public class UserDetailResult {
     private String followingCount;
     private String rank;
     private String userBio = "";
+    private String sessionId;
 
     public String getPhoneNumber() {
         return phoneNumber;
@@ -159,5 +160,13 @@ public class UserDetailResult {
 
     public void setUserBio(String userBio) {
         this.userBio = userBio;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 }

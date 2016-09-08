@@ -27,9 +27,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewTreeObserver;
 import android.view.animation.AnimationUtils;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -64,6 +67,7 @@ import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.OnWebServiceCompleteListener;
 import com.mycity4kids.models.parentingdetails.CommentsData;
 import com.mycity4kids.models.parentingdetails.ImageData;
+import com.mycity4kids.models.parentingdetails.VideoData;
 import com.mycity4kids.models.request.AddCommentRequest;
 import com.mycity4kids.models.request.ArticleDetailRequest;
 import com.mycity4kids.models.request.DeleteBookmarkRequest;
@@ -116,6 +120,8 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
     private NestedScrollView mScrollView;
     private ArrayList<ImageData> imageList;
+    private ArrayList<VideoData> videoList;
+
     Boolean isFollowing = false;
 
     LinearLayout newCommentLayout;
@@ -129,6 +135,13 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     Toolbar mToolbar;
     View commentEditView;
     AppBarLayout appBarLayout;
+    WebView mWebView;
+
+    private MyWebChromeClient mWebChromeClient = null;
+    private View mCustomView;
+    private CoordinatorLayout mContentView;
+    private FrameLayout mCustomViewContainer;
+    private WebChromeClient.CustomViewCallback mCustomViewCallback;
 
     private float density;
 
@@ -187,6 +200,11 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             floatingActionButton.setOnClickListener(this);
             FadingViewOffsetListener listener = new FadingViewOffsetListener((View) floatingActionButton);
             appBarLayout.addOnOffsetChangedListener(listener);
+
+            mWebView = (WebView) findViewById(R.id.articleWebView);
+            mWebChromeClient = new MyWebChromeClient();
+            mWebView.setWebChromeClient(mWebChromeClient);
+
             author_type = (TextView) findViewById(R.id.blogger_type);
 
             followClick = (TextView) findViewById(R.id.follow_click);
@@ -283,6 +301,18 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mWebView.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mWebView.onPause();
+    }
+
     private void hitArticleDetailsS3API() {
         Call<ArticleDetailResult> call = articleDetailsAPI.getArticleDetailsFromS3(articleId);
         call.enqueue(articleDetailResponseCallbackS3);
@@ -329,7 +359,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         call.enqueue(commentsCallback);
 
     }
-
 
     @Override
     protected void onStart() {
@@ -484,6 +513,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     private void getResponseUpdateUi(ArticleDetailResult detailsResponse) {
         detailData = detailsResponse;
         imageList = detailData.getBody().getImage();
+        videoList = detailData.getBody().getVideo();
         authorType = detailData.getUserType();
         author = detailData.getUserName();
 
@@ -539,7 +569,15 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     bodyDesc = bodyDesc.replace(images.getKey(), "<p style='text-align:center'><img src=" + images.getValue() + " style=\"width: 100%;\"+></p>");
                 }
             }
+            if (!videoList.isEmpty()) {
+                for (VideoData video : videoList) {
+                    if (bodyDescription.contains(video.getKey())) {
+                        bodyDesc = bodyDesc.replace(video.getKey(), "<p style='text-align:center'><iframe allowfullscreen=\"true\" allowtransparency=\"true\" frameborder=\"0\" src=http:" + video.getVideoUrl() + "?modestbranding=1&amp;rel=0&amp;showinfo=0\" style=\"width: 100%;\"></iframe></p>");
+                    }
+                }
+            }
 
+//            <iframe allowfullscreen=\"true\" allowtransparency=\"true\" frameborder=\"0\" src=\"//www.youtube.com/embed/TqQ5xM2x1Gs\" width=\"640\" height=\"360\" class=\"note-video-clip\"></iframe>
             String bodyImgTxt = "<html><head>" +
                     "" +
                     "<style type=\"text/css\">\n" +
@@ -554,12 +592,19 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     "}\n" +
                     "</style>" +
                     "</head><body>" + bodyDesc + "</body></html>";
-            WebView view = (WebView) findViewById(R.id.articleWebView);
-            view.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-            view.loadDataWithBaseURL("", bodyImgTxt, "text/html", "utf-8", "");
-            view.getSettings().setJavaScriptEnabled(true);
+
+            mWebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+            mWebView.loadDataWithBaseURL("", bodyImgTxt, "text/html", "utf-8", "");
+            mWebView.getSettings().setJavaScriptEnabled(true);
         } else {
-            bodyDesc = bodyDesc.replaceAll("\n", "<br/>");
+            if (!videoList.isEmpty()) {
+                for (VideoData video : videoList) {
+                    if (bodyDescription.contains(video.getKey())) {
+                        bodyDesc = bodyDesc.replace(video.getKey(), "<p style='text-align:center'><iframe src=http:" + video.getVideoUrl() + "?modestbranding=1&amp;rel=0&amp;showinfo=0\" style=\"width: 100%;\" allowfullscreen></iframe></p>");
+                    }
+                }
+            }
+//            bodyDesc = bodyDesc.replaceAll("\n", "<br/>");
             String bodyImgTxt = "<html><head>" +
                     "" +
                     "<style type=\"text/css\">\n" +
@@ -574,10 +619,10 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     "}\n" +
                     "</style>" +
                     "</head><body>" + bodyDesc + "</body></html>";
-            WebView view = (WebView) findViewById(R.id.articleWebView);
-            view.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-            view.loadDataWithBaseURL("", bodyImgTxt, "text/html", "utf-8", "");
-            view.getSettings().setJavaScriptEnabled(true);
+
+            mWebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+            mWebView.loadDataWithBaseURL("", bodyImgTxt, "text/html", "utf-8", "");
+            mWebView.getSettings().setJavaScriptEnabled(true);
         }
 
         final Target target = new Target() {
@@ -1401,4 +1446,48 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
+
+    private class MyWebChromeClient extends WebChromeClient {
+        FrameLayout.LayoutParams LayoutParameters = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT);
+
+        @Override
+        public void onShowCustomView(View view, CustomViewCallback callback) {
+            // if a view already exists then immediately terminate the new one
+            if (mCustomView != null) {
+                callback.onCustomViewHidden();
+                return;
+            }
+            mContentView = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
+            mContentView.setVisibility(View.GONE);
+            mCustomViewContainer = new FrameLayout(ArticlesAndBlogsDetailsActivity.this);
+            mCustomViewContainer.setLayoutParams(LayoutParameters);
+            mCustomViewContainer.setBackgroundResource(android.R.color.black);
+            view.setLayoutParams(LayoutParameters);
+            mCustomViewContainer.addView(view);
+            mCustomView = view;
+            mCustomViewCallback = callback;
+            mCustomViewContainer.setVisibility(View.VISIBLE);
+            setContentView(mCustomViewContainer);
+        }
+
+        @Override
+        public void onHideCustomView() {
+            if (mCustomView == null) {
+                return;
+            } else {
+                // Hide the custom view.
+                mCustomView.setVisibility(View.GONE);
+                // Remove the custom view from its container.
+                mCustomViewContainer.removeView(mCustomView);
+                mCustomView = null;
+                mCustomViewContainer.setVisibility(View.GONE);
+                mCustomViewCallback.onCustomViewHidden();
+                // Show the content view.
+                mContentView.setVisibility(View.VISIBLE);
+                setContentView(mContentView);
+            }
+        }
+    }
+
 }

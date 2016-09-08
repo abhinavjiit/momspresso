@@ -15,7 +15,6 @@
         android:orientation="horizontal">
 
 
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -28,6 +27,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_gravity="top"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="5dp"
                 android:ellipsize="end"
                 android:fontFamily="sans-serif-light"
                 android:gravity="top"
@@ -36,59 +37,45 @@
                 android:singleLine="false"
                 android:text="Review Title"
                 android:textColor="@color/black_color"
-                android:textSize="12sp"
-                android:layout_marginRight="30dp"
-                android:layout_marginTop="5dp"/>
+                android:textSize="12sp" />
+
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:layout_below="@+id/txvReviewTitle"
                 android:id="@+id/reviewAddressDate"
-                android:fontFamily="sans-serif-thin"
-                android:text="Address and Date"
-                android:paddingLeft="10dp"
-                android:layout_marginTop="3dp"
-                android:textColor="@color/grey_faded"/>
-            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/txvReviewTitle"
+                android:layout_marginTop="3dp"
+                android:fontFamily="sans-serif-light"
+                android:paddingLeft="10dp"
+                android:text="Address and Date"
+                android:textSize="11sp" />
+
+            <TextView
                 android:id="@+id/ratingNo"
-                android:text="4/5"
-                android:layout_toRightOf="@+id/reviewAddressDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_above="@+id/txvReviewText"
                 android:layout_alignParentRight="true"
+                android:layout_toRightOf="@+id/reviewAddressDate"
+                android:fontFamily="sans-serif-light"
                 android:gravity="right"
-                android:textColor="@color/home_light_blue"
-                android:fontFamily="sans-serif-light"/>
+                android:text="4/5"
+                android:textColor="@color/home_light_blue" />
 
-        <!--    <LinearLayout
+            <TextView
+                android:id="@+id/txvReviewText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_gravity="bottom"
-                android:gravity="bottom"
-                >-->
-
-
-                <TextView
-                    android:id="@+id/txvReviewText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:fontFamily="sans-serif-thin"
-                    android:gravity="left"
-                    android:layout_below="@+id/reviewAddressDate"
-                    android:maxLines="2"
-                    android:text="Review Text"
-                    android:textColor="@color/black_color"
-                    android:textSize="14sp"
-                    android:paddingLeft="10dp"
-                    android:layout_marginTop="5dp"/>
-
-           <!-- </LinearLayout>-->
-
-
+                android:layout_below="@+id/reviewAddressDate"
+                android:layout_marginTop="5dp"
+                android:fontFamily="sans-serif-light"
+                android:gravity="left"
+                android:maxLines="2"
+                android:paddingLeft="10dp"
+                android:text="Review Text"
+                android:textColor="@color/black_color"
+                android:textSize="14sp" />
 
         </RelativeLayout>
 

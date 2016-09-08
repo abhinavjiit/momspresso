@@ -1,6 +1,5 @@
 package com.mycity4kids.ui.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -10,6 +9,7 @@ import android.widget.EditText;
 
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
+import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.gtmutils.Utils;
@@ -73,10 +73,19 @@ public class EditProfieActivity extends BaseActivity {
         switch (item.getItemId()) {
             case R.id.save:
                 UpdateUserDetail updateUserDetail = new UpdateUserDetail();
-                updateUserDetail.setFirstName((editFirstName.getText().toString()).trim() + "");
-                updateUserDetail.setLastName(editLastName.getText().toString().trim() + "");
-                updateUserDetail.setPhoneNumber(phoneEditText.getText().toString().trim() + "");
-                updateUserDetail.setUserBio(userBioEditText.getText().toString().trim() + "");
+                if (!StringUtils.isNullOrEmpty(editFirstName.getText().toString())) {
+                    updateUserDetail.setFirstName((editFirstName.getText().toString()).trim() + "");
+                }
+                if (!StringUtils.isNullOrEmpty(editLastName.getText().toString())) {
+                    updateUserDetail.setLastName(editLastName.getText().toString().trim() + "");
+                }
+                if (!StringUtils.isNullOrEmpty(phoneEditText.getText().toString())) {
+                    updateUserDetail.setPhoneNumber(phoneEditText.getText().toString().trim() + "");
+                }
+                if (!StringUtils.isNullOrEmpty(userBioEditText.getText().toString())) {
+                    updateUserDetail.setUserBio(userBioEditText.getText().toString().trim() + "");
+                }
+
                 Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
                 showProgressDialog(getResources().getString(R.string.please_wait));
                 UserAttributeUpdateAPI userAttributeUpdateAPI = retrofit.create(UserAttributeUpdateAPI.class);

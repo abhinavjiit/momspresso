@@ -448,6 +448,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                     model.setIsValidated(responseData.getData().getResult().getIsValidated());
                     model.setFirst_name(responseData.getData().getResult().getFirstName() + " " + responseData.getData().getResult().getLastName());
                     model.setProfilePicUrl(responseData.getData().getResult().getProfilePicUrl().getClientApp());
+                    model.setSessionId(responseData.getData().getResult().getSessionId());
                     SharedPrefUtils.setUserDetailModel(ActivityLogin.this, model);
                     SharedPrefUtils.setProfileImgUrl(ActivityLogin.this, responseData.getData().getResult().getProfilePicUrl().getClientApp());
 

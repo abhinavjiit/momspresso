@@ -121,4 +121,9 @@
 
     <color name="fab.pink">#ec3b57</color>
 
+    <color name="navigation.drawer.divider">#e5e5e5</color>
+    <color name="navigation.drawer.endtext">#737373</color>
+    <color name="navigation.drawer.maintext">#000000</color>
+
+
 </resources>

@@ -60,7 +60,6 @@ public class BaseApplication extends Application {
 
     private SQLiteDatabase mWritableDatabase;
     private RequestQueue mRequestQueue;
-    ;
     private static BaseApplication mInstance;
     private static Retrofit retrofit;
     private static OkHttpClient client;
