@@ -569,7 +569,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     bodyDesc = bodyDesc.replace(images.getKey(), "<p style='text-align:center'><img src=" + images.getValue() + " style=\"width: 100%;\"+></p>");
                 }
             }
-            if (!videoList.isEmpty()) {
+            if (videoList!=null&&!videoList.isEmpty()) {
                 for (VideoData video : videoList) {
                     if (bodyDescription.contains(video.getKey())) {
                         bodyDesc = bodyDesc.replace(video.getKey(), "<p style='text-align:center'><iframe allowfullscreen=\"true\" allowtransparency=\"true\" frameborder=\"0\" src=http:" + video.getVideoUrl() + "?modestbranding=1&amp;rel=0&amp;showinfo=0\" style=\"width: 100%;\"></iframe></p>");
@@ -597,7 +597,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             mWebView.loadDataWithBaseURL("", bodyImgTxt, "text/html", "utf-8", "");
             mWebView.getSettings().setJavaScriptEnabled(true);
         } else {
-            if (!videoList.isEmpty()) {
+            if (videoList!=null&&!videoList.isEmpty()) {
                 for (VideoData video : videoList) {
                     if (bodyDescription.contains(video.getKey())) {
                         bodyDesc = bodyDesc.replace(video.getKey(), "<p style='text-align:center'><iframe src=http:" + video.getVideoUrl() + "?modestbranding=1&amp;rel=0&amp;showinfo=0\" style=\"width: 100%;\" allowfullscreen></iframe></p>");

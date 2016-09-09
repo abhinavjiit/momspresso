@@ -2,6 +2,7 @@ package com.mycity4kids.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -46,7 +47,7 @@ import retrofit2.Retrofit;
  * @author Hemant Parmar
  */
 
-public class FilteredTopicsArticleListingActivity extends BaseActivity implements OnClickListener {
+public class FilteredTopicsArticleListingActivity extends BaseActivity implements OnClickListener , SwipeRefreshLayout.OnRefreshListener {
 
     NewArticlesListingAdapter articlesListingAdapter;
     ListView listView;
@@ -56,7 +57,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
     private RelativeLayout mLodingView;
     FrameLayout frameLayout;
     FloatingActionsMenu fabMenu;
-
+    private SwipeRefreshLayout swipeRefreshLayout;
     private int nextPageNumber;
     private boolean isReuqestRunning = false;
     private ProgressBar progressBar;
@@ -82,7 +83,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         noBlogsTextView = (TextView) findViewById(R.id.noBlogsTextView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely));
-
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         frameLayout = (FrameLayout) findViewById(R.id.frame_layout);
         frameLayout.getBackground().setAlpha(0);
 
@@ -97,7 +98,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         if (null != displayName) {
             getSupportActionBar().setTitle(displayName.toUpperCase());
         }
-
+        swipeRefreshLayout.setOnRefreshListener((SwipeRefreshLayout.OnRefreshListener) FilteredTopicsArticleListingActivity.this);
         progressBar.setVisibility(View.VISIBLE);
 
         articleDataModelsNew = new ArrayList<ArticleListingResult>();
@@ -197,7 +198,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                 showToast("Something went wrong from server");
                 return;
             }
-
+            swipeRefreshLayout.setRefreshing(false);
             try {
                 ArticleListingResponse responseData = (ArticleListingResponse) response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
@@ -287,5 +288,18 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                 finish();
         }
         return true;
+    }
+
+    @Override
+    public void onRefresh() {
+        if (!ConnectivityUtils.isNetworkEnabled(this)) {
+            swipeRefreshLayout.setRefreshing(false);
+            removeProgressDialog();
+            showToast(getString(R.string.error_network));
+            return;
+        }
+        nextPageNumber=1;
+        hitFilteredTopicsArticleListingApi(sortType);
+
     }
 }

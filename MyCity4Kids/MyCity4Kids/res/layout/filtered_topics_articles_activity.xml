@@ -13,6 +13,11 @@
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize" />
 
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar">
 
     <ListView
         android:id="@+id/scroll"
@@ -23,7 +28,7 @@
         android:background="@color/grey_light"
         android:divider="@color/transparent"
         android:drawSelectorOnTop="true" />
-
+    </android.support.v4.widget.SwipeRefreshLayout>
     <TextView
         android:id="@+id/noBlogsTextView"
         android:layout_width="wrap_content"

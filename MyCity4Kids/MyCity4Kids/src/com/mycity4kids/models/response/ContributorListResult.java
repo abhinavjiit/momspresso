@@ -13,15 +13,15 @@ public class ContributorListResult  {
     int isFollowed;
     String colorCode;
 
-    public Long getRank() {
+    public String getRank() {
         return rank;
     }
 
-    public void setRank(Long rank) {
+    public void setRank(String rank) {
         this.rank = rank;
     }
 
-    Long rank;
+    String rank;
 
     public ProfilePic getProfilePic() {
         return profilePicUrl;
