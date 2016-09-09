@@ -462,6 +462,11 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
 
 
     private void checkFollowingStatusAPI() {
+        if (!ConnectivityUtils.isNetworkEnabled(this)) {
+            removeProgressDialog();
+            showToast(getString(R.string.error_network));
+            return;
+        }
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
         ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
         ArticleDetailRequest articleDetailRequest = new ArticleDetailRequest();
@@ -743,6 +748,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         if (!ConnectivityUtils.isNetworkEnabled(this)) {
             removeProgressDialog();
             showToast(getString(R.string.error_network));
+            progressBar.setVisibility(View.INVISIBLE);
             return;
         }
         int from = (nextPageNumber - 1) * 15 + 1;

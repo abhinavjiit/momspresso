@@ -23,6 +23,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
+import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -166,7 +167,12 @@ public class BookmarkListActivity extends BaseActivity implements SwipeRefreshLa
     }
 
     private void hitArticleListingApi(int pPageCount, String sortKey, boolean isCacheRequired) {
-
+        if (!ConnectivityUtils.isNetworkEnabled(this)) {
+           // swipeRefreshLayout.setRefreshing(false);
+            removeProgressDialog();
+            showToast(getString(R.string.error_network));
+            return;
+        }
         String url;
 
         // caching disabled for bookmarked articles as we need to refresh it everytime an article is bookmarked/unbookmarked.
@@ -301,6 +307,12 @@ public class BookmarkListActivity extends BaseActivity implements SwipeRefreshLa
     @Override
 
     public void onRefresh() {
+        if (!ConnectivityUtils.isNetworkEnabled(this)) {
+            swipeRefreshLayout.setRefreshing(false);
+            removeProgressDialog();
+            showToast(getString(R.string.error_network));
+            return;
+        }
         isLastPageReached = false;
         removeVolleyCache(sortType);
         paginationValue = "";

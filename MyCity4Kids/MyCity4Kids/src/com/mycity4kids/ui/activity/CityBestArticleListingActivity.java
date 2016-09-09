@@ -176,6 +176,7 @@ public class CityBestArticleListingActivity extends BaseActivity {
     private void hitBestofCityArticleListingApi(int sortType) {
         if (!ConnectivityUtils.isNetworkEnabled(this)) {
             ToastUtils.showToast(this, getString(R.string.error_network));
+            progressBar.setVisibility(View.INVISIBLE);
             return;
         }
         if (nextPageNumber == 1) {

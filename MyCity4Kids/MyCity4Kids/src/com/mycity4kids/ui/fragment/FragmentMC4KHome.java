@@ -1,10 +1,13 @@
 package com.mycity4kids.ui.fragment;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
@@ -46,6 +49,7 @@ import com.mycity4kids.enums.ParentingFilterType;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.OnWebServiceCompleteListener;
+import com.mycity4kids.listener.OnButtonClicked;
 import com.mycity4kids.models.businesslist.BusinessDataListing;
 import com.mycity4kids.models.businesslist.BusinessListRequest;
 import com.mycity4kids.models.businesslist.BusinessListResponse;
@@ -1724,7 +1728,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
 
                         ToastUtils.showToast(getActivity(), getActivity().getResources().getString(R.string.event_added));
                     } else {
-                        Intent i = new Intent(getActivity(), ActivityCreateAppointment.class);
+                      /*  Intent i = new Intent(getActivity(), ActivityCreateAppointment.class);
                         i.putExtra(Constants.BUSINESS_OR_EVENT_ID, mBusinessDataListings.get(finalI1).getId());
                         i.putExtra(Constants.EVENT_NAME, mBusinessDataListings.get(finalI1).getName());
                         i.putExtra(Constants.EVENT_DES, mBusinessDataListings.get(finalI1).getDescription());
@@ -1732,7 +1736,34 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                         i.putExtra(Constants.EVENT_START_DATE, mBusinessDataListings.get(finalI1).getStart_date());
                         i.putExtra(Constants.EVENT_END_DATE, mBusinessDataListings.get(finalI1).getEnd_date());
                         Utils.pushEvent(getActivity(), GTMEventType.EVENTLIST_PLUS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", "Upcoming Events");
-                        getActivity().startActivity(i);
+                        getActivity().startActivity(i);*/
+                       final BusinessDataListing information= mBusinessDataListings.get(finalI1);
+                     /*   showAlertDialog("Add Event to calendar", "Do you want add this event to you personal calendar?", new OnButtonClicked() {
+                            @Override
+                            public void onButtonCLick(int buttonId) {
+                                saveCalendar(information.getName(), information.getDescription(), information.getEvent_date().getStart_date(), information.getEvent_date().getEnd_date(), information.getLocality());
+                            }
+                        });*/
+                        new AlertDialog.Builder(getActivity())
+                                .setTitle("Add Event to calendar")
+                                .setMessage("Do you want add this event to you personal calendar?")
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // continue with delete
+                                        dialog.dismiss();
+                                      //  onButtonClicked.onButtonCLick(0);
+                                        saveCalendar(information.getName(), information.getDescription(), information.getStart_date(), information.getEnd_date(), information.getLocality());
+                                        ToastUtils.showToast(getActivity(),"Successfully added to Calendar");
+                                    }
+                                })
+                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // do nothing
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .show();
                     }
                 }
             });
@@ -1772,4 +1803,32 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
             }
         });
     }
+    private void saveCalendar(String title, String desc, String sDate, String eDate, String location) {
+
+        ContentResolver cr = (getActivity()).getContentResolver();
+        ContentValues values = new ContentValues();
+
+        values.put(CalendarContract.Events.DTSTART, "" + DateTimeUtils.getTimestampFromStringDate(sDate));
+        values.put(CalendarContract.Events.DTEND, "" + DateTimeUtils.getTimestampFromStringDate(eDate));
+        values.put(CalendarContract.Events.TITLE, title);
+        values.put(CalendarContract.Events.DESCRIPTION, desc);
+        values.put(CalendarContract.Events.EVENT_LOCATION, location);
+
+        TimeZone timeZone = TimeZone.getDefault();
+        values.put(CalendarContract.Events.EVENT_TIMEZONE, timeZone.getID());
+
+        // default calendar
+        values.put(CalendarContract.Events.CALENDAR_ID, 3);
+
+//        values.put(CalendarContract.Events.RRULE, "FREQ=DAILY;UNTIL="
+//                + dtUntill);
+
+        values.put(CalendarContract.Events.HAS_ALARM, 1);
+
+        // insert event to calendar
+        Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
+
+
+    }
+
 }

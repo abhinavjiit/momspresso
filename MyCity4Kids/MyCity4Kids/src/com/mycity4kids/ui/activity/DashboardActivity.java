@@ -186,7 +186,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 // You only need to set User ID on a tracker once. By setting it on the tracker, the ID will be
         // sent with all subsequent hits.
         // new code
-        t.set("&uid", SharedPrefUtils.getUserDetailModel(this).getId() + "");
+        t.set("&uid", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
         // This hit will be sent with the User ID value and be visible in User-ID-enabled views (profiles).
         t.send(new HitBuilders.EventBuilder().setCategory("UX").setAction("User Sign In").build());

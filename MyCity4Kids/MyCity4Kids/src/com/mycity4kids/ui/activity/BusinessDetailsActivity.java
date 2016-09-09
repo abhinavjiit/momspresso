@@ -1130,10 +1130,11 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
 
                 case R.id.txvAddToCal: {
 
-                    showAlertDialog("Add Event to clarendar", "Do you want add this event to you personal calendar?", new OnButtonClicked() {
+                    showAlertDialog("Add Event to calendar", "Do you want add this event to you personal calendar?", new OnButtonClicked() {
                         @Override
                         public void onButtonCLick(int buttonId) {
                             saveCalendar(information.getName(), information.getDescription(), information.getEvent_date().getStart_date(), information.getEvent_date().getEnd_date(), information.getLocality());
+                            ToastUtils.showToast(BusinessDetailsActivity.this,"Successfully added to Calendar");
                         }
                     });
 

@@ -23,6 +23,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
+import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -146,7 +147,12 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
     }
 
     private void hitArticleListingApi(int pPageCount, String sortKey, boolean isCacheRequired) {
-
+        if (!ConnectivityUtils.isNetworkEnabled(this)) {
+         //   swipeRefreshLayout.setRefreshing(false);
+            removeProgressDialog();
+            showToast(getString(R.string.error_network));
+            return;
+        }
         String url = AppConstants.LIVE_URL + AppConstants.SERVICE_TYPE_ARTICLE + sortKey +
                 AppConstants.SEPARATOR_BACKSLASH + from + AppConstants.SEPARATOR_BACKSLASH + to;
         HttpVolleyRequest.getStringResponse(this, url, null, mGetArticleListingListener, Request.Method.GET, isCacheRequired);
@@ -258,6 +264,12 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
 
     @Override
     public void onRefresh() {
+        if (!ConnectivityUtils.isNetworkEnabled(this)) {
+            swipeRefreshLayout.setRefreshing(false);
+            removeProgressDialog();
+            showToast(getString(R.string.error_network));
+            return;
+        }
         isLastPageReached = false;
         removeVolleyCache(sortType);
         from = 1;
