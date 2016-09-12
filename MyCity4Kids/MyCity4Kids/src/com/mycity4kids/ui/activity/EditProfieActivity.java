@@ -80,7 +80,7 @@ public class EditProfieActivity extends BaseActivity {
                     updateUserDetail.setLastName(editLastName.getText().toString().trim() + "");
                 }
                 if (!StringUtils.isNullOrEmpty(phoneEditText.getText().toString())) {
-                    updateUserDetail.setPhoneNumber(phoneEditText.getText().toString().trim() + "");
+                    updateUserDetail.setMobile(phoneEditText.getText().toString().trim() + "");
                 }
                 if (!StringUtils.isNullOrEmpty(userBioEditText.getText().toString())) {
                     updateUserDetail.setUserBio(userBioEditText.getText().toString().trim() + "");

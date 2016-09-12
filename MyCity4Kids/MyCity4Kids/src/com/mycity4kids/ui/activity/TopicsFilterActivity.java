@@ -100,12 +100,23 @@ public class TopicsFilterActivity extends BaseActivity {
                 final ArrayList<Topics> topicList = new ArrayList<>();
 
                 ArrayList<Topics> firstList = new ArrayList<>();
-                firstList.add(new Topics("recent", "Recent", false, new ArrayList<Topics>(), "all", "All"));
-                firstList.add(new Topics("trending", "Trending", false, new ArrayList<Topics>(), "all", "All"));
-                firstList.add(new Topics("popular", "Popular", false, new ArrayList<Topics>(), "all", "All"));
+                Topics recentTopic = new Topics("recent", "Recent", false, new ArrayList<Topics>(), "all", "All");
+                recentTopic.setDisplay_name("recent");
+                firstList.add(recentTopic);
+
+                Topics trendingTopic = new Topics("trending", "Trending", false, new ArrayList<Topics>(), "all", "All");
+                trendingTopic.setDisplay_name("trending");
+                firstList.add(trendingTopic);
+
+                Topics popularTopic = new Topics("popular", "Popular", false, new ArrayList<Topics>(), "all", "All");
+                popularTopic.setDisplay_name("popular");
+                firstList.add(popularTopic);
 
                 Topics allTopics = new Topics("all", "All", false, firstList, null, null);
+                allTopics.setDisplay_name("all");
+
                 Topics bestInyoutCity = new Topics("bestInyourCity", "Best of " + SharedPrefUtils.getCurrentCityModel(this).getName(), false, new ArrayList<Topics>(), null, null);
+                bestInyoutCity.setDisplay_name("Best of " + SharedPrefUtils.getCurrentCityModel(this).getName());
 
                 topicList.add(allTopics);
                 topicList.add(bestInyoutCity);
@@ -124,7 +135,7 @@ public class TopicsFilterActivity extends BaseActivity {
                             if (responseData.getData().get(i).getChild().get(j).getChild().size() > 0) {
                                 Topics allTopic = new Topics(responseData.getData().get(i).getChild().get(j).getId(), "All", false, new ArrayList<Topics>(), responseData.getData().get(i).getId(),
                                         responseData.getData().get(i).getTitle());
-                                allTopic.setDisplay_name(responseData.getData().get(i).getChild().get(j).getDisplay_name());
+                                allTopic.setDisplay_name("all");
                                 tempList.add(allTopic);
                             }
                             for (int k = 0; k < responseData.getData().get(i).getChild().get(j).getChild().size(); k++) {
@@ -142,7 +153,7 @@ public class TopicsFilterActivity extends BaseActivity {
                         if (responseData.getData().get(i).getChild().size() > 0) {
                             Topics allTopic = new Topics(responseData.getData().get(i).getId(), "All", false, new ArrayList<Topics>(), responseData.getData().get(i).getId(),
                                     responseData.getData().get(i).getTitle());
-                            allTopic.setDisplay_name(responseData.getData().get(i).getDisplay_name());
+                            allTopic.setDisplay_name("all");
                             tempUpList.add(allTopic);
                         }
                         for (int j = 0; j < responseData.getData().get(i).getChild().size(); j++) {
@@ -159,6 +170,8 @@ public class TopicsFilterActivity extends BaseActivity {
 
                 Topics contributorTopic = new Topics("contributors", "Meet our contributors",
                         false, new ArrayList<Topics>(), null, null);
+                contributorTopic.setDisplay_name("Meet our contributors");
+
                 topicList.add(contributorTopic);
                 topicsMap.put(contributorTopic, new ArrayList<Topics>());
 
@@ -176,17 +189,17 @@ public class TopicsFilterActivity extends BaseActivity {
                         if (topicList.get(groupPosition).getChild().size() == 0) {
                             switch (topicList.get(groupPosition).getId()) {
                                 case "bestInyourCity":
-                                    Utils.pushEventTopicChoose(TopicsFilterActivity.this, GTMEventType.TOPIC_FILTER_CHOSEN_EVENT, SharedPrefUtils.getUserDetailModel(TopicsFilterActivity.this).getDynamoId() + "","Filter Topics", "bestInyourCity");
+                                    Utils.pushEventTopicChoose(TopicsFilterActivity.this, GTMEventType.TOPIC_FILTER_CHOSEN_EVENT, SharedPrefUtils.getUserDetailModel(TopicsFilterActivity.this).getDynamoId() + "", "Filter Topics", "bestInyourCity");
                                     Intent cityIntent = new Intent(TopicsFilterActivity.this, CityBestArticleListingActivity.class);
                                     startActivity(cityIntent);
                                     break;
                                 case "contributors":
-                                    Utils.pushEventTopicChoose(TopicsFilterActivity.this, GTMEventType.TOPIC_FILTER_CHOSEN_EVENT, SharedPrefUtils.getUserDetailModel(TopicsFilterActivity.this).getDynamoId() + "","Filter Topics", "meetOurContributors");
+                                    Utils.pushEventTopicChoose(TopicsFilterActivity.this, GTMEventType.TOPIC_FILTER_CHOSEN_EVENT, SharedPrefUtils.getUserDetailModel(TopicsFilterActivity.this).getDynamoId() + "", "Filter Topics", "meetOurContributors");
                                     Intent contributorIntent = new Intent(TopicsFilterActivity.this, ContributorListActivity.class);
                                     startActivity(contributorIntent);
                                     break;
                                 default:
-                                    Utils.pushEventTopicChoose(TopicsFilterActivity.this, GTMEventType.TOPIC_FILTER_CHOSEN_EVENT, SharedPrefUtils.getUserDetailModel(TopicsFilterActivity.this).getDynamoId() + "","Filter Topics", topicList.get(groupPosition).getDisplay_name());
+                                    Utils.pushEventTopicChoose(TopicsFilterActivity.this, GTMEventType.TOPIC_FILTER_CHOSEN_EVENT, SharedPrefUtils.getUserDetailModel(TopicsFilterActivity.this).getDynamoId() + "", "Filter Topics", topicList.get(groupPosition).getDisplay_name());
                                     Intent intent = new Intent(TopicsFilterActivity.this, FilteredTopicsArticleListingActivity.class);
                                     intent.putExtra("selectedTopics", topicList.get(groupPosition).getId());
                                     intent.putExtra("displayName", topicList.get(groupPosition).getDisplay_name());

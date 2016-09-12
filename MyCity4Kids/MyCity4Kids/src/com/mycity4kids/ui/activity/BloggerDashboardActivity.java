@@ -539,6 +539,8 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                     Intent intent = new Intent(BloggerDashboardActivity.this, ArticlesAndBlogsDetailsActivity.class);
                     intent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(position - 1).getUserId());
                     intent.putExtra(Constants.ARTICLE_ID, articleDataModelsNew.get(position - 1).getId());
+                    intent.putExtra(Constants.BLOG_SLUG, articleDataModelsNew.get(position - 1).getBlogPageSlug());
+                    intent.putExtra(Constants.TITLE_SLUG, articleDataModelsNew.get(position - 1).getTitleSlug());
                     startActivity(intent);
 
                 }
@@ -555,6 +557,8 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                     Intent intent = new Intent(BloggerDashboardActivity.this, ArticlesAndBlogsDetailsActivity.class);
                     intent.putExtra(Constants.ARTICLE_ID, commentList.get(position - 1).getArticleId());
                     intent.putExtra(Constants.AUTHOR_ID, commentList.get(position - 1).getUserId());
+                    intent.putExtra(Constants.BLOG_SLUG, commentList.get(position - 1).getBlogTitleSlug());
+                    intent.putExtra(Constants.TITLE_SLUG, commentList.get(position - 1).getTitleSlug());
                     startActivity(intent);
                 }
             }
@@ -1112,7 +1116,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                                  Bio = responseData.getData().getResult().getUserBio();
                                  firstName = responseData.getData().getResult().getFirstName();
                                  lastName = responseData.getData().getResult().getLastName();
-                                 phoneNumber = responseData.getData().getResult().getPhoneNumber();
+                                 phoneNumber = responseData.getData().getResult().getPhone().getMobile();
                                  if (!StringUtils.isNullOrEmpty(responseData.getData().getResult().getProfilePicUrl().getClientApp())) {
                                      Picasso.with(BloggerDashboardActivity.this).load(responseData.getData().getResult().getProfilePicUrl().getClientApp())
                                              .placeholder(R.drawable.family_xxhdpi).error(R.drawable.family_xxhdpi).transform(new RoundedTransformation()).into(bloggerImageView);

@@ -10,6 +10,10 @@ public class UpdateUserDetail extends BaseResponse {
     private String attributeName;
     private String attributeValue;
     private String attributeType;
+    private String firstName;
+    private String lastName;
+    private String mobile;
+    private String userBio;
 
     public String getFirstName() {
         return firstName;
@@ -19,8 +23,6 @@ public class UpdateUserDetail extends BaseResponse {
         this.firstName = firstName;
     }
 
-    private String firstName;
-
     public String getLastName() {
         return lastName;
     }
@@ -29,17 +31,13 @@ public class UpdateUserDetail extends BaseResponse {
         this.lastName = lastName;
     }
 
-    private String lastName;
-
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getMobile() {
+        return mobile;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
-
-    private String phoneNumber;
 
     public String getUserBio() {
         return userBio;
@@ -48,8 +46,6 @@ public class UpdateUserDetail extends BaseResponse {
     public void setUserBio(String userBio) {
         this.userBio = userBio;
     }
-
-    private String userBio;
 
     public String getAttributeName() {
         return attributeName;
