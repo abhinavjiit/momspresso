@@ -536,17 +536,37 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 } else if (AppConstants.USER_TYPE_EXPERT.equals(detailData.getUserType())) {
                     author_type.setText(AppConstants.AUTHOR_TYPE_EXPERT);
                     author_type.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_expert));
+                    if (StringUtils.isNullOrEmpty(deepLinkURL)) {
+                        shareUrl = AppConstants.ARTICLE_SHARE_URL + "article/" + titleSlug;
+                    } else {
+                        shareUrl = deepLinkURL;
+                    }
                 } else if (AppConstants.USER_TYPE_EDITOR.equals(detailData.getUserType())) {
                     author_type.setText(AppConstants.AUTHOR_TYPE_EDITOR);
                     author_type.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_editor));
+                    if (StringUtils.isNullOrEmpty(deepLinkURL)) {
+                        shareUrl = AppConstants.ARTICLE_SHARE_URL + "article/" + titleSlug;
+                    } else {
+                        shareUrl = deepLinkURL;
+                    }
                 } else if (AppConstants.USER_TYPE_EDITORIAL.equals(detailData.getUserType())) {
                     author_type.setText(AppConstants.AUTHOR_TYPE_EDITORIAL);
                     author_type.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_editorial));
+                    if (StringUtils.isNullOrEmpty(deepLinkURL)) {
+                        shareUrl = AppConstants.ARTICLE_SHARE_URL + "article/" + titleSlug;
+                    } else {
+                        shareUrl = deepLinkURL;
+                    }
                 }
             } else {
                 // Default Author type set to Blogger
                 author_type.setText("Blogger");
                 author_type.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_blogger));
+                if (StringUtils.isNullOrEmpty(deepLinkURL)) {
+                    shareUrl = AppConstants.ARTICLE_SHARE_URL + blogSlug + "/article/" + titleSlug;
+                } else {
+                    shareUrl = deepLinkURL;
+                }
             }
         } catch (Exception e) {
             Crashlytics.logException(e);

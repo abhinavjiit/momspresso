@@ -25,6 +25,9 @@ public class UserDetailResult {
     private String sessionId;
     private String phoneNumber;
 
+    private PhoneDetails phone;
+
+
     public String getPhoneNumber() {
         return phoneNumber;
     }
@@ -167,5 +170,13 @@ public class UserDetailResult {
 
     public void setSessionId(String sessionId) {
         this.sessionId = sessionId;
+    }
+
+    public PhoneDetails getPhone() {
+        return phone;
+    }
+
+    public void setPhone(PhoneDetails phone) {
+        this.phone = phone;
     }
 }

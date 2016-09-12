@@ -4,11 +4,13 @@ package com.mycity4kids.models.response;
  * Created by anshul on 8/2/16.
  */
 public class UserCommentsResult {
-    String id;
-    String articleId,parentId,userComment,createdTime,userId,userName;
-    Long updatedTime;
-
-
+    private String id;
+    private String articleId, parentId, userComment, createdTime, userId, userName;
+    private Long updatedTime;
+    String articleTitle;
+    String authorName;
+    private String blogTitleSlug;
+    private String titleSlug;
 
     public String getArticleTitle() {
         return articleTitle;
@@ -18,8 +20,6 @@ public class UserCommentsResult {
         this.articleTitle = articleTitle;
     }
 
-    String articleTitle;
-
     public String getAuthorName() {
         return authorName;
     }
@@ -28,7 +28,6 @@ public class UserCommentsResult {
         this.authorName = authorName;
     }
 
-    String authorName;
     public String getId() {
         return id;
     }
@@ -93,8 +92,19 @@ public class UserCommentsResult {
         this.userName = userName;
     }
 
+    public String getBlogTitleSlug() {
+        return blogTitleSlug;
+    }
 
+    public void setBlogTitleSlug(String blogTitleSlug) {
+        this.blogTitleSlug = blogTitleSlug;
+    }
 
+    public String getTitleSlug() {
+        return titleSlug;
+    }
 
-
+    public void setTitleSlug(String titleSlug) {
+        this.titleSlug = titleSlug;
+    }
 }

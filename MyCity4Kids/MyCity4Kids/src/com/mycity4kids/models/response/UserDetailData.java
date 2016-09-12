@@ -1,7 +1,5 @@
 package com.mycity4kids.models.response;
 
-import java.util.ArrayList;
-
 /**
  * Created by hemant on 22/6/16.
  */
