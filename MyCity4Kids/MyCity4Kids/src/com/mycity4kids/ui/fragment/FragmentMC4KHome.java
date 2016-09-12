@@ -433,10 +433,11 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                             @Override
                             public void onClick(View v) {
                                 Intent intent = new Intent(getActivity(), ArticlesAndBlogsDetailsActivity.class);
-
                                 ArticleListingResult parentingListData = (ArticleListingResult) (mArticleDataListing.get((int) view.getTag()));
                                 intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
                                 intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
+                                intent.putExtra(Constants.BLOG_SLUG, parentingListData.getBlogPageSlug());
+                                intent.putExtra(Constants.TITLE_SLUG, parentingListData.getTitleSlug());
                                 startActivity(intent);
                                 Log.e("Tag", "" + view.getTag());
                             }
@@ -542,10 +543,11 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(getActivity(), ArticlesAndBlogsDetailsActivity.class);
-
                         ArticleListingResult parentingListData1 = (ArticleListingResult) (mArticleBestCityListing.get((int) view1.getTag()));
                         intent.putExtra(Constants.ARTICLE_ID, parentingListData1.getId());
                         intent.putExtra(Constants.AUTHOR_ID, parentingListData1.getUserId());
+                        intent.putExtra(Constants.BLOG_SLUG, parentingListData1.getBlogPageSlug());
+                        intent.putExtra(Constants.TITLE_SLUG, parentingListData1.getTitleSlug());
                         startActivity(intent);
                         Log.e("Tag", "" + view1.getTag());
                     }
@@ -576,126 +578,6 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         }
     }
 
-    private OnWebServiceCompleteListener mGetArticleListingListener1 = new OnWebServiceCompleteListener() {
-        @Override
-        public void onWebServiceComplete(VolleyBaseResponse response, boolean isError) {
-            blogProgessBar1.setVisibility(View.GONE);
-            Log.d("Response back =", " " + response.getResponseBody());
-            if (isError) {
-                if (null != getActivity() && response.getResponseCode() != 999)
-                    ((DashboardActivity) getActivity()).showToast("Something went wrong from server");
-            } else {
-                Log.d("Response = ", response.getResponseBody());
-                String temp = "";
-                if (response == null) {
-                    ((DashboardActivity) getActivity()).showToast("Something went wrong from server");
-                    removeProgressDialog();
-                    return;
-                }
-
-                CommonParentingResponse responseBlogData;
-                try {
-                    responseBlogData = new Gson().fromJson(response.getResponseBody(), CommonParentingResponse.class);
-                } catch (JsonSyntaxException jse) {
-                    Crashlytics.logException(jse);
-                    Log.d("JsonSyntaxException", Log.getStackTraceString(jse));
-                    ((DashboardActivity) getActivity()).showToast("Something went wrong from server");
-                    removeProgressDialog();
-                    return;
-                }
-
-                if (responseBlogData.getResponseCode() == Constants.HTTP_RESPONSE_SUCCESS) {
-                    //clear list to avoid duplicates due to volley caching
-                    mArticleDataListing1.clear();
-
-                    mArticleDataListing1.addAll(responseBlogData.getResult().getData().getData());
-                    hzScrollLinearLayout1.removeAllViews();
-                    BaseApplication.setBlogResponse(mArticleDataListing1);
-                    for (int i = 0; i < mArticleDataListing1.size(); i++) {
-                        final View view1 = mInflator.inflate(R.layout.card_item_article_dashboard, null);
-                        view1.setTag(i);
-                        ImageView articleImage = (ImageView) view1.findViewById(R.id.imvAuthorThumb);
-                        TextView title = (TextView) view1.findViewById(R.id.txvArticleTitle);
-                        cardView = (CardView) view1.findViewById(R.id.cardViewWidget);
-                        Picasso.with(getActivity()).load(mArticleDataListing1.get(i).getThumbnail_image()).placeholder(R.drawable.default_article).into(articleImage);
-                        title.setText(mArticleDataListing1.get(i).getTitle());
-
-                        view1.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent intent = new Intent(getActivity(), ArticlesAndBlogsDetailsActivity.class);
-
-                                CommonParentingList parentingListData1 = (CommonParentingList) (mArticleDataListing1.get((int) view1.getTag()));
-                                intent.putExtra(Constants.ARTICLE_ID, parentingListData1.getId());
-                                intent.putExtra(Constants.ARTICLE_COVER_IMAGE, parentingListData1.getThumbnail_image());
-                                intent.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.ARTICLES);
-                                intent.putExtra(Constants.FILTER_TYPE, parentingListData1.getAuthor_type());
-                                intent.putExtra(Constants.BLOG_NAME, parentingListData1.getBlog_name());
-                                startActivity(intent);
-                                Log.e("Tag", "" + view1.getTag());
-                            }
-                        });
-                        hzScrollLinearLayout1.addView(view1);
-                    }
-                    View customViewMore = mInflator.inflate(R.layout.custom_view_more_dashboard, null);
-                    DisplayMetrics metrics = new DisplayMetrics();
-                    if (getActivity() != null) {
-                        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-                        int widthPixels = metrics.widthPixels;
-                        float width = (float) (widthPixels * 0.45);
-                        customViewMore.setMinimumWidth((int) width);
-                    }
-                    hzScrollLinearLayout1.addView(customViewMore);
-                    customViewMore.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            FragmentEditorsPick editorsfragment = new FragmentEditorsPick();
-                            ((DashboardActivity) getActivity()).replaceFragment(editorsfragment, null, true);
-                        }
-                    });
-                    if (mArticleDataListing1.isEmpty()) {
-                        ((TextView) view.findViewById(R.id.go_to_blog)).setVisibility(View.VISIBLE);
-                        ((TextView) view.findViewById(R.id.no_blog)).setVisibility(View.VISIBLE);
-                    }
-                    baseScroll.smoothScrollTo(0, 0);
-
-                } else if (responseBlogData.getResponseCode() == 400) {
-                    ((TextView) view.findViewById(R.id.go_to_blog)).setVisibility(View.VISIBLE);
-                    ((TextView) view.findViewById(R.id.no_blog)).setVisibility(View.VISIBLE);
-
-                }
-
-            }
-        }
-    };
-
-    public boolean calcAgeGroup(int kidAge, String ageGroup) {
-        boolean result = false;
-
-        try {
-            int position = ageGroup.indexOf('(') + 1;
-            int yearPosition = ageGroup.indexOf("year");
-            ageGroup = ageGroup.substring(position, yearPosition);
-
-            String[] diff = ageGroup.split("-");
-            if (diff.length >= 2) {
-                int startAge = Integer.parseInt(diff[0].trim());
-                int endAge = Integer.parseInt(diff[1].trim());
-
-                if (kidAge >= startAge && kidAge <= endAge) {
-                    result = true;
-                }
-
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-        return result;
-    }
-
-
     @Override
     protected void updateUi(Response response) {
 
@@ -705,7 +587,6 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
             blogProgessBar.setVisibility(View.GONE);
             return;
         }
-
 
         switch (response.getDataType()) {
             case AppConstants.BUSINESS_LIST_REQUEST:
@@ -1737,7 +1618,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                         i.putExtra(Constants.EVENT_END_DATE, mBusinessDataListings.get(finalI1).getEnd_date());
                         Utils.pushEvent(getActivity(), GTMEventType.EVENTLIST_PLUS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", "Upcoming Events");
                         getActivity().startActivity(i);*/
-                       final BusinessDataListing information= mBusinessDataListings.get(finalI1);
+                        final BusinessDataListing information = mBusinessDataListings.get(finalI1);
                      /*   showAlertDialog("Add Event to calendar", "Do you want add this event to you personal calendar?", new OnButtonClicked() {
                             @Override
                             public void onButtonCLick(int buttonId) {
@@ -1751,9 +1632,9 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                                     public void onClick(DialogInterface dialog, int which) {
                                         // continue with delete
                                         dialog.dismiss();
-                                      //  onButtonClicked.onButtonCLick(0);
+                                        //  onButtonClicked.onButtonCLick(0);
                                         saveCalendar(information.getName(), information.getDescription(), information.getStart_date(), information.getEnd_date(), information.getLocality());
-                                        ToastUtils.showToast(getActivity(),"Successfully added to Calendar");
+                                        ToastUtils.showToast(getActivity(), "Successfully added to Calendar");
                                     }
                                 })
                                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -1803,6 +1684,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
             }
         });
     }
+
     private void saveCalendar(String title, String desc, String sDate, String eDate, String location) {
 
         ContentResolver cr = (getActivity()).getContentResolver();

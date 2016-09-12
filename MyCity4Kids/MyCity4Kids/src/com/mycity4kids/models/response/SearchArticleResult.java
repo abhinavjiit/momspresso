@@ -11,6 +11,7 @@ public class SearchArticleResult {
     private String image;
     private String title;
     private String body;
+    private String blogSlug;
 
     public String getId() {
         return id;
@@ -58,5 +59,13 @@ public class SearchArticleResult {
 
     public void setBody(String body) {
         this.body = body;
+    }
+
+    public String getBlogSlug() {
+        return blogSlug;
+    }
+
+    public void setBlogSlug(String blogSlug) {
+        this.blogSlug = blogSlug;
     }
 }

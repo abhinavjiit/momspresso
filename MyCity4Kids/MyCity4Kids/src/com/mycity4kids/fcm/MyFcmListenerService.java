@@ -52,6 +52,7 @@ import java.util.Map;
  */
 public class MyFcmListenerService extends FirebaseMessagingService {
     private static final String TAG = MyFcmListenerService.class.getSimpleName();
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
@@ -88,10 +89,9 @@ public class MyFcmListenerService extends FirebaseMessagingService {
         notificationManager.notify(0 *//* ID of notification *//*, notificationBuilder.build());*/
         // This is just one simple example of what you might choose to do with
 //    // a GCM message.
-        String msg=remoteMessage.getData().get("message");
-        if (msg==null)
-        {
-            msg=remoteMessage.getData().toString();
+        String msg = remoteMessage.getData().get("message");
+        if (msg == null) {
+            msg = remoteMessage.getData().toString();
         }
 
         if (StringUtils.isNullOrEmpty(msg)) {
@@ -99,9 +99,9 @@ public class MyFcmListenerService extends FirebaseMessagingService {
         }
         PushNotificationModel pushNotificationModel;
         try {
-             pushNotificationModel = new Gson().fromJson(msg, PushNotificationModel.class);
-        }catch (JsonSyntaxException jse){
-             pushNotificationModel = new Gson().fromJson(new Gson().toJson(remoteMessage.getData()), PushNotificationModel.class);
+            pushNotificationModel = new Gson().fromJson(msg, PushNotificationModel.class);
+        } catch (JsonSyntaxException jse) {
+            pushNotificationModel = new Gson().fromJson(new Gson().toJson(remoteMessage.getData()), PushNotificationModel.class);
         }
         try {
 
@@ -340,7 +340,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         resultIntent = new Intent(getApplicationContext(), BusinessDetailsActivity.class);
                         resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         resultIntent.putExtra(Constants.CATEGORY_ID, SharedPrefUtils.getEventIdForCity(getApplication()));
-                        resultIntent.putExtra(Constants.BUSINESS_OR_EVENT_ID, ""+pushNotificationModel.getId());
+                        resultIntent.putExtra(Constants.BUSINESS_OR_EVENT_ID, "" + pushNotificationModel.getId());
                         resultIntent.putExtra(Constants.PAGE_TYPE, Constants.EVENT_PAGE_TYPE);
                         resultIntent.putExtra(Constants.DISTANCE, "0");
                         resultIntent.putExtra(AppConstants.NOTIFICATION_ID, requestID);
@@ -446,9 +446,8 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     mBuilder.setContentIntent(contentIntent);
                     mNotificationManager.notify(requestID, mBuilder.build());
 
-                }
-                else if (type.equalsIgnoreCase("article_details"))
-                { int requestID = (int) System.currentTimeMillis();
+                } else if (type.equalsIgnoreCase("article_details")) {
+                    int requestID = (int) System.currentTimeMillis();
                     Intent intent;
                     PendingIntent contentIntent;
                     if (SharedPrefUtils.getAppUpgrade(this)) {
@@ -468,8 +467,8 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
                     }
-String title=remoteMessage.getNotification().getTitle();
-                    String body=remoteMessage.getNotification().getBody();
+                    String title = remoteMessage.getNotification().getTitle();
+                    String body = remoteMessage.getNotification().getBody();
                 /*    NotificationCompat.BigPictureStyle notiStyle = new
                             NotificationCompat.BigPictureStyle();
                     notiStyle.setBigContentTitle(title);
@@ -486,16 +485,15 @@ String title=remoteMessage.getNotification().getTitle();
                                     .setContentIntent(contentIntent)
                                     .setContentText(body)
                                     .setAutoCancel(true);
-                                    //.setStyle(notiStyle);
+                    //.setStyle(notiStyle);
                     ;
                     // Gets an instance of the NotificationManager service
                     NotificationManager mNotifyMgr =
                             (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                     // Builds the notification and issues it.
                     mNotifyMgr.notify(requestID, mBuilder.build());
-                }
-                else if (type.equalsIgnoreCase("event_details"))
-                { int requestID = (int) System.currentTimeMillis();
+                } else if (type.equalsIgnoreCase("event_details")) {
+                    int requestID = (int) System.currentTimeMillis();
                     Intent resultIntent;
                     PendingIntent contentIntent;
                     if (SharedPrefUtils.getAppUpgrade(this)) {
@@ -505,7 +503,7 @@ String title=remoteMessage.getNotification().getTitle();
                         resultIntent = new Intent(getApplicationContext(), BusinessDetailsActivity.class);
                         resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         resultIntent.putExtra(Constants.CATEGORY_ID, SharedPrefUtils.getEventIdForCity(getApplication()));
-                        resultIntent.putExtra(Constants.BUSINESS_OR_EVENT_ID, pushNotificationModel.getId()+"");
+                        resultIntent.putExtra(Constants.BUSINESS_OR_EVENT_ID, pushNotificationModel.getId() + "");
                         resultIntent.putExtra(Constants.PAGE_TYPE, Constants.EVENT_PAGE_TYPE);
                         resultIntent.putExtra(Constants.DISTANCE, "0");
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
@@ -516,8 +514,8 @@ String title=remoteMessage.getNotification().getTitle();
                         contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
                     }
-                    String title=remoteMessage.getNotification().getTitle();
-                    String body=remoteMessage.getNotification().getBody();
+                    String title = remoteMessage.getNotification().getTitle();
+                    String body = remoteMessage.getNotification().getBody();
                 /*    NotificationCompat.BigPictureStyle notiStyle = new
                             NotificationCompat.BigPictureStyle();
                     notiStyle.setBigContentTitle(title);
@@ -534,16 +532,15 @@ String title=remoteMessage.getNotification().getTitle();
                                     .setContentIntent(contentIntent)
                                     .setContentText(body)
                                     .setAutoCancel(true);
-                            //.setStyle(notiStyle);
-                            ;
+                    //.setStyle(notiStyle);
+                    ;
                     // Gets an instance of the NotificationManager service
                     NotificationManager mNotifyMgr =
                             (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                     // Builds the notification and issues it.
                     mNotifyMgr.notify(requestID, mBuilder.build());
-                }
-                else if (type.equalsIgnoreCase("webView"))
-                { int requestID = (int) System.currentTimeMillis();
+                } else if (type.equalsIgnoreCase("webView")) {
+                    int requestID = (int) System.currentTimeMillis();
                     Intent resultIntent;
                     PendingIntent contentIntent;
                     if (SharedPrefUtils.getAppUpgrade(this)) {
@@ -561,8 +558,8 @@ String title=remoteMessage.getNotification().getTitle();
                         contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
                     }
-                    String title=remoteMessage.getNotification().getTitle();
-                    String body=remoteMessage.getNotification().getBody();
+                    String title = remoteMessage.getNotification().getTitle();
+                    String body = remoteMessage.getNotification().getBody();
                 /*    NotificationCompat.BigPictureStyle notiStyle = new
                             NotificationCompat.BigPictureStyle();
                     notiStyle.setBigContentTitle(title);
@@ -579,7 +576,7 @@ String title=remoteMessage.getNotification().getTitle();
                                     .setContentIntent(contentIntent)
                                     .setContentText(body)
                                     .setAutoCancel(true);
-                            //.setStyle(notiStyle);
+                    //.setStyle(notiStyle);
 
                     // Gets an instance of the NotificationManager service
                     NotificationManager mNotifyMgr =
@@ -595,6 +592,7 @@ String title=remoteMessage.getNotification().getTitle();
         }
 
     }
+
     private Bitmap getScaledBitmap(Bitmap bitmap) {
         DisplayMetrics displaymetrics = getResources().getDisplayMetrics();
         int height = 180;

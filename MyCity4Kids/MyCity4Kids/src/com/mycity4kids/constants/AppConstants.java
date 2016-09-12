@@ -14,8 +14,8 @@ public class AppConstants {
     public static final String DEV_URL = "http://54.169.17.138/";
     public static final String STAGING_URL = "http://52.77.116.39:8080/";
 
- //   public static final String LIVE_URL = "http://52.77.116.39/";
-    public static final String LIVE_URL="http://52.220.87.141/";
+    //   public static final String LIVE_URL = "http://52.77.116.39/";
+    public static final String LIVE_URL = "http://52.220.87.141/";
 //    public static final String LIVE_URL = "http://54.169.17.138/";
 //    public static final String LIVE_URL = "http://10.42.0.1/";
 //    public static final String LIVE_URL = "http://192.168.1.12/";
@@ -157,6 +157,8 @@ public class AppConstants {
     public static final Uri APP_BASE_URI = Uri.parse("android-app://com.mycity4kids/http/www.mycity4kids.com/");
     public static final Uri WEB_BASE_URL = Uri.parse("http://www.mycity4kids.com/");
 
+    public static final String ARTICLE_SHARE_URL = "http://dev.mycity4kids.com/" + "newparenting/";
+//    public static final String ARTICLE_SHARE_URL = BASE_URL + "newparenting/";
 
     /*New Login/Sign Up Constants*/
     public static final String SMS_ORIGIN = "MCKOTP";
@@ -374,9 +376,9 @@ public class AppConstants {
     public static final String DEEP_LINK_AUTHOR_LISTING = "author_listing";
     public static final String DEEP_LINK_BLOGGER_LISTING = "blogger_listing";
     public static final String DEEP_LINK_ARTICLE_DETAIL = "article_detail";
-   public static final String DEEP_LINK_AUTHOR_DETAIL="author_detail";
-   public static final String DEEP_LINK_ARTICLE_LISTING="article_listing";
-   public static final String DEEP_LINK_TOPIC_LISTING="category_listing";
+    public static final String DEEP_LINK_AUTHOR_DETAIL = "author_detail";
+    public static final String DEEP_LINK_ARTICLE_LISTING = "article_listing";
+    public static final String DEEP_LINK_TOPIC_LISTING = "category_listing";
     public static final String CONTAINER_ID = "GTM-MS864S";
 
     //Author Types

@@ -20,7 +20,6 @@ import com.mycity4kids.ui.activity.ActivityCreateAppointment;
 import com.mycity4kids.ui.activity.ActivityCreateTask;
 import com.mycity4kids.ui.activity.ActivityEditAppointment;
 import com.mycity4kids.ui.activity.ActivityEditTask;
-import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
 import com.mycity4kids.ui.adapter.AttendeeCustomAdapter;
 
 import java.util.ArrayList;

@@ -19,7 +19,7 @@ public class ArticleListingResult implements Parcelable {
     private String userType;
     private String commentsCount;
     private String trendingCount;
-    private String blogPageSlug;
+    private String blogTitleSlug;
     private Long createdTime;
     private String articleCount;
 
@@ -35,7 +35,7 @@ public class ArticleListingResult implements Parcelable {
         userType = in.readString();
         commentsCount = in.readString();
         trendingCount = in.readString();
-        blogPageSlug = in.readString();
+        blogTitleSlug = in.readString();
         createdTime = in.readLong();
         articleCount = in.readString();
     }
@@ -141,11 +141,11 @@ public class ArticleListingResult implements Parcelable {
     }
 
     public String getBlogPageSlug() {
-        return blogPageSlug;
+        return blogTitleSlug;
     }
 
     public void setBlogPageSlug(String blogPageSlug) {
-        this.blogPageSlug = blogPageSlug;
+        this.blogTitleSlug = blogPageSlug;
     }
 
     public Long getCreatedTime() {
@@ -182,7 +182,7 @@ public class ArticleListingResult implements Parcelable {
         dest.writeString(userType);
         dest.writeString(commentsCount);
         dest.writeString(trendingCount);
-        dest.writeString(blogPageSlug);
+        dest.writeString(blogTitleSlug);
         dest.writeLong(createdTime);
         dest.writeString(articleCount);
     }

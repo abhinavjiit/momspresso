@@ -1091,8 +1091,22 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                                  } else {
                                      rankingTextView.setText(responseData.getData().getResult().getRank());
                                  }
-                                 followersTextView.setText(responseData.getData().getResult().getFollowersCount());
-                                 followingTextView.setText(responseData.getData().getResult().getFollowingCount());
+                                 int followerCount = Integer.parseInt(responseData.getData().getResult().getFollowersCount());
+                                 if (followerCount > 999) {
+                                     float singleFollowerCount = ((float) followerCount) / 1000;
+                                     followersTextView.setText("" + singleFollowerCount + "k");
+                                 } else {
+                                     followersTextView.setText("" + followerCount);
+                                 }
+
+                                 int followingCount = Integer.parseInt(responseData.getData().getResult().getFollowingCount());
+                                 if (followingCount > 999) {
+                                     float singleFollowingCount = ((float) followingCount) / 1000;
+                                     followingTextView.setText("" + singleFollowingCount + "k");
+                                 } else {
+                                     followingTextView.setText("" + followingCount);
+                                 }
+
                                  blogTitle.setText(responseData.getData().getResult().getBlogTitle());
                                  getSupportActionBar().setTitle(responseData.getData().getResult().getFirstName());
                                  Bio = responseData.getData().getResult().getUserBio();

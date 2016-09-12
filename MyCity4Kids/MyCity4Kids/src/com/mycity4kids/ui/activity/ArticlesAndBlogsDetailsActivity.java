@@ -170,12 +170,14 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     private String bookmarkFlag = "0";
 
     private String commentURL = "";
-
+    String shareUrl = "";
     ArticleDetailsAPI articleDetailsAPI;
     private String bookmarkId;
 
     EditCommentsRepliesFragment editCommentsRepliesFragment;
     CommentRepliesDialogFragment commentFragment;
+    private String blogSlug;
+    private String titleSlug;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -265,14 +267,10 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
                 @Override
                 public void onScrollChanged() {
-
                     View view = (View) mScrollView.getChildAt(mScrollView.getChildCount() - 1);
-
                     Rect scrollBounds = new Rect();
                     mScrollView.getHitRect(scrollBounds);
-
                     int diff = (view.getBottom() - (mScrollView.getHeight() + mScrollView.getScrollY()));
-
                     if (diff <= 10 && !isLoading && !StringUtils.isNullOrEmpty(commentURL) && commentURL.contains("http")) {
                         getMoreComments();
                     }
@@ -283,6 +281,10 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             if (bundle != null) {
                 articleId = bundle.getString(Constants.ARTICLE_ID);
                 authorId = bundle.getString(Constants.AUTHOR_ID);
+                authorId = bundle.getString(Constants.AUTHOR_ID);
+                blogSlug = bundle.getString(Constants.BLOG_SLUG);
+                titleSlug = bundle.getString(Constants.TITLE_SLUG);
+
                 if (!ConnectivityUtils.isNetworkEnabled(this)) {
                     showToast(getString(R.string.error_network));
                     return;
@@ -438,12 +440,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             case R.id.share:
                 Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
-                String shareUrl = "";
-                if (StringUtils.isNullOrEmpty(detailData.getUrl())) {
-                    shareUrl = "";
-                } else {
-                    shareUrl = detailData.getUrl();
-                }
 
                 String author = ((TextView) findViewById(R.id.user_name)).getText().toString();
                 String shareMessage;
@@ -452,7 +448,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 } else {
                     shareMessage = "mycity4kids\n\nCheck out this interesting blog post " + "\"" + detailData.getTitle() + "\" by " + author + ".\nRead Here: " + shareUrl;
                 }
-                Utils.pushEventShareURL(ArticlesAndBlogsDetailsActivity.this, GTMEventType.SHARE_BLOG_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "","Blog Detail", shareUrl);
+                Utils.pushEventShareURL(ArticlesAndBlogsDetailsActivity.this, GTMEventType.SHARE_BLOG_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Blog Detail", shareUrl);
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
                 startActivity(Intent.createChooser(shareIntent, "mycity4kids"));
 
@@ -532,6 +528,11 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 if (AppConstants.USER_TYPE_BLOGGER.equals(detailData.getUserType())) {
                     author_type.setText(AppConstants.AUTHOR_TYPE_BLOGGER);
                     author_type.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_blogger));
+                    if (StringUtils.isNullOrEmpty(deepLinkURL)) {
+                        shareUrl = AppConstants.ARTICLE_SHARE_URL + blogSlug + "/article/" + titleSlug;
+                    } else {
+                        shareUrl = deepLinkURL;
+                    }
                 } else if (AppConstants.USER_TYPE_EXPERT.equals(detailData.getUserType())) {
                     author_type.setText(AppConstants.AUTHOR_TYPE_EXPERT);
                     author_type.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_expert));
@@ -569,10 +570,10 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     bodyDesc = bodyDesc.replace(images.getKey(), "<p style='text-align:center'><img src=" + images.getValue() + " style=\"width: 100%;\"+></p>");
                 }
             }
-            if (!videoList.isEmpty()) {
+            if (null != videoList && !videoList.isEmpty()) {
                 for (VideoData video : videoList) {
                     if (bodyDescription.contains(video.getKey())) {
-                        bodyDesc = bodyDesc.replace(video.getKey(), "<p style='text-align:center'><iframe allowfullscreen=\"true\" allowtransparency=\"true\" frameborder=\"0\" src=http:" + video.getVideoUrl() + "?modestbranding=1&amp;rel=0&amp;showinfo=0\" style=\"width: 100%;\"></iframe></p>");
+                        bodyDesc = bodyDesc.replace(video.getKey(), "<p style='text-align:center'><iframe src=http:" + video.getVideoUrl() + "?modestbranding=1&amp;rel=0&amp;showinfo=0\" style=\"width: 100%;\"></iframe></p>");
                     }
                 }
             }
@@ -597,14 +598,13 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             mWebView.loadDataWithBaseURL("", bodyImgTxt, "text/html", "utf-8", "");
             mWebView.getSettings().setJavaScriptEnabled(true);
         } else {
-            if (!videoList.isEmpty()) {
+            if (null != videoList && !videoList.isEmpty()) {
                 for (VideoData video : videoList) {
                     if (bodyDescription.contains(video.getKey())) {
-                        bodyDesc = bodyDesc.replace(video.getKey(), "<p style='text-align:center'><iframe src=http:" + video.getVideoUrl() + "?modestbranding=1&amp;rel=0&amp;showinfo=0\" style=\"width: 100%;\" allowfullscreen></iframe></p>");
+                        bodyDesc = bodyDesc.replace(video.getKey(), "<p style='text-align:center'><iframe src=http:" + video.getVideoUrl() + "?modestbranding=1&amp;rel=0&amp;showinfo=0\" style=\"width: 100%;\" ></iframe></p>");
                     }
                 }
             }
-//            bodyDesc = bodyDesc.replaceAll("\n", "<br/>");
             String bodyImgTxt = "<html><head>" +
                     "" +
                     "<style type=\"text/css\">\n" +
@@ -653,7 +653,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         hitUpdateViewCountAPI(detailData.getUserId(), detailData.getTags(), detailData.getCities());
 
     }
-
 
     private void displayComments(ViewHolder holder, CommentsData commentList, boolean isNewComment) {
         if (holder != null) {

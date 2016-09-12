@@ -118,6 +118,8 @@ public class SearchArticlesTabFragment extends BaseFragment {
                 intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
                 intent.putExtra(Constants.ARTICLE_COVER_IMAGE, parentingListData.getImage());
                 intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
+                intent.putExtra(Constants.BLOG_SLUG, parentingListData.getBlogSlug());
+                intent.putExtra(Constants.TITLE_SLUG, parentingListData.getTitleSlug());
                 startActivity(intent);
 
             }
@@ -126,35 +128,12 @@ public class SearchArticlesTabFragment extends BaseFragment {
         return view;
     }
 
-//    @Override
-//    public void setUserVisibleHint(boolean visible) {
-//        super.setUserVisibleHint(visible);
-//        if (visible && isResumed()) {   // only at fragment screen is resumed
-//            fragmentResume = true;
-//            fragmentVisible = false;
-//            fragmentOnCreated = true;
-//            if (!isDataLoadedOnce && !StringUtils.isNullOrEmpty(searchName)) {
-//                nextPageNumber = 1;
-//                newSearchTopicArticleListingApi(searchName, sortType);
-//                isDataLoadedOnce = true;
-//            }
-//        } else if (visible) {        // only at fragment onCreated
-//            fragmentResume = false;
-//            fragmentVisible = true;
-//            fragmentOnCreated = true;
-//        } else if (!visible && fragmentOnCreated) {// only when you go out of fragment screen
-//            fragmentVisible = false;
-//            fragmentResume = false;
-//        }
-//    }
-
     @Override
     protected void updateUi(Response response) {
 
     }
 
     private void getArticleResponse(SearchResponse responseData) {
-        //	parentingResponse = responseData ;
         ArrayList<SearchArticleResult> dataList = responseData.getData().getResult().getArticle();
 
         if (dataList.size() == 0) {
@@ -172,14 +151,8 @@ public class SearchArticlesTabFragment extends BaseFragment {
                 noBlogsTextView.setText("No articles found");
             }
 
-//            articleDataModelsNew = dataList;
-//            articlesListingAdapter.setNewListData(articleDataModelsNew);
-//            articlesListingAdapter.notifyDataSetChanged();
-//            noBlogsTextView.setVisibility(View.VISIBLE);
-//            noBlogsTextView.setText("No articles found");
         } else {
             noBlogsTextView.setVisibility(View.GONE);
-//            totalPageCount = responseData.getResult().getData().getPage_count();
             if (nextPageNumber == 1) {
                 articleDataModelsNew = dataList;
             } else {
@@ -199,7 +172,6 @@ public class SearchArticlesTabFragment extends BaseFragment {
             ((SearchArticlesAndAuthorsActivity) getActivity()).showToast("No connectivity available");
             return;
         }
-//        mLodingView.setVisibility(View.VISIBLE);
 
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
         SearchArticlesAuthorsAPI searchArticlesAuthorsAPI = retro.create(SearchArticlesAuthorsAPI.class);
@@ -209,15 +181,6 @@ public class SearchArticlesTabFragment extends BaseFragment {
 
         call.enqueue(searchArticlesResponseCallback);
 
-
-//        ParentingRequest _parentingModel = new ParentingRequest();
-//        _parentingModel.setSearchName(searchName);
-//        _parentingModel.setCity_id(SharedPrefUtils.getCurrentCityModel(getActivity()).getId());
-//        _parentingModel.setPage("" + nextPageNumber);
-//
-//        _parentingModel.setSoty_by(sortby);
-//        ParentingStopController _controller = new ParentingStopController(getActivity(), this);
-//        _controller.getData(AppConstants.TOP_PICKS_REQUEST, _parentingModel);
     }
 
     public void refreshAllArticles(String searchText, String sortType) {

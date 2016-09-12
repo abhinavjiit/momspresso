@@ -46,6 +46,8 @@ public class Constants {
     public static final String LOCAL_BROADCAST_GCM = "gcm_broadcast";
 
     public static final String PUSH_MODEL = "pushmodel";
+    public static final String BLOG_SLUG = "blogSlug";
+    public static final String TITLE_SLUG = "titleSlug";
 
     public static boolean IS_RESET = false;
 

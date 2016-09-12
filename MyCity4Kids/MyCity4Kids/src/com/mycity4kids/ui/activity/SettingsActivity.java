@@ -1,98 +1,54 @@
 package com.mycity4kids.ui.activity;
 
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
-import com.kelltontech.utils.ConnectivityUtils;
-import com.kelltontech.utils.StringUtils;
-import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
-import com.mycity4kids.application.BaseApplication;
-import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.controller.LogoutController;
-import com.mycity4kids.dbtable.ExternalCalendarTable;
-import com.mycity4kids.dbtable.TableAdult;
-import com.mycity4kids.dbtable.TableApiEvents;
-import com.mycity4kids.dbtable.TableAppointmentData;
-import com.mycity4kids.dbtable.TableAttendee;
-import com.mycity4kids.dbtable.TableFamily;
-import com.mycity4kids.dbtable.TableFile;
-import com.mycity4kids.dbtable.TableKids;
-import com.mycity4kids.dbtable.TableNotes;
-import com.mycity4kids.dbtable.TableTaskData;
-import com.mycity4kids.dbtable.TableTaskList;
-import com.mycity4kids.dbtable.TableWhoToRemind;
-import com.mycity4kids.dbtable.TaskCompletedTable;
-import com.mycity4kids.dbtable.TaskTableAttendee;
-import com.mycity4kids.dbtable.TaskTableFile;
-import com.mycity4kids.dbtable.TaskTableNotes;
-import com.mycity4kids.dbtable.TaskTableWhoToRemind;
-import com.mycity4kids.dbtable.UserTable;
 import com.mycity4kids.gtmutils.Utils;
-import com.mycity4kids.models.logout.LogoutResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.reminders.AppointmentManager;
 import com.mycity4kids.ui.fragment.ArticlesFragment;
 import com.mycity4kids.ui.fragment.ChangeCityFragment;
-import com.mycity4kids.ui.fragment.ExternalCalFragment;
 import com.mycity4kids.ui.fragment.FragmentAdultProfile;
 import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
-import com.mycity4kids.ui.fragment.FragmentCalMonth;
-import com.mycity4kids.ui.fragment.FragmentCalender;
-import com.mycity4kids.ui.fragment.FragmentCityForKids;
-import com.mycity4kids.ui.fragment.FragmentEditorsPick;
 import com.mycity4kids.ui.fragment.FragmentFamilyDetail;
 import com.mycity4kids.ui.fragment.FragmentFamilyProfile;
 import com.mycity4kids.ui.fragment.FragmentHomeCategory;
 import com.mycity4kids.ui.fragment.FragmentKidProfile;
-import com.mycity4kids.ui.fragment.FragmentMC4KHome;
 import com.mycity4kids.ui.fragment.FragmentSetting;
-import com.mycity4kids.ui.fragment.FragmentTaskHome;
 import com.mycity4kids.ui.fragment.NotificationFragment;
-import com.mycity4kids.ui.fragment.ParentingBlogFragment;
-import com.mycity4kids.ui.fragment.SendFeedbackFragment;
-import com.mycity4kids.ui.fragment.SyncSettingFragment;
-import com.mycity4kids.utils.RoundedTransformation;
-import com.squareup.picasso.Picasso;
 
 /**
  * Created by anshul on 8/4/16.
  */
-public class SettingsActivity extends BaseActivity  {
+public class SettingsActivity extends BaseActivity {
 
     int cityId;
     TextView cityChange;
-    String bio,firstName,lastName;
+    String bio, firstName, lastName;
     Toolbar mToolBar;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         Utils.pushOpenScreenEvent(SettingsActivity.this, "Settings", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
-      //  ((DashboardActivity) getActivity()).refreshMenu();
+        //  ((DashboardActivity) getActivity()).refreshMenu();
 
-        mToolBar=(Toolbar) findViewById(R.id.toolbar);
+        mToolBar = (Toolbar) findViewById(R.id.toolbar);
         mToolBar.setVisibility(View.VISIBLE);
         setSupportActionBar(mToolBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -116,22 +72,21 @@ public class SettingsActivity extends BaseActivity  {
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
-        bio=  getIntent().getStringExtra("bio");
-        firstName=  getIntent().getStringExtra("firstName");
-        lastName=  getIntent().getStringExtra("lastName");
+        bio = getIntent().getStringExtra("bio");
+        firstName = getIntent().getStringExtra("firstName");
+        lastName = getIntent().getStringExtra("lastName");
         Bundle extras = getIntent().getExtras();
         String fragmentToLoad = "";
         if (null != extras)
             fragmentToLoad = extras.getString("load_fragment", "");
-        if (Constants.SETTINGS_FRAGMENT.equals(fragmentToLoad))
-        {
+        if (Constants.SETTINGS_FRAGMENT.equals(fragmentToLoad)) {
             //changeVisibiltyOfArrow(false);
             setTitle("Settings");
-            Bundle bundle=new Bundle();
-            bundle.putString("bio",getIntent().getStringExtra("bio"));
-            bundle.putString("firstName",getIntent().getStringExtra("firstName"));
-            bundle.putString("lastName",getIntent().getStringExtra("lastName"));
-            bundle.putString("phoneNumber",getIntent().getStringExtra("phoneNumber"));
+            Bundle bundle = new Bundle();
+            bundle.putString("bio", getIntent().getStringExtra("bio"));
+            bundle.putString("firstName", getIntent().getStringExtra("firstName"));
+            bundle.putString("lastName", getIntent().getStringExtra("lastName"));
+            bundle.putString("phoneNumber", getIntent().getStringExtra("phoneNumber"));
             replaceFragment(new FragmentSetting(), bundle, false);
         }
         getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
@@ -139,18 +94,18 @@ public class SettingsActivity extends BaseActivity  {
             public void onBackStackChanged() {
                 Fragment currentFrag = getSupportFragmentManager().findFragmentById(R.id.content_frame);
 
-             if (currentFrag instanceof FragmentSetting) {
-                 //   changeVisibiltyOfArrow(false);
+                if (currentFrag instanceof FragmentSetting) {
+                    //   changeVisibiltyOfArrow(false);
                     setTitle("Settings");
                     mDrawerToggle.setDrawerIndicatorEnabled(false);
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_UNLOCKED);
                     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-                 getSupportActionBar().setHomeButtonEnabled(true);
+                    getSupportActionBar().setHomeButtonEnabled(true);
 
 
-                }  else if (currentFrag instanceof FragmentFamilyDetail) {
+                } else if (currentFrag instanceof FragmentFamilyDetail) {
 
                     setTitle("Family Details");
 
@@ -161,7 +116,7 @@ public class SettingsActivity extends BaseActivity  {
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
-                //    changeVisibiltyOfArrow(false);
+                    //    changeVisibiltyOfArrow(false);
                 } else if (currentFrag instanceof FragmentFamilyProfile) {
 
 
@@ -172,7 +127,7 @@ public class SettingsActivity extends BaseActivity  {
                     mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
                     getSupportActionBar().setHomeButtonEnabled(true);
 
-                 //   changeVisibiltyOfArrow(false);
+                    //   changeVisibiltyOfArrow(false);
                 } else if (currentFrag instanceof FragmentAdultProfile) {
 
 
@@ -182,7 +137,7 @@ public class SettingsActivity extends BaseActivity  {
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
-               //     changeVisibiltyOfArrow(false);
+                    //     changeVisibiltyOfArrow(false);
                 } else if (currentFrag instanceof FragmentKidProfile) {
 
 
@@ -192,9 +147,9 @@ public class SettingsActivity extends BaseActivity  {
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
-                //    changeVisibiltyOfArrow(false);
+                    //    changeVisibiltyOfArrow(false);
 
-                }  else if (currentFrag instanceof ChangeCityFragment) {
+                } else if (currentFrag instanceof ChangeCityFragment) {
                     setTitle("Change City");
 
                     mDrawerToggle.setDrawerIndicatorEnabled(false);
@@ -202,7 +157,7 @@ public class SettingsActivity extends BaseActivity  {
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
-               //     changeVisibiltyOfArrow(false);
+                    //     changeVisibiltyOfArrow(false);
                 }
                 invalidateOptionsMenu();
                 mDrawerToggle.syncState();
@@ -213,8 +168,7 @@ public class SettingsActivity extends BaseActivity  {
             @Override
             public void onClick(View v) {
                 Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-                if(topFragment instanceof FragmentSetting)
-                {
+                if (topFragment instanceof FragmentSetting) {
                     finish();
                 }
                 switch (v.getId()) {
@@ -259,8 +213,6 @@ public class SettingsActivity extends BaseActivity  {
             getMenuInflater().inflate(R.menu.menu_event, menu);
         } else if (topFragment instanceof ArticlesFragment) {
             getMenuInflater().inflate(R.menu.menu_articles, menu);
-        } else if (topFragment instanceof ParentingBlogFragment) {
-            getMenuInflater().inflate(R.menu.blog_menu, menu);
         } else if (topFragment instanceof NotificationFragment) {
             getMenuInflater().inflate(R.menu.forgot_password, menu);
         } else if (topFragment instanceof FragmentHomeCategory) {
@@ -305,8 +257,7 @@ public class SettingsActivity extends BaseActivity  {
     @Override
     public void onBackPressed() {
         Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-        if(topFragment instanceof FragmentSetting)
-        {
+        if (topFragment instanceof FragmentSetting) {
             finish();
         }
         super.onBackPressed();

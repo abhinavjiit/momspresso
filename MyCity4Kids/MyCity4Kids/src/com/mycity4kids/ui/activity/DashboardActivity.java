@@ -47,7 +47,6 @@ import com.mycity4kids.constants.ColorCode;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.ArticleBlogFollowController;
 import com.mycity4kids.controller.CompleteTaskController;
-import com.mycity4kids.controller.DeepLinkingController;
 import com.mycity4kids.controller.DeleteTaskController;
 import com.mycity4kids.controller.TaskListController;
 import com.mycity4kids.dbtable.TableAppointmentData;
@@ -60,17 +59,12 @@ import com.mycity4kids.dbtable.TaskTableFile;
 import com.mycity4kids.dbtable.TaskTableNotes;
 import com.mycity4kids.dbtable.TaskTableWhoToRemind;
 import com.mycity4kids.editor.EditorPostActivity;
-import com.mycity4kids.enums.DialogButtonEvent;
-import com.mycity4kids.enums.DialogEnum;
 import com.mycity4kids.enums.ParentingFilterType;
 import com.mycity4kids.facebook.FacebookUtils;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
-import com.mycity4kids.interfaces.IGetRateAndUpdateEvent;
 import com.mycity4kids.interfaces.OnUIView;
 import com.mycity4kids.models.configuration.ConfigurationApiModel;
-import com.mycity4kids.models.deeplinking.DeepLinkApiModel;
-import com.mycity4kids.models.deeplinking.DeepLinkData;
 import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.models.parentingstop.ArticleBlogFollowRequest;
 import com.mycity4kids.models.response.DeepLinkingResposnse;
@@ -84,7 +78,6 @@ import com.mycity4kids.newmodels.TaskListResponse;
 import com.mycity4kids.newmodels.TaskResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.reminders.Reminder;
-import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.DeepLinkingAPI;
 import com.mycity4kids.ui.adapter.UserTaskListAdapter;
 import com.mycity4kids.ui.fragment.AddTaskListPopUp;
@@ -105,7 +98,6 @@ import com.mycity4kids.ui.fragment.FragmentMC4KHome;
 import com.mycity4kids.ui.fragment.FragmentSetting;
 import com.mycity4kids.ui.fragment.FragmentTaskHome;
 import com.mycity4kids.ui.fragment.NotificationFragment;
-import com.mycity4kids.ui.fragment.ParentingBlogFragment;
 import com.mycity4kids.ui.fragment.RateAppDialogFragment;
 import com.mycity4kids.ui.fragment.SendFeedbackFragment;
 import com.mycity4kids.ui.fragment.SyncSettingFragment;
@@ -129,7 +121,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
-public class DashboardActivity extends BaseActivity implements View.OnClickListener, IGetRateAndUpdateEvent {
+public class DashboardActivity extends BaseActivity implements View.OnClickListener {
 
     private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
@@ -253,9 +245,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
         Utils.pushOpenScreenEvent(DashboardActivity.this, "DashBoard", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
-//        Reminder.with(this).info(Constants.REMINDER_KIDS_BIRTHDAY, "RANDOM kids birthday")
-//                .startTime(1419318120000l).setRepeatBehavior("Yearly", "Forever", "", null)
-//                .remindBefore("0").setRecurring("yes").create(11111120);
         TableKids _kidTable = new TableKids(BaseApplication.getInstance());
         Long sTime;
         for (int i = 0; i < _kidTable.getKidsCount(); i++) {
@@ -275,19 +264,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
         // onclick events
         findViewById(R.id.rdBtnToday).setOnClickListener(this);
-//        findViewById(R.id.rdBtnCalender).setOnClickListener(this);
-        //  findViewById(R.id.rdBtnTodo).setOnClickListener(this);
         findViewById(R.id.rdBtnUpcoming).setOnClickListener(this);
         findViewById(R.id.feed_back).setOnClickListener(this);
 
         setSupportActionBar(mToolbar);
-
-//        if (!SharedPrefUtils.getPushTokenUpdateToServer(DashboardActivity.this)) {
-        //  GCMUtil.initializeGCM(DashboardActivity.this);
-//        }
-
-//        set task list
-
 
         taskListAdapter = new UserTaskListAdapter(this, getTaskList(), false);
         allTaskList.setAdapter(taskListAdapter);
@@ -406,22 +386,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         findViewById(R.id.rdBtnKids).setOnClickListener(this);
         findViewById(R.id.rdBtnParentingBlogs).setOnClickListener(this);
         findViewById(R.id.editor).setOnClickListener(this);
-//        findViewById(R.id.drafts).setOnClickListener(this);
-//        findViewById(R.id.bloggerDashboard).setOnClickListener(this);
-//        findViewById(R.id.txvSettings).setOnClickListener(this);
-//        findViewById(R.id.txvMeetContributors).setOnClickListener(this);
-        //  findViewById(R.id.txvHelp).setOnClickListener(this);
         findViewById(R.id.imgProfile).setOnClickListener(this);
         findViewById(R.id.txvUserName).setOnClickListener(this);
-
-//        findViewById(R.id.txvfeedback).setOnClickListener(this);
-//        findViewById(R.id.txvrate).setOnClickListener(this);
-        //     findViewById(R.id.txvtelfrnd).setOnClickListener(this);
-
         findViewById(R.id.back_month).setOnClickListener(this);
         findViewById(R.id.next_month).setOnClickListener(this);
         findViewById(R.id.all_tasklist).setOnClickListener(this);
-
         findViewById(R.id.jan).setOnClickListener(this);
         findViewById(R.id.feb).setOnClickListener(this);
         findViewById(R.id.mar).setOnClickListener(this);
@@ -434,11 +403,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         findViewById(R.id.oct).setOnClickListener(this);
         findViewById(R.id.nov).setOnClickListener(this);
         findViewById(R.id.dec).setOnClickListener(this);
-
         findViewById(R.id.add_tasklist).setOnClickListener(this);
-
         findViewById(R.id.downarrow).setOnClickListener(this);
-
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.black_color));
@@ -446,7 +412,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.blank, R.string.blank) {
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                //  getActionBar().setTitle(mTitle);
                 invalidateOptionsMenu();
                 syncState();
             }
@@ -464,13 +429,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         /**
          * this dialog will open App Upgrade
          */
-        //  if (SharedPrefUtils.getAppUpgrade(this)) {
-        // RateAndUpdateDialog dialogUpgrade = new RateAndUpdateDialog();
-        // dialogUpgrade.newInstance(this, DialogEnum.UPDATE_DIALOG, this);
-        // dialogUpgrade.show(getSupportFragmentManager(), "");
-
-//            new rate us app @manish
-
 
         RateVersion reteVersionModel = SharedPrefUtils.getRateVersion(this);
         int currentRateVersion = reteVersionModel.getAppRateVersion();
@@ -606,25 +564,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_UNLOCKED);
                     findViewById(R.id.month_popup).setVisibility(View.GONE);
                     findViewById(R.id.task_popup).setVisibility(View.GONE);
-//                    if (findViewById(R.id.task_popup).getVisibility() == View.VISIBLE) {
-//                        findViewById(R.id.task_popup).setVisibility(View.GONE);
-//                    } else {
-//                        findViewById(R.id.task_popup).setVisibility(View.VISIBLE);
-//                    }
                     setTitle("All Tasks");
-
-                } else if (currentFrag instanceof ParentingBlogFragment) {
-
-                    findViewById(R.id.month_popup).setVisibility(View.GONE);
-                    findViewById(R.id.task_popup).setVisibility(View.GONE);
-                    mDrawerToggle.setDrawerIndicatorEnabled(false);
-                    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                    getSupportActionBar().setHomeButtonEnabled(true);
-                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
-                    changeVisibiltyOfArrow(false);
-                    setTitle("Meet Our Contributors");
 
                 } else if (currentFrag instanceof ArticlesFragment) {
 
@@ -684,10 +624,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         }
                         setTitle("Best of " + SharedPrefUtils.getCurrentCityModel(DashboardActivity.this).getName());
                     }
-
-
                 } else if (currentFrag instanceof SendFeedbackFragment) {
-
                     changeVisibiltyOfArrow(false);
                     mDrawerToggle.setDrawerIndicatorEnabled(true);
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
@@ -968,9 +905,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
             notiftTaskList();
             refreshMenu();
-        } else if (topFragment instanceof ParentingBlogFragment) {
-            refreshMenu();
-            setTitle("Meet Our Contributors");
         } else if (topFragment instanceof SendFeedbackFragment) {
             refreshMenu();
             setTitle("Send Feedback");
@@ -1061,14 +995,13 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         // Inflate the menu; this adds items to the action bar if it is present.
         // according to fragment change it
         final Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-        if (topFragment instanceof FragmentCityForKids) {
+        if (topFragment instanceof FragmentMC4KHome) {
+            getMenuInflater().inflate(R.menu.menu_search, menu);
+        } else if (topFragment instanceof FragmentCityForKids) {
 
         } else if (topFragment instanceof FragmentCalender) {
-
             if (filter) {
-
                 if (StringUtils.isNullOrEmpty(selected_colorcode)) {
-
                     getMenuInflater().inflate(R.menu.menu, menu);
                 } else {
                     menu.clear();
@@ -1081,18 +1014,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                             .getIdentifier("filter_" + key + "xxhdpi", "drawable", getPackageName()));
                     item.setIcon(drawable);
                 }
-
             } else {
                 getMenuInflater().inflate(R.menu.menu, menu);
             }
-
         } else if (topFragment instanceof FragmentCalMonth) {
-
-
             if (filter) {
-
                 if (StringUtils.isNullOrEmpty(selected_colorcode)) {
-
                     getMenuInflater().inflate(R.menu.menu_change, menu);
                 } else {
                     menu.clear();
@@ -1105,12 +1032,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     item.setIcon(drawable);
 
                 }
-
-
             } else {
                 getMenuInflater().inflate(R.menu.menu_change, menu);
             }
-
             //getMenuInflater().inflate(R.menu.menu_change, menu);
         } else if (topFragment instanceof FragmentFamilyDetail) {
 
@@ -1137,8 +1061,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             getMenuInflater().inflate(R.menu.menu_event, menu);
         } else if (topFragment instanceof ArticlesFragment) {
             getMenuInflater().inflate(R.menu.menu_articles, menu);
-        } else if (topFragment instanceof ParentingBlogFragment) {
-            getMenuInflater().inflate(R.menu.blog_menu, menu);
         } else if (topFragment instanceof NotificationFragment) {
             getMenuInflater().inflate(R.menu.forgot_password, menu);
         } else if (topFragment instanceof FragmentHomeCategory) {
@@ -1198,44 +1120,21 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     Intent intent = new Intent(getApplicationContext(), TopicsFilterActivity.class);
                     startActivity(intent);
 //                    startActivityForResult(intent, Constants.FILTER_ARTICLE);
-                } else if (topFragment instanceof ParentingBlogFragment) {
-                    Intent intent = new Intent(getApplicationContext(), BlogFilterActivity.class);
-                    startActivityForResult(intent, Constants.FILTER_BLOG);
                 }
                 break;
             case R.id.search:
-                if (topFragment instanceof ArticlesFragment) {
-//                    ((FragmentBusinesslistEvents) topFragment).toggleFilter();
+                if (topFragment instanceof ArticlesFragment || topFragment instanceof FragmentMC4KHome) {
                     Intent intent = new Intent(getApplicationContext(), SearchArticlesAndAuthorsActivity.class);
                     intent.putExtra(Constants.FILTER_NAME, "");
                     intent.putExtra(Constants.TAB_POSITION, 0);
                     startActivity(intent);
-                } else if (topFragment instanceof ParentingBlogFragment) {
-//                    ((FragmentBusinesslistEvents) topFragment).toggleFilter();
-                    Intent intent = new Intent(getApplicationContext(), SearchArticlesAndAuthorsActivity.class);
-                    intent.putExtra(Constants.FILTER_NAME, "");
-                    intent.putExtra(Constants.TAB_POSITION, 1);
-                    startActivity(intent);
                 }
                 break;
             case R.id.three_bar:
-
                 replaceFragment(new FragmentCalender(), null, true);
-
-//                commented by manish
-//                if (topFragment instanceof FragmentCalMonth) {
-//                    try {
-//                        ((FragmentCalMonth) topFragment).resetFilter();
-//                    } catch (ParseException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
                 refreshMenu();
-
                 break;
-
             case R.id.save:
-
                 if (topFragment instanceof FragmentAdultProfile) {
                     ((FragmentAdultProfile) topFragment).callService();
                 } else if (topFragment instanceof FragmentKidProfile) {
@@ -1254,18 +1153,13 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
 
             case R.id.delete:
-
                 if (topFragment instanceof FragmentTaskHome) {
-
                     AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-
                     dialog.setMessage(getResources().getString(R.string.delete_list)).setNegativeButton(R.string.new_yes
                             , new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-
                                     dialog.cancel();
                                     TaskListModel taskListModel = new TaskListModel();
-
                                     taskListModel.setId(taskListID);
                                     if (ConnectivityUtils.isNetworkEnabled(DashboardActivity.this)) {
                                         showProgressDialog(getString(R.string.please_wait));
@@ -1275,15 +1169,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                     } else {
                                         showToast(getString(R.string.error_network));
                                     }
-
-
                                 }
                             }).setPositiveButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             // do nothing
                             dialog.cancel();
-
-
                         }
                     }).setIcon(android.R.drawable.ic_dialog_alert);
 
@@ -1292,27 +1182,17 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
                     alert11.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.home_light_blue));
                     alert11.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.canceltxt_color));
-
-
                 }
-
                 break;
-
             case R.id.editTaskListId:
-
                 if (topFragment instanceof FragmentTaskHome) {
-
-
                     AddTaskListPopUp addTaskListPopUp = new AddTaskListPopUp();
                     Bundle bundle1 = new Bundle();
                     bundle1.putString("from", "dashboard");
                     bundle1.putBoolean("editList", true);
                     addTaskListPopUp.setArguments(bundle1);
                     addTaskListPopUp.show(getFragmentManager(), "addTaskList");
-
-
                 }
-
                 break;
             case R.id.kidsresource_bookmark:
                 if (topFragment instanceof FragmentHomeCategory) {
@@ -1321,33 +1201,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     intent.putExtra(Constants.SHOW_BOOKMARK_RESOURCES, 1);
                     startActivity(intent);
                 }
-
                 break;
             default:
                 return super.onOptionsItemSelected(item);
         }
-
         return super.onOptionsItemSelected(item);
     }
-
-
-//    private void rateAppHandling() {
-//
-//        RateVersion reteVersionModel = SharedPrefUtils.getRateVersion(this);
-//        int currentRateVersion = reteVersionModel.getAppRateVersion();
-//        currentRateVersion++;
-//        boolean isCompleteRateProcess = reteVersionModel.isAppRateComplete();
-//        RateVersion rateModel = new RateVersion();
-//        rateModel.setAppRateComplete(isCompleteRateProcess);
-//        rateModel.setAppRateVersion(currentRateVersion);
-//        SharedPrefUtils.setAppRateVersion(this, rateModel);
-//        if (!SharedPrefUtils.getRateVersion(this).isAppRateComplete() && currentRateVersion >= 3) {
-//            RateAndUpdateDialog dialog = new RateAndUpdateDialog();
-//            dialog.newInstance(this, DialogEnum.RAME_ME_DIALOG, this);
-//            dialog.show(getSupportFragmentManager(), "");
-//        }
-//    }
-
 
     protected void updateUi(Response response) {
 
@@ -1389,34 +1248,23 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     } else {
                         Log.e("push", "token failed");
                     }
-
-
                 }
                 break;
 
 
             case AppConstants.TASKS_COMPLETE_REQUEST:
                 try {
-
                     CommonResponse responseData = (CommonResponse) response.getResponseObject();
-
                     if (responseData.getResponseCode() == 200) {
                         // mark sync as 1
                         // remove reminder
-
                         for (int taskid : taskIdlist) {
-
                             TaskCompletedTable table = new TaskCompletedTable(BaseApplication.getInstance());
                             ArrayList<String> dbDateList = table.getDatesById(taskid);
-
                             for (String date : dbDateList) {
-
                                 table.updateSyncFlag(date, taskid);
-
                             }
                         }
-
-
                         // update on today screen too
                         Fragment visibleFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
                         if (visibleFragment instanceof FragmentMC4KHome) {
@@ -1427,12 +1275,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 e.printStackTrace();
                             }
                         }
-
                     } else {
                         Log.e("", "response failed task complete");
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1440,98 +1285,69 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
             case AppConstants.DELETE_TASK_REQUEST:
                 try {
-
-
                     TaskResponse responseData = (TaskResponse) response.getResponseObject();
                     if (responseData.getResponseCode() == 200) {
                         // delete from db
                         TableTaskData tableTask = new TableTaskData(BaseApplication.getInstance());
-
                         // check if form push
                         if (frmPush) {
-
                             frmPush = false;
                             if (taskId > 0) {
-
                                 removeProgressDialog();
                                 tableTask.deleteTask(taskId);
-
                                 // get from attendee table
                                 TaskTableAttendee attendeeTable = new TaskTableAttendee(BaseApplication.getInstance());
                                 attendeeTable.deleteTask(taskId);
-
-
                                 // get from whotoRemond table
                                 TaskTableWhoToRemind whotoRemindTable = new TaskTableWhoToRemind(BaseApplication.getInstance());
                                 whotoRemindTable.deleteTask(taskId);
-
                                 // get from FILES
-
                                 TaskTableFile fileTable = new TaskTableFile(BaseApplication.getInstance());
                                 fileTable.deleteTask(taskId);
                                 // note
-
                                 TaskTableNotes notesTable = new TaskTableNotes(BaseApplication.getInstance());
                                 notesTable.deleteTask(taskId);
-
                                 showToast(responseData.getResult().getMessage());
-
                                 Reminder.with(DashboardActivity.this).cancel(taskId);
-
                             }
-
                         } else {
                             for (int taskId : deletedTasksList) {
                                 // delete  in db
-
                                 tableTask.deleteTask(taskId);
-
                                 // get from attendee table
                                 TaskTableAttendee attendeeTable = new TaskTableAttendee(BaseApplication.getInstance());
                                 attendeeTable.deleteTask(taskId);
-
-
                                 // get from whotoRemond table
                                 TaskTableWhoToRemind whotoRemindTable = new TaskTableWhoToRemind(BaseApplication.getInstance());
                                 whotoRemindTable.deleteTask(taskId);
-
                                 // get from FILES
-
                                 TaskTableFile fileTable = new TaskTableFile(BaseApplication.getInstance());
                                 fileTable.deleteTask(taskId);
                                 // note
-
                                 TaskTableNotes notesTable = new TaskTableNotes(BaseApplication.getInstance());
                                 notesTable.deleteTask(taskId);
-
                                 Reminder.with(DashboardActivity.this).cancel(taskId);
-
                             }
                         }
 
                         // update on today screen too
                         Fragment visibleFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
                         if (visibleFragment instanceof FragmentMC4KHome) {
-
                             try {
                                 ((FragmentMC4KHome) visibleFragment).refreshList();
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
                         }
-
-
                     } else if (responseData.getResponseCode() == 400) {
                         Log.e("", "response failed getAppointment");
                     }
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 break;
 
             case AppConstants.CREATE_TASKLIST_REQUEST:
-
                 try {
                     TaskListResponse responseData = (TaskListResponse) response.getResponseObject();
                     if (responseData.getResponseCode() == 200) {
@@ -1541,30 +1357,23 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
                     } else if (responseData.getResponseCode() == 400) {
                         showToast(responseData.getResult().getMessage());
-
                     }
                     removeProgressDialog();
 
                 } catch (Exception e) {
                     removeProgressDialog();
                 }
-
                 break;
 
             case AppConstants.DELETE_LIST_REQUEST:
 
                 try {
                     TaskResponse responseData = (TaskResponse) response.getResponseObject();
-
                     String asb = "";
-
                     if (responseData.getResponseCode() == 200) {
                         // save in db
-//
                         showToast(responseData.getResult().getMessage());
-
                         if (topFragment instanceof FragmentTaskHome) {
-
                             TableTaskList tableTaskList = new TableTaskList(BaseApplication.getInstance());
                             tableTaskList.deleteList(taskListID);
 
@@ -1578,13 +1387,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
                             findViewById(R.id.task_popup).setVisibility(View.GONE);
                             taskIconFlag = false;
-
-
                         }
-
                     } else if (responseData.getResponseCode() == 400) {
                         showToast(responseData.getResult().getMessage());
-
                     }
                     removeProgressDialog();
 
@@ -1602,11 +1407,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     if (BuildConfig.DEBUG) {
                         Log.e("follow response", followData.getResult().getMessage());
                     }
-
-                    if (topFragment instanceof ParentingBlogFragment) {
-                        //   ((ParentingBlogFragment) topFragment).updateList_followBtn(blogListPosition);
-                    }
-
                 } else if (followData.getResponseCode() == 400) {
                     String message = followData.getResult().getMessage();
                     if (BuildConfig.DEBUG) {
@@ -1621,77 +1421,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
 
             case AppConstants.DEEP_LINK_RESOLVER_REQUEST:
-         /*       removeProgressDialog();
-                Object result = response.getResponseObject();
-                if (result instanceof DeepLinkApiModel) {
-                    DeepLinkApiModel _deepLinkResponse = (DeepLinkApiModel) result;
-                    if (_deepLinkResponse != null && _deepLinkResponse.getResult() != null
-                            && _deepLinkResponse.getResult().getData() != null) {
-                        identifyTargetScreen(_deepLinkResponse.getResult().getData());
-                    }
-                }*/
                 break;
 
         }
-
-    }
-
-    @Override
-    public void getDialogTypeAndEvent(DialogEnum enumType, DialogButtonEvent type) {
-//        switch (enumType) {
-//            case RAME_ME_DIALOG:
-//                RateVersion rateModel = new RateVersion();
-//                switch (type) {
-//
-//                    case RATE_ME_OR_INSTALL:
-//                        rateModel.setAppRateComplete(true);
-//                        rateModel.setAppRateVersion(0);
-//                        SharedPrefUtils.setAppRateVersion(this, rateModel);
-//                        /**
-//                         * a try/catch block here because an Exception will be thrown if the Play Store is not installed on the target device.
-//                         */
-//                        String appPackage = getPackageName();
-//                        try {
-//                            Intent rateIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackage));
-//                            startActivity(rateIntent);
-//                        } catch (Exception e) {
-//                            Intent rateIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackage));
-//                            startActivity(rateIntent);
-//                        }
-//                        break;
-//
-//                    case LATER:
-//                        rateModel.setAppRateComplete(false);
-//                        rateModel.setAppRateVersion(0);
-//                        SharedPrefUtils.setAppRateVersion(this, rateModel);
-//                        break;
-//                }
-//
-//                break;
-//            case UPDATE_DIALOG:
-//                switch (type) {
-//                    case RATE_ME_OR_INSTALL:
-//                        String appPackage = getPackageName();
-//                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackage));
-//                        startActivity(intent);
-//
-//                        break;
-//
-//                    case LATER:
-//                        //do nothing.
-//                        break;
-//                }
-//                /**
-//                 * if App Upgrade dialog will open
-//                 * then after App Upgrade it will open.
-//                 * oterwise on onCreate it will handle.
-//                 */
-//                rateAppHandling();
-//
-//                break;
-//            default:
-//                break;
-//        }
 
     }
 
@@ -1745,46 +1477,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             case R.id.rdBtnToday:
                 changeVisibiltyOfArrow(false);
                 Utils.pushEvent(DashboardActivity.this, GTMEventType.MC4KToday_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Left Menu Screen");
-                //TableAppointmentData data = new TableAppointmentData(BaseApplication.getInstance());
-                //TableTaskData taskData = new TableTaskData(BaseApplication.getInstance());
-                //int count = data.getRowsCount() + taskData.getRowsCount();
-                //if (count > 0) {
                 replaceFragment(new FragmentMC4KHome(), null, false);
                 setTitle(getTodayTime());
 
                 break;
-
-//            case R.id.rdBtnCalender:
-//                // title show current month
-//                Utils.pushEvent(DashboardActivity.this, GTMEventType.CALENDAR_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Left Menu Screen");
-//                if (StringUtils.isNullOrEmpty("" + SharedPrefUtils.getUserDetailModel(this).getFamily_id()) ||
-//                        SharedPrefUtils.getUserDetailModel(this).getFamily_id() == 0) {
-//                    showCreateFamilyAlert();
-//                } else {
-//                    changeVisibiltyOfArrow(true);
-//                    Calendar c = Calendar.getInstance();
-//                    setTitle(form.format(c.getTime()).toString());
-//
-//                    replaceFragment(new FragmentCalender(), null, true);
-//                }
-//
-//                //  startActivity(new Intent(this,ActivityCreateAppointment.class));
-//
-//                break;
-            /*
-            case R.id.rdBtnTodo:
-                Utils.pushEvent(DashboardActivity.this, GTMEventType.TODO_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "");
-            if (StringUtils.isNullOrEmpty("" + SharedPrefUtils.getUserDetailModel(this).getFamily_id()) ||
-                    SharedPrefUtils.getUserDetailModel(this).getFamily_id() == 0) {
-                showCreateFamilyAlert();
-            } else {
-                replaceFragment(new FragmentTaskHome(), null, true);
-                setTitle("All Tasks");
-                SharedPrefUtils.setTaskListID(DashboardActivity.this, 0);
-                taskIconFlag = false;
-                refreshMenu();
-            }
-            break;*/
             case R.id.rdBtnUpcoming:
                 Utils.pushEvent(DashboardActivity.this, GTMEventType.UPCOMING_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Left Menu Screen");
                 Constants.IS_SEARCH_LISTING = false;
@@ -1806,10 +1502,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 replaceFragment(new FragmentHomeCategory(), null, true);
                 break;
             case R.id.rdBtnParentingBlogs:
-//                Utils.pushEvent(DashboardActivity.this, GTMEventType.BLOGS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Left Menu Screen");
-//                changeVisibiltyOfArrow(false);
-//                setTitle("Articles");
-//                replaceFragment(new ArticlesFragment(), null, true);
                 Intent intent = new Intent(getApplicationContext(), TopicsFilterActivity.class);
                 startActivity(intent);
                 break;
@@ -1835,79 +1527,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     startActivity(viewIntent);
                 }
                 break;
-
-//            case R.id.drafts:
-//                Intent intent5 = new Intent(DashboardActivity.this, DraftListViewActivity.class);
-//              /*  Bundle bundle5 = new Bundle();
-//                bundle5.putString(EditorPostActivity.TITLE_PARAM, "");
-//                bundle5.putString(EditorPostActivity.CONTENT_PARAM, "");
-//                bundle5.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
-//                        getString(R.string.example_post_title_placeholder));
-//                bundle5.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
-//                        getString(R.string.example_post_content_placeholder));
-//                bundle5.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
-//                intent1.putExtras(bundle5);*/
-//                startActivity(intent5);
-//                break;
-//            case R.id.bloggerDashboard:
-//                Intent intent = new Intent(DashboardActivity.this, FollowersAndFollowingListActivity.class);
-//                intent.putExtra(AppConstants.FOLLOW_LIST_TYPE, AppConstants.FOLLOWER_LIST);
-//                startActivity(intent);
-//                break;
-//            case R.id.txvSettings:
-//                Utils.pushEvent(DashboardActivity.this, GTMEventType.SETTINGS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Left Menu Screen");
-//                changeVisibiltyOfArrow(false);
-//                setTitle("Settings");
-//                replaceFragment(new FragmentSetting(), null, true);
-//                break;
-//            case R.id.txvMeetContributors:
-//                Utils.pushEvent(DashboardActivity.this, GTMEventType.MEETCONTRIBUTORS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Left Menu Screen");
-//                changeVisibiltyOfArrow(false);
-//                replaceFragment(new ParentingBlogFragment(), null, true);
-//                break;
-
-
-
-           /* case R.id.txvHelp:
-                Utils.pushEvent(DashboardActivity.this, GTMEventType.HELP_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
-                Intent intent = new Intent(DashboardActivity.this, LoadWebViewActivity.class);
-                intent.putExtra(Constants.WEB_VIEW_URL, "http://www.mycity4kids.com/mobile#faq");
-                startActivity(intent);
-//                changeVisibiltyOfArrow(false);
-
-                break;*/
-
-//            case R.id.txvfeedback:
-//                Intent intentEmail = new Intent(Intent.ACTION_SEND);
-//                String[] recipients = {"feedback@mycity4kids.com"};
-//                intentEmail.putExtra(Intent.EXTRA_EMAIL, recipients);
-//                intentEmail.putExtra(Intent.EXTRA_SUBJECT, "mycity4kids mobile app");
-//                //intentEmail.putExtra(Intent.EXTRA_TEXT,"I just downloaded the amazing mycity4kids mobile app. Check it out @: http://www.mycity4kids.com/mobile ");
-//                //intentEmail.putExtra(Intent.EXTRA_CC,"ghi");
-//                intentEmail.setType("text/html");
-//                startActivity(Intent.createChooser(intentEmail, "Send mail").setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-//                break;
-
-//            case R.id.txvrate:
-//                String appPackage = getPackageName();
-//                try {
-//                    Intent rateIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackage));
-//                    startActivity(rateIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-//                } catch (Exception e) {
-//                    Intent rateIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackage));
-//                    startActivity(rateIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-//                }
-//                break;
-
-            /*case R.id.txvtelfrnd:
-                Utils.pushEvent(DashboardActivity.this, GTMEventType.TELLFRIEND_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId()+"", "");
-                Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
-                shareIntent.setType("text/plain");
-                shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "mycity4kids android app");
-                String shareMessage = "I just downloaded the amazing mycity4kids mobile app. Check it out http://www.mycity4kids.com/mobile";
-                shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
-                startActivity(Intent.createChooser(shareIntent, "mycity4kids").setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                break;*/
 
             case R.id.feed_back:
                 Utils.pushEvent(DashboardActivity.this, GTMEventType.FEEDBACK_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Left Menu Screen");
@@ -2269,20 +1888,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         notiftTaskList();
                     }
                     break;
-
-                case Constants.FILTER_ARTICLE:
-
-                    if (data.getBooleanExtra(Constants.IS_MEET_CONTRIBUTORS_SELECTED, false)) {
-
-                        replaceFragment(new ParentingBlogFragment(), null, true);
-                    }
-                case Constants.FILTER_BLOG:
-                    if (topFragment instanceof ParentingBlogFragment) {
-                        //    ((ParentingBlogFragment) topFragment).sortParentingBlogListing(data.getStringExtra(Constants.FILTER_BLOG_SORT_TYPE));
-                    }
-
-                    break;
-
                 case AppConstants.REQUEST_GOOGLE_PLAY_SERVICES:
                     if (resultCode != RESULT_OK) {
                         isGooglePlayServicesAvailable();
@@ -2311,12 +1916,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         }
                     }
                     break;
-                case Constants.BLOG_FOLLOW_STATUS:
-                    if (topFragment instanceof ParentingBlogFragment) {
-                        //   ((ParentingBlogFragment) topFragment).updateList_followBtn(data.getIntExtra(Constants.BLOG_LIST_POSITION, 0));
-                    }
-                    break;
-
                 default:
                     if (topFragment instanceof FragmentCalender) {
 //                        ((FragmentCalender) topFragment).refreshView();
@@ -2657,7 +2256,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     }
 
-    private void getDeepLinkData(String deepLinkURL) {
+    private void getDeepLinkData(final String deepLinkURL) {
         /*DeepLinkingController _deepLinkingController = new DeepLinkingController(this, this);
         _deepLinkingController.getData(AppConstants.DEEP_LINK_RESOLVER_REQUEST, deepLinkURL);
         showProgressDialog("");*/
@@ -2680,6 +2279,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     showToast(getString(R.string.toast_response_error));
                     return;
                 } else {
+//                    resposnseData.getData().getResult().setUrl(deepLinkURL);
                     identifyTargetScreen(resposnseData.getData().getResult());
                 }
             }
