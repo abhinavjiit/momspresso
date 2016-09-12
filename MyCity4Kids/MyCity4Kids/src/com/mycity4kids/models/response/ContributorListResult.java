@@ -7,7 +7,7 @@ public class ContributorListResult  {
     String firstName;
     String lastName;
     String userType;
-    String UserBio;
+    String userBio;
     String id;
     Long followersCount;
     int isFollowed;
@@ -65,11 +65,11 @@ public class ContributorListResult  {
     }
 
     public String getAbout() {
-        return UserBio;
+        return userBio;
     }
 
     public void setAbout(String about) {
-        this.UserBio = about;
+        this.userBio = about;
     }
 
     public String getUserType() {

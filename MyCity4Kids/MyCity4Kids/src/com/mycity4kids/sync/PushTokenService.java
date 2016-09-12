@@ -93,7 +93,7 @@ public class PushTokenService extends IntentService implements UpdateListener {
                 String deviceId = telephonyManager.getDeviceId();
                 builder.append("&deviceId=").append(deviceId);
                 builder.append("&deviceType=").append("android");
-                builder.append("fcmToken=").append(SharedPrefUtils.getDeviceToken(this));
+                builder.append("&fcmToken=").append(SharedPrefUtils.getDeviceToken(this));
 
                 Log.i("Send Push Token to Server ", builder.toString());
                 return builder.toString().replace(" ", "%20");

@@ -23,6 +23,7 @@ public class UserDetailResult {
     private String rank;
     private String userBio = "";
     private String sessionId;
+    private String phoneNumber;
 
     public String getPhoneNumber() {
         return phoneNumber;
@@ -31,8 +32,6 @@ public class UserDetailResult {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
-
-    private String phoneNumber;
 
     public String getId() {
         return sqlId;

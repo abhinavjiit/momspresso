@@ -124,7 +124,7 @@ public class DraftListAdapter extends BaseAdapter {
                 }
                 case "1": {
                     holder.txvUnapproved.setVisibility(View.VISIBLE);
-                    holder.txvUnapproved.setText("Under Moderation");
+                    holder.txvUnapproved.setText("Pending for Approval");
                     view.setBackgroundColor(ContextCompat.getColor(context, R.color.gray_color));
                     holder.txvArticleTitle.setTextColor(ContextCompat.getColor(context, R.color.faded_text));
                     holder.txvUpdateDate.setTextColor(ContextCompat.getColor(context, R.color.faded_italic));
