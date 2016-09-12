@@ -654,7 +654,8 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
     }
 
-    private void displayComments(ViewHolder holder, CommentsData commentList, boolean isNewComment) {
+    private void displayComments(ViewHolder holder, CommentsData commentList,
+                                 boolean isNewComment) {
         if (holder != null) {
             LayoutInflater inflater = LayoutInflater.from(this);
             View view = inflater.inflate(R.layout.custom_comment_cell, null);

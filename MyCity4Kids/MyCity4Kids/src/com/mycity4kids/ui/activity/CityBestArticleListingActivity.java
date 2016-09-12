@@ -2,6 +2,7 @@ package com.mycity4kids.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -41,7 +42,7 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 4/8/16.
  */
-public class CityBestArticleListingActivity extends BaseActivity {
+public class CityBestArticleListingActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener{
 
     NewArticlesListingAdapter articlesListingAdapter;
     ArrayList<ArticleListingResult> articleDataModelsNew;
@@ -56,6 +57,7 @@ public class CityBestArticleListingActivity extends BaseActivity {
     private ProgressBar progressBar;
     private int limit = 15;
     private FrameLayout frameLayout;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,8 +76,9 @@ public class CityBestArticleListingActivity extends BaseActivity {
         findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely));
         frameLayout = (FrameLayout) findViewById(R.id.frame_layout);
         frameLayout.setVisibility(View.GONE);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
 
-
+        swipeRefreshLayout.setOnRefreshListener((SwipeRefreshLayout.OnRefreshListener) CityBestArticleListingActivity.this);
         progressBar.setVisibility(View.VISIBLE);
 
         articleDataModelsNew = new ArrayList<ArticleListingResult>();
@@ -203,6 +206,7 @@ public class CityBestArticleListingActivity extends BaseActivity {
                 showToast("Something went wrong from server");
                 return;
             }
+            swipeRefreshLayout.setRefreshing(false);
 
             try {
                 ArticleListingResponse responseData = (ArticleListingResponse) response.body();
@@ -270,4 +274,16 @@ public class CityBestArticleListingActivity extends BaseActivity {
         return true;
     }
 
+    @Override
+    public void onRefresh() {
+        if (!ConnectivityUtils.isNetworkEnabled(this)) {
+            swipeRefreshLayout.setRefreshing(false);
+            removeProgressDialog();
+            showToast(getString(R.string.error_network));
+            return;
+        }
+        nextPageNumber=1;
+        hitBestofCityArticleListingApi(sortType);
+
+    }
 }
