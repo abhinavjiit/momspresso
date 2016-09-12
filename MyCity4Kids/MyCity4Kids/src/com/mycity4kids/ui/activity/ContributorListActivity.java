@@ -63,7 +63,7 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
     ArrayList<ContributorListResult> contributorArrayList;
     Toolbar mToolBar;
     FloatingActionButton rankFab, nameFab;
-    int sortType = 1;
+    int sortType = 2;
     String type = AppConstants.USER_TYPE_BLOGGER;
     FloatingActionsMenu fab_menu;
     FrameLayout frameLayout;
@@ -287,12 +287,18 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
         switch (v.getId()) {
             case R.id.rankSortFAB:
                 fab_menu.collapse();
-                sortType = 0;
+                sortType = 2;
+                paginationValue = "0";
+                contributorArrayList.clear();
+                parentingBlogAdapter.notifyDataSetChanged();
                 hitBloggerAPIrequest(sortType, type);
                 break;
             case R.id.nameSortFAB:
                 fab_menu.collapse();
                 sortType = 1;
+                paginationValue = "0";
+                contributorArrayList.clear();
+                parentingBlogAdapter.notifyDataSetChanged();
                 hitBloggerAPIrequest(sortType, type);
                 break;
         }

@@ -438,7 +438,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         rateModel.setAppRateComplete(isCompleteRateProcess);
         rateModel.setAppRateVersion(currentRateVersion);
         SharedPrefUtils.setAppRateVersion(this, rateModel);
-        if (!SharedPrefUtils.getRateVersion(this).isAppRateComplete() && currentRateVersion >= 3) {
+        if (!SharedPrefUtils.getRateVersion(this).isAppRateComplete() && currentRateVersion >= 10) {
             RateAppDialogFragment rateAppDialogFragment = new RateAppDialogFragment();
             reteVersionModel.setAppRateVersion(-7);
             rateAppDialogFragment.show(getFragmentManager(), rateAppDialogFragment.getClass().getSimpleName());

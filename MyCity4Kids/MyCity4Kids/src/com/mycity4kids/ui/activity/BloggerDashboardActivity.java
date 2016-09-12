@@ -1116,7 +1116,12 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                                  Bio = responseData.getData().getResult().getUserBio();
                                  firstName = responseData.getData().getResult().getFirstName();
                                  lastName = responseData.getData().getResult().getLastName();
-                                 phoneNumber = responseData.getData().getResult().getPhone().getMobile();
+                                 if (null == responseData.getData().getResult().getPhone()) {
+                                     phoneNumber = " ";
+                                 } else {
+                                     phoneNumber = responseData.getData().getResult().getPhone().getMobile();
+                                 }
+
                                  if (!StringUtils.isNullOrEmpty(responseData.getData().getResult().getProfilePicUrl().getClientApp())) {
                                      Picasso.with(BloggerDashboardActivity.this).load(responseData.getData().getResult().getProfilePicUrl().getClientApp())
                                              .placeholder(R.drawable.family_xxhdpi).error(R.drawable.family_xxhdpi).transform(new RoundedTransformation()).into(bloggerImageView);
