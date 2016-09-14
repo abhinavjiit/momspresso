@@ -47,7 +47,7 @@ import retrofit2.Retrofit;
  * @author Hemant Parmar
  */
 
-public class FilteredTopicsArticleListingActivity extends BaseActivity implements OnClickListener , SwipeRefreshLayout.OnRefreshListener {
+public class FilteredTopicsArticleListingActivity extends BaseActivity implements OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     NewArticlesListingAdapter articlesListingAdapter;
     ListView listView;
@@ -259,11 +259,15 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         switch (v.getId()) {
             case R.id.recentSortFAB:
                 fabMenu.collapse();
+                articleDataModelsNew.clear();
+                articlesListingAdapter.notifyDataSetChanged();
                 nextPageNumber = 1;
                 hitFilteredTopicsArticleListingApi(0);
                 break;
             case R.id.popularSortFAB:
                 fabMenu.collapse();
+                articleDataModelsNew.clear();
+                articlesListingAdapter.notifyDataSetChanged();
                 nextPageNumber = 1;
                 hitFilteredTopicsArticleListingApi(1);
                 break;
@@ -297,7 +301,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             showToast(getString(R.string.error_network));
             return;
         }
-        nextPageNumber=1;
+        nextPageNumber = 1;
         hitFilteredTopicsArticleListingApi(sortType);
 
     }

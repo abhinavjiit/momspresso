@@ -43,7 +43,10 @@ public interface ArticleDetailsAPI {
     //    @GET("https://s3-ap-northeast-1.amazonaws.com/microservices-sync-test/articles-data/{article_id}.json")
 
     //Staging Url for article details
-    @GET("http://dziyfkwv8zf9m.cloudfront.net/articles-data/{articleId}.json")
+    //    @GET("http://dziyfkwv8zf9m.cloudfront.net/articles-data/{articleId}.json")
+
+    //Live Url for article details
+    @GET("http://cdn3.mycity4kids.com/articles-data/{articleId}.json")
     Call<ArticleDetailResult> getArticleDetailsFromS3(@Path("articleId") String articleId);
 
     @GET("/v1/articles/doc/")

@@ -148,12 +148,14 @@ public class SharedPrefUtils {
         _editor.putInt(SELECTED_TASKLIST_ID, id);
         _editor.commit();
     }
+
     public static void setConfigCategoryVersion(Context pContext, int id) {
         SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         Editor _editor = _sharedPref.edit();
         _editor.putInt(CONFIG_CATEGORY_VERSION, id);
         _editor.commit();
     }
+
     public static int getConfigCategoryVersion(Context pContext) {
         SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         int id = 0;
@@ -270,7 +272,12 @@ public class SharedPrefUtils {
     public static UserInfo getUserDetailModel(Context pContext) {
         SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         UserInfo user = new UserInfo();
-        user.setId(_sharedPref.getString(USER_ID, "0"));
+        // Changed the userId from int to String when backend changed from sql to dyanoma.
+        try {
+            user.setId(_sharedPref.getString(USER_ID, "0"));
+        } catch (ClassCastException cce) {
+            user.setId("" + (_sharedPref.getInt(USER_ID, 0)));
+        }
         user.setDynamoId(_sharedPref.getString(DYNAMO_USER_ID, "0"));
         user.setFamily_id(_sharedPref.getInt(FAMILY_ID, 0));
         user.setEmail(_sharedPref.getString(EMAIL, ""));
@@ -529,13 +536,14 @@ public class SharedPrefUtils {
         SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         return _sharedPref.getBoolean(PHOENIX_FIRST_LAUNCH_FLAG, true);
     }
-    public static void setChangeCityFlag(Context context, boolean flag)
-    {
+
+    public static void setChangeCityFlag(Context context, boolean flag) {
         SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         Editor _editor = _sharedPref.edit();
         _editor.putBoolean(CHANGE_CITY_FLAG, flag);
         _editor.commit();
     }
+
     public static boolean isChangeCity(Context context) {
         SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         return _sharedPref.getBoolean(CHANGE_CITY_FLAG, false);

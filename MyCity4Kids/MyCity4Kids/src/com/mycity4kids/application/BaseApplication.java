@@ -180,11 +180,11 @@ public class BaseApplication extends Application {
         } catch (ClassNotFoundException e) {
         }
 
-//        CrashlyticsCore core = new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build();
-//        Fabric.with(this, new Crashlytics.Builder().core(core).build());
+        CrashlyticsCore core = new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build();
+        Fabric.with(this, new Crashlytics.Builder().core(core).build());
 
-        Fabric.with(this, new Crashlytics.Builder().build());
-        Crashlytics.setUserIdentifier("" + SharedPrefUtils.getUserDetailModel(this).getId());
+//        Fabric.with(this, new Crashlytics.Builder().build());
+        Crashlytics.setUserIdentifier("" + SharedPrefUtils.getUserDetailModel(this).getDynamoId());
         Crashlytics.setUserEmail("" + SharedPrefUtils.getUserDetailModel(this).getEmail());
 
         setInstance(this);

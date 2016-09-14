@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mycity4kids"
-    android:versionCode="35"
+    android:versionCode="36"
     android:versionName="5.0">
 
     <uses-sdk
@@ -30,15 +30,7 @@
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <!--<uses-permission android:name="android.permission.WAKE_LOCK" />-->
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-    <uses-permission android:name="android.permission.SEND_SMS" />
-    <!-- <permission
-         android:name="com.mycity4kids.gcm.permission.C2D_MESSAGE"
-         android:protectionLevel="signature" />-->
-
-    <!--  <uses-permission android:name="com.mycity4kids.gcm.permission.C2D_MESSAGE" />-->
-
 
     !-- Maps API needs OpenGL ES 2.0. -->
     <uses-feature

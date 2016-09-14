@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
@@ -23,8 +22,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.telephony.SmsManager;
-import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.util.Log;
 import android.util.TypedValue;
@@ -54,7 +51,6 @@ import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.ui.IScreen;
 import com.kelltontech.utils.BitmapUtils;
 import com.kelltontech.utils.ConnectivityUtils;
-import com.kelltontech.utils.DataUtils;
 import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
 import com.kelltontech.utils.ToastUtils;
@@ -63,7 +59,6 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.controller.BookmarkController;
 import com.mycity4kids.controller.BusinessAndEventDetailsController;
 import com.mycity4kids.controller.FavoriteAndBeenThereController;
 import com.mycity4kids.controller.ImageUploadController;
@@ -76,7 +71,6 @@ import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.IOnSubmitGallery;
 import com.mycity4kids.listener.OnButtonClicked;
 import com.mycity4kids.models.bookmark.BookmarkModel;
-import com.mycity4kids.models.businesseventdetails.Batches;
 import com.mycity4kids.models.businesseventdetails.DetailMap;
 import com.mycity4kids.models.businesseventdetails.DetailsRequest;
 import com.mycity4kids.models.businesseventdetails.DetailsResponse;
@@ -84,7 +78,6 @@ import com.mycity4kids.models.businesseventdetails.DetailsReviews;
 import com.mycity4kids.models.businesslist.BusinessDataListing;
 import com.mycity4kids.models.favorite.FavoriteRequest;
 import com.mycity4kids.models.forgot.CommonResponse;
-import com.mycity4kids.models.parentingdetails.ParentingDetailResponse;
 import com.mycity4kids.models.user.BusinessImageUploadRequest;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.models.user.UserModel;
@@ -94,7 +87,6 @@ import com.mycity4kids.observablescrollview.ScrollUtils;
 import com.mycity4kids.observablescrollview.Scrollable;
 import com.mycity4kids.observablescrollview.TouchInterceptionFrameLayout;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.retrofitAPIsInterfaces.ArticlePublishAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ResourcesAPI;
 import com.mycity4kids.slidingtab.SlidingTabLayout;
 import com.mycity4kids.ui.adapter.ViewPagerAdapterEventdetail;
@@ -111,7 +103,6 @@ import java.io.File;
 import java.net.URI;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.TimeZone;
 
 import retrofit2.Call;
@@ -212,16 +203,11 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
         txvshare.setOnClickListener(this);
         txvbooknow.setOnClickListener(this);
         txvaddtocal.setOnClickListener(this);
-
-        //mTabHost=(TabHost)findViewById(android.R.id.tabhost);
-
         mViewPager = (ViewPager) findViewById(R.id.pager);
 
         setUpObservableScroll();
 
         ((ImageView) findViewById(R.id.imgBack)).setOnClickListener(this);
-        //((ImageView)findViewById(R.id.imgSearch)).setOnClickListener(this);
-
 
         if (bundle != null) {
             UserTable _table = new UserTable((BaseApplication) getApplicationContext());
@@ -236,12 +222,6 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
             _requestModel.setCategoryId("" + categoryId);
             if (mEventOrBusiness == Constants.BUSINESS_PAGE_TYPE) {
                 _requestModel.setType("business");
-//                bookmarkStatus = getIntent().getIntExtra(Constants.RESOURCE_BOOKMARK_STATUS, 0);
-//                if (bookmarkStatus == 0)
-//                    imgBookmark.setImageResource(R.drawable.ic_favorite_border_white_48dp);
-//                else
-//                    imgBookmark.setImageResource(R.drawable.ic_favorite_border_white_48dp_fill);
-
             } else if (mEventOrBusiness == Constants.EVENT_PAGE_TYPE) {
                 _requestModel.setType("event");
             }
@@ -316,9 +296,6 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
         ViewCompat.setElevation(findViewById(R.id.header), getResources().getDimension(R.dimen.toolbar_elevation));
-//        mPagerAdapter = new NavigationAdapter(getSupportFragmentManager());
-//        mPager = (ViewPager) findViewById(R.id.pager);
-//        mPager.setAdapter(mPagerAdapter);
         mImageView = findViewById(R.id.image);
         mOverlayView = findViewById(R.id.overlay);
         RelativeLayout rltRootHeader = (RelativeLayout) findViewById(R.id.rltRootHeader);
@@ -341,10 +318,6 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
                 ratingHeader.setText("" + ratingVal);
         }
         SlidingTabLayout slidingTabLayout = (SlidingTabLayout) findViewById(R.id.tabs);
-//        slidingTabLayout.setCustomTabView(R.layout.tab_indicator, android.R.id.text1);
-//        slidingTabLayout.setSelectedIndicatorColors(getResources().getColor(R.color.accent));
-//        slidingTabLayout.setDistributeEvenly(true);
-//        slidingTabLayout.setViewPager(mPager);
         ((FrameLayout.LayoutParams) slidingTabLayout.getLayoutParams()).topMargin = mTopHeaderHeight - mTabHeight;
 
         ViewConfiguration vc = ViewConfiguration.get(this);
@@ -409,11 +382,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
                     case 3:
                         showBottomIcons(false, true);
                         break;
-
-
                 }
-
-
             }
 
             @Override
@@ -542,8 +511,6 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
 
                         }
                     }
-
-
                 }
                 break;
                 case AppConstants.BEEN_THERE_REQUEST: {
@@ -567,8 +534,6 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
 
                         }
                     }
-
-
                 }
                 break;
                 case AppConstants.UPLOAD_BUSINESS_IMAGE_REQUEST: {
@@ -633,34 +598,6 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
          * also but i am puting seperatly with details header. Deepanker
          */
         information = pDetailsResponse.getResult().getData().getInfo();
-       /* if( StringUtils.isNullOrEmpty(information.getSubaddress()) ) {
-            txvaddress.setVisibility(View.VISIBLE);*/
-
-
-      /*  }else{
-            txvaddress.setVisibility(View.GONE);
-            }*/
-
-/*if(information.getAddress()!=null)
-{
-    txvaddress.setText(information.getCity_name() + "(");
-    txvdistance.setText(distance+"km)");
-}*/
-// if(information.getAddress()!=null)
-//{
-//    txvaddress.setText(information.getAddress() + "(");
-//    txvdistance.setText(distance+"km)");
-//}
-//else if(information.getSubaddress()!=null)
-//{
-//    txvaddress.setText(information.getSubaddress() + "(");
-//    txvdistance.setText(distance+"km)");
-//}
-//else
-//{
-//    txvaddress.setText("(");
-//    txvdistance.setText(distance+"km)");
-//}
 
         txvaddress.setText(information.getLocality() + " (");
         txvdistance.setText(distance + "km)");
@@ -675,13 +612,9 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
         getFavoriteAndBeenThere(pDetailsResponse.getResult().getData().getInfo().getId());
 
         mDetailsFragmentAdapter = new ViewPagerAdapterEventdetail(BusinessDetailsActivity.this, pDetailsResponse, mEventOrBusiness, categoryId, distance, getSupportFragmentManager(), Titles, Numboftabs, isbusiness);
-        //mTabHost.setup();
-        //mTabHost.setOnTabChangedListener(mDetailsFragmentAdapter);
         mViewPager.setAdapter(mDetailsFragmentAdapter);
         // Assiging the Sliding Tab Layout View
         tabs = (SlidingTabLayout) findViewById(R.id.tabs);
-        //tabs.setdis
-        //tabs.setDistributeEvenly(true); // To make the Tabs Fixed set this true, This makes the tabs Space Evenly in Available width
 
         // Setting Custom Color for the Scroll bar indicator of the Tab View
         tabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
@@ -695,18 +628,9 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
                 return 0;
             }
         });
-        /*tabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
-            @Override
-			public int getIndicatorColor(int position) {
-				return getResources().getColor(R.color.tabsScrollColor);
-			}
-		});*/
 
         // Setting the ViewPager For the SlidingTabsLayout
         tabs.setViewPager(mViewPager);
-        //mViewPager.setOnPageChangeListener(mDetailsFragmentAdapter);
-        //mViewPager.setOffscreenPageLimit(4);
-
 
         ArrayList<DetailsReviews> reviewList = pDetailsResponse.getResult().getData().getReviews();
         int countOfReviews = 0;
@@ -720,10 +644,8 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
             LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.tab_design_with_circle, null);
             TextView circleTxtView = (TextView) layout.findViewById(R.id.tab_title_circle);
             if (countOfReviews > 0 && TAB_ARRAY[i].equalsIgnoreCase("reviews")) {
-                //circleTxtView.setVisibility(View.VISIBLE);
                 circleTxtView.setText("" + countOfReviews);
             } else {
-                //circleTxtView.setVisibility(View.GONE);
             }
             if (mEventOrBusiness == Constants.BUSINESS_PAGE_TYPE) {
                 ((TextView) layout.findViewById(R.id.tab_title)).setText(TAB_ARRAY_BUSINESS[i]);
@@ -732,10 +654,6 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
             } else if (mEventOrBusiness == Constants.EVENT_PAGE_TYPE) {
                 ((TextView) layout.findViewById(R.id.tab_title)).setText(TAB_ARRAY[i]);
             }
-
-            //layout.setBackgroundResource(R.drawable.detail_tab_selector);
-            //this.mTabHost.getTabWidget().setDividerDrawable(R.drawable.tab_border);
-            //mDetailsFragmentAdapter.addTab(BusinessDetailsActivity.this.mTabHost.newTabSpec("Tab1").setIndicator(layout));
         }
 
         mViewPager.setAdapter(mDetailsFragmentAdapter);
@@ -744,16 +662,8 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
 
     private void getFavoriteAndBeenThere(String businessId) {
         UserTable _table = new UserTable((BaseApplication) this.getApplicationContext());
-        /*if (_table.getCount() < 0) {
-            return;
-		}*/
         UserModel userData = _table.getAllUserData();
         UserInfo userInfo = userData != null ? userData.getUser() : null;
-        /*if (userInfo == null || userInfo.getId() <= 0  || StringUtils.isNullOrEmpty(userInfo.getSessionId()) ) {
-
-			return;
-		}*/
-
         FavoriteRequest _request = new FavoriteRequest();
         if (userInfo != null) {
             _request.setUser_id("" + userInfo.getId());
@@ -905,76 +815,11 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
         String businessId = getIntent().getExtras().getString(Constants.BUSINESS_OR_EVENT_ID);
         requestData.setBusinessId(businessId);
 
-//        UserTable userTable = new UserTable((BaseApplication) this.getApplication());
-//        int count = userTable.getCount();
-//        if (count <= 0) {
-//            removeProgressDialog();
-//            showToast(getResources().getString(R.string.user_login));
-//            return;
-//        }
-//        UserModel userModel = userTable.getAllUserData();
         requestData.setUserId("" + SharedPrefUtils.getCurrentCityModel(this).getId());
-//        requestData.setSessionId(userModel.getUser().getSessionId());
 
         ImageUploadController controller = new ImageUploadController(this, this);
         controller.getData(AppConstants.UPLOAD_BUSINESS_IMAGE_REQUEST, requestData);
     }
-
-    private void saveCalendarEvent(BusinessDataListing mBusinessInfoModel) {
-        try {
-
-
-            Uri EVENTS_URI = Uri.parse(DataUtils.getCalendarUriBase(BusinessDetailsActivity.this) + "events");
-            ContentResolver cr = BusinessDetailsActivity.this.getContentResolver();
-
-            // event insert
-            ContentValues values = new ContentValues();
-            values.put("calendar_id", 1);
-            values.put("title", mBusinessInfoModel.getName());
-            values.put("allDay", 0);
-            ArrayList<Batches> batchedList = mBusinessInfoModel.getBatches();
-            if (!batchedList.isEmpty() && batchedList.size() > 0) {
-
-                long startDate = DateTimeUtils.parseExtendedDate(batchedList.get(0).getStart_date_time());
-                //String startDate=DateTimeUtils.changeDateInddMMyyyy(batchedList.get(0).getStart_date_time());
-                if (!StringUtils.isNullOrEmpty("" + startDate)) {
-                    values.put("dtstart", startDate);
-                }
-                long endDate = DateTimeUtils.parseExtendedDate(batchedList.get(0).getEnd_date_time());
-                //String endDate=DateTimeUtils.changeDateInddMMyyyy(batchedList.get(0).getEnd_date_time());
-                if (!StringUtils.isNullOrEmpty("" + endDate)) {
-                    values.put("dtend", endDate);
-                }
-            } else {
-                long startDate = DateTimeUtils.parseExtendedDate(mBusinessInfoModel.getEvent_date().getStart_date());
-                long endDate = DateTimeUtils.parseExtendedDate(mBusinessInfoModel.getEvent_date().getEnd_date());
-                //String startDate=DateTimeUtils.changeDate(mBusinessInfoModel.getEvent_date().getStart_date());
-                //String endDate=DateTimeUtils.changeDate(mBusinessInfoModel.getEvent_date().getEnd_date());
-                if (!StringUtils.isNullOrEmpty("" + startDate)) {
-                    values.put("dtstart", startDate);
-
-                }
-                if (!StringUtils.isNullOrEmpty("" + endDate)) {
-                    values.put("dtend", endDate);
-
-                }
-            }
-
-            //	values.put("description", "Reminder description");
-            //	values.put("visibility", 0);
-            values.put("hasAlarm", 1);
-            values.put("eventTimezone", TimeZone.getDefault().getID());
-            Uri event = cr.insert(EVENTS_URI, values);
-            int id = Integer.parseInt(event.getLastPathSegment());
-            if (id > 0) {
-                Toast.makeText(BusinessDetailsActivity.this, "Calendar event created successfully", Toast.LENGTH_LONG).show();
-            }
-        } catch (Exception e) {
-            Toast.makeText(BusinessDetailsActivity.this, "Something went wrong with calendar", Toast.LENGTH_LONG).show();
-            return;
-        }
-    }
-
 
     @Override
     public void onClick(View v) {
@@ -1027,24 +872,12 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
                     if (flag) {
                         Log.d("check", " if popup" + flag);
                         mDetailsHeader.TopToBottom();
-            /*	mDetailsHeader.setVisibility(View.VISIBLE);
-                mDetailsHeader.collepseView();*/
                         flag = false;
                     } else {
                         Log.d("check", "else popup" + flag);
                         mDetailsHeader.bottomToTop();
-            /*	Animation bottomUp = AnimationUtils.loadAnimation(BusinessDetailsActivity.this, R.anim.bottom_up);
-                bottomUp.setAnimationListener(makeTopGone);
-				mDetailsHeader.startAnimation(bottomUp);*/
                         flag = true;
                     }
-
-			/*if(isOpen){
-                _detailsHeader.TopToBottom();
-			}else{
-				_detailsHeader.bottomToTop();
-			}
-			isOpen=!isOpen;*/
                 }
                 break;
                 case R.id.imgBack: {
@@ -1134,42 +967,21 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
                         @Override
                         public void onButtonCLick(int buttonId) {
                             saveCalendar(information.getName(), information.getDescription(), information.getEvent_date().getStart_date(), information.getEvent_date().getEnd_date(), information.getLocality());
-                            ToastUtils.showToast(BusinessDetailsActivity.this,"Successfully added to Calendar");
+                            ToastUtils.showToast(BusinessDetailsActivity.this, "Successfully added to Calendar");
                         }
                     });
-
-//                    Intent i = new Intent(BusinessDetailsActivity.this, ActivityCreateAppointment.class);
-//                    i.putExtra(Constants.EVENT_NAME, information.getName());
-//                    i.putExtra(Constants.EVENT_LOCATION, information.getLocality());
-//                    i.putExtra(Constants.EVENT_START_DATE, information.getEvent_date().getStart_date());
-//                    i.putExtra(Constants.EVENT_END_DATE, information.getEvent_date().getEnd_date());
-//                    Utils.pushEvent(BusinessDetailsActivity.this, GTMEventType.ADDCALENDAR_EVENT_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Resource/Event Details");
-//                    startActivity(i);
-                    //saveCalendarEvent(information);
                 }
                 break;
                 case R.id.img_round: {
                     if (flag) {
                         Log.d("check", " if popup" + flag);
                         mDetailsHeader.TopToBottom();
-            /*	mDetailsHeader.setVisibility(View.VISIBLE);
-                mDetailsHeader.collepseView();*/
                         flag = false;
                     } else {
                         Log.d("check", "else popup" + flag);
                         mDetailsHeader.bottomToTop();
-            /*	Animation bottomUp = AnimationUtils.loadAnimation(BusinessDetailsActivity.this, R.anim.bottom_up);
-                bottomUp.setAnimationListener(makeTopGone);
-				mDetailsHeader.startAnimation(bottomUp);*/
                         flag = true;
                     }
-
-			/*if(isOpen){
-                _detailsHeader.TopToBottom();
-			}else{
-				_detailsHeader.bottomToTop();
-			}
-			isOpen=!isOpen;*/
                 }
                 break;
                 case R.id.imgBack: {
@@ -1210,7 +1022,6 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
         }
     }
 
-
     private void saveCalendar(String title, String desc, String sDate, String eDate, String location) {
 
         ContentResolver cr = getContentResolver();
@@ -1227,45 +1038,13 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
 
         // default calendar
         values.put(CalendarContract.Events.CALENDAR_ID, 3);
-
-//        values.put(CalendarContract.Events.RRULE, "FREQ=DAILY;UNTIL="
-//                + dtUntill);
-
         values.put(CalendarContract.Events.HAS_ALARM, 1);
 
-        // insert event to calendar
         Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
 
 
     }
 
-    /**
-     * use it later.
-     */
-
-	/*private class LongOperation extends AsyncTask<Response, Void, Response> {
-
-		@Override
-		    protected void onPreExecute() {
-		    // Things to be done before execution of long running operation. For example showing ProgessDialog
-		    }
-
-		    @Override
-		    protected Response doInBackground(Response... params) {
-		    	Response response=params[0];
-		        return response;
-		    }
-
-		    @Override
-		    protected void onPostExecute(Response result) {
-		        // execution of result of Long time consuming operation
-		    }
-
-		    @Override
-		    protected void onProgressUpdate(Void... values) {
-		      // Things to be done while execution of long running operation is in progress. For example updating ProgessDialog
-		     }
-		}*/
     public void goToLoginDialog() {
         Bundle args = new Bundle();
         args.putInt(Constants.CATEGORY_ID, categoryId);
@@ -1290,10 +1069,6 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
             imgBookmark.setImageResource(R.drawable.ic_favorite_border_white_48dp);
             bookmarkRequest.setAction("remove");
         }
-//        followAPICall(followAuthorId);
-       /* BookmarkController bookmarkController = new BookmarkController(this, this);
-        bookmarkController.getData(AppConstants.BOOKMARK_RESOURCE_REQUEST, bookmarkRequest);*/
-
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         // prepare call in Retrofit 2.0
         ResourcesAPI bookmarkAPI = retrofit.create(ResourcesAPI.class);
@@ -1562,20 +1337,6 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
         ViewHelper.setAlpha(titleMain, valu);
         ViewHelper.setAlpha(mTitleView, (1 - (valu * 2)));
         ViewHelper.setAlpha(mBelowTitleView, 1 - valu);
-//        if (valu >=0.3){
-//            mBelowTitleView.setVisibility(View.GONE);
-//        } else {
-//            ViewHelper.setAlpha(mBelowTitleView, valu);
-//            mBelowTitleView.setVisibility(View.VISIBLE);
-//        }
-
-        // Scale title text
-        float scale = 1 + ScrollUtils.getFloat((flexibleRange + translationY - mTabHeight) / flexibleRange, 0, MAX_TEXT_SCALE_DELTA);
-        // mTitleView.setTextSize((int) (8 * scale * density));
-//        setPivotXToTitle();
-//        ViewHelper.setPivotY(mTitleView, 0);
-//        ViewHelper.setScaleX(mTitleView, scale);
-//        ViewHelper.setScaleY(mTitleView, scale);
     }
 
     public void moveToMap() {
@@ -1591,8 +1352,6 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
                     ((MapFragment) mDetailsFragmentAdapter.getItemAt(3)).directionBtnClick();
                 }
             }, 1000);
-
-
             // move to map fragment
         }
     }

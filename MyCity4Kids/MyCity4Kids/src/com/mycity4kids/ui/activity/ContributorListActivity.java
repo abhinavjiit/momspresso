@@ -310,7 +310,7 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
         this.type = type;
         contributorArrayList.clear();
         parentingBlogAdapter.notifyDataSetChanged();
-
+        sortType = 1;
         isReuqestRunning = true;
         if (!type.equals(AppConstants.USER_TYPE_BLOGGER)) {
             fab_menu.setVisibility(View.GONE);

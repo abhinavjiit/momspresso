@@ -72,9 +72,6 @@ public class SplashActivity extends BaseActivity {
     Bundle extras;
     FirebaseAnalytics mFirebaseAnalytics;
 
-//    private DeepLinkData _deepLinkData;
-//    private GetAppointmentController _appointmentcontroller;
-
     // The onNewIntent() is overridden to get and resolve the data for deep linking
     @Override
     protected void onNewIntent(Intent intent) {
@@ -82,23 +79,7 @@ public class SplashActivity extends BaseActivity {
         String data = intent.getDataString();
         if (Intent.ACTION_VIEW.equals(action) && data != null) {
             _deepLinkURL = data;
-//            DeepLinkingController _deepLinkingController = new DeepLinkingController(this, this);
-//            _deepLinkingController.getData(AppConstants.DEEP_LINK_RESOLVER_REQUEST, data);
         }
-   /*     if (intent.getExtras()!=null&&intent.getExtras().getString("articleId")!=null)
-        {
-            if (intent.getExtras().getString("type").equalsIgnoreCase("article"))
-            {  Log.e("extra New Intent ", intent.getExtras().toString());
-            String articleId=intent.getExtras().getString("articleId");
-//            Log.e("articleId",articleId);
-            Intent intent1=new Intent(SplashActivity.this, ArticlesAndBlogsDetailsActivity.class);
-            intent1.putExtra("article_id",articleId);
-            intent1.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.ARTICLES);
-            startActivity(intent1);
-            finish();
-                return;
-        }}*/
-        //  super.onNewIntent(intent);
     }
 
     @Override
@@ -232,18 +213,6 @@ public class SplashActivity extends BaseActivity {
                     ForceUpdateAPI forceUpdateAPI = retrofit.create(ForceUpdateAPI.class);
                     Call<ForceUpdateModel> call = forceUpdateAPI.checkForceUpdateRequired(version, "android");
                     call.enqueue(checkForceUpdateResponseCallback);
-
-//                    final Handler handler = new Handler();
-//                    handler.postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            isFirstLaunch = 0;
-//                            navigateToNextScreen(true);
-//                        }
-//                    }, 500);
-
-                    //ToastUtils.showToast(SplashActivity.this, getString(R.string.error_network));
-                    //return;
                 } else {
                     if (SharedPrefUtils.getAppUpgrade(SplashActivity.this)) {
                         String message = SharedPrefUtils.getAppUgradeMessage(SplashActivity.this);
@@ -262,15 +231,6 @@ public class SplashActivity extends BaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-//
-//        GCMUtil.initializeGCM(this, new OnGcmTokenReceived() {
-//            @Override
-//            public void onGcmTokenReceive(String deviceToken) {
-//                Log.e("SplashActivity", "deviceToken ------------- " + deviceToken);
-//            }
-//        });
-//        GCMUtil.initializeGCM(this);
-
     }
 
     public Action getAction() {
@@ -360,13 +320,6 @@ public class SplashActivity extends BaseActivity {
             } else
                 navigateToNextScreen(true);
         }
-        // move to screen
-
-
-        /*if(isSplash)
-        {
-		 moveTaskToBack(true);
-		}*/
     }
 
     @Override
@@ -428,18 +381,14 @@ public class SplashActivity extends BaseActivity {
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
             System.out.println("TOuch outside the dialog ******************** ");
-
         }
         return false;
     }
 
     private void buildAlertMessageNoGps() {
-
         isLocationScreen = true;
         FragmentAlertDialog _dialog = new FragmentAlertDialog();
-
         FragmentAlertDialog fragment = _dialog.newInstance(this, getString(R.string.gps_enabled_alert));
-
         getSupportFragmentManager().beginTransaction().add(fragment, "MAGIC_TAG").commit();
         return;
     }
