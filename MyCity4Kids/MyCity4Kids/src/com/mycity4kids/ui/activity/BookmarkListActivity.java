@@ -66,7 +66,7 @@ public class BookmarkListActivity extends BaseActivity implements SwipeRefreshLa
     private ProgressBar progressBar;
     private int from = 1;
     private int to = 15;
-    private int limit = 6;
+    private int limit = 15;
     private String paginationValue = "";
     Toolbar mToolBar;
 
@@ -167,7 +167,7 @@ public class BookmarkListActivity extends BaseActivity implements SwipeRefreshLa
 
     private void hitArticleListingApi(int pPageCount, String sortKey, boolean isCacheRequired) {
         if (!ConnectivityUtils.isNetworkEnabled(this)) {
-           // swipeRefreshLayout.setRefreshing(false);
+            // swipeRefreshLayout.setRefreshing(false);
             removeProgressDialog();
             showToast(getString(R.string.error_network));
             return;

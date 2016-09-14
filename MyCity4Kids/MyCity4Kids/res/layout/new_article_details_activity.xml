@@ -113,7 +113,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/white_color">
 
             <View
                 android:layout_width="match_parent"
@@ -135,6 +136,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/follow_click"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_marginTop="20dp"
                 android:autoLink="web"
                 android:background="@color/white_color"
@@ -350,8 +353,8 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="40dp"
-                android:layout_weight=".13"
                 android:layout_gravity="bottom"
+                android:layout_weight=".13"
                 android:background="@color/blog.comments.addcomment_button"
                 android:gravity="center">
 

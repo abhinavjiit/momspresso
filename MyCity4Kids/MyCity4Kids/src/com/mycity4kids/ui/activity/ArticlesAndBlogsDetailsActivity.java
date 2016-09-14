@@ -608,7 +608,8 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     "}\n" +
                     "body {\n" +
                     "    font-family: MyFont;\n" +
-                    "    font-size: 16px;\n" +
+                    "    font-size: 18px;\n" +
+                    "    line-height: 160%;\n" +
                     "    text-align: left;\n" +
                     "}\n" +
                     "</style>" +
@@ -634,7 +635,8 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     "}\n" +
                     "body {\n" +
                     "    font-family: MyFont;\n" +
-                    "    font-size: 16px;\n" +
+                    "    font-size: 18px;\n" +
+                    "    line-height: 160%;\n" +
                     "    text-align: left;\n" +
                     "}\n" +
                     "</style>" +
