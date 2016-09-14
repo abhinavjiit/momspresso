@@ -279,6 +279,10 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                         Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(EditorPostActivity.this.getContentResolver(), imageUri);
                         float actualHeight = imageBitmap.getHeight();
                         float actualWidth = imageBitmap.getWidth();
+                        if (actualWidth < 720) {
+                            showToast("Please upload image with minimum width of 720 pixels");
+                            return;
+                        }
                         float maxHeight = 1300;
                         float maxWidth = 720;
                         float imgRatio = actualWidth / actualHeight;
@@ -355,11 +359,14 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                         float actualHeight = imageBitmap.getHeight();
                         float actualWidth = imageBitmap.getWidth();
                         float maxHeight = 1300;
-                        float maxWidth = 700;
+                        float maxWidth = 720;
                         float imgRatio = actualWidth / actualHeight;
                         float maxRatio = maxWidth / maxHeight;
                         // float compressionQuality = 0.5;//50 percent compression
-
+                        if (actualWidth < 720) {
+                            showToast("Please upload image with minimum width of 720 pixels");
+                            return;
+                        }
                         if (actualHeight > maxHeight || actualWidth > maxWidth) {
                             if (imgRatio < maxRatio) {
                                 //adjust width according to maxHeight
