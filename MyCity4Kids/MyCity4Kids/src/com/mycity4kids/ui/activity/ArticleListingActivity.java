@@ -148,7 +148,7 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
 
     private void hitArticleListingApi(int pPageCount, String sortKey, boolean isCacheRequired) {
         if (!ConnectivityUtils.isNetworkEnabled(this)) {
-         //   swipeRefreshLayout.setRefreshing(false);
+            //   swipeRefreshLayout.setRefreshing(false);
             removeProgressDialog();
             showToast(getString(R.string.error_network));
             return;

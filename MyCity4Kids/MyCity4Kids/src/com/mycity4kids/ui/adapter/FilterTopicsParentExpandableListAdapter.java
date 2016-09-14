@@ -218,7 +218,12 @@ public class FilterTopicsParentExpandableListAdapter extends BaseExpandableListA
                     default:
                         Intent intent_3 = new Intent(context, FilteredTopicsArticleListingActivity.class);
                         intent_3.putExtra("selectedTopics", map.get(topicList.get(level1GroupPosition)).get(groupPosition).getId());
-                        intent_3.putExtra("displayName", map.get(topicList.get(level1GroupPosition)).get(groupPosition).getDisplay_name());
+                        if ("all".equalsIgnoreCase(map.get(topicList.get(level1GroupPosition)).get(groupPosition).getDisplay_name())) {
+                            intent_3.putExtra("displayName", topicList.get(level1GroupPosition).getDisplay_name());
+                        } else {
+                            intent_3.putExtra("displayName", map.get(topicList.get(level1GroupPosition)).get(groupPosition).getDisplay_name());
+                        }
+
                         context.startActivity(intent_3);
                         break;
                 }
@@ -243,7 +248,12 @@ public class FilterTopicsParentExpandableListAdapter extends BaseExpandableListA
 //            Log.d("SubSub Title", "" + map.get(topicList.get(level1GroupPosition)).get(groupPosition).getChild().get(childPosition).getTitle());
             Intent intent = new Intent(context, FilteredTopicsArticleListingActivity.class);
             intent.putExtra("selectedTopics", map.get(topicList.get(level1GroupPosition)).get(groupPosition).getChild().get(childPosition).getId());
-            intent.putExtra("displayName", map.get(topicList.get(level1GroupPosition)).get(groupPosition).getChild().get(childPosition).getDisplay_name());
+            if ("all".equalsIgnoreCase(map.get(topicList.get(level1GroupPosition)).get(groupPosition).getChild().get(childPosition).getDisplay_name())) {
+                intent.putExtra("displayName", map.get(topicList.get(level1GroupPosition)).get(groupPosition).getDisplay_name());
+            } else {
+                intent.putExtra("displayName", map.get(topicList.get(level1GroupPosition)).get(groupPosition).getChild().get(childPosition).getDisplay_name());
+            }
+
             context.startActivity(intent);
             return false;
         }

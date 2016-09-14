@@ -61,7 +61,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
     private int nextPageNumber;
     private boolean isReuqestRunning = false;
     private ProgressBar progressBar;
-    boolean isLastPageReached = true;
+    boolean isLastPageReached = false;
     private TextView noBlogsTextView;
     private String selectedTopics;
     private Toolbar mToolbar;
@@ -139,7 +139,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
                 boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
-                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && isLastPageReached) {
+                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && !isLastPageReached) {
                     mLodingView.setVisibility(View.VISIBLE);
                     hitFilteredTopicsArticleListingApi(sortType);
                     isReuqestRunning = true;
@@ -261,6 +261,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                 fabMenu.collapse();
                 articleDataModelsNew.clear();
                 articlesListingAdapter.notifyDataSetChanged();
+                sortType = 0;
                 nextPageNumber = 1;
                 hitFilteredTopicsArticleListingApi(0);
                 break;
@@ -268,6 +269,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                 fabMenu.collapse();
                 articleDataModelsNew.clear();
                 articlesListingAdapter.notifyDataSetChanged();
+                sortType = 1;
                 nextPageNumber = 1;
                 hitFilteredTopicsArticleListingApi(1);
                 break;
@@ -301,6 +303,8 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             showToast(getString(R.string.error_network));
             return;
         }
+
+        isLastPageReached = false;
         nextPageNumber = 1;
         hitFilteredTopicsArticleListingApi(sortType);
 
