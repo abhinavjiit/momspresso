@@ -33,6 +33,7 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.dbtable.UserTable;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.listener.OnButtonClicked;
 import com.mycity4kids.models.response.ArticleDraftResponse;
 import com.mycity4kids.models.response.DraftListResult;
 import com.mycity4kids.models.response.ImageUploadResponse;
@@ -152,6 +153,10 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                 Log.e("imageuploading", mEditorFragment.imageUploading + "");
                 showToast("Please wait while image is being uploaded");
             } else {
+                if (!ConnectivityUtils.isNetworkEnabled(this)) {
+                    showToast(getString(R.string.error_network));
+                    return;
+                }
                 fromBackpress = true;
                 saveDraftRequest(titleFormatting(mEditorFragment.getTitle().toString().trim()), mEditorFragment.getContent().toString(), draftId);
 
@@ -458,6 +463,10 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                     showToast("Published Articles are not allowed to be saved in drafts");
                 } else {
                     Log.e("draftId", draftId + "");
+                    if (!ConnectivityUtils.isNetworkEnabled(this)) {
+                        showToast(getString(R.string.error_network));
+                        return true;
+                    }
                     saveDraftRequest(titleFormatting(mEditorFragment.getTitle().toString().trim()), mEditorFragment.getContent().toString(), draftId);
                     fromBackpress = false;
                 }
@@ -541,6 +550,14 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                     removeProgressDialog();
                     if (response == null || response.body() == null) {
                         showToast("Something went wrong from server");
+                        if (fromBackpress) {
+                            showAlertDialog("Oops!", "Draft could not be saved, your current changes will be lost if you exit now. Would you like to exit?", new OnButtonClicked() {
+                                @Override
+                                public void onButtonCLick(int buttonId) {
+                                    finish();
+                                }
+                            });
+                        }
                         return;
                     }
                     if (responseModel.getCode() != 200) {

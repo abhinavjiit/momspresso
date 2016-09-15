@@ -872,8 +872,9 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     ArticleListingResult parentingListData = (ArticleListingResult) v.getTag();
                     intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId() + "");
                     intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
-                    finish();
+//                    finish();
                     break;
                 }
                 case R.id.trendingArticle1:
@@ -884,8 +885,9 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     ArticleListingResult parentingListData = (ArticleListingResult) v.getTag();
                     intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
                     intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
-                    finish();
+//                    finish();
                     break;
                 }
             }
