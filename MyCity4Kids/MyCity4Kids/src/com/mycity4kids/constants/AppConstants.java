@@ -159,7 +159,7 @@ public class AppConstants {
     public static final Uri APP_BASE_URI = Uri.parse("android-app://com.mycity4kids/http/www.mycity4kids.com/");
     public static final Uri WEB_BASE_URL = Uri.parse("http://www.mycity4kids.com/");
 
-    public static final String ARTICLE_SHARE_URL = "https://mycity4kids.com/" + "parenting/";
+    public static final String ARTICLE_SHARE_URL = "http://mycity4kids.com/" + "parenting/";
 //    public static final String ARTICLE_SHARE_URL = BASE_URL + "newparenting/";
 
     /*New Login/Sign Up Constants*/

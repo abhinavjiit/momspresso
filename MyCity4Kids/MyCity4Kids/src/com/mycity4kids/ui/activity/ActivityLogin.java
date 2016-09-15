@@ -534,7 +534,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
 
     public String convertTime(String time) {
         try {
-            Date date = new Date(Long.parseLong(time));
+            Date date = new Date(Long.parseLong(time) * 1000);
             Format format = new SimpleDateFormat("dd-MM-yyyy");
             return format.format(date);
         } catch (NumberFormatException nfe) {

@@ -593,7 +593,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             if (null != videoList && !videoList.isEmpty()) {
                 for (VideoData video : videoList) {
                     if (bodyDescription.contains(video.getKey())) {
-                        bodyDesc = bodyDesc.replace(video.getKey(), "<p style='text-align:center'><iframe src=http:" + video.getVideoUrl() + "?modestbranding=1&amp;rel=0&amp;showinfo=0\" style=\"width: 100%;\"></iframe></p>");
+                        bodyDesc = bodyDesc.replace(video.getKey(), "<p style='text-align:center'><iframe allowfullscreen src=http:" + video.getVideoUrl() + "?modestbranding=1&amp;rel=0&amp;showinfo=0\" style=\"width: 100%;\"></iframe></p>");
                     }
                 }
             }
@@ -622,7 +622,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             if (null != videoList && !videoList.isEmpty()) {
                 for (VideoData video : videoList) {
                     if (bodyDescription.contains(video.getKey())) {
-                        bodyDesc = bodyDesc.replace(video.getKey(), "<p style='text-align:center'><iframe src=http:" + video.getVideoUrl() + "?modestbranding=1&amp;rel=0&amp;showinfo=0\" style=\"width: 100%;\" ></iframe></p>");
+                        bodyDesc = bodyDesc.replace(video.getKey(), "<p style='text-align:center'><iframe allowfullscreen src=http:" + video.getVideoUrl() + "?modestbranding=1&amp;rel=0&amp;showinfo=0\" style=\"width: 100%;\" ></iframe></p>");
                     }
                 }
             }

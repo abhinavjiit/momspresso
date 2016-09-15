@@ -46,7 +46,8 @@ public interface ArticleDetailsAPI {
     //    @GET("http://dziyfkwv8zf9m.cloudfront.net/articles-data/{articleId}.json")
 
     //Live Url for article details
-    @GET("http://cdn3.mycity4kids.com/articles-data/{articleId}.json")
+//    @GET("http://cdn3.mycity4kids.com/articles-data/{articleId}.json")
+    @GET("https://s3-ap-southeast-1.amazonaws.com/mycity4kids-phoenix/articles-data/{articleId}.json")
     Call<ArticleDetailResult> getArticleDetailsFromS3(@Path("articleId") String articleId);
 
     @GET("/v1/articles/doc/")
