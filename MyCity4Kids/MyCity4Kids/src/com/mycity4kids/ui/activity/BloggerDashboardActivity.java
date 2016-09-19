@@ -388,7 +388,13 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         });
         publishedArticleListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(AbsListView absListView, int i) {
+            public void onScrollStateChanged(AbsListView absListView, int scrollState) {
+                if (SCROLL_STATE_TOUCH_SCROLL == scrollState) {
+                    View currentFocus = getCurrentFocus();
+                    if (currentFocus != null) {
+                        currentFocus.clearFocus();
+                    }
+                }
             }
 
             @Override
@@ -521,7 +527,13 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
 
         draftListview.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(AbsListView absListView, int i) {
+            public void onScrollStateChanged(AbsListView absListView, int scrollState) {
+                if (SCROLL_STATE_TOUCH_SCROLL == scrollState) {
+                    View currentFocus = getCurrentFocus();
+                    if (currentFocus != null) {
+                        currentFocus.clearFocus();
+                    }
+                }
             }
 
             @Override
