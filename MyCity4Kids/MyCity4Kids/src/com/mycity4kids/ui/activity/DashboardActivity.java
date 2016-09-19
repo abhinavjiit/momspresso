@@ -245,21 +245,21 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
         Utils.pushOpenScreenEvent(DashboardActivity.this, "DashBoard", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
-        TableKids _kidTable = new TableKids(BaseApplication.getInstance());
-        Long sTime;
-        for (int i = 0; i < _kidTable.getKidsCount(); i++) {
-            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-            Date dob;
-            try {
-                //28800000 -- Morning 8 am addition
-                dob = df.parse(_kidTable.getAllKids().get(i).getDate_of_birth());
-                Reminder.with(this).info(Constants.REMINDER_KIDS_BIRTHDAY, "" + _kidTable.getAllKids().get(i).getName())
-                        .startTime(dob.getTime() + 28800000).setRepeatBehavior("Yearly", "Forever", "", null)
-                        .remindBefore("0").setRecurring("yes").create(-i);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
+//        TableKids _kidTable = new TableKids(BaseApplication.getInstance());
+//        Long sTime;
+//        for (int i = 0; i < _kidTable.getKidsCount(); i++) {
+//            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+//            Date dob;
+//            try {
+//                //28800000 -- Morning 8 am addition
+//                dob = df.parse(_kidTable.getAllKids().get(i).getDate_of_birth());
+//                Reminder.with(this).info(Constants.REMINDER_KIDS_BIRTHDAY, "" + _kidTable.getAllKids().get(i).getName())
+//                        .startTime(dob.getTime() + 28800000).setRepeatBehavior("Yearly", "Forever", "", null)
+//                        .remindBefore("0").setRecurring("yes").create(-i);
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+//        }
 //        addChildbirthTS();
 
         // onclick events

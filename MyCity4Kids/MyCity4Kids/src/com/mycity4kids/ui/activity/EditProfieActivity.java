@@ -94,6 +94,10 @@ public class EditProfieActivity extends BaseActivity {
                     @Override
                     public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
                         removeProgressDialog();
+                        if (response == null || response.body() == null) {
+                            showToast(getString(R.string.went_wrong));
+                            return;
+                        }
                         if (!response.body().getStatus().equals("success")) {
                             showToast(getString(R.string.toast_response_error));
                         } else {

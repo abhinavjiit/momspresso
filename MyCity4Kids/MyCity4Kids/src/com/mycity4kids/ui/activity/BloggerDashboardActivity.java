@@ -290,7 +290,9 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                 reviewImageView.setColorFilter(ContextCompat.getColor(BloggerDashboardActivity.this, R.color.grey_icon_unselected));
                 draftListview.setVisibility(View.GONE);
                 if (publishedArticleListView.getHeaderViewsCount() == 0) {
+                    publishedArticleListView.setAdapter(null);
                     publishedArticleListView.addHeaderView(header, null, false);
+                    publishedArticleListView.setAdapter(articlesListingAdapter);
                 }
                 if (articleDataModelsNew.size() == 0) {
                     noArticleTextView.setVisibility(View.VISIBLE);
@@ -319,7 +321,9 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                 draftListview.setVisibility(View.GONE);
                 publishedArticleListView.setVisibility(View.GONE);
                 if (commentsListView.getHeaderViewsCount() == 0) {
+                    commentsListView.setAdapter(null);
                     commentsListView.addHeaderView(header, null, false);
+                    commentsListView.setAdapter(commentsListAdapter);
                 }
                 if (commentList.size() == 0) {
                     noDraftTextView.setVisibility(View.GONE);
@@ -348,7 +352,9 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                 publishedArticleListView.setVisibility(View.GONE);
                 commentsListView.setVisibility(View.GONE);
                 if (reviewsListView.getHeaderViewsCount() == 0) {
+                    reviewsListView.setAdapter(null);
                     reviewsListView.addHeaderView(header, null, false);
+                    reviewsListView.setAdapter(reviewsListAdapter);
                 }
                 header.setClickable(false);
                 if (reviewList.size() == 0) {
@@ -1140,7 +1146,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                                      public void run() {
                                          int lineCnt = userBio.getLineCount();
                                          // Perform any actions you want based on the line count here.
-                                         if (lineCnt >= 3) {
+                                         if (lineCnt > 3) {
                                              moreTextView.setVisibility(View.VISIBLE);
                                              userBio.setMaxLines(3);
                                              userBio.setEllipsize(null);

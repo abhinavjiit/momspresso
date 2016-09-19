@@ -511,8 +511,6 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
             kidsInfo.setName(kid.getName());
             kidsInfo.setDate_of_birth(convertTime(kid.getBirthDay()));
             kidsInfo.setColor_code(kid.getColorCode());
-            kidsInfo.setGender(kid.getGender());
-
             kidsInfoArrayList.add(kidsInfo);
         }
 
@@ -534,7 +532,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
 
     public String convertTime(String time) {
         try {
-            Date date = new Date(Long.parseLong(time) * 1000);
+            Date date = new Date(Long.parseLong(time));
             Format format = new SimpleDateFormat("dd-MM-yyyy");
             return format.format(date);
         } catch (NumberFormatException nfe) {

@@ -421,7 +421,11 @@ public class EditSelectedTopicsActivity extends BaseActivity {
                 jArray.put(jObject);
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            Crashlytics.logException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        } catch (Exception ex) {
+            Crashlytics.logException(ex);
+            Log.d("MC4kException", Log.getStackTraceString(ex));
         }
         tags = jArray.toString();
     }

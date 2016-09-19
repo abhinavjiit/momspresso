@@ -323,7 +323,10 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     private void hitBookmarkFollowingStatusAPI() {
         ArticleDetailRequest articleDetailRequest = new ArticleDetailRequest();
         articleDetailRequest.setArticleId(articleId);
-        Call<ArticleDetailResponse> callBookmark = articleDetailsAPI.checkFollowingBookmarkStatus(articleId, authorId);
+        Retrofit retro = BaseApplication.getInstance().getRetrofit();
+        ArticleDetailsAPI bookmarFollowingStatusAPI = retro.create(ArticleDetailsAPI.class);
+
+        Call<ArticleDetailResponse> callBookmark = bookmarFollowingStatusAPI.checkFollowingBookmarkStatus(articleId, authorId);
         callBookmark.enqueue(isBookmarkedFollowedResponseCallback);
     }
 

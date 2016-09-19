@@ -129,17 +129,14 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
                     ArticleListingResult parentingListData = (ArticleListingResult) ((NewArticlesListingAdapter) adapterView.getAdapter()).getItem(i);
                     intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
                     intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
-                    intent.putExtra(Constants.ARTICLE_COVER_IMAGE, parentingListData.getImageUrl());
-                    intent.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.ARTICLES);
-                    intent.putExtra(Constants.FILTER_TYPE, parentingListData.getUserType());
-                    intent.putExtra(Constants.BLOG_NAME, parentingListData.getBlogPageSlug());
+                    intent.putExtra(Constants.BLOG_SLUG, parentingListData.getBlogPageSlug());
+                    intent.putExtra(Constants.TITLE_SLUG, parentingListData.getTitleSlug());
                     startActivity(intent);
 
                 }
             }
         });
     }
-
 
     @Override
     protected void updateUi(Response response) {

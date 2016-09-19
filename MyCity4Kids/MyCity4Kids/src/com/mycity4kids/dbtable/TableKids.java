@@ -18,7 +18,6 @@ public class TableKids extends BaseTable {
     private static final String KID_COLOR_CODE = "colorCode";
     private static final String KID_BDAY = "bday";
     private static final String KIDID = "kid_id";
-    private static final String KID_GENDER = "gender";
     /**
      * Table Name:-
      */
@@ -29,7 +28,6 @@ public class TableKids extends BaseTable {
             KIDS_TABLE + "(" + PRIMARY_KEY + " integer primary key," +
             KID_NAME + " text ," +
             KID_COLOR_CODE + " text  ," +
-            KID_GENDER + " text  ," +
             KIDID + " integer  ," +
             KID_BDAY + " text )";
 
@@ -47,7 +45,6 @@ public class TableKids extends BaseTable {
         _contentValue.put(KID_NAME, kidModel.getName());
         _contentValue.put(KID_COLOR_CODE, kidModel.getColor_code());
         _contentValue.put(KID_BDAY, kidModel.getDate_of_birth());
-        _contentValue.put(KID_GENDER, kidModel.getGender());
         _contentValue.put(KIDID, kidModel.getId());
         return _contentValue;
     }
@@ -71,7 +68,6 @@ public class TableKids extends BaseTable {
                 kidModel.setColor_code(_cursor.getString(_cursor.getColumnIndex(KID_COLOR_CODE)));
                 kidModel.setDate_of_birth(_cursor.getString(_cursor.getColumnIndex(KID_BDAY)));
                 kidModel.setId(_cursor.getString(_cursor.getColumnIndex(KIDID)));
-                kidModel.setGender(_cursor.getString(_cursor.getColumnIndex(KID_GENDER)));
                 kidlist.add(kidModel);
             }
         } catch (Exception e) {
@@ -93,7 +89,6 @@ public class TableKids extends BaseTable {
                 kid.setColor_code(_cursor.getString(_cursor.getColumnIndex(KID_COLOR_CODE)));
                 kid.setDate_of_birth(_cursor.getString(_cursor.getColumnIndex(KID_BDAY)));
                 kid.setId(_cursor.getString(_cursor.getColumnIndex(KIDID)));
-                kid.setGender(_cursor.getString(_cursor.getColumnIndex(KID_GENDER)));
             }
         } catch (Exception e) {
             Log.e("", "" + e);
@@ -113,7 +108,6 @@ public class TableKids extends BaseTable {
             values.put(KID_BDAY, model.getDob());
             values.put(KID_COLOR_CODE, model.getColor_code());
             values.put(KID_NAME, model.getName());
-            values.put(KID_GENDER, model.getGender());
 
             int rowsEffected = mWritableDatabase.update(KIDS_TABLE, values, KIDID + " = ? ", new String[]{String.valueOf(model.getKidid())});
             Log.e(KIDS_TABLE, "rowsEffected: " + rowsEffected);
