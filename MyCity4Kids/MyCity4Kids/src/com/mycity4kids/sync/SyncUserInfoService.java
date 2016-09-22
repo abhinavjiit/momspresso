@@ -1,44 +1,24 @@
 package com.mycity4kids.sync;
 
 import android.app.IntentService;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.gson.Gson;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
-import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.dbtable.TableAdult;
-import com.mycity4kids.dbtable.TableFamily;
 import com.mycity4kids.dbtable.TableKids;
-import com.mycity4kids.dbtable.UserTable;
-import com.mycity4kids.models.request.LoginRegistrationRequest;
 import com.mycity4kids.models.response.KidsModel;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.models.user.KidsInfo;
-import com.mycity4kids.models.user.UserInfo;
-import com.mycity4kids.models.user.UserModel;
-import com.mycity4kids.models.user.UserResponse;
-import com.mycity4kids.newmodels.ForceUpdateModel;
 import com.mycity4kids.newmodels.PushNotificationModel;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.retrofitAPIsInterfaces.ForceUpdateAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
-import com.mycity4kids.ui.activity.DashboardActivity;
-import com.mycity4kids.ui.activity.LoadingActivity;
-import com.mycity4kids.ui.fragment.FacebookAddEmailDialogFragment;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -160,7 +140,7 @@ public class SyncUserInfoService extends IntentService implements UpdateListener
                 builder.append(AppConstants.GET_SYNC_USER_INFO_URL);
                 String userId = SharedPrefUtils.getUserDetailModel(this).getId();
                 builder.append("user_id:").append(userId);
-                Log.i("User sync request url", builder.toString());
+//                Log.i("User sync request url", builder.toString());
                 break;
         }
         return builder.toString();

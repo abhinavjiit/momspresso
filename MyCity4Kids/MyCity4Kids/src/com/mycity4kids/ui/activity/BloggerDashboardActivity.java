@@ -2,8 +2,6 @@ package com.mycity4kids.ui.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -250,7 +248,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
             publishedArticleListView.addHeaderView(header, null, false);
             publishedArticleListView.setVisibility(View.VISIBLE);
             draftListview.setVisibility(View.GONE);
-            publishedImageView.setColorFilter(ContextCompat.getColor(BloggerDashboardActivity.this, R.color.red_selected));
+            publishedImageView.setImageDrawable(ContextCompat.getDrawable(BloggerDashboardActivity.this, R.drawable.icon_publish_selected));
         }
 
         commentsListView.setAdapter(commentsListAdapter);
@@ -259,10 +257,11 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         draftItemLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                draftImageView.setColorFilter(ContextCompat.getColor(BloggerDashboardActivity.this, R.color.red_selected));
-                publishedImageView.setColorFilter(ContextCompat.getColor(BloggerDashboardActivity.this, R.color.grey_icon_unselected));
-                commentsImageView.setColorFilter(ContextCompat.getColor(BloggerDashboardActivity.this, R.color.grey_icon_unselected));
-                reviewImageView.setColorFilter(ContextCompat.getColor(BloggerDashboardActivity.this, R.color.grey_icon_unselected));
+                draftImageView.setImageDrawable(ContextCompat.getDrawable(BloggerDashboardActivity.this, R.drawable.icon_draft_selected));
+                publishedImageView.setImageDrawable(ContextCompat.getDrawable(BloggerDashboardActivity.this, R.drawable.icon_publish));
+                commentsImageView.setImageDrawable(ContextCompat.getDrawable(BloggerDashboardActivity.this, R.drawable.icon_comments));
+                reviewImageView.setImageDrawable(ContextCompat.getDrawable(BloggerDashboardActivity.this, R.drawable.icon_review));
+
                 draftListview.setVisibility(View.VISIBLE);
                 if (draftList.size() == 0) {
                     noDraftTextView.setVisibility(View.VISIBLE);
@@ -284,10 +283,11 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         publishedItemLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                draftImageView.setColorFilter(ContextCompat.getColor(BloggerDashboardActivity.this, R.color.grey_icon_unselected));
-                publishedImageView.setColorFilter(ContextCompat.getColor(BloggerDashboardActivity.this, R.color.red_selected));
-                commentsImageView.setColorFilter(ContextCompat.getColor(BloggerDashboardActivity.this, R.color.grey_icon_unselected));
-                reviewImageView.setColorFilter(ContextCompat.getColor(BloggerDashboardActivity.this, R.color.grey_icon_unselected));
+                draftImageView.setImageDrawable(ContextCompat.getDrawable(BloggerDashboardActivity.this, R.drawable.icon_draft));
+                publishedImageView.setImageDrawable(ContextCompat.getDrawable(BloggerDashboardActivity.this, R.drawable.icon_publish_selected));
+                commentsImageView.setImageDrawable(ContextCompat.getDrawable(BloggerDashboardActivity.this, R.drawable.icon_comments));
+                reviewImageView.setImageDrawable(ContextCompat.getDrawable(BloggerDashboardActivity.this, R.drawable.icon_review));
+
                 draftListview.setVisibility(View.GONE);
                 if (publishedArticleListView.getHeaderViewsCount() == 0) {
                     publishedArticleListView.setAdapter(null);
@@ -314,10 +314,11 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         commentsItemLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                draftImageView.setColorFilter(ContextCompat.getColor(BloggerDashboardActivity.this, R.color.grey_icon_unselected));
-                publishedImageView.setColorFilter(ContextCompat.getColor(BloggerDashboardActivity.this, R.color.grey_icon_unselected));
-                commentsImageView.setColorFilter(ContextCompat.getColor(BloggerDashboardActivity.this, R.color.red_selected));
-                reviewImageView.setColorFilter(ContextCompat.getColor(BloggerDashboardActivity.this, R.color.grey_icon_unselected));
+                draftImageView.setImageDrawable(ContextCompat.getDrawable(BloggerDashboardActivity.this, R.drawable.icon_draft));
+                publishedImageView.setImageDrawable(ContextCompat.getDrawable(BloggerDashboardActivity.this, R.drawable.icon_publish));
+                commentsImageView.setImageDrawable(ContextCompat.getDrawable(BloggerDashboardActivity.this, R.drawable.icon_comments_selected));
+                reviewImageView.setImageDrawable(ContextCompat.getDrawable(BloggerDashboardActivity.this, R.drawable.icon_review));
+
                 draftListview.setVisibility(View.GONE);
                 publishedArticleListView.setVisibility(View.GONE);
                 if (commentsListView.getHeaderViewsCount() == 0) {
@@ -344,10 +345,11 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         reviewItemLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                draftImageView.setColorFilter(ContextCompat.getColor(BloggerDashboardActivity.this, R.color.grey_icon_unselected));
-                publishedImageView.setColorFilter(ContextCompat.getColor(BloggerDashboardActivity.this, R.color.grey_icon_unselected));
-                commentsImageView.setColorFilter(ContextCompat.getColor(BloggerDashboardActivity.this, R.color.grey_icon_unselected));
-                reviewImageView.setColorFilter(ContextCompat.getColor(BloggerDashboardActivity.this, R.color.red_selected));
+                draftImageView.setImageDrawable(ContextCompat.getDrawable(BloggerDashboardActivity.this, R.drawable.icon_draft));
+                publishedImageView.setImageDrawable(ContextCompat.getDrawable(BloggerDashboardActivity.this, R.drawable.icon_publish));
+                commentsImageView.setImageDrawable(ContextCompat.getDrawable(BloggerDashboardActivity.this, R.drawable.icon_comments));
+                reviewImageView.setImageDrawable(ContextCompat.getDrawable(BloggerDashboardActivity.this, R.drawable.icon_review_selected));
+
                 draftListview.setVisibility(View.GONE);
                 publishedArticleListView.setVisibility(View.GONE);
                 commentsListView.setVisibility(View.GONE);
@@ -1147,29 +1149,29 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
 
                                  if (responseData.getData().getResult().getUserBio() == null || responseData.getData().getResult().getUserBio().isEmpty()) {
                                      userBio.setVisibility(View.GONE);
-                                     moreTextView.setVisibility(View.GONE);
+//                                     moreTextView.setVisibility(View.GONE);
                                  } else {
                                      userBio.setText(responseData.getData().getResult().getUserBio());
                                      userBio.setVisibility(View.VISIBLE);
                                  }
 
-                                 userBio.post(new Runnable() {
-                                     @Override
-                                     public void run() {
-                                         int lineCnt = userBio.getLineCount();
-                                         // Perform any actions you want based on the line count here.
-                                         if (lineCnt > 3) {
-                                             moreTextView.setVisibility(View.VISIBLE);
-                                             userBio.setMaxLines(3);
-                                             userBio.setEllipsize(null);
-                                             moreTextView.setText("MORE");
-                                         } else {
-                                             userBio.setMaxLines(3);
-                                             userBio.setEllipsize(null);
-                                             moreTextView.setVisibility(View.GONE);
-                                         }
-                                     }
-                                 });
+//                                 userBio.post(new Runnable() {
+//                                     @Override
+//                                     public void run() {
+//                                         int lineCnt = userBio.getLineCount();
+//                                         // Perform any actions you want based on the line count here.
+//                                         if (lineCnt > 3) {
+//                                             moreTextView.setVisibility(View.VISIBLE);
+//                                             userBio.setMaxLines(3);
+//                                             userBio.setEllipsize(null);
+//                                             moreTextView.setText("MORE");
+//                                         } else {
+//                                             userBio.setMaxLines(3);
+//                                             userBio.setEllipsize(null);
+//                                             moreTextView.setVisibility(View.GONE);
+//                                         }
+//                                     }
+//                                 });
                              }
                          }
 
@@ -1234,7 +1236,6 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
         MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
         RequestBody requestBodyFile = RequestBody.create(MEDIA_TYPE_PNG, file);
-        //     RequestBody userId = RequestBody.create(MediaType.parse("text/plain"), "" + userModel.getUser().getId());
         RequestBody imageType = RequestBody.create(MediaType.parse("text/plain"), "0");
         // prepare call in Retrofit 2.0
         ImageUploadAPI imageUploadAPI = retro.create(ImageUploadAPI.class);
@@ -1595,13 +1596,6 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         mCurrentPhotoPath = "file:" + image.getAbsolutePath();
         absoluteImagePath = image.getAbsolutePath();
         return image;
-    }
-
-    public static Bitmap rotateImage(Bitmap source, float angle) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(angle);
-        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix,
-                true);
     }
 
     public void hidefloatingbutton(Boolean b) {

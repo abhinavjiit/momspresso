@@ -201,12 +201,15 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         if (notificationExtras != null) {
             if (notificationExtras.getString("type").equalsIgnoreCase("article_details")) {
                 String articleId = notificationExtras.getString("id");
+                String authorId = notificationExtras.getString("userId");
+                String blogSlug = notificationExtras.getString("blogSlug");
+                String titleSlug = notificationExtras.getString("titleSlug");
                 Intent intent1 = new Intent(DashboardActivity.this, ArticlesAndBlogsDetailsActivity.class);
-                intent1.putExtra("article_id", articleId);
-                intent1.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.ARTICLES);
-                intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                intent1.putExtra(Constants.ARTICLE_ID, articleId);
+                intent1.putExtra(Constants.AUTHOR_ID, authorId);
+                intent1.putExtra(Constants.BLOG_SLUG, blogSlug);
+                intent1.putExtra(Constants.TITLE_SLUG, titleSlug);
                 startActivity(intent1);
-                finish();
             } else if (notificationExtras.getString("type").equalsIgnoreCase("event_details")) {
                 String eventId = notificationExtras.getString("id");
                 Intent resultIntent = new Intent(getApplicationContext(), BusinessDetailsActivity.class);

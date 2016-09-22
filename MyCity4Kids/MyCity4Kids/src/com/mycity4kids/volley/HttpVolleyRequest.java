@@ -2,13 +2,11 @@ package com.mycity4kids.volley;
 
 import android.content.Context;
 import android.support.v4.util.ArrayMap;
-import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Cache;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.Response.Listener;
@@ -33,21 +31,6 @@ public class HttpVolleyRequest {
     public static void getStringResponse(final Context context, String url, final Map<String, String> paramsMap,
                                          final OnWebServiceCompleteListener listener, int requestMethod, boolean isCacheEnabled) {
         final VolleyBaseResponse baseResponse = new VolleyBaseResponse();
-        // Formulate the request and handle the response.
-//        if (Request.Method.GET == requestMethod) {
-//            if (null != SharedPrefUtils.getUserDetailModel(context)) {
-//                url = url + "&user_id=" + SharedPrefUtils.getUserDetailModel(context).getId();
-//            } else {
-//                url = url + "&user_id=" + "";
-//            }
-//        } else if (Request.Method.POST == requestMethod || Request.Method.PUT == requestMethod) {
-//            if (null != SharedPrefUtils.getUserDetailModel(context)) {
-//                paramsMap.put("user_id", "" + SharedPrefUtils.getUserDetailModel(context).getId());
-//            } else {
-//                paramsMap.put("user_id", "");
-//
-//            }
-//        }
 
         stringRequest = new StringRequest(requestMethod, url,
                 new Listener<String>() {
@@ -55,9 +38,9 @@ public class HttpVolleyRequest {
                     public void onResponse(String response) {
                         // Do something with the response
                         baseResponse.setResponseBody(response);
-                        Log.d("responseHeader:", "" + baseResponse.getResponseHeader());
-                        Log.d("responseCode:", "" + baseResponse.getResponseCode());
-                        Log.d("response:", response.toString());
+//                        Log.d("responseHeader:", "" + baseResponse.getResponseHeader());
+//                        Log.d("responseCode:", "" + baseResponse.getResponseCode());
+//                        Log.d("response:", response.toString());
                         listener.onWebServiceComplete(baseResponse, false);
                     }
                 },

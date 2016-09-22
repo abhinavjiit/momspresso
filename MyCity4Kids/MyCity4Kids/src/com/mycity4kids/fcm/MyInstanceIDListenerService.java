@@ -25,12 +25,12 @@ public class MyInstanceIDListenerService extends FirebaseInstanceIdService {
     public void onTokenRefresh() {
         // Get updated InstanceID token.
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        Log.e("Refreshed token", "Refreshed token: " + refreshedToken);
+//        Log.e("Refreshed token", "Refreshed token: " + refreshedToken);
         // TODO: Implement this method to send any registration to your app's servers.
         // sendRegistrationToServer(refreshedToken);
         SharedPrefUtils.setDeviceToken(this, refreshedToken);
-        Log.e("token in preferences",SharedPrefUtils.getDeviceToken(this));
+        Log.e("token in preferences", SharedPrefUtils.getDeviceToken(this));
         Intent intent = new Intent(this, PushTokenService.class);
-               startService(intent);
+        startService(intent);
     }
 }

@@ -30,7 +30,6 @@ import android.view.animation.AnimationUtils;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -280,8 +279,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             Bundle bundle = getIntent().getExtras();
             if (bundle != null) {
                 articleId = bundle.getString(Constants.ARTICLE_ID);
-                authorId = bundle.getString(Constants.AUTHOR_ID);
-                authorId = bundle.getString(Constants.AUTHOR_ID);
+                authorId = bundle.getString(Constants.AUTHOR_ID, "");
                 blogSlug = bundle.getString(Constants.BLOG_SLUG);
                 titleSlug = bundle.getString(Constants.TITLE_SLUG);
 
@@ -426,14 +424,15 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         getMenuInflater().inflate(R.menu.aa_new_show_article, menu);
         this.menu = menu;
         menu.getItem(0).setEnabled(false);
-        hitBookmarkFollowingStatusAPI();
+        if (!StringUtils.isNullOrEmpty(authorId)) {
+            hitBookmarkFollowingStatusAPI();
+        }
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-
             case android.R.id.home:
                 finish();
                 return true;
@@ -441,9 +440,12 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 addRemoveBookmark();
                 return true;
             case R.id.share:
+                if (StringUtils.isNullOrEmpty(blogSlug) && StringUtils.isNullOrEmpty(titleSlug)) {
+                    showToast("Unable to share the article currently!");
+                    return true;
+                }
                 Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
-
                 String author = ((TextView) findViewById(R.id.user_name)).getText().toString();
                 String shareMessage;
                 if (StringUtils.isNullOrEmpty(shareUrl)) {
@@ -922,12 +924,12 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
         if (isFollowing) {
             isFollowing = false;
-            followClick.setText("Follow");
+            followClick.setText("FOLLOW");
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.unfollowUser(request);
             followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback);
         } else {
             isFollowing = true;
-            followClick.setText("Following");
+            followClick.setText("FOLLOWING");
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.followUser(request);
             followUnfollowUserResponseCall.enqueue(followUserResponseCallback);
         }
@@ -966,6 +968,10 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 ArticleDetailResult responseData = (ArticleDetailResult) response.body();
                 newCommentLayout.setVisibility(View.VISIBLE);
                 getResponseUpdateUi(responseData);
+                if (StringUtils.isNullOrEmpty(authorId)) {
+                    authorId = detailData.getUserId();
+                    hitBookmarkFollowingStatusAPI();
+                }
                 hitRelatedArticleAPI();
                 commentURL = responseData.getCommentsUri();
 
@@ -1007,6 +1013,10 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     newCommentLayout.setVisibility(View.VISIBLE);
                     getResponseUpdateUi(responseData.getData().getResult());
+                    if (StringUtils.isNullOrEmpty(authorId)) {
+                        authorId = detailData.getUserId();
+                        hitBookmarkFollowingStatusAPI();
+                    }
                     hitRelatedArticleAPI();
                     commentURL = responseData.getData().getResult().getCommentsUri();
 
@@ -1426,7 +1436,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
                 } else {
-                    followClick.setText("Follow");
+                    followClick.setText("FOLLOW");
                     isFollowing = false;
                 }
             } catch (Exception e) {
@@ -1456,7 +1466,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
                 } else {
-                    followClick.setText("Following");
+                    followClick.setText("FOLLOWING");
                     isFollowing = true;
                 }
             } catch (Exception e) {

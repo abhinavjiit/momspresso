@@ -11,14 +11,11 @@ import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.kelltontech.utils.ConnectivityUtils;
-import com.kelltontech.utils.DataUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.newmodels.PushNotificationModel;
 import com.mycity4kids.preference.SharedPrefUtils;
-
-import org.json.JSONException;
 
 /**
  * Created by kapil.vij on 17-07-2015.
@@ -95,7 +92,7 @@ public class PushTokenService extends IntentService implements UpdateListener {
                 builder.append("&deviceType=").append("android");
                 builder.append("&fcmToken=").append(SharedPrefUtils.getDeviceToken(this));
 
-                Log.i("Send Push Token to Server ", builder.toString());
+//                Log.i("Push Token to Server ", builder.toString());
                 return builder.toString().replace(" ", "%20");
 
         }

@@ -6,9 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.text.Html;
@@ -25,7 +22,6 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.dbtable.TableAdult;
-import com.mycity4kids.enums.ParentingFilterType;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.newmodels.PushNotificationModel;
@@ -34,7 +30,6 @@ import com.mycity4kids.reminders.ShareArticleReceiver;
 import com.mycity4kids.sync.SyncService;
 import com.mycity4kids.sync.SyncUserInfoService;
 import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
-import com.mycity4kids.ui.activity.BloggerDashboardActivity;
 import com.mycity4kids.ui.activity.BusinessDetailsActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.LoadWebViewActivity;
@@ -65,30 +60,6 @@ public class MyFcmListenerService extends FirebaseMessagingService {
     }
 
     private void sendNotification(RemoteMessage remoteMessage) {
-
-    /*    Intent intent = new Intent(this, BloggerDashboardActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 *//* Request code *//*, intent,
-                PendingIntent.FLAG_ONE_SHOT);
-
-        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-
-// this is a my insertion looking for a solution
-        int icon = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ? R.drawable.icon_my_blogs : R.drawable.icon_my_blogs;
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(icon)
-                .setContentTitle(remoteMessage.getFrom())
-        //        .setContentText(remoteMessage.getNotification().getBody())
-                .setAutoCancel(true)
-                .setSound(defaultSoundUri)
-                .setContentIntent(pendingIntent);
-
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        notificationManager.notify(0 *//* ID of notification *//*, notificationBuilder.build());*/
-        // This is just one simple example of what you might choose to do with
-//    // a GCM message.
         String msg = remoteMessage.getData().get("message");
         if (msg == null) {
             msg = remoteMessage.getData().toString();
@@ -104,7 +75,6 @@ public class MyFcmListenerService extends FirebaseMessagingService {
             pushNotificationModel = new Gson().fromJson(new Gson().toJson(remoteMessage.getData()), PushNotificationModel.class);
         }
         try {
-
             if (pushNotificationModel != null) {
 
                 String type = pushNotificationModel.getType();
@@ -176,14 +146,9 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         intent = new Intent(getApplicationContext(), ArticlesAndBlogsDetailsActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra(Constants.ARTICLE_ID, "" + pushNotificationModel.getId());
-                        intent.putExtra(AppConstants.NOTIFICATION_ID, requestID);
-                        intent.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.ARTICLES);
-                        intent.putExtra(Constants.BLOG_NAME, pushNotificationModel.getBlog_name());
-                        if (pushNotificationModel.getFilter_type().trim().equals("Blogger")) {
-                            intent.putExtra(Constants.FILTER_TYPE, "blogs");
-                        } else {
-                            intent.putExtra(Constants.FILTER_TYPE, "authors");
-                        }
+                        intent.putExtra(Constants.AUTHOR_ID, "" + pushNotificationModel.getUser_id());
+                        intent.putExtra(Constants.BLOG_SLUG, pushNotificationModel.getBlogPageSlug());
+                        intent.putExtra(Constants.TITLE_SLUG, pushNotificationModel.getTitleSlug());
 
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
                         // Adds the back stack
@@ -191,7 +156,6 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         // Adds the Intent to the top of the stack
                         stackBuilder.addNextIntent(intent);
                         contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-
                     }
 
                     NotificationCompat.BigPictureStyle notiStyle = new
@@ -203,11 +167,10 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     NotificationCompat.Builder mBuilder =
                             new NotificationCompat.Builder(this)
                                     .setLargeIcon(icon)
-                                    .setSmallIcon(R.drawable.iconnotify)
+                                    .setSmallIcon(R.drawable.icon_notify)
                                     .setContentTitle(title)
                                     .setContentIntent(contentIntent)
                                     .setContentText(message).setStyle(notiStyle);
-                    ;
                     // Gets an instance of the NotificationManager service
                     NotificationManager mNotifyMgr =
                             (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -241,7 +204,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     PendingIntent sharePendingIntent = PendingIntent.getBroadcast((BaseApplication) getApplicationContext(), 0, shareIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
                     PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                    NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setLargeIcon(icon).setSmallIcon(R.drawable.iconnotify).setContentTitle(title).setStyle(new NotificationCompat.BigTextStyle().bigText(message)).setContentText(message);
+                    NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setLargeIcon(icon).setSmallIcon(R.drawable.icon_notify).setContentTitle(title).setStyle(new NotificationCompat.BigTextStyle().bigText(message)).setContentText(message);
                     mBuilder.setDefaults(NotificationCompat.DEFAULT_ALL);
                     mBuilder.setAutoCancel(true);
                     mBuilder.setContentIntent(contentIntent);
@@ -398,7 +361,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     // Creates an explicit intent for an ResultActivity to receive.
 
                     NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-                            .setLargeIcon(icon).setSmallIcon(R.drawable.iconnotify)
+                            .setLargeIcon(icon).setSmallIcon(R.drawable.icon_notify)
                             .setContentTitle(title).setStyle(new NotificationCompat.BigTextStyle().bigText(message)).setContentText(message);
 
                     mBuilder.setDefaults(NotificationCompat.DEFAULT_ALL);
@@ -436,7 +399,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     }
 //                    message = "Plan you week.";
                     NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-                            .setLargeIcon(icon).setSmallIcon(R.drawable.iconnotify)
+                            .setLargeIcon(icon).setSmallIcon(R.drawable.icon_notify)
                             .setContentTitle(title)
                             .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
                             .setContentText(message);
@@ -457,7 +420,10 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         intent = new Intent(getApplicationContext(), ArticlesAndBlogsDetailsActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra(Constants.ARTICLE_ID, "" + pushNotificationModel.getId());
-                        intent.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.ARTICLES);
+                        intent.putExtra(Constants.AUTHOR_ID, "" + pushNotificationModel.getUser_id());
+                        intent.putExtra(Constants.AUTHOR_ID, "" + pushNotificationModel.getUser_id());
+                        intent.putExtra(Constants.BLOG_SLUG, pushNotificationModel.getBlogPageSlug());
+                        intent.putExtra(Constants.TITLE_SLUG, pushNotificationModel.getTitleSlug());
 
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
                         // Adds the back stack
@@ -469,23 +435,16 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     }
                     String title = remoteMessage.getNotification().getTitle();
                     String body = remoteMessage.getNotification().getBody();
-                /*    NotificationCompat.BigPictureStyle notiStyle = new
-                            NotificationCompat.BigPictureStyle();
-                    notiStyle.setBigContentTitle(title);
-                    notiStyle.setSummaryText(message);
-                    notiStyle.bigPicture(bitmap);
-*/
                     Bitmap icon = BitmapFactory.decodeResource(getResources(),
                             R.drawable.ic_launcher);
                     NotificationCompat.Builder mBuilder =
                             new NotificationCompat.Builder(this)
                                     .setLargeIcon(icon)
-                                    .setSmallIcon(R.drawable.iconnotify)
+                                    .setSmallIcon(R.drawable.icon_notify)
                                     .setContentTitle(title)
                                     .setContentIntent(contentIntent)
                                     .setContentText(body)
                                     .setAutoCancel(true);
-                    //.setStyle(notiStyle);
                     ;
                     // Gets an instance of the NotificationManager service
                     NotificationManager mNotifyMgr =
@@ -516,23 +475,16 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     }
                     String title = remoteMessage.getNotification().getTitle();
                     String body = remoteMessage.getNotification().getBody();
-                /*    NotificationCompat.BigPictureStyle notiStyle = new
-                            NotificationCompat.BigPictureStyle();
-                    notiStyle.setBigContentTitle(title);
-                    notiStyle.setSummaryText(message);
-                    notiStyle.bigPicture(bitmap);
-*/
                     Bitmap icon = BitmapFactory.decodeResource(getResources(),
                             R.drawable.ic_launcher);
                     NotificationCompat.Builder mBuilder =
                             new NotificationCompat.Builder(this)
                                     .setLargeIcon(icon)
-                                    .setSmallIcon(R.drawable.iconnotify)
+                                    .setSmallIcon(R.drawable.icon_notify)
                                     .setContentTitle(title)
                                     .setContentIntent(contentIntent)
                                     .setContentText(body)
                                     .setAutoCancel(true);
-                    //.setStyle(notiStyle);
                     ;
                     // Gets an instance of the NotificationManager service
                     NotificationManager mNotifyMgr =
@@ -560,23 +512,16 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     }
                     String title = remoteMessage.getNotification().getTitle();
                     String body = remoteMessage.getNotification().getBody();
-                /*    NotificationCompat.BigPictureStyle notiStyle = new
-                            NotificationCompat.BigPictureStyle();
-                    notiStyle.setBigContentTitle(title);
-                    notiStyle.setSummaryText(message);
-                    notiStyle.bigPicture(bitmap);
-*/
                     Bitmap icon = BitmapFactory.decodeResource(getResources(),
                             R.drawable.ic_launcher);
                     NotificationCompat.Builder mBuilder =
                             new NotificationCompat.Builder(this)
                                     .setLargeIcon(icon)
-                                    .setSmallIcon(R.drawable.iconnotify)
+                                    .setSmallIcon(R.drawable.icon_notify)
                                     .setContentTitle(title)
                                     .setContentIntent(contentIntent)
                                     .setContentText(body)
                                     .setAutoCancel(true);
-                    //.setStyle(notiStyle);
 
                     // Gets an instance of the NotificationManager service
                     NotificationManager mNotifyMgr =
@@ -584,6 +529,30 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     // Builds the notification and issues it.
                     mNotifyMgr.notify(requestID, mBuilder.build());
 
+                } else {
+                    Log.i(TAG, " Default : " + msg);
+                    Bitmap icon = BitmapFactory.decodeResource(getResources(),
+                            R.drawable.ic_launcher);
+
+                    int requestID = (int) System.currentTimeMillis();
+                    String message = pushNotificationModel.getMessage_id();
+                    String title = pushNotificationModel.getTitle();
+
+                    NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+
+                    Intent resultIntent;
+                    PendingIntent contentIntent;
+                    resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
+                    contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                    NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+                            .setLargeIcon(icon).setSmallIcon(R.drawable.icon_notify)
+                            .setContentTitle(title).setStyle(new NotificationCompat.BigTextStyle().bigText(message)).setContentText(message);
+
+                    mBuilder.setDefaults(NotificationCompat.DEFAULT_ALL);
+                    mBuilder.setAutoCancel(true);
+                    mBuilder.setContentIntent(contentIntent);
+                    mNotificationManager.notify(requestID, mBuilder.build());
                 }
 
             }

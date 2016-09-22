@@ -1,28 +1,23 @@
 package com.kelltontech.network;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.HttpRetryException;
-import java.net.SocketException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Vector;
-import java.util.zip.GZIPInputStream;
+import android.app.Activity;
+import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.preference.PreferenceManager;
+import android.util.Base64;
+import android.util.Base64InputStream;
+import android.util.Base64OutputStream;
+
+import com.kelltontech.utils.ConnectivityUtils;
+import com.kelltontech.utils.DataUtils;
+import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.utils.SerializableCookie;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
@@ -36,21 +31,21 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
-import android.app.Activity;
-import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.preference.PreferenceManager;
-import android.util.Base64;
-import android.util.Base64InputStream;
-import android.util.Base64OutputStream;
-import android.util.Log;
-
-import com.kelltontech.persistence.SharedPrefsUtils;
-import com.kelltontech.utils.ConnectivityUtils;
-import com.kelltontech.utils.DataUtils;
-import com.kelltontech.utils.StringUtils;
-import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.utils.SerializableCookie;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.SocketException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Vector;
+import java.util.zip.GZIPInputStream;
 
 /**
  * @author sachin.gupta
@@ -148,7 +143,7 @@ public class HttpClientConnection extends Thread {
                 try {
                     Thread.sleep(10 * 60 * 1000);// 10 min sleep
                 } catch (InterruptedException e) {
-                    Log.i(LOG_TAG, "" + e);
+//                    Log.i(LOG_TAG, "" + e);
                 }
             }
         }
@@ -252,10 +247,10 @@ public class HttpClientConnection extends Thread {
                     uri = new URI(currentRequest.getUrl() + "&user_id=" + "");
                 }
                 getOrPost.setURI(uri);
-                Log.i(LOG_TAG, "Request URL: " + uri.toURL());
+//                Log.i(LOG_TAG, "Request URL: " + uri.toURL());
             } else {
                 getOrPost.setURI(new URI(currentRequest.getUrl()));
-                Log.i(LOG_TAG, "Request URL: " + getOrPost.getURI().toString());
+//                Log.i(LOG_TAG, "Request URL: " + getOrPost.getURI().toString());
             }
 
             String[] headerNames = currentRequest.getHeaderNames();
@@ -263,7 +258,7 @@ public class HttpClientConnection extends Thread {
                 String[] headerValues = currentRequest.getHeaderValues();
                 for (int i = 0; i < headerNames.length; i++) {
                     getOrPost.addHeader(headerNames[i], headerValues[i]);
-                    Log.i(LOG_TAG, "Header: " + headerNames[i] + " = " + headerValues[i]);
+//                    Log.i(LOG_TAG, "Header: " + headerNames[i] + " = " + headerValues[i]);
                 }
             }
             PackageInfo pInfo = currentRequest.getContext().getPackageManager().getPackageInfo(currentRequest.getContext().getPackageName(), 0);
@@ -290,7 +285,7 @@ public class HttpClientConnection extends Thread {
 //            }
             int statusCode = httpResponse.getStatusLine().getStatusCode();
 
-            Log.i(LOG_TAG, "Response Received : " + statusCode);
+//            Log.i(LOG_TAG, "Response Received : " + statusCode);
 
             if (currentRequest.isCancelled()) {
                 return;
@@ -347,9 +342,9 @@ public class HttpClientConnection extends Thread {
      */
     private void notifyError(String errorMessage, Exception exception) {
         if (exception == null) {
-            Log.e(LOG_TAG, "Error Response: " + errorMessage);
+//            Log.e(LOG_TAG, "Error Response: " + errorMessage);
         } else {
-            Log.e(LOG_TAG, "Error Response: " + errorMessage, exception);
+//            Log.e(LOG_TAG, "Error Response: " + errorMessage, exception);
         }
         Response response = new Response();
         response.setRequestData(currentRequest.getRequestData());
@@ -372,7 +367,7 @@ public class HttpClientConnection extends Thread {
             }
             interrupt();
         } catch (Exception ex) {
-            Log.e(LOG_TAG, "addRequest()", ex);
+//            Log.e(LOG_TAG, "addRequest()", ex);
         }
     }
 

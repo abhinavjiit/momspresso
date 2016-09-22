@@ -15,14 +15,16 @@ public class PushNotificationModel implements Parcelable {
     private String title;
     private String share_content;
     private String message_id;
-    private String user_id;
+    private String userId;
     private int appointment_id;
-    private int id;
+    private String id;
     private String type;
     private String url;
     private String article_cover_image_url = "";
     private String filter_type = "";
     private String blog_name = "";
+    private String blogTitleSlug;
+    private String titleSlug;
 
     public String getUrl() {
         return url;
@@ -32,11 +34,11 @@ public class PushNotificationModel implements Parcelable {
         this.url = url;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -73,11 +75,11 @@ public class PushNotificationModel implements Parcelable {
     }
 
     public String getUser_id() {
-        return user_id;
+        return userId;
     }
 
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
+    public void setUser_id(String userId) {
+        this.userId = userId;
     }
 
     public int getAppointment_id() {
@@ -144,6 +146,22 @@ public class PushNotificationModel implements Parcelable {
         this.blog_name = blog_name;
     }
 
+    public String getBlogPageSlug() {
+        return blogTitleSlug;
+    }
+
+    public void setBlogPageSlug(String blogTitleSlug) {
+        this.blogTitleSlug = blogTitleSlug;
+    }
+
+    public String getTitleSlug() {
+        return titleSlug;
+    }
+
+    public void setTitleSlug(String titleSlug) {
+        this.titleSlug = titleSlug;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -159,14 +177,16 @@ public class PushNotificationModel implements Parcelable {
         share_content = in.readString();
         url = in.readString();
         family_id = in.readInt();
-        user_id = in.readString();
+        userId = in.readString();
         appointment_id = in.readInt();
-        id = in.readInt();
+        id = in.readString();
         calendar_items = in.readString();
         todo_items = in.readString();
         article_cover_image_url = in.readString();
         filter_type = in.readString();
         blog_name = in.readString();
+        blogTitleSlug = in.readString();
+        titleSlug = in.readString();
     }
 
 
@@ -179,14 +199,16 @@ public class PushNotificationModel implements Parcelable {
         dest.writeString(share_content);
         dest.writeString(url);
         dest.writeInt(family_id);
-        dest.writeString(user_id);
+        dest.writeString(userId);
         dest.writeInt(appointment_id);
-        dest.writeInt(id);
+        dest.writeString(id);
         dest.writeString(calendar_items);
         dest.writeString(todo_items);
         dest.writeString(article_cover_image_url);
         dest.writeString(filter_type);
         dest.writeString(blog_name);
+        dest.writeString(blogTitleSlug);
+        dest.writeString(titleSlug);
     }
 
     public static Parcelable.Creator<PushNotificationModel> CREATOR = new Parcelable.Creator<PushNotificationModel>() {

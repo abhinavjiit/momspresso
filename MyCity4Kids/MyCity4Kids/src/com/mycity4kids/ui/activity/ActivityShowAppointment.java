@@ -262,11 +262,6 @@ public class ActivityShowAppointment extends BaseActivity implements View.OnClic
         AdapterNotes adapterNotsList = new AdapterNotes(this, notemodellist);
         notesListView.setAdapter(adapterNotsList);
 
-
-        googleMap = ((MapFragment) getFragmentManager().findFragmentById(
-                R.id.map)).getMap();
-
-
         // horizontalAdapter = new AdapterHorizontalList(getApplicationContext(), list);
         //imageView.setAdapter(horizontalAdapter);
 
@@ -459,20 +454,20 @@ public class ActivityShowAppointment extends BaseActivity implements View.OnClic
 
                         dialog.setMessage(getResources().getString(R.string.delete_appointment)).setNegativeButton(R.string.new_yes
                                 , new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
+                                    public void onClick(DialogInterface dialog, int which) {
 
-                                dialog.cancel();
+                                        dialog.cancel();
 
-                                AppoitmentDataModel.AppointmentDetail model = new AppoitmentDataModel().new AppointmentDetail();
-                                model.setId(appointmentid);
+                                        AppoitmentDataModel.AppointmentDetail model = new AppoitmentDataModel().new AppointmentDetail();
+                                        model.setId(appointmentid);
 
-                                showProgressDialog(getString(R.string.please_wait));
+                                        showProgressDialog(getString(R.string.please_wait));
 
-                                AppointmentDeleteController _controller = new AppointmentDeleteController(ActivityShowAppointment.this, ActivityShowAppointment.this);
-                                _controller.getData(AppConstants.DELETE_APPOINTEMT_REQUEST, model);
+                                        AppointmentDeleteController _controller = new AppointmentDeleteController(ActivityShowAppointment.this, ActivityShowAppointment.this);
+                                        _controller.getData(AppConstants.DELETE_APPOINTEMT_REQUEST, model);
 
-                            }
-                        }).setPositiveButton(R.string.new_cancel, new DialogInterface.OnClickListener() {
+                                    }
+                                }).setPositiveButton(R.string.new_cancel, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 // do nothing
                                 dialog.cancel();
@@ -492,21 +487,21 @@ public class ActivityShowAppointment extends BaseActivity implements View.OnClic
 
                         dialog.setMessage(getResources().getString(R.string.delete_appointment)).setNegativeButton(R.string.new_yes
                                 , new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
+                                    public void onClick(DialogInterface dialog, int which) {
 
-                                dialog.cancel();
+                                        dialog.cancel();
 
-                                tableAppointment.deleteAppointment("" + exteranlAppointmentid, true);
+                                        tableAppointment.deleteAppointment("" + exteranlAppointmentid, true);
 
 
-                                if (AppointmentManager.getInstance(ActivityShowAppointment.this).getAppointmentMap() != null) {
-                                    AppointmentManager.getInstance(ActivityShowAppointment.this).removeAppointmentDataFromMap(new AppointmentMappingModel(exteranlAppointmentid), true);
-                                }
+                                        if (AppointmentManager.getInstance(ActivityShowAppointment.this).getAppointmentMap() != null) {
+                                            AppointmentManager.getInstance(ActivityShowAppointment.this).removeAppointmentDataFromMap(new AppointmentMappingModel(exteranlAppointmentid), true);
+                                        }
 
-                                finish();
+                                        finish();
 
-                            }
-                        }).setPositiveButton(R.string.new_cancel, new DialogInterface.OnClickListener() {
+                                    }
+                                }).setPositiveButton(R.string.new_cancel, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 // do nothing
                                 dialog.cancel();
@@ -572,7 +567,7 @@ public class ActivityShowAppointment extends BaseActivity implements View.OnClic
         if (StringUtils.isNullOrEmpty(appDetail.getLocality().toString()))
             sendIntent.putExtra(Intent.EXTRA_TEXT, "Appointment: " + title.getText().toString() + "\nStart Time: " + getShareDate(appDetail.getStarttime()) + ", " + getShareTime(appDetail.getStarttime()) + " \nEnd Time: " + getShareDate(appDetail.getEndtime()) + ", " + getShareTime(appDetail.getEndtime()));
         else
-            sendIntent.putExtra(Intent.EXTRA_TEXT, "Appointment: " + title.getText().toString() +"\nStart Time: " + getShareDate(appDetail.getStarttime()) + ", " + getShareTime(appDetail.getStarttime()) + " \nEnd Time: " + getShareDate(appDetail.getEndtime()) + ", " + getShareTime(appDetail.getEndtime()) + "\nLocation: " + appointmentAddress.getText().toString());
+            sendIntent.putExtra(Intent.EXTRA_TEXT, "Appointment: " + title.getText().toString() + "\nStart Time: " + getShareDate(appDetail.getStarttime()) + ", " + getShareTime(appDetail.getStarttime()) + " \nEnd Time: " + getShareDate(appDetail.getEndtime()) + ", " + getShareTime(appDetail.getEndtime()) + "\nLocation: " + appointmentAddress.getText().toString());
         startActivity(Intent.createChooser(sendIntent, "Share Appointment"));
     }
 

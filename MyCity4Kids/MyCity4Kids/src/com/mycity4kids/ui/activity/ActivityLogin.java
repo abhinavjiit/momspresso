@@ -389,7 +389,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
 
                 googleToken = GoogleAuthUtil.getToken(ActivityLogin.this, googleEmailId, "oauth2:" + GooglePlusUtils.SCOPES);
 
-                System.out.println("token " + googleToken);
+//                System.out.println("token " + googleToken);
                 return googleToken;
 
             } catch (UserRecoverableAuthException userAuthEx) {
@@ -532,7 +532,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
 
     public String convertTime(String time) {
         try {
-            Date date = new Date(Long.parseLong(time));
+            Date date = new Date(Long.parseLong(time) * 1000);
             Format format = new SimpleDateFormat("dd-MM-yyyy");
             return format.format(date);
         } catch (NumberFormatException nfe) {

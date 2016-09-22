@@ -214,7 +214,7 @@ public class TutorialActivity extends BaseActivity implements View.OnClickListen
 
                 googleToken = GoogleAuthUtil.getToken(TutorialActivity.this, googleEmailId, "oauth2:" + GooglePlusUtils.SCOPES);
 
-                System.out.println("token " + googleToken);
+//                System.out.println("token " + googleToken);
                 return googleToken;
 
             } catch (UserRecoverableAuthException userAuthEx) {
@@ -411,7 +411,7 @@ public class TutorialActivity extends BaseActivity implements View.OnClickListen
     }
 
     public String convertTime(String time) {
-        Date date = new Date(Long.parseLong(time));
+        Date date = new Date(Long.parseLong(time) * 1000);
         Format format = new SimpleDateFormat("dd-MM-yyyy");
         return format.format(date);
     }

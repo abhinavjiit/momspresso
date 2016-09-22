@@ -153,7 +153,7 @@ public class BusinessListController extends BaseController {
             case AppConstants.BUSINESS_SEARCH_LISTING_REQUESTEVENTNEW:
                 try {
                     String responseData = new String(response.getResponseData());
-                    Log.d("check", "request url " + responseData);
+//                    Log.d("check", "request url " + responseData);
                     //Log.i("BusinessSearchList Response", responseData);
                     BusinessListResponse businessList = new Gson().fromJson(responseData, BusinessListResponse.class);
                     response.setResponseObject(businessList);
@@ -166,7 +166,7 @@ public class BusinessListController extends BaseController {
             case AppConstants.BOOKMARKED_RESOURCE_LIST_REQUEST:
                 try {
                     String responseData = new String(response.getResponseData());
-                    Log.d("check", "request url " + responseData);
+//                    Log.d("check", "request url " + responseData);
                     //Log.i("BusinessSearchList Response", responseData);
                     BusinessListResponse businessList = new Gson().fromJson(responseData, BusinessListResponse.class);
                     response.setResponseObject(businessList);

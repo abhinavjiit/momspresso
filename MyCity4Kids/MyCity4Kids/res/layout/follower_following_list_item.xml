@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="60dp"
     android:background="@color/white_color"
     android:orientation="vertical">
 
-    <ImageView
+    <com.mikhaellopez.circularimageview.CircularImageView
         android:id="@+id/authorImageView"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_centerVertical="true"
         android:layout_margin="10dp"
-        android:src="@drawable/default_commentor_img" />
+        android:src="@drawable/default_commentor_img"
+        app:civ_border="true"
+        app:civ_border_color="@color/grey"
+        app:civ_border_width="1dp"
+        app:civ_shadow="false" />
 
     <TextView
         android:id="@+id/authorNameTextView"
@@ -38,10 +43,10 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="2dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
         android:background="@color/white_color"
-        android:gravity="left"
+        android:gravity="right"
         android:paddingBottom="8dp"
         android:paddingTop="8dp"
         android:text="FOLLOW"
@@ -55,11 +60,11 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="2dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
         android:background="@color/white_color"
         android:foregroundGravity="center"
-        android:gravity="left"
+        android:gravity="right"
         android:paddingBottom="8dp"
         android:paddingTop="8dp"
         android:text="FOLLOWING"
