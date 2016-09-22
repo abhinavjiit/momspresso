@@ -13,7 +13,6 @@ import com.mycity4kids.R;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.ui.activity.ActivitySignUp;
 import com.mycity4kids.ui.activity.DashboardActivity;
 
 /**
@@ -36,7 +35,6 @@ public class SyncSettingFragment extends BaseFragment implements View.OnClickLis
             if (isCommingFromSetting) {
                 ((DashboardActivity) getActivity()).setTitle("Sync Settings");
             } else {
-                ((ActivitySignUp) getActivity()).getSupportActionBar().setTitle("Sync Settings");
             }
         }
 

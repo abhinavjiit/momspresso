@@ -284,7 +284,7 @@ public class TutorialActivity extends BaseActivity implements View.OnClickListen
                         dialogFragment = new FacebookAddEmailDialogFragment();
                         dialogFragment.setTargetFragment(dialogFragment, 2);
                         Bundle bundle = new Bundle();
-                        bundle.putString(AppConstants.FROM_ACTIVITY, AppConstants.ACTIVITY_LOGIN);
+                        bundle.putString(AppConstants.FROM_ACTIVITY, AppConstants.ACTIVITY_TUTORIAL);
                         dialogFragment.setArguments(bundle);
                         dialogFragment.show(getFragmentManager(), "verify email");
                     }
@@ -451,4 +451,61 @@ public class TutorialActivity extends BaseActivity implements View.OnClickListen
             FacebookUtils.onActivityResult(this, _requestCode, _resultCode, _data);
         }
     }
+
+    public void addEmail(String email) {
+        showProgressDialog(getString(R.string.please_wait));
+        String emailId = email;
+        LoginRegistrationRequest lr = new LoginRegistrationRequest();
+        lr.setEmail(emailId);
+
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
+        Call<UserDetailResponse> call = loginRegistrationAPI.addFacebookEmail(lr);
+        call.enqueue(onAddFacebookEmailResponseReceived);
+    }
+
+    public void cancelAddEmail() {
+        removeProgressDialog();
+        dialogFragment.dismiss();
+    }
+
+    Callback<UserDetailResponse> onAddFacebookEmailResponseReceived = new Callback<UserDetailResponse>() {
+        @Override
+        public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
+            removeProgressDialog();
+            Log.d("SUCCESS", "" + response);
+            if (response == null || response.body() == null) {
+                showToast(getString(R.string.went_wrong));
+                return;
+            }
+
+            try {
+                UserDetailResponse responseData = (UserDetailResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+
+                    dialogFragment.dismiss();
+                    showToast("Mail sent to email address Please click and verify");
+
+                    Intent intent = new Intent(TutorialActivity.this, PushTokenService.class);
+                    startService(intent);
+                    Intent intent1 = new Intent(TutorialActivity.this, LoadingActivity.class);
+                    startActivity(intent1);
+                } else {
+                    showToast(responseData.getReason());
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("Exception", Log.getStackTraceString(e));
+                showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<UserDetailResponse> call, Throwable t) {
+            Log.d("MC4kException", Log.getStackTraceString(t));
+            Crashlytics.logException(t);
+            showToast(getString(R.string.went_wrong));
+        }
+    };
+
 }

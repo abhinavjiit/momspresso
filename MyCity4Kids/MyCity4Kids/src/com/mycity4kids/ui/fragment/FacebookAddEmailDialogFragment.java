@@ -14,6 +14,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.ui.activity.ActivityLogin;
 import com.mycity4kids.ui.activity.SplashActivity;
+import com.mycity4kids.ui.activity.TutorialActivity;
 
 /**
  * Created by manish.soni on 08-09-2015.
@@ -56,6 +57,8 @@ public class FacebookAddEmailDialogFragment extends android.app.DialogFragment i
                     }
                     if (AppConstants.ACTIVITY_LOGIN.equals(fromActivity)) {
                         ((ActivityLogin) getActivity()).addEmail(emailEditText.getText().toString());
+                    }else if(AppConstants.ACTIVITY_TUTORIAL.equals(fromActivity)){
+                        ((TutorialActivity) getActivity()).addEmail(emailEditText.getText().toString());
                     }
 //                    getDialog().dismiss();
                 }
@@ -63,6 +66,8 @@ public class FacebookAddEmailDialogFragment extends android.app.DialogFragment i
             case R.id.cancel:
                 if (AppConstants.ACTIVITY_LOGIN.equals(fromActivity)) {
                     ((ActivityLogin) getActivity()).cancelAddEmail();
+                }else if(AppConstants.ACTIVITY_TUTORIAL.equals(fromActivity)){
+                    ((TutorialActivity) getActivity()).cancelAddEmail();
                 }
                 break;
         }

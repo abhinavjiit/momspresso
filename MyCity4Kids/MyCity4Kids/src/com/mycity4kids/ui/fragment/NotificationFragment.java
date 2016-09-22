@@ -19,7 +19,6 @@ import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.parentingstop.ParentingRequest;
 import com.mycity4kids.newmodels.bloggermodel.ParentingBlogResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.ui.activity.ActivitySignUp;
 import com.mycity4kids.ui.activity.DashboardActivity;
 
 /**
@@ -46,7 +45,6 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
             if (isCommingFromSetting) {
                 ((DashboardActivity) getActivity()).setTitle("Notifications");
             } else {
-                ((ActivitySignUp) getActivity()).getSupportActionBar().setTitle("Notifications");
             }
         }
 

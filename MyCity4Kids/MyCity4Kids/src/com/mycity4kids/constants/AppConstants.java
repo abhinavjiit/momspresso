@@ -397,6 +397,7 @@ public class AppConstants {
 
     public static final String FROM_ACTIVITY = "fromActivity";
     public static final String ACTIVITY_LOGIN = "ActivityLogin";
+    public static final String ACTIVITY_TUTORIAL = "TutorialActivity";
     public static final String SPLASH_ACTIVITY = "SplashActivity";
 
     public static final String SORT_TYPE_BOOKMARK = "bookmark";

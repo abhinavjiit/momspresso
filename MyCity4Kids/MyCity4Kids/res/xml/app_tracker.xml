@@ -56,7 +56,6 @@
     <screenName name="com.mycity4kids.ui.activity.ActivityCreateAppointment">Create Appointment</screenName>
     <screenName name="com.mycity4kids.ui.activity.ActivityEditAppointment">Edit Appointment</screenName>
     <screenName name="com.mycity4kids.ui.activity.ForgotPasswordActivity">Forgot Password</screenName>
-    <screenName name="com.mycity4kids.ui.activity.ActivitySignUp">Sign up</screenName>
     <screenName name="com.mycity4kids.ui.activity.BusinessListActivityKidsResources">Resources List</screenName>
     <screenName name="com.mycity4kids.ui.activity.ProfileActivity">Edit Profile</screenName>
     <screenName name="com.mycity4kids.ui.activity.WriteReviewActivity">Write Review</screenName>
@@ -72,10 +71,7 @@
     <screenName name="com.mycity4kids.ui.activity.ActivityFamilyProfile">Family Profile</screenName>
     <screenName name="com.mycity4kids.ui.activity.JoinFamilyActivity">Join Family Dashboard</screenName>
     <screenName name="com.mycity4kids.ui.activity.LoadWebViewActivity">Help</screenName>
-    <screenName name="com.mycity4kids.ui.activity.ListFamilyInvitesActivity">List of Family Invites</screenName>
-    <screenName name="com.mycity4kids.ui.activity.SocialSignUpActivity">Social Media Signup</screenName>
     <screenName name="com.mycity4kids.ui.activity.CreateFamilyActivity">Create Family</screenName>
-    <screenName name="com.mycity4kids.ui.activity.ActivityVerifyOTP">OTP Verification</screenName>
     <screenName name="com.mycity4kids.ui.activity.BloggerDashboardActivity">Blogger Dashboard</screenName>
     <screenName name="com.mycity4kids.editor.EditorPostActivity">Text Editor</screenName>
     <screenName name="com.mycity4kids.editor.ArticleImageTagUploadActivity">Article Image Upload</screenName>

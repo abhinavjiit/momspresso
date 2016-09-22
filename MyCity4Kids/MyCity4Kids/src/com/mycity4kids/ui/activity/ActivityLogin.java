@@ -326,52 +326,6 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         return isLoginOk;
     }
 
-    public void showSignUpDialog(String message, final UserResponse response) {
-
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-
-        dialog.setMessage(message).setNegativeButton(android.R.string.ok
-                , new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        dialog.cancel();
-                        String data = "";
-                        Intent intent = new Intent(ActivityLogin.this, ActivitySignUp.class);
-                        intent.putExtra(Constants.SIGNUP_DATA, new Gson().toJson(response));
-//                intent.putExtra(Constants.SIGNUP_FLAG, true);
-                        startActivity(intent);
-                        finish();
-
-
-                    }
-                }).setPositiveButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                // do nothing
-                dialog.cancel();
-
-
-            }
-        }).setIcon(android.R.drawable.ic_dialog_alert);
-
-        AlertDialog alert11 = dialog.create();
-        alert11.show();
-
-        alert11.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.home_light_blue));
-        alert11.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.canceltxt_color));
-
-    }
-
-    public void getMobileFromExistingUsers(String mobileNum) {
-        mobileNumberForVerification = mobileNum;
-        showProgressDialog(getString(R.string.please_wait));
-        UserRequest _requestModel = new UserRequest();
-        _requestModel.setUserId("" + SharedPrefUtils.getUserDetailModel(this).getId());
-        _requestModel.setMobileNumber(mobileNumberForVerification);
-        UpdateMobileController _controller = new UpdateMobileController(this, this);
-        _controller.getData(AppConstants.UPDATE_MOBILE_FOR_EXISTING_USER_REQUEST, _requestModel);
-    }
-
-
     public class GetGoogleToken extends AsyncTask<Void, String, String> {
 
         @Override
@@ -660,14 +614,8 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
     };
 
     public void addEmail(String email) {
-
         showProgressDialog(getString(R.string.please_wait));
         String emailId = email;
-//        UpdateUserDetail _requestModel = new UpdateUserDetail();
-//        _requestModel.setAttributeName("email");
-//        _requestModel.setAttributeValue(email);
-//        _requestModel.setAttributeType("S");
-
         LoginRegistrationRequest lr = new LoginRegistrationRequest();
         lr.setEmail(emailId);
 
@@ -675,9 +623,6 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
         Call<UserDetailResponse> call = loginRegistrationAPI.addFacebookEmail(lr);
         call.enqueue(onAddFacebookEmailResponseReceived);
-
-//        LoginController _controller = new LoginController(this, this);
-//        _controller.getData(AppConstants.NEW_LOGIN_REQUEST, _requestModel);
     }
 
     public void cancelAddEmail() {
