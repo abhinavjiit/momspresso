@@ -26,7 +26,7 @@ public class LoadWebViewActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.web_view_activity);
-        mToolbar=(Toolbar)findViewById(R.id.toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("mycity4kids");
@@ -45,22 +45,15 @@ public class LoadWebViewActivity extends BaseActivity {
     protected void updateUi(Response response) {
 
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                Intent intent =new Intent(LoadWebViewActivity.this,DashboardActivity.class);
-                startActivity(intent);
                 finish();
         }
         return true;
     }
 
-    @Override
-    public void onBackPressed() {
-        Intent intent =new Intent(LoadWebViewActivity.this,DashboardActivity.class);
-        startActivity(intent);
-        finish();
-       // super.onBackPressed();
-    }
+
 }
