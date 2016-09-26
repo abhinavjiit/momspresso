@@ -56,7 +56,7 @@
         app:tabGravity="fill"
         app:tabIndicatorColor="@color/tabsScrollColor"
         app:tabIndicatorHeight="3dp"
-        app:tabMode="scrollable"
+        app:tabMode="fixed"
         app:tabSelectedTextColor="#EFFFF0"
         app:tabTextColor="#ABD0F8"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />

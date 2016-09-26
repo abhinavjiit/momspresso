@@ -19,127 +19,180 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-           <!-- <android.support.v7.widget.CardView
+            <LinearLayout
+                android:id="@+id/blogss"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp">-->
-
+                android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/blogss"
+                    android:id="@+id/blogHeader"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="#ce92d8"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
 
-                    android:orientation="vertical">
+                    <ImageView
+                        android:id="@+id/img_go_to_blogs"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight=".12"
+                        android:src="@drawable/blog_listxxhdpi" />
+
+                    <TextView
+                        android:id="@+id/txtBlogs"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight=".85"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:text="Trending Blogs"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/white_color"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <ProgressBar
+                    android:id="@+id/blogprogressbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/no_blog"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="2dp"
+                    android:text="No Blogs Listed"
+                    android:textColor="@color/grey"
+                    android:textSize="12dp"
+                    android:visibility="gone" />
+
+                <HorizontalScrollView
+                    android:id="@+id/bloglist"
+                    android:layout_width="match_parent"
+                    android:layout_height="240dp"
+                    android:layout_marginTop="5dp"
+                    android:divider="@color/dividercolor"
+                    android:dividerHeight="0.3dp"
+                    android:scrollbars="none">
 
                     <LinearLayout
-
-                        android:id="@+id/blogHeader"
+                        android:id="@+id/hzScrollLinearLayout"
                         android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal" />
+                </HorizontalScrollView>
+
+                <TextView
+                    android:id="@+id/go_to_blog"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="15dp"
+                    android:text="@string/home_goto_blog"
+                    android:textColor="@color/home_light_blue"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/momspressoLL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/momspressoHeader"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#ce92d8"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <ImageView
+                        android:id="@+id/go_to_momspresso"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:background="#ce92d8"
-                        android:orientation="horizontal"
-                        android:weightSum="1">
-
-
-                        <ImageView
-                            android:id="@+id/img_go_to_blogs"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_weight=".12"
-                            android:src="@drawable/blog_listxxhdpi" />
-
-                        <TextView
-                            android:id="@+id/txtBlogs"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_weight=".85"
-                            android:paddingBottom="10dp"
-                            android:paddingTop="10dp"
-                            android:text="Trending Blogs"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:textColor="@color/white_color"
-                            android:textStyle="bold" />
-
-
-                    </LinearLayout>
-
-
-                    <ProgressBar
-                        android:id="@+id/blogprogressbar"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:visibility="visible" />
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight=".12"
+                        android:src="@drawable/blog_listxxhdpi" />
 
                     <TextView
-                        android:id="@+id/no_blog"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/txtMomspresso"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:padding="2dp"
-                        android:text="No Blogs Listed"
-                        android:textColor="@color/grey"
-                        android:textSize="12dp"
-                        android:visibility="gone" />
-
-
-                    <!--<com.mycity4kids.widget.CustomListView
-                        android:id="@+id/bloglist"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:divider="@color/dividercolor"
-                        android:dividerHeight="0.3dp" />-->
-                    <HorizontalScrollView
-                        android:layout_width="match_parent"
-                        android:layout_height="240dp"
-                        android:divider="@color/dividercolor"
-                        android:dividerHeight="0.3dp"
-                        android:id="@+id/bloglist"
-                        android:layout_marginTop="5dp"
-                        android:scrollbars="none"
-                        >
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:id="@+id/hzScrollLinearLayout"
-                            android:orientation="horizontal"
-                            >
-
-                        </LinearLayout>
-
-                    </HorizontalScrollView>
-
-                    <TextView
-                        android:id="@+id/go_to_blog"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="15dp"
-                        android:text="@string/home_goto_blog"
-                        android:textColor="@color/home_light_blue"
-                        android:textStyle="bold"
-                        android:visibility="gone"/>
-
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight=".85"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:text="Monspresso Blogs"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/white_color"
+                        android:textStyle="bold" />
                 </LinearLayout>
+
+                <ProgressBar
+                    android:id="@+id/momspressoProgressbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/no_momspresso"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="2dp"
+                    android:text="No Blogs Listed"
+                    android:textColor="@color/grey"
+                    android:textSize="12dp"
+                    android:visibility="gone" />
+
+                <HorizontalScrollView
+                    android:id="@+id/momspressolist"
+                    android:layout_width="match_parent"
+                    android:layout_height="240dp"
+                    android:layout_marginTop="5dp"
+                    android:divider="@color/dividercolor"
+                    android:dividerHeight="0.3dp"
+                    android:scrollbars="none">
+
+                    <LinearLayout
+                        android:id="@+id/momspressoHZScrollLinearLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal" />
+                </HorizontalScrollView>
+
+                <TextView
+                    android:id="@+id/txv_go_to_momspresso"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="15dp"
+                    android:text="@string/home_goto_blog"
+                    android:textColor="@color/home_light_blue"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/editorPicks"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:orientation="vertical">
 
                 <LinearLayout
-
                     android:id="@+id/blogHeader1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/home_purple"
                     android:orientation="horizontal"
                     android:weightSum="1">
-
 
                     <ImageView
                         android:id="@+id/img_go_to_blogs1"
@@ -161,10 +214,7 @@
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="@color/white_color"
                         android:textStyle="bold" />
-
-
                 </LinearLayout>
-
 
                 <ProgressBar
                     android:id="@+id/blogprogressbar1"
@@ -183,28 +233,20 @@
                     android:textSize="12dp"
                     android:visibility="gone" />
 
-
-                <!--<com.mycity4kids.widget.CustomListView
-                    android:id="@+id/bloglist"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:divider="@color/dividercolor"
-                    android:dividerHeight="0.3dp" />-->
                 <HorizontalScrollView
+                    android:id="@+id/bloglist1"
                     android:layout_width="match_parent"
                     android:layout_height="240dp"
+                    android:layout_marginTop="5dp"
                     android:divider="@color/dividercolor"
                     android:dividerHeight="0.3dp"
-                    android:id="@+id/bloglist1"
-                    android:layout_marginTop="5dp"
-                    android:scrollbars="none"
-                    >
+                    android:scrollbars="none">
+
                     <LinearLayout
+                        android:id="@+id/hzScrollLinearLayout1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:id="@+id/hzScrollLinearLayout1"
-                        android:orientation="horizontal"
-                        >
+                        android:orientation="horizontal">
 
                     </LinearLayout>
 
@@ -218,11 +260,11 @@
                     android:text="@string/home_goto_blog"
                     android:textColor="@color/home_light_blue"
                     android:textStyle="bold"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
             </LinearLayout>
 
-       <!--     </android.support.v7.widget.CardView>-->
+            <!--     </android.support.v7.widget.CardView>-->
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
@@ -403,111 +445,111 @@
             <!--</LinearLayout>-->
             <!--</android.support.v7.widget.CardView>-->
 
-           <!-- <android.support.v7.widget.CardView
+            <!-- <android.support.v7.widget.CardView
+                 android:id="@+id/eventsss"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_marginLeft="5dp"
+                 android:layout_marginRight="5dp"
+                 android:layout_marginTop="5dp">-->
+
+            <LinearLayout
+
                 android:id="@+id/eventsss"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp">-->
+                android:orientation="vertical">
+
 
                 <LinearLayout
 
+                    android:id="@+id/eventHeader"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:id="@+id/eventsss"
-                    >
+                    android:background="@color/home_blue"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
 
+
+                    <ImageView
+                        android:id="@+id/img_go_to_events"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight=".13"
+                        android:src="@drawable/zoom_list" />
+
+                    <TextView
+                        android:id="@+id/txtEvents"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight=".85"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:text="@string/home_events"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/white_color"
+                        android:textStyle="bold" />
+
+
+                </LinearLayout>
+
+                <ProgressBar
+                    android:id="@+id/eventprogressbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/no_events"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="2dp"
+                    android:text="No Events Listed"
+                    android:textColor="@color/grey"
+                    android:textSize="12dp"
+                    android:visibility="gone" />
+
+
+                <com.mycity4kids.widget.CustomListView
+                    android:id="@+id/eventList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@color/dividercolor"
+                    android:dividerHeight="0.3dp"
+                    android:visibility="gone" />
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="240dp"
+                    android:layout_marginTop="5dp"
+                    android:divider="@color/dividercolor"
+                    android:dividerHeight="0.3dp"
+                    android:scrollbars="none">
 
                     <LinearLayout
-
-                        android:id="@+id/eventHeader"
+                        android:id="@+id/hzScrollLinearLayoutEvent"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/home_blue"
-                        android:orientation="horizontal"
-                        android:weightSum="1">
-
-
-                        <ImageView
-                            android:id="@+id/img_go_to_events"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_weight=".13"
-                            android:src="@drawable/zoom_list" />
-
-                        <TextView
-                            android:id="@+id/txtEvents"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_weight=".85"
-                            android:paddingBottom="10dp"
-                            android:paddingTop="10dp"
-                            android:text="@string/home_events"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:textColor="@color/white_color"
-                            android:textStyle="bold" />
-
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
 
                     </LinearLayout>
 
-                    <ProgressBar
-                        android:id="@+id/eventprogressbar"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone" />
+                </HorizontalScrollView>
 
-                    <TextView
-                        android:id="@+id/no_events"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:padding="2dp"
-                        android:text="No Events Listed"
-                        android:textColor="@color/grey"
-                        android:textSize="12dp"
-                        android:visibility="gone" />
-
-
-                    <com.mycity4kids.widget.CustomListView
-                        android:id="@+id/eventList"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:divider="@color/dividercolor"
-                        android:dividerHeight="0.3dp"
-                        android:visibility="gone"/>
-                    <HorizontalScrollView
-                        android:layout_width="match_parent"
-                        android:layout_height="240dp"
-                        android:divider="@color/dividercolor"
-                        android:dividerHeight="0.3dp"
-                        android:layout_marginTop="5dp"
-                        android:scrollbars="none"
-                        >
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:id="@+id/hzScrollLinearLayoutEvent"
-                            android:orientation="horizontal">
-
-                        </LinearLayout>
-
-                    </HorizontalScrollView>
-
-                    <TextView
-                        android:id="@+id/go_to_events"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="15dp"
-                        android:text="@string/home_goto_event"
-                        android:textColor="@color/home_light_blue"
-                        android:textStyle="bold"
-                        android:visibility="gone"/>
-                </LinearLayout>
-          <!--  </android.support.v7.widget.CardView>-->
+                <TextView
+                    android:id="@+id/go_to_events"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="15dp"
+                    android:text="@string/home_goto_event"
+                    android:textColor="@color/home_light_blue"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+            </LinearLayout>
+            <!--  </android.support.v7.widget.CardView>-->
 
         </LinearLayout>
 

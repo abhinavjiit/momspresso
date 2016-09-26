@@ -22,6 +22,7 @@ public class ArticleListingResult implements Parcelable {
     private String blogTitleSlug;
     private Long createdTime;
     private String articleCount;
+    private String videoUrl;
 
     protected ArticleListingResult(Parcel in) {
         id = in.readString();
@@ -38,6 +39,7 @@ public class ArticleListingResult implements Parcelable {
         blogTitleSlug = in.readString();
         createdTime = in.readLong();
         articleCount = in.readString();
+        videoUrl = in.readString();
     }
 
     public static final Creator<ArticleListingResult> CREATOR = new Creator<ArticleListingResult>() {
@@ -164,6 +166,14 @@ public class ArticleListingResult implements Parcelable {
         this.articleCount = articleCount;
     }
 
+    public String getVideoUrl() {
+        return videoUrl;
+    }
+
+    public void setVideoUrl(String videoUrl) {
+        this.videoUrl = videoUrl;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -185,9 +195,8 @@ public class ArticleListingResult implements Parcelable {
         dest.writeString(blogTitleSlug);
         dest.writeLong(createdTime);
         dest.writeString(articleCount);
+        dest.writeString(videoUrl);
     }
-
-
 
 
 }

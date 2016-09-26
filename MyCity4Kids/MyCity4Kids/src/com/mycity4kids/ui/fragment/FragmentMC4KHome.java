@@ -9,6 +9,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.util.DisplayMetrics;
@@ -16,7 +18,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -50,6 +55,8 @@ import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.OnWebServiceCompleteListener;
 import com.mycity4kids.listener.OnButtonClicked;
+import com.mycity4kids.models.Topics;
+import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.businesslist.BusinessDataListing;
 import com.mycity4kids.models.businesslist.BusinessListRequest;
 import com.mycity4kids.models.businesslist.BusinessListResponse;
@@ -72,6 +79,7 @@ import com.mycity4kids.ui.activity.BusinessDetailsActivity;
 import com.mycity4kids.ui.activity.CityBestArticleListingActivity;
 import com.mycity4kids.ui.activity.CreateFamilyActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
+import com.mycity4kids.ui.activity.FilteredTopicsArticleListingActivity;
 import com.mycity4kids.ui.adapter.AdapterHomeAppointment;
 import com.mycity4kids.ui.adapter.ArticlesListingAdapter;
 import com.mycity4kids.ui.adapter.BusinessListingAdapterevent;
@@ -80,6 +88,14 @@ import com.mycity4kids.volley.HttpVolleyRequest;
 import com.mycity4kids.widget.CustomListView;
 import com.squareup.picasso.Picasso;
 
+import org.wordpress.android.editor.EditorWebViewAbstract;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -123,6 +139,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     private ArrayList<CommonParentingList> mArticleDataListing1;
     private ArrayList<ArticleListingResult> mArticleDataListing;
     private ArrayList<ArticleListingResult> mArticleBestCityListing;
+    private ArrayList<ArticleListingResult> mMomspressoArticleListing;
     private CustomListView eventListView;
     private HorizontalScrollView blogListView;
     private View rltLoadingView;
@@ -130,10 +147,20 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     private boolean mEventDataAvalble;
     TextView txtCal, txtEvents, txtBlogs;
     private LayoutInflater mInflator;
-    private LinearLayout hzScrollLinearLayout, hzScrollLinearLayoutEvent, hzScrollLinearLayout1, blogHeader1;
+    private LinearLayout hzScrollLinearLayout, hzScrollLinearLayoutEvent, hzScrollLinearLayout1, blogHeader1, momspressoHZScrollLinearLayout;
     private float density;
     CardView cardView;
     int sortType = 0;
+    private HorizontalScrollView momspressoListView;
+    private LinearLayout momspressoHeader;
+    private View mCustomView;
+    private FrameLayout mCustomViewContainer;
+    private WebChromeClient.CustomViewCallback mCustomViewCallback;
+    private DrawerLayout mContentView;
+    private MyWebChromeClient mWebChromeClient = null;
+    ArrayList<WebView> videoIframe = new ArrayList<>();
+    private ProgressBar momspressoProgressbar;
+//    WebView currentWebView;
 
     @Nullable
     @Override
@@ -144,6 +171,8 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         hzScrollLinearLayout = (LinearLayout) view.findViewById(R.id.hzScrollLinearLayout);
         hzScrollLinearLayout1 = (LinearLayout) view.findViewById(R.id.hzScrollLinearLayout1);
         hzScrollLinearLayoutEvent = (LinearLayout) view.findViewById(R.id.hzScrollLinearLayoutEvent);
+        momspressoHZScrollLinearLayout = (LinearLayout) view.findViewById(R.id.momspressoHZScrollLinearLayout);
+
         density = getActivity().getResources().getDisplayMetrics().density;
         appointmentList = (CustomListView) view.findViewById(R.id.home_appointmentList);
         goToCal = (TextView) view.findViewById(R.id.go_to_cal);
@@ -153,6 +182,8 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         imgGoToCal = (ImageView) view.findViewById(R.id.img_go_to_cal);
         imgGoToEvents = (ImageView) view.findViewById(R.id.img_go_to_events);
         imgGoToBlogs = (ImageView) view.findViewById(R.id.img_go_to_blogs);
+
+
         txtCal = (TextView) view.findViewById(R.id.txtCal);
         txtEvents = (TextView) view.findViewById(R.id.txtEvents);
         txtBlogs = (TextView) view.findViewById(R.id.txtBlogs);
@@ -160,10 +191,16 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         progressBar = (ProgressBar) view.findViewById(R.id.eventprogressbar);
         blogProgessBar = (ProgressBar) view.findViewById(R.id.blogprogressbar);
         blogProgessBar1 = (ProgressBar) view.findViewById(R.id.blogprogressbar1);
+        momspressoProgressbar = (ProgressBar) view.findViewById(R.id.momspressoProgressbar);
+
         eventListView = (CustomListView) view.findViewById(R.id.eventList);
         blogListView = (HorizontalScrollView) view.findViewById(R.id.bloglist);
+        momspressoListView = (HorizontalScrollView) view.findViewById(R.id.momspressolist);
         rltLoadingView = (RelativeLayout) view.findViewById(R.id.rltLoadingView);
         blogHeader1 = (LinearLayout) view.findViewById(R.id.blogHeader1);
+        momspressoHeader = (LinearLayout) view.findViewById(R.id.momspressoHeader);
+
+
         if (SharedPrefUtils.getCurrentCityModel(getActivity()).getName().isEmpty()) {
             switch (SharedPrefUtils.getCurrentCityModel(getActivity()).getId()) {
                 case 1:
@@ -210,10 +247,10 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         txtEvents.setOnClickListener(this);
         txtBlogs.setOnClickListener(this);
         blogHeader1.setOnClickListener(this);
+        momspressoHeader.setOnClickListener(this);
 
         view.findViewById(R.id.go_to_blog).setOnClickListener(this);
         view.findViewById(R.id.go_to_events).setOnClickListener(this);
-
         view.findViewById(R.id.no_blog).setOnClickListener(this);
         view.findViewById(R.id.no_events).setOnClickListener(this);
 
@@ -268,6 +305,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         current.setText(currentForm.format(calendar.getTime()).toString());
         appointmentListData = new ArrayList<>();
         mArticleBestCityListing = new ArrayList<>();
+        mMomspressoArticleListing = new ArrayList<>();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         formatter.setTimeZone(TimeZone.getTimeZone("GMT+0530"));
         tableAppointment = new TableAppointmentData(BaseApplication.getInstance());
@@ -287,6 +325,8 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         mArticleDataListing1 = new ArrayList<>();
         articlesListingAdapter = new ArticlesListingAdapter(getActivity(), true);
 
+        String momspressoCategoryId = getMomspressoCategory();
+        hitMomspressoListingApi(momspressoCategoryId);
         hitBlogListingApi();
         hitEditorPicksApi();
 
@@ -309,6 +349,44 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                 inflateEventCardsScroll();
             }
         }
+    }
+
+    private String getMomspressoCategory() {
+        if (StringUtils.isNullOrEmpty(SharedPrefUtils.getMomspressoCategory(getActivity()).getId())) {
+            try {
+                FileInputStream fileInputStream = getActivity().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                String fileContent = convertStreamToString(fileInputStream);
+                TopicsResponse responseData = new Gson().fromJson(fileContent, TopicsResponse.class);
+
+                for (int i = 0; i < responseData.getData().size(); i++) {
+                    if (AppConstants.MOMSPRESSO_SLUG.equals(responseData.getData().get(i).getSlug())) {
+                        SharedPrefUtils.setMomspressoCategory(getActivity(), responseData.getData().get(i));
+                        return responseData.getData().get(i).getId();
+                    }
+                }
+            } catch (FileNotFoundException fnfe) {
+
+            }
+        } else {
+            return SharedPrefUtils.getMomspressoCategory(getActivity()).getId();
+        }
+        return null;
+    }
+
+    public static String convertStreamToString(InputStream is) {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        StringBuilder sb = new StringBuilder();
+        String line = null;
+        try {
+            while ((line = reader.readLine()) != null) {
+                sb.append(line).append("\n");
+            }
+            reader.close();
+        } catch (IOException e) {
+            Crashlytics.logException(e);
+            Log.d("IOException", Log.getStackTraceString(e));
+        }
+        return sb.toString();
     }
 
     public int getAge(Date dateOfBirth) {
@@ -480,6 +558,15 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         }
     };
 
+    private void hitMomspressoListingApi(String momspressoCategoryId) {
+        momspressoProgressbar.setVisibility(View.VISIBLE);
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
+
+        Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(momspressoCategoryId, 0, 1, 5);
+        filterCall.enqueue(momspressoListingResponseCallback);
+    }
+
     public void hitEditorPicksApi() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
@@ -487,6 +574,40 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         Call<ArticleListingResponse> filterCall = topicsAPI.getBestArticlesForCity("" + SharedPrefUtils.getCurrentCityModel(getActivity()).getId(), sortType, 1, 15);
         filterCall.enqueue(articleListingResponseCallback);
     }
+
+    private Callback<ArticleListingResponse> momspressoListingResponseCallback = new Callback<ArticleListingResponse>() {
+        @Override
+        public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
+            momspressoProgressbar.setVisibility(View.GONE);
+            if (response == null || response.body() == null) {
+                ((DashboardActivity) getActivity()).showToast("Something went wrong from server");
+                return;
+            }
+
+            try {
+                ArticleListingResponse responseData = (ArticleListingResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    processMomspressoListingResponse(responseData);
+                } else {
+                    ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4KException", Log.getStackTraceString(e));
+                ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
+            momspressoProgressbar.setVisibility(View.GONE);
+            Crashlytics.logException(t);
+            Log.d("MC4KException", Log.getStackTraceString(t));
+            if (null != getActivity()) {
+                ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
+            }
+        }
+    };
 
     private Callback<ArticleListingResponse> articleListingResponseCallback = new Callback<ArticleListingResponse>() {
         @Override
@@ -519,6 +640,78 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
             }
         }
     };
+
+    private void processMomspressoListingResponse(ArticleListingResponse responseData) {
+
+        ArrayList<ArticleListingResult> dataList = responseData.getData().getResult();
+
+        if (dataList.size() == 0) {
+            ((TextView) view.findViewById(R.id.no_momspresso)).setVisibility(View.VISIBLE);
+        } else {
+            ((TextView) view.findViewById(R.id.no_momspresso)).setVisibility(View.GONE);
+            mMomspressoArticleListing.clear();
+            mMomspressoArticleListing.addAll(responseData.getData().getResult());
+            momspressoHZScrollLinearLayout.removeAllViews();
+            mWebChromeClient = new MyWebChromeClient();
+
+//            BaseApplication.setBestCityResponse(mArticleBestCityListing);
+            for (int i = 0; i < mMomspressoArticleListing.size(); i++) {
+                final View view1 = mInflator.inflate(R.layout.momspresso_card_item_article_dashboard, null);
+                view1.setTag(i);
+                WebView wv = (WebView) view1.findViewById(R.id.videoIframe);
+
+                wv.setWebChromeClient(mWebChromeClient);
+
+                TextView title = (TextView) view1.findViewById(R.id.txvArticleTitle);
+                cardView = (CardView) view1.findViewById(R.id.cardViewWidget);
+
+                String videoFrameHTML = "<iframe allowfullscreen src=http:" + mMomspressoArticleListing.get(i).getVideoUrl() + "?modestbranding=1&amp;rel=0&amp;showinfo=0\" style=\"width: 100%;\" ></iframe>";
+                wv.loadData(videoFrameHTML, "text/html", null);
+                wv.getSettings().setJavaScriptEnabled(true);
+                videoIframe.add(wv);
+
+                title.setText(mMomspressoArticleListing.get(i).getTitle());
+
+                view1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getActivity(), ArticlesAndBlogsDetailsActivity.class);
+                        ArticleListingResult parentingListData1 = (ArticleListingResult) (mMomspressoArticleListing.get((int) view1.getTag()));
+                        intent.putExtra(Constants.ARTICLE_ID, parentingListData1.getId());
+                        intent.putExtra(Constants.AUTHOR_ID, parentingListData1.getUserId());
+                        intent.putExtra(Constants.BLOG_SLUG, parentingListData1.getBlogPageSlug());
+                        intent.putExtra(Constants.TITLE_SLUG, parentingListData1.getTitleSlug());
+                        startActivity(intent);
+                        Log.e("Tag", "" + view1.getTag());
+                    }
+                });
+                momspressoHZScrollLinearLayout.addView(view1);
+            }
+            View customViewMore = mInflator.inflate(R.layout.custom_view_more_dashboard, null);
+            DisplayMetrics metrics = new DisplayMetrics();
+            if (getActivity() != null) {
+                getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+                int widthPixels = metrics.widthPixels;
+                float width = (float) (widthPixels * 0.45);
+                customViewMore.setMinimumWidth((int) width);
+            }
+            momspressoHZScrollLinearLayout.addView(customViewMore);
+            customViewMore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent1 = new Intent(getActivity(), FilteredTopicsArticleListingActivity.class);
+                    intent1.putExtra("selectedTopics", SharedPrefUtils.getMomspressoCategory(getActivity()).getId());
+                    intent1.putExtra("displayName", SharedPrefUtils.getMomspressoCategory(getActivity()).getDisplay_name());
+                    startActivity(intent1);
+                }
+            });
+            if (mMomspressoArticleListing.isEmpty()) {
+                ((TextView) view.findViewById(R.id.txtMomspresso)).setVisibility(View.VISIBLE);
+                ((TextView) view.findViewById(R.id.no_momspresso)).setVisibility(View.VISIBLE);
+            }
+            baseScroll.smoothScrollTo(0, 0);
+        }
+    }
 
     private void processArticleListingResponse(ArticleListingResponse responseData) {
 
@@ -707,6 +900,12 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
             case R.id.blogHeader1:
                 Intent intent1 = new Intent(getActivity(), CityBestArticleListingActivity.class);
                 startActivity(intent1);
+                break;
+            case R.id.momspressoHeader:
+                Intent momspressoIntent = new Intent(getActivity(), FilteredTopicsArticleListingActivity.class);
+                momspressoIntent.putExtra("selectedTopics", SharedPrefUtils.getMomspressoCategory(getActivity()).getId());
+                momspressoIntent.putExtra("displayName", SharedPrefUtils.getMomspressoCategory(getActivity()).getDisplay_name());
+                startActivity(momspressoIntent);
                 break;
         }
 
@@ -1715,4 +1914,70 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
 
     }
 
+    private class MyWebChromeClient extends WebChromeClient {
+        FrameLayout.LayoutParams LayoutParameters = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT);
+
+        @Override
+        public void onShowCustomView(View customView, CustomViewCallback callback) {
+            // if a view already exists then immediately terminate the new one
+            if (mCustomView != null) {
+                callback.onCustomViewHidden();
+                return;
+            }
+            mContentView = (DrawerLayout) ((DashboardActivity) getActivity()).findViewById(R.id.drawer_layout);
+            mContentView.setVisibility(View.GONE);
+            mCustomViewContainer = new FrameLayout(getActivity());
+            mCustomViewContainer.setLayoutParams(LayoutParameters);
+            mCustomViewContainer.setBackgroundResource(android.R.color.black);
+            view.setLayoutParams(LayoutParameters);
+            mCustomViewContainer.addView(customView);
+            mCustomView = customView;
+            mCustomViewCallback = callback;
+            mCustomViewContainer.setVisibility(View.VISIBLE);
+            getActivity().setContentView(mCustomViewContainer);
+        }
+
+        @Override
+        public void onHideCustomView() {
+            if (mCustomView == null) {
+                return;
+            } else {
+                // Hide the custom view.
+                mCustomView.setVisibility(View.GONE);
+                // Remove the custom view from its container.
+                mCustomViewContainer.removeView(mCustomView);
+                mCustomView = null;
+                mCustomViewContainer.setVisibility(View.GONE);
+                mCustomViewCallback.onCustomViewHidden();
+                // Show the content view.
+                mContentView.setVisibility(View.VISIBLE);
+                ((DashboardActivity) getActivity()).setContentView(mContentView);
+            }
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (videoIframe == null) {
+            return;
+        } else {
+            for (int i = 0; i < videoIframe.size(); i++) {
+                videoIframe.get(i).onResume();
+            }
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (videoIframe == null) {
+            return;
+        } else {
+            for (int i = 0; i < videoIframe.size(); i++) {
+                videoIframe.get(i).onPause();
+            }
+        }
+    }
 }

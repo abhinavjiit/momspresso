@@ -431,4 +431,6 @@ public class AppConstants {
     public static final int EDIT_COMMENT = 0;
     public static final int EDIT_REPLY = 1;
     public static final int EDIT_NESTED_REPLY = 2;
+    public static final String MOMSPRESSO_CATEGORY_ID = "momspressoCategoryId";
+    public static final String MOMSPRESSO_SLUG = "momspresso-video";
 }

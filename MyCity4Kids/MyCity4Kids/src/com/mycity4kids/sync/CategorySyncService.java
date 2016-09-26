@@ -8,6 +8,7 @@ import android.util.Log;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.response.ConfigResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ConfigAPIs;
@@ -83,6 +84,12 @@ public class CategorySyncService extends IntentService {
                                                  public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
                                                      Log.d("TAGA", "server contacted and has file");
                                                      boolean writtenToDisk = writeResponseBodyToDisk(response.body());
+
+                                                     Topics t = new Topics();
+                                                     t.setId("");
+                                                     t.setDisplay_name("");
+                                                     SharedPrefUtils.setMomspressoCategory(CategorySyncService.this, t);
+
                                                      SharedPrefUtils.setConfigCategoryVersion(CategorySyncService.this, responseModel.getData().getResult().getCategory().getVersion());
                                                      Log.d("TAGA", "file download was a success? " + writtenToDisk);
                                                  }

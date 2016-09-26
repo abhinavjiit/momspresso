@@ -21,6 +21,11 @@ public class Topics implements Parcelable {
     private String parentId;
     private String parentName;
     private boolean isSelected;
+    private String slug;
+
+    public Topics() {
+
+    }
 
     public Topics(String id, String title, boolean isSelected, ArrayList<Topics> child, String parentId, String parentName) {
         this.id = id;
@@ -41,6 +46,7 @@ public class Topics implements Parcelable {
         publicVisibility = in.readString();
         showInMenu = in.readString();
         isSelected = in.readByte() != 0;
+        slug = in.readString();
     }
 
     public static final Creator<Topics> CREATOR = new Creator<Topics>() {
@@ -127,6 +133,14 @@ public class Topics implements Parcelable {
         this.showInMenu = showInMenu;
     }
 
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -143,5 +157,6 @@ public class Topics implements Parcelable {
         dest.writeString(publicVisibility);
         dest.writeString(showInMenu);
         dest.writeByte((byte) (isSelected ? 1 : 0));
+        dest.writeString(slug);
     }
 }

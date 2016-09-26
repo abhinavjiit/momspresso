@@ -50,7 +50,6 @@ import com.mycity4kids.controller.CompleteTaskController;
 import com.mycity4kids.controller.DeleteTaskController;
 import com.mycity4kids.controller.TaskListController;
 import com.mycity4kids.dbtable.TableAppointmentData;
-import com.mycity4kids.dbtable.TableKids;
 import com.mycity4kids.dbtable.TableTaskData;
 import com.mycity4kids.dbtable.TableTaskList;
 import com.mycity4kids.dbtable.TaskCompletedTable;
@@ -59,7 +58,6 @@ import com.mycity4kids.dbtable.TaskTableFile;
 import com.mycity4kids.dbtable.TaskTableNotes;
 import com.mycity4kids.dbtable.TaskTableWhoToRemind;
 import com.mycity4kids.editor.EditorPostActivity;
-import com.mycity4kids.enums.ParentingFilterType;
 import com.mycity4kids.facebook.FacebookUtils;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
@@ -159,44 +157,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     // The onNewIntent() is overridden to get and resolve the data for deep linking
     @Override
     protected void onNewIntent(Intent intent) {
-        if (!StringUtils.isNullOrEmpty(intent.getStringExtra(AppConstants.DEEP_LINK_URL)))
-            getDeepLinkData(intent.getStringExtra(AppConstants.DEEP_LINK_URL));
-        deepLinkUrl = intent.getStringExtra(AppConstants.DEEP_LINK_URL);
         super.onNewIntent(intent);
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dashboard);
-        t = ((BaseApplication) getApplication()).getTracker(
-                BaseApplication.TrackerName.APP_TRACKER);
-        // Enable Display Features.
-        t.enableAdvertisingIdCollection(true);
-        // Set screen name.
-        t.setScreenName("DashBoard");
-// You only need to set User ID on a tracker once. By setting it on the tracker, the ID will be
-        // sent with all subsequent hits.
-        // new code
-        t.set("&uid", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-
-        // This hit will be sent with the User ID value and be visible in User-ID-enabled views (profiles).
-        t.send(new HitBuilders.EventBuilder().setCategory("UX").setAction("User Sign In").build());
-
-        // till here
-        // Build and send timing.
-   /*     t.send(new HitBuilders.TimingBuilder()
-                .setCategory(getTimingCategory())
-                .setValue(getTimingInterval())
-                .setVariable(getTimingName())
-                .setLabel(getTimingLabel())
-                .build());*/
-
-
-// Send a screen view.
-        t.send(new HitBuilders.ScreenViewBuilder().build());
-        onNewIntent(getIntent());
-        Intent intent = getIntent();
         Bundle notificationExtras = intent.getParcelableExtra("notificationExtras");
         if (notificationExtras != null) {
             if (notificationExtras.getString("type").equalsIgnoreCase("article_details")) {
@@ -225,12 +186,38 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 intent1.putExtra(Constants.WEB_VIEW_URL, url);
                 startActivity(intent1);
             }
+        } else {
+            if (!StringUtils.isNullOrEmpty(intent.getStringExtra(AppConstants.DEEP_LINK_URL)))
+                getDeepLinkData(intent.getStringExtra(AppConstants.DEEP_LINK_URL));
+            deepLinkUrl = intent.getStringExtra(AppConstants.DEEP_LINK_URL);
         }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_dashboard);
+        t = ((BaseApplication) getApplication()).getTracker(
+                BaseApplication.TrackerName.APP_TRACKER);
+        // Enable Display Features.
+        t.enableAdvertisingIdCollection(true);
+        // Set screen name.
+        t.setScreenName("DashBoard");
+        // You only need to set User ID on a tracker once. By setting it on the tracker, the ID will be
+        // sent with all subsequent hits.
+        // new code
+        t.set("&uid", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+
+        // This hit will be sent with the User ID value and be visible in User-ID-enabled views (profiles).
+        t.send(new HitBuilders.EventBuilder().setCategory("UX").setAction("User Sign In").build());
+        // Send a screen view.
+        t.send(new HitBuilders.ScreenViewBuilder().build());
+        onNewIntent(getIntent());
+        Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         String fragmentToLoad = "";
         if (null != extras)
             fragmentToLoad = extras.getString("load_fragment", "");
-        // DatabaseUtil.exportDb();
 
         taskData = new TableTaskData(BaseApplication.getInstance());
 
@@ -247,23 +234,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         txvAllTaskPopup = (TextView) findViewById(R.id.all_tasklist);
 
         Utils.pushOpenScreenEvent(DashboardActivity.this, "DashBoard", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-
-//        TableKids _kidTable = new TableKids(BaseApplication.getInstance());
-//        Long sTime;
-//        for (int i = 0; i < _kidTable.getKidsCount(); i++) {
-//            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-//            Date dob;
-//            try {
-//                //28800000 -- Morning 8 am addition
-//                dob = df.parse(_kidTable.getAllKids().get(i).getDate_of_birth());
-//                Reminder.with(this).info(Constants.REMINDER_KIDS_BIRTHDAY, "" + _kidTable.getAllKids().get(i).getName())
-//                        .startTime(dob.getTime() + 28800000).setRepeatBehavior("Yearly", "Forever", "", null)
-//                        .remindBefore("0").setRecurring("yes").create(-i);
-//            } catch (ParseException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        addChildbirthTS();
 
         // onclick events
         findViewById(R.id.rdBtnToday).setOnClickListener(this);
@@ -337,9 +307,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 // check recurring
                 if (!StringUtils.isNullOrEmpty(isrecurring)) {
                     if (isrecurring.equalsIgnoreCase("yes")) {
-                        // task complete
-                        // frmPush = true;
-                        // insert in db then hit api
 
                         Calendar c = Calendar.getInstance();
                         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -388,6 +355,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
         findViewById(R.id.rdBtnKids).setOnClickListener(this);
         findViewById(R.id.rdBtnParentingBlogs).setOnClickListener(this);
+        findViewById(R.id.rdBtnMomspressoVideo).setOnClickListener(this);
         findViewById(R.id.editor).setOnClickListener(this);
         findViewById(R.id.imgProfile).setOnClickListener(this);
         findViewById(R.id.txvUserName).setOnClickListener(this);
@@ -443,7 +411,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         SharedPrefUtils.setAppRateVersion(this, rateModel);
         if (!SharedPrefUtils.getRateVersion(this).isAppRateComplete() && currentRateVersion >= 10) {
             RateAppDialogFragment rateAppDialogFragment = new RateAppDialogFragment();
-            reteVersionModel.setAppRateVersion(-7);
+            reteVersionModel.setAppRateVersion(-20);
             rateAppDialogFragment.show(getFragmentManager(), rateAppDialogFragment.getClass().getSimpleName());
         }
 
@@ -1507,6 +1475,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             case R.id.rdBtnParentingBlogs:
                 Intent intent = new Intent(getApplicationContext(), TopicsFilterActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.rdBtnMomspressoVideo:
+                Intent videoArticlesIntent = new Intent(this, FilteredTopicsArticleListingActivity.class);
+                videoArticlesIntent.putExtra("selectedTopics", SharedPrefUtils.getMomspressoCategory(this).getId());
+                videoArticlesIntent.putExtra("displayName", SharedPrefUtils.getMomspressoCategory(this).getDisplay_name());
+                startActivity(videoArticlesIntent);
                 break;
             case R.id.editor:
                 if (Build.VERSION.SDK_INT > 15) {

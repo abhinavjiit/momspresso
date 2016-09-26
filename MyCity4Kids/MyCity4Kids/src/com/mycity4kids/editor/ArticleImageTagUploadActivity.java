@@ -208,6 +208,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
             return;
         }
         if (draftObject.getId() == null || draftObject.getId().isEmpty()) {
+            // Article is published directly and never saved in draft.
             ArticleDraftRequest articleDraftRequest = new ArticleDraftRequest();
             articleDraftRequest.setTitle(draftObject.getTitle().trim());
             articleDraftRequest.setBody(draftObject.getBody());
@@ -270,6 +271,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
                          }
             );
         } else {
+            // Article which is published is  already saved as draft.
             ArticleDraftRequest articleDraftRequest = new ArticleDraftRequest();
             articleDraftRequest.setTitle(draftObject.getTitle().trim());
             articleDraftRequest.setBody(draftObject.getBody());
@@ -291,7 +293,6 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
             if ("editor".equals(from)) {
                 articleDraftRequest.setId(draftObject.getId());
             } else {
-
                 ArrayList<Map<String, String>> cityList = new ArrayList<Map<String, String>>();
                 JSONArray cityArray = null;
                 try {

@@ -2,13 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="60dp"
     android:background="@color/white_color">
 
     <com.mikhaellopez.circularimageview.CircularImageView
         android:id="@+id/authorImageView"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerVertical="true"
         android:layout_margin="10dp"
         android:src="@drawable/default_commentor_img"
         app:civ_border="true"
@@ -21,7 +22,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
         android:layout_toRightOf="@+id/authorImageView"
+        android:fontFamily="sans-serif-light"
         android:text=""
-        android:textSize="20sp" />
+        android:textColor="@color/black_color"
+        android:textSize="18sp" />
 </RelativeLayout>

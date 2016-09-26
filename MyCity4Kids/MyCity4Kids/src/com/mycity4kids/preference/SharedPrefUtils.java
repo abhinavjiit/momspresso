@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
 import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.VersionApiModel;
 import com.mycity4kids.models.city.MetroCity;
 import com.mycity4kids.models.user.UserInfo;
@@ -87,6 +88,10 @@ public class SharedPrefUtils {
     private static final String PHOENIX_FIRST_LAUNCH_FLAG = "phoenixFirstLaunchFlag";
 
     private static final String CHANGE_CITY_FLAG = "changeCityFlag";
+
+
+    public static final String MOMSPRESSO_CATEGORY_ID = "momspressoCategoryId";
+    public static final String MOMSPRESSO_DISPLAY_NAME = "momspressoDisplayName";
 
     /**
      * this shared preference save current versions for control city,locality,category APIs .
@@ -547,5 +552,22 @@ public class SharedPrefUtils {
     public static boolean isChangeCity(Context context) {
         SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         return _sharedPref.getBoolean(CHANGE_CITY_FLAG, false);
+    }
+
+    public static void setMomspressoCategory(Context context, Topics category) {
+        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+
+        _editor.putString(MOMSPRESSO_CATEGORY_ID, category.getId());
+        _editor.putString(MOMSPRESSO_DISPLAY_NAME, category.getDisplay_name());
+        _editor.commit();
+    }
+
+    public static Topics getMomspressoCategory(Context context) {
+        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Topics momspressoTopic = new Topics();
+        momspressoTopic.setId(_sharedPref.getString(MOMSPRESSO_CATEGORY_ID, ""));
+        momspressoTopic.setDisplay_name(_sharedPref.getString(MOMSPRESSO_DISPLAY_NAME, ""));
+        return momspressoTopic;
     }
 }

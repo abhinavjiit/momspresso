@@ -274,9 +274,9 @@ public class SplashActivity extends BaseActivity {
             Intent intent = new Intent(SplashActivity.this, DashboardActivity.class);
             if (!StringUtils.isNullOrEmpty(_deepLinkURL)) {
                 intent.putExtra(AppConstants.DEEP_LINK_URL, _deepLinkURL);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP/*|Intent.FLAG_ACTIVITY_NEW_TASK*/);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             } else if (extras != null && extras.getString("type") != null) {
-                //String articleId=extras.getString("articleId");
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intent.putExtra("notificationExtras", extras);
             }
             startActivity(intent);

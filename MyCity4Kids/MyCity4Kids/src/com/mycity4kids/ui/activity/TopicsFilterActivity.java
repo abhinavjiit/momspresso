@@ -246,6 +246,11 @@ public class TopicsFilterActivity extends BaseActivity {
                         Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
 
                         try {
+                            Topics t = new Topics();
+                            t.setId("");
+                            t.setDisplay_name("");
+                            SharedPrefUtils.setMomspressoCategory(TopicsFilterActivity.this, t);
+
                             FileInputStream fileInputStream = openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                             String fileContent = convertStreamToString(fileInputStream);
                             TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
