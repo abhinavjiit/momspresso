@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import android.util.Base64;
 import android.util.Base64InputStream;
 import android.util.Base64OutputStream;
+import android.util.Log;
 
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.DataUtils;

@@ -87,7 +87,7 @@ public class DetailHeader extends RelativeLayout implements OnClickListener {
         transparent.setOnClickListener(this);
         //anupama
         /*((TextView) view.findViewById(R.id.favorite)).setOnClickListener(this);
-		((TextView) view.findViewById(R.id.been_there)).setOnClickListener(this);
+        ((TextView) view.findViewById(R.id.been_there)).setOnClickListener(this);
 		((TextView) view.findViewById(R.id.share_with_frnd)).setOnClickListener(this);*/
         ((TextView) view.findViewById(R.id.write_a_review)).setOnClickListener(this);
         ((TextView) view.findViewById(R.id.add_a_photo)).setOnClickListener(this);
@@ -183,7 +183,7 @@ public class DetailHeader extends RelativeLayout implements OnClickListener {
                     }
 
 
-                    String shareMessage = "mycity4kids\n\nCheck out this interesting place I came across - " + titleName +".\n" + webUrl;
+                    String shareMessage = "mycity4kids\n\nCheck out this interesting place I came across - " + titleName + ".\n" + webUrl;
                     shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
 
                     getContext().startActivity(Intent.createChooser(shareIntent, "mycity4kids"));
@@ -198,7 +198,7 @@ public class DetailHeader extends RelativeLayout implements OnClickListener {
                     break;
                 case R.id.direction:
 
-                   _activity.moveToMap();
+                    _activity.moveToMap();
 
                     break;
 
@@ -231,10 +231,7 @@ public class DetailHeader extends RelativeLayout implements OnClickListener {
                     _controller.getData(AppConstants.BEEN_THERE_REQUEST, requestData);
                     break;
                 case R.id.write_a_review:
-                    if (count <= 0) {
-                        goToLoginDialog();
-                        return;
-                    }
+
                     ((BusinessDetailsActivity) getContext()).writeReviewFromHeader(AddReviewOrPhoto.WriteAReview);
 
                     // _activity.showToast("Under Implementation");
@@ -268,7 +265,7 @@ public class DetailHeader extends RelativeLayout implements OnClickListener {
                         webUrl = "";
                     }
 
-                  //  shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, titleName);
+                    //  shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, titleName);
 
 
                     String shareMessage = "I have just discovered " + titleName + " in mycity4kids app. Check it out " + webUrl;

@@ -204,39 +204,39 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         if (SharedPrefUtils.getCurrentCityModel(getActivity()).getName().isEmpty()) {
             switch (SharedPrefUtils.getCurrentCityModel(getActivity()).getId()) {
                 case 1:
-                    txtBlogs1.setText("Best of " + "Delhi-NCR");
+                    txtBlogs1.setText("BEST OF " + "DELHI-NCR");
                     break;
                 case 2:
-                    txtBlogs1.setText("Best of " + "Bangalore");
+                    txtBlogs1.setText("BEST OF " + "BANGLORE");
                     break;
                 case 3:
-                    txtBlogs1.setText("Best of " + "Mumbai");
+                    txtBlogs1.setText("BEST OF " + "MUMBAI");
                     break;
                 case 4:
-                    txtBlogs1.setText("Best of " + "Pune");
+                    txtBlogs1.setText("BEST OF " + "PUNE");
                     break;
                 case 5:
-                    txtBlogs1.setText("Best of " + "Hyderabad");
+                    txtBlogs1.setText("BEST OF " + "HYDERABAD");
                     break;
                 case 6:
-                    txtBlogs1.setText("Best of " + "Chennai");
+                    txtBlogs1.setText("BEST OF " + "CHENNAI");
                     break;
                 case 7:
-                    txtBlogs1.setText("Best of " + "Kolkata");
+                    txtBlogs1.setText("BEST OF " + "KOLKATA");
                     break;
                 case 8:
-                    txtBlogs1.setText("Best of " + "Jaipur");
+                    txtBlogs1.setText("BEST OF " + "JAIPUR");
                     break;
                 case 9:
-                    txtBlogs1.setText("Best of " + "Ahmedabad");
+                    txtBlogs1.setText("BEST OF " + "AHMEDABAD");
                     break;
                 default:
-                    txtBlogs1.setText("Best of " + "Delhi-NCR");
+                    txtBlogs1.setText("BEST OF " + "DELHI-NCR");
                     break;
             }
 
         } else {
-            txtBlogs1.setText("Best of " + SharedPrefUtils.getCurrentCityModel(getActivity()).getName());
+            txtBlogs1.setText("BEST OF " + SharedPrefUtils.getCurrentCityModel(getActivity()).getName().toUpperCase());
         }
         goToCal.setOnClickListener(this);
         addAppointment.setOnClickListener(this);
@@ -447,7 +447,6 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         BusinessListController businessListController = new BusinessListController(getActivity(), this);
         BusinessListRequest businessListRequest = new BusinessListRequest();
         businessListRequest.setCategory_id(categoryId + "");
-        businessListRequest.setDate_by("onlytoday");
         businessListRequest.setCity_id((SharedPrefUtils.getCurrentCityModel(getActivity())).getId() + "");
         businessListRequest.setPage(page + "");
         businessListController.getData(AppConstants.BUSINESS_LIST_REQUEST, businessListRequest);
@@ -571,7 +570,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
 
-        Call<ArticleListingResponse> filterCall = topicsAPI.getBestArticlesForCity("" + SharedPrefUtils.getCurrentCityModel(getActivity()).getId(), sortType, 1, 15);
+        Call<ArticleListingResponse> filterCall = topicsAPI.getBestArticlesForCity("" + SharedPrefUtils.getCurrentCityModel(getActivity()).getId(), sortType, 1, 10);
         filterCall.enqueue(articleListingResponseCallback);
     }
 
@@ -805,7 +804,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
 
                     if (mBusinessDataListings.isEmpty()) {
 
-                        ((TextView) view.findViewById(R.id.go_to_events)).setVisibility(View.VISIBLE);
+//                        ((TextView) view.findViewById(R.id.go_to_events)).setVisibility(View.VISIBLE);
                         ((TextView) view.findViewById(R.id.no_events)).setVisibility(View.VISIBLE);
                         // eventListView.setVisibility(View.GONE);
                     }
@@ -813,7 +812,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
 
                 } else if (responseData.getResponseCode() == 400) {
 
-                    ((TextView) view.findViewById(R.id.go_to_events)).setVisibility(View.VISIBLE);
+//                    ((TextView) view.findViewById(R.id.go_to_events)).setVisibility(View.VISIBLE);
                     ((TextView) view.findViewById(R.id.no_events)).setVisibility(View.VISIBLE);
                     //eventListView.setVisibility(View.GONE);
                     //((LinearLayout) view.findViewById(R.id.eventHeader)).setVisibility(View.GONE);
@@ -969,7 +968,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     public void refreshList() throws ParseException {
         if (SharedPrefUtils.isChangeCity(getActivity())) {
             hitEditorPicksApi();
-            txtBlogs1.setText("Best of " + SharedPrefUtils.getCurrentCityModel(getActivity()).getName());
+            txtBlogs1.setText("BEST OF " + SharedPrefUtils.getCurrentCityModel(getActivity()).getName().toUpperCase());
             SharedPrefUtils.setChangeCityFlag(getActivity(), false);
             mBusinessDataListings.clear();
             BaseApplication.setBusinessREsponse(mBusinessDataListings);

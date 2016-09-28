@@ -78,6 +78,7 @@ import com.mycity4kids.models.response.ArticleDetailResponse;
 import com.mycity4kids.models.response.ArticleDetailResult;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
+import com.mycity4kids.models.response.FBCommentResponse;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
 import com.mycity4kids.models.response.ProfilePic;
 import com.mycity4kids.newmodels.VolleyBaseResponse;
@@ -177,6 +178,8 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     CommentRepliesDialogFragment commentFragment;
     private String blogSlug;
     private String titleSlug;
+    private String commentType = "db";
+    private String pagination = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -270,7 +273,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     Rect scrollBounds = new Rect();
                     mScrollView.getHitRect(scrollBounds);
                     int diff = (view.getBottom() - (mScrollView.getHeight() + mScrollView.getScrollY()));
-                    if (diff <= 10 && !isLoading && !StringUtils.isNullOrEmpty(commentURL) && commentURL.contains("http")) {
+                    if (diff <= 10 && !isLoading && !StringUtils.isNullOrEmpty(commentURL) && commentURL.contains("http") && !AppConstants.PAGINATION_END_VALUE.equals(pagination)) {
                         getMoreComments();
                     }
                 }
@@ -354,12 +357,18 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             return;
         }
         mLodingView.setVisibility(View.VISIBLE);
-
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
-        ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
+        if ("db".equals(commentType)) {
+            ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
 
-        Call<ResponseBody> call = articleDetailsAPI.getComments(commentURL);
-        call.enqueue(commentsCallback);
+            Call<ResponseBody> call = articleDetailsAPI.getComments(commentURL);
+            call.enqueue(commentsCallback);
+        } else {
+            ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
+
+            Call<FBCommentResponse> call = articleDetailsAPI.getFBComments(articleId, pagination);
+            call.enqueue(fbCommentsCallback);
+        }
 
     }
 
@@ -706,14 +715,13 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
             view.setTag(commentList);
 
-            if (SharedPrefUtils.getUserDetailModel(this).getDynamoId().equals(commentList.getUserId())) {
+            if (!"fb".equals(commentList.getComment_type()) && SharedPrefUtils.getUserDetailModel(this).getDynamoId().equals(commentList.getUserId())) {
                 holder.editTxt.setVisibility(View.VISIBLE);
             } else {
                 holder.editTxt.setVisibility(View.INVISIBLE);
             }
 
-            if (!StringUtils.isNullOrEmpty(commentList.getComment_type()) &&
-                    (commentList.getComment_type().equals("fan") || commentList.getComment_type().equals("fb"))) {
+            if ("fb".equals(commentList.getComment_type())) {
                 holder.replyTxt.setVisibility(View.GONE);
             } else {
                 holder.replyTxt.setVisibility(View.VISIBLE);
@@ -849,15 +857,19 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     break;
                 case R.id.network_img:
                     CommentsData commentData = (CommentsData) ((View) v.getParent().getParent()).getTag();
-                    Intent profileIntent = new Intent(this, BloggerDashboardActivity.class);
-                    profileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, commentData.getUserId());
-                    startActivity(profileIntent);
+                    if (!"fb".equals(commentData.getComment_type())) {
+                        Intent profileIntent = new Intent(this, BloggerDashboardActivity.class);
+                        profileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, commentData.getUserId());
+                        startActivity(profileIntent);
+                    }
                     break;
                 case R.id.txvCommentTitle:
                     CommentsData cData = (CommentsData) ((View) v.getParent().getParent()).getTag();
-                    Intent userProfileIntent = new Intent(this, BloggerDashboardActivity.class);
-                    userProfileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, cData.getUserId());
-                    startActivity(userProfileIntent);
+                    if (!"fb".equals(cData.getComment_type())) {
+                        Intent userProfileIntent = new Intent(this, BloggerDashboardActivity.class);
+                        userProfileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, cData.getUserId());
+                        startActivity(userProfileIntent);
+                    }
                     break;
                 case R.id.follow_click:
                     followAPICall(authorId);
@@ -1185,7 +1197,10 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                         arrayList.add(cData);
                     }
                 }
-
+                if (StringUtils.isNullOrEmpty(commentURL)) {
+                    commentType = "fb";
+                    commentURL = "http";
+                }
                 commentLayout = ((LinearLayout) findViewById(R.id.commnetLout));
                 ViewHolder viewHolder = null;
                 viewHolder = new ViewHolder();
@@ -1209,6 +1224,52 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             handleExceptions(t);
         }
     };
+
+    Callback<FBCommentResponse> fbCommentsCallback = new Callback<FBCommentResponse>() {
+        @Override
+        public void onResponse(Call<FBCommentResponse> call, retrofit2.Response<FBCommentResponse> response) {
+            removeProgressDialog();
+            mLodingView.setVisibility(View.GONE);
+            if (response == null || null == response.body()) {
+                showToast("Something went wrong from server");
+                return;
+            }
+
+            try {
+                isLoading = false;
+                FBCommentResponse responseData = (FBCommentResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    ArrayList<CommentsData> dataList = responseData.getData().getResult();
+                    pagination = responseData.getData().getPagination();
+                    if (dataList.size() == 0) {
+
+                    } else {
+                        commentLayout = ((LinearLayout) findViewById(R.id.commnetLout));
+                        ViewHolder viewHolder = null;
+                        viewHolder = new ViewHolder();
+                        for (int i = 0; i < dataList.size(); i++) {
+                            CommentsData fbCommentData = dataList.get(i);
+                            fbCommentData.setComment_type("fb");
+                            displayComments(viewHolder, fbCommentData, false);
+                        }
+                    }
+                } else {
+                    showToast(getString(R.string.server_went_wrong));
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+                showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<FBCommentResponse> call, Throwable t) {
+            mLodingView.setVisibility(View.GONE);
+            handleExceptions(t);
+        }
+    };
+
 
     private Callback<ArticleDetailResponse> isBookmarkedFollowedResponseCallback = new Callback<ArticleDetailResponse>() {
         @Override

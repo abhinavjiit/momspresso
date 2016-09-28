@@ -39,6 +39,7 @@
                 android:textSize="14sp" />
 
             <LinearLayout
+                android:id="@+id/articleBlock"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/txvArticleTitle"
@@ -62,6 +63,19 @@
                     android:textSize="11sp" />
 
                 <TextView
+                    android:id="@+id/articleViewCountTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/articleBlock"
+                    android:layout_marginTop="7dp"
+                    android:fontFamily="sans-serif-light"
+                    android:gravity="left"
+                    android:paddingLeft="15dp"
+                    android:text="100000000 views"
+                    android:textSize="11sp"
+                    android:visibility="gone" />
+
+                <TextView
                     android:id="@+id/unapproved"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -71,10 +85,7 @@
                     android:paddingRight="19dp"
                     android:text="UNAPPROVED"
                     android:textColor="@color/blue_color"
-                    android:textSize="13sp"
-
-
-                    />
+                    android:textSize="13sp" />
             </LinearLayout>
 
             <ImageView

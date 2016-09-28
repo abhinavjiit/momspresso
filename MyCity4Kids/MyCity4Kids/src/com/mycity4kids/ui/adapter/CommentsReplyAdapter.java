@@ -82,7 +82,7 @@ public class CommentsReplyAdapter extends ArrayAdapter<CommentsData> {
         }
 
         if (SharedPrefUtils.getUserDetailModel(mContext).getDynamoId().equals(replyList.get(position).getUserId())
-                && position != 0) {
+                && position != 0 && !"fb".equals(replyList.get(position).getComment_type())) {
             holder.editBtnTextView.setVisibility(View.VISIBLE);
             holder.editBtnTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -97,18 +97,22 @@ public class CommentsReplyAdapter extends ArrayAdapter<CommentsData> {
         holder.replierImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent userProfileIntent = new Intent(mContext, BloggerDashboardActivity.class);
-                userProfileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, replyList.get(position).getUserId());
-                mContext.startActivity(userProfileIntent);
+                if (!"fb".equals(replyList.get(position).getComment_type())) {
+                    Intent userProfileIntent = new Intent(mContext, BloggerDashboardActivity.class);
+                    userProfileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, replyList.get(position).getUserId());
+                    mContext.startActivity(userProfileIntent);
+                }
             }
         });
 
         holder.replierNameTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent userProfileIntent = new Intent(mContext, BloggerDashboardActivity.class);
-                userProfileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, replyList.get(position).getUserId());
-                mContext.startActivity(userProfileIntent);
+                if (!"fb".equals(replyList.get(position).getComment_type())) {
+                    Intent userProfileIntent = new Intent(mContext, BloggerDashboardActivity.class);
+                    userProfileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, replyList.get(position).getUserId());
+                    mContext.startActivity(userProfileIntent);
+                }
             }
         });
 
@@ -116,7 +120,7 @@ public class CommentsReplyAdapter extends ArrayAdapter<CommentsData> {
             view.setBackgroundColor(ContextCompat.getColor(mContext, R.color.white_color));
         } else {
             view.setBackgroundColor(ContextCompat.getColor(mContext, R.color.blog_comments_reply_bg));
-            if (getItemViewType(position) == TYPE_REPLY_LEVEL_ONE) {
+            if (getItemViewType(position) == TYPE_REPLY_LEVEL_ONE && !"fb".equals(replyList.get(position).getComment_type())) {
                 holder.replyBtnTextView.setVisibility(View.VISIBLE);
             } else {
                 holder.replyBtnTextView.setVisibility(View.INVISIBLE);
@@ -130,7 +134,9 @@ public class CommentsReplyAdapter extends ArrayAdapter<CommentsData> {
         holder.replyBtnTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                replyCommentInterface.onReplyButtonClicked(position);
+                if (!"fb".equals(replyList.get(position).getComment_type())) {
+                    replyCommentInterface.onReplyButtonClicked(position);
+                }
             }
         });
         if (replyList.get(position).getProfile_image() != null && !StringUtils.isNullOrEmpty(replyList.get(position).getProfile_image().getClientAppMin())) {

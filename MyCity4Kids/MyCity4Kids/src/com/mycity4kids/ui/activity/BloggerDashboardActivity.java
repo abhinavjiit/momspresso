@@ -193,7 +193,6 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         moreTextView = (TextView) header.findViewById(R.id.more_text);
         followButton = (TextView) header.findViewById(R.id.followTextView);
         unfollowButton = (TextView) header.findViewById(R.id.unfollowTextView);
-//        following = (TextView) header.findViewById(R.id.followingTextView1);
         FollowersLinearLL = (LinearLayout) header.findViewById(R.id.FollowersLinearLL);
         FollowingLinearLL = (LinearLayout) header.findViewById(R.id.FollowingLinearLL);
         setSupportActionBar(mToolbar);
@@ -230,9 +229,6 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
             bloggerImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    Intent intent = new Intent(Intent.ACTION_PICK);
-//                    intent.setType("image/*");
-//                    startActivityForResult(intent, ADD_MEDIA_ACTIVITY_REQUEST_CODE);
                     chooseImageOptionPopUp(bloggerImageView);
                 }
             });
@@ -595,8 +591,6 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                 boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
                 if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestCommentsRunning && !isLastPageCommentsReached) {
                     mLodingView.setVisibility(View.VISIBLE);
-                    //caching enabled only for page 1. so disabling it here for all other pages by passing false.
-                    //  hitArticleListingApi(nextPageNumber, sortType, false);
                     hitCommentsApi();
                     isReuqestCommentsRunning = true;
 
@@ -1156,23 +1150,6 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                                      userBio.setVisibility(View.VISIBLE);
                                  }
 
-//                                 userBio.post(new Runnable() {
-//                                     @Override
-//                                     public void run() {
-//                                         int lineCnt = userBio.getLineCount();
-//                                         // Perform any actions you want based on the line count here.
-//                                         if (lineCnt > 3) {
-//                                             moreTextView.setVisibility(View.VISIBLE);
-//                                             userBio.setMaxLines(3);
-//                                             userBio.setEllipsize(null);
-//                                             moreTextView.setText("MORE");
-//                                         } else {
-//                                             userBio.setMaxLines(3);
-//                                             userBio.setEllipsize(null);
-//                                             moreTextView.setVisibility(View.GONE);
-//                                         }
-//                                     }
-//                                 });
                              }
                          }
 
@@ -1538,7 +1515,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         intent.putExtra("from", "publishedList");
         intent.putExtra("title", detailData.getTitle());
         intent.putExtra("content", content);
-        intent.putExtra("thumbnailUrl", detailData.getImageUrl());
+        intent.putExtra("thumbnailUrl", detailData.getImageUrl().getClientApp());
         intent.putExtra("articleId", detailData.getId());
         intent.putExtra("tag", new Gson().toJson(detailData.getTags()));
         intent.putExtra("cities", new Gson().toJson(detailData.getCities()));

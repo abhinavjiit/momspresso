@@ -110,7 +110,6 @@ public class DraftListAdapter extends BaseAdapter {
             view.setClickable(false);
             holder.popupButton.setClickable(true);
             holder.txvArticleTitle.setTextColor(Color.BLACK);
-            holder.txvUpdateDate.setTextColor(ContextCompat.getColor(context, R.color.gray2));
         } else {
             switch (draftlist.get(position).getArticleType()) {
                 case "0": {
@@ -119,7 +118,6 @@ public class DraftListAdapter extends BaseAdapter {
                     view.setClickable(false);
                     holder.popupButton.setClickable(true);
                     holder.txvArticleTitle.setTextColor(Color.BLACK);
-                    holder.txvUpdateDate.setTextColor(ContextCompat.getColor(context, R.color.gray2));
                     break;
                 }
                 case "1": {
@@ -127,7 +125,6 @@ public class DraftListAdapter extends BaseAdapter {
                     holder.txvUnapproved.setText("Pending for Approval");
                     view.setBackgroundColor(ContextCompat.getColor(context, R.color.gray_color));
                     holder.txvArticleTitle.setTextColor(ContextCompat.getColor(context, R.color.faded_text));
-                    holder.txvUpdateDate.setTextColor(ContextCompat.getColor(context, R.color.faded_italic));
                     view.setClickable(true);
                     holder.popupButton.setClickable(false);
                     break;
@@ -138,7 +135,6 @@ public class DraftListAdapter extends BaseAdapter {
                     view.setClickable(false);
                     holder.popupButton.setClickable(true);
                     holder.txvArticleTitle.setTextColor(Color.BLACK);
-                    holder.txvUpdateDate.setTextColor(ContextCompat.getColor(context, R.color.gray2));
                     break;
                 }
                 case "4": {
@@ -147,7 +143,6 @@ public class DraftListAdapter extends BaseAdapter {
                     view.setClickable(false);
                     holder.popupButton.setClickable(true);
                     holder.txvArticleTitle.setTextColor(Color.BLACK);
-                    holder.txvUpdateDate.setTextColor(ContextCompat.getColor(context, R.color.gray2));
                     break;
                 }
                 default:
@@ -156,7 +151,6 @@ public class DraftListAdapter extends BaseAdapter {
                     view.setClickable(false);
                     holder.popupButton.setClickable(true);
                     holder.txvArticleTitle.setTextColor(Color.BLACK);
-                    holder.txvUpdateDate.setTextColor(ContextCompat.getColor(context, R.color.gray2));
                     break;
             }
         }

@@ -60,7 +60,7 @@ public class CommentRepliesDialogFragment extends DialogFragment implements OnCl
     ListView replyListView;
     CommentsReplyAdapter adapter;
     private CommentsData commentsData;
-    private LinearLayout addCommentLayout;
+    private LinearLayout addCommentLayout, commentLayout;
     private EditText addReplyEditText;
     Toolbar mToolbar;
     ArrayList<CommentsData> completeReplies = new ArrayList<>();
@@ -93,11 +93,17 @@ public class CommentRepliesDialogFragment extends DialogFragment implements OnCl
         replyListView = (ListView) rootView.findViewById(R.id.replyListView);
         addCommentLayout = (LinearLayout) rootView.findViewById(R.id.addCommentLinearLayout);
         addReplyEditText = (EditText) rootView.findViewById(R.id.addReplyEditText);
+        commentLayout = (LinearLayout) rootView.findViewById(R.id.comment_layout);
+
         addCommentLayout.setOnClickListener(this);
         Bundle extras = getArguments();
         if (extras != null) {
             commentsData = extras.getParcelable("commentData");
             articleId = extras.getString("articleId");
+        }
+
+        if ("fb".equals(commentsData.getComment_type())) {
+            commentLayout.setVisibility(View.GONE);
         }
 
         completeReplies.add(commentsData);
@@ -114,10 +120,15 @@ public class CommentRepliesDialogFragment extends DialogFragment implements OnCl
         }
         for (int i = 0; i < cData.getReplies().size(); i++) {
             cData.getReplies().get(i).setCommentLevel(0);
-            completeReplies.add(cData.getReplies().get(i));
-            for (int j = 0; j < cData.getReplies().get(i).getReplies().size(); j++) {
-                cData.getReplies().get(i).getReplies().get(j).setCommentLevel(1);
-                completeReplies.add(cData.getReplies().get(i).getReplies().get(j));
+            if (!"fb".equals(cData.getComment_type())) {
+                completeReplies.add(cData.getReplies().get(i));
+                for (int j = 0; j < cData.getReplies().get(i).getReplies().size(); j++) {
+                    cData.getReplies().get(i).getReplies().get(j).setCommentLevel(1);
+                    completeReplies.add(cData.getReplies().get(i).getReplies().get(j));
+                }
+            } else {
+                cData.getReplies().get(i).setComment_type("fb");
+                completeReplies.add(cData.getReplies().get(i));
             }
         }
     }

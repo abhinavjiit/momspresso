@@ -70,6 +70,9 @@ public class PublishedArticleListingAdapter extends BaseAdapter {
             holder.txvArticleTitle = (TextView) view.findViewById(R.id.txvArticleTitle);
             holder.txvPublishDate = (TextView) view.findViewById(R.id.txvPublishDate);
             holder.unapproved = (TextView) view.findViewById(R.id.unapproved);
+            holder.txvArticleViewCount = (TextView) view.findViewById(R.id.articleViewCountTextView);
+
+            holder.txvArticleViewCount.setVisibility(View.VISIBLE);
             holder.unapproved.setVisibility(View.GONE);
             holder.popupButton = view.findViewById(R.id.img_menu);
             if (!isPrivateProfile) {
@@ -77,6 +80,8 @@ public class PublishedArticleListingAdapter extends BaseAdapter {
             } else {
                 holder.popupButton.setVisibility(View.VISIBLE);
             }
+
+            holder.txvArticleViewCount.setText(articleDataModelsNew.get(position).getArticleCount() + " Views");
             holder.popupButton.setTag(getItem(position));
             if (Build.VERSION.SDK_INT == 15) {
                 holder.popupButton.setVisibility(View.GONE);
@@ -132,6 +137,7 @@ public class PublishedArticleListingAdapter extends BaseAdapter {
     class ViewHolder {
         TextView txvArticleTitle;
         TextView txvPublishDate;
+        TextView txvArticleViewCount;
         TextView unapproved;
         View popupButton;
     }

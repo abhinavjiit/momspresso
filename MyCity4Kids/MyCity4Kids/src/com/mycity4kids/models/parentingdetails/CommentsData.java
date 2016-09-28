@@ -16,6 +16,7 @@ public class CommentsData implements Parcelable {
     private String createdTime;
     private String updatedTime;
     private String userId;
+    private String userType;
     private String comment_type;
     private ProfilePic profilePic;
     private ArrayList<CommentsData> replies;
@@ -38,6 +39,7 @@ public class CommentsData implements Parcelable {
         profilePic = in.readParcelable(ProfilePic.class.getClassLoader());
         replies = in.createTypedArrayList(CommentsData.CREATOR);
         commentLevel = in.readInt();
+        userType = in.readString();
     }
 
     public ArrayList<CommentsData> getReplies() {
@@ -70,6 +72,14 @@ public class CommentsData implements Parcelable {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
     }
 
     public String getUpdatedTime() {
@@ -155,6 +165,7 @@ public class CommentsData implements Parcelable {
         dest.writeParcelable(profilePic, flags);
         dest.writeTypedList(replies);
         dest.writeInt(commentLevel);
+        dest.writeString(userType);
     }
 
     public static final Creator<CommentsData> CREATOR = new Creator<CommentsData>() {
