@@ -375,7 +375,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     @Override
     protected void onStart() {
         super.onStart();
-        if (!StringUtils.isNullOrEmpty(deepLinkURL) && AppConstants.BASE_URL.equalsIgnoreCase("http://webserve.mycity4kids.com/")) {
+        if (!StringUtils.isNullOrEmpty(deepLinkURL) && AppConstants.BASE_URL.equalsIgnoreCase("http://api.mycity4kids.com/")) {
             // Connect client
             mClient.connect();
             final String TITLE = screenTitle;
@@ -401,7 +401,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
     @Override
     protected void onStop() {
-        if (!StringUtils.isNullOrEmpty(deepLinkURL) && AppConstants.BASE_URL.equalsIgnoreCase("http://webserve.mycity4kids.com/")) {
+        if (!StringUtils.isNullOrEmpty(deepLinkURL) && AppConstants.BASE_URL.equalsIgnoreCase("http://api.mycity4kids.com/")) {
             final String TITLE = screenTitle;
             final Uri APP_URI = AppConstants.APP_BASE_URI.buildUpon().appendPath(deepLinkURL).build();
             final Uri WEB_URL = AppConstants.WEB_BASE_URL.buildUpon().appendPath(deepLinkURL).build();
@@ -449,7 +449,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 addRemoveBookmark();
                 return true;
             case R.id.share:
-                if (StringUtils.isNullOrEmpty(blogSlug) && StringUtils.isNullOrEmpty(titleSlug)) {
+                if (StringUtils.isNullOrEmpty(shareUrl) && StringUtils.isNullOrEmpty(blogSlug) && StringUtils.isNullOrEmpty(titleSlug)) {
                     showToast("Unable to share the article currently!");
                     return true;
                 }
@@ -736,7 +736,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 holder.commentDescription.setText(commentList.getBody());
             }
             if (!StringUtils.isNullOrEmpty(commentList.getCreate())) {
-                holder.dateTxt.setText(DateTimeUtils.getDateFromTimestamp(Long.parseLong(commentList.getCreate())));
+                holder.dateTxt.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(Long.parseLong(commentList.getCreate())));
             } else {
                 holder.dateTxt.setText("NA");
             }
@@ -988,6 +988,10 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 commentURL = responseData.getCommentsUri();
 
                 if (!StringUtils.isNullOrEmpty(commentURL) && commentURL.contains("http")) {
+                    getMoreComments();
+                } else {
+                    commentType = "fb";
+                    commentURL = "http";
                     getMoreComments();
                 }
             } catch (Exception e) {

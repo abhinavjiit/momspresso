@@ -112,6 +112,7 @@ public class BusinessListController extends BaseController {
         switch (response.getDataType()) {
             case AppConstants.BUSINESS_LIST_REQUEST:
                 try {
+                    Log.d("Events Response ", "" + response);
                     String responseData = new String(response.getResponseData());
                     BusinessListResponse businessList = new Gson().fromJson(responseData, BusinessListResponse.class);
                     response.setResponseObject(businessList);
@@ -195,8 +196,6 @@ public class BusinessListController extends BaseController {
         businessModel.setLatitude(String.valueOf(_latitude));
         businessModel.setLongitude(String.valueOf(_longitude));
         StringBuilder builder = new StringBuilder();
-        //		http://54.251.100.249/webservices/apilistings/business?city_id=1&category_id=248&sub_category_id=585&page=3&zone_id=4&locality_id=852
-        //			http://54.251.100.249/webservices/apilistings/business?city_id=1&category_id=248&sort_by=rating
 
         builder.append("city_id=").append(businessModel.getCity_id());
 
@@ -204,14 +203,6 @@ public class BusinessListController extends BaseController {
             builder.append("&category_id=").append(businessModel.getCategory_id());
         }
 
-//        String pincode = SharedPrefUtils.getpinCode(getActivity());
-//        if (!StringUtils.isNullOrEmpty(pincode)) {
-//            builder.append("&pincode=").append(pincode);
-//        }
-
-		/*if (! StringUtils.isNullOrEmpty(businessModel.getSub_category_id())) {
-            builder.append("&sub_category_id=").append(businessModel.getSub_category_id());
-		}*/
         if (!StringUtils.isNullOrEmpty(businessModel.getPage())) {
             builder.append("&page=").append(businessModel.getPage());
         }
@@ -222,25 +213,6 @@ public class BusinessListController extends BaseController {
         if (!StringUtils.isNullOrEmpty(businessModel.getTotalFilterValues())) {
             builder.append(businessModel.getTotalFilterValues());
         }
-        /*if (! StringUtils.isNullOrEmpty(businessModel.getZone_id())) {
-            builder.append("&zone_id=").append(businessModel.getZone_id());
-		}*/
-        /*if (! StringUtils.isNullOrEmpty(businessModel.getAge_group())) {
-            builder.append("&age_group=").append(businessModel.getAge_group());
-		}
-		if (! StringUtils.isNullOrEmpty(businessModel.getDate_by())) {
-			builder.append("&date_by=").append(businessModel.getDate_by());
-		}
-		if (! StringUtils.isNullOrEmpty(businessModel.getActivities())) {
-			builder.append("&activities=").append(businessModel.getActivities());
-		}*/
-
-		/*if(! StringUtils.isNullOrEmpty(businessModel.getQuerySearch())){
-            builder.append("q=").append(businessModel.getQuerySearch());
-		}
-		if(! StringUtils.isNullOrEmpty(businessModel.getLocalitySearch())){
-			builder.append("&locality=").append(businessModel.getLocalitySearch());
-		}*/
 
         if (!StringUtils.isNullOrEmpty(businessModel.getDate_by())) {
             builder.append("&date_by=").append(businessModel.getDate_by());
@@ -252,9 +224,6 @@ public class BusinessListController extends BaseController {
         if (!StringUtils.isNullOrEmpty(businessModel.getLocality_id())) {
             builder.append("&locality_id=").append(businessModel.getLocality_id());
         }
-        /*	if (! StringUtils.isNullOrEmpty(businessModel.getMore())) {
-            builder.append("&more=").append(businessModel.getMore());
-		}*/
         if (!StringUtils.isNullOrEmpty(businessModel.getSort_by())) {
             builder.append("&sort=").append(businessModel.getSort_by());
         }
@@ -264,12 +233,6 @@ public class BusinessListController extends BaseController {
         if (!StringUtils.isNullOrEmpty(businessModel.getLongitude())) {
             builder.append("&longitude=").append(businessModel.getLongitude());
         }
-//anupama
-        /*String device_id=DataUtils.getDeviceId(getActivity());
-		if (! StringUtils.isNullOrEmpty(device_id)) {
-			builder.append("&imei_no=").append(device_id);
-		}*/
-
         builder.append("&pincode=").append(SharedPrefUtils.getpinCode(getActivity()));
 
         return builder.toString().replace(" ", "%20");
@@ -409,15 +372,15 @@ public class BusinessListController extends BaseController {
         }
 
 		/*if (! StringUtils.isNullOrEmpty(businessModel.getSort_by())) {
-			builder.append("&sort=").append(businessModel.getSort_by());
+            builder.append("&sort=").append(businessModel.getSort_by());
 		}*/
 
 		/*if (! StringUtils.isNullOrEmpty(businessModel.getTotalFilterValues())) {
-			builder.append(businessModel.getTotalFilterValues());
+            builder.append(businessModel.getTotalFilterValues());
 		}*/
 
 		/*if (! StringUtils.isNullOrEmpty(businessModel.getPage())) {
-			builder.append("&page=").append(businessModel.getPage());
+            builder.append("&page=").append(businessModel.getPage());
 		}*/
 		/*if (! StringUtils.isNullOrEmpty(businessModel.getLatitude())) {
 			builder.append("&latitude=").append(businessModel.getLatitude());

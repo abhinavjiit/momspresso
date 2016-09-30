@@ -12,13 +12,6 @@
         android:cacheColorHint="@color/transparent"
         android:visibility="gone" />
 
-    <!--<com.mycity4kids.widget.FixedTabHost
-        android:id="@android:id/tabhost"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/topSeparator"
-        android:background="@android:color/white"
-        >-->
     <RelativeLayout
         android:id="@+id/search_bar"
         android:layout_width="match_parent"

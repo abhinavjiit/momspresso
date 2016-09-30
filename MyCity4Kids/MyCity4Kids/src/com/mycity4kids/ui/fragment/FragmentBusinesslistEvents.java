@@ -160,7 +160,7 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
             tab_host.setup();
             tab_host.setOnTabChangedListener(this);
             tab_host.setVisibility(View.GONE);
-           // chosen_tab = TabType.Filter;
+            // chosen_tab = TabType.Filter;
             businessAdapter = new BusinessListingAdapterevent(getActivity());
             businessOrEventType = getActivity().getIntent().getIntExtra(Constants.PAGE_TYPE, 0);
             categoryId = getActivity().getIntent().getIntExtra(Constants.EXTRA_CATEGORY_ID, 0);
@@ -180,21 +180,6 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
             if (getActivity().getIntent().getExtras() != null) {
                 // added by khushboo
             }
-           /* Constants.IS_SEARCH_LISTING = getActivity().getIntent().getExtras().getBoolean("isSearchListing", false);
-            if (Constants.IS_SEARCH_LISTING) {
-                querySearch = getActivity().getIntent().getExtras().getString("query");
-                localitySearch = getActivity().getIntent().getExtras().getString("locality");
-                hitBusinessSearchListingApi(querySearch, localitySearch, mPageCount);
-//                if (!StringUtils.isNullOrEmpty(localitySearch) && !StringUtils.isNullOrEmpty(querySearch)) {
-//                    _headerTxt.setText(querySearch + " in " + localitySearch);
-//                } else if (!StringUtils.isNullOrEmpty(localitySearch) && StringUtils.isNullOrEmpty(querySearch)) {
-//                    _headerTxt.setText(localitySearch);
-//                } else if (StringUtils.isNullOrEmpty(localitySearch) && !StringUtils.isNullOrEmpty(querySearch)) {
-//                    _headerTxt.setText(querySearch);
-//                }
-
-
-            } else {*/
 
             String categoryName = getActivity().getIntent().getStringExtra(Constants.CATEGOTY_NAME);
 
@@ -202,8 +187,6 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
                 categoryName = getArguments().getString(Constants.CATEGOTY_NAME);
             }
 
-//                _headerTxt.setText(categoryName);
-            //
             TableKids tableKids = new TableKids(BaseApplication.getInstance());
             ArrayList<KidsInfo> kidsInformations = new ArrayList<>();
             kidsInformations = tableKids.getAllKids();
@@ -216,33 +199,27 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
                     startDate = df.parse(kidsInformations.get(i).getDate_of_birth());
                     int age = getAge(startDate);
                     agelist.add(age);
-                    ageArryList.add(""+age);
+                    ageArryList.add("" + age);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
             }
-           // String agegoupstr = "&age_group[]=";
-           // String finalstrdata = "";
             HashSet<String> selectedageGroups = new HashSet<>();
 
             for (int i = 0; i < agelist.size(); i++) {
                 if ((agelist.get(i) >= 0) && (agelist.get(i) < 2)) {
 
                     selectedageGroups.add("infants");
-                }
-               else if ((agelist.get(i) >= 2) && (agelist.get(i) <4)) {
+                } else if ((agelist.get(i) >= 2) && (agelist.get(i) < 4)) {
 
                     selectedageGroups.add("toddlers");
-                }
-               else if ((agelist.get(i) >= 4) && (agelist.get(i) <6)) {
+                } else if ((agelist.get(i) >= 4) && (agelist.get(i) < 6)) {
 
                     selectedageGroups.add("kindergarten");
-                }
-               else if ((agelist.get(i) >=6) && (agelist.get(i) <10)) {
+                } else if ((agelist.get(i) >= 6) && (agelist.get(i) < 10)) {
 
                     selectedageGroups.add("junior_school");
-                }
-               else  if ((agelist.get(i) >=10) && (agelist.get(i) <14)) {
+                } else if ((agelist.get(i) >= 10) && (agelist.get(i) < 14)) {
 
                     selectedageGroups.add("middle_school");
                 }
@@ -267,20 +244,6 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
             // now add age also
             Object[] ageObj = ageArryList.toArray();
 
-//            String ageString = "&age[]=";
-
-//            flag = false;
-//            for (int i = 0; i < ageObj.length; i++) {
-//
-//                if (flag) {
-//                    ageString = ageString + "&age[]=";
-//                }
-//
-//                ageString = ageString + ageObj[i].toString();
-//                flag = true;
-//
-//            }
-//          finalString = finalString + ageString;
 
             mFilterMap.put(MapTypeFilter.AgeGroup, finalString);
             //
@@ -291,37 +254,6 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
                 view.findViewById(R.id.tabline).setVisibility(View.GONE);
                 _RootLayout.setVisibility(View.GONE);
                 manageTabForFilter();
-//                    tab_host.getTabWidget().getChildAt(0).setOnTouchListener(new OnTouchListener() {
-//
-//                        @Override
-//                        public boolean onTouch(View v, MotionEvent event) {
-//                            if (event.getAction() == MotionEvent.ACTION_UP) {
-//                                ((TextView) view.findViewById(R.id.txt_no_data_business)).setVisibility(View.GONE);
-//                                if (tab_host.getCurrentTabTag().equals("Tab0")) {
-//                                    tab_host.getTabWidget().getChildAt(0).setSelected(true);
-//                                    if (pager_view.getVisibility() == View.GONE) {
-//                                        Animation bottomUp = AnimationUtils.loadAnimation(getActivity(), R.anim.bottom_down);
-//                                        pager_view.startAnimation(bottomUp);
-//                                        pager_view.setVisibility(View.VISIBLE);
-//                                    } else {
-//                                        Animation bottomUp = AnimationUtils.loadAnimation(getActivity(), R.anim.bottom_up);
-//                                        bottomUp.setAnimationListener(makeTopGone);
-//                                        pager_view.startAnimation(bottomUp);
-//                                        //	pager_view.setVisibility(View.INVISIBLE) ;
-//                                        //	pager_view.setVisibility(View.GONE) ;
-//                                    }
-//
-//                                } else if (tab_host.getCurrentTabTag().equals("SortTab0")) {
-//                                    tab_host.getTabWidget().getChildAt(0).setSelected(true);
-//                                    if (mSortbyArrays != null && !mSortbyArrays.isEmpty()) {
-//                                        SortBy sortBy = mSortbyArrays.get(0);
-//                                    }
-//                                }
-//
-//                            }
-//                            return false;
-//                        }
-//                    });
 
             } else if (businessOrEventType == Constants.BUSINESS_PAGE_TYPE) {
                 mSortbyArrays = getSorts();
@@ -337,11 +269,10 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
     }
 
 
-
     @Override
     public void onStart() {
         super.onStart();
-        if (!StringUtils.isNullOrEmpty(deepLinkURL) && AppConstants.BASE_URL.equalsIgnoreCase("http://webserve.mycity4kids.com/")) {
+        if (!StringUtils.isNullOrEmpty(deepLinkURL) && AppConstants.BASE_URL.equalsIgnoreCase("http://api.mycity4kids.com/")) {
             // Connect client
             mClient.connect();
             final String TITLE = screenTitle;
@@ -354,10 +285,10 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
                 @Override
                 public void onResult(Status status) {
                     if (status.isSuccess()) {
-                        Log.d(TAG, APP_URI.toString()+" App Indexing API: The screen view started" +
+                        Log.d(TAG, APP_URI.toString() + " App Indexing API: The screen view started" +
                                 " successfully.");
                     } else {
-                        Log.e(TAG, APP_URI.toString()+" App Indexing API: There was an error " +
+                        Log.e(TAG, APP_URI.toString() + " App Indexing API: There was an error " +
                                 "recording the screen ." + status.toString());
                     }
                 }
@@ -367,7 +298,7 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
 
     @Override
     public void onStop() {
-        if (!StringUtils.isNullOrEmpty(deepLinkURL) && AppConstants.BASE_URL.equalsIgnoreCase("http://webserve.mycity4kids.com/")) {
+        if (!StringUtils.isNullOrEmpty(deepLinkURL) && AppConstants.BASE_URL.equalsIgnoreCase("http://api.mycity4kids.com/")) {
             final String TITLE = screenTitle;
             final Uri APP_URI = AppConstants.APP_BASE_URI.buildUpon().appendPath(deepLinkURL).build();
             final Uri WEB_URL = AppConstants.WEB_BASE_URL.buildUpon().appendPath(deepLinkURL).build();
@@ -378,10 +309,10 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
                 @Override
                 public void onResult(Status status) {
                     if (status.isSuccess()) {
-                        Log.d(TAG, APP_URI.toString()+" App Indexing API:  The screen view end " +
+                        Log.d(TAG, APP_URI.toString() + " App Indexing API:  The screen view end " +
                                 "successfully.");
                     } else {
-                        Log.e(TAG, APP_URI.toString()+" App Indexing API: There was an error " +
+                        Log.e(TAG, APP_URI.toString() + " App Indexing API: There was an error " +
                                 "recording the screen." + status.toString());
                     }
                 }
@@ -391,6 +322,7 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
         }
         super.onStop();
     }
+
     public void refreshList() {
         businessAdapter.refreshEventIdList();
         businessAdapter.notifyDataSetChanged();
@@ -447,68 +379,6 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
             businessListView.setAdapter(businessAdapter);
         }
 
-
-       /* TableKids tableKids = new TableKids(BaseApplication.getInstance());
-        ArrayList<KidsInfo> kidsInformations =new ArrayList<>();
-        kidsInformations=tableKids.getAllKids();
-        ArrayList<Float> agelist=new ArrayList<>();
-        for(int i=0;i<kidsInformations.size();i++)
-        {
-            DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
-            Date startDate;
-            try {
-                startDate = df.parse(kidsInformations.get(i).getDate_of_birth());
-                float age=getAge(startDate);
-                agelist.add(age);
-
-
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-        String agegoupstr="&age_group[]=";
-        String finalstrdata="";
-        for(int i=0;i<agelist.size();i++)
-        {
-            if((agelist.get(i)>=0)&&(agelist.get(i)<=2))
-            {
-                Log.d("check","age 1 ");
-                finalstrdata=finalstrdata+agegoupstr+"infants";
-            }
-        }
-        for (int i = 0; i < agelist.size(); i++) {
-            if ((agelist.get(i) >= 3) && (agelist.get(i) <= 4)) {
-                Log.d("check","age 2 ");
-                finalstrdata=finalstrdata+agegoupstr+"toddlers";
-            }
-        }
-        for(int i=0;i<agelist.size();i++)
-        {
-            if((agelist.get(i)>=5)&&(agelist.get(i)<=6))
-            {
-                Log.d("check","age 3 ");
-                finalstrdata=finalstrdata+agegoupstr+"kindergarten";
-            }
-        }
-        for(int i=0;i<agelist.size();i++)
-        {
-            if((agelist.get(i)>=7)&&(agelist.get(i)<=10))
-            {
-                Log.d("check","age 4 ");
-                finalstrdata=finalstrdata+agegoupstr+"junior_school";
-            }
-        }
-        for(int i=0;i<agelist.size();i++)
-        {
-            if((agelist.get(i)>=11)&&(agelist.get(i)<=14))
-            {
-                Log.d("check", "age 5 ");
-                finalstrdata=finalstrdata+agegoupstr+"middle_school";
-
-            }
-        }
-        mFilterMap.put(MapTypeFilter.AgeGroup, finalstrdata);*/
-
         mSearchList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
@@ -521,11 +391,8 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
                      */
                     String whichAdapterDataIsLoaded = (String) parent.getTag();
                     String listItem = (String) parent.getAdapter().getItem(pos).toString();
-//                    Log.d("check","check ArrayAdapter ");
-//                    Log.d("check","check listItem "+listItem);
                     searchName.removeTextChangedListener(textWatcher);
                     if (!listItem.contains(",")) {
-//                        Log.d("check","check listItem null");
                         isContainCommaQuery = false;
                         searchName.setText(listItem);
                         mSearchList.setVisibility(View.GONE);
@@ -535,8 +402,6 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
                         StringTokenizer tokens = new StringTokenizer(listItem, ",");
                         String first = tokens.nextToken();
                         String second = tokens.nextToken();
-//                        Log.d("check","check first "+first);
-//                        Log.d("check","check second "+second);
                         if (!StringUtils.isNullOrEmpty(first) && !StringUtils.isNullOrEmpty(second)) {
                             searchName.setText(first.trim());
                             mLocalitySearchEtxt.setText(second.trim());
@@ -548,19 +413,12 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
 
                 } else if (parent.getAdapter() instanceof SubLocalityAdapter) {
                     String listItem = (String) parent.getAdapter().getItem(pos).toString();
-//                    Log.d("check","check SubLocalityAdapter ");
-                    ///if(pos == 0 && ((SubLocalityAdapter)parent.getAdapter()).getSublocalities().get(0).equals("Current Location")) {
                     String queryData = searchName.getText().toString();
                     String locality = mLocalitySearchEtxt.getText().toString();
                     String localitysearch = "";
 
                     if (!queryData.equals("")) {
 
-                       /* FragmentBusinesslistEvents infoFragment = new FragmentBusinesslistEvents();
-                        Bundle args = new Bundle() ;
-                       // Intent intent =new Intent(BusinessListActivityKidsResources.this,BusinessListActivityKidsResources.class);
-                       // args.putExtra("query", queryData);
-                        args.putString("query", queryData);*/
                         if (locality.equals("") || !isContainCommaQuery) {
                             String localityData = (String) parent.getAdapter().getItem(pos);
                             mLocalitySearchEtxt.setText(listItem);
@@ -585,12 +443,6 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
                     } else {
                         ToastUtils.showToast(getActivity(), getString(R.string.no_query));
                     }
-                    ///	}else{
-                        /*	mLocalitySearchEtxt.removeTextChangedListener(textWatcher);
-                            String listItem = ((SubLocalityAdapter)parent.getAdapter()).getSublocalities().get(pos);
-							mLocalitySearchEtxt.setText(listItem);
-							mLocalitySearchEtxt.addTextChangedListener(textWatcher);
-						}*/
                 }
             }
         });
@@ -605,27 +457,9 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
                     return;
                 }
                 if (!StringUtils.isNullOrEmpty(queryData) || !StringUtils.isNullOrEmpty(localityData)) {
-                    //  if (!StringUtils.isNullOrEmpty(queryData)) {
-
-                    //if(isContainCommaQuery || localityData.equals(""))
-                    //	{
-                  /*  FragmentBusinesslistEvents infoFragment = new FragmentBusinesslistEvents();
-                    Bundle args = new Bundle() ;
-                    args.putString("query", queryData);
-                    args.putString("locality", localityData);
-                    args.putBoolean("isSearchListing", true);
-                    infoFragment.setArguments(args);*/
                     mIsComingFromFilter = false;
                     hitBusinessSearchListingApi(queryData, "", mPageCount);
-
-                    //	}else{
-                    //		showToast("Please give correct data!");
-                    //		return;
-                    //	}
-                    //	}
                 }
-                   /* Intent intent = new Intent(getActivity(), AutoSuggestTransparentDialogActivity.class);
-                    startActivity(intent);*/
                 hideSearchList();
             }
         });
@@ -779,38 +613,6 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
         });
     }
 
-    /*public void searchList(CharSequence s, int start, int before, int count,
-                           String edittext) {
-        // TODO Auto-generated method stub
-
-        ArrayList<Activities> activitieslist = new ArrayList<Activities>();
-        int editlength = edittext.length();
-        for (int i = 0; i < mBusinessDataListings.size(); i++) {
-            if (editlength <= mBusinessDataListings.get(i).getName().length()) {
-                if (edittext
-                        .equalsIgnoreCase((String) mBusinessDataListings.get(i).getName()
-                                .subSequence(0, editlength))) {
-                    Log.d("Getid", "success ");
-                    Activities activityModel = new Activities();
-                    activityModel.setId(mBusinessDataListings.get(i).getId());
-                    activityModel.setName(mActivitiesList.get(i).getName());
-                    activitieslist.add(activityModel);
-                    //friendslistsearch.add(new Activities(mActivitiesList.get(i).getId(),mActivitiesList.get(i).getName()));
-                    Log.d("Getid", "success " + activitieslist.size());
-                    *//*_adapter = new ActivitiesFragmentAdapter(getActivity(),parentzFragment,
-                            activitieslist);*//*
-                    //_adapter.setList(activitieslist);
-                    //mActivitiesListView.setAdapter(_adapter);
-                    _adapter.notifyDataSetChanged();
-
-
-                }
-
-
-            }
-
-        }
-    }*/
     public int getAge(Date dateOfBirth) {
         int age = 0;
 
@@ -854,25 +656,6 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
                         newList.add(b);
                 }
             }
-            //  mBusinessDataListingschild.add(newList);
-          /*  Iterator myVeryOwnIterator = originalList.keySet().iterator();
-            while (myVeryOwnIterator.hasNext()) {
-
-                ArrayList<TaskMappingModel> newList = new ArrayList<>();
-                String key = (String) myVeryOwnIterator.next();
-                ArrayList<TaskMappingModel> tasklist = originalList.get(key);
-
-
-                for (TaskMappingModel modelTasks : tasklist) {
-
-                    if (!StringUtils.isNullOrEmpty(modelTasks.getTaskName())) {
-                        if (modelTasks.getTaskName().toLowerCase().contains(query))
-
-                            newList.add(modelTasks);
-                    }
-                }
-                childList.put(key, newList);
-            }*/
         }
 
         // businessAdapter.setListData();
@@ -880,30 +663,8 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
         eventListView.setAdapter(businessAdapter);
         businessAdapter.notifyDataSetChanged();
     }
-    // commenting by khushboo
-
-//    @Override
-//    public void onBackPressed() {
-//        if (tab_host.getVisibility() == View.VISIBLE && businessOrEventType == Constants.BUSINESS_PAGE_TYPE) {
-//            Animation bottomUp = AnimationUtils.loadAnimation(getActivity(), R.anim.bottom_up);
-//            tab_host.startAnimation(bottomUp);
-//            tab_host.setVisibility(View.GONE);
-//            ((TextView) view.findViewById(R.id.txvFilter)).setBackgroundColor(getResources().getColor(R.color.tab_unchecked));
-//
-//
-//        } else if (pager_view.getVisibility() == View.VISIBLE && businessOrEventType == Constants.EVENT_PAGE_TYPE) {
-//            Animation bottomUp = AnimationUtils.loadAnimation(getActivity(), R.anim.bottom_up);
-//            bottomUp.setAnimationListener(makeTopGone);
-//            pager_view.startAnimation(bottomUp);
-//            ((TextView) view.findViewById(R.id.txvFilter)).setBackgroundColor(getResources().getColor(R.color.tab_unchecked));
-//        } else {
-//            getActivity().finish();
-//        }
-//    }
-
 
     public void hitBusinessListingApiSorted(int categoryId, int page, HashMap<MapTypeFilter, String> mFilterMap) {
-//        Log.d("check","in hitBusinessListingApiSorted ");
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
             ToastUtils.showToast(getActivity(), getString(R.string.toast_network_error));
             return;
@@ -919,7 +680,6 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
             String value = entry.getValue();
             finalValuesForFilter = finalValuesForFilter + value;
 
-            //	System.out.println(key + " " + value);
         }
 
         mBusinessDataListings = new ArrayList<BusinessDataListing>();
@@ -947,26 +707,10 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
             } else {
                 businessListController.getData(AppConstants.BUSINESS_LIST_REQUEST, businessListRequest);
             }
-           /* BusinessListRequest businessListRequest = new BusinessListRequest();
-            businessListRequest.setCategory_id(categoryId + "");
-            businessListRequest.setCity_id((SharedPrefUtils.getCurrentCityModel(getActivity())).getId() + "");
-            businessListRequest.setPage(page + "");
-            businessListController.getData(AppConstants.BUSINESS_LIST_REQUEST, businessListRequest);*/
         }
-        //  mIsRequestRunning = true;
-
-        //
-
-
-        // mFilterMap=new HashMap<MapTypeFilter, String>();
-
-
-        //  BusinessListController businessListController = new BusinessListController(getActivity(), this);
 
         mIsRequestRunning = true;
         mIsComingFromFilter = true;
-        //
-        //	mIsComingFromFilter=false;
     }
 
     public void hitBusinessListingApi(int categoryId, int page) {

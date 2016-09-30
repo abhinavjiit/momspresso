@@ -116,7 +116,6 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/colorline"
                 android:layout_marginTop="8dp"
-                android:background="@color/white_color"
                 android:gravity="center_vertical">
 
                 <TextView
@@ -127,7 +126,7 @@
                     android:drawablePadding="10dp"
                     android:fontFamily="sans-serif-light"
                     android:paddingLeft="10dp"
-                    android:text="215"
+                    android:text="0"
                     android:textSize="13sp"
                     android:visibility="visible" />
 

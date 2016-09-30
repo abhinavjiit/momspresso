@@ -48,12 +48,12 @@ public class DateTimeUtils {
     }
 
     /**
-     * @param pEpochMillis
-     * @param pFormat      Possible values for pFormat are:
-     *                     <ul>
-     *                     <li>{@link Format#DD_Mmm_YYYY_Dow}</li>
-     *                     <li>{@link Format#day_of_week_3_chars}</li>
-     *                     </ul>
+     * @param calendar
+     * @param pFormat  Possible values for pFormat are:
+     *                 <ul>
+     *                 <li>{@link Format#DD_Mmm_YYYY_Dow}</li>
+     *                 <li>{@link Format#day_of_week_3_chars}</li>
+     *                 </ul>
      * @return date string as per calendar, formatted as per pFormat.
      */
     public static String getFormattedDate(Calendar calendar, String pFormat) {
@@ -217,6 +217,22 @@ public class DateTimeUtils {
         try {
             java.text.DateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
             Date netDate = new Date(timeStampStr * 1000);
+            return sdf.format(netDate);
+        } catch (Exception ex) {
+            return "xx";
+        }
+    }
+
+    public static String getDateFromNanoMilliTimestamp(long timeStampStr) {
+
+        try {
+            java.text.DateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
+            Date netDate;
+            if (timeStampStr > 1000000000000l) {
+                netDate = new Date(timeStampStr);
+            } else {
+                netDate = new Date(timeStampStr * 1000);
+            }
             return sdf.format(netDate);
         } catch (Exception ex) {
             return "xx";

@@ -1,8 +1,14 @@
 package com.mycity4kids.ui.adapter;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
+import android.provider.CalendarContract;
+import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,6 +50,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class BusinessListingAdapterevent extends BaseAdapter implements Filterable {
 
@@ -461,13 +468,6 @@ public class BusinessListingAdapterevent extends BaseAdapter implements Filterab
 
         }
 
-
-//        if (mBusinessData.get(position).isEventAdded()) {
-//            holder.statusimg.setBackgroundResource(R.drawable.checkbox_withcheckxxhdpi);
-//        } else {
-//            holder.statusimg.setBackgroundResource(R.drawable.add_red);
-//        }
-
         if (eventIdList.contains(mBusinessData.get(position).getId())) {
             holder.statusimg.setImageResource(R.drawable.checkmark_xxhdpi);
             mBusinessData.get(position).setIsEventAdded(true);
@@ -485,15 +485,27 @@ public class BusinessListingAdapterevent extends BaseAdapter implements Filterab
 
                     ToastUtils.showToast(mContext, mContext.getResources().getString(R.string.event_added));
                 } else {
-                    Intent i = new Intent(mContext, ActivityCreateAppointment.class);
-                    i.putExtra(Constants.BUSINESS_OR_EVENT_ID, mBusinessData.get(position).getId());
-                    i.putExtra(Constants.EVENT_NAME, mBusinessData.get(position).getName());
-                    i.putExtra(Constants.EVENT_DES, mBusinessData.get(position).getDescription());
-                    i.putExtra(Constants.EVENT_LOCATION, mBusinessData.get(position).getLocality());
-                    i.putExtra(Constants.EVENT_START_DATE, mBusinessData.get(position).getStart_date());
-                    i.putExtra(Constants.EVENT_END_DATE, mBusinessData.get(position).getEnd_date());
-                    Utils.pushEvent(mContext, GTMEventType.EVENTLIST_PLUS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId() + "", "Upcoming Events");
-                    mContext.startActivity(i);
+                    final BusinessDataListing information = mBusinessData.get(position);
+                    new AlertDialog.Builder(mContext)
+                            .setTitle("Add Event to calendar")
+                            .setMessage("Do you want add this event to you personal calendar?")
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // continue with delete
+                                    dialog.dismiss();
+                                    //  onButtonClicked.onButtonCLick(0);
+                                    saveCalendar(information.getName(), information.getDescription(), information.getStart_date(), information.getEnd_date(), information.getLocality());
+                                    ToastUtils.showToast(mContext, "Successfully added to Calendar");
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // do nothing
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
                 }
 
             }
@@ -501,6 +513,34 @@ public class BusinessListingAdapterevent extends BaseAdapter implements Filterab
 
 
         return view;
+    }
+
+    private void saveCalendar(String title, String desc, String sDate, String eDate, String location) {
+
+        ContentResolver cr = mContext.getContentResolver();
+        ContentValues values = new ContentValues();
+
+        values.put(CalendarContract.Events.DTSTART, "" + DateTimeUtils.getTimestampFromStringDate(sDate));
+        values.put(CalendarContract.Events.DTEND, "" + DateTimeUtils.getTimestampFromStringDate(eDate));
+        values.put(CalendarContract.Events.TITLE, title);
+        values.put(CalendarContract.Events.DESCRIPTION, desc);
+        values.put(CalendarContract.Events.EVENT_LOCATION, location);
+
+        TimeZone timeZone = TimeZone.getDefault();
+        values.put(CalendarContract.Events.EVENT_TIMEZONE, timeZone.getID());
+
+        // default calendar
+        values.put(CalendarContract.Events.CALENDAR_ID, 3);
+
+//        values.put(CalendarContract.Events.RRULE, "FREQ=DAILY;UNTIL="
+//                + dtUntill);
+
+        values.put(CalendarContract.Events.HAS_ALARM, 1);
+
+        // insert event to calendar
+        Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
+
+
     }
 
     String getTimeAmPm(String milliseconds) {

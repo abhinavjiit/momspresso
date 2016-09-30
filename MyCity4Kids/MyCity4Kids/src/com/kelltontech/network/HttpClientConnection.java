@@ -248,10 +248,10 @@ public class HttpClientConnection extends Thread {
                     uri = new URI(currentRequest.getUrl() + "&user_id=" + "");
                 }
                 getOrPost.setURI(uri);
-//                Log.i(LOG_TAG, "Request URL: " + uri.toURL());
+                Log.i(LOG_TAG, "Request URL: " + uri.toURL());
             } else {
                 getOrPost.setURI(new URI(currentRequest.getUrl()));
-//                Log.i(LOG_TAG, "Request URL: " + getOrPost.getURI().toString());
+                Log.i(LOG_TAG, "Request URL: " + getOrPost.getURI().toString());
             }
 
             String[] headerNames = currentRequest.getHeaderNames();
@@ -271,7 +271,6 @@ public class HttpClientConnection extends Thread {
                 CookieStore cookieStore = new BasicCookieStore();
                 for (int i = 0; i < cookies.size(); i++) {
                     cookieStore.addCookie(cookies.get(i));
-//                    Log.d("MycityCookie Request", "Name = " + cookies.get(i).getName() + " Value = " + cookies.get(i).getValue());
                 }
                 ((DefaultHttpClient) httpClient).setCookieStore(cookieStore);
             }
@@ -279,14 +278,9 @@ public class HttpClientConnection extends Thread {
             httpResponse = httpClient.execute(getOrPost);
             cookies = ((DefaultHttpClient) httpClient).getCookieStore().getCookies();
             saveSharedPreferencesCookies(cookies);
-//            if (cookies != null) {
-//                for (int i = 0; i < cookies.size(); i++) {
-//                    Log.d("MycityCookie Response", "Name = " + cookies.get(i).getName() + " Value = " + cookies.get(i).getValue());
-//                }
-//            }
             int statusCode = httpResponse.getStatusLine().getStatusCode();
 
-//            Log.i(LOG_TAG, "Response Received : " + statusCode);
+            Log.i(LOG_TAG, "Response Received : " + statusCode);
 
             if (currentRequest.isCancelled()) {
                 return;
@@ -343,9 +337,9 @@ public class HttpClientConnection extends Thread {
      */
     private void notifyError(String errorMessage, Exception exception) {
         if (exception == null) {
-//            Log.e(LOG_TAG, "Error Response: " + errorMessage);
+            Log.e(LOG_TAG, "Error Response: " + errorMessage);
         } else {
-//            Log.e(LOG_TAG, "Error Response: " + errorMessage, exception);
+            Log.e(LOG_TAG, "Error Response: " + errorMessage, exception);
         }
         Response response = new Response();
         response.setRequestData(currentRequest.getRequestData());

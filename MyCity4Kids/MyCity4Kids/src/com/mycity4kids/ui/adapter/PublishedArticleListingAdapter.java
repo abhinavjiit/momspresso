@@ -72,7 +72,6 @@ public class PublishedArticleListingAdapter extends BaseAdapter {
             holder.unapproved = (TextView) view.findViewById(R.id.unapproved);
             holder.txvArticleViewCount = (TextView) view.findViewById(R.id.articleViewCountTextView);
 
-            holder.txvArticleViewCount.setVisibility(View.VISIBLE);
             holder.unapproved.setVisibility(View.GONE);
             holder.popupButton = view.findViewById(R.id.img_menu);
             if (!isPrivateProfile) {
@@ -81,7 +80,6 @@ public class PublishedArticleListingAdapter extends BaseAdapter {
                 holder.popupButton.setVisibility(View.VISIBLE);
             }
 
-            holder.txvArticleViewCount.setText(articleDataModelsNew.get(position).getArticleCount() + " Views");
             holder.popupButton.setTag(getItem(position));
             if (Build.VERSION.SDK_INT == 15) {
                 holder.popupButton.setVisibility(View.GONE);
@@ -106,6 +104,8 @@ public class PublishedArticleListingAdapter extends BaseAdapter {
             } else {
                 holder.txvPublishDate.setText(sdf1.format(calendar1.getTime()));
             }
+            holder.txvArticleViewCount.setVisibility(View.VISIBLE);
+            holder.txvArticleViewCount.setText(articleDataModelsNew.get(position).getArticleCount() + " Views");
         } catch (Exception e) {
             e.printStackTrace();
         }

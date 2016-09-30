@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
@@ -47,15 +46,11 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.BusinessListController;
 import com.mycity4kids.dbtable.TableAppointmentData;
-import com.mycity4kids.dbtable.TableKids;
 import com.mycity4kids.dbtable.TableTaskData;
 import com.mycity4kids.dbtable.TaskCompletedTable;
-import com.mycity4kids.enums.ParentingFilterType;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.OnWebServiceCompleteListener;
-import com.mycity4kids.listener.OnButtonClicked;
-import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.businesslist.BusinessDataListing;
 import com.mycity4kids.models.businesslist.BusinessListRequest;
@@ -64,12 +59,12 @@ import com.mycity4kids.models.parentingstop.CommonParentingList;
 import com.mycity4kids.models.parentingstop.CommonParentingResponse;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
-import com.mycity4kids.models.user.KidsInfo;
 import com.mycity4kids.newmodels.AppointmentMappingModel;
 import com.mycity4kids.newmodels.AttendeeModel;
 import com.mycity4kids.newmodels.TaskMappingModel;
 import com.mycity4kids.newmodels.VolleyBaseResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.retrofitAPIsInterfaces.EventsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.activity.ActivityCreateAppointment;
 import com.mycity4kids.ui.activity.ActivityShowAppointment;
@@ -84,11 +79,10 @@ import com.mycity4kids.ui.adapter.AdapterHomeAppointment;
 import com.mycity4kids.ui.adapter.ArticlesListingAdapter;
 import com.mycity4kids.ui.adapter.BusinessListingAdapterevent;
 import com.mycity4kids.utils.ArrayAdapterFactory;
+import com.mycity4kids.utils.location.GPSTracker;
 import com.mycity4kids.volley.HttpVolleyRequest;
 import com.mycity4kids.widget.CustomListView;
 import com.squareup.picasso.Picasso;
-
-import org.wordpress.android.editor.EditorWebViewAbstract;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -102,7 +96,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -342,7 +335,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
             eventListView.setAdapter(businessAdapter);
 
             if (BaseApplication.getBusinessREsponse() == null || BaseApplication.getBusinessREsponse().isEmpty()) {
-                hitBusinessListingApi(SharedPrefUtils.getEventIdForCity(getActivity()), 1);
+                hitBusinessListingApiRetro(SharedPrefUtils.getEventIdForCity(getActivity()), 1);
             } else {
                 mEventDataAvalble = true;
                 mBusinessDataListings.addAll(BaseApplication.getBusinessREsponse());
@@ -423,27 +416,6 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
             //        progressBar.setVisibility(View.VISIBLE);
         }
 
-        // child ages
-        TableKids tableKids = new TableKids(BaseApplication.getInstance());
-        ArrayList<KidsInfo> kidsInformations = (ArrayList<KidsInfo>) tableKids.getAllKids();
-        HashSet<String> selectedageGroups = new HashSet<>();
-
-        // find ages
-
-        for (int i = 0; i < kidsInformations.size(); i++) {
-            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-            Date startDate;
-            try {
-                startDate = df.parse(kidsInformations.get(i).getDate_of_birth());
-                int age = getAge(startDate);
-
-                selectedageGroups.add("" + age);
-
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-
         BusinessListController businessListController = new BusinessListController(getActivity(), this);
         BusinessListRequest businessListRequest = new BusinessListRequest();
         businessListRequest.setCategory_id(categoryId + "");
@@ -453,6 +425,22 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
 
         mIsRequestRunning = true;
 
+    }
+
+    private void hitBusinessListingApiRetro(int categoryId, int page) {
+        if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
+            return;
+        }
+
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        EventsAPI topicsAPI = retrofit.create(EventsAPI.class);
+        GPSTracker getCurrentLocation = new GPSTracker(getActivity());
+        double _latitude = getCurrentLocation.getLatitude();
+        double _longitude = getCurrentLocation.getLongitude();
+
+        Call<BusinessListResponse> filterCall = topicsAPI.getEventList("" + (SharedPrefUtils.getCurrentCityModel(getActivity())).getId(), "" + categoryId,
+                "" + _latitude, "" + _longitude, "", SharedPrefUtils.getUserDetailModel(getActivity()).getId(), 1);
+        filterCall.enqueue(eventListingResponseCallback);
     }
 
     public void hitBlogListingApi() {
@@ -607,6 +595,69 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
             }
         }
     };
+
+    private Callback<BusinessListResponse> eventListingResponseCallback = new Callback<BusinessListResponse>() {
+        @Override
+        public void onResponse(Call<BusinessListResponse> call, retrofit2.Response<BusinessListResponse> response) {
+            momspressoProgressbar.setVisibility(View.GONE);
+            if (response == null || response.body() == null) {
+                ((DashboardActivity) getActivity()).showToast("Something went wrong from server");
+                return;
+            }
+
+            try {
+                progressBar.setVisibility(View.GONE);
+                BusinessListResponse responseData = (BusinessListResponse) response.body();
+                if (responseData.getResponseCode() == Constants.HTTP_RESPONSE_SUCCESS) {
+
+                    mBusinessListCount = responseData.getResult().getData().getTotal();
+                    mTotalPageCount = responseData.getResult().getData().getPage_count();
+                    //to add in already created list
+                    // we neew to clear this list in case of sort by and filter
+                    //  mBusinessDataListings.clear();
+                    mBusinessDataListings.addAll(responseData.getResult().getData().getData());
+
+                    BaseApplication.setBusinessREsponse(mBusinessDataListings);
+
+                    businessAdapter.setListData(mBusinessDataListings, businessOrEventType);
+
+                    businessAdapter.notifyDataSetChanged();
+                    inflateEventCardsScroll();
+
+                    if (mBusinessDataListings.isEmpty()) {
+
+//                        ((TextView) view.findViewById(R.id.go_to_events)).setVisibility(View.VISIBLE);
+                        ((TextView) view.findViewById(R.id.no_events)).setVisibility(View.VISIBLE);
+                        // eventListView.setVisibility(View.GONE);
+                    }
+                    baseScroll.smoothScrollTo(0, 0);
+
+                } else if (responseData.getResponseCode() == 400) {
+
+//                    ((TextView) view.findViewById(R.id.go_to_events)).setVisibility(View.VISIBLE);
+                    ((TextView) view.findViewById(R.id.no_events)).setVisibility(View.VISIBLE);
+                    //eventListView.setVisibility(View.GONE);
+                    //((LinearLayout) view.findViewById(R.id.eventHeader)).setVisibility(View.GONE);
+
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4KException", Log.getStackTraceString(e));
+                ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<BusinessListResponse> call, Throwable t) {
+            momspressoProgressbar.setVisibility(View.GONE);
+            Crashlytics.logException(t);
+            Log.d("MC4KException", Log.getStackTraceString(t));
+            if (null != getActivity()) {
+                ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
+            }
+        }
+    };
+
 
     private Callback<ArticleListingResponse> articleListingResponseCallback = new Callback<ArticleListingResponse>() {
         @Override
@@ -975,7 +1026,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
             businessAdapter.setListData(mBusinessDataListings, businessOrEventType);
             businessAdapter.notifyDataSetChanged();
             hzScrollLinearLayoutEvent.removeAllViews();
-            hitBusinessListingApi(SharedPrefUtils.getEventIdForCity(getActivity()), 1);
+            hitBusinessListingApiRetro(SharedPrefUtils.getEventIdForCity(getActivity()), 1);
         }
 
 
@@ -1809,22 +1860,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
 
                         ToastUtils.showToast(getActivity(), getActivity().getResources().getString(R.string.event_added));
                     } else {
-                      /*  Intent i = new Intent(getActivity(), ActivityCreateAppointment.class);
-                        i.putExtra(Constants.BUSINESS_OR_EVENT_ID, mBusinessDataListings.get(finalI1).getId());
-                        i.putExtra(Constants.EVENT_NAME, mBusinessDataListings.get(finalI1).getName());
-                        i.putExtra(Constants.EVENT_DES, mBusinessDataListings.get(finalI1).getDescription());
-                        i.putExtra(Constants.EVENT_LOCATION, mBusinessDataListings.get(finalI1).getLocality());
-                        i.putExtra(Constants.EVENT_START_DATE, mBusinessDataListings.get(finalI1).getStart_date());
-                        i.putExtra(Constants.EVENT_END_DATE, mBusinessDataListings.get(finalI1).getEnd_date());
-                        Utils.pushEvent(getActivity(), GTMEventType.EVENTLIST_PLUS_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", "Upcoming Events");
-                        getActivity().startActivity(i);*/
                         final BusinessDataListing information = mBusinessDataListings.get(finalI1);
-                     /*   showAlertDialog("Add Event to calendar", "Do you want add this event to you personal calendar?", new OnButtonClicked() {
-                            @Override
-                            public void onButtonCLick(int buttonId) {
-                                saveCalendar(information.getName(), information.getDescription(), information.getEvent_date().getStart_date(), information.getEvent_date().getEnd_date(), information.getLocality());
-                            }
-                        });*/
                         new AlertDialog.Builder(getActivity())
                                 .setTitle("Add Event to calendar")
                                 .setMessage("Do you want add this event to you personal calendar?")

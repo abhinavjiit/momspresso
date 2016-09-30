@@ -14,7 +14,7 @@ public class DraftListResult implements Serializable {
     String createdTime;
     String body;
     String title;
-    ImageURL imageUrl;
+//    ImageURL imageUrl;
     int itemType = 1;
     private Map<String, List<Map<String, String>>> tags;
 
@@ -66,13 +66,13 @@ public class DraftListResult implements Serializable {
         this.title = title;
     }
 
-    public ImageURL getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(ImageURL imageUrl) {
-        this.imageUrl = imageUrl;
-    }
+//    public ImageURL getImageUrl() {
+//        return imageUrl;
+//    }
+//
+//    public void setImageUrl(ImageURL imageUrl) {
+//        this.imageUrl = imageUrl;
+//    }
 
     public int getItemType() {
         return itemType;

@@ -433,4 +433,6 @@ public class AppConstants {
     public static final int EDIT_NESTED_REPLY = 2;
     public static final String MOMSPRESSO_CATEGORY_ID = "momspressoCategoryId";
     public static final String MOMSPRESSO_SLUG = "momspresso-video";
+    public static final String DEEPLINK_EDITOR_URL = "mc4k://www.mycity4kids.com/editor";
+    public static final String DEEPLINK_PROFILE_URL = "mc4k://www.mycity4kids.com/profile";
 }

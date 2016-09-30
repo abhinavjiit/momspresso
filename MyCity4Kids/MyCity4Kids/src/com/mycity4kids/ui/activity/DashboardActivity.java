@@ -62,6 +62,7 @@ import com.mycity4kids.facebook.FacebookUtils;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.OnUIView;
+import com.mycity4kids.listener.OnButtonClicked;
 import com.mycity4kids.models.configuration.ConfigurationApiModel;
 import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.models.parentingstop.ArticleBlogFollowRequest;
@@ -187,8 +188,74 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 startActivity(intent1);
             }
         } else {
-            if (!StringUtils.isNullOrEmpty(intent.getStringExtra(AppConstants.DEEP_LINK_URL)))
-                getDeepLinkData(intent.getStringExtra(AppConstants.DEEP_LINK_URL));
+            String tempDeepLinkURL = intent.getStringExtra(AppConstants.DEEP_LINK_URL);
+            if (!StringUtils.isNullOrEmpty(tempDeepLinkURL)) {
+                if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_EDITOR_URL)) {
+                    final String bloggerId = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("/") + 1, tempDeepLinkURL.length());
+                    if (!StringUtils.isNullOrEmpty(bloggerId) && !bloggerId.equals(SharedPrefUtils.getUserDetailModel(this).getDynamoId())) {
+                        showAlertDialog("Message", "Logged in as " + SharedPrefUtils.getUserDetailModel(this).getFirst_name(), new OnButtonClicked() {
+                            @Override
+                            public void onButtonCLick(int buttonId) {
+                                if (Build.VERSION.SDK_INT > 15) {
+                                    Utils.pushEvent(DashboardActivity.this, GTMEventType.ADD_BLOG_CLICKED_EVENT,
+                                            SharedPrefUtils.getUserDetailModel(DashboardActivity.this).getDynamoId() + "", "Mobile Deep Link");
+                                    Intent intent1 = new Intent(DashboardActivity.this, EditorPostActivity.class);
+                                    Bundle bundle5 = new Bundle();
+                                    bundle5.putString(EditorPostActivity.TITLE_PARAM, "");
+                                    bundle5.putString(EditorPostActivity.CONTENT_PARAM, "");
+                                    bundle5.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
+                                            getString(R.string.example_post_title_placeholder));
+                                    bundle5.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
+                                            getString(R.string.example_post_content_placeholder));
+                                    bundle5.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
+                                    bundle5.putString("from", "dashboard");
+                                    intent1.putExtras(bundle5);
+                                    startActivity(intent1);
+                                } else {
+                                    showToast("This version of android is no more supported.");
+                                }
+                            }
+                        });
+                    } else {
+                        if (Build.VERSION.SDK_INT > 15) {
+                            Utils.pushEvent(DashboardActivity.this, GTMEventType.ADD_BLOG_CLICKED_EVENT,
+                                    SharedPrefUtils.getUserDetailModel(DashboardActivity.this).getDynamoId() + "", "Mobile Deep Link");
+                            Intent intent1 = new Intent(DashboardActivity.this, EditorPostActivity.class);
+                            Bundle bundle5 = new Bundle();
+                            bundle5.putString(EditorPostActivity.TITLE_PARAM, "");
+                            bundle5.putString(EditorPostActivity.CONTENT_PARAM, "");
+                            bundle5.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
+                                    getString(R.string.example_post_title_placeholder));
+                            bundle5.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
+                                    getString(R.string.example_post_content_placeholder));
+                            bundle5.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
+                            bundle5.putString("from", "dashboard");
+                            intent1.putExtras(bundle5);
+                            startActivity(intent1);
+                        } else {
+                            showToast("This version of android is no more supported.");
+                        }
+                    }
+                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_PROFILE_URL)) {
+                    final String bloggerId = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("/") + 1, tempDeepLinkURL.length());
+                    if (!StringUtils.isNullOrEmpty(bloggerId) && !bloggerId.equals(SharedPrefUtils.getUserDetailModel(this).getDynamoId())) {
+                        showAlertDialog("Message", "Logged in as " + SharedPrefUtils.getUserDetailModel(this).getFirst_name(), new OnButtonClicked() {
+                            @Override
+                            public void onButtonCLick(int buttonId) {
+                                Intent profileIntent = new Intent(DashboardActivity.this, BloggerDashboardActivity.class);
+                                profileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, SharedPrefUtils.getUserDetailModel(DashboardActivity.this).getDynamoId());
+                                startActivity(profileIntent);
+                            }
+                        });
+                    } else {
+                        Intent profileIntent = new Intent(DashboardActivity.this, BloggerDashboardActivity.class);
+                        profileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, bloggerId);
+                        startActivity(profileIntent);
+                    }
+                } else {
+                    getDeepLinkData(tempDeepLinkURL);
+                }
+            }
             deepLinkUrl = intent.getStringExtra(AppConstants.DEEP_LINK_URL);
         }
     }
@@ -1443,8 +1510,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 }
 
                 break;
-
-
             case R.id.rdBtnToday:
                 changeVisibiltyOfArrow(false);
                 Utils.pushEvent(DashboardActivity.this, GTMEventType.MC4KToday_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Left Menu Screen");
@@ -1498,10 +1563,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     intent1.putExtras(bundle5);
                     startActivity(intent1);
                 } else {
-                    Intent viewIntent =
-                            new Intent("android.intent.action.VIEW",
-                                    Uri.parse("http://www.mycity4kids.com/parenting/admin/setupablog"));
-                    startActivity(viewIntent);
+                    showToast("This version of android is no more supported.");
                 }
                 break;
 
