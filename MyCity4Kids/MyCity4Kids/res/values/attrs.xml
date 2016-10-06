@@ -12,4 +12,9 @@
     <declare-styleable name="CustomFontTextView">
         <attr name="fontName" format="string" />
     </declare-styleable>
+
+    <declare-styleable name="RelatedArticlesComponent">
+        <attr name="articleTitle" format="string" localization="suggested" />
+        <attr name="articleImage" format="integer" />
+    </declare-styleable>
 </resources>

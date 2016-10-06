@@ -357,7 +357,7 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
     @Override
     protected void onStart() {
         super.onStart();
-        if (!StringUtils.isNullOrEmpty(deepLinkURL) && AppConstants.BASE_URL.equalsIgnoreCase("http://api.mycity4kids.com/")) {
+        if (!StringUtils.isNullOrEmpty(deepLinkURL) && AppConstants.BASE_URL.equalsIgnoreCase("https://api.mycity4kids.com/")) {
             // Connect client
             mClient.connect();
             final String TITLE = screenTitle;
@@ -383,7 +383,7 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
 
     @Override
     protected void onStop() {
-        if (!StringUtils.isNullOrEmpty(deepLinkURL) && AppConstants.BASE_URL.equalsIgnoreCase("http://api.mycity4kids.com/")) {
+        if (!StringUtils.isNullOrEmpty(deepLinkURL) && AppConstants.BASE_URL.equalsIgnoreCase("https://api.mycity4kids.com/")) {
             final String TITLE = screenTitle;
             final Uri APP_URI = AppConstants.APP_BASE_URI.buildUpon().appendPath(deepLinkURL).build();
             final Uri WEB_URL = AppConstants.WEB_BASE_URL.buildUpon().appendPath(deepLinkURL).build();

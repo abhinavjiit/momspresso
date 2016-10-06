@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/articleImageView"
+        android:layout_width="70dp"
+        android:layout_height="50dp"
+        android:src="@drawable/default_article" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/articleTitleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/articleImageView"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/articleImageView"
+        android:gravity="left"
+        android:maxLines="3"
+        android:paddingLeft="12dp"
+        android:paddingTop="4dp"
+        android:text="TITLEE wa w ad"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:fontName="georgia.ttf" />
+</merge>

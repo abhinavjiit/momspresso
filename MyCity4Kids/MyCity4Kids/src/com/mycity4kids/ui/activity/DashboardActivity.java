@@ -983,37 +983,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             SharedPrefUtils.setHomeCheckFlag(this, false);
         }
 
-        // register gcm broadcast
-//        LocalBroadcastManager.getInstance(this).registerReceiver(mGcmUpdate,
-//                new IntentFilter(Constants.LOCAL_BROADCAST_GCM));
-
-
     }
-
-//    private BroadcastReceiver mGcmUpdate = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//
-//
-//            if (!SharedPrefUtils.getPushTokenUpdateToServer(DashboardActivity.this)) {
-//
-//                if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getDeviceToken(DashboardActivity.this))) {
-//
-//                    // hit api
-//                    if (SharedPrefUtils.getUserDetailModel(context).getId() > 0) {
-//                        PushTokenController controller = new PushTokenController(DashboardActivity.this, DashboardActivity.this);
-//                        controller.getData(AppConstants.PUSH_TOKEN_REQUEST, "");
-//
-//                    }
-//                } else {
-//                    GCMUtil.initializeGCM(DashboardActivity.this);
-//                }
-//
-//            }
-//
-//
-//        }
-//    };
 
     @Override
     public void onPause() {

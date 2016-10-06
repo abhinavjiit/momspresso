@@ -161,40 +161,53 @@
                     android:id="@+id/recentAuthorArticleHeading"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
                     android:text="RECENT BLOGS FROM"
                     android:textAllCaps="true"
-                    android:textColor="@color/black_color"
-                    android:textSize="14sp" />
+                    android:textColor="@color/primary"
+                    android:textSize="15sp" />
 
-                <TextView
-                    android:id="@+id/recentAuthorArticle1"
-                    android:layout_width="wrap_content"
+                <com.mycity4kids.widget.RelatedArticlesView
+                    android:id="@+id/relatedArticles1"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:fontFamily="sans-serif-light"
-                    android:singleLine="true"
-                    android:text="Recent Articles from Author"
-                    android:textColor="@color/new_blue" />
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp"
+                    app:articleImage="@drawable/progress_spinner"
+                    app:articleTitle="labda" />
 
-                <TextView
-                    android:id="@+id/recentAuthorArticle2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:fontFamily="sans-serif-light"
-                    android:singleLine="true"
-                    android:text="Recent Articles from Author"
-                    android:textColor="@color/new_blue" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#f2f2f2" />
 
-                <TextView
-                    android:id="@+id/recentAuthorArticle3"
-                    android:layout_width="wrap_content"
+                <com.mycity4kids.widget.RelatedArticlesView
+                    android:id="@+id/relatedArticles2"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:fontFamily="sans-serif-light"
-                    android:singleLine="true"
-                    android:text="Recent Articles from Author"
-                    android:textColor="@color/new_blue" />
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp"
+                    app:articleImage="@drawable/progress_spinner"
+                    app:articleTitle="labda" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#f2f2f2" />
+
+                <com.mycity4kids.widget.RelatedArticlesView
+                    android:id="@+id/relatedArticles3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp"
+                    app:articleImage="@drawable/progress_spinner"
+                    app:articleTitle="labda" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#f2f2f2" />
             </LinearLayout>
 
             <LinearLayout
@@ -212,61 +225,71 @@
                     android:id="@+id/trendingArticlesHeading"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
                     android:text="TRENDING BLOGS"
-                    android:textColor="@color/black_color"
-                    android:textSize="14sp" />
+                    android:textColor="@color/primary"
+                    android:textSize="15sp" />
 
-                <TextView
-                    android:id="@+id/trendingArticle1"
-                    android:layout_width="wrap_content"
+                <com.mycity4kids.widget.RelatedArticlesView
+                    android:id="@+id/trendingRelatedArticles1"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:fontFamily="sans-serif-light"
-                    android:singleLine="true"
-                    android:text="Recent Articles from Author"
-                    android:textColor="@color/new_blue" />
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp"
+                    app:articleImage="@drawable/progress_spinner"
+                    app:articleTitle="labda" />
 
-                <TextView
-                    android:id="@+id/trendingArticle2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:fontFamily="sans-serif-light"
-                    android:singleLine="true"
-                    android:text="Recent Articles from Author"
-                    android:textColor="@color/new_blue" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#f2f2f2" />
 
-                <TextView
-                    android:id="@+id/trendingArticle3"
-                    android:layout_width="wrap_content"
+                <com.mycity4kids.widget.RelatedArticlesView
+                    android:id="@+id/trendingRelatedArticles2"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="2dp"
-                    android:layout_marginTop="5dp"
-                    android:fontFamily="sans-serif-light"
-                    android:singleLine="true"
-                    android:text="Recent Articles from Author"
-                    android:textColor="@color/new_blue" />
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp"
+                    app:articleImage="@drawable/progress_spinner"
+                    app:articleTitle="labda" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#f2f2f2" />
+
+                <com.mycity4kids.widget.RelatedArticlesView
+                    android:id="@+id/trendingRelatedArticles3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp"
+                    app:articleImage="@drawable/progress_spinner"
+                    app:articleTitle="labda" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#f2f2f2" />
             </LinearLayout>
 
-            <!--<Button-->
-            <!--android:id="@+id/share_spouse"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_below="@+id/trendingArticles"-->
-            <!--android:layout_marginLeft="5dp"-->
-            <!--android:layout_marginRight="5dp"-->
-            <!--android:layout_marginTop="5dp"-->
-            <!--android:background="#224cf0"-->
-            <!--android:padding="10dp"-->
-            <!--android:text="Share with Spouse/Guardian"-->
-            <!--android:textAllCaps="false"-->
-            <!--android:visibility="gone"/>-->
+            <TextView
+                android:id="@+id/commentsHeading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/trendingArticles"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="10dp"
+                android:paddingLeft="10dp"
+                android:text="COMMENTS"
+                android:textColor="@color/primary"
+                android:textSize="15sp" />
 
             <LinearLayout
                 android:id="@+id/commnetLout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/trendingArticles"
+                android:layout_below="@+id/commentsHeading"
                 android:minHeight="5dp"
                 android:orientation="vertical"
                 android:padding="5dp">
@@ -366,7 +389,6 @@
                     android:clickable="true" />
 
             </LinearLayout>
-
 
         </LinearLayout>
 

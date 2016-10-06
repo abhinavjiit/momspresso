@@ -90,6 +90,7 @@ import com.mycity4kids.ui.fragment.CommentRepliesDialogFragment;
 import com.mycity4kids.ui.fragment.EditCommentsRepliesFragment;
 import com.mycity4kids.utils.FadingViewOffsetListener;
 import com.mycity4kids.volley.HttpVolleyRequest;
+import com.mycity4kids.widget.RelatedArticlesView;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -136,6 +137,8 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     View commentEditView;
     AppBarLayout appBarLayout;
     WebView mWebView;
+    RelatedArticlesView relatedArticles1, relatedArticles2, relatedArticles3;
+    RelatedArticlesView trendingRelatedArticles1, trendingRelatedArticles2, trendingRelatedArticles3;
 
     private MyWebChromeClient mWebChromeClient = null;
     private View mCustomView;
@@ -218,14 +221,21 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             article_title = (TextView) findViewById(R.id.article_title);
             String coverImageUrl = getIntent().getStringExtra(Constants.ARTICLE_COVER_IMAGE);
             recentAuthorArticleHeading = (TextView) findViewById(R.id.recentAuthorArticleHeading);
-            recentAuthorArticle1 = (TextView) findViewById(R.id.recentAuthorArticle1);
-            recentAuthorArticle2 = (TextView) findViewById(R.id.recentAuthorArticle2);
-            recentAuthorArticle3 = (TextView) findViewById(R.id.recentAuthorArticle3);
+            relatedArticles1 = (RelatedArticlesView) findViewById(R.id.relatedArticles1);
+            relatedArticles2 = (RelatedArticlesView) findViewById(R.id.relatedArticles2);
+            relatedArticles3 = (RelatedArticlesView) findViewById(R.id.relatedArticles3);
+
+            trendingRelatedArticles1 = (RelatedArticlesView) findViewById(R.id.trendingRelatedArticles1);
+            trendingRelatedArticles2 = (RelatedArticlesView) findViewById(R.id.trendingRelatedArticles2);
+            trendingRelatedArticles3 = (RelatedArticlesView) findViewById(R.id.trendingRelatedArticles3);
+//            recentAuthorArticle1 = (TextView) findViewById(R.id.recentAuthorArticle1);
+//            recentAuthorArticle2 = (TextView) findViewById(R.id.recentAuthorArticle2);
+//            recentAuthorArticle3 = (TextView) findViewById(R.id.recentAuthorArticle3);
             trendingArticles = (LinearLayout) findViewById(R.id.trendingArticles);
             recentAuthorArticles = (LinearLayout) findViewById(R.id.recentAuthorArticles);
-            trendingArticle1 = (TextView) findViewById(R.id.trendingArticle1);
-            trendingArticle2 = (TextView) findViewById(R.id.trendingArticle2);
-            trendingArticle3 = (TextView) findViewById(R.id.trendingArticle3);
+//            trendingArticle1 = (TextView) findViewById(R.id.trendingArticle1);
+//            trendingArticle2 = (TextView) findViewById(R.id.trendingArticle2);
+//            trendingArticle3 = (TextView) findViewById(R.id.trendingArticle3);
             cover_image = (ImageView) findViewById(R.id.cover_image);
             density = getResources().getDisplayMetrics().density;
             width = getResources().getDisplayMetrics().widthPixels;
@@ -250,12 +260,20 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             newCommentLayout = (LinearLayout) findViewById(R.id.comment_layout);
             commentBtn = (ImageView) findViewById(R.id.add_comment_btn);
             commentBtn.setOnClickListener(this);
-            recentAuthorArticle1.setOnClickListener(this);
-            recentAuthorArticle2.setOnClickListener(this);
-            recentAuthorArticle3.setOnClickListener(this);
-            trendingArticle1.setOnClickListener(this);
-            trendingArticle2.setOnClickListener(this);
-            trendingArticle3.setOnClickListener(this);
+//            recentAuthorArticle1.setOnClickListener(this);
+//            recentAuthorArticle2.setOnClickListener(this);
+//            recentAuthorArticle3.setOnClickListener(this);
+//            trendingArticle1.setOnClickListener(this);
+//            trendingArticle2.setOnClickListener(this);
+//            trendingArticle3.setOnClickListener(this);
+            relatedArticles1.setOnClickListener(this);
+            relatedArticles2.setOnClickListener(this);
+            relatedArticles3.setOnClickListener(this);
+            trendingRelatedArticles1.setOnClickListener(this);
+            trendingRelatedArticles2.setOnClickListener(this);
+            trendingRelatedArticles3.setOnClickListener(this);
+
+
             commentText = (EditText) findViewById(R.id.editCommentTxt);
 
             mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
@@ -375,7 +393,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     @Override
     protected void onStart() {
         super.onStart();
-        if (!StringUtils.isNullOrEmpty(deepLinkURL) && AppConstants.BASE_URL.equalsIgnoreCase("http://api.mycity4kids.com/")) {
+        if (!StringUtils.isNullOrEmpty(deepLinkURL) && AppConstants.BASE_URL.equalsIgnoreCase("https://api.mycity4kids.com/")) {
             // Connect client
             mClient.connect();
             final String TITLE = screenTitle;
@@ -401,7 +419,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
     @Override
     protected void onStop() {
-        if (!StringUtils.isNullOrEmpty(deepLinkURL) && AppConstants.BASE_URL.equalsIgnoreCase("http://api.mycity4kids.com/")) {
+        if (!StringUtils.isNullOrEmpty(deepLinkURL) && AppConstants.BASE_URL.equalsIgnoreCase("https://api.mycity4kids.com/")) {
             final String TITLE = screenTitle;
             final Uri APP_URI = AppConstants.APP_BASE_URI.buildUpon().appendPath(deepLinkURL).build();
             final Uri WEB_URL = AppConstants.WEB_BASE_URL.buildUpon().appendPath(deepLinkURL).build();
@@ -743,7 +761,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
             if (commentList.getProfile_image() != null && !StringUtils.isNullOrEmpty(commentList.getProfile_image().getClientAppMin())) {
                 try {
-                    Picasso.with(this).load(commentList.getProfile_image().getClientAppMin()).into(holder.commentorsImage);
+                    Picasso.with(this).load(commentList.getProfile_image().getClientAppMin()).placeholder(R.drawable.default_commentor_img).into(holder.commentorsImage);
                 } catch (Exception e) {
                     Crashlytics.logException(e);
                     Log.d("MC4kException", Log.getStackTraceString(e));
@@ -882,9 +900,9 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
                     break;
 
-                case R.id.recentAuthorArticle1:
-                case R.id.recentAuthorArticle2:
-                case R.id.recentAuthorArticle3: {
+                case R.id.relatedArticles1:
+                case R.id.relatedArticles2:
+                case R.id.relatedArticles3: {
                     Intent intent = new Intent(this, ArticlesAndBlogsDetailsActivity.class);
                     ArticleListingResult parentingListData = (ArticleListingResult) v.getTag();
                     intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId() + "");
@@ -894,9 +912,9 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 //                    finish();
                     break;
                 }
-                case R.id.trendingArticle1:
-                case R.id.trendingArticle2:
-                case R.id.trendingArticle3: {
+                case R.id.trendingRelatedArticles1:
+                case R.id.trendingRelatedArticles2:
+                case R.id.trendingRelatedArticles3: {
                     Intent intent = new Intent(this, ArticlesAndBlogsDetailsActivity.class);
 
                     ArticleListingResult parentingListData = (ArticleListingResult) v.getTag();
@@ -1090,23 +1108,39 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     } else {
                         trendingArticles.setVisibility(View.VISIBLE);
                         if (dataList.size() >= 3) {
-                            trendingArticle1.setText(dataList.get(0).getTitle());
-                            trendingArticle1.setTag(dataList.get(0));
-                            trendingArticle2.setText(dataList.get(1).getTitle());
-                            trendingArticle2.setTag(dataList.get(1));
-                            trendingArticle3.setText(dataList.get(2).getTitle());
-                            trendingArticle3.setTag(dataList.get(2));
+                            Picasso.with(ArticlesAndBlogsDetailsActivity.this).load(dataList.get(0).getImageUrl().getClientAppThumbnail()).
+                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles1.getArticleImageView());
+                            trendingRelatedArticles1.setArticleTitle(dataList.get(0).getTitle());
+                            trendingRelatedArticles1.setTag(dataList.get(0));
+
+                            Picasso.with(ArticlesAndBlogsDetailsActivity.this).load(dataList.get(1).getImageUrl().getClientAppThumbnail()).
+                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles2.getArticleImageView());
+                            trendingRelatedArticles2.setArticleTitle(dataList.get(1).getTitle());
+                            trendingRelatedArticles2.setTag(dataList.get(1));
+
+                            Picasso.with(ArticlesAndBlogsDetailsActivity.this).load(dataList.get(2).getImageUrl().getClientAppThumbnail()).
+                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles3.getArticleImageView());
+                            trendingRelatedArticles3.setArticleTitle(dataList.get(2).getTitle());
+                            trendingRelatedArticles3.setTag(dataList.get(2));
                         } else if (dataList.size() == 2) {
-                            trendingArticle1.setText(dataList.get(0).getTitle());
-                            trendingArticle1.setTag(dataList.get(0));
-                            trendingArticle2.setText(dataList.get(1).getTitle());
-                            trendingArticle2.setTag(dataList.get(1));
-                            trendingArticle3.setVisibility(View.GONE);
+                            Picasso.with(ArticlesAndBlogsDetailsActivity.this).load(dataList.get(0).getImageUrl().getClientAppThumbnail()).
+                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles1.getArticleImageView());
+                            trendingRelatedArticles1.setArticleTitle(dataList.get(0).getTitle());
+                            trendingRelatedArticles1.setTag(dataList.get(0));
+
+                            Picasso.with(ArticlesAndBlogsDetailsActivity.this).load(dataList.get(1).getImageUrl().getClientAppThumbnail()).
+                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles2.getArticleImageView());
+                            trendingRelatedArticles2.setArticleTitle(dataList.get(1).getTitle());
+                            trendingRelatedArticles2.setTag(dataList.get(1));
+
+                            trendingRelatedArticles3.setVisibility(View.GONE);
                         } else if (dataList.size() == 1) {
-                            trendingArticle1.setText(dataList.get(0).getTitle());
-                            trendingArticle1.setTag(dataList.get(0));
-                            trendingArticle2.setVisibility(View.GONE);
-                            trendingArticle3.setVisibility(View.GONE);
+                            Picasso.with(ArticlesAndBlogsDetailsActivity.this).load(dataList.get(0).getImageUrl().getClientAppThumbnail()).
+                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles1.getArticleImageView());
+                            trendingRelatedArticles1.setArticleTitle(dataList.get(0).getTitle());
+                            trendingRelatedArticles1.setTag(dataList.get(0));
+                            trendingRelatedArticles2.setVisibility(View.GONE);
+                            trendingRelatedArticles3.setVisibility(View.GONE);
                         }
                     }
                 }
@@ -1142,23 +1176,53 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                         recentAuthorArticles.setVisibility(View.VISIBLE);
 
                         if (dataList.size() >= 3) {
-                            recentAuthorArticle1.setText(dataList.get(0).getTitle());
-                            recentAuthorArticle1.setTag(dataList.get(0));
-                            recentAuthorArticle2.setText(dataList.get(1).getTitle());
-                            recentAuthorArticle2.setTag(dataList.get(1));
-                            recentAuthorArticle3.setText(dataList.get(2).getTitle());
-                            recentAuthorArticle3.setTag(dataList.get(2));
+                            Picasso.with(ArticlesAndBlogsDetailsActivity.this).load(dataList.get(0).getImageUrl().getClientAppThumbnail()).
+                                    placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
+                            relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
+                            relatedArticles1.setTag(dataList.get(0));
+
+                            Picasso.with(ArticlesAndBlogsDetailsActivity.this).load(dataList.get(1).getImageUrl().getClientAppThumbnail()).
+                                    placeholder(R.drawable.default_article).fit().into(relatedArticles2.getArticleImageView());
+                            relatedArticles2.setArticleTitle(dataList.get(1).getTitle());
+                            relatedArticles2.setTag(dataList.get(1));
+
+                            Picasso.with(ArticlesAndBlogsDetailsActivity.this).load(dataList.get(2).getImageUrl().getClientAppThumbnail()).
+                                    placeholder(R.drawable.default_article).fit().into(relatedArticles3.getArticleImageView());
+                            relatedArticles3.setArticleTitle(dataList.get(2).getTitle());
+                            relatedArticles3.setTag(dataList.get(2));
+
+//                            recentAuthorArticle1.setText(dataList.get(0).getTitle());
+//                            recentAuthorArticle1.setTag(dataList.get(0));
+//                            recentAuthorArticle2.setText(dataList.get(1).getTitle());
+//                            recentAuthorArticle2.setTag(dataList.get(1));
+//                            recentAuthorArticle3.setText(dataList.get(2).getTitle());
+//                            recentAuthorArticle3.setTag(dataList.get(2));
                         } else if (dataList.size() == 2) {
-                            recentAuthorArticle1.setText(dataList.get(0).getTitle());
-                            recentAuthorArticle1.setTag(dataList.get(0));
-                            recentAuthorArticle2.setText(dataList.get(1).getTitle());
-                            recentAuthorArticle2.setTag(dataList.get(1));
-                            recentAuthorArticle3.setVisibility(View.GONE);
+
+                            Picasso.with(ArticlesAndBlogsDetailsActivity.this).load(dataList.get(0).getImageUrl().getClientAppThumbnail()).
+                                    placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
+                            relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
+                            relatedArticles1.setTag(dataList.get(0));
+
+                            Picasso.with(ArticlesAndBlogsDetailsActivity.this).load(dataList.get(1).getImageUrl().getClientAppThumbnail()).
+                                    placeholder(R.drawable.default_article).fit().into(relatedArticles2.getArticleImageView());
+                            relatedArticles2.setArticleTitle(dataList.get(1).getTitle());
+                            relatedArticles2.setTag(dataList.get(1));
+
+                            relatedArticles3.setVisibility(View.GONE);
+
+//                            recentAuthorArticle1.setText(dataList.get(0).getTitle());
+//                            recentAuthorArticle1.setTag(dataList.get(0));
+//                            recentAuthorArticle2.setText(dataList.get(1).getTitle());
+//                            recentAuthorArticle2.setTag(dataList.get(1));
+//                            recentAuthorArticle3.setVisibility(View.GONE);
                         } else if (dataList.size() == 1) {
-                            recentAuthorArticle1.setText(dataList.get(0).getTitle());
-                            recentAuthorArticle1.setTag(dataList.get(0));
-                            recentAuthorArticle2.setVisibility(View.GONE);
-                            recentAuthorArticle3.setVisibility(View.GONE);
+                            Picasso.with(ArticlesAndBlogsDetailsActivity.this).load(dataList.get(0).getImageUrl().getClientAppThumbnail()).
+                                    placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
+                            relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
+                            relatedArticles1.setTag(dataList.get(0));
+                            relatedArticles2.setVisibility(View.GONE);
+                            relatedArticles3.setVisibility(View.GONE);
                         }
                     }
                 } else {
