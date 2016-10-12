@@ -228,14 +228,8 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             trendingRelatedArticles1 = (RelatedArticlesView) findViewById(R.id.trendingRelatedArticles1);
             trendingRelatedArticles2 = (RelatedArticlesView) findViewById(R.id.trendingRelatedArticles2);
             trendingRelatedArticles3 = (RelatedArticlesView) findViewById(R.id.trendingRelatedArticles3);
-//            recentAuthorArticle1 = (TextView) findViewById(R.id.recentAuthorArticle1);
-//            recentAuthorArticle2 = (TextView) findViewById(R.id.recentAuthorArticle2);
-//            recentAuthorArticle3 = (TextView) findViewById(R.id.recentAuthorArticle3);
             trendingArticles = (LinearLayout) findViewById(R.id.trendingArticles);
             recentAuthorArticles = (LinearLayout) findViewById(R.id.recentAuthorArticles);
-//            trendingArticle1 = (TextView) findViewById(R.id.trendingArticle1);
-//            trendingArticle2 = (TextView) findViewById(R.id.trendingArticle2);
-//            trendingArticle3 = (TextView) findViewById(R.id.trendingArticle3);
             cover_image = (ImageView) findViewById(R.id.cover_image);
             density = getResources().getDisplayMetrics().density;
             width = getResources().getDisplayMetrics().widthPixels;
@@ -260,12 +254,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             newCommentLayout = (LinearLayout) findViewById(R.id.comment_layout);
             commentBtn = (ImageView) findViewById(R.id.add_comment_btn);
             commentBtn.setOnClickListener(this);
-//            recentAuthorArticle1.setOnClickListener(this);
-//            recentAuthorArticle2.setOnClickListener(this);
-//            recentAuthorArticle3.setOnClickListener(this);
-//            trendingArticle1.setOnClickListener(this);
-//            trendingArticle2.setOnClickListener(this);
-//            trendingArticle3.setOnClickListener(this);
             relatedArticles1.setOnClickListener(this);
             relatedArticles2.setOnClickListener(this);
             relatedArticles3.setOnClickListener(this);
@@ -640,8 +628,8 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     "}\n" +
                     "body {\n" +
                     "    font-family: MyFont;\n" +
-                    "    font-size: 18px;\n" +
-                    "    line-height: 160%;\n" +
+                    "    font-size: " + getResources().getDimension(R.dimen.article_details_text_size) + ";\n" +
+                    "    line-height: " + getResources().getInteger(R.integer.article_details_line_height) + "%;\n" +
                     "    text-align: left;\n" +
                     "}\n" +
                     "</style>" +
@@ -667,8 +655,8 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     "}\n" +
                     "body {\n" +
                     "    font-family: MyFont;\n" +
-                    "    font-size: 18px;\n" +
-                    "    line-height: 160%;\n" +
+                    "    font-size: " + getResources().getDimension(R.dimen.article_details_text_size) + ";\n" +
+                    "    line-height: " + getResources().getInteger(R.integer.article_details_line_height) + "%;\n" +
                     "    text-align: left;\n" +
                     "}\n" +
                     "</style>" +

@@ -40,6 +40,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -76,6 +77,7 @@ import com.mycity4kids.models.businesseventdetails.DetailsRequest;
 import com.mycity4kids.models.businesseventdetails.DetailsResponse;
 import com.mycity4kids.models.businesseventdetails.DetailsReviews;
 import com.mycity4kids.models.businesslist.BusinessDataListing;
+import com.mycity4kids.models.businesslist.BusinessListResponse;
 import com.mycity4kids.models.favorite.FavoriteRequest;
 import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.models.user.BusinessImageUploadRequest;
@@ -87,10 +89,12 @@ import com.mycity4kids.observablescrollview.ScrollUtils;
 import com.mycity4kids.observablescrollview.Scrollable;
 import com.mycity4kids.observablescrollview.TouchInterceptionFrameLayout;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.retrofitAPIsInterfaces.EventsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ResourcesAPI;
 import com.mycity4kids.slidingtab.SlidingTabLayout;
 import com.mycity4kids.ui.adapter.ViewPagerAdapterEventdetail;
 import com.mycity4kids.ui.fragment.MapFragment;
+import com.mycity4kids.utils.location.GPSTracker;
 import com.mycity4kids.widget.DetailHeader;
 import com.nineoldandroids.view.ViewHelper;
 
@@ -168,6 +172,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
     private GoogleApiClient mClient;
     private String TAG;
     private ImageView imgBookmark;
+
 //    private String screenTitle = "Business Detail";
 
     @Override
@@ -216,6 +221,15 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
             businessId = bundle.getString(Constants.BUSINESS_OR_EVENT_ID);
             mEventOrBusiness = bundle.getInt(Constants.PAGE_TYPE);
             distance = bundle.getString(Constants.DISTANCE);
+
+
+            Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+            EventsAPI topicsAPI = retrofit.create(EventsAPI.class);
+            GPSTracker getCurrentLocation = new GPSTracker(this);
+            double _latitude = getCurrentLocation.getLatitude();
+            double _longitude = getCurrentLocation.getLongitude();
+
+
             BusinessAndEventDetailsController _controller = new BusinessAndEventDetailsController(this, this);
             DetailsRequest _requestModel = new DetailsRequest();
             _requestModel.setBusinessOrEventId(businessId);
@@ -229,7 +243,13 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
                 _requestModel.setUser_id("" + _table.getUserId());
             }
             showProgressDialog(getString(R.string.fetching_data));
-            _controller.getData(AppConstants.BUSINESS_AND_EVENT_DETAILS_REQUEST, _requestModel);
+
+
+            Call<DetailsResponse> filterCall = topicsAPI.getEventDetails(businessId, "" + categoryId,
+                    SharedPrefUtils.getUserDetailModel(this).getId(), _requestModel.getType(), "" + _latitude, "" + _longitude, SharedPrefUtils.getpinCode(this));
+            filterCall.enqueue(eventDetailsResponseCallback);
+
+//            _controller.getData(AppConstants.BUSINESS_AND_EVENT_DETAILS_REQUEST, _requestModel);
         }
         mDetailsHeader = (DetailHeader) findViewById(R.id.detailsHeader);
         mDetailsHeader.inflateHeader(mEventOrBusiness);
@@ -1394,4 +1414,31 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
 
     }
 
+    private Callback<DetailsResponse> eventDetailsResponseCallback = new Callback<DetailsResponse>() {
+        @Override
+        public void onResponse(Call<DetailsResponse> call, retrofit2.Response<DetailsResponse> response) {
+            removeProgressDialog();
+            if (response == null || response.body() == null) {
+                showToast("Something went wrong from server");
+                return;
+            }
+            try {
+                DetailsResponse responseData = (DetailsResponse) response.body();
+                updateUiWithDetailsResponse(responseData);
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4KException", Log.getStackTraceString(e));
+                showToast(getString(R.string.went_wrong));
+            }
+
+        }
+
+        @Override
+        public void onFailure(Call<DetailsResponse> call, Throwable t) {
+            removeProgressDialog();
+            Crashlytics.logException(t);
+            Log.d("MC4KException", Log.getStackTraceString(t));
+            showToast(getString(R.string.went_wrong));
+        }
+    };
 }

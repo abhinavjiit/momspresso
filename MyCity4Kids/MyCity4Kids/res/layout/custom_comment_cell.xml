@@ -17,8 +17,8 @@
 
         <com.mikhaellopez.circularimageview.CircularImageView
             android:id="@+id/network_img"
-            android:layout_width="54dp"
-            android:layout_height="54dp"
+            android:layout_width="@dimen/ad_comments_profile_pic_width"
+            android:layout_height="@dimen/ad_comments_profile_pic_width"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:contentDescription="@string/author_img"
@@ -42,7 +42,7 @@
             android:singleLine="false"
             android:text="@string/title"
             android:textColor="@color/black_color"
-            android:textSize="17sp" />
+            android:textSize="@dimen/ad_comments_username" />
 
         <TextView
             android:id="@+id/txvDate"
@@ -55,7 +55,7 @@
             android:paddingLeft="8dp"
             android:text="date"
             android:textColor="@color/blog.comments.date_comment_text"
-            android:textSize="14sp" />
+            android:textSize="@dimen/ad_comments_date" />
 
         <TextView
             android:id="@+id/txvCommentDescription"
@@ -69,7 +69,7 @@
             android:paddingLeft="8dp"
             android:singleLine="false"
             android:textColor="@color/black_color"
-            android:textSize="14sp" />
+            android:textSize="@dimen/ad_comments_text" />
 
         <TextView
             android:id="@+id/txvEdit"
@@ -81,7 +81,7 @@
             android:padding="5dp"
             android:text="EDIT"
             android:textColor="@color/grey"
-            android:textSize="14sp" />
+            android:textSize="@dimen/ad_comments_edit_btn" />
 
         <TextView
             android:id="@+id/txvReply"
@@ -92,7 +92,7 @@
             android:padding="5dp"
             android:text="REPLY"
             android:textColor="@color/blog.comments.follow_reply_btn"
-            android:textSize="14sp"
+            android:textSize="@dimen/ad_comments_reply_btn"
             android:visibility="visible" />
     </RelativeLayout>
 
@@ -133,7 +133,7 @@
             android:maxWidth="150dp"
             android:text="user d wad d dijiaw dawj9iad ikad"
             android:textColor="@color/black_color"
-            android:textSize="14sp" />
+            android:textSize="@dimen/ad_comments_reply_username" />
 
         <TextView
             android:id="@+id/replied"
@@ -146,7 +146,7 @@
             android:paddingLeft="8dp"
             android:text="Replied"
             android:textColor="@color/black_color"
-            android:textSize="12sp" />
+            android:textSize="@dimen/ad_comments_replied" />
 
         <TextView
             android:id="@+id/replyCountTextView"
@@ -159,7 +159,7 @@
             android:paddingRight="10dp"
             android:text="REPLIES"
             android:textColor="@color/black_color"
-            android:textSize="12sp" />
+            android:textSize="@dimen/ad_comments_replied_count" />
     </RelativeLayout>
 
     <View

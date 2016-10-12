@@ -50,12 +50,12 @@
             android:layout_width="130dp"
             android:layout_height="wrap_content"
             android:layout_above="@+id/txvLogin"
-            android:layout_alignParentLeft="true"
             android:layout_gravity="center"
-            android:layout_marginLeft="30dp"
-            android:drawablePadding="-14dp"
+            android:layout_marginRight="30dp"
+            android:layout_toLeftOf="@+id/midSeparator"
             android:background="@drawable/facebook_rounded_corners_transparent"
             android:drawableLeft="@drawable/ic_facebook_white_48dp"
+            android:drawablePadding="-14dp"
             android:fontFamily="sans-serif-light"
             android:gravity="center"
             android:paddingBottom="6dp"
@@ -65,17 +65,24 @@
             android:textColor="@color/white_color"
             android:textSize="16sp" />
 
+        <View
+            android:id="@+id/midSeparator"
+            android:layout_width="1dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="@null" />
+
         <TextView
             android:id="@+id/connect_gplus"
             android:layout_width="130dp"
             android:layout_height="wrap_content"
             android:layout_above="@+id/txvLogin"
-            android:layout_alignParentRight="true"
             android:layout_gravity="center"
-            android:layout_marginRight="30dp"
-            android:drawablePadding="-14dp"
+            android:layout_marginLeft="30dp"
+            android:layout_toRightOf="@+id/midSeparator"
             android:background="@drawable/facebook_rounded_corners_transparent"
             android:drawableLeft="@drawable/ic_gplus_white_48dp"
+            android:drawablePadding="-14dp"
             android:fontFamily="sans-serif-light"
             android:gravity="center"
             android:paddingBottom="6dp"
@@ -134,42 +141,7 @@
                 android:src="@drawable/white_filled_bg"
                 android:tag="3" />
 
-            <!--<ImageView-->
-            <!--android:id="@+id/four"-->
-            <!--android:layout_width="10dp"-->
-            <!--android:layout_height="10dp"-->
-            <!--android:layout_marginLeft="5dp"-->
-            <!--android:layout_marginRight="5dp"-->
-            <!--android:alpha="0.2"-->
-            <!--android:src="@drawable/white_filled_bg"-->
-            <!--android:tag="4" />-->
-
-            <!--<ImageView-->
-            <!--android:id="@+id/five"-->
-            <!--android:layout_width="10dp"-->
-            <!--android:layout_height="10dp"-->
-            <!--android:alpha="0.2"-->
-            <!--android:src="@drawable/white_filled_bg"-->
-            <!--android:tag="5" />-->
-
-            <!--<ImageView
-                android:id="@+id/six"
-                android:layout_width="10dp"
-                android:tag="6"
-                android:alpha="0.2"
-                android:layout_height="10dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:src="@drawable/white_filled_bg" />-->
         </LinearLayout>
     </RelativeLayout>
 
-    <!--<ImageView-->
-    <!--android:id="@+id/img_image"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_above="@id/rltBottomView"-->
-    <!--android:layout_centerHorizontal="true"-->
-    <!--android:layout_marginBottom="10dp"-->
-    <!--android:src="@drawable/tutorial_1" />-->
 </RelativeLayout>

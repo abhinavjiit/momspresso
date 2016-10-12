@@ -165,13 +165,6 @@ public class ParentingBlogAdapter extends BaseAdapter {
         }
         holder.followersCount.setText(datalist.get(position).getFollowersCount() + "");
 
-        holder.bloggerFollow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ((DashboardActivity) context).followAPICall_List(String.valueOf(datalist.get(position).getId()), position);
-            }
-        });
-
         if (datalist.get(position).getIsFollowed() == 0) {
             holder.bloggerFollow.setText("FOLLOW");
         } else {

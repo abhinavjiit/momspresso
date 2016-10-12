@@ -1248,6 +1248,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
 
                          @Override
                          public void onFailure(Call<ImageUploadResponse> call, Throwable t) {
+                             showToast("unable to upload image, please try again later");
                              Crashlytics.logException(t);
                              Log.d("MC4kException", Log.getStackTraceString(t));
                          }

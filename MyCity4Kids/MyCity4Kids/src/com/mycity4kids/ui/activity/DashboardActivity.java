@@ -1221,45 +1221,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
 
         switch (response.getDataType()) {
-            case AppConstants.CONFIGURATION_REQUEST:
-                removeProgressDialog();
-                Object responseObject = response.getResponseObject();
-                if (responseObject instanceof ConfigurationApiModel) {
-                    ConfigurationApiModel _configurationResponse = (ConfigurationApiModel) responseObject;
-
-                    /**
-                     * Save data into tables :-
-                     */
-                    HeavyDbTask _heavyDbTask = new HeavyDbTask(this,
-                            _configurationResponse, new OnUIView() {
-
-                        @Override
-                        public void comeBackOnUI() {
-                            Log.i("Dashboard", "Configuration Data Updated");
-//                            navigateToNextScreen(true);
-                        }
-                    });
-                    _heavyDbTask.execute();
-
-                }
-                break;
-
-            case AppConstants.PUSH_TOKEN_REQUEST:
-                responseObject = response.getResponseObject();
-                if (responseObject instanceof CommonResponse) {
-                    CommonResponse commonResponse = (CommonResponse) responseObject;
-                    if (commonResponse.getResponseCode() == 200) {
-
-                        SharedPrefUtils.setPushTokenUpdateToServer(this, true);
-                        Log.e("push", "token updated");
-
-                    } else {
-                        Log.e("push", "token failed");
-                    }
-                }
-                break;
-
-
             case AppConstants.TASKS_COMPLETE_REQUEST:
                 try {
                     CommonResponse responseData = (CommonResponse) response.getResponseObject();
@@ -1405,27 +1366,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     removeProgressDialog();
                 }
 
-                break;
-
-            case AppConstants.ARTICLE_BLOG_FOLLOW_REQUEST:
-                CommonResponse followData = (CommonResponse) response.getResponseObject();
-                removeProgressDialog();
-                if (followData.getResponseCode() == 200) {
-                    ToastUtils.showToast(getApplicationContext(), followData.getResult().getMessage(), Toast.LENGTH_SHORT);
-                    if (BuildConfig.DEBUG) {
-                        Log.e("follow response", followData.getResult().getMessage());
-                    }
-                } else if (followData.getResponseCode() == 400) {
-                    String message = followData.getResult().getMessage();
-                    if (BuildConfig.DEBUG) {
-                        Log.e("follow response", followData.getResult().getMessage());
-                    }
-                    if (!StringUtils.isNullOrEmpty(message)) {
-                        showToast(message);
-                    } else {
-                        showToast(getString(R.string.went_wrong));
-                    }
-                }
                 break;
 
             case AppConstants.DEEP_LINK_RESOLVER_REQUEST:
@@ -2249,20 +2189,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             return false;
         }
         return true;
-    }
-
-    public void followAPICall_List(String id, int position) {
-
-        blogListPosition = position;
-
-        ArticleBlogFollowRequest _followRequest = new ArticleBlogFollowRequest();
-        _followRequest.setSessionId("" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getSessionId());
-        _followRequest.setUserId("" + SharedPrefUtils.getUserDetailModel(getApplicationContext()).getId());
-        _followRequest.setAuthorId("" + id);
-        ArticleBlogFollowController _followController = new ArticleBlogFollowController(this, this);
-        showProgressDialog(getString(R.string.please_wait));
-        _followController.getData(AppConstants.ARTICLE_BLOG_FOLLOW_REQUEST, _followRequest);
-
     }
 
     private void getDeepLinkData(final String deepLinkURL) {

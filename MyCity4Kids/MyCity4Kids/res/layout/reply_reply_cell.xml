@@ -18,8 +18,8 @@
 
         <com.mikhaellopez.circularimageview.CircularImageView
             android:id="@+id/network_img"
-            android:layout_width="54dp"
-            android:layout_height="54dp"
+            android:layout_width="@dimen/ad_comments_profile_pic_width"
+            android:layout_height="@dimen/ad_comments_profile_pic_height"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:contentDescription="@string/author_img"
@@ -44,7 +44,7 @@
             android:singleLine="false"
             android:text="@string/title"
             android:textColor="@color/black_color"
-            android:textSize="17sp" />
+            android:textSize="@dimen/ad_comments_username" />
 
         <TextView
             android:id="@+id/txvDate"
@@ -57,7 +57,7 @@
             android:paddingLeft="8dp"
             android:text="date"
             android:textColor="@color/blog.comments.date_comment_text"
-            android:textSize="14sp" />
+            android:textSize="@dimen/ad_comments_date" />
 
         <TextView
             android:id="@+id/txvCommentDescription"
@@ -71,7 +71,7 @@
             android:paddingLeft="8dp"
             android:singleLine="false"
             android:textColor="@color/black_color"
-            android:textSize="14sp" />
+            android:textSize="@dimen/ad_comments_text" />
 
         <TextView
             android:id="@+id/txvEdit"
@@ -83,7 +83,7 @@
             android:padding="5dp"
             android:text="EDIT"
             android:textColor="@color/grey"
-            android:textSize="14sp" />
+            android:textSize="@dimen/ad_comments_edit_btn" />
 
         <TextView
             android:id="@+id/txvReply"
@@ -94,7 +94,7 @@
             android:padding="5dp"
             android:text="REPLY"
             android:textColor="@color/blog.comments.follow_reply_btn"
-            android:textSize="14sp"
+            android:textSize="@dimen/ad_comments_reply_btn"
             android:visibility="invisible" />
     </RelativeLayout>
 

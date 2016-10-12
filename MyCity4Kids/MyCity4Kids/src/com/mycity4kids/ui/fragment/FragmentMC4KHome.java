@@ -1841,9 +1841,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                 @Override
                 public void onClick(View v) {
                     Intent intent5 = new Intent(getActivity(), BusinessDetailsActivity.class);
-                    String businessId = null;
-
-                    businessId = mBusinessDataListings.get(finalI).getId();
+                    String businessId = mBusinessDataListings.get(finalI).getId();
                     intent5.putExtra(Constants.CATEGORY_ID, SharedPrefUtils.getEventIdForCity(getActivity()));
                     intent5.putExtra(Constants.BUSINESS_OR_EVENT_ID, businessId);
                     intent5.putExtra(Constants.PAGE_TYPE, Constants.EVENT_PAGE_TYPE);

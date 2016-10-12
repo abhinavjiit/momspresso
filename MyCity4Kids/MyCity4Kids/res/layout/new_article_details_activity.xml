@@ -9,7 +9,7 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="@dimen/article_details_app_bar_height"
         android:fitsSystemWindows="true"
         android:orientation="vertical"
         android:theme="@style/ThemeOverlay.AppCompat.Dark">
@@ -165,7 +165,7 @@
                     android:text="RECENT BLOGS FROM"
                     android:textAllCaps="true"
                     android:textColor="@color/primary"
-                    android:textSize="15sp" />
+                    android:textSize="@dimen/ad_recent" />
 
                 <com.mycity4kids.widget.RelatedArticlesView
                     android:id="@+id/relatedArticles1"
@@ -228,7 +228,7 @@
                     android:layout_marginBottom="5dp"
                     android:text="TRENDING BLOGS"
                     android:textColor="@color/primary"
-                    android:textSize="15sp" />
+                    android:textSize="@dimen/ad_trending" />
 
                 <com.mycity4kids.widget.RelatedArticlesView
                     android:id="@+id/trendingRelatedArticles1"
@@ -283,7 +283,7 @@
                 android:paddingLeft="10dp"
                 android:text="COMMENTS"
                 android:textColor="@color/primary"
-                android:textSize="15sp" />
+                android:textSize="@dimen/ad_comments_heading" />
 
             <LinearLayout
                 android:id="@+id/commnetLout"
@@ -369,8 +369,8 @@
                 android:maxLines="4"
                 android:padding="12dp"
                 android:singleLine="false"
-                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/black_color"
+                android:textSize="@dimen/ad_comments_edit_text"
                 android:visibility="visible" />
 
             <LinearLayout

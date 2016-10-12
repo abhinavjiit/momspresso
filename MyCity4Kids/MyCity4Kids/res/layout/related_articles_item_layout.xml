@@ -4,8 +4,8 @@
 
     <ImageView
         android:id="@+id/articleImageView"
-        android:layout_width="70dp"
-        android:layout_height="50dp"
+        android:layout_width="@dimen/ad_related_article_image_width"
+        android:layout_height="@dimen/ad_related_article_image_height"
         android:src="@drawable/default_article" />
 
     <com.mycity4kids.widget.CustomFontTextView
@@ -23,6 +23,6 @@
         android:paddingTop="4dp"
         android:text="TITLEE wa w ad"
         android:textColor="@color/black"
-        android:textSize="14sp"
+        android:textSize="@dimen/ad_related_article_title"
         app:fontName="georgia.ttf" />
 </merge>
