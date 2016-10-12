@@ -107,7 +107,7 @@ public class ApiHandler extends AsyncTask<String, Void, String> {
             case AppConstants.PUSH_TOKEN_REQUEST:
 
                 try {
-                    //System.out.println("RequestUrl : " + params[0]);
+                    System.out.println("RequestUrl : " + params[0]);
                     HashMap<String, String> map = new HashMap<String, String>();
                     map.put("Content-Type", "application/json");
                     jsonString = HTTPPoster.doGet(params[0], map,context);

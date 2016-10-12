@@ -85,7 +85,7 @@ public class PushTokenService extends IntentService implements UpdateListener {
                 builder.append(AppConstants.UPDATE_PUSH_TOKEN_URL);
 
                 builder.append("userId=").append(SharedPrefUtils.getUserDetailModel(this).getId());
-                builder.append("dynamoId=").append(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+                builder.append("&dynamoId=").append(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
                 builder.append("&pushToken=").append(SharedPrefUtils.getDeviceToken(this));
                 TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
                 String deviceId = telephonyManager.getDeviceId();
