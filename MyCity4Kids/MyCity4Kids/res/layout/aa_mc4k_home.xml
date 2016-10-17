@@ -51,7 +51,7 @@
                         android:paddingLeft="8dp"
                         android:paddingTop="10dp"
                         android:text="TRENDING BLOGS"
-                        android:textColor="@color/primary"
+                        android:textColor="@color/primary_blue"
                         android:textSize="15sp" />
                 </LinearLayout>
 
@@ -130,7 +130,7 @@
                         android:paddingBottom="3dp"
                         android:paddingLeft="8dp"
                         android:text="MOMSPRESSO VIDEOS"
-                        android:textColor="@color/primary"
+                        android:textColor="@color/primary_blue"
                         android:textSize="15sp" />
                 </LinearLayout>
 
@@ -210,7 +210,7 @@
                         android:paddingBottom="4dp"
                         android:paddingLeft="8dp"
                         android:text="EDITOR'S PICKS"
-                        android:textColor="@color/primary"
+                        android:textColor="@color/primary_blue"
                         android:textSize="15sp" />
                 </LinearLayout>
 
@@ -395,7 +395,7 @@
                         android:paddingBottom="4dp"
                         android:paddingLeft="8dp"
                         android:text="@string/home_events"
-                        android:textColor="@color/primary"
+                        android:textColor="@color/primary_blue"
                         android:textSize="15sp" />
 
 

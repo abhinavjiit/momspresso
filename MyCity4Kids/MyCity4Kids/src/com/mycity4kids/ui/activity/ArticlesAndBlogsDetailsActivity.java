@@ -1,11 +1,12 @@
 package com.mycity4kids.ui.activity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -13,20 +14,18 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.NestedScrollView;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewTreeObserver;
 import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -64,6 +63,7 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.OnWebServiceCompleteListener;
+import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.parentingdetails.CommentsData;
 import com.mycity4kids.models.parentingdetails.ImageData;
 import com.mycity4kids.models.parentingdetails.VideoData;
@@ -81,19 +81,23 @@ import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.FBCommentResponse;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
 import com.mycity4kids.models.response.ProfilePic;
+import com.mycity4kids.models.response.ViewCountResponse;
 import com.mycity4kids.newmodels.VolleyBaseResponse;
+import com.mycity4kids.observablescrollview.ObservableScrollView;
+import com.mycity4kids.observablescrollview.ObservableScrollViewCallbacks;
+import com.mycity4kids.observablescrollview.ScrollState;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
 import com.mycity4kids.ui.CircleTransformation;
 import com.mycity4kids.ui.fragment.CommentRepliesDialogFragment;
 import com.mycity4kids.ui.fragment.EditCommentsRepliesFragment;
-import com.mycity4kids.utils.FadingViewOffsetListener;
 import com.mycity4kids.volley.HttpVolleyRequest;
 import com.mycity4kids.widget.RelatedArticlesView;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import org.apmem.tools.layouts.FlowLayout;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -110,7 +114,7 @@ import retrofit2.Retrofit;
 /**
  * @author Hemant.parmar
  */
-public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnClickListener {
+public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnClickListener, ObservableScrollViewCallbacks {
 
     private final static int ADD_BOOKMARK = 1;
 
@@ -119,7 +123,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     private String articleId;
     int width;
 
-    private NestedScrollView mScrollView;
+    private ObservableScrollView mScrollView;
     private ArrayList<ImageData> imageList;
     private ArrayList<VideoData> videoList;
 
@@ -142,7 +146,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
     private MyWebChromeClient mWebChromeClient = null;
     private View mCustomView;
-    private CoordinatorLayout mContentView;
+    private RelativeLayout mContentView;
     private FrameLayout mCustomViewContainer;
     private WebChromeClient.CustomViewCallback mCustomViewCallback;
 
@@ -151,6 +155,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     private ImageView cover_image;
     private TextView article_title;
     private TextView author_type;
+    private TextView articleViewCountTextView;
     private String authorId;
     String authorType, author;
     private int bookmarkStatus;
@@ -168,7 +173,9 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     ImageView floatingActionButton;
     private Menu menu;
     LinearLayout commLayout;
-    CoordinatorLayout coordinatorLayout;
+    RelativeLayout coordinatorLayout;
+    FlowLayout tagsLayout;
+    ArrayList<Topics> selectedTopics;
     Bitmap defaultBloggerBitmap, defaultCommentorBitmap;
     private String bookmarkFlag = "0";
 
@@ -183,6 +190,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     private String titleSlug;
     private String commentType = "db";
     private String pagination = "";
+    private float mToolbarBarHeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -197,16 +205,13 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             NotificationManager nMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             nMgr.cancel(getIntent().getIntExtra(AppConstants.NOTIFICATION_ID, 0));
 
-            setContentView(R.layout.new_article_details_activity);
-            coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
+            setContentView(R.layout.article_details_activity);
+            coordinatorLayout = (RelativeLayout) findViewById(R.id.coordinatorLayout);
             ((TextView) findViewById(R.id.add_comment)).setOnClickListener(this);
             ((TextView) findViewById(R.id.user_name)).setOnClickListener(this);
-            appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
 
             floatingActionButton = (ImageView) findViewById(R.id.user_image);
             floatingActionButton.setOnClickListener(this);
-            FadingViewOffsetListener listener = new FadingViewOffsetListener((View) floatingActionButton);
-            appBarLayout.addOnOffsetChangedListener(listener);
 
             mWebView = (WebView) findViewById(R.id.articleWebView);
             mWebChromeClient = new MyWebChromeClient();
@@ -230,6 +235,9 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             trendingRelatedArticles3 = (RelatedArticlesView) findViewById(R.id.trendingRelatedArticles3);
             trendingArticles = (LinearLayout) findViewById(R.id.trendingArticles);
             recentAuthorArticles = (LinearLayout) findViewById(R.id.recentAuthorArticles);
+
+            tagsLayout = (FlowLayout) findViewById(R.id.tagsLayout);
+            articleViewCountTextView = (TextView) findViewById(R.id.articleViewCountTextView);
             cover_image = (ImageView) findViewById(R.id.cover_image);
             density = getResources().getDisplayMetrics().density;
             width = getResources().getDisplayMetrics().widthPixels;
@@ -239,10 +247,13 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
             mToolbar = (Toolbar) findViewById(R.id.anim_toolbar);
             setSupportActionBar(mToolbar);
+            getSupportActionBar().setTitle("");
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-            collapsingToolbarLayout.setExpandedTitleGravity(Gravity.CENTER);
-            collapsingToolbarLayout.setExpandedTitleColor(Color.TRANSPARENT);
+            getSupportActionBar().setIcon(R.drawable.app_logo);
+
+//            collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+//            collapsingToolbarLayout.setExpandedTitleGravity(Gravity.CENTER);
+//            collapsingToolbarLayout.setExpandedTitleColor(Color.TRANSPARENT);
 
             defaultBloggerBitmap = (new CircleTransformation()).transform(BitmapFactory.decodeResource(getResources(),
                     R.drawable.default_blogger_profile_img));
@@ -267,23 +278,12 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
             findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely));
 
-            mScrollView = (NestedScrollView) findViewById(R.id.scroll_view);
+            mScrollView = (ObservableScrollView) findViewById(R.id.scroll_view);
             mUiHelper = new UiLifecycleHelper(this, FacebookUtils.callback);
             mUiHelper.onCreate(savedInstanceState);
             commLayout = ((LinearLayout) findViewById(R.id.commnetLout));
-            mScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
 
-                @Override
-                public void onScrollChanged() {
-                    View view = (View) mScrollView.getChildAt(mScrollView.getChildCount() - 1);
-                    Rect scrollBounds = new Rect();
-                    mScrollView.getHitRect(scrollBounds);
-                    int diff = (view.getBottom() - (mScrollView.getHeight() + mScrollView.getScrollY()));
-                    if (diff <= 10 && !isLoading && !StringUtils.isNullOrEmpty(commentURL) && commentURL.contains("http") && !AppConstants.PAGINATION_END_VALUE.equals(pagination)) {
-                        getMoreComments();
-                    }
-                }
-            });
+            mScrollView.setScrollViewCallbacks(this);
 
             Bundle bundle = getIntent().getExtras();
             if (bundle != null) {
@@ -300,7 +300,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 Retrofit retro = BaseApplication.getInstance().getRetrofit();
                 articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
                 hitArticleDetailsS3API();
-
+                getViewCountAPI();
             }
         } catch (Exception e) {
             removeProgressDialog();
@@ -325,6 +325,11 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     private void hitArticleDetailsS3API() {
         Call<ArticleDetailResult> call = articleDetailsAPI.getArticleDetailsFromS3(articleId);
         call.enqueue(articleDetailResponseCallbackS3);
+    }
+
+    private void getViewCountAPI() {
+        Call<ViewCountResponse> call = articleDetailsAPI.getViewCount(articleId);
+        call.enqueue(getViewCountResponseCallback);
     }
 
     private void hitBookmarkFollowingStatusAPI() {
@@ -539,7 +544,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
         if (!StringUtils.isNullOrEmpty(detailData.getTitle())) {
             article_title.setText(detailData.getTitle());
-            collapsingToolbarLayout.setTitle(detailData.getTitle());
+//            collapsingToolbarLayout.setTitle(detailData.getTitle());
         }
 
         try {
@@ -665,6 +670,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             mWebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
             mWebView.loadDataWithBaseURL("", bodyImgTxt, "text/html", "utf-8", "");
             mWebView.getSettings().setJavaScriptEnabled(true);
+
         }
 
         final Target target = new Target() {
@@ -693,7 +699,43 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         }
 
         hitUpdateViewCountAPI(detailData.getUserId(), detailData.getTags(), detailData.getCities());
+        createSelectedTagsView();
+    }
 
+    /*
+    * creates selected tags views from the list of selected topics.
+    * */
+    private void createSelectedTagsView() {
+//        selectedTopics
+        ArrayList<Map<String, String>> tagsList = detailData.getTags();
+        LayoutInflater mInflater = LayoutInflater.from(this);
+
+        for (int i = 0; i < tagsList.size(); i++) {
+
+            for (Map.Entry<String, String> entry : tagsList.get(i).entrySet()) {
+                String key = entry.getKey();
+                final String value = entry.getValue();
+                if (AppConstants.IGNORE_TAG.equals(key)) {
+                    continue;
+                }
+
+                LinearLayout topicView = (LinearLayout) mInflater.inflate(R.layout.related_tags_view, null, false);
+                topicView.setClickable(true);
+                ((TextView) topicView.getChildAt(0)).setTag(key);
+                ((TextView) topicView.getChildAt(0)).setText(value.toUpperCase());
+                ((TextView) topicView.getChildAt(0)).setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String categoryId = (String) v.getTag();
+                        Intent intent = new Intent(ArticlesAndBlogsDetailsActivity.this, FilteredTopicsArticleListingActivity.class);
+                        intent.putExtra("selectedTopics", categoryId);
+                        intent.putExtra("displayName", value);
+                        startActivity(intent);
+                    }
+                });
+                tagsLayout.addView(topicView);
+            }
+        }
     }
 
     private void displayComments(ViewHolder holder, CommentsData commentList,
@@ -913,6 +955,14 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 //                    finish();
                     break;
                 }
+                case R.layout.related_tags_view: {
+                    String categoryId = (String) v.getTag();
+                    Intent intent = new Intent(ArticlesAndBlogsDetailsActivity.this, FilteredTopicsArticleListingActivity.class);
+                    intent.putExtra("selectedTopics", categoryId);
+                    intent.putExtra("displayName", ((TextView) ((LinearLayout) v).getChildAt(0)).getText());
+                    startActivity(intent);
+                    break;
+                }
             }
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -920,6 +970,69 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         }
     }
 
+    @Override
+    public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
+        View view = (View) mScrollView.getChildAt(mScrollView.getChildCount() - 1);
+        Rect scrollBounds = new Rect();
+        mScrollView.getHitRect(scrollBounds);
+        int diff = (view.getBottom() - (mScrollView.getHeight() + mScrollView.getScrollY()));
+        if (diff <= 10 && !isLoading && !StringUtils.isNullOrEmpty(commentURL) && commentURL.contains("http") && !AppConstants.PAGINATION_END_VALUE.equals(pagination)) {
+            getMoreComments();
+        }
+    }
+
+    @Override
+    public void onDownMotionEvent() {
+
+    }
+
+    @Override
+    public void onUpOrCancelMotionEvent(ScrollState scrollState) {
+        ActionBar ab = getSupportActionBar();
+        if (ab == null) {
+            return;
+        }
+        if (scrollState == ScrollState.UP) {
+            if (ab.isShowing()) {
+                hideToolbar();
+            }
+        } else if (scrollState == ScrollState.DOWN) {
+            if (!ab.isShowing()) {
+                showToolbar();
+            }
+        }
+    }
+
+    private void hideToolbar() {
+//        mToolbar.animate().translationY(-mToolbar.getBottom()).setInterpolator(new AccelerateInterpolator()).start();
+
+        mToolbar.animate()
+                .translationY(-mToolbar.getHeight())
+                .setInterpolator(new LinearInterpolator())
+                .setDuration(180)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+//                        toolbarSetElevation(0);
+                        getSupportActionBar().hide();
+                    }
+                });
+    }
+
+    private void showToolbar() {
+//        mToolbar.animate().translationY(0).setInterpolator(new DecelerateInterpolator()).start();
+        mToolbar.animate()
+                .translationY(0)
+                .setInterpolator(new LinearInterpolator())
+                .setDuration(180)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                        getSupportActionBar().show();
+//                        toolbarSetElevation(verticalOffset == 0 ? 0 : TOOLBAR_ELEVATION);
+                    }
+                });
+    }
 
     private class ViewHolder {
         private CircularImageView commentorsImage;
@@ -1014,6 +1127,34 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             removeProgressDialog();
             handleExceptions(t);
             getArticleDetailsWebserviceAPI();
+        }
+    };
+
+    private Callback<ViewCountResponse> getViewCountResponseCallback = new Callback<ViewCountResponse>() {
+        @Override
+        public void onResponse(Call<ViewCountResponse> call, retrofit2.Response<ViewCountResponse> response) {
+            if (response == null || response.body() == null) {
+                getArticleDetailsWebserviceAPI();
+                return;
+            }
+            try {
+                ViewCountResponse responseData = (ViewCountResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    articleViewCountTextView.setText(responseData.getData().get(0).getCount() + " Views");
+                } else {
+                    articleViewCountTextView.setText(responseData.getReason());
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+
+        }
+
+        @Override
+        public void onFailure(Call<ViewCountResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
 
@@ -1612,7 +1753,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 callback.onCustomViewHidden();
                 return;
             }
-            mContentView = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
+            mContentView = (RelativeLayout) findViewById(R.id.coordinatorLayout);
             mContentView.setVisibility(View.GONE);
             mCustomViewContainer = new FrameLayout(ArticlesAndBlogsDetailsActivity.this);
             mCustomViewContainer.setLayoutParams(LayoutParameters);

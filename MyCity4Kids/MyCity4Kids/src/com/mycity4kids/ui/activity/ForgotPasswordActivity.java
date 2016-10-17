@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.widget.EditText;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.gson.JsonSyntaxException;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -24,6 +25,8 @@ import com.mycity4kids.controller.ForgotPasswordController;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.models.request.LoginRegistrationRequest;
+import com.mycity4kids.models.response.ForgotPasswordData;
+import com.mycity4kids.models.response.ForgotPasswordResponse;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -87,7 +90,7 @@ public class ForgotPasswordActivity extends BaseActivity {
 
                         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
                         LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
-                        Call<UserDetailResponse> call = loginRegistrationAPI.resetPassword(lr);
+                        Call<ForgotPasswordResponse> call = loginRegistrationAPI.resetPassword(lr);
                         call.enqueue(onForgotPasswordResponseReceived);
                     }
                 }
@@ -98,9 +101,9 @@ public class ForgotPasswordActivity extends BaseActivity {
         }
     }
 
-    Callback<UserDetailResponse> onForgotPasswordResponseReceived = new Callback<UserDetailResponse>() {
+    Callback<ForgotPasswordResponse> onForgotPasswordResponseReceived = new Callback<ForgotPasswordResponse>() {
         @Override
-        public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
+        public void onResponse(Call<ForgotPasswordResponse> call, retrofit2.Response<ForgotPasswordResponse> response) {
             Log.d("SUCCESS", "" + response);
             removeProgressDialog();
             if (response == null || response.body() == null) {
@@ -109,9 +112,9 @@ public class ForgotPasswordActivity extends BaseActivity {
             }
 
             try {
-                UserDetailResponse responseData = (UserDetailResponse) response.body();
+                ForgotPasswordResponse responseData = (ForgotPasswordResponse) response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-
+                    showToast(responseData.getData().get(0).getMsg());
                 } else {
                     showToast(responseData.getReason());
                 }
@@ -123,8 +126,11 @@ public class ForgotPasswordActivity extends BaseActivity {
         }
 
         @Override
-        public void onFailure(Call<UserDetailResponse> call, Throwable t) {
+        public void onFailure(Call<ForgotPasswordResponse> call, Throwable t) {
             removeProgressDialog();
+            if (t instanceof JsonSyntaxException) {
+                Log.d("dawd", "dwad");
+            }
             Log.d("MC4kException", Log.getStackTraceString(t));
             Crashlytics.logException(t);
             showToast(getString(R.string.went_wrong));

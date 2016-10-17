@@ -276,8 +276,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:background="@color/transparent"
+        android:elevation="5dp"
         android:gravity="center"
-        android:minHeight="?attr/actionBarSize">
+        android:minHeight="?attr/actionBarSize"
+        app:theme="@style/ToolbarTheme"
+        app:titleTextAppearance="@style/ToolbarTheme.Title">
 
         <com.mikhaellopez.circularimageview.CircularImageView
             android:id="@+id/profileImageView"

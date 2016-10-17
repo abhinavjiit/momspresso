@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/a_bg_blue"
@@ -10,9 +11,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize">
-
-    </android.support.v7.widget.Toolbar>
+        android:elevation="5dp"
+        android:minHeight="?attr/actionBarSize"
+        app:theme="@style/ToolbarTheme"
+        app:titleTextAppearance="@style/ToolbarTheme.Title" />
 
     <LinearLayout
         android:id="@+id/root"
@@ -35,12 +37,12 @@
             android:id="@+id/editEmail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black_color"
             android:background="@null"
-            android:textAllCaps="false"
-            android:inputType="textEmailAddress"
             android:drawableBottom="@drawable/underline"
-            android:drawablePadding="5dp" />
+            android:drawablePadding="5dp"
+            android:inputType="textEmailAddress"
+            android:textAllCaps="false"
+            android:textColor="@color/black_color" />
 
     </LinearLayout>
 

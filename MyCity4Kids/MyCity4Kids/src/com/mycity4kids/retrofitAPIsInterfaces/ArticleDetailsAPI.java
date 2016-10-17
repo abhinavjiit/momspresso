@@ -10,6 +10,7 @@ import com.mycity4kids.models.response.ArticleDetailResponse;
 import com.mycity4kids.models.response.ArticleDetailResult;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.FBCommentResponse;
+import com.mycity4kids.models.response.ViewCountResponse;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -66,6 +67,9 @@ public interface ArticleDetailsAPI {
 
     @GET
     Call<ResponseBody> getComments(@Url String url);
+
+    @GET("v1/articles/views/{articleId}")
+    Call<ViewCountResponse> getViewCount(@Path("articleId") String articleId);
 
     @GET("v1/comments/fb/{articleId}")
     Call<FBCommentResponse> getFBComments(@Path("articleId") String articleId,

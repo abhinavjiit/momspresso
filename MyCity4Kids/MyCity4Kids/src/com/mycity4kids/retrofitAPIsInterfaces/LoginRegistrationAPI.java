@@ -2,6 +2,7 @@ package com.mycity4kids.retrofitAPIsInterfaces;
 
 import com.mycity4kids.models.request.AddEditKidsInformationRequest;
 import com.mycity4kids.models.request.LoginRegistrationRequest;
+import com.mycity4kids.models.response.ForgotPasswordResponse;
 import com.mycity4kids.models.response.UserDetailResponse;
 
 import retrofit2.Call;
@@ -26,7 +27,7 @@ public interface LoginRegistrationAPI {
     Call<UserDetailResponse> getUserDetails(@Path("userId") String userId);
 
     @POST("v1/users/link/password/")
-    Call<UserDetailResponse> resetPassword(@Body LoginRegistrationRequest body);
+    Call<ForgotPasswordResponse> resetPassword(@Body LoginRegistrationRequest body);
 
     @POST("v1/users/link/email/")
     Call<UserDetailResponse> resendVerificationLink(@Body LoginRegistrationRequest body);

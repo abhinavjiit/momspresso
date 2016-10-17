@@ -9,7 +9,7 @@
         android:id="@+id/sliding_tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/primary"
+        android:background="@color/primary_blue"
         app:layout_collapseMode="pin"
         app:tabGravity="fill"
         app:tabIndicatorColor="@color/tabsScrollColor"

@@ -264,15 +264,15 @@ public class TutorialActivity extends BaseActivity implements View.OnClickListen
                 UserDetailResponse responseData = (UserDetailResponse) response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     UserInfo model = new UserInfo();
-                    model.setId(responseData.getData().getResult().getId());
-                    model.setDynamoId(responseData.getData().getResult().getDynamoId());
-                    model.setEmail(responseData.getData().getResult().getEmail());
-                    model.setMc4kToken(responseData.getData().getResult().getMc4kToken());
-                    model.setIsValidated(responseData.getData().getResult().getIsValidated());
-                    model.setFirst_name(responseData.getData().getResult().getFirstName() + " " + responseData.getData().getResult().getLastName());
-                    model.setProfilePicUrl(responseData.getData().getResult().getProfilePicUrl().getClientApp());
+                    model.setId(responseData.getData().get(0).getResult().getId());
+                    model.setDynamoId(responseData.getData().get(0).getResult().getDynamoId());
+                    model.setEmail(responseData.getData().get(0).getResult().getEmail());
+                    model.setMc4kToken(responseData.getData().get(0).getResult().getMc4kToken());
+                    model.setIsValidated(responseData.getData().get(0).getResult().getIsValidated());
+                    model.setFirst_name(responseData.getData().get(0).getResult().getFirstName() + " " + responseData.getData().get(0).getResult().getLastName());
+                    model.setProfilePicUrl(responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp());
                     SharedPrefUtils.setUserDetailModel(TutorialActivity.this, model);
-                    SharedPrefUtils.setProfileImgUrl(TutorialActivity.this, responseData.getData().getResult().getProfilePicUrl().getClientApp());
+                    SharedPrefUtils.setProfileImgUrl(TutorialActivity.this, responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp());
 
                     PackageInfo pInfo = getPackageManager().getPackageInfo(TutorialActivity.this.getPackageName(), 0);
                     String version = pInfo.versionName;
@@ -294,7 +294,7 @@ public class TutorialActivity extends BaseActivity implements View.OnClickListen
                     }
                     //Verified User
                     else {
-                        if (null != responseData.getData().getResult().getKids()) {
+                        if (null != responseData.getData().get(0).getResult().getKids()) {
 //                            saveKidsInformation(responseData.getData().getResult().getKids());
                         }
                         Intent intent = new Intent(TutorialActivity.this, PushTokenService.class);

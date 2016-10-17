@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/tools"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blogger_listing_bg"
+    android:background="@color/home_bg"
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
@@ -12,16 +13,19 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:background="?attr/colorPrimary"
+        android:elevation="5dp"
         android:minHeight="?attr/actionBarSize"
-        android:visibility="visible" />
+        android:visibility="visible"
+        app:theme="@style/ToolbarTheme"
+        app:titleTextAppearance="@style/ToolbarTheme.Title" />
 
     <ListView
         android:id="@+id/blog_listing"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
-        android:background="@color/blogger_listing_bg"
-        android:divider="@color/blogger_listing_bg"
+        android:background="@color/home_bg"
+        android:divider="@color/home_bg"
         android:dividerHeight="5dp" />
 
     <TextView

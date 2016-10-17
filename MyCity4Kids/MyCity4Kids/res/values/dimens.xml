@@ -47,7 +47,7 @@
 
 
     <!--Article Details dimensions-->
-    <dimen name="article_details_app_bar_height">250dp</dimen>
+    <dimen name="article_details_app_bar_height">200dp</dimen>
     <dimen name="article_details_text_size">18px</dimen>
     <dimen name="ad_recent_trending_heading">15sp</dimen>
     <dimen name="ad_recent">15sp</dimen>

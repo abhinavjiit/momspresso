@@ -25,11 +25,12 @@
                 android:background="?attr/colorPrimary"
                 android:contentInsetLeft="30dp"
                 android:contentInsetStart="30dp"
+                android:elevation="5dp"
                 android:minHeight="?attr/actionBarSize"
                 app:contentInsetLeft="30dp"
-                app:contentInsetStart="30dp">
-
-            </android.support.v7.widget.Toolbar>
+                app:contentInsetStart="30dp"
+                app:theme="@style/ToolbarTheme"
+                app:titleTextAppearance="@style/ToolbarTheme.Title" />
 
             <!--<com.mycity4kids.widget.CustomFontTextView-->
             <!--android:layout_width="wrap_content"-->

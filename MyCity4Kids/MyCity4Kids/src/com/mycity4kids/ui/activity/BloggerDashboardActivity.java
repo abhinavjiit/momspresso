@@ -1101,16 +1101,16 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
 //                                 Crashlytics.log(Log.ERROR, "NULL", "blogger dashboard");
                                  return;
                              }
-                             if (responseData.getCode() != 200) {
-                                 showToast(getString(R.string.toast_response_error));
+                             if (responseData.getCode() != 200 || Constants.FAILURE.equals(responseData.getStatus())) {
+                                 showToast(responseData.getReason());
                                  return;
                              } else {
-                                 if (StringUtils.isNullOrEmpty(responseData.getData().getResult().getRank())) {
+                                 if (StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getRank())) {
                                      rankingTextView.setText("--");
                                  } else {
-                                     rankingTextView.setText(responseData.getData().getResult().getRank());
+                                     rankingTextView.setText(responseData.getData().get(0).getResult().getRank());
                                  }
-                                 int followerCount = Integer.parseInt(responseData.getData().getResult().getFollowersCount());
+                                 int followerCount = Integer.parseInt(responseData.getData().get(0).getResult().getFollowersCount());
                                  if (followerCount > 999) {
                                      float singleFollowerCount = ((float) followerCount) / 1000;
                                      followersTextView.setText("" + singleFollowerCount + "k");
@@ -1118,7 +1118,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                                      followersTextView.setText("" + followerCount);
                                  }
 
-                                 int followingCount = Integer.parseInt(responseData.getData().getResult().getFollowingCount());
+                                 int followingCount = Integer.parseInt(responseData.getData().get(0).getResult().getFollowingCount());
                                  if (followingCount > 999) {
                                      float singleFollowingCount = ((float) followingCount) / 1000;
                                      followingTextView.setText("" + singleFollowingCount + "k");
@@ -1126,27 +1126,27 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                                      followingTextView.setText("" + followingCount);
                                  }
 
-                                 blogTitle.setText(responseData.getData().getResult().getBlogTitle());
-                                 getSupportActionBar().setTitle(responseData.getData().getResult().getFirstName());
-                                 Bio = responseData.getData().getResult().getUserBio();
-                                 firstName = responseData.getData().getResult().getFirstName();
-                                 lastName = responseData.getData().getResult().getLastName();
-                                 if (null == responseData.getData().getResult().getPhone()) {
+                                 blogTitle.setText(responseData.getData().get(0).getResult().getBlogTitle());
+                                 getSupportActionBar().setTitle(responseData.getData().get(0).getResult().getFirstName());
+                                 Bio = responseData.getData().get(0).getResult().getUserBio();
+                                 firstName = responseData.getData().get(0).getResult().getFirstName();
+                                 lastName = responseData.getData().get(0).getResult().getLastName();
+                                 if (null == responseData.getData().get(0).getResult().getPhone()) {
                                      phoneNumber = " ";
                                  } else {
-                                     phoneNumber = responseData.getData().getResult().getPhone().getMobile();
+                                     phoneNumber = responseData.getData().get(0).getResult().getPhone().getMobile();
                                  }
 
-                                 if (!StringUtils.isNullOrEmpty(responseData.getData().getResult().getProfilePicUrl().getClientApp())) {
-                                     Picasso.with(BloggerDashboardActivity.this).load(responseData.getData().getResult().getProfilePicUrl().getClientApp())
+                                 if (!StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp())) {
+                                     Picasso.with(BloggerDashboardActivity.this).load(responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp())
                                              .placeholder(R.drawable.family_xxhdpi).error(R.drawable.family_xxhdpi).transform(new RoundedTransformation()).into(bloggerImageView);
                                  }
 
-                                 if (responseData.getData().getResult().getUserBio() == null || responseData.getData().getResult().getUserBio().isEmpty()) {
+                                 if (responseData.getData().get(0).getResult().getUserBio() == null || responseData.getData().get(0).getResult().getUserBio().isEmpty()) {
                                      userBio.setVisibility(View.GONE);
 //                                     moreTextView.setVisibility(View.GONE);
                                  } else {
-                                     userBio.setText(responseData.getData().getResult().getUserBio());
+                                     userBio.setText(responseData.getData().get(0).getResult().getUserBio());
                                      userBio.setVisibility(View.VISIBLE);
                                  }
 

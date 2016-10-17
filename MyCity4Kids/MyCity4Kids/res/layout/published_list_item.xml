@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="4dp"
+    android:paddingLeft="6dp"
+    android:paddingRight="6dp"
+    android:paddingTop="4dp">
+
+    <LinearLayout
+        android:id="@+id/titleContainer"
+        android:layout_width="match_parent"
+        android:layout_height="66dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/articleImageView"
+                android:layout_width="100dp"
+                android:layout_height="66dp"
+                android:layout_alignParentLeft="true"
+                android:src="@drawable/default_article" />
+
+            <TextView
+                android:id="@+id/txvArticleTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_gravity="top"
+                android:layout_marginRight="30dp"
+                android:layout_toRightOf="@+id/articleImageView"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-light"
+                android:gravity="top"
+                android:maxLines="2"
+                android:paddingLeft="10dp"
+                android:singleLine="false"
+                android:text="@string/title"
+                android:textColor="@color/black_color"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:id="@+id/articleBlock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txvArticleTitle"
+                android:layout_gravity="bottom"
+                android:layout_marginTop="7dp"
+                android:layout_toRightOf="@+id/articleImageView"
+                android:gravity="bottom">
+
+                <TextView
+                    android:id="@+id/txvPublishDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_gravity="bottom"
+                    android:fontFamily="sans-serif-light"
+                    android:gravity="left"
+                    android:paddingLeft="10dp"
+                    android:singleLine="true"
+                    android:text="@string/article_publish_date"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:id="@+id/articleViewCountTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/articleBlock"
+                    android:layout_marginTop="7dp"
+                    android:fontFamily="sans-serif-light"
+                    android:gravity="left"
+                    android:paddingLeft="15dp"
+                    android:text="100000000 views"
+                    android:textSize="11sp"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/unapproved"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/img_menu"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="left"
+                    android:paddingRight="19dp"
+                    android:text="UNAPPROVED"
+                    android:textColor="@color/blue_color"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/img_menu"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:padding="10dp"
+                android:src="@drawable/ic_more_vert_black_24dp" />
+
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

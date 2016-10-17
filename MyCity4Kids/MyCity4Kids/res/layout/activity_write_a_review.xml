@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/a_bg_blue">
@@ -9,8 +10,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
-        android:elevation="8dp"
-        android:minHeight="?attr/actionBarSize"></android.support.v7.widget.Toolbar>
+        android:elevation="5dp"
+        android:minHeight="?attr/actionBarSize"
+        app:theme="@style/ToolbarTheme"
+        app:titleTextAppearance="@style/ToolbarTheme.Title" />
 
     <RelativeLayout
         android:id="@+id/toolbar1"
@@ -180,10 +183,10 @@
                             android:background="@color/white_color"
                             android:inputType="text|none"
                             android:maxLength="50"
+                            android:paddingBottom="10dp"
                             android:paddingLeft="10dp"
                             android:paddingRight="10dp"
                             android:paddingTop="5dp"
-                            android:paddingBottom="10dp"
                             android:singleLine="true"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:textColor="@color/slider_txt_color"
@@ -217,10 +220,10 @@
                             android:layout_marginRight="25dp"
                             android:background="@color/white_color"
                             android:gravity="top|left"
+                            android:paddingBottom="10dp"
                             android:paddingLeft="10dp"
                             android:paddingRight="10dp"
                             android:paddingTop="5dp"
-                            android:paddingBottom="10dp"
                             android:singleLine="false"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:textColor="@color/slider_txt_color"
@@ -253,10 +256,10 @@
                                 android:drawableLeft="@drawable/add_photo_reveiw"
                                 android:drawablePadding="15dp"
                                 android:gravity="center"
-                                android:paddingTop="10dp"
                                 android:paddingBottom="10dp"
                                 android:paddingLeft="10dp"
                                 android:paddingRight="20dp"
+                                android:paddingTop="10dp"
                                 android:singleLine="true"
                                 android:text="ADD PHOTOS"
                                 android:textColor="@android:color/holo_red_dark"

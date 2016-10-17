@@ -45,7 +45,7 @@
                 android:id="@+id/header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/colorPrimary">
+                android:background="@color/primary_blue">
 
                 <ImageView
                     android:id="@+id/image"
@@ -210,7 +210,7 @@
                             android:layout_height="1.2dp"
                             android:layout_gravity="center_vertical"
                             android:layout_weight="4.35"
-                            android:background="#557ce8"></View>
+                            android:background="#557ce8"/>
 
                         <TextView
                             android:id="@+id/ratingHeader"
@@ -232,7 +232,7 @@
                             android:layout_height="1.2dp"
                             android:layout_gravity="center_vertical"
                             android:layout_weight="4.35"
-                            android:background="#557ce8"></View>
+                            android:background="#557ce8"/>
 
                     </LinearLayout>
 
@@ -246,7 +246,7 @@
                     android:id="@+id/overlay"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/flexible_space_image_height"
-                    android:background="?attr/colorPrimary"
+                    android:background="@color/primary_blue"
                     android:visibility="visible" />
 
                 <com.mycity4kids.slidingtab.SlidingTabLayout

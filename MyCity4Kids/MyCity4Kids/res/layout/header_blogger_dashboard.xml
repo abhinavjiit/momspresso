@@ -13,7 +13,7 @@
         android:layout_marginTop="10dp"
         android:src="@drawable/family_xxhdpi"
         app:civ_border="true"
-        app:civ_border_color="@color/grey"
+        app:civ_border_color="@color/line_separator_color"
         app:civ_border_width="1dp"
         app:civ_shadow="false" />
 

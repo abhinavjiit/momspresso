@@ -5,12 +5,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/tools"
+    <android.support.v7.widget.Toolbar xmlns:app="http://schemas.android.com/tools"
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@android:color/white">
+        android:background="@android:color/white"
+        android:elevation="5dp"
+        app:theme="@style/ToolbarTheme"
+        app:titleTextAppearance="@style/ToolbarTheme.Title">
 
         <RelativeLayout
             android:layout_width="fill_parent"
@@ -51,7 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar"
-        android:background="@color/primary"
+        android:background="@color/primary_blue"
         app:layout_collapseMode="pin"
         app:tabGravity="fill"
         app:tabIndicatorColor="@color/tabsScrollColor"

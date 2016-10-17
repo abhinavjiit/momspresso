@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -10,7 +11,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:background="@color/primary"
-        android:minHeight="?attr/actionBarSize" />
+        android:elevation="5dp"
+        android:minHeight="?attr/actionBarSize"
+        app:theme="@style/ToolbarTheme"
+        app:titleTextAppearance="@style/ToolbarTheme.Title" />
 
     <TextView
         android:id="@+id/welcome"
@@ -88,8 +92,8 @@
         android:background="@null"
         android:drawableBottom="@drawable/underline"
         android:gravity="start"
-        android:maxLength="200"
         android:hint="Let our readers get to know you"
+        android:maxLength="200"
         android:padding="10dp"
         android:textColor="@color/black_color" />
 
@@ -115,7 +119,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
-        android:background="@color/primary"
+        android:background="@color/primary_blue"
         android:text="Create Blog" />
 
 </RelativeLayout>

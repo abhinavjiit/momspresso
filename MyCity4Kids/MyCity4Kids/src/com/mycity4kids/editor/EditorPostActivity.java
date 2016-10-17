@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -748,7 +749,8 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     }
 
     public String titleFormatting(String title) {
-        return title.replace("&nbsp;", "");
+        String htmlStrippedTitle = Html.fromHtml(title).toString();
+        return htmlStrippedTitle;
 
 
     }

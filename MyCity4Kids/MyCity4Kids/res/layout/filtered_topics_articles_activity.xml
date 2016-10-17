@@ -11,7 +11,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize" />
+        android:elevation="5dp"
+        android:minHeight="?attr/actionBarSize"
+        fab:theme="@style/ToolbarTheme"
+        fab:titleTextAppearance="@style/ToolbarTheme.Title" />
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
@@ -19,16 +22,17 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar">
 
-    <ListView
-        android:id="@+id/scroll"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
-        android:layout_marginTop="2dp"
-        android:background="@color/grey_light"
-        android:divider="@color/transparent"
-        android:drawSelectorOnTop="true" />
+        <ListView
+            android:id="@+id/scroll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/toolbar"
+            android:layout_marginTop="2dp"
+            android:background="@color/grey_light"
+            android:divider="@color/transparent"
+            android:drawSelectorOnTop="true" />
     </android.support.v4.widget.SwipeRefreshLayout>
+
     <TextView
         android:id="@+id/noBlogsTextView"
         android:layout_width="wrap_content"

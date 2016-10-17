@@ -76,7 +76,7 @@ public class SyncUserInfoService extends IntentService implements UpdateListener
             try {
                 UserDetailResponse responseData = (UserDetailResponse) response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    SharedPrefUtils.setProfileImgUrl(SyncUserInfoService.this, responseData.getData().getResult().getProfilePicUrl().getClientApp());
+                    SharedPrefUtils.setProfileImgUrl(SyncUserInfoService.this, responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp());
                     new SaveUserInfoinDB().execute(responseData);
                 } else {
 //                    showToast(responseData.getReason());
@@ -259,8 +259,8 @@ public class SyncUserInfoService extends IntentService implements UpdateListener
         @Override
         protected Void doInBackground(UserDetailResponse... userResponses) {
 
-            if (null != userResponses[0].getData().getResult().getKids()) {
-                saveKidsInformation(userResponses[0].getData().getResult().getKids());
+            if (null != userResponses[0].getData().get(0).getResult().getKids()) {
+                saveKidsInformation(userResponses[0].getData().get(0).getResult().getKids());
             }
             return null;
         }

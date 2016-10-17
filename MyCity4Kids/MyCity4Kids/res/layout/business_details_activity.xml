@@ -46,7 +46,7 @@
                 android:id="@+id/header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/colorPrimary">
+                android:background="@color/primary_blue">
 
                 <ImageView
                     android:id="@+id/image"
@@ -252,7 +252,7 @@
                     android:id="@+id/overlay"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/flexible_space_image_height"
-                    android:background="?attr/colorPrimary"
+                    android:background="@color/primary_blue"
                     android:visibility="visible" />
 
                 <com.mycity4kids.slidingtab.SlidingTabLayout

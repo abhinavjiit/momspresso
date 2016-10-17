@@ -7,12 +7,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.kelltontech.utils.DateTimeUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.models.response.ArticleListingResult;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -65,8 +67,9 @@ public class PublishedArticleListingAdapter extends BaseAdapter {
 
         final ViewHolder holder;
         if (view == null) {
-            view = mInflator.inflate(R.layout.draft_list_item, null);
+            view = mInflator.inflate(R.layout.published_list_item, null);
             holder = new ViewHolder();
+            holder.imgArticleImage = (ImageView) view.findViewById(R.id.articleImageView);
             holder.txvArticleTitle = (TextView) view.findViewById(R.id.txvArticleTitle);
             holder.txvPublishDate = (TextView) view.findViewById(R.id.txvPublishDate);
             holder.unapproved = (TextView) view.findViewById(R.id.unapproved);
@@ -90,6 +93,8 @@ public class PublishedArticleListingAdapter extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
 
+        Picasso.with(mContext).load(articleDataModelsNew.get(position).getImageUrl().getMobileWebThumbnail()).
+                placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.imgArticleImage);
         holder.txvArticleTitle.setText(articleDataModelsNew.get(position).getTitle());
         try {
 
@@ -135,6 +140,7 @@ public class PublishedArticleListingAdapter extends BaseAdapter {
     }
 
     class ViewHolder {
+        ImageView imgArticleImage;
         TextView txvArticleTitle;
         TextView txvPublishDate;
         TextView txvArticleViewCount;

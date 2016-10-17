@@ -494,7 +494,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     findViewById(R.id.month_popup).setVisibility(View.GONE);
                     findViewById(R.id.task_popup).setVisibility(View.GONE);
                     changeVisibiltyOfArrow(false);
-                    setTitle(getTodayTime());
+                    setTitle("");
                     mDrawerToggle.setDrawerIndicatorEnabled(true);
 
                 } else if (currentFrag instanceof FragmentMC4KHome) {
@@ -505,7 +505,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     findViewById(R.id.month_popup).setVisibility(View.GONE);
                     findViewById(R.id.task_popup).setVisibility(View.GONE);
                     changeVisibiltyOfArrow(false);
-                    setTitle(getTodayTime());
+                    setTitle("");
 
                 } else if (currentFrag instanceof FragmentCalender) {
 
@@ -1082,6 +1082,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void setTitle(CharSequence title) {
         mTitle = title;
+        if (StringUtils.isEmpty(mTitle)) {
+            getSupportActionBar().setIcon(R.drawable.app_logo);
+        } else {
+            getSupportActionBar().setIcon(null);
+        }
         getSupportActionBar().setTitle(mTitle);
     }
 
@@ -1424,7 +1429,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 changeVisibiltyOfArrow(false);
                 Utils.pushEvent(DashboardActivity.this, GTMEventType.MC4KToday_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Left Menu Screen");
                 replaceFragment(new FragmentMC4KHome(), null, false);
-                setTitle(getTodayTime());
+                setTitle("");
 
                 break;
             case R.id.rdBtnUpcoming:

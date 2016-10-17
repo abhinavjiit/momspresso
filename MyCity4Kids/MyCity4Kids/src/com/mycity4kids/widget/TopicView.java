@@ -44,9 +44,6 @@ public class TopicView extends RelativeLayout {
         categoryTextView = (TextView) this.findViewById(R.id.categoryTextView);
         subcategoryTextView = (TextView) this.findViewById(R.id.subcategoryTextView);
         removeTopicImageView = (ImageView) this.findViewById(R.id.removeTopicImageView);
-//        inflate(getContext(), R.layout.topic_view, this);
-//        this.categoryTextView = (TextView) findViewById(R.id.categoryTextView);
-//        this.subcategoryTextView = (TextView) findViewById(R.id.subcategoryTextView);
     }
 
     /**
@@ -58,25 +55,8 @@ public class TopicView extends RelativeLayout {
         subcategoryTextView = (TextView) findViewById(R.id.subcategoryTextView);
         removeTopicImageView = (ImageView) findViewById(R.id.removeTopicImageView);
 
-//        removeTopicImageView.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                ((FlowLayout) containerView.getParent()).removeView(containerView);
-//            }
-//        });
     }
 
-//    @Override
-//    protected void onFinishInflate() {
-//        super.onFinishInflate();
-//
-//        // Sets the images for the previous and next buttons. Uses
-//        // built-in images so you don't need to add images, but in
-//        // a real application your images should be in the
-//        // application package so they are always available.
-//
-//
-//    }
 
     /**
      * Sets the category.
@@ -96,7 +76,7 @@ public class TopicView extends RelativeLayout {
         this.subcategoryTextView.setText(subcategoryName);
     }
 
-    public void removeTopic(){
+    public void removeTopic() {
         ((FlowLayout) containerView.getParent()).removeView(containerView);
     }
 
