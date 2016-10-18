@@ -65,6 +65,8 @@ public class SearchAuthorsTabFragment extends BaseFragment {
         View view = null;
         view = getActivity().getLayoutInflater().inflate(R.layout.fragment_author_listing, container, false);
         listView = (ListView) view.findViewById(R.id.authorListView);
+        listView.setBackgroundColor(ContextCompat.getColor(getActivity(),R.color.white_color));
+
         ColorDrawable sage = new ColorDrawable(ContextCompat.getColor(getActivity(), R.color.gray2));
         listView.setDivider(sage);
         listView.setDividerHeight(1);

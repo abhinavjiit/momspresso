@@ -64,6 +64,8 @@ public class SearchTopicsTabFragment extends BaseFragment {
         View view = null;
         view = getActivity().getLayoutInflater().inflate(R.layout.new_article_layout, container, false);
         listView = (ListView) view.findViewById(R.id.scroll);
+        listView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.white_color));
+
         ColorDrawable sage = new ColorDrawable(ContextCompat.getColor(getActivity(), R.color.gray2));
         listView.setDivider(sage);
         listView.setDividerHeight(1);

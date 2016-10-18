@@ -17,14 +17,6 @@
         app:theme="@style/ToolbarTheme"
         app:titleTextAppearance="@style/ToolbarTheme.Title" />
 
-    <!-- <View
-         android:id="@+id/dummy_line"
-         android:layout_width="match_parent"
-         android:layout_height="1dp"
-         android:layout_below="@id/toolbar"
-         android:layout_alignParentTop="true"
-         android:background="#DEDEDE" />-->
-
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"

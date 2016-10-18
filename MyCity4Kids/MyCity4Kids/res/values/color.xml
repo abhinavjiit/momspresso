@@ -121,10 +121,10 @@
     <color name="ad.tags.text">#707070</color>
     <color name="ad.tags.bg">#e9e9e9</color>
 
-    <color name="search.tablayout.bg">#e9e9e9</color>
-    <color name="search.tabs.bg">#e9e9e9</color>
+    <color name="search.tablayout.bg">#f1f1f1</color>
     <color name="search.tablayout.selectedtabtext">#ec3b57</color>
-    <color name="search.tablayout.unselectedtext">#ec3b57</color>
+    <color name="search.tablayout.unselectedtext">#9a9a9a</color>
+    <color name="search.tablayout.strip">#ec3b57</color>
 
     <color name="authortype.colorcode.blogger">#0ea2e8</color>
     <color name="authortype.colorcode.expert">#7db412</color>

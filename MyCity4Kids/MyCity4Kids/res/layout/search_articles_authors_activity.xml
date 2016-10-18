@@ -36,15 +36,13 @@
 
             <ImageView
                 android:id="@+id/searchImageView"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:layout_alignParentRight="true"
                 android:paddingLeft="10dp"
                 android:paddingRight="20dp"
-                android:scaleType="center"
-                android:src="@drawable/search" />
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_search_white_48dp" />
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
@@ -53,14 +51,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar"
-        android:background="@color/primary_blue"
+        android:background="@color/search.tablayout.bg"
         app:layout_collapseMode="pin"
         app:tabGravity="fill"
-        app:tabIndicatorColor="@color/tabsScrollColor"
-        app:tabIndicatorHeight="3dp"
+        app:tabIndicatorColor="@color/search.tablayout.strip"
+        app:tabIndicatorHeight="2dp"
         app:tabMode="fixed"
-        app:tabSelectedTextColor="#EFFFF0"
-        app:tabTextColor="#ABD0F8"
+        app:tabSelectedTextColor="@color/search.tablayout.selectedtabtext"
+        app:tabTextColor="@color/search.tablayout.unselectedtext"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <android.support.v4.view.ViewPager
