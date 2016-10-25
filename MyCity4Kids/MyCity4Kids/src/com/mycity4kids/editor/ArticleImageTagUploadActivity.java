@@ -67,7 +67,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
     ImageView articleImage;
     public static final int ADD_MEDIA_ACTIVITY_REQUEST_CODE = 1111;
     Uri imageUri;
-    String url = "default-article-listing.jpg";
+    String url;
     Button publish;
     SharedPreferences pref;
     boolean blogSetup = false;
@@ -248,13 +248,12 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
                                      return;
                                  }
                                  if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
-                                     if (!StringUtils.isNullOrEmpty(responseModel.getData().getMsg())) {
+                                     if (!StringUtils.isNullOrEmpty(responseModel.getData().get(0).getMsg())) {
                                          //  SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
-                                         Log.i("Retro Publish Message", responseModel.getData().getMsg());
+                                         Log.i("Retro Publish Message", responseModel.getData().get(0).getMsg());
 
-                                         alertDialog(responseModel.getData().getMsg());
+                                         alertDialog(responseModel.getData().get(0).getMsg());
                                      } else {
-                                         removeProgressDialog();
                                          showToast(responseModel.getReason().toString());
                                      }
                                  }
@@ -325,15 +324,17 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
                         return;
                     }
                     ArticleDraftResponse responseModel = (ArticleDraftResponse) response.body();
-                    if (responseModel.getCode() != 200) {
-                        showToast(getString(R.string.toast_response_error));
-                        return;
+
+                    if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
+                        id = responseModel.getData().get(0).getResult().getId() + "";
+                        alertDialog(responseModel.getData().get(0).getMsg());
                     } else {
-                        if (!StringUtils.isNullOrEmpty(responseModel.getData().getMsg())) {
-                            Log.i("Draft message", responseModel.getData().getMsg());
+                        if (!StringUtils.isNullOrEmpty(responseModel.getReason())) {
+                            showToast(responseModel.getReason());
+                        } else {
+                            showToast(getString(R.string.toast_response_error));
                         }
-                        id = responseModel.getData().getResult().getId() + "";
-                        alertDialog(responseModel.getData().getMsg());
+                        return;
                     }
                 }
 

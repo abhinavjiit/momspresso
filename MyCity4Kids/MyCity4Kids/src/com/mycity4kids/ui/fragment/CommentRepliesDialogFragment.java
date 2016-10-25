@@ -78,9 +78,9 @@ public class CommentRepliesDialogFragment extends DialogFragment implements OnCl
                 false);
         mToolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         mToolbar.setTitle("Replies");
-        mToolbar.setTitleTextColor(ContextCompat.getColor(getActivity(), R.color.white_color));
+        mToolbar.setTitleTextColor(ContextCompat.getColor(getActivity(), R.color.colorControlNormal));
         Drawable upArrow = ContextCompat.getDrawable(getActivity(), R.drawable.back_arroow);
-        upArrow.setColorFilter(ContextCompat.getColor(getActivity(), R.color.white_color), PorterDuff.Mode.SRC_ATOP);
+        upArrow.setColorFilter(ContextCompat.getColor(getActivity(), R.color.colorControlNormal), PorterDuff.Mode.SRC_ATOP);
         mToolbar.setNavigationIcon(upArrow);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

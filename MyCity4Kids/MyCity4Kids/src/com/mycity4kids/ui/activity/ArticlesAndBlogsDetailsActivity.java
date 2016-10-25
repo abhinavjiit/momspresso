@@ -1,5 +1,6 @@
 package com.mycity4kids.ui.activity;
 
+import android.accounts.NetworkErrorException;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.NotificationManager;
@@ -47,6 +48,7 @@ import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
@@ -92,6 +94,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
 import com.mycity4kids.ui.CircleTransformation;
 import com.mycity4kids.ui.fragment.CommentRepliesDialogFragment;
 import com.mycity4kids.ui.fragment.EditCommentsRepliesFragment;
+import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.volley.HttpVolleyRequest;
 import com.mycity4kids.widget.RelatedArticlesView;
 import com.squareup.picasso.Picasso;
@@ -347,8 +350,12 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 AppConstants.SEPARATOR_BACKSLASH + "1" + AppConstants.SEPARATOR_BACKSLASH + "3";
         HttpVolleyRequest.getStringResponse(this, url, null, mGetArticleListingListener, Request.Method.GET, true);
 
-        Call<ArticleListingResponse> call = articleDetailsAPI.getPublishedArticles(authorId, 0, 1, 4);
-        call.enqueue(bloggersArticleResponseCallback);
+//        Call<ArticleListingResponse> categoryRelatedArticlesCall = articleDetailsAPI.getCategoryRelatedArticles(articleId);
+//        categoryRelatedArticlesCall.enqueue(categoryArticleResponseCallback);
+
+        Call<ArticleListingResponse> callAuthorRecentcall = articleDetailsAPI.getPublishedArticles(authorId, 0, 1, 4);
+        callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
+
     }
 
 
@@ -1221,7 +1228,9 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
                 ArticleListingResponse responseBlogData;
                 try {
-                    responseBlogData = new Gson().fromJson(response.getResponseBody(), ArticleListingResponse.class);
+                    Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                    responseBlogData = gson.fromJson(response.getResponseBody(), ArticleListingResponse.class);
+//                    responseBlogData = new Gson().fromJson(response.getResponseBody(), ArticleListingResponse.class);
                 } catch (JsonSyntaxException jse) {
                     Crashlytics.logException(jse);
                     Log.d("JsonSyntaxException", Log.getStackTraceString(jse));
@@ -1231,7 +1240,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 }
 
                 if (responseBlogData.getCode() == 200 && Constants.SUCCESS.equals(responseBlogData.getStatus())) {
-                    ArrayList<ArticleListingResult> dataList = responseBlogData.getData().getResult();
+                    ArrayList<ArticleListingResult> dataList = responseBlogData.getData().get(0).getResult();
                     if (dataList == null || dataList.size() == 0) {
 
                     } else {
@@ -1276,6 +1285,95 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             }
         }
     };
+
+    private Callback<ArticleListingResponse> categoryArticleResponseCallback = new Callback<ArticleListingResponse>() {
+        @Override
+        public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
+
+            if (mLodingView.getVisibility() == View.VISIBLE) {
+                mLodingView.setVisibility(View.GONE);
+            }
+            if (response == null || response.body() == null) {
+//                showToast("Something went wrong from server");
+                NetworkErrorException nee = new NetworkErrorException("Category related Article API failure");
+                Crashlytics.logException(nee);
+                Call<ArticleListingResponse> callAuthorRecentcall = articleDetailsAPI.getPublishedArticles(authorId, 0, 1, 4);
+                callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
+                return;
+            }
+
+            try {
+                ArticleListingResponse responseData = (ArticleListingResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
+                    for (int i = 0; i < dataList.size(); i++) {
+                        if (dataList.get(i).getId().equals(articleId)) {
+                            dataList.remove(i);
+                            break;
+                        }
+                    }
+                    if (dataList.size() == 0) {
+                        Call<ArticleListingResponse> callAuthorRecentcall = articleDetailsAPI.getPublishedArticles(authorId, 0, 1, 4);
+                        callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
+                    } else {
+                        recentAuthorArticleHeading.setText("RELATED ARTICLES");
+                        recentAuthorArticles.setVisibility(View.VISIBLE);
+
+                        if (dataList.size() >= 3) {
+                            Picasso.with(ArticlesAndBlogsDetailsActivity.this).load(dataList.get(0).getImageUrl().getClientAppThumbnail()).
+                                    placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
+                            relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
+                            relatedArticles1.setTag(dataList.get(0));
+
+                            Picasso.with(ArticlesAndBlogsDetailsActivity.this).load(dataList.get(1).getImageUrl().getClientAppThumbnail()).
+                                    placeholder(R.drawable.default_article).fit().into(relatedArticles2.getArticleImageView());
+                            relatedArticles2.setArticleTitle(dataList.get(1).getTitle());
+                            relatedArticles2.setTag(dataList.get(1));
+
+                            Picasso.with(ArticlesAndBlogsDetailsActivity.this).load(dataList.get(2).getImageUrl().getClientAppThumbnail()).
+                                    placeholder(R.drawable.default_article).fit().into(relatedArticles3.getArticleImageView());
+                            relatedArticles3.setArticleTitle(dataList.get(2).getTitle());
+                            relatedArticles3.setTag(dataList.get(2));
+                        } else if (dataList.size() == 2) {
+                            Picasso.with(ArticlesAndBlogsDetailsActivity.this).load(dataList.get(0).getImageUrl().getClientAppThumbnail()).
+                                    placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
+                            relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
+                            relatedArticles1.setTag(dataList.get(0));
+
+                            Picasso.with(ArticlesAndBlogsDetailsActivity.this).load(dataList.get(1).getImageUrl().getClientAppThumbnail()).
+                                    placeholder(R.drawable.default_article).fit().into(relatedArticles2.getArticleImageView());
+                            relatedArticles2.setArticleTitle(dataList.get(1).getTitle());
+                            relatedArticles2.setTag(dataList.get(1));
+                            relatedArticles3.setVisibility(View.GONE);
+                        } else if (dataList.size() == 1) {
+                            Picasso.with(ArticlesAndBlogsDetailsActivity.this).load(dataList.get(0).getImageUrl().getClientAppThumbnail()).
+                                    placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
+                            relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
+                            relatedArticles1.setTag(dataList.get(0));
+                            relatedArticles2.setVisibility(View.GONE);
+                            relatedArticles3.setVisibility(View.GONE);
+                        }
+                    }
+                } else {
+                    NetworkErrorException nee = new NetworkErrorException("Category related Article Error Response");
+                    Crashlytics.logException(nee);
+                    Call<ArticleListingResponse> callAuthorRecentcall = articleDetailsAPI.getPublishedArticles(authorId, 0, 1, 4);
+                    callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+                Call<ArticleListingResponse> callAuthorRecentcall = articleDetailsAPI.getPublishedArticles(authorId, 0, 1, 4);
+                callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
+            }
+        }
+
+        @Override
+        public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
+            handleExceptions(t);
+        }
+    };
+
     private Callback<ArticleListingResponse> bloggersArticleResponseCallback = new Callback<ArticleListingResponse>() {
         @Override
         public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
@@ -1291,7 +1389,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             try {
                 ArticleListingResponse responseData = (ArticleListingResponse) response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    ArrayList<ArticleListingResult> dataList = responseData.getData().getResult();
+                    ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
                     for (int i = 0; i < dataList.size(); i++) {
                         if (dataList.get(i).getId().equals(articleId)) {
                             dataList.remove(i);
@@ -1319,15 +1417,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                                     placeholder(R.drawable.default_article).fit().into(relatedArticles3.getArticleImageView());
                             relatedArticles3.setArticleTitle(dataList.get(2).getTitle());
                             relatedArticles3.setTag(dataList.get(2));
-
-//                            recentAuthorArticle1.setText(dataList.get(0).getTitle());
-//                            recentAuthorArticle1.setTag(dataList.get(0));
-//                            recentAuthorArticle2.setText(dataList.get(1).getTitle());
-//                            recentAuthorArticle2.setTag(dataList.get(1));
-//                            recentAuthorArticle3.setText(dataList.get(2).getTitle());
-//                            recentAuthorArticle3.setTag(dataList.get(2));
                         } else if (dataList.size() == 2) {
-
                             Picasso.with(ArticlesAndBlogsDetailsActivity.this).load(dataList.get(0).getImageUrl().getClientAppThumbnail()).
                                     placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
                             relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
@@ -1337,14 +1427,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                                     placeholder(R.drawable.default_article).fit().into(relatedArticles2.getArticleImageView());
                             relatedArticles2.setArticleTitle(dataList.get(1).getTitle());
                             relatedArticles2.setTag(dataList.get(1));
-
                             relatedArticles3.setVisibility(View.GONE);
-
-//                            recentAuthorArticle1.setText(dataList.get(0).getTitle());
-//                            recentAuthorArticle1.setTag(dataList.get(0));
-//                            recentAuthorArticle2.setText(dataList.get(1).getTitle());
-//                            recentAuthorArticle2.setTag(dataList.get(1));
-//                            recentAuthorArticle3.setVisibility(View.GONE);
                         } else if (dataList.size() == 1) {
                             Picasso.with(ArticlesAndBlogsDetailsActivity.this).load(dataList.get(0).getImageUrl().getClientAppThumbnail()).
                                     placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
@@ -1370,14 +1453,18 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         }
     };
 
-
     Callback<ResponseBody> commentsCallback = new Callback<ResponseBody>() {
         @Override
         public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
             removeProgressDialog();
             mLodingView.setVisibility(View.GONE);
             if (response == null || null == response.body()) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                Crashlytics.logException(nee);
                 showToast("Something went wrong from server");
+                isLoading = false;
+                commentType = "fb";
+                commentURL = "http";
                 return;
             }
             try {
@@ -1439,7 +1526,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     ArrayList<CommentsData> dataList = responseData.getData().getResult();
                     pagination = responseData.getData().getPagination();
                     if (dataList.size() == 0) {
-
+                        pagination = AppConstants.PAGINATION_END_VALUE;
                     } else {
                         commentLayout = ((LinearLayout) findViewById(R.id.commnetLout));
                         ViewHolder viewHolder = null;

@@ -1,6 +1,7 @@
 package com.mycity4kids.models.response;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,8 +17,8 @@ public class DraftListResult implements Serializable {
     String title;
 //    ImageURL imageUrl;
     int itemType = 1;
-    private Map<String, List<Map<String, String>>> tags;
-
+//    private Map<String, List<Map<String, String>>> tags;
+    private ArrayList<Map<String, String>> tags;
     public String getId() {
         return id;
     }
@@ -82,11 +83,19 @@ public class DraftListResult implements Serializable {
         this.itemType = itemType;
     }
 
-    public Map<String, List<Map<String, String>>> getTags() {
+//    public Map<String, List<Map<String, String>>> getTags() {
+//        return tags;
+//    }
+//
+//    public void setTags(Map<String, List<Map<String, String>>> tags) {
+//        this.tags = tags;
+//    }
+
+    public ArrayList<Map<String, String>> getTags() {
         return tags;
     }
 
-    public void setTags(Map<String, List<Map<String, String>>> tags) {
+    public void setTags(ArrayList<Map<String, String>> tags) {
         this.tags = tags;
     }
 }

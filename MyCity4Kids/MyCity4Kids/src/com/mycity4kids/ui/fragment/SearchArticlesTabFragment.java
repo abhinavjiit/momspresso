@@ -64,7 +64,7 @@ public class SearchArticlesTabFragment extends BaseFragment {
         View view = null;
         view = getActivity().getLayoutInflater().inflate(R.layout.new_article_layout, container, false);
         listView = (ListView) view.findViewById(R.id.scroll);
-        listView.setBackgroundColor(ContextCompat.getColor(getActivity(),R.color.white_color));
+        listView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.white_color));
         ColorDrawable sage = new ColorDrawable(ContextCompat.getColor(getActivity(), R.color.gray2));
         listView.setDivider(sage);
         listView.setDividerHeight(1);
@@ -234,7 +234,9 @@ public class SearchArticlesTabFragment extends BaseFragment {
             if (mLodingView.getVisibility() == View.VISIBLE) {
                 mLodingView.setVisibility(View.GONE);
             }
-            ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+            if (null != getActivity()) {
+                ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+            }
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }

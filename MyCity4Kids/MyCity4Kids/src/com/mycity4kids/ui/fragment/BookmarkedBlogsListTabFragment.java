@@ -127,7 +127,7 @@ public class BookmarkedBlogsListTabFragment extends BaseFragment {
     private void processBookmarkResponse(ArticleListingResponse responseData) {
 
         //	parentingResponse = responseData ;
-        ArrayList<ArticleListingResult> dataList = responseData.getData().getResult();
+        ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
 
         if (dataList.size() == 0) {
 

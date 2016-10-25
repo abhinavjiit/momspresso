@@ -10,8 +10,11 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.Session;
@@ -102,6 +105,17 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
             signinTextView = (CustomFontTextView) findViewById(R.id.signinTextView);
             mEmailId.addTextChangedListener(mTextWatcher);
             mPassword.addTextChangedListener(mTextWatcher);
+            mPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+                        loginRequest();
+                    }
+                    return false;
+                }
+            });
+
+
             ((CustomFontTextView) findViewById(R.id.orTextView)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -158,44 +172,35 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                 break;
             case R.id.signinTextView:
 //                try {
-                if (isDataValid()) {
-                    if (ConnectivityUtils.isNetworkEnabled(this)) {
-                        showProgressDialog(getString(R.string.please_wait));
-                        //mProgressDialog=ProgressDialog.show(this, "", "Please Wait...",true,false);
-                        loginMode = "email";
-                        String emailId_or_mobile = mEmailId.getText().toString().trim();
-                        String password = mPassword.getText().toString().trim();
-
-//                            byte[] bytesOfMessage = null;
-//                            MessageDigest md = null;
-//
-//                            md = MessageDigest.getInstance("MD5");
-//                            bytesOfMessage = password.getBytes("UTF-8");
-//
-//                            byte[] thedigest = md.digest(bytesOfMessage);
-
-                        LoginRegistrationRequest lr = new LoginRegistrationRequest();
-                        lr.setEmail(emailId_or_mobile);
-                        lr.setPassword(password);
-                        lr.setRequestMedium("custom");
-
-                        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-                        LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
-                        Call<UserDetailResponse> call = loginRegistrationAPI.login(lr);
-                        call.enqueue(onLoginResponseReceivedListener);
-                    } else {
-                        showToast(getString(R.string.error_network));
-                    }
-                }
-//                } catch (NoSuchAlgorithmException e) {
-//                    e.printStackTrace();
-//                } catch (UnsupportedEncodingException e) {
-//                    e.printStackTrace();
-//                }
+                loginRequest();
                 break;
             default:
                 break;
 
+        }
+    }
+
+    private void loginRequest() {
+        if (isDataValid()) {
+            if (ConnectivityUtils.isNetworkEnabled(this)) {
+                showProgressDialog(getString(R.string.please_wait));
+                //mProgressDialog=ProgressDialog.show(this, "", "Please Wait...",true,false);
+                loginMode = "email";
+                String emailId_or_mobile = mEmailId.getText().toString().trim();
+                String password = mPassword.getText().toString().trim();
+
+                LoginRegistrationRequest lr = new LoginRegistrationRequest();
+                lr.setEmail(emailId_or_mobile);
+                lr.setPassword(password);
+                lr.setRequestMedium("custom");
+
+                Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+                LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
+                Call<UserDetailResponse> call = loginRegistrationAPI.login(lr);
+                call.enqueue(onLoginResponseReceivedListener);
+            } else {
+                showToast(getString(R.string.error_network));
+            }
         }
     }
 
@@ -587,7 +592,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
             Log.d("SUCCESS", "" + response);
             removeProgressDialog();
             if (response == null || response.body() == null) {
-                showToast(getString(R.string.went_wrong));
+//                showToast(getString(R.string.went_wrong));
                 return;
             }
 
@@ -601,7 +606,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-                showToast(getString(R.string.went_wrong));
+//                showToast(getString(R.string.went_wrong));
             }
         }
 

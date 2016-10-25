@@ -205,7 +205,7 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
 
     private void processResponse(ArticleListingResponse responseData) {
         try {
-            ArrayList<ArticleListingResult> dataList = responseData.getData().getResult();
+            ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
 
             if (dataList.size() == 0) {
 
@@ -227,7 +227,7 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
                 if (from == 1) {
                     articleDataModelsNew = dataList;
                 } else {
-                    int prevFrom = Integer.parseInt(responseData.getData().getChunks().split("-")[0]);
+                    int prevFrom = Integer.parseInt(responseData.getData().get(0).getChunks().split("-")[0]);
                     if (prevFrom < from) {
                         //Response from cache refresh request. Update the dataset and refresh list
                         //cache refresh request response and response from pagination may overlap causing duplication

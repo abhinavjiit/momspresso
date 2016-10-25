@@ -226,7 +226,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
 
     private void processArticleListingResponse(ArticleListingResponse responseData) {
 
-        ArrayList<ArticleListingResult> dataList = responseData.getData().getResult();
+        ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
 
         if (dataList.size() == 0) {
             isLastPageReached = false;

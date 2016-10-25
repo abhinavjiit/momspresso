@@ -70,6 +70,7 @@ public class JsCallbackReceiver {
                 mPreviousStyleSet = newStyleSet;
                 break;
             case CALLBACK_SELECTION_CHANGED:
+                //AppLog.d(AppLog.T.EDITOR, "CALLBACK_SELECTION_CHANGED " + params);
                 // Called for changes to the field in current focus and for changes made to selection
                 // (includes moving the caret without selecting text)
                 // TODO: Possibly needed for handling WebView scrolling when caret moves (from iOS)
@@ -78,6 +79,7 @@ public class JsCallbackReceiver {
                 break;
             case CALLBACK_INPUT:
                 // Called on key press
+                //AppLog.d(AppLog.T.EDITOR, "CALLBACK_INPUT " + params);
                 // TODO: Possibly needed for handling WebView scrolling when caret moves (from iOS)
                 break;
             case CALLBACK_FOCUS_IN:

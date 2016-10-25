@@ -359,7 +359,7 @@
             android:name=".ui.activity.SearchArticlesAndAuthorsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Transparent"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity
             android:name=".ui.activity.KidsBirthdayActivity"
             android:parentActivityName=".ui.activity.DashboardActivity"
@@ -393,8 +393,7 @@
             android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|uiMode|keyboard"
             android:label="@string/app_name"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustPan" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.ActivityFamilyProfile"
             android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|uiMode|keyboard"

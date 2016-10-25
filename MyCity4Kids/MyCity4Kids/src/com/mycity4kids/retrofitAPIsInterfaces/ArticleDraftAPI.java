@@ -4,6 +4,7 @@ import com.mycity4kids.models.response.BaseResponse;
 import com.mycity4kids.models.response.DraftListResponse;
 import com.mycity4kids.models.response.ArticleDraftResponse;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.DELETE;
 import retrofit2.http.Field;
@@ -44,7 +45,8 @@ public interface ArticleDraftAPI {
 
 
     @GET("v1/articles/")
-    Call<DraftListResponse> getDraftsList(@Query("aType") String aType);
+    Call<ResponseBody> getDraftsList(@Query("aType") String aType);
+
     @DELETE
     Call<ArticleDraftResponse> deleteDraft(@Url String url);
 }

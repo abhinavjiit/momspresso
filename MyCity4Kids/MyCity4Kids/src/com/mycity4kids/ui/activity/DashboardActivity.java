@@ -102,6 +102,8 @@ import com.mycity4kids.ui.fragment.SendFeedbackFragment;
 import com.mycity4kids.ui.fragment.SyncSettingFragment;
 import com.mycity4kids.utils.RoundedTransformation;
 import com.mycity4kids.widget.CustomListView;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Field;
@@ -842,7 +844,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     public void updateImageProfile() {
         if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getProfileImgUrl(this))) {
-            Picasso.with(this).load(SharedPrefUtils.getProfileImgUrl(this)).placeholder(R.drawable.family_xxhdpi).error(R.drawable.family_xxhdpi).transform(new RoundedTransformation()).into(profileImage);
+            Picasso.with(this).load(SharedPrefUtils.getProfileImgUrl(this)).memoryPolicy(MemoryPolicy.NO_CACHE).networkPolicy(NetworkPolicy.NO_CACHE)
+                    .placeholder(R.drawable.family_xxhdpi).error(R.drawable.family_xxhdpi).transform(new RoundedTransformation()).into(profileImage);
         }
     }
 

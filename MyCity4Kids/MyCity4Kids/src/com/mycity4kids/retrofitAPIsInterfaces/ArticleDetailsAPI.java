@@ -90,4 +90,7 @@ public interface ArticleDetailsAPI {
 
     @POST("v1/users/deleteBookmark/")
     Call<AddBookmarkResponse> deleteBookmark(@Body DeleteBookmarkRequest body);
+
+    @GET("v1/recommend/related/{articleId}")
+    Call<ArticleListingResponse> getCategoryRelatedArticles(@Path("articleId") String articleId);
 }

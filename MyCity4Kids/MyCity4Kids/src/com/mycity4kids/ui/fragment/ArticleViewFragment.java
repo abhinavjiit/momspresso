@@ -220,7 +220,7 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
     private void processResponse(ArticleListingResponse responseData) {
         //	parentingResponse = responseData ;
         try {
-            ArrayList<ArticleListingResult> dataList = responseData.getData().getResult();
+            ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
 
             if (dataList.size() == 0) {
 
@@ -252,7 +252,7 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
                     } else {
                         articleDataModelsNew.addAll(dataList);
                     }
-                    paginationValue = responseData.getData().getPagination();
+                    paginationValue = responseData.getData().get(0).getPagination();
                     if (AppConstants.PAGINATION_END_VALUE.equals(paginationValue)) {
                         isLastPageReached = true;
                     }
@@ -261,7 +261,7 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
                     if (from == 1) {
                         articleDataModelsNew = dataList;
                     } else {
-                        int prevFrom = Integer.parseInt(responseData.getData().getChunks().split("-")[0]);
+                        int prevFrom = Integer.parseInt(responseData.getData().get(0).getChunks().split("-")[0]);
                         if (prevFrom < from) {
                             //Response from cache refresh request. Update the dataset and refresh list
                             //cache refresh request response and response from pagination may overlap causing duplication

@@ -95,6 +95,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -484,8 +486,11 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                     //clear list to avoid duplicates due to volley caching
                     mArticleDataListing.clear();
 
-                    mArticleDataListing.addAll(responseBlogData.getData().getResult());
+                    mArticleDataListing.addAll(responseBlogData.getData().get(0).getResult());
                     hzScrollLinearLayout.removeAllViews();
+                    if (!mArticleDataListing.isEmpty()) {
+                        Collections.shuffle(mArticleDataListing);
+                    }
                     for (int i = 0; i < mArticleDataListing.size(); i++) {
                         final View view = mInflator.inflate(R.layout.card_item_article_dashboard, null);
                         view.setTag(i);
@@ -614,7 +619,6 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                     mTotalPageCount = responseData.getResult().getData().getPage_count();
                     //to add in already created list
                     // we neew to clear this list in case of sort by and filter
-                    //  mBusinessDataListings.clear();
                     mBusinessDataListings.addAll(responseData.getResult().getData().getData());
 
                     BaseApplication.setBusinessREsponse(mBusinessDataListings);
@@ -625,20 +629,12 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                     inflateEventCardsScroll();
 
                     if (mBusinessDataListings.isEmpty()) {
-
-//                        ((TextView) view.findViewById(R.id.go_to_events)).setVisibility(View.VISIBLE);
                         ((TextView) view.findViewById(R.id.no_events)).setVisibility(View.VISIBLE);
-                        // eventListView.setVisibility(View.GONE);
                     }
                     baseScroll.smoothScrollTo(0, 0);
 
                 } else if (responseData.getResponseCode() == 400) {
-
-//                    ((TextView) view.findViewById(R.id.go_to_events)).setVisibility(View.VISIBLE);
                     ((TextView) view.findViewById(R.id.no_events)).setVisibility(View.VISIBLE);
-                    //eventListView.setVisibility(View.GONE);
-                    //((LinearLayout) view.findViewById(R.id.eventHeader)).setVisibility(View.GONE);
-
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
@@ -693,17 +689,20 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
 
     private void processMomspressoListingResponse(ArticleListingResponse responseData) {
 
-        ArrayList<ArticleListingResult> dataList = responseData.getData().getResult();
+        ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
 
         if (dataList.size() == 0) {
             ((TextView) view.findViewById(R.id.no_momspresso)).setVisibility(View.VISIBLE);
         } else {
             ((TextView) view.findViewById(R.id.no_momspresso)).setVisibility(View.GONE);
             mMomspressoArticleListing.clear();
-            mMomspressoArticleListing.addAll(responseData.getData().getResult());
+            mMomspressoArticleListing.addAll(responseData.getData().get(0).getResult());
             momspressoHZScrollLinearLayout.removeAllViews();
             mWebChromeClient = new MyWebChromeClient();
 
+            if (!mMomspressoArticleListing.isEmpty()) {
+                Collections.shuffle(mMomspressoArticleListing);
+            }
 //            BaseApplication.setBestCityResponse(mArticleBestCityListing);
             for (int i = 0; i < mMomspressoArticleListing.size(); i++) {
                 final View view1 = mInflator.inflate(R.layout.momspresso_card_item_article_dashboard, null);
@@ -765,14 +764,14 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
 
     private void processArticleListingResponse(ArticleListingResponse responseData) {
 
-        ArrayList<ArticleListingResult> dataList = responseData.getData().getResult();
+        ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
 
         if (dataList.size() == 0) {
             ((TextView) view.findViewById(R.id.no_blog1)).setVisibility(View.VISIBLE);
         } else {
             ((TextView) view.findViewById(R.id.no_blog1)).setVisibility(View.GONE);
             mArticleBestCityListing.clear();
-            mArticleBestCityListing.addAll(responseData.getData().getResult());
+            mArticleBestCityListing.addAll(responseData.getData().get(0).getResult());
             hzScrollLinearLayout1.removeAllViews();
             BaseApplication.setBestCityResponse(mArticleBestCityListing);
             for (int i = 0; i < mArticleBestCityListing.size(); i++) {

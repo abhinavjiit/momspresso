@@ -12,6 +12,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.kelltontech.utils.DateTimeUtils;
+import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.squareup.picasso.Picasso;
@@ -93,8 +94,13 @@ public class PublishedArticleListingAdapter extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
 
-        Picasso.with(mContext).load(articleDataModelsNew.get(position).getImageUrl().getMobileWebThumbnail()).
-                placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.imgArticleImage);
+        if (null != articleDataModelsNew.get(position).getImageUrl()) {
+            Picasso.with(mContext).load(articleDataModelsNew.get(position).getImageUrl().getMobileWebThumbnail()).
+                    placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.imgArticleImage);
+        } else {
+            holder.imgArticleImage.setBackgroundResource(R.drawable.article_default);
+        }
+
         holder.txvArticleTitle.setText(articleDataModelsNew.get(position).getTitle());
         try {
 

@@ -3,6 +3,7 @@ package com.mycity4kids.ui.activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
@@ -53,7 +54,7 @@ public class SettingsActivity extends BaseActivity {
         setSupportActionBar(mToolBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.black_color));
+        mDrawerLayout.setStatusBarBackgroundColor(ContextCompat.getColor(this, R.color.black_color));
 
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolBar, R.string.blank, R.string.blank) {
             public void onDrawerClosed(View view) {
@@ -115,7 +116,7 @@ public class SettingsActivity extends BaseActivity {
                     getSupportActionBar().setHomeButtonEnabled(true);
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
+//                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
                     //    changeVisibiltyOfArrow(false);
                 } else if (currentFrag instanceof FragmentFamilyProfile) {
 
@@ -124,7 +125,7 @@ public class SettingsActivity extends BaseActivity {
                     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
+//                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
                     getSupportActionBar().setHomeButtonEnabled(true);
 
                     //   changeVisibiltyOfArrow(false);
@@ -136,7 +137,7 @@ public class SettingsActivity extends BaseActivity {
                     getSupportActionBar().setHomeButtonEnabled(true);
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
+//                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
                     //     changeVisibiltyOfArrow(false);
                 } else if (currentFrag instanceof FragmentKidProfile) {
 
@@ -146,7 +147,7 @@ public class SettingsActivity extends BaseActivity {
                     getSupportActionBar().setHomeButtonEnabled(true);
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
+//                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
                     //    changeVisibiltyOfArrow(false);
 
                 } else if (currentFrag instanceof ChangeCityFragment) {
@@ -156,7 +157,7 @@ public class SettingsActivity extends BaseActivity {
 
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
+//                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
                     //     changeVisibiltyOfArrow(false);
                 }
                 invalidateOptionsMenu();

@@ -232,7 +232,7 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
 
     private void processArticleListingResponse(ArticleListingResponse responseData) {
 
-        ArrayList<ArticleListingResult> dataList = responseData.getData().getResult();
+        ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
 
         if (dataList.size() == 0) {
             isLastPageReached = false;

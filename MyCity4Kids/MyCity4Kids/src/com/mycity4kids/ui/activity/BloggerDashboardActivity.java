@@ -28,6 +28,7 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -50,6 +51,7 @@ import com.mycity4kids.models.response.ArticleDetailResult;
 import com.mycity4kids.models.response.ArticleDraftResponse;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
+import com.mycity4kids.models.response.DraftListData;
 import com.mycity4kids.models.response.DraftListResponse;
 import com.mycity4kids.models.response.DraftListResult;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
@@ -70,8 +72,14 @@ import com.mycity4kids.ui.adapter.PublishedArticleListingAdapter;
 import com.mycity4kids.ui.adapter.ReviewsListAdapter;
 import com.mycity4kids.ui.adapter.UserCommentsAdapter;
 import com.mycity4kids.utils.RoundedTransformation;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.yalantis.ucrop.UCrop;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -81,9 +89,12 @@ import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -792,8 +803,8 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                                  showToast(getString(R.string.toast_response_error));
                                  return;
                              } else {
-                                 if (!StringUtils.isNullOrEmpty(responseModel.getData().getMsg())) {
-                                     Log.i("Draft message", responseModel.getData().getMsg());
+                                 if (!StringUtils.isNullOrEmpty(responseModel.getData().get(0).getMsg())) {
+                                     Log.i("Draft message", responseModel.getData().get(0).getMsg());
                                  }
                                  processPublisedArticlesResponse(responseModel);
 
@@ -824,32 +835,89 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
             return;
         }
 
-        Call<DraftListResponse> call = getDraftListAPI.getDraftsList("0,1,2,4");
+        Call<ResponseBody> call = getDraftListAPI.getDraftsList("0,1,2,4");
 
         //asynchronous call
-        call.enqueue(new Callback<DraftListResponse>() {
+        call.enqueue(new Callback<ResponseBody>() {
                          @Override
-                         public void onResponse(Call<DraftListResponse> call, retrofit2.Response<DraftListResponse> response) {
+                         public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
                              int statusCode = response.code();
                              removeProgressDialog();
                              if (response == null || response.body() == null) {
                                  showToast(getString(R.string.went_wrong));
                                  return;
                              }
-                             DraftListResponse responseModel = response.body();
-                             if (responseModel.getCode() != 200) {
-                                 showToast(getString(R.string.toast_response_error));
-                                 return;
-                             } else {
-                                 if (!StringUtils.isNullOrEmpty(responseModel.getData().getMsg())) {
-                                     Log.i("Draft message", responseModel.getData().getMsg());
+                             try {
+                                 String resData = new String(response.body().bytes());
+                                 JSONObject jObject = new JSONObject(resData);
+                                 int code = jObject.getInt("code");
+                                 String status = jObject.getString("status");
+                                 if (code == 200 && Constants.SUCCESS.equals(status)) {
+                                     DraftListResponse draftListResponse = new DraftListResponse();
+                                     DraftListData draftListData = new DraftListData();
+                                     JSONArray dataObj = jObject.optJSONArray("data");
+                                     if (null != dataObj) {
+                                         //Empty Draft List Handling
+                                         ArrayList<DraftListResult> emptyDraftList = new ArrayList<DraftListResult>();
+                                         draftListData.setResult(emptyDraftList);
+                                         draftListResponse.setData(draftListData);
+                                         processDraftResponse(draftListResponse);
+                                         return;
+                                     }
+
+                                     JSONArray resultJsonObject = jObject.getJSONObject("data").optJSONArray("result");
+                                     ArrayList<DraftListResult> draftList = new ArrayList<DraftListResult>();
+                                     ArrayList<Map<String, String>> retMap;
+                                     for (int i = 0; i < resultJsonObject.length(); i++) {
+                                         DraftListResult draftitem = new DraftListResult();
+                                         draftitem.setId(resultJsonObject.getJSONObject(i).getString("id"));
+                                         draftitem.setArticleType(resultJsonObject.getJSONObject(i).getString("articleType"));
+                                         draftitem.setCreatedTime(resultJsonObject.getJSONObject(i).getString("createdTime"));
+                                         draftitem.setUpdatedTime(resultJsonObject.getJSONObject(i).getLong("updatedTime"));
+                                         draftitem.setBody(resultJsonObject.getJSONObject(i).getString("body"));
+                                         draftitem.setTitle(resultJsonObject.getJSONObject(i).getString("title"));
+                                         if (resultJsonObject.getJSONObject(i).has("itemType")) {
+                                             draftitem.setItemType(resultJsonObject.getJSONObject(i).getInt("itemType"));
+                                         }
+                                         //Different formats of tags array Handling :(
+                                         if (resultJsonObject.getJSONObject(i).has("tags")) {
+                                             JSONArray tagsArray = resultJsonObject.getJSONObject(i).optJSONArray("tags");
+                                             if (null != tagsArray) {
+                                                 retMap = new Gson().fromJson(tagsArray.toString(), new TypeToken<ArrayList<HashMap<String, String>>>() {
+                                                 }.getType());
+                                                 draftitem.setTags(retMap);
+                                             } else {
+                                                 JSONArray jsArray = resultJsonObject.getJSONObject(i).getJSONObject("tags").optJSONArray("tagsArr");
+                                                 retMap = new Gson().fromJson(jsArray.toString(), new TypeToken<ArrayList<HashMap<String, String>>>() {
+                                                 }.getType());
+                                                 draftitem.setTags(retMap);
+                                             }
+                                         } else {
+                                             // no tags key in the json
+                                             retMap = new ArrayList<Map<String, String>>();
+                                             draftitem.setTags(retMap);
+                                         }
+                                         draftList.add(draftitem);
+                                     }
+                                     draftListData.setResult(draftList);
+                                     draftListResponse.setData(draftListData);
+                                     processDraftResponse(draftListResponse);
+                                 } else {
+                                     showToast(jObject.getString("reason"));
                                  }
-                                 processDraftResponse(responseModel);
+                             } catch (JSONException jsonexception) {
+                                 Crashlytics.logException(jsonexception);
+                                 Log.d("JSONException", Log.getStackTraceString(jsonexception));
+                                 showToast("Something went wrong while parsing response from server");
+                             } catch (Exception ex) {
+                                 Crashlytics.logException(ex);
+                                 Log.d("MC4kException", Log.getStackTraceString(ex));
+                                 showToast("Something went wrong from server");
                              }
                          }
 
                          @Override
-                         public void onFailure(Call<DraftListResponse> call, Throwable t) {
+                         public void onFailure(Call<ResponseBody> call, Throwable t) {
                              removeProgressDialog();
                              Crashlytics.logException(t);
                              Log.d("MC4kException", Log.getStackTraceString(t));
@@ -889,9 +957,9 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                                  showToast(getString(R.string.toast_response_error));
                                  return;
                              } else {
-                                 if (!StringUtils.isNullOrEmpty(responseModel.getData().getMsg())) {
+                                 if (!StringUtils.isNullOrEmpty(responseModel.getData().get(0).getMsg())) {
                                      //  SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
-                                     Log.i("Draft message", responseModel.getData().getMsg());
+                                     Log.i("Draft message", responseModel.getData().get(0).getMsg());
                                  }
                                  draftList.remove(position);
                                  adapter.notifyDataSetChanged();
@@ -988,7 +1056,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     }
 
     private void processPublisedArticlesResponse(ArticleListingResponse responseData) {
-        ArrayList<ArticleListingResult> dataList = responseData.getData().getResult();
+        ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
 
         if (dataList.size() == 0) {
 
@@ -1237,10 +1305,12 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                                      Log.i("IMAGE_UPLOAD_REQUEST", responseModel.getData().getResult().getUrl());
                                  }
                                  setProfileImage(responseModel.getData().getResult().getUrl());
-                                 //   setProfileImage(responseModel.getData().getUrl());
-                                 Picasso.with(BloggerDashboardActivity.this).load(responseModel.getData().getResult().getUrl()).placeholder(R.drawable.family_xxhdpi)
+                                 Picasso.with(BloggerDashboardActivity.this).invalidate(SharedPrefUtils.getProfileImgUrl(BloggerDashboardActivity.this));
+                                 Picasso.with(BloggerDashboardActivity.this).load(responseModel.getData().getResult().getUrl())
+                                         .memoryPolicy(MemoryPolicy.NO_CACHE).networkPolicy(NetworkPolicy.NO_CACHE).placeholder(R.drawable.family_xxhdpi)
                                          .error(R.drawable.family_xxhdpi).transform(new RoundedTransformation()).into(bloggerImageView);
                                  SharedPrefUtils.setProfileImgUrl(BloggerDashboardActivity.this, responseModel.getData().getResult().getUrl());
+
                                  showToast("Image successfully uploaded!");
                                  // ((BaseActivity) this()).showSnackbar(getView().findViewById(R.id.root), "You have successfully uploaded an image.");
                              }

@@ -457,6 +457,8 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             case R.id.draft: {
                 if (mEditorFragment.getTitle().toString().isEmpty() && mEditorFragment.getContent().toString().isEmpty()) {
                     showToast("There is nothing to save in draft");
+                } else if (mEditorFragment.getTitle().toString().length() > 150) {
+                    showToast("Unable to save draft. Title should smaller than 150 characters");
                 } else if (mEditorFragment.imageUploading == 0) {
                     Log.e("imageuploading", mEditorFragment.imageUploading + "");
                     showToast("Please wait while image is being uploaded");
@@ -476,6 +478,8 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             case R.id.publish: {
                 if (mEditorFragment.getTitle().toString().isEmpty()) {
                     showToast("Title can't be empty");
+                } else if (mEditorFragment.getTitle().toString().length() > 150) {
+                    showToast("Unable to save draft. Title should smaller than 150 characters");
                 } else if (mEditorFragment.getContent().toString().isEmpty()) {
                     showToast("Body can't be empty");
                 } else if (mEditorFragment.getContent().toString().split(" ").length < 300) {
@@ -488,7 +492,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                     PublishDraftObject draftObject = new PublishDraftObject();
 
                     draftObject.setBody(contentFormatting(mEditorFragment.getContent().toString()));
-                    draftObject.setTitle(titleFormatting(mEditorFragment.getTitle().toString()));
+                    draftObject.setTitle(titleFormatting(mEditorFragment.getTitle().toString().trim()));
                     Log.d("draftId = ", draftId + "");
                     if ((getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) || ("4".equals(moderation_status))) {
                         // coming from edit published articles
@@ -565,11 +569,11 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                         showToast(getString(R.string.toast_response_error));
                         return;
                     } else {
-                        if (!StringUtils.isNullOrEmpty(responseModel.getData().getMsg())) {
+                        if (!StringUtils.isNullOrEmpty(responseModel.getData().get(0).getMsg())) {
                             //  SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
-                            Log.i("Draft message", responseModel.getData().getMsg());
+                            Log.i("Draft message", responseModel.getData().get(0).getMsg());
                         }
-                        draftId = responseModel.getData().getResult().getId() + "";
+                        draftId = responseModel.getData().get(0).getResult().getId() + "";
 
                         //setProfileImage(originalImage);
                         showToast("Draft Successfully saved");
@@ -611,11 +615,11 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                         showToast(getString(R.string.toast_response_error));
                         return;
                     } else {
-                        if (!StringUtils.isNullOrEmpty(responseModel.getData().getMsg())) {
+                        if (!StringUtils.isNullOrEmpty(responseModel.getData().get(0).getMsg())) {
                             //  SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
-                            Log.i("Draft message", responseModel.getData().getMsg());
+                            Log.i("Draft message", responseModel.getData().get(0).getMsg());
                         }
-                        draftId = responseModel.getData().getResult().getId() + "";
+                        draftId = responseModel.getData().get(0).getResult().getId() + "";
 
                         //setProfileImage(originalImage);
                         showToast("Draft Successfully saved");
