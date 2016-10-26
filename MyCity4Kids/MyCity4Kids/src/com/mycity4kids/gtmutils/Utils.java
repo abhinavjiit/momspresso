@@ -16,11 +16,11 @@ public class Utils {
     /**
      * Push an "openScreen" event with the given screen name. Tags that match that event will fire.
      */
-    public static void pushOpenScreenEvent(Context context, String screenName,String user) {
+    public static void pushOpenScreenEvent(Context context, String screenName, String user) {
         DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
         //dataLayer.pushEvent("screenOpen", DataLayer.mapOf("screenName",screenName));
         dataLayer.push(DataLayer.mapOf("event", "openScreen",        // Event, Name of Open Screen Event.
-                "screenName", screenName,GTMTags.USER_ID,user));  // Name of screen name field, Screen name value.
+                "screenName", screenName, GTMTags.USER_ID, user));  // Name of screen name field, Screen name value.
     }
 
     /**
@@ -31,22 +31,29 @@ public class Utils {
         dataLayer.pushEvent("screenOpen", DataLayer.mapOf("screenName", screenName));
     }
 
-    public static void pushEvent(Context context,GTMEventType event,String user,String eventValue) {
+    public static void pushEvent(Context context, GTMEventType event, String user, String eventValue) {
         DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
         // dataLayer.push("user", "monitor1");
-        dataLayer.push(DataLayer.mapOf("event", event , GTMTags.USER_ID,user,GTMTags.ScreenName,eventValue));
+        dataLayer.push(DataLayer.mapOf("event", event, GTMTags.USER_ID, user, GTMTags.ScreenName, eventValue));
 
     }
-    public static void pushEventShareURL(Context context,GTMEventType event,String user,String ScreenName,String eventValue) {
+
+    public static void pushEventShareURL(Context context, GTMEventType event, String user, String ScreenName, String eventValue) {
         DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
         // dataLayer.push("user", "monitor1");
-        dataLayer.push(DataLayer.mapOf("event", event , GTMTags.USER_ID,user,GTMTags.ScreenName,ScreenName,GTMTags.HandledUrl,eventValue));
+        dataLayer.push(DataLayer.mapOf("event", event, GTMTags.USER_ID, user, GTMTags.ScreenName, ScreenName, GTMTags.HandledUrl, eventValue));
+    }
+
+    public static void pushEventTopicChoose(Context context, GTMEventType event, String user, String ScreenName, String eventValue) {
+        DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
+        // dataLayer.push("user", "monitor1");
+        dataLayer.push(DataLayer.mapOf("event", event, GTMTags.USER_ID, user, GTMTags.ScreenName, ScreenName, GTMTags.TopicChosen, eventValue));
 
     }
-    public static void pushEventTopicChoose(Context context,GTMEventType event,String user,String ScreenName,String eventValue) {
+
+    public static void pushEventRelatedArticle(Context context, GTMEventType event, String user, String ScreenName, String eventValue, int position) {
         DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
         // dataLayer.push("user", "monitor1");
-        dataLayer.push(DataLayer.mapOf("event", event , GTMTags.USER_ID,user,GTMTags.ScreenName,ScreenName,GTMTags.TopicChosen,eventValue));
-
+        dataLayer.push(DataLayer.mapOf("event", event, GTMTags.USER_ID, user, GTMTags.ScreenName, ScreenName, GTMTags.HandledUrl, eventValue, GTMTags.INDEX, position));
     }
 }

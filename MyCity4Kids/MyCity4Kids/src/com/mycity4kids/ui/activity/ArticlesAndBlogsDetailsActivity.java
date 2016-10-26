@@ -350,11 +350,11 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 AppConstants.SEPARATOR_BACKSLASH + "1" + AppConstants.SEPARATOR_BACKSLASH + "3";
         HttpVolleyRequest.getStringResponse(this, url, null, mGetArticleListingListener, Request.Method.GET, true);
 
-//        Call<ArticleListingResponse> categoryRelatedArticlesCall = articleDetailsAPI.getCategoryRelatedArticles(articleId);
-//        categoryRelatedArticlesCall.enqueue(categoryArticleResponseCallback);
+        Call<ArticleListingResponse> categoryRelatedArticlesCall = articleDetailsAPI.getCategoryRelatedArticles(articleId);
+        categoryRelatedArticlesCall.enqueue(categoryArticleResponseCallback);
 
-        Call<ArticleListingResponse> callAuthorRecentcall = articleDetailsAPI.getPublishedArticles(authorId, 0, 1, 4);
-        callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
+//        Call<ArticleListingResponse> callAuthorRecentcall = articleDetailsAPI.getPublishedArticles(authorId, 0, 1, 4);
+//        callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
 
     }
 
@@ -901,7 +901,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                         String contentData = commentText.getText().toString();
                         Retrofit retro = BaseApplication.getInstance().getRetrofit();
                         ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
-
                         AddCommentRequest addCommentRequest = new AddCommentRequest();
                         addCommentRequest.setArticleId(articleId);
                         addCommentRequest.setUserComment(contentData);
@@ -936,30 +935,58 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, detailData.getUserId());
                     startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
                     break;
-
-                case R.id.relatedArticles1:
-                case R.id.relatedArticles2:
-                case R.id.relatedArticles3: {
+                case R.id.relatedArticles1: {
+                    Utils.pushEventRelatedArticle(ArticlesAndBlogsDetailsActivity.this, GTMEventType.RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Blog Detail", ((ArticleListingResult) v.getTag()).getTitleSlug(), 1);
                     Intent intent = new Intent(this, ArticlesAndBlogsDetailsActivity.class);
                     ArticleListingResult parentingListData = (ArticleListingResult) v.getTag();
                     intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId() + "");
                     intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
-//                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
-//                    finish();
                     break;
                 }
-                case R.id.trendingRelatedArticles1:
-                case R.id.trendingRelatedArticles2:
-                case R.id.trendingRelatedArticles3: {
+                case R.id.relatedArticles2: {
+                    Utils.pushEventRelatedArticle(ArticlesAndBlogsDetailsActivity.this, GTMEventType.RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Blog Detail", ((ArticleListingResult) v.getTag()).getTitleSlug(), 2);
                     Intent intent = new Intent(this, ArticlesAndBlogsDetailsActivity.class);
-
+                    ArticleListingResult parentingListData = (ArticleListingResult) v.getTag();
+                    intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId() + "");
+                    intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
+                    startActivity(intent);
+                    break;
+                }
+                case R.id.relatedArticles3: {
+                    Utils.pushEventRelatedArticle(ArticlesAndBlogsDetailsActivity.this, GTMEventType.RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Blog Detail", ((ArticleListingResult) v.getTag()).getTitleSlug(), 3);
+                    Intent intent = new Intent(this, ArticlesAndBlogsDetailsActivity.class);
+                    ArticleListingResult parentingListData = (ArticleListingResult) v.getTag();
+                    intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId() + "");
+                    intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
+                    startActivity(intent);
+                    break;
+                }
+                case R.id.trendingRelatedArticles1: {
+                    Utils.pushEventRelatedArticle(ArticlesAndBlogsDetailsActivity.this, GTMEventType.TRENDING_RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Blog Detail", ((ArticleListingResult) v.getTag()).getTitleSlug(), 1);
+                    Intent intent = new Intent(this, ArticlesAndBlogsDetailsActivity.class);
                     ArticleListingResult parentingListData = (ArticleListingResult) v.getTag();
                     intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
                     intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
-//                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
-//                    finish();
+                    break;
+                }
+                case R.id.trendingRelatedArticles2: {
+                    Utils.pushEventRelatedArticle(ArticlesAndBlogsDetailsActivity.this, GTMEventType.TRENDING_RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Blog Detail", ((ArticleListingResult) v.getTag()).getTitleSlug(), 2);
+                    Intent intent = new Intent(this, ArticlesAndBlogsDetailsActivity.class);
+                    ArticleListingResult parentingListData = (ArticleListingResult) v.getTag();
+                    intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
+                    intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
+                    startActivity(intent);
+                    break;
+                }
+                case R.id.trendingRelatedArticles3: {
+                    Utils.pushEventRelatedArticle(ArticlesAndBlogsDetailsActivity.this, GTMEventType.TRENDING_RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Blog Detail", ((ArticleListingResult) v.getTag()).getTitleSlug(), 3);
+                    Intent intent = new Intent(this, ArticlesAndBlogsDetailsActivity.class);
+                    ArticleListingResult parentingListData = (ArticleListingResult) v.getTag();
+                    intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
+                    intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
+                    startActivity(intent);
                     break;
                 }
                 case R.layout.related_tags_view: {

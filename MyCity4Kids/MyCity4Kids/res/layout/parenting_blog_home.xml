@@ -16,8 +16,8 @@
         android:elevation="5dp"
         android:minHeight="?attr/actionBarSize"
         android:visibility="visible"
-        app:theme="@style/ToolbarTheme"
-        app:titleTextAppearance="@style/ToolbarTheme.Title" />
+        fab:theme="@style/ToolbarTheme"
+        fab:titleTextAppearance="@style/ToolbarTheme.Title" />
 
     <ListView
         android:id="@+id/blog_listing"

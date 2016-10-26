@@ -422,7 +422,6 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
                     }
                 })
                 .show();
-
     }
 
     public void sendUploadProfileImageRequest(File file) {
