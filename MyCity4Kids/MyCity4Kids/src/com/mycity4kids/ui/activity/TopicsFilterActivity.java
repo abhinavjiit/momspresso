@@ -199,6 +199,7 @@ public class TopicsFilterActivity extends BaseActivity {
                                     startActivity(contributorIntent);
                                     break;
                                 default:
+                                    //Category with no child. e.g Momspresso.
                                     Utils.pushEventTopicChoose(TopicsFilterActivity.this, GTMEventType.TOPIC_FILTER_CHOSEN_EVENT, SharedPrefUtils.getUserDetailModel(TopicsFilterActivity.this).getDynamoId() + "", "Filter Topics", topicList.get(groupPosition).getDisplay_name());
                                     Intent intent = new Intent(TopicsFilterActivity.this, FilteredTopicsArticleListingActivity.class);
                                     intent.putExtra("selectedTopics", topicList.get(groupPosition).getId());

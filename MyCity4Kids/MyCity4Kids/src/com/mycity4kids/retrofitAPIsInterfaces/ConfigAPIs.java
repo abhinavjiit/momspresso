@@ -11,6 +11,6 @@ import retrofit2.http.Url;
  * Created by anshul on 7/12/16.
  */
 public interface ConfigAPIs {
-@GET("v1/utilities/config/")
-Call<ConfigResponse> getConfig();
+    @GET("v1/utilities/config/")
+    Call<ConfigResponse> getConfig();
 }

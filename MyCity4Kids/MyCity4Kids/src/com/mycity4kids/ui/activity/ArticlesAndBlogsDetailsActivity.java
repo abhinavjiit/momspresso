@@ -936,7 +936,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
                     break;
                 case R.id.relatedArticles1: {
-                    Utils.pushEventRelatedArticle(ArticlesAndBlogsDetailsActivity.this, GTMEventType.RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Blog Detail", ((ArticleListingResult) v.getTag()).getTitleSlug(), 1);
+                    Utils.pushEventRelatedArticle(ArticlesAndBlogsDetailsActivity.this, GTMEventType.RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Blog Detail", ((ArticleListingResult) v.getTag()).getTitleSlug(), 1);
                     Intent intent = new Intent(this, ArticlesAndBlogsDetailsActivity.class);
                     ArticleListingResult parentingListData = (ArticleListingResult) v.getTag();
                     intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId() + "");
@@ -945,7 +945,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     break;
                 }
                 case R.id.relatedArticles2: {
-                    Utils.pushEventRelatedArticle(ArticlesAndBlogsDetailsActivity.this, GTMEventType.RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Blog Detail", ((ArticleListingResult) v.getTag()).getTitleSlug(), 2);
+                    Utils.pushEventRelatedArticle(ArticlesAndBlogsDetailsActivity.this, GTMEventType.RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Blog Detail", ((ArticleListingResult) v.getTag()).getTitleSlug(), 2);
                     Intent intent = new Intent(this, ArticlesAndBlogsDetailsActivity.class);
                     ArticleListingResult parentingListData = (ArticleListingResult) v.getTag();
                     intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId() + "");
@@ -954,7 +954,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     break;
                 }
                 case R.id.relatedArticles3: {
-                    Utils.pushEventRelatedArticle(ArticlesAndBlogsDetailsActivity.this, GTMEventType.RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Blog Detail", ((ArticleListingResult) v.getTag()).getTitleSlug(), 3);
+                    Utils.pushEventRelatedArticle(ArticlesAndBlogsDetailsActivity.this, GTMEventType.RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Blog Detail", ((ArticleListingResult) v.getTag()).getTitleSlug(), 3);
                     Intent intent = new Intent(this, ArticlesAndBlogsDetailsActivity.class);
                     ArticleListingResult parentingListData = (ArticleListingResult) v.getTag();
                     intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId() + "");
@@ -963,7 +963,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     break;
                 }
                 case R.id.trendingRelatedArticles1: {
-                    Utils.pushEventRelatedArticle(ArticlesAndBlogsDetailsActivity.this, GTMEventType.TRENDING_RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Blog Detail", ((ArticleListingResult) v.getTag()).getTitleSlug(), 1);
+                    Utils.pushEventRelatedArticle(ArticlesAndBlogsDetailsActivity.this, GTMEventType.TRENDING_RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Blog Detail", ((ArticleListingResult) v.getTag()).getTitleSlug(), 1);
                     Intent intent = new Intent(this, ArticlesAndBlogsDetailsActivity.class);
                     ArticleListingResult parentingListData = (ArticleListingResult) v.getTag();
                     intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
@@ -972,7 +972,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     break;
                 }
                 case R.id.trendingRelatedArticles2: {
-                    Utils.pushEventRelatedArticle(ArticlesAndBlogsDetailsActivity.this, GTMEventType.TRENDING_RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Blog Detail", ((ArticleListingResult) v.getTag()).getTitleSlug(), 2);
+                    Utils.pushEventRelatedArticle(ArticlesAndBlogsDetailsActivity.this, GTMEventType.TRENDING_RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Blog Detail", ((ArticleListingResult) v.getTag()).getTitleSlug(), 2);
                     Intent intent = new Intent(this, ArticlesAndBlogsDetailsActivity.class);
                     ArticleListingResult parentingListData = (ArticleListingResult) v.getTag();
                     intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
@@ -981,7 +981,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     break;
                 }
                 case R.id.trendingRelatedArticles3: {
-                    Utils.pushEventRelatedArticle(ArticlesAndBlogsDetailsActivity.this, GTMEventType.TRENDING_RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Blog Detail", ((ArticleListingResult) v.getTag()).getTitleSlug(), 3);
+                    Utils.pushEventRelatedArticle(ArticlesAndBlogsDetailsActivity.this, GTMEventType.TRENDING_RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Blog Detail", ((ArticleListingResult) v.getTag()).getTitleSlug(), 3);
                     Intent intent = new Intent(this, ArticlesAndBlogsDetailsActivity.class);
                     ArticleListingResult parentingListData = (ArticleListingResult) v.getTag();
                     intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());

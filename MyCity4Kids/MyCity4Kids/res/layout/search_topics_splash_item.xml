@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/grey">
+
+    <TextView
+        android:id="@+id/parentCategoryTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="15dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="5dp"
+        android:paddingTop="7dp"
+        android:text="Pregnancy"
+        android:textColor="@color/white_color"
+        android:textSize="18sp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/parentCategoryTextView"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp">
+
+        <org.apmem.tools.layouts.FlowLayout
+            android:id="@+id/rootView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </org.apmem.tools.layouts.FlowLayout><!--<RelativeLayout--><!--android:layout_width="wrap_content"--><!--android:layout_height="100dp"--><!--android:background="@drawable/default_article">-->
+    </RelativeLayout>
+    <!----><!--</RelativeLayout>-->
+</RelativeLayout>

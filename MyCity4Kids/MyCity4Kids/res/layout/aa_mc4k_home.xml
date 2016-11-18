@@ -20,6 +20,69 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/forYouLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/forYouHeader"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:id="@+id/txtForYou"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight=".85"
+                        android:paddingBottom="3dp"
+                        android:paddingLeft="8dp"
+                        android:paddingTop="10dp"
+                        android:text="FOR YOU"
+                        android:textColor="@color/primary_blue"
+                        android:textSize="15sp" />
+                </LinearLayout>
+
+                <ProgressBar
+                    android:id="@+id/forYouProgressbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/no_for_you"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="2dp"
+                    android:text="No Blogs Listed"
+                    android:textColor="@color/grey"
+                    android:textSize="12dp"
+                    android:visibility="gone" />
+
+                <HorizontalScrollView
+                    android:id="@+id/forYouHSV"
+                    android:layout_width="match_parent"
+                    android:layout_height="230dp"
+                    android:layout_marginTop="1dp"
+                    android:divider="@color/dividercolor"
+                    android:dividerHeight="0.3dp"
+                    android:scrollbars="none">
+
+                    <LinearLayout
+                        android:id="@+id/forYouHSVLinearLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal" />
+                </HorizontalScrollView>
+
+            </LinearLayout>
+
+
+            <LinearLayout
                 android:id="@+id/blogss"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

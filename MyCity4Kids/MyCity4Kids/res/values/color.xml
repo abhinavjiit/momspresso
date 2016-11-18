@@ -139,4 +139,5 @@
     <color name="navigation.drawer.maintext">#000000</color>
     <color name="colorControlNormal">#333333</color>
 
+    <color name="splashtopics.done.button">#ec3b57</color>
 </resources>

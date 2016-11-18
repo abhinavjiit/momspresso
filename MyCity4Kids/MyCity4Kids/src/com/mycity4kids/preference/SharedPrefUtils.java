@@ -29,6 +29,7 @@ public class SharedPrefUtils {
     public static final String LOCALITY_VERSION = "localityVersion";
     public static final String CATEGORY_VERSION = "categoryVersion";
     public static final String CONFIG_CATEGORY_VERSION = "configCategoryVersion";
+    public static final String POPULAR_CONFIG_CATEGORY_VERSION = "popularConfigCategoryVersion";
     /**
      * Selected City related prefs constants
      */
@@ -569,5 +570,19 @@ public class SharedPrefUtils {
         momspressoTopic.setId(_sharedPref.getString(MOMSPRESSO_CATEGORY_ID, ""));
         momspressoTopic.setDisplay_name(_sharedPref.getString(MOMSPRESSO_DISPLAY_NAME, ""));
         return momspressoTopic;
+    }
+
+    public static void setConfigPopularCategoryVersion(Context pContext, int id) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        _editor.putInt(POPULAR_CONFIG_CATEGORY_VERSION, id);
+        _editor.commit();
+    }
+
+    public static int getConfigPopularCategoryVersion(Context pContext) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        int id = 0;
+        id = (_sharedPref.getInt(POPULAR_CONFIG_CATEGORY_VERSION, 0));
+        return id;
     }
 }

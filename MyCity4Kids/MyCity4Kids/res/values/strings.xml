@@ -367,4 +367,9 @@
     <string name="camera_pick">Take Picture From Camera</string>
 
     <string name="login">Login</string>
+
+    <string name="publish_article.dialog.title">Share</string>
+    <string name="publish_article.dialog.message">Share your latest blog with your family &amp; friends</string>
+
+    <string name="topic_splash.select_category.message">Select atleast 5 topics to personalize your experience</string>
 </resources>

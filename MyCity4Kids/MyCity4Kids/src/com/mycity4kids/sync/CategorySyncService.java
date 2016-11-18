@@ -8,6 +8,7 @@ import android.util.Log;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.response.ConfigResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -34,6 +35,9 @@ public class CategorySyncService extends IntentService {
      */
     public int version;
     public String location;
+
+    public int popularVersion;
+    public String popularLocation;
 
     public CategorySyncService(String name) {
         super(name);
@@ -83,7 +87,7 @@ public class CategorySyncService extends IntentService {
                                                  @Override
                                                  public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
                                                      Log.d("TAGA", "server contacted and has file");
-                                                     boolean writtenToDisk = writeResponseBodyToDisk(response.body());
+                                                     boolean writtenToDisk = writeResponseBodyToDisk(response.body(), AppConstants.CATEGORIES_JSON_FILE);
 
                                                      Topics t = new Topics();
                                                      t.setId("");
@@ -91,6 +95,34 @@ public class CategorySyncService extends IntentService {
                                                      SharedPrefUtils.setMomspressoCategory(CategorySyncService.this, t);
 
                                                      SharedPrefUtils.setConfigCategoryVersion(CategorySyncService.this, responseModel.getData().getResult().getCategory().getVersion());
+                                                     Log.d("TAGA", "file download was a success? " + writtenToDisk);
+                                                 }
+
+                                                 @Override
+                                                 public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                                     Log.e("TAGA", "error");
+                                                 }
+                                             });
+                                         }
+
+                                         popularVersion = SharedPrefUtils.getConfigPopularCategoryVersion(CategorySyncService.this);
+                                         if (popularVersion == 0 || popularVersion != responseModel.getData().getResult().getCategory().getPopularVersion()) {
+                                             popularLocation = responseModel.getData().getResult().getCategory().getPopularLocation();
+                                             TopicsCategoryAPI categoryAPI = retrofit.create(TopicsCategoryAPI.class);
+                                             if (!ConnectivityUtils.isNetworkEnabled(CategorySyncService.this)) {
+                                                 //showToast(getString(R.string.error_network));
+                                                 return;
+                                             }
+
+                                             Call<ResponseBody> caller = categoryAPI.downloadTopicsListForFollowUnfollow(popularLocation);
+
+                                             caller.enqueue(new Callback<ResponseBody>() {
+                                                 @Override
+                                                 public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                                                     Log.d("TAGA", "server contacted and has file");
+                                                     boolean writtenToDisk = writeResponseBodyToDisk(response.body(), AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
+                                                     SharedPrefUtils.setConfigPopularCategoryVersion(CategorySyncService.this,
+                                                             responseModel.getData().getResult().getCategory().getPopularVersion());
                                                      Log.d("TAGA", "file download was a success? " + writtenToDisk);
                                                  }
 
@@ -116,11 +148,10 @@ public class CategorySyncService extends IntentService {
 
     }
 
-    private boolean writeResponseBodyToDisk(ResponseBody body) {
+    private boolean writeResponseBodyToDisk(ResponseBody body, String filename) {
         try {
             InputStream inputStream = null;
             OutputStream outputStream = null;
-            String filename = "categories.json";
             try {
                 byte[] fileReader = new byte[4096];
 

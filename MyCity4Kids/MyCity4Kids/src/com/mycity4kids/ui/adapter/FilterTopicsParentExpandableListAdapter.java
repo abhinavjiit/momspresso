@@ -216,6 +216,7 @@ public class FilterTopicsParentExpandableListAdapter extends BaseExpandableListA
                         context.startActivity(intent_1);
                         break;
                     default:
+                        //SubCategories and All option.
                         Intent intent_3 = new Intent(context, FilteredTopicsArticleListingActivity.class);
                         intent_3.putExtra("selectedTopics", map.get(topicList.get(level1GroupPosition)).get(groupPosition).getId());
                         if ("all".equalsIgnoreCase(map.get(topicList.get(level1GroupPosition)).get(groupPosition).getDisplay_name())) {
@@ -246,6 +247,8 @@ public class FilterTopicsParentExpandableListAdapter extends BaseExpandableListA
         public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
 //            Log.d("SubSub ChildCount", "" + map.get(topicList.get(level1GroupPosition)).get(groupPosition).getChild().get(childPosition));
 //            Log.d("SubSub Title", "" + map.get(topicList.get(level1GroupPosition)).get(groupPosition).getChild().get(childPosition).getTitle());
+
+            //Sub-Sub-Categories click
             Intent intent = new Intent(context, FilteredTopicsArticleListingActivity.class);
             intent.putExtra("selectedTopics", map.get(topicList.get(level1GroupPosition)).get(groupPosition).getChild().get(childPosition).getId());
             if ("all".equalsIgnoreCase(map.get(topicList.get(level1GroupPosition)).get(groupPosition).getChild().get(childPosition).getDisplay_name())) {

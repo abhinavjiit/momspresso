@@ -235,6 +235,15 @@
         <item name="drawerArrowStyle">@style/WhiteDrawerIconStyle</item>
     </style>
 
+    <style name="FilterToobar" parent="AppTheme">
+        <item name="android:textColorSecondary">@color/colorControlNormal</item>
+        <item name="actionMenuTextColor">@color/splashtopics.done.button</item>
+        <!-- Set toolbar back arrow color -->
+        <item name="colorControlNormal">@color/colorControlNormal</item>
+        <item name="drawerArrowStyle">@style/WhiteDrawerIconStyle</item>
+    </style>
+
+
     <style name="ToolbarTheme.Title" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <!-- Set title color -->
         <item name="android:textColor">@color/colorControlNormal</item>

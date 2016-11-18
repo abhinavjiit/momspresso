@@ -1,5 +1,7 @@
 package com.mycity4kids.ui.activity;
 
+import android.accounts.NetworkErrorException;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -22,23 +24,39 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
+import com.kelltontech.utils.StringUtils;
 import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.enums.ParentingFilterType;
 import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.models.FollowTopics;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
+import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse;
+import com.mycity4kids.models.response.TopicsFollowingStatusResponse;
+import com.mycity4kids.newmodels.FollowUnfollowCategoriesRequest;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.NewArticlesListingAdapter;
 
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -51,7 +69,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
 
     NewArticlesListingAdapter articlesListingAdapter;
     ListView listView;
-
+    private Menu menu;
     ArrayList<ArticleListingResult> articleDataModelsNew;
     int sortType = 0;
     private RelativeLayout mLodingView;
@@ -68,6 +86,10 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
     private int limit = 15;
     FloatingActionButton popularSortFAB, recentSortFAB;
     private String displayName;
+
+    private String followingTopicStatus = "0";
+    private int isTopicFollowed;
+    private boolean showFollowUnfollowOption;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +117,8 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
 
         selectedTopics = getIntent().getStringExtra("selectedTopics");
         displayName = getIntent().getStringExtra("displayName");
+//        showFollowUnfollowOption = getIntent().getBooleanExtra("showFollowUnfollowOption", false);
+
         if (null != displayName) {
             getSupportActionBar().setTitle(displayName.toUpperCase());
         }
@@ -283,17 +307,255 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        // according to fragment change it
+        getMenuInflater().inflate(R.menu.menu_filter_article_by_topics, menu);
+        this.menu = menu;
+        menu.getItem(0).setEnabled(false);
+        if (!StringUtils.isNullOrEmpty(selectedTopics)) {
+            checkFollowingTopicStatus();
+        }
         return true;
     }
+
+    private void checkFollowingTopicStatus() {
+        try {
+            FileInputStream fileInputStream = openFileInput(AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
+            String fileContent = convertStreamToString(fileInputStream);
+            FollowTopics[] res = new Gson().fromJson(fileContent, FollowTopics[].class);
+            if (!checkCurrentCategoryExists(res)) {
+                return;
+            }
+        } catch (FileNotFoundException e) {
+            Crashlytics.logException(e);
+            Log.d("FileNotFoundException", Log.getStackTraceString(e));
+            Retrofit retro = BaseApplication.getInstance().getRetrofit();
+            final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
+
+            Call<ResponseBody> call = topicsAPI.downloadCategoriesJSON();
+            call.enqueue(downloadCategoriesJSONCallback);
+        }
+
+        Retrofit retro = BaseApplication.getInstance().getRetrofit();
+        TopicsCategoryAPI topicFollowingStatusAPI = retro.create(TopicsCategoryAPI.class);
+
+        Call<TopicsFollowingStatusResponse> callBookmark = topicFollowingStatusAPI.checkTopicsFollowingStatus(SharedPrefUtils.getUserDetailModel(this).getDynamoId(),
+                selectedTopics);
+        callBookmark.enqueue(isTopicFollowedResponseCallback);
+    }
+
+    private boolean checkCurrentCategoryExists(FollowTopics[] res) {
+        Log.d("cttbhtbtbtb", "btrdsefafs");
+        for (int i = 0; i < res.length; i++) {
+            for (int j = 0; j < res[i].getChild().size(); j++) {
+                if (selectedTopics.equals(res[i].getChild().get(j).getId())) {
+                    Log.d("lkkmk", "iuink");
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    Callback<ResponseBody> downloadCategoriesJSONCallback = new Callback<ResponseBody>() {
+        @Override
+        public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+            progressBar.setVisibility(View.GONE);
+            if (response == null || response.body() == null) {
+                showToast("Something went wrong from server");
+                return;
+            }
+            try {
+                String resData = new String(response.body().bytes());
+                JSONObject jsonObject = new JSONObject(resData);
+
+                Retrofit retro = BaseApplication.getInstance().getRetrofit();
+                final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
+                String popularURL = jsonObject.getJSONObject("data").getJSONObject("result").getJSONObject("category").getString("popularLocation");
+                Call<ResponseBody> caller = topicsAPI.downloadTopicsListForFollowUnfollow(popularURL);
+
+                caller.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                        boolean writtenToDisk = writeResponseBodyToDisk(response.body());
+                        Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
+
+                        try {
+                            FileInputStream fileInputStream = openFileInput(AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
+                            String fileContent = convertStreamToString(fileInputStream);
+                            FollowTopics[] res = new Gson().fromJson(fileContent, FollowTopics[].class);
+                            checkCurrentCategoryExists(res);
+                        } catch (FileNotFoundException e) {
+                            Crashlytics.logException(e);
+                            Log.d("FileNotFoundException", Log.getStackTraceString(e));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Crashlytics.logException(t);
+                        Log.d("MC4KException", Log.getStackTraceString(t));
+                    }
+                });
+            } catch (Exception e) {
+                progressBar.setVisibility(View.GONE);
+                Crashlytics.logException(e);
+                Log.d("MC4KException", Log.getStackTraceString(e));
+                showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<ResponseBody> call, Throwable t) {
+            progressBar.setVisibility(View.GONE);
+            showToast(getString(R.string.went_wrong));
+            Crashlytics.logException(t);
+            Log.d("MC4KException", Log.getStackTraceString(t));
+        }
+    };
+
+    private boolean writeResponseBodyToDisk(ResponseBody body) {
+        try {
+            InputStream inputStream = null;
+            OutputStream outputStream = null;
+            try {
+                byte[] fileReader = new byte[4096];
+                long fileSize = body.contentLength();
+                long fileSizeDownloaded = 0;
+
+                inputStream = body.byteStream();
+                outputStream = openFileOutput(AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE, Context.MODE_PRIVATE);
+
+                while (true) {
+                    int read = inputStream.read(fileReader);
+                    if (read == -1) {
+                        break;
+                    }
+                    outputStream.write(fileReader, 0, read);
+                    fileSizeDownloaded += read;
+                    Log.d("TopicsFilterActivity", "file download: " + fileSizeDownloaded + " of " + fileSize);
+                }
+
+                outputStream.flush();
+                return true;
+            } catch (IOException e) {
+                return false;
+            } finally {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+            }
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    private Callback<TopicsFollowingStatusResponse> isTopicFollowedResponseCallback = new Callback<TopicsFollowingStatusResponse>() {
+        @Override
+        public void onResponse(Call<TopicsFollowingStatusResponse> call, retrofit2.Response<TopicsFollowingStatusResponse> response) {
+            if (response == null || null == response.body()) {
+                showToast("Something went wrong from server");
+                return;
+            }
+
+            TopicsFollowingStatusResponse responseData = (TopicsFollowingStatusResponse) response.body();
+            if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                followingTopicStatus = responseData.getData().getStatus();
+                if ("0".equals(followingTopicStatus)) {
+                    menu.getItem(0).setEnabled(true);
+                    menu.getItem(0).setTitle("FOLLOW");
+                    isTopicFollowed = 0;
+                } else {
+                    menu.getItem(0).setEnabled(true);
+                    menu.getItem(0).setTitle("FOLLOWING");
+                    isTopicFollowed = 1;
+                }
+            } else {
+                showToast(getString(R.string.server_went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<TopicsFollowingStatusResponse> call, Throwable t) {
+
+        }
+    };
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
+                break;
+            case R.id.followUnfollowButton:
+                followUnfollowTopics();
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
         }
         return true;
     }
+
+    private void followUnfollowTopics() {
+        Retrofit retro = BaseApplication.getInstance().getRetrofit();
+        TopicsCategoryAPI topicsCategoryAPI = retro.create(TopicsCategoryAPI.class);
+        FollowUnfollowCategoriesRequest followUnfollowCategoriesRequest = new FollowUnfollowCategoriesRequest();
+        ArrayList<String> topicIdLList = new ArrayList<>();
+        topicIdLList.add(selectedTopics);
+        followUnfollowCategoriesRequest.setCategories(topicIdLList);
+        if (isTopicFollowed == 0) {
+            menu.getItem(0).setTitle("FOLLOWING");
+            isTopicFollowed = 1;
+        } else {
+            menu.getItem(0).setTitle("FOLLOW");
+            isTopicFollowed = 0;
+        }
+        Call<FollowUnfollowCategoriesResponse> call = topicsCategoryAPI.followCategories(SharedPrefUtils.getUserDetailModel(this).getDynamoId(), followUnfollowCategoriesRequest);
+        call.enqueue(followUnfollowCategoriesResponseCallback);
+    }
+
+    private Callback<FollowUnfollowCategoriesResponse> followUnfollowCategoriesResponseCallback = new Callback<FollowUnfollowCategoriesResponse>() {
+        @Override
+        public void onResponse(Call<FollowUnfollowCategoriesResponse> call, retrofit2.Response<FollowUnfollowCategoriesResponse> response) {
+            removeProgressDialog();
+            if (response == null || null == response.body()) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                Crashlytics.logException(nee);
+                showToast("Something went wrong from server");
+                return;
+            }
+            try {
+                FollowUnfollowCategoriesResponse responseData = (FollowUnfollowCategoriesResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+
+//                    ArrayList<String> newTopicList = (ArrayList<String>) responseData.getData();
+//                    if(newTopicList.contains(selectedTopics)){
+//
+//                    }else{
+//
+//                    }
+                } else {
+                    showToast(responseData.getReason());
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+                showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<FollowUnfollowCategoriesResponse> call, Throwable t) {
+            removeProgressDialog();
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+            showToast(getString(R.string.went_wrong));
+        }
+    };
 
     @Override
     public void onRefresh() {
@@ -309,4 +571,21 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         hitFilteredTopicsArticleListingApi(sortType);
 
     }
+
+    public static String convertStreamToString(InputStream is) {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        StringBuilder sb = new StringBuilder();
+        String line = null;
+        try {
+            while ((line = reader.readLine()) != null) {
+                sb.append(line).append("\n");
+            }
+            reader.close();
+        } catch (IOException e) {
+            Crashlytics.logException(e);
+            Log.d("IOException", Log.getStackTraceString(e));
+        }
+        return sb.toString();
+    }
+
 }

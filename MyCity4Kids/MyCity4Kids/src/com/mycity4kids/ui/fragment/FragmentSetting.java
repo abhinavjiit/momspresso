@@ -44,6 +44,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.reminders.AppointmentManager;
 import com.mycity4kids.ui.activity.ActivityLogin;
 import com.mycity4kids.ui.activity.EditProfieActivity;
+import com.mycity4kids.ui.activity.FollowedTopicsListingActivity;
 import com.mycity4kids.ui.activity.SettingsActivity;
 
 
@@ -70,7 +71,7 @@ public class FragmentSetting extends BaseFragment implements View.OnClickListene
 
         ((TextView) view.findViewById(R.id.logout)).setOnClickListener(this);
         ((TextView) view.findViewById(R.id.family_details)).setOnClickListener(this);
-        //  ((TextView) view.findViewById(R.id.sync_setting)).setOnClickListener(this);
+        ((TextView) view.findViewById(R.id.viewFollowingTopics)).setOnClickListener(this);
         ((TextView) view.findViewById(R.id.editProfile)).setOnClickListener(this);
 //        ((TextView) view.findViewById(R.id.notification)).setOnClickListener(this);
         cityChange = (TextView) view.findViewById(R.id.cityChange);
@@ -170,6 +171,11 @@ public class FragmentSetting extends BaseFragment implements View.OnClickListene
 
             case R.id.cityChange:
                 ((SettingsActivity) getActivity()).replaceFragment(new ChangeCityFragment(), null, true);
+                break;
+            case R.id.viewFollowingTopics:
+                Intent intenrt = new Intent(getActivity(), FollowedTopicsListingActivity.class);
+                startActivity(intenrt);
+                break;
             default:
                 break;
         }

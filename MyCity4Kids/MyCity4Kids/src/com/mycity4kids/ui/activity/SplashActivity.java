@@ -1,5 +1,6 @@
 package com.mycity4kids.ui.activity;
 
+import android.accounts.NetworkErrorException;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -25,6 +26,7 @@ import com.google.android.gms.tagmanager.Container;
 import com.google.android.gms.tagmanager.ContainerHolder;
 import com.google.android.gms.tagmanager.TagManager;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -34,6 +36,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.asynctask.HeavyDbTask;
 import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.ConfigurationController;
 import com.mycity4kids.dbtable.TableAdult;
 import com.mycity4kids.fragmentdialog.FragmentAlertDialog;
@@ -41,21 +44,29 @@ import com.mycity4kids.gtmutils.ContainerHolderSingleton;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.OnUIView;
 import com.mycity4kids.listener.OnButtonClicked;
+import com.mycity4kids.models.FollowTopics;
 import com.mycity4kids.models.VersionApiModel;
 import com.mycity4kids.models.city.City;
 import com.mycity4kids.models.city.MetroCity;
 import com.mycity4kids.models.configuration.ConfigurationApiModel;
+import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.newmodels.ForceUpdateModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ForceUpdateAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.sync.CategorySyncService;
 import com.mycity4kids.sync.PushTokenService;
+import com.mycity4kids.ui.adapter.FollowedTopicsListAdapter;
 import com.mycity4kids.utils.NearMyCity;
 import com.mycity4kids.utils.location.GPSTracker;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -271,17 +282,10 @@ public class SplashActivity extends BaseActivity {
 //            startSyncing();
             startSyncingUserInfo();
 
-            Intent intent = new Intent(SplashActivity.this, DashboardActivity.class);
-            if (!StringUtils.isNullOrEmpty(_deepLinkURL)) {
-                intent.putExtra(AppConstants.DEEP_LINK_URL, _deepLinkURL);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            } else if (extras != null && extras.getString("type") != null) {
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                intent.putExtra("notificationExtras", extras);
-            }
-            startActivity(intent);
-            finish();
-
+            Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+            TopicsCategoryAPI topicsCategoryAPI = retrofit.create(TopicsCategoryAPI.class);
+            Call<FollowUnfollowCategoriesResponse> call = topicsCategoryAPI.getFollowedCategories(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+            call.enqueue(getFollowedTopicsResponseCallback);
         } else {
             Log.e("MYCITY4KIDS", "USER logged Out");
             if (!isConfigurationAvailable) {
@@ -293,7 +297,6 @@ public class SplashActivity extends BaseActivity {
                 });
                 return;
             } else {
-
                 Intent intent;
                 if (SharedPrefUtils.getLogoutFlag(this))
                     intent = new Intent(SplashActivity.this, ActivityLogin.class);
@@ -305,6 +308,65 @@ public class SplashActivity extends BaseActivity {
             }
         }
         Log.d("GCM Token ", SharedPrefUtils.getDeviceToken(this));
+    }
+
+    private Callback<FollowUnfollowCategoriesResponse> getFollowedTopicsResponseCallback = new Callback<FollowUnfollowCategoriesResponse>() {
+        @Override
+        public void onResponse(Call<FollowUnfollowCategoriesResponse> call, retrofit2.Response<FollowUnfollowCategoriesResponse> response) {
+            removeProgressDialog();
+            if (response == null || null == response.body()) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                Crashlytics.logException(nee);
+                showToast("Something went wrong from server");
+                gotoDashboard();
+                return;
+            }
+            try {
+                FollowUnfollowCategoriesResponse responseData = (FollowUnfollowCategoriesResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    ArrayList<String> mDatalist = (ArrayList<String>) responseData.getData();
+                    if (mDatalist.size() < AppConstants.MINIMUM_TOPICS_FOLLOW_REQUIREMENT) {
+                        Intent intent = new Intent(SplashActivity.this, TopicsSplashActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putStringArrayListExtra("followedTopics", mDatalist);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        gotoDashboard();
+                    }
+                } else {
+                    showToast(responseData.getReason());
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+//                showToast(getString(R.string.went_wrong));
+                gotoDashboard();
+            }
+        }
+
+        @Override
+        public void onFailure(Call<FollowUnfollowCategoriesResponse> call, Throwable t) {
+            removeProgressDialog();
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+//            showToast(getString(R.string.went_wrong));
+            gotoDashboard();
+        }
+
+    };
+
+    private void gotoDashboard() {
+        Intent intent = new Intent(SplashActivity.this, DashboardActivity.class);
+        if (!StringUtils.isNullOrEmpty(_deepLinkURL)) {
+            intent.putExtra(AppConstants.DEEP_LINK_URL, _deepLinkURL);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        } else if (extras != null && extras.getString("type") != null) {
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            intent.putExtra("notificationExtras", extras);
+        }
+        startActivity(intent);
+        finish();
     }
 
     @Override

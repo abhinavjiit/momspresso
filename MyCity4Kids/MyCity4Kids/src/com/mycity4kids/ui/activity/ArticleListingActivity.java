@@ -34,6 +34,7 @@ import com.mycity4kids.interfaces.OnWebServiceCompleteListener;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.newmodels.VolleyBaseResponse;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.adapter.NewArticlesListingAdapter;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.volley.HttpVolleyRequest;
@@ -85,8 +86,10 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
             getSupportActionBar().setTitle("Recent");
         } else if (sortType.equals(Constants.KEY_POPULAR)) {
             getSupportActionBar().setTitle("Popular");
-        } else {
+        } else if (sortType.equals(Constants.KEY_TRENDING)) {
             getSupportActionBar().setTitle("Trending");
+        } else {
+            getSupportActionBar().setTitle("For You");
         }
 
 
@@ -150,8 +153,15 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
             showToast(getString(R.string.error_network));
             return;
         }
-        String url = AppConstants.LIVE_URL + AppConstants.SERVICE_TYPE_ARTICLE + sortKey +
-                AppConstants.SEPARATOR_BACKSLASH + from + AppConstants.SEPARATOR_BACKSLASH + to;
+        String url;
+        if (Constants.KEY_FOR_YOU.equals(sortKey)) {
+            url = AppConstants.LIVE_URL + AppConstants.SERVICE_TYPE_FOR_YOU + SharedPrefUtils.getUserDetailModel(this).getDynamoId() +
+                    AppConstants.SEPARATOR_BACKSLASH + from + AppConstants.SEPARATOR_BACKSLASH + to;
+        } else {
+            url = AppConstants.LIVE_URL + AppConstants.SERVICE_TYPE_ARTICLE + sortKey +
+                    AppConstants.SEPARATOR_BACKSLASH + from + AppConstants.SEPARATOR_BACKSLASH + to;
+        }
+
         HttpVolleyRequest.getStringResponse(this, url, null, mGetArticleListingListener, Request.Method.GET, isCacheRequired);
 
 

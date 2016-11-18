@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
-import android.graphics.drawable.ColorDrawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,10 +27,10 @@ import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.BitmapUtils;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
+import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
-import com.mycity4kids.dbtable.UserTable;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.listener.OnButtonClicked;
@@ -482,7 +481,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                     showToast("Unable to save draft. Title should smaller than 150 characters");
                 } else if (mEditorFragment.getContent().toString().isEmpty()) {
                     showToast("Body can't be empty");
-                } else if (mEditorFragment.getContent().toString().split(" ").length < 300) {
+                } else if (mEditorFragment.getContent().toString().split(" ").length < 300 && !BuildConfig.DEBUG) {
                     showToast("Please write atleast 300 words to publish");
                 } else if (mEditorFragment.imageUploading == 0) {
                     Log.e("imageuploading", mEditorFragment.imageUploading + "");

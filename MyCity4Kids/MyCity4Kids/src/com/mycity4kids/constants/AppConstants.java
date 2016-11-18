@@ -402,12 +402,15 @@ public class AppConstants {
 
     public static final String SORT_TYPE_BOOKMARK = "bookmark";
     public static final String SERVICE_TYPE_ARTICLE = "v1/articles/";
+    public static final String SERVICE_TYPE_FOR_YOU = "v1/recommend/";
     public static final String SERVICE_TYPE_USER = "v1/users/";
     public static final String SEPARATOR_BACKSLASH = "/";
     public static final String SEPARATOR_QMARK = "?";
 
     public static final String CATEGORIES_JSON_FILE = "categories.json";
+    public static final String FOLLOW_UNFOLLOW_TOPICS_JSON_FILE = "follow_unfollow_topics.json";
     public static final String PHOENIX_RELEASE_VERSION = "5.0";
+    public static final String CHOOSE_TOPICS_RELEASE_VERSION = "5.4";
 
     public static final String PAGINATION_END_VALUE = "NA";
     public static final String FOLLOW_LIST_TYPE = "followListType";
@@ -437,4 +440,5 @@ public class AppConstants {
     public static final String DEEPLINK_PROFILE_URL = "mc4k://www.mycity4kids.com/profile";
 
     public static final String IGNORE_TAG = "ignore";
+    public static final int MINIMUM_TOPICS_FOLLOW_REQUIREMENT = 5;
 }

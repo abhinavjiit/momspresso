@@ -13,7 +13,7 @@
         android:background="?attr/colorPrimary"
         android:elevation="5dp"
         android:minHeight="?attr/actionBarSize"
-        fab:theme="@style/ToolbarTheme"
+        fab:theme="@style/FilterToobar"
         fab:titleTextAppearance="@style/ToolbarTheme.Title" />
 
     <android.support.v4.widget.SwipeRefreshLayout

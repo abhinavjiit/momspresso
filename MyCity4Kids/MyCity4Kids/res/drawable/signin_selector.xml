@@ -3,5 +3,4 @@
     <item android:color="@color/login_grey" android:drawable="@drawable/signin_button_bg_disabled" android:state_enabled="false" />
     <item android:color="@color/white_color" android:drawable="@drawable/signin_button_bg_enabled" android:state_pressed="true" />
     <item android:color="@color/white_color" android:drawable="@drawable/signin_button_bg_enabled" android:state_enabled="true" />
-
 </selector>

@@ -1,14 +1,17 @@
 package com.mycity4kids.editor;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -17,8 +20,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.facebook.widget.FacebookDialog;
+import com.google.android.gms.plus.PlusShare;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -31,6 +37,7 @@ import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.editor.ArticleDraftRequest;
+import com.mycity4kids.models.parentingdetails.CommentsData;
 import com.mycity4kids.models.response.ArticleDraftResponse;
 import com.mycity4kids.models.response.BlogPageResponse;
 import com.mycity4kids.models.response.ImageUploadResponse;
@@ -39,7 +46,9 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticlePublishAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
+import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
 import com.mycity4kids.ui.activity.BloggerDashboardActivity;
+import com.mycity4kids.ui.fragment.PublishedArticleShareDialogFragment;
 import com.squareup.picasso.Picasso;
 import com.yalantis.ucrop.UCrop;
 
@@ -48,8 +57,11 @@ import org.json.JSONException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.MediaType;
@@ -251,15 +263,22 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
                                      if (!StringUtils.isNullOrEmpty(responseModel.getData().get(0).getMsg())) {
                                          //  SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
                                          Log.i("Retro Publish Message", responseModel.getData().get(0).getMsg());
-
-                                         alertDialog(responseModel.getData().get(0).getMsg());
+                                         if (StringUtils.isNullOrEmpty(responseModel.getData().get(0).getResult().getUrl())) {
+                                             alertDialog(responseModel.getData().get(0).getMsg());
+                                         } else {
+                                             PublishedArticleShareDialogFragment publishedArticleShareDialogFragment = new PublishedArticleShareDialogFragment();
+                                             Bundle _args = new Bundle();
+                                             _args.putString("shareUrl", responseModel.getData().get(0).getResult().getUrl());
+                                             publishedArticleShareDialogFragment.setArguments(_args);
+                                             FragmentManager fm = getSupportFragmentManager();
+                                             publishedArticleShareDialogFragment.setCancelable(false);
+                                             publishedArticleShareDialogFragment.show(fm, "Share Published Article");
+                                         }
                                      } else {
                                          showToast(responseModel.getReason().toString());
                                      }
                                  }
-
                              }
-
 
                              @Override
                              public void onFailure(Call<ArticleDraftResponse> call, Throwable t) {
@@ -327,7 +346,17 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
 
                     if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
                         id = responseModel.getData().get(0).getResult().getId() + "";
-                        alertDialog(responseModel.getData().get(0).getMsg());
+                        if (StringUtils.isNullOrEmpty(responseModel.getData().get(0).getResult().getUrl())) {
+                            alertDialog(responseModel.getData().get(0).getMsg());
+                        } else {
+                            PublishedArticleShareDialogFragment publishedArticleShareDialogFragment = new PublishedArticleShareDialogFragment();
+                            Bundle _args = new Bundle();
+                            _args.putString("shareUrl", responseModel.getData().get(0).getResult().getUrl());
+                            publishedArticleShareDialogFragment.setArguments(_args);
+                            FragmentManager fm = getSupportFragmentManager();
+                            publishedArticleShareDialogFragment.setCancelable(false);
+                            publishedArticleShareDialogFragment.show(fm, "Share Published Article");
+                        }
                     } else {
                         if (!StringUtils.isNullOrEmpty(responseModel.getReason())) {
                             showToast(responseModel.getReason());
