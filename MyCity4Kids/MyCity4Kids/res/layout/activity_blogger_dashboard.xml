@@ -11,16 +11,18 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
         android:elevation="5dp"
+        android:minHeight="?attr/actionBarSize"
         app:theme="@style/ToolbarTheme"
-        app:titleTextAppearance="@style/ToolbarTheme.Title"/>
+        app:titleTextAppearance="@style/ToolbarTheme.Title" />
 
     <ListView
         android:id="@+id/draftListView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar"
+        android:clipToPadding="false"
+        android:paddingBottom="100dp"
         android:visibility="visible" />
 
     <ListView
@@ -28,6 +30,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar"
+        android:clipToPadding="false"
+        android:paddingBottom="100dp"
         android:visibility="gone" />
 
     <ListView

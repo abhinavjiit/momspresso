@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
@@ -22,11 +21,9 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -45,7 +42,6 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.controller.BusinessListController;
 import com.mycity4kids.dbtable.TableAppointmentData;
 import com.mycity4kids.dbtable.TableTaskData;
 import com.mycity4kids.dbtable.TaskCompletedTable;
@@ -54,10 +50,7 @@ import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.OnWebServiceCompleteListener;
 import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.businesslist.BusinessDataListing;
-import com.mycity4kids.models.businesslist.BusinessListRequest;
 import com.mycity4kids.models.businesslist.BusinessListResponse;
-import com.mycity4kids.models.parentingstop.CommonParentingList;
-import com.mycity4kids.models.parentingstop.CommonParentingResponse;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.newmodels.AppointmentMappingModel;
@@ -69,21 +62,19 @@ import com.mycity4kids.retrofitAPIsInterfaces.EventsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.activity.ActivityCreateAppointment;
 import com.mycity4kids.ui.activity.ActivityShowAppointment;
-import com.mycity4kids.ui.activity.ArticleListingActivity;
 import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
 import com.mycity4kids.ui.activity.BusinessDetailsActivity;
-import com.mycity4kids.ui.activity.CityBestArticleListingActivity;
 import com.mycity4kids.ui.activity.CreateFamilyActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.FilteredTopicsArticleListingActivity;
-import com.mycity4kids.ui.activity.TopicsSplashActivity;
 import com.mycity4kids.ui.adapter.AdapterHomeAppointment;
-import com.mycity4kids.ui.adapter.ArticlesListingAdapter;
 import com.mycity4kids.ui.adapter.BusinessListingAdapterevent;
+import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.utils.location.GPSTracker;
 import com.mycity4kids.volley.HttpVolleyRequest;
 import com.mycity4kids.widget.CustomListView;
+import com.mycity4kids.widget.HorizontalScrollCustomView;
 import com.squareup.picasso.Picasso;
 
 import java.io.BufferedReader;
@@ -97,7 +88,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -119,13 +109,12 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     TableAppointmentData tableAppointment;
     ArrayList<AppointmentMappingModel> appointmentListData;
     AdapterHomeAppointment adapterHomeAppointment;
-    TextView goToCal, current, goToBlogs, txtBlogs1;
-    ImageView imgGoToCal, imgGoToEvents, imgGoToBlogs;
+    TextView goToCal, current;
+    ImageView imgGoToCal, imgGoToEvents;
     ImageView addAppointment;
     ScrollView baseScroll;
-    private ProgressBar progressBar, blogProgessBar, blogProgessBar1, forYouProgressbar;
+    private ProgressBar progressBar;
     private BusinessListingAdapterevent businessAdapter;
-    private ArticlesListingAdapter articlesListingAdapter;
     private int mBusinessListCount = 1;
     private int mTotalPageCount = 0;
     private int mPageCount = 1;
@@ -133,24 +122,19 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     private int from = 1;
     private int to = 10;
     private ArrayList<BusinessDataListing> mBusinessDataListings;
-    private ArrayList<CommonParentingList> mArticleDataListing1;
     private ArrayList<ArticleListingResult> mArticleDataListing;
     private ArrayList<ArticleListingResult> mArticleBestCityListing;
     private ArrayList<ArticleListingResult> mArticleForYouListing;
+    private ArrayList<ArticleListingResult> mArticleEditorPicksListing;
     private ArrayList<ArticleListingResult> mMomspressoArticleListing;
     private CustomListView eventListView;
-    private HorizontalScrollView blogListView, forYouHSV;
-    private View rltLoadingView;
-    private boolean mIsRequestRunning;
     private boolean mEventDataAvalble;
-    TextView txtCal, txtEvents, txtBlogs;
+    TextView txtCal, txtEvents;
     private LayoutInflater mInflator;
-    private LinearLayout hzScrollLinearLayout, hzScrollLinearLayoutEvent, hzScrollLinearLayout1, forYouHSVLinearLayout, blogHeader1, momspressoHZScrollLinearLayout;
-    private float density;
+    private LinearLayout hzScrollLinearLayoutEvent, momspressoHZScrollLinearLayout;
     CardView cardView;
     int sortType = 0;
-    private HorizontalScrollView momspressoListView;
-    private LinearLayout momspressoHeader, forYouHeader;
+    private LinearLayout momspressoHeader;
     private View mCustomView;
     private FrameLayout mCustomViewContainer;
     private WebChromeClient.CustomViewCallback mCustomViewCallback;
@@ -158,7 +142,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     private MyWebChromeClient mWebChromeClient = null;
     ArrayList<WebView> videoIframe = new ArrayList<>();
     private ProgressBar momspressoProgressbar;
-//    WebView currentWebView;
+    private HorizontalScrollCustomView forYourSection, trendingSection, editorPicksSection, inYourCitySection;
 
     @Nullable
     @Override
@@ -166,13 +150,17 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         view = inflater.inflate(R.layout.aa_mc4k_home, container, false);
         Utils.pushOpenScreenEvent(getActivity(), "Dashboard Fragment", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
         mInflator = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        hzScrollLinearLayout = (LinearLayout) view.findViewById(R.id.hzScrollLinearLayout);
-        hzScrollLinearLayout1 = (LinearLayout) view.findViewById(R.id.hzScrollLinearLayout1);
         hzScrollLinearLayoutEvent = (LinearLayout) view.findViewById(R.id.hzScrollLinearLayoutEvent);
         momspressoHZScrollLinearLayout = (LinearLayout) view.findViewById(R.id.momspressoHZScrollLinearLayout);
-        forYouHSVLinearLayout = (LinearLayout) view.findViewById(R.id.forYouHSVLinearLayout);
+        forYourSection = (HorizontalScrollCustomView) view.findViewById(R.id.forYouSection);
+        trendingSection = (HorizontalScrollCustomView) view.findViewById(R.id.trendingSection);
+        editorPicksSection = (HorizontalScrollCustomView) view.findViewById(R.id.editorPicksSection);
+        inYourCitySection = (HorizontalScrollCustomView) view.findViewById(R.id.inYourCitySection);
 
-        density = getActivity().getResources().getDisplayMetrics().density;
+        forYourSection.setSectionTitle(getString(R.string.home_sections_title_for_you));
+        trendingSection.setSectionTitle(getString(R.string.home_sections_title_trending));
+        editorPicksSection.setSectionTitle(getString(R.string.home_sections_title_editors_pick));
+
         appointmentList = (CustomListView) view.findViewById(R.id.home_appointmentList);
         goToCal = (TextView) view.findViewById(R.id.go_to_cal);
         addAppointment = (ImageView) view.findViewById(R.id.add_appointment);
@@ -180,81 +168,30 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         baseScroll = (ScrollView) view.findViewById(R.id.base_scroll);
         imgGoToCal = (ImageView) view.findViewById(R.id.img_go_to_cal);
         imgGoToEvents = (ImageView) view.findViewById(R.id.img_go_to_events);
-        imgGoToBlogs = (ImageView) view.findViewById(R.id.img_go_to_blogs);
-
 
         txtCal = (TextView) view.findViewById(R.id.txtCal);
         txtEvents = (TextView) view.findViewById(R.id.txtEvents);
-        txtBlogs = (TextView) view.findViewById(R.id.txtBlogs);
-        txtBlogs1 = (TextView) view.findViewById(R.id.txtBlogs1);
         progressBar = (ProgressBar) view.findViewById(R.id.eventprogressbar);
-        blogProgessBar = (ProgressBar) view.findViewById(R.id.blogprogressbar);
-        blogProgessBar1 = (ProgressBar) view.findViewById(R.id.blogprogressbar1);
-        forYouProgressbar = (ProgressBar) view.findViewById(R.id.forYouProgressbar);
         momspressoProgressbar = (ProgressBar) view.findViewById(R.id.momspressoProgressbar);
 
         eventListView = (CustomListView) view.findViewById(R.id.eventList);
-        blogListView = (HorizontalScrollView) view.findViewById(R.id.bloglist);
-        forYouHSV = (HorizontalScrollView) view.findViewById(R.id.forYouHSV);
-        momspressoListView = (HorizontalScrollView) view.findViewById(R.id.momspressolist);
-        rltLoadingView = (RelativeLayout) view.findViewById(R.id.rltLoadingView);
-        blogHeader1 = (LinearLayout) view.findViewById(R.id.blogHeader1);
         momspressoHeader = (LinearLayout) view.findViewById(R.id.momspressoHeader);
-        forYouHeader = (LinearLayout) view.findViewById(R.id.forYouHeader);
-
 
         if (SharedPrefUtils.getCurrentCityModel(getActivity()).getName().isEmpty()) {
-            switch (SharedPrefUtils.getCurrentCityModel(getActivity()).getId()) {
-                case 1:
-                    txtBlogs1.setText("BEST OF " + "DELHI-NCR");
-                    break;
-                case 2:
-                    txtBlogs1.setText("BEST OF " + "BANGLORE");
-                    break;
-                case 3:
-                    txtBlogs1.setText("BEST OF " + "MUMBAI");
-                    break;
-                case 4:
-                    txtBlogs1.setText("BEST OF " + "PUNE");
-                    break;
-                case 5:
-                    txtBlogs1.setText("BEST OF " + "HYDERABAD");
-                    break;
-                case 6:
-                    txtBlogs1.setText("BEST OF " + "CHENNAI");
-                    break;
-                case 7:
-                    txtBlogs1.setText("BEST OF " + "KOLKATA");
-                    break;
-                case 8:
-                    txtBlogs1.setText("BEST OF " + "JAIPUR");
-                    break;
-                case 9:
-                    txtBlogs1.setText("BEST OF " + "AHMEDABAD");
-                    break;
-                default:
-                    txtBlogs1.setText("BEST OF " + "DELHI-NCR");
-                    break;
-            }
+            inYourCitySection.setCityNameFromCityId(SharedPrefUtils.getCurrentCityModel(getActivity()).getId());
 
         } else {
-            txtBlogs1.setText("BEST OF " + SharedPrefUtils.getCurrentCityModel(getActivity()).getName().toUpperCase());
+            inYourCitySection.setCityName(SharedPrefUtils.getCurrentCityModel(getActivity()).getName().toUpperCase());
         }
         goToCal.setOnClickListener(this);
         addAppointment.setOnClickListener(this);
         imgGoToCal.setOnClickListener(this);
         imgGoToEvents.setOnClickListener(this);
-        imgGoToBlogs.setOnClickListener(this);
         txtCal.setOnClickListener(this);
         txtEvents.setOnClickListener(this);
-        txtBlogs.setOnClickListener(this);
-        blogHeader1.setOnClickListener(this);
         momspressoHeader.setOnClickListener(this);
-        forYouHeader.setOnClickListener(this);
 
-        view.findViewById(R.id.go_to_blog).setOnClickListener(this);
         view.findViewById(R.id.go_to_events).setOnClickListener(this);
-        view.findViewById(R.id.no_blog).setOnClickListener(this);
         view.findViewById(R.id.no_events).setOnClickListener(this);
 
         TableAppointmentData tAppointment = new TableAppointmentData(BaseApplication.getInstance());
@@ -306,10 +243,12 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         currentForm.setTimeZone(TimeZone.getTimeZone("GMT+0530"));
         String currentDate = form.format(calendar.getTime());
         current.setText(currentForm.format(calendar.getTime()).toString());
+        mArticleDataListing = new ArrayList<>();
         appointmentListData = new ArrayList<>();
         mArticleBestCityListing = new ArrayList<>();
         mMomspressoArticleListing = new ArrayList<>();
         mArticleForYouListing = new ArrayList<>();
+        mArticleEditorPicksListing = new ArrayList<>();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         formatter.setTimeZone(TimeZone.getTimeZone("GMT+0530"));
         tableAppointment = new TableAppointmentData(BaseApplication.getInstance());
@@ -324,22 +263,17 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         adapterHomeAppointment = new AdapterHomeAppointment(getActivity(), appointmentListData);
         appointmentList.setAdapter(adapterHomeAppointment);
 
-        // blog adapter
-        mArticleDataListing = new ArrayList<>();
-        mArticleDataListing1 = new ArrayList<>();
-        articlesListingAdapter = new ArticlesListingAdapter(getActivity(), true);
-
         String momspressoCategoryId = getMomspressoCategory();
-        hitMomspressoListingApi(momspressoCategoryId);
         hitForYouListingApi();
         hitBlogListingApi();
-        hitEditorPicksApi();
+        hitMomspressoListingApi(momspressoCategoryId);
+        hitEditorPicksListingApi();
+        hitInYourCityListingApi();
 
         if (!SharedPrefUtils.isCityFetched(getActivity())) {
             view.findViewById(R.id.eventsss).setVisibility(View.GONE);
         } else {
             view.findViewById(R.id.eventsss).setVisibility(View.VISIBLE);
-            view.findViewById(R.id.blogss).setVisibility(View.VISIBLE);
 
             // hit business list api
             businessAdapter = new BusinessListingAdapterevent(getActivity());
@@ -356,117 +290,87 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         }
     }
 
-    private String getMomspressoCategory() {
-        if (StringUtils.isNullOrEmpty(SharedPrefUtils.getMomspressoCategory(getActivity()).getId())) {
-            try {
-                FileInputStream fileInputStream = getActivity().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
-                String fileContent = convertStreamToString(fileInputStream);
-                TopicsResponse responseData = new Gson().fromJson(fileContent, TopicsResponse.class);
-
-                for (int i = 0; i < responseData.getData().size(); i++) {
-                    if (AppConstants.MOMSPRESSO_SLUG.equals(responseData.getData().get(i).getSlug())) {
-                        SharedPrefUtils.setMomspressoCategory(getActivity(), responseData.getData().get(i));
-                        return responseData.getData().get(i).getId();
-                    }
-                }
-            } catch (FileNotFoundException fnfe) {
-
-            }
-        } else {
-            return SharedPrefUtils.getMomspressoCategory(getActivity()).getId();
-        }
-        return null;
-    }
-
-    public static String convertStreamToString(InputStream is) {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        StringBuilder sb = new StringBuilder();
-        String line = null;
-        try {
-            while ((line = reader.readLine()) != null) {
-                sb.append(line).append("\n");
-            }
-            reader.close();
-        } catch (IOException e) {
-            Crashlytics.logException(e);
-            Log.d("IOException", Log.getStackTraceString(e));
-        }
-        return sb.toString();
-    }
-
-    public int getAge(Date dateOfBirth) {
-        float age = 0;
-
-        Calendar born = Calendar.getInstance();
-        Calendar now = Calendar.getInstance();
-
-        if (dateOfBirth != null) {
-            now.setTime(new Date());
-            born.setTime(dateOfBirth);
-            if (now.get(Calendar.YEAR) == born.get(Calendar.YEAR)) {
-                age = 0;
-            } else if (now.get(Calendar.YEAR) > born.get(Calendar.YEAR)) {
-                if (born.get(Calendar.MONTH) <= now.get(Calendar.MONTH) && born.get(Calendar.DAY_OF_MONTH) <= now.get(Calendar.DAY_OF_MONTH)) {
-                    age = now.get(Calendar.YEAR) - born.get(Calendar.YEAR);
-                } else {
-                    age = now.get(Calendar.YEAR) - born.get(Calendar.YEAR);
-                    age = age - 1;
-                }
-            }
-        }
-
-        return (int) age;
-    }
-
-
-    public void hitBusinessListingApi(int categoryId, int page) {
-        if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
-            return;
-        }
-
-        if (page == 1) {
-            //        progressBar.setVisibility(View.VISIBLE);
-        }
-
-        BusinessListController businessListController = new BusinessListController(getActivity(), this);
-        BusinessListRequest businessListRequest = new BusinessListRequest();
-        businessListRequest.setCategory_id(categoryId + "");
-        businessListRequest.setCity_id((SharedPrefUtils.getCurrentCityModel(getActivity())).getId() + "");
-        businessListRequest.setPage(page + "");
-        businessListController.getData(AppConstants.BUSINESS_LIST_REQUEST, businessListRequest);
-
-        mIsRequestRunning = true;
-
-    }
-
-    private void hitBusinessListingApiRetro(int categoryId, int page) {
-        if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
-            return;
-        }
-
+    private void hitForYouListingApi() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        EventsAPI topicsAPI = retrofit.create(EventsAPI.class);
-        GPSTracker getCurrentLocation = new GPSTracker(getActivity());
-        double _latitude = getCurrentLocation.getLatitude();
-        double _longitude = getCurrentLocation.getLongitude();
+        TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
 
-        Call<BusinessListResponse> filterCall = topicsAPI.getEventList("" + (SharedPrefUtils.getCurrentCityModel(getActivity())).getId(), "" + categoryId,
-                "" + _latitude, "" + _longitude, "", SharedPrefUtils.getUserDetailModel(getActivity()).getId(), 1);
-        filterCall.enqueue(eventListingResponseCallback);
+        Call<ArticleListingResponse> filterCall = topicsAPI.getForYouArticles("" + SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), "" + from, "" + to);
+        filterCall.enqueue(forYouResponseCallback);
     }
 
     public void hitBlogListingApi() {
-        blogProgessBar.setVisibility(View.VISIBLE);
+        trendingSection.setProgressBarVisibility(View.VISIBLE);
         String url;
         url = AppConstants.LIVE_URL + "v1/articles/trending/" + from + "/" + to;
         HttpVolleyRequest.getStringResponse(getActivity(), url, null, mGetArticleListingListener, Request.Method.GET, true);
 
     }
 
+    private void hitMomspressoListingApi(String momspressoCategoryId) {
+        momspressoProgressbar.setVisibility(View.VISIBLE);
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
+
+        Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(momspressoCategoryId, 0, 1, 5);
+        filterCall.enqueue(momspressoListingResponseCallback);
+    }
+
+    private void hitEditorPicksListingApi() {
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
+        int end = AppUtils.randInt(AppConstants.EDITOR_PICKS_MIN_ARTICLES + 1, AppConstants.EDITOR_PICKS_ARTICLE_COUNT + 1);
+        int start = end - AppConstants.EDITOR_PICKS_MIN_ARTICLES;
+        Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(AppConstants.EDITOR_PICKS_CATEGORY_ID, 0, start, end);
+        filterCall.enqueue(editorPicksResponseCallback);
+    }
+
+    public void hitInYourCityListingApi() {
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
+
+        Call<ArticleListingResponse> filterCall = topicsAPI.getBestArticlesForCity("" + SharedPrefUtils.getCurrentCityModel(getActivity()).getId(), sortType, 1, 10);
+        filterCall.enqueue(inYourCityListingResponseCallback);
+    }
+
+    private Callback<ArticleListingResponse> forYouResponseCallback = new Callback<ArticleListingResponse>() {
+        @Override
+        public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
+            forYourSection.setProgressBarVisibility(View.GONE);
+            if (response == null || response.body() == null) {
+                ((DashboardActivity) getActivity()).showToast("Something went wrong from server");
+                return;
+            }
+
+            try {
+                ArticleListingResponse responseData = (ArticleListingResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    processForYouResponse(responseData);
+                } else {
+                    ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4KException", Log.getStackTraceString(e));
+                ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
+            forYourSection.setProgressBarVisibility(View.GONE);
+            Crashlytics.logException(t);
+            Log.d("MC4KException", Log.getStackTraceString(t));
+            if (null != getActivity()) {
+                ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
+            }
+        }
+    };
+
     private OnWebServiceCompleteListener mGetArticleListingListener = new OnWebServiceCompleteListener() {
         @Override
         public void onWebServiceComplete(VolleyBaseResponse response, boolean isError) {
-            blogProgessBar.setVisibility(View.GONE);
+//            blogProgessBar.setVisibility(View.GONE);
+            trendingSection.setProgressBarVisibility(View.GONE);
             Log.d("Response back =", " " + response.getResponseBody());
             if (isError) {
                 if (null != getActivity() && response.getResponseCode() != 999)
@@ -495,87 +399,14 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                 if (responseBlogData.getCode() == Constants.HTTP_RESPONSE_SUCCESS) {
                     //clear list to avoid duplicates due to volley caching
                     mArticleDataListing.clear();
-
                     mArticleDataListing.addAll(responseBlogData.getData().get(0).getResult());
-                    hzScrollLinearLayout.removeAllViews();
-                    if (!mArticleDataListing.isEmpty()) {
-                        Collections.shuffle(mArticleDataListing);
-                    }
-                    for (int i = 0; i < mArticleDataListing.size(); i++) {
-                        final View view = mInflator.inflate(R.layout.card_item_article_dashboard, null);
-                        view.setTag(i);
-                        ImageView articleImage = (ImageView) view.findViewById(R.id.imvAuthorThumb);
-                        TextView title = (TextView) view.findViewById(R.id.txvArticleTitle);
-                        cardView = (CardView) view.findViewById(R.id.cardViewWidget);
-                        Picasso.with(getActivity()).load(mArticleDataListing.get(i).getImageUrl().getMobileWebThumbnail()).placeholder(R.drawable.default_article).into(articleImage);
-                        title.setText(mArticleDataListing.get(i).getTitle());
-                        view.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent intent = new Intent(getActivity(), ArticlesAndBlogsDetailsActivity.class);
-                                ArticleListingResult parentingListData = (ArticleListingResult) (mArticleDataListing.get((int) view.getTag()));
-                                intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
-                                intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
-                                intent.putExtra(Constants.BLOG_SLUG, parentingListData.getBlogPageSlug());
-                                intent.putExtra(Constants.TITLE_SLUG, parentingListData.getTitleSlug());
-                                startActivity(intent);
-                                Log.e("Tag", "" + view.getTag());
-                            }
-                        });
-                        hzScrollLinearLayout.addView(view);
-                    }
-                    View customViewMore = mInflator.inflate(R.layout.custom_view_more_dashboard, null);
-                    DisplayMetrics metrics = new DisplayMetrics();
-                    if (getActivity() != null) {
-                        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-                        int widthPixels = metrics.widthPixels;
-                        float width = (float) (widthPixels * 0.45);
-                        customViewMore.setMinimumWidth((int) width);
-                    }
-                    if (mArticleDataListing.size() != 0) {
-                        hzScrollLinearLayout.addView(customViewMore);
-                    }
-                    customViewMore.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(getActivity(), ArticleListingActivity.class);
-                            intent.putExtra(Constants.SORT_TYPE, Constants.KEY_TRENDING);
-                            startActivity(intent);
-                        }
-                    });
-                    if (mArticleDataListing.isEmpty()) {
-                        ((TextView) view.findViewById(R.id.go_to_blog)).setVisibility(View.VISIBLE);
-                        ((TextView) view.findViewById(R.id.no_blog)).setVisibility(View.VISIBLE);
-                    }
-                    baseScroll.smoothScrollTo(0, 0);
-
+                    trendingSection.setmDatalist(mArticleDataListing, Constants.KEY_TRENDING);
                 } else {
-                    ((TextView) view.findViewById(R.id.go_to_blog)).setVisibility(View.VISIBLE);
-                    ((TextView) view.findViewById(R.id.no_blog)).setVisibility(View.VISIBLE);
-
+                    trendingSection.setEmptyListLabelVisibility(View.VISIBLE);
                 }
-
             }
-
         }
     };
-
-    private void hitMomspressoListingApi(String momspressoCategoryId) {
-        momspressoProgressbar.setVisibility(View.VISIBLE);
-        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
-
-        Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(momspressoCategoryId, 0, 1, 5);
-        filterCall.enqueue(momspressoListingResponseCallback);
-    }
-
-    public void hitEditorPicksApi() {
-        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
-
-        Call<ArticleListingResponse> filterCall = topicsAPI.getBestArticlesForCity("" + SharedPrefUtils.getCurrentCityModel(getActivity()).getId(), sortType, 1, 10);
-        filterCall.enqueue(articleListingResponseCallback);
-    }
 
     private Callback<ArticleListingResponse> momspressoListingResponseCallback = new Callback<ArticleListingResponse>() {
         @Override
@@ -611,132 +442,85 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         }
     };
 
-    private void hitForYouListingApi() {
-        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
+    private Callback<ArticleListingResponse> editorPicksResponseCallback = new Callback<ArticleListingResponse>() {
+        @Override
+        public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
+            editorPicksSection.setProgressBarVisibility(View.GONE);
+            if (response == null || response.body() == null) {
+                ((DashboardActivity) getActivity()).showToast("Something went wrong from server");
+                return;
+            }
 
-        Call<ArticleListingResponse> filterCall = topicsAPI.getForYouArticles("" + SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), "" + from, "" + to);
-        filterCall.enqueue(forYouResponseCallback);
+            try {
+                ArticleListingResponse responseData = (ArticleListingResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    processEditorPicksResponse(responseData);
+                } else {
+                    ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4KException", Log.getStackTraceString(e));
+                ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
+//            forYouProgressbar.setVisibility(View.GONE);
+            editorPicksSection.setProgressBarVisibility(View.GONE);
+            Crashlytics.logException(t);
+            Log.d("MC4KException", Log.getStackTraceString(t));
+            if (null != getActivity()) {
+                ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
+            }
+        }
+    };
+
+    private Callback<ArticleListingResponse> inYourCityListingResponseCallback = new Callback<ArticleListingResponse>() {
+        @Override
+        public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
+            inYourCitySection.setProgressBarVisibility(View.GONE);
+            if (response == null || response.body() == null) {
+                ((DashboardActivity) getActivity()).showToast("Something went wrong from server");
+                return;
+            }
+
+            try {
+                ArticleListingResponse responseData = (ArticleListingResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    processInYourCityListingResponse(responseData);
+                } else {
+                    ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4KException", Log.getStackTraceString(e));
+                ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
+            inYourCitySection.setProgressBarVisibility(View.GONE);
+            Crashlytics.logException(t);
+            Log.d("MC4KException", Log.getStackTraceString(t));
+            if (null != getActivity()) {
+                ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
+            }
+        }
+    };
+
+    private void processForYouResponse(ArticleListingResponse responseData) {
+        ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
+        if (dataList.size() == 0) {
+            forYourSection.setEmptyListLabelVisibility(View.VISIBLE);
+        } else {
+            mArticleForYouListing.clear();
+            mArticleForYouListing.addAll(responseData.getData().get(0).getResult());
+            forYourSection.setmDatalist(mArticleForYouListing, Constants.KEY_FOR_YOU);
+        }
     }
-
-    private Callback<BusinessListResponse> eventListingResponseCallback = new Callback<BusinessListResponse>() {
-        @Override
-        public void onResponse(Call<BusinessListResponse> call, retrofit2.Response<BusinessListResponse> response) {
-            momspressoProgressbar.setVisibility(View.GONE);
-            if (response == null || response.body() == null) {
-                ((DashboardActivity) getActivity()).showToast("Something went wrong from server");
-                return;
-            }
-
-            try {
-                progressBar.setVisibility(View.GONE);
-                BusinessListResponse responseData = (BusinessListResponse) response.body();
-                if (responseData.getResponseCode() == Constants.HTTP_RESPONSE_SUCCESS) {
-
-                    mBusinessListCount = responseData.getResult().getData().getTotal();
-                    mTotalPageCount = responseData.getResult().getData().getPage_count();
-                    //to add in already created list
-                    // we neew to clear this list in case of sort by and filter
-                    mBusinessDataListings.addAll(responseData.getResult().getData().getData());
-
-                    BaseApplication.setBusinessREsponse(mBusinessDataListings);
-
-                    businessAdapter.setListData(mBusinessDataListings, businessOrEventType);
-
-                    businessAdapter.notifyDataSetChanged();
-                    inflateEventCardsScroll();
-
-                    if (mBusinessDataListings.isEmpty()) {
-                        ((TextView) view.findViewById(R.id.no_events)).setVisibility(View.VISIBLE);
-                    }
-                    baseScroll.smoothScrollTo(0, 0);
-
-                } else if (responseData.getResponseCode() == 400) {
-                    ((TextView) view.findViewById(R.id.no_events)).setVisibility(View.VISIBLE);
-                }
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                Log.d("MC4KException", Log.getStackTraceString(e));
-                ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<BusinessListResponse> call, Throwable t) {
-            momspressoProgressbar.setVisibility(View.GONE);
-            Crashlytics.logException(t);
-            Log.d("MC4KException", Log.getStackTraceString(t));
-            if (null != getActivity()) {
-                ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
-            }
-        }
-    };
-
-    private Callback<ArticleListingResponse> forYouResponseCallback = new Callback<ArticleListingResponse>() {
-        @Override
-        public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
-            forYouProgressbar.setVisibility(View.GONE);
-            if (response == null || response.body() == null) {
-                ((DashboardActivity) getActivity()).showToast("Something went wrong from server");
-                return;
-            }
-
-            try {
-                ArticleListingResponse responseData = (ArticleListingResponse) response.body();
-                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    processForYouResponse(responseData);
-                } else {
-                    ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
-                }
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                Log.d("MC4KException", Log.getStackTraceString(e));
-                ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
-            forYouProgressbar.setVisibility(View.GONE);
-            Crashlytics.logException(t);
-            Log.d("MC4KException", Log.getStackTraceString(t));
-            if (null != getActivity()) {
-                ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
-            }
-        }
-    };
-
-    private Callback<ArticleListingResponse> articleListingResponseCallback = new Callback<ArticleListingResponse>() {
-        @Override
-        public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
-            if (response == null || response.body() == null) {
-                ((DashboardActivity) getActivity()).showToast("Something went wrong from server");
-                return;
-            }
-
-            try {
-                ArticleListingResponse responseData = (ArticleListingResponse) response.body();
-                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    processArticleListingResponse(responseData);
-                } else {
-                    ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
-                }
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                Log.d("MC4KException", Log.getStackTraceString(e));
-                ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
-            Crashlytics.logException(t);
-            Log.d("MC4KException", Log.getStackTraceString(t));
-            if (null != getActivity()) {
-                ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
-            }
-        }
-    };
 
     private void processMomspressoListingResponse(ArticleListingResponse responseData) {
 
@@ -813,147 +597,126 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         }
     }
 
-    private void processArticleListingResponse(ArticleListingResponse responseData) {
-
+    private void processEditorPicksResponse(ArticleListingResponse responseData) {
         ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
-
         if (dataList.size() == 0) {
-            ((TextView) view.findViewById(R.id.no_blog1)).setVisibility(View.VISIBLE);
+            editorPicksSection.setEmptyListLabelVisibility(View.VISIBLE);
         } else {
-            ((TextView) view.findViewById(R.id.no_blog1)).setVisibility(View.GONE);
+            mArticleEditorPicksListing.clear();
+            mArticleEditorPicksListing.addAll(responseData.getData().get(0).getResult());
+            editorPicksSection.setmDatalist(mArticleEditorPicksListing, Constants.KEY_EDITOR_PICKS);
+        }
+    }
+
+    private void processInYourCityListingResponse(ArticleListingResponse responseData) {
+        ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
+        if (dataList.size() == 0) {
+            inYourCitySection.setEmptyListLabelVisibility(View.VISIBLE);
+
+        } else {
+            inYourCitySection.setEmptyListLabelVisibility(View.GONE);
             mArticleBestCityListing.clear();
             mArticleBestCityListing.addAll(responseData.getData().get(0).getResult());
-            hzScrollLinearLayout1.removeAllViews();
-            BaseApplication.setBestCityResponse(mArticleBestCityListing);
-            for (int i = 0; i < mArticleBestCityListing.size(); i++) {
-                final View view1 = mInflator.inflate(R.layout.card_item_article_dashboard, null);
-                view1.setTag(i);
-                ImageView articleImage = (ImageView) view1.findViewById(R.id.imvAuthorThumb);
-                TextView title = (TextView) view1.findViewById(R.id.txvArticleTitle);
-                cardView = (CardView) view1.findViewById(R.id.cardViewWidget);
-                Picasso.with(getActivity()).load(mArticleBestCityListing.get(i).getImageUrl().getMobileWebThumbnail()).placeholder(R.drawable.default_article).into(articleImage);
-                title.setText(mArticleBestCityListing.get(i).getTitle());
-
-                view1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(), ArticlesAndBlogsDetailsActivity.class);
-                        ArticleListingResult parentingListData1 = (ArticleListingResult) (mArticleBestCityListing.get((int) view1.getTag()));
-                        intent.putExtra(Constants.ARTICLE_ID, parentingListData1.getId());
-                        intent.putExtra(Constants.AUTHOR_ID, parentingListData1.getUserId());
-                        intent.putExtra(Constants.BLOG_SLUG, parentingListData1.getBlogPageSlug());
-                        intent.putExtra(Constants.TITLE_SLUG, parentingListData1.getTitleSlug());
-                        startActivity(intent);
-                        Log.e("Tag", "" + view1.getTag());
-                    }
-                });
-                hzScrollLinearLayout1.addView(view1);
-            }
-            View customViewMore = mInflator.inflate(R.layout.custom_view_more_dashboard, null);
-            DisplayMetrics metrics = new DisplayMetrics();
-            if (getActivity() != null) {
-                getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-                int widthPixels = metrics.widthPixels;
-                float width = (float) (widthPixels * 0.45);
-                customViewMore.setMinimumWidth((int) width);
-            }
-            hzScrollLinearLayout1.addView(customViewMore);
-            customViewMore.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent1 = new Intent(getActivity(), CityBestArticleListingActivity.class);
-                    startActivity(intent1);
-                }
-            });
-            if (mArticleBestCityListing.isEmpty()) {
-                ((TextView) view.findViewById(R.id.go_to_blog)).setVisibility(View.VISIBLE);
-                ((TextView) view.findViewById(R.id.no_blog1)).setVisibility(View.VISIBLE);
-            }
-            baseScroll.smoothScrollTo(0, 0);
+            inYourCitySection.setmDatalist(mArticleBestCityListing, Constants.KEY_IN_YOUR_CITY);
         }
     }
 
-    private void processForYouResponse(ArticleListingResponse responseData) {
+    private String getMomspressoCategory() {
+        if (StringUtils.isNullOrEmpty(SharedPrefUtils.getMomspressoCategory(getActivity()).getId())) {
+            try {
+                FileInputStream fileInputStream = getActivity().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                String fileContent = convertStreamToString(fileInputStream);
+                TopicsResponse responseData = new Gson().fromJson(fileContent, TopicsResponse.class);
 
-        ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
+                for (int i = 0; i < responseData.getData().size(); i++) {
+                    if (AppConstants.MOMSPRESSO_SLUG.equals(responseData.getData().get(i).getSlug())) {
+                        SharedPrefUtils.setMomspressoCategory(getActivity(), responseData.getData().get(i));
+                        return responseData.getData().get(i).getId();
+                    }
+                }
+            } catch (FileNotFoundException fnfe) {
 
-        if (dataList.size() == 0) {
-            ((TextView) view.findViewById(R.id.no_for_you)).setVisibility(View.VISIBLE);
+            }
         } else {
-            ((TextView) view.findViewById(R.id.no_for_you)).setVisibility(View.GONE);
-            mArticleForYouListing.clear();
-            mArticleForYouListing.addAll(responseData.getData().get(0).getResult());
-            if (!mArticleForYouListing.isEmpty()) {
-                Collections.shuffle(mArticleForYouListing);
-            }
-            forYouHSVLinearLayout.removeAllViews();
-//            BaseApplication.setBestCityResponse(mArticleForYouListing);
-            for (int i = 0; i < mArticleForYouListing.size(); i++) {
-                final View view1 = mInflator.inflate(R.layout.card_item_article_dashboard, null);
-                view1.setTag(i);
-                ImageView articleImage = (ImageView) view1.findViewById(R.id.imvAuthorThumb);
-                TextView title = (TextView) view1.findViewById(R.id.txvArticleTitle);
-                cardView = (CardView) view1.findViewById(R.id.cardViewWidget);
-                Picasso.with(getActivity()).load(mArticleForYouListing.get(i).getImageUrl().getMobileWebThumbnail()).placeholder(R.drawable.default_article).into(articleImage);
-                title.setText(mArticleForYouListing.get(i).getTitle());
-
-                view1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(), ArticlesAndBlogsDetailsActivity.class);
-                        ArticleListingResult parentingListData1 = (ArticleListingResult) (mArticleForYouListing.get((int) view1.getTag()));
-                        intent.putExtra(Constants.ARTICLE_ID, parentingListData1.getId());
-                        intent.putExtra(Constants.AUTHOR_ID, parentingListData1.getUserId());
-                        intent.putExtra(Constants.BLOG_SLUG, parentingListData1.getBlogPageSlug());
-                        intent.putExtra(Constants.TITLE_SLUG, parentingListData1.getTitleSlug());
-                        startActivity(intent);
-                        Log.e("Tag", "" + view1.getTag());
-                    }
-                });
-                forYouHSVLinearLayout.addView(view1);
-            }
-            View customViewMore = mInflator.inflate(R.layout.custom_view_more_dashboard, null);
-            DisplayMetrics metrics = new DisplayMetrics();
-            if (getActivity() != null) {
-                getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-                int widthPixels = metrics.widthPixels;
-                float width = (float) (widthPixels * 0.45);
-                customViewMore.setMinimumWidth((int) width);
-            }
-            forYouHSVLinearLayout.addView(customViewMore);
-            customViewMore.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent1 = new Intent(getActivity(), ArticleListingActivity.class);
-                    intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_FOR_YOU);
-                    startActivity(intent1);
-                }
-            });
-            baseScroll.smoothScrollTo(0, 0);
+            return SharedPrefUtils.getMomspressoCategory(getActivity()).getId();
         }
+        return null;
     }
 
-    @Override
-    protected void updateUi(Response response) {
+    public static String convertStreamToString(InputStream is) {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        StringBuilder sb = new StringBuilder();
+        String line = null;
+        try {
+            while ((line = reader.readLine()) != null) {
+                sb.append(line).append("\n");
+            }
+            reader.close();
+        } catch (IOException e) {
+            Crashlytics.logException(e);
+            Log.d("IOException", Log.getStackTraceString(e));
+        }
+        return sb.toString();
+    }
 
-        mIsRequestRunning = false;
-        if (response == null) {
-            progressBar.setVisibility(View.GONE);
-            blogProgessBar.setVisibility(View.GONE);
+    public int getAge(Date dateOfBirth) {
+        float age = 0;
+
+        Calendar born = Calendar.getInstance();
+        Calendar now = Calendar.getInstance();
+
+        if (dateOfBirth != null) {
+            now.setTime(new Date());
+            born.setTime(dateOfBirth);
+            if (now.get(Calendar.YEAR) == born.get(Calendar.YEAR)) {
+                age = 0;
+            } else if (now.get(Calendar.YEAR) > born.get(Calendar.YEAR)) {
+                if (born.get(Calendar.MONTH) <= now.get(Calendar.MONTH) && born.get(Calendar.DAY_OF_MONTH) <= now.get(Calendar.DAY_OF_MONTH)) {
+                    age = now.get(Calendar.YEAR) - born.get(Calendar.YEAR);
+                } else {
+                    age = now.get(Calendar.YEAR) - born.get(Calendar.YEAR);
+                    age = age - 1;
+                }
+            }
+        }
+
+        return (int) age;
+    }
+
+    private void hitBusinessListingApiRetro(int categoryId, int page) {
+        if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
             return;
         }
 
-        switch (response.getDataType()) {
-            case AppConstants.BUSINESS_LIST_REQUEST:
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        EventsAPI topicsAPI = retrofit.create(EventsAPI.class);
+        GPSTracker getCurrentLocation = new GPSTracker(getActivity());
+        double _latitude = getCurrentLocation.getLatitude();
+        double _longitude = getCurrentLocation.getLongitude();
+
+        Call<BusinessListResponse> filterCall = topicsAPI.getEventList("" + (SharedPrefUtils.getCurrentCityModel(getActivity())).getId(), "" + categoryId,
+                "" + _latitude, "" + _longitude, "", SharedPrefUtils.getUserDetailModel(getActivity()).getId(), 1);
+        filterCall.enqueue(eventListingResponseCallback);
+    }
+
+    private Callback<BusinessListResponse> eventListingResponseCallback = new Callback<BusinessListResponse>() {
+        @Override
+        public void onResponse(Call<BusinessListResponse> call, retrofit2.Response<BusinessListResponse> response) {
+            momspressoProgressbar.setVisibility(View.GONE);
+            if (response == null || response.body() == null) {
+                ((DashboardActivity) getActivity()).showToast("Something went wrong from server");
+                return;
+            }
+
+            try {
                 progressBar.setVisibility(View.GONE);
-                BusinessListResponse responseData = (BusinessListResponse) response.getResponseObject();
+                BusinessListResponse responseData = (BusinessListResponse) response.body();
                 if (responseData.getResponseCode() == Constants.HTTP_RESPONSE_SUCCESS) {
 
                     mBusinessListCount = responseData.getResult().getData().getTotal();
                     mTotalPageCount = responseData.getResult().getData().getPage_count();
                     //to add in already created list
                     // we neew to clear this list in case of sort by and filter
-                    //  mBusinessDataListings.clear();
                     mBusinessDataListings.addAll(responseData.getResult().getData().getData());
 
                     BaseApplication.setBusinessREsponse(mBusinessDataListings);
@@ -964,49 +727,44 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                     inflateEventCardsScroll();
 
                     if (mBusinessDataListings.isEmpty()) {
-
-//                        ((TextView) view.findViewById(R.id.go_to_events)).setVisibility(View.VISIBLE);
                         ((TextView) view.findViewById(R.id.no_events)).setVisibility(View.VISIBLE);
-                        // eventListView.setVisibility(View.GONE);
                     }
                     baseScroll.smoothScrollTo(0, 0);
 
                 } else if (responseData.getResponseCode() == 400) {
-
-//                    ((TextView) view.findViewById(R.id.go_to_events)).setVisibility(View.VISIBLE);
                     ((TextView) view.findViewById(R.id.no_events)).setVisibility(View.VISIBLE);
-                    //eventListView.setVisibility(View.GONE);
-                    //((LinearLayout) view.findViewById(R.id.eventHeader)).setVisibility(View.GONE);
-
                 }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4KException", Log.getStackTraceString(e));
+                ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<BusinessListResponse> call, Throwable t) {
+            momspressoProgressbar.setVisibility(View.GONE);
+            Crashlytics.logException(t);
+            Log.d("MC4KException", Log.getStackTraceString(t));
+            if (null != getActivity()) {
+                ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
+            }
+        }
+    };
+
+    @Override
+    protected void updateUi(Response response) {
+
+        if (response == null) {
+            progressBar.setVisibility(View.GONE);
+            return;
+        }
+
+        switch (response.getDataType()) {
+            case AppConstants.BUSINESS_LIST_REQUEST:
                 break;
             case AppConstants.ARTICLES_TODAY_REQUEST:
-                blogProgessBar.setVisibility(View.GONE);
-                CommonParentingResponse responseBlogData = (CommonParentingResponse) response.getResponseObject();
-                if (responseBlogData.getResponseCode() == Constants.HTTP_RESPONSE_SUCCESS) {
-
-//                    mArticleDataListing.addAll(responseBlogData.getResult().getData().getData());
-//                    BaseApplication.setBlogResponse(mArticleDataListing);
-//                    articlesListingAdapter.setNewListData(mArticleDataListing);
-                    articlesListingAdapter.notifyDataSetChanged();
-
-                    if (mArticleDataListing.isEmpty()) {
-                        ((TextView) view.findViewById(R.id.go_to_blog)).setVisibility(View.VISIBLE);
-                        ((TextView) view.findViewById(R.id.no_blog)).setVisibility(View.VISIBLE);
-                        //  ((LinearLayout) view.findViewById(R.id.blogHeader)).setVisibility(View.GONE);
-                        //  eventListView.setVisibility(View.GONE);
-                    }
-                    baseScroll.smoothScrollTo(0, 0);
-
-                } else if (responseBlogData.getResponseCode() == 400) {
-                    ((TextView) view.findViewById(R.id.go_to_blog)).setVisibility(View.VISIBLE);
-                    ((TextView) view.findViewById(R.id.no_blog)).setVisibility(View.VISIBLE);
-                    //blogListView.setVisibility(View.GONE);
-                    // ((LinearLayout) view.findViewById(R.id.blogHeader)).setVisibility(View.GONE);
-
-                }
                 break;
-
         }
     }
 
@@ -1050,29 +808,11 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                 fragment.setArguments(bundle);
                 ((DashboardActivity) getActivity()).replaceFragment(fragment, bundle, true);
                 break;
-            case R.id.go_to_blog:
-            case R.id.img_go_to_blogs:
-            case R.id.txtBlogs:
-                Intent intent3 = new Intent(getActivity(), ArticleListingActivity.class);
-                intent3.putExtra(Constants.SORT_TYPE, Constants.KEY_TRENDING);
-                startActivity(intent3);
-                break;
-            case R.id.blogHeader1:
-                Intent intent1 = new Intent(getActivity(), CityBestArticleListingActivity.class);
-                startActivity(intent1);
-                break;
             case R.id.momspressoHeader:
-//                Intent momspressoIntent = new Intent(getActivity(), FilteredTopicsArticleListingActivity.class);
-//                momspressoIntent.putExtra("selectedTopics", SharedPrefUtils.getMomspressoCategory(getActivity()).getId());
-//                momspressoIntent.putExtra("displayName", SharedPrefUtils.getMomspressoCategory(getActivity()).getDisplay_name());
-//                startActivity(momspressoIntent);
-                Intent intent23 = new Intent(getActivity(), TopicsSplashActivity.class);
-                startActivity(intent23);
-                break;
-            case R.id.forYouHeader:
-                Intent intentForYou = new Intent(getActivity(), ArticleListingActivity.class);
-                intentForYou.putExtra(Constants.SORT_TYPE, Constants.KEY_FOR_YOU);
-                startActivity(intentForYou);
+                Intent momspressoIntent = new Intent(getActivity(), FilteredTopicsArticleListingActivity.class);
+                momspressoIntent.putExtra("selectedTopics", SharedPrefUtils.getMomspressoCategory(getActivity()).getId());
+                momspressoIntent.putExtra("displayName", SharedPrefUtils.getMomspressoCategory(getActivity()).getDisplay_name());
+                startActivity(momspressoIntent);
                 break;
         }
 
@@ -1105,15 +845,12 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
 
 
     public ArrayList<AppointmentMappingModel> getSorted(String date, ArrayList<AppointmentMappingModel> dataList) {
-
-
         for (int i = 0; i < dataList.size(); i++) {
             try {
                 dataList.get(i).setTemptime(convertTimeStamp(date, getTime(dataList.get(i).getStarttime())));
             } catch (Exception e) {
                 e.getMessage();
             }
-
         }
 
         // now sorted by timeastamp
@@ -1125,7 +862,6 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                     dataList.set(i, dataList.get(j));
                     dataList.set(j, swapModel);
                 }
-
             }
         }
 
@@ -1135,8 +871,8 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
 
     public void refreshList() throws ParseException {
         if (SharedPrefUtils.isChangeCity(getActivity())) {
-            hitEditorPicksApi();
-            txtBlogs1.setText("BEST OF " + SharedPrefUtils.getCurrentCityModel(getActivity()).getName().toUpperCase());
+            hitInYourCityListingApi();
+            inYourCitySection.setCityName(SharedPrefUtils.getCurrentCityModel(getActivity()).getName().toUpperCase());
             SharedPrefUtils.setChangeCityFlag(getActivity(), false);
             mBusinessDataListings.clear();
             BaseApplication.setBusinessREsponse(mBusinessDataListings);
@@ -1386,10 +1122,8 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         if (repeat.equalsIgnoreCase("monthly")) {
             while (calendar.getTimeInMillis() <= calendar1.getTimeInMillis()) {
                 if (f1.format(calendar.getTime()).equals(cureentdate)) {
-
                     result = true;
                     break;
-
                 }
                 calendar.add(Calendar.MONTH, 1);
             }
@@ -1397,10 +1131,8 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         } else if (repeat.equalsIgnoreCase("yearly")) {
             while (calendar.getTimeInMillis() <= calendar1.getTimeInMillis()) {
                 if (f1.format(calendar.getTime()).equals(cureentdate)) {
-
                     result = true;
                     break;
-
                 }
                 calendar.add(Calendar.YEAR, 1);
             }
@@ -1408,14 +1140,11 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         } else if (repeat.equalsIgnoreCase("weekly")) {
             while (calendar.getTimeInMillis() <= calendar1.getTimeInMillis()) {
                 if (f1.format(calendar.getTime()).equals(cureentdate)) {
-
                     result = true;
                     break;
-
                 }
                 calendar.add(Calendar.DAY_OF_MONTH, 7);
             }
-
         }
 
         return result;
@@ -1424,9 +1153,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     public boolean getOtherValues(long apointmenttime, String repeat, String cureentdate, int count) throws ParseException {
 
         boolean result = false;
-
         SimpleDateFormat f1 = new SimpleDateFormat("yyyy-MM-dd");
-
         String appointmentDate = f1.format(apointmenttime);
 
         Calendar calendar = Calendar.getInstance();
@@ -1441,15 +1168,11 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         calendar1.set(Calendar.HOUR_OF_DAY, 23);
         calendar1.set(Calendar.MINUTE, 58);
 
-
         if (repeat.equalsIgnoreCase("months")) {
             while (calendar.getTimeInMillis() <= calendar1.getTimeInMillis()) {
                 if (f1.format(calendar.getTime()).equals(cureentdate)) {
-
                     result = true;
                     break;
-
-
                 }
                 calendar.add(Calendar.MONTH, count);
             }
@@ -1457,11 +1180,8 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         } else if (repeat.equalsIgnoreCase("weeks")) {
             while (calendar.getTimeInMillis() <= calendar1.getTimeInMillis()) {
                 if (f1.format(calendar.getTime()).equals(cureentdate)) {
-
                     result = true;
                     break;
-
-
                 }
                 calendar.add(Calendar.WEEK_OF_YEAR, count);
             }
@@ -1469,18 +1189,12 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         } else if (repeat.equalsIgnoreCase("days")) {
             while (calendar.getTimeInMillis() <= calendar1.getTimeInMillis()) {
                 if (f1.format(calendar.getTime()).equals(cureentdate)) {
-
                     result = true;
                     break;
-
-
                 }
                 calendar.add(Calendar.DAY_OF_MONTH, count);
             }
-
         }
-
-
         return result;
     }
 
@@ -1534,9 +1248,6 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         long currentTS = 0, currentTS_end = 0;
         SimpleDateFormat formatter = new SimpleDateFormat("dd MM yyyy hh:mm a");
         try {
-
-//            currentTS = System.currentTimeMillis() - 1000;
-//            currentTS_end = (convertTimeStamp(String.valueOf(baseCalendar.get(Calendar.DAY_OF_MONTH)) + " " + String.valueOf((baseCalendar.get(Calendar.MONTH) + 1)) + " " + String.valueOf(baseCalendar.get(Calendar.YEAR)) + " 11:59 PM"));
 
             currentTS = (convertTimeStamp(String.valueOf(baseCalendar.get(Calendar.DAY_OF_MONTH)) + " " + String.valueOf((baseCalendar.get(Calendar.MONTH) + 1)) + " " + String.valueOf(baseCalendar.get(Calendar.YEAR)) + " 12:01 AM"));
             currentTS_end = (convertTimeStamp(String.valueOf(baseCalendar.get(Calendar.DAY_OF_MONTH)) + " " + String.valueOf((baseCalendar.get(Calendar.MONTH) + 1)) + " " + String.valueOf(baseCalendar.get(Calendar.YEAR)) + " 11:59 PM"));
@@ -2052,10 +1763,6 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
 
         // default calendar
         values.put(CalendarContract.Events.CALENDAR_ID, 3);
-
-//        values.put(CalendarContract.Events.RRULE, "FREQ=DAILY;UNTIL="
-//                + dtUntill);
-
         values.put(CalendarContract.Events.HAS_ALARM, 1);
 
         // insert event to calendar

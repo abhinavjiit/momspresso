@@ -2,7 +2,10 @@ package com.mycity4kids.application;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
@@ -14,10 +17,8 @@ import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.kelltontech.utils.ConnectivityUtils;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
@@ -35,17 +36,11 @@ import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 import io.fabric.sdk.android.Fabric;
-import okhttp3.Cache;
-import okhttp3.FormBody;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
-import okio.Buffer;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -61,15 +56,15 @@ public class BaseApplication extends Application {
     private SQLiteDatabase mWritableDatabase;
     private RequestQueue mRequestQueue;
     private static BaseApplication mInstance;
-    private static Retrofit retrofit;
-    private static OkHttpClient client;
+    private static Retrofit retrofit, customTimeoutRetrofit;
+    private static OkHttpClient client, customTimeoutOkHttpClient;
     /*
      * Google Analytics configuration values.
      */
     private static GoogleAnalytics mGa;
     private static Tracker mTracker;
     public static String base_url;
-
+    public String appVersion;
     // Placeholder property ID.this was old which create by own account.
     //private static final String GA_PROPERTY_ID = "UA-50870780-1";
 
@@ -201,6 +196,13 @@ public class BaseApplication extends Application {
         // startService(new Intent(this,ReplicationService.class))
         // For Google Analytics initialization.
 
+        PackageInfo pInfo = null;
+        try {
+            pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        appVersion = pInfo.versionName;
         Log.i(LOG_TAG, "onCreate()");
     }
 
@@ -259,6 +261,11 @@ public class BaseApplication extends Application {
                 requestBuilder.addHeader("id", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
                 requestBuilder.addHeader("mc4kToken", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
                 requestBuilder.addHeader("agent", "android");
+                requestBuilder.addHeader("manufacturer", Build.MANUFACTURER);
+                requestBuilder.addHeader("model", Build.MODEL);
+                requestBuilder.addHeader("appVersion", appVersion);
+                requestBuilder.addHeader("latitude", SharedPrefUtils.getUserLocationLatitude(getApplicationContext()));
+                requestBuilder.addHeader("longitude", SharedPrefUtils.getUserLocationLongitude(getApplicationContext()));
                 Request request = requestBuilder.build();
 
 //                Response response = chain.proceed(request);
@@ -277,17 +284,17 @@ public class BaseApplication extends Application {
                     .Builder()
                     .addInterceptor(mainInterceptor)
                     .addInterceptor(logging)
-                    .connectTimeout(20, TimeUnit.SECONDS)
-                    .readTimeout(20, TimeUnit.SECONDS)
-                    .writeTimeout(20, TimeUnit.SECONDS)
+                    .connectTimeout(30, TimeUnit.SECONDS)
+                    .readTimeout(30, TimeUnit.SECONDS)
+                    .writeTimeout(30, TimeUnit.SECONDS)
                     .build();
         } else {
             client = new OkHttpClient
                     .Builder()
                     .addInterceptor(mainInterceptor)
-                    .connectTimeout(20, TimeUnit.SECONDS)
-                    .readTimeout(20, TimeUnit.SECONDS)
-                    .writeTimeout(20, TimeUnit.SECONDS)
+                    .connectTimeout(30, TimeUnit.SECONDS)
+                    .readTimeout(30, TimeUnit.SECONDS)
+                    .writeTimeout(30, TimeUnit.SECONDS)
                     .build();
         }
 
@@ -333,5 +340,69 @@ public class BaseApplication extends Application {
                     .client(client)
                     .build();
         }
+    }
+
+    public Retrofit getConfigurableTimeoutRetrofit(int timeout) {
+        if (null == customTimeoutRetrofit) {
+            createCustomTimeoutRetrofitInstance(SharedPrefUtils.getBaseURL(this), timeout);
+        }
+        return customTimeoutRetrofit;
+    }
+
+    public Retrofit createCustomTimeoutRetrofitInstance(String base_url, int timeout) {
+
+        Interceptor mainInterceptor = new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                Request original = chain.request();
+                HttpUrl originalHttpUrl = original.url();
+                Request.Builder requestBuilder = original.newBuilder();
+
+                requestBuilder.addHeader("id", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
+                requestBuilder.addHeader("mc4kToken", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
+                requestBuilder.addHeader("agent", "android");
+                requestBuilder.addHeader("manufacturer", Build.MANUFACTURER);
+                requestBuilder.addHeader("model", Build.MODEL);
+                requestBuilder.addHeader("appVersion", appVersion);
+                requestBuilder.addHeader("latitude", SharedPrefUtils.getUserLocationLatitude(getApplicationContext()));
+                requestBuilder.addHeader("longitude", SharedPrefUtils.getUserLocationLongitude(getApplicationContext()));
+                Request request = requestBuilder.build();
+
+//                Response response = chain.proceed(request);
+//                Log.w("Retrofit@Response", response.body().string());
+                return chain.proceed(request);
+            }
+
+        };
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+// set your desired log level
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        if (BuildConfig.DEBUG) {
+            customTimeoutOkHttpClient = new OkHttpClient
+                    .Builder()
+                    .addInterceptor(mainInterceptor)
+                    .addInterceptor(logging)
+                    .connectTimeout(timeout, TimeUnit.SECONDS)
+                    .readTimeout(timeout, TimeUnit.SECONDS)
+                    .writeTimeout(timeout, TimeUnit.SECONDS)
+                    .build();
+        } else {
+            customTimeoutOkHttpClient = new OkHttpClient
+                    .Builder()
+                    .addInterceptor(mainInterceptor)
+                    .connectTimeout(timeout, TimeUnit.SECONDS)
+                    .readTimeout(timeout, TimeUnit.SECONDS)
+                    .writeTimeout(timeout, TimeUnit.SECONDS)
+                    .build();
+        }
+
+        customTimeoutRetrofit = new Retrofit.Builder()
+                .baseUrl(base_url)
+                .addConverterFactory(buildGsonConverter())
+                .client(customTimeoutOkHttpClient)
+                .build();
+        return customTimeoutRetrofit;
     }
 }

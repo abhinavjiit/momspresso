@@ -144,6 +144,9 @@ public class SplashActivity extends BaseActivity {
             double _latitude = getCurrentLocation.getLatitude();
             double _longitude = getCurrentLocation.getLongitude();
 
+            SharedPrefUtils.setUserLocationLatitude(this, _latitude);
+            SharedPrefUtils.setUserLocationLongitude(this, _longitude);
+
             /**
              * configuration Controller for fetching category,locality,city
              * according to api versions:

@@ -15,9 +15,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mycity4kids.R;
+import com.mycity4kids.gtmutils.GTMEventType;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.ITopicSelectionEvent;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.newmodels.SelectTopic;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.widget.MyBounceInterpolator;
 
 import org.apmem.tools.layouts.FlowLayout;
@@ -36,6 +39,7 @@ public class SearchTopicsSplashAdapter extends BaseAdapter implements Filterable
     ContactsFilter mContactsFilter;
     private ArrayList<SelectTopic> selectTopicArrayList;
     private ArrayList<SelectTopic> filteredSelectTopicArrayList;
+    String userId;
 
     /*
     * Adapter for Filtering through all items of all Topics(sub-sub-topics/sub-topics)
@@ -49,6 +53,7 @@ public class SearchTopicsSplashAdapter extends BaseAdapter implements Filterable
         iTopicSelectionEvent = (ITopicSelectionEvent) pContext;
         this.selectTopicArrayList = selectTopicArrayList;
         this.filteredSelectTopicArrayList = selectTopicArrayList;
+        userId = SharedPrefUtils.getUserDetailModel(mContext).getDynamoId();
     }
 
     class ViewHolder {
@@ -100,30 +105,32 @@ public class SearchTopicsSplashAdapter extends BaseAdapter implements Filterable
         for (int i = 0; i < top3Cat.size(); i++) {
             LinearLayout ll = (LinearLayout) mInflator.inflate(R.layout.search_topic_item, null);
             final TextView tv = (TextView) ((LinearLayout) ll.getChildAt(0)).getChildAt(0);
-            tv.setText(top3Cat.get(i).getDisplay_name());
+            tv.setText(top3Cat.get(i).getDisplay_name().toUpperCase());
             tv.setTag(top3Cat.get(i));
             final LinearLayout ll_main = (LinearLayout) ll.getChildAt(0);
             if (null == selectedTopicsMap.get(((Topics) tv.getTag()).getId())) {
-                ll_main.setBackgroundResource(R.drawable.topics_transparent_bg);
-                tv.setTextColor(ContextCompat.getColor(mContext, R.color.white_color));
+                ll_main.setBackgroundResource(R.drawable.search_topics_transparent_bg);
+                tv.setTextColor(ContextCompat.getColor(mContext, R.color.splashtopics_search_topic_item_text));
             } else {
-                ll_main.setBackgroundResource(R.drawable.topics_filled_bg);
-                tv.setTextColor(ContextCompat.getColor(mContext, R.color.red_drawer_selected));
+                ll_main.setBackgroundResource(R.drawable.search_topics_filled_bg);
+                tv.setTextColor(ContextCompat.getColor(mContext, R.color.white_color));
             }
 
             tv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (null == selectedTopicsMap.get(((Topics) tv.getTag()).getId())) {
+                        Utils.pushEventFollowUnfollowTopic(mContext, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, userId, "SearchOrDetailsTopicList", "follow", ((Topics) tv.getTag()).getDisplay_name() + ":" + ((Topics) tv.getTag()).getId());
                         selectedTopicsMap.put(((Topics) tv.getTag()).getId(), (Topics) tv.getTag());
                         ((Topics) tv.getTag()).setIsSelected(true);
-                        ll_main.setBackgroundResource(R.drawable.topics_filled_bg);
-                        tv.setTextColor(ContextCompat.getColor(mContext, R.color.red_drawer_selected));
+                        ll_main.setBackgroundResource(R.drawable.search_topics_filled_bg);
+                        tv.setTextColor(ContextCompat.getColor(mContext, R.color.white_color));
                     } else {
+                        Utils.pushEventFollowUnfollowTopic(mContext, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, userId, "SearchOrDetailsTopicList", "unfollow", ((Topics) tv.getTag()).getDisplay_name() + ":" + ((Topics) tv.getTag()).getId());
                         selectedTopicsMap.remove(((Topics) tv.getTag()).getId());
                         ((Topics) tv.getTag()).setIsSelected(false);
-                        ll_main.setBackgroundResource(R.drawable.topics_transparent_bg);
-                        tv.setTextColor(ContextCompat.getColor(mContext, R.color.white_color));
+                        ll_main.setBackgroundResource(R.drawable.search_topics_transparent_bg);
+                        tv.setTextColor(ContextCompat.getColor(mContext, R.color.splashtopics_search_topic_item_text));
                     }
                     iTopicSelectionEvent.onTopicSelectionChanged(selectedTopicsMap.size());
                     ll_main.startAnimation(holder.anim);

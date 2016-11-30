@@ -512,12 +512,8 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         draftListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-
                 if (position == 0) {
                     // Header Item
-
-
                 } else {
                     // List view items
                     if (Build.VERSION.SDK_INT > 15) {
@@ -556,7 +552,6 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
             }
         });
 
-
         publishedArticleListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -575,6 +570,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
 
             }
         });
+
         commentsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -591,6 +587,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                 }
             }
         });
+
         commentsListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView absListView, int i) {
@@ -613,6 +610,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                 }
             }
         });
+
         reviewsListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView absListView, int i) {
@@ -636,6 +634,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                 }
             }
         });
+
         reviewsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -836,7 +835,6 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         }
 
         Call<ResponseBody> call = getDraftListAPI.getDraftsList("0,1,2,4");
-
         //asynchronous call
         call.enqueue(new Callback<ResponseBody>() {
                          @Override
@@ -944,21 +942,17 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         call.enqueue(new Callback<ArticleDraftResponse>() {
                          @Override
                          public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
-                             int statusCode = response.code();
+                             removeProgressDialog();
                              if (response == null || response.body() == null) {
                                  showToast(getString(R.string.went_wrong));
                                  return;
                              }
                              ArticleDraftResponse responseModel = (ArticleDraftResponse) response.body();
-
-                             removeProgressDialog();
-
                              if (responseModel.getCode() != 200) {
                                  showToast(getString(R.string.toast_response_error));
                                  return;
                              } else {
                                  if (!StringUtils.isNullOrEmpty(responseModel.getData().get(0).getMsg())) {
-                                     //  SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
                                      Log.i("Draft message", responseModel.getData().get(0).getMsg());
                                  }
                                  draftList.remove(position);
@@ -1029,12 +1023,8 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit:
-                Log.e("huhuhu", "bhbhbhbhb");
-                //    archive(item);
                 return true;
             case R.id.delete:
-                Log.e("huhuhu", "nnnnnnn");
-                //   delete(item);
                 return true;
             default:
                 return false;
@@ -1159,11 +1149,8 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         call.enqueue(new Callback<UserDetailResponse>() {
                          @Override
                          public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
-                             int statusCode = response.code();
-
-                             UserDetailResponse responseData = (UserDetailResponse) response.body();
-
                              removeProgressDialog();
+                             UserDetailResponse responseData = (UserDetailResponse) response.body();
                              if (response == null || null == response.body()) {
                                  showToast("Something went wrong from server");
 //                                 Crashlytics.log(Log.ERROR, "NULL", "blogger dashboard");
@@ -1262,15 +1249,13 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                 }
                 break;
             case UCrop.REQUEST_CROP: {
-                {
-                    if (resultCode == RESULT_OK) {
-                        final Uri resultUri = UCrop.getOutput(data);
-                        Log.e("resultUri", resultUri.toString());
-                        File file2 = FileUtils.getFile(this, resultUri);
-                        sendUploadProfileImageRequest(file2);
-                    } else if (resultCode == UCrop.RESULT_ERROR) {
-                        final Throwable cropError = UCrop.getError(data);
-                    }
+                if (resultCode == RESULT_OK) {
+                    final Uri resultUri = UCrop.getOutput(data);
+                    Log.e("resultUri", resultUri.toString());
+                    File file2 = FileUtils.getFile(this, resultUri);
+                    sendUploadProfileImageRequest(file2);
+                } else if (resultCode == UCrop.RESULT_ERROR) {
+                    final Throwable cropError = UCrop.getError(data);
                 }
             }
         }
@@ -1409,8 +1394,6 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         uCrop.withAspectRatio(1, 1);
         uCrop.withMaxResultSize(300, 300);
         uCrop.start(BloggerDashboardActivity.this);
-
-
     }
 
     private Callback<ArticleDetailResponse> isFollowedResponseCallback = new Callback<ArticleDetailResponse>() {
@@ -1525,7 +1508,6 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         }
     };
 
-
     Callback<ArticleDetailResult> articleDetailResponseCallback = new Callback<ArticleDetailResult>() {
         @Override
         public void onResponse(Call<ArticleDetailResult> call, retrofit2.Response<ArticleDetailResult> response) {
@@ -1534,7 +1516,6 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                 showToast("Something went wrong from server");
                 return;
             }
-            String commentMessage = "";
             try {
                 ArticleDetailResult responseData = (ArticleDetailResult) response.body();
                 getResponseUpdateUi(responseData);

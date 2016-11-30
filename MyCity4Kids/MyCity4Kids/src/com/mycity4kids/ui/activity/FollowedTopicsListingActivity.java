@@ -2,6 +2,7 @@ package com.mycity4kids.ui.activity;
 
 import android.accounts.NetworkErrorException;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -50,9 +51,7 @@ public class FollowedTopicsListingActivity extends BaseActivity {
     private ListView followedTopicsListView;
     private Toolbar mToolbar;
     ProgressBar progressBar;
-    FollowedTopicsListAdapter followedTopicsListAdapter;
     ArrayList<String> mDatalist;
-    ArrayList<Topics> allSubSubTopicList = new ArrayList<>();
     ArrayList<Topics> followedSubSubTopicList = new ArrayList<>();
 
     @Override
@@ -258,7 +257,8 @@ public class FollowedTopicsListingActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        return super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_followed_topics, menu);
+        return true;
     }
 
     @Override
@@ -266,10 +266,16 @@ public class FollowedTopicsListingActivity extends BaseActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
+                break;
+            case R.id.addTopics:
+                Intent intent = new Intent(this, TopicsSplashActivity.class);
+                intent.putExtra(AppConstants.IS_ADD_MORE_TOPIC, true);
+                startActivity(intent);
+                break;
             default:
                 return super.onOptionsItemSelected(item);
         }
-
+        return true;
     }
 
 }

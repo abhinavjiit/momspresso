@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -25,7 +24,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.HitBuilders;
@@ -37,15 +35,11 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
-import com.kelltontech.utils.ToastUtils;
-import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
-import com.mycity4kids.asynctask.HeavyDbTask;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.ColorCode;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.controller.ArticleBlogFollowController;
 import com.mycity4kids.controller.CompleteTaskController;
 import com.mycity4kids.controller.DeleteTaskController;
 import com.mycity4kids.controller.TaskListController;
@@ -61,11 +55,8 @@ import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.facebook.FacebookUtils;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
-import com.mycity4kids.interfaces.OnUIView;
 import com.mycity4kids.listener.OnButtonClicked;
-import com.mycity4kids.models.configuration.ConfigurationApiModel;
 import com.mycity4kids.models.forgot.CommonResponse;
-import com.mycity4kids.models.parentingstop.ArticleBlogFollowRequest;
 import com.mycity4kids.models.response.DeepLinkingResposnse;
 import com.mycity4kids.models.response.DeepLinkingResult;
 import com.mycity4kids.models.version.RateVersion;
@@ -201,18 +192,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 if (Build.VERSION.SDK_INT > 15) {
                                     Utils.pushEvent(DashboardActivity.this, GTMEventType.ADD_BLOG_CLICKED_EVENT,
                                             SharedPrefUtils.getUserDetailModel(DashboardActivity.this).getDynamoId() + "", "Mobile Deep Link");
-                                    Intent intent1 = new Intent(DashboardActivity.this, EditorPostActivity.class);
-                                    Bundle bundle5 = new Bundle();
-                                    bundle5.putString(EditorPostActivity.TITLE_PARAM, "");
-                                    bundle5.putString(EditorPostActivity.CONTENT_PARAM, "");
-                                    bundle5.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
-                                            getString(R.string.example_post_title_placeholder));
-                                    bundle5.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
-                                            getString(R.string.example_post_content_placeholder));
-                                    bundle5.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
-                                    bundle5.putString("from", "dashboard");
-                                    intent1.putExtras(bundle5);
-                                    startActivity(intent1);
+                                    launchEditor();
                                 } else {
                                     showToast("This version of android is no more supported.");
                                 }
@@ -222,18 +202,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         if (Build.VERSION.SDK_INT > 15) {
                             Utils.pushEvent(DashboardActivity.this, GTMEventType.ADD_BLOG_CLICKED_EVENT,
                                     SharedPrefUtils.getUserDetailModel(DashboardActivity.this).getDynamoId() + "", "Mobile Deep Link");
-                            Intent intent1 = new Intent(DashboardActivity.this, EditorPostActivity.class);
-                            Bundle bundle5 = new Bundle();
-                            bundle5.putString(EditorPostActivity.TITLE_PARAM, "");
-                            bundle5.putString(EditorPostActivity.CONTENT_PARAM, "");
-                            bundle5.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
-                                    getString(R.string.example_post_title_placeholder));
-                            bundle5.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
-                                    getString(R.string.example_post_content_placeholder));
-                            bundle5.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
-                            bundle5.putString("from", "dashboard");
-                            intent1.putExtras(bundle5);
-                            startActivity(intent1);
+                            launchEditor();
                         } else {
                             showToast("This version of android is no more supported.");
                         }
@@ -1007,7 +976,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         // according to fragment change it
         final Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
         if (topFragment instanceof FragmentMC4KHome) {
-            getMenuInflater().inflate(R.menu.menu_search, menu);
+            getMenuInflater().inflate(R.menu.menu_home, menu);
         } else if (topFragment instanceof FragmentCityForKids) {
 
         } else if (topFragment instanceof FragmentCalender) {
@@ -1138,6 +1107,15 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 //                    startActivityForResult(intent, Constants.FILTER_ARTICLE);
                 }
                 break;
+            case R.id.write:
+                Log.d("dwad", "dwa");
+                if (Build.VERSION.SDK_INT > 15) {
+                    Utils.pushEvent(DashboardActivity.this, GTMEventType.ADD_BLOG_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Left Menu Screen");
+                    launchEditor();
+                } else {
+                    showToast("This version of android is no more supported.");
+                }
+                break;
             case R.id.search:
                 if (topFragment instanceof ArticlesFragment || topFragment instanceof FragmentMC4KHome) {
                     Intent intent = new Intent(getApplicationContext(), SearchArticlesAndAuthorsActivity.class);
@@ -1222,6 +1200,21 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 return super.onOptionsItemSelected(item);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void launchEditor() {
+        Intent intent1 = new Intent(DashboardActivity.this, EditorPostActivity.class);
+        Bundle bundle5 = new Bundle();
+        bundle5.putString(EditorPostActivity.TITLE_PARAM, "");
+        bundle5.putString(EditorPostActivity.CONTENT_PARAM, "");
+        bundle5.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
+                getString(R.string.example_post_title_placeholder));
+        bundle5.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
+                getString(R.string.example_post_content_placeholder));
+        bundle5.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
+        bundle5.putString("from", "dashboard");
+        intent1.putExtras(bundle5);
+        startActivity(intent1);
     }
 
     protected void updateUi(Response response) {
@@ -1468,18 +1461,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             case R.id.editor:
                 if (Build.VERSION.SDK_INT > 15) {
                     Utils.pushEvent(DashboardActivity.this, GTMEventType.ADD_BLOG_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Left Menu Screen");
-                    Intent intent1 = new Intent(DashboardActivity.this, EditorPostActivity.class);
-                    Bundle bundle5 = new Bundle();
-                    bundle5.putString(EditorPostActivity.TITLE_PARAM, "");
-                    bundle5.putString(EditorPostActivity.CONTENT_PARAM, "");
-                    bundle5.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
-                            getString(R.string.example_post_title_placeholder));
-                    bundle5.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
-                            getString(R.string.example_post_content_placeholder));
-                    bundle5.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
-                    bundle5.putString("from", "dashboard");
-                    intent1.putExtras(bundle5);
-                    startActivity(intent1);
+                    launchEditor();
                 } else {
                     showToast("This version of android is no more supported.");
                 }

@@ -34,6 +34,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.FollowTopics;
 import com.mycity4kids.models.response.ArticleListingResponse;
@@ -508,9 +509,13 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         topicIdLList.add(selectedTopics);
         followUnfollowCategoriesRequest.setCategories(topicIdLList);
         if (isTopicFollowed == 0) {
+            Log.d("GTM FOLLOW", displayName + ":" + selectedTopics);
+            Utils.pushEventFollowUnfollowTopic(this, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "CategoriesArticleList", "follow", displayName + ":" + selectedTopics);
             menu.getItem(0).setTitle("FOLLOWING");
             isTopicFollowed = 1;
         } else {
+            Log.d("GTM UNFOLLOW", displayName + ":" + selectedTopics);
+            Utils.pushEventFollowUnfollowTopic(this, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "CategoriesArticleList", "follow", displayName + ":" + selectedTopics);
             menu.getItem(0).setTitle("FOLLOW");
             isTopicFollowed = 0;
         }
@@ -532,12 +537,6 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                 FollowUnfollowCategoriesResponse responseData = (FollowUnfollowCategoriesResponse) response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
-//                    ArrayList<String> newTopicList = (ArrayList<String>) responseData.getData();
-//                    if(newTopicList.contains(selectedTopics)){
-//
-//                    }else{
-//
-//                    }
                 } else {
                     showToast(responseData.getReason());
                 }

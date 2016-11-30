@@ -88,8 +88,10 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
             getSupportActionBar().setTitle("Popular");
         } else if (sortType.equals(Constants.KEY_TRENDING)) {
             getSupportActionBar().setTitle("Trending");
-        } else {
+        } else if (sortType.equals(Constants.KEY_FOR_YOU)) {
             getSupportActionBar().setTitle("For You");
+        } else {
+            getSupportActionBar().setTitle("Top Picks");
         }
 
 
@@ -157,6 +159,9 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
         if (Constants.KEY_FOR_YOU.equals(sortKey)) {
             url = AppConstants.LIVE_URL + AppConstants.SERVICE_TYPE_FOR_YOU + SharedPrefUtils.getUserDetailModel(this).getDynamoId() +
                     AppConstants.SEPARATOR_BACKSLASH + from + AppConstants.SEPARATOR_BACKSLASH + to;
+        } else if (Constants.KEY_EDITOR_PICKS.equals(sortKey)) {
+            url = AppConstants.LIVE_URL + AppConstants.SERVICE_TYPE__EDITORS_PICKS + AppConstants.EDITOR_PICKS_CATEGORY_ID + "?sort=0&sponsored=0&start=" + from +
+                    "&end=" + to;
         } else {
             url = AppConstants.LIVE_URL + AppConstants.SERVICE_TYPE_ARTICLE + sortKey +
                     AppConstants.SEPARATOR_BACKSLASH + from + AppConstants.SEPARATOR_BACKSLASH + to;

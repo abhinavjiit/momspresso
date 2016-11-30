@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/homeItemRootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/headerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <TextView
+            android:id="@+id/labelTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_toLeftOf="@+id/addTopicsTextView"
+            android:paddingBottom="3dp"
+            android:paddingLeft="8dp"
+            android:paddingTop="10dp"
+            android:text="TRENDING BLOGS"
+            android:textColor="@color/primary_blue"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/addTopicsTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:paddingBottom="3dp"
+            android:paddingRight="8dp"
+            android:paddingTop="10dp"
+            android:text="ADD TOPICS"
+            android:textColor="@color/home.foryou.addTopics"
+            android:textSize="12sp"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/emptyListTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:padding="2dp"
+        android:text="No Blogs Listed"
+        android:textColor="@color/grey"
+        android:textSize="12dp"
+        android:visibility="gone" />
+
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="230dp"
+        android:layout_marginTop="1dp"
+        android:divider="@color/dividercolor"
+        android:dividerHeight="0.3dp"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/hsvLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal" />
+    </HorizontalScrollView>
+
+</LinearLayout>

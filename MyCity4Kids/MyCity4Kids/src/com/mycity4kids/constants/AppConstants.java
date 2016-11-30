@@ -402,6 +402,7 @@ public class AppConstants {
 
     public static final String SORT_TYPE_BOOKMARK = "bookmark";
     public static final String SERVICE_TYPE_ARTICLE = "v1/articles/";
+    public static final String SERVICE_TYPE__EDITORS_PICKS = "v1/articles/topics/";
     public static final String SERVICE_TYPE_FOR_YOU = "v1/recommend/";
     public static final String SERVICE_TYPE_USER = "v1/users/";
     public static final String SEPARATOR_BACKSLASH = "/";
@@ -440,5 +441,13 @@ public class AppConstants {
     public static final String DEEPLINK_PROFILE_URL = "mc4k://www.mycity4kids.com/profile";
 
     public static final String IGNORE_TAG = "ignore";
+    public static final String EDITOR_PICKS_CATEGORY_ID = "category-66b6883fd0434683b053f18aa4d52b59";
     public static final int MINIMUM_TOPICS_FOLLOW_REQUIREMENT = 5;
+
+    public static final int EDITOR_PICKS_MIN_ARTICLES = 10;
+    public static final int EDITOR_PICKS_ARTICLE_COUNT = 200;
+    public static final String IS_ADD_MORE_TOPIC = "isAddMoreTopic";
+    public static final int WORDS_PER_MINUTE = 240;
+    public static final int MAX_ARTICLE_BODY_IMAGE_READ_TIME = 12;
+    public static final int MIN_ARTICLE_BODY_IMAGE_READ_TIME = 3;
 }

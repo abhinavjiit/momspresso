@@ -2,6 +2,7 @@ package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +15,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mycity4kids.R;
+import com.mycity4kids.gtmutils.GTMEventType;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.ITopicSelectionEvent;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.newmodels.SelectTopic;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.widget.MyBounceInterpolator;
 import com.squareup.picasso.Picasso;
 
@@ -32,6 +36,7 @@ public class TopicsSplashAdapter extends BaseAdapter {
     private HashMap<String, Topics> selectedTopicsMap;
     private ITopicSelectionEvent iTopicSelectionEvent;
     private ArrayList<SelectTopic> filteredSelectTopicArrayList;
+    String userId;
 
     public TopicsSplashAdapter(Context pContext, HashMap<String, Topics> selectedTopicsMap, ArrayList<SelectTopic> selectTopicArrayList) {
 
@@ -40,7 +45,7 @@ public class TopicsSplashAdapter extends BaseAdapter {
         this.selectedTopicsMap = selectedTopicsMap;
         iTopicSelectionEvent = (ITopicSelectionEvent) pContext;
         this.filteredSelectTopicArrayList = selectTopicArrayList;
-
+        userId = SharedPrefUtils.getUserDetailModel(mContext).getDynamoId();
     }
 
     class ViewHolder {
@@ -253,11 +258,15 @@ public class TopicsSplashAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 if (null == selectedTopicsMap.get(top3Cat.get(0).getId())) {
+                    Log.d("FOLLOW 1", top3Cat.get(0).getDisplay_name() + ":" + top3Cat.get(0).getId());
+                    Utils.pushEventFollowUnfollowTopic(mContext, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, userId, "SearchOrDetailsTopicList", "follow", top3Cat.get(0).getDisplay_name() + ":" + top3Cat.get(0).getId());
                     selectedTopicsMap.put(top3Cat.get(0).getId(), top3Cat.get(0));
                     top3Cat.get(0).setIsSelected(true);
                     holder.popularSubcatLL_1.setBackgroundResource(R.drawable.topics_filled_bg);
                     holder.popularSubCatTextView1.setTextColor(ContextCompat.getColor(mContext, R.color.red_drawer_selected));
                 } else {
+                    Log.d("UNFOLLOW 1", top3Cat.get(0).getDisplay_name() + ":" + top3Cat.get(0).getId());
+                    Utils.pushEventFollowUnfollowTopic(mContext, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, userId, "SearchOrDetailsTopicList", "unfollow", top3Cat.get(0).getDisplay_name() + ":" + top3Cat.get(0).getId());
                     selectedTopicsMap.remove(top3Cat.get(0).getId());
                     top3Cat.get(0).setIsSelected(false);
                     holder.popularSubcatLL_1.setBackgroundResource(R.drawable.topics_transparent_bg);
@@ -295,11 +304,15 @@ public class TopicsSplashAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 if (null == selectedTopicsMap.get(top3Cat.get(1).getId())) {
+                    Log.d("FOLLOW 2", top3Cat.get(1).getDisplay_name() + ":" + top3Cat.get(1).getId());
+                    Utils.pushEventFollowUnfollowTopic(mContext, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, userId, "SearchOrDetailsTopicList", "follow", top3Cat.get(1).getDisplay_name() + ":" + top3Cat.get(1).getId());
                     selectedTopicsMap.put(top3Cat.get(1).getId(), top3Cat.get(1));
                     top3Cat.get(1).setIsSelected(true);
                     holder.popularSubcatLL_2.setBackgroundResource(R.drawable.topics_filled_bg);
                     holder.popularSubCatTextView2.setTextColor(ContextCompat.getColor(mContext, R.color.red_drawer_selected));
                 } else {
+                    Log.d("UNFOLLOW 2", top3Cat.get(1).getDisplay_name() + ":" + top3Cat.get(1).getId());
+                    Utils.pushEventFollowUnfollowTopic(mContext, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, userId, "SearchOrDetailsTopicList", "unfollow", top3Cat.get(1).getDisplay_name() + ":" + top3Cat.get(1).getId());
                     selectedTopicsMap.remove(top3Cat.get(1).getId());
                     top3Cat.get(1).setIsSelected(false);
                     holder.popularSubcatLL_2.setBackgroundResource(R.drawable.topics_transparent_bg);
@@ -337,11 +350,15 @@ public class TopicsSplashAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 if (null == selectedTopicsMap.get(top3Cat.get(2).getId())) {
+                    Log.d("FOLLOW 3", top3Cat.get(2).getDisplay_name() + ":" + top3Cat.get(2).getId());
+                    Utils.pushEventFollowUnfollowTopic(mContext, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, userId, "SearchOrDetailsTopicList", "follow", top3Cat.get(2).getDisplay_name() + ":" + top3Cat.get(2).getId());
                     top3Cat.get(2).setIsSelected(true);
                     selectedTopicsMap.put(top3Cat.get(2).getId(), top3Cat.get(2));
                     holder.popularSubcatLL_3.setBackgroundResource(R.drawable.topics_filled_bg);
                     holder.popularSubCatTextView3.setTextColor(ContextCompat.getColor(mContext, R.color.red_drawer_selected));
                 } else {
+                    Log.d("UNFOLLOW 3", top3Cat.get(2).getDisplay_name() + ":" + top3Cat.get(2).getId());
+                    Utils.pushEventFollowUnfollowTopic(mContext, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, userId, "SearchOrDetailsTopicList", "unfollow", top3Cat.get(2).getDisplay_name() + ":" + top3Cat.get(2).getId());
                     selectedTopicsMap.remove(top3Cat.get(2).getId());
                     top3Cat.get(2).setIsSelected(false);
                     holder.popularSubcatLL_3.setBackgroundResource(R.drawable.topics_transparent_bg);
@@ -379,11 +396,15 @@ public class TopicsSplashAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 if (null == selectedTopicsMap.get(top3Cat.get(3).getId())) {
+                    Log.d("FOLLOW 4", top3Cat.get(3).getDisplay_name() + ":" + top3Cat.get(3).getId());
+                    Utils.pushEventFollowUnfollowTopic(mContext, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, userId, "TopicsSplashList", "follow", top3Cat.get(3).getDisplay_name() + ":" + top3Cat.get(3).getId());
                     top3Cat.get(3).setIsSelected(true);
                     selectedTopicsMap.put(top3Cat.get(3).getId(), top3Cat.get(3));
                     holder.popularSubcatLL_4.setBackgroundResource(R.drawable.topics_filled_bg);
                     holder.popularSubCatTextView4.setTextColor(ContextCompat.getColor(mContext, R.color.red_drawer_selected));
                 } else {
+                    Log.d("UNFOLLOW 4", top3Cat.get(3).getDisplay_name() + ":" + top3Cat.get(3).getId());
+                    Utils.pushEventFollowUnfollowTopic(mContext, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, userId, "TopicsSplashList", "unfollow", top3Cat.get(3).getDisplay_name() + ":" + top3Cat.get(3).getId());
                     selectedTopicsMap.remove(top3Cat.get(3).getId());
                     top3Cat.get(3).setIsSelected(false);
                     holder.popularSubcatLL_4.setBackgroundResource(R.drawable.topics_transparent_bg);

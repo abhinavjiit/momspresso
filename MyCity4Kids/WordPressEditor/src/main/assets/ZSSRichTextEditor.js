@@ -104,7 +104,6 @@ ZSSEditor.init = function() {
         // sent if we try to load a callback here.
         //
 
-
         if (editor.is(":focus")) {
             ZSSEditor.selectionChangedCallback();
             ZSSEditor.sendEnabledStyles(e);
@@ -114,13 +113,15 @@ ZSSEditor.init = function() {
             }
         }
     }, false);
-    $('#zss_field_content').bind('paste', function(event) {
-        event.preventDefault();
-        var clipboardData = event.originalEvent.clipboardData.getData('text/plain');
-        document.execCommand('insertText', false, clipboardData);
-        //ZSSEditor.selectionChangedCallback();
 
-    });
+    // Remove styling while pasting
+    if (nativeState.androidApiLevel > 19) {
+        $('#zss_field_content').bind('paste', function(event) {
+            event.preventDefault();
+            var clipboardData = event.originalEvent.clipboardData.getData('text/plain');
+            document.execCommand('insertText', false, clipboardData);
+        });
+    }
 }; //end
 
 // MARK: - Debugging logs

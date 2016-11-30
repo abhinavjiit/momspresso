@@ -57,22 +57,24 @@ import retrofit2.Retrofit;
  */
 public class TopicsSplashActivity extends BaseActivity implements ITopicSelectionEvent {
 
-    ListView popularTopicsListView;
-    TopicsSplashAdapter topicsSplashAdapter;
-
+    private Toolbar mToolbar, searchToolbar, categoryToolbar;
+    private ListView popularTopicsListView;
+    private TextView selectLabelTextView, categoryNameTextView;
+    private EditText searchEditText;
+    private ImageView categoryBackButton;
     private TextView doneTextView, countTextView;
     private RelativeLayout selectedCategoriesView;
 
     private ArrayList<SelectTopic> selectTopic;
     private ArrayList<String> previouslyFollowedTopics;
-
     private HashMap<String, Topics> selectedTopicsMap;
-    private Toolbar mToolbar, searchToolbar, categoryToolbar;
-    private TextView selectLabelTextView, categoryNameTextView;
+
+    private TopicsSplashAdapter topicsSplashAdapter;
     private SearchTopicsSplashAdapter searchTopicsSplashAdapter;
-    private EditText searchEditText;
-    private ImageView categoryBackButton;
+
+
     private boolean isCategoryMainPage = true;
+    private boolean isAddMoreTopic = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +82,7 @@ public class TopicsSplashActivity extends BaseActivity implements ITopicSelectio
         setContentView(R.layout.topics_splash_activity);
 
         previouslyFollowedTopics = getIntent().getStringArrayListExtra("followedTopics");
+        isAddMoreTopic = getIntent().getBooleanExtra(AppConstants.IS_ADD_MORE_TOPIC, false);
 
         popularTopicsListView = (ListView) findViewById(R.id.popularTopicsListView);
         countTextView = (TextView) findViewById(R.id.countTextView);
@@ -100,25 +103,22 @@ public class TopicsSplashActivity extends BaseActivity implements ITopicSelectio
         getSupportActionBar().setTitle("");
         selectedTopicsMap = new HashMap<>();
 
-        try {
-            FileInputStream fileInputStream = openFileInput(AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
-            String fileContent = convertStreamToString(fileInputStream);
-            FollowTopics[] res = new Gson().fromJson(fileContent, FollowTopics[].class);
-            createTopicsData(res);
-        } catch (FileNotFoundException e) {
-            Crashlytics.logException(e);
-            Log.d("FileNotFoundException", Log.getStackTraceString(e));
-            Retrofit retro = BaseApplication.getInstance().getRetrofit();
-            final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
-
-            Call<ResponseBody> call = topicsAPI.downloadCategoriesJSON();
-            call.enqueue(downloadCategoriesJSONCallback);
+        if (isAddMoreTopic) {
+            showProgressDialog("Getting selected topics");
+            Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+            TopicsCategoryAPI topicsCategoryAPI = retrofit.create(TopicsCategoryAPI.class);
+            Call<FollowUnfollowCategoriesResponse> call = topicsCategoryAPI.getFollowedCategories(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+            call.enqueue(getFollowedTopicsResponseCallback);
+        } else {
+            populateTopicsList();
         }
-
 
         mToolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (null == selectTopic) {
+                    return;
+                }
                 searchTopicsSplashAdapter = new SearchTopicsSplashAdapter(TopicsSplashActivity.this, selectedTopicsMap, selectTopic);
                 popularTopicsListView.setAdapter(searchTopicsSplashAdapter);
                 searchTopicsSplashAdapter.notifyDataSetChanged();
@@ -202,6 +202,57 @@ public class TopicsSplashActivity extends BaseActivity implements ITopicSelectio
         });
     }
 
+    private void populateTopicsList() {
+        try {
+            FileInputStream fileInputStream = openFileInput(AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
+            String fileContent = convertStreamToString(fileInputStream);
+            FollowTopics[] res = new Gson().fromJson(fileContent, FollowTopics[].class);
+            createTopicsData(res);
+        } catch (FileNotFoundException e) {
+            Crashlytics.logException(e);
+            Log.d("FileNotFoundException", Log.getStackTraceString(e));
+
+            showProgressDialog("Please wait");
+            Retrofit retro = BaseApplication.getInstance().getRetrofit();
+            final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
+
+            Call<ResponseBody> call = topicsAPI.downloadCategoriesJSON();
+            call.enqueue(downloadCategoriesJSONCallback);
+        }
+    }
+
+    private Callback<FollowUnfollowCategoriesResponse> getFollowedTopicsResponseCallback = new Callback<FollowUnfollowCategoriesResponse>() {
+        @Override
+        public void onResponse(Call<FollowUnfollowCategoriesResponse> call, retrofit2.Response<FollowUnfollowCategoriesResponse> response) {
+            removeProgressDialog();
+            if (response == null || null == response.body()) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                Crashlytics.logException(nee);
+                showToast("Something went wrong from server");
+                return;
+            }
+            try {
+                FollowUnfollowCategoriesResponse responseData = (FollowUnfollowCategoriesResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    previouslyFollowedTopics = (ArrayList<String>) responseData.getData();
+                    populateTopicsList();
+                } else {
+                    showToast(responseData.getReason());
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<FollowUnfollowCategoriesResponse> call, Throwable t) {
+            removeProgressDialog();
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
     Callback<ResponseBody> downloadCategoriesJSONCallback = new Callback<ResponseBody>() {
         @Override
         public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
@@ -213,7 +264,7 @@ public class TopicsSplashActivity extends BaseActivity implements ITopicSelectio
                 String resData = new String(response.body().bytes());
                 JSONObject jsonObject = new JSONObject(resData);
 
-                Retrofit retro = BaseApplication.getInstance().getRetrofit();
+                Retrofit retro = BaseApplication.getInstance().getConfigurableTimeoutRetrofit(3);
                 final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
                 String popularURL = jsonObject.getJSONObject("data").getJSONObject("result").getJSONObject("category").getString("popularLocation");
                 Call<ResponseBody> caller = topicsAPI.downloadTopicsListForFollowUnfollow(popularURL);
@@ -221,6 +272,7 @@ public class TopicsSplashActivity extends BaseActivity implements ITopicSelectio
                 caller.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                        removeProgressDialog();
                         boolean writtenToDisk = writeResponseBodyToDisk(response.body());
                         Log.d("TopicsSplashActivity", "file download was a success? " + writtenToDisk);
 
@@ -237,11 +289,19 @@ public class TopicsSplashActivity extends BaseActivity implements ITopicSelectio
 
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        removeProgressDialog();
                         Crashlytics.logException(t);
                         Log.d("MC4KException", Log.getStackTraceString(t));
+                        showToast("Something went wrong while downloading topics");
+
+                        Intent intent = new Intent(TopicsSplashActivity.this, DashboardActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        startActivity(intent);
+                        finish();
                     }
                 });
             } catch (Exception e) {
+                removeProgressDialog();
                 Crashlytics.logException(e);
                 Log.d("MC4KException", Log.getStackTraceString(e));
                 showToast(getString(R.string.went_wrong));
@@ -250,6 +310,7 @@ public class TopicsSplashActivity extends BaseActivity implements ITopicSelectio
 
         @Override
         public void onFailure(Call<ResponseBody> call, Throwable t) {
+            removeProgressDialog();
             showToast(getString(R.string.went_wrong));
             Crashlytics.logException(t);
             Log.d("MC4KException", Log.getStackTraceString(t));
@@ -359,7 +420,7 @@ public class TopicsSplashActivity extends BaseActivity implements ITopicSelectio
     public void onTopicSelectionChanged(int mapSize) {
         if (mapSize >= AppConstants.MINIMUM_TOPICS_FOLLOW_REQUIREMENT) {
             selectedCategoriesView.setVisibility(View.VISIBLE);
-            countTextView.setText(mapSize + " topics " + "chosen");
+            countTextView.setText(mapSize + " topics chosen");
         } else {
             selectedCategoriesView.setVisibility(View.GONE);
         }

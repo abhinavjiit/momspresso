@@ -10,6 +10,7 @@ import com.mycity4kids.models.VersionApiModel;
 import com.mycity4kids.models.city.MetroCity;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.models.version.RateVersion;
+import com.mycity4kids.ui.activity.SplashActivity;
 
 /**
  * To save the Preference for My City App
@@ -93,6 +94,9 @@ public class SharedPrefUtils {
 
     public static final String MOMSPRESSO_CATEGORY_ID = "momspressoCategoryId";
     public static final String MOMSPRESSO_DISPLAY_NAME = "momspressoDisplayName";
+
+    public static final String LOCATION_LATITUDE = "latitude";
+    public static final String LOCATION_LONGITUDE = "longitude";
 
     /**
      * this shared preference save current versions for control city,locality,category APIs .
@@ -584,5 +588,29 @@ public class SharedPrefUtils {
         int id = 0;
         id = (_sharedPref.getInt(POPULAR_CONFIG_CATEGORY_VERSION, 0));
         return id;
+    }
+
+    public static void setUserLocationLatitude(Context pContext, double latitude) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        _editor.putString(LOCATION_LATITUDE, "" + latitude);
+        _editor.commit();
+    }
+
+    public static String getUserLocationLatitude(Context context) {
+        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return _sharedPref.getString(LOCATION_LATITUDE, "");
+    }
+
+    public static void setUserLocationLongitude(Context pContext, double longitude) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        _editor.putString(LOCATION_LONGITUDE, "" + longitude);
+        _editor.commit();
+    }
+
+    public static String getUserLocationLongitude(Context context) {
+        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return _sharedPref.getString(LOCATION_LONGITUDE, "");
     }
 }

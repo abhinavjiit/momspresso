@@ -372,4 +372,11 @@
     <string name="publish_article.dialog.message">Share your latest blog with your family &amp; friends</string>
 
     <string name="topic_splash.select_category.message">Select atleast 5 topics to personalize your experience</string>
+    <string name="home.sections.title.for_you">FOR YOU</string>
+    <string name="home.sections.title.trending">TRENDING BLOGS</string>
+    <string name="home.sections.title.momspresso">MOMSPRESSO VIDEOS</string>
+    <string name="home.sections.title.editors_pick">EDITORS\' PICKS</string>
+    <string name="home.sections.title.in_your_city">BEST OF </string>
+    <string name="home.sections.title.upcoming_events">UPCOMING EVENTS</string>
+
 </resources>

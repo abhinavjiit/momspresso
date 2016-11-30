@@ -220,6 +220,9 @@ public class Constants {
     public static String KEY_POPULAR = "popular";
     public static String KEY_TRENDING = "trending";
     public static String KEY_FOR_YOU = "foryou";
+    public static final String KEY_IN_YOUR_CITY = "inYourCity";
+    public static final String KEY_EDITOR_PICKS = "editorPicks";
+
     public static String SORT_TYPE = "sorttype";
     public static String BLOG_TITLE = "blog_title";
     public static String IS_SEARCH_ACTIVE = "is_Search_Active";

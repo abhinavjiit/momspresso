@@ -17,6 +17,8 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.GTMEventType;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse;
 import com.mycity4kids.newmodels.FollowUnfollowCategoriesRequest;
@@ -133,12 +135,16 @@ public class FollowedTopicsListAdapter extends BaseAdapter {
         topicIdLList.add(mDataList.get(position).getId());
         followUnfollowCategoriesRequest.setCategories(topicIdLList);
         if (mDataList.get(position).isSelected()) {
+            Log.d("GTM FOLLOW", mDataList.get(position).getDisplay_name() + ":" + mDataList.get(position).getId());
+            Utils.pushEventFollowUnfollowTopic(mContext, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, currentUserId, "FollowedTopicList", "follow", mDataList.get(position).getDisplay_name() + ":" + mDataList.get(position).getId());
             holder.relativeLoadingView.setVisibility(View.VISIBLE);
             holder.followingTextView.setVisibility(View.INVISIBLE);
             holder.followTextView.setVisibility(View.INVISIBLE);
             String jsonString = new Gson().toJson(followUnfollowCategoriesRequest);
             new FollowUnfollowAsyncTask(holder, "follow", position).execute(jsonString, "follow");
         } else {
+            Log.d("GTM UNFOLLOW", mDataList.get(position).getDisplay_name() + ":" + mDataList.get(position).getId());
+            Utils.pushEventFollowUnfollowTopic(mContext, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, currentUserId, "FollowedTopicList", "unfollow", mDataList.get(position).getDisplay_name() + ":" + mDataList.get(position).getId());
             holder.relativeLoadingView.setVisibility(View.VISIBLE);
             holder.followingTextView.setVisibility(View.INVISIBLE);
             holder.followTextView.setVisibility(View.INVISIBLE);
@@ -240,17 +246,17 @@ public class FollowedTopicsListAdapter extends BaseAdapter {
                 FollowUnfollowCategoriesResponse responseData = new Gson().fromJson(result, FollowUnfollowCategoriesResponse.class);
                 if (responseData.getCode() == 200 & Constants.SUCCESS.equals(responseData.getStatus())) {
 //                    for (int i = 0; i < mDataList.size(); i++) {
-                        if ("follow".equals(type)) {
-                            mDataList.get(pos).setIsSelected(false);
-                            viewHolder.relativeLoadingView.setVisibility(View.GONE);
-                            viewHolder.followingTextView.setVisibility(View.VISIBLE);
-                            viewHolder.followTextView.setVisibility(View.INVISIBLE);
-                        } else {
-                            mDataList.get(pos).setIsSelected(true);
-                            viewHolder.relativeLoadingView.setVisibility(View.GONE);
-                            viewHolder.followTextView.setVisibility(View.VISIBLE);
-                            viewHolder.followingTextView.setVisibility(View.INVISIBLE);
-                        }
+                    if ("follow".equals(type)) {
+                        mDataList.get(pos).setIsSelected(false);
+                        viewHolder.relativeLoadingView.setVisibility(View.GONE);
+                        viewHolder.followingTextView.setVisibility(View.VISIBLE);
+                        viewHolder.followTextView.setVisibility(View.INVISIBLE);
+                    } else {
+                        mDataList.get(pos).setIsSelected(true);
+                        viewHolder.relativeLoadingView.setVisibility(View.GONE);
+                        viewHolder.followTextView.setVisibility(View.VISIBLE);
+                        viewHolder.followingTextView.setVisibility(View.INVISIBLE);
+                    }
 //                    }
                 } else {
                     resetFollowUnfollowStatus();

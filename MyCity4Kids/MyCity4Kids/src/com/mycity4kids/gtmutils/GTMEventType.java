@@ -323,7 +323,18 @@ public enum GTMEventType {
         public String toString() {
             return "trendingRelatedArticleClicked";
         }
+    },
+    TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT {
+        @Override
+        public String toString() {
+            return "followUnfollowTopicClicked";
+        }
+    },
+    ARTICLE_TIME_SPENT_EVENT {
+        @Override
+        public String toString() {
+            return "articleTimeSpent";
+        }
     }
-
 
 }

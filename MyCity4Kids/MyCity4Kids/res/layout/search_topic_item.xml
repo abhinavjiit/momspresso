@@ -11,7 +11,7 @@
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
         android:layout_marginTop="4dp"
-        android:background="@drawable/topics_transparent_bg"
+        android:background="@drawable/search_topics_transparent_bg"
         android:clickable="true">
 
         <TextView
@@ -19,6 +19,6 @@
             android:layout_height="wrap_content"
             android:padding="6dp"
             android:text=""
-            android:textColor="@color/white_color" />
+            android:textColor="@color/black" />
     </LinearLayout>
 </LinearLayout>

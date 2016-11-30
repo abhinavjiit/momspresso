@@ -119,7 +119,8 @@
 
     <color name="ad.title">#333333</color>
     <color name="ad.tags.text">#707070</color>
-    <color name="ad.tags.bg">#e9e9e9</color>
+    <color name="ad.tags.bg">#fafafa</color>
+    <color name="ad.fab.bg">#fafafa</color>
 
     <color name="search.tablayout.bg">#f1f1f1</color>
     <color name="search.tablayout.selectedtabtext">#ec3b57</color>
@@ -140,4 +141,10 @@
     <color name="colorControlNormal">#333333</color>
 
     <color name="splashtopics.done.button">#ec3b57</color>
+    <color name="splashtopics.bottombar.bg">#efefef</color>
+    <color name="splashtopics.search.topic_item_bg">#ec3b57</color>
+    <color name="splashtopics.search.topic_item_selected_text">#ec3b57</color>
+    <color name="splashtopics.search.topic_parent_text">#333333</color>
+    <color name="splashtopics.search.topic_item_text">#555555</color>
+    <color name="home.foryou.addTopics">#656565</color>
 </resources>

@@ -90,8 +90,8 @@ public class ConfirmFollowedTopicsActivity extends BaseActivity {
             tv.setText(subTopicsList.get(i).getDisplay_name());
             tv.setTag(subTopicsList.get(i));
             final LinearLayout ll_main = (LinearLayout) ll.getChildAt(0);
-            ll_main.setBackgroundResource(R.drawable.topics_filled_bg);
-            tv.setTextColor(ContextCompat.getColor(this, R.color.red_drawer_selected));
+            ll_main.setBackgroundResource(R.drawable.search_topics_filled_bg);
+            tv.setTextColor(ContextCompat.getColor(this, R.color.white_color));
             rootView.addView(ll);
         }
 
