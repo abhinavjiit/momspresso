@@ -14,13 +14,8 @@ public class AppConstants {
     public static final String DEV_URL = "http://54.169.17.138/";
     public static final String STAGING_URL = "http://52.77.116.39:8080/";
 
-    //   public static final String LIVE_URL = "http://52.77.116.39/";
-    //   public static final String LIVE_URL="http://52.220.87.141/";
+    //    public static final String LIVE_URL = "http://52.220.87.141/";
     public static final String LIVE_URL = "https://api.mycity4kids.com/";
-//    public static final String LIVE_URL = "http://54.169.17.138/";
-//    public static final String LIVE_URL = "http://10.42.0.1/";
-//    public static final String LIVE_URL = "http://192.168.1.12/";
-
 
     public static final String PHOENIX_STAGING_URL = "http://52.77.116.39";
 
@@ -450,4 +445,5 @@ public class AppConstants {
     public static final int WORDS_PER_MINUTE = 240;
     public static final int MAX_ARTICLE_BODY_IMAGE_READ_TIME = 12;
     public static final int MIN_ARTICLE_BODY_IMAGE_READ_TIME = 3;
+    public static final long MIN_PERCENT_FOR_TIMESPENT = 10L;
 }

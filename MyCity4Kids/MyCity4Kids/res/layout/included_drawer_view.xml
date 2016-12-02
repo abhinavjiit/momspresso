@@ -112,6 +112,21 @@
             android:textSize="16sp" />
 
         <TextView
+            android:id="@+id/rdBtnEditorPicks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:button="@null"
+            android:clickable="true"
+            android:fontFamily="sans-serif-light"
+            android:paddingBottom="15dp"
+            android:paddingLeft="20dp"
+            android:paddingTop="15dp"
+            android:text="Editors' Picks"
+            android:textColor="@color/black_color"
+            android:textSize="16sp" />
+
+        <TextView
             android:id="@+id/rdBtnUpcoming"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

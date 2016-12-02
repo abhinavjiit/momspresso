@@ -2,6 +2,7 @@ package com.mycity4kids.retrofitAPIsInterfaces;
 
 import com.mycity4kids.models.request.AddCommentRequest;
 import com.mycity4kids.models.request.ArticleDetailRequest;
+import com.mycity4kids.models.request.ArticleReadTimeRequest;
 import com.mycity4kids.models.request.DeleteBookmarkRequest;
 import com.mycity4kids.models.request.RecommendUnrecommendArticleRequest;
 import com.mycity4kids.models.request.UpdateViewCountRequest;
@@ -102,4 +103,7 @@ public interface ArticleDetailsAPI {
 
     @PUT("v1/users/likes/")
     Call<RecommendUnrecommendArticleResponse> recommendUnrecommendArticle(@Body RecommendUnrecommendArticleRequest body);
+
+    @POST("v1/articles/chronos/")
+    Call<ResponseBody> updateArticleTimeSpent(@Body ArticleReadTimeRequest body);
 }

@@ -322,6 +322,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
     @Override
     public void onResume() {
+        //coming back from another activity, restart the readtime
         if (null != trackArticleReadTime && trackArticleReadTime.getActivityTimerStatus() == 1) {
             trackArticleReadTime.startTimer();
         }
@@ -489,7 +490,9 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, "" + estimatedReadTime);
+                if (null != trackArticleReadTime) {
+                    trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
+                }
                 finish();
                 return true;
             case R.id.bookmark:
@@ -770,7 +773,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 ((TextView) topicView.getChildAt(0)).setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, "" + estimatedReadTime);
+                        trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
                         trackArticleReadTime.resetTimer();
                         String categoryId = (String) v.getTag();
                         Intent intent = new Intent(ArticlesAndBlogsDetailsActivity.this, FilteredTopicsArticleListingActivity.class);
@@ -951,7 +954,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 case R.id.network_img:
                     CommentsData commentData = (CommentsData) ((View) v.getParent().getParent()).getTag();
                     if (!"fb".equals(commentData.getComment_type())) {
-                        trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, "" + estimatedReadTime);
+                        trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
                         trackArticleReadTime.resetTimer();
                         Intent profileIntent = new Intent(this, BloggerDashboardActivity.class);
                         profileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, commentData.getUserId());
@@ -961,7 +964,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 case R.id.txvCommentTitle:
                     CommentsData cData = (CommentsData) ((View) v.getParent().getParent()).getTag();
                     if (!"fb".equals(cData.getComment_type())) {
-                        trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, "" + estimatedReadTime);
+                        trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
                         trackArticleReadTime.resetTimer();
                         Intent userProfileIntent = new Intent(this, BloggerDashboardActivity.class);
                         userProfileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, cData.getUserId());
@@ -974,7 +977,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
                 case R.id.user_image:
                 case R.id.user_name:
-                    trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, "" + estimatedReadTime);
+                    trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
                     trackArticleReadTime.resetTimer();
                     Intent intentnn = new Intent(this, BloggerDashboardActivity.class);
                     intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, detailData.getUserId());
@@ -1011,7 +1014,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     break;
                 }
                 case R.layout.related_tags_view: {
-                    trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, "" + estimatedReadTime);
+                    trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
                     trackArticleReadTime.resetTimer();
                     String categoryId = (String) v.getTag();
                     Intent intent = new Intent(ArticlesAndBlogsDetailsActivity.this, FilteredTopicsArticleListingActivity.class);
@@ -1040,7 +1043,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     }
 
     private void launchRelatedTrendingArticle(View v) {
-        trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, "" + estimatedReadTime);
+        trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
         trackArticleReadTime.resetTimer();
         Intent intent = new Intent(this, ArticlesAndBlogsDetailsActivity.class);
         ArticleListingResult parentingListData = (ArticleListingResult) v.getTag();
@@ -2045,7 +2048,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
     @Override
     public void onBackPressed() {
-        trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, "" + estimatedReadTime);
+        trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
         super.onBackPressed();
     }
 }
