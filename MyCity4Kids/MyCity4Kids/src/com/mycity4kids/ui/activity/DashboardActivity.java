@@ -394,7 +394,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         findViewById(R.id.rdBtnKids).setOnClickListener(this);
         findViewById(R.id.rdBtnParentingBlogs).setOnClickListener(this);
         findViewById(R.id.rdBtnMomspressoVideo).setOnClickListener(this);
-        findViewById(R.id.rdBtnEditorPicks).setOnClickListener(this);
         findViewById(R.id.editor).setOnClickListener(this);
         findViewById(R.id.imgProfile).setOnClickListener(this);
         findViewById(R.id.txvUserName).setOnClickListener(this);
@@ -1458,11 +1457,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 videoArticlesIntent.putExtra("selectedTopics", SharedPrefUtils.getMomspressoCategory(this).getId());
                 videoArticlesIntent.putExtra("displayName", SharedPrefUtils.getMomspressoCategory(this).getDisplay_name());
                 startActivity(videoArticlesIntent);
-                break;
-            case R.id.rdBtnEditorPicks:
-                Intent intentEditorPicks = new Intent(this, ArticleListingActivity.class);
-                intentEditorPicks.putExtra(Constants.SORT_TYPE, Constants.KEY_EDITOR_PICKS);
-                startActivity(intentEditorPicks);
                 break;
             case R.id.editor:
                 if (Build.VERSION.SDK_INT > 15) {

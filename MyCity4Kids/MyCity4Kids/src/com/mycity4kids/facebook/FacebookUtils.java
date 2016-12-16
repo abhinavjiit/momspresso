@@ -62,7 +62,7 @@ public final class FacebookUtils {
 
         Settings.addLoggingBehavior(LoggingBehavior.INCLUDE_ACCESS_TOKENS);
         Session.OpenRequest openRequest = new Session.OpenRequest(context);
-        openRequest.setPermissions(Arrays.asList("email"));
+        openRequest.setPermissions(Arrays.asList("email", "user_friends"));
         openRequest.setCallback(new Session.StatusCallback() {
 
             @Override
@@ -81,7 +81,7 @@ public final class FacebookUtils {
                     });
                     request.executeAsync();
                 } else {
-//                    Log.e("exception ","in catch block");
+//                    Log.e("exception ", "in catch block" + exception);
 //                    if(session!=null)
 //                        Log.e("exception ",session+"in session catch block");
 //                    if(exception!=null)

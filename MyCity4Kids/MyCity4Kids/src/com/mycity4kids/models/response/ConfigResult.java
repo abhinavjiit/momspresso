@@ -1,5 +1,10 @@
 package com.mycity4kids.models.response;
 
+import org.json.JSONObject;
+
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by anshul on 7/12/16.
  */
@@ -8,6 +13,7 @@ public class ConfigResult {
     int userTypeVersion;
     int articleTypeVersion;
     ConfigCategory category;
+    private Map<String, String> notificationSettings;
 
     public int getUserTypeVersion() {
         return userTypeVersion;
@@ -33,5 +39,11 @@ public class ConfigResult {
         this.category = category;
     }
 
+    public Map<String, String> getNotificationSettings() {
+        return notificationSettings;
+    }
 
+    public void setNotificationSettings(Map<String, String> notificationSettings) {
+        this.notificationSettings = notificationSettings;
+    }
 }

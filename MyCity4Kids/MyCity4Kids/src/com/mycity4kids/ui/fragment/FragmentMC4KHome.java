@@ -629,7 +629,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                 TopicsResponse responseData = new Gson().fromJson(fileContent, TopicsResponse.class);
 
                 for (int i = 0; i < responseData.getData().size(); i++) {
-                    if (AppConstants.MOMSPRESSO_SLUG.equals(responseData.getData().get(i).getSlug())) {
+                    if (AppConstants.MOMSPRESSO_CATEGORYID.equals(responseData.getData().get(i).getId())) {
                         SharedPrefUtils.setMomspressoCategory(getActivity(), responseData.getData().get(i));
                         return responseData.getData().get(i).getId();
                     }

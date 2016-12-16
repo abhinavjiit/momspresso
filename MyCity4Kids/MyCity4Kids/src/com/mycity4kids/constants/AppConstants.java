@@ -406,7 +406,7 @@ public class AppConstants {
     public static final String CATEGORIES_JSON_FILE = "categories.json";
     public static final String FOLLOW_UNFOLLOW_TOPICS_JSON_FILE = "follow_unfollow_topics.json";
     public static final String PHOENIX_RELEASE_VERSION = "5.0";
-    public static final String CHOOSE_TOPICS_RELEASE_VERSION = "5.4";
+    public static final String FACEBOOK_CONNECT_RELEASE_VERSION = "5.5";
 
     public static final String PAGINATION_END_VALUE = "NA";
     public static final String FOLLOW_LIST_TYPE = "followListType";
@@ -432,6 +432,7 @@ public class AppConstants {
     public static final int EDIT_NESTED_REPLY = 2;
     public static final String MOMSPRESSO_CATEGORY_ID = "momspressoCategoryId";
     public static final String MOMSPRESSO_SLUG = "momspresso-video";
+    public static final String MOMSPRESSO_CATEGORYID = "category-ae65da4bf8bb48e4b80f13444be1e9a5";
     public static final String DEEPLINK_EDITOR_URL = "mc4k://www.mycity4kids.com/editor";
     public static final String DEEPLINK_PROFILE_URL = "mc4k://www.mycity4kids.com/profile";
 
@@ -446,4 +447,13 @@ public class AppConstants {
     public static final int MAX_ARTICLE_BODY_IMAGE_READ_TIME = 12;
     public static final int MIN_ARTICLE_BODY_IMAGE_READ_TIME = 3;
     public static final long MIN_PERCENT_FOR_TIMESPENT = 10L;
+    public static final String ANALYTICS_INFO_TYPE = "analyticsInfoType";
+    public static final String ANALYTICS_INFO_IMPROVE_PAGE_VIEWS = "infoImprovePageViews";
+    public static final String ANALYTICS_INFO_RANK_CALCULATION = "infoRankCalculation";
+    public static final String ANALYTICS_INFO_IMPROVE_RANK = "infoImproveRank";
+    public static final String ANALYTICS_INFO_IMPROVE_SOCIAL_SHARE = "infoImproveSocialShare";
+    public static final String ANALYTICS_INFO_INCREASE_FOLLOWERS = "infoIncreaseFollowers";
+    public static final int ANALYTICS_TOP_BLOGGERS_COUNT = 5;
+    public static final int CONTRIBUTOR_SORT_TYPE_RANK = 2;
+
 }

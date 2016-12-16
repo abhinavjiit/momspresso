@@ -61,6 +61,7 @@ import com.mycity4kids.models.response.ReviewResponse;
 import com.mycity4kids.models.response.UserCommentsResponse;
 import com.mycity4kids.models.response.UserCommentsResult;
 import com.mycity4kids.models.response.UserDetailResponse;
+import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
@@ -128,7 +129,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     PublishedArticleListingAdapter articlesListingAdapter;
     UserCommentsAdapter commentsListAdapter;
     ReviewsListAdapter reviewsListAdapter;
-    TextView rankingTextView, followersTextView, followingTextView, userBio, blogTitle, editProfileTextView;
+    TextView rankingTextView, followersTextView, followingTextView, userBio, blogTitle, editProfileTextView, analyticsTextView;
     ImageView draftImageView, publishedImageView, commentsImageView, reviewImageView;
     LinearLayout draftItemLinearLayout, publishedItemLinearLayout, commentsItemLinearLayout, reviewItemLinearLayout;
     private String firstName, lastName, Bio, phoneNumber;
@@ -186,6 +187,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         rankingTextView = (TextView) header.findViewById(R.id.rankingTextView);
         followersTextView = (TextView) header.findViewById(R.id.followersTextView);
         followingTextView = (TextView) header.findViewById(R.id.followingTextView);
+        analyticsTextView = (TextView) header.findViewById(R.id.analyticsTextView);
         userBio = (TextView) header.findViewById(R.id.userBio);
         blogTitle = (TextView) header.findViewById(R.id.blogName);
         draftItemLinearLayout = (LinearLayout) header.findViewById(R.id.draftItemLinearlayout);
@@ -948,15 +950,16 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                                  return;
                              }
                              ArticleDraftResponse responseModel = (ArticleDraftResponse) response.body();
-                             if (responseModel.getCode() != 200) {
-                                 showToast(getString(R.string.toast_response_error));
-                                 return;
-                             } else {
-                                 if (!StringUtils.isNullOrEmpty(responseModel.getData().get(0).getMsg())) {
-                                     Log.i("Draft message", responseModel.getData().get(0).getMsg());
-                                 }
+
+                             if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
                                  draftList.remove(position);
                                  adapter.notifyDataSetChanged();
+                             } else {
+                                 if (StringUtils.isNullOrEmpty(responseModel.getReason())) {
+                                     showToast(getString(R.string.toast_response_error));
+                                 } else {
+                                     showToast(responseModel.getReason());
+                                 }
                              }
                          }
 
@@ -975,6 +978,10 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
             case R.id.unfollowTextView:
             case R.id.followTextView:
                 hitFollowUnfollowAPI();
+                break;
+            case R.id.analyticsTextView:
+                Intent intent = new Intent(BloggerDashboardActivity.this, BloggersAnalyticsActivity.class);
+                startActivity(intent);
                 break;
             default:
                 v.post(new Runnable() {
@@ -1144,7 +1151,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
             return;
         }
 
-        Call<UserDetailResponse> call = bloggerDashboardAPI.getBloggerData(AppConstants.LIVE_URL + "v1/users/dashboard/" + userId);
+        Call<UserDetailResponse> call = bloggerDashboardAPI.getBloggerData(userId);
         //asynchronous call
         call.enqueue(new Callback<UserDetailResponse>() {
                          @Override
@@ -1186,6 +1193,12 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                                  Bio = responseData.getData().get(0).getResult().getUserBio();
                                  firstName = responseData.getData().get(0).getResult().getFirstName();
                                  lastName = responseData.getData().get(0).getResult().getLastName();
+                                 if (isPrivateProfile && AppConstants.USER_TYPE_BLOGGER.equals(responseData.getData().get(0).getResult().getUserType())) {
+                                     analyticsTextView.setVisibility(View.VISIBLE);
+                                     analyticsTextView.setOnClickListener(BloggerDashboardActivity.this);
+                                 } else if (null != analyticsTextView) {
+                                     analyticsTextView.setVisibility(View.GONE);
+                                 }
                                  if (null == responseData.getData().get(0).getResult().getPhone()) {
                                      phoneNumber = " ";
                                  } else {
@@ -1193,6 +1206,9 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                                  }
 
                                  if (!StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp())) {
+                                     if (isPrivateProfile) {
+                                         SharedPrefUtils.setProfileImgUrl(BloggerDashboardActivity.this, responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp());
+                                     }
                                      Picasso.with(BloggerDashboardActivity.this).load(responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp())
                                              .placeholder(R.drawable.family_xxhdpi).error(R.drawable.family_xxhdpi).transform(new RoundedTransformation()).into(bloggerImageView);
                                  }
@@ -1203,6 +1219,13 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                                  } else {
                                      userBio.setText(responseData.getData().get(0).getResult().getUserBio());
                                      userBio.setVisibility(View.VISIBLE);
+                                 }
+                                 if (null == responseData.getData().get(0).getResult().getSocialTokens()) {
+                                     //token already expired or yet to connect using facebook
+                                     SharedPrefUtils.setFacebookConnectedFlag(BloggerDashboardActivity.this, "1");
+                                 } else {
+                                     SharedPrefUtils.setFacebookConnectedFlag(BloggerDashboardActivity.this,
+                                             responseData.getData().get(0).getResult().getSocialTokens().getFb().getIsExpired());
                                  }
 
                              }

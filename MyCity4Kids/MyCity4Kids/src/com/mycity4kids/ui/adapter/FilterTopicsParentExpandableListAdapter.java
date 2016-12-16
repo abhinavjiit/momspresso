@@ -208,9 +208,10 @@ public class FilterTopicsParentExpandableListAdapter extends BaseExpandableListA
 //                Log.d("SubCategory Child", "" + map.get(topicList.get(level1GroupPosition)).get(groupPosition).getTitle());
 
                 switch (map.get(topicList.get(level1GroupPosition)).get(groupPosition).getId()) {
-                    case "recent":
-                    case "popular":
-                    case "trending":
+                    case Constants.KEY_RECENT:
+                    case Constants.KEY_POPULAR:
+                    case Constants.KEY_TRENDING:
+                    case Constants.KEY_EDITOR_PICKS:
                         Intent intent_1 = new Intent(context, ArticleListingActivity.class);
                         intent_1.putExtra(Constants.SORT_TYPE, map.get(topicList.get(level1GroupPosition)).get(groupPosition).getId());
                         context.startActivity(intent_1);

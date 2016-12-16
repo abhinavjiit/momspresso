@@ -22,6 +22,7 @@ public class UserInfo extends BaseDataModel implements Parcelable {
     private String isValidated;
     private String userType;
     private String profilePicUrl;
+    private String loginMode;
 
     public UserInfo() {
         super();
@@ -155,6 +156,14 @@ public class UserInfo extends BaseDataModel implements Parcelable {
         this.profilePicUrl = profilePicUrl;
     }
 
+    public String getLoginMode() {
+        return loginMode;
+    }
+
+    public void setLoginMode(String loginMode) {
+        this.loginMode = loginMode;
+    }
+
     protected UserInfo(Parcel in) {
         id = in.readString();
         dynamoId = in.readString();
@@ -172,6 +181,7 @@ public class UserInfo extends BaseDataModel implements Parcelable {
         isValidated = in.readString();
         userType = in.readString();
         profilePicUrl = in.readString();
+        loginMode = in.readString();
     }
 
     @Override
@@ -192,6 +202,7 @@ public class UserInfo extends BaseDataModel implements Parcelable {
         dest.writeString(isValidated);
         dest.writeString(userType);
         dest.writeString(profilePicUrl);
+        dest.writeString(loginMode);
     }
 
     @Override

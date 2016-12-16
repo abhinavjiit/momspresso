@@ -5,25 +5,6 @@
     android:background="@color/white_color"
     android:orientation="vertical">
 
-
-    <TextView
-        android:id="@+id/family_details"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_marginBottom="1dp"
-        android:background="@color/white_color"
-        android:drawableRight="@drawable/arrow_xxhdpi"
-        android:gravity="center_vertical"
-        android:padding="10dp"
-        android:text="Family Details"
-        android:textColor="@color/black_color"
-        android:textSize="15sp" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/gray_color" />
-
     <TextView
         android:id="@+id/viewFollowingTopics"
         android:layout_width="match_parent"
@@ -35,6 +16,25 @@
         android:gravity="center_vertical"
         android:padding="10dp"
         android:text="Topics Followed"
+        android:textColor="@color/black_color"
+        android:textSize="15sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray_color" />
+
+    <TextView
+        android:id="@+id/notifications"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginBottom="1dp"
+        android:background="@color/white_color"
+        android:drawablePadding="50dp"
+        android:drawableRight="@drawable/arrow_xxhdpi"
+        android:gravity="center_vertical"
+        android:padding="10dp"
+        android:text="Notifications"
         android:textColor="@color/black_color"
         android:textSize="15sp" />
 
@@ -61,6 +61,43 @@
         android:layout_height="1dp"
         android:background="@color/gray_color" />
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/facebookLabel"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginBottom="1dp"
+            android:layout_toLeftOf="@+id/facebookConnect"
+            android:background="@color/white_color"
+            android:gravity="center_vertical"
+            android:padding="10dp"
+            android:text="Facebook"
+            android:textColor="@color/black_color"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/facebookConnect"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="1dp"
+            android:background="@color/white_color"
+            android:gravity="center_vertical"
+            android:padding="10dp"
+            android:text="CONNECT"
+            android:textColor="@color/red_selected"
+            android:textSize="15sp" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray_color" />
+
     <TextView
         android:id="@+id/editProfile"
         android:layout_width="match_parent"
@@ -72,6 +109,24 @@
         android:gravity="center_vertical"
         android:padding="10dp"
         android:text="Edit Profile"
+        android:textColor="@color/black_color"
+        android:textSize="15sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray_color" />
+
+    <TextView
+        android:id="@+id/family_details"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginBottom="1dp"
+        android:background="@color/white_color"
+        android:drawableRight="@drawable/arrow_xxhdpi"
+        android:gravity="center_vertical"
+        android:padding="10dp"
+        android:text="Family Details"
         android:textColor="@color/black_color"
         android:textSize="15sp" />
 

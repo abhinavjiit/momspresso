@@ -1,5 +1,6 @@
 package com.mycity4kids.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,6 +17,7 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.facebook.FacebookUtils;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.fragment.ArticlesFragment;
@@ -28,6 +30,7 @@ import com.mycity4kids.ui.fragment.FragmentHomeCategory;
 import com.mycity4kids.ui.fragment.FragmentKidProfile;
 import com.mycity4kids.ui.fragment.FragmentSetting;
 import com.mycity4kids.ui.fragment.NotificationFragment;
+import com.mycity4kids.ui.fragment.NotificationSettingsFragment;
 
 /**
  * Created by anshul on 8/4/16.
@@ -96,69 +99,47 @@ public class SettingsActivity extends BaseActivity {
                 Fragment currentFrag = getSupportFragmentManager().findFragmentById(R.id.content_frame);
 
                 if (currentFrag instanceof FragmentSetting) {
-                    //   changeVisibiltyOfArrow(false);
                     setTitle("Settings");
                     mDrawerToggle.setDrawerIndicatorEnabled(false);
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_UNLOCKED);
                     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
                     getSupportActionBar().setHomeButtonEnabled(true);
-
-
                 } else if (currentFrag instanceof FragmentFamilyDetail) {
-
                     setTitle("Family Details");
-
                     mDrawerToggle.setDrawerIndicatorEnabled(false);
                     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
                     getSupportActionBar().setHomeButtonEnabled(true);
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-//                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
-                    //    changeVisibiltyOfArrow(false);
                 } else if (currentFrag instanceof FragmentFamilyProfile) {
-
-
                     mDrawerToggle.setDrawerIndicatorEnabled(false);
                     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-//                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
                     getSupportActionBar().setHomeButtonEnabled(true);
-
-                    //   changeVisibiltyOfArrow(false);
                 } else if (currentFrag instanceof FragmentAdultProfile) {
-
-
                     mDrawerToggle.setDrawerIndicatorEnabled(false);
                     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                     getSupportActionBar().setHomeButtonEnabled(true);
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-//                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
-                    //     changeVisibiltyOfArrow(false);
                 } else if (currentFrag instanceof FragmentKidProfile) {
-
-
                     mDrawerToggle.setDrawerIndicatorEnabled(false);
                     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                     getSupportActionBar().setHomeButtonEnabled(true);
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-//                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
-                    //    changeVisibiltyOfArrow(false);
-
                 } else if (currentFrag instanceof ChangeCityFragment) {
                     setTitle("Change City");
-
                     mDrawerToggle.setDrawerIndicatorEnabled(false);
-
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-//                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
-                    //     changeVisibiltyOfArrow(false);
+                } else if (currentFrag instanceof NotificationSettingsFragment) {
+                    setTitle("Notification Settings");
+                    mDrawerToggle.setDrawerIndicatorEnabled(false);
+                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                    mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                 }
                 invalidateOptionsMenu();
                 mDrawerToggle.syncState();
@@ -218,6 +199,8 @@ public class SettingsActivity extends BaseActivity {
             getMenuInflater().inflate(R.menu.forgot_password, menu);
         } else if (topFragment instanceof FragmentHomeCategory) {
             getMenuInflater().inflate(R.menu.kidsresource_listing, menu);
+        } else if (topFragment instanceof NotificationSettingsFragment) {
+            getMenuInflater().inflate(R.menu.forgot_password, menu);
         }
         return true;
     }
@@ -239,8 +222,11 @@ public class SettingsActivity extends BaseActivity {
                     ((FragmentFamilyDetail) topFragment).onHeaderButtonTapped();
                 } else if (topFragment instanceof NotificationFragment) {
                     ((NotificationFragment) topFragment).saveNotificationSetting();
-                } else if (topFragment instanceof ChangeCityFragment)
+                } else if (topFragment instanceof ChangeCityFragment) {
                     ((ChangeCityFragment) topFragment).changeCity();
+                } else if (topFragment instanceof NotificationSettingsFragment) {
+                    ((NotificationSettingsFragment) topFragment).updateNotificationSettings();
+                }
                 break;
             case android.R.id.home:
                 finish();
@@ -262,6 +248,15 @@ public class SettingsActivity extends BaseActivity {
             finish();
         }
         super.onBackPressed();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == 0) {
+            removeProgressDialog();
+        }
+        FacebookUtils.onActivityResult(this, requestCode, resultCode, data);
     }
 }
 

@@ -26,7 +26,6 @@ import com.google.android.gms.tagmanager.Container;
 import com.google.android.gms.tagmanager.ContainerHolder;
 import com.google.android.gms.tagmanager.TagManager;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -44,7 +43,6 @@ import com.mycity4kids.gtmutils.ContainerHolderSingleton;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.OnUIView;
 import com.mycity4kids.listener.OnButtonClicked;
-import com.mycity4kids.models.FollowTopics;
 import com.mycity4kids.models.VersionApiModel;
 import com.mycity4kids.models.city.City;
 import com.mycity4kids.models.city.MetroCity;
@@ -57,16 +55,12 @@ import com.mycity4kids.retrofitAPIsInterfaces.ForceUpdateAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.sync.CategorySyncService;
 import com.mycity4kids.sync.PushTokenService;
-import com.mycity4kids.ui.adapter.FollowedTopicsListAdapter;
 import com.mycity4kids.utils.NearMyCity;
 import com.mycity4kids.utils.location.GPSTracker;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -119,6 +113,11 @@ public class SplashActivity extends BaseActivity {
             if (!"0".equals(SharedPrefUtils.getUserDetailModel(this).getId()) && version.equals(AppConstants.PHOENIX_RELEASE_VERSION) && SharedPrefUtils.isPhoenixFirstLaunch(this)) {
                 SharedPrefUtils.clearPrefrence(this);
                 SharedPrefUtils.setPhoenixFirstLaunch(this, false);
+            }
+
+            if (!"0".equals(SharedPrefUtils.getUserDetailModel(this).getId()) && version.equals(AppConstants.FACEBOOK_CONNECT_RELEASE_VERSION) && SharedPrefUtils.isFBConnectFirstLaunch(this)) {
+                SharedPrefUtils.clearPrefrence(this);
+                SharedPrefUtils.setFBConnectFirstLaunch(this, false);
             }
 
             ImageView _spin = (ImageView) findViewById(R.id.spin);

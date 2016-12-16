@@ -54,7 +54,6 @@ public class PushTokenService extends IntentService implements UpdateListener {
         handler.execute(getApiUrl(requestType));
     }
 
-
     @Override
     public void updateView(String jsonString, int requestType) {
         switch (requestType) {
@@ -72,9 +71,7 @@ public class PushTokenService extends IntentService implements UpdateListener {
                     Crashlytics.logException(jse);
                     Log.d("JsonSyntaxException", Log.getStackTraceString(jse));
                 }
-
                 break;
-
         }
     }
 

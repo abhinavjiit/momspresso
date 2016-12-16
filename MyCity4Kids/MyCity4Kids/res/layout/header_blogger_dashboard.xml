@@ -136,21 +136,43 @@
             </LinearLayout>
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/editProfileTextView"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="33dp"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/statsLinearLayout"
             android:layout_marginRight="5dp"
             android:layout_marginTop="10dp"
-            android:background="@drawable/edit_button_bg"
-            android:backgroundTint="#ededed"
-            android:fontFamily="sans-serif"
-            android:gravity="center"
-            android:text="EDIT YOUR PROFILE"
-            android:textColor="#525252"
-            android:textSize="14sp"
-            android:visibility="visible" />
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/editProfileTextView"
+                android:layout_width="match_parent"
+                android:layout_height="33dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/edit_button_bg"
+                android:backgroundTint="#ededed"
+                android:gravity="center"
+                android:text="EDIT"
+                android:textColor="#525252"
+                android:textSize="14sp"
+                android:visibility="visible" />
+
+            <TextView
+                android:id="@+id/analyticsTextView"
+                android:layout_width="match_parent"
+                android:layout_height="33dp"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/edit_button_bg"
+                android:backgroundTint="#ededed"
+                android:gravity="center"
+                android:text="ANALYTICS"
+                android:textColor="#525252"
+                android:textSize="14sp"
+                android:visibility="gone" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/followTextView"

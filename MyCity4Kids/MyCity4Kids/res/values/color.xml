@@ -147,4 +147,14 @@
     <color name="splashtopics.search.topic_parent_text">#333333</color>
     <color name="splashtopics.search.topic_item_text">#555555</color>
     <color name="home.foryou.addTopics">#656565</color>
+
+    <color name="analytics.pageview.datepicker.submit">#ec3b57</color>
+    <color name="analytics.engagement.likes_label">#737373</color>
+    <color name="analytics.engagement.shares_label">#737373</color>
+    <color name="analytics.engagement.comments_label">#737373</color>
+    <color name="analytics.engagement.comments_disclaimer">#737373</color>
+    <color name="analytics.engagement.separator">#c7c7c7</color>
+
+    <color name="analytics.engagement.graph">#ABC4F8</color>
+
 </resources>

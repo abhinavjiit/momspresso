@@ -335,6 +335,18 @@ public enum GTMEventType {
         public String toString() {
             return "articleTimeSpent";
         }
+    },
+    FACEBOOK_CONNECT_EVENT {
+        @Override
+        public String toString() {
+            return "fbConnectClicked";
+        }
+    },
+    FOR_YOU_ARTICLE_CLICK_EVENT {
+        @Override
+        public String toString() {
+            return "forYouArticleClickEvent";
+        }
     }
 
 }

@@ -31,28 +31,6 @@ import retrofit2.http.Url;
  */
 public interface ArticleDetailsAPI {
 
-    @GET("apiparentingstop/get_blog_detail")
-    Call<ArticleDetailResponse> getArticleBody(@Query("article_id") String article_id,
-                                               @Query("user_id") String user_id,
-                                               @Query("app_version") String app_version);
-
-    @GET("apiparentingstop/get_comment")
-    Call<ResponseBody> getArticleComments(@Query("article_id") String article_id,
-                                          @Query("limit") String limit,
-                                          @Query("offset") String offset,
-                                          @Query("comment_type") String comment_type,
-                                          @Query("user_id") String user_id,
-                                          @Query("app_version") String app_version);
-
-
-    //    dev url for article details
-    //    @GET("https://s3-ap-northeast-1.amazonaws.com/microservices-sync-test/articles-data/{article_id}.json")
-
-    //Staging Url for article details
-    //    @GET("http://dziyfkwv8zf9m.cloudfront.net/articles-data/{articleId}.json")
-
-    //Live Url for article details
-//    @GET("http://cdn3.mycity4kids.com/articles-data/{articleId}.json")
     @GET("https://s3-ap-southeast-1.amazonaws.com/mycity4kids-phoenix/articles-data/{articleId}.json")
     Call<ArticleDetailResult> getArticleDetailsFromS3(@Path("articleId") String articleId);
 

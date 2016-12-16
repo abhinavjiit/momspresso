@@ -378,5 +378,60 @@
     <string name="home.sections.title.editors_pick">EDITORS\' PICKS</string>
     <string name="home.sections.title.in_your_city">BEST OF </string>
     <string name="home.sections.title.upcoming_events">UPCOMING EVENTS</string>
+    <string name="analytics.pageviews.daycount">Last 30 days</string>
 
+    <string name="analytics.popup.last30days">Last 30 days</string>
+    <string name="analytics.popup.customdates">Custom</string>
+    <string name="analytics.popup.improve_page_views">How can I improve my page views?</string>
+    <string name="analytics.popup.increase_followers">How can I increase my followers?</string>
+    <string name="analytics.popup.rank_calculation">How is this calculated?</string>
+    <string name="analytics.popup.improve_rank">How can I improve my rank?</string>
+    <string name="analytics.popup.improve_social">How can I improve my social share?</string>
+    <!--<string name="analytics.popup.improve_social">Last 30 days</string>-->
+    <!--<string name="analytics.popup.followers">Last 30 days</string>-->
+
+    <string name="analytics.pageviews.label">Page Views</string>
+    <string name="analytics.rank.label">Your Rank</string>
+    <string name="analytics.followers.label">Followers</string>
+    <string name="analytics.engagement.label">Engagement</string>
+    <string name="analytics.engagement.comments_disclaimer">*No. of comments include Facebook and mycity4kids.</string>
+    <string name="activity.analytics.toolbar_title">Blog Analytics</string>
+
+
+    <string-array name="improve_page_views_array">
+        <item>Interlink your article to other blog posts</item>
+        <item>Be consistent and write weekly</item>
+        <item>Make a point in every blog post that you publish</item>
+        <item>Use catchy titles</item>
+        <item>Spell check and double check your blog posts for any errors</item>
+        <item>Focus on the tone and the words that you use</item>
+        <item>Respond to blog comments</item>
+    </string-array>
+
+    <string-array name="rank_calculation_array">
+        <item>It is calculated basis of weightage of 0.34 for rank based on avg overall views of articles seen in the last 3 months + weightage of 0.33 for total views in the last 6 weeks + weightage of 0.33 for total articles contributed</item>
+        <item>To put the complicating formula into perspective, it is calculated as per the total number of articles you have posted and the page views that your posts have received.</item>
+    </string-array>
+
+    <string-array name="improve_rank_array">
+        <item>Be consistent in your blogging - post a blog weekly</item>
+        <item>Promote your blog post on all the Facebook groups that you are part of</item>
+        <item>Seek an opinion for peers and edit the blog post accordingly</item>
+    </string-array>
+
+    <string-array name="improve_social_share_array">
+        <item>Share blog posts using the buttons for social sharing in your blog post</item>
+        <item>Add Social Plugins to your profile e.g. www.twitter.com/bloggername</item>
+        <item>Try to edit and focus on the content while sharing your blog post</item>
+        <item>Use appropriate hashtags</item>
+    </string-array>
+
+    <string-array name="increase_followers_array">
+        <item>Add a line urging readers to follow you at the end of every blog, if they enjoyed reading it</item>
+        <item>Ask readers who frequently engage with your blog through comments, to follow you</item>
+        <item>Share your blog across all networks you are a part of, such as Facebook, Whatsapp and so on</item>
+    </string-array>
+
+    <string name="editor.spell_check.title">Spell Check</string>
+    <string name="editor.spell_check.message">Always check spellings before publishing</string>
 </resources>

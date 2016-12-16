@@ -487,32 +487,36 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                     Log.e("imageuploading", mEditorFragment.imageUploading + "");
                     showToast("Please wait while image is being uploaded");
                 } else {
+                    showAlertDialog(getString(R.string.editor_spell_check_title), getString(R.string.editor_spell_check_message), new OnButtonClicked() {
+                        @Override
+                        public void onButtonCLick(int buttonId) {
+                            PublishDraftObject draftObject = new PublishDraftObject();
 
-                    PublishDraftObject draftObject = new PublishDraftObject();
-
-                    draftObject.setBody(contentFormatting(mEditorFragment.getContent().toString()));
-                    draftObject.setTitle(titleFormatting(mEditorFragment.getTitle().toString().trim()));
-                    Log.d("draftId = ", draftId + "");
-                    if ((getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) || ("4".equals(moderation_status))) {
-                        // coming from edit published articles
-                        Intent intent_1 = new Intent(EditorPostActivity.this, EditSelectedTopicsActivity.class);
-                        draftObject.setId(articleId);
-                        intent_1.putExtra("draftItem", draftObject);
-                        intent_1.putExtra("imageUrl", thumbnailUrl);
-                        intent_1.putExtra("from", "publishedList");
-                        intent_1.putExtra("articleId", articleId);
-                        intent_1.putExtra("tag", tag);
-                        intent_1.putExtra("cities", cities);
-                        startActivity(intent_1);
-                    } else {
-                        Intent intent_3 = new Intent(EditorPostActivity.this, AddArticleTopicsActivity.class);
-                        if (!StringUtils.isNullOrEmpty(draftId)) {
-                            draftObject.setId(draftId);
+                            draftObject.setBody(contentFormatting(mEditorFragment.getContent().toString()));
+                            draftObject.setTitle(titleFormatting(mEditorFragment.getTitle().toString().trim()));
+                            Log.d("draftId = ", draftId + "");
+                            if ((getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) || ("4".equals(moderation_status))) {
+                                // coming from edit published articles
+                                Intent intent_1 = new Intent(EditorPostActivity.this, EditSelectedTopicsActivity.class);
+                                draftObject.setId(articleId);
+                                intent_1.putExtra("draftItem", draftObject);
+                                intent_1.putExtra("imageUrl", thumbnailUrl);
+                                intent_1.putExtra("from", "publishedList");
+                                intent_1.putExtra("articleId", articleId);
+                                intent_1.putExtra("tag", tag);
+                                intent_1.putExtra("cities", cities);
+                                startActivity(intent_1);
+                            } else {
+                                Intent intent_3 = new Intent(EditorPostActivity.this, AddArticleTopicsActivity.class);
+                                if (!StringUtils.isNullOrEmpty(draftId)) {
+                                    draftObject.setId(draftId);
+                                }
+                                intent_3.putExtra("draftItem", draftObject);
+                                intent_3.putExtra("from", "editor");
+                                startActivity(intent_3);
+                            }
                         }
-                        intent_3.putExtra("draftItem", draftObject);
-                        intent_3.putExtra("from", "editor");
-                        startActivity(intent_3);
-                    }
+                    });
                 }
             }
             break;

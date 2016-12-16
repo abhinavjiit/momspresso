@@ -216,10 +216,10 @@ public class Constants {
     public static String BLOG_ARTICLES_LIST = "blog_acticle_data";
     public static String TAB_POSITION = "tab_position";
     public static String SORT_KEY = "article_sort_key";
-    public static String KEY_RECENT = "recent";
-    public static String KEY_POPULAR = "popular";
-    public static String KEY_TRENDING = "trending";
-    public static String KEY_FOR_YOU = "foryou";
+    public static final String KEY_RECENT = "recent";
+    public static final String KEY_POPULAR = "popular";
+    public static final String KEY_TRENDING = "trending";
+    public static final String KEY_FOR_YOU = "foryou";
     public static final String KEY_IN_YOUR_CITY = "inYourCity";
     public static final String KEY_EDITOR_PICKS = "editorPicks";
 

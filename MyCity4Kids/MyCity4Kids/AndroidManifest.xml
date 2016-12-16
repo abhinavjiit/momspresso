@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mycity4kids"
-    android:versionCode="45"
-    android:versionName="5.4.1">
+    android:versionCode="46"
+    android:versionName="5.5">
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -482,6 +482,10 @@
         <activity
             android:name=".ui.activity.FollowedTopicsListingActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.BloggersAnalyticsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.nnn" />
 
         <receiver
             android:name="com.mycity4kids.reminders.BootCompleteReceiver"

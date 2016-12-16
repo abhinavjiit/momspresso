@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
+import com.google.gson.Gson;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.application.BaseApplication;
@@ -15,9 +17,13 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ConfigAPIs;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Iterator;
+import java.util.Map;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -72,6 +78,10 @@ public class CategorySyncService extends IntentService {
                                      return;
                                  } else {
                                      if (!StringUtils.isNullOrEmpty(responseModel.getData().getMsg())) {
+                                         for (Map.Entry<String, String> entry : responseModel.getData().getResult().getNotificationSettings().entrySet()) {
+                                             SharedPrefUtils.setNotificationConfig(CategorySyncService.this, entry.getKey(), entry.getValue());
+                                         }
+
                                          version = SharedPrefUtils.getConfigCategoryVersion(CategorySyncService.this);
                                          if (version == 0 || version != responseModel.getData().getResult().getCategory().getVersion()) {
                                              location = responseModel.getData().getResult().getCategory().getLocation();
@@ -101,6 +111,8 @@ public class CategorySyncService extends IntentService {
                                                  @Override
                                                  public void onFailure(Call<ResponseBody> call, Throwable t) {
                                                      Log.e("TAGA", "error");
+                                                     Crashlytics.logException(t);
+                                                     Log.d("MC4kException", Log.getStackTraceString(t));
                                                  }
                                              });
                                          }
@@ -129,19 +141,23 @@ public class CategorySyncService extends IntentService {
                                                  @Override
                                                  public void onFailure(Call<ResponseBody> call, Throwable t) {
                                                      Log.e("TAGA", "error");
+                                                     Crashlytics.logException(t);
+                                                     Log.d("MC4kException", Log.getStackTraceString(t));
                                                  }
                                              });
                                          }
                                      }
                                  }
                              } catch (Exception e) {
-                                 e.printStackTrace();
+                                 Crashlytics.logException(e);
+                                 Log.d("MC4kException", Log.getStackTraceString(e));
                              }
                          }
 
                          @Override
                          public void onFailure(Call<ConfigResponse> call, Throwable t) {
-
+                             Crashlytics.logException(t);
+                             Log.d("MC4kException", Log.getStackTraceString(t));
                          }
                      }
         );

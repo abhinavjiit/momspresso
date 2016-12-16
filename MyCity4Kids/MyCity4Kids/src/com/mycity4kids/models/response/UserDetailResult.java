@@ -24,9 +24,8 @@ public class UserDetailResult {
     private String userBio = "";
     private String sessionId;
     private String phoneNumber;
-
     private PhoneDetails phone;
-
+    private SocialTokens socialTokens;
 
     public String getPhoneNumber() {
         return phoneNumber;
@@ -178,5 +177,64 @@ public class UserDetailResult {
 
     public void setPhone(PhoneDetails phone) {
         this.phone = phone;
+    }
+
+    public SocialTokens getSocialTokens() {
+        return socialTokens;
+    }
+
+    public void setSocialTokens(SocialTokens socialTokens) {
+        this.socialTokens = socialTokens;
+    }
+
+    public class SocialTokens {
+        private SocialTokenDesc fb;
+        private SocialTokenDesc twitter;
+        private SocialTokenDesc google;
+
+        public SocialTokenDesc getFb() {
+            return fb;
+        }
+
+        public void setFb(SocialTokenDesc fb) {
+            this.fb = fb;
+        }
+
+        public SocialTokenDesc getTwitter() {
+            return twitter;
+        }
+
+        public void setTwitter(SocialTokenDesc twitter) {
+            this.twitter = twitter;
+        }
+
+        public SocialTokenDesc getGoogle() {
+            return google;
+        }
+
+        public void setGoogle(SocialTokenDesc google) {
+            this.google = google;
+        }
+
+        public class SocialTokenDesc {
+            private String isExpired;
+            private String token;
+
+            public String getIsExpired() {
+                return isExpired;
+            }
+
+            public void setIsExpired(String isExpired) {
+                this.isExpired = isExpired;
+            }
+
+            public String getToken() {
+                return token;
+            }
+
+            public void setToken(String token) {
+                this.token = token;
+            }
+        }
     }
 }

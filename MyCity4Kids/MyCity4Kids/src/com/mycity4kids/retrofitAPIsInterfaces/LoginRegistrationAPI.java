@@ -2,6 +2,8 @@ package com.mycity4kids.retrofitAPIsInterfaces;
 
 import com.mycity4kids.models.request.AddEditKidsInformationRequest;
 import com.mycity4kids.models.request.LoginRegistrationRequest;
+import com.mycity4kids.models.request.SocialConnectRequest;
+import com.mycity4kids.models.response.BaseResponse;
 import com.mycity4kids.models.response.ForgotPasswordResponse;
 import com.mycity4kids.models.response.UserDetailResponse;
 
@@ -34,4 +36,7 @@ public interface LoginRegistrationAPI {
 
     @PUT("v1/users/kid/")
     Call<UserDetailResponse> addEditKidsInformation(@Body AddEditKidsInformationRequest body);
+
+    @PUT("v1/users/socialTokens/")
+    Call<BaseResponse> socialConnect(@Body SocialConnectRequest body);
 }

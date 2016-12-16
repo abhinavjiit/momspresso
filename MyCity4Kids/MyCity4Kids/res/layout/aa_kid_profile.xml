@@ -27,13 +27,13 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <EditText
-                android:inputType="textCapSentences"
                 android:id="@+id/kids_name"
-                android:digits=" abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:digits=" abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
                 android:drawableBottom="@drawable/underline"
+                android:inputType="textCapSentences"
                 android:paddingBottom="7dp"
                 android:textColor="@color/black_color" />
 

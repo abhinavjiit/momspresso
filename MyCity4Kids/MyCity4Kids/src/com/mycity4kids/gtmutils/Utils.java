@@ -66,6 +66,6 @@ public class Utils {
     public static void pushArticleDetailsTimeSpent(Context context, GTMEventType event, String user, String ScreenName, String titleSlug, String timeSpent, String estimatedTime) {
         DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
         // dataLayer.push("user", "monitor1");
-        dataLayer.push(DataLayer.mapOf("event", event, GTMTags.USER_ID, user, GTMTags.ScreenName, ScreenName, GTMTags.HandledUrl, titleSlug, GTMTags.TimeSpent, timeSpent,GTMTags.EstimatedTime, timeSpent));
+        dataLayer.push(DataLayer.mapOf("event", event, GTMTags.USER_ID, user, GTMTags.ScreenName, ScreenName, GTMTags.HandledUrl, titleSlug, GTMTags.TimeSpent, timeSpent,GTMTags.EstimatedTime, estimatedTime));
     }
 }

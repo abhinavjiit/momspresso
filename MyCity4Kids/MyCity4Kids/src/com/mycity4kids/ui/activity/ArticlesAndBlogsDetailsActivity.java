@@ -2048,7 +2048,9 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
     @Override
     public void onBackPressed() {
-        trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
+        if (null == trackArticleReadTime) {
+            trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
+        }
         super.onBackPressed();
     }
 }

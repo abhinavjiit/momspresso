@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/rankCalculation"
+        android:actionMenuTextColor="@color/black_color"
+        android:title="@string/analytics.popup.rank_calculation" />
+
+    <item
+        android:id="@+id/improveRank"
+        android:actionMenuTextColor="@color/black_color"
+        android:title="@string/analytics.popup.improve_rank" />
+</menu>

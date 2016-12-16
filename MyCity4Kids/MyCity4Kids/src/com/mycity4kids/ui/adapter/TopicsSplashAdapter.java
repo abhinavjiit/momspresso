@@ -257,11 +257,13 @@ public class TopicsSplashAdapter extends BaseAdapter {
         holder.popularSubCatTextView1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int action = 0;
                 if (null == selectedTopicsMap.get(top3Cat.get(0).getId())) {
                     Log.d("FOLLOW 1", top3Cat.get(0).getDisplay_name() + ":" + top3Cat.get(0).getId());
                     Utils.pushEventFollowUnfollowTopic(mContext, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, userId, "SearchOrDetailsTopicList", "follow", top3Cat.get(0).getDisplay_name() + ":" + top3Cat.get(0).getId());
                     selectedTopicsMap.put(top3Cat.get(0).getId(), top3Cat.get(0));
                     top3Cat.get(0).setIsSelected(true);
+                    action = 1;
                     holder.popularSubcatLL_1.setBackgroundResource(R.drawable.topics_filled_bg);
                     holder.popularSubCatTextView1.setTextColor(ContextCompat.getColor(mContext, R.color.red_drawer_selected));
                 } else {
@@ -269,6 +271,7 @@ public class TopicsSplashAdapter extends BaseAdapter {
                     Utils.pushEventFollowUnfollowTopic(mContext, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, userId, "SearchOrDetailsTopicList", "unfollow", top3Cat.get(0).getDisplay_name() + ":" + top3Cat.get(0).getId());
                     selectedTopicsMap.remove(top3Cat.get(0).getId());
                     top3Cat.get(0).setIsSelected(false);
+                    action = 0;
                     holder.popularSubcatLL_1.setBackgroundResource(R.drawable.topics_transparent_bg);
                     holder.popularSubCatTextView1.setTextColor(ContextCompat.getColor(mContext, R.color.white_color));
                     holder.anim1.setAnimationListener(new Animation.AnimationListener() {
@@ -295,7 +298,7 @@ public class TopicsSplashAdapter extends BaseAdapter {
                         }
                     });
                 }
-                iTopicSelectionEvent.onTopicSelectionChanged(selectedTopicsMap.size());
+                iTopicSelectionEvent.onTopicSelectionChanged(selectedTopicsMap.size(), action);
                 holder.popularSubcatLL_1.startAnimation(holder.anim1);
             }
         });
@@ -303,11 +306,13 @@ public class TopicsSplashAdapter extends BaseAdapter {
         holder.popularSubCatTextView2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int action = 0;
                 if (null == selectedTopicsMap.get(top3Cat.get(1).getId())) {
                     Log.d("FOLLOW 2", top3Cat.get(1).getDisplay_name() + ":" + top3Cat.get(1).getId());
                     Utils.pushEventFollowUnfollowTopic(mContext, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, userId, "SearchOrDetailsTopicList", "follow", top3Cat.get(1).getDisplay_name() + ":" + top3Cat.get(1).getId());
                     selectedTopicsMap.put(top3Cat.get(1).getId(), top3Cat.get(1));
                     top3Cat.get(1).setIsSelected(true);
+                    action = 1;
                     holder.popularSubcatLL_2.setBackgroundResource(R.drawable.topics_filled_bg);
                     holder.popularSubCatTextView2.setTextColor(ContextCompat.getColor(mContext, R.color.red_drawer_selected));
                 } else {
@@ -315,6 +320,7 @@ public class TopicsSplashAdapter extends BaseAdapter {
                     Utils.pushEventFollowUnfollowTopic(mContext, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, userId, "SearchOrDetailsTopicList", "unfollow", top3Cat.get(1).getDisplay_name() + ":" + top3Cat.get(1).getId());
                     selectedTopicsMap.remove(top3Cat.get(1).getId());
                     top3Cat.get(1).setIsSelected(false);
+                    action = 0;
                     holder.popularSubcatLL_2.setBackgroundResource(R.drawable.topics_transparent_bg);
                     holder.popularSubCatTextView2.setTextColor(ContextCompat.getColor(mContext, R.color.white_color));
                     holder.anim2.setAnimationListener(new Animation.AnimationListener() {
@@ -341,7 +347,7 @@ public class TopicsSplashAdapter extends BaseAdapter {
                         }
                     });
                 }
-                iTopicSelectionEvent.onTopicSelectionChanged(selectedTopicsMap.size());
+                iTopicSelectionEvent.onTopicSelectionChanged(selectedTopicsMap.size(), action);
                 holder.popularSubcatLL_2.startAnimation(holder.anim2);
             }
         });
@@ -349,10 +355,12 @@ public class TopicsSplashAdapter extends BaseAdapter {
         holder.popularSubCatTextView3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int action = 0;
                 if (null == selectedTopicsMap.get(top3Cat.get(2).getId())) {
                     Log.d("FOLLOW 3", top3Cat.get(2).getDisplay_name() + ":" + top3Cat.get(2).getId());
                     Utils.pushEventFollowUnfollowTopic(mContext, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, userId, "SearchOrDetailsTopicList", "follow", top3Cat.get(2).getDisplay_name() + ":" + top3Cat.get(2).getId());
                     top3Cat.get(2).setIsSelected(true);
+                    action = 1;
                     selectedTopicsMap.put(top3Cat.get(2).getId(), top3Cat.get(2));
                     holder.popularSubcatLL_3.setBackgroundResource(R.drawable.topics_filled_bg);
                     holder.popularSubCatTextView3.setTextColor(ContextCompat.getColor(mContext, R.color.red_drawer_selected));
@@ -361,6 +369,7 @@ public class TopicsSplashAdapter extends BaseAdapter {
                     Utils.pushEventFollowUnfollowTopic(mContext, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, userId, "SearchOrDetailsTopicList", "unfollow", top3Cat.get(2).getDisplay_name() + ":" + top3Cat.get(2).getId());
                     selectedTopicsMap.remove(top3Cat.get(2).getId());
                     top3Cat.get(2).setIsSelected(false);
+                    action = 0;
                     holder.popularSubcatLL_3.setBackgroundResource(R.drawable.topics_transparent_bg);
                     holder.popularSubCatTextView3.setTextColor(ContextCompat.getColor(mContext, R.color.white_color));
                     holder.anim3.setAnimationListener(new Animation.AnimationListener() {
@@ -387,7 +396,7 @@ public class TopicsSplashAdapter extends BaseAdapter {
                         }
                     });
                 }
-                iTopicSelectionEvent.onTopicSelectionChanged(selectedTopicsMap.size());
+                iTopicSelectionEvent.onTopicSelectionChanged(selectedTopicsMap.size(), action);
                 holder.popularSubcatLL_3.startAnimation(holder.anim3);
             }
         });
@@ -395,10 +404,12 @@ public class TopicsSplashAdapter extends BaseAdapter {
         holder.popularSubCatTextView4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int action = 0;
                 if (null == selectedTopicsMap.get(top3Cat.get(3).getId())) {
                     Log.d("FOLLOW 4", top3Cat.get(3).getDisplay_name() + ":" + top3Cat.get(3).getId());
                     Utils.pushEventFollowUnfollowTopic(mContext, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, userId, "TopicsSplashList", "follow", top3Cat.get(3).getDisplay_name() + ":" + top3Cat.get(3).getId());
                     top3Cat.get(3).setIsSelected(true);
+                    action = 1;
                     selectedTopicsMap.put(top3Cat.get(3).getId(), top3Cat.get(3));
                     holder.popularSubcatLL_4.setBackgroundResource(R.drawable.topics_filled_bg);
                     holder.popularSubCatTextView4.setTextColor(ContextCompat.getColor(mContext, R.color.red_drawer_selected));
@@ -407,6 +418,7 @@ public class TopicsSplashAdapter extends BaseAdapter {
                     Utils.pushEventFollowUnfollowTopic(mContext, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, userId, "TopicsSplashList", "unfollow", top3Cat.get(3).getDisplay_name() + ":" + top3Cat.get(3).getId());
                     selectedTopicsMap.remove(top3Cat.get(3).getId());
                     top3Cat.get(3).setIsSelected(false);
+                    action = 0;
                     holder.popularSubcatLL_4.setBackgroundResource(R.drawable.topics_transparent_bg);
                     holder.popularSubCatTextView4.setTextColor(ContextCompat.getColor(mContext, R.color.white_color));
                     holder.anim4.setAnimationListener(new Animation.AnimationListener() {
@@ -433,7 +445,7 @@ public class TopicsSplashAdapter extends BaseAdapter {
                         }
                     });
                 }
-                iTopicSelectionEvent.onTopicSelectionChanged(selectedTopicsMap.size());
+                iTopicSelectionEvent.onTopicSelectionChanged(selectedTopicsMap.size(), action);
                 holder.popularSubcatLL_4.startAnimation(holder.anim4);
             }
         });
@@ -456,5 +468,4 @@ public class TopicsSplashAdapter extends BaseAdapter {
         }
         return displayList;
     }
-
 }

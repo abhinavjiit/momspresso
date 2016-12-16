@@ -10,6 +10,7 @@ import com.mycity4kids.models.VersionApiModel;
 import com.mycity4kids.models.city.MetroCity;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.models.version.RateVersion;
+import com.mycity4kids.ui.activity.BloggerDashboardActivity;
 import com.mycity4kids.ui.activity.SplashActivity;
 
 /**
@@ -88,6 +89,7 @@ public class SharedPrefUtils {
     private static final String RATE_NOW_FIRST_CHECK = "ratenow_Chk";
 
     private static final String PHOENIX_FIRST_LAUNCH_FLAG = "phoenixFirstLaunchFlag";
+    private static final String FB_CONNECT_FIRST_LAUNCH_FLAG = "fbConnectFirstLaunchFlag";
 
     private static final String CHANGE_CITY_FLAG = "changeCityFlag";
 
@@ -97,6 +99,8 @@ public class SharedPrefUtils {
 
     public static final String LOCATION_LATITUDE = "latitude";
     public static final String LOCATION_LONGITUDE = "longitude";
+
+    public static final String IS_FB_CONNECTED = "isFBConnected";
 
     /**
      * this shared preference save current versions for control city,locality,category APIs .
@@ -547,6 +551,18 @@ public class SharedPrefUtils {
         return _sharedPref.getBoolean(PHOENIX_FIRST_LAUNCH_FLAG, true);
     }
 
+    public static void setFBConnectFirstLaunch(Context context, boolean flag) {
+        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        _editor.putBoolean(FB_CONNECT_FIRST_LAUNCH_FLAG, flag);
+        _editor.commit();
+    }
+
+    public static boolean isFBConnectFirstLaunch(Context context) {
+        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return _sharedPref.getBoolean(FB_CONNECT_FIRST_LAUNCH_FLAG, true);
+    }
+
     public static void setChangeCityFlag(Context context, boolean flag) {
         SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         Editor _editor = _sharedPref.edit();
@@ -612,5 +628,29 @@ public class SharedPrefUtils {
     public static String getUserLocationLongitude(Context context) {
         SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         return _sharedPref.getString(LOCATION_LONGITUDE, "");
+    }
+
+    public static void setNotificationConfig(Context pContext, String key, String value) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        _editor.putString(key, value);
+        _editor.commit();
+    }
+
+    public static String getNotificationConfig(Context context, String key) {
+        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return _sharedPref.getString(key, "");
+    }
+
+    public static void setFacebookConnectedFlag(Context pContext, String isExpired) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        _editor.putString(IS_FB_CONNECTED, isExpired);
+        _editor.commit();
+    }
+
+    public static String getFacebookConnectedFlag(Context context) {
+        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return _sharedPref.getString(IS_FB_CONNECTED, "");
     }
 }

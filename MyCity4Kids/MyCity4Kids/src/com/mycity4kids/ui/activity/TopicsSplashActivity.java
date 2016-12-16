@@ -4,6 +4,7 @@ import android.accounts.NetworkErrorException;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -64,6 +66,7 @@ public class TopicsSplashActivity extends BaseActivity implements ITopicSelectio
     private ImageView categoryBackButton;
     private TextView doneTextView, countTextView;
     private RelativeLayout selectedCategoriesView;
+    private LinearLayout selectAll;
 
     private ArrayList<SelectTopic> selectTopic;
     private ArrayList<String> previouslyFollowedTopics;
@@ -75,6 +78,8 @@ public class TopicsSplashActivity extends BaseActivity implements ITopicSelectio
 
     private boolean isCategoryMainPage = true;
     private boolean isAddMoreTopic = false;
+    private boolean areAllItemsSelected = true;
+    private int subCatPosition = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +94,7 @@ public class TopicsSplashActivity extends BaseActivity implements ITopicSelectio
         doneTextView = (TextView) findViewById(R.id.doneTextView);
         selectedCategoriesView = (RelativeLayout) findViewById(R.id.selectedCategoriesView);
         selectLabelTextView = (TextView) findViewById(R.id.selectLabelTextView);
-
+        selectAll = (LinearLayout) findViewById(R.id.selectAll);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         searchToolbar = (Toolbar) findViewById(R.id.searchToolbar);
         categoryToolbar = (Toolbar) findViewById(R.id.categoryToolbar);
@@ -123,6 +128,7 @@ public class TopicsSplashActivity extends BaseActivity implements ITopicSelectio
                 popularTopicsListView.setAdapter(searchTopicsSplashAdapter);
                 searchTopicsSplashAdapter.notifyDataSetChanged();
                 isCategoryMainPage = false;
+                selectAll.setVisibility(View.GONE);
                 mToolbar.setVisibility(View.INVISIBLE);
                 searchToolbar.setVisibility(View.VISIBLE);
                 categoryToolbar.setVisibility(View.INVISIBLE);
@@ -137,6 +143,7 @@ public class TopicsSplashActivity extends BaseActivity implements ITopicSelectio
                 if (!isCategoryMainPage) {
                     return;
                 }
+                subCatPosition = position;
                 ArrayList<SelectTopic> topicCompleteSubSubTopicItemList = new ArrayList<SelectTopic>();
                 topicCompleteSubSubTopicItemList.add(selectTopic.get(position));
                 //Need to use a new Adapter everytime because it keeps the reference of the data list and shows older list
@@ -144,9 +151,25 @@ public class TopicsSplashActivity extends BaseActivity implements ITopicSelectio
                 searchTopicsSplashAdapter = new SearchTopicsSplashAdapter(TopicsSplashActivity.this, selectedTopicsMap, topicCompleteSubSubTopicItemList);
                 popularTopicsListView.setAdapter(searchTopicsSplashAdapter);
                 searchTopicsSplashAdapter.notifyDataSetChanged();
+                areAllItemsSelected = true;
+                for (int i = 0; i < topicCompleteSubSubTopicItemList.get(0).getChildTopics().size(); i++) {
+                    if (selectedTopicsMap.get(topicCompleteSubSubTopicItemList.get(0).getChildTopics().get(i).getId()) == null) {
+                        areAllItemsSelected = false;
+                    }
+                }
+                if (areAllItemsSelected) {
+                    ((LinearLayout) selectAll.getChildAt(0)).setBackgroundResource(R.drawable.search_topics_filled_bg);
+                    ((TextView) ((LinearLayout) selectAll.getChildAt(0)).getChildAt(0)).setTextColor(ContextCompat.getColor(TopicsSplashActivity.this, R.color.white_color));
+                    ((TextView) ((LinearLayout) selectAll.getChildAt(0)).getChildAt(0)).setText("DESELECT ALL");
+                } else {
+                    ((LinearLayout) selectAll.getChildAt(0)).setBackgroundResource(R.drawable.search_topics_transparent_bg);
+                    ((TextView) ((LinearLayout) selectAll.getChildAt(0)).getChildAt(0)).setTextColor(ContextCompat.getColor(TopicsSplashActivity.this, R.color.splashtopics_search_topic_item_text));
+                    ((TextView) ((LinearLayout) selectAll.getChildAt(0)).getChildAt(0)).setText("SELECT ALL");
+                }
                 getSupportActionBar().setTitle("");
                 isCategoryMainPage = false;
                 categoryNameTextView.setText(selectTopic.get(position).getDisplayName().toUpperCase());
+                selectAll.setVisibility(View.VISIBLE);
                 mToolbar.setVisibility(View.INVISIBLE);
                 searchToolbar.setVisibility(View.INVISIBLE);
                 categoryToolbar.setVisibility(View.VISIBLE);
@@ -160,6 +183,7 @@ public class TopicsSplashActivity extends BaseActivity implements ITopicSelectio
                 popularTopicsListView.setAdapter(topicsSplashAdapter);
                 isCategoryMainPage = true;
                 mToolbar.setVisibility(View.VISIBLE);
+                selectAll.setVisibility(View.GONE);
                 searchToolbar.setVisibility(View.INVISIBLE);
                 categoryToolbar.setVisibility(View.INVISIBLE);
                 selectLabelTextView.setVisibility(View.VISIBLE);
@@ -198,6 +222,31 @@ public class TopicsSplashActivity extends BaseActivity implements ITopicSelectio
                 intent.putParcelableArrayListExtra("topicsList", topicsList);
                 intent.putStringArrayListExtra("previouslyFollowedTopics", previouslyFollowedTopics);
                 startActivity(intent);
+            }
+        });
+
+        selectAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<SelectTopic> topicCompleteSubSubTopicItemList = new ArrayList<SelectTopic>();
+                topicCompleteSubSubTopicItemList.add(selectTopic.get(subCatPosition));
+                areAllItemsSelected = true;
+                for (int i = 0; i < topicCompleteSubSubTopicItemList.get(0).getChildTopics().size(); i++) {
+                    if (selectedTopicsMap.get(topicCompleteSubSubTopicItemList.get(0).getChildTopics().get(i).getId()) == null) {
+                        areAllItemsSelected = false;
+                    }
+                }
+                if (areAllItemsSelected) {
+                    searchTopicsSplashAdapter.deselectAllItems(popularTopicsListView.getChildAt(0));
+                    ((LinearLayout) selectAll.getChildAt(0)).setBackgroundResource(R.drawable.search_topics_transparent_bg);
+                    ((TextView) ((LinearLayout) selectAll.getChildAt(0)).getChildAt(0)).setTextColor(ContextCompat.getColor(TopicsSplashActivity.this, R.color.splashtopics_search_topic_item_text));
+                    ((TextView) ((LinearLayout) selectAll.getChildAt(0)).getChildAt(0)).setText("SELECT ALL");
+                } else {
+                    searchTopicsSplashAdapter.selectAllItems(popularTopicsListView.getChildAt(0));
+                    ((LinearLayout) selectAll.getChildAt(0)).setBackgroundResource(R.drawable.search_topics_filled_bg);
+                    ((TextView) ((LinearLayout) selectAll.getChildAt(0)).getChildAt(0)).setTextColor(ContextCompat.getColor(TopicsSplashActivity.this, R.color.white_color));
+                    ((TextView) ((LinearLayout) selectAll.getChildAt(0)).getChildAt(0)).setText("DESELECT ALL");
+                }
             }
         });
     }
@@ -417,7 +466,29 @@ public class TopicsSplashActivity extends BaseActivity implements ITopicSelectio
     }
 
     @Override
-    public void onTopicSelectionChanged(int mapSize) {
+    public void onTopicSelectionChanged(int mapSize, int action) {
+        if (action == 0) {
+            ((LinearLayout) selectAll.getChildAt(0)).setBackgroundResource(R.drawable.search_topics_transparent_bg);
+            ((TextView) ((LinearLayout) selectAll.getChildAt(0)).getChildAt(0)).setTextColor(ContextCompat.getColor(TopicsSplashActivity.this, R.color.splashtopics_search_topic_item_text));
+        } else {
+            ArrayList<SelectTopic> topicCompleteSubSubTopicItemList = new ArrayList<SelectTopic>();
+            topicCompleteSubSubTopicItemList.add(selectTopic.get(subCatPosition));
+            areAllItemsSelected = true;
+            for (int i = 0; i < topicCompleteSubSubTopicItemList.get(0).getChildTopics().size(); i++) {
+                if (selectedTopicsMap.get(topicCompleteSubSubTopicItemList.get(0).getChildTopics().get(i).getId()) == null) {
+                    areAllItemsSelected = false;
+                }
+            }
+            if (areAllItemsSelected) {
+                ((LinearLayout) selectAll.getChildAt(0)).setBackgroundResource(R.drawable.search_topics_filled_bg);
+                ((TextView) ((LinearLayout) selectAll.getChildAt(0)).getChildAt(0)).setTextColor(ContextCompat.getColor(TopicsSplashActivity.this, R.color.white_color));
+                ((TextView) ((LinearLayout) selectAll.getChildAt(0)).getChildAt(0)).setText("DESELECT ALL");
+            } else {
+                ((LinearLayout) selectAll.getChildAt(0)).setBackgroundResource(R.drawable.search_topics_transparent_bg);
+                ((TextView) ((LinearLayout) selectAll.getChildAt(0)).getChildAt(0)).setTextColor(ContextCompat.getColor(TopicsSplashActivity.this, R.color.splashtopics_search_topic_item_text));
+                ((TextView) ((LinearLayout) selectAll.getChildAt(0)).getChildAt(0)).setText("SELECT ALL");
+            }
+        }
         if (mapSize >= AppConstants.MINIMUM_TOPICS_FOLLOW_REQUIREMENT) {
             selectedCategoriesView.setVisibility(View.VISIBLE);
             countTextView.setText(mapSize + " topics chosen");
@@ -434,6 +505,7 @@ public class TopicsSplashActivity extends BaseActivity implements ITopicSelectio
             popularTopicsListView.setAdapter(topicsSplashAdapter);
             isCategoryMainPage = true;
             mToolbar.setVisibility(View.VISIBLE);
+            selectAll.setVisibility(View.GONE);
             searchToolbar.setVisibility(View.INVISIBLE);
             categoryToolbar.setVisibility(View.INVISIBLE);
             selectLabelTextView.setVisibility(View.VISIBLE);

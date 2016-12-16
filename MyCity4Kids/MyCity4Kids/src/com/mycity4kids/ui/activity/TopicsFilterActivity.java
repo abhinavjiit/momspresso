@@ -100,17 +100,21 @@ public class TopicsFilterActivity extends BaseActivity {
                 final ArrayList<Topics> topicList = new ArrayList<>();
 
                 ArrayList<Topics> firstList = new ArrayList<>();
-                Topics recentTopic = new Topics("recent", "Recent", false, new ArrayList<Topics>(), "all", "All");
+                Topics recentTopic = new Topics(Constants.KEY_RECENT, "Recent", false, new ArrayList<Topics>(), "all", "All");
                 recentTopic.setDisplay_name("recent");
                 firstList.add(recentTopic);
 
-                Topics trendingTopic = new Topics("trending", "Trending", false, new ArrayList<Topics>(), "all", "All");
+                Topics trendingTopic = new Topics(Constants.KEY_TRENDING, "Trending", false, new ArrayList<Topics>(), "all", "All");
                 trendingTopic.setDisplay_name("trending");
                 firstList.add(trendingTopic);
 
-                Topics popularTopic = new Topics("popular", "Popular", false, new ArrayList<Topics>(), "all", "All");
+                Topics popularTopic = new Topics(Constants.KEY_POPULAR, "Popular", false, new ArrayList<Topics>(), "all", "All");
                 popularTopic.setDisplay_name("popular");
                 firstList.add(popularTopic);
+
+                Topics editorPicksTopic = new Topics(Constants.KEY_EDITOR_PICKS, "Top Picks", false, new ArrayList<Topics>(), "all", "All");
+                editorPicksTopic.setDisplay_name("top picks");
+                firstList.add(editorPicksTopic);
 
                 Topics allTopics = new Topics("all", "All", false, firstList, null, null);
                 allTopics.setDisplay_name("all");

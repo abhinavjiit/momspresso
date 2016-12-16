@@ -43,6 +43,8 @@ import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.IFacebookUser;
 import com.mycity4kids.interfaces.IPlusClient;
 import com.mycity4kids.models.request.LoginRegistrationRequest;
+import com.mycity4kids.models.request.SocialConnectRequest;
+import com.mycity4kids.models.response.BaseResponse;
 import com.mycity4kids.models.response.KidsModel;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.models.user.KidsInfo;
@@ -408,14 +410,38 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                     model.setFirst_name(responseData.getData().get(0).getResult().getFirstName() + " " + responseData.getData().get(0).getResult().getLastName());
                     model.setProfilePicUrl(responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp());
                     model.setSessionId(responseData.getData().get(0).getResult().getSessionId());
+                    model.setLoginMode(loginMode);
                     SharedPrefUtils.setUserDetailModel(ActivityLogin.this, model);
                     SharedPrefUtils.setProfileImgUrl(ActivityLogin.this, responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp());
+
+                    if (null == responseData.getData().get(0).getResult().getSocialTokens()) {
+                        //token already expired or not yet connected with facebook
+                        SharedPrefUtils.setFacebookConnectedFlag(ActivityLogin.this, "1");
+                    } else {
+                        SharedPrefUtils.setFacebookConnectedFlag(ActivityLogin.this,
+                                responseData.getData().get(0).getResult().getSocialTokens().getFb().getIsExpired());
+                    }
 
                     PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
                     String version = pInfo.versionName;
                     if (version.equals(AppConstants.PHOENIX_RELEASE_VERSION)) {
                         SharedPrefUtils.setPhoenixFirstLaunch(ActivityLogin.this, false);
                     }
+                    if (version.equals(AppConstants.FACEBOOK_CONNECT_RELEASE_VERSION)) {
+                        SharedPrefUtils.setFBConnectFirstLaunch(ActivityLogin.this, false);
+                    }
+
+                    if ("fb".equals(loginMode)) {
+                        SocialConnectRequest socialConnectRequest = new SocialConnectRequest();
+                        socialConnectRequest.setToken(accessToken);
+                        socialConnectRequest.setReferer("fb");
+
+                        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+                        LoginRegistrationAPI socialConnectAPI = retrofit.create(LoginRegistrationAPI.class);
+                        Call<BaseResponse> socialConnectCall = socialConnectAPI.socialConnect(socialConnectRequest);
+                        socialConnectCall.enqueue(socialConnectResponseListener);
+                    }
+
                     //facebook login with an account without email
                     if (!AppConstants.VALIDATED_USER.equals(model.getIsValidated()) && "fb".equals(loginMode)) {
                         dialogFragment = new FacebookAddEmailDialogFragment();
@@ -455,6 +481,18 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
             Log.d("MC4kException", Log.getStackTraceString(t));
             Crashlytics.logException(t);
             showToast(getString(R.string.went_wrong));
+        }
+    };
+
+    private Callback<BaseResponse> socialConnectResponseListener = new Callback<BaseResponse>() {
+        @Override
+        public void onResponse(Call<BaseResponse> call, retrofit2.Response<BaseResponse> response) {
+            Log.d("FacebookConnect", "SUCCESS");
+        }
+
+        @Override
+        public void onFailure(Call<BaseResponse> call, Throwable t) {
+            Log.d("FacebookConnect", "FAILURE");
         }
     };
 

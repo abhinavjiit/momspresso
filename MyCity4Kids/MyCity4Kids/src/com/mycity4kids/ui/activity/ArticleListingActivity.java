@@ -29,7 +29,8 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.enums.ParentingFilterType;
+import com.mycity4kids.gtmutils.GTMEventType;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.OnWebServiceCompleteListener;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
@@ -131,6 +132,10 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
 
                 Intent intent = new Intent(ArticleListingActivity.this, ArticlesAndBlogsDetailsActivity.class);
                 if (adapterView.getAdapter() instanceof NewArticlesListingAdapter) {
+                    if (Constants.KEY_FOR_YOU.equals(sortType)) {
+                        Utils.pushEvent(ArticleListingActivity.this, GTMEventType.FOR_YOU_ARTICLE_CLICK_EVENT,
+                                SharedPrefUtils.getUserDetailModel(ArticleListingActivity.this).getDynamoId(), "Article Listing Screen");
+                    }
                     ArticleListingResult parentingListData = (ArticleListingResult) ((NewArticlesListingAdapter) adapterView.getAdapter()).getItem(i);
                     intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
                     intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
@@ -310,7 +315,11 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_search, menu);
+        if (Constants.KEY_FOR_YOU.equals(sortType)) {
+            getMenuInflater().inflate(R.menu.menu_followed_topics, menu);
+        } else {
+            getMenuInflater().inflate(R.menu.menu_search, menu);
+        }
         return true;
     }
 
@@ -325,6 +334,12 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
                 intent.putExtra(Constants.FILTER_NAME, "");
                 intent.putExtra(Constants.TAB_POSITION, 0);
                 startActivity(intent);
+                break;
+            case R.id.addTopics:
+                Intent addTopicsIntent = new Intent(this, TopicsSplashActivity.class);
+                addTopicsIntent.putExtra(AppConstants.IS_ADD_MORE_TOPIC, true);
+                startActivity(addTopicsIntent);
+                break;
         }
         return true;
     }
