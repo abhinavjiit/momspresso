@@ -29,14 +29,13 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.enums.ParentingFilterType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.OnWebServiceCompleteListener;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.newmodels.VolleyBaseResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.ui.adapter.NewArticlesListingAdapter;
+import com.mycity4kids.ui.adapter.BookmarkedArticlesListingAdapter;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.volley.HttpVolleyRequest;
 
@@ -51,7 +50,7 @@ public class BookmarkListActivity extends BaseActivity implements SwipeRefreshLa
 
     }
 
-    NewArticlesListingAdapter articlesListingAdapter;
+    BookmarkedArticlesListingAdapter articlesListingAdapter;
     ArrayList<ArticleListingResult> articleDataModelsNew;
     ListView listView;
     TextView noBlogsTextView;
@@ -95,7 +94,7 @@ public class BookmarkListActivity extends BaseActivity implements SwipeRefreshLa
         hitArticleListingApi(nextPageNumber, "bookmark", true);
         swipeRefreshLayout.setOnRefreshListener((SwipeRefreshLayout.OnRefreshListener) BookmarkListActivity.this);
 
-        articlesListingAdapter = new NewArticlesListingAdapter(BookmarkListActivity.this, true);
+        articlesListingAdapter = new BookmarkedArticlesListingAdapter(BookmarkListActivity.this);
         articlesListingAdapter.setNewListData(articleDataModelsNew);
         listView.setAdapter(articlesListingAdapter);
         articlesListingAdapter.notifyDataSetChanged();
@@ -122,10 +121,9 @@ public class BookmarkListActivity extends BaseActivity implements SwipeRefreshLa
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
                 Intent intent = new Intent(BookmarkListActivity.this, ArticlesAndBlogsDetailsActivity.class);
-                if (adapterView.getAdapter() instanceof NewArticlesListingAdapter) {
-                    ArticleListingResult parentingListData = (ArticleListingResult) ((NewArticlesListingAdapter) adapterView.getAdapter()).getItem(i);
+                if (adapterView.getAdapter() instanceof BookmarkedArticlesListingAdapter) {
+                    ArticleListingResult parentingListData = (ArticleListingResult) ((BookmarkedArticlesListingAdapter) adapterView.getAdapter()).getItem(i);
                     intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
                     intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
                     intent.putExtra(Constants.ARTICLE_COVER_IMAGE, parentingListData.getImageUrl());
@@ -137,14 +135,6 @@ public class BookmarkListActivity extends BaseActivity implements SwipeRefreshLa
             }
         });
     }
-
-    public void refreshBookmarkList() {
-        nextPageNumber = 1;
-        isLastPageReached = false;
-        paginationValue = "";
-        hitArticleListingApi(nextPageNumber, AppConstants.SORT_TYPE_BOOKMARK, false);
-    }
-
 
     private void removeVolleyCache(String sortType) {
         if (AppConstants.SORT_TYPE_BOOKMARK.equals(sortType))
@@ -162,12 +152,10 @@ public class BookmarkListActivity extends BaseActivity implements SwipeRefreshLa
             cacheTo = cacheTo + 15;
             cachedPage = cacheFrom + AppConstants.SEPARATOR_BACKSLASH + cacheTo;
         }
-
     }
 
     private void hitArticleListingApi(int pPageCount, String sortKey, boolean isCacheRequired) {
         if (!ConnectivityUtils.isNetworkEnabled(this)) {
-            // swipeRefreshLayout.setRefreshing(false);
             removeProgressDialog();
             showToast(getString(R.string.error_network));
             return;
@@ -223,7 +211,6 @@ public class BookmarkListActivity extends BaseActivity implements SwipeRefreshLa
                 isReuqestRunning = false;
                 mLodingView.setVisibility(View.GONE);
             }
-
         }
     };
 
@@ -246,16 +233,8 @@ public class BookmarkListActivity extends BaseActivity implements SwipeRefreshLa
                     noBlogsTextView.setVisibility(View.VISIBLE);
                     noBlogsTextView.setText("No articles found");
                 }
-
-//            articleDataModelsNew = dataList;
-//            articlesListingAdapter.setNewListData(articleDataModelsNew);
-//            articlesListingAdapter.notifyDataSetChanged();
-//            noBlogsTextView.setVisibility(View.VISIBLE);
-//            noBlogsTextView.setText("No articles found");
             } else {
                 noBlogsTextView.setVisibility(View.GONE);
-//            totalPageCount = responseData.getResult().getData().getPage_count();
-
                 if (AppConstants.SORT_TYPE_BOOKMARK.equals(sortType)) {
                     if (StringUtils.isNullOrEmpty(paginationValue)) {
                         articleDataModelsNew = dataList;
@@ -287,7 +266,6 @@ public class BookmarkListActivity extends BaseActivity implements SwipeRefreshLa
                         } else {
                             articleDataModelsNew.addAll(dataList);
                         }
-
                     }
                     from = from + 15;
                     to = to + 15;
@@ -300,7 +278,6 @@ public class BookmarkListActivity extends BaseActivity implements SwipeRefreshLa
             Crashlytics.logException(ex);
             Log.d("MC4kException", Log.getStackTraceString(ex));
         }
-
     }
 
     @Override
@@ -324,7 +301,6 @@ public class BookmarkListActivity extends BaseActivity implements SwipeRefreshLa
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         // according to fragment change it
-
         return true;
     }
 

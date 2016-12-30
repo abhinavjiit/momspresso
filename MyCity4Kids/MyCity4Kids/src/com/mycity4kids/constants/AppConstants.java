@@ -383,6 +383,7 @@ public class AppConstants {
     public static final String AUTHOR_TYPE_EDITOR = "Editor";
     public static final String AUTHOR_TYPE_EDITORIAL = "Editorial";
     public static final String AUTHOR_TYPE_EXPERT = "Expert";
+    public static final String AUTHOR_TYPE_FEATURED = "Featured Author";
   /*  public static final String USER_TYPE_EDITOR = "0";
     public static final String USER_TYPE_EXPERT = "1";
     public static final String USER_TYPE_BLOGGER = "2";
@@ -426,6 +427,8 @@ public class AppConstants {
     public static final String USER_TYPE_EXPERT = "6";
     public static final String USER_TYPE_BLOGGER = "7";
     public static final String USER_TYPE_EDITORIAL = "8";
+    public static final String USER_TYPE_FEATURED = "9";
+
     public static final String COMMENT_OR_REPLY_OR_NESTED_REPLY = "editType";
     public static final int EDIT_COMMENT = 0;
     public static final int EDIT_REPLY = 1;
@@ -456,4 +459,8 @@ public class AppConstants {
     public static final int ANALYTICS_TOP_BLOGGERS_COUNT = 5;
     public static final int CONTRIBUTOR_SORT_TYPE_RANK = 2;
 
+    public static final String NOTIFICATION_TYPE_WEBVIEW = "webView";
+    public static final String NOTIFICATION_TYPE_UPCOMING_EVENTS = "upcoming_event_list";
+    public static final String NOTIFICATION_TYPE_PROFILE = "profile";
+    public static final String NOTIFICATION_TYPE_ARTICLE_DETAILS = "article_details";
 }

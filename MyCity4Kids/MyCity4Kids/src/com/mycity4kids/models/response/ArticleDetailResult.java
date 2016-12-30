@@ -29,6 +29,7 @@ public class ArticleDetailResult {
     private ArrayList<Map<String, String>> tags;
     private ArrayList<Map<String, String>> cities;
     private String bookmarkId;
+    private String isMomspresso;
 
     public String getId() {
         return id;
@@ -196,5 +197,13 @@ public class ArticleDetailResult {
 
     public void setBookmarkId(String bookmarkId) {
         this.bookmarkId = bookmarkId;
+    }
+
+    public String getIsMomspresso() {
+        return isMomspresso;
+    }
+
+    public void setIsMomspresso(String isMomspresso) {
+        this.isMomspresso = isMomspresso;
     }
 }

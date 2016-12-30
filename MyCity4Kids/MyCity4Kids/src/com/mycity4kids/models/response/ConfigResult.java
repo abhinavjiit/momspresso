@@ -14,6 +14,7 @@ public class ConfigResult {
     int articleTypeVersion;
     ConfigCategory category;
     private Map<String, String> notificationSettings;
+    private Map<String, String> notificationType;
 
     public int getUserTypeVersion() {
         return userTypeVersion;
@@ -45,5 +46,13 @@ public class ConfigResult {
 
     public void setNotificationSettings(Map<String, String> notificationSettings) {
         this.notificationSettings = notificationSettings;
+    }
+
+    public Map<String, String> getNotificationType() {
+        return notificationType;
+    }
+
+    public void setNotificationType(Map<String, String> notificationType) {
+        this.notificationType = notificationType;
     }
 }

@@ -8,6 +8,7 @@ public class ConfigCategory {
     String location;
 
     int popularVersion;
+    int userTypeVersion;
     String popularLocation;
 
     public int getVersion() {
@@ -40,5 +41,13 @@ public class ConfigCategory {
 
     public void setPopularLocation(String popularLocation) {
         this.popularLocation = popularLocation;
+    }
+
+    public int getUserTypeVersion() {
+        return userTypeVersion;
+    }
+
+    public void setUserTypeVersion(int userTypeVersion) {
+        this.userTypeVersion = userTypeVersion;
     }
 }

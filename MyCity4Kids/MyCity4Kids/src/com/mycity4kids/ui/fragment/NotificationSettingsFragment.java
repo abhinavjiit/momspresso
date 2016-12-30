@@ -146,16 +146,18 @@ public class NotificationSettingsFragment extends BaseFragment {
                     NotificationSettingsResponse responseData = (NotificationSettingsResponse) response.body();
                     if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                         if (null != getActivity()) {
-                            Toast.makeText(getActivity(), "Notification settings updated successfully", Toast.LENGTH_SHORT);
+                            Toast.makeText(getActivity(), "Notification settings updated successfully", Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         if (null != getActivity()) {
-                            Toast.makeText(getActivity(), "Error while updating notification settings", Toast.LENGTH_SHORT);
+                            Toast.makeText(getActivity(), "Error while updating notification settings", Toast.LENGTH_SHORT).show();
+                            ;
                         }
                     }
                 } catch (Exception e) {
                     if (null != getActivity()) {
-                        Toast.makeText(getActivity(), "Error while updating notification settings", Toast.LENGTH_SHORT);
+                        Toast.makeText(getActivity(), "Error while updating notification settings", Toast.LENGTH_SHORT).show();
+                        ;
                     }
                     removeProgressDialog();
                     Crashlytics.logException(e);
@@ -166,7 +168,8 @@ public class NotificationSettingsFragment extends BaseFragment {
             @Override
             public void onFailure(Call<NotificationSettingsResponse> call, Throwable t) {
                 if (null != getActivity()) {
-                    Toast.makeText(getActivity(), "Error while updating notification settings", Toast.LENGTH_SHORT);
+                    Toast.makeText(getActivity(), "Error while updating notification settings", Toast.LENGTH_SHORT).show();
+                    ;
                 }
                 Crashlytics.logException(t);
                 Log.d("MC4kException", Log.getStackTraceString(t));

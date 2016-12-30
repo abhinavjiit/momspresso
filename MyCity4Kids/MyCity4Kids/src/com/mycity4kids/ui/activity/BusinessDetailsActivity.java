@@ -245,11 +245,11 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
             showProgressDialog(getString(R.string.fetching_data));
 
 
-            Call<DetailsResponse> filterCall = topicsAPI.getEventDetails(businessId, "" + categoryId,
-                    SharedPrefUtils.getUserDetailModel(this).getId(), _requestModel.getType(), "" + _latitude, "" + _longitude, SharedPrefUtils.getpinCode(this));
-            filterCall.enqueue(eventDetailsResponseCallback);
+//            Call<DetailsResponse> filterCall = topicsAPI.getEventDetails(businessId, "" + categoryId,
+//                    SharedPrefUtils.getUserDetailModel(this).getId(), _requestModel.getType(), "" + _latitude, "" + _longitude, SharedPrefUtils.getpinCode(this));
+//            filterCall.enqueue(eventDetailsResponseCallback);
 
-//            _controller.getData(AppConstants.BUSINESS_AND_EVENT_DETAILS_REQUEST, _requestModel);
+            _controller.getData(AppConstants.BUSINESS_AND_EVENT_DETAILS_REQUEST, _requestModel);
         }
         mDetailsHeader = (DetailHeader) findViewById(R.id.detailsHeader);
         mDetailsHeader.inflateHeader(mEventOrBusiness);

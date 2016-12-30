@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="10dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="10dp">
+
+    <TextView
+        android:id="@+id/notificationTitleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/notificationDateTextView"
+        android:fontFamily="sans-serif"
+        android:text="mycity4kids"
+        android:textColor="@color/black_color"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/notificationBodyTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/notificationTitleTextView"
+        android:layout_marginTop="2dp"
+        android:ellipsize="end"
+        android:fontFamily="sans-serif-light"
+        android:text="Review Title"
+        android:textColor="@color/black_color"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/notificationDateTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:fontFamily="sans-serif-light"
+        android:paddingLeft="10dp"
+        android:text="Address and Date"
+        android:textSize="11sp" />
+
+</RelativeLayout>

@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="4dp">
+
+    //Do not change order of the child layouts. Used childAt function
 
     <TextView
         android:id="@+id/subcategoryTextView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="5dp"
+        android:layout_height="match_parent"
         android:background="@drawable/tags_bg"
         android:fontFamily="sans-serif-light"
         android:gravity="center"
@@ -20,4 +21,20 @@
         android:paddingTop="6dp"
         android:textColor="@color/ad.tags.text"
         android:textSize="12sp" />
-</LinearLayout>
+
+    <View
+        android:id="@+id/seperator"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@+id/subcategoryTextView"
+        android:background="@color/white_color" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/seperator"
+        android:background="@drawable/tags_bg"
+        android:padding="10dp"
+        android:src="@drawable/follow_plus" />
+</RelativeLayout>

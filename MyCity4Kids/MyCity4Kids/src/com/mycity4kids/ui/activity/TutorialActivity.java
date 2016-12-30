@@ -271,7 +271,8 @@ public class TutorialActivity extends BaseActivity implements View.OnClickListen
                     model.setEmail(responseData.getData().get(0).getResult().getEmail());
                     model.setMc4kToken(responseData.getData().get(0).getResult().getMc4kToken());
                     model.setIsValidated(responseData.getData().get(0).getResult().getIsValidated());
-                    model.setFirst_name(responseData.getData().get(0).getResult().getFirstName() + " " + responseData.getData().get(0).getResult().getLastName());
+                    model.setFirst_name(responseData.getData().get(0).getResult().getFirstName());
+                    model.setLast_name(responseData.getData().get(0).getResult().getLastName());
                     model.setProfilePicUrl(responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp());
                     model.setSessionId(responseData.getData().get(0).getResult().getSessionId());
                     model.setLoginMode(loginMode);

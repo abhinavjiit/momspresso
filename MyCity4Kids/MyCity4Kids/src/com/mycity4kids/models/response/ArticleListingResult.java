@@ -3,6 +3,9 @@ package com.mycity4kids.models.response;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+import java.util.Map;
+
 /**
  * Created by hemant on 5/7/16.
  */
@@ -14,7 +17,7 @@ public class ArticleListingResult implements Parcelable {
     private String titleSlug;
     private ImageURL imageUrl;
     private String userName;
-    private ProfilePic profilePics;
+    private ProfilePic profilePic;
     private String userId;
     private String userType;
     private String commentsCount;
@@ -23,6 +26,9 @@ public class ArticleListingResult implements Parcelable {
     private Long createdTime;
     private String articleCount;
     private String videoUrl;
+    private ArrayList<Map<String, String>> tags;
+    private String likesCount;
+    private String reason;
 
     protected ArticleListingResult(Parcel in) {
         id = in.readString();
@@ -31,7 +37,7 @@ public class ArticleListingResult implements Parcelable {
         titleSlug = in.readString();
         imageUrl = in.readParcelable(ImageURL.class.getClassLoader());
         userName = in.readString();
-        profilePics = in.readParcelable(ProfilePic.class.getClassLoader());
+        profilePic = in.readParcelable(ProfilePic.class.getClassLoader());
         userId = in.readString();
         userType = in.readString();
         commentsCount = in.readString();
@@ -40,6 +46,7 @@ public class ArticleListingResult implements Parcelable {
         createdTime = in.readLong();
         articleCount = in.readString();
         videoUrl = in.readString();
+        reason = in.readString();
     }
 
     public static final Creator<ArticleListingResult> CREATOR = new Creator<ArticleListingResult>() {
@@ -103,11 +110,11 @@ public class ArticleListingResult implements Parcelable {
     }
 
     public ProfilePic getProfilePic() {
-        return profilePics;
+        return profilePic;
     }
 
     public void setProfilePic(ProfilePic profilePic) {
-        this.profilePics = profilePic;
+        this.profilePic = profilePic;
     }
 
     public String getUserId() {
@@ -174,6 +181,30 @@ public class ArticleListingResult implements Parcelable {
         this.videoUrl = videoUrl;
     }
 
+    public ArrayList<Map<String, String>> getTags() {
+        return tags;
+    }
+
+    public void setTags(ArrayList<Map<String, String>> tags) {
+        this.tags = tags;
+    }
+
+    public String getLikesCount() {
+        return likesCount;
+    }
+
+    public void setLikesCount(String likesCount) {
+        this.likesCount = likesCount;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -187,7 +218,7 @@ public class ArticleListingResult implements Parcelable {
         dest.writeString(titleSlug);
         dest.writeParcelable(imageUrl, flags);
         dest.writeString(userName);
-        dest.writeParcelable(profilePics, flags);
+        dest.writeParcelable(profilePic, flags);
         dest.writeString(userId);
         dest.writeString(userType);
         dest.writeString(commentsCount);
@@ -196,6 +227,7 @@ public class ArticleListingResult implements Parcelable {
         dest.writeLong(createdTime);
         dest.writeString(articleCount);
         dest.writeString(videoUrl);
+        dest.writeString(reason);
     }
 
 

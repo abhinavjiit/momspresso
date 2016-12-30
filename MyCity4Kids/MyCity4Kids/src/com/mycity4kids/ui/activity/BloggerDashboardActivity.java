@@ -46,6 +46,7 @@ import com.mycity4kids.models.parentingdetails.ImageData;
 import com.mycity4kids.models.request.ArticleDetailRequest;
 import com.mycity4kids.models.request.FollowUnfollowUserRequest;
 import com.mycity4kids.models.request.UpdateUserDetail;
+import com.mycity4kids.models.request.UpdateUserDetailsRequest;
 import com.mycity4kids.models.response.ArticleDetailResponse;
 import com.mycity4kids.models.response.ArticleDetailResult;
 import com.mycity4kids.models.response.ArticleDraftResponse;
@@ -1336,7 +1337,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     }
 
     public void setProfileImage(String url) {
-        UpdateUserDetail updateUserDetail = new UpdateUserDetail();
+        UpdateUserDetailsRequest updateUserDetail = new UpdateUserDetailsRequest();
         updateUserDetail.setAttributeName("profilePicUrl");
         updateUserDetail.setAttributeValue(url);
         updateUserDetail.setAttributeType("S");

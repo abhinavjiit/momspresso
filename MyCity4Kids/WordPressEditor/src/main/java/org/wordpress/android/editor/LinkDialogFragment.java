@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -63,7 +64,14 @@ public class LinkDialogFragment extends DialogFragment {
             }
             urlEditText.setSelection(urlEditText.length());
         }
-
-        return builder.create();
+        final AlertDialog alertDialog = builder.create();
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(getActivity(), R.color.black));
+                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(getActivity(), R.color.black));
+            }
+        });
+        return alertDialog;
     }
 }

@@ -100,7 +100,7 @@ public class ArticleViewFragment extends BaseFragment implements SwipeRefreshLay
 //        }
         swipeRefreshLayout.setOnRefreshListener((SwipeRefreshLayout.OnRefreshListener) ArticleViewFragment.this);
 
-        articlesListingAdapter = new NewArticlesListingAdapter(getActivity(), true);
+        articlesListingAdapter = new NewArticlesListingAdapter(getActivity());
         articlesListingAdapter.setNewListData(articleDataModelsNew);
         listView.setAdapter(articlesListingAdapter);
         articlesListingAdapter.notifyDataSetChanged();

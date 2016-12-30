@@ -130,7 +130,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         nextPageNumber = 1;
         hitFilteredTopicsArticleListingApi(sortType);
 
-        articlesListingAdapter = new NewArticlesListingAdapter(this, true);
+        articlesListingAdapter = new NewArticlesListingAdapter(this);
         articlesListingAdapter.setNewListData(articleDataModelsNew);
         listView.setAdapter(articlesListingAdapter);
         articlesListingAdapter.notifyDataSetChanged();

@@ -249,4 +249,16 @@ public class DateTimeUtils {
         }
         return dated.getTime();
     }
+
+    public static String getMMMDDFormatDate(String timeStampStr) {
+
+        try {
+            long tStamp = Long.parseLong(timeStampStr);
+            java.text.DateFormat sdf = new SimpleDateFormat("MMM dd");
+            Date netDate = new Date(tStamp * 1000);
+            return sdf.format(netDate);
+        } catch (Exception ex) {
+            return "xx";
+        }
+    }
 }

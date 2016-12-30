@@ -27,85 +27,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <LinearLayout
-                android:id="@+id/momspressoLL"
+            <com.mycity4kids.widget.HorizontalScrollCustomView
+                android:id="@+id/momspressoSection"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:id="@+id/momspressoHeader"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
-
-                    <ImageView
-                        android:id="@+id/go_to_momspresso"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight=".12"
-                        android:src="@null"
-                        android:visibility="gone" />
-
-                    <TextView
-                        android:id="@+id/txtMomspresso"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight=".85"
-                        android:paddingBottom="3dp"
-                        android:paddingLeft="8dp"
-                        android:text="MOMSPRESSO VIDEOS"
-                        android:textColor="@color/primary_blue"
-                        android:textSize="15sp" />
-                </LinearLayout>
-
-                <ProgressBar
-                    android:id="@+id/momspressoProgressbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="visible" />
-
-                <TextView
-                    android:id="@+id/no_momspresso"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:padding="2dp"
-                    android:text="No Blogs Listed"
-                    android:textColor="@color/grey"
-                    android:textSize="12dp"
-                    android:visibility="gone" />
-
-                <HorizontalScrollView
-                    android:id="@+id/momspressolist"
-                    android:layout_width="match_parent"
-                    android:layout_height="230dp"
-                    android:layout_marginTop="1dp"
-                    android:divider="@color/dividercolor"
-                    android:dividerHeight="0.3dp"
-                    android:scrollbars="none">
-
-                    <LinearLayout
-                        android:id="@+id/momspressoHZScrollLinearLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal" />
-                </HorizontalScrollView>
-
-                <TextView
-                    android:id="@+id/txv_go_to_momspresso"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="15dp"
-                    android:text="@string/home_goto_blog"
-                    android:textColor="@color/home_light_blue"
-                    android:textStyle="bold"
-                    android:visibility="gone" />
-
-            </LinearLayout>
+                android:layout_height="wrap_content" />
 
             <com.mycity4kids.widget.HorizontalScrollCustomView
                 android:id="@+id/editorPicksSection"

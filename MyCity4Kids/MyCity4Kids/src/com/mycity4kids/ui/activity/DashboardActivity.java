@@ -6,16 +6,20 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,7 +27,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.HitBuilders;
@@ -31,6 +37,7 @@ import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.gson.Gson;
+import com.joanzapata.iconify.widget.IconButton;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -147,6 +154,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private int blogListPosition;
     Tracker t;
     private String deepLinkUrl;
+    String fragmentToLoad = "";
+    private int hot_number = 2;
+    private TextView ui_hot = null;
+    private TextView itemMessagesBadgeTextView;
+    private RelativeLayout badgeLayout;
 
     // The onNewIntent() is overridden to get and resolve the data for deep linking
     @Override
@@ -179,6 +191,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 Intent intent1 = new Intent(this, LoadWebViewActivity.class);
                 intent1.putExtra(Constants.WEB_VIEW_URL, url);
                 startActivity(intent1);
+            } else if (notificationExtras.getString("type").equalsIgnoreCase("profile")) {
+                String u_id = notificationExtras.getString("userId");
+                Intent intent1 = new Intent(this, BloggerDashboardActivity.class);
+                intent1.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, u_id);
+                startActivity(intent1);
+            } else if (notificationExtras.getString("type").equalsIgnoreCase("upcoming_event_list")) {
+                fragmentToLoad = Constants.BUSINESS_EVENTLIST_FRAGMENT;
+//                intent.getExtras().putString(Constants.LOAD_FRAGMENT, Constants.BUSINESS_EVENTLIST_FRAGMENT);
             }
         } else {
             String tempDeepLinkURL = intent.getStringExtra(AppConstants.DEEP_LINK_URL);
@@ -186,7 +206,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_EDITOR_URL)) {
                     final String bloggerId = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("/") + 1, tempDeepLinkURL.length());
                     if (!StringUtils.isNullOrEmpty(bloggerId) && !bloggerId.equals(SharedPrefUtils.getUserDetailModel(this).getDynamoId())) {
-                        showAlertDialog("Message", "Logged in as " + SharedPrefUtils.getUserDetailModel(this).getFirst_name(), new OnButtonClicked() {
+                        showAlertDialog("Message", "Logged in as " + SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name(), new OnButtonClicked() {
                             @Override
                             public void onButtonCLick(int buttonId) {
                                 if (Build.VERSION.SDK_INT > 15) {
@@ -210,7 +230,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_PROFILE_URL)) {
                     final String bloggerId = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("/") + 1, tempDeepLinkURL.length());
                     if (!StringUtils.isNullOrEmpty(bloggerId) && !bloggerId.equals(SharedPrefUtils.getUserDetailModel(this).getDynamoId())) {
-                        showAlertDialog("Message", "Logged in as " + SharedPrefUtils.getUserDetailModel(this).getFirst_name(), new OnButtonClicked() {
+                        showAlertDialog("Message", "Logged in as " + SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name(), new OnButtonClicked() {
                             @Override
                             public void onButtonCLick(int buttonId) {
                                 Intent profileIntent = new Intent(DashboardActivity.this, BloggerDashboardActivity.class);
@@ -226,6 +246,16 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 } else {
                     getDeepLinkData(tempDeepLinkURL);
                 }
+            } else if (Constants.BUSINESS_EVENTLIST_FRAGMENT.equals(intent.getStringExtra(Constants.LOAD_FRAGMENT))) {
+                fragmentToLoad = Constants.BUSINESS_EVENTLIST_FRAGMENT;
+                setTitle("Upcoming Events");
+                FragmentBusinesslistEvents fragment = new FragmentBusinesslistEvents();
+                Bundle mBundle = new Bundle();
+                mBundle.putInt(Constants.PAGE_TYPE, Constants.EVENT_PAGE_TYPE);
+                mBundle.putInt(Constants.EXTRA_CATEGORY_ID, SharedPrefUtils.getEventIdForCity(DashboardActivity.this));
+                mBundle.putString(Constants.CATEGOTY_NAME, "Events & workshop");
+                fragment.setArguments(mBundle);
+                replaceFragment(fragment, mBundle, true);
             }
             deepLinkUrl = intent.getStringExtra(AppConstants.DEEP_LINK_URL);
         }
@@ -253,9 +283,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         onNewIntent(getIntent());
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
-        String fragmentToLoad = "";
-        if (null != extras)
-            fragmentToLoad = extras.getString("load_fragment", "");
+
+        if (null != intent.getParcelableExtra("notificationExtras")) {
+            if ("upcoming_event_list".equals(((Bundle) intent.getParcelableExtra("notificationExtras")).getString("type")))
+                fragmentToLoad = Constants.BUSINESS_EVENTLIST_FRAGMENT;
+        }
 
         taskData = new TableTaskData(BaseApplication.getInstance());
 
@@ -287,7 +319,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         tempyear = currentdate.get(Calendar.YEAR);
 
         year.setText(String.valueOf(tempyear));
-        mUsernName.setText(SharedPrefUtils.getUserDetailModel(this).getFirst_name());
+        mUsernName.setText(SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name());
         // setting profile image
 
         updateImageProfile();
@@ -765,41 +797,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         });
 
     }
-/*
-    private String getTimingCategory() {
-        return ((EditText) getView().findViewById(R.id.editTimingCategory)).getText().toString().trim();
-    }
-
-    private long getTimingInterval() {
-        String value =
-                ((EditText) getView().findViewById(R.id.editTimingInterval)).getText().toString().trim();
-        if (value.length() == 0) {
-            return 0;
-        }
-        return Long.valueOf(value);
-    }
-
-    private String getTimingName() {
-        return ((EditText) getView().findViewById(R.id.editTimingName)).getText().toString().trim();
-    }
-
-    private String getTimingLabel() {
-        return ((EditText) getView().findViewById(R.id.editTimingLabel)).getText().toString().trim();
-    }
-*/
-
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
 
         View v = getCurrentFocus();
         boolean ret = super.dispatchTouchEvent(event);
-
-//        if (findViewById(R.id.month_popup).getVisibility() == View.VISIBLE)
-//            findViewById(R.id.month_popup).setVisibility(View.GONE);
-//
-//        if (findViewById(R.id.task_popup).getVisibility() == View.VISIBLE)
-//            findViewById(R.id.task_popup).setVisibility(View.GONE);
 
         Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
 
@@ -830,45 +833,16 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             downArrow.setVisibility(View.VISIBLE);
         else
             downArrow.setVisibility(View.GONE);
-
-    }
-
-    public void notiftTaskinFragment() {
-
-        Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-
-        if (topFragment instanceof FragmentTaskHome) {
-
-            // get share prefrence list
-            int listid = SharedPrefUtils.getTaskListID(this);
-            if (listid == 0) {
-                taskIconFlag = false;
-                setTitle("All Tasks");
-                ((FragmentTaskHome) topFragment).NotifyTaskByListId(false, 0);
-            } else {
-                // get name from db according to list
-
-                taskIconFlag = true;
-                setTitle(new TableTaskList(BaseApplication.getInstance()).getListName(listid));
-                ((FragmentTaskHome) topFragment).NotifyTaskByListId(true, listid);
-            }
-
-            notiftTaskList();
-
-            refreshMenu();
-        }
-
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mUsernName.setText(SharedPrefUtils.getUserDetailModel(this).getFirst_name());
+        mUsernName.setText(SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name());
         updateImageProfile();
         final Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-        findViewById(R.id.month_popup).setVisibility(View.GONE);
-        findViewById(R.id.task_popup).setVisibility(View.GONE);
+//        findViewById(R.id.month_popup).setVisibility(View.GONE);
+//        findViewById(R.id.task_popup).setVisibility(View.GONE);
         refreshMenu();
         if (topFragment instanceof FragmentCalender) {
             ((FragmentCalender) topFragment).refreshView();
@@ -879,7 +853,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 e.printStackTrace();
             }
         } else if (topFragment instanceof FragmentMC4KHome) {
-
             try {
                 ((FragmentMC4KHome) topFragment).refreshList();
             } catch (ParseException e) {
@@ -969,7 +942,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         mDrawerToggle.syncState();
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -977,6 +949,25 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         final Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
         if (topFragment instanceof FragmentMC4KHome) {
             getMenuInflater().inflate(R.menu.menu_home, menu);
+//            MenuItem itemMessages = menu.findItem(R.id.menu_messages);
+//
+//            badgeLayout = (RelativeLayout) MenuItemCompat.getActionView(itemMessages);
+////            final View menu_hotlist = MenuItemCompat.getActionView(itemMessages);
+//            itemMessagesBadgeTextView = (TextView) badgeLayout.findViewById(R.id.badge_textView);
+//            itemMessagesBadgeTextView.setVisibility(View.GONE); // initially hidden
+//
+//            IconButton iconButtonMessages = (IconButton) badgeLayout.findViewById(R.id.badge_icon_button);
+////            iconButtonMessages.setText("{fa-envelope}");
+//            iconButtonMessages.setTextColor(ContextCompat.getColor(this, R.color.grey));
+//
+//            iconButtonMessages.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    Log.d("NNNNNN------", "PPPPPPPPPP");
+//                    Intent wintent = new Intent(getApplicationContext(), NotificationCenterListActivity.class);
+//                    startActivity(wintent);
+//                }
+//            });
         } else if (topFragment instanceof FragmentCityForKids) {
 
         } else if (topFragment instanceof FragmentCalender) {
@@ -1046,20 +1037,80 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         } else if (topFragment instanceof FragmentHomeCategory) {
             getMenuInflater().inflate(R.menu.kidsresource_listing, menu);
         }
-
         return true;
     }
 
+    private void onHotlistSelected() {
+        Log.d("vfvfvfvvfvfvfv", "dwadawd");
+    }
+
+    // call the updating code on the main thread,
+// so we can call this asynchronously
+    public void updateHotCount(final int new_hot_number) {
+        hot_number = new_hot_number;
+        if (ui_hot == null) return;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (new_hot_number == 0)
+                    ui_hot.setVisibility(View.INVISIBLE);
+                else {
+                    ui_hot.setVisibility(View.VISIBLE);
+                    ui_hot.setText(Integer.toString(new_hot_number));
+                }
+            }
+        });
+    }
+
+
+    static abstract class MyMenuItemStuffListener implements View.OnClickListener, View.OnLongClickListener {
+        private String hint;
+        private View view;
+
+        MyMenuItemStuffListener(View view, String hint) {
+            this.view = view;
+            this.hint = hint;
+            view.setOnClickListener(this);
+            view.setOnLongClickListener(this);
+        }
+
+        @Override
+        abstract public void onClick(View v);
+
+        @Override
+        public boolean onLongClick(View v) {
+            final int[] screenPos = new int[2];
+            final Rect displayFrame = new Rect();
+            view.getLocationOnScreen(screenPos);
+            view.getWindowVisibleDisplayFrame(displayFrame);
+            final Context context = view.getContext();
+            final int width = view.getWidth();
+            final int height = view.getHeight();
+            final int midy = screenPos[1] + height / 2;
+            final int screenWidth = context.getResources().getDisplayMetrics().widthPixels;
+            Toast cheatSheet = Toast.makeText(context, hint, Toast.LENGTH_SHORT);
+            if (midy < displayFrame.height()) {
+                cheatSheet.setGravity(Gravity.TOP | Gravity.RIGHT,
+                        screenWidth - screenPos[0] - width / 2, height);
+            } else {
+                cheatSheet.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, height);
+            }
+            cheatSheet.show();
+            return true;
+        }
+    }
 
     @Override
     public void setTitle(CharSequence title) {
         mTitle = title;
-        if (StringUtils.isEmpty(mTitle)) {
-            getSupportActionBar().setIcon(R.drawable.app_logo);
-        } else {
-            getSupportActionBar().setIcon(null);
+        if (getSupportActionBar() != null) {
+            if (StringUtils.isEmpty(mTitle)) {
+                getSupportActionBar().setIcon(R.drawable.myicon);
+            } else {
+                getSupportActionBar().setIcon(null);
+            }
+            getSupportActionBar().setTitle(mTitle);
         }
-        getSupportActionBar().setTitle(mTitle);
     }
 
     @Override
@@ -1108,7 +1159,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 }
                 break;
             case R.id.write:
-                Log.d("dwad", "dwa");
                 if (Build.VERSION.SDK_INT > 15) {
                     Utils.pushEvent(DashboardActivity.this, GTMEventType.ADD_BLOG_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Left Menu Screen");
                     launchEditor();
@@ -1123,6 +1173,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     intent.putExtra(Constants.TAB_POSITION, 0);
                     startActivity(intent);
                 }
+                break;
+            case R.id.notification_center:
+                Intent wintent = new Intent(DashboardActivity.this, NotificationCenterListActivity.class);
+                startActivity(wintent);
                 break;
             case R.id.three_bar:
                 replaceFragment(new FragmentCalender(), null, true);

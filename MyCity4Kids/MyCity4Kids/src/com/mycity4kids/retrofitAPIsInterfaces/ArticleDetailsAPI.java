@@ -34,6 +34,10 @@ public interface ArticleDetailsAPI {
     @GET("https://s3-ap-southeast-1.amazonaws.com/mycity4kids-phoenix/articles-data/{articleId}.json")
     Call<ArticleDetailResult> getArticleDetailsFromS3(@Path("articleId") String articleId);
 
+//    For Local JSON Testing
+//    @GET("http://10.0.0.27/test/article-fa3ae55a274040688a4370b055e6f8d6.json")
+//    Call<ArticleDetailResult> getArticleDetailsFromLocal();
+
     @GET("/v1/articles/doc/")
     Call<ArticleDetailResponse> getArticleDetailsFromWebservice(@Query("articleId") String articleId);
 

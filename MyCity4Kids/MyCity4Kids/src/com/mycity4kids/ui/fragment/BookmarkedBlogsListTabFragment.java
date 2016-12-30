@@ -77,7 +77,7 @@ public class BookmarkedBlogsListTabFragment extends BaseFragment {
 //        nextPageNumber=1;
         hitBookmarkedArticleListingAPI();
 
-        articlesListingAdapter = new NewArticlesListingAdapter(getActivity(), true);
+        articlesListingAdapter = new NewArticlesListingAdapter(getActivity());
         articlesListingAdapter.setNewListData(articleDataModelsNew);
         listView.setAdapter(articlesListingAdapter);
         articlesListingAdapter.notifyDataSetChanged();

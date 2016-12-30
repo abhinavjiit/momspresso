@@ -1,5 +1,6 @@
 package com.mycity4kids.ui.fragment;
 
+import android.accounts.NetworkErrorException;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -236,6 +237,8 @@ public class CommentRepliesDialogFragment extends DialogFragment implements OnCl
         public void onResponse(Call<AddCommentResponse> call, retrofit2.Response<AddCommentResponse> response) {
             removeProgressDialog();
             if (response == null || null == response.body()) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                Crashlytics.logException(nee);
                 ((ArticlesAndBlogsDetailsActivity) getActivity()).showToast("Something went wrong from server");
                 return;
             }
@@ -270,7 +273,7 @@ public class CommentRepliesDialogFragment extends DialogFragment implements OnCl
         cData.setId(commentId);
         cData.setCommentLevel(0);
         cData.setBody(addReplyEditText.getText().toString());
-        cData.setName(SharedPrefUtils.getUserDetailModel(getActivity()).getFirst_name());
+        cData.setName(SharedPrefUtils.getUserDetailModel(getActivity()).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(getActivity()).getLast_name());
         cData.setUserId(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId());
         cData.setCreate("" + System.currentTimeMillis() / 1000);
         cData.setParent_id(parentId);
@@ -295,7 +298,7 @@ public class CommentRepliesDialogFragment extends DialogFragment implements OnCl
         cData.setId(commentId);
         cData.setCommentLevel(1);
         cData.setBody(addReplyEditText.getText().toString());
-        cData.setName(SharedPrefUtils.getUserDetailModel(getActivity()).getFirst_name());
+        cData.setName(SharedPrefUtils.getUserDetailModel(getActivity()).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(getActivity()).getLast_name());
         cData.setCreate("" + System.currentTimeMillis() / 1000);
         cData.setParent_id(parentId);
         cData.setUserId(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId());

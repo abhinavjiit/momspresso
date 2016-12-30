@@ -120,6 +120,9 @@ public class ParentingBlogAdapter extends BaseAdapter {
                 case AppConstants.USER_TYPE_REPORT_MANAGER:
                     holder.authorType.setText("Report Manager");
                     break;
+                case AppConstants.USER_TYPE_FEATURED:
+                    holder.authorType.setText(AppConstants.AUTHOR_TYPE_FEATURED);
+                    break;
                 default:
                     holder.authorType.setText("Blogger");
                     break;

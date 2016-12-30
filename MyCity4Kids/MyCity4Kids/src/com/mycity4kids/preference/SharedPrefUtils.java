@@ -10,6 +10,7 @@ import com.mycity4kids.models.VersionApiModel;
 import com.mycity4kids.models.city.MetroCity;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.models.version.RateVersion;
+import com.mycity4kids.sync.CategorySyncService;
 import com.mycity4kids.ui.activity.BloggerDashboardActivity;
 import com.mycity4kids.ui.activity.SplashActivity;
 
@@ -32,6 +33,7 @@ public class SharedPrefUtils {
     public static final String CATEGORY_VERSION = "categoryVersion";
     public static final String CONFIG_CATEGORY_VERSION = "configCategoryVersion";
     public static final String POPULAR_CONFIG_CATEGORY_VERSION = "popularConfigCategoryVersion";
+    public static final String USER_TYPE_VERSION = "userTypeVersion";
     /**
      * Selected City related prefs constants
      */
@@ -63,6 +65,8 @@ public class SharedPrefUtils {
     public static final String MOBILE = "mobile";
     public static final String COLOR_CODE = "colorcode";
     public static final String USER_NAME = "username";
+    public static final String FIRST_NAME = "firstName";
+    public static final String LAST_NAME = "lastName";
     public static final String SESSIONID = "sessionid";
     public static final String MC4KTOKEN = "mc4kToken";
     public static final String IS_USER_VALIDATED = "isValidated";
@@ -275,7 +279,9 @@ public class SharedPrefUtils {
         _editor.putString(MOBILE, pModel.getMobile_number());
         _editor.putString(COLOR_CODE, pModel.getColor_code());
         _editor.putInt(FAMILY_ID, pModel.getFamily_id());
-        _editor.putString(USER_NAME, pModel.getFirst_name());
+        _editor.putString(USER_NAME, pModel.getFirst_name() + pModel.getLast_name());
+        _editor.putString(FIRST_NAME, pModel.getFirst_name());
+        _editor.putString(LAST_NAME, pModel.getLast_name());
         _editor.putString(SESSIONID, pModel.getSessionId());
         _editor.putString(MC4KTOKEN, pModel.getMc4kToken());
         _editor.putString(IS_USER_VALIDATED, pModel.getIsValidated());
@@ -297,7 +303,8 @@ public class SharedPrefUtils {
         user.setEmail(_sharedPref.getString(EMAIL, ""));
         user.setMobile_number(_sharedPref.getString(MOBILE, ""));
         user.setColor_code(_sharedPref.getString(COLOR_CODE, ""));
-        user.setFirst_name(_sharedPref.getString(USER_NAME, "user"));
+        user.setFirst_name(_sharedPref.getString(FIRST_NAME, ""));
+        user.setLast_name(_sharedPref.getString(LAST_NAME, ""));
         user.setSessionId(_sharedPref.getString(SESSIONID, ""));
         user.setMc4kToken(_sharedPref.getString(MC4KTOKEN, ""));
         user.setIsValidated(_sharedPref.getString(IS_USER_VALIDATED, ""));
@@ -652,5 +659,43 @@ public class SharedPrefUtils {
     public static String getFacebookConnectedFlag(Context context) {
         SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         return _sharedPref.getString(IS_FB_CONNECTED, "");
+    }
+
+    public static void setNotificationType(Context pContext, String key, String value) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        _editor.putString(key, value);
+        _editor.commit();
+    }
+
+    public static String getNotificationType(Context context, String key) {
+        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return _sharedPref.getString(key, "");
+    }
+
+    public static void setUserTypeVersion(Context pContext, int id) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        _editor.putInt(USER_TYPE_VERSION, id);
+        _editor.commit();
+    }
+
+    public static int getUserTypeVersion(Context pContext) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        int id = 0;
+        id = (_sharedPref.getInt(USER_TYPE_VERSION, 0));
+        return id;
+    }
+
+    public static void setConfigUserType(Context pContext, String key, String value) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        _editor.putString(key, value);
+        _editor.commit();
+    }
+
+    public static String getConfigUserType(Context context, String key) {
+        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return _sharedPref.getString(key, "");
     }
 }

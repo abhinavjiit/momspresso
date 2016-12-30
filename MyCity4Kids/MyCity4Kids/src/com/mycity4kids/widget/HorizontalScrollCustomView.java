@@ -24,6 +24,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.ArticleListingActivity;
 import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
 import com.mycity4kids.ui.activity.CityBestArticleListingActivity;
+import com.mycity4kids.ui.activity.FilteredTopicsArticleListingActivity;
 import com.mycity4kids.ui.activity.TopicsSplashActivity;
 import com.squareup.picasso.Picasso;
 
@@ -154,6 +155,11 @@ public class HorizontalScrollCustomView extends LinearLayout {
                     Intent intent1 = new Intent(getContext(), ArticleListingActivity.class);
                     intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_EDITOR_PICKS);
                     getContext().startActivity(intent1);
+                } else if (Constants.KEY_MOMSPRESSO.equals(listingType)) {
+                    Intent intent1 = new Intent(getContext(), FilteredTopicsArticleListingActivity.class);
+                    intent1.putExtra("selectedTopics", SharedPrefUtils.getMomspressoCategory(getContext()).getId());
+                    intent1.putExtra("displayName", SharedPrefUtils.getMomspressoCategory(getContext()).getDisplay_name());
+                    getContext().startActivity(intent1);
                 }
             }
         });
@@ -175,6 +181,11 @@ public class HorizontalScrollCustomView extends LinearLayout {
                 } else if (Constants.KEY_EDITOR_PICKS.equals(listingType)) {
                     Intent intent1 = new Intent(getContext(), ArticleListingActivity.class);
                     intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_EDITOR_PICKS);
+                    getContext().startActivity(intent1);
+                } else if (Constants.KEY_MOMSPRESSO.equals(listingType)) {
+                    Intent intent1 = new Intent(getContext(), FilteredTopicsArticleListingActivity.class);
+                    intent1.putExtra("selectedTopics", SharedPrefUtils.getMomspressoCategory(getContext()).getId());
+                    intent1.putExtra("displayName", SharedPrefUtils.getMomspressoCategory(getContext()).getDisplay_name());
                     getContext().startActivity(intent1);
                 }
             }

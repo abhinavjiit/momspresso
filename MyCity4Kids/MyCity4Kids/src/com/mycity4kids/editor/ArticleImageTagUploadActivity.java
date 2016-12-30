@@ -1,5 +1,6 @@
 package com.mycity4kids.editor;
 
+import android.accounts.NetworkErrorException;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -256,6 +257,8 @@ public class ArticleImageTagUploadActivity extends BaseActivity {
 
                                  removeProgressDialog();
                                  if (response == null || response.body() == null) {
+                                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                                     Crashlytics.logException(nee);
                                      showToast(getString(R.string.went_wrong));
                                      return;
                                  }

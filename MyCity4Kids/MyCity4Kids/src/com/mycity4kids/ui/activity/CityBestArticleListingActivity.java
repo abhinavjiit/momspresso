@@ -85,7 +85,7 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
         nextPageNumber = 1;
         hitBestofCityArticleListingApi(sortType);
 
-        articlesListingAdapter = new NewArticlesListingAdapter(this, true);
+        articlesListingAdapter = new NewArticlesListingAdapter(this);
         articlesListingAdapter.setNewListData(articleDataModelsNew);
         listView.setAdapter(articlesListingAdapter);
         articlesListingAdapter.notifyDataSetChanged();

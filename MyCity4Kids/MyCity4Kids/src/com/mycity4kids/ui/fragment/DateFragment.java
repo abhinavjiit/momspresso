@@ -83,7 +83,7 @@ public class DateFragment extends Fragment implements OnClickListener {
                 filterMap = ((BusinessListActivityKidsResources) getActivity()).mFilterMap;
             } else {
                 filterMap = FragmentBusinesslistEvents.mFilterMap;
-                System.out.println("filter map "+filterMap);
+                System.out.println("filter map " + filterMap);
             }
             if (filterMap != null && !filterMap.isEmpty() && ifilter != null) {
                 ifilter.doNewFilter(businessOrEvent);
@@ -125,7 +125,7 @@ public class DateFragment extends Fragment implements OnClickListener {
         businessOrEvent = args.getInt(Constants.PAGE_TYPE);
     }
     /*@Override
-	public void getDateValue(String date) {
+    public void getDateValue(String date) {
 		dateFromPicker=date;
 		ifilter.doFilter(FilterType.DateValue, dateFromPicker,businessOrEvent);
 	}*/

@@ -123,7 +123,7 @@ public class AddAdultDialogFragment extends android.app.DialogFragment implement
         }
 
         for (int i = 0; i < userInfos.size(); i++) {
-            addAttendeeList.add(new AttendeeModel(userInfos.get(i).getId(), "ADULT", userInfos.get(i).getFirst_name(), userInfos.get(i).getColor_code()));
+            addAttendeeList.add(new AttendeeModel(userInfos.get(i).getId(), "ADULT", userInfos.get(i).getFirst_name() + " " + userInfos.get(i).getLast_name(), userInfos.get(i).getColor_code()));
         }
 
         used_colors.clear();

@@ -380,6 +380,7 @@
     <string name="home.sections.title.upcoming_events">UPCOMING EVENTS</string>
     <string name="analytics.pageviews.daycount">Last 30 days</string>
 
+    <string name="activity.analytics.toolbar_title">Blog Analytics</string>
     <string name="analytics.popup.last30days">Last 30 days</string>
     <string name="analytics.popup.customdates">Custom</string>
     <string name="analytics.popup.improve_page_views">How can I improve my page views?</string>
@@ -387,16 +388,13 @@
     <string name="analytics.popup.rank_calculation">How is this calculated?</string>
     <string name="analytics.popup.improve_rank">How can I improve my rank?</string>
     <string name="analytics.popup.improve_social">How can I improve my social share?</string>
-    <!--<string name="analytics.popup.improve_social">Last 30 days</string>-->
-    <!--<string name="analytics.popup.followers">Last 30 days</string>-->
-
     <string name="analytics.pageviews.label">Page Views</string>
     <string name="analytics.rank.label">Your Rank</string>
     <string name="analytics.followers.label">Followers</string>
     <string name="analytics.engagement.label">Engagement</string>
     <string name="analytics.engagement.comments_disclaimer">*No. of comments include Facebook and mycity4kids.</string>
-    <string name="activity.analytics.toolbar_title">Blog Analytics</string>
 
+    <string name="ad.recommendation.tootip_text">Tap to Recommend the blog</string>
 
     <string-array name="improve_page_views_array">
         <item>Interlink your article to other blog posts</item>
@@ -409,8 +407,7 @@
     </string-array>
 
     <string-array name="rank_calculation_array">
-        <item>It is calculated basis of weightage of 0.34 for rank based on avg overall views of articles seen in the last 3 months + weightage of 0.33 for total views in the last 6 weeks + weightage of 0.33 for total articles contributed</item>
-        <item>To put the complicating formula into perspective, it is calculated as per the total number of articles you have posted and the page views that your posts have received.</item>
+        <item>Your rank is calculated by a state-of-the-art algorithm which takes in the number of views your article has got, the number of times it has been shared on social media, number of comments it has got on different platforms and the number of articles you have written in the past week.</item>
     </string-array>
 
     <string-array name="improve_rank_array">

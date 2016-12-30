@@ -1,5 +1,6 @@
 package com.mycity4kids.ui.activity;
 
+import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -34,13 +35,20 @@ import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.OnWebServiceCompleteListener;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
+import com.mycity4kids.models.response.NotificationCenterListResponse;
 import com.mycity4kids.newmodels.VolleyBaseResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.retrofitAPIsInterfaces.NotificationsAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.RecommendationAPI;
 import com.mycity4kids.ui.adapter.NewArticlesListingAdapter;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.volley.HttpVolleyRequest;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
 
 /**
  * Created by hemant on 4/8/16.
@@ -63,7 +71,7 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
     private ProgressBar progressBar;
     private int from = 1;
     private int to = 15;
-
+    private String chunks = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +110,7 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
 
         swipeRefreshLayout.setOnRefreshListener((SwipeRefreshLayout.OnRefreshListener) this);
 
-        articlesListingAdapter = new NewArticlesListingAdapter(this, true);
+        articlesListingAdapter = new NewArticlesListingAdapter(this);
         articlesListingAdapter.setNewListData(articleDataModelsNew);
         listView.setAdapter(articlesListingAdapter);
         articlesListingAdapter.notifyDataSetChanged();
@@ -160,10 +168,17 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
             showToast(getString(R.string.error_network));
             return;
         }
-        String url;
+        String url = "";
         if (Constants.KEY_FOR_YOU.equals(sortKey)) {
-            url = AppConstants.LIVE_URL + AppConstants.SERVICE_TYPE_FOR_YOU + SharedPrefUtils.getUserDetailModel(this).getDynamoId() +
-                    AppConstants.SEPARATOR_BACKSLASH + from + AppConstants.SEPARATOR_BACKSLASH + to;
+
+            Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+            RecommendationAPI recommendationAPI = retrofit.create(RecommendationAPI.class);
+            Call<ArticleListingResponse> call = recommendationAPI.getRecommendedArticlesList(SharedPrefUtils.getUserDetailModel(this).getDynamoId(), 10, chunks);
+            progressBar.setVisibility(View.VISIBLE);
+            call.enqueue(recommendedArticlesResponseCallback);
+
+//            url = AppConstants.LIVE_URL + AppConstants.SERVICE_TYPE_FOR_YOU + SharedPrefUtils.getUserDetailModel(this).getDynamoId() +
+//                    AppConstants.SEPARATOR_BACKSLASH + from + AppConstants.SEPARATOR_BACKSLASH + to;
         } else if (Constants.KEY_EDITOR_PICKS.equals(sortKey)) {
             url = AppConstants.LIVE_URL + AppConstants.SERVICE_TYPE__EDITORS_PICKS + AppConstants.EDITOR_PICKS_CATEGORY_ID + "?sort=0&sponsored=0&start=" + from +
                     "&end=" + to;
@@ -174,6 +189,81 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
 
         HttpVolleyRequest.getStringResponse(this, url, null, mGetArticleListingListener, Request.Method.GET, isCacheRequired);
 
+
+    }
+
+    private Callback<ArticleListingResponse> recommendedArticlesResponseCallback = new Callback<ArticleListingResponse>() {
+        @Override
+        public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
+            progressBar.setVisibility(View.GONE);
+            mLodingView.setVisibility(View.GONE);
+            isReuqestRunning = false;
+            if (response == null || null == response.body()) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                Crashlytics.logException(nee);
+                showToast("Something went wrong from server");
+                return;
+            }
+            try {
+                ArticleListingResponse responseData = (ArticleListingResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    processForYouResponse(responseData);
+//                    notificationCenterResultArrayList.addAll(responseData.getData().getResult());
+//                    notificationCenterListAdapter.notifyDataSetChanged();
+                } else {
+                    showToast(responseData.getReason());
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+                showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
+
+        }
+    };
+
+    private void processForYouResponse(ArticleListingResponse responseData) {
+        try {
+            ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
+            if (dataList.size() == 0) {
+                isLastPageReached = true;
+                if (null != articleDataModelsNew && !articleDataModelsNew.isEmpty()) {
+                    //No more next results for search from pagination
+                } else {
+                    // No results for search
+                    articleDataModelsNew = dataList;
+                    articlesListingAdapter.setNewListData(dataList);
+                    articlesListingAdapter.notifyDataSetChanged();
+                    noBlogsTextView.setVisibility(View.VISIBLE);
+                    noBlogsTextView.setText("No articles found");
+                }
+            } else {
+                noBlogsTextView.setVisibility(View.GONE);
+                if ("".equals(chunks)) {
+                    articleDataModelsNew.clear();
+                    articleDataModelsNew.addAll(dataList);
+                } else {
+                    articleDataModelsNew.addAll(dataList);
+                }
+                if (chunks.equals(responseData.getData().get(0).getChunks())) {
+                    isLastPageReached = true;
+                } else {
+                    chunks = responseData.getData().get(0).getChunks();
+                }
+
+                articlesListingAdapter.setNewListData(articleDataModelsNew);
+                articlesListingAdapter.notifyDataSetChanged();
+            }
+        } catch (Exception ex) {
+            mLodingView.setVisibility(View.GONE);
+            removeVolleyCache(sortType);
+            Crashlytics.logException(ex);
+            Log.d("MC4kException", Log.getStackTraceString(ex));
+        }
 
     }
 

@@ -9,6 +9,13 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/notification_center"
+        android:icon="@drawable/notfication_bell"
+        android:orderInCategory="100"
+        android:title="@+id/notification"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/search"
         android:icon="@drawable/ic_search_white_48dp"
         android:orderInCategory="100"

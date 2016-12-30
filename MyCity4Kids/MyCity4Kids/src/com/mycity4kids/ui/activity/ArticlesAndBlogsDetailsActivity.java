@@ -13,6 +13,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -23,6 +24,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.webkit.WebChromeClient;
@@ -40,6 +42,7 @@ import com.android.volley.Request;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.UiLifecycleHelper;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.github.library.bubbleview.BubbleTextVew;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -81,10 +84,12 @@ import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.ArticleRecommendationStatusResponse;
 import com.mycity4kids.models.response.FBCommentResponse;
+import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
 import com.mycity4kids.models.response.ProfilePic;
 import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
 import com.mycity4kids.models.response.ViewCountResponse;
+import com.mycity4kids.newmodels.FollowUnfollowCategoriesRequest;
 import com.mycity4kids.newmodels.VolleyBaseResponse;
 import com.mycity4kids.observablescrollview.ObservableScrollView;
 import com.mycity4kids.observablescrollview.ObservableScrollViewCallbacks;
@@ -92,12 +97,14 @@ import com.mycity4kids.observablescrollview.ScrollState;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.CircleTransformation;
 import com.mycity4kids.ui.fragment.CommentRepliesDialogFragment;
 import com.mycity4kids.ui.fragment.EditCommentsRepliesFragment;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.utils.TrackArticleReadTime;
 import com.mycity4kids.volley.HttpVolleyRequest;
+import com.mycity4kids.widget.MyBounceInterpolator;
 import com.mycity4kids.widget.RelatedArticlesView;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -198,6 +205,11 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     Rect scrollBounds;
     TrackArticleReadTime trackArticleReadTime;
     int estimatedReadTime = 0;
+    BubbleTextVew recommendSuggestion;
+    private Animation showRecommendAnim, hideRecommendAnim;
+    private boolean hasRecommendSuggestionAppeared = true;
+    private WebView videoWebView;
+    private String isMomspresso;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -223,8 +235,11 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             recommendFloatingActionButton.setEnabled(false);
 
             mWebView = (WebView) findViewById(R.id.articleWebView);
+            videoWebView = (WebView) findViewById(R.id.videoWebView);
+
             mWebChromeClient = new MyWebChromeClient();
             mWebView.setWebChromeClient(mWebChromeClient);
+            videoWebView.setWebChromeClient(mWebChromeClient);
 
             author_type = (TextView) findViewById(R.id.blogger_type);
 
@@ -244,6 +259,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             trendingRelatedArticles3 = (RelatedArticlesView) findViewById(R.id.trendingRelatedArticles3);
             trendingArticles = (LinearLayout) findViewById(R.id.trendingArticles);
             recentAuthorArticles = (LinearLayout) findViewById(R.id.recentAuthorArticles);
+            recommendSuggestion = (BubbleTextVew) findViewById(R.id.recommendSuggestion);
 
             tagsLayout = (FlowLayout) findViewById(R.id.tagsLayout);
             articleViewCountTextView = (TextView) findViewById(R.id.articleViewCountTextView);
@@ -277,6 +293,47 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             trendingRelatedArticles2.setOnClickListener(this);
             trendingRelatedArticles3.setOnClickListener(this);
 
+            showRecommendAnim = AnimationUtils.loadAnimation(this, R.anim.recommend_anim_show);
+            showRecommendAnim.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    recommendSuggestion.setVisibility(View.VISIBLE);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            recommendSuggestion.setVisibility(View.INVISIBLE);
+                            recommendSuggestion.startAnimation(hideRecommendAnim);
+                        }
+                    }, 5000);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+            hideRecommendAnim = AnimationUtils.loadAnimation(this, R.anim.recommend_anim_hide);
+            hideRecommendAnim.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    recommendSuggestion.setVisibility(View.INVISIBLE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
 
             commentText = (EditText) findViewById(R.id.editCommentTxt);
 
@@ -328,6 +385,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         }
         super.onResume();
         mWebView.onResume();
+        videoWebView.onResume();
     }
 
     @Override
@@ -336,11 +394,15 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             trackArticleReadTime.pauseTimer();
         super.onPause();
         mWebView.onPause();
+        videoWebView.onPause();
     }
 
 
     private void hitArticleDetailsS3API() {
         Call<ArticleDetailResult> call = articleDetailsAPI.getArticleDetailsFromS3(articleId);
+
+//        For Local JSON Testing
+//        Call<ArticleDetailResult> call = articleDetailsAPI.getArticleDetailsFromLocal();
         call.enqueue(articleDetailResponseCallbackS3);
     }
 
@@ -383,6 +445,9 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     }
 
     private void recommendUnrecommentArticleAPI(String status) {
+        if (recommendSuggestion.getVisibility() == View.VISIBLE) {
+            recommendSuggestion.setVisibility(View.INVISIBLE);
+        }
         RecommendUnrecommendArticleRequest recommendUnrecommendArticleRequest = new RecommendUnrecommendArticleRequest();
         recommendUnrecommendArticleRequest.setArticleId(articleId);
         recommendUnrecommendArticleRequest.setStatus(status);
@@ -499,6 +564,10 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 addRemoveBookmark();
                 return true;
             case R.id.share:
+                if (!ConnectivityUtils.isNetworkEnabled(this)) {
+                    showToast(getString(R.string.error_network));
+                    return true;
+                }
                 if (StringUtils.isNullOrEmpty(shareUrl) && StringUtils.isNullOrEmpty(blogSlug) && StringUtils.isNullOrEmpty(titleSlug)) {
                     showToast("Unable to share the article currently!");
                     return true;
@@ -569,6 +638,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         videoList = detailData.getBody().getVideo();
         authorType = detailData.getUserType();
         author = detailData.getUserName();
+        isMomspresso = detailData.getIsMomspresso();
 
         if (!StringUtils.isNullOrEmpty(detailData.getImageUrl().getClientApp())) {
             Picasso.with(this).load(detailData.getImageUrl().getClientApp()).placeholder(R.drawable.default_article).resize(width, (int) (220 * density)).centerCrop().into(cover_image);
@@ -582,7 +652,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             if (!StringUtils.isNullOrEmpty(detailData.getUserType())) {
 
                 if (AppConstants.USER_TYPE_BLOGGER.equals(detailData.getUserType())) {
-                    author_type.setText(AppConstants.AUTHOR_TYPE_BLOGGER);
+                    author_type.setText(AppConstants.AUTHOR_TYPE_BLOGGER.toUpperCase());
                     author_type.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_blogger));
                     if (StringUtils.isNullOrEmpty(deepLinkURL)) {
                         shareUrl = AppConstants.ARTICLE_SHARE_URL + blogSlug + "/article/" + titleSlug;
@@ -590,7 +660,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                         shareUrl = deepLinkURL;
                     }
                 } else if (AppConstants.USER_TYPE_EXPERT.equals(detailData.getUserType())) {
-                    author_type.setText(AppConstants.AUTHOR_TYPE_EXPERT);
+                    author_type.setText(AppConstants.AUTHOR_TYPE_EXPERT.toUpperCase());
                     author_type.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_expert));
                     if (StringUtils.isNullOrEmpty(deepLinkURL)) {
                         shareUrl = AppConstants.ARTICLE_SHARE_URL + "article/" + titleSlug;
@@ -598,7 +668,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                         shareUrl = deepLinkURL;
                     }
                 } else if (AppConstants.USER_TYPE_EDITOR.equals(detailData.getUserType())) {
-                    author_type.setText(AppConstants.AUTHOR_TYPE_EDITOR);
+                    author_type.setText(AppConstants.AUTHOR_TYPE_EDITOR.toUpperCase());
                     author_type.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_editor));
                     if (StringUtils.isNullOrEmpty(deepLinkURL)) {
                         shareUrl = AppConstants.ARTICLE_SHARE_URL + "article/" + titleSlug;
@@ -606,8 +676,16 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                         shareUrl = deepLinkURL;
                     }
                 } else if (AppConstants.USER_TYPE_EDITORIAL.equals(detailData.getUserType())) {
-                    author_type.setText(AppConstants.AUTHOR_TYPE_EDITORIAL);
+                    author_type.setText(AppConstants.AUTHOR_TYPE_EDITORIAL.toUpperCase());
                     author_type.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_editorial));
+                    if (StringUtils.isNullOrEmpty(deepLinkURL)) {
+                        shareUrl = AppConstants.ARTICLE_SHARE_URL + "article/" + titleSlug;
+                    } else {
+                        shareUrl = deepLinkURL;
+                    }
+                }else if (AppConstants.USER_TYPE_FEATURED.equals(detailData.getUserType())) {
+                    author_type.setText(AppConstants.AUTHOR_TYPE_FEATURED.toUpperCase());
+                    author_type.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_featured));
                     if (StringUtils.isNullOrEmpty(deepLinkURL)) {
                         shareUrl = AppConstants.ARTICLE_SHARE_URL + "article/" + titleSlug;
                     } else {
@@ -616,7 +694,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 }
             } else {
                 // Default Author type set to Blogger
-                author_type.setText("Blogger");
+                author_type.setText("Blogger".toUpperCase());
                 author_type.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_blogger));
                 if (StringUtils.isNullOrEmpty(deepLinkURL)) {
                     shareUrl = AppConstants.ARTICLE_SHARE_URL + blogSlug + "/article/" + titleSlug;
@@ -656,8 +734,15 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             }
             if (null != videoList && !videoList.isEmpty()) {
                 for (VideoData video : videoList) {
-                    if (bodyDescription.contains(video.getKey())) {
-                        bodyDesc = bodyDesc.replace(video.getKey(), "<p style='text-align:center'><iframe allowfullscreen src=http:" + video.getVideoUrl() + "?modestbranding=1&amp;rel=0&amp;showinfo=0\" style=\"width: 100%;\"></iframe></p>");
+                    if ("1".equals(isMomspresso)) {
+                        videoWebView.setVisibility(View.VISIBLE);
+                        cover_image.setVisibility(View.INVISIBLE);
+                        bodyDesc = bodyDesc.replace(video.getKey(), "");
+                        String vUrl = "<html><head></head><body><p style='text-align:center'><iframe allowfullscreen src=http:" + video.getVideoUrl() +
+                                "?modestbranding=1&amp;rel=0&amp;showinfo=0\" style=\"width: 100%; height: 100%;\" ></iframe></p></body></html>";
+                        videoWebView.loadDataWithBaseURL("", vUrl, "text/html", "utf-8", "");
+                    } else if (bodyDescription.contains(video.getKey())) {
+                        bodyDesc = bodyDesc.replace(video.getKey(), "<p style='text-align:center'><iframe allowfullscreen src=http:" + video.getVideoUrl().replace("http:", "") + "?modestbranding=1&amp;rel=0&amp;showinfo=0\" style=\"width: 100%;\"></iframe></p>");
                     }
                 }
             }
@@ -682,11 +767,22 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             mWebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
             mWebView.loadDataWithBaseURL("", bodyImgTxt, "text/html", "utf-8", "");
             mWebView.getSettings().setJavaScriptEnabled(true);
+
+            videoWebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+//            videoWebView.loadDataWithBaseURL("", bodyImgTxt, "text/html", "utf-8", "");
+            videoWebView.getSettings().setJavaScriptEnabled(true);
         } else {
             if (null != videoList && !videoList.isEmpty()) {
                 for (VideoData video : videoList) {
-                    if (bodyDescription.contains(video.getKey())) {
-                        bodyDesc = bodyDesc.replace(video.getKey(), "<p style='text-align:center'><iframe allowfullscreen src=http:" + video.getVideoUrl() + "?modestbranding=1&amp;rel=0&amp;showinfo=0\" style=\"width: 100%;\" ></iframe></p>");
+                    if ("1".equals(isMomspresso)) {
+                        videoWebView.setVisibility(View.VISIBLE);
+                        cover_image.setVisibility(View.INVISIBLE);
+                        bodyDesc = bodyDesc.replace(video.getKey(), "");
+                        String vUrl = "<html><head></head><body><p style='text-align:center'><iframe allowfullscreen src=http:" + video.getVideoUrl() +
+                                "?modestbranding=1&amp;rel=0&amp;showinfo=0\" style=\"width: 100%; height: 100%;\" ></iframe></p></body></html>";
+                        videoWebView.loadDataWithBaseURL("", vUrl, "text/html", "utf-8", "");
+                    } else if (bodyDescription.contains(video.getKey())) {
+                        bodyDesc = bodyDesc.replace(video.getKey(), "<p style='text-align:center'><iframe allowfullscreen src=http:" + video.getVideoUrl().replace("http:", "") + "?modestbranding=1&amp;rel=0&amp;showinfo=0\" style=\"width: 100%;\" ></iframe></p>");
                     }
                 }
             }
@@ -709,6 +805,10 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             mWebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
             mWebView.loadDataWithBaseURL("", bodyImgTxt, "text/html", "utf-8", "");
             mWebView.getSettings().setJavaScriptEnabled(true);
+
+            videoWebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+//            videoWebView.loadDataWithBaseURL("", bodyImgTxt, "text/html", "utf-8", "");
+            videoWebView.getSettings().setJavaScriptEnabled(true);
         }
 
         final Target target = new Target() {
@@ -754,37 +854,16 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     * */
     private void createSelectedTagsView() {
 //        selectedTopics
-        ArrayList<Map<String, String>> tagsList = detailData.getTags();
-        LayoutInflater mInflater = LayoutInflater.from(this);
 
-        for (int i = 0; i < tagsList.size(); i++) {
+        getFollowedTopicsList();
 
-            for (Map.Entry<String, String> entry : tagsList.get(i).entrySet()) {
-                String key = entry.getKey();
-                final String value = entry.getValue();
-                if (AppConstants.IGNORE_TAG.equals(key)) {
-                    continue;
-                }
+    }
 
-                LinearLayout topicView = (LinearLayout) mInflater.inflate(R.layout.related_tags_view, null, false);
-                topicView.setClickable(true);
-                ((TextView) topicView.getChildAt(0)).setTag(key);
-                ((TextView) topicView.getChildAt(0)).setText(value.toUpperCase());
-                ((TextView) topicView.getChildAt(0)).setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
-                        trackArticleReadTime.resetTimer();
-                        String categoryId = (String) v.getTag();
-                        Intent intent = new Intent(ArticlesAndBlogsDetailsActivity.this, FilteredTopicsArticleListingActivity.class);
-                        intent.putExtra("selectedTopics", categoryId);
-                        intent.putExtra("displayName", value);
-                        startActivity(intent);
-                    }
-                });
-                tagsLayout.addView(topicView);
-            }
-        }
+    private void getFollowedTopicsList() {
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        TopicsCategoryAPI topicsCategoryAPI = retrofit.create(TopicsCategoryAPI.class);
+        Call<FollowUnfollowCategoriesResponse> call = topicsCategoryAPI.getFollowedCategories(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+        call.enqueue(getFollowedTopicsResponseCallback);
     }
 
     private void displayComments(ViewHolder holder, CommentsData commentList,
@@ -977,8 +1056,10 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
                 case R.id.user_image:
                 case R.id.user_name:
-                    trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
-                    trackArticleReadTime.resetTimer();
+                    if (null != trackArticleReadTime) {
+                        trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
+                        trackArticleReadTime.resetTimer();
+                    }
                     Intent intentnn = new Intent(this, BloggerDashboardActivity.class);
                     intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, detailData.getUserId());
                     startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
@@ -1066,7 +1147,12 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         int permanentDiff = (tagsView.getBottom() - (mScrollView.getHeight() + mScrollView.getScrollY()));
         if (permanentDiff <= 0) {
             isArticleDetailEndReached = true;
-            if (recommendFloatingActionButton.getVisibility() == View.GONE) {
+            if (!hasRecommendSuggestionAppeared && recommendSuggestion.getVisibility() == View.INVISIBLE) {
+                hasRecommendSuggestionAppeared = true;
+                recommendSuggestion.setVisibility(View.VISIBLE);
+                recommendSuggestion.startAnimation(showRecommendAnim);
+            }
+            if (recommendFloatingActionButton.getVisibility() == View.INVISIBLE) {
                 showFloatingActionButton();
             }
         } else {
@@ -1092,11 +1178,14 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             if (!isArticleDetailEndReached && recommendFloatingActionButton.getVisibility() == View.VISIBLE) {
                 hideFloatingActionButton();
             }
+//            if (recommendSuggestion.getVisibility() == View.VISIBLE) {
+//                recommendSuggestion.setVisibility(View.INVISIBLE);
+//            }
         } else if (scrollState == ScrollState.DOWN) {
             if (!ab.isShowing()) {
                 showToolbar();
             }
-            if (recommendFloatingActionButton.getVisibility() == View.GONE) {
+            if (recommendFloatingActionButton.getVisibility() == View.INVISIBLE) {
                 showFloatingActionButton();
             }
         }
@@ -1137,7 +1226,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
-                        recommendFloatingActionButton.setVisibility(View.GONE);
+                        recommendFloatingActionButton.setVisibility(View.INVISIBLE);
                     }
                 });
     }
@@ -1567,6 +1656,161 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         }
     };
 
+    private Callback<FollowUnfollowCategoriesResponse> getFollowedTopicsResponseCallback = new Callback<FollowUnfollowCategoriesResponse>() {
+        @Override
+        public void onResponse(Call<FollowUnfollowCategoriesResponse> call, retrofit2.Response<FollowUnfollowCategoriesResponse> response) {
+            if (response == null || null == response.body()) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                Crashlytics.logException(nee);
+                showToast("Something went wrong from server");
+                return;
+            }
+            try {
+                FollowUnfollowCategoriesResponse responseData = (FollowUnfollowCategoriesResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+
+                    ArrayList<String> previouslyFollowedTopics = (ArrayList<String>) responseData.getData();
+                    ArrayList<Map<String, String>> tagsList = detailData.getTags();
+                    LayoutInflater mInflater = LayoutInflater.from(ArticlesAndBlogsDetailsActivity.this);
+
+                    for (int i = 0; i < tagsList.size(); i++) {
+
+                        for (Map.Entry<String, String> entry : tagsList.get(i).entrySet()) {
+                            String key = entry.getKey();
+                            final String value = entry.getValue();
+                            if (AppConstants.IGNORE_TAG.equals(key)) {
+                                continue;
+                            }
+
+                            RelativeLayout topicView = (RelativeLayout) mInflater.inflate(R.layout.related_tags_view, null, false);
+                            topicView.setClickable(true);
+                            ((TextView) topicView.getChildAt(0)).setTag(key);
+                            ((ImageView) topicView.getChildAt(2)).setTag(key);
+                            ((TextView) topicView.getChildAt(0)).setText(value.toUpperCase());
+                            if (null != previouslyFollowedTopics && previouslyFollowedTopics.contains(key)) {
+//                                ((TextView) topicView.getChildAt(0)).setBackgroundColor(ContextCompat.getColor(ArticlesAndBlogsDetailsActivity.this, R.color.home_green));
+                                ((ImageView) topicView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(ArticlesAndBlogsDetailsActivity.this, R.drawable.tick));
+                                ((ImageView) topicView.getChildAt(2)).setOnClickListener(new OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Log.d("TOPICS ----- ", "UNFOLLOW");
+                                        followUnfollowTopics((String) v.getTag(), (RelativeLayout) v.getParent(), 0);
+                                    }
+                                });
+                            } else {
+                                ((ImageView) topicView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(ArticlesAndBlogsDetailsActivity.this, R.drawable.follow_plus));
+                                ((ImageView) topicView.getChildAt(2)).setOnClickListener(new OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Log.d("TOPICS ----- ", "FOLLOW");
+                                        followUnfollowTopics((String) v.getTag(), (RelativeLayout) v.getParent(), 1);
+                                    }
+                                });
+                            }
+
+                            ((TextView) topicView.getChildAt(0)).setOnClickListener(new OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
+                                    trackArticleReadTime.resetTimer();
+                                    String categoryId = (String) v.getTag();
+                                    Intent intent = new Intent(ArticlesAndBlogsDetailsActivity.this, FilteredTopicsArticleListingActivity.class);
+                                    intent.putExtra("selectedTopics", categoryId);
+                                    intent.putExtra("displayName", value);
+                                    startActivity(intent);
+                                }
+                            });
+                            tagsLayout.addView(topicView);
+                        }
+                    }
+                } else {
+                    showToast(responseData.getReason());
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<FollowUnfollowCategoriesResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
+
+    private void followUnfollowTopics(String selectedTopic, RelativeLayout tagView, int action) {
+        Retrofit retro = BaseApplication.getInstance().getRetrofit();
+        TopicsCategoryAPI topicsCategoryAPI = retro.create(TopicsCategoryAPI.class);
+        FollowUnfollowCategoriesRequest followUnfollowCategoriesRequest = new FollowUnfollowCategoriesRequest();
+        ArrayList<String> topicIdLList = new ArrayList<>();
+        topicIdLList.add(selectedTopic);
+        followUnfollowCategoriesRequest.setCategories(topicIdLList);
+        if (action == 0) {
+            Log.d("GTM FOLLOW", "displayName" + selectedTopic);
+            Utils.pushEventFollowUnfollowTopic(this, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Article Details", "follow", ((TextView) tagView.getChildAt(0)).getText() + ":" + selectedTopic);
+            ((TextView) tagView.getChildAt(0)).setTag(selectedTopic);
+            ((ImageView) tagView.getChildAt(2)).setTag(selectedTopic);
+            ((ImageView) tagView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(ArticlesAndBlogsDetailsActivity.this, R.drawable.follow_plus));
+            ((ImageView) tagView.getChildAt(2)).setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("TOPICS ----- ", "FOLLOW");
+                    followUnfollowTopics((String) v.getTag(), (RelativeLayout) v.getParent(), 1);
+                }
+            });
+        } else {
+            Log.d("GTM UNFOLLOW", "displayName" + selectedTopic);
+            Utils.pushEventFollowUnfollowTopic(this, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Article Details", "unfollow", ((TextView) tagView.getChildAt(0)) + ":" + selectedTopic);
+            ((TextView) tagView.getChildAt(0)).setTag(selectedTopic);
+            ((ImageView) tagView.getChildAt(2)).setTag(selectedTopic);
+            ((ImageView) tagView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(ArticlesAndBlogsDetailsActivity.this, R.drawable.tick));
+            ((ImageView) tagView.getChildAt(2)).setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("TOPICS ----- ", "UNFOLLOW");
+                    followUnfollowTopics((String) v.getTag(), (RelativeLayout) v.getParent(), 0);
+                }
+            });
+        }
+        Call<FollowUnfollowCategoriesResponse> call = topicsCategoryAPI.followCategories(SharedPrefUtils.getUserDetailModel(this).getDynamoId(), followUnfollowCategoriesRequest);
+        call.enqueue(followUnfollowCategoriesResponseCallback);
+    }
+
+    private Callback<FollowUnfollowCategoriesResponse> followUnfollowCategoriesResponseCallback = new Callback<FollowUnfollowCategoriesResponse>() {
+        @Override
+        public void onResponse(Call<FollowUnfollowCategoriesResponse> call, retrofit2.Response<FollowUnfollowCategoriesResponse> response) {
+            removeProgressDialog();
+            if (response == null || null == response.body()) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                Crashlytics.logException(nee);
+                showToast("Something went wrong from server");
+                return;
+            }
+            try {
+                FollowUnfollowCategoriesResponse responseData = (FollowUnfollowCategoriesResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    showToast(responseData.getReason());
+                } else {
+                    showToast(responseData.getReason());
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+                showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<FollowUnfollowCategoriesResponse> call, Throwable t) {
+            removeProgressDialog();
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+            showToast(getString(R.string.went_wrong));
+        }
+    };
+
     Callback<ResponseBody> commentsCallback = new Callback<ResponseBody>() {
         @Override
         public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
@@ -1719,6 +1963,8 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         public void onResponse(Call<AddCommentResponse> call, retrofit2.Response<AddCommentResponse> response) {
             removeProgressDialog();
             if (response == null || null == response.body()) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                Crashlytics.logException(nee);
                 showToast("Something went wrong from server");
                 return;
             }
@@ -1731,7 +1977,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 cd.setId(responseData.getData().getId());
                 cd.setBody(commentText.getText().toString().trim());
                 cd.setUserId(SharedPrefUtils.getUserDetailModel(ArticlesAndBlogsDetailsActivity.this).getDynamoId());
-                cd.setName(SharedPrefUtils.getUserDetailModel(ArticlesAndBlogsDetailsActivity.this).getFirst_name());
+                cd.setName(SharedPrefUtils.getUserDetailModel(ArticlesAndBlogsDetailsActivity.this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(ArticlesAndBlogsDetailsActivity.this).getLast_name());
                 cd.setReplies(new ArrayList<CommentsData>());
 
                 ProfilePic profilePic = new ProfilePic();
@@ -1794,9 +2040,11 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             recommendFloatingActionButton.setEnabled(true);
             recommendationFlag = responseData.getData().getStatus();
             if ("0".equals(recommendationFlag)) {
+                hasRecommendSuggestionAppeared = false;
                 recommendFloatingActionButton.setIconDrawable(ContextCompat.getDrawable(ArticlesAndBlogsDetailsActivity.this, R.drawable.heart_outline));
                 recommendStatus = 0;
             } else {
+                hasRecommendSuggestionAppeared = true;
                 recommendFloatingActionButton.setIconDrawable(ContextCompat.getDrawable(ArticlesAndBlogsDetailsActivity.this, R.drawable.heart_filled));
                 recommendStatus = 1;
             }
@@ -1823,7 +2071,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     if (null == responseData.getData() && responseData.getData().isEmpty()) {
                         showToast(responseData.getReason());
                     } else {
-
+                        showToast(responseData.getReason());
                     }
                 } else {
                     showToast(getString(R.string.server_went_wrong));
@@ -1834,8 +2082,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 showToast(getString(R.string.went_wrong));
             }
         }
-//            updateBookmarkStatus(ADD_BOOKMARK, responseData);
-
 
         @Override
         public void onFailure(Call<RecommendUnrecommendArticleResponse> call, Throwable t) {
@@ -1942,7 +2188,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         }
     }
 
-
     Callback<FollowUnfollowUserResponse> followUserResponseCallback = new Callback<FollowUnfollowUserResponse>() {
         @Override
         public void onResponse(Call<FollowUnfollowUserResponse> call, retrofit2.Response<FollowUnfollowUserResponse> response) {
@@ -2048,7 +2293,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
     @Override
     public void onBackPressed() {
-        if (null == trackArticleReadTime) {
+        if (null != trackArticleReadTime) {
             trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
         }
         super.onBackPressed();

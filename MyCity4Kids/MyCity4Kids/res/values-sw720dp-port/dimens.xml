@@ -26,4 +26,6 @@
     <dimen name="ad_related_article_image_height">66dp</dimen>
     <dimen name="ad_related_article_image_width">96dp</dimen>
     <dimen name="ad_related_article_title">17sp</dimen>
+
+    <dimen name="article_listing.article_image">450dp</dimen>
 </resources>

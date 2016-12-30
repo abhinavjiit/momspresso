@@ -142,7 +142,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     private MyWebChromeClient mWebChromeClient = null;
     ArrayList<WebView> videoIframe = new ArrayList<>();
     private ProgressBar momspressoProgressbar;
-    private HorizontalScrollCustomView forYourSection, trendingSection, editorPicksSection, inYourCitySection;
+    private HorizontalScrollCustomView forYourSection, trendingSection, editorPicksSection, inYourCitySection, momspressoSection;
 
     @Nullable
     @Override
@@ -151,15 +151,17 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         Utils.pushOpenScreenEvent(getActivity(), "Dashboard Fragment", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
         mInflator = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         hzScrollLinearLayoutEvent = (LinearLayout) view.findViewById(R.id.hzScrollLinearLayoutEvent);
-        momspressoHZScrollLinearLayout = (LinearLayout) view.findViewById(R.id.momspressoHZScrollLinearLayout);
+//        momspressoHZScrollLinearLayout = (LinearLayout) view.findViewById(R.id.momspressoHZScrollLinearLayout);
         forYourSection = (HorizontalScrollCustomView) view.findViewById(R.id.forYouSection);
         trendingSection = (HorizontalScrollCustomView) view.findViewById(R.id.trendingSection);
         editorPicksSection = (HorizontalScrollCustomView) view.findViewById(R.id.editorPicksSection);
         inYourCitySection = (HorizontalScrollCustomView) view.findViewById(R.id.inYourCitySection);
+        momspressoSection = (HorizontalScrollCustomView) view.findViewById(R.id.momspressoSection);
 
         forYourSection.setSectionTitle(getString(R.string.home_sections_title_for_you));
         trendingSection.setSectionTitle(getString(R.string.home_sections_title_trending));
         editorPicksSection.setSectionTitle(getString(R.string.home_sections_title_editors_pick));
+        momspressoSection.setSectionTitle(getString(R.string.home_sections_title_momspresso));
 
         appointmentList = (CustomListView) view.findViewById(R.id.home_appointmentList);
         goToCal = (TextView) view.findViewById(R.id.go_to_cal);
@@ -172,10 +174,10 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         txtCal = (TextView) view.findViewById(R.id.txtCal);
         txtEvents = (TextView) view.findViewById(R.id.txtEvents);
         progressBar = (ProgressBar) view.findViewById(R.id.eventprogressbar);
-        momspressoProgressbar = (ProgressBar) view.findViewById(R.id.momspressoProgressbar);
+//        momspressoProgressbar = (ProgressBar) view.findViewById(R.id.momspressoProgressbar);
 
         eventListView = (CustomListView) view.findViewById(R.id.eventList);
-        momspressoHeader = (LinearLayout) view.findViewById(R.id.momspressoHeader);
+//        momspressoHeader = (LinearLayout) view.findViewById(R.id.momspressoHeader);
 
         if (SharedPrefUtils.getCurrentCityModel(getActivity()).getName().isEmpty()) {
             inYourCitySection.setCityNameFromCityId(SharedPrefUtils.getCurrentCityModel(getActivity()).getId());
@@ -189,7 +191,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         imgGoToEvents.setOnClickListener(this);
         txtCal.setOnClickListener(this);
         txtEvents.setOnClickListener(this);
-        momspressoHeader.setOnClickListener(this);
+//        momspressoHeader.setOnClickListener(this);
 
         view.findViewById(R.id.go_to_events).setOnClickListener(this);
         view.findViewById(R.id.no_events).setOnClickListener(this);
@@ -307,11 +309,11 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     }
 
     private void hitMomspressoListingApi(String momspressoCategoryId) {
-        momspressoProgressbar.setVisibility(View.VISIBLE);
+//        momspressoProgressbar.setVisibility(View.VISIBLE);
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
 
-        Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(momspressoCategoryId, 0, 1, 5);
+        Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(momspressoCategoryId, 0, 1, 10);
         filterCall.enqueue(momspressoListingResponseCallback);
     }
 
@@ -411,7 +413,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     private Callback<ArticleListingResponse> momspressoListingResponseCallback = new Callback<ArticleListingResponse>() {
         @Override
         public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
-            momspressoProgressbar.setVisibility(View.GONE);
+//            momspressoProgressbar.setVisibility(View.GONE);
             if (response == null || response.body() == null) {
                 ((DashboardActivity) getActivity()).showToast("Something went wrong from server");
                 return;
@@ -433,7 +435,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
 
         @Override
         public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
-            momspressoProgressbar.setVisibility(View.GONE);
+//            momspressoProgressbar.setVisibility(View.GONE);
             Crashlytics.logException(t);
             Log.d("MC4KException", Log.getStackTraceString(t));
             if (null != getActivity()) {
@@ -523,79 +525,90 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     }
 
     private void processMomspressoListingResponse(ArticleListingResponse responseData) {
-
         ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
-
         if (dataList.size() == 0) {
-            ((TextView) view.findViewById(R.id.no_momspresso)).setVisibility(View.VISIBLE);
+            momspressoSection.setEmptyListLabelVisibility(View.VISIBLE);
         } else {
-            ((TextView) view.findViewById(R.id.no_momspresso)).setVisibility(View.GONE);
             mMomspressoArticleListing.clear();
             mMomspressoArticleListing.addAll(responseData.getData().get(0).getResult());
-            momspressoHZScrollLinearLayout.removeAllViews();
-            mWebChromeClient = new MyWebChromeClient();
-
-            if (!mMomspressoArticleListing.isEmpty()) {
-                Collections.shuffle(mMomspressoArticleListing);
-            }
-//            BaseApplication.setBestCityResponse(mArticleBestCityListing);
-            for (int i = 0; i < mMomspressoArticleListing.size(); i++) {
-                final View view1 = mInflator.inflate(R.layout.momspresso_card_item_article_dashboard, null);
-                view1.setTag(i);
-                WebView wv = (WebView) view1.findViewById(R.id.videoIframe);
-
-                wv.setWebChromeClient(mWebChromeClient);
-
-                TextView title = (TextView) view1.findViewById(R.id.txvArticleTitle);
-                cardView = (CardView) view1.findViewById(R.id.cardViewWidget);
-
-                String videoFrameHTML = "<iframe allowfullscreen src=http:" + mMomspressoArticleListing.get(i).getVideoUrl() + "?modestbranding=1&amp;rel=0&amp;showinfo=0\" style=\"width: 100%;\" ></iframe>";
-                wv.loadData(videoFrameHTML, "text/html", null);
-                wv.getSettings().setJavaScriptEnabled(true);
-                videoIframe.add(wv);
-
-                title.setText(mMomspressoArticleListing.get(i).getTitle());
-
-                view1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(), ArticlesAndBlogsDetailsActivity.class);
-                        ArticleListingResult parentingListData1 = (ArticleListingResult) (mMomspressoArticleListing.get((int) view1.getTag()));
-                        intent.putExtra(Constants.ARTICLE_ID, parentingListData1.getId());
-                        intent.putExtra(Constants.AUTHOR_ID, parentingListData1.getUserId());
-                        intent.putExtra(Constants.BLOG_SLUG, parentingListData1.getBlogPageSlug());
-                        intent.putExtra(Constants.TITLE_SLUG, parentingListData1.getTitleSlug());
-                        startActivity(intent);
-                        Log.e("Tag", "" + view1.getTag());
-                    }
-                });
-                momspressoHZScrollLinearLayout.addView(view1);
-            }
-            View customViewMore = mInflator.inflate(R.layout.custom_view_more_dashboard, null);
-            DisplayMetrics metrics = new DisplayMetrics();
-            if (getActivity() != null) {
-                getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-                int widthPixels = metrics.widthPixels;
-                float width = (float) (widthPixels * 0.45);
-                customViewMore.setMinimumWidth((int) width);
-            }
-            momspressoHZScrollLinearLayout.addView(customViewMore);
-            customViewMore.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent1 = new Intent(getActivity(), FilteredTopicsArticleListingActivity.class);
-                    intent1.putExtra("selectedTopics", SharedPrefUtils.getMomspressoCategory(getActivity()).getId());
-                    intent1.putExtra("displayName", SharedPrefUtils.getMomspressoCategory(getActivity()).getDisplay_name());
-                    startActivity(intent1);
-                }
-            });
-            if (mMomspressoArticleListing.isEmpty()) {
-                ((TextView) view.findViewById(R.id.txtMomspresso)).setVisibility(View.VISIBLE);
-                ((TextView) view.findViewById(R.id.no_momspresso)).setVisibility(View.VISIBLE);
-            }
-            baseScroll.smoothScrollTo(0, 0);
+            momspressoSection.setmDatalist(mMomspressoArticleListing, Constants.KEY_MOMSPRESSO);
         }
     }
+
+//    private void processMomspressoListingResponse(ArticleListingResponse responseData) {
+//
+//        ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
+//
+//        if (dataList.size() == 0) {
+//            ((TextView) view.findViewById(R.id.no_momspresso)).setVisibility(View.VISIBLE);
+//        } else {
+//            ((TextView) view.findViewById(R.id.no_momspresso)).setVisibility(View.GONE);
+//            mMomspressoArticleListing.clear();
+//            mMomspressoArticleListing.addAll(responseData.getData().get(0).getResult());
+//            momspressoHZScrollLinearLayout.removeAllViews();
+//            mWebChromeClient = new MyWebChromeClient();
+//
+//            if (!mMomspressoArticleListing.isEmpty()) {
+//                Collections.shuffle(mMomspressoArticleListing);
+//            }
+////            BaseApplication.setBestCityResponse(mArticleBestCityListing);
+//            for (int i = 0; i < mMomspressoArticleListing.size(); i++) {
+//                final View view1 = mInflator.inflate(R.layout.momspresso_card_item_article_dashboard, null);
+//                view1.setTag(i);
+//                WebView wv = (WebView) view1.findViewById(R.id.videoIframe);
+//
+//                wv.setWebChromeClient(mWebChromeClient);
+//
+//                TextView title = (TextView) view1.findViewById(R.id.txvArticleTitle);
+//                cardView = (CardView) view1.findViewById(R.id.cardViewWidget);
+//
+//                String videoFrameHTML = "<iframe allowfullscreen src=http:" + mMomspressoArticleListing.get(i).getVideoUrl() + "?modestbranding=1&amp;rel=0&amp;showinfo=0\" style=\"width: 100%;\" ></iframe>";
+//                wv.loadData(videoFrameHTML, "text/html", null);
+//                wv.getSettings().setJavaScriptEnabled(true);
+//                videoIframe.add(wv);
+//
+//                title.setText(mMomspressoArticleListing.get(i).getTitle());
+//
+//                view1.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        Intent intent = new Intent(getActivity(), ArticlesAndBlogsDetailsActivity.class);
+//                        ArticleListingResult parentingListData1 = (ArticleListingResult) (mMomspressoArticleListing.get((int) view1.getTag()));
+//                        intent.putExtra(Constants.ARTICLE_ID, parentingListData1.getId());
+//                        intent.putExtra(Constants.AUTHOR_ID, parentingListData1.getUserId());
+//                        intent.putExtra(Constants.BLOG_SLUG, parentingListData1.getBlogPageSlug());
+//                        intent.putExtra(Constants.TITLE_SLUG, parentingListData1.getTitleSlug());
+//                        startActivity(intent);
+//                        Log.e("Tag", "" + view1.getTag());
+//                    }
+//                });
+//                momspressoHZScrollLinearLayout.addView(view1);
+//            }
+//            View customViewMore = mInflator.inflate(R.layout.custom_view_more_dashboard, null);
+//            DisplayMetrics metrics = new DisplayMetrics();
+//            if (getActivity() != null) {
+//                getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+//                int widthPixels = metrics.widthPixels;
+//                float width = (float) (widthPixels * 0.45);
+//                customViewMore.setMinimumWidth((int) width);
+//            }
+//            momspressoHZScrollLinearLayout.addView(customViewMore);
+//            customViewMore.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Intent intent1 = new Intent(getActivity(), FilteredTopicsArticleListingActivity.class);
+//                    intent1.putExtra("selectedTopics", SharedPrefUtils.getMomspressoCategory(getActivity()).getId());
+//                    intent1.putExtra("displayName", SharedPrefUtils.getMomspressoCategory(getActivity()).getDisplay_name());
+//                    startActivity(intent1);
+//                }
+//            });
+//            if (mMomspressoArticleListing.isEmpty()) {
+//                ((TextView) view.findViewById(R.id.txtMomspresso)).setVisibility(View.VISIBLE);
+//                ((TextView) view.findViewById(R.id.no_momspresso)).setVisibility(View.VISIBLE);
+//            }
+//            baseScroll.smoothScrollTo(0, 0);
+//        }
+//    }
 
     private void processEditorPicksResponse(ArticleListingResponse responseData) {
         ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
@@ -702,7 +715,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     private Callback<BusinessListResponse> eventListingResponseCallback = new Callback<BusinessListResponse>() {
         @Override
         public void onResponse(Call<BusinessListResponse> call, retrofit2.Response<BusinessListResponse> response) {
-            momspressoProgressbar.setVisibility(View.GONE);
+//            momspressoProgressbar.setVisibility(View.GONE);
             if (response == null || response.body() == null) {
                 ((DashboardActivity) getActivity()).showToast("Something went wrong from server");
                 return;
@@ -743,7 +756,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
 
         @Override
         public void onFailure(Call<BusinessListResponse> call, Throwable t) {
-            momspressoProgressbar.setVisibility(View.GONE);
+//            momspressoProgressbar.setVisibility(View.GONE);
             Crashlytics.logException(t);
             Log.d("MC4KException", Log.getStackTraceString(t));
             if (null != getActivity()) {
@@ -808,12 +821,12 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                 fragment.setArguments(bundle);
                 ((DashboardActivity) getActivity()).replaceFragment(fragment, bundle, true);
                 break;
-            case R.id.momspressoHeader:
-                Intent momspressoIntent = new Intent(getActivity(), FilteredTopicsArticleListingActivity.class);
-                momspressoIntent.putExtra("selectedTopics", SharedPrefUtils.getMomspressoCategory(getActivity()).getId());
-                momspressoIntent.putExtra("displayName", SharedPrefUtils.getMomspressoCategory(getActivity()).getDisplay_name());
-                startActivity(momspressoIntent);
-                break;
+//            case R.id.momspressoHeader:
+//                Intent momspressoIntent = new Intent(getActivity(), FilteredTopicsArticleListingActivity.class);
+//                momspressoIntent.putExtra("selectedTopics", SharedPrefUtils.getMomspressoCategory(getActivity()).getId());
+//                momspressoIntent.putExtra("displayName", SharedPrefUtils.getMomspressoCategory(getActivity()).getDisplay_name());
+//                startActivity(momspressoIntent);
+//                break;
         }
 
     }

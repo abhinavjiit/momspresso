@@ -469,7 +469,9 @@ public class TopicsSplashActivity extends BaseActivity implements ITopicSelectio
     public void onTopicSelectionChanged(int mapSize, int action) {
         if (action == 0) {
             ((LinearLayout) selectAll.getChildAt(0)).setBackgroundResource(R.drawable.search_topics_transparent_bg);
-            ((TextView) ((LinearLayout) selectAll.getChildAt(0)).getChildAt(0)).setTextColor(ContextCompat.getColor(TopicsSplashActivity.this, R.color.splashtopics_search_topic_item_text));
+            TextView selectAllTV= ((TextView) ((LinearLayout) selectAll.getChildAt(0)).getChildAt(0));
+            selectAllTV.setTextColor(ContextCompat.getColor(TopicsSplashActivity.this, R.color.splashtopics_search_topic_item_text));
+            selectAllTV.setText("SELECT ALL");
         } else {
             ArrayList<SelectTopic> topicCompleteSubSubTopicItemList = new ArrayList<SelectTopic>();
             topicCompleteSubSubTopicItemList.add(selectTopic.get(subCatPosition));

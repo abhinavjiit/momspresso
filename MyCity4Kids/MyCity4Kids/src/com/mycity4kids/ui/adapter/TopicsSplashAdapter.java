@@ -217,6 +217,7 @@ public class TopicsSplashAdapter extends BaseAdapter {
             holder.popularSubCatTextView2.setVisibility(View.VISIBLE);
             holder.popularSubCatTextView2.setText(top3Cat.get(1).getDisplay_name().toUpperCase());
             holder.popularSubCatTextView3.setVisibility(View.GONE);
+            holder.popularSubCatTextView4.setVisibility(View.GONE);
 
             if (null == selectedTopicsMap.get(top3Cat.get(0).getId())) {
                 holder.popularSubcatLL_1.setBackgroundResource(R.drawable.topics_transparent_bg);
@@ -239,6 +240,7 @@ public class TopicsSplashAdapter extends BaseAdapter {
             holder.popularSubCatTextView1.setText(top3Cat.get(0).getDisplay_name().toUpperCase());
             holder.popularSubCatTextView2.setVisibility(View.GONE);
             holder.popularSubCatTextView3.setVisibility(View.GONE);
+            holder.popularSubCatTextView4.setVisibility(View.GONE);
 
             if (null == selectedTopicsMap.get(top3Cat.get(0).getId())) {
                 holder.popularSubcatLL_1.setBackgroundResource(R.drawable.topics_transparent_bg);
@@ -252,6 +254,7 @@ public class TopicsSplashAdapter extends BaseAdapter {
             holder.popularSubCatTextView1.setVisibility(View.GONE);
             holder.popularSubCatTextView2.setVisibility(View.GONE);
             holder.popularSubCatTextView3.setVisibility(View.GONE);
+            holder.popularSubCatTextView4.setVisibility(View.GONE);
         }
 
         holder.popularSubCatTextView1.setOnClickListener(new View.OnClickListener() {

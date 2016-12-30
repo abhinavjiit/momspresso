@@ -1,22 +1,18 @@
 package com.mycity4kids.ui.fragment;
 
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Switch;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
@@ -27,18 +23,24 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.asynctask.HeavyDbTask;
 import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.ConfigurationController;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.OnUIView;
-import com.mycity4kids.listener.OnButtonClicked;
 import com.mycity4kids.models.VersionApiModel;
 import com.mycity4kids.models.city.City;
 import com.mycity4kids.models.city.MetroCity;
 import com.mycity4kids.models.configuration.ConfigurationApiModel;
+import com.mycity4kids.models.request.UpdateUserDetailsRequest;
+import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.ui.activity.DashboardActivity;
+import com.mycity4kids.retrofitAPIsInterfaces.UserAttributeUpdateAPI;
 import com.mycity4kids.ui.activity.SettingsActivity;
 import com.mycity4kids.utils.NearMyCity;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
 
 /**
  * Created by anshul on 2/4/16.
@@ -50,6 +52,7 @@ public class ChangeCityFragment extends BaseFragment {
     Double _longitude;
     int cityId;
     FirebaseAnalytics mFirebaseAnalytics;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,13 +60,12 @@ public class ChangeCityFragment extends BaseFragment {
         Utils.pushOpenScreenEvent(getActivity(), "City Change", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
 
         ((SettingsActivity) getActivity()).setTitle("Change City");
-        mFirebaseAnalytics=FirebaseAnalytics.getInstance(getActivity());
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
         setHasOptionsMenu(true);
-        radioGroup=(RadioGroup)view.findViewById(R.id.radioGroup);
-        cityId=SharedPrefUtils.getCurrentCityModel(getActivity()).getId();
-        Log.e("cityId",SharedPrefUtils.getCurrentCityModel(getActivity()).getId()+"");
-        switch (cityId)
-        {
+        radioGroup = (RadioGroup) view.findViewById(R.id.radioGroup);
+        cityId = SharedPrefUtils.getCurrentCityModel(getActivity()).getId();
+        Log.e("cityId", SharedPrefUtils.getCurrentCityModel(getActivity()).getId() + "");
+        switch (cityId) {
             case 1:
                 radioGroup.check(R.id.delhiNcr);
                 break;
@@ -128,11 +130,11 @@ public class ChangeCityFragment extends BaseFragment {
 
                         @Override
                         public void comeBackOnUI() {
-                         //   navigateToNextScreen(true);
+                            //   navigateToNextScreen(true);
                             ((SettingsActivity) getActivity()).replaceFragment(new FragmentSetting(), null, true);
                             removeProgressDialog();
-                          //  getActivity().getFragmentManager().beginTransaction().remove(this).commit();
-                            Log.e("comeBackUi","hey");
+                            //  getActivity().getFragmentManager().beginTransaction().remove(this).commit();
+                            Log.e("comeBackUi", "hey");
                         }
                     });
 
@@ -146,62 +148,63 @@ public class ChangeCityFragment extends BaseFragment {
         }
 
     }
-    public void changeCity()
-    {  final VersionApiModel versionApiModel = SharedPrefUtils.getSharedPrefVersion(getActivity());
+
+    public void changeCity() {
+
+        final VersionApiModel versionApiModel = SharedPrefUtils.getSharedPrefVersion(getActivity());
         final ConfigurationController _controller = new ConfigurationController(getActivity(), this);
-        int selectedId=radioGroup.getCheckedRadioButtonId();
-        radioButton=(RadioButton) getView().findViewById(selectedId);
+        int selectedId = radioGroup.getCheckedRadioButtonId();
+        radioButton = (RadioButton) getView().findViewById(selectedId);
         showProgressDialog(getString(R.string.please_wait));
-      //  Toast.makeText(getActivity(),radioButton.getText(),Toast.LENGTH_SHORT).show();
-        switch(radioButton.getText().toString())
-        {
+        //  Toast.makeText(getActivity(),radioButton.getText(),Toast.LENGTH_SHORT).show();
+        switch (radioButton.getText().toString()) {
             case "Delhi-NCR":
-                _latitude=28.6100;
-                _longitude=77.2300;
+                _latitude = 28.6100;
+                _longitude = 77.2300;
                 break;
             case "Bangalore":
-                _latitude=12.9667;
-                _longitude=77.5667;
+                _latitude = 12.9667;
+                _longitude = 77.5667;
                 break;
             case "Mumbai":
-                _latitude=18.9750;
-                _longitude=72.8258;
+                _latitude = 18.9750;
+                _longitude = 72.8258;
                 break;
             case "Pune":
-                _latitude=18.5203;
-                _longitude=73.8567;
+                _latitude = 18.5203;
+                _longitude = 73.8567;
                 break;
             case "Hyderabad":
-                _latitude=17.3660;
-                _longitude=78.4760;
+                _latitude = 17.3660;
+                _longitude = 78.4760;
                 break;
             case "Chennai":
-                _latitude=13.0474097;
-                _longitude=79.9288085;
+                _latitude = 13.0474097;
+                _longitude = 79.9288085;
                 break;
             case "Kolkata":
-                _latitude=22.5667;
-                _longitude=88.3667;
+                _latitude = 22.5667;
+                _longitude = 88.3667;
                 break;
             case "Jaipur":
-                _latitude=26.9000;
-                _longitude=75.8000;
+                _latitude = 26.9000;
+                _longitude = 75.8000;
                 break;
             case "Ahmedabad":
-                _latitude=23.0300;
-                _longitude=72.5800;
+                _latitude = 23.0300;
+                _longitude = 72.5800;
                 break;
             /*case "Others":
                 _latitude=0.0;
                 _longitude=0.0;
                 break;*/
-                default:
-                    _latitude=28.6100;
-                    _longitude=77.2300;
-                    break;
+            default:
+                _latitude = 28.6100;
+                _longitude = 77.2300;
+                break;
 
         }
-         new NearMyCity(getActivity(), _latitude, _longitude, new NearMyCity.FetchCity() {
+        new NearMyCity(getActivity(), _latitude, _longitude, new NearMyCity.FetchCity() {
 
             @Override
             public void nearCity(City cityModel) {
@@ -219,11 +222,11 @@ public class ChangeCityFragment extends BaseFragment {
                  * this city model will be save only one time on splash:
                  */
                 SharedPrefUtils.setCurrentCityModel(getActivity(), model);
-                SharedPrefUtils.setChangeCityFlag(getActivity(),true);
+                SharedPrefUtils.setChangeCityFlag(getActivity(), true);
 
                 if (cityId > 0) {
                     versionApiModel.setCityId(cityId);
-                    mFirebaseAnalytics.setUserProperty("CityId",cityId+"");
+                    mFirebaseAnalytics.setUserProperty("CityId", cityId + "");
                     /**
                      * get current version code ::
                      */
@@ -247,6 +250,38 @@ public class ChangeCityFragment extends BaseFragment {
                     }
                     _controller.getData(AppConstants.CONFIGURATION_REQUEST, versionApiModel);
 
+                    UpdateUserDetailsRequest updateUserDetail = new UpdateUserDetailsRequest();
+                    updateUserDetail.setAttributeName("cityId");
+                    updateUserDetail.setAttributeType("S");
+                    updateUserDetail.setAttributeValue("" + cityModel.getCityId());
+                    Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+                    UserAttributeUpdateAPI userAttributeUpdateAPI = retrofit.create(UserAttributeUpdateAPI.class);
+                    Call<UserDetailResponse> call = userAttributeUpdateAPI.updateCity(updateUserDetail);
+                    call.enqueue(new Callback<UserDetailResponse>() {
+                        @Override
+                        public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
+                            removeProgressDialog();
+                            if (response == null || response.body() == null) {
+                                Toast.makeText(getActivity(), getString(R.string.went_wrong), Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                            UserDetailResponse responseData = (UserDetailResponse) response.body();
+                            if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                                Toast.makeText(getActivity(), "Successfully updated!", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getActivity(), responseData.getReason(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<UserDetailResponse> call, Throwable t) {
+                            removeProgressDialog();
+                            Toast.makeText(getActivity(), getString(R.string.went_wrong), Toast.LENGTH_SHORT).show();
+                            Crashlytics.logException(t);
+                            Log.d("MC4kException", Log.getStackTraceString(t));
+                        }
+                    });
 
                 }
 

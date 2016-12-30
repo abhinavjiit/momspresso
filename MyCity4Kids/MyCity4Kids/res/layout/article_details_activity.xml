@@ -82,6 +82,13 @@
                 android:scaleType="fitXY"
                 android:src="@drawable/default_article" />
 
+            <WebView
+                android:id="@+id/videoWebView"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/article_details_app_bar_height"
+                android:layout_below="@+id/articleViewCountTextView"
+                android:visibility="gone" />
+
             <com.mikhaellopez.circularimageview.CircularImageView
                 android:id="@+id/user_image"
                 android:layout_width="50dp"
@@ -339,6 +346,25 @@
         app:fab_icon="@drawable/heart_outline"
         app:fab_plusIconColor="@color/white_color"
         app:fab_size="normal" />
+
+    <com.github.library.bubbleview.BubbleTextVew
+        android:id="@+id/recommendSuggestion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottom_Lout"
+        android:layout_marginBottom="32dp"
+        android:layout_toLeftOf="@+id/recommendFloatingActionButton"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="@string/ad.recommendation.tootip_text"
+        android:textColor="@color/white_color"
+        android:visibility="invisible"
+        app:angle="5dp"
+        app:arrowHeight="8dp"
+        app:arrowLocation="right"
+        app:arrowPosition="12dp"
+        app:arrowWidth="8dp"
+        app:bubbleColor="@color/ad.recommend.tooltip.bg" />
 
     <LinearLayout
         android:id="@+id/bottom_Lout"

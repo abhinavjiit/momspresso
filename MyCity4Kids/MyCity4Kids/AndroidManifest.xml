@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mycity4kids"
-    android:versionCode="46"
-    android:versionName="5.5">
+    android:versionCode="47"
+    android:versionName="5.5.1">
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -41,6 +41,7 @@
     <application
         android:name=".application.BaseApplication"
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@drawable/myicon"
         android:label="@string/app_name"
         android:largeHeap="true"
@@ -486,6 +487,9 @@
             android:name=".ui.activity.BloggersAnalyticsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.nnn" />
+        <activity
+            android:name=".ui.activity.NotificationCenterListActivity"
+            android:screenOrientation="portrait" />
 
         <receiver
             android:name="com.mycity4kids.reminders.BootCompleteReceiver"

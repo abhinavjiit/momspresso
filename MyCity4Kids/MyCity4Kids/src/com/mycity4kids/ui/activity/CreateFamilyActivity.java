@@ -321,7 +321,8 @@ public class CreateFamilyActivity extends BaseActivity implements View.OnClickLi
                     model.setFamily_id(responseData.getResult().getData().getUser().getFamily_id());
                     model.setColor_code(responseData.getResult().getData().getUser().getColor_code());
                     model.setSessionId(responseData.getResult().getData().getUser().getSessionId());
-                    model.setFirst_name(responseData.getResult().getData().getUser().getFirst_name() + " " + responseData.getResult().getData().getUser().getLast_name());
+                    model.setFirst_name(responseData.getResult().getData().getUser().getFirst_name());
+                    model.setLast_name(responseData.getResult().getData().getUser().getLast_name());
 
                     SharedPrefUtils.setUserDetailModel(CreateFamilyActivity.this, model);
 

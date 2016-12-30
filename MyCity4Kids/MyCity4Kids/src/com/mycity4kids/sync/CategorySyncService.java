@@ -1,5 +1,6 @@
 package com.mycity4kids.sync;
 
+import android.accounts.NetworkErrorException;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
@@ -11,8 +12,10 @@ import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.response.ConfigResponse;
+import com.mycity4kids.models.response.UserTypeResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ConfigAPIs;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
@@ -28,6 +31,7 @@ import java.util.Map;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 
 /**
@@ -44,6 +48,7 @@ public class CategorySyncService extends IntentService {
 
     public int popularVersion;
     public String popularLocation;
+    public int userTypeVersion;
 
     public CategorySyncService(String name) {
         super(name);
@@ -80,6 +85,10 @@ public class CategorySyncService extends IntentService {
                                      if (!StringUtils.isNullOrEmpty(responseModel.getData().getMsg())) {
                                          for (Map.Entry<String, String> entry : responseModel.getData().getResult().getNotificationSettings().entrySet()) {
                                              SharedPrefUtils.setNotificationConfig(CategorySyncService.this, entry.getKey(), entry.getValue());
+                                         }
+
+                                         for (Map.Entry<String, String> entry : responseModel.getData().getResult().getNotificationType().entrySet()) {
+                                             SharedPrefUtils.setNotificationType(CategorySyncService.this, entry.getKey(), entry.getValue());
                                          }
 
                                          version = SharedPrefUtils.getConfigCategoryVersion(CategorySyncService.this);
@@ -146,6 +155,11 @@ public class CategorySyncService extends IntentService {
                                                  }
                                              });
                                          }
+
+                                         userTypeVersion = SharedPrefUtils.getUserTypeVersion(CategorySyncService.this);
+                                         if (userTypeVersion == 0 || userTypeVersion != responseModel.getData().getResult().getCategory().getUserTypeVersion()) {
+//                                             updateUserTypeMap();
+                                         }
                                      }
                                  }
                              } catch (Exception e) {
@@ -163,6 +177,44 @@ public class CategorySyncService extends IntentService {
         );
 
     }
+
+    private void updateUserTypeMap() {
+        final Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        // prepare call in Retrofit 2.0
+        ConfigAPIs configAPIs = retrofit.create(ConfigAPIs.class);
+        Call<UserTypeResponse> userTypeCall = configAPIs.getAllUserType();
+        userTypeCall.enqueue(userTypeResponseCallback);
+    }
+
+    private Callback<UserTypeResponse> userTypeResponseCallback = new Callback<UserTypeResponse>() {
+        @Override
+        public void onResponse(Call<UserTypeResponse> call, Response<UserTypeResponse> response) {
+            if (response == null || null == response.body()) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                Crashlytics.logException(nee);
+                return;
+            }
+            try {
+                UserTypeResponse responseData = (UserTypeResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    for (Map.Entry<String, String> entry : responseData.getData().getResult().entrySet()) {
+                        SharedPrefUtils.setConfigUserType(CategorySyncService.this, entry.getValue(), entry.getKey());
+                    }
+                } else {
+//                    showToast(responseData.getReason());
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<UserTypeResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
 
     private boolean writeResponseBodyToDisk(ResponseBody body, String filename) {
         try {

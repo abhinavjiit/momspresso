@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/home_bg"
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
@@ -253,7 +254,7 @@
                         android:maxLines="1"
                         android:paddingLeft="10dp"
                         android:singleLine="true"
-                        android:text="likes"
+                        android:text="Likes"
                         android:textColor="@color/analytics.engagement.likes_label"
                         android:textSize="12sp" />
 

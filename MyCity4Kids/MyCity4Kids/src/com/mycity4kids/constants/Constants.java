@@ -222,6 +222,7 @@ public class Constants {
     public static final String KEY_FOR_YOU = "foryou";
     public static final String KEY_IN_YOUR_CITY = "inYourCity";
     public static final String KEY_EDITOR_PICKS = "editorPicks";
+    public static final String KEY_MOMSPRESSO = "momspresso";
 
     public static String SORT_TYPE = "sorttype";
     public static String BLOG_TITLE = "blog_title";
