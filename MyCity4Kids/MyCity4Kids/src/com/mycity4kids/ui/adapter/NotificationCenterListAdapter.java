@@ -103,6 +103,16 @@ public class NotificationCenterListAdapter extends BaseAdapter {
                     mContext.startActivity(intent);
                 }
             });
+        } else if (AppConstants.NOTIFICATION_TYPE_VIDEO_DETAILS.equals(nType)) {
+            holder.rootView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mContext, ArticlesAndBlogsDetailsActivity.class);
+                    intent.putExtra(Constants.VIDEO_ID, notificationList.get(position).getId());
+                    intent.putExtra(Constants.AUTHOR_ID, notificationList.get(position).getAuthorId());
+                    mContext.startActivity(intent);
+                }
+            });
         } else if (AppConstants.NOTIFICATION_TYPE_UPCOMING_EVENTS.equals(nType)) {
             holder.rootView.setOnClickListener(new View.OnClickListener() {
                 @Override

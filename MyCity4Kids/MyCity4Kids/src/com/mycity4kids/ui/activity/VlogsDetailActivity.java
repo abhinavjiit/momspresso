@@ -189,6 +189,8 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vlogs_detail_activity);
+        Utils.pushOpenScreenEvent(VlogsDetailActivity.this, "Video Details", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+
         deepLinkURL = getIntent().getStringExtra(Constants.DEEPLINK_URL);
         mClient = new GoogleApiClient.Builder(this).addApi(AppIndex.APP_INDEX_API).build();
         TAG = VlogsDetailActivity.this.getClass().getSimpleName();
@@ -1504,7 +1506,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
         followUnfollowCategoriesRequest.setCategories(topicIdLList);
         if (action == 0) {
             Log.d("GTM FOLLOW", "displayName" + selectedTopic);
-            Utils.pushEventFollowUnfollowTopic(this, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Vlog Details", "follow", ((TextView) tagView.getChildAt(0)).getText() + ":" + selectedTopic);
+            Utils.pushEventFollowUnfollowTopic(this, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Video Details", "follow", ((TextView) tagView.getChildAt(0)).getText() + ":" + selectedTopic);
             ((TextView) tagView.getChildAt(0)).setTag(selectedTopic);
             ((ImageView) tagView.getChildAt(2)).setTag(selectedTopic);
             ((ImageView) tagView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(VlogsDetailActivity.this, R.drawable.follow_plus));
@@ -1517,7 +1519,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
             });
         } else {
             Log.d("GTM UNFOLLOW", "displayName" + selectedTopic);
-            Utils.pushEventFollowUnfollowTopic(this, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Vlog Details", "unfollow", ((TextView) tagView.getChildAt(0)) + ":" + selectedTopic);
+            Utils.pushEventFollowUnfollowTopic(this, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Video Details", "unfollow", ((TextView) tagView.getChildAt(0)) + ":" + selectedTopic);
             ((TextView) tagView.getChildAt(0)).setTag(selectedTopic);
             ((ImageView) tagView.getChildAt(2)).setTag(selectedTopic);
             ((ImageView) tagView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(VlogsDetailActivity.this, R.drawable.tick));
@@ -1815,32 +1817,32 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                     startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
                     break;
                 case R.id.relatedArticles1: {
-                    Utils.pushEventRelatedArticle(VlogsDetailActivity.this, GTMEventType.RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Vlog Detail", ((VlogsListingAndDetailResult) v.getTag()).getTitleSlug(), 1);
+                    Utils.pushEventRelatedArticle(VlogsDetailActivity.this, GTMEventType.RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Video Detail", ((VlogsListingAndDetailResult) v.getTag()).getTitleSlug(), 1);
                     launchRelatedTrendingArticle(v);
                     break;
                 }
                 case R.id.relatedArticles2: {
-                    Utils.pushEventRelatedArticle(VlogsDetailActivity.this, GTMEventType.RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Vlog Detail", ((VlogsListingAndDetailResult) v.getTag()).getTitleSlug(), 2);
+                    Utils.pushEventRelatedArticle(VlogsDetailActivity.this, GTMEventType.RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Video Detail", ((VlogsListingAndDetailResult) v.getTag()).getTitleSlug(), 2);
                     launchRelatedTrendingArticle(v);
                     break;
                 }
                 case R.id.relatedArticles3: {
-                    Utils.pushEventRelatedArticle(VlogsDetailActivity.this, GTMEventType.RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Vlog Detail", ((VlogsListingAndDetailResult) v.getTag()).getTitleSlug(), 3);
+                    Utils.pushEventRelatedArticle(VlogsDetailActivity.this, GTMEventType.RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Video Detail", ((VlogsListingAndDetailResult) v.getTag()).getTitleSlug(), 3);
                     launchRelatedTrendingArticle(v);
                     break;
                 }
                 case R.id.trendingRelatedArticles1: {
-                    Utils.pushEventRelatedArticle(VlogsDetailActivity.this, GTMEventType.TRENDING_RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Vlog Detail", ((VlogsListingAndDetailResult) v.getTag()).getTitleSlug(), 1);
+                    Utils.pushEventRelatedArticle(VlogsDetailActivity.this, GTMEventType.TRENDING_RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Video Detail", ((VlogsListingAndDetailResult) v.getTag()).getTitleSlug(), 1);
                     launchRelatedTrendingArticle(v);
                     break;
                 }
                 case R.id.trendingRelatedArticles2: {
-                    Utils.pushEventRelatedArticle(VlogsDetailActivity.this, GTMEventType.TRENDING_RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Blog Detail", ((VlogsListingAndDetailResult) v.getTag()).getTitleSlug(), 2);
+                    Utils.pushEventRelatedArticle(VlogsDetailActivity.this, GTMEventType.TRENDING_RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Video Detail", ((VlogsListingAndDetailResult) v.getTag()).getTitleSlug(), 2);
                     launchRelatedTrendingArticle(v);
                     break;
                 }
                 case R.id.trendingRelatedArticles3: {
-                    Utils.pushEventRelatedArticle(VlogsDetailActivity.this, GTMEventType.TRENDING_RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Blog Detail", ((VlogsListingAndDetailResult) v.getTag()).getTitleSlug(), 3);
+                    Utils.pushEventRelatedArticle(VlogsDetailActivity.this, GTMEventType.TRENDING_RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Video Detail", ((VlogsListingAndDetailResult) v.getTag()).getTitleSlug(), 3);
                     launchRelatedTrendingArticle(v);
                     break;
                 }
@@ -2020,7 +2022,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                 } else {
                     shareMessage = "mycity4kids\n\nCheck out this interesting blog post " + "\"" + detailData.getTitle() + "\" by " + author + ".\nRead Here: " + shareUrl;
                 }
-                Utils.pushEventShareURL(VlogsDetailActivity.this, GTMEventType.SHARE_BLOG_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Vlog Detail", shareUrl);
+                Utils.pushEventShareURL(VlogsDetailActivity.this, GTMEventType.SHARE_BLOG_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Video Detail", shareUrl);
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
                 startActivity(Intent.createChooser(shareIntent, "mycity4kids"));
 

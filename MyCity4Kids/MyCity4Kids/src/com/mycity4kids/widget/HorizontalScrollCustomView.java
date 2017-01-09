@@ -121,6 +121,8 @@ public class HorizontalScrollCustomView extends LinearLayout {
                 public void onClick(View v) {
                     if (Constants.KEY_FOR_YOU.equals(listingType)) {
                         Utils.pushEvent(getContext(), GTMEventType.FOR_YOU_ARTICLE_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(getContext()).getDynamoId(), "Home Screen");
+                    } else if (Constants.KEY_HINDI.equals(listingType)) {
+                        Utils.pushEvent(getContext(), GTMEventType.HINDI_ARTICLE_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(getContext()).getDynamoId(), "Home Screen");
                     }
                     Intent intent = new Intent(getContext(), ArticlesAndBlogsDetailsActivity.class);
                     ArticleListingResult parentingListData = (ArticleListingResult) (mDatalist.get((int) view.getTag()));
@@ -239,6 +241,7 @@ public class HorizontalScrollCustomView extends LinearLayout {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Utils.pushEvent(getContext(), GTMEventType.FUNNY_VIDEO_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(getContext()).getDynamoId(), "Home Screen");
                     Intent intent = new Intent(getContext(), VlogsDetailActivity.class);
                     VlogsListingAndDetailResult parentingListData = (VlogsListingAndDetailResult) (vlogslist.get((int) view.getTag()));
                     intent.putExtra(Constants.VIDEO_ID, parentingListData.getId());

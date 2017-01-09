@@ -467,6 +467,7 @@ public class AppConstants {
     public static final String NOTIFICATION_TYPE_UPCOMING_EVENTS = "upcoming_event_list";
     public static final String NOTIFICATION_TYPE_PROFILE = "profile";
     public static final String NOTIFICATION_TYPE_ARTICLE_DETAILS = "article_details";
+    public static final String NOTIFICATION_TYPE_VIDEO_DETAILS = "video_details";
 
     public static final String FOLLOWING_STATUS_ACTIVITY_RESULT = "followingStatusActivityResult";
 }

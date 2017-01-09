@@ -8,6 +8,7 @@ public class NotificationCenterResult {
     private String userId;
     private String title;
     private String articleId;
+    private String videoId;
     private String authorId;
     private String titleSlug;
     private String blogTitleSlug;
@@ -52,6 +53,14 @@ public class NotificationCenterResult {
 
     public String getAuthorId() {
         return authorId;
+    }
+
+    public String getVideoId() {
+        return videoId;
+    }
+
+    public void setVideoId(String videoId) {
+        this.videoId = videoId;
     }
 
     public void setAuthorId(String authorId) {

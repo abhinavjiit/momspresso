@@ -347,6 +347,18 @@ public enum GTMEventType {
         public String toString() {
             return "forYouArticleClickEvent";
         }
+    },
+    FUNNY_VIDEO_CLICK_EVENT {
+        @Override
+        public String toString() {
+            return "funnyVideoClickEvent";
+        }
+    },
+    HINDI_ARTICLE_CLICK_EVENT {
+        @Override
+        public String toString() {
+            return "hindiArticleClickEvent";
+        }
     }
 
 }
