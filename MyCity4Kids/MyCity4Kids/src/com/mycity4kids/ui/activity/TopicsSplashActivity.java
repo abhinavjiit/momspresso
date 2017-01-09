@@ -205,7 +205,9 @@ public class TopicsSplashActivity extends BaseActivity implements ITopicSelectio
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                searchTopicsSplashAdapter.getFilter().filter(s);
+                if (null != searchTopicsSplashAdapter) {
+                    searchTopicsSplashAdapter.getFilter().filter(s);
+                }
             }
 
             @Override
@@ -469,7 +471,7 @@ public class TopicsSplashActivity extends BaseActivity implements ITopicSelectio
     public void onTopicSelectionChanged(int mapSize, int action) {
         if (action == 0) {
             ((LinearLayout) selectAll.getChildAt(0)).setBackgroundResource(R.drawable.search_topics_transparent_bg);
-            TextView selectAllTV= ((TextView) ((LinearLayout) selectAll.getChildAt(0)).getChildAt(0));
+            TextView selectAllTV = ((TextView) ((LinearLayout) selectAll.getChildAt(0)).getChildAt(0));
             selectAllTV.setTextColor(ContextCompat.getColor(TopicsSplashActivity.this, R.color.splashtopics_search_topic_item_text));
             selectAllTV.setText("SELECT ALL");
         } else {

@@ -66,6 +66,7 @@ dependencies {
     compile 'com.lguipeng.bubbleview:library:1.0.0'
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.1'
     compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.1.+'
+    compile 'life.knowledge4:k4l-video-trimmer:1.0'
     compile project(':WordPressEditor')
     compile files('libs/comscore.jar')
 

@@ -151,10 +151,11 @@ public class AppConstants {
 
     public static final String DEEP_LINKING_URL = BASE_URL + "apicommon/get_url_data?";
 
-    public static final Uri APP_BASE_URI = Uri.parse("android-app://com.mycity4kids/http/www.mycity4kids.com/");
-    public static final Uri WEB_BASE_URL = Uri.parse("http://www.mycity4kids.com/");
+    public static final Uri APP_BASE_URI = Uri.parse("android-app://com.mycity4kids/https/www.mycity4kids.com/");
+    public static final Uri WEB_BASE_URL = Uri.parse("https://www.mycity4kids.com/");
 
-    public static final String ARTICLE_SHARE_URL = "http://mycity4kids.com/" + "parenting/";
+    public static final String ARTICLE_SHARE_URL = "https://mycity4kids.com/" + "parenting/";
+    public static final String VIDEO_ARTICLE_SHARE_URL = "https://mycity4kids.com/" + "parenting/";
 //    public static final String ARTICLE_SHARE_URL = BASE_URL + "newparenting/";
 
     /*New Login/Sign Up Constants*/
@@ -376,6 +377,7 @@ public class AppConstants {
     public static final String DEEP_LINK_AUTHOR_DETAIL = "author_detail";
     public static final String DEEP_LINK_ARTICLE_LISTING = "article_listing";
     public static final String DEEP_LINK_TOPIC_LISTING = "category_listing";
+    public static final String DEEP_LINK_VLOG_DETAIL = "video";
     public static final String CONTAINER_ID = "GTM-MS864S";
 
     //Author Types
@@ -384,6 +386,7 @@ public class AppConstants {
     public static final String AUTHOR_TYPE_EDITORIAL = "Editorial";
     public static final String AUTHOR_TYPE_EXPERT = "Expert";
     public static final String AUTHOR_TYPE_FEATURED = "Featured Author";
+    public static final String AUTHOR_TYPE_USER = "User";
   /*  public static final String USER_TYPE_EDITOR = "0";
     public static final String USER_TYPE_EXPERT = "1";
     public static final String USER_TYPE_BLOGGER = "2";
@@ -436,6 +439,7 @@ public class AppConstants {
     public static final String MOMSPRESSO_CATEGORY_ID = "momspressoCategoryId";
     public static final String MOMSPRESSO_SLUG = "momspresso-video";
     public static final String MOMSPRESSO_CATEGORYID = "category-ae65da4bf8bb48e4b80f13444be1e9a5";
+    public static final String HINDI_CATEGORYID = "category-1515d3c9adb249988a136bdbfc8f0017";
     public static final String DEEPLINK_EDITOR_URL = "mc4k://www.mycity4kids.com/editor";
     public static final String DEEPLINK_PROFILE_URL = "mc4k://www.mycity4kids.com/profile";
 
@@ -463,4 +467,6 @@ public class AppConstants {
     public static final String NOTIFICATION_TYPE_UPCOMING_EVENTS = "upcoming_event_list";
     public static final String NOTIFICATION_TYPE_PROFILE = "profile";
     public static final String NOTIFICATION_TYPE_ARTICLE_DETAILS = "article_details";
+
+    public static final String FOLLOWING_STATUS_ACTIVITY_RESULT = "followingStatusActivityResult";
 }

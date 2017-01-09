@@ -2,10 +2,7 @@ package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +10,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
 import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -21,10 +17,7 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.parentingdetails.CommentsData;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.CircleTransformation;
-import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
 import com.mycity4kids.ui.activity.BloggerDashboardActivity;
-import com.mycity4kids.ui.fragment.CommentRepliesDialogFragment;
-import com.mycity4kids.ui.fragment.EditCommentsRepliesFragment;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

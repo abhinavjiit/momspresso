@@ -707,7 +707,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
 
-
         if (!StringUtils.isNullOrEmpty(detailData.getUserName())) {
             ((TextView) findViewById(R.id.user_name)).setText(detailData.getUserName());
         }
@@ -975,6 +974,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                         Bundle _args = new Bundle();
                         _args.putParcelable("commentData", (CommentsData) ((View) v.getParent().getParent()).getTag());
                         _args.putString("articleId", articleId);
+                        _args.putString("type", "article");
                         commentFragment.setArguments(_args);
                         FragmentManager fm = getSupportFragmentManager();
                         commentFragment.show(fm, "Replies");
@@ -989,6 +989,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                         Bundle commentArgs = new Bundle();
                         commentArgs.putParcelable("commentData", (CommentsData) ((View) v.getParent()).getTag());
                         commentArgs.putString("articleId", articleId);
+                        commentArgs.putString("type", "article");
                         commentFragment.setArguments(commentArgs);
                         FragmentManager fm = getSupportFragmentManager();
                         commentFragment.show(fm, "Replies");
@@ -1005,6 +1006,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                         Bundle _args = new Bundle();
                         _args.putParcelable("commentData", cData);
                         _args.putString("articleId", articleId);
+                        _args.putString("type", "article");
                         _args.putInt(AppConstants.COMMENT_OR_REPLY_OR_NESTED_REPLY, 0);
                         editCommentsRepliesFragment.setArguments(_args);
                         FragmentManager fm = getSupportFragmentManager();
@@ -1344,7 +1346,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         @Override
         public void onResponse(Call<ViewCountResponse> call, retrofit2.Response<ViewCountResponse> response) {
             if (response == null || response.body() == null) {
-                getArticleDetailsWebserviceAPI();
                 return;
             }
             try {

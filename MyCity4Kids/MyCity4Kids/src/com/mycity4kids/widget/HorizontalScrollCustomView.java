@@ -19,13 +19,18 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.response.ArticleListingResult;
+import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.ArticleListingActivity;
 import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
 import com.mycity4kids.ui.activity.CityBestArticleListingActivity;
 import com.mycity4kids.ui.activity.FilteredTopicsArticleListingActivity;
 import com.mycity4kids.ui.activity.TopicsSplashActivity;
+import com.mycity4kids.ui.activity.VlogsDetailActivity;
+import com.mycity4kids.ui.activity.VlogsListingActivity;
+import com.mycity4kids.utils.AppUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -43,6 +48,7 @@ public class HorizontalScrollCustomView extends LinearLayout {
     HorizontalScrollView horizontalScrollView;
     LinearLayout hsvLinearLayout;
     private ArrayList<ArticleListingResult> mDatalist;
+    private ArrayList<VlogsListingAndDetailResult> vlogslist;
     private LayoutInflater mInflator;
 
     public HorizontalScrollCustomView(Context context) {
@@ -95,6 +101,7 @@ public class HorizontalScrollCustomView extends LinearLayout {
                 }
             });
         }
+        final Topics hindiTopic = AppUtils.getHindiTopic(getContext());
         this.mDatalist = mDatalist;
         mInflator = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         progressBar.setVisibility(GONE);
@@ -160,6 +167,16 @@ public class HorizontalScrollCustomView extends LinearLayout {
                     intent1.putExtra("selectedTopics", SharedPrefUtils.getMomspressoCategory(getContext()).getId());
                     intent1.putExtra("displayName", SharedPrefUtils.getMomspressoCategory(getContext()).getDisplay_name());
                     getContext().startActivity(intent1);
+                } else if (Constants.KEY_HINDI.equals(listingType)) {
+                    Intent hindiIntent = new Intent(getContext(), FilteredTopicsArticleListingActivity.class);
+                    if (hindiTopic == null) {
+                        hindiIntent.putExtra("selectedTopics", AppConstants.HINDI_CATEGORYID);
+                        hindiIntent.putExtra("displayName", getContext().getString(R.string.home_sections_title_hindi));
+                    } else {
+                        hindiIntent.putExtra("selectedTopics", AppConstants.HINDI_CATEGORYID);
+                        hindiIntent.putExtra("displayName", hindiTopic.getDisplay_name());
+                    }
+                    getContext().startActivity(hindiIntent);
                 }
             }
         });
@@ -187,10 +204,77 @@ public class HorizontalScrollCustomView extends LinearLayout {
                     intent1.putExtra("selectedTopics", SharedPrefUtils.getMomspressoCategory(getContext()).getId());
                     intent1.putExtra("displayName", SharedPrefUtils.getMomspressoCategory(getContext()).getDisplay_name());
                     getContext().startActivity(intent1);
+                } else if (Constants.KEY_HINDI.equals(listingType)) {
+                    Intent hindiIntent = new Intent(getContext(), FilteredTopicsArticleListingActivity.class);
+                    hindiIntent.putExtra("selectedTopics", hindiTopic.getId());
+                    hindiIntent.putExtra("displayName", hindiTopic.getDisplay_name());
+                    getContext().startActivity(hindiIntent);
                 }
             }
         });
         if (mDatalist.isEmpty()) {
+            emptyListTextView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public ArrayList<VlogsListingAndDetailResult> getVlogslist() {
+        return vlogslist;
+    }
+
+    public void setVlogslist(final ArrayList<VlogsListingAndDetailResult> vlogslist) {
+        this.vlogslist = vlogslist;
+        mInflator = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        progressBar.setVisibility(GONE);
+        hsvLinearLayout.removeAllViews();
+        if (!vlogslist.isEmpty()) {
+            Collections.shuffle(vlogslist);
+        }
+        for (int i = 0; i < vlogslist.size(); i++) {
+            final View view = mInflator.inflate(R.layout.card_item_article_dashboard, null);
+            view.setTag(i);
+            ImageView articleImage = (ImageView) view.findViewById(R.id.imvAuthorThumb);
+            TextView title = (TextView) view.findViewById(R.id.txvArticleTitle);
+            Picasso.with(getContext()).load(AppUtils.getYoutubeThumbnailURL(vlogslist.get(i).getUrl())).placeholder(R.drawable.default_article).into(articleImage);
+            title.setText(vlogslist.get(i).getTitle());
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getContext(), VlogsDetailActivity.class);
+                    VlogsListingAndDetailResult parentingListData = (VlogsListingAndDetailResult) (vlogslist.get((int) view.getTag()));
+                    intent.putExtra(Constants.VIDEO_ID, parentingListData.getId());
+                    intent.putExtra(Constants.AUTHOR_ID, parentingListData.getAuthor().getId());
+                    getContext().startActivity(intent);
+                    Log.e("Tag", "" + view.getTag());
+                }
+            });
+            hsvLinearLayout.addView(view);
+        }
+
+        View customViewMore = mInflator.inflate(R.layout.custom_view_more_dashboard, null);
+        DisplayMetrics metrics = new DisplayMetrics();
+        if (getContext() != null) {
+            ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(metrics);
+            int widthPixels = metrics.widthPixels;
+            float width = (float) (widthPixels * 0.45);
+            customViewMore.setMinimumWidth((int) width);
+        }
+        hsvLinearLayout.addView(customViewMore);
+        customViewMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent1 = new Intent(getContext(), VlogsListingActivity.class);
+                getContext().startActivity(intent1);
+            }
+        });
+
+        sectionNameTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent1 = new Intent(getContext(), VlogsListingActivity.class);
+                getContext().startActivity(intent1);
+            }
+        });
+        if (vlogslist.isEmpty()) {
             emptyListTextView.setVisibility(View.VISIBLE);
         }
     }

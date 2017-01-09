@@ -20,7 +20,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
  */
 public class BlogFilterActivity extends BaseActivity implements View.OnClickListener {
 
-    TextView rankName, blogger, expert, editor, aTOz, editorialTeam;
+    TextView rankName, blogger, expert, editor, aTOz, editorialTeam, featuredAuthor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,12 +35,15 @@ public class BlogFilterActivity extends BaseActivity implements View.OnClickList
         blogger = (TextView) findViewById(R.id.bloggers);
         expert = (TextView) findViewById(R.id.experts);
         editor = (TextView) findViewById(R.id.editors);
+        featuredAuthor = (TextView) findViewById(R.id.featuredAuthor);
+
         aTOz = (TextView) findViewById(R.id.atoz);
         editorialTeam = (TextView) findViewById(R.id.editorialTeam);
         rankName.setOnClickListener(this);
         blogger.setOnClickListener(this);
         expert.setOnClickListener(this);
         editor.setOnClickListener(this);
+        featuredAuthor.setOnClickListener(this);
 
         aTOz.setOnClickListener(this);
         editorialTeam.setOnClickListener(this);
@@ -105,6 +108,14 @@ public class BlogFilterActivity extends BaseActivity implements View.OnClickList
 
                 intent = new Intent(getApplicationContext(), ContributorListActivity.class);
                 intent.putExtra(Constants.FILTER_BLOG_SORT_TYPE, AppConstants.USER_TYPE_EDITORIAL);
+                setResult(RESULT_OK, intent);
+                finish();
+                break;
+
+            case R.id.featuredAuthor:
+
+                intent = new Intent(getApplicationContext(), ContributorListActivity.class);
+                intent.putExtra(Constants.FILTER_BLOG_SORT_TYPE, AppConstants.USER_TYPE_FEATURED);
                 setResult(RESULT_OK, intent);
                 finish();
                 break;

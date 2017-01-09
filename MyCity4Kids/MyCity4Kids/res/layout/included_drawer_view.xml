@@ -143,6 +143,22 @@
             android:textColor="@color/black_color"
             android:textSize="16sp" />
 
+        <TextView
+            android:id="@+id/rdBtnHindi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:background="?attr/selectableItemBackground"
+            android:button="@null"
+            android:clickable="true"
+            android:fontFamily="sans-serif-light"
+            android:paddingBottom="15dp"
+            android:paddingLeft="20dp"
+            android:paddingTop="15dp"
+            android:text="@string/menu.hindi"
+            android:textColor="@color/black_color"
+            android:textSize="16sp" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"

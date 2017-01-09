@@ -89,7 +89,7 @@ public class EditProfieActivity extends BaseActivity {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (userDetailsFetchSuccess) {
+            if (userDetailsFetchSuccess && menu != null && menu.getItem(0) != null) {
                 menu.getItem(0).setVisible(true);
             }
         }

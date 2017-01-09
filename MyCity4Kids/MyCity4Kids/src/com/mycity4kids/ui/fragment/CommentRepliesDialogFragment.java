@@ -44,6 +44,7 @@ import com.mycity4kids.newmodels.AttendeeModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
+import com.mycity4kids.ui.activity.VlogsDetailActivity;
 import com.mycity4kids.ui.adapter.CommentsReplyAdapter;
 
 import java.util.ArrayList;
@@ -70,6 +71,7 @@ public class CommentRepliesDialogFragment extends DialogFragment implements OnCl
     private ProgressDialog mProgressDialog;
     int pos;
     private int replyLevelFlag = 1;
+    private String type = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -101,6 +103,7 @@ public class CommentRepliesDialogFragment extends DialogFragment implements OnCl
         if (extras != null) {
             commentsData = extras.getParcelable("commentData");
             articleId = extras.getString("articleId");
+            type = extras.getString("type");
         }
 
         if ("fb".equals(commentsData.getComment_type())) {
@@ -180,6 +183,7 @@ public class CommentRepliesDialogFragment extends DialogFragment implements OnCl
             EditCommentsRepliesFragment editCommentsRepliesFragment = new EditCommentsRepliesFragment();
             Bundle _args = new Bundle();
             _args.putString("articleId", articleId);
+            _args.putString("type", type);
             if (completeReplies.get(pos).getCommentLevel() == 0) {
                 _args.putInt(AppConstants.COMMENT_OR_REPLY_OR_NESTED_REPLY, AppConstants.EDIT_REPLY);
                 _args.putParcelable("commentData", completeReplies.get(pos));
@@ -239,14 +243,22 @@ public class CommentRepliesDialogFragment extends DialogFragment implements OnCl
             if (response == null || null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                 Crashlytics.logException(nee);
-                ((ArticlesAndBlogsDetailsActivity) getActivity()).showToast("Something went wrong from server");
+                if ("article".equals(type)) {
+                    ((ArticlesAndBlogsDetailsActivity) getActivity()).showToast("Something went wrong from server");
+                } else {
+                    ((VlogsDetailActivity) getActivity()).showToast("Something went wrong from server");
+                }
                 return;
             }
 
             AddCommentResponse responseData = (AddCommentResponse) response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-//            if (response.isSuccessful()) {
-                ((ArticlesAndBlogsDetailsActivity) getActivity()).showToast("Comment added successfully!");
+                if ("article".equals(type)) {
+                    ((ArticlesAndBlogsDetailsActivity) getActivity()).showToast("Comment added successfully!");
+                } else {
+                    ((VlogsDetailActivity) getActivity()).showToast("Comment added successfully!");
+                }
+
                 if (replyLevelFlag == 1) {
                     replyLevelFlag = 1;
                     updateCommentReplyList(responseData.getData().getId());
@@ -256,14 +268,22 @@ public class CommentRepliesDialogFragment extends DialogFragment implements OnCl
                 }
 
             } else {
-                ((ArticlesAndBlogsDetailsActivity) getActivity()).showToast(responseData.getReason());
+                if ("article".equals(type)) {
+                    ((ArticlesAndBlogsDetailsActivity) getActivity()).showToast(responseData.getReason());
+                } else {
+                    ((VlogsDetailActivity) getActivity()).showToast(responseData.getReason());
+                }
             }
         }
 
         @Override
         public void onFailure(Call<AddCommentResponse> call, Throwable t) {
             removeProgressDialog();
-            ((ArticlesAndBlogsDetailsActivity) getActivity()).handleExceptions(t);
+            if ("article".equals(type)) {
+                ((ArticlesAndBlogsDetailsActivity) getActivity()).handleExceptions(t);
+            } else {
+                ((VlogsDetailActivity) getActivity()).handleExceptions(t);
+            }
         }
     };
 
@@ -287,7 +307,11 @@ public class CommentRepliesDialogFragment extends DialogFragment implements OnCl
         addReplyEditText.setText("");
         completeReplies.add(cData);
         adapter.notifyDataSetChanged();
-        ((ArticlesAndBlogsDetailsActivity) getActivity()).onReplyOrNestedReplyAddition(cData, 1);
+        if ("article".equals(type)) {
+            ((ArticlesAndBlogsDetailsActivity) getActivity()).onReplyOrNestedReplyAddition(cData, 1);
+        } else {
+            ((VlogsDetailActivity) getActivity()).onReplyOrNestedReplyAddition(cData, 1);
+        }
     }
 
     private void updateReplyReplyList(String commentId) {
@@ -321,7 +345,6 @@ public class CommentRepliesDialogFragment extends DialogFragment implements OnCl
 
         completeReplies.get(parentPosition).getReplies().add(cData);
         adapter.notifyDataSetChanged();
-//        ((ArticlesAndBlogsDetailsActivity) getActivity()).onReplyOrNestedReplyAddition(completeReplies.get(parentPosition), 2);
     }
 
     public void showProgressDialog(String bodyText) {

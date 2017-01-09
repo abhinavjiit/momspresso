@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -95,36 +96,47 @@ public class ParentingBlogAdapter extends BaseAdapter {
             switch (datalist.get(position).getUserType()) {
                 case AppConstants.USER_TYPE_USER:
                     holder.authorType.setText("User");
+                    holder.authorType.setTextColor(ContextCompat.getColor(context, R.color.black));
                     break;
                 case AppConstants.USER_TYPE_ADMIN:
                     holder.authorType.setText("Admin");
+                    holder.authorType.setTextColor(ContextCompat.getColor(context, R.color.black));
                     break;
                 case AppConstants.USER_TYPE_CITY_ADMIN:
                     holder.authorType.setText("City Admin");
+                    holder.authorType.setTextColor(ContextCompat.getColor(context, R.color.black));
                     break;
                 case AppConstants.USER_TYPE_BLOGGER:
                     holder.authorType.setText("Blogger");
+                    holder.authorType.setTextColor(ContextCompat.getColor(context, R.color.authortype_colorcode_blogger));
                     break;
                 case AppConstants.USER_TYPE_BUSINESS:
                     holder.authorType.setText("Business");
+                    holder.authorType.setTextColor(ContextCompat.getColor(context, R.color.black));
                     break;
                 case AppConstants.USER_TYPE_EDITOR:
                     holder.authorType.setText("Editor");
+                    holder.authorType.setTextColor(ContextCompat.getColor(context, R.color.authortype_colorcode_editor));
                     break;
                 case AppConstants.USER_TYPE_EDITORIAL:
                     holder.authorType.setText("Editorial Team");
+                    holder.authorType.setTextColor(ContextCompat.getColor(context, R.color.authortype_colorcode_editorial));
                     break;
                 case AppConstants.USER_TYPE_EXPERT:
                     holder.authorType.setText("Expert");
+                    holder.authorType.setTextColor(ContextCompat.getColor(context, R.color.authortype_colorcode_expert));
                     break;
                 case AppConstants.USER_TYPE_REPORT_MANAGER:
                     holder.authorType.setText("Report Manager");
+                    holder.authorType.setTextColor(ContextCompat.getColor(context, R.color.black));
                     break;
                 case AppConstants.USER_TYPE_FEATURED:
                     holder.authorType.setText(AppConstants.AUTHOR_TYPE_FEATURED);
+                    holder.authorType.setTextColor(ContextCompat.getColor(context, R.color.authortype_colorcode_featured));
                     break;
                 default:
                     holder.authorType.setText("Blogger");
+                    holder.authorType.setTextColor(ContextCompat.getColor(context, R.color.authortype_colorcode_blogger));
                     break;
             }
             if (!datalist.get(position).getUserType().equals(AppConstants.USER_TYPE_BLOGGER)) {
@@ -136,11 +148,7 @@ public class ParentingBlogAdapter extends BaseAdapter {
             }
 
         }
-        try {
-            holder.authorType.setTextColor(Color.parseColor(datalist.get(position).getColorCode()));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
         if ((datalist.get(position).getProfilePic() == null)) {
             Picasso.with(context).load(R.drawable.default_commentor_img).fit().placeholder(R.drawable.default_commentor_img).transform(new RoundedTransformation()).into(holder.bloggerCover);
         } else {
@@ -319,17 +327,17 @@ public class ParentingBlogAdapter extends BaseAdapter {
                                 viewHolder.relativeLoadingView.setVisibility(View.GONE);
                                 viewHolder.bloggerFollow.setVisibility(View.VISIBLE);
                                 viewHolder.bloggerFollow.setText("FOLLOWING");
-                                long followersCount=datalist.get(i).getFollowersCount()+1;
+                                long followersCount = datalist.get(i).getFollowersCount() + 1;
                                 datalist.get(i).setFollowersCount(followersCount);
-                                viewHolder.followersCount.setText(followersCount+"");
+                                viewHolder.followersCount.setText(followersCount + "");
                                 //  viewHolder.followTextView.setVisibility(View.INVISIBLE);
                             } else {
                                 datalist.get(i).setIsFollowed(0);
                                 viewHolder.relativeLoadingView.setVisibility(View.GONE);
                                 viewHolder.bloggerFollow.setVisibility(View.VISIBLE);
-                                long followersCount=datalist.get(i).getFollowersCount()-1;
+                                long followersCount = datalist.get(i).getFollowersCount() - 1;
                                 datalist.get(i).setFollowersCount(followersCount);
-                                viewHolder.followersCount.setText(followersCount+"");
+                                viewHolder.followersCount.setText(followersCount + "");
                                 viewHolder.bloggerFollow.setText("FOLLOW");
                             }
 //                            notifyDataSetChanged();
@@ -349,14 +357,14 @@ public class ParentingBlogAdapter extends BaseAdapter {
                 //   viewHolder.followingTextView.setVisibility(View.INVISIBLE);
                 viewHolder.bloggerFollow.setVisibility(View.VISIBLE);
                 viewHolder.bloggerFollow.setText("FOLLOW");
-                viewHolder.followersCount.setText(datalist.get(position).getFollowersCount()-1+"");
-                datalist.get(position).setFollowersCount(datalist.get(position).getFollowersCount()-1);
+                viewHolder.followersCount.setText(datalist.get(position).getFollowersCount() - 1 + "");
+                datalist.get(position).setFollowersCount(datalist.get(position).getFollowersCount() - 1);
 
             } else {
                 viewHolder.bloggerFollow.setVisibility(View.VISIBLE);
                 viewHolder.bloggerFollow.setText("FOLLOWING");
-                viewHolder.followersCount.setText(datalist.get(position).getFollowersCount()+1+"");
-                datalist.get(position).setFollowersCount(datalist.get(position).getFollowersCount()+1);
+                viewHolder.followersCount.setText(datalist.get(position).getFollowersCount() + 1 + "");
+                datalist.get(position).setFollowersCount(datalist.get(position).getFollowersCount() + 1);
             }
         }
 

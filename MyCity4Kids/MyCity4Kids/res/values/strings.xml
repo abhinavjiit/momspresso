@@ -378,6 +378,8 @@
     <string name="home.sections.title.editors_pick">EDITORS\' PICKS</string>
     <string name="home.sections.title.in_your_city">BEST OF </string>
     <string name="home.sections.title.upcoming_events">UPCOMING EVENTS</string>
+    <string name="home.sections.title.funny_videos">FUNNY VIDEOS</string>
+    <string name="home.sections.title.hindi">हिन्दी</string>
     <string name="analytics.pageviews.daycount">Last 30 days</string>
 
     <string name="activity.analytics.toolbar_title">Blog Analytics</string>
@@ -431,4 +433,5 @@
 
     <string name="editor.spell_check.title">Spell Check</string>
     <string name="editor.spell_check.message">Always check spellings before publishing</string>
+    <string name="menu.hindi">हिन्दी</string>
 </resources>

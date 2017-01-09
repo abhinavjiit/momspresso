@@ -2,12 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mycity4kids"
-    android:versionCode="47"
-    android:versionName="5.5.1">
+    android:versionCode="48"
+    android:versionName="5.5.2">
 
     <uses-sdk
         android:minSdkVersion="14"
-        android:targetSdkVersion="22" />
+        android:targetSdkVersion="22"
+        tools:overrideLibrary="life.knowledge4.videotrimmer" />
     <!-- So that we can get the account name -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
@@ -489,6 +490,19 @@
             android:theme="@style/Theme.nnn" />
         <activity
             android:name=".ui.activity.NotificationCenterListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.VlogsDetailActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".ui.activity.VlogsListingActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.VideoTrimmer"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.AllVideoSectionActivity"
             android:screenOrientation="portrait" />
 
         <receiver

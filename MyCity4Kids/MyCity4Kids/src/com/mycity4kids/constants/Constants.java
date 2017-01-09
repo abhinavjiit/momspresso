@@ -36,6 +36,7 @@ public class Constants {
     public static final String SHOW_BOOKMARK_RESOURCES = "show_bookmark_resources";
     public static final String ARTICLE_NAME = "article_name";
     public static final String AUTHOR_ID = "authorId";
+    public static final String VIDEO_ID = "videoId";
 
     public static final String SIGNUP_DATA = "signup_data";
     public static final String SIGNUP_FLAG = "signup_flag";
@@ -223,6 +224,7 @@ public class Constants {
     public static final String KEY_IN_YOUR_CITY = "inYourCity";
     public static final String KEY_EDITOR_PICKS = "editorPicks";
     public static final String KEY_MOMSPRESSO = "momspresso";
+    public static final String KEY_HINDI = "hindi";
 
     public static String SORT_TYPE = "sorttype";
     public static String BLOG_TITLE = "blog_title";

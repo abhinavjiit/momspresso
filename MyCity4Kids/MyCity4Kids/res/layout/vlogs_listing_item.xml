@@ -55,18 +55,43 @@
 
                 <TextView
                     android:id="@+id/txvArticleTitle"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_above="@+id/flowLayout"
+                    android:layout_below="@+id/articleImageView"
+                    android:layout_toEndOf="@+id/authorImageView"
+                    android:layout_toLeftOf="@+id/authorTypeTextView"
+                    android:layout_toRightOf="@+id/authorImageView"
+                    android:layout_toStartOf="@+id/authorTypeTextView"
                     android:ellipsize="end"
                     android:fontFamily="sans-serif-light"
-                    android:maxLines="2"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:singleLine="false"
+                    android:maxLines="1"
+                    android:paddingLeft="2dp"
+                    android:paddingRight="4dp"
+                    android:paddingTop="12dp"
+                    android:singleLine="true"
                     android:text="@string/title"
-                    android:textColor="@color/white_color"
-                    android:textSize="19sp" />
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/txvAuthorName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txvArticleTitle"
+                    android:layout_gravity="bottom"
+                    android:layout_toEndOf="@+id/authorImageView"
+                    android:layout_toRightOf="@+id/authorImageView"
+                    android:clickable="true"
+                    android:fontFamily="sans-serif-light"
+                    android:gravity="bottom"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="2dp"
+                    android:paddingRight="5dp"
+                    android:paddingTop="2dp"
+                    android:singleLine="true"
+                    android:text="@string/author_name"
+                    android:textSize="11sp" />
+
 
                 <org.apmem.tools.layouts.FlowLayout
                     android:id="@+id/flowLayout"
@@ -75,7 +100,8 @@
                     android:layout_alignBottom="@+id/articleImageView"
                     android:layout_marginBottom="2dp"
                     android:paddingLeft="10dp"
-                    android:paddingRight="10dp">
+                    android:paddingRight="10dp"
+                    android:visibility="gone">
 
                     <LinearLayout
                         android:id="@+id/popularSubcatLL_1"
@@ -201,25 +227,6 @@
                     card_view:civ_border_width="1dp"
                     card_view:civ_shadow="false" />
 
-                <TextView
-                    android:id="@+id/txvAuthorName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/articleImageView"
-                    android:layout_gravity="bottom"
-                    android:layout_toLeftOf="@+id/authorTypeTextView"
-                    android:layout_toRightOf="@+id/authorImageView"
-                    android:clickable="true"
-                    android:fontFamily="sans-serif-light"
-                    android:gravity="bottom"
-                    android:paddingBottom="5dp"
-                    android:paddingLeft="2dp"
-                    android:paddingRight="5dp"
-                    android:paddingTop="8dp"
-                    android:singleLine="true"
-                    android:text="@string/author_name"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/viewCountTextView"
@@ -234,7 +241,8 @@
                     android:paddingLeft="2dp"
                     android:text="0"
                     android:textColor="@color/card_listing.stats"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/commentCountTextView"
@@ -251,7 +259,8 @@
                     android:gravity="center"
                     android:text="0"
                     android:textColor="@color/card_listing.stats"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/recommendCountTextView"
@@ -268,7 +277,8 @@
                     android:gravity="center"
                     android:text="0"
                     android:textColor="@color/card_listing.stats"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/authorTypeTextView"
@@ -279,7 +289,7 @@
                     android:fontFamily="sans-serif-light"
                     android:paddingBottom="5dp"
                     android:paddingRight="10dp"
-                    android:paddingTop="8dp"
+                    android:paddingTop="12dp"
                     android:text="BLOGGER"
                     android:textColor="@color/black"
                     android:textSize="13sp" />
@@ -295,7 +305,8 @@
                     android:paddingRight="10dp"
                     android:text="NA"
                     android:textColor="@color/card_listing.stats"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:visibility="gone" />
             </RelativeLayout>
 
         </LinearLayout>

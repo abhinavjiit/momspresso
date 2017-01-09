@@ -12,8 +12,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
@@ -37,7 +35,6 @@ import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.gson.Gson;
-import com.joanzapata.iconify.widget.IconButton;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -63,6 +60,7 @@ import com.mycity4kids.facebook.FacebookUtils;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.listener.OnButtonClicked;
+import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.models.response.DeepLinkingResposnse;
 import com.mycity4kids.models.response.DeepLinkingResult;
@@ -98,6 +96,7 @@ import com.mycity4kids.ui.fragment.NotificationFragment;
 import com.mycity4kids.ui.fragment.RateAppDialogFragment;
 import com.mycity4kids.ui.fragment.SendFeedbackFragment;
 import com.mycity4kids.ui.fragment.SyncSettingFragment;
+import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.RoundedTransformation;
 import com.mycity4kids.widget.CustomListView;
 import com.squareup.picasso.MemoryPolicy;
@@ -176,6 +175,13 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 intent1.putExtra(Constants.AUTHOR_ID, authorId);
                 intent1.putExtra(Constants.BLOG_SLUG, blogSlug);
                 intent1.putExtra(Constants.TITLE_SLUG, titleSlug);
+                startActivity(intent1);
+            } else if (notificationExtras.getString("type").equalsIgnoreCase("video_details")) {
+                String articleId = notificationExtras.getString("id");
+                String authorId = notificationExtras.getString("userId");
+                Intent intent1 = new Intent(DashboardActivity.this, VlogsDetailActivity.class);
+                intent1.putExtra(Constants.VIDEO_ID, articleId);
+                intent1.putExtra(Constants.AUTHOR_ID, authorId);
                 startActivity(intent1);
             } else if (notificationExtras.getString("type").equalsIgnoreCase("event_details")) {
                 String eventId = notificationExtras.getString("id");
@@ -426,6 +432,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         findViewById(R.id.rdBtnKids).setOnClickListener(this);
         findViewById(R.id.rdBtnParentingBlogs).setOnClickListener(this);
         findViewById(R.id.rdBtnMomspressoVideo).setOnClickListener(this);
+        findViewById(R.id.rdBtnHindi).setOnClickListener(this);
         findViewById(R.id.editor).setOnClickListener(this);
         findViewById(R.id.imgProfile).setOnClickListener(this);
         findViewById(R.id.txvUserName).setOnClickListener(this);
@@ -841,8 +848,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         mUsernName.setText(SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name());
         updateImageProfile();
         final Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-//        findViewById(R.id.month_popup).setVisibility(View.GONE);
-//        findViewById(R.id.task_popup).setVisibility(View.GONE);
+        if (findViewById(R.id.month_popup) != null) {
+            findViewById(R.id.month_popup).setVisibility(View.GONE);
+        }
+        if (findViewById(R.id.task_popup) != null) {
+            findViewById(R.id.task_popup).setVisibility(View.GONE);
+        }
         refreshMenu();
         if (topFragment instanceof FragmentCalender) {
             ((FragmentCalender) topFragment).refreshView();
@@ -1159,6 +1170,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 }
                 break;
             case R.id.write:
+//            {
+//                Intent intent = new Intent(getApplicationContext(), VideoTrimmer.class);
+//                startActivity(intent);
+//            }
                 if (Build.VERSION.SDK_INT > 15) {
                     Utils.pushEvent(DashboardActivity.this, GTMEventType.ADD_BLOG_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Left Menu Screen");
                     launchEditor();
@@ -1502,14 +1517,27 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 setTitle("Kids Resources");
                 replaceFragment(new FragmentHomeCategory(), null, true);
                 break;
+            case R.id.rdBtnHindi:
+                Utils.pushEvent(DashboardActivity.this, GTMEventType.RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Left Menu Screen");
+                Intent hindiIntent = new Intent(this, FilteredTopicsArticleListingActivity.class);
+                Topics hindiTopic = AppUtils.getHindiTopic(this);
+                if (hindiTopic == null) {
+                    hindiIntent.putExtra("selectedTopics", AppConstants.HINDI_CATEGORYID);
+                    hindiIntent.putExtra("displayName", getString(R.string.home_sections_title_hindi));
+                } else {
+                    hindiIntent.putExtra("selectedTopics", AppConstants.HINDI_CATEGORYID);
+                    hindiIntent.putExtra("displayName", hindiTopic.getDisplay_name());
+                }
+                startActivity(hindiIntent);
+                break;
             case R.id.rdBtnParentingBlogs:
                 Intent intent = new Intent(getApplicationContext(), TopicsFilterActivity.class);
                 startActivity(intent);
                 break;
             case R.id.rdBtnMomspressoVideo:
-                Intent videoArticlesIntent = new Intent(this, FilteredTopicsArticleListingActivity.class);
-                videoArticlesIntent.putExtra("selectedTopics", SharedPrefUtils.getMomspressoCategory(this).getId());
-                videoArticlesIntent.putExtra("displayName", SharedPrefUtils.getMomspressoCategory(this).getDisplay_name());
+                Intent videoArticlesIntent = new Intent(this, AllVideoSectionActivity.class);
+//                videoArticlesIntent.putExtra("selectedTopics", SharedPrefUtils.getMomspressoCategory(this).getId());
+//                videoArticlesIntent.putExtra("displayName", SharedPrefUtils.getMomspressoCategory(this).getDisplay_name());
                 startActivity(videoArticlesIntent);
                 break;
             case R.id.editor:
@@ -2252,14 +2280,16 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         call.enqueue(new Callback<DeepLinkingResposnse>() {
             @Override
             public void onResponse(Call<DeepLinkingResposnse> call, retrofit2.Response<DeepLinkingResposnse> response) {
-                DeepLinkingResposnse resposnseData = (DeepLinkingResposnse) response.body();
                 removeProgressDialog();
-                if (resposnseData.getCode() != 200) {
+                try {
+                    DeepLinkingResposnse responseData = (DeepLinkingResposnse) response.body();
+                    if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                        identifyTargetScreen(responseData.getData().getResult());
+                    } else {
+                        showToast(getString(R.string.toast_response_error));
+                    }
+                } catch (Exception e) {
                     showToast(getString(R.string.toast_response_error));
-                    return;
-                } else {
-//                    resposnseData.getData().getResult().setUrl(deepLinkURL);
-                    identifyTargetScreen(resposnseData.getData().getResult());
                 }
             }
 
@@ -2304,6 +2334,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
             case AppConstants.DEEP_LINK_TOPIC_LISTING:
                 renderArticleListingScreen(data);
+                break;
+            case AppConstants.DEEP_LINK_VLOG_DETAIL:
+                renderVlogDetailScreen(data);
                 break;
         }
     }
@@ -2394,6 +2427,16 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             Intent intent = new Intent(DashboardActivity.this, ArticlesAndBlogsDetailsActivity.class);
             intent.putExtra(Constants.AUTHOR_ID, data.getAuthor_id());
             intent.putExtra(Constants.ARTICLE_ID, data.getArticle_id());
+            intent.putExtra(Constants.DEEPLINK_URL, deepLinkUrl);
+            startActivity(intent);
+        }
+    }
+
+    private void renderVlogDetailScreen(DeepLinkingResult data) {
+        if (!StringUtils.isNullOrEmpty(data.getId())) {
+            Intent intent = new Intent(DashboardActivity.this, VlogsDetailActivity.class);
+//            intent.putExtra(Constants.AUTHOR_ID, data.getAuthor_id());
+            intent.putExtra(Constants.VIDEO_ID, data.getId());
             intent.putExtra(Constants.DEEPLINK_URL, deepLinkUrl);
             startActivity(intent);
         }

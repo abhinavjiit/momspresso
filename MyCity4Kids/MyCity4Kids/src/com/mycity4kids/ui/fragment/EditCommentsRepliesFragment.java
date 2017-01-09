@@ -35,6 +35,7 @@ import com.mycity4kids.models.response.AddCommentResponse;
 import com.mycity4kids.newmodels.AttendeeModel;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
+import com.mycity4kids.ui.activity.VlogsDetailActivity;
 import com.mycity4kids.ui.adapter.CommentsReplyAdapter;
 
 import java.util.ArrayList;
@@ -60,6 +61,7 @@ public class EditCommentsRepliesFragment extends DialogFragment implements OnCli
     String articleId;
     int editType, position;
     private ProgressDialog mProgressDialog;
+    private String type;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -93,6 +95,7 @@ public class EditCommentsRepliesFragment extends DialogFragment implements OnCli
         if (extras != null) {
             commentsData = extras.getParcelable("commentData");
             articleId = extras.getString("articleId");
+            type = extras.getString("type");
             editType = extras.getInt(AppConstants.COMMENT_OR_REPLY_OR_NESTED_REPLY);
             position = extras.getInt("position", 1);
             nestedReplyData = extras.getParcelable("replyData");
@@ -162,13 +165,22 @@ public class EditCommentsRepliesFragment extends DialogFragment implements OnCli
         public void onResponse(Call<AddCommentResponse> call, retrofit2.Response<AddCommentResponse> response) {
             removeProgressDialog();
             if (response == null || null == response.body()) {
-                ((ArticlesAndBlogsDetailsActivity) getActivity()).showToast("Something went wrong from server");
+                if ("article".equals(type)) {
+                    ((ArticlesAndBlogsDetailsActivity) getActivity()).showToast("Something went wrong from server");
+                } else {
+                    ((VlogsDetailActivity) getActivity()).showToast("Something went wrong from server");
+                }
                 return;
             }
 
             AddCommentResponse responseData = (AddCommentResponse) response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                ((ArticlesAndBlogsDetailsActivity) getActivity()).showToast("Comment edited successfully!");
+                if ("article".equals(type)) {
+                    ((ArticlesAndBlogsDetailsActivity) getActivity()).showToast("Comment edited successfully!");
+                } else {
+                    ((VlogsDetailActivity) getActivity()).showToast("Comment edited successfully!");
+                }
+
                 if (editType == AppConstants.EDIT_NESTED_REPLY) {
                     nestedReplyData.setBody(commentReplyEditText.getText().toString());
 
@@ -176,17 +188,31 @@ public class EditCommentsRepliesFragment extends DialogFragment implements OnCli
                     commentsData.setBody(commentReplyEditText.getText().toString());
                 }
                 commentReplyEditText.setText("");
-                ((ArticlesAndBlogsDetailsActivity) getActivity()).updateCommentReplyNestedReply(commentsData, editType);
+                if ("article".equals(type)) {
+                    ((ArticlesAndBlogsDetailsActivity) getActivity()).updateCommentReplyNestedReply(commentsData, editType);
+                } else {
+                    ((VlogsDetailActivity) getActivity()).updateCommentReplyNestedReply(commentsData, editType);
+                }
+
                 dismiss();
             } else {
-                ((ArticlesAndBlogsDetailsActivity) getActivity()).showToast(responseData.getReason());
+                if ("article".equals(type)) {
+                    ((ArticlesAndBlogsDetailsActivity) getActivity()).showToast(responseData.getReason());
+                } else {
+                    ((VlogsDetailActivity) getActivity()).showToast(responseData.getReason());
+                }
+
             }
         }
 
         @Override
         public void onFailure(Call<AddCommentResponse> call, Throwable t) {
             removeProgressDialog();
-            ((ArticlesAndBlogsDetailsActivity) getActivity()).handleExceptions(t);
+            if ("article".equals(type)) {
+                ((ArticlesAndBlogsDetailsActivity) getActivity()).handleExceptions(t);
+            } else {
+                ((VlogsDetailActivity) getActivity()).handleExceptions(t);
+            }
         }
     };
 

@@ -37,6 +37,7 @@ import com.mycity4kids.ui.activity.LoadWebViewActivity;
 import com.mycity4kids.ui.activity.NewsLetterWebviewActivity;
 import com.mycity4kids.ui.activity.PlanYourWeekActivity;
 import com.mycity4kids.ui.activity.SplashActivity;
+import com.mycity4kids.ui.activity.VlogsDetailActivity;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -301,13 +302,51 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra(Constants.ARTICLE_ID, "" + pushNotificationModel.getId());
                         intent.putExtra(Constants.AUTHOR_ID, "" + pushNotificationModel.getUser_id());
-                        intent.putExtra(Constants.AUTHOR_ID, "" + pushNotificationModel.getUser_id());
                         intent.putExtra(Constants.BLOG_SLUG, pushNotificationModel.getBlogPageSlug());
                         intent.putExtra(Constants.TITLE_SLUG, pushNotificationModel.getTitleSlug());
 
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
                         // Adds the back stack
                         stackBuilder.addParentStack(ArticlesAndBlogsDetailsActivity.class);
+                        // Adds the Intent to the top of the stack
+                        stackBuilder.addNextIntent(intent);
+                        contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                    }
+                    String title = remoteMessage.getNotification().getTitle();
+                    String body = remoteMessage.getNotification().getBody();
+                    Bitmap icon = BitmapFactory.decodeResource(getResources(),
+                            R.drawable.ic_launcher);
+                    NotificationCompat.Builder mBuilder =
+                            new NotificationCompat.Builder(this)
+                                    .setLargeIcon(icon)
+                                    .setSmallIcon(R.drawable.icon_notify)
+                                    .setContentTitle(title)
+                                    .setContentIntent(contentIntent)
+                                    .setContentText(body)
+                                    .setAutoCancel(true);
+                    ;
+                    // Gets an instance of the NotificationManager service
+                    NotificationManager mNotifyMgr =
+                            (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                    // Builds the notification and issues it.
+                    mNotifyMgr.notify(requestID, mBuilder.build());
+                } else if (type.equalsIgnoreCase("video_details")) {
+                    int requestID = (int) System.currentTimeMillis();
+                    Intent intent;
+                    PendingIntent contentIntent;
+                    if (SharedPrefUtils.getAppUpgrade(this)) {
+                        intent = new Intent(getApplicationContext(), SplashActivity.class);
+                        contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    } else {
+                        intent = new Intent(getApplicationContext(), VlogsDetailActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra(Constants.VIDEO_ID, "" + pushNotificationModel.getId());
+                        intent.putExtra(Constants.AUTHOR_ID, "" + pushNotificationModel.getUser_id());
+
+                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+                        // Adds the back stack
+                        stackBuilder.addParentStack(VlogsDetailActivity.class);
                         // Adds the Intent to the top of the stack
                         stackBuilder.addNextIntent(intent);
                         contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);

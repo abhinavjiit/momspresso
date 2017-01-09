@@ -48,11 +48,14 @@ import com.mycity4kids.dbtable.TaskCompletedTable;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.OnWebServiceCompleteListener;
+import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.businesslist.BusinessDataListing;
 import com.mycity4kids.models.businesslist.BusinessListResponse;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
+import com.mycity4kids.models.response.VlogsListingAndDetailResult;
+import com.mycity4kids.models.response.VlogsListingResponse;
 import com.mycity4kids.newmodels.AppointmentMappingModel;
 import com.mycity4kids.newmodels.AttendeeModel;
 import com.mycity4kids.newmodels.TaskMappingModel;
@@ -60,13 +63,12 @@ import com.mycity4kids.newmodels.VolleyBaseResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.EventsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.activity.ActivityCreateAppointment;
 import com.mycity4kids.ui.activity.ActivityShowAppointment;
-import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
 import com.mycity4kids.ui.activity.BusinessDetailsActivity;
 import com.mycity4kids.ui.activity.CreateFamilyActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
-import com.mycity4kids.ui.activity.FilteredTopicsArticleListingActivity;
 import com.mycity4kids.ui.adapter.AdapterHomeAppointment;
 import com.mycity4kids.ui.adapter.BusinessListingAdapterevent;
 import com.mycity4kids.utils.AppUtils;
@@ -88,7 +90,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -121,12 +122,16 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     private int businessOrEventType;
     private int from = 1;
     private int to = 10;
+
     private ArrayList<BusinessDataListing> mBusinessDataListings;
     private ArrayList<ArticleListingResult> mArticleDataListing;
     private ArrayList<ArticleListingResult> mArticleBestCityListing;
     private ArrayList<ArticleListingResult> mArticleForYouListing;
     private ArrayList<ArticleListingResult> mArticleEditorPicksListing;
     private ArrayList<ArticleListingResult> mMomspressoArticleListing;
+    private ArrayList<VlogsListingAndDetailResult> funnyVideosListing;
+    private ArrayList<ArticleListingResult> hindiArticlesListing;
+
     private CustomListView eventListView;
     private boolean mEventDataAvalble;
     TextView txtCal, txtEvents;
@@ -142,7 +147,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     private MyWebChromeClient mWebChromeClient = null;
     ArrayList<WebView> videoIframe = new ArrayList<>();
     private ProgressBar momspressoProgressbar;
-    private HorizontalScrollCustomView forYourSection, trendingSection, editorPicksSection, inYourCitySection, momspressoSection;
+    private HorizontalScrollCustomView forYourSection, trendingSection, editorPicksSection, inYourCitySection, momspressoSection, funnyVideosSection, hindiSection;
 
     @Nullable
     @Override
@@ -157,11 +162,15 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         editorPicksSection = (HorizontalScrollCustomView) view.findViewById(R.id.editorPicksSection);
         inYourCitySection = (HorizontalScrollCustomView) view.findViewById(R.id.inYourCitySection);
         momspressoSection = (HorizontalScrollCustomView) view.findViewById(R.id.momspressoSection);
+        funnyVideosSection = (HorizontalScrollCustomView) view.findViewById(R.id.funnyVideosSection);
+        hindiSection = (HorizontalScrollCustomView) view.findViewById(R.id.hindiSection);
 
         forYourSection.setSectionTitle(getString(R.string.home_sections_title_for_you));
         trendingSection.setSectionTitle(getString(R.string.home_sections_title_trending));
         editorPicksSection.setSectionTitle(getString(R.string.home_sections_title_editors_pick));
         momspressoSection.setSectionTitle(getString(R.string.home_sections_title_momspresso));
+        funnyVideosSection.setSectionTitle(getString(R.string.home_sections_title_funny_videos));
+        hindiSection.setSectionTitle(getString(R.string.home_sections_title_hindi));
 
         appointmentList = (CustomListView) view.findViewById(R.id.home_appointmentList);
         goToCal = (TextView) view.findViewById(R.id.go_to_cal);
@@ -251,6 +260,8 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         mMomspressoArticleListing = new ArrayList<>();
         mArticleForYouListing = new ArrayList<>();
         mArticleEditorPicksListing = new ArrayList<>();
+        funnyVideosListing = new ArrayList<>();
+        hindiArticlesListing = new ArrayList<>();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         formatter.setTimeZone(TimeZone.getTimeZone("GMT+0530"));
         tableAppointment = new TableAppointmentData(BaseApplication.getInstance());
@@ -266,11 +277,14 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         appointmentList.setAdapter(adapterHomeAppointment);
 
         String momspressoCategoryId = getMomspressoCategory();
+
         hitForYouListingApi();
         hitBlogListingApi();
         hitMomspressoListingApi(momspressoCategoryId);
         hitEditorPicksListingApi();
+        hitHindiArticlesListing();
         hitInYourCityListingApi();
+        hitFunnyVideosListingApi();
 
         if (!SharedPrefUtils.isCityFetched(getActivity())) {
             view.findViewById(R.id.eventsss).setVisibility(View.GONE);
@@ -317,6 +331,13 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         filterCall.enqueue(momspressoListingResponseCallback);
     }
 
+    private void hitFunnyVideosListingApi() {
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI.class);
+        Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsAPI.getVlogsList(0, 9, 0, 3);
+        callRecentVideoArticles.enqueue(funnyVideosResponseCallback);
+    }
+
     private void hitEditorPicksListingApi() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
@@ -324,6 +345,16 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         int start = end - AppConstants.EDITOR_PICKS_MIN_ARTICLES;
         Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(AppConstants.EDITOR_PICKS_CATEGORY_ID, 0, start, end);
         filterCall.enqueue(editorPicksResponseCallback);
+    }
+
+    private void hitHindiArticlesListing() {
+//        momspressoProgressbar.setVisibility(View.VISIBLE);
+        final Topics hindiTopic = AppUtils.getHindiTopic(getContext());
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
+
+        Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(AppConstants.HINDI_CATEGORYID, 0, 1, 10);
+        filterCall.enqueue(hindiArticlesListingResponseCallback);
     }
 
     public void hitInYourCityListingApi() {
@@ -444,6 +475,72 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         }
     };
 
+    private Callback<ArticleListingResponse> hindiArticlesListingResponseCallback = new Callback<ArticleListingResponse>() {
+        @Override
+        public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
+//            momspressoProgressbar.setVisibility(View.GONE);
+            if (response == null || response.body() == null) {
+                ((DashboardActivity) getActivity()).showToast("Something went wrong from server");
+                return;
+            }
+
+            try {
+                ArticleListingResponse responseData = (ArticleListingResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    processHindiArticlesListingResponse(responseData);
+                } else {
+                    ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4KException", Log.getStackTraceString(e));
+                ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
+//            momspressoProgressbar.setVisibility(View.GONE);
+            Crashlytics.logException(t);
+            Log.d("MC4KException", Log.getStackTraceString(t));
+            if (null != getActivity()) {
+                ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
+            }
+        }
+    };
+
+    private Callback<VlogsListingResponse> funnyVideosResponseCallback = new Callback<VlogsListingResponse>() {
+        @Override
+        public void onResponse(Call<VlogsListingResponse> call, retrofit2.Response<VlogsListingResponse> response) {
+            if (response == null || response.body() == null) {
+                ((DashboardActivity) getActivity()).showToast("Something went wrong from server");
+                return;
+            }
+
+            try {
+                VlogsListingResponse responseData = (VlogsListingResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    processFunnyVideosResponse(responseData);
+                } else {
+                    ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4KException", Log.getStackTraceString(e));
+                ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<VlogsListingResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4KException", Log.getStackTraceString(t));
+            if (null != getActivity()) {
+                ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
+            }
+        }
+    };
+
     private Callback<ArticleListingResponse> editorPicksResponseCallback = new Callback<ArticleListingResponse>() {
         @Override
         public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
@@ -535,80 +632,27 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         }
     }
 
-//    private void processMomspressoListingResponse(ArticleListingResponse responseData) {
-//
-//        ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
-//
-//        if (dataList.size() == 0) {
-//            ((TextView) view.findViewById(R.id.no_momspresso)).setVisibility(View.VISIBLE);
-//        } else {
-//            ((TextView) view.findViewById(R.id.no_momspresso)).setVisibility(View.GONE);
-//            mMomspressoArticleListing.clear();
-//            mMomspressoArticleListing.addAll(responseData.getData().get(0).getResult());
-//            momspressoHZScrollLinearLayout.removeAllViews();
-//            mWebChromeClient = new MyWebChromeClient();
-//
-//            if (!mMomspressoArticleListing.isEmpty()) {
-//                Collections.shuffle(mMomspressoArticleListing);
-//            }
-////            BaseApplication.setBestCityResponse(mArticleBestCityListing);
-//            for (int i = 0; i < mMomspressoArticleListing.size(); i++) {
-//                final View view1 = mInflator.inflate(R.layout.momspresso_card_item_article_dashboard, null);
-//                view1.setTag(i);
-//                WebView wv = (WebView) view1.findViewById(R.id.videoIframe);
-//
-//                wv.setWebChromeClient(mWebChromeClient);
-//
-//                TextView title = (TextView) view1.findViewById(R.id.txvArticleTitle);
-//                cardView = (CardView) view1.findViewById(R.id.cardViewWidget);
-//
-//                String videoFrameHTML = "<iframe allowfullscreen src=http:" + mMomspressoArticleListing.get(i).getVideoUrl() + "?modestbranding=1&amp;rel=0&amp;showinfo=0\" style=\"width: 100%;\" ></iframe>";
-//                wv.loadData(videoFrameHTML, "text/html", null);
-//                wv.getSettings().setJavaScriptEnabled(true);
-//                videoIframe.add(wv);
-//
-//                title.setText(mMomspressoArticleListing.get(i).getTitle());
-//
-//                view1.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        Intent intent = new Intent(getActivity(), ArticlesAndBlogsDetailsActivity.class);
-//                        ArticleListingResult parentingListData1 = (ArticleListingResult) (mMomspressoArticleListing.get((int) view1.getTag()));
-//                        intent.putExtra(Constants.ARTICLE_ID, parentingListData1.getId());
-//                        intent.putExtra(Constants.AUTHOR_ID, parentingListData1.getUserId());
-//                        intent.putExtra(Constants.BLOG_SLUG, parentingListData1.getBlogPageSlug());
-//                        intent.putExtra(Constants.TITLE_SLUG, parentingListData1.getTitleSlug());
-//                        startActivity(intent);
-//                        Log.e("Tag", "" + view1.getTag());
-//                    }
-//                });
-//                momspressoHZScrollLinearLayout.addView(view1);
-//            }
-//            View customViewMore = mInflator.inflate(R.layout.custom_view_more_dashboard, null);
-//            DisplayMetrics metrics = new DisplayMetrics();
-//            if (getActivity() != null) {
-//                getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-//                int widthPixels = metrics.widthPixels;
-//                float width = (float) (widthPixels * 0.45);
-//                customViewMore.setMinimumWidth((int) width);
-//            }
-//            momspressoHZScrollLinearLayout.addView(customViewMore);
-//            customViewMore.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Intent intent1 = new Intent(getActivity(), FilteredTopicsArticleListingActivity.class);
-//                    intent1.putExtra("selectedTopics", SharedPrefUtils.getMomspressoCategory(getActivity()).getId());
-//                    intent1.putExtra("displayName", SharedPrefUtils.getMomspressoCategory(getActivity()).getDisplay_name());
-//                    startActivity(intent1);
-//                }
-//            });
-//            if (mMomspressoArticleListing.isEmpty()) {
-//                ((TextView) view.findViewById(R.id.txtMomspresso)).setVisibility(View.VISIBLE);
-//                ((TextView) view.findViewById(R.id.no_momspresso)).setVisibility(View.VISIBLE);
-//            }
-//            baseScroll.smoothScrollTo(0, 0);
-//        }
-//    }
+    private void processHindiArticlesListingResponse(ArticleListingResponse responseData) {
+        ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
+        if (dataList.size() == 0) {
+            hindiSection.setEmptyListLabelVisibility(View.VISIBLE);
+        } else {
+            hindiArticlesListing.clear();
+            hindiArticlesListing.addAll(responseData.getData().get(0).getResult());
+            hindiSection.setmDatalist(hindiArticlesListing, Constants.KEY_HINDI);
+        }
+    }
+
+    private void processFunnyVideosResponse(VlogsListingResponse responseData) {
+        ArrayList<VlogsListingAndDetailResult> dataList = responseData.getData().get(0).getResult();
+        if (dataList.size() == 0) {
+            funnyVideosSection.setEmptyListLabelVisibility(View.VISIBLE);
+        } else {
+            funnyVideosListing.clear();
+            funnyVideosListing.addAll(responseData.getData().get(0).getResult());
+            funnyVideosSection.setVlogslist(funnyVideosListing);
+        }
+    }
 
     private void processEditorPicksResponse(ArticleListingResponse responseData) {
         ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
