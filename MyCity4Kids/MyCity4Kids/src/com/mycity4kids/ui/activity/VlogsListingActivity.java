@@ -57,7 +57,7 @@ public class VlogsListingActivity extends BaseActivity implements View.OnClickLi
 
     private int sortType = 0;
     private int nextPageNumber;
-    private int limit = 3;
+    private int limit = 10;
     private boolean isLastPageReached = false;
     private boolean isReuqestRunning = false;
     private SwipeRefreshLayout swipeRefreshLayout;

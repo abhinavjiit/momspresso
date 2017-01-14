@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mycity4kids"
-    android:versionCode="48"
-    android:versionName="5.5.2">
+    android:versionCode="49"
+    android:versionName="5.6">
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -493,7 +493,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.VlogsDetailActivity"
-            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.activity.VlogsListingActivity"
@@ -502,7 +502,19 @@
             android:name=".ui.activity.VideoTrimmer"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.activity.VideoTrimmerActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.AddVideoDetailsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.VideoUploadProgressActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.activity.AllVideoSectionActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.MyFunnyVideosListingActivity"
             android:screenOrientation="portrait" />
 
         <receiver

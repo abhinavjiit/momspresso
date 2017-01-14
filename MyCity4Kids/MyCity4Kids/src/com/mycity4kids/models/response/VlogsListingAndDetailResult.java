@@ -11,6 +11,7 @@ public class VlogsListingAndDetailResult {
     private String url;
     private String published_time;
     private String published_status;
+    private String publication_status;
     private String commentUri;
     private Author author;
 
@@ -60,6 +61,14 @@ public class VlogsListingAndDetailResult {
 
     public void setPublished_status(String published_status) {
         this.published_status = published_status;
+    }
+
+    public String getPublication_status() {
+        return publication_status;
+    }
+
+    public void setPublication_status(String publication_status) {
+        this.publication_status = publication_status;
     }
 
     public String getCommentUri() {

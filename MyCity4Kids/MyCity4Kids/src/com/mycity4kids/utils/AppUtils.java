@@ -1,15 +1,25 @@
 package com.mycity4kids.utils;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
+import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -46,6 +56,7 @@ public class AppUtils {
             query = new URL(url).getQuery();
         } catch (MalformedURLException e) {
             e.printStackTrace();
+            return "";
         }
         String[] param = query.split("&");
         String id = null;
@@ -60,6 +71,9 @@ public class AppUtils {
 
     public static String getYoutubeThumbnailURL(String youtubeUrl) {
         String youtubeId = extractYoutubeId(youtubeUrl);
+        if (StringUtils.isNullOrEmpty(youtubeId)) {
+            return "";
+        }
         String youtubeThumbUrl = "http://img.youtube.com/vi/" + youtubeId + "/0.jpg";
         return youtubeThumbUrl;
     }
@@ -98,4 +112,106 @@ public class AppUtils {
         }
         return null;
     }
+
+    public static boolean createDirIfNotExists(String path) {
+        boolean ret = true;
+
+        File file = new File(Environment.getExternalStorageDirectory(), path);
+        if (!file.exists()) {
+            if (!file.mkdirs()) {
+                Log.e("TravellerLog :: ", "Problem creating Image folder");
+                ret = false;
+            }
+        }
+        return ret;
+    }
+
+
+    public static String getFileNameFromUri(Context mContext, Uri uri) {
+        String result = null;
+        if (null != uri.getScheme() && uri.getScheme().equals("content")) {
+            Cursor cursor = mContext.getContentResolver().query(uri, null, null, null, null);
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+        if (result == null) {
+            result = uri.getPath();
+            int cut = result.lastIndexOf('/');
+            if (cut != -1) {
+                result = result.substring(cut + 1);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Converts a file to a content uri, by inserting it into the media store.
+     * Requires this permission: <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+     */
+    protected static Uri convertFileToContentUri(Context context, File file) throws Exception {
+
+        //Uri localImageUri = Uri.fromFile(localImageFile); // Not suitable as it's not a content Uri
+
+        ContentResolver cr = context.getContentResolver();
+        String imagePath = file.getAbsolutePath();
+        String imageName = null;
+        String imageDescription = null;
+        String uriString = MediaStore.Images.Media.insertImage(cr, imagePath, imageName, imageDescription);
+        return Uri.parse(uriString);
+    }
+
+    public static Uri exportToGallery(String filename, ContentResolver contentResolver, Context mContext) {
+        // Save the name and description of a video in a ContentValues map.
+        final ContentValues values = new ContentValues(2);
+        values.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
+        values.put(MediaStore.Video.Media.DATA, filename);
+        // Add a new record (identified by uri)
+        final Uri uri = contentResolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                values);
+        mContext.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                Uri.parse("file://" + filename)));
+        return uri;
+    }
+
+    public static final Uri getVideoUriFromMediaProvider(String videoFile, ContentResolver contentResolver) {
+        String selection = MediaStore.Video.VideoColumns.DATA + "=?";
+        String[] selectArgs = {videoFile};
+        String[] projection = {MediaStore.Video.VideoColumns._ID};
+        Cursor c = null;
+        try {
+            c = contentResolver.query(android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                    projection, selection, selectArgs, null);
+            if (c.getCount() > 0) {
+                c.moveToFirst();
+                String id = c.getString(c
+                        .getColumnIndex(MediaStore.Video.VideoColumns._ID));
+
+                return Uri
+                        .withAppendedPath(
+                                android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                                id);
+            }
+            return null;
+        } finally {
+            if (c != null) {
+                c.close();
+            }
+        }
+    }
+
+    public static void deleteDirectoryContent(String dirName) {
+        File dir = new File(Environment.getExternalStorageDirectory() + File.separator + dirName);
+        if (dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i = 0; i < children.length; i++) {
+                new File(dir, children[i]).delete();
+            }
+        }
+    }
+
 }

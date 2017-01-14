@@ -8,8 +8,10 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -78,6 +80,7 @@ import com.mycity4kids.ui.adapter.UserTaskListAdapter;
 import com.mycity4kids.ui.fragment.AddTaskListPopUp;
 import com.mycity4kids.ui.fragment.ArticlesFragment;
 import com.mycity4kids.ui.fragment.ChangeCityFragment;
+import com.mycity4kids.ui.fragment.ChooseVideoUploadOptionDialogFragment;
 import com.mycity4kids.ui.fragment.ExternalCalFragment;
 import com.mycity4kids.ui.fragment.FragmentAdultProfile;
 import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
@@ -115,6 +118,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import life.knowledge4.videotrimmer.utils.FileUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -315,6 +319,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         findViewById(R.id.rdBtnToday).setOnClickListener(this);
         findViewById(R.id.rdBtnUpcoming).setOnClickListener(this);
         findViewById(R.id.feed_back).setOnClickListener(this);
+        findViewById(R.id.addVideosTextView).setOnClickListener(this);
+        findViewById(R.id.myVideosTextView).setOnClickListener(this);
 
         setSupportActionBar(mToolbar);
 
@@ -1170,10 +1176,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 }
                 break;
             case R.id.write:
-//            {
-//                Intent intent = new Intent(getApplicationContext(), VideoTrimmer.class);
-//                startActivity(intent);
-//            }
                 if (Build.VERSION.SDK_INT > 15) {
                     Utils.pushEvent(DashboardActivity.this, GTMEventType.ADD_BLOG_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Left Menu Screen");
                     launchEditor();
@@ -1468,7 +1470,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         isPopupOpen = true;
                         findViewById(R.id.month_popup).setVisibility(View.VISIBLE);
                     }
-
                 } else if (topFragment instanceof FragmentCalMonth) {
                     if (findViewById(R.id.month_popup).getVisibility() == View.VISIBLE) {
                         findViewById(R.id.month_popup).setVisibility(View.GONE);
@@ -1478,24 +1479,19 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     }
                     refreshMenu();
                 } else if (topFragment instanceof FragmentTaskHome) {
-
                     findViewById(R.id.month_popup).setVisibility(View.GONE);
-
                     if (findViewById(R.id.task_popup).getVisibility() == View.VISIBLE) {
                         findViewById(R.id.task_popup).setVisibility(View.GONE);
                     } else {
                         findViewById(R.id.task_popup).setVisibility(View.VISIBLE);
                     }
-//                    refreshMenu();
                 }
-
                 break;
             case R.id.rdBtnToday:
                 changeVisibiltyOfArrow(false);
                 Utils.pushEvent(DashboardActivity.this, GTMEventType.MC4KToday_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Left Menu Screen");
                 replaceFragment(new FragmentMC4KHome(), null, false);
                 setTitle("");
-
                 break;
             case R.id.rdBtnUpcoming:
                 Utils.pushEvent(DashboardActivity.this, GTMEventType.UPCOMING_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Left Menu Screen");
@@ -1536,8 +1532,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.rdBtnMomspressoVideo:
                 Intent videoArticlesIntent = new Intent(this, AllVideoSectionActivity.class);
-//                videoArticlesIntent.putExtra("selectedTopics", SharedPrefUtils.getMomspressoCategory(this).getId());
-//                videoArticlesIntent.putExtra("displayName", SharedPrefUtils.getMomspressoCategory(this).getDisplay_name());
                 startActivity(videoArticlesIntent);
                 break;
             case R.id.editor:
@@ -1548,61 +1542,51 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     showToast("This version of android is no more supported.");
                 }
                 break;
-
             case R.id.feed_back:
                 Utils.pushEvent(DashboardActivity.this, GTMEventType.FEEDBACK_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Left Menu Screen");
                 changeVisibiltyOfArrow(false);
                 setTitle("Send Feedback");
                 replaceFragment(new SendFeedbackFragment(), null, true);
-
                 break;
-
+            case R.id.addVideosTextView:
+                ChooseVideoUploadOptionDialogFragment chooseVideoUploadOptionDialogFragment = new ChooseVideoUploadOptionDialogFragment();
+                FragmentManager fm = getSupportFragmentManager();
+                chooseVideoUploadOptionDialogFragment.setCancelable(true);
+                chooseVideoUploadOptionDialogFragment.show(fm, "Choose video option");
+                break;
+            case R.id.myVideosTextView:
+                Intent funnyIntent = new Intent(DashboardActivity.this, MyFunnyVideosListingActivity.class);
+                startActivity(funnyIntent);
+                break;
             case R.id.txvUserName:
             case R.id.imgProfile:
                 Intent intent4 = new Intent(DashboardActivity.this, BloggerDashboardActivity.class);
                 startActivity(intent4);
-                //  replaceFragment(new FragmentFamilyDetail(), null, true);
                 break;
-
             case R.id.back_month:
-//                setTitle();
                 year.setText(String.valueOf(Integer.parseInt(String.valueOf(year.getText())) - 1));
-
                 refreshMonthPopup();
-
                 break;
             case R.id.next_month:
-
                 year.setText(String.valueOf(Integer.parseInt(String.valueOf(year.getText())) + 1));
-
                 refreshMonthPopup();
                 break;
-
             case R.id.jan:
-
                 if (topFragment instanceof FragmentCalender) {
-
                     try {
-//                        ((FragmentCalender) topFragment).updateListbyDay(0, Integer.parseInt(String.valueOf(year.getText())));
                         ((FragmentCalender) topFragment).updateListbyDay(0, Integer.parseInt(String.valueOf(year.getText())));
                         setTitleFormat(1, Integer.parseInt(String.valueOf(year.getText())));
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-
-
                 } else if (topFragment instanceof FragmentCalMonth) {
-
                     ((FragmentCalMonth) topFragment).setMonthByPopUp(0, Integer.parseInt(String.valueOf(year.getText())));
                     setTitleFormat(1, Integer.parseInt(String.valueOf(year.getText())));
 
                 }
-
                 findViewById(R.id.month_popup).setVisibility(View.GONE);
                 break;
-
             case R.id.feb:
-
                 if (topFragment instanceof FragmentCalender) {
                     try {
                         ((FragmentCalender) topFragment).updateListbyDay(1, Integer.parseInt(String.valueOf(year.getText())));
@@ -1614,14 +1598,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
                     ((FragmentCalMonth) topFragment).setMonthByPopUp(1, Integer.parseInt(String.valueOf(year.getText())));
                     setTitleFormat(2, Integer.parseInt(String.valueOf(year.getText())));
-
                 }
-
                 findViewById(R.id.month_popup).setVisibility(View.GONE);
                 break;
-
             case R.id.mar:
-
                 if (topFragment instanceof FragmentCalender) {
                     try {
                         ((FragmentCalender) topFragment).updateListbyDay(2, Integer.parseInt(String.valueOf(year.getText())));
@@ -1630,17 +1610,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         e.printStackTrace();
                     }
                 } else if (topFragment instanceof FragmentCalMonth) {
-
                     ((FragmentCalMonth) topFragment).setMonthByPopUp(2, Integer.parseInt(String.valueOf(year.getText())));
                     setTitleFormat(3, Integer.parseInt(String.valueOf(year.getText())));
-
                 }
-
                 findViewById(R.id.month_popup).setVisibility(View.GONE);
                 break;
-
             case R.id.apr:
-
                 if (topFragment instanceof FragmentCalender) {
                     try {
                         ((FragmentCalender) topFragment).updateListbyDay(3, Integer.parseInt(String.valueOf(year.getText())));
@@ -1649,17 +1624,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         e.printStackTrace();
                     }
                 } else if (topFragment instanceof FragmentCalMonth) {
-
                     ((FragmentCalMonth) topFragment).setMonthByPopUp(3, Integer.parseInt(String.valueOf(year.getText())));
                     setTitleFormat(4, Integer.parseInt(String.valueOf(year.getText())));
-
                 }
-
                 findViewById(R.id.month_popup).setVisibility(View.GONE);
                 break;
-
             case R.id.may:
-
                 if (topFragment instanceof FragmentCalender) {
                     try {
                         ((FragmentCalender) topFragment).updateListbyDay(4, Integer.parseInt(String.valueOf(year.getText())));
@@ -1671,14 +1641,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
                     ((FragmentCalMonth) topFragment).setMonthByPopUp(4, Integer.parseInt(String.valueOf(year.getText())));
                     setTitleFormat(5, Integer.parseInt(String.valueOf(year.getText())));
-
                 }
-
                 findViewById(R.id.month_popup).setVisibility(View.GONE);
                 break;
-
             case R.id.june:
-
                 if (topFragment instanceof FragmentCalender) {
                     try {
                         ((FragmentCalender) topFragment).updateListbyDay(5, Integer.parseInt(String.valueOf(year.getText())));
@@ -1687,17 +1653,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         e.printStackTrace();
                     }
                 } else if (topFragment instanceof FragmentCalMonth) {
-
                     ((FragmentCalMonth) topFragment).setMonthByPopUp(5, Integer.parseInt(String.valueOf(year.getText())));
                     setTitleFormat(6, Integer.parseInt(String.valueOf(year.getText())));
-
                 }
-
                 findViewById(R.id.month_popup).setVisibility(View.GONE);
                 break;
-
             case R.id.july:
-
                 if (topFragment instanceof FragmentCalender) {
                     try {
                         ((FragmentCalender) topFragment).updateListbyDay(6, Integer.parseInt(String.valueOf(year.getText())));
@@ -1706,17 +1667,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         e.printStackTrace();
                     }
                 } else if (topFragment instanceof FragmentCalMonth) {
-
                     ((FragmentCalMonth) topFragment).setMonthByPopUp(6, Integer.parseInt(String.valueOf(year.getText())));
                     setTitleFormat(7, Integer.parseInt(String.valueOf(year.getText())));
-
                 }
-
                 findViewById(R.id.month_popup).setVisibility(View.GONE);
                 break;
-
             case R.id.aug:
-
                 if (topFragment instanceof FragmentCalender) {
                     try {
                         ((FragmentCalender) topFragment).updateListbyDay(7, Integer.parseInt(String.valueOf(year.getText())));
@@ -1725,17 +1681,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         e.printStackTrace();
                     }
                 } else if (topFragment instanceof FragmentCalMonth) {
-
                     ((FragmentCalMonth) topFragment).setMonthByPopUp(7, Integer.parseInt(String.valueOf(year.getText())));
                     setTitleFormat(8, Integer.parseInt(String.valueOf(year.getText())));
-
                 }
-
                 findViewById(R.id.month_popup).setVisibility(View.GONE);
                 break;
-
             case R.id.sept:
-
                 if (topFragment instanceof FragmentCalender) {
                     try {
                         ((FragmentCalender) topFragment).updateListbyDay(8, Integer.parseInt(String.valueOf(year.getText())));
@@ -1744,17 +1695,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         e.printStackTrace();
                     }
                 } else if (topFragment instanceof FragmentCalMonth) {
-
                     ((FragmentCalMonth) topFragment).setMonthByPopUp(8, Integer.parseInt(String.valueOf(year.getText())));
                     setTitleFormat(9, Integer.parseInt(String.valueOf(year.getText())));
-
                 }
-
                 findViewById(R.id.month_popup).setVisibility(View.GONE);
                 break;
-
             case R.id.oct:
-
                 if (topFragment instanceof FragmentCalender) {
                     try {
                         ((FragmentCalender) topFragment).updateListbyDay(9, Integer.parseInt(String.valueOf(year.getText())));
@@ -1766,14 +1712,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
                     ((FragmentCalMonth) topFragment).setMonthByPopUp(9, Integer.parseInt(String.valueOf(year.getText())));
                     setTitleFormat(10, Integer.parseInt(String.valueOf(year.getText())));
-
                 }
-
                 findViewById(R.id.month_popup).setVisibility(View.GONE);
                 break;
-
             case R.id.nov:
-
                 if (topFragment instanceof FragmentCalender) {
                     try {
                         ((FragmentCalender) topFragment).updateListbyDay(10, Integer.parseInt(String.valueOf(year.getText())));
@@ -1782,17 +1724,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         e.printStackTrace();
                     }
                 } else if (topFragment instanceof FragmentCalMonth) {
-
                     ((FragmentCalMonth) topFragment).setMonthByPopUp(10, Integer.parseInt(String.valueOf(year.getText())));
                     setTitleFormat(11, Integer.parseInt(String.valueOf(year.getText())));
-
                 }
-
                 findViewById(R.id.month_popup).setVisibility(View.GONE);
                 break;
-
             case R.id.dec:
-
                 if (topFragment instanceof FragmentCalender) {
                     try {
                         ((FragmentCalender) topFragment).updateListbyDay(11, Integer.parseInt(String.valueOf(year.getText())));
@@ -1801,31 +1738,20 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         e.printStackTrace();
                     }
                 } else if (topFragment instanceof FragmentCalMonth) {
-
                     ((FragmentCalMonth) topFragment).setMonthByPopUp(11, Integer.parseInt(String.valueOf(year.getText())));
                     setTitleFormat(12, Integer.parseInt(String.valueOf(year.getText())));
-
                 }
-
                 findViewById(R.id.month_popup).setVisibility(View.GONE);
                 break;
-
             case R.id.add_tasklist:
-
                 AddTaskListPopUp addTaskListPopUp = new AddTaskListPopUp();
-
                 Bundle bundle1 = new Bundle();
-
                 bundle1.putString("from", "dashboard");
                 addTaskListPopUp.setArguments(bundle1);
                 addTaskListPopUp.show(getFragmentManager(), "addTaskList");
-
                 break;
-
             case R.id.all_tasklist:
-
                 if (topFragment instanceof FragmentTaskHome) {
-
                     SharedPrefUtils.setTaskListID(DashboardActivity.this, 0);
                     ((FragmentTaskHome) topFragment).NotifyTaskByListId(false, 0);
                     setTitle("All Tasks");
@@ -1833,14 +1759,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     taskIconFlag = false;
                     refreshMenu();
                 }
-
                 break;
             default:
                 break;
         }
-
     }
-
 
     @Override
     public void onBackPressed() {
@@ -1937,6 +1860,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         }
                     }
                     break;
+                case AppConstants.REQUEST_VIDEO_TRIMMER:
+                    final Uri selectedUri = data.getData();
+                    if (selectedUri != null) {
+                        startTrimActivity(selectedUri);
+                    } else {
+                        Toast.makeText(this, R.string.toast_cannot_retrieve_selected_video, Toast.LENGTH_SHORT).show();
+                    }
+                    break;
                 default:
                     if (topFragment instanceof FragmentCalender) {
 //                        ((FragmentCalender) topFragment).refreshView();
@@ -1968,6 +1899,16 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     }
 
+    private void startTrimActivity(@NonNull Uri uri) {
+        Intent intent = new Intent(this, VideoTrimmerActivity.class);
+        String filepath = FileUtils.getPath(this, uri);
+        if (null != filepath && filepath.endsWith(".mp4")) {
+            intent.putExtra("EXTRA_VIDEO_PATH", FileUtils.getPath(this, uri));
+            startActivity(intent);
+        } else {
+            showToast("please choose a .mp4 format file");
+        }
+    }
 
     public void setTitleFormat(int month, int year) {
 

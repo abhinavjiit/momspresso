@@ -131,7 +131,9 @@ public class ChangeCityFragment extends BaseFragment {
                         @Override
                         public void comeBackOnUI() {
                             //   navigateToNextScreen(true);
-                            ((SettingsActivity) getActivity()).replaceFragment(new FragmentSetting(), null, true);
+                            if (getActivity() != null) {
+                                ((SettingsActivity) getActivity()).replaceFragment(new FragmentSetting(), null, true);
+                            }
                             removeProgressDialog();
                             //  getActivity().getFragmentManager().beginTransaction().remove(this).commit();
                             Log.e("comeBackUi", "hey");

@@ -200,6 +200,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
         YouTubePlayerFragment youTubePlayerFragment =
                 (YouTubePlayerFragment) getFragmentManager().findFragmentById(R.id.youtube_fragment);
         youTubePlayerFragment.initialize(DeveloperKey.DEVELOPER_KEY, this);
+
 //        youTubePlayerView.initialize(DeveloperKey.DEVELOPER_KEY, this);
         mScrollView = (ObservableScrollView) findViewById(R.id.scroll_view);
         commentText = (EditText) findViewById(R.id.editCommentTxt);
@@ -1603,6 +1604,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
         if (!b) {
             this.youTubePlayer = youTubePlayer;
+            youTubePlayer.setFullscreenControlFlags(YouTubePlayer.FULLSCREEN_FLAG_CONTROL_ORIENTATION | YouTubePlayer.FULLSCREEN_FLAG_ALWAYS_FULLSCREEN_IN_LANDSCAPE);
             if (null != youTubeId) {
                 youTubePlayer.cueVideo(youTubeId);
             }// Plays https://www.youtube.com/watch?v=fhWaJi1Hsfo

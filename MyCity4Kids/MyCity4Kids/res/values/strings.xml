@@ -396,6 +396,10 @@
     <string name="analytics.engagement.label">Engagement</string>
     <string name="analytics.engagement.comments_disclaimer">*No. of comments include Facebook and mycity4kids.</string>
 
+    <string name="videos.dialog.title">Choose a video to upload</string>
+    <string name="videos.upload_option.camera">Take video</string>
+    <string name="videos.upload_option.gallery">Choose from gallery</string>
+
     <string name="ad.recommendation.tootip_text">Tap to Recommend the blog</string>
 
     <string-array name="improve_page_views_array">
@@ -434,4 +438,15 @@
     <string name="editor.spell_check.title">Spell Check</string>
     <string name="editor.spell_check.message">Always check spellings before publishing</string>
     <string name="menu.hindi">हिन्दी</string>
+
+
+    <string name="permission_title_rationale">Permission needed</string>
+    <string name="permission_read_storage_rationale">Storage read permission is needed to pick files.</string>
+    <string name="label_select_video">Select Video</string>
+    <string name="toast_cannot_retrieve_selected_video">Cannot retrieve selected video</string>
+    <string name="label_cancel">Cancel</string>
+    <string name="label_ok">OK</string>
+    <string name="pick_a_video">Select or record a a video below to try it out:</string>
+    <string name="trimming_progress">Trimming your video...</string>
+    <string name="video_saved_at">Video saves at : $%1s</string>
 </resources>

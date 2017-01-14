@@ -12,7 +12,7 @@ public class AppConstants {
 
 
     public static final String DEV_URL = "http://54.169.17.138/";
-    public static final String STAGING_URL = "http://52.77.116.39:8080/";
+    public static final String STAGING_URL = "http://52.220.87.141/";
 
     //    public static final String LIVE_URL = "http://52.220.87.141/";
     public static final String LIVE_URL = "https://api.mycity4kids.com/";
@@ -156,6 +156,7 @@ public class AppConstants {
 
     public static final String ARTICLE_SHARE_URL = "https://mycity4kids.com/" + "parenting/";
     public static final String VIDEO_ARTICLE_SHARE_URL = "https://mycity4kids.com/" + "parenting/";
+    public static final String VIDEO_UPLOAD_URL = LIVE_URL + "v1/media/videos/";
 //    public static final String ARTICLE_SHARE_URL = BASE_URL + "newparenting/";
 
     /*New Login/Sign Up Constants*/
@@ -309,6 +310,7 @@ public class AppConstants {
     public static final int BOOKMARKED_RESOURCE_LIST_REQUEST = 104;
 
     public static final int REQUEST_AUTHORIZATION = 1001;
+    public static final int REQUEST_VIDEO_TRIMMER = 1019;
     public static final int REQUEST_ACCOUNT_PICKER = 1000;
     public static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     public static final int PUSH_TOKEN_REQUEST = 1003;
@@ -470,4 +472,15 @@ public class AppConstants {
     public static final String NOTIFICATION_TYPE_VIDEO_DETAILS = "video_details";
 
     public static final String FOLLOWING_STATUS_ACTIVITY_RESULT = "followingStatusActivityResult";
+    public static final String VIDEO_STATUS_DRAFT = "0";
+    public static final String VIDEO_STATUS_APPROVAL_PENDING = "1";
+    public static final String VIDEO_STATUS_APPROVAL_CANCELLED = "2";
+    public static final String VIDEO_STATUS_PUBLISHED = "3";
+    public static final String VIDEO_STATUS_UNPUBLISHED = "4";
+
+    public static final String VIDEO_TYPE_DRAFT = "DRAFT";
+    public static final String VIDEO_TYPE_APPROVAL_PENDING = "PENDING FOR APPROVAL";
+    public static final String VIDEO_TYPE_APPROVAL_CANCELLED = "APPROVAL CANCELLED";
+    public static final String VIDEO_TYPE_PUBLISHED = "";
+    public static final String VIDEO_TYPE_UNPUBLISHED = "UNPUBLISHED";
 }

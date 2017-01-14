@@ -229,7 +229,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen 
     }
 
     public void showAlertDialog(String title, String message, final OnButtonClicked onButtonClicked) {
-        new AlertDialog.Builder(this)
+        new AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
                 .setTitle(title)
                 .setMessage(message)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {

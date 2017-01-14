@@ -65,7 +65,7 @@ public class SearchAuthorsTabFragment extends BaseFragment {
         View view = null;
         view = getActivity().getLayoutInflater().inflate(R.layout.fragment_author_listing, container, false);
         listView = (ListView) view.findViewById(R.id.authorListView);
-        listView.setBackgroundColor(ContextCompat.getColor(getActivity(),R.color.white_color));
+        listView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.white_color));
 
         ColorDrawable sage = new ColorDrawable(ContextCompat.getColor(getActivity(), R.color.gray2));
         listView.setDivider(sage);
@@ -238,7 +238,9 @@ public class SearchAuthorsTabFragment extends BaseFragment {
             if (mLodingView.getVisibility() == View.VISIBLE) {
                 mLodingView.setVisibility(View.GONE);
             }
-            ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+            if (getActivity() != null) {
+                ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+            }
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
