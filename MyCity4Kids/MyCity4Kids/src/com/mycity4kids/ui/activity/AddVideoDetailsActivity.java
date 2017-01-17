@@ -26,6 +26,8 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
+import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.utils.AppUtils;
 
 import java.io.File;
@@ -54,7 +56,7 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_video_details_activity);
-
+        Utils.pushOpenScreenEvent(this, "AddVideoDetailsActivity", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         videoTitleEditText = (EditText) findViewById(R.id.videoTitleEditText);
         muteSwitch = (Switch) findViewById(R.id.muteVideoSwitch);
 //        videoView = (VideoView) findViewById(R.id.videoView1);

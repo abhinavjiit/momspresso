@@ -413,6 +413,7 @@ public class AppConstants {
     public static final String FOLLOW_UNFOLLOW_TOPICS_JSON_FILE = "follow_unfollow_topics.json";
     public static final String PHOENIX_RELEASE_VERSION = "5.0";
     public static final String FACEBOOK_CONNECT_RELEASE_VERSION = "5.5";
+    public static final String UPLOAD_VIDEO_RELEASE_VERSION = "5.6.2";
 
     public static final String PAGINATION_END_VALUE = "NA";
     public static final String FOLLOW_LIST_TYPE = "followListType";

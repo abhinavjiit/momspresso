@@ -581,12 +581,19 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                     // Header Item
 
                 } else {
-                    Intent intent = new Intent(BloggerDashboardActivity.this, ArticlesAndBlogsDetailsActivity.class);
-                    intent.putExtra(Constants.ARTICLE_ID, commentList.get(position - 1).getArticleId());
-                    intent.putExtra(Constants.AUTHOR_ID, commentList.get(position - 1).getUserId());
-                    intent.putExtra(Constants.BLOG_SLUG, commentList.get(position - 1).getBlogTitleSlug());
-                    intent.putExtra(Constants.TITLE_SLUG, commentList.get(position - 1).getTitleSlug());
-                    startActivity(intent);
+                    if (commentList.get(position - 1).getArticleId().startsWith("videos")) {
+                        Intent intent1 = new Intent(BloggerDashboardActivity.this, VlogsDetailActivity.class);
+                        intent1.putExtra(Constants.VIDEO_ID, commentList.get(position - 1).getArticleId());
+                        intent1.putExtra(Constants.AUTHOR_ID, commentList.get(position - 1).getUserId());
+                        startActivity(intent1);
+                    } else {
+                        Intent intent = new Intent(BloggerDashboardActivity.this, ArticlesAndBlogsDetailsActivity.class);
+                        intent.putExtra(Constants.ARTICLE_ID, commentList.get(position - 1).getArticleId());
+                        intent.putExtra(Constants.AUTHOR_ID, commentList.get(position - 1).getUserId());
+                        intent.putExtra(Constants.BLOG_SLUG, commentList.get(position - 1).getBlogTitleSlug());
+                        intent.putExtra(Constants.TITLE_SLUG, commentList.get(position - 1).getTitleSlug());
+                        startActivity(intent);
+                    }
                 }
             }
         });

@@ -22,9 +22,11 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.listener.OnButtonClicked;
 import com.mycity4kids.models.request.UploadVideoRequest;
 import com.mycity4kids.models.response.UpdateVideoDetailsResponse;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.UploadVideosAPI;
 import com.mycity4kids.ui.TusAndroidUpload;
 import com.mycity4kids.ui.TusClient;
@@ -59,7 +61,7 @@ public class VideoUploadProgressActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.video_upload_progress_activity);
-
+        Utils.pushOpenScreenEvent(this, "VideoUploadProgressActivity", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         contentURI = getIntent().getParcelableExtra("uri");
         title = getIntent().getStringExtra("title");
 

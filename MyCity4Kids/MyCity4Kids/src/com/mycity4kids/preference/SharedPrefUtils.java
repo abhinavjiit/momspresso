@@ -94,6 +94,7 @@ public class SharedPrefUtils {
 
     private static final String PHOENIX_FIRST_LAUNCH_FLAG = "phoenixFirstLaunchFlag";
     private static final String FB_CONNECT_FIRST_LAUNCH_FLAG = "fbConnectFirstLaunchFlag";
+    private static final String UPLOAD_VIDEO_FIRST_LAUNCH_FLAG = "uploadVideoFirstLaunchFlag";
 
     private static final String CHANGE_CITY_FLAG = "changeCityFlag";
 
@@ -568,6 +569,18 @@ public class SharedPrefUtils {
     public static boolean isFBConnectFirstLaunch(Context context) {
         SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         return _sharedPref.getBoolean(FB_CONNECT_FIRST_LAUNCH_FLAG, true);
+    }
+
+    public static void setUploadVideoFirstLaunch(Context context, boolean flag) {
+        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        _editor.putBoolean(UPLOAD_VIDEO_FIRST_LAUNCH_FLAG, flag);
+        _editor.commit();
+    }
+
+    public static boolean isUploadVideoFirstLaunch(Context context) {
+        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return _sharedPref.getBoolean(UPLOAD_VIDEO_FIRST_LAUNCH_FLAG, true);
     }
 
     public static void setChangeCityFlag(Context context, boolean flag) {

@@ -3,6 +3,8 @@ package com.mycity4kids.widget;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -26,10 +28,12 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.ArticleListingActivity;
 import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
 import com.mycity4kids.ui.activity.CityBestArticleListingActivity;
+import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.FilteredTopicsArticleListingActivity;
 import com.mycity4kids.ui.activity.TopicsSplashActivity;
 import com.mycity4kids.ui.activity.VlogsDetailActivity;
 import com.mycity4kids.ui.activity.VlogsListingActivity;
+import com.mycity4kids.ui.fragment.ChooseVideoUploadOptionDialogFragment;
 import com.mycity4kids.utils.AppUtils;
 import com.squareup.picasso.Picasso;
 
@@ -224,6 +228,20 @@ public class HorizontalScrollCustomView extends LinearLayout {
     }
 
     public void setVlogslist(final ArrayList<VlogsListingAndDetailResult> vlogslist) {
+        addTopicsTextView.setVisibility(VISIBLE);
+        addTopicsTextView.setText("ADD VIDEO");
+        addTopicsTextView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ChooseVideoUploadOptionDialogFragment chooseVideoUploadOptionDialogFragment = new ChooseVideoUploadOptionDialogFragment();
+                FragmentManager fm = ((DashboardActivity) getContext()).getSupportFragmentManager();
+                Bundle _args = new Bundle();
+                _args.putString("activity", "dashboard");
+                chooseVideoUploadOptionDialogFragment.setArguments(_args);
+                chooseVideoUploadOptionDialogFragment.setCancelable(true);
+                chooseVideoUploadOptionDialogFragment.show(fm, "Choose video option");
+            }
+        });
         this.vlogslist = vlogslist;
         mInflator = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         progressBar.setVisibility(GONE);

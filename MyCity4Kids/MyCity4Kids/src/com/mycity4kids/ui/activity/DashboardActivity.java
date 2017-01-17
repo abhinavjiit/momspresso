@@ -64,6 +64,7 @@ import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.listener.OnButtonClicked;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.forgot.CommonResponse;
+import com.mycity4kids.models.parentingdetails.CommentsData;
 import com.mycity4kids.models.response.DeepLinkingResposnse;
 import com.mycity4kids.models.response.DeepLinkingResult;
 import com.mycity4kids.models.version.RateVersion;
@@ -290,6 +291,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         t.send(new HitBuilders.EventBuilder().setCategory("UX").setAction("User Sign In").build());
         // Send a screen view.
         t.send(new HitBuilders.ScreenViewBuilder().build());
+
         onNewIntent(getIntent());
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
@@ -811,6 +813,17 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     }
 
+    private boolean showUploadVideoTutorial() {
+        String version = AppUtils.getAppVersion(this);
+        if (version.equals(AppConstants.UPLOAD_VIDEO_RELEASE_VERSION) && SharedPrefUtils.isUploadVideoFirstLaunch(this)) {
+            SharedPrefUtils.setUploadVideoFirstLaunch(this, false);
+            Intent videoFlIntent = new Intent(this, UploadVideoFLActivity.class);
+            startActivity(videoFlIntent);
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
 
@@ -851,6 +864,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
+        if (showUploadVideoTutorial()) return;
         mUsernName.setText(SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name());
         updateImageProfile();
         final Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
@@ -1551,6 +1565,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             case R.id.addVideosTextView:
                 ChooseVideoUploadOptionDialogFragment chooseVideoUploadOptionDialogFragment = new ChooseVideoUploadOptionDialogFragment();
                 FragmentManager fm = getSupportFragmentManager();
+                Bundle _args = new Bundle();
+                _args.putString("activity", "dashboard");
+                chooseVideoUploadOptionDialogFragment.setArguments(_args);
                 chooseVideoUploadOptionDialogFragment.setCancelable(true);
                 chooseVideoUploadOptionDialogFragment.show(fm, "Choose video option");
                 break;

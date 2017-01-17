@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mycity4kids"
-    android:versionCode="50"
-    android:versionName="5.6.1">
+    android:versionCode="51"
+    android:versionName="5.6.2">
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -499,9 +499,6 @@
             android:name=".ui.activity.VlogsListingActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activity.VideoTrimmer"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.activity.VideoTrimmerActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -515,6 +512,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.MyFunnyVideosListingActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.UploadVideoFLActivity"
             android:screenOrientation="portrait" />
 
         <receiver

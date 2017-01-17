@@ -160,5 +160,7 @@
 
     <color name="analytics.engagement.graph">#ABC4F8</color>
 
+    <color name="upload_video.tutorial.learn_more">#ec3b57</color>
+
     <color name="card_listing.stats">#737373</color>
 </resources>

@@ -103,9 +103,9 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_gravity="right|bottom"
-            fab:fab_addButtonColorNormal="@color/fab.pink"
-            fab:fab_addButtonColorPressed="@color/fab.pink"
-            fab:fab_addButtonPlusIconColor="@color/white_color"
+            fab:fab_addButtonColorNormal="@color/transparent"
+            fab:fab_addButtonColorPressed="@color/transparent"
+            fab:fab_addButtonPlusIconColor="@color/transparent"
             fab:fab_addButtonStrokeVisible="false"
             fab:fab_labelStyle="@style/menu_labels_style"
             fab:fab_labelsPosition="left">
@@ -131,7 +131,18 @@
                 fab:fab_plusIconColor="@color/white_color"
                 fab:fab_size="mini"
                 fab:fab_title="Popular" />
-
         </com.getbase.floatingactionbutton.FloatingActionsMenu>
     </FrameLayout>
+
+    <com.getbase.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabSort"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="right|bottom"
+        fab:fab_colorNormal="@color/fab.pink"
+        fab:fab_colorPressed="@color/fab.pink"
+        fab:fab_icon="@drawable/sort_icon" />
 </RelativeLayout>

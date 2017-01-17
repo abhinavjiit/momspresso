@@ -157,7 +157,7 @@ public class FragmentSetting extends BaseFragment implements View.OnClickListene
             case R.id.logout:
                 if (ConnectivityUtils.isNetworkEnabled(getActivity())) {
                     final LogoutController _controller = new LogoutController(getActivity(), this);
-                    AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity(), R.style.MyAlertDialogStyle);
 
                     dialog.setMessage(getResources().getString(R.string.logout_msg)).setNegativeButton(R.string.new_yes
                             , new DialogInterface.OnClickListener() {

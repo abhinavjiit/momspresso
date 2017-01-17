@@ -14,7 +14,11 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.DashboardActivity;
+import com.mycity4kids.ui.activity.MyFunnyVideosListingActivity;
+import com.mycity4kids.ui.activity.VlogsListingActivity;
 
 /**
  * Created by user on 08-06-2015.
@@ -23,6 +27,7 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
 
     //    private static final int REQUEST_VIDEO_TRIMMER = 0x01;
     static final String EXTRA_VIDEO_PATH = "EXTRA_VIDEO_PATH";
+    private String activity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -30,6 +35,11 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
 
         final View rootView = inflater.inflate(R.layout.choose_video_option_dialog, container,
                 false);
+        Utils.pushOpenScreenEvent(getActivity(), "Upload video Option Menu", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
+        Bundle extras = getArguments();
+        if (extras != null) {
+            activity = extras.getString("activity");
+        }
 
         TextView cameraTextView = (TextView) rootView.findViewById(R.id.optionCameraTextView);
         TextView galleryTextView = (TextView) rootView.findViewById(R.id.optionGalleryTextView);
@@ -57,13 +67,18 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
                 dismiss();
                 break;
         }
-
     }
 
     private void openVideoCapture() {
         try {
             Intent videoCapture = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-            ((DashboardActivity) getActivity()).startActivityForResult(videoCapture, AppConstants.REQUEST_VIDEO_TRIMMER);
+            if ("dashboard".equals(activity)) {
+                ((DashboardActivity) getActivity()).startActivityForResult(videoCapture, AppConstants.REQUEST_VIDEO_TRIMMER);
+            } else if ("myfunnyvideos".equals(activity)) {
+                ((MyFunnyVideosListingActivity) getActivity()).startActivityForResult(videoCapture, AppConstants.REQUEST_VIDEO_TRIMMER);
+            } else if ("vlogslisting".equals(activity)) {
+                ((VlogsListingActivity) getActivity()).startActivityForResult(videoCapture, AppConstants.REQUEST_VIDEO_TRIMMER);
+            }
         } catch (Exception e) {
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
@@ -76,7 +91,13 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
             intent.setType("video/mp4");
             intent.setAction(Intent.ACTION_GET_CONTENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
-            ((DashboardActivity) getActivity()).startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)), AppConstants.REQUEST_VIDEO_TRIMMER);
+            if ("dashboard".equals(activity)) {
+                ((DashboardActivity) getActivity()).startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)), AppConstants.REQUEST_VIDEO_TRIMMER);
+            } else if ("myfunnyvideos".equals(activity)) {
+                ((MyFunnyVideosListingActivity) getActivity()).startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)), AppConstants.REQUEST_VIDEO_TRIMMER);
+            } else if ("vlogslisting".equals(activity)) {
+                ((VlogsListingActivity) getActivity()).startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)), AppConstants.REQUEST_VIDEO_TRIMMER);
+            }
         } catch (Exception e) {
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));

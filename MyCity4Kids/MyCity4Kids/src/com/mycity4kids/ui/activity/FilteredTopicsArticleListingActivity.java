@@ -85,7 +85,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
     private String selectedTopics;
     private Toolbar mToolbar;
     private int limit = 15;
-    FloatingActionButton popularSortFAB, recentSortFAB;
+    FloatingActionButton popularSortFAB, recentSortFAB, fabSort;
     private String displayName;
 
     private String followingTopicStatus = "0";
@@ -115,6 +115,17 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         recentSortFAB = (FloatingActionButton) findViewById(R.id.recentSortFAB);
         popularSortFAB.setOnClickListener(this);
         recentSortFAB.setOnClickListener(this);
+        fabSort = (FloatingActionButton) findViewById(R.id.fabSort);
+        fabSort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (fabMenu.isExpanded()) {
+                    fabMenu.collapse();
+                } else {
+                    fabMenu.expand();
+                }
+            }
+        });
 
         selectedTopics = getIntent().getStringExtra("selectedTopics");
         displayName = getIntent().getStringExtra("displayName");

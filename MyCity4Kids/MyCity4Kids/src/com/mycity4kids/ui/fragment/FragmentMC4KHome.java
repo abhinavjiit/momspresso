@@ -122,6 +122,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     private int businessOrEventType;
     private int from = 1;
     private int to = 10;
+    private String userId;
 
     private ArrayList<BusinessDataListing> mBusinessDataListings;
     private ArrayList<ArticleListingResult> mArticleDataListing;
@@ -183,10 +184,9 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         txtCal = (TextView) view.findViewById(R.id.txtCal);
         txtEvents = (TextView) view.findViewById(R.id.txtEvents);
         progressBar = (ProgressBar) view.findViewById(R.id.eventprogressbar);
-//        momspressoProgressbar = (ProgressBar) view.findViewById(R.id.momspressoProgressbar);
-
         eventListView = (CustomListView) view.findViewById(R.id.eventList);
-//        momspressoHeader = (LinearLayout) view.findViewById(R.id.momspressoHeader);
+
+        userId = SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId();
 
         if (SharedPrefUtils.getCurrentCityModel(getActivity()).getName().isEmpty()) {
             inYourCitySection.setCityNameFromCityId(SharedPrefUtils.getCurrentCityModel(getActivity()).getId());
@@ -310,7 +310,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
 
-        Call<ArticleListingResponse> filterCall = topicsAPI.getForYouArticles("" + SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), "" + from, "" + to);
+        Call<ArticleListingResponse> filterCall = topicsAPI.getForYouArticles("" + userId, "" + from, "" + to);
         filterCall.enqueue(forYouResponseCallback);
     }
 
@@ -326,7 +326,9 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
 //        momspressoProgressbar.setVisibility(View.VISIBLE);
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
-
+        if (momspressoCategoryId == null) {
+            momspressoCategoryId = AppConstants.MOMSPRESSO_CATEGORYID;
+        }
         Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(momspressoCategoryId, 0, 1, 10);
         filterCall.enqueue(momspressoListingResponseCallback);
     }
@@ -1772,7 +1774,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + mBusinessDataListings.get(finalI2).getPhone()));
-                    Utils.pushEvent(getActivity(), GTMEventType.CALL_RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", "Dashboard");
+                    Utils.pushEvent(getActivity(), GTMEventType.CALL_RESOURCES_CLICKED_EVENT, userId + "", "Dashboard");
 
                     startActivity(intent);
                 }

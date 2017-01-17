@@ -449,4 +449,13 @@
     <string name="pick_a_video">Select or record a a video below to try it out:</string>
     <string name="trimming_progress">Trimming your video...</string>
     <string name="video_saved_at">Video saves at : $%1s</string>
+
+    <string name="upload_video.tutorial.title">FUNNY HOME VIDEOS</string>
+    <string name="upload_video.tutorial.description">mycity4kids is happy to introducing a new feature which lets you share your homemade videos with our vast parenting community.\nAll you need to do is pull out all your funny and original home videos and upload them in quick, easy steps guided by our extremely user-friendly interface. Do make sure that these are less than a minute in length.</string>
+    <string name="upload_video.tutorial.learn_more">Learn more</string>
+    <string name="upload_video.tutorial.instruction">You can simply add videos by going to the 3 bar menu and pressing on \'Add Videos\'.</string>
+    <string name="upload_video.tutorial.see_what_people_are_sharing">See what people are sharing</string>
+
+    <!--<string name="upload_video.tutorial.title">Trimming your video...</string>-->
+
 </resources>

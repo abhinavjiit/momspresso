@@ -134,4 +134,16 @@
 
         </com.getbase.floatingactionbutton.FloatingActionsMenu>
     </FrameLayout>
+
+    <com.getbase.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabSort"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="right|bottom"
+        fab:fab_colorNormal="@color/fab.pink"
+        fab:fab_colorPressed="@color/fab.pink"
+        fab:fab_icon="@drawable/sort_icon" />
 </RelativeLayout>

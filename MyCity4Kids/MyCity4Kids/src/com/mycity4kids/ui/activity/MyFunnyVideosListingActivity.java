@@ -1,8 +1,13 @@
 package com.mycity4kids.ui.activity;
 
 import android.accounts.NetworkErrorException;
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -18,6 +23,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -34,9 +40,11 @@ import com.mycity4kids.models.response.VlogsListingResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.adapter.MyFunnyVideosListingAdapter;
+import com.mycity4kids.ui.fragment.ChooseVideoUploadOptionDialogFragment;
 
 import java.util.ArrayList;
 
+import life.knowledge4.videotrimmer.utils.FileUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -54,7 +62,7 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
     private RelativeLayout mLodingView;
     TextView noBlogsTextView;
     Toolbar mToolbar;
-    FloatingActionButton popularSortFAB, recentSortFAB;
+    FloatingActionButton popularSortFAB, recentSortFAB, fabSort;
     FrameLayout frameLayout;
 
     private int sortType = 0;
@@ -81,9 +89,20 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
         fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
         popularSortFAB = (FloatingActionButton) findViewById(R.id.popularSortFAB);
         recentSortFAB = (FloatingActionButton) findViewById(R.id.recentSortFAB);
+        fabSort = (FloatingActionButton) findViewById(R.id.fabSort);
+
         popularSortFAB.setOnClickListener(this);
         recentSortFAB.setOnClickListener(this);
-
+        fabSort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (fabMenu.isExpanded()) {
+                    fabMenu.collapse();
+                } else {
+                    fabMenu.expand();
+                }
+            }
+        });
         fabMenu.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
             @Override
             public void onMenuExpanded() {
@@ -290,7 +309,7 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_search, menu);
+        getMenuInflater().inflate(R.menu.menu_my_videos, menu);
         return true;
     }
 
@@ -300,11 +319,14 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
             case android.R.id.home:
                 finish();
                 break;
-            case R.id.search:
-                Intent intent = new Intent(getApplicationContext(), SearchArticlesAndAuthorsActivity.class);
-                intent.putExtra(Constants.FILTER_NAME, "");
-                intent.putExtra(Constants.TAB_POSITION, 0);
-                startActivity(intent);
+            case R.id.add_video:
+                ChooseVideoUploadOptionDialogFragment chooseVideoUploadOptionDialogFragment = new ChooseVideoUploadOptionDialogFragment();
+                FragmentManager fm = getSupportFragmentManager();
+                Bundle _args = new Bundle();
+                _args.putString("activity", "myfunnyvideos");
+                chooseVideoUploadOptionDialogFragment.setArguments(_args);
+                chooseVideoUploadOptionDialogFragment.setCancelable(true);
+                chooseVideoUploadOptionDialogFragment.show(fm, "Choose video option");
                 break;
         }
         return true;
@@ -331,6 +353,33 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
                 nextPageNumber = 1;
                 hitArticleListingApi();
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+        if (requestCode == AppConstants.REQUEST_VIDEO_TRIMMER) {
+            final Uri selectedUri = data.getData();
+            if (selectedUri != null) {
+                startTrimActivity(selectedUri);
+            } else {
+                Toast.makeText(this, R.string.toast_cannot_retrieve_selected_video, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void startTrimActivity(@NonNull Uri uri) {
+        Intent intent = new Intent(this, VideoTrimmerActivity.class);
+        String filepath = FileUtils.getPath(this, uri);
+        if (null != filepath && filepath.endsWith(".mp4")) {
+            intent.putExtra("EXTRA_VIDEO_PATH", FileUtils.getPath(this, uri));
+            startActivity(intent);
+        } else {
+            showToast("please choose a .mp4 format file");
         }
     }
 }

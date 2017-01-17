@@ -27,6 +27,7 @@
 MyCity4Kids/WordPressEditor/WordPressEditor.iml
 /MyCity4Kids/PinnedSectionListView/PinnedSectionListView.iml
 /MyCity4Kids/WordPressEditor/build
+/MyCity4Kids/progressviewslib/build
 /.idea
 .idea
 *.properties

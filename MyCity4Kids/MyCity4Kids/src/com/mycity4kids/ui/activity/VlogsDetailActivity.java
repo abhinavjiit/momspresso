@@ -1094,169 +1094,6 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
         }
     };
 
-    private OnWebServiceCompleteListener mGetArticleListingListener = new OnWebServiceCompleteListener() {
-        @Override
-        public void onWebServiceComplete(VolleyBaseResponse response, boolean isError) {
-            Log.d("Response back =", " " + response.getResponseBody());
-            if (isError) {
-                if (null != this && response.getResponseCode() != 999)
-                    showToast("Something went wrong from server");
-            } else {
-                Log.d("Response = ", response.getResponseBody());
-                if (response == null) {
-                    showToast("Something went wrong from server");
-                    removeProgressDialog();
-                    return;
-                }
-
-                ArticleListingResponse responseBlogData;
-                try {
-                    Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
-                    responseBlogData = gson.fromJson(response.getResponseBody(), ArticleListingResponse.class);
-//                    responseBlogData = new Gson().fromJson(response.getResponseBody(), ArticleListingResponse.class);
-                } catch (JsonSyntaxException jse) {
-                    Crashlytics.logException(jse);
-                    Log.d("JsonSyntaxException", Log.getStackTraceString(jse));
-                    showToast("Something went wrong from server");
-                    removeProgressDialog();
-                    return;
-                }
-
-                if (responseBlogData.getCode() == 200 && Constants.SUCCESS.equals(responseBlogData.getStatus())) {
-                    ArrayList<ArticleListingResult> dataList = responseBlogData.getData().get(0).getResult();
-                    if (dataList == null || dataList.size() == 0) {
-
-                    } else {
-                        trendingArticles.setVisibility(View.VISIBLE);
-                        if (dataList.size() >= 3) {
-                            Picasso.with(VlogsDetailActivity.this).load(dataList.get(0).getImageUrl().getClientAppThumbnail()).
-                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles1.getArticleImageView());
-                            trendingRelatedArticles1.setArticleTitle(dataList.get(0).getTitle());
-                            trendingRelatedArticles1.setTag(dataList.get(0));
-
-                            Picasso.with(VlogsDetailActivity.this).load(dataList.get(1).getImageUrl().getClientAppThumbnail()).
-                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles2.getArticleImageView());
-                            trendingRelatedArticles2.setArticleTitle(dataList.get(1).getTitle());
-                            trendingRelatedArticles2.setTag(dataList.get(1));
-
-                            Picasso.with(VlogsDetailActivity.this).load(dataList.get(2).getImageUrl().getClientAppThumbnail()).
-                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles3.getArticleImageView());
-                            trendingRelatedArticles3.setArticleTitle(dataList.get(2).getTitle());
-                            trendingRelatedArticles3.setTag(dataList.get(2));
-                        } else if (dataList.size() == 2) {
-                            Picasso.with(VlogsDetailActivity.this).load(dataList.get(0).getImageUrl().getClientAppThumbnail()).
-                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles1.getArticleImageView());
-                            trendingRelatedArticles1.setArticleTitle(dataList.get(0).getTitle());
-                            trendingRelatedArticles1.setTag(dataList.get(0));
-
-                            Picasso.with(VlogsDetailActivity.this).load(dataList.get(1).getImageUrl().getClientAppThumbnail()).
-                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles2.getArticleImageView());
-                            trendingRelatedArticles2.setArticleTitle(dataList.get(1).getTitle());
-                            trendingRelatedArticles2.setTag(dataList.get(1));
-
-                            trendingRelatedArticles3.setVisibility(View.GONE);
-                        } else if (dataList.size() == 1) {
-                            Picasso.with(VlogsDetailActivity.this).load(dataList.get(0).getImageUrl().getClientAppThumbnail()).
-                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles1.getArticleImageView());
-                            trendingRelatedArticles1.setArticleTitle(dataList.get(0).getTitle());
-                            trendingRelatedArticles1.setTag(dataList.get(0));
-                            trendingRelatedArticles2.setVisibility(View.GONE);
-                            trendingRelatedArticles3.setVisibility(View.GONE);
-                        }
-                    }
-                }
-            }
-        }
-    };
-
-    private Callback<ArticleListingResponse> categoryArticleResponseCallback = new Callback<ArticleListingResponse>() {
-        @Override
-        public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
-
-            if (mLodingView.getVisibility() == View.VISIBLE) {
-                mLodingView.setVisibility(View.GONE);
-            }
-            if (response == null || response.body() == null) {
-//                showToast("Something went wrong from server");
-                NetworkErrorException nee = new NetworkErrorException("Category related Article API failure");
-                Crashlytics.logException(nee);
-                Call<VlogsListingResponse> callAuthorRecentcall = vlogsListingAndDetailsAPI.getPublishedVlogs(authorId, 0, 3, 0);
-                callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
-                return;
-            }
-
-            try {
-                ArticleListingResponse responseData = (ArticleListingResponse) response.body();
-                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
-                    for (int i = 0; i < dataList.size(); i++) {
-                        if (dataList.get(i).getId().equals(videoId)) {
-                            dataList.remove(i);
-                            break;
-                        }
-                    }
-                    if (dataList.size() == 0) {
-                        Call<VlogsListingResponse> callAuthorRecentcall = vlogsListingAndDetailsAPI.getPublishedVlogs(authorId, 0, 3, 0);
-                        callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
-                    } else {
-                        recentAuthorArticleHeading.setText("RELATED ARTICLES");
-                        recentAuthorArticles.setVisibility(View.VISIBLE);
-
-                        if (dataList.size() >= 3) {
-                            Picasso.with(VlogsDetailActivity.this).load(dataList.get(0).getImageUrl().getClientAppThumbnail()).
-                                    placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
-                            relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
-                            relatedArticles1.setTag(dataList.get(0));
-
-                            Picasso.with(VlogsDetailActivity.this).load(dataList.get(1).getImageUrl().getClientAppThumbnail()).
-                                    placeholder(R.drawable.default_article).fit().into(relatedArticles2.getArticleImageView());
-                            relatedArticles2.setArticleTitle(dataList.get(1).getTitle());
-                            relatedArticles2.setTag(dataList.get(1));
-
-                            Picasso.with(VlogsDetailActivity.this).load(dataList.get(2).getImageUrl().getClientAppThumbnail()).
-                                    placeholder(R.drawable.default_article).fit().into(relatedArticles3.getArticleImageView());
-                            relatedArticles3.setArticleTitle(dataList.get(2).getTitle());
-                            relatedArticles3.setTag(dataList.get(2));
-                        } else if (dataList.size() == 2) {
-                            Picasso.with(VlogsDetailActivity.this).load(dataList.get(0).getImageUrl().getClientAppThumbnail()).
-                                    placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
-                            relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
-                            relatedArticles1.setTag(dataList.get(0));
-
-                            Picasso.with(VlogsDetailActivity.this).load(dataList.get(1).getImageUrl().getClientAppThumbnail()).
-                                    placeholder(R.drawable.default_article).fit().into(relatedArticles2.getArticleImageView());
-                            relatedArticles2.setArticleTitle(dataList.get(1).getTitle());
-                            relatedArticles2.setTag(dataList.get(1));
-                            relatedArticles3.setVisibility(View.GONE);
-                        } else if (dataList.size() == 1) {
-                            Picasso.with(VlogsDetailActivity.this).load(dataList.get(0).getImageUrl().getClientAppThumbnail()).
-                                    placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
-                            relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
-                            relatedArticles1.setTag(dataList.get(0));
-                            relatedArticles2.setVisibility(View.GONE);
-                            relatedArticles3.setVisibility(View.GONE);
-                        }
-                    }
-                } else {
-                    NetworkErrorException nee = new NetworkErrorException("Category related Article Error Response");
-                    Crashlytics.logException(nee);
-                    Call<VlogsListingResponse> callAuthorRecentcall = vlogsListingAndDetailsAPI.getPublishedVlogs(authorId, 0, 3, 0);
-                    callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
-                }
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-                Call<VlogsListingResponse> callAuthorRecentcall = vlogsListingAndDetailsAPI.getPublishedVlogs(authorId, 0, 3, 0);
-                callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
-            }
-        }
-
-        @Override
-        public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
-            handleExceptions(t);
-        }
-    };
-
     private Callback<VlogsListingResponse> bloggersArticleResponseCallback = new Callback<VlogsListingResponse>() {
         @Override
         public void onResponse(Call<VlogsListingResponse> call, retrofit2.Response<VlogsListingResponse> response) {
@@ -1273,6 +1110,9 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                 VlogsListingResponse responseData = (VlogsListingResponse) response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     ArrayList<VlogsListingAndDetailResult> dataList = responseData.getData().get(0).getResult();
+                    if (dataList == null) {
+                        return;
+                    }
                     for (int i = 0; i < dataList.size(); i++) {
                         if (dataList.get(i).getId().equals(videoId)) {
                             dataList.remove(i);
@@ -1352,6 +1192,9 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                 VlogsListingResponse responseData = (VlogsListingResponse) response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     ArrayList<VlogsListingAndDetailResult> dataList = responseData.getData().get(0).getResult();
+                    if (dataList == null) {
+                        return;
+                    }
                     for (int i = 0; i < dataList.size(); i++) {
                         if (dataList.get(i).getId().equals(videoId)) {
                             dataList.remove(i);
@@ -1573,6 +1416,11 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
         @Override
         public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
             Log.d("View Count", "Updated Successfully");
+            if (response == null || null == response.body()) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                Crashlytics.logException(nee);
+                return;
+            }
             try {
                 String resData = new String(response.body().bytes());
                 Log.d("View Count", "Updated Successfully" + resData);

@@ -7,9 +7,10 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
 
 import com.mycity4kids.R;
+import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.utils.AppUtils;
 
 import life.knowledge4.videotrimmer.K4LVideoTrimmer;
@@ -28,7 +29,7 @@ public class VideoTrimmerActivity extends AppCompatActivity implements OnTrimVid
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trimmer);
-
+        Utils.pushOpenScreenEvent(this, "VideoTrimmerActivity", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         Intent extraIntent = getIntent();
         String path = "";
         mHandler = new Handler();

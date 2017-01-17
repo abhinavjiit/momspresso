@@ -1,8 +1,13 @@
 package com.mycity4kids.ui.activity;
 
 import android.accounts.NetworkErrorException;
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -18,6 +23,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -27,14 +33,17 @@ import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.models.response.VlogsListingResponse;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.adapter.VlogsListingAdapter;
+import com.mycity4kids.ui.fragment.ChooseVideoUploadOptionDialogFragment;
 
 import java.util.ArrayList;
 
+import life.knowledge4.videotrimmer.utils.FileUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -52,7 +61,7 @@ public class VlogsListingActivity extends BaseActivity implements View.OnClickLi
     private RelativeLayout mLodingView;
     TextView noBlogsTextView;
     Toolbar mToolbar;
-    FloatingActionButton popularSortFAB, recentSortFAB;
+    FloatingActionButton popularSortFAB, recentSortFAB, fabSort;
     FrameLayout frameLayout;
 
     private int sortType = 0;
@@ -62,11 +71,15 @@ public class VlogsListingActivity extends BaseActivity implements View.OnClickLi
     private boolean isReuqestRunning = false;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ProgressBar progressBar;
+    private boolean stackClearRequired;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vlogs_listing_activity);
+
+        stackClearRequired = getIntent().getBooleanExtra(AppConstants.STACK_CLEAR_REQUIRED, false);
+
         listView = (ListView) findViewById(R.id.vlogsListView);
         mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
         noBlogsTextView = (TextView) findViewById(R.id.noBlogsTextView);
@@ -80,7 +93,17 @@ public class VlogsListingActivity extends BaseActivity implements View.OnClickLi
         recentSortFAB = (FloatingActionButton) findViewById(R.id.recentSortFAB);
         popularSortFAB.setOnClickListener(this);
         recentSortFAB.setOnClickListener(this);
-
+        fabSort = (FloatingActionButton) findViewById(R.id.fabSort);
+        fabSort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (fabMenu.isExpanded()) {
+                    fabMenu.collapse();
+                } else {
+                    fabMenu.expand();
+                }
+            }
+        });
         fabMenu.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
             @Override
             public void onMenuExpanded() {
@@ -263,7 +286,7 @@ public class VlogsListingActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_search, menu);
+        getMenuInflater().inflate(R.menu.menu_my_videos, menu);
         return true;
     }
 
@@ -271,13 +294,16 @@ public class VlogsListingActivity extends BaseActivity implements View.OnClickLi
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
+                onBackPressed();
                 break;
-            case R.id.search:
-                Intent intent = new Intent(getApplicationContext(), SearchArticlesAndAuthorsActivity.class);
-                intent.putExtra(Constants.FILTER_NAME, "");
-                intent.putExtra(Constants.TAB_POSITION, 0);
-                startActivity(intent);
+            case R.id.add_video:
+                ChooseVideoUploadOptionDialogFragment chooseVideoUploadOptionDialogFragment = new ChooseVideoUploadOptionDialogFragment();
+                FragmentManager fm = getSupportFragmentManager();
+                Bundle _args = new Bundle();
+                _args.putString("activity", "vlogslisting");
+                chooseVideoUploadOptionDialogFragment.setArguments(_args);
+                chooseVideoUploadOptionDialogFragment.setCancelable(true);
+                chooseVideoUploadOptionDialogFragment.show(fm, "Choose video option");
                 break;
         }
         return true;
@@ -304,6 +330,44 @@ public class VlogsListingActivity extends BaseActivity implements View.OnClickLi
                 nextPageNumber = 1;
                 hitArticleListingApi();
                 break;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+//        if (stackClearRequired) {
+//            Intent intent = new Intent(VlogsListingActivity.this, DashboardActivity.class);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            startActivity(intent);
+//            finish();
+//        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+        if (requestCode == AppConstants.REQUEST_VIDEO_TRIMMER) {
+            final Uri selectedUri = data.getData();
+            if (selectedUri != null) {
+                startTrimActivity(selectedUri);
+            } else {
+                Toast.makeText(this, R.string.toast_cannot_retrieve_selected_video, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void startTrimActivity(@NonNull Uri uri) {
+        Intent intent = new Intent(this, VideoTrimmerActivity.class);
+        String filepath = FileUtils.getPath(this, uri);
+        if (null != filepath && filepath.endsWith(".mp4")) {
+            intent.putExtra("EXTRA_VIDEO_PATH", FileUtils.getPath(this, uri));
+            startActivity(intent);
+        } else {
+            showToast("please choose a .mp4 format file");
         }
     }
 }

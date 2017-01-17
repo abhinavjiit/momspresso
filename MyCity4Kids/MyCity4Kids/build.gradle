@@ -68,6 +68,7 @@ dependencies {
     compile 'io.tus.android.client:tus-android-client:0.1.4'
     compile 'com.github.jakob-grabner:Circle-Progress-View:v1.3'
     compile 'com.afollestad:easyvideoplayer:0.3.0'
+    compile 'com.plattysoft.leonids:LeonidsLib:1.3.2'
     compile project(':WordPressEditor')
     compile files('libs/comscore.jar')
     compile project(':progressviewslib')
