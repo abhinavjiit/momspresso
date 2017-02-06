@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:paddingBottom="7dp"
+            android:text="CHILD INFORMATION"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/black_color"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/cross"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/cross_xxhdpi" />
+    </RelativeLayout>
+
+    <!--<TextView-->
+    <!--android:id="@+id/txtkidname"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:fontFamily="sans-serif-light"-->
+    <!--android:paddingBottom="7dp"-->
+    <!--android:text="CHILD'S NAME"-->
+    <!--android:textColor="@color/new_grey" />-->
+
+    <EditText
+        android:id="@+id/kids_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:background="@null"
+        android:digits=" abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        android:drawableBottom="@drawable/underline"
+        android:fontFamily="sans-serif-light"
+        android:hint="@string/publish_article.complete_profile.hint_kids_name"
+        android:inputType="textCapWords"
+        android:paddingBottom="4dp"
+        android:paddingTop="4dp"
+        android:singleLine="true"
+        android:textColor="@color/black_color"
+        android:textSize="16sp" />
+
+    <!--<TextView-->
+    <!--android:id="@+id/txtkidbdy"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:fontFamily="sans-serif-light"-->
+    <!--android:paddingBottom="7dp"-->
+    <!--android:text="BIRTHDAY"-->
+    <!--android:textColor="@color/new_grey" />-->
+
+    <EditText
+        android:id="@+id/kids_bdy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:drawableBottom="@drawable/underline"
+        android:drawablePadding="3dp"
+        android:drawableRight="@drawable/drop_down_arrowxxhdpi"
+        android:focusable="false"
+        android:fontFamily="sans-serif-light"
+        android:gravity="left"
+        android:hint="@string/publish_article.complete_profile.hint_kids_dob"
+        android:paddingBottom="4dp"
+        android:paddingTop="4dp"
+        android:textColor="@color/black_color"
+        android:textSize="16sp" />
+
+</LinearLayout>

@@ -118,7 +118,12 @@ public class HorizontalScrollCustomView extends LinearLayout {
             view.setTag(i);
             ImageView articleImage = (ImageView) view.findViewById(R.id.imvAuthorThumb);
             TextView title = (TextView) view.findViewById(R.id.txvArticleTitle);
-            Picasso.with(getContext()).load(mDatalist.get(i).getImageUrl().getMobileWebThumbnail()).placeholder(R.drawable.default_article).into(articleImage);
+            if ((Constants.KEY_MOMSPRESSO.equals(listingType))
+                    && (mDatalist.get(i).getImageUrl().getMobileWebThumbnail() == null || mDatalist.get(i).getImageUrl().getMobileWebThumbnail().endsWith("default.jpg"))) {
+                Picasso.with(getContext()).load(AppUtils.getYoutubeThumbnailURLMomspresso(mDatalist.get(i).getVideoUrl())).placeholder(R.drawable.default_article).into(articleImage);
+            } else {
+                Picasso.with(getContext()).load(mDatalist.get(i).getImageUrl().getMobileWebThumbnail()).placeholder(R.drawable.default_article).into(articleImage);
+            }
             title.setText(mDatalist.get(i).getTitle());
             view.setOnClickListener(new View.OnClickListener() {
                 @Override

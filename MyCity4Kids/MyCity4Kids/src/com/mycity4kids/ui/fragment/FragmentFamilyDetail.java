@@ -151,7 +151,6 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
     }
 
     public void setList() {
-
         TableKids tableKids = new TableKids(BaseApplication.getInstance());
         ArrayList<KidsInfo> kidsInformations = (ArrayList<KidsInfo>) tableKids.getAllKids();
 
@@ -164,7 +163,6 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
             String key = new ColorCode().getKey(kidsInformations.get(i).getColor_code());
             used_colors.put("" + i, key);
         }
-
     }
 
     @Override
@@ -590,6 +588,7 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
                 kmodel.setBirthDay("" + bdaytimestamp);
             } else {
                 Toast.makeText(getActivity(), "incorrect kids bday", Toast.LENGTH_SHORT).show();
+                return;
             }
 
             kmodel.setColorCode(ki.getColor_code());
@@ -606,6 +605,7 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
                 kmodel.setBirthDay("" + bdaytimestamp);
             } else {
                 Toast.makeText(getActivity(), "incorrect kids bday", Toast.LENGTH_SHORT).show();
+                return;
             }
 
             kmodel.setColorCode(ki.getColor_code());

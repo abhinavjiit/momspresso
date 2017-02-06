@@ -190,7 +190,6 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
 
         if (SharedPrefUtils.getCurrentCityModel(getActivity()).getName().isEmpty()) {
             inYourCitySection.setCityNameFromCityId(SharedPrefUtils.getCurrentCityModel(getActivity()).getId());
-
         } else {
             inYourCitySection.setCityName(SharedPrefUtils.getCurrentCityModel(getActivity()).getName().toUpperCase());
         }
@@ -285,17 +284,15 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         hitHindiArticlesListing();
         hitInYourCityListingApi();
         hitFunnyVideosListingApi();
-
-        if (!SharedPrefUtils.isCityFetched(getActivity())) {
+        businessAdapter = new BusinessListingAdapterevent(getActivity());
+        mBusinessDataListings = new ArrayList<>();
+        eventListView.setAdapter(businessAdapter);
+        if (!SharedPrefUtils.isCityFetched(getActivity()) || SharedPrefUtils.getCurrentCityModel(getActivity()).getId() == AppConstants.OTHERS_CITY_ID) {
             view.findViewById(R.id.eventsss).setVisibility(View.GONE);
+            inYourCitySection.setVisibility(View.GONE);
         } else {
+            inYourCitySection.setVisibility(View.VISIBLE);
             view.findViewById(R.id.eventsss).setVisibility(View.VISIBLE);
-
-            // hit business list api
-            businessAdapter = new BusinessListingAdapterevent(getActivity());
-            mBusinessDataListings = new ArrayList<>();
-            eventListView.setAdapter(businessAdapter);
-
             if (BaseApplication.getBusinessREsponse() == null || BaseApplication.getBusinessREsponse().isEmpty()) {
                 hitBusinessListingApiRetro(SharedPrefUtils.getEventIdForCity(getActivity()), 1);
             } else {
@@ -323,7 +320,6 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     }
 
     private void hitMomspressoListingApi(String momspressoCategoryId) {
-//        momspressoProgressbar.setVisibility(View.VISIBLE);
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
         if (momspressoCategoryId == null) {
@@ -350,8 +346,6 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     }
 
     private void hitHindiArticlesListing() {
-//        momspressoProgressbar.setVisibility(View.VISIBLE);
-        final Topics hindiTopic = AppUtils.getHindiTopic(getContext());
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
 
@@ -929,24 +923,31 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     }
 
     public void refreshList() throws ParseException {
-        if (SharedPrefUtils.isChangeCity(getActivity())) {
+        if (SharedPrefUtils.isChangeCity(getActivity()) && SharedPrefUtils.getCurrentCityModel(getActivity()).getId() != AppConstants.OTHERS_CITY_ID) {
+            inYourCitySection.setVisibility(View.VISIBLE);
+            view.findViewById(R.id.eventsss).setVisibility(View.VISIBLE);
             hitInYourCityListingApi();
             inYourCitySection.setCityName(SharedPrefUtils.getCurrentCityModel(getActivity()).getName().toUpperCase());
             SharedPrefUtils.setChangeCityFlag(getActivity(), false);
+            if (mBusinessDataListings == null) {
+                mBusinessDataListings = new ArrayList<>();
+            }
             mBusinessDataListings.clear();
             BaseApplication.setBusinessREsponse(mBusinessDataListings);
             businessAdapter.setListData(mBusinessDataListings, businessOrEventType);
             businessAdapter.notifyDataSetChanged();
             hzScrollLinearLayoutEvent.removeAllViews();
             hitBusinessListingApiRetro(SharedPrefUtils.getEventIdForCity(getActivity()), 1);
+        } else if (SharedPrefUtils.getCurrentCityModel(getActivity()).getId() == AppConstants.OTHERS_CITY_ID) {
+            inYourCitySection.setVisibility(View.GONE);
+            view.findViewById(R.id.eventsss).setVisibility(View.GONE);
         }
-
 
         Calendar calendar = Calendar.getInstance();
         tableAppointment = new TableAppointmentData(BaseApplication.getInstance());
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        appointmentListData = getAppointmentByDay(formatter.format(calendar.getTime()));
         try {
+            appointmentListData = getAppointmentByDay(formatter.format(calendar.getTime()));
             // first change according to time
             appointmentListData = getSorted(formatter.format(calendar.getTime()), appointmentListData);
             adapterHomeAppointment.notifyList(appointmentListData);
@@ -968,9 +969,6 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
 
         String f11 = Date + " 12:01 AM";
         String f22 = Date + " 11:59 PM";
-
-        long fff = convertTimeStamp_new(f11);
-        long lll = convertTimeStamp_new(f22);
 
         TableAppointmentData tableAppointment = new TableAppointmentData(BaseApplication.getInstance());
         appointmentModels = tableAppointment.allDataBTWNdaysHome(convertTimeStamp_new(f11), convertTimeStamp_new(f22));

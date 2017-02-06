@@ -14,7 +14,6 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
-import com.mycity4kids.ui.adapter.UploadVideoFLAdapter;
 import com.plattysoft.leonids.ParticleSystem;
 
 import java.util.ArrayList;
@@ -24,12 +23,10 @@ import java.util.ArrayList;
  */
 public class UploadVideoFLActivity extends BaseActivity {
 
-    private ViewPager mViewPager;
     private ImageView tutorialImageView;
     private TextView learnMoreTextView;
     private LinearLayout introLayout;
 
-    private UploadVideoFLAdapter mViewPagerAdapter;
     ParticleSystem p1, p2, p3, p4;
     Handler handler = new Handler();
     Handler changImageHandler = new Handler();
@@ -43,7 +40,6 @@ public class UploadVideoFLActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.upload_video_fl_activity);
-        mViewPager = (ViewPager) findViewById(R.id.pager);
         tutorialImageView = (ImageView) findViewById(R.id.uploadTutorialImageView);
         learnMoreTextView = (TextView) findViewById(R.id.learnMoreTextView);
         introLayout = (LinearLayout) findViewById(R.id.introLayout);

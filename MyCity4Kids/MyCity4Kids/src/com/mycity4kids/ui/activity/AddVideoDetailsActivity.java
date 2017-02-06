@@ -205,7 +205,6 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
                 break;
             case R.id.uploadButton:
                 if (StringUtils.isNullOrEmpty(videoTitleEditText.getText().toString())) {
-//                    showToast("Please enter the title to continue");
                     videoTitleEditText.setFocusableInTouchMode(true);
                     videoTitleEditText.setError("Please enter the title of the video");
                     videoTitleEditText.requestFocus();

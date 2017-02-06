@@ -8,6 +8,7 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.VersionApiModel;
 import com.mycity4kids.models.city.MetroCity;
+import com.mycity4kids.models.response.CityInfoItem;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.models.version.RateVersion;
 import com.mycity4kids.sync.CategorySyncService;
@@ -39,6 +40,13 @@ public class SharedPrefUtils {
      */
     public static final String SELECTED_CITY_ID = "cityId";
     public static final String SELECTED_CITY_NAME = "city_name";
+    public static final String SELECTED_NEW_CITY_ID = "newCityId";
+
+    /**
+     * Selected City related prefs constants
+     */
+    public static final String NEW_CITY_ID = "newCityId";
+    public static final String NEW_CITY_NAME = "newCityName";
 
     public static final String SELECTED_TASKLIST_ID = "tasklist_id";
 
@@ -158,7 +166,17 @@ public class SharedPrefUtils {
         Editor _editor = _sharedPref.edit();
         _editor.putInt(SELECTED_CITY_ID, pModel.getId());
         _editor.putString(SELECTED_CITY_NAME, pModel.getName());
+        _editor.putString(SELECTED_NEW_CITY_ID, pModel.getNewCityId());
         _editor.commit();
+    }
+
+    public static MetroCity getCurrentCityModel(Context pContext) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        MetroCity city = new MetroCity();
+        city.setId(_sharedPref.getInt(SELECTED_CITY_ID, 11));
+        city.setName(_sharedPref.getString(SELECTED_CITY_NAME, "Others"));
+        city.setNewCityId(_sharedPref.getString(SELECTED_NEW_CITY_ID, "city-11"));
+        return city;
     }
 
     public static void setTaskListID(Context pContext, int id) {
@@ -257,15 +275,6 @@ public class SharedPrefUtils {
         SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         boolean flag = (_sharedPref.getBoolean(IS_FIRST_TYM_CHECK, false));
         return flag;
-    }
-
-
-    public static MetroCity getCurrentCityModel(Context pContext) {
-        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        MetroCity city = new MetroCity();
-        city.setId(_sharedPref.getInt(SELECTED_CITY_ID, 1));
-        city.setName(_sharedPref.getString(SELECTED_CITY_NAME, "Delhi-NCR"));
-        return city;
     }
 
     // set userdeatil in prefrences model

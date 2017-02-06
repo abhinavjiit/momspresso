@@ -87,6 +87,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
     private int limit = 15;
     FloatingActionButton popularSortFAB, recentSortFAB, fabSort;
     private String displayName;
+    private String listingType = "";
 
     private String followingTopicStatus = "0";
     private int isTopicFollowed;
@@ -129,7 +130,10 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
 
         selectedTopics = getIntent().getStringExtra("selectedTopics");
         displayName = getIntent().getStringExtra("displayName");
-//        showFollowUnfollowOption = getIntent().getBooleanExtra("showFollowUnfollowOption", false);
+
+        if (AppConstants.MOMSPRESSO_CATEGORYID.equals(selectedTopics)) {
+            listingType = Constants.KEY_MOMSPRESSO;
+        }
 
         if (null != displayName) {
             getSupportActionBar().setTitle(displayName.toUpperCase());
@@ -143,6 +147,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
 
         articlesListingAdapter = new NewArticlesListingAdapter(this);
         articlesListingAdapter.setNewListData(articleDataModelsNew);
+        articlesListingAdapter.setListingType(listingType);
         listView.setAdapter(articlesListingAdapter);
         articlesListingAdapter.notifyDataSetChanged();
 

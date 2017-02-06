@@ -1,7 +1,5 @@
 package com.mycity4kids.editor;
 
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -16,19 +14,15 @@ import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
+import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.dbtable.UserTable;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
-import com.mycity4kids.models.editor.ArticleDraftRequest;
 import com.mycity4kids.models.response.SetupBlogResponse;
-import com.mycity4kids.models.user.UserModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
-
-import java.io.File;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,16 +34,8 @@ import retrofit2.Retrofit;
 public class SetupBlogPageActivity extends BaseActivity {
     Toolbar mToolbar;
     ImageView blogImage;
-    public static final int ADD_MEDIA_ACTIVITY_REQUEST_CODE = 1111;
-    Uri imageUri;
-    String imageString;
-    File file;
-    String response;
-    Bitmap finalBitmap;
-    String url = "blogger_list_default.jpg";
     EditText blogTitle, bloggerBio;
     Button createBlog;
-    private UserModel userModel;
 
     @Override
     protected void updateUi(Response response) {
@@ -69,10 +55,12 @@ public class SetupBlogPageActivity extends BaseActivity {
         getSupportActionBar().setTitle("Setup your Blog");
         blogImage = (ImageView) findViewById(R.id.blogImage);
         Utils.pushOpenScreenEvent(SetupBlogPageActivity.this, "Setup Blog", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-        UserTable userTable = new UserTable((BaseApplication) this.getApplication());
-        userModel = userTable.getAllUserData();
-        if (getIntent().getStringExtra("userBio") != null && !getIntent().getStringExtra("userBio").isEmpty()) {
+
+        if (!StringUtils.isNullOrEmpty(getIntent().getStringExtra("userBio"))) {
             bloggerBio.setText(getIntent().getStringExtra("userBio"));
+        }
+        if (!StringUtils.isNullOrEmpty(getIntent().getStringExtra("blogTitle"))) {
+            blogTitle.setText(getIntent().getStringExtra("blogTitle"));
         }
 
         createBlog.setOnClickListener(new View.OnClickListener() {
@@ -80,7 +68,6 @@ public class SetupBlogPageActivity extends BaseActivity {
             public void onClick(View v) {
                 Utils.pushEvent(SetupBlogPageActivity.this, GTMEventType.SETUP_BLOG_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(SetupBlogPageActivity.this).getDynamoId() + "", "Set Up Blog");
                 if (blogTitle.getText().toString().isEmpty()) {
-                    // showToast("Please fill the required fields");
                     blogTitle.setFocusableInTouchMode(true);
                     blogTitle.setError("Please enter Blog Title");
                     blogTitle.requestFocus();
@@ -94,8 +81,6 @@ public class SetupBlogPageActivity extends BaseActivity {
                     blogTitle.requestFocus();
                 } else {
                     showProgressDialog(getResources().getString(R.string.please_wait));
-                    ArticleDraftRequest articleDraftRequest = new ArticleDraftRequest();
-
                     Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
                     // prepare call in Retrofit 2.0
                     BlogPageAPI blogSetupAPI = retrofit.create(BlogPageAPI.class);
@@ -104,10 +89,7 @@ public class SetupBlogPageActivity extends BaseActivity {
                         showToast(getString(R.string.error_network));
                         return;
                     }
-                    Call<SetupBlogResponse> call = blogSetupAPI.createBlogPage(
-                            blogTitle.getText().toString(),
-                            bloggerBio.getText().toString()
-                    );
+                    Call<SetupBlogResponse> call = blogSetupAPI.createBlogPage(blogTitle.getText().toString(), bloggerBio.getText().toString());
 
                     //asynchronous call
                     call.enqueue(new Callback<SetupBlogResponse>() {

@@ -456,6 +456,18 @@
     <string name="upload_video.tutorial.instruction">You can simply add videos by going to the 3 bar menu and pressing on \'Add Videos\'.</string>
     <string name="upload_video.tutorial.see_what_people_are_sharing">See what people are sharing</string>
 
-    <!--<string name="upload_video.tutorial.title">Trimming your video...</string>-->
+    <string name="publish_article.upload_image.title">Add an image to go with your article</string>
+    <string name="publish_article.upload_image.click_to_upload_picture">Click to upload picture</string>
+    <string name="publish_article.upload_image.change_photo">Change Image</string>
+    <string name="publish_article.upload_image.please_upload_or_choose_image">Please upload a picture or choose from the images shown below to continue</string>
+    <string name="copyright_mycity4kids_2016">Copyright &#169; mycity4kids 2017</string>
+    <string name="publish_article.complete_profile.title">Complete Your Profile</string>
+    <string name="publish_article.complete_profile.paid_assignment">Be eligible for paid writing assignments</string>
+    <string name="publish_article.complete_profile.hint_city_name">City Name</string>
+    <string name="publish_article.complete_profile.hint_kids_name">Child\'s Name</string>
+    <string name="publish_article.complete_profile.hint_kids_dob">Child\'s Birthday</string>
+    <string name="publish_article.complete_profile.add_children">ADD</string>
+
+    <string name="change_city.fetch_available_cities">Please wait while we fetch the list of available cities</string>
 
 </resources>

@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +21,7 @@ import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.kelltontech.utils.ToastUtils;
+import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -58,8 +60,10 @@ import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
 import com.mycity4kids.ui.activity.ActivityLogin;
 import com.mycity4kids.ui.activity.EditProfieActivity;
 import com.mycity4kids.ui.activity.FollowedTopicsListingActivity;
+import com.mycity4kids.ui.activity.IdTokenLoginActivity;
 import com.mycity4kids.ui.activity.SettingsActivity;
 import com.mycity4kids.ui.adapter.NotificationSettingsListAdapter;
+import com.mycity4kids.utils.AppUtils;
 
 import java.util.Map;
 
@@ -77,7 +81,9 @@ public class FragmentSetting extends BaseFragment implements View.OnClickListene
     TextView cityChange;
     String bio, firstName, lastName, phoneNumber;
     private String accessToken;
-    private TextView facebookConnectTextView;
+    private TextView facebookConnectTextView, appVersionTextView;
+    private LinearLayout appVersionLayout;
+    private int unlockIdTokenLogin = 0;
 
     @Nullable
     @Override
@@ -91,13 +97,18 @@ public class FragmentSetting extends BaseFragment implements View.OnClickListene
         lastName = getArguments().getString("lastName");
         phoneNumber = getArguments().getString("phoneNumber");
         facebookConnectTextView = (TextView) view.findViewById(R.id.facebookConnect);
+        appVersionLayout = (LinearLayout) view.findViewById(R.id.appVersionLayout);
+        appVersionTextView = (TextView) view.findViewById(R.id.appVersionTextView);
 
         ((TextView) view.findViewById(R.id.logout)).setOnClickListener(this);
         ((TextView) view.findViewById(R.id.family_details)).setOnClickListener(this);
         ((TextView) view.findViewById(R.id.viewFollowingTopics)).setOnClickListener(this);
         ((TextView) view.findViewById(R.id.editProfile)).setOnClickListener(this);
         ((TextView) view.findViewById(R.id.notifications)).setOnClickListener(this);
+        appVersionLayout.setOnClickListener(this);
         facebookConnectTextView.setOnClickListener(this);
+
+        appVersionTextView.setText("App-Version: " + AppUtils.getAppVersion(getActivity()));
 
         if ("1".equals(SharedPrefUtils.getFacebookConnectedFlag(getActivity()))) {
             facebookConnectTextView.setText("CONNECT");
@@ -205,6 +216,13 @@ public class FragmentSetting extends BaseFragment implements View.OnClickListene
                 if ("CONNECT".equals(facebookConnectTextView.getText().toString())) {
                     Utils.pushEvent(getActivity(), GTMEventType.FACEBOOK_CONNECT_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), "settings");
                     FacebookUtils.facebookLogin(getActivity(), this);
+                }
+                break;
+            case R.id.appVersionLayout:
+                unlockIdTokenLogin++;
+                if (BuildConfig.DEBUG && unlockIdTokenLogin > 9) {
+                    Intent _intent = new Intent(getActivity(), IdTokenLoginActivity.class);
+                    startActivity(_intent);
                 }
                 break;
             default:

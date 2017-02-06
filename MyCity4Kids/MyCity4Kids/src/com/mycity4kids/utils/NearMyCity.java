@@ -3,10 +3,31 @@ package com.mycity4kids.utils;
 import java.util.ArrayList;
 
 import android.Manifest.permission;
+import android.accounts.NetworkErrorException;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
+import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.city.City;
+import com.mycity4kids.models.response.CityConfigResponse;
+import com.mycity4kids.models.response.CityInfoItem;
+import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse;
+import com.mycity4kids.newmodels.ForceUpdateModel;
+import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.retrofitAPIsInterfaces.ConfigAPIs;
+import com.mycity4kids.retrofitAPIsInterfaces.ForceUpdateAPI;
+import com.mycity4kids.ui.activity.SplashActivity;
+import com.mycity4kids.ui.activity.TopicsSplashActivity;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 /**
  * this class will give the current Region name , City Id (City Model) according to current Location
@@ -21,6 +42,8 @@ public class NearMyCity {
     private double mLattitude;
     private double mLongitude;
     private FetchCity mFetchCity;
+    ArrayList<CityInfoItem> cityList = new ArrayList<CityInfoItem>();
+    ArrayList<City> addresses = new ArrayList<City>();
 
     public interface FetchCity {
         public void nearCity(City message);
@@ -71,8 +94,45 @@ public class NearMyCity {
 //		}
 //	}
     private void fetchingLocation() {
-        mFetchCity.nearCity(getNearMe(mLattitude, mLongitude));
+
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        ConfigAPIs cityConfigAPI = retrofit.create(ConfigAPIs.class);
+        Call<CityConfigResponse> call = cityConfigAPI.getCityConfig();
+        call.enqueue(cityConfigResponseCallback);
+
+//        mFetchCity.nearCity(getNearMe(mLattitude, mLongitude));
     }
+
+    private Callback<CityConfigResponse> cityConfigResponseCallback = new Callback<CityConfigResponse>() {
+        @Override
+        public void onResponse(Call<CityConfigResponse> call, Response<CityConfigResponse> response) {
+            if (response == null || null == response.body()) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                Crashlytics.logException(nee);
+                return;
+            }
+            try {
+                CityConfigResponse responseData = (CityConfigResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    ArrayList<CityInfoItem> mDatalist = responseData.getData().getResult().getCityData();
+                    cityList.addAll(mDatalist);
+//                    mFetchCity.nearCity(getNearMe(mLattitude, mLongitude));
+                } else {
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+//                showToast(getString(R.string.went_wrong));
+            }
+
+            mFetchCity.nearCity(getNearMe(mLattitude, mLongitude));
+        }
+
+        @Override
+        public void onFailure(Call<CityConfigResponse> call, Throwable t) {
+
+        }
+    };
 
 //	private String getNearMe(Address address) {
 
@@ -85,6 +145,7 @@ public class NearMyCity {
      */
     private City getNearMe(double lat, double longi) {
         City nearMe = null;
+        CityInfoItem cityInfoItem = null;
         ArrayList<City> addresses = new ArrayList<City>();
 
         addresses.add(new City("Delhi-NCR", 28.6100, 77.2300, 1));
@@ -97,11 +158,16 @@ public class NearMyCity {
         addresses.add(new City("Jaipur", 26.9000, 75.8000, 8));
         addresses.add(new City("Ahmedabad", 23.0300, 72.5800, 9));
 
-        for (int i = 0; i < addresses.size(); i++) {
-
-            if (Math.abs(distance(lat, longi, addresses.get(i).getLatitude(), addresses.get(i).getLongitude(), 'K')) <= 100) {
-                nearMe = addresses.get(i);
-                break;
+        for (int i = 0; i < cityList.size(); i++) {
+            if (Math.abs(distance(lat, longi, cityList.get(i).getLat(), cityList.get(i).getLon(), 'K')) <= 100) {
+                CityInfoItem cii = cityList.get(i);
+                int cId = Integer.parseInt(cii.getId().replace("city-", ""));
+                nearMe = new City(cii.getCityName(), cii.getLat(), cii.getLon(), cId, cii.getId());
+            }
+            if (nearMe == null && AppConstants.OTHERS_NEW_CITY_ID.equals(cityList.get(i).getId())) {
+                CityInfoItem cii = cityList.get(i);
+                int cId = Integer.parseInt(cii.getId().replace("city-", ""));
+                nearMe = new City(cii.getCityName(), cii.getLat(), cii.getLon(), cId, cii.getId());
             }
         }
         if (nearMe == null) {

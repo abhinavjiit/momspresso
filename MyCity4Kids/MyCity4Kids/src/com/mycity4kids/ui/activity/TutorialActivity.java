@@ -324,7 +324,7 @@ public class TutorialActivity extends BaseActivity implements View.OnClickListen
                     //Verified User
                     else {
                         if (null != responseData.getData().get(0).getResult().getKids()) {
-//                            saveKidsInformation(responseData.getData().getResult().getKids());
+                            saveKidsInformation(responseData.getData().get(0).getResult().getKids());
                         }
                         Intent intent = new Intent(TutorialActivity.this, PushTokenService.class);
                         startService(intent);
@@ -425,13 +425,14 @@ public class TutorialActivity extends BaseActivity implements View.OnClickListen
 
         ArrayList<KidsInfo> kidsInfoArrayList = new ArrayList<>();
 
+        if (kidsList.size() == 1 && StringUtils.isNullOrEmpty(kidsList.get(0).getName())) {
+            return;
+        }
         for (KidsModel kid : kidsList) {
             KidsInfo kidsInfo = new KidsInfo();
             kidsInfo.setName(kid.getName());
             kidsInfo.setDate_of_birth(convertTime(kid.getBirthDay()));
             kidsInfo.setColor_code(kid.getColorCode());
-            kidsInfo.setGender(kid.getGender());
-
             kidsInfoArrayList.add(kidsInfo);
         }
 
@@ -452,9 +453,13 @@ public class TutorialActivity extends BaseActivity implements View.OnClickListen
     }
 
     public String convertTime(String time) {
-        Date date = new Date(Long.parseLong(time) * 1000);
-        Format format = new SimpleDateFormat("dd-MM-yyyy");
-        return format.format(date);
+        try {
+            Date date = new Date(Long.parseLong(time) * 1000);
+            Format format = new SimpleDateFormat("dd-MM-yyyy");
+            return format.format(date);
+        } catch (NumberFormatException nfe) {
+            return "";
+        }
     }
 
     @Override

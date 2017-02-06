@@ -157,10 +157,15 @@
     <color name="analytics.engagement.comments_label">#737373</color>
     <color name="analytics.engagement.comments_disclaimer">#737373</color>
     <color name="analytics.engagement.separator">#c7c7c7</color>
-
     <color name="analytics.engagement.graph">#ABC4F8</color>
 
-    <color name="upload_video.tutorial.learn_more">#ec3b57</color>
+    <color name="publish_article.tag_images.selected_bg">#80000000</color>
 
+    <color name="upload_video.tutorial.learn_more">#ec3b57</color>
+    <color name="upload_video.progress.progress_bar">#507bbd</color>
+    <color name="toolbar.menu_items">#ec3b57</color>
     <color name="card_listing.stats">#737373</color>
+
+    <color name="complete_profile.add_more_children">#ec3b57</color>
+    <color name="complete_profile.done">#ec3b57</color>
 </resources>

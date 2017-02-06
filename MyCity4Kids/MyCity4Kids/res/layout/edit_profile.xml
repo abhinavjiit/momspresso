@@ -91,6 +91,25 @@
             android:textSize="14sp" />
 
         <View
+            android:id="@+id/blogTitleSeparator"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_color" />
+
+        <EditText
+            android:id="@+id/blogTitleEditText"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@null"
+            android:drawableLeft="@drawable/icon_draft"
+            android:drawablePadding="10dp"
+            android:fontFamily="sans-serif-light"
+            android:hint=" Blog Title"
+            android:paddingLeft="5dp"
+            android:textColor="@color/black_color"
+            android:textSize="14sp" />
+
+        <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/gray_color" />

@@ -52,6 +52,15 @@ public class AppUtils {
         return randomNum;
     }
 
+    public static String getYoutubeThumbnailURL(String youtubeUrl) {
+        String youtubeId = extractYoutubeId(youtubeUrl);
+        if (StringUtils.isNullOrEmpty(youtubeId)) {
+            return "";
+        }
+        String youtubeThumbUrl = "http://img.youtube.com/vi/" + youtubeId + "/0.jpg";
+        return youtubeThumbUrl;
+    }
+
     public static String extractYoutubeId(String url) {
         String query = null;
         try {
@@ -71,13 +80,18 @@ public class AppUtils {
         return id;
     }
 
-    public static String getYoutubeThumbnailURL(String youtubeUrl) {
-        String youtubeId = extractYoutubeId(youtubeUrl);
+    public static String getYoutubeThumbnailURLMomspresso(String youtubeUrl) {
+        String youtubeId = extractYoutubeIdMomspresso(youtubeUrl);
         if (StringUtils.isNullOrEmpty(youtubeId)) {
             return "";
         }
         String youtubeThumbUrl = "http://img.youtube.com/vi/" + youtubeId + "/0.jpg";
         return youtubeThumbUrl;
+    }
+
+    public static String extractYoutubeIdMomspresso(String youtubeUrl) {
+        String[] param = youtubeUrl.split("/");
+        return param[param.length - 1];
     }
 
     public static String convertStreamToString(InputStream is) {

@@ -175,11 +175,11 @@ public class SplashActivity extends BaseActivity {
                         MetroCity model = new MetroCity();
                         model.setId(cityModel.getCityId());
                         model.setName(cityModel.getCityName());
+                        model.setNewCityId(cityModel.getNewCityId());
                         /**
                          * this city model will be save only one time on splash:
                          */
                         SharedPrefUtils.setCurrentCityModel(SplashActivity.this, model);
-
 
                         if (cityId > 0) {
                             versionApiModel.setCityId(cityId);

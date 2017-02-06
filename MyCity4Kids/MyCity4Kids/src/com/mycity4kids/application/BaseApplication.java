@@ -316,6 +316,10 @@ public class BaseApplication extends Application {
         return GsonConverterFactory.create(myGson);
     }
 
+    public void destroyRetrofitInstance() {
+        retrofit = null;
+    }
+
     public Retrofit getRetrofit() {
         if (null == retrofit) {
             createRetrofitInstance(SharedPrefUtils.getBaseURL(this));

@@ -3,14 +3,17 @@ package com.mycity4kids.retrofitAPIsInterfaces;
 import com.mycity4kids.models.editor.ArticleDraftRequest;
 import com.mycity4kids.models.parentingdetails.ParentingDetailResponse;
 import com.mycity4kids.models.response.ArticleDraftResponse;
+import com.mycity4kids.models.response.ArticleTagsImagesResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 import retrofit2.http.Url;
 
 /**
@@ -33,16 +36,10 @@ public interface ArticlePublishAPI {
     @POST("v1/articles/")
     Call<ArticleDraftResponse> publishArticle(@Body ArticleDraftRequest body);
 
-
-    @FormUrlEncoded
-    @PUT
-    Call<ArticleDraftResponse> updateArticle(@Url String url,
-                                             @Field("title") String title,
-                                             @Field("body") String body,
-                                             @Field("tags") String tag,
-                                             @Field("imageUrl") String imageUrl,
-                                             @Field("articleType") String articleType
-    );
+    @GET("v1/resources/images/")
+    Call<ArticleTagsImagesResponse> getImagesForCategories(@Query("tags") String tags,
+                                                           @Query("limit") int limit,
+                                                           @Query("page") int page);
 
     @PUT("v1/articles/{articleId}")
     Call<ArticleDraftResponse> updateArticle(@Path("articleId") String articleId,

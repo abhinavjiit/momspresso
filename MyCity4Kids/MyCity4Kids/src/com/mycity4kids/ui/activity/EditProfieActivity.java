@@ -21,6 +21,7 @@ import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.UpdateUserDetailsRequest;
@@ -41,12 +42,14 @@ public class EditProfieActivity extends BaseActivity {
 
     private ProgressBar progress_bar;
     Toolbar mToolBar;
-    String bio, firstName, lastName, phoneNumber;
+    String bio, firstName, lastName, phoneNumber, blogTitle;
     EditText editFirstName, editLastName, userBioEditText, phoneEditText;
     TextView noDataFoundTextView;
     private LinearLayout fieldsLinearLayout;
     private Menu menu;
     private boolean userDetailsFetchSuccess = false;
+    private EditText blogTitleEditText;
+//    private boolean isBlogSetUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +62,7 @@ public class EditProfieActivity extends BaseActivity {
         editLastName = (EditText) findViewById(R.id.editLastName);
         userBioEditText = (EditText) findViewById(R.id.userBioEditText);
         phoneEditText = (EditText) findViewById(R.id.phoneEditText);
+        blogTitleEditText = (EditText) findViewById(R.id.blogTitleEditText);
         noDataFoundTextView = (TextView) findViewById(R.id.noDataFoundTextView);
         fieldsLinearLayout = (LinearLayout) findViewById(R.id.fieldsLinearLayout);
 
@@ -113,9 +117,17 @@ public class EditProfieActivity extends BaseActivity {
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                 userDetailsFetchSuccess = true;
                 fieldsLinearLayout.setVisibility(View.VISIBLE);
+//                if (AppConstants.USER_TYPE_USER.equals(responseData.getData().get(0).getResult().getUserType())) {
+//                    isBlogSetUp = false;
+//                } else {
+//                    isBlogSetUp = true;
+//                }
+
                 bio = responseData.getData().get(0).getResult().getUserBio();
                 firstName = responseData.getData().get(0).getResult().getFirstName();
                 lastName = responseData.getData().get(0).getResult().getLastName();
+                blogTitle = responseData.getData().get(0).getResult().getBlogTitle();
+
                 if (null == responseData.getData().get(0).getResult().getPhone()) {
                     phoneNumber = " ";
                 } else {
@@ -124,6 +136,7 @@ public class EditProfieActivity extends BaseActivity {
                 editFirstName.setText(firstName);
                 editLastName.setText(lastName);
                 userBioEditText.setText(bio);
+                blogTitleEditText.setText(blogTitle);
                 phoneEditText.setText(phoneNumber);
             } else {
                 noDataFoundTextView.setVisibility(View.VISIBLE);
@@ -159,6 +172,7 @@ public class EditProfieActivity extends BaseActivity {
                     UpdateUserDetailsRequest updateUserDetail = new UpdateUserDetailsRequest();
                     updateUserDetail.setFirstName((editFirstName.getText().toString()).trim() + "");
                     updateUserDetail.setUserBio(userBioEditText.getText().toString().trim() + "");
+                    updateUserDetail.setBlogTitle(blogTitleEditText.getText().toString().trim() + "");
 
                     if (StringUtils.isNullOrEmpty(editLastName.getText().toString().trim())) {
                         updateUserDetail.setLastName(" ");
@@ -171,7 +185,6 @@ public class EditProfieActivity extends BaseActivity {
                     } else {
                         updateUserDetail.setMobile(phoneEditText.getText().toString().trim() + "");
                     }
-
 
                     Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
                     showProgressDialog(getResources().getString(R.string.please_wait));
@@ -220,6 +233,10 @@ public class EditProfieActivity extends BaseActivity {
             return false;
         } else if (StringUtils.isNullOrEmpty(userBioEditText.getText().toString().trim())) {
             showToast("User bio cannot be empty");
+            return false;
+        } else if (StringUtils.isNullOrEmpty(blogTitleEditText.getText().toString().trim())) {
+            showToast("Blog Title cannot be empty");
+            return false;
         }
         return true;
     }

@@ -5,6 +5,7 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -18,11 +19,15 @@ import com.facebook.widget.FacebookDialog;
 import com.google.android.gms.plus.PlusShare;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.dbtable.TableKids;
+import com.mycity4kids.models.user.KidsInfo;
 import com.mycity4kids.ui.activity.BloggerDashboardActivity;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -86,7 +91,6 @@ public class PublishedArticleShareDialogFragment extends DialogFragment implemen
                                     "Check out this interesting blog post ")
                             .setContentUrl(Uri.parse(shareUrl))
                             .getIntent();
-
                     startActivityForResult(shareIntent, 0);
                 }
                 break;
@@ -125,10 +129,21 @@ public class PublishedArticleShareDialogFragment extends DialogFragment implemen
                 }
                 break;
             case R.id.closeImageView:
-                Intent intent = new Intent(getActivity(), BloggerDashboardActivity.class);
-                intent.putExtra(AppConstants.STACK_CLEAR_REQUIRED, true);
-                startActivity(intent);
-                getActivity().finish();
+
+                TableKids tableKids = new TableKids(BaseApplication.getInstance());
+                ArrayList<KidsInfo> kidsInformations = (ArrayList<KidsInfo>) tableKids.getAllKids();
+                if (kidsInformations != null && !kidsInformations.isEmpty()) {
+                    Intent intent = new Intent(getActivity(), BloggerDashboardActivity.class);
+                    intent.putExtra(AppConstants.STACK_CLEAR_REQUIRED, true);
+                    startActivity(intent);
+                    getActivity().finish();
+                } else {
+                    CompleteProfileDialogFragment completeProfileDialogFragment = new CompleteProfileDialogFragment();
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+                    completeProfileDialogFragment.setCancelable(false);
+                    completeProfileDialogFragment.show(fm, "Complete blogger profile");
+                    dismiss();
+                }
                 break;
         }
 

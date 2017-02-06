@@ -169,7 +169,7 @@ public class HeavyDbTask extends AsyncTask<Void, Void, String>{
 
 
 			}else if(_configurationResponse.getResponseCode()==400){
-				Toast.makeText(mContext, "Category not fetched.", Toast.LENGTH_LONG).show();
+//				Toast.makeText(mContext, "Category not fetched.", Toast.LENGTH_LONG).show();
 
 			}
 		}

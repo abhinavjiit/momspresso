@@ -1,9 +1,6 @@
 package com.mycity4kids.ui.activity;
 
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -19,20 +16,13 @@ import com.kelltontech.utils.StringUtils;
 import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
-import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.ForgotPasswordController;
 import com.mycity4kids.gtmutils.Utils;
-import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.models.request.LoginRegistrationRequest;
-import com.mycity4kids.models.response.ForgotPasswordData;
 import com.mycity4kids.models.response.ForgotPasswordResponse;
-import com.mycity4kids.models.response.UserDetailResponse;
-import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
-import com.mycity4kids.sync.PushTokenService;
-import com.mycity4kids.ui.fragment.FacebookAddEmailDialogFragment;
 
 import retrofit2.Call;
 import retrofit2.Callback;

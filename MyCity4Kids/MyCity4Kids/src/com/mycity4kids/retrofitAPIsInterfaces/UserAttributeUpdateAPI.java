@@ -26,4 +26,7 @@ public interface UserAttributeUpdateAPI {
 
     @PUT("v1/users/cityId/")
     Call<UserDetailResponse> updateCity(@Body UpdateUserDetailsRequest body);
+
+    @PUT("v1/users/")
+    Call<UserDetailResponse> updateCityAndKids(@Body UpdateUserDetailsRequest body);
 }

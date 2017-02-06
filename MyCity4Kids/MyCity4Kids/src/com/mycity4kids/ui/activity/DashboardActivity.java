@@ -82,6 +82,7 @@ import com.mycity4kids.ui.fragment.AddTaskListPopUp;
 import com.mycity4kids.ui.fragment.ArticlesFragment;
 import com.mycity4kids.ui.fragment.ChangeCityFragment;
 import com.mycity4kids.ui.fragment.ChooseVideoUploadOptionDialogFragment;
+import com.mycity4kids.ui.fragment.CompleteProfileDialogFragment;
 import com.mycity4kids.ui.fragment.ExternalCalFragment;
 import com.mycity4kids.ui.fragment.FragmentAdultProfile;
 import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
@@ -97,6 +98,7 @@ import com.mycity4kids.ui.fragment.FragmentMC4KHome;
 import com.mycity4kids.ui.fragment.FragmentSetting;
 import com.mycity4kids.ui.fragment.FragmentTaskHome;
 import com.mycity4kids.ui.fragment.NotificationFragment;
+import com.mycity4kids.ui.fragment.PublishedArticleShareDialogFragment;
 import com.mycity4kids.ui.fragment.RateAppDialogFragment;
 import com.mycity4kids.ui.fragment.SendFeedbackFragment;
 import com.mycity4kids.ui.fragment.SyncSettingFragment;
@@ -429,7 +431,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         txvAllTaskPopup.setText("All Tasks (" + taskData.getRowsCount() + ")");
 
 
-        if (SharedPrefUtils.isCityFetched(this)) {
+        if (SharedPrefUtils.isCityFetched(this) && SharedPrefUtils.getCurrentCityModel(this).getId() != AppConstants.OTHERS_CITY_ID) {
             findViewById(R.id.rdBtnUpcoming).setVisibility(View.VISIBLE);
             findViewById(R.id.rdBtnKids).setVisibility(View.VISIBLE);
         } else {
@@ -514,37 +516,27 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     changeVisibiltyOfArrow(false);
                     setTitle("");
                     mDrawerToggle.setDrawerIndicatorEnabled(true);
-
                 } else if (currentFrag instanceof FragmentMC4KHome) {
                     mDrawerToggle.setDrawerIndicatorEnabled(true);
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_UNLOCKED);
-//
                     findViewById(R.id.month_popup).setVisibility(View.GONE);
                     findViewById(R.id.task_popup).setVisibility(View.GONE);
                     changeVisibiltyOfArrow(false);
                     setTitle("");
-
                 } else if (currentFrag instanceof FragmentCalender) {
-
                     findViewById(R.id.task_popup).setVisibility(View.GONE);
-
-
                     changeVisibiltyOfArrow(true);
                     mDrawerToggle.setDrawerIndicatorEnabled(true);
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_UNLOCKED);
-//                    setTitle("Calender");
                 } else if (currentFrag instanceof FragmentCalMonth) {
-
                     findViewById(R.id.task_popup).setVisibility(View.GONE);
                     findViewById(R.id.month_popup).setVisibility(View.GONE);
-
                     mDrawerToggle.setDrawerIndicatorEnabled(true);
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_UNLOCKED);
                     changeVisibiltyOfArrow(true);
-//                    setTitle("Calender");
                 } else if (currentFrag instanceof FragmentSetting) {
                     changeVisibiltyOfArrow(false);
                     setTitle("Settings");
@@ -553,7 +545,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_UNLOCKED);
                     findViewById(R.id.month_popup).setVisibility(View.GONE);
                     findViewById(R.id.task_popup).setVisibility(View.GONE);
-
                 } else if (currentFrag instanceof FragmentBusinesslistEvents) {
                     changeVisibiltyOfArrow(false);
                     setTitle("Upcoming Events");
@@ -564,22 +555,18 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     setTitle("Kids Resources");
                     findViewById(R.id.month_popup).setVisibility(View.GONE);
                     findViewById(R.id.task_popup).setVisibility(View.GONE);
-
                 } else if (currentFrag instanceof FragmentFamilyDetail) {
-
                     setTitle("Family Details");
                     findViewById(R.id.month_popup).setVisibility(View.GONE);
                     findViewById(R.id.task_popup).setVisibility(View.GONE);
                     mDrawerToggle.setDrawerIndicatorEnabled(false);
                     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
                     getSupportActionBar().setHomeButtonEnabled(true);
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
                     changeVisibiltyOfArrow(false);
                 } else if (currentFrag instanceof FragmentFamilyProfile) {
-
                     findViewById(R.id.month_popup).setVisibility(View.GONE);
                     findViewById(R.id.task_popup).setVisibility(View.GONE);
                     mDrawerToggle.setDrawerIndicatorEnabled(false);
@@ -588,10 +575,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
                     getSupportActionBar().setHomeButtonEnabled(true);
-
                     changeVisibiltyOfArrow(false);
                 } else if (currentFrag instanceof FragmentAdultProfile) {
-
                     findViewById(R.id.month_popup).setVisibility(View.GONE);
                     findViewById(R.id.task_popup).setVisibility(View.GONE);
                     mDrawerToggle.setDrawerIndicatorEnabled(false);
@@ -602,7 +587,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
                     changeVisibiltyOfArrow(false);
                 } else if (currentFrag instanceof FragmentKidProfile) {
-
                     findViewById(R.id.month_popup).setVisibility(View.GONE);
                     findViewById(R.id.task_popup).setVisibility(View.GONE);
                     mDrawerToggle.setDrawerIndicatorEnabled(false);
@@ -613,7 +597,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
                     changeVisibiltyOfArrow(false);
                 } else if (currentFrag instanceof FragmentTaskHome) {
-
                     changeVisibiltyOfArrow(true);
                     mDrawerToggle.setDrawerIndicatorEnabled(true);
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
@@ -621,9 +604,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     findViewById(R.id.month_popup).setVisibility(View.GONE);
                     findViewById(R.id.task_popup).setVisibility(View.GONE);
                     setTitle("All Tasks");
-
                 } else if (currentFrag instanceof ArticlesFragment) {
-
                     changeVisibiltyOfArrow(false);
                     mDrawerToggle.setDrawerIndicatorEnabled(true);
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
@@ -631,9 +612,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     findViewById(R.id.month_popup).setVisibility(View.GONE);
                     findViewById(R.id.task_popup).setVisibility(View.GONE);
                     setTitle("Blogs");
-
                 } else if (currentFrag instanceof FragmentEditorsPick) {
-
                     changeVisibiltyOfArrow(false);
                     mDrawerToggle.setDrawerIndicatorEnabled(true);
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
@@ -688,14 +667,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     findViewById(R.id.month_popup).setVisibility(View.GONE);
                     findViewById(R.id.task_popup).setVisibility(View.GONE);
                     setTitle("Send Feedback");
-
                 } else if (currentFrag instanceof NotificationFragment) {
-
                     setTitle("Notifications");
                     findViewById(R.id.month_popup).setVisibility(View.GONE);
                     findViewById(R.id.task_popup).setVisibility(View.GONE);
                     mDrawerToggle.setDrawerIndicatorEnabled(false);
-
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
@@ -705,18 +681,15 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     findViewById(R.id.month_popup).setVisibility(View.GONE);
                     findViewById(R.id.task_popup).setVisibility(View.GONE);
                     mDrawerToggle.setDrawerIndicatorEnabled(false);
-
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
                     changeVisibiltyOfArrow(false);
                 } else if (currentFrag instanceof ExternalCalFragment) {
                     setTitle("External Calendars");
-
                     findViewById(R.id.month_popup).setVisibility(View.GONE);
                     findViewById(R.id.task_popup).setVisibility(View.GONE);
                     mDrawerToggle.setDrawerIndicatorEnabled(false);
-
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
@@ -726,7 +699,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     findViewById(R.id.month_popup).setVisibility(View.GONE);
                     findViewById(R.id.task_popup).setVisibility(View.GONE);
                     mDrawerToggle.setDrawerIndicatorEnabled(false);
-
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
@@ -886,6 +858,13 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         } else if (topFragment instanceof FragmentMC4KHome) {
             try {
                 ((FragmentMC4KHome) topFragment).refreshList();
+                if (SharedPrefUtils.isCityFetched(this) && SharedPrefUtils.getCurrentCityModel(this).getId() != AppConstants.OTHERS_CITY_ID) {
+                    findViewById(R.id.rdBtnUpcoming).setVisibility(View.VISIBLE);
+                    findViewById(R.id.rdBtnKids).setVisibility(View.VISIBLE);
+                } else {
+                    findViewById(R.id.rdBtnUpcoming).setVisibility(View.GONE);
+                    findViewById(R.id.rdBtnKids).setVisibility(View.GONE);
+                }
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -1190,6 +1169,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 }
                 break;
             case R.id.write:
+//                CompleteProfileDialogFragment completeProfileDialogFragment = new CompleteProfileDialogFragment();
+//                FragmentManager fm = getSupportFragmentManager();
+//                completeProfileDialogFragment.setCancelable(false);
+//                completeProfileDialogFragment.show(fm, "Complete blogger profile");
+
                 if (Build.VERSION.SDK_INT > 15) {
                     Utils.pushEvent(DashboardActivity.this, GTMEventType.ADD_BLOG_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Left Menu Screen");
                     launchEditor();
@@ -1890,6 +1874,13 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 //                        ((FragmentCalender) topFragment).refreshView();
                     } else if (topFragment instanceof FragmentMC4KHome) {
                         ((FragmentMC4KHome) topFragment).refreshList();
+                        if (SharedPrefUtils.isCityFetched(this) && SharedPrefUtils.getCurrentCityModel(this).getId() != AppConstants.OTHERS_CITY_ID) {
+                            findViewById(R.id.rdBtnUpcoming).setVisibility(View.VISIBLE);
+                            findViewById(R.id.rdBtnKids).setVisibility(View.VISIBLE);
+                        } else {
+                            findViewById(R.id.rdBtnUpcoming).setVisibility(View.GONE);
+                            findViewById(R.id.rdBtnKids).setVisibility(View.GONE);
+                        }
                     } else if (topFragment instanceof FragmentCalMonth) {
                         ((FragmentCalMonth) topFragment).refreshCalender_afterAdd();
                     } else if (topFragment instanceof FragmentMC4KHome) {

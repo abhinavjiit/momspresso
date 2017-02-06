@@ -2,9 +2,6 @@ package com.mycity4kids.constants;
 
 import android.net.Uri;
 
-import com.mycity4kids.application.BaseApplication;
-import com.mycity4kids.preference.SharedPrefUtils;
-
 /**
  * @author Deepanker Chaudhary
  */
@@ -14,7 +11,7 @@ public class AppConstants {
     public static final String DEV_URL = "http://54.169.17.138/";
     public static final String STAGING_URL = "http://52.220.87.141/";
 
-    //    public static final String LIVE_URL = "http://52.220.87.141/";
+//    public static final String LIVE_URL = "http://52.220.87.141/";
     public static final String LIVE_URL = "https://api.mycity4kids.com/";
 
     public static final String PHOENIX_STAGING_URL = "http://52.77.116.39";
@@ -154,8 +151,8 @@ public class AppConstants {
     public static final Uri APP_BASE_URI = Uri.parse("android-app://com.mycity4kids/https/www.mycity4kids.com/");
     public static final Uri WEB_BASE_URL = Uri.parse("https://www.mycity4kids.com/");
 
-    public static final String ARTICLE_SHARE_URL = "https://mycity4kids.com/" + "parenting/";
-    public static final String VIDEO_ARTICLE_SHARE_URL = "https://mycity4kids.com/" + "parenting/";
+    public static final String ARTICLE_SHARE_URL = "https://wwww.mycity4kids.com/" + "parenting/";
+    public static final String VIDEO_ARTICLE_SHARE_URL = "https://www.mycity4kids.com/" + "parenting/";
     public static final String VIDEO_UPLOAD_URL = LIVE_URL + "v1/media/videos/";
 //    public static final String ARTICLE_SHARE_URL = BASE_URL + "newparenting/";
 
@@ -484,4 +481,12 @@ public class AppConstants {
     public static final String VIDEO_TYPE_APPROVAL_CANCELLED = "APPROVAL CANCELLED";
     public static final String VIDEO_TYPE_PUBLISHED = "";
     public static final String VIDEO_TYPE_UNPUBLISHED = "UNPUBLISHED";
+
+    public static final int OTHERS_CITY_ID = 11;
+    public static final String OTHERS_NEW_CITY_ID = "city-11";
+    public static final String OTHERS_CITY_NAME = "Others";
+
+    public static final int ALL_CITY_ID = 11;
+    public static final String ALL_CITY_NEW_ID = "city-10";
+
 }

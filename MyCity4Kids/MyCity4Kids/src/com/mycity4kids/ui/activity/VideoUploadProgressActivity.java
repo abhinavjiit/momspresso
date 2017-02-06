@@ -72,10 +72,10 @@ public class VideoUploadProgressActivity extends BaseActivity {
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Upload Video");
+        getSupportActionBar().setTitle("Video Upload");
 
         mCircleView.setStartPositionInDegrees(ProgressStartPoint.DEFAULT);
-        mCircleView.setLinearGradientProgress(true);
+        mCircleView.setLinearGradientProgress(false);
 
         try {
             SharedPreferences pref = getSharedPreferences("tus", 0);

@@ -68,6 +68,9 @@ public class TrackArticleReadTime {
         Utils.pushArticleDetailsTimeSpent(mContext, GTMEventType.ARTICLE_TIME_SPENT_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(),
                 "Blog Detail", articleURL, "" + timeSpent, "" + estimatedTime);
 
+        if (estimatedTime == 0) {
+            return;
+        }
         long timeSpentEstimatedTimePercentage = (timeSpent * 100) / (estimatedTime * 1000);
 
         Log.d("updateTimeBackendAndGA", "timeSpentEstimatedTimePercentage = " + timeSpentEstimatedTimePercentage);

@@ -18,8 +18,10 @@ import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.ui.activity.BloggerDashboardActivity;
+import com.mycity4kids.utils.AppUtils;
 import com.squareup.picasso.Picasso;
 
 import org.apmem.tools.layouts.FlowLayout;
@@ -41,6 +43,7 @@ public class NewArticlesListingAdapter extends BaseAdapter {
     ArrayList<ArticleListingResult> articleDataModelsNew;
 
     private final float density;
+    private String listingType = "";
 
     public NewArticlesListingAdapter(Context pContext) {
 
@@ -59,6 +62,10 @@ public class NewArticlesListingAdapter extends BaseAdapter {
 
     public void addNewListData(ArrayList<ArticleListingResult> mParentingLists_new) {
         articleDataModelsNew.addAll(mParentingLists_new);
+    }
+
+    public void setListingType(String listingType) {
+        this.listingType = listingType;
     }
 
     @Override
@@ -212,11 +219,16 @@ public class NewArticlesListingAdapter extends BaseAdapter {
                 holder.txvAuthorName.setText(articleDataModelsNew.get(position).getUserName());
             }
 
-            if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getImageUrl().getMobileWebThumbnail())) {
-                Picasso.with(mContext).load(articleDataModelsNew.get(position).getImageUrl().getMobileWebThumbnail())
-                        .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
+            if ((Constants.KEY_MOMSPRESSO.equals(listingType))
+                    && (articleDataModelsNew.get(position).getImageUrl().getMobileWebThumbnail() == null || articleDataModelsNew.get(position).getImageUrl().getMobileWebThumbnail().endsWith("default.jpg"))) {
+                Picasso.with(mContext).load(AppUtils.getYoutubeThumbnailURLMomspresso(articleDataModelsNew.get(position).getVideoUrl())).placeholder(R.drawable.default_article).into(holder.articleImageView);
             } else {
-                holder.articleImageView.setBackgroundResource(R.drawable.default_article);
+                if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getImageUrl().getMobileWebThumbnail())) {
+                    Picasso.with(mContext).load(articleDataModelsNew.get(position).getImageUrl().getMobileWebThumbnail())
+                            .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
+                } else {
+                    holder.articleImageView.setBackgroundResource(R.drawable.default_article);
+                }
             }
 
             if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getProfilePic().getClientAppMin())) {

@@ -1,6 +1,7 @@
 package com.mycity4kids.retrofitAPIsInterfaces;
 
 import com.mycity4kids.models.response.BlogPageResponse;
+import com.mycity4kids.models.response.CityConfigResponse;
 import com.mycity4kids.models.response.ConfigResponse;
 import com.mycity4kids.models.response.UserTypeResponse;
 
@@ -17,4 +18,7 @@ public interface ConfigAPIs {
 
     @GET("v1/utilities/config/userType/")
     Call<UserTypeResponse> getAllUserType();
+
+    @GET("v1/utilities/config/cityType/")
+    Call<CityConfigResponse> getCityConfig();
 }

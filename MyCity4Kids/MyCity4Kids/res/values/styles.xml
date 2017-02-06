@@ -237,7 +237,7 @@
 
     <style name="FilterToobar" parent="AppTheme">
         <item name="android:textColorSecondary">@color/colorControlNormal</item>
-        <item name="actionMenuTextColor">@color/splashtopics.done.button</item>
+        <item name="actionMenuTextColor">@color/toolbar.menu_items</item>
         <!-- Set toolbar back arrow color -->
         <item name="colorControlNormal">@color/colorControlNormal</item>
         <item name="drawerArrowStyle">@style/WhiteDrawerIconStyle</item>
