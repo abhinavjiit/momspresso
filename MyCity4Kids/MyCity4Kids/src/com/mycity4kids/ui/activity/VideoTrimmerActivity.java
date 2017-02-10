@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.mycity4kids.R;
 import com.mycity4kids.gtmutils.Utils;
@@ -36,13 +37,19 @@ public class VideoTrimmerActivity extends AppCompatActivity implements OnTrimVid
         if (extraIntent != null) {
             path = extraIntent.getStringExtra(EXTRA_VIDEO_PATH);
         }
-        AppUtils.deleteDirectoryContent("MyCity4Kids");
+        if (path.contains(Environment.getExternalStorageDirectory() + "/MyCity4Kids/")) {
+            Log.d("TRIM Video", "Video Picked from Mycity folder");
+        } else {
+            AppUtils.deleteDirectoryContent("MyCity4Kids");
+        }
+
         //setting progressbar
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setCancelable(false);
         mProgressDialog.setMessage(getString(R.string.trimming_progress));
 
         mVideoTrimmer = ((K4LVideoTrimmer) findViewById(R.id.timeLine));
+
         if (mVideoTrimmer != null) {
             mVideoTrimmer.setMaxDuration(60);
             mVideoTrimmer.setOnTrimVideoListener(this);
@@ -55,6 +62,7 @@ public class VideoTrimmerActivity extends AppCompatActivity implements OnTrimVid
                 e.printStackTrace();
             }
 //            mVideoTrimmer.setVideoInformationVisibility(true);
+
         }
     }
 

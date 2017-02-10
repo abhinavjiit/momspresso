@@ -102,7 +102,7 @@ public class NotificationCenterListAdapter extends BaseAdapter {
         }
 
         String nType = SharedPrefUtils.getNotificationType(mContext, notificationList.get(position).getNotifType());
-        if (AppConstants.NOTIFICATION_TYPE_WEBVIEW.equals(nType)) {
+        if ((StringUtils.isNullOrEmpty(nType) && "0".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_WEBVIEW.equals(nType)) {
             holder.rootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -115,7 +115,7 @@ public class NotificationCenterListAdapter extends BaseAdapter {
                     mContext.startActivity(intent1);
                 }
             });
-        } else if (AppConstants.NOTIFICATION_TYPE_ARTICLE_DETAILS.equals(nType)) {
+        } else if ((StringUtils.isNullOrEmpty(nType) && "1".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_ARTICLE_DETAILS.equals(nType)) {
             holder.rootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -137,7 +137,7 @@ public class NotificationCenterListAdapter extends BaseAdapter {
                     mContext.startActivity(intent);
                 }
             });
-        } else if (AppConstants.NOTIFICATION_TYPE_VIDEO_DETAILS.equals(nType)) {
+        } else if ((StringUtils.isNullOrEmpty(nType) && "1".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_VIDEO_DETAILS.equals(nType)) {
             holder.rootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -151,7 +151,7 @@ public class NotificationCenterListAdapter extends BaseAdapter {
                     mContext.startActivity(intent);
                 }
             });
-        } else if (AppConstants.NOTIFICATION_TYPE_UPCOMING_EVENTS.equals(nType)) {
+        } else if ((StringUtils.isNullOrEmpty(nType) && "3".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_UPCOMING_EVENTS.equals(nType)) {
             holder.rootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -171,7 +171,7 @@ public class NotificationCenterListAdapter extends BaseAdapter {
                     mContext.startActivity(intent1);
                 }
             });
-        } else if (AppConstants.NOTIFICATION_TYPE_PROFILE.equals(nType)) {
+        } else if ((StringUtils.isNullOrEmpty(nType) && "2".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_PROFILE.equals(nType)) {
             holder.rootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
