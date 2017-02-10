@@ -55,7 +55,7 @@ public class AppUtils {
     public static String getYoutubeThumbnailURL(String youtubeUrl) {
         String youtubeId = extractYoutubeId(youtubeUrl);
         if (StringUtils.isNullOrEmpty(youtubeId)) {
-            return "";
+            return "empty";
         }
         String youtubeThumbUrl = "http://img.youtube.com/vi/" + youtubeId + "/0.jpg";
         return youtubeThumbUrl;

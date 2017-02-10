@@ -30,6 +30,7 @@ import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
 import com.mycity4kids.ui.activity.BloggerDashboardActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.LoadWebViewActivity;
+import com.mycity4kids.ui.activity.VlogsDetailActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -145,7 +146,7 @@ public class NotificationCenterListAdapter extends BaseAdapter {
                     notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
                     hitNotificationReadAPI(notificationList.get(position).getId());
                     notifyDataSetChanged();
-                    Intent intent = new Intent(mContext, ArticlesAndBlogsDetailsActivity.class);
+                    Intent intent = new Intent(mContext, VlogsDetailActivity.class);
                     intent.putExtra(Constants.VIDEO_ID, notificationList.get(position).getId());
                     intent.putExtra(Constants.AUTHOR_ID, notificationList.get(position).getAuthorId());
                     mContext.startActivity(intent);
