@@ -151,7 +151,7 @@ public class AppConstants {
     public static final Uri APP_BASE_URI = Uri.parse("android-app://com.mycity4kids/https/www.mycity4kids.com/");
     public static final Uri WEB_BASE_URL = Uri.parse("https://www.mycity4kids.com/");
 
-    public static final String ARTICLE_SHARE_URL = "https://wwww.mycity4kids.com/" + "parenting/";
+    public static final String ARTICLE_SHARE_URL = "https://www.mycity4kids.com/" + "parenting/";
     public static final String VIDEO_ARTICLE_SHARE_URL = "https://www.mycity4kids.com/" + "parenting/";
     public static final String VIDEO_UPLOAD_URL = LIVE_URL + "v1/media/videos/";
 //    public static final String ARTICLE_SHARE_URL = BASE_URL + "newparenting/";
@@ -481,6 +481,9 @@ public class AppConstants {
     public static final String VIDEO_TYPE_APPROVAL_CANCELLED = "APPROVAL CANCELLED";
     public static final String VIDEO_TYPE_PUBLISHED = "";
     public static final String VIDEO_TYPE_UNPUBLISHED = "UNPUBLISHED";
+
+    public static final String NOTIFICATION_STATUS_READ = "1";
+    public static final String NOTIFICATION_STATUS_UNREAD = "0";
 
     public static final int OTHERS_CITY_ID = 11;
     public static final String OTHERS_NEW_CITY_ID = "city-11";

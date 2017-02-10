@@ -49,6 +49,7 @@ public class Constants {
     public static final String PUSH_MODEL = "pushmodel";
     public static final String BLOG_SLUG = "blogSlug";
     public static final String TITLE_SLUG = "titleSlug";
+    public static final String NOTIFICATION_CENTER_ID = "notificationCenterId";
 
     public static boolean IS_RESET = false;
 

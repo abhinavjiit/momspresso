@@ -135,7 +135,7 @@ public class BusinessListingAdapterevent extends BaseAdapter implements Filterab
         if (view == null) {
             view = mInflator.inflate(R.layout.aa_new_listitem_business, null);
             holder = new ViewHolder();
-            holder.colorcode = (LinearLayout) view.findViewById(R.id.colorcodeevent);
+//            holder.colorcode = (LinearLayout) view.findViewById(R.id.colorcodeevent);
             holder.txvName = (TextView) view.findViewById(R.id.name);
             holder.txvAddress = (TextView) view.findViewById(R.id.addresstxt);
             holder.thumb = (ImageView) view.findViewById(R.id.thumbnail);
@@ -150,13 +150,8 @@ public class BusinessListingAdapterevent extends BaseAdapter implements Filterab
         } else {
             holder = (ViewHolder) view.getTag();
         }
-//        holder.thumbview.getLayoutParams().height = height / 6;
-//        holder.thumbview.getLayoutParams().width = height / 6;
-//        holder.thumb.getLayoutParams().height = height / 6;
-//        holder.thumb.getLayoutParams().width = height / 6;
 
         dummyParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0);
-
 
         try {
             startage = Float.parseFloat(filteredData.get(position).getStartagegroup());
@@ -193,23 +188,11 @@ public class BusinessListingAdapterevent extends BaseAdapter implements Filterab
             }
         }
         if (!kidslist.isEmpty()) {
-//            Iterator<Map.Entry<Float, String>> iterator = kidslist.entrySet().iterator();
-//            while (iterator.hasNext()) {
-//                Map.Entry pairs = (Map.Entry) iterator.next();
-//                float a = (float) pairs.getKey();
-//                String c = (String) pairs.getValue();
-//                if ((a >= startage) && (a <= endagegroup)) {
-//                    colorsvalue.add(c);
-//                }
-//
-//            }
-
             for (int i = 0; i < colorArray.size(); i++) {
                 if ((ageArray.get(i) >= startage) && (ageArray.get(i) <= endagegroup)) {
                     colorsvalue.add(colorArray.get(i).toString());
                 }
             }
-
         }
 
         if (colorsvalue.isEmpty()) {
@@ -230,15 +213,14 @@ public class BusinessListingAdapterevent extends BaseAdapter implements Filterab
             }
         }
 
-
-        holder.colorcode.removeAllViews();
-        for (int i = 0; i < colorsvalue.size(); i++) {
-            View dummyView = new View(mContext);
-            dummyView.setLayoutParams(dummyParams);
-            dummyView.setBackgroundColor(Color.parseColor(colorsvalue.get(i)));
-            dummyParams.weight = 1f;
-            holder.colorcode.addView(dummyView);
-        }
+//        holder.colorcode.removeAllViews();
+//        for (int i = 0; i < colorsvalue.size(); i++) {
+//            View dummyView = new View(mContext);
+//            dummyView.setLayoutParams(dummyParams);
+//            dummyView.setBackgroundColor(Color.parseColor(colorsvalue.get(i)));
+//            dummyParams.weight = 1f;
+//            holder.colorcode.addView(dummyView);
+//        }
 
         try {
             DecimalFormat df = new DecimalFormat("####0.0");
@@ -411,58 +393,6 @@ public class BusinessListingAdapterevent extends BaseAdapter implements Filterab
             //holder.txvDistance.setVisibility(View.GONE);
         }
         if (mBusinessOrEventType == Constants.EVENT_PAGE_TYPE) {
-            //	holder.txvDistance.setVisibility(View.GONE);
-            //holder.txvDate.setVisibility(View.VISIBLE);
-            /*holder.txvMonth.setVisibility(View.VISIBLE);
-            holder.txvAgeGroup.setVisibility(View.VISIBLE);
-			holder.axvAgeGroupRatio.setVisibility(View.VISIBLE);
-			
-			String[] startDateValues=getDateValues(mBusinessData.get(position).getStart_date());
-			String[]endDateValues=getDateValues(mBusinessData.get(position).getEnd_date());*/
-
-
-			/*Calendar cal = Calendar.getInstance();
-            cal.setTime(DateTimeUtils.stringToDate(mBusinessData.get(position).getStart_date()));
-			int startmonth = cal.get(Calendar.MONTH);
-			int startDay=cal.get(Calendar.DAY_OF_MONTH);
-			int startYear=cal.get(Calendar.YEAR);
-			cal.setTime(DateTimeUtils.stringToDate(mBusinessData.get(position).getEnd_date()));
-			int endMonth = cal.get(Calendar.MONTH);
-			int endtDay=cal.get(Calendar.DAY_OF_MONTH);
-			int endYear=cal.get(Calendar.YEAR);*/
-
-			/*if(startDateValues!=null && endDateValues!=null){
-                if(startmonth==endMonth && startDay==endtDay ){
-				    holder.txvDate.setText(startDateValues[0]+"      ");
-					holder.txvMonth.setText(startDateValues[1]+"      ");
-				}else if(startmonth==endMonth && startDay!=endtDay){
-					holder.txvDate.setText(startDateValues[0]+"-"+endDateValues[0]);
-					holder.txvMonth.setText(startDateValues[1]);
-				}
-				else{
-					holder.txvDate.setText(startDateValues[0]+"-"+endDateValues[0]);
-					holder.txvMonth.setText(startDateValues[1]+"  "+endDateValues[1]);
-				}
-				
-			}*/
-
-			/*if(isAgeGroupCorrect(mBusinessData,position))
-            {
-				if(mBusinessData.get(position).getEndagegroup().contains("+")){
-					holder.axvAgeGroupRatio.setText(Math.round(Float.parseFloat(mBusinessData.get(position).getStartagegroup()))+" "+mBusinessData.get(position).getEndagegroup());
-	
-				}else if(!mBusinessData.get(position).getStartagegroup().contains("+") && !mBusinessData.get(position).getEndagegroup().contains("+")){
-					holder.axvAgeGroupRatio.setText(Math.round(Float.parseFloat(mBusinessData.get(position).getStartagegroup()))+"-"+Math.round(Float.parseFloat(mBusinessData.get(position).getEndagegroup())));
-
-				}
-				
-			}*/
-            /**
-             * CR DONE- Deepanker
-             */
-            /*if(!StringUtils.isNullOrEmpty(mBusinessData.get(position).getAgegroup_text())){
-                holder.axvAgeGroupRatio.setText(mBusinessData.get(position).getAgegroup_text());
-			}*/
 
             filteredData.get(position).getEnd_date();
 
@@ -543,23 +473,6 @@ public class BusinessListingAdapterevent extends BaseAdapter implements Filterab
 
     }
 
-    String getTimeAmPm(String milliseconds) {
-
-        String time = "";
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(Long.parseLong(milliseconds));
-
-        time = cal.get(Calendar.HOUR) + " : " + cal.get(Calendar.MINUTE);
-
-        if (cal.get(Calendar.AM_PM) == 0)
-            time = "AM";
-        else
-            time = "PM";
-
-        return time;
-
-    }
-
     String getTime(String milliseconds) {
 
         SimpleDateFormat format = new SimpleDateFormat("hh:mma");
@@ -609,18 +522,6 @@ public class BusinessListingAdapterevent extends BaseAdapter implements Filterab
                 nlist.addAll(mBusinessData);
             }
 
-//			String filterableString ;
-//         Log.d("check","filterString "+filterString);
-//			for (int i = 0; i < count; i++) {
-//				filterableString = list.get(i).getName();
-//				if (filterString.equalsIgnoreCase((String)filterableString.subSequence(0,filterString.length()))){
-//					Activities activityModel=new Activities();
-//					activityModel.setId(list.get(i).getId());
-//					activityModel.setName(list.get(i).getName());
-//					nlist.add(activityModel);
-//				}
-//			}
-
             results.values = nlist;
             results.count = nlist.size();
 
@@ -630,53 +531,11 @@ public class BusinessListingAdapterevent extends BaseAdapter implements Filterab
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             filteredData = (ArrayList<BusinessDataListing>) results.values;
-            //  Log.d("check", "constraint " + constraint);
-            // Log.d("check", "results.values " + results.values);
             notifyDataSetChanged();
         }
 
     }
 
-    /*private String distance(String serverLat,String serverLong){
-        GPSTracker getCurrentLocation = new GPSTracker(mContext);
-        double _latitude = getCurrentLocation.getLatitude();
-        double _longitude = getCurrentLocation.getLongitude();
-        if(serverLat.contains("0.0") || serverLong.contains("0.0") || _latitude==0.0 ||_longitude==0.0){
-            return "";
-        }
-        double serverLatitude=Double.parseDouble(serverLat);
-        double serverLongitude=Double.parseDouble(serverLong);
-
-        DecimalFormat df = new DecimalFormat("####0.0");
-        return df.format(distance(_latitude,_longitude,serverLatitude,serverLongitude));
-    }*/
-    /*private double distance(double lat1, double lon1, double lat2, double lon2) {
-
-		  double theta = lon1 - lon2;
-	      double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
-	      dist = Math.acos(dist);
-	      dist = rad2deg(dist);
-	      dist = dist * 60 * 1.1515;
-	      if (unit == 'K') {
-	        dist = dist * 1.609344;
-	      } else if (unit == 'N') {
-	        dist = dist * 0.8684;
-	        }
-	      return (dist/0.621);
-	    }
-	:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-    ::  This function converts decimal degrees to radians             :
-    :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-    private double deg2rad(double deg) {
-      return (deg * Math.PI / 180.0);
-    }
-
-    :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-    ::  This function converts radians to decimal degrees             :
-    :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-    private double rad2deg(double rad) {
-      return (rad * 180.0 / Math.PI);
-    }*/
     class ViewHolder {
         ImageView thumb;
         TextView txvName;
@@ -685,45 +544,9 @@ public class BusinessListingAdapterevent extends BaseAdapter implements Filterab
         TextView txvtime;
         TextView txvDate;
         LinearLayout thumbview;
-        LinearLayout colorcode;
+        //        LinearLayout colorcode;
         ImageView statusimg;
         ImageView plusBtn;
-        /*TextView txvActivities;
-        TextView txvDistance;
-		TextView txvDate;
-		TextView txvMonth;
-		TextView txvAgeGroup;
-		TextView axvAgeGroupRatio;
-		TextView btnBookNow;*/
-    }
-
-    private String[] getDateValues(String date) {
-        String[] datesValue = null;
-        try {
-            String formatedDate = DateTimeUtils.changeDate(date);
-
-            datesValue = formatedDate.split(" ");
-        /*DateFormat format = new SimpleDateFormat("dd MMM yyyy",Locale.US);
-        cal.setTime(format.parse(formatedDate));*/
-        } catch (Exception e) {
-            return null;
-        }
-
-        return datesValue;
-
-    }
-
-    private boolean isAgeGroupCorrect(ArrayList<BusinessDataListing> mBusinessData2, int position) {
-        boolean isOK = false;
-        try {
-            if (!StringUtils.isNullOrEmpty(filteredData.get(position).getStartagegroup()) || !StringUtils.isNullOrEmpty(filteredData.get(position).getEndagegroup())) {
-                isOK = true;
-            }
-
-        } catch (Exception e) {
-            isOK = false;
-        }
-        return isOK;
     }
 
     public String getMonth(int month) {
@@ -731,32 +554,12 @@ public class BusinessListingAdapterevent extends BaseAdapter implements Filterab
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.MONTH, month);
-//        return new DateFormatSymbols().getMonths()[month];
         return (sdf_n.format(calendar.getTime())).toUpperCase();
     }
 
     public String getWeek(int weekday) {
         return new DateFormatSymbols().getWeekdays()[weekday];
     }
-
-//    public float getAge(Date dateOfBirth) {
-//        float age = 0;
-//        Calendar born = Calendar.getInstance();
-//        Calendar now = Calendar.getInstance();
-//        if (dateOfBirth != null) {
-//            now.setTime(new Date());
-//            born.setTime(dateOfBirth);
-//            if (born.after(now)) {
-//                throw new IllegalArgumentException("Can't be born in the future");
-//            }
-//            age = now.get(Calendar.YEAR) - born.get(Calendar.YEAR);
-//            if (now.get(Calendar.DAY_OF_YEAR) < born.get(Calendar.DAY_OF_YEAR)) {
-//                age -= 1;
-//            }
-//        }
-//
-//        return age;
-//    }
 
     public float getAge(Date dateOfBirth) {
         float age = 0;

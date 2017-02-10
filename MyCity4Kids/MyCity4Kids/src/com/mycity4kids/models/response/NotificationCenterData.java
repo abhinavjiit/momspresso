@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class NotificationCenterData {
     private ArrayList<NotificationCenterResult> result;
     private Pagination pagination;
+    private String total;
 
     public ArrayList<NotificationCenterResult> getResult() {
         return result;
@@ -23,6 +24,14 @@ public class NotificationCenterData {
 
     public void setPagination(Pagination pagination) {
         this.pagination = pagination;
+    }
+
+    public String getTotal() {
+        return total;
+    }
+
+    public void setTotal(String total) {
+        this.total = total;
     }
 
     public class Pagination {

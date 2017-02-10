@@ -119,14 +119,16 @@ public class TopicsFilterActivity extends BaseActivity {
                 Topics allTopics = new Topics("all", "All", false, firstList, null, null);
                 allTopics.setDisplay_name("all");
 
-                Topics bestInyoutCity = new Topics("bestInyourCity", "Best of " + SharedPrefUtils.getCurrentCityModel(this).getName(), false, new ArrayList<Topics>(), null, null);
-                bestInyoutCity.setDisplay_name("Best of " + SharedPrefUtils.getCurrentCityModel(this).getName());
-
                 topicList.add(allTopics);
-                topicList.add(bestInyoutCity);
-
                 topicsMap.put(allTopics, firstList);
-                topicsMap.put(bestInyoutCity, new ArrayList<Topics>());
+
+                if (SharedPrefUtils.getCurrentCityModel(this).getId() != AppConstants.OTHERS_CITY_ID) {
+                    Topics bestInyoutCity = new Topics("bestInyourCity", "Best of " + SharedPrefUtils.getCurrentCityModel(this).getName(), false, new ArrayList<Topics>(), null, null);
+                    bestInyoutCity.setDisplay_name("Best of " + SharedPrefUtils.getCurrentCityModel(this).getName());
+                    topicList.add(bestInyoutCity);
+                    topicsMap.put(bestInyoutCity, new ArrayList<Topics>());
+                }
+
                 //Prepare structure for multi-expandable listview.
                 for (int i = 0; i < responseData.getData().size(); i++) {
                     ArrayList<Topics> tempUpList = new ArrayList<>();

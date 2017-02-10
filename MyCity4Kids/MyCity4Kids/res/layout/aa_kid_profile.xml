@@ -48,7 +48,8 @@
             android:drawableBottom="@drawable/color_2xxhdpi"
             android:drawablePadding="2dp"
             android:hint="@string/colour"
-            android:textColor="@color/black_color" />
+            android:textColor="@color/black_color"
+            android:visibility="gone" />
 
     </RelativeLayout>
 

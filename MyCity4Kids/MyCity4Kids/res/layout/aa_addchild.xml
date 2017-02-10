@@ -85,6 +85,7 @@
                 android:drawableBottom="@drawable/color_2xxhdpi"
                 android:drawablePadding="5dp"
                 android:hint="@string/colour"
+                android:visibility="gone"
                 android:textColor="@color/black_color" />
 
 

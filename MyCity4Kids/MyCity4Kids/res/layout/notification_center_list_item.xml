@@ -3,16 +3,25 @@
     android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/notification_center.unread.bg"
     android:paddingBottom="10dp"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
     android:paddingTop="10dp">
+
+    <ImageView
+        android:id="@+id/notificationImageView"
+        android:layout_width="66dp"
+        android:layout_height="50dp"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/default_article" />
 
     <TextView
         android:id="@+id/notificationTitleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@+id/notificationDateTextView"
+        android:layout_toRightOf="@+id/notificationImageView"
         android:fontFamily="sans-serif"
         android:text="mycity4kids"
         android:textColor="@color/black_color"
@@ -24,6 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/notificationTitleTextView"
         android:layout_marginTop="2dp"
+        android:layout_toRightOf="@+id/notificationImageView"
         android:ellipsize="end"
         android:fontFamily="sans-serif-light"
         android:text="Review Title"

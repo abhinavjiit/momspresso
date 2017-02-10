@@ -249,6 +249,21 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen 
                 .show();
     }
 
+    public void showOkDialog(String title, String message, final OnButtonClicked onButtonClicked) {
+        new AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
+                .setTitle(title)
+                .setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // continue with delete
+                        dialog.dismiss();
+                        onButtonClicked.onButtonCLick(0);
+                    }
+                })
+                .show();
+    }
+
     public void showUpgradeAppAlertDialog(String title, String message, final OnButtonClicked onButtonClicked) {
         new AlertDialog.Builder(this)
                 .setTitle(title)

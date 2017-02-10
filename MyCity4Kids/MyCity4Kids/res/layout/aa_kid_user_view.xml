@@ -9,7 +9,8 @@
         android:id="@+id/view_colorCode"
         android:layout_width="10dp"
         android:layout_height="match_parent"
-        android:background="@color/red_drawer_selected"></View>
+        android:background="@color/red_drawer_selected"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/name"

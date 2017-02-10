@@ -10,9 +10,9 @@
 
     <item
         android:id="@+id/notification_center"
-        android:icon="@drawable/notfication_bell"
         android:orderInCategory="100"
         android:title="@+id/notification"
+        app:actionLayout="@layout/badge_layout"
         app:showAsAction="always" />
 
     <item

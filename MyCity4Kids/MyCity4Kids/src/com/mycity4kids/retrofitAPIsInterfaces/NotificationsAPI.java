@@ -1,6 +1,7 @@
 package com.mycity4kids.retrofitAPIsInterfaces;
 
 import com.mycity4kids.models.request.AddCommentRequest;
+import com.mycity4kids.models.request.NotificationReadRequest;
 import com.mycity4kids.models.request.NotificationSettingsRequest;
 import com.mycity4kids.models.response.AddCommentResponse;
 import com.mycity4kids.models.response.ArticleDetailResponse;
@@ -31,4 +32,10 @@ public interface NotificationsAPI {
     Call<NotificationCenterListResponse> getNotificationCenterList(@Path("userId") String userId,
                                                                    @Query("limit") int limit,
                                                                    @Query("pagination") String pagination);
+
+    @GET("/v1/notifications/centre/{userId}")
+    Call<NotificationCenterListResponse> getUnreadNotificationCount(@Path("userId") String userId);
+
+    @PUT("/v1/notifications/centre/")
+    Call<NotificationCenterListResponse> markNotificationAsRead(@Body NotificationReadRequest body);
 }

@@ -54,7 +54,7 @@ import retrofit2.Retrofit;
 /**
  * Created by anshul on 2/4/16.
  */
-public class ChangeCityFragment extends BaseFragment {
+public class ChangeCityFragment extends BaseFragment implements ChangeCityAdapter.IOtherCity {
 
     private ListView cityListView;
     RadioGroup radioGroup;
@@ -117,7 +117,7 @@ public class ChangeCityFragment extends BaseFragment {
                         }
                     }
 
-                    final ChangeCityAdapter adapter = new ChangeCityAdapter(getActivity(), mDatalist);
+                    final ChangeCityAdapter adapter = new ChangeCityAdapter(getActivity(), mDatalist, ChangeCityFragment.this);
                     cityListView.setAdapter(adapter);
                 } else {
                 }
@@ -270,4 +270,129 @@ public class ChangeCityFragment extends BaseFragment {
             }
         });
     }
+
+    @Override
+    public void onOtherCityAdd(final String cityName) {
+        final VersionApiModel versionApiModel = SharedPrefUtils.getSharedPrefVersion(getActivity());
+        final ConfigurationController _controller = new ConfigurationController(getActivity(), this);
+        if (null == mDatalist || mDatalist.isEmpty()) {
+            ToastUtils.showToast(getActivity(), getString(R.string.change_city_fetch_available_cities));
+            return;
+        }
+        showProgressDialog(getString(R.string.please_wait));
+        for (int i = 0; i < mDatalist.size(); i++) {
+            if (mDatalist.get(i).isSelected()) {
+                _latitude = mDatalist.get(i).getLat();
+                _longitude = mDatalist.get(i).getLon();
+            }
+        }
+        new NearMyCity(getActivity(), _latitude, _longitude, new NearMyCity.FetchCity() {
+
+            @Override
+            public void nearCity(City cityModel) {
+                int cityId = cityModel.getCityId();
+
+                /**
+                 * save current city in shared preference
+                 */
+                MetroCity model = new MetroCity();
+                model.setId(cityModel.getCityId());
+                model.setName(cityName);
+                model.setNewCityId(cityModel.getNewCityId());
+
+                SharedPrefUtils.setCurrentCityModel(getActivity(), model);
+                SharedPrefUtils.setChangeCityFlag(getActivity(), true);
+
+                if (cityId > 0) {
+                    versionApiModel.setCityId(cityId);
+                    mFirebaseAnalytics.setUserProperty("CityId", cityId + "");
+                    /**
+                     * get current version code ::
+                     */
+                    PackageInfo pInfo = null;
+                    try {
+                        pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+
+                    } catch (PackageManager.NameNotFoundException e) {
+                        e.printStackTrace();
+                    }
+
+                    String version = pInfo.versionName;
+                    if (!StringUtils.isNullOrEmpty(version)) {
+                        versionApiModel.setAppUpdateVersion(version);
+                    }
+
+                    if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
+                        ToastUtils.showToast(getActivity(), getString(R.string.error_network));
+                        return;
+
+                    }
+                    _controller.getData(AppConstants.CONFIGURATION_REQUEST, versionApiModel);
+
+                    UpdateUserDetailsRequest updateUserDetail = new UpdateUserDetailsRequest();
+                    updateUserDetail.setAttributeName("cityId");
+                    updateUserDetail.setAttributeType("S");
+                    updateUserDetail.setAttributeValue("" + cityModel.getCityId());
+                    Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+                    UserAttributeUpdateAPI userAttributeUpdateAPI = retrofit.create(UserAttributeUpdateAPI.class);
+                    Call<UserDetailResponse> call = userAttributeUpdateAPI.updateCity(updateUserDetail);
+                    call.enqueue(new Callback<UserDetailResponse>() {
+                        @Override
+                        public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
+                            removeProgressDialog();
+                            if (response == null || response.body() == null) {
+                                Toast.makeText(getActivity(), getString(R.string.went_wrong), Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                            UserDetailResponse responseData = (UserDetailResponse) response.body();
+                            if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                                Toast.makeText(getActivity(), "Successfully updated!", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(getActivity(), PushTokenService.class);
+                                getActivity().startService(intent);
+                            } else {
+                                Toast.makeText(getActivity(), responseData.getReason(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<UserDetailResponse> call, Throwable t) {
+                            removeProgressDialog();
+                            Toast.makeText(getActivity(), getString(R.string.went_wrong), Toast.LENGTH_SHORT).show();
+                            Crashlytics.logException(t);
+                            Log.d("MC4kException", Log.getStackTraceString(t));
+                        }
+                    });
+
+                    UpdateUserDetailsRequest addOtherCityNameRequest = new UpdateUserDetailsRequest();
+                    addOtherCityNameRequest.setCityId("" + cityModel.getCityId());
+                    addOtherCityNameRequest.setCityName(cityName);
+                    Call<UserDetailResponse> callNew = userAttributeUpdateAPI.updateCityAndKids(addOtherCityNameRequest);
+                    callNew.enqueue(addOtherCityNameResponseCallback);
+                }
+            }
+        });
+    }
+
+    Callback<UserDetailResponse> addOtherCityNameResponseCallback = new Callback<UserDetailResponse>() {
+        @Override
+        public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
+            Log.d("SUCCESS", "" + response);
+            if (response == null || response.body() == null) {
+                return;
+            }
+            try {
+
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4KException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<UserDetailResponse> call, Throwable t) {
+            Log.d("MC4kException", Log.getStackTraceString(t));
+            Crashlytics.logException(t);
+        }
+    };
 }

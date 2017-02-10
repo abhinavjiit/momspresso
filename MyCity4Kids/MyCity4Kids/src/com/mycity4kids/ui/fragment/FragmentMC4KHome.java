@@ -54,6 +54,7 @@ import com.mycity4kids.models.businesslist.BusinessDataListing;
 import com.mycity4kids.models.businesslist.BusinessListResponse;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
+import com.mycity4kids.models.response.NotificationCenterListResponse;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.models.response.VlogsListingResponse;
 import com.mycity4kids.newmodels.AppointmentMappingModel;
@@ -62,6 +63,7 @@ import com.mycity4kids.newmodels.TaskMappingModel;
 import com.mycity4kids.newmodels.VolleyBaseResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.EventsAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.NotificationsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.activity.ActivityCreateAppointment;
@@ -284,6 +286,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         hitHindiArticlesListing();
         hitInYourCityListingApi();
         hitFunnyVideosListingApi();
+        updateUnreadNotificationCount();
         businessAdapter = new BusinessListingAdapterevent(getActivity());
         mBusinessDataListings = new ArrayList<>();
         eventListView.setAdapter(businessAdapter);
@@ -943,6 +946,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
             view.findViewById(R.id.eventsss).setVisibility(View.GONE);
         }
 
+        updateUnreadNotificationCount();
         Calendar calendar = Calendar.getInstance();
         tableAppointment = new TableAppointmentData(BaseApplication.getInstance());
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -956,6 +960,14 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void updateUnreadNotificationCount() {
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        NotificationsAPI notificationsAPI = retrofit.create(NotificationsAPI.class);
+
+        Call<NotificationCenterListResponse> filterCall = notificationsAPI.getUnreadNotificationCount(userId);
+        filterCall.enqueue(unreadNotificationCountResponseCallback);
     }
 
 
@@ -1894,4 +1906,33 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
             }
         }
     }
+
+    private Callback<NotificationCenterListResponse> unreadNotificationCountResponseCallback = new Callback<NotificationCenterListResponse>() {
+        @Override
+        public void onResponse(Call<NotificationCenterListResponse> call, retrofit2.Response<NotificationCenterListResponse> response) {
+            if (response == null || response.body() == null) {
+                ((DashboardActivity) getActivity()).showToast("Something went wrong from server");
+                return;
+            }
+
+            try {
+                NotificationCenterListResponse responseData = (NotificationCenterListResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    ((DashboardActivity) getActivity()).updateUnreadNotificationCount(responseData.getData().getTotal());
+                } else {
+                    ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4KException", Log.getStackTraceString(e));
+                ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<NotificationCenterListResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4KException", Log.getStackTraceString(t));
+        }
+    };
 }

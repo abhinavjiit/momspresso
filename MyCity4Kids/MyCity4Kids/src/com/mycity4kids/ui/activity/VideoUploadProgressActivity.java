@@ -235,11 +235,23 @@ public class VideoUploadProgressActivity extends BaseActivity {
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     setStatus("Upload finished!");
                     setPauseButtonEnabled(false);
-                    showToast("Your video has been succesfully uploaded and sent for moderation. We will notify you once it is published.");
-                    Intent intent = new Intent(VideoUploadProgressActivity.this, DashboardActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                    finish();
+//                    showToast("Your video has been succesfully uploaded and sent for moderation. We will notify you once it is published.");
+
+                    showOkDialog("Video Uploaded Successfully", "Video has been successfully uploaded and send for moderation. We will notifiy you once moderated",
+                            new OnButtonClicked() {
+                                @Override
+                                public void onButtonCLick(int buttonId) {
+                                    Intent intent = new Intent(VideoUploadProgressActivity.this, DashboardActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            });
+
+//                    Intent intent = new Intent(VideoUploadProgressActivity.this, DashboardActivity.class);
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                    startActivity(intent);
+//                    finish();
                 } else {
                     setStatus("Uploading Failed.");
                     showToast(responseData.getReason());

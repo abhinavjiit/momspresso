@@ -18,6 +18,7 @@ public class NotificationCenterResult {
     private String notifType;
     private String sharingUrl;
     private String url;
+    private String thumbNail;
 
     public String getId() {
         return id;
@@ -129,5 +130,13 @@ public class NotificationCenterResult {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getThumbNail() {
+        return thumbNail;
+    }
+
+    public void setThumbNail(String thumbNail) {
+        this.thumbNail = thumbNail;
     }
 }

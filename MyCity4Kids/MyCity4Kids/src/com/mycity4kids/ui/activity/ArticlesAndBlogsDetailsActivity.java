@@ -74,6 +74,7 @@ import com.mycity4kids.models.request.AddCommentRequest;
 import com.mycity4kids.models.request.ArticleDetailRequest;
 import com.mycity4kids.models.request.DeleteBookmarkRequest;
 import com.mycity4kids.models.request.FollowUnfollowUserRequest;
+import com.mycity4kids.models.request.NotificationReadRequest;
 import com.mycity4kids.models.request.RecommendUnrecommendArticleRequest;
 import com.mycity4kids.models.request.UpdateViewCountRequest;
 import com.mycity4kids.models.response.AddBookmarkResponse;
@@ -86,6 +87,7 @@ import com.mycity4kids.models.response.ArticleRecommendationStatusResponse;
 import com.mycity4kids.models.response.FBCommentResponse;
 import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
+import com.mycity4kids.models.response.NotificationCenterListResponse;
 import com.mycity4kids.models.response.ProfilePic;
 import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
 import com.mycity4kids.models.response.ViewCountResponse;
@@ -97,6 +99,7 @@ import com.mycity4kids.observablescrollview.ScrollState;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.NotificationsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.CircleTransformation;
 import com.mycity4kids.ui.fragment.CommentRepliesDialogFragment;
@@ -202,6 +205,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     private String titleSlug;
     private String commentType = "db";
     private String pagination = "";
+    //    private String notificationCenterId = "";
     Rect scrollBounds;
     TrackArticleReadTime trackArticleReadTime;
     int estimatedReadTime = 0;
@@ -353,7 +357,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 authorId = bundle.getString(Constants.AUTHOR_ID, "");
                 blogSlug = bundle.getString(Constants.BLOG_SLUG);
                 titleSlug = bundle.getString(Constants.TITLE_SLUG);
-
+//                notificationCenterId = bundle.getString(Constants.NOTIFICATION_CENTER_ID, "");
                 if (!ConnectivityUtils.isNetworkEnabled(this)) {
                     showToast(getString(R.string.error_network));
                     return;
@@ -361,6 +365,11 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 showProgressDialog(getString(R.string.fetching_data));
                 Retrofit retro = BaseApplication.getInstance().getRetrofit();
                 articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
+
+//                if (!StringUtils.isNullOrEmpty(notificationCenterId)) {
+//                    hitNotificationReadAPI();
+//                }
+
                 hitArticleDetailsS3API();
                 getViewCountAPI();
                 hitRecommendedStatusAPI();
@@ -397,6 +406,15 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         videoWebView.onPause();
     }
 
+//    private void hitNotificationReadAPI() {
+//        NotificationReadRequest notificationReadRequest = new NotificationReadRequest();
+//        notificationReadRequest.setNotifId(notificationCenterId);
+//
+//        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+//        NotificationsAPI notificationsAPI = retrofit.create(NotificationsAPI.class);
+//        Call<NotificationCenterListResponse> call = notificationsAPI.markNotificationAsRead(notificationReadRequest);
+//        call.enqueue(markNotificationReadResponseCallback);
+//    }
 
     private void hitArticleDetailsS3API() {
         Call<ArticleDetailResult> call = articleDetailsAPI.getArticleDetailsFromS3(articleId);
@@ -683,7 +701,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     } else {
                         shareUrl = deepLinkURL;
                     }
-                }else if (AppConstants.USER_TYPE_FEATURED.equals(detailData.getUserType())) {
+                } else if (AppConstants.USER_TYPE_FEATURED.equals(detailData.getUserType())) {
                     author_type.setText(AppConstants.AUTHOR_TYPE_FEATURED.toUpperCase());
                     author_type.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_featured));
                     if (StringUtils.isNullOrEmpty(deepLinkURL)) {
@@ -1341,6 +1359,32 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             getArticleDetailsWebserviceAPI();
         }
     };
+
+//    private Callback<NotificationCenterListResponse> markNotificationReadResponseCallback = new Callback<NotificationCenterListResponse>() {
+//        @Override
+//        public void onResponse(Call<NotificationCenterListResponse> call, retrofit2.Response<NotificationCenterListResponse> response) {
+//            if (response == null || response.body() == null) {
+//                return;
+//            }
+//            try {
+//                NotificationCenterListResponse responseData = (NotificationCenterListResponse) response.body();
+//                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+//
+//                } else {
+//
+//                }
+//            } catch (Exception e) {
+//                Crashlytics.logException(e);
+//                Log.d("MC4kException", Log.getStackTraceString(e));
+//            }
+//        }
+//
+//        @Override
+//        public void onFailure(Call<NotificationCenterListResponse> call, Throwable t) {
+//            Crashlytics.logException(t);
+//            Log.d("MC4kException", Log.getStackTraceString(t));
+//        }
+//    };
 
     private Callback<ViewCountResponse> getViewCountResponseCallback = new Callback<ViewCountResponse>() {
         @Override

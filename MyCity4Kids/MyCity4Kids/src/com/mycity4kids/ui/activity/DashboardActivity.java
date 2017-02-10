@@ -14,6 +14,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
@@ -26,6 +28,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -37,6 +40,7 @@ import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.gson.Gson;
+import com.joanzapata.iconify.widget.IconButton;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -164,7 +168,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private int hot_number = 2;
     private TextView ui_hot = null;
     private TextView itemMessagesBadgeTextView;
-    private RelativeLayout badgeLayout;
+    private FrameLayout badgeLayout;
 
     // The onNewIntent() is overridden to get and resolve the data for deep linking
     @Override
@@ -959,25 +963,32 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         final Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
         if (topFragment instanceof FragmentMC4KHome) {
             getMenuInflater().inflate(R.menu.menu_home, menu);
-//            MenuItem itemMessages = menu.findItem(R.id.menu_messages);
-//
-//            badgeLayout = (RelativeLayout) MenuItemCompat.getActionView(itemMessages);
-////            final View menu_hotlist = MenuItemCompat.getActionView(itemMessages);
-//            itemMessagesBadgeTextView = (TextView) badgeLayout.findViewById(R.id.badge_textView);
-//            itemMessagesBadgeTextView.setVisibility(View.GONE); // initially hidden
-//
-//            IconButton iconButtonMessages = (IconButton) badgeLayout.findViewById(R.id.badge_icon_button);
-////            iconButtonMessages.setText("{fa-envelope}");
-//            iconButtonMessages.setTextColor(ContextCompat.getColor(this, R.color.grey));
-//
-//            iconButtonMessages.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    Log.d("NNNNNN------", "PPPPPPPPPP");
-//                    Intent wintent = new Intent(getApplicationContext(), NotificationCenterListActivity.class);
-//                    startActivity(wintent);
-//                }
-//            });
+            MenuItem itemMessages = menu.findItem(R.id.notification_center);
+
+            badgeLayout = (FrameLayout) MenuItemCompat.getActionView(itemMessages);
+            String notifCount = "";
+            if (null != itemMessagesBadgeTextView && itemMessagesBadgeTextView.getText() != null) {
+                notifCount = itemMessagesBadgeTextView.getText().toString();
+            }
+            itemMessagesBadgeTextView = (TextView) badgeLayout.findViewById(R.id.badge_textView);
+            itemMessagesBadgeTextView.setText(notifCount);
+
+            if (StringUtils.isNullOrEmpty(itemMessagesBadgeTextView.getText().toString())) {
+                itemMessagesBadgeTextView.setVisibility(View.GONE); // initially hidden
+            }
+
+            IconButton iconButtonMessages = (IconButton) badgeLayout.findViewById(R.id.badge_icon_button);
+//            iconButtonMessages.setText("{fa-envelope}");
+            iconButtonMessages.setTextColor(ContextCompat.getColor(this, R.color.grey));
+
+            iconButtonMessages.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.d("NNNNNN------", "PPPPPPPPPP");
+                    Intent wintent = new Intent(getApplicationContext(), NotificationCenterListActivity.class);
+                    startActivity(wintent);
+                }
+            });
         } else if (topFragment instanceof FragmentCityForKids) {
 
         } else if (topFragment instanceof FragmentCalender) {
@@ -1048,6 +1059,16 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             getMenuInflater().inflate(R.menu.kidsresource_listing, menu);
         }
         return true;
+    }
+
+    public void updateUnreadNotificationCount(String unreadNotifCount) {
+        if (StringUtils.isNullOrEmpty(unreadNotifCount) || "0".equals(unreadNotifCount)) {
+            itemMessagesBadgeTextView.setVisibility(View.GONE);
+        } else {
+            itemMessagesBadgeTextView.setVisibility(View.VISIBLE);
+            itemMessagesBadgeTextView.setText(unreadNotifCount);
+        }
+
     }
 
     private void onHotlistSelected() {
