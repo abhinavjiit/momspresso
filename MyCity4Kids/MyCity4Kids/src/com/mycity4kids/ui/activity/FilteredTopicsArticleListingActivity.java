@@ -1,9 +1,12 @@
 package com.mycity4kids.ui.activity;
 
 import android.accounts.NetworkErrorException;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -13,6 +16,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
@@ -37,6 +41,8 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.FollowTopics;
+import com.mycity4kids.models.Topics;
+import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse;
@@ -45,6 +51,7 @@ import com.mycity4kids.newmodels.FollowUnfollowCategoriesRequest;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.NewArticlesListingAdapter;
+import com.mycity4kids.ui.fragment.FilterTopicsDialogFragment;
 
 import org.json.JSONObject;
 
@@ -56,6 +63,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -66,7 +75,7 @@ import retrofit2.Retrofit;
  * @author Hemant Parmar
  */
 
-public class FilteredTopicsArticleListingActivity extends BaseActivity implements OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class FilteredTopicsArticleListingActivity extends BaseActivity implements OnClickListener, SwipeRefreshLayout.OnRefreshListener, FilterTopicsDialogFragment.OnTopicsSelectionComplete {
 
     NewArticlesListingAdapter articlesListingAdapter;
     ListView listView;
@@ -82,6 +91,8 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
     private ProgressBar progressBar;
     boolean isLastPageReached = false;
     private TextView noBlogsTextView;
+    private TextView sortTextView;
+    private TextView filterTextView;
     private String selectedTopics;
     private Toolbar mToolbar;
     private int limit = 15;
@@ -92,6 +103,9 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
     private String followingTopicStatus = "0";
     private int isTopicFollowed;
     private boolean showFollowUnfollowOption;
+    private RelativeLayout recommendFloatingActionButton;
+    private ArrayList<Topics> allTopicsList;
+    private HashMap<Topics, List<Topics>> allTopicsMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,10 +119,18 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         listView = (ListView) findViewById(R.id.scroll);
         mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
         noBlogsTextView = (TextView) findViewById(R.id.noBlogsTextView);
+        sortTextView = (TextView) findViewById(R.id.sortTextView);
+        filterTextView = (TextView) findViewById(R.id.filterTextView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely));
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         frameLayout = (FrameLayout) findViewById(R.id.frame_layout);
+        recommendFloatingActionButton = (RelativeLayout) findViewById(R.id.bottomOptionMenu);
+
+        findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely));
+
+        sortTextView.setOnClickListener(this);
+        filterTextView.setOnClickListener(this);
+
         frameLayout.getBackground().setAlpha(0);
 
         fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
@@ -172,9 +194,28 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         });
 
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            private int mLastFirstVisibleItem;
+            private boolean mIsScrollingUp;
+
             @Override
-            public void onScrollStateChanged(AbsListView absListView, int i) {
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                final ListView lw = listView;
+
+                if (view.getId() == lw.getId()) {
+                    final int currentFirstVisibleItem = lw.getFirstVisiblePosition();
+
+                    if (currentFirstVisibleItem > mLastFirstVisibleItem) {
+                        mIsScrollingUp = false;
+                        showToolbar();
+                    } else if (currentFirstVisibleItem < mLastFirstVisibleItem) {
+                        hideToolbar();
+                        mIsScrollingUp = true;
+                    }
+
+                    mLastFirstVisibleItem = currentFirstVisibleItem;
+                }
             }
+
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
@@ -295,6 +336,8 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
 
     }
 
+    ArrayList<Topics> subAndSubSubTopicsList;
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -314,7 +357,56 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                 nextPageNumber = 1;
                 hitFilteredTopicsArticleListingApi(1);
                 break;
+            case R.id.sortTextView:
+//                fabMenu.collapse();
+//                articleDataModelsNew.clear();
+//                articlesListingAdapter.notifyDataSetChanged();
+//                sortType = 1;
+//                nextPageNumber = 1;
+//                hitFilteredTopicsArticleListingApi(1);
+                break;
+            case R.id.filterTextView:
+
+                try {
+                    allTopicsList = BaseApplication.getTopicList();
+                    allTopicsMap = BaseApplication.getTopicsMap();
+
+                    if (allTopicsList == null || allTopicsMap == null) {
+                        FileInputStream fileInputStream = openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                        String fileContent = convertStreamToString(fileInputStream);
+                        TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
+                        createTopicsData(res);
+                    }
+
+                    getCurrentMainTopic();
+                    openFilterDialog();
+                } catch (FileNotFoundException e) {
+                    Crashlytics.logException(e);
+                    Log.d("FileNotFoundException", Log.getStackTraceString(e));
+                    Retrofit retro = BaseApplication.getInstance().getRetrofit();
+                    final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
+
+                    Call<ResponseBody> call = topicsAPI.downloadCategoriesJSON();
+                    call.enqueue(downloadCategoriesJSONCallback);
+                }
+
+//                fabMenu.collapse();
+//                articleDataModelsNew.clear();
+//                articlesListingAdapter.notifyDataSetChanged();
+//                sortType = 1;
+//                nextPageNumber = 1;
+//                hitFilteredTopicsArticleListingApi(1);
+                break;
         }
+    }
+
+    private void openFilterDialog() {
+        FilterTopicsDialogFragment filterTopicsDialogFragment = new FilterTopicsDialogFragment();
+        Bundle args = new Bundle();
+        args.putParcelableArrayList("topicsList", subAndSubSubTopicsList);
+        filterTopicsDialogFragment.setArguments(args);
+        FragmentManager fm = getSupportFragmentManager();
+        filterTopicsDialogFragment.show(fm, "Filter");
     }
 
     @Override
@@ -350,7 +442,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
 
             Call<ResponseBody> call = topicsAPI.downloadCategoriesJSON();
-            call.enqueue(downloadCategoriesJSONCallback);
+            call.enqueue(downloadFollowTopicsJSONCallback);
         }
 
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
@@ -375,6 +467,94 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
     }
 
     Callback<ResponseBody> downloadCategoriesJSONCallback = new Callback<ResponseBody>() {
+        @Override
+        public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+            progressBar.setVisibility(View.GONE);
+            if (response == null || response.body() == null) {
+                showToast("Something went wrong from server");
+                return;
+            }
+            try {
+                String resData = new String(response.body().bytes());
+                JSONObject jsonObject = new JSONObject(resData);
+
+                Retrofit retro = BaseApplication.getInstance().getRetrofit();
+                final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
+
+                Call<ResponseBody> caller = topicsAPI.downloadFileWithDynamicUrlSync(jsonObject.getJSONObject("data").getJSONObject("result").getJSONObject("category").getString("location"));
+
+                caller.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                        boolean writtenToDisk = writeResponseBodyToDisk(response.body());
+                        Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
+
+                        try {
+                            Topics t = new Topics();
+                            t.setId("");
+                            t.setDisplay_name("");
+                            SharedPrefUtils.setMomspressoCategory(FilteredTopicsArticleListingActivity.this, t);
+
+                            FileInputStream fileInputStream = openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                            String fileContent = convertStreamToString(fileInputStream);
+                            TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
+                            createTopicsData(res);
+                            getCurrentMainTopic();
+                            openFilterDialog();
+                        } catch (FileNotFoundException e) {
+                            Crashlytics.logException(e);
+                            Log.d("FileNotFoundException", Log.getStackTraceString(e));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Crashlytics.logException(t);
+                        Log.d("MC4KException", Log.getStackTraceString(t));
+                    }
+                });
+            } catch (Exception e) {
+                progressBar.setVisibility(View.GONE);
+                Crashlytics.logException(e);
+                Log.d("MC4KException", Log.getStackTraceString(e));
+                showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<ResponseBody> call, Throwable t) {
+            progressBar.setVisibility(View.GONE);
+            showToast(getString(R.string.went_wrong));
+            Crashlytics.logException(t);
+            Log.d("MC4KException", Log.getStackTraceString(t));
+        }
+    };
+
+    private void getCurrentMainTopic() {
+        Topics parentCategoryTopic;
+        for (int i = 0; i < allTopicsList.size(); i++) {
+            subAndSubSubTopicsList = new ArrayList<>();
+            for (int j = 0; j < allTopicsList.get(i).getChild().size(); j++) {
+                if (selectedTopics.equals(allTopicsList.get(i).getChild().get(j).getId())) {
+                    //selected topic is Subcategory with no subsubcategories
+                    parentCategoryTopic = allTopicsList.get(i);
+                    subAndSubSubTopicsList.addAll(allTopicsList.get(i).getChild());
+                    return;
+                }
+                for (int k = 0; k < allTopicsList.get(i).getChild().get(j).getChild().size(); k++) {
+                    if (selectedTopics.equals(allTopicsList.get(i).getChild().get(j).getChild().get(k).getId())) {
+                        //selected topic is SubSubcategory
+                        parentCategoryTopic = allTopicsList.get(i);
+                        subAndSubSubTopicsList.addAll(allTopicsList.get(i).getChild());
+                        return;
+                    }
+                }
+            }
+        }
+
+    }
+
+    Callback<ResponseBody> downloadFollowTopicsJSONCallback = new Callback<ResponseBody>() {
         @Override
         public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
             progressBar.setVisibility(View.GONE);
@@ -603,4 +783,92 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         return sb.toString();
     }
 
+    private void hideToolbar() {
+
+        recommendFloatingActionButton.animate()
+                .translationY(recommendFloatingActionButton.getHeight())
+                .setInterpolator(new LinearInterpolator())
+                .setDuration(180)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        getSupportActionBar().hide();
+                    }
+                });
+    }
+
+    private void showToolbar() {
+        recommendFloatingActionButton.animate()
+                .translationY(0)
+                .setInterpolator(new LinearInterpolator())
+                .setDuration(180)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                        getSupportActionBar().show();
+                    }
+                });
+    }
+
+    private void createTopicsData(TopicsResponse responseData) {
+        try {
+            progressBar.setVisibility(View.GONE);
+            if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+
+                allTopicsMap = new HashMap<Topics, List<Topics>>();
+                allTopicsList = new ArrayList<>();
+
+                //Prepare structure for multi-expandable listview.
+                for (int i = 0; i < responseData.getData().size(); i++) {
+                    ArrayList<Topics> tempUpList = new ArrayList<>();
+
+                    for (int j = 0; j < responseData.getData().get(i).getChild().size(); j++) {
+                        ArrayList<Topics> tempList = new ArrayList<>();
+                        for (int k = 0; k < responseData.getData().get(i).getChild().get(j).getChild().size(); k++) {
+                            if ("1".equals(responseData.getData().get(i).getChild().get(j).getChild().get(k).getPublicVisibility())) {
+                                //Adding All sub-subcategories
+                                responseData.getData().get(i).getChild().get(j).getChild().get(k)
+                                        .setParentId(responseData.getData().get(i).getId());
+                                responseData.getData().get(i).getChild().get(j).getChild().get(k)
+                                        .setParentName(responseData.getData().get(i).getTitle());
+                                tempList.add(responseData.getData().get(i).getChild().get(j).getChild().get(k));
+                            }
+                        }
+                        responseData.getData().get(i).getChild().get(j).setChild(tempList);
+                    }
+
+                    for (int k = 0; k < responseData.getData().get(i).getChild().size(); k++) {
+                        if ("1".equals(responseData.getData().get(i).getChild().get(k).getPublicVisibility())) {
+                            //Adding All subcategories
+                            responseData.getData().get(i).getChild().get(k)
+                                    .setParentId(responseData.getData().get(i).getId());
+                            responseData.getData().get(i).getChild().get(k)
+                                    .setParentName(responseData.getData().get(i).getTitle());
+                            tempUpList.add(responseData.getData().get(i).getChild().get(k));
+                        }
+                    }
+
+                    if ("1".equals(responseData.getData().get(i).getPublicVisibility())) {
+                        allTopicsList.add(responseData.getData().get(i));
+                        allTopicsMap.put(responseData.getData().get(i), tempUpList);
+                    }
+                }
+                BaseApplication.setTopicList(allTopicsList);
+                BaseApplication.setTopicsMap(allTopicsMap);
+            } else {
+                showToast(getString(R.string.server_error));
+            }
+        } catch (Exception e) {
+            progressBar.setVisibility(View.GONE);
+            Crashlytics.logException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+            showToast(getString(R.string.went_wrong));
+        }
+    }
+
+
+    @Override
+    public void onsSelectionComplete(String[] topics) {
+        Log.d("String[] topics = ", topics[0] + topics[1] + topics[2]);
+    }
 }

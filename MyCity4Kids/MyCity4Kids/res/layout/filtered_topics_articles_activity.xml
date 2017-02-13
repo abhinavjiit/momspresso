@@ -146,4 +146,46 @@
         fab:fab_colorNormal="@color/fab.pink"
         fab:fab_colorPressed="@color/fab.pink"
         fab:fab_icon="@drawable/sort_icon" />
+
+    <RelativeLayout
+        android:id="@+id/bottomOptionMenu"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white_color">
+
+        <TextView
+            android:id="@+id/sortTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/midSeparator"
+            android:drawableLeft="@drawable/sort_icon"
+            android:drawablePadding="-50dp"
+            android:drawableTint="@color/black"
+            android:gravity="center"
+            android:paddingLeft="50dp"
+            android:text="Sort" />
+
+        <View
+            android:id="@+id/midSeparator"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:background="@color/black" />
+
+        <TextView
+            android:id="@+id/filterTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/midSeparator"
+            android:drawableLeft="@drawable/filter"
+            android:drawablePadding="-50dp"
+            android:drawableTint="@color/black"
+            android:gravity="center"
+            android:paddingLeft="50dp"
+            android:text="Sort" />
+    </RelativeLayout>
+
 </RelativeLayout>

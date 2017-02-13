@@ -23,6 +23,7 @@ import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.database.BaseDbHelper;
+import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.businesslist.BusinessDataListing;
 import com.mycity4kids.models.parentingstop.CommonParentingList;
 import com.mycity4kids.models.response.ArticleListingResult;
@@ -33,6 +34,7 @@ import com.mycity4kids.utils.ArrayAdapterFactory;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.fabric.sdk.android.Fabric;
@@ -58,6 +60,10 @@ public class BaseApplication extends Application {
     private static BaseApplication mInstance;
     private static Retrofit retrofit, customTimeoutRetrofit;
     private static OkHttpClient client, customTimeoutOkHttpClient;
+
+    private static ArrayList<Topics> topicList;
+    private static HashMap<Topics, List<Topics>> topicsMap;
+
     /*
      * Google Analytics configuration values.
      */
@@ -103,6 +109,22 @@ public class BaseApplication extends Application {
     }
 
     private static ArrayList<ArticleListingResult> bestCityResponse;
+
+    public static ArrayList<Topics> getTopicList() {
+        return topicList;
+    }
+
+    public static void setTopicList(ArrayList<Topics> topicLists) {
+        topicList = topicLists;
+    }
+
+    public static HashMap<Topics, List<Topics>> getTopicsMap() {
+        return topicsMap;
+    }
+
+    public static void setTopicsMap(HashMap<Topics, List<Topics>> topicsMaps) {
+        topicsMap = topicsMaps;
+    }
 
     public enum TrackerName {
         APP_TRACKER, // Tracker used only in this app.
