@@ -146,7 +146,7 @@ public class MyFunnyVideosListingAdapter extends BaseAdapter {
             holder.tvParentLL2.setVisibility(View.GONE);
             holder.tvParentLL3.setVisibility(View.GONE);
             holder.tvParentLL4.setVisibility(View.GONE);
-            if (StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getTitle())) {
+            if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getTitle())) {
                 holder.txvArticleTitle.setText(articleDataModelsNew.get(position).getTitle());
             } else {
                 holder.txvArticleTitle.setText(articleDataModelsNew.get(position).getTitleSlug());

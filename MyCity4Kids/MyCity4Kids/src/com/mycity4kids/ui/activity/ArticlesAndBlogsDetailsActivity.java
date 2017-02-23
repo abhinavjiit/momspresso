@@ -759,7 +759,8 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                                 "?modestbranding=1&amp;rel=0&amp;showinfo=0\" style=\"width: 100%; height: 100%;\" ></iframe></p></body></html>";
                         videoWebView.loadDataWithBaseURL("", vUrl, "text/html", "utf-8", "");
                     } else if (bodyDescription.contains(video.getKey())) {
-                        bodyDesc = bodyDesc.replace(video.getKey(), "<p style='text-align:center'><iframe allowfullscreen src=http:" + video.getVideoUrl().replace("http:", "") + "?modestbranding=1&amp;rel=0&amp;showinfo=0\" style=\"width: 100%;\"></iframe></p>");
+                        String vURL = video.getVideoUrl().replace("http:", "").replace("https:", "");
+                        bodyDesc = bodyDesc.replace(video.getKey(), "<p style='text-align:center'><iframe allowfullscreen src=http:" + vURL + "?modestbranding=1&amp;rel=0&amp;showinfo=0\" style=\"width: 100%;\"></iframe></p>");
                     }
                 }
             }
@@ -799,7 +800,8 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                                 "?modestbranding=1&amp;rel=0&amp;showinfo=0\" style=\"width: 100%; height: 100%;\" ></iframe></p></body></html>";
                         videoWebView.loadDataWithBaseURL("", vUrl, "text/html", "utf-8", "");
                     } else if (bodyDescription.contains(video.getKey())) {
-                        bodyDesc = bodyDesc.replace(video.getKey(), "<p style='text-align:center'><iframe allowfullscreen src=http:" + video.getVideoUrl().replace("http:", "") + "?modestbranding=1&amp;rel=0&amp;showinfo=0\" style=\"width: 100%;\" ></iframe></p>");
+                        String vURL = video.getVideoUrl().replace("http:", "").replace("https:", "");
+                        bodyDesc = bodyDesc.replace(video.getKey(), "<p style='text-align:center'><iframe allowfullscreen src=http:" + vURL + "?modestbranding=1&amp;rel=0&amp;showinfo=0\" style=\"width: 100%;\" ></iframe></p>");
                     }
                 }
             }

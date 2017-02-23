@@ -64,8 +64,8 @@ public class AllVideoSectionActivity extends BaseActivity {
         mMomspressoArticleListing = new ArrayList<>();
         funnyVideosListing = new ArrayList<>();
 
-        String momspressoCategoryId = getMomspressoCategory();
-        hitMomspressoListingApi(momspressoCategoryId);
+//        String momspressoCategoryId = getMomspressoCategory();
+        hitMomspressoListingApi(AppConstants.MOMSPRESSO_CATEGORYID);
         hitFunnyVideosListingApi();
     }
 

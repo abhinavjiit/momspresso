@@ -9,17 +9,21 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -95,17 +99,23 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
     private TextView filterTextView;
     private String selectedTopics;
     private Toolbar mToolbar;
+    private FrameLayout sortBgLayout;
     private int limit = 15;
-    FloatingActionButton popularSortFAB, recentSortFAB, fabSort;
+    private FloatingActionButton popularSortFAB, recentSortFAB, fabSort;
+    private TextView bottomMenuRecentSort, bottomMenuPopularSort;
     private String displayName;
     private String listingType = "";
 
     private String followingTopicStatus = "0";
     private int isTopicFollowed;
-    private boolean showFollowUnfollowOption;
-    private RelativeLayout recommendFloatingActionButton;
+    private RelativeLayout bottomOptionMenu;
     private ArrayList<Topics> allTopicsList;
     private HashMap<Topics, List<Topics>> allTopicsMap;
+    private LinearLayout sortingLayout;
+
+    private Animation bottomUp, bottomDown;
+    private String filteredTopics;
+    private String topicLevel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,21 +128,28 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         Utils.pushOpenScreenEvent(FilteredTopicsArticleListingActivity.this, "Topic Articles List", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         listView = (ListView) findViewById(R.id.scroll);
         mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
+        sortingLayout = (LinearLayout) findViewById(R.id.sortingLayout);
         noBlogsTextView = (TextView) findViewById(R.id.noBlogsTextView);
         sortTextView = (TextView) findViewById(R.id.sortTextView);
         filterTextView = (TextView) findViewById(R.id.filterTextView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-        frameLayout = (FrameLayout) findViewById(R.id.frame_layout);
-        recommendFloatingActionButton = (RelativeLayout) findViewById(R.id.bottomOptionMenu);
 
-        findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely));
-
+        bottomOptionMenu = (RelativeLayout) findViewById(R.id.bottomOptionMenu);
+        bottomMenuRecentSort = (TextView) findViewById(R.id.recentSort);
+        bottomMenuPopularSort = (TextView) findViewById(R.id.popularSort);
+        bottomUp = AnimationUtils.loadAnimation(this, R.anim.slide_up_from_bottom);
+        bottomDown = AnimationUtils.loadAnimation(this, R.anim.slide_down_to_bottom);
+        sortBgLayout = (FrameLayout) findViewById(R.id.sortBgLayout);
         sortTextView.setOnClickListener(this);
         filterTextView.setOnClickListener(this);
+        sortBgLayout.setOnClickListener(this);
+        bottomMenuRecentSort.setOnClickListener(this);
+        bottomMenuPopularSort.setOnClickListener(this);
+        sortBgLayout.setVisibility(View.GONE);
 
+        frameLayout = (FrameLayout) findViewById(R.id.frame_layout);
         frameLayout.getBackground().setAlpha(0);
-
         fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
         popularSortFAB = (FloatingActionButton) findViewById(R.id.popularSortFAB);
         recentSortFAB = (FloatingActionButton) findViewById(R.id.recentSortFAB);
@@ -150,8 +167,45 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             }
         });
 
+        findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely));
+
         selectedTopics = getIntent().getStringExtra("selectedTopics");
         displayName = getIntent().getStringExtra("displayName");
+
+        try {
+            allTopicsList = BaseApplication.getTopicList();
+            allTopicsMap = BaseApplication.getTopicsMap();
+
+            if (allTopicsList == null || allTopicsMap == null) {
+                FileInputStream fileInputStream = openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                String fileContent = convertStreamToString(fileInputStream);
+                TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
+                createTopicsData(res);
+            }
+
+            getTopicLevelAndPrepareFilterData();
+
+            if (AppConstants.TOPIC_LEVEL_SUB_SUB_CATEGORY.equals(topicLevel) ||
+                    AppConstants.MOMSPRESSO_CATEGORYID.equals(selectedTopics) ||
+                    AppConstants.HINDI_CATEGORYID.equals(selectedTopics)) {
+                sortBgLayout.setVisibility(View.GONE);
+                bottomOptionMenu.setVisibility(View.GONE);
+            } else {
+                frameLayout.setVisibility(View.GONE);
+                fabMenu.setVisibility(View.GONE);
+                fabSort.setVisibility(View.GONE);
+                popularSortFAB.setVisibility(View.GONE);
+                recentSortFAB.setVisibility(View.GONE);
+            }
+        } catch (FileNotFoundException e) {
+            Crashlytics.logException(e);
+            Log.d("FileNotFoundException", Log.getStackTraceString(e));
+            Retrofit retro = BaseApplication.getInstance().getRetrofit();
+            final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
+
+            Call<ResponseBody> call = topicsAPI.downloadCategoriesJSON();
+            call.enqueue(downloadCategoriesJSONCallback);
+        }
 
         if (AppConstants.MOMSPRESSO_CATEGORYID.equals(selectedTopics)) {
             listingType = Constants.KEY_MOMSPRESSO;
@@ -206,9 +260,9 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
 
                     if (currentFirstVisibleItem > mLastFirstVisibleItem) {
                         mIsScrollingUp = false;
-                        showToolbar();
+                        showBottomMenu();
                     } else if (currentFirstVisibleItem < mLastFirstVisibleItem) {
-                        hideToolbar();
+                        hideBottomMenu();
                         mIsScrollingUp = true;
                     }
 
@@ -262,9 +316,13 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
 
         int from = (nextPageNumber - 1) * limit + 1;
-        Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1);
-        filterCall.enqueue(articleListingResponseCallback);
-
+        if (StringUtils.isNullOrEmpty(filteredTopics)) {
+            Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1);
+            filterCall.enqueue(articleListingResponseCallback);
+        } else {
+            Call<ArticleListingResponse> filterCall = topicsAPI.getFilteredArticlesForCategories(filteredTopics, sortType, from, from + limit - 1);
+            filterCall.enqueue(articleListingResponseCallback);
+        }
     }
 
     private Callback<ArticleListingResponse> articleListingResponseCallback = new Callback<ArticleListingResponse>() {
@@ -341,7 +399,9 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.recentSort:
             case R.id.recentSortFAB:
+                sortBgLayout.setVisibility(View.GONE);
                 fabMenu.collapse();
                 articleDataModelsNew.clear();
                 articlesListingAdapter.notifyDataSetChanged();
@@ -349,7 +409,9 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                 nextPageNumber = 1;
                 hitFilteredTopicsArticleListingApi(0);
                 break;
+            case R.id.popularSort:
             case R.id.popularSortFAB:
+                sortBgLayout.setVisibility(View.GONE);
                 fabMenu.collapse();
                 articleDataModelsNew.clear();
                 articlesListingAdapter.notifyDataSetChanged();
@@ -357,53 +419,56 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                 nextPageNumber = 1;
                 hitFilteredTopicsArticleListingApi(1);
                 break;
+            case R.id.sortBgLayout:
+                sortBgLayout.setVisibility(View.GONE);
+                break;
             case R.id.sortTextView:
-//                fabMenu.collapse();
-//                articleDataModelsNew.clear();
-//                articlesListingAdapter.notifyDataSetChanged();
-//                sortType = 1;
-//                nextPageNumber = 1;
-//                hitFilteredTopicsArticleListingApi(1);
+                sortingLayout.setAnimation(bottomUp);
+                sortingLayout.startAnimation(bottomUp);
+                sortBgLayout.setVisibility(View.VISIBLE);
                 break;
             case R.id.filterTextView:
-
-                try {
-                    allTopicsList = BaseApplication.getTopicList();
-                    allTopicsMap = BaseApplication.getTopicsMap();
-
-                    if (allTopicsList == null || allTopicsMap == null) {
-                        FileInputStream fileInputStream = openFileInput(AppConstants.CATEGORIES_JSON_FILE);
-                        String fileContent = convertStreamToString(fileInputStream);
-                        TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
-                        createTopicsData(res);
-                    }
-
-                    getCurrentMainTopic();
-                    openFilterDialog();
-                } catch (FileNotFoundException e) {
-                    Crashlytics.logException(e);
-                    Log.d("FileNotFoundException", Log.getStackTraceString(e));
-                    Retrofit retro = BaseApplication.getInstance().getRetrofit();
-                    final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
-
-                    Call<ResponseBody> call = topicsAPI.downloadCategoriesJSON();
-                    call.enqueue(downloadCategoriesJSONCallback);
-                }
-
-//                fabMenu.collapse();
-//                articleDataModelsNew.clear();
-//                articlesListingAdapter.notifyDataSetChanged();
-//                sortType = 1;
-//                nextPageNumber = 1;
-//                hitFilteredTopicsArticleListingApi(1);
+                openFilterDialog();
+//                try {
+//                    allTopicsList = BaseApplication.getTopicList();
+//                    allTopicsMap = BaseApplication.getTopicsMap();
+//
+//                    if (allTopicsList == null || allTopicsMap == null) {
+//                        FileInputStream fileInputStream = openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+//                        String fileContent = convertStreamToString(fileInputStream);
+//                        TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
+//                        createTopicsData(res);
+//                    }
+//
+//                    getTopicLevelAndPrepareFilterData();
+//                openFilterDialog();
+//                } catch (FileNotFoundException e) {
+//                    Crashlytics.logException(e);
+//                    Log.d("FileNotFoundException", Log.getStackTraceString(e));
+//                    Retrofit retro = BaseApplication.getInstance().getRetrofit();
+//                    final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
+//
+//                    Call<ResponseBody> call = topicsAPI.downloadCategoriesJSON();
+//                    call.enqueue(downloadCategoriesJSONCallback);
+//                }
                 break;
         }
+    }
+
+    public static Animation inFromBottomAnimation(long durationMillis) {
+        Animation inFromBottom = new TranslateAnimation(
+                Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT, 0.0f,
+                Animation.RELATIVE_TO_PARENT, +1.0f, Animation.RELATIVE_TO_PARENT, 0.0f
+        );
+        inFromBottom.setDuration(durationMillis);
+        return inFromBottom;
     }
 
     private void openFilterDialog() {
         FilterTopicsDialogFragment filterTopicsDialogFragment = new FilterTopicsDialogFragment();
         Bundle args = new Bundle();
         args.putParcelableArrayList("topicsList", subAndSubSubTopicsList);
+        args.putString("topicsLevel", topicLevel);
         filterTopicsDialogFragment.setArguments(args);
         FragmentManager fm = getSupportFragmentManager();
         filterTopicsDialogFragment.show(fm, "Filter");
@@ -499,8 +564,18 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                             String fileContent = convertStreamToString(fileInputStream);
                             TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
                             createTopicsData(res);
-                            getCurrentMainTopic();
-                            openFilterDialog();
+                            getTopicLevelAndPrepareFilterData();
+                            if (AppConstants.TOPIC_LEVEL_SUB_SUB_CATEGORY.equals(topicLevel)) {
+                                sortBgLayout.setVisibility(View.GONE);
+                                bottomOptionMenu.setVisibility(View.GONE);
+                            } else {
+                                frameLayout.setVisibility(View.GONE);
+                                fabMenu.setVisibility(View.GONE);
+                                fabSort.setVisibility(View.GONE);
+                                popularSortFAB.setVisibility(View.GONE);
+                                recentSortFAB.setVisibility(View.GONE);
+                            }
+//                            openFilterDialog();
                         } catch (FileNotFoundException e) {
                             Crashlytics.logException(e);
                             Log.d("FileNotFoundException", Log.getStackTraceString(e));
@@ -530,15 +605,29 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         }
     };
 
-    private void getCurrentMainTopic() {
+    private void getTopicLevelAndPrepareFilterData() {
         Topics parentCategoryTopic;
         for (int i = 0; i < allTopicsList.size(); i++) {
             subAndSubSubTopicsList = new ArrayList<>();
+
+            //Selected topic is Main Category
+            if (selectedTopics.equals(allTopicsList.get(i).getId())) {
+                subAndSubSubTopicsList.addAll(allTopicsList.get(i).getChild());
+                topicLevel = AppConstants.TOPIC_LEVEL_MAIN_CATEGORY;
+                return;
+            }
+
             for (int j = 0; j < allTopicsList.get(i).getChild().size(); j++) {
                 if (selectedTopics.equals(allTopicsList.get(i).getChild().get(j).getId())) {
                     //selected topic is Subcategory with no subsubcategories
                     parentCategoryTopic = allTopicsList.get(i);
-                    subAndSubSubTopicsList.addAll(allTopicsList.get(i).getChild());
+                    subAndSubSubTopicsList.addAll(allTopicsList.get(i).getChild().get(j).getChild());
+                    if (subAndSubSubTopicsList.isEmpty()) {
+                        topicLevel = AppConstants.TOPIC_LEVEL_SUB_SUB_CATEGORY;
+                    } else {
+                        topicLevel = AppConstants.TOPIC_LEVEL_SUB_CATEGORY;
+                    }
+
                     return;
                 }
                 for (int k = 0; k < allTopicsList.get(i).getChild().get(j).getChild().size(); k++) {
@@ -546,6 +635,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                         //selected topic is SubSubcategory
                         parentCategoryTopic = allTopicsList.get(i);
                         subAndSubSubTopicsList.addAll(allTopicsList.get(i).getChild());
+                        topicLevel = AppConstants.TOPIC_LEVEL_SUB_SUB_CATEGORY;
                         return;
                     }
                 }
@@ -783,29 +873,28 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         return sb.toString();
     }
 
-    private void hideToolbar() {
-
-        recommendFloatingActionButton.animate()
-                .translationY(recommendFloatingActionButton.getHeight())
+    private void hideBottomMenu() {
+        bottomOptionMenu.animate()
+                .translationY(bottomOptionMenu.getHeight())
                 .setInterpolator(new LinearInterpolator())
                 .setDuration(180)
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
-                        getSupportActionBar().hide();
+//                        getSupportActionBar().hide();
                     }
                 });
     }
 
-    private void showToolbar() {
-        recommendFloatingActionButton.animate()
+    private void showBottomMenu() {
+        bottomOptionMenu.animate()
                 .translationY(0)
                 .setInterpolator(new LinearInterpolator())
                 .setDuration(180)
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationStart(Animator animation) {
-                        getSupportActionBar().show();
+//                        getSupportActionBar().show();
                     }
                 });
     }
@@ -868,7 +957,14 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
 
 
     @Override
-    public void onsSelectionComplete(String[] topics) {
-        Log.d("String[] topics = ", topics[0] + topics[1] + topics[2]);
+    public void onsSelectionComplete(List<String> topics) {
+        nextPageNumber = 1;
+        if (null == topics || topics.isEmpty()) {
+            filteredTopics = null;
+        } else {
+            filteredTopics = TextUtils.join(",", topics);
+        }
+        hitFilteredTopicsArticleListingApi(0);
     }
+
 }

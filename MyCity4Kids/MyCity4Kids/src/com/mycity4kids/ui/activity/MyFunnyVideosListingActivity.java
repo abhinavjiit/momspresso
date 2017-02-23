@@ -123,6 +123,11 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
             }
         });
 
+        popularSortFAB.setVisibility(View.INVISIBLE);
+        recentSortFAB.setVisibility(View.INVISIBLE);
+        fabSort.setVisibility(View.INVISIBLE);
+        fabMenu.setVisibility(View.INVISIBLE);
+
         userId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -284,6 +289,10 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
             noBlogsTextView.setVisibility(View.GONE);
             if (nextPageNumber == 1) {
                 articleDataModelsNew = dataList;
+                popularSortFAB.setVisibility(View.VISIBLE);
+                recentSortFAB.setVisibility(View.VISIBLE);
+                fabSort.setVisibility(View.VISIBLE);
+                fabMenu.setVisibility(View.VISIBLE);
             } else {
                 articleDataModelsNew.addAll(dataList);
             }

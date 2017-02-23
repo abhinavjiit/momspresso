@@ -132,7 +132,7 @@ public class VideoUploadProgressActivity extends BaseActivity {
 
         @Override
         protected void onPostExecute(String videoId) {
-            if (!StringUtils.isNullOrEmpty(videoId.toString())) {
+            if (!StringUtils.isNullOrEmpty(videoId)) {
                 cancelTextView.setVisibility(View.GONE);
 
                 UploadVideoRequest uploadVideoRequest = new UploadVideoRequest();
@@ -143,7 +143,9 @@ public class VideoUploadProgressActivity extends BaseActivity {
                 UploadVideosAPI updateVideoUrlAPI = retrofit.create(UploadVideosAPI.class);
                 Call<UpdateVideoDetailsResponse> updateVideoUrlCall = updateVideoUrlAPI.updateUploadedVideoURL(uploadVideoRequest);
                 updateVideoUrlCall.enqueue(updateVideoUrlResponseCallback);
-
+            } else {
+                showToast("Error occured while uploading your video. Please try again.");
+                finish();
             }
 //            activity.setStatus("Upload finished!\n");
 //            activity.setPauseButtonEnabled(false);

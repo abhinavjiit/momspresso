@@ -277,11 +277,11 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         adapterHomeAppointment = new AdapterHomeAppointment(getActivity(), appointmentListData);
         appointmentList.setAdapter(adapterHomeAppointment);
 
-        String momspressoCategoryId = getMomspressoCategory();
+//        String momspressoCategoryId = getMomspressoCategory();
 
         hitForYouListingApi();
         hitBlogListingApi();
-        hitMomspressoListingApi(momspressoCategoryId);
+        hitMomspressoListingApi(AppConstants.MOMSPRESSO_CATEGORYID);
         hitEditorPicksListingApi();
         hitHindiArticlesListing();
         hitInYourCityListingApi();

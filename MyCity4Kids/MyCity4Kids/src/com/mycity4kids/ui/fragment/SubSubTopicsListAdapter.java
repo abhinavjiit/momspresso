@@ -84,7 +84,7 @@ public class SubSubTopicsListAdapter extends ArrayAdapter<Topics> {
     public List<String> getSelectedTopics() {
         for (int i = 0; i < subcategoryList.size(); i++) {
             if (subcategoryList.get(i).isSelected())
-                selectedTopics.add(subcategoryList.get(i).getDisplay_name());
+                selectedTopics.add(subcategoryList.get(i).getId());
         }
         return selectedTopics;
     }

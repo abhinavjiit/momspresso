@@ -11,7 +11,7 @@ public class AppConstants {
     public static final String DEV_URL = "http://54.169.17.138/";
     public static final String STAGING_URL = "http://52.220.87.141/";
 
-//    public static final String LIVE_URL = "http://52.220.87.141/";
+    //    public static final String LIVE_URL = "http://52.220.87.141/";
     public static final String LIVE_URL = "https://api.mycity4kids.com/";
 
     public static final String PHOENIX_STAGING_URL = "http://52.77.116.39";
@@ -492,4 +492,7 @@ public class AppConstants {
     public static final int ALL_CITY_ID = 11;
     public static final String ALL_CITY_NEW_ID = "city-10";
 
+    public static final String TOPIC_LEVEL_MAIN_CATEGORY = "1";
+    public static final String TOPIC_LEVEL_SUB_CATEGORY = "2";
+    public static final String TOPIC_LEVEL_SUB_SUB_CATEGORY = "3";
 }

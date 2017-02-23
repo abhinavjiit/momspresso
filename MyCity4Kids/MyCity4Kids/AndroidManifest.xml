@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mycity4kids"
-    android:versionCode="53"
-    android:versionName="5.6.4">
+    android:versionCode="54"
+    android:versionName="5.6.5">
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -490,7 +490,8 @@
             android:theme="@style/Theme.nnn" />
         <activity
             android:name=".ui.activity.NotificationCenterListActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.nnn" />
         <activity
             android:name=".ui.activity.VlogsDetailActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"

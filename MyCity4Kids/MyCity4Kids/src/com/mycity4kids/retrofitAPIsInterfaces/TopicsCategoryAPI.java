@@ -45,6 +45,12 @@ public interface TopicsCategoryAPI {
                                                         @Query("start") int start,
                                                         @Query("end") int end);
 
+    @GET("/v1/articles/topics")
+    Call<ArticleListingResponse> getFilteredArticlesForCategories(@Query("ids") String categoryIds,
+                                                                  @Query("sort") int sort,
+                                                                  @Query("start") int start,
+                                                                  @Query("end") int end);
+
     @GET("/v1/articles/cities/{cityId}")
     Call<ArticleListingResponse> getBestArticlesForCity(@Path("cityId") String cityId,
                                                         @Query("sort") int sort,
@@ -67,6 +73,6 @@ public interface TopicsCategoryAPI {
 
     @GET("/v1/recommend/{userId}/{start}/{end}")
     Call<ArticleListingResponse> getForYouArticles(@Path("userId") String userId,
-                                                          @Path("start") String start,
-                                                          @Path("end") String end);
+                                                   @Path("start") String start,
+                                                   @Path("end") String end);
 }

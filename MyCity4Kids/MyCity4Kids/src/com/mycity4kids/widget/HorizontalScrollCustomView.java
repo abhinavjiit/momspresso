@@ -105,7 +105,6 @@ public class HorizontalScrollCustomView extends LinearLayout {
                 }
             });
         }
-        final Topics hindiTopic = AppUtils.getHindiTopic(getContext());
         this.mDatalist = mDatalist;
         mInflator = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         progressBar.setVisibility(GONE);
@@ -175,18 +174,13 @@ public class HorizontalScrollCustomView extends LinearLayout {
                     getContext().startActivity(intent1);
                 } else if (Constants.KEY_MOMSPRESSO.equals(listingType)) {
                     Intent intent1 = new Intent(getContext(), FilteredTopicsArticleListingActivity.class);
-                    intent1.putExtra("selectedTopics", SharedPrefUtils.getMomspressoCategory(getContext()).getId());
+                    intent1.putExtra("selectedTopics", AppConstants.MOMSPRESSO_CATEGORYID);
                     intent1.putExtra("displayName", SharedPrefUtils.getMomspressoCategory(getContext()).getDisplay_name());
                     getContext().startActivity(intent1);
                 } else if (Constants.KEY_HINDI.equals(listingType)) {
                     Intent hindiIntent = new Intent(getContext(), FilteredTopicsArticleListingActivity.class);
-                    if (hindiTopic == null) {
-                        hindiIntent.putExtra("selectedTopics", AppConstants.HINDI_CATEGORYID);
-                        hindiIntent.putExtra("displayName", getContext().getString(R.string.home_sections_title_hindi));
-                    } else {
-                        hindiIntent.putExtra("selectedTopics", AppConstants.HINDI_CATEGORYID);
-                        hindiIntent.putExtra("displayName", hindiTopic.getDisplay_name());
-                    }
+                    hindiIntent.putExtra("selectedTopics", AppConstants.HINDI_CATEGORYID);
+                    hindiIntent.putExtra("displayName", getContext().getString(R.string.home_sections_title_hindi));
                     getContext().startActivity(hindiIntent);
                 }
             }
@@ -212,13 +206,13 @@ public class HorizontalScrollCustomView extends LinearLayout {
                     getContext().startActivity(intent1);
                 } else if (Constants.KEY_MOMSPRESSO.equals(listingType)) {
                     Intent intent1 = new Intent(getContext(), FilteredTopicsArticleListingActivity.class);
-                    intent1.putExtra("selectedTopics", SharedPrefUtils.getMomspressoCategory(getContext()).getId());
+                    intent1.putExtra("selectedTopics", AppConstants.MOMSPRESSO_CATEGORYID);
                     intent1.putExtra("displayName", SharedPrefUtils.getMomspressoCategory(getContext()).getDisplay_name());
                     getContext().startActivity(intent1);
                 } else if (Constants.KEY_HINDI.equals(listingType)) {
                     Intent hindiIntent = new Intent(getContext(), FilteredTopicsArticleListingActivity.class);
-                    hindiIntent.putExtra("selectedTopics", hindiTopic.getId());
-                    hindiIntent.putExtra("displayName", hindiTopic.getDisplay_name());
+                    hindiIntent.putExtra("selectedTopics", AppConstants.HINDI_CATEGORYID);
+                    hindiIntent.putExtra("displayName", getContext().getString(R.string.home_sections_title_hindi));
                     getContext().startActivity(hindiIntent);
                 }
             }

@@ -69,6 +69,7 @@ dependencies {
     compile 'com.github.jakob-grabner:Circle-Progress-View:v1.3'
     compile 'com.afollestad:easyvideoplayer:0.3.0'
     compile 'com.plattysoft.leonids:LeonidsLib:1.3.2'
+    compile 'commons-io:commons-io:2.4'
     compile project(':WordPressEditor')
     compile files('libs/comscore.jar')
     compile project(':progressviewslib')

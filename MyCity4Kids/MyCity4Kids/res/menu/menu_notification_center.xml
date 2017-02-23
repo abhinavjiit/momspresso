@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menus"
+        android:title="ddd"
+        app:showAsAction="always">
+        <item
+            android:id="@+id/markRead"
+            android:title="Mark all as read" />
+    </item>
+</menu>

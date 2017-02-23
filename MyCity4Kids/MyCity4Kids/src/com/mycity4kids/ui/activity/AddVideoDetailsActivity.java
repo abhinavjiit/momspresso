@@ -11,45 +11,66 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Switch;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.afollestad.easyvideoplayer.EasyVideoCallback;
 import com.afollestad.easyvideoplayer.EasyVideoPlayer;
+import com.coremedia.iso.boxes.Container;
+import com.googlecode.mp4parser.FileDataSourceImpl;
+import com.googlecode.mp4parser.authoring.Movie;
+import com.googlecode.mp4parser.authoring.Track;
+import com.googlecode.mp4parser.authoring.builder.DefaultMp4Builder;
+import com.googlecode.mp4parser.authoring.container.mp4.MovieCreator;
+import com.googlecode.mp4parser.authoring.tracks.AACTrackImpl;
+import com.googlecode.mp4parser.authoring.tracks.AppendTrack;
+import com.googlecode.mp4parser.authoring.tracks.CroppedTrack;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.ui.fragment.AudioPickerDialogFragment;
+import com.mycity4kids.ui.fragment.AudioPickerDialogFragment.IAudioSelectionComplete;
 import com.mycity4kids.utils.AppUtils;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by hemant on 10/1/17.
  */
-public class AddVideoDetailsActivity extends BaseActivity implements View.OnClickListener, EasyVideoCallback {
+public class AddVideoDetailsActivity extends BaseActivity implements View.OnClickListener, EasyVideoCallback, IAudioSelectionComplete {
 
     private final static int MAX_VOLUME = 100;
 
     private EditText videoTitleEditText;
     private Switch muteSwitch;
     private Toolbar mToolbar;
+    private TextView audioTextView;
+    private ImageView removeCustomAudioImageView;
 
     private Uri originalUri;
     private String vRotation;
 
+    private String originalPath;
     Uri contentURI;
     private Uri mutedUri;
+    private Uri audioAppendedFileUri;
     private EasyVideoPlayer player;
 
     @Override
@@ -62,6 +83,8 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
 //        videoView = (VideoView) findViewById(R.id.videoView1);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         player = (EasyVideoPlayer) findViewById(R.id.player);
+        audioTextView = (TextView) findViewById(R.id.audioTextView);
+        removeCustomAudioImageView = (ImageView) findViewById(R.id.removeCustomAudioImageView);
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -73,15 +96,19 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
             muteSwitch.setVisibility(View.GONE);
         }
 
-        String uriPath = getIntent().getStringExtra("uriPath");
+        originalPath = getIntent().getStringExtra("uriPath");
+
+        audioTextView.setOnClickListener(this);
+        removeCustomAudioImageView.setOnClickListener(this);
+        removeCustomAudioImageView.setVisibility(View.GONE);
 
         player.setCallback(this);
         player.setAutoPlay(true);
         // Sets the source to the HTTP URL held in the TEST_URL variable.
         // To play files, you can use Uri.fromFile(new File("..."))
-        player.setSource(Uri.fromFile(new File(uriPath)));
+        player.setSource(Uri.fromFile(new File(originalPath)));
         //specify the location of media file
-        originalUri = Uri.parse(uriPath);
+        originalUri = Uri.parse(originalPath);
         // Starts or resumes playback.
         player.start();
     }
@@ -115,17 +142,33 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
                     player.setVolume(volume, volume);
                 }
                 break;
+            case R.id.audioTextView:
+                openAudioFilePickerDialog();
+                break;
+            case R.id.removeCustomAudioImageView:
+                restoreOriginalSound();
+                removeCustomAudioImageView.setVisibility(View.GONE);
+                break;
         }
+    }
+
+    private void restoreOriginalSound() {
+        player.stop();
+        player.setSource(Uri.fromFile(new File(originalPath)));
+        player.start();
+    }
+
+    private void openAudioFilePickerDialog() {
+        AudioPickerDialogFragment filterTopicsDialogFragment = new AudioPickerDialogFragment();
+        Bundle args = new Bundle();
+        filterTopicsDialogFragment.setArguments(args);
+        FragmentManager fm = getSupportFragmentManager();
+        filterTopicsDialogFragment.show(fm, "Audio Picker");
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     private void muteVideo() {
         String fname = AppUtils.getFileNameFromUri(this, originalUri);
-//        String filePath = Environment.getExternalStorageDirectory() + "/MyCity4Kids/" + "mute_" + fname;
-//        File fi = new File(filePath);
-//        if (fi.exists()) {
-//            fi.delete();
-//        }
         String outputFile = "";
         try {
             File file = new File(Environment.getExternalStorageDirectory() + "/MyCity4Kids/" + "mute_" + fname);
@@ -236,12 +279,18 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
                 contentURI = AppUtils.getVideoUriFromMediaProvider(mutedUri.getPath(), getContentResolver());
             }
         } else {
-            contentURI = AppUtils.exportToGallery(originalUri.getPath(), getContentResolver(), this);
-            contentURI = AppUtils.getVideoUriFromMediaProvider(originalUri.getPath(), getContentResolver());
+            if (removeCustomAudioImageView.getVisibility() == View.VISIBLE) {
+                contentURI = AppUtils.exportToGallery(audioAppendedFileUri.getPath(), getContentResolver(), this);
+                contentURI = AppUtils.getVideoUriFromMediaProvider(audioAppendedFileUri.getPath(), getContentResolver());
+            } else {
+                contentURI = AppUtils.exportToGallery(originalUri.getPath(), getContentResolver(), this);
+                contentURI = AppUtils.getVideoUriFromMediaProvider(originalUri.getPath(), getContentResolver());
+            }
         }
         removeProgressDialog();
         resumeUpload();
     }
+
 
     public void resumeUpload() {
         Intent intt = new Intent(this, VideoUploadProgressActivity.class);
@@ -293,5 +342,97 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
     @Override
     public void onSubmit(EasyVideoPlayer player, Uri source) {
 
+    }
+
+    private void mp4mux(String audioFileName) {
+        try {
+            String fname = AppUtils.getFileNameFromUri(this, originalUri);
+            Movie movie = new Movie();
+            Movie m = MovieCreator.build(Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/" + fname);
+            Track vTrack = null;
+            for (Track track : m.getTracks()) {
+                if ("soun".equals(track.getHandler())) {
+                    System.err.println("Adding audio track to new movie");
+                } else if ("vide".equals(track.getHandler())) {
+                    System.err.println("Adding video track to new movie");
+                    vTrack = track;
+                    movie.addTrack(track);
+                } else {
+                    System.err.println("Adding " + track.getHandler() + " track to new movie");
+                }
+            }
+
+            AACTrackImpl audioTrack = new AACTrackImpl(new FileDataSourceImpl(Environment.getExternalStorageDirectory() + "/MyCity4Kids/" + audioFileName));
+            int audioDuration = (int) Math.ceil(trackDuration(audioTrack));
+            int videoDuration = (int) Math.ceil(trackDuration(vTrack));
+            System.out.println("videoduration:" + videoDuration);
+            System.out.println("audioDuration:" + audioDuration);
+            System.out.println("video Samples:" + vTrack.getSamples().size());
+            System.out.println("audio Samples:" + audioTrack.getSamples().size());
+            if (audioDuration > videoDuration) {
+                int factor = audioDuration / videoDuration;
+                CroppedTrack croppedTrack = new CroppedTrack(audioTrack, 0, audioTrack.getSamples().size() / factor);
+                movie.addTrack(croppedTrack);
+            } else {
+                movie.addTrack(audioTrack);
+            }
+
+            String filePath = Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/modifiedVideo.mp4";
+            File fi = new File(filePath);
+            if (fi.exists()) {
+                fi.delete();
+            }
+
+            Container mp4file = new DefaultMp4Builder().build(movie);
+            FileChannel fc = new FileOutputStream(new File(Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/modifiedVideo.mp4")).getChannel();
+            mp4file.writeContainer(fc);
+            fc.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /*
+    * Concatenates 2 audio samples
+    * */
+    private void mergeAudio() {
+        try {
+            AACTrackImpl audioTrack = new AACTrackImpl(new FileDataSourceImpl(Environment.getExternalStorageDirectory() + "/MyCity4Kids/" + "audio1.aac"));
+            AACTrackImpl audioTrack1 = new AACTrackImpl(new FileDataSourceImpl(Environment.getExternalStorageDirectory() + "/MyCity4Kids/" + "audio2.aac"));
+
+            List<Track> audioTracks = new LinkedList<Track>();
+
+            audioTracks.add(audioTrack);
+            audioTracks.add(audioTrack1);
+
+            Movie result = new Movie();
+
+            if (audioTracks.size() > 0) {
+                result.addTrack(new AppendTrack(audioTracks.toArray(new Track[audioTracks.size()])));
+            }
+
+            Container out = new DefaultMp4Builder().build(result);
+            out.writeContainer(new FileOutputStream(Environment.getExternalStorageDirectory() + "/MyCity4Kids/" + "output.aac").getChannel());
+        } catch (IOException e) {
+
+        }
+    }
+
+    private double trackDuration(Track track) {
+        return (double) track.getDuration() / track.getTrackMetaData().getTimescale();
+    }
+
+    @Override
+    public void onAudioSelectionComplete(String topics) {
+        Log.d("AudioSelectionComplete", topics);
+        player.stop();
+        mp4mux(topics);
+        File tempF = new File(Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/modifiedVideo.mp4");
+        audioAppendedFileUri = Uri.parse(tempF.getAbsolutePath());
+        player.setSource(audioAppendedFileUri);
+        player.start();
+        removeCustomAudioImageView.setVisibility(View.VISIBLE);
     }
 }

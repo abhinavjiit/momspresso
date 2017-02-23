@@ -25,6 +25,7 @@ import android.widget.ListView;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.IScreen;
 import com.mycity4kids.R;
+import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.parentingdetails.CommentsData;
 
@@ -37,6 +38,8 @@ import java.util.List;
 public class FilterTopicsDialogFragment extends DialogFragment {
 
     private ArrayList<Topics> subTopicsArrayList;
+    private List<String> selectedTopics;
+    private String topicsLevel;
 
     private Toolbar mToolbar;
     private ProgressDialog mProgressDialog;
@@ -75,23 +78,40 @@ public class FilterTopicsDialogFragment extends DialogFragment {
         Bundle extras = getArguments();
         if (extras != null) {
             subTopicsArrayList = extras.getParcelableArrayList("topicsList");
+            topicsLevel = extras.getString("topicsLevel");
         }
 
-        subTopicsListAdapter = new SubTopicsListAdapter(getActivity(), R.layout.sub_topics_filter_item, subTopicsArrayList);
-        subSubTopicsListAdapter = new SubSubTopicsListAdapter(getActivity(), R.layout.sub_topics_filter_item, subTopicsArrayList.get(0).getChild());
-        subTopicsListView.setAdapter(subTopicsListAdapter);
-        subSubTopicsListView.setAdapter(subSubTopicsListAdapter);
+        if (AppConstants.TOPIC_LEVEL_MAIN_CATEGORY.equals(topicsLevel)) {
+            subTopicsListAdapter = new SubTopicsListAdapter(getActivity(), R.layout.sub_topics_filter_item, subTopicsArrayList);
+            subSubTopicsListAdapter = new SubSubTopicsListAdapter(getActivity(), R.layout.sub_topics_filter_item, subTopicsArrayList.get(0).getChild());
+            subTopicsListView.setAdapter(subTopicsListAdapter);
+            subSubTopicsListView.setAdapter(subSubTopicsListAdapter);
+        } else if (AppConstants.TOPIC_LEVEL_SUB_CATEGORY.equals(topicsLevel)) {
+            subTopicsListView.setVisibility(View.GONE);
+            subSubTopicsListAdapter = new SubSubTopicsListAdapter(getActivity(), R.layout.sub_topics_filter_item, subTopicsArrayList);
+            subSubTopicsListView.setAdapter(subSubTopicsListAdapter);
+        }
 
-        final String[] ada = {"dwdawdaw ", "vfvfvfv ", "nbnbgnbn "};
+
         confirmImageView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                onTopicsSelectionComplete.onsSelectionComplete(ada);
-                List<String> dwdwd = subSubTopicsListAdapter.getSelectedTopics();
-                Log.d("dwdwd", dwdwd.toString());
+                if (AppConstants.TOPIC_LEVEL_MAIN_CATEGORY.equals(topicsLevel)) {
+                    for (int i = 0; i < subTopicsArrayList.size(); i++) {
+                        subSubTopicsListAdapter.setSubSubTopicsData(subTopicsArrayList.get(i).getChild());
+                        subSubTopicsListAdapter.notifyDataSetChanged();
+                        selectedTopics = subSubTopicsListAdapter.getSelectedTopics();
+                    }
+                } else if (AppConstants.TOPIC_LEVEL_SUB_CATEGORY.equals(topicsLevel)) {
+                    selectedTopics = subSubTopicsListAdapter.getSelectedTopics();
+                }
+
+                onTopicsSelectionComplete.onsSelectionComplete(selectedTopics);
+                Log.d("selected tops = ", selectedTopics.toString());
                 dismiss();
             }
         });
+
 
         subTopicsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -159,7 +179,7 @@ public class FilterTopicsDialogFragment extends DialogFragment {
     }
 
     public interface OnTopicsSelectionComplete {
-        void onsSelectionComplete(String[] topics);
+        void onsSelectionComplete(List<String> topics);
     }
 
 }
