@@ -508,6 +508,14 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
 
             Call<ResponseBody> call = topicsAPI.downloadCategoriesJSON();
             call.enqueue(downloadFollowTopicsJSONCallback);
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Log.d("Exception", Log.getStackTraceString(e));
+            Retrofit retro = BaseApplication.getInstance().getRetrofit();
+            final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
+
+            Call<ResponseBody> call = topicsAPI.downloadCategoriesJSON();
+            call.enqueue(downloadFollowTopicsJSONCallback);
         }
 
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
@@ -933,6 +941,12 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                                     .setParentId(responseData.getData().get(i).getId());
                             responseData.getData().get(i).getChild().get(k)
                                     .setParentName(responseData.getData().get(i).getTitle());
+
+                            if (responseData.getData().get(i).getChild().get(k).getChild().isEmpty()) {
+                                ArrayList<Topics> duplicateEntry = new ArrayList<Topics>();
+                                duplicateEntry.add(responseData.getData().get(i).getChild().get(k));
+                                responseData.getData().get(i).getChild().get(k).setChild(duplicateEntry);
+                            }
                             tempUpList.add(responseData.getData().get(i).getChild().get(k));
                         }
                     }

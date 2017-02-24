@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
@@ -18,6 +19,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -42,7 +45,7 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 4/8/16.
  */
-public class CityBestArticleListingActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener{
+public class CityBestArticleListingActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
 
     NewArticlesListingAdapter articlesListingAdapter;
     ArrayList<ArticleListingResult> articleDataModelsNew;
@@ -58,6 +61,10 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
     private int limit = 15;
     private FrameLayout frameLayout;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private FrameLayout sortBgLayout;
+    private RelativeLayout bottomOptionMenu;
+    private FloatingActionsMenu fabMenu;
+    private FloatingActionButton popularSortFAB, recentSortFAB, fabSort;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,9 +81,51 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
         noBlogsTextView = (TextView) findViewById(R.id.noBlogsTextView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely));
-        frameLayout = (FrameLayout) findViewById(R.id.frame_layout);
-        frameLayout.setVisibility(View.GONE);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        sortBgLayout = (FrameLayout) findViewById(R.id.sortBgLayout);
+        bottomOptionMenu = (RelativeLayout) findViewById(R.id.bottomOptionMenu);
+
+        sortBgLayout.setVisibility(View.GONE);
+        bottomOptionMenu.setVisibility(View.GONE);
+
+        frameLayout = (FrameLayout) findViewById(R.id.frame_layout);
+        frameLayout.getBackground().setAlpha(0);
+        fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
+        popularSortFAB = (FloatingActionButton) findViewById(R.id.popularSortFAB);
+        recentSortFAB = (FloatingActionButton) findViewById(R.id.recentSortFAB);
+        popularSortFAB.setOnClickListener(this);
+        recentSortFAB.setOnClickListener(this);
+        fabSort = (FloatingActionButton) findViewById(R.id.fabSort);
+        fabSort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (fabMenu.isExpanded()) {
+                    fabMenu.collapse();
+                } else {
+                    fabMenu.expand();
+                }
+            }
+        });
+
+        fabMenu.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
+            @Override
+            public void onMenuExpanded() {
+                frameLayout.getBackground().setAlpha(240);
+                frameLayout.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        fabMenu.collapse();
+                        return true;
+                    }
+                });
+            }
+
+            @Override
+            public void onMenuCollapsed() {
+                frameLayout.getBackground().setAlpha(0);
+                frameLayout.setOnTouchListener(null);
+            }
+        });
 
         swipeRefreshLayout.setOnRefreshListener((SwipeRefreshLayout.OnRefreshListener) CityBestArticleListingActivity.this);
         progressBar.setVisibility(View.VISIBLE);
@@ -282,8 +331,31 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
             showToast(getString(R.string.error_network));
             return;
         }
-        nextPageNumber=1;
+        nextPageNumber = 1;
         hitBestofCityArticleListingApi(sortType);
+    }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.recentSortFAB:
+                sortBgLayout.setVisibility(View.GONE);
+                fabMenu.collapse();
+                articleDataModelsNew.clear();
+                articlesListingAdapter.notifyDataSetChanged();
+                sortType = 0;
+                nextPageNumber = 1;
+                hitBestofCityArticleListingApi(0);
+                break;
+            case R.id.popularSortFAB:
+                sortBgLayout.setVisibility(View.GONE);
+                fabMenu.collapse();
+                articleDataModelsNew.clear();
+                articlesListingAdapter.notifyDataSetChanged();
+                sortType = 1;
+                nextPageNumber = 1;
+                hitBestofCityArticleListingApi(1);
+                break;
+        }
     }
 }

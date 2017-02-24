@@ -160,8 +160,12 @@
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:layout_toLeftOf="@+id/midSeparator"
+            android:drawableLeft="@drawable/filter_sort_icon"
+            android:drawablePadding="-50dp"
             android:drawableTint="@color/black"
             android:gravity="center"
+            android:paddingLeft="50dp"
+            android:paddingTop="5dp"
             android:text="SORT" />
         <!--android:drawableLeft="@drawable/sort_icon"-->
         <View
@@ -177,8 +181,12 @@
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_toRightOf="@+id/midSeparator"
+            android:drawableLeft="@drawable/filter_topics_icon"
+            android:drawablePadding="-50dp"
             android:drawableTint="@color/black"
             android:gravity="center"
+            android:paddingLeft="50dp"
+            android:paddingTop="5dp"
             android:text="FILTER" />
         <!--android:drawableLeft="@drawable/filter"-->
     </RelativeLayout>
