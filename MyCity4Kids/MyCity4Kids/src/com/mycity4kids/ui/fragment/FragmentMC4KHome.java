@@ -1708,7 +1708,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
             TextView address = (TextView) view.findViewById(R.id.addresstxt);
             TextView durationtxt = (TextView) view.findViewById(R.id.durationtxt);
             TextView category = (TextView) view.findViewById(R.id.category);
-            ImageView call = (ImageView) view.findViewById(R.id.call);
+            final ImageView call = (ImageView) view.findViewById(R.id.call);
             ImageView addEvent = (ImageView) view.findViewById(R.id.addEvent);
             cardView = (CardView) view.findViewById(R.id.cardViewWidget);
             LinearLayout middleContainer = (LinearLayout) view.findViewById(R.id.middleContainer);
@@ -1717,7 +1717,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
             title.setText(mBusinessDataListings.get(i).getName());
             ageGroup.setText(mBusinessDataListings.get(i).getAgegroup_text() + " years");
             address.setText(mBusinessDataListings.get(i).getLocality());
-            Calendar cal = Calendar.getInstance();
+            final Calendar cal = Calendar.getInstance();
             cal.setTime(DateTimeUtils.stringToDate(mBusinessDataListings.get(i).getStart_date()));
             int startmonth = cal.get(Calendar.MONTH);
             int startDay = cal.get(Calendar.DAY_OF_MONTH);
@@ -1756,7 +1756,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                         ToastUtils.showToast(getActivity(), getActivity().getResources().getString(R.string.event_added));
                     } else {
                         final BusinessDataListing information = mBusinessDataListings.get(finalI1);
-                        new AlertDialog.Builder(getActivity())
+                        new AlertDialog.Builder(getActivity(), R.style.MyAlertDialogStyle)
                                 .setTitle("Add Event to calendar")
                                 .setMessage("Do you want add this event to you personal calendar?")
                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -1783,10 +1783,18 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
             call.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + mBusinessDataListings.get(finalI2).getPhone()));
-                    Utils.pushEvent(getActivity(), GTMEventType.CALL_RESOURCES_CLICKED_EVENT, userId + "", "Dashboard");
+                    String[] telList = null;
+                    if (null != mBusinessDataListings.get(finalI2).getPhone()) {
+                        telList = mBusinessDataListings.get(finalI2).getPhone().split("/");
+                    }
+                    if (telList == null || telList.length == 0) {
+                        call.setVisibility(View.GONE);
+                    } else {
+                        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + telList[0]));
+                        Utils.pushEvent(getActivity(), GTMEventType.CALL_RESOURCES_CLICKED_EVENT, userId + "", "Dashboard");
+                        startActivity(intent);
+                    }
 
-                    startActivity(intent);
                 }
             });
 

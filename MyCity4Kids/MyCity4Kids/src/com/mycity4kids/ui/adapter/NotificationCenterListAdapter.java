@@ -138,7 +138,7 @@ public class NotificationCenterListAdapter extends BaseAdapter {
                     mContext.startActivity(intent);
                 }
             });
-        } else if ((StringUtils.isNullOrEmpty(nType) && "1".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_VIDEO_DETAILS.equals(nType)) {
+        } else if ((StringUtils.isNullOrEmpty(nType) && "4".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_VIDEO_DETAILS.equals(nType)) {
             holder.rootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

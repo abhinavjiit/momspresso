@@ -2,6 +2,7 @@ package com.mycity4kids.models.response;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +15,7 @@ public class ConfigResult {
     int articleTypeVersion;
     ConfigCategory category;
     private Map<String, String> notificationSettings;
-    private Map<String, String> notificationType;
+    private ArrayList<String> notificationType;
 
     public int getUserTypeVersion() {
         return userTypeVersion;
@@ -48,11 +49,11 @@ public class ConfigResult {
         this.notificationSettings = notificationSettings;
     }
 
-    public Map<String, String> getNotificationType() {
+    public ArrayList<String> getNotificationType() {
         return notificationType;
     }
 
-    public void setNotificationType(Map<String, String> notificationType) {
+    public void setNotificationType(ArrayList<String> notificationType) {
         this.notificationType = notificationType;
     }
 }

@@ -87,8 +87,8 @@ public class CategorySyncService extends IntentService {
                                              SharedPrefUtils.setNotificationConfig(CategorySyncService.this, entry.getKey(), entry.getValue());
                                          }
 
-                                         for (Map.Entry<String, String> entry : responseModel.getData().getResult().getNotificationType().entrySet()) {
-                                             SharedPrefUtils.setNotificationType(CategorySyncService.this, entry.getKey(), entry.getValue());
+                                         for (int i = 0; i < responseModel.getData().getResult().getNotificationType().size(); i++) {
+                                             SharedPrefUtils.setNotificationType(CategorySyncService.this, "" + i, responseModel.getData().getResult().getNotificationType().get(i));
                                          }
 
                                          version = SharedPrefUtils.getConfigCategoryVersion(CategorySyncService.this);
