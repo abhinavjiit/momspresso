@@ -181,7 +181,11 @@ public class NotificationCenterListAdapter extends BaseAdapter {
                     hitNotificationReadAPI(notificationList.get(position).getId());
                     notifyDataSetChanged();
                     Intent intent1 = new Intent(mContext, BloggerDashboardActivity.class);
-                    intent1.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, notificationList.get(position).getUserId());
+                    if (!StringUtils.isNullOrEmpty(notificationList.get(position).getAuthorId())) {
+                        intent1.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, notificationList.get(position).getAuthorId());
+                    } else {
+                        intent1.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, notificationList.get(position).getUserId());
+                    }
                     if (AppConstants.NOTIFICATION_STATUS_UNREAD.equals(notificationList.get(position).getIsRead())) {
                         intent1.putExtra(Constants.NOTIFICATION_CENTER_ID, notificationList.get(position).getId());
                     } else {

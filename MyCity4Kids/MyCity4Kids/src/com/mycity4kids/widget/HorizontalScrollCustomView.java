@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
@@ -116,6 +117,7 @@ public class HorizontalScrollCustomView extends LinearLayout {
             final View view = mInflator.inflate(R.layout.card_item_article_dashboard, null);
             view.setTag(i);
             ImageView articleImage = (ImageView) view.findViewById(R.id.imvAuthorThumb);
+            ImageView videoIndicatorImageView = (ImageView) view.findViewById(R.id.videoIndicatorImageView);
             TextView title = (TextView) view.findViewById(R.id.txvArticleTitle);
             if ((Constants.KEY_MOMSPRESSO.equals(listingType))
                     && (mDatalist.get(i).getImageUrl().getMobileWebThumbnail() == null || mDatalist.get(i).getImageUrl().getMobileWebThumbnail().endsWith("default.jpg"))) {
@@ -123,6 +125,13 @@ public class HorizontalScrollCustomView extends LinearLayout {
             } else {
                 Picasso.with(getContext()).load(mDatalist.get(i).getImageUrl().getMobileWebThumbnail()).placeholder(R.drawable.default_article).into(articleImage);
             }
+
+            if (!StringUtils.isNullOrEmpty(mDatalist.get(i).getVideoUrl())) {
+                videoIndicatorImageView.setVisibility(VISIBLE);
+            } else {
+                videoIndicatorImageView.setVisibility(INVISIBLE);
+            }
+
             title.setText(mDatalist.get(i).getTitle());
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -253,8 +262,11 @@ public class HorizontalScrollCustomView extends LinearLayout {
             view.setTag(i);
             ImageView articleImage = (ImageView) view.findViewById(R.id.imvAuthorThumb);
             TextView title = (TextView) view.findViewById(R.id.txvArticleTitle);
+            ImageView videoIndicatorImageView = (ImageView) view.findViewById(R.id.videoIndicatorImageView);
             Picasso.with(getContext()).load(AppUtils.getYoutubeThumbnailURL(vlogslist.get(i).getUrl())).placeholder(R.drawable.default_article).into(articleImage);
             title.setText(vlogslist.get(i).getTitle());
+            videoIndicatorImageView.setVisibility(VISIBLE);
+
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

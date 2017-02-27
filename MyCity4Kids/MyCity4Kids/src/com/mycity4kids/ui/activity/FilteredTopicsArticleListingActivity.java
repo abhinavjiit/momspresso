@@ -113,7 +113,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
     private HashMap<Topics, List<Topics>> allTopicsMap;
     private LinearLayout sortingLayout;
 
-    private Animation bottomUp, bottomDown;
+//    private Animation bottomUp, bottomDown;
     private String filteredTopics;
     private String topicLevel;
 
@@ -138,8 +138,8 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         bottomOptionMenu = (RelativeLayout) findViewById(R.id.bottomOptionMenu);
         bottomMenuRecentSort = (TextView) findViewById(R.id.recentSort);
         bottomMenuPopularSort = (TextView) findViewById(R.id.popularSort);
-        bottomUp = AnimationUtils.loadAnimation(this, R.anim.slide_up_from_bottom);
-        bottomDown = AnimationUtils.loadAnimation(this, R.anim.slide_down_to_bottom);
+//        bottomUp = AnimationUtils.loadAnimation(this, R.anim.slide_up_from_bottom);
+//        bottomDown = AnimationUtils.loadAnimation(this, R.anim.slide_down_to_bottom);
         sortBgLayout = (FrameLayout) findViewById(R.id.sortBgLayout);
         sortTextView.setOnClickListener(this);
         filterTextView.setOnClickListener(this);
@@ -423,8 +423,8 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                 sortBgLayout.setVisibility(View.GONE);
                 break;
             case R.id.sortTextView:
-                sortingLayout.setAnimation(bottomUp);
-                sortingLayout.startAnimation(bottomUp);
+//                sortingLayout.setAnimation(bottomUp);
+//                sortingLayout.startAnimation(bottomUp);
                 sortBgLayout.setVisibility(View.VISIBLE);
                 break;
             case R.id.filterTextView:

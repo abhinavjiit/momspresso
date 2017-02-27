@@ -1,7 +1,6 @@
 package com.mycity4kids.ui.activity;
 
 import android.accounts.NetworkErrorException;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -10,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.CheckedTextView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -19,15 +17,10 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
-import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
-import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
-import com.mycity4kids.models.response.ArticleListingResponse;
-import com.mycity4kids.models.response.ArticleListingResult;
-import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse;
 import com.mycity4kids.models.response.NotificationCenterListResponse;
 import com.mycity4kids.models.response.NotificationCenterResult;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -203,7 +196,7 @@ public class NotificationCenterListActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_notification_center, menu);
+//        getMenuInflater().inflate(R.menu.menu_notification_center, menu);
         return true;
     }
 

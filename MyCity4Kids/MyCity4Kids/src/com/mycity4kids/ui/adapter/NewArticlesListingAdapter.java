@@ -95,6 +95,7 @@ public class NewArticlesListingAdapter extends BaseAdapter {
                 holder.txvAuthorName = (TextView) view.findViewById(R.id.txvAuthorName);
                 holder.articleImageView = (ImageView) view.findViewById(R.id.articleImageView);
                 holder.authorImageView = (ImageView) view.findViewById(R.id.authorImageView);
+                holder.videoIndicatorImageView = (ImageView) view.findViewById(R.id.videoIndicatorImageView);
                 holder.forYouDescriptionTextView = (TextView) view.findViewById(R.id.forYouDescriptionTextView);
 
                 holder.viewCountTextView = (TextView) view.findViewById(R.id.viewCountTextView);
@@ -231,6 +232,12 @@ public class NewArticlesListingAdapter extends BaseAdapter {
                 }
             }
 
+            if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getVideoUrl())) {
+                holder.videoIndicatorImageView.setVisibility(View.VISIBLE);
+            } else {
+                holder.videoIndicatorImageView.setVisibility(View.INVISIBLE);
+            }
+
             if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getProfilePic().getClientAppMin())) {
                 Picasso.with(mContext).load(articleDataModelsNew.get(position).getProfilePic().getClientAppMin())
                         .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img).into(holder.authorImageView);
@@ -267,6 +274,7 @@ public class NewArticlesListingAdapter extends BaseAdapter {
         TextView txvAuthorName;
         ImageView articleImageView;
         ImageView authorImageView;
+        ImageView videoIndicatorImageView;
         TextView forYouDescriptionTextView;
         TextView viewCountTextView;
         TextView commentCountTextView;

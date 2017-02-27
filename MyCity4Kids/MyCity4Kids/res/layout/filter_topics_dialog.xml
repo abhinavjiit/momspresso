@@ -31,20 +31,25 @@
         <!--</RelativeLayout>-->
     </android.support.v7.widget.Toolbar>
 
-    <ListView
-        android:id="@+id/subTopicsListView"
+    <RelativeLayout
+        android:id="@+id/subTopicsContainer"
         android:layout_width="150dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
-        android:background="@color/home_bg"
-        android:divider="@drawable/underline" />
+        android:background="@color/home_bg">
 
-    <View
-        android:layout_width="150dp"
-        android:layout_height="2dp"
-        android:layout_below="@+id/subTopicsListView"
-        android:background="@drawable/underline" />
+        <ListView
+            android:id="@+id/subTopicsListView"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:divider="@drawable/underline" />
 
+        <View
+            android:layout_width="150dp"
+            android:layout_height="2dp"
+            android:layout_below="@+id/subTopicsListView"
+            android:background="@drawable/underline" />
+    </RelativeLayout>
     <!--<EditText-->
     <!--android:id="@+id/searchSubSubTopicsEditText"-->
     <!--android:layout_width="wrap_content"-->
@@ -78,7 +83,7 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/toolbar"
         android:layout_marginTop="5dp"
-        android:layout_toRightOf="@+id/subTopicsListView"
+        android:layout_toRightOf="@+id/subTopicsContainer"
         android:divider="@drawable/underline"
         android:paddingLeft="15dp" />
 
@@ -87,7 +92,8 @@
         android:layout_height="2dp"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/subSubTopicsListView"
-        android:layout_toRightOf="@+id/subTopicsListView"
+        android:layout_marginLeft="15dp"
+        android:layout_toRightOf="@+id/subTopicsContainer"
         android:background="@drawable/underline" />
 
 </RelativeLayout>
