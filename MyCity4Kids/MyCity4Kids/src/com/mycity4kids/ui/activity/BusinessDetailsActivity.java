@@ -858,28 +858,28 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
                 }
                 break;
                 case R.id.txvShare: {
-                    if (count <= 0) {
-                        goToLoginDialog();
-                        return;
-                    }
+//                    if (count <= 0) {
+//                        goToLoginDialog();
+//                        return;
+//                    }
                     Utils.pushEvent(BusinessDetailsActivity.this, GTMEventType.WRITEREVIEW_RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Resource/Event Details");
                     writeReviewFromHeader(AddReviewOrPhoto.WriteAReview);
                 }
                 break;
                 case R.id.txvBookNow: {
-                    if (count <= 0) {
-                        (BusinessDetailsActivity.this).mDetailsHeader.goToLoginDialog();
-                        return;
-                    }
+//                    if (count <= 0) {
+//                        (BusinessDetailsActivity.this).mDetailsHeader.goToLoginDialog();
+//                        return;
+//                    }
 
                     startActivity(new Intent(BusinessDetailsActivity.this, BookOrPayWebActivity.class).putExtra(Constants.WEB_VIEW_ECOMMERECE, information.getEcommerce_url()));
                 }
                 break;
                 case R.id.txvAddToCal: {
-                    if (count <= 0) {
-                        goToLoginDialog();
-                        return;
-                    }
+//                    if (count <= 0) {
+//                        goToLoginDialog();
+//                        return;
+//                    }
                     Utils.pushEvent(BusinessDetailsActivity.this, GTMEventType.ADDPHOTOS_RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Resource/Event Details");
 
                     CameraFragmentDialog fragmentDialog = new CameraFragmentDialog();
@@ -973,10 +973,10 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
                 break;
                 case R.id.txvBookNow: {
 
-                    if (count <= 0) {
-                        mDetailsHeader.goToLoginDialog();
-                        return;
-                    }
+//                    if (count <= 0) {
+//                        mDetailsHeader.goToLoginDialog();
+//                        return;
+//                    }
                     startActivity(new Intent(BusinessDetailsActivity.this, BookOrPayWebActivity.class).putExtra(Constants.WEB_VIEW_ECOMMERECE, information.getEcommerce_url()));
                     break;
                 }
