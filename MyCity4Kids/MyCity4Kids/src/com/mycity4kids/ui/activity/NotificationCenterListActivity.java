@@ -21,6 +21,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.models.request.NotificationReadRequest;
 import com.mycity4kids.models.response.NotificationCenterListResponse;
 import com.mycity4kids.models.response.NotificationCenterResult;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -196,7 +197,7 @@ public class NotificationCenterListActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.menu_notification_center, menu);
+        getMenuInflater().inflate(R.menu.menu_notification_center, menu);
         return true;
     }
 
@@ -205,10 +206,58 @@ public class NotificationCenterListActivity extends BaseActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
+                break;
             case R.id.markRead:
                 Log.d("Notification Center", "Mark all as read");
+                markAllNotificationAsRead();
+                break;
             default:
                 return super.onOptionsItemSelected(item);
         }
+        return super.onOptionsItemSelected(item);
     }
+
+    private void markAllNotificationAsRead() {
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        NotificationsAPI notificationsAPI = retrofit.create(NotificationsAPI.class);
+
+        NotificationReadRequest notificationReadRequest = new NotificationReadRequest();
+        notificationReadRequest.setReadAll("1");
+
+        Call<NotificationCenterListResponse> call = notificationsAPI.markNotificationAsRead(notificationReadRequest);
+//        progressBar.setVisibility(View.VISIBLE);
+        call.enqueue(allNotificationReadResponseListener);
+    }
+
+    private Callback<NotificationCenterListResponse> allNotificationReadResponseListener = new Callback<NotificationCenterListResponse>() {
+        @Override
+        public void onResponse(Call<NotificationCenterListResponse> call, retrofit2.Response<NotificationCenterListResponse> response) {
+            if (response == null || null == response.body()) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                Crashlytics.logException(nee);
+                showToast("Something went wrong from server");
+                return;
+            }
+            try {
+                NotificationCenterListResponse responseData = (NotificationCenterListResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    paginationValue = "";
+                    getNotificationFromAPI();
+                } else {
+                    showToast(responseData.getReason());
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+//                showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<NotificationCenterListResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+//            showToast(getString(R.string.went_wrong));
+        }
+    };
 }

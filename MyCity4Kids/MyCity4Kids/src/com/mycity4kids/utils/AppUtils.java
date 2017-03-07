@@ -230,6 +230,12 @@ public class AppUtils {
         }
     }
 
+    public static void deleteFile(String filePath) {
+        File dir = new File(Environment.getExternalStorageDirectory() + File.separator + filePath);
+        if (dir.exists())
+            dir.delete();
+    }
+
     public static String getAppVersion(Context mContext) {
         PackageInfo pInfo = null;
         try {

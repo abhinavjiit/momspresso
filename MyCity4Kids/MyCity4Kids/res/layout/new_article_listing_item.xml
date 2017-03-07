@@ -59,7 +59,7 @@
                     android:layout_height="90dp"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="60dp"
-                    android:src="@drawable/play_1"
+                    android:src="@drawable/ic_video_icon"
                     android:visibility="invisible" />
 
                 <TextView

@@ -23,7 +23,7 @@
                 android:layout_height="wrap_content" />
 
             <com.mycity4kids.widget.HorizontalScrollCustomView
-                android:id="@+id/funnyVideosSection"
+                android:id="@+id/momspressoSection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content" />
 
             <com.mycity4kids.widget.HorizontalScrollCustomView
-                android:id="@+id/momspressoSection"
+                android:id="@+id/funnyVideosSection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

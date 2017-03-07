@@ -189,6 +189,8 @@ public class VideoUploadProgressActivity extends BaseActivity {
 
             } catch (Exception e) {
                 exception = e;
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
                 cancel(true);
             }
             return null;
@@ -218,7 +220,9 @@ public class VideoUploadProgressActivity extends BaseActivity {
         showAlertDialog("mycity4kids", "Your upload progress will be lost. Are you sure you want to exit?", new OnButtonClicked() {
             @Override
             public void onButtonCLick(int buttonId) {
-                uploadTask.cancel(true);
+                if (uploadTask != null) {
+                    uploadTask.cancel(true);
+                }
                 finish();
             }
         });

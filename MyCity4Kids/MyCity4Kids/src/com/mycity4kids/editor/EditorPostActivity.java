@@ -481,7 +481,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                     showToast("Unable to save draft. Title should smaller than 150 characters");
                 } else if (mEditorFragment.getContent().toString().isEmpty()) {
                     showToast("Body can't be empty");
-                } else if (mEditorFragment.getContent().toString().split(" ").length < 300 && !BuildConfig.DEBUG) {
+                } else if (mEditorFragment.getContent().toString().replace("&nbsp;", " ").split("\\s+").length < 299 && !BuildConfig.DEBUG) {
                     showToast("Please write atleast 300 words to publish");
                 } else if (mEditorFragment.imageUploading == 0) {
                     Log.e("imageuploading", mEditorFragment.imageUploading + "");

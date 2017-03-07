@@ -64,6 +64,7 @@ import com.mycity4kids.newmodels.VolleyBaseResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.EventsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.NotificationsAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.RecommendationAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.activity.ActivityCreateAppointment;
@@ -308,9 +309,9 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
 
     private void hitForYouListingApi() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
+        RecommendationAPI foryouAPI = retrofit.create(RecommendationAPI.class);
 
-        Call<ArticleListingResponse> filterCall = topicsAPI.getForYouArticles("" + userId, "" + from, "" + to);
+        Call<ArticleListingResponse> filterCall = foryouAPI.getRecommendedArticlesList("" + userId, 10, "");
         filterCall.enqueue(forYouResponseCallback);
     }
 
