@@ -49,11 +49,9 @@ import com.mycity4kids.facebook.FacebookUtils;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.IFacebookUser;
-import com.mycity4kids.models.NotificationSettingsModel;
 import com.mycity4kids.models.logout.LogoutResponse;
 import com.mycity4kids.models.request.SocialConnectRequest;
 import com.mycity4kids.models.response.BaseResponse;
-import com.mycity4kids.models.response.NotificationSettingsResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.reminders.AppointmentManager;
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
@@ -62,10 +60,7 @@ import com.mycity4kids.ui.activity.EditProfieActivity;
 import com.mycity4kids.ui.activity.FollowedTopicsListingActivity;
 import com.mycity4kids.ui.activity.IdTokenLoginActivity;
 import com.mycity4kids.ui.activity.SettingsActivity;
-import com.mycity4kids.ui.adapter.NotificationSettingsListAdapter;
 import com.mycity4kids.utils.AppUtils;
-
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -92,10 +87,10 @@ public class FragmentSetting extends BaseFragment implements View.OnClickListene
         Utils.pushOpenScreenEvent(getActivity(), "Settings", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
 
         // ((SettingsActivity) getActivity()).refreshMenu();
-        bio = getArguments().getString("bio");
-        firstName = getArguments().getString("firstName");
-        lastName = getArguments().getString("lastName");
-        phoneNumber = getArguments().getString("phoneNumber");
+//        bio = getArguments().getString("bio");
+//        firstName = getArguments().getString("firstName");
+//        lastName = getArguments().getString("lastName");
+//        phoneNumber = getArguments().getString("phoneNumber");
         facebookConnectTextView = (TextView) view.findViewById(R.id.facebookConnect);
         appVersionLayout = (LinearLayout) view.findViewById(R.id.appVersionLayout);
         appVersionTextView = (TextView) view.findViewById(R.id.appVersionTextView);
@@ -105,6 +100,9 @@ public class FragmentSetting extends BaseFragment implements View.OnClickListene
         ((TextView) view.findViewById(R.id.viewFollowingTopics)).setOnClickListener(this);
         ((TextView) view.findViewById(R.id.editProfile)).setOnClickListener(this);
         ((TextView) view.findViewById(R.id.notifications)).setOnClickListener(this);
+        ((TextView) view.findViewById(R.id.subscriptions)).setOnClickListener(this);
+        ((TextView) view.findViewById(R.id.languageSubscriptions)).setOnClickListener(this);
+
         appVersionLayout.setOnClickListener(this);
         facebookConnectTextView.setOnClickListener(this);
 
@@ -196,10 +194,10 @@ public class FragmentSetting extends BaseFragment implements View.OnClickListene
                 break;
             case R.id.editProfile:
                 Intent intent = new Intent(getActivity(), EditProfieActivity.class);
-                intent.putExtra("bio", bio);
-                intent.putExtra("firstName", firstName);
-                intent.putExtra("lastName", lastName);
-                intent.putExtra("phoneNumber", phoneNumber);
+//                intent.putExtra("bio", bio);
+//                intent.putExtra("firstName", firstName);
+//                intent.putExtra("lastName", lastName);
+//                intent.putExtra("phoneNumber", phoneNumber);
                 startActivity(intent);
                 break;
             case R.id.cityChange:
@@ -207,6 +205,12 @@ public class FragmentSetting extends BaseFragment implements View.OnClickListene
                 break;
             case R.id.notifications:
                 ((SettingsActivity) getActivity()).replaceFragment(new NotificationSettingsFragment(), null, true);
+                break;
+            case R.id.languageSubscriptions:
+                ((SettingsActivity) getActivity()).replaceFragment(new LanguageSettingsFragment(), null, true);
+                break;
+            case R.id.subscriptions:
+                ((SettingsActivity) getActivity()).replaceFragment(new SubscriptionSettingsFragment(), null, true);
                 break;
             case R.id.viewFollowingTopics:
                 Intent intenrt = new Intent(getActivity(), FollowedTopicsListingActivity.class);

@@ -23,6 +23,7 @@ public class UserInfo extends BaseDataModel implements Parcelable {
     private String userType;
     private String profilePicUrl;
     private String loginMode;
+    private String cityId;
 
     public UserInfo() {
         super();
@@ -164,6 +165,14 @@ public class UserInfo extends BaseDataModel implements Parcelable {
         this.loginMode = loginMode;
     }
 
+    public String getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(String cityId) {
+        this.cityId = cityId;
+    }
+
     protected UserInfo(Parcel in) {
         id = in.readString();
         dynamoId = in.readString();
@@ -182,6 +191,7 @@ public class UserInfo extends BaseDataModel implements Parcelable {
         userType = in.readString();
         profilePicUrl = in.readString();
         loginMode = in.readString();
+        cityId = in.readString();
     }
 
     @Override
@@ -203,6 +213,7 @@ public class UserInfo extends BaseDataModel implements Parcelable {
         dest.writeString(userType);
         dest.writeString(profilePicUrl);
         dest.writeString(loginMode);
+        dest.writeString(cityId);
     }
 
     @Override

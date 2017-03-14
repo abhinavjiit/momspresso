@@ -83,14 +83,63 @@ public class NewArticlesListingAdapter extends BaseAdapter {
         return position;
     }
 
+//    @Override
+//    public int getItemViewType(int position) {
+//        if (position > 0 && position % 10 == 0) {
+//            return 0;
+//        } else {
+//            return 1;
+//        }
+//    }
+//
+//    @Override
+//    public int getViewTypeCount() {
+//        return 2;
+//    }
+
     @Override
     public View getView(final int position, View view, ViewGroup parent) {
 
         try {
             final ViewHolder holder;
+//            int type = getItemViewType(position);
+
             if (view == null) {
-                view = mInflator.inflate(R.layout.new_article_listing_item, null);
                 holder = new ViewHolder();
+//                switch (type) {
+//                    case 0:
+//                        view = mInflator.inflate(R.layout.language_feed_article_listing_item, null);
+//
+//                        holder.languageFeedTextView = (TextView) view.findViewById(R.id.languageFeedTextView);
+//
+//                        holder.txvArticleTitle = (TextView) view.findViewById(R.id.txvArticleTitle);
+//                        holder.txvAuthorName = (TextView) view.findViewById(R.id.txvAuthorName);
+//                        holder.articleImageView = (ImageView) view.findViewById(R.id.articleImageView);
+//                        holder.authorImageView = (ImageView) view.findViewById(R.id.authorImageView);
+//                        holder.videoIndicatorImageView = (ImageView) view.findViewById(R.id.videoIndicatorImageView);
+//                        holder.forYouDescriptionTextView = (TextView) view.findViewById(R.id.forYouDescriptionTextView);
+//
+//                        holder.viewCountTextView = (TextView) view.findViewById(R.id.viewCountTextView);
+//                        holder.commentCountTextView = (TextView) view.findViewById(R.id.commentCountTextView);
+//                        holder.recommendCountTextView = (TextView) view.findViewById(R.id.recommendCountTextView);
+//
+//                        holder.authorTypeTextView = (TextView) view.findViewById(R.id.authorTypeTextView);
+//                        holder.rankTextView = (TextView) view.findViewById(R.id.rankTextView);
+//
+//                        holder.flowLayout = (FlowLayout) view.findViewById(R.id.flowLayout);
+//                        holder.popularSubCatTextView1 = (TextView) view.findViewById(R.id.popularSubcatTextView_1);
+//                        holder.popularSubCatTextView2 = (TextView) view.findViewById(R.id.popularSubcatTextView_2);
+//                        holder.popularSubCatTextView3 = (TextView) view.findViewById(R.id.popularSubcatTextView_3);
+//                        holder.popularSubCatTextView4 = (TextView) view.findViewById(R.id.popularSubcatTextView_4);
+//
+//                        holder.tvParentLL1 = (LinearLayout) view.findViewById(R.id.popularSubcatLL_1);
+//                        holder.tvParentLL2 = (LinearLayout) view.findViewById(R.id.popularSubcatLL_2);
+//                        holder.tvParentLL3 = (LinearLayout) view.findViewById(R.id.popularSubcatLL_3);
+//                        holder.tvParentLL4 = (LinearLayout) view.findViewById(R.id.popularSubcatLL_4);
+//                        break;
+//                    case 1:
+                view = mInflator.inflate(R.layout.new_article_listing_item, null);
+
                 holder.txvArticleTitle = (TextView) view.findViewById(R.id.txvArticleTitle);
                 holder.txvAuthorName = (TextView) view.findViewById(R.id.txvAuthorName);
                 holder.articleImageView = (ImageView) view.findViewById(R.id.articleImageView);
@@ -115,7 +164,8 @@ public class NewArticlesListingAdapter extends BaseAdapter {
                 holder.tvParentLL2 = (LinearLayout) view.findViewById(R.id.popularSubcatLL_2);
                 holder.tvParentLL3 = (LinearLayout) view.findViewById(R.id.popularSubcatLL_3);
                 holder.tvParentLL4 = (LinearLayout) view.findViewById(R.id.popularSubcatLL_4);
-
+//                        break;
+//                }
                 view.setTag(holder);
             } else {
                 holder = (ViewHolder) view.getTag();
@@ -261,6 +311,15 @@ public class NewArticlesListingAdapter extends BaseAdapter {
                     mContext.startActivity(intent);
                 }
             });
+
+//            holder.languageFeedTextView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Intent intent = new Intent(mContext, BloggerDashboardActivity.class);
+//                    intent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, articleDataModelsNew.get(position).getUserId());
+//                    mContext.startActivity(intent);
+//                }
+//            });
         } catch (Exception ex) {
             Crashlytics.logException(ex);
             Log.d("MC4kException", Log.getStackTraceString(ex));
@@ -270,6 +329,8 @@ public class NewArticlesListingAdapter extends BaseAdapter {
     }
 
     class ViewHolder {
+        TextView languageFeedTextView;
+
         TextView txvArticleTitle;
         TextView txvAuthorName;
         ImageView articleImageView;

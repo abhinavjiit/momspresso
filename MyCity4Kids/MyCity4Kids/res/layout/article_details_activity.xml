@@ -47,36 +47,69 @@
                 android:textSize="28sp"
                 app:fontName="_ptsan_.ttf" />
 
-            <TextView
-                android:id="@+id/articleViewCountTextView"
-                android:layout_width="wrap_content"
+            <org.apmem.tools.layouts.FlowLayout
+                android:id="@+id/statsFlowLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/article_title"
-                android:layout_marginBottom="10dp"
-                android:fontFamily="sans-serif-thin"
-                android:paddingLeft="10dp"
-                android:text="Article Views"
-                android:textColor="@color/grey"
-                android:textSize="12sp" />
+                android:layout_marginLeft="10dp">
 
-            <TextView
-                android:id="@+id/article_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/article_title"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@+id/articleViewCountTextView"
-                android:fontFamily="sans-serif-thin"
-                android:text="Article Date"
-                android:textColor="@color/grey"
-                android:textSize="12sp" />
+                <TextView
+                    android:id="@+id/articleViewCountTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginRight="10dp"
+                    android:fontFamily="sans-serif-thin"
+                    android:text="Article Views"
+                    android:textColor="@color/grey"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/articleCommentCountTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/article_title"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_toRightOf="@+id/articleViewCountTextView"
+                    android:fontFamily="sans-serif-thin"
+                    android:text="Article Comments"
+                    android:textColor="@color/grey"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/articleRecommendationCountTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/article_title"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_toRightOf="@+id/articleCommentCountTextView"
+                    android:fontFamily="sans-serif-thin"
+                    android:text="Article Recommendations"
+                    android:textColor="@color/grey"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/article_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/article_title"
+                    android:layout_marginBottom="10dp"
+                    android:layout_toRightOf="@+id/articleRecommendationCountTextView"
+                    android:fontFamily="sans-serif-thin"
+                    android:text="Article Date"
+                    android:textColor="@color/grey"
+                    android:textSize="12sp" />
+
+            </org.apmem.tools.layouts.FlowLayout>
 
             <ImageView
                 android:id="@+id/cover_image"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/article_details_app_bar_height"
-                android:layout_below="@+id/articleViewCountTextView"
+                android:layout_below="@+id/statsFlowLayout"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:scaleType="fitXY"

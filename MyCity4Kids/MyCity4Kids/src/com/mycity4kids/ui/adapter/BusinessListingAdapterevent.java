@@ -369,7 +369,7 @@ public class BusinessListingAdapterevent extends BaseAdapter implements Filterab
                 distanceTime.append(orgweekday);
                 distanceTime.append(" at ").append(timeString.toLowerCase());
             }
-            holder.txvtime.setText(distanceTime);
+            holder.txvtime.setText(filteredData.get(position).getAgegroup_text() + " years");
         } catch (Exception e) {
             e.printStackTrace();
         }

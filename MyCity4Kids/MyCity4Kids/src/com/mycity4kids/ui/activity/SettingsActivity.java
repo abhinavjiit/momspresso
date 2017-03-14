@@ -29,8 +29,10 @@ import com.mycity4kids.ui.fragment.FragmentFamilyProfile;
 import com.mycity4kids.ui.fragment.FragmentHomeCategory;
 import com.mycity4kids.ui.fragment.FragmentKidProfile;
 import com.mycity4kids.ui.fragment.FragmentSetting;
+import com.mycity4kids.ui.fragment.LanguageSettingsFragment;
 import com.mycity4kids.ui.fragment.NotificationFragment;
 import com.mycity4kids.ui.fragment.NotificationSettingsFragment;
+import com.mycity4kids.ui.fragment.SubscriptionSettingsFragment;
 
 /**
  * Created by anshul on 8/4/16.
@@ -87,10 +89,10 @@ public class SettingsActivity extends BaseActivity {
             //changeVisibiltyOfArrow(false);
             setTitle("Settings");
             Bundle bundle = new Bundle();
-            bundle.putString("bio", getIntent().getStringExtra("bio"));
-            bundle.putString("firstName", getIntent().getStringExtra("firstName"));
-            bundle.putString("lastName", getIntent().getStringExtra("lastName"));
-            bundle.putString("phoneNumber", getIntent().getStringExtra("phoneNumber"));
+//            bundle.putString("bio", getIntent().getStringExtra("bio"));
+//            bundle.putString("firstName", getIntent().getStringExtra("firstName"));
+//            bundle.putString("lastName", getIntent().getStringExtra("lastName"));
+//            bundle.putString("phoneNumber", getIntent().getStringExtra("phoneNumber"));
             replaceFragment(new FragmentSetting(), bundle, false);
         }
         getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
@@ -137,6 +139,16 @@ public class SettingsActivity extends BaseActivity {
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                 } else if (currentFrag instanceof NotificationSettingsFragment) {
                     setTitle("Notification Settings");
+                    mDrawerToggle.setDrawerIndicatorEnabled(false);
+                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                    mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                } else if (currentFrag instanceof LanguageSettingsFragment) {
+                    setTitle("Language Setting");
+                    mDrawerToggle.setDrawerIndicatorEnabled(false);
+                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                    mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                } else if (currentFrag instanceof SubscriptionSettingsFragment) {
+                    setTitle("Email Subscription");
                     mDrawerToggle.setDrawerIndicatorEnabled(false);
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
@@ -201,7 +213,12 @@ public class SettingsActivity extends BaseActivity {
             getMenuInflater().inflate(R.menu.kidsresource_listing, menu);
         } else if (topFragment instanceof NotificationSettingsFragment) {
             getMenuInflater().inflate(R.menu.forgot_password, menu);
+        } else if (topFragment instanceof LanguageSettingsFragment) {
+            getMenuInflater().inflate(R.menu.forgot_password, menu);
+        } else if (topFragment instanceof SubscriptionSettingsFragment) {
+            getMenuInflater().inflate(R.menu.forgot_password, menu);
         }
+
         return true;
     }
 
@@ -226,6 +243,10 @@ public class SettingsActivity extends BaseActivity {
                     ((ChangeCityFragment) topFragment).changeCity();
                 } else if (topFragment instanceof NotificationSettingsFragment) {
                     ((NotificationSettingsFragment) topFragment).updateNotificationSettings();
+                } else if (topFragment instanceof LanguageSettingsFragment) {
+                    ((LanguageSettingsFragment) topFragment).updateLanguageSubscription();
+                } else if (topFragment instanceof SubscriptionSettingsFragment) {
+                    ((SubscriptionSettingsFragment) topFragment).updateLanguageSubscription();
                 }
                 break;
             case android.R.id.home:

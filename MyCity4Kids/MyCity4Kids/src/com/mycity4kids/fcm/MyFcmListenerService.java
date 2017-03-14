@@ -36,6 +36,7 @@ import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.LoadWebViewActivity;
 import com.mycity4kids.ui.activity.NewsLetterWebviewActivity;
 import com.mycity4kids.ui.activity.PlanYourWeekActivity;
+import com.mycity4kids.ui.activity.SettingsActivity;
 import com.mycity4kids.ui.activity.SplashActivity;
 import com.mycity4kids.ui.activity.VlogsDetailActivity;
 
@@ -462,6 +463,43 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
                         // Adds the back stack
                         stackBuilder.addParentStack(BloggerDashboardActivity.class);
+                        // Adds the Intent to the top of the stack
+                        stackBuilder.addNextIntent(resultIntent);
+                        contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                    }
+                    String title = remoteMessage.getNotification().getTitle();
+                    String body = remoteMessage.getNotification().getBody();
+                    Bitmap icon = BitmapFactory.decodeResource(getResources(),
+                            R.drawable.ic_launcher);
+                    NotificationCompat.Builder mBuilder =
+                            new NotificationCompat.Builder(this)
+                                    .setLargeIcon(icon)
+                                    .setSmallIcon(R.drawable.icon_notify)
+                                    .setContentTitle(title)
+                                    .setContentIntent(contentIntent)
+                                    .setContentText(body)
+                                    .setAutoCancel(true);
+
+                    // Gets an instance of the NotificationManager service
+                    NotificationManager mNotifyMgr =
+                            (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                    // Builds the notification and issues it.
+                    mNotifyMgr.notify(requestID, mBuilder.build());
+
+                } else if (type.equalsIgnoreCase("app_settings")) {
+                    int requestID = (int) System.currentTimeMillis();
+                    Intent resultIntent;
+                    PendingIntent contentIntent;
+                    if (SharedPrefUtils.getAppUpgrade(this)) {
+                        resultIntent = new Intent(getApplicationContext(), SplashActivity.class);
+                        contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    } else {
+                        resultIntent = new Intent(getApplicationContext(), SettingsActivity.class);
+                        resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        resultIntent.putExtra("load_fragment", Constants.SETTINGS_FRAGMENT);
+                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+                        // Adds the back stack
+                        stackBuilder.addParentStack(SettingsActivity.class);
                         // Adds the Intent to the top of the stack
                         stackBuilder.addNextIntent(resultIntent);
                         contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);

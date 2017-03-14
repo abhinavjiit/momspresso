@@ -14,16 +14,44 @@
 
         <TextView
             android:id="@+id/labelTextView"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
             android:layout_gravity="center_vertical"
-            android:layout_toLeftOf="@+id/addTopicsTextView"
             android:paddingBottom="3dp"
             android:paddingLeft="8dp"
             android:paddingTop="10dp"
             android:text="TRENDING BLOGS"
             android:textColor="@color/primary_blue"
             android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/labelTextView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_toRightOf="@+id/labelTextView"
+            android:paddingBottom="3dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp"
+            android:text="Bangla"
+            android:textColor="@color/primary_blue"
+            android:textSize="15sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/labelTextView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_toRightOf="@+id/labelTextView2"
+            android:paddingBottom="3dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp"
+            android:text="Marathi"
+            android:textColor="@color/primary_blue"
+            android:textSize="15sp"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/addTopicsTextView"

@@ -15,81 +15,79 @@ import com.kelltontech.network.Response;
 import com.mycity4kids.application.BaseApplication;
 
 /**
- * 
  * @author deepanker.chaudhary
- *
  */
-public abstract class BaseFragment extends Fragment implements IScreen{
+public abstract class BaseFragment extends Fragment implements IScreen {
 
 
-	@Override
-	public final void handleUiUpdate(final Response response) {
-		if(getActivity()!=null)
-		{
-		if (getActivity().isFinishing()) {
-			return;
-		}
-		try {
-			updateUi(response);
-		} catch (Exception e) {
-			Log.i(getClass().getSimpleName(), "updateUi()", e);
-		}
-		
-	}
-	}
-	
-private ProgressDialog	mProgressDialog;
-	
-	/**
-	 * @param bodyText
-	 */
-	public void showProgressDialog(String bodyText) {
-		if (mProgressDialog == null) {
-			mProgressDialog = new ProgressDialog(getActivity());
-			mProgressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-			mProgressDialog.setCancelable(false);
-			mProgressDialog.setCanceledOnTouchOutside(false);
-			mProgressDialog.setOnKeyListener(new Dialog.OnKeyListener() {
-				@Override
-				public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-					if (keyCode == KeyEvent.KEYCODE_CAMERA || keyCode == KeyEvent.KEYCODE_SEARCH) {
-						return true; //
-					}
-					return false;
-				}
-			});
-		}
+    @Override
+    public final void handleUiUpdate(final Response response) {
+        if (getActivity() != null) {
+            if (getActivity().isFinishing()) {
+                return;
+            }
+            try {
+                updateUi(response);
+            } catch (Exception e) {
+                Log.i(getClass().getSimpleName(), "updateUi()", e);
+            }
 
-		mProgressDialog.setMessage(bodyText);
+        }
+    }
 
-		if (!mProgressDialog.isShowing()) {
-			mProgressDialog.show();
-		}
-	}
+    private ProgressDialog mProgressDialog;
 
-	/**
-	 * 
-	 */
-	public void removeProgressDialog() {
-		if (mProgressDialog != null && mProgressDialog.isShowing()) {
-			mProgressDialog.dismiss();
-		}
-	}
-	protected abstract void updateUi(Response response);
+    /**
+     * @param bodyText
+     */
+    public void showProgressDialog(String bodyText) {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(getActivity());
+            mProgressDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.setCanceledOnTouchOutside(false);
+            mProgressDialog.setOnKeyListener(new Dialog.OnKeyListener() {
+                @Override
+                public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                    if (keyCode == KeyEvent.KEYCODE_CAMERA || keyCode == KeyEvent.KEYCODE_SEARCH) {
+                        return true; //
+                    }
+                    return false;
+                }
+            });
+        }
+
+        mProgressDialog.setMessage(bodyText);
+
+        if (!mProgressDialog.isShowing()) {
+            mProgressDialog.show();
+        }
+    }
+
+    /**
+     *
+     */
+    public void removeProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
+    }
+
+    protected abstract void updateUi(Response response);
 
 
     public void refreshFragment(Bundle bundle) {
 
     }
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		final Tracker tracker = ((BaseApplication)getActivity().getApplication()).getTracker(BaseApplication.TrackerName.APP_TRACKER);
-		if(tracker != null){
+    @Override
+    public void onResume() {
+        super.onResume();
+        final Tracker tracker = ((BaseApplication) getActivity().getApplication()).getTracker(BaseApplication.TrackerName.APP_TRACKER);
+        if (tracker != null) {
 
-			tracker.setScreenName(getClass().getSimpleName());
-			tracker.send(new HitBuilders.ScreenViewBuilder().build());
-		}
-	}
+            tracker.setScreenName(getClass().getSimpleName());
+            tracker.send(new HitBuilders.ScreenViewBuilder().build());
+        }
+    }
 }

@@ -19,14 +19,15 @@ import com.mycity4kids.asynctask.HeavyDbTask;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.ConfigurationController;
-import com.mycity4kids.controller.ControllerCityByPincode;
 import com.mycity4kids.interfaces.OnUIView;
 import com.mycity4kids.models.VersionApiModel;
 import com.mycity4kids.models.city.MetroCity;
 import com.mycity4kids.models.configuration.ConfigurationApiModel;
+import com.mycity4kids.models.response.CityConfigResponse;
+import com.mycity4kids.models.response.CityInfoItem;
 import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse;
-import com.mycity4kids.newmodels.parentingmodel.CityByPinCodeModel;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.retrofitAPIsInterfaces.ConfigAPIs;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 
 import java.util.ArrayList;
@@ -40,6 +41,8 @@ import retrofit2.Retrofit;
  */
 public class LoadingActivity extends BaseActivity {
 
+    private int cityIdFromLocation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,80 +51,74 @@ public class LoadingActivity extends BaseActivity {
 
         if (!ConnectivityUtils.isNetworkEnabled(LoadingActivity.this)) {
             navigateToDashboard();
-//            ToastUtils.showToast(LoadingActivity.this, getString(R.string.error_network));
             return;
         }
-//        showProgressDialog(getString(R.string.please_wait));
-
-        // get cityid from pincode
-        new ControllerCityByPincode(this, this).getData(AppConstants.CITY_BY_PINCODE_REQUEST, "" + SharedPrefUtils.getpinCode(this));
+        cityIdFromLocation = Integer.parseInt(SharedPrefUtils.getUserDetailModel(LoadingActivity.this).getCityId());
+        SharedPrefUtils.getCurrentCityModel(LoadingActivity.this).getId();
+        if (SharedPrefUtils.getCurrentCityModel(LoadingActivity.this).getId() == AppConstants.OTHERS_CITY_ID) {
+            fetchingLocation();
+        } else {
+            navigateToDashboard();
+        }
     }
+
+    private void fetchingLocation() {
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        ConfigAPIs cityConfigAPI = retrofit.create(ConfigAPIs.class);
+        Call<CityConfigResponse> call = cityConfigAPI.getCityConfig();
+        call.enqueue(cityConfigResponseCallback);
+    }
+
+    private Callback<CityConfigResponse> cityConfigResponseCallback = new Callback<CityConfigResponse>() {
+        @Override
+        public void onResponse(Call<CityConfigResponse> call, retrofit2.Response<CityConfigResponse> response) {
+            if (response == null || null == response.body()) {
+                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                Crashlytics.logException(nee);
+                return;
+            }
+            try {
+                CityConfigResponse responseData = (CityConfigResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    ArrayList<CityInfoItem> mDatalist = responseData.getData().getResult().getCityData();
+                    for (int i = 0; i < mDatalist.size(); i++) {
+                        CityInfoItem cii = mDatalist.get(i);
+                        int cId = Integer.parseInt(cii.getId().replace("city-", ""));
+                        if (cId == cityIdFromLocation) {
+                            MetroCity model = new MetroCity();
+                            model.setId(cId);
+                            model.setName(cii.getCityName());
+                            model.setNewCityId(cii.getId());
+
+                            SharedPrefUtils.setCurrentCityModel(LoadingActivity.this, model);
+                            SharedPrefUtils.setCityFetched(LoadingActivity.this, true);
+                            sendConfigurationRequest();
+                        }
+                    }
+                } else {
+                    navigateToDashboard();
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+                navigateToDashboard();
+            }
+        }
+
+        @Override
+        public void onFailure(Call<CityConfigResponse> call, Throwable t) {
+            navigateToDashboard();
+        }
+    };
 
     @Override
     protected void updateUi(Response response) {
-//        removeProgressDialog();
         if (response == null) {
             SharedPrefUtils.setCityFetched(this, false);
-//            showToast(getResources().getString(R.string.server_error));
             return;
         }
         switch (response.getDataType()) {
-            case AppConstants.CITY_BY_PINCODE_REQUEST:
-                navigateToDashboard();
-                CityByPinCodeModel cityByPinCodeModel = (CityByPinCodeModel) response.getResponseObject();
-                if (cityByPinCodeModel.getResponseCode() == 200) {
-                    MetroCity model = new MetroCity();
-                    model.setId(cityByPinCodeModel.getResult().getData().getCity_id());
-                    switch (cityByPinCodeModel.getResult().getData().getCity_id()) {
-                        case 1:
-                            model.setName("Delhi-NCR");
-                            break;
-                        case 2:
-                            model.setName("Bangalore");
-                            break;
-                        case 3:
-                            model.setName("Mumbai");
-                            break;
-                        case 4:
-                            model.setName("Pune");
-                            break;
-                        case 5:
-                            model.setName("Hyderabad");
-                            break;
-                        case 6:
-                            model.setName("Chennai");
-                            break;
-                        case 7:
-                            model.setName("Kolkata");
-                            break;
-                        case 8:
-                            model.setName("Jaipur");
-                            break;
-                        case 9:
-                            model.setName("Ahmedabad");
-                            break;
-                        default:
-                            model.setName("Delhi-NCR");
-                            break;
-                    }
-
-                    int lastCityIdUsed = SharedPrefUtils.getCurrentCityModel(this).getId();
-                    SharedPrefUtils.setCurrentCityModel(this, model);
-                    SharedPrefUtils.setCityFetched(this, true);
-                    if (lastCityIdUsed != model.getId()) {
-                        // hit configuration API
-                        sendConfigurationRequest();
-                    } else {
-                        navigateToDashboard();
-                    }
-
-                } else {
-                    SharedPrefUtils.setCityFetched(this, false);
-                    navigateToDashboard();
-                }
-                break;
             case AppConstants.CONFIGURATION_REQUEST:
-//                removeProgressDialog();
                 Object responseObject = response.getResponseObject();
                 if (responseObject instanceof ConfigurationApiModel) {
                     ConfigurationApiModel _configurationResponse = (ConfigurationApiModel) responseObject;
@@ -136,7 +133,6 @@ public class LoadingActivity extends BaseActivity {
                         public void comeBackOnUI() {
                             navigateToDashboard();
                             Log.i("Dashboard", "Configuration Data Updated");
-//                            navigateToNextScreen(true);
                         }
                     });
                     _heavyDbTask.execute();
@@ -221,7 +217,6 @@ public class LoadingActivity extends BaseActivity {
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-//                showToast(getString(R.string.went_wrong));
                 Intent intent = new Intent(LoadingActivity.this, DashboardActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
@@ -234,7 +229,6 @@ public class LoadingActivity extends BaseActivity {
             removeProgressDialog();
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
-//            showToast(getString(R.string.went_wrong));
             Intent intent = new Intent(LoadingActivity.this, DashboardActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
@@ -242,8 +236,4 @@ public class LoadingActivity extends BaseActivity {
         }
     };
 
-    @Override
-    public void onBackPressed() {
-//        super.onBackPressed();
-    }
 }

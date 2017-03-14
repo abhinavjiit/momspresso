@@ -170,6 +170,8 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     private TextView article_title;
     private TextView author_type;
     private TextView articleViewCountTextView;
+    private TextView articleCommentCountTextView;
+    private TextView articleRecommendationCountTextView;
     private String authorId;
     String authorType, author;
     private int bookmarkStatus;
@@ -209,9 +211,9 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     Rect scrollBounds;
     TrackArticleReadTime trackArticleReadTime;
     int estimatedReadTime = 0;
-    BubbleTextVew recommendSuggestion;
-    private Animation showRecommendAnim, hideRecommendAnim;
-    private boolean hasRecommendSuggestionAppeared = true;
+//    BubbleTextVew recommendSuggestion;
+//    private Animation showRecommendAnim, hideRecommendAnim;
+//    private boolean hasRecommendSuggestionAppeared = true;
     private WebView videoWebView;
     private String isMomspresso;
 
@@ -263,10 +265,11 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             trendingRelatedArticles3 = (RelatedArticlesView) findViewById(R.id.trendingRelatedArticles3);
             trendingArticles = (LinearLayout) findViewById(R.id.trendingArticles);
             recentAuthorArticles = (LinearLayout) findViewById(R.id.recentAuthorArticles);
-            recommendSuggestion = (BubbleTextVew) findViewById(R.id.recommendSuggestion);
 
             tagsLayout = (FlowLayout) findViewById(R.id.tagsLayout);
             articleViewCountTextView = (TextView) findViewById(R.id.articleViewCountTextView);
+            articleCommentCountTextView = (TextView) findViewById(R.id.articleCommentCountTextView);
+            articleRecommendationCountTextView = (TextView) findViewById(R.id.articleRecommendationCountTextView);
             cover_image = (ImageView) findViewById(R.id.cover_image);
             density = getResources().getDisplayMetrics().density;
             width = getResources().getDisplayMetrics().widthPixels;
@@ -296,48 +299,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             trendingRelatedArticles1.setOnClickListener(this);
             trendingRelatedArticles2.setOnClickListener(this);
             trendingRelatedArticles3.setOnClickListener(this);
-
-            showRecommendAnim = AnimationUtils.loadAnimation(this, R.anim.recommend_anim_show);
-            showRecommendAnim.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    recommendSuggestion.setVisibility(View.VISIBLE);
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            recommendSuggestion.setVisibility(View.INVISIBLE);
-                            recommendSuggestion.startAnimation(hideRecommendAnim);
-                        }
-                    }, 5000);
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-
-                }
-            });
-            hideRecommendAnim = AnimationUtils.loadAnimation(this, R.anim.recommend_anim_hide);
-            hideRecommendAnim.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    recommendSuggestion.setVisibility(View.INVISIBLE);
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-
-                }
-            });
 
             commentText = (EditText) findViewById(R.id.editCommentTxt);
 
@@ -463,9 +424,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     }
 
     private void recommendUnrecommentArticleAPI(String status) {
-        if (recommendSuggestion.getVisibility() == View.VISIBLE) {
-            recommendSuggestion.setVisibility(View.INVISIBLE);
-        }
         RecommendUnrecommendArticleRequest recommendUnrecommendArticleRequest = new RecommendUnrecommendArticleRequest();
         recommendUnrecommendArticleRequest.setArticleId(articleId);
         recommendUnrecommendArticleRequest.setStatus(status);
@@ -1169,11 +1127,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         int permanentDiff = (tagsView.getBottom() - (mScrollView.getHeight() + mScrollView.getScrollY()));
         if (permanentDiff <= 0) {
             isArticleDetailEndReached = true;
-            if (!hasRecommendSuggestionAppeared && recommendSuggestion.getVisibility() == View.INVISIBLE) {
-                hasRecommendSuggestionAppeared = true;
-                recommendSuggestion.setVisibility(View.VISIBLE);
-                recommendSuggestion.startAnimation(showRecommendAnim);
-            }
+
             if (recommendFloatingActionButton.getVisibility() == View.INVISIBLE) {
                 showFloatingActionButton();
             }
@@ -1398,6 +1352,14 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 ViewCountResponse responseData = (ViewCountResponse) response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     articleViewCountTextView.setText(responseData.getData().get(0).getCount() + " Views");
+                    articleCommentCountTextView.setText(responseData.getData().get(0).getCommentCount() + " Comments");
+                    articleRecommendationCountTextView.setText(responseData.getData().get(0).getLikeCount() + " Recommendations");
+                    if ("0".equals(responseData.getData().get(0).getCommentCount())) {
+                        articleCommentCountTextView.setVisibility(View.GONE);
+                    }
+                    if ("0".equals(responseData.getData().get(0).getLikeCount())) {
+                        articleRecommendationCountTextView.setVisibility(View.GONE);
+                    }
                 } else {
                     articleViewCountTextView.setText(responseData.getReason());
                 }
@@ -2087,11 +2049,9 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             recommendFloatingActionButton.setEnabled(true);
             recommendationFlag = responseData.getData().getStatus();
             if ("0".equals(recommendationFlag)) {
-                hasRecommendSuggestionAppeared = false;
                 recommendFloatingActionButton.setIconDrawable(ContextCompat.getDrawable(ArticlesAndBlogsDetailsActivity.this, R.drawable.heart_outline));
                 recommendStatus = 0;
             } else {
-                hasRecommendSuggestionAppeared = true;
                 recommendFloatingActionButton.setIconDrawable(ContextCompat.getDrawable(ArticlesAndBlogsDetailsActivity.this, R.drawable.heart_filled));
                 recommendStatus = 1;
             }

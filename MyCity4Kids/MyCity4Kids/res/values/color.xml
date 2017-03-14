@@ -171,4 +171,6 @@
 
     <color name="complete_profile.add_more_children">#ec3b57</color>
     <color name="complete_profile.done">#ec3b57</color>
+
+    <color name="article_listing.language_feed">#ec3b57</color>
 </resources>

@@ -11,34 +11,35 @@ import android.widget.Switch;
 
 import com.mycity4kids.R;
 import com.mycity4kids.models.NotificationSettingsModel;
+import com.mycity4kids.models.SubscriptionSettingsModel;
 
 import java.util.ArrayList;
 
 /**
  * Created by hemant on 7/12/16.
  */
-public class NotificationSettingsListAdapter extends BaseAdapter {
+public class SubscriptionSettingsListAdapter extends BaseAdapter {
 
-    private ArrayList<NotificationSettingsModel> notificationSettingsList;
+    private ArrayList<SubscriptionSettingsModel> subscriptionSettingsList;
     private Context mContext;
     private LayoutInflater mInflator;
     private ArrayList<String> tempList;
 
-    public NotificationSettingsListAdapter(Context pContext, ArrayList<NotificationSettingsModel> notificationSettingsList) {
+    public SubscriptionSettingsListAdapter(Context pContext, ArrayList<SubscriptionSettingsModel> subscriptionSettingsList) {
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = pContext;
-        this.notificationSettingsList = notificationSettingsList;
+        this.subscriptionSettingsList = subscriptionSettingsList;
         tempList = new ArrayList<>();
     }
 
     @Override
     public int getCount() {
-        return notificationSettingsList == null ? 0 : notificationSettingsList.size();
+        return subscriptionSettingsList == null ? 0 : subscriptionSettingsList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return notificationSettingsList.get(position);
+        return subscriptionSettingsList.get(position);
     }
 
     @Override
@@ -55,15 +56,15 @@ public class NotificationSettingsListAdapter extends BaseAdapter {
 
         final ViewHolder holder;
         if (view == null) {
-            view = mInflator.inflate(R.layout.notification_settings_item, null);
+            view = mInflator.inflate(R.layout.subscription_settings_item, null);
             holder = new ViewHolder();
-            holder.aSwitch = (SwitchCompat) view.findViewById(R.id.notificationStatus);
+            holder.aSwitch = (SwitchCompat) view.findViewById(R.id.subscriptionStatus);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
         }
-        holder.aSwitch.setText(notificationSettingsList.get(position).getName());
-        if ("1".equals(notificationSettingsList.get(position).getStatus())) {
+        holder.aSwitch.setText(subscriptionSettingsList.get(position).getDisplayName());
+        if ("1".equals(subscriptionSettingsList.get(position).getStatus())) {
             holder.aSwitch.setChecked(true);
         } else {
             holder.aSwitch.setChecked(false);
@@ -74,19 +75,15 @@ public class NotificationSettingsListAdapter extends BaseAdapter {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    notificationSettingsList.get((int) holder.aSwitch.getTag()).setStatus("1");
+                    subscriptionSettingsList.get((int) holder.aSwitch.getTag()).setStatus("1");
 //                    tempList.add((String) holder.aSwitch.getTag());
                 } else {
 //                    tempList.remove((String) holder.aSwitch.getTag());
-                    notificationSettingsList.get((int) holder.aSwitch.getTag()).setStatus("0");
+                    subscriptionSettingsList.get((int) holder.aSwitch.getTag()).setStatus("0");
                 }
             }
         });
 
         return view;
-    }
-
-    public ArrayList<NotificationSettingsModel> getAllNotificationStatus() {
-        return notificationSettingsList;
     }
 }

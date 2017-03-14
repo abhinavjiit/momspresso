@@ -114,6 +114,7 @@ public class SharedPrefUtils {
     public static final String LOCATION_LONGITUDE = "longitude";
 
     public static final String IS_FB_CONNECTED = "isFBConnected";
+    private static final String USER_CITY_ID = "userCityId";
 
     /**
      * this shared preference save current versions for control city,locality,category APIs .
@@ -295,6 +296,7 @@ public class SharedPrefUtils {
         _editor.putString(SESSIONID, pModel.getSessionId());
         _editor.putString(MC4KTOKEN, pModel.getMc4kToken());
         _editor.putString(IS_USER_VALIDATED, pModel.getIsValidated());
+        _editor.putString(USER_CITY_ID, pModel.getCityId());
         _editor.commit();
     }
 
@@ -318,6 +320,7 @@ public class SharedPrefUtils {
         user.setSessionId(_sharedPref.getString(SESSIONID, ""));
         user.setMc4kToken(_sharedPref.getString(MC4KTOKEN, ""));
         user.setIsValidated(_sharedPref.getString(IS_USER_VALIDATED, ""));
+        user.setCityId(_sharedPref.getString(USER_CITY_ID, "11"));
         return user;
     }
 

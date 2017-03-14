@@ -11,7 +11,7 @@ public class AppConstants {
     public static final String DEV_URL = "http://54.169.17.138/";
     public static final String STAGING_URL = "http://52.220.87.141/";
 
-    //    public static final String LIVE_URL = "http://52.220.87.141/";
+    //        public static final String LIVE_URL = "http://52.220.87.141/";
     public static final String LIVE_URL = "https://api.mycity4kids.com/";
 
     public static final String PHOENIX_STAGING_URL = "http://52.77.116.39";
@@ -377,6 +377,7 @@ public class AppConstants {
     public static final String DEEP_LINK_ARTICLE_LISTING = "article_listing";
     public static final String DEEP_LINK_TOPIC_LISTING = "category_listing";
     public static final String DEEP_LINK_VLOG_DETAIL = "video";
+    public static final String APP_SETTINGS_DEEPLINK = "app_settings";
     public static final String CONTAINER_ID = "GTM-MS864S";
 
     //Author Types
@@ -438,8 +439,12 @@ public class AppConstants {
     public static final int EDIT_NESTED_REPLY = 2;
     public static final String MOMSPRESSO_CATEGORY_ID = "momspressoCategoryId";
     public static final String MOMSPRESSO_SLUG = "momspresso-video";
+
     public static final String MOMSPRESSO_CATEGORYID = "category-ae65da4bf8bb48e4b80f13444be1e9a5";
     public static final String HINDI_CATEGORYID = "category-1515d3c9adb249988a136bdbfc8f0017";
+    public static final String BANGLA_CATEGORYID = "category-5ad20fb85f7c4a84b66b8d6993dbad9f";
+    public static final String MARATHI_CATEGORYID = "category-bd1d0a1ab9c0436d97f78d90a115ee71";
+
     public static final String DEEPLINK_EDITOR_URL = "mc4k://www.mycity4kids.com/editor";
     public static final String DEEPLINK_PROFILE_URL = "mc4k://www.mycity4kids.com/profile";
 

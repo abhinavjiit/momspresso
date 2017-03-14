@@ -235,7 +235,7 @@ public class NotificationCenterListActivity extends BaseActivity {
             if (response == null || null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                 Crashlytics.logException(nee);
-                showToast("Something went wrong from server");
+//                showToast("Something went wrong from server");
                 return;
             }
             try {

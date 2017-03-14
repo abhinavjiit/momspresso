@@ -146,7 +146,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:padding="2dp"
-                        android:src="@drawable/clock_new" />
+                        android:src="@drawable/age_group_user" />
 
                     <TextView
                         android:id="@+id/durationtxt"

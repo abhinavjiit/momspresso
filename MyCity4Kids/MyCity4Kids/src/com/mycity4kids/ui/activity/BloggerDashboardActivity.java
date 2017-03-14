@@ -183,6 +183,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
             header = getLayoutInflater().inflate(R.layout.header_blogger_dashboard, null);
         } else {
             header = getLayoutInflater().inflate(R.layout.header_blogger_dashboard_public, null);
+            addDraft.setVisibility(View.GONE);
         }
         header.setClickable(false);
         rankingTextView = (TextView) header.findViewById(R.id.rankingTextView);
@@ -1391,10 +1392,10 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                 // showHelp();
                 Intent intent1 = new Intent(BloggerDashboardActivity.this, SettingsActivity.class);
                 intent1.putExtra("load_fragment", Constants.SETTINGS_FRAGMENT);
-                intent1.putExtra("bio", Bio);
-                intent1.putExtra("firstName", firstName);
-                intent1.putExtra("lastName", lastName);
-                intent1.putExtra("phoneNumber", phoneNumber);
+//                intent1.putExtra("bio", Bio);
+//                intent1.putExtra("firstName", firstName);
+//                intent1.putExtra("lastName", lastName);
+//                intent1.putExtra("phoneNumber", phoneNumber);
                 startActivity(intent1);
 
                 return true;
@@ -1663,7 +1664,11 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         if (b == true) {
             addDraft.setVisibility(View.INVISIBLE);
         } else {
-            addDraft.setVisibility(View.VISIBLE);
+            if (isPrivateProfile) {
+                addDraft.setVisibility(View.VISIBLE);
+            } else {
+                addDraft.setVisibility(View.GONE);
+            }
         }
     }
 }

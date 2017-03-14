@@ -174,7 +174,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         editorPicksSection.setSectionTitle(getString(R.string.home_sections_title_editors_pick));
         momspressoSection.setSectionTitle(getString(R.string.home_sections_title_momspresso));
         funnyVideosSection.setSectionTitle(getString(R.string.home_sections_title_funny_videos));
-        hindiSection.setSectionTitle(getString(R.string.home_sections_title_hindi));
+        hindiSection.setMultipleSectionsTitle(getString(R.string.home_sections_title_hindi), getString(R.string.home_sections_title_bangla), getString(R.string.home_sections_title_marathi));
 
         appointmentList = (CustomListView) view.findViewById(R.id.home_appointmentList);
         goToCal = (TextView) view.findViewById(R.id.go_to_cal);

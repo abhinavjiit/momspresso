@@ -262,4 +262,9 @@
         <!-- Used for the background -->
         <item name="android:background">@color/white_color</item>
     </style>
+
+
+    <style name="SwitchStyle">
+        <item name="colorControlActivated">@color/primary_blue</item>
+    </style>
 </resources>

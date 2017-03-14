@@ -47,6 +47,8 @@ import java.util.Collections;
 public class HorizontalScrollCustomView extends LinearLayout {
 
     TextView sectionNameTextView;
+    TextView sectionNameTextView2;
+    TextView sectionNameTextView3;
     TextView emptyListTextView;
     TextView addTopicsTextView;
     ProgressBar progressBar;
@@ -82,6 +84,9 @@ public class HorizontalScrollCustomView extends LinearLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         sectionNameTextView = (TextView) this.findViewById(R.id.labelTextView);
+        sectionNameTextView2 = (TextView) this.findViewById(R.id.labelTextView2);
+        sectionNameTextView3 = (TextView) this.findViewById(R.id.labelTextView3);
+
         emptyListTextView = (TextView) this.findViewById(R.id.emptyListTextView);
         addTopicsTextView = (TextView) this.findViewById(R.id.addTopicsTextView);
         progressBar = (ProgressBar) this.findViewById(R.id.progressBar);
@@ -226,6 +231,29 @@ public class HorizontalScrollCustomView extends LinearLayout {
                 }
             }
         });
+
+        if (Constants.KEY_HINDI.equals(listingType)) {
+            sectionNameTextView2.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent banglaIntent = new Intent(getContext(), FilteredTopicsArticleListingActivity.class);
+                    banglaIntent.putExtra("selectedTopics", AppConstants.BANGLA_CATEGORYID);
+                    banglaIntent.putExtra("displayName", getContext().getString(R.string.home_sections_title_bangla));
+                    getContext().startActivity(banglaIntent);
+                }
+            });
+
+            sectionNameTextView3.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent marathiIntent = new Intent(getContext(), FilteredTopicsArticleListingActivity.class);
+                    marathiIntent.putExtra("selectedTopics", AppConstants.MARATHI_CATEGORYID);
+                    marathiIntent.putExtra("displayName", getContext().getString(R.string.home_sections_title_marathi));
+                    getContext().startActivity(marathiIntent);
+                }
+            });
+        }
+
         if (mDatalist.isEmpty()) {
             emptyListTextView.setVisibility(View.VISIBLE);
         }
@@ -313,6 +341,14 @@ public class HorizontalScrollCustomView extends LinearLayout {
 
     public void setSectionTitle(String title) {
         sectionNameTextView.setText(title);
+    }
+
+    public void setMultipleSectionsTitle(String title1, String title2, String title3) {
+        sectionNameTextView.setText(title1);
+        sectionNameTextView2.setVisibility(VISIBLE);
+        sectionNameTextView2.setText(title2);
+        sectionNameTextView3.setVisibility(VISIBLE);
+        sectionNameTextView3.setText(title3);
     }
 
     public void setCityNameFromCityId(int cityId) {

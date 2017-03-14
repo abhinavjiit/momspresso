@@ -20,6 +20,10 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,6 +33,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -110,7 +119,7 @@ public class AppUtils {
         return sb.toString();
     }
 
-    public static Topics getHindiTopic(Context mContext) {
+    public static Topics getSpecificLanguageTopic(Context mContext, String topicId) {
         try {
             FileInputStream fileInputStream = mContext.openFileInput(AppConstants.CATEGORIES_JSON_FILE);
             String fileContent = convertStreamToString(fileInputStream);
@@ -118,7 +127,7 @@ public class AppUtils {
 
             for (int i = 0; i < responseData.getData().size(); i++) {
                 for (int j = 0; j < responseData.getData().get(i).getChild().size(); j++) {
-                    if (AppConstants.HINDI_CATEGORYID.equals(responseData.getData().get(i).getChild().get(j).getId())) {
+                    if (topicId.equals(responseData.getData().get(i).getChild().get(j).getId())) {
                         return responseData.getData().get(i).getChild().get(j);
                     }
                 }
@@ -244,5 +253,41 @@ public class AppUtils {
             e.printStackTrace();
         }
         return pInfo.versionName;
+    }
+
+    public static Map<String, Object> toMap(JSONObject object) throws JSONException {
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        Iterator<String> keysItr = object.keys();
+        while(keysItr.hasNext()) {
+            String key = keysItr.next();
+            Object value = object.get(key);
+
+            if(value instanceof JSONArray) {
+                value = toList((JSONArray) value);
+            }
+
+            else if(value instanceof JSONObject) {
+                value = toMap((JSONObject) value);
+            }
+            map.put(key, value);
+        }
+        return map;
+    }
+
+    public static List<Object> toList(JSONArray array) throws JSONException {
+        List<Object> list = new ArrayList<Object>();
+        for(int i = 0; i < array.length(); i++) {
+            Object value = array.get(i);
+            if(value instanceof JSONArray) {
+                value = toList((JSONArray) value);
+            }
+
+            else if(value instanceof JSONObject) {
+                value = toMap((JSONObject) value);
+            }
+            list.add(value);
+        }
+        return list;
     }
 }

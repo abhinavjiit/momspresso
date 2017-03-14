@@ -7,38 +7,37 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
-import android.widget.Switch;
 
 import com.mycity4kids.R;
-import com.mycity4kids.models.NotificationSettingsModel;
+import com.mycity4kids.models.SubscriptionSettingsModel;
 
 import java.util.ArrayList;
 
 /**
  * Created by hemant on 7/12/16.
  */
-public class NotificationSettingsListAdapter extends BaseAdapter {
+public class LanguageSettingsListAdapter extends BaseAdapter {
 
-    private ArrayList<NotificationSettingsModel> notificationSettingsList;
+    private ArrayList<SubscriptionSettingsModel> languageSettingsList;
     private Context mContext;
     private LayoutInflater mInflator;
     private ArrayList<String> tempList;
 
-    public NotificationSettingsListAdapter(Context pContext, ArrayList<NotificationSettingsModel> notificationSettingsList) {
+    public LanguageSettingsListAdapter(Context pContext, ArrayList<SubscriptionSettingsModel> languageSettingsList) {
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = pContext;
-        this.notificationSettingsList = notificationSettingsList;
+        this.languageSettingsList = languageSettingsList;
         tempList = new ArrayList<>();
     }
 
     @Override
     public int getCount() {
-        return notificationSettingsList == null ? 0 : notificationSettingsList.size();
+        return languageSettingsList == null ? 0 : languageSettingsList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return notificationSettingsList.get(position);
+        return languageSettingsList.get(position);
     }
 
     @Override
@@ -55,15 +54,15 @@ public class NotificationSettingsListAdapter extends BaseAdapter {
 
         final ViewHolder holder;
         if (view == null) {
-            view = mInflator.inflate(R.layout.notification_settings_item, null);
+            view = mInflator.inflate(R.layout.language_settings_item, null);
             holder = new ViewHolder();
-            holder.aSwitch = (SwitchCompat) view.findViewById(R.id.notificationStatus);
+            holder.aSwitch = (SwitchCompat) view.findViewById(R.id.languageStatus);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
         }
-        holder.aSwitch.setText(notificationSettingsList.get(position).getName());
-        if ("1".equals(notificationSettingsList.get(position).getStatus())) {
+        holder.aSwitch.setText(languageSettingsList.get(position).getName());
+        if ("1".equals(languageSettingsList.get(position).getStatus())) {
             holder.aSwitch.setChecked(true);
         } else {
             holder.aSwitch.setChecked(false);
@@ -74,19 +73,13 @@ public class NotificationSettingsListAdapter extends BaseAdapter {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    notificationSettingsList.get((int) holder.aSwitch.getTag()).setStatus("1");
-//                    tempList.add((String) holder.aSwitch.getTag());
+                    languageSettingsList.get((int) holder.aSwitch.getTag()).setStatus("1");
                 } else {
-//                    tempList.remove((String) holder.aSwitch.getTag());
-                    notificationSettingsList.get((int) holder.aSwitch.getTag()).setStatus("0");
+                    languageSettingsList.get((int) holder.aSwitch.getTag()).setStatus("0");
                 }
             }
         });
 
         return view;
-    }
-
-    public ArrayList<NotificationSettingsModel> getAllNotificationStatus() {
-        return notificationSettingsList;
     }
 }
