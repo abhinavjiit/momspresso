@@ -3,16 +3,16 @@ package com.mycity4kids.models;
 /**
  * Created by hemant on 7/12/16.
  */
-public class SubscriptionSettingsModel {
+public class SubscriptionAndLanguageSettingsModel {
     private String id;
     private String name;
     private String displayName;
     private String status;
 
-    public SubscriptionSettingsModel() {
+    public SubscriptionAndLanguageSettingsModel() {
     }
 
-    public SubscriptionSettingsModel(String id, String name, String status) {
+    public SubscriptionAndLanguageSettingsModel(String id, String name, String status) {
         this.id = id;
         this.name = name;
         this.status = status;

@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -26,6 +28,7 @@ import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.ui.activity.AllVideoSectionActivity;
 import com.mycity4kids.ui.activity.ArticleListingActivity;
 import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
 import com.mycity4kids.ui.activity.CityBestArticleListingActivity;
@@ -189,7 +192,7 @@ public class HorizontalScrollCustomView extends LinearLayout {
                 } else if (Constants.KEY_MOMSPRESSO.equals(listingType)) {
                     Intent intent1 = new Intent(getContext(), FilteredTopicsArticleListingActivity.class);
                     intent1.putExtra("selectedTopics", AppConstants.MOMSPRESSO_CATEGORYID);
-                    intent1.putExtra("displayName", SharedPrefUtils.getMomspressoCategory(getContext()).getDisplay_name());
+                    intent1.putExtra("displayName", getContext().getString(R.string.home_sections_title_momspresso));
                     getContext().startActivity(intent1);
                 } else if (Constants.KEY_HINDI.equals(listingType)) {
                     Intent hindiIntent = new Intent(getContext(), FilteredTopicsArticleListingActivity.class);
@@ -221,7 +224,7 @@ public class HorizontalScrollCustomView extends LinearLayout {
                 } else if (Constants.KEY_MOMSPRESSO.equals(listingType)) {
                     Intent intent1 = new Intent(getContext(), FilteredTopicsArticleListingActivity.class);
                     intent1.putExtra("selectedTopics", AppConstants.MOMSPRESSO_CATEGORYID);
-                    intent1.putExtra("displayName", SharedPrefUtils.getMomspressoCategory(getContext()).getDisplay_name());
+                    intent1.putExtra("displayName", getContext().getString(R.string.home_sections_title_momspresso));
                     getContext().startActivity(intent1);
                 } else if (Constants.KEY_HINDI.equals(listingType)) {
                     Intent hindiIntent = new Intent(getContext(), FilteredTopicsArticleListingActivity.class);
@@ -263,16 +266,22 @@ public class HorizontalScrollCustomView extends LinearLayout {
         return vlogslist;
     }
 
-    public void setVlogslist(final ArrayList<VlogsListingAndDetailResult> vlogslist) {
+    public void setVlogslist(final ArrayList<VlogsListingAndDetailResult> vlogslist, final String fromActivity) {
         addTopicsTextView.setVisibility(VISIBLE);
         addTopicsTextView.setText("ADD VIDEO");
         addTopicsTextView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 ChooseVideoUploadOptionDialogFragment chooseVideoUploadOptionDialogFragment = new ChooseVideoUploadOptionDialogFragment();
-                FragmentManager fm = ((DashboardActivity) getContext()).getSupportFragmentManager();
+                FragmentManager fm = null;
                 Bundle _args = new Bundle();
-                _args.putString("activity", "dashboard");
+                if ("dashboard".equals(fromActivity)) {
+                    fm = ((DashboardActivity) getContext()).getSupportFragmentManager();
+                    _args.putString("activity", "dashboard");
+                } else if ("allvideosection".equals(fromActivity)) {
+                    fm = ((AllVideoSectionActivity) getContext()).getSupportFragmentManager();
+                    _args.putString("activity", "allvideosection");
+                }
                 chooseVideoUploadOptionDialogFragment.setArguments(_args);
                 chooseVideoUploadOptionDialogFragment.setCancelable(true);
                 chooseVideoUploadOptionDialogFragment.show(fm, "Choose video option");
@@ -344,7 +353,9 @@ public class HorizontalScrollCustomView extends LinearLayout {
     }
 
     public void setMultipleSectionsTitle(String title1, String title2, String title3) {
-        sectionNameTextView.setText(title1);
+        SpannableString content = new SpannableString(title1);
+        content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+        sectionNameTextView.setText(content);
         sectionNameTextView2.setVisibility(VISIBLE);
         sectionNameTextView2.setText(title2);
         sectionNameTextView3.setVisibility(VISIBLE);

@@ -1,52 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white_color">
+    android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
+    <android.support.v7.widget.Toolbar xmlns:app="http://schemas.android.com/tools"
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:background="?attr/colorPrimary"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@android:color/white"
         android:elevation="5dp"
-        android:minHeight="?attr/actionBarSize"
         app:theme="@style/ToolbarTheme"
-        app:titleTextAppearance="@style/ToolbarTheme.Title" />
+        app:titleTextAppearance="@style/ToolbarTheme.Title">
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="15dp">
+
+            <EditText
+                android:id="@+id/searchEditText"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/searchImageView"
+                android:layout_toStartOf="@+id/searchImageView"
+                android:background="@android:color/transparent"
+                android:ellipsize="end"
+                android:hint="search any article or author"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:singleLine="true"
+                android:textColor="@color/black_color" />
+
+            <ImageView
+                android:id="@+id/searchImageView"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:paddingLeft="10dp"
+                android:paddingRight="20dp"
+                android:src="@drawable/ic_search_white_48dp" />
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
 
     <ListView
-        android:id="@+id/draftListView"
+        android:id="@+id/scroll"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
-        android:clipToPadding="false"
-        android:paddingBottom="100dp"
-        android:visibility="visible" />
+        android:background="@color/grey_light"
+        android:divider="@color/transparent"
+        android:drawSelectorOnTop="true" />
 
-    <ListView
-        android:id="@+id/publishedArticleListView"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/noBlogsTextView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
-        android:clipToPadding="false"
-        android:paddingBottom="100dp"
-        android:visibility="gone" />
-
-    <ListView
-        android:id="@+id/commentsListView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
-        android:visibility="gone" />
-
-    <ListView
-        android:id="@+id/reviewsListView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
+        android:layout_centerInParent="true"
+        android:text="No blogs have been bookmarked yet."
         android:visibility="gone" />
 
     <RelativeLayout
@@ -96,13 +110,4 @@
         android:layout_centerVertical="true"
         android:visibility="invisible" />
 
-    <ImageView
-        android:id="@+id/addDraft"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:padding="10dp"
-        android:src="@drawable/add_draft" />
 </RelativeLayout>

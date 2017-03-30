@@ -1,7 +1,9 @@
 package com.mycity4kids.ui.adapter;
 
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.util.Log;
@@ -20,7 +22,10 @@ import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.ArticleListingResult;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.BloggerDashboardActivity;
+import com.mycity4kids.ui.activity.SettingsActivity;
+import com.mycity4kids.ui.activity.SplashActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.squareup.picasso.Picasso;
 
@@ -44,12 +49,15 @@ public class NewArticlesListingAdapter extends BaseAdapter {
 
     private final float density;
     private String listingType = "";
+    private int languageFeedChosen;
 
     public NewArticlesListingAdapter(Context pContext) {
 
         density = pContext.getResources().getDisplayMetrics().density;
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = pContext;
+        languageFeedChosen = Integer.parseInt(SharedPrefUtils.getUserDetailModel(pContext).getIsLangSelection());
+
     }
 
     public void setListData(ArrayList<ArticleListingResult> mParentingLists) {
@@ -83,89 +91,95 @@ public class NewArticlesListingAdapter extends BaseAdapter {
         return position;
     }
 
-//    @Override
-//    public int getItemViewType(int position) {
-//        if (position > 0 && position % 10 == 0) {
-//            return 0;
-//        } else {
-//            return 1;
-//        }
-//    }
-//
-//    @Override
-//    public int getViewTypeCount() {
-//        return 2;
-//    }
+    @Override
+    public int getItemViewType(int position) {
+        if (1 == languageFeedChosen && position == 10) {
+            Log.d("Manage", "Language");
+            return 0;
+        } else {
+            if (1 != languageFeedChosen && position > 0 && position % 10 == 0) {
+                Log.d("Manage", "Language");
+                return 0;
+            } else {
+                return 1;
+            }
+        }
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        return 2;
+    }
 
     @Override
     public View getView(final int position, View view, ViewGroup parent) {
 
         try {
             final ViewHolder holder;
-//            int type = getItemViewType(position);
+            int type = getItemViewType(position);
 
             if (view == null) {
                 holder = new ViewHolder();
-//                switch (type) {
-//                    case 0:
-//                        view = mInflator.inflate(R.layout.language_feed_article_listing_item, null);
-//
-//                        holder.languageFeedTextView = (TextView) view.findViewById(R.id.languageFeedTextView);
-//
-//                        holder.txvArticleTitle = (TextView) view.findViewById(R.id.txvArticleTitle);
-//                        holder.txvAuthorName = (TextView) view.findViewById(R.id.txvAuthorName);
-//                        holder.articleImageView = (ImageView) view.findViewById(R.id.articleImageView);
-//                        holder.authorImageView = (ImageView) view.findViewById(R.id.authorImageView);
-//                        holder.videoIndicatorImageView = (ImageView) view.findViewById(R.id.videoIndicatorImageView);
-//                        holder.forYouDescriptionTextView = (TextView) view.findViewById(R.id.forYouDescriptionTextView);
-//
-//                        holder.viewCountTextView = (TextView) view.findViewById(R.id.viewCountTextView);
-//                        holder.commentCountTextView = (TextView) view.findViewById(R.id.commentCountTextView);
-//                        holder.recommendCountTextView = (TextView) view.findViewById(R.id.recommendCountTextView);
-//
-//                        holder.authorTypeTextView = (TextView) view.findViewById(R.id.authorTypeTextView);
-//                        holder.rankTextView = (TextView) view.findViewById(R.id.rankTextView);
-//
-//                        holder.flowLayout = (FlowLayout) view.findViewById(R.id.flowLayout);
-//                        holder.popularSubCatTextView1 = (TextView) view.findViewById(R.id.popularSubcatTextView_1);
-//                        holder.popularSubCatTextView2 = (TextView) view.findViewById(R.id.popularSubcatTextView_2);
-//                        holder.popularSubCatTextView3 = (TextView) view.findViewById(R.id.popularSubcatTextView_3);
-//                        holder.popularSubCatTextView4 = (TextView) view.findViewById(R.id.popularSubcatTextView_4);
-//
-//                        holder.tvParentLL1 = (LinearLayout) view.findViewById(R.id.popularSubcatLL_1);
-//                        holder.tvParentLL2 = (LinearLayout) view.findViewById(R.id.popularSubcatLL_2);
-//                        holder.tvParentLL3 = (LinearLayout) view.findViewById(R.id.popularSubcatLL_3);
-//                        holder.tvParentLL4 = (LinearLayout) view.findViewById(R.id.popularSubcatLL_4);
-//                        break;
-//                    case 1:
-                view = mInflator.inflate(R.layout.new_article_listing_item, null);
+                switch (type) {
+                    case 0:
+                        view = mInflator.inflate(R.layout.language_feed_article_listing_item, null);
 
-                holder.txvArticleTitle = (TextView) view.findViewById(R.id.txvArticleTitle);
-                holder.txvAuthorName = (TextView) view.findViewById(R.id.txvAuthorName);
-                holder.articleImageView = (ImageView) view.findViewById(R.id.articleImageView);
-                holder.authorImageView = (ImageView) view.findViewById(R.id.authorImageView);
-                holder.videoIndicatorImageView = (ImageView) view.findViewById(R.id.videoIndicatorImageView);
-                holder.forYouDescriptionTextView = (TextView) view.findViewById(R.id.forYouDescriptionTextView);
+                        holder.languageFeedTextView = (TextView) view.findViewById(R.id.languageFeedTextView);
 
-                holder.viewCountTextView = (TextView) view.findViewById(R.id.viewCountTextView);
-                holder.commentCountTextView = (TextView) view.findViewById(R.id.commentCountTextView);
-                holder.recommendCountTextView = (TextView) view.findViewById(R.id.recommendCountTextView);
+                        holder.txvArticleTitle = (TextView) view.findViewById(R.id.txvArticleTitle);
+                        holder.txvAuthorName = (TextView) view.findViewById(R.id.txvAuthorName);
+                        holder.articleImageView = (ImageView) view.findViewById(R.id.articleImageView);
+                        holder.authorImageView = (ImageView) view.findViewById(R.id.authorImageView);
+                        holder.videoIndicatorImageView = (ImageView) view.findViewById(R.id.videoIndicatorImageView);
+                        holder.forYouDescriptionTextView = (TextView) view.findViewById(R.id.forYouDescriptionTextView);
 
-                holder.authorTypeTextView = (TextView) view.findViewById(R.id.authorTypeTextView);
-                holder.rankTextView = (TextView) view.findViewById(R.id.rankTextView);
+                        holder.viewCountTextView = (TextView) view.findViewById(R.id.viewCountTextView);
+                        holder.commentCountTextView = (TextView) view.findViewById(R.id.commentCountTextView);
+                        holder.recommendCountTextView = (TextView) view.findViewById(R.id.recommendCountTextView);
 
-                holder.flowLayout = (FlowLayout) view.findViewById(R.id.flowLayout);
-                holder.popularSubCatTextView1 = (TextView) view.findViewById(R.id.popularSubcatTextView_1);
-                holder.popularSubCatTextView2 = (TextView) view.findViewById(R.id.popularSubcatTextView_2);
-                holder.popularSubCatTextView3 = (TextView) view.findViewById(R.id.popularSubcatTextView_3);
-                holder.popularSubCatTextView4 = (TextView) view.findViewById(R.id.popularSubcatTextView_4);
+                        holder.authorTypeTextView = (TextView) view.findViewById(R.id.authorTypeTextView);
+                        holder.rankTextView = (TextView) view.findViewById(R.id.rankTextView);
 
-                holder.tvParentLL1 = (LinearLayout) view.findViewById(R.id.popularSubcatLL_1);
-                holder.tvParentLL2 = (LinearLayout) view.findViewById(R.id.popularSubcatLL_2);
-                holder.tvParentLL3 = (LinearLayout) view.findViewById(R.id.popularSubcatLL_3);
-                holder.tvParentLL4 = (LinearLayout) view.findViewById(R.id.popularSubcatLL_4);
-//                        break;
-//                }
+                        holder.flowLayout = (FlowLayout) view.findViewById(R.id.flowLayout);
+                        holder.popularSubCatTextView1 = (TextView) view.findViewById(R.id.popularSubcatTextView_1);
+                        holder.popularSubCatTextView2 = (TextView) view.findViewById(R.id.popularSubcatTextView_2);
+                        holder.popularSubCatTextView3 = (TextView) view.findViewById(R.id.popularSubcatTextView_3);
+                        holder.popularSubCatTextView4 = (TextView) view.findViewById(R.id.popularSubcatTextView_4);
+
+                        holder.tvParentLL1 = (LinearLayout) view.findViewById(R.id.popularSubcatLL_1);
+                        holder.tvParentLL2 = (LinearLayout) view.findViewById(R.id.popularSubcatLL_2);
+                        holder.tvParentLL3 = (LinearLayout) view.findViewById(R.id.popularSubcatLL_3);
+                        holder.tvParentLL4 = (LinearLayout) view.findViewById(R.id.popularSubcatLL_4);
+                        break;
+                    case 1:
+                        view = mInflator.inflate(R.layout.new_article_listing_item, null);
+
+                        holder.txvArticleTitle = (TextView) view.findViewById(R.id.txvArticleTitle);
+                        holder.txvAuthorName = (TextView) view.findViewById(R.id.txvAuthorName);
+                        holder.articleImageView = (ImageView) view.findViewById(R.id.articleImageView);
+                        holder.authorImageView = (ImageView) view.findViewById(R.id.authorImageView);
+                        holder.videoIndicatorImageView = (ImageView) view.findViewById(R.id.videoIndicatorImageView);
+                        holder.forYouDescriptionTextView = (TextView) view.findViewById(R.id.forYouDescriptionTextView);
+
+                        holder.viewCountTextView = (TextView) view.findViewById(R.id.viewCountTextView);
+                        holder.commentCountTextView = (TextView) view.findViewById(R.id.commentCountTextView);
+                        holder.recommendCountTextView = (TextView) view.findViewById(R.id.recommendCountTextView);
+
+                        holder.authorTypeTextView = (TextView) view.findViewById(R.id.authorTypeTextView);
+                        holder.rankTextView = (TextView) view.findViewById(R.id.rankTextView);
+
+                        holder.flowLayout = (FlowLayout) view.findViewById(R.id.flowLayout);
+                        holder.popularSubCatTextView1 = (TextView) view.findViewById(R.id.popularSubcatTextView_1);
+                        holder.popularSubCatTextView2 = (TextView) view.findViewById(R.id.popularSubcatTextView_2);
+                        holder.popularSubCatTextView3 = (TextView) view.findViewById(R.id.popularSubcatTextView_3);
+                        holder.popularSubCatTextView4 = (TextView) view.findViewById(R.id.popularSubcatTextView_4);
+
+                        holder.tvParentLL1 = (LinearLayout) view.findViewById(R.id.popularSubcatLL_1);
+                        holder.tvParentLL2 = (LinearLayout) view.findViewById(R.id.popularSubcatLL_2);
+                        holder.tvParentLL3 = (LinearLayout) view.findViewById(R.id.popularSubcatLL_3);
+                        holder.tvParentLL4 = (LinearLayout) view.findViewById(R.id.popularSubcatLL_4);
+                        break;
+                }
                 view.setTag(holder);
             } else {
                 holder = (ViewHolder) view.getTag();
@@ -270,7 +284,7 @@ public class NewArticlesListingAdapter extends BaseAdapter {
                 holder.txvAuthorName.setText(articleDataModelsNew.get(position).getUserName());
             }
 
-            if ((Constants.KEY_MOMSPRESSO.equals(listingType))
+            if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getVideoUrl())
                     && (articleDataModelsNew.get(position).getImageUrl().getMobileWebThumbnail() == null || articleDataModelsNew.get(position).getImageUrl().getMobileWebThumbnail().endsWith("default.jpg"))) {
                 Picasso.with(mContext).load(AppUtils.getYoutubeThumbnailURLMomspresso(articleDataModelsNew.get(position).getVideoUrl())).placeholder(R.drawable.default_article).into(holder.articleImageView);
             } else {
@@ -312,14 +326,17 @@ public class NewArticlesListingAdapter extends BaseAdapter {
                 }
             });
 
-//            holder.languageFeedTextView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Intent intent = new Intent(mContext, BloggerDashboardActivity.class);
-//                    intent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, articleDataModelsNew.get(position).getUserId());
-//                    mContext.startActivity(intent);
-//                }
-//            });
+            if (type == 0) {
+                holder.languageFeedTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Intent resultIntent = new Intent(mContext, SettingsActivity.class);
+                        resultIntent.putExtra("load_fragment", Constants.LANGUAGE_FRAGMENT);
+                        mContext.startActivity(resultIntent);
+                    }
+                });
+            }
         } catch (Exception ex) {
             Crashlytics.logException(ex);
             Log.d("MC4kException", Log.getStackTraceString(ex));

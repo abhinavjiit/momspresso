@@ -16,6 +16,7 @@ public class ConfigResult {
     ConfigCategory category;
     private Map<String, String> notificationSettings;
     private ArrayList<String> notificationType;
+    private Map<String, String> language;
 
     public int getUserTypeVersion() {
         return userTypeVersion;
@@ -55,5 +56,13 @@ public class ConfigResult {
 
     public void setNotificationType(ArrayList<String> notificationType) {
         this.notificationType = notificationType;
+    }
+
+    public Map<String, String> getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(Map<String, String> language) {
+        this.language = language;
     }
 }

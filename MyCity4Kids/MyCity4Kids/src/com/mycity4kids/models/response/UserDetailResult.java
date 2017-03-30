@@ -1,6 +1,7 @@
 package com.mycity4kids.models.response;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Created by hemant on 22/6/16.
@@ -26,6 +27,8 @@ public class UserDetailResult {
     private String phoneNumber;
     private PhoneDetails phone;
     private SocialTokens socialTokens;
+    private String isLangSelection = "0";
+    private Map<String, String> langSubscription;
 
     public String getPhoneNumber() {
         return phoneNumber;
@@ -171,6 +174,14 @@ public class UserDetailResult {
         this.sessionId = sessionId;
     }
 
+    public String getIsLangSelection() {
+        return isLangSelection;
+    }
+
+    public void setIsLangSelection(String isLangSelection) {
+        this.isLangSelection = isLangSelection;
+    }
+
     public PhoneDetails getPhone() {
         return phone;
     }
@@ -185,6 +196,14 @@ public class UserDetailResult {
 
     public void setSocialTokens(SocialTokens socialTokens) {
         this.socialTokens = socialTokens;
+    }
+
+    public Map<String, String> getLangSubscription() {
+        return langSubscription;
+    }
+
+    public void setLangSubscription(Map<String, String> langSubscription) {
+        this.langSubscription = langSubscription;
     }
 
     public class SocialTokens {

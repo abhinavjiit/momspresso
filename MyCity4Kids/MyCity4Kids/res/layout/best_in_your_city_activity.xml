@@ -16,36 +16,11 @@
         fab:theme="@style/FilterToobar"
         fab:titleTextAppearance="@style/ToolbarTheme.Title" />
 
-    <TextView
-        android:id="@+id/titleTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/toolbar"
-        android:layout_toLeftOf="@+id/followUnfollowTextView"
-        android:padding="10dp"
-        android:text="Parenting"
-        android:textAllCaps="true"
-        android:textColor="@color/black"
-        android:textSize="20sp" />
-
-    <TextView
-        android:id="@+id/followUnfollowTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/swipe_refresh_layout"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/toolbar"
-        android:gravity="center"
-        android:padding="10dp"
-        android:text="FOLLOW"
-        android:textColor="@color/toolbar.menu_items" />
-
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/titleTextView">
+        android:layout_below="@+id/toolbar">
 
         <ListView
             android:id="@+id/scroll"

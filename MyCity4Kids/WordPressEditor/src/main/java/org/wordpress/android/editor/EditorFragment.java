@@ -132,7 +132,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 && !getResources().getBoolean(R.bool.is_large_tablet_landscape)) {
             mHideActionBarOnSoftKeyboardUp = true;
         }
-        disableTitleView = (TextView)view.findViewById(R.id.disableTitleView);
+        disableTitleView = (TextView) view.findViewById(R.id.disableTitleView);
         mWaitingMediaFiles = new ConcurrentHashMap<>();
         mWaitingGalleries = Collections.newSetFromMap(new ConcurrentHashMap<MediaGallery, Boolean>());
         mUploadingMedia = new HashMap<>();
@@ -199,7 +199,6 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
         mSourceViewTitle.setHint(mTitlePlaceholder);
         mSourceViewContent.setHint("<p>" + mContentPlaceholder + "</p>");
-
 
 
         // -- Format bar configuration
@@ -382,8 +381,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             htmlEditor = htmlEditor.replace("%%ANDROID_API_LEVEL%%", String.valueOf(Build.VERSION.SDK_INT));
             htmlEditor = htmlEditor.replace("%%LOCALIZED_STRING_INIT%%",
                     "nativeState.localizedStringEdit = '" + getString(R.string.edit) + "';\n" +
-                    "nativeState.localizedStringUploading = '" + getString(R.string.uploading) + "';\n" +
-                    "nativeState.localizedStringUploadingGallery = '" + getString(R.string.uploading_gallery_placeholder) + "';\n");
+                            "nativeState.localizedStringUploading = '" + getString(R.string.uploading) + "';\n" +
+                            "nativeState.localizedStringUploadingGallery = '" + getString(R.string.uploading_gallery_placeholder) + "';\n");
         }
 
         // To avoid reflection security issues with JavascriptInterface on API<17, we use an iframe to make URL requests
@@ -449,7 +448,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
                 mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_content').focus();");
             }
-        } else*/ if (id == R.id.format_bar_button_media) {
+        } else*/
+        if (id == R.id.format_bar_button_media) {
             mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
             ((ToggleButton) v).setChecked(false);
 
@@ -622,7 +622,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     @SuppressLint("NewApi")
     private void enableWebDebugging(boolean enable) {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             AppLog.i(T.EDITOR, "Enabling web debugging");
             WebView.setWebContentsDebuggingEnabled(enable);
         }
@@ -643,8 +643,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == BUTTON_ID_LOG_HTML) {
             // anshul changes
-            Log.e("title",getTitle().toString());
-            Log.e("content",getContent().toString());
+            Log.e("title", getTitle().toString());
+            Log.e("content", getContent().toString());
             if (mDebugModeEnabled) {
                 // Log the raw html
                 mWebView.post(new Runnable() {
@@ -659,9 +659,9 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             return true;
         } else if (item.getItemId() == R.id.draft) {
             // anshul changes
-            Log.e("title",getTitle().toString());
+            Log.e("title", getTitle().toString());
             Log.e("Formatted", contentFormatting());
-            Log.e("content",getContent().toString());
+            Log.e("content", getContent().toString());
 
             if (mDebugModeEnabled) {
                 // Log the raw html
@@ -675,10 +675,10 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 AppLog.d(T.EDITOR, "Could not execute JavaScript - debug mode not enabled");
             }
             return true;
-        }else if (item.getItemId() == R.id.publish) {
+        } else if (item.getItemId() == R.id.publish) {
             // anshul changes
-            Log.e("title",getTitle().toString());
-            Log.e("content",getContent().toString());
+            Log.e("title", getTitle().toString());
+            Log.e("content", getContent().toString());
             if (mDebugModeEnabled) {
                 // Log the raw html
                 mWebView.post(new Runnable() {
@@ -691,7 +691,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 AppLog.d(T.EDITOR, "Could not execute JavaScript - debug mode not enabled");
             }
             return true;
-        }else {
+        } else {
             return super.onOptionsItemSelected(item);
         }
     }
@@ -806,7 +806,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                                 mediaFile.getVideoPressShortCode());
 
                         mWebView.execJavaScriptFromString("ZSSEditor.insertVideo('" + safeMediaUrl + "', '" +
-                                posterUrl + "', '" + videoPressId +  "');");
+                                posterUrl + "', '" + videoPressId + "');");
                     } else {
                         mWebView.execJavaScriptFromString("ZSSEditor.insertImage('" + safeMediaUrl + "', '" + mediaId +
                                 "');");
@@ -857,7 +857,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         mWebView.post(new Runnable() {
             @Override
             public void run() {
-                    mWebView.execJavaScriptFromString("ZSSEditor.setVideoPressLinks('" + videoId + "', '" +
+                mWebView.execJavaScriptFromString("ZSSEditor.setVideoPressLinks('" + videoId + "', '" +
                         Utils.escapeQuotes(videoUrl) + "', '" + Utils.escapeQuotes(posterUrl) + "');");
             }
         });
@@ -1082,7 +1082,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         switch (uploadStatus) {
             case "uploading":
                 // Display 'cancel upload' dialog
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.MyAlertDialogStyle);
                 builder.setTitle(getString(R.string.stop_upload_dialog_title));
                 builder.setPositiveButton(R.string.stop_upload_button, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -1256,7 +1256,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     @Override
     public void onImageReplaced(String responseArgs) {
-        imageUploading=1;
+        imageUploading = 1;
     }
 
     private void updateVisualEditorFields() {
@@ -1307,7 +1307,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     void updateFormatBarEnabledState(boolean enabled) {
         float alpha = (enabled ? TOOLBAR_ALPHA_ENABLED : TOOLBAR_ALPHA_DISABLED);
-        for(ToggleButton button : mTagToggleButtonMap.values()) {
+        for (ToggleButton button : mTagToggleButtonMap.values()) {
             button.setEnabled(enabled);
             button.setAlpha(alpha);
         }
@@ -1350,8 +1350,9 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     /**
      * In HTML mode, applies formatting to selected text, or inserts formatting tag at current cursor position
+     *
      * @param toggleButton format bar button which was clicked
-     * @param tag identifier tag
+     * @param tag          identifier tag
      */
     private void applyFormattingHtmlMode(ToggleButton toggleButton, String tag) {
         if (mSourceViewContent == null) {
@@ -1411,21 +1412,21 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
             mSourceViewContent.setSelection(selectionEnd + endTag.length());
         }
     }
-    public String contentFormatting()
-    {
-        String content=getContent().toString();
-        String pTag="<p>";
-        String newString=pTag.concat(content);
-        String formattedString=newString.replace("\n\n", "</p><p>");
-        formattedString=formattedString.concat("</p>");
+
+    public String contentFormatting() {
+        String content = getContent().toString();
+        String pTag = "<p>";
+        String newString = pTag.concat(content);
+        String formattedString = newString.replace("\n\n", "</p><p>");
+        formattedString = formattedString.concat("</p>");
         return formattedString;
 
     }
 
-    public void toggleTitleView(boolean b){
-        if(b){
+    public void toggleTitleView(boolean b) {
+        if (b) {
             disableTitleView.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             disableTitleView.setVisibility(View.INVISIBLE);
         }
 

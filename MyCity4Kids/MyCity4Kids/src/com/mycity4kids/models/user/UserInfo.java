@@ -24,6 +24,7 @@ public class UserInfo extends BaseDataModel implements Parcelable {
     private String profilePicUrl;
     private String loginMode;
     private String cityId;
+    private String isLangSelection;
 
     public UserInfo() {
         super();
@@ -173,6 +174,14 @@ public class UserInfo extends BaseDataModel implements Parcelable {
         this.cityId = cityId;
     }
 
+    public String getIsLangSelection() {
+        return isLangSelection;
+    }
+
+    public void setIsLangSelection(String isLangSelection) {
+        this.isLangSelection = isLangSelection;
+    }
+
     protected UserInfo(Parcel in) {
         id = in.readString();
         dynamoId = in.readString();
@@ -192,6 +201,7 @@ public class UserInfo extends BaseDataModel implements Parcelable {
         profilePicUrl = in.readString();
         loginMode = in.readString();
         cityId = in.readString();
+        isLangSelection = in.readString();
     }
 
     @Override
@@ -214,6 +224,7 @@ public class UserInfo extends BaseDataModel implements Parcelable {
         dest.writeString(profilePicUrl);
         dest.writeString(loginMode);
         dest.writeString(cityId);
+        dest.writeString(isLangSelection);
     }
 
     @Override

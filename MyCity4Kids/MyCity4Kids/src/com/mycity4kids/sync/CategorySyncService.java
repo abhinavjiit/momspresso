@@ -91,6 +91,10 @@ public class CategorySyncService extends IntentService {
                                              SharedPrefUtils.setNotificationType(CategorySyncService.this, "" + i, responseModel.getData().getResult().getNotificationType().get(i));
                                          }
 
+                                         for (Map.Entry<String, String> entry : responseModel.getData().getResult().getLanguage().entrySet()) {
+                                             SharedPrefUtils.setLanguageConfig(CategorySyncService.this, entry.getKey(), entry.getValue());
+                                         }
+
                                          version = SharedPrefUtils.getConfigCategoryVersion(CategorySyncService.this);
                                          if (version == 0 || version != responseModel.getData().getResult().getCategory().getVersion()) {
                                              location = responseModel.getData().getResult().getCategory().getLocation();
@@ -108,10 +112,10 @@ public class CategorySyncService extends IntentService {
                                                      Log.d("TAGA", "server contacted and has file");
                                                      boolean writtenToDisk = writeResponseBodyToDisk(response.body(), AppConstants.CATEGORIES_JSON_FILE);
 
-                                                     Topics t = new Topics();
-                                                     t.setId("");
-                                                     t.setDisplay_name("");
-                                                     SharedPrefUtils.setMomspressoCategory(CategorySyncService.this, t);
+//                                                     Topics t = new Topics();
+//                                                     t.setId("");
+//                                                     t.setDisplay_name("");
+//                                                     SharedPrefUtils.setMomspressoCategory(CategorySyncService.this, t);
 
                                                      SharedPrefUtils.setConfigCategoryVersion(CategorySyncService.this, responseModel.getData().getResult().getCategory().getVersion());
                                                      Log.d("TAGA", "file download was a success? " + writtenToDisk);

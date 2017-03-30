@@ -16,5 +16,6 @@ public interface RecommendationAPI {
     @GET("v1/recommendations/{userId}")
     Call<ArticleListingResponse> getRecommendedArticlesList(@Path("userId") String userId,
                                                             @Query("size") int limit,
-                                                            @Query("chunks") String chunks);
+                                                            @Query("chunks") String chunks,
+                                                            @Query("lang") String lang);
 }

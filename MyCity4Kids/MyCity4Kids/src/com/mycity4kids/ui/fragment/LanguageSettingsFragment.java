@@ -10,19 +10,24 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
+import com.kelltontech.utils.ConnectivityUtils;
+import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
-import com.mycity4kids.models.SubscriptionSettingsModel;
-import com.mycity4kids.models.request.SubscriptionUpdateRequest;
-import com.mycity4kids.models.response.SubscriptionSettingsResponse;
+import com.mycity4kids.models.SubscriptionAndLanguageSettingsModel;
+import com.mycity4kids.models.response.ConfigResponse;
+import com.mycity4kids.models.response.LanguageSettingsResponse;
+import com.mycity4kids.models.response.PreferredLanguageUpdateRequest;
+import com.mycity4kids.models.response.UpdateLanguageSettingsResponse;
+import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.retrofitAPIsInterfaces.SubscriptionsAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.ConfigAPIs;
+import com.mycity4kids.retrofitAPIsInterfaces.LanguageSettingsAPI;
+import com.mycity4kids.sync.CategorySyncService;
 import com.mycity4kids.ui.adapter.LanguageSettingsListAdapter;
 
 import java.util.ArrayList;
@@ -38,9 +43,11 @@ import retrofit2.Retrofit;
  */
 public class LanguageSettingsFragment extends BaseFragment {
 
-    ListView languageListView;
-    ArrayList<SubscriptionSettingsModel> languageSettingsList;
-    LanguageSettingsListAdapter languageSettingsListAdapter;
+    private boolean isSubsequentCall = false;
+
+    private ListView languageListView;
+    private ArrayList<SubscriptionAndLanguageSettingsModel> languageSettingsList;
+    private LanguageSettingsListAdapter languageSettingsListAdapter;
 
     @Nullable
     @Override
@@ -58,40 +65,28 @@ public class LanguageSettingsFragment extends BaseFragment {
 
         showProgressDialog("Please wait ...");
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        SubscriptionsAPI subscriptionsAPI = retrofit.create(SubscriptionsAPI.class);
-        Call<SubscriptionSettingsResponse> call = subscriptionsAPI.getSubscriptionList(SharedPrefUtils.getUserDetailModel(getActivity()).getEmail());
-        call.enqueue(subscriptionSettingsResponseCallback);
+        LanguageSettingsAPI languageSettingsAPI = retrofit.create(LanguageSettingsAPI.class);
+        Call<LanguageSettingsResponse> call = languageSettingsAPI.getLanguagesList();
+        call.enqueue(languageSettingsResponseCallback);
     }
 
-    private Callback<SubscriptionSettingsResponse> subscriptionSettingsResponseCallback = new Callback<SubscriptionSettingsResponse>() {
+    private Callback<LanguageSettingsResponse> languageSettingsResponseCallback = new Callback<LanguageSettingsResponse>() {
         @Override
-        public void onResponse(Call<SubscriptionSettingsResponse> call, retrofit2.Response<SubscriptionSettingsResponse> response) {
-
+        public void onResponse(Call<LanguageSettingsResponse> call, retrofit2.Response<LanguageSettingsResponse> response) {
             removeProgressDialog();
             if (response == null || response.body() == null) {
                 return;
             }
             try {
-                SubscriptionSettingsResponse responseData = (SubscriptionSettingsResponse) response.body();
+                LanguageSettingsResponse responseData = (LanguageSettingsResponse) response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 //                    responseData.getData().getResult()
-                    for (Map.Entry<String, Object> entry : responseData.getData().getResult().entrySet()) {
-                        if (entry.getValue() instanceof String) {
-                            Log.d("Notification Items = ", entry.getKey() + "/" + entry.getValue());
-
-
-                        } else if (entry.getValue() instanceof Map) {
-                            Map<String, String> retMap = new Gson().fromJson(entry.getValue().toString(), new TypeToken<HashMap<String, String>>() {
-                            }.getType());
-
-                            for (Map.Entry<String, String> langEntry : retMap.entrySet()) {
-                                SubscriptionSettingsModel subscriptionSettingsModel = new SubscriptionSettingsModel();
-                                subscriptionSettingsModel.setStatus(langEntry.getValue());
-                                subscriptionSettingsModel.setName(langEntry.getKey());
-                                languageSettingsList.add(subscriptionSettingsModel);
-                            }
-                        }
-
+                    for (Map.Entry<String, String> entry : responseData.getData().getResult().entrySet()) {
+                        Log.d("Notification Items = ", entry.getKey() + "/" + entry.getValue());
+                        SubscriptionAndLanguageSettingsModel subscriptionAndLanguageSettingsModel = new SubscriptionAndLanguageSettingsModel();
+                        subscriptionAndLanguageSettingsModel.setStatus(entry.getValue());
+                        subscriptionAndLanguageSettingsModel.setName(entry.getKey());
+                        languageSettingsList.add(subscriptionAndLanguageSettingsModel);
                     }
                     languageSettingsListAdapter = new LanguageSettingsListAdapter(getActivity(), languageSettingsList);
                     languageListView.setAdapter(languageSettingsListAdapter);
@@ -106,7 +101,8 @@ public class LanguageSettingsFragment extends BaseFragment {
         }
 
         @Override
-        public void onFailure(Call<SubscriptionSettingsResponse> call, Throwable t) {
+        public void onFailure(Call<LanguageSettingsResponse> call, Throwable t) {
+            removeProgressDialog();
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
@@ -118,55 +114,122 @@ public class LanguageSettingsFragment extends BaseFragment {
 
     public void updateLanguageSubscription() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        SubscriptionsAPI subscriptionsAPI = retrofit.create(SubscriptionsAPI.class);
-        SubscriptionUpdateRequest subscriptionUpdateRequest = new SubscriptionUpdateRequest();
+        LanguageSettingsAPI languageSettingsAPI = retrofit.create(LanguageSettingsAPI.class);
+        PreferredLanguageUpdateRequest languageUpdateRequest = new PreferredLanguageUpdateRequest();
 
         HashMap<String, String> map = new HashMap<>();
         for (int i = 0; i < languageSettingsList.size(); i++) {
             map.put(languageSettingsList.get(i).getName(), languageSettingsList.get(i).getStatus());
         }
 
-        subscriptionUpdateRequest.setEmail(SharedPrefUtils.getUserDetailModel(getActivity()).getEmail());
-        subscriptionUpdateRequest.setSubscribe(map);
+        languageUpdateRequest.setLangSubscription(map);
 
-        Call<SubscriptionSettingsResponse> call = subscriptionsAPI.updateSubscriptions(subscriptionUpdateRequest);
-        call.enqueue(new Callback<SubscriptionSettingsResponse>() {
-            @Override
-            public void onResponse(Call<SubscriptionSettingsResponse> call, retrofit2.Response<SubscriptionSettingsResponse> response) {
-                if (response == null || response.body() == null) {
+        Call<UpdateLanguageSettingsResponse> call = languageSettingsAPI.updatePreferredLanguages(languageUpdateRequest);
+        call.enqueue(updateLanguageSettingsCallback);
+    }
+
+    Callback<UpdateLanguageSettingsResponse> updateLanguageSettingsCallback = new Callback<UpdateLanguageSettingsResponse>() {
+        @Override
+        public void onResponse(Call<UpdateLanguageSettingsResponse> call, retrofit2.Response<UpdateLanguageSettingsResponse> response) {
+            if (response == null || response.body() == null) {
 //                showToast("Something went wrong from server");
-                    return;
-                }
-                try {
-                    SubscriptionSettingsResponse responseData = (SubscriptionSettingsResponse) response.body();
-                    if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                        if (null != getActivity()) {
-                            Toast.makeText(getActivity(), "Subscription settings updated successfully", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            try {
+                UpdateLanguageSettingsResponse responseData = (UpdateLanguageSettingsResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    if (null != getActivity()) {
+                        Toast.makeText(getActivity(), "Language content settings updated successfully", Toast.LENGTH_SHORT).show();
+                        UserInfo userInfo = SharedPrefUtils.getUserDetailModel(getActivity());
+                        userInfo.setIsLangSelection("1");
+                        SharedPrefUtils.setUserDetailModel(getActivity(), userInfo);
+
+                        Map<String, String> subscribedContentLanguages = responseData.getData();
+                        String filter = "0";
+                        for (Map.Entry<String, String> entry : subscribedContentLanguages.entrySet()) {
+                            if ("1".equals(entry.getValue())) {
+                                String langKey = SharedPrefUtils.getLanguageConfig(getActivity(), entry.getKey());
+                                if (!StringUtils.isNullOrEmpty(langKey)) {
+                                    filter = filter + "," + SharedPrefUtils.getLanguageConfig(getActivity(), entry.getKey());
+                                } else {
+                                    if (!isSubsequentCall) {
+                                        updateConfigSettings();
+                                        return;
+                                    }
+
+                                }
+                            }
                         }
-                    } else {
-                        if (null != getActivity()) {
-                            Toast.makeText(getActivity(), "Error while updating subscription settings", Toast.LENGTH_SHORT).show();
-                        }
+                        SharedPrefUtils.setLanguageFilters(getActivity(), filter);
                     }
-                } catch (Exception e) {
+                } else {
                     if (null != getActivity()) {
                         Toast.makeText(getActivity(), "Error while updating subscription settings", Toast.LENGTH_SHORT).show();
                     }
-                    removeProgressDialog();
-                    Crashlytics.logException(e);
-                    Log.d("MC4kException", Log.getStackTraceString(e));
                 }
-            }
-
-            @Override
-            public void onFailure(Call<SubscriptionSettingsResponse> call, Throwable t) {
+            } catch (Exception e) {
                 if (null != getActivity()) {
                     Toast.makeText(getActivity(), "Error while updating subscription settings", Toast.LENGTH_SHORT).show();
                 }
-                Crashlytics.logException(t);
-                Log.d("MC4kException", Log.getStackTraceString(t));
+                removeProgressDialog();
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
             }
-        });
+        }
+
+        @Override
+        public void onFailure(Call<UpdateLanguageSettingsResponse> call, Throwable t) {
+            if (null != getActivity()) {
+                Toast.makeText(getActivity(), "Error while updating subscription settings", Toast.LENGTH_SHORT).show();
+            }
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
+    private void updateConfigSettings() {
+        if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
+            return;
+        }
+        isSubsequentCall = true;
+        final Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        ConfigAPIs configAPIs = retrofit.create(ConfigAPIs.class);
+        Call<ConfigResponse> call = configAPIs.getConfig();
+        call.enqueue(configSettingResponseListener);
     }
 
+    private Callback<ConfigResponse> configSettingResponseListener = new Callback<ConfigResponse>() {
+        @Override
+        public void onResponse(Call<ConfigResponse> call, retrofit2.Response<ConfigResponse> response) {
+            if (response == null || response.body() == null) {
+                return;
+            }
+            try {
+                ConfigResponse responseData = (ConfigResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    for (Map.Entry<String, String> entry : responseData.getData().getResult().getLanguage().entrySet()) {
+                        SharedPrefUtils.setLanguageConfig(getActivity(), entry.getKey(), entry.getValue());
+                    }
+                    updateLanguageSubscription();
+                } else {
+                    Toast.makeText(getActivity(), "Error while updating subscription settings", Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                Toast.makeText(getActivity(), "Error while updating subscription settings", Toast.LENGTH_SHORT).show();
+                removeProgressDialog();
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+
+
+        }
+
+        @Override
+        public void onFailure(Call<ConfigResponse> call, Throwable t) {
+            Toast.makeText(getActivity(), "Error while updating subscription settings", Toast.LENGTH_SHORT).show();
+            removeProgressDialog();
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
 }

@@ -16,6 +16,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.ui.activity.AllVideoSectionActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.MyFunnyVideosListingActivity;
 import com.mycity4kids.ui.activity.VlogsListingActivity;
@@ -78,6 +79,8 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
                 ((MyFunnyVideosListingActivity) getActivity()).startActivityForResult(videoCapture, AppConstants.REQUEST_VIDEO_TRIMMER);
             } else if ("vlogslisting".equals(activity)) {
                 ((VlogsListingActivity) getActivity()).startActivityForResult(videoCapture, AppConstants.REQUEST_VIDEO_TRIMMER);
+            } else if ("allvideosection".equals(activity)) {
+                ((AllVideoSectionActivity) getActivity()).startActivityForResult(videoCapture, AppConstants.REQUEST_VIDEO_TRIMMER);
             }
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -97,6 +100,8 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
                 ((MyFunnyVideosListingActivity) getActivity()).startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)), AppConstants.REQUEST_VIDEO_TRIMMER);
             } else if ("vlogslisting".equals(activity)) {
                 ((VlogsListingActivity) getActivity()).startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)), AppConstants.REQUEST_VIDEO_TRIMMER);
+            } else if ("allvideosection".equals(activity)) {
+                ((AllVideoSectionActivity) getActivity()).startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)), AppConstants.REQUEST_VIDEO_TRIMMER);
             }
         } catch (Exception e) {
             Crashlytics.logException(e);

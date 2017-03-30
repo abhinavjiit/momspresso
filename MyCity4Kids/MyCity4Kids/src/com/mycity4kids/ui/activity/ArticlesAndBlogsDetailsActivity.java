@@ -81,6 +81,7 @@ import com.mycity4kids.models.response.AddBookmarkResponse;
 import com.mycity4kids.models.response.AddCommentResponse;
 import com.mycity4kids.models.response.ArticleDetailResponse;
 import com.mycity4kids.models.response.ArticleDetailResult;
+import com.mycity4kids.models.response.ArticleDetailWebserviceResponse;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.ArticleRecommendationStatusResponse;
@@ -211,7 +212,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     Rect scrollBounds;
     TrackArticleReadTime trackArticleReadTime;
     int estimatedReadTime = 0;
-//    BubbleTextVew recommendSuggestion;
+    //    BubbleTextVew recommendSuggestion;
 //    private Animation showRecommendAnim, hideRecommendAnim;
 //    private boolean hasRecommendSuggestionAppeared = true;
     private WebView videoWebView;
@@ -379,10 +380,13 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
     private void hitArticleDetailsS3API() {
         Call<ArticleDetailResult> call = articleDetailsAPI.getArticleDetailsFromS3(articleId);
+        call.enqueue(articleDetailResponseCallbackS3);
 
 //        For Local JSON Testing
 //        Call<ArticleDetailResult> call = articleDetailsAPI.getArticleDetailsFromLocal();
-        call.enqueue(articleDetailResponseCallbackS3);
+
+//        For Direct fetch from webservice testing
+//        getArticleDetailsWebserviceAPI();
     }
 
     private void getViewCountAPI() {
@@ -1378,29 +1382,29 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     };
 
     private void getArticleDetailsWebserviceAPI() {
-        Call<ArticleDetailResponse> call = articleDetailsAPI.getArticleDetailsFromWebservice(articleId);
+        Call<ArticleDetailWebserviceResponse> call = articleDetailsAPI.getArticleDetailsFromWebservice(articleId);
         call.enqueue(articleDetailResponseCallbackWebservice);
     }
 
-    Callback<ArticleDetailResponse> articleDetailResponseCallbackWebservice = new Callback<ArticleDetailResponse>() {
+    Callback<ArticleDetailWebserviceResponse> articleDetailResponseCallbackWebservice = new Callback<ArticleDetailWebserviceResponse>() {
         @Override
-        public void onResponse(Call<ArticleDetailResponse> call, retrofit2.Response<ArticleDetailResponse> response) {
+        public void onResponse(Call<ArticleDetailWebserviceResponse> call, retrofit2.Response<ArticleDetailWebserviceResponse> response) {
             removeProgressDialog();
             if (response == null || response.body() == null) {
                 showToast("Something went wrong from server");
                 return;
             }
             try {
-                ArticleDetailResponse responseData = (ArticleDetailResponse) response.body();
+                ArticleDetailWebserviceResponse responseData = (ArticleDetailWebserviceResponse) response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     newCommentLayout.setVisibility(View.VISIBLE);
-                    getResponseUpdateUi(responseData.getData().getResult());
+                    getResponseUpdateUi(responseData.getData());
                     if (StringUtils.isNullOrEmpty(authorId)) {
                         authorId = detailData.getUserId();
                         hitBookmarkFollowingStatusAPI();
                     }
                     hitRelatedArticleAPI();
-                    commentURL = responseData.getData().getResult().getCommentsUri();
+                    commentURL = responseData.getData().getCommentsUri();
 
                     if (!StringUtils.isNullOrEmpty(commentURL) && commentURL.contains("http")) {
                         getMoreComments();
@@ -1417,7 +1421,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         }
 
         @Override
-        public void onFailure(Call<ArticleDetailResponse> call, Throwable t) {
+        public void onFailure(Call<ArticleDetailWebserviceResponse> call, Throwable t) {
             removeProgressDialog();
             handleExceptions(t);
         }

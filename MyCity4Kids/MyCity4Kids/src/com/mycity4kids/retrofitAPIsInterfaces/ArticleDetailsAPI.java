@@ -10,6 +10,7 @@ import com.mycity4kids.models.response.AddBookmarkResponse;
 import com.mycity4kids.models.response.AddCommentResponse;
 import com.mycity4kids.models.response.ArticleDetailResponse;
 import com.mycity4kids.models.response.ArticleDetailResult;
+import com.mycity4kids.models.response.ArticleDetailWebserviceResponse;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleRecommendationStatusResponse;
 import com.mycity4kids.models.response.FBCommentResponse;
@@ -39,7 +40,7 @@ public interface ArticleDetailsAPI {
 //    Call<ArticleDetailResult> getArticleDetailsFromLocal();
 
     @GET("/v1/articles/doc/")
-    Call<ArticleDetailResponse> getArticleDetailsFromWebservice(@Query("articleId") String articleId);
+    Call<ArticleDetailWebserviceResponse> getArticleDetailsFromWebservice(@Query("articleId") String articleId);
 
     @GET("v1/users/checkFollowingBookmarkStatus/")
     Call<ArticleDetailResponse> checkFollowingBookmarkStatus(@Query("articleId") String articleId,

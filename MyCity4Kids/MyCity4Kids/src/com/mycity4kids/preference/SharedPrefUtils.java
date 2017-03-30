@@ -78,7 +78,7 @@ public class SharedPrefUtils {
     public static final String SESSIONID = "sessionid";
     public static final String MC4KTOKEN = "mc4kToken";
     public static final String IS_USER_VALIDATED = "isValidated";
-
+    private static final String USER_LANG_SELECTION = "userLangSelection";
 
     public static final String APPOINTMENT_TIMESTAMP = "appointment_timestamp";
     public static final String TASK_TIMESTAMP = "task_timestamp";
@@ -115,6 +115,7 @@ public class SharedPrefUtils {
 
     public static final String IS_FB_CONNECTED = "isFBConnected";
     private static final String USER_CITY_ID = "userCityId";
+    private static final String LANGUAGE_FILTER = "languageFilter";
 
     /**
      * this shared preference save current versions for control city,locality,category APIs .
@@ -297,6 +298,7 @@ public class SharedPrefUtils {
         _editor.putString(MC4KTOKEN, pModel.getMc4kToken());
         _editor.putString(IS_USER_VALIDATED, pModel.getIsValidated());
         _editor.putString(USER_CITY_ID, pModel.getCityId());
+        _editor.putString(USER_LANG_SELECTION, pModel.getIsLangSelection());
         _editor.commit();
     }
 
@@ -321,6 +323,7 @@ public class SharedPrefUtils {
         user.setMc4kToken(_sharedPref.getString(MC4KTOKEN, ""));
         user.setIsValidated(_sharedPref.getString(IS_USER_VALIDATED, ""));
         user.setCityId(_sharedPref.getString(USER_CITY_ID, "11"));
+        user.setIsLangSelection(_sharedPref.getString(USER_LANG_SELECTION, "0"));
         return user;
     }
 
@@ -607,22 +610,22 @@ public class SharedPrefUtils {
         return _sharedPref.getBoolean(CHANGE_CITY_FLAG, false);
     }
 
-    public static void setMomspressoCategory(Context context, Topics category) {
-        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Editor _editor = _sharedPref.edit();
-
-        _editor.putString(MOMSPRESSO_CATEGORY_ID, category.getId());
-        _editor.putString(MOMSPRESSO_DISPLAY_NAME, category.getDisplay_name());
-        _editor.commit();
-    }
-
-    public static Topics getMomspressoCategory(Context context) {
-        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        Topics momspressoTopic = new Topics();
-        momspressoTopic.setId(_sharedPref.getString(MOMSPRESSO_CATEGORY_ID, ""));
-        momspressoTopic.setDisplay_name(_sharedPref.getString(MOMSPRESSO_DISPLAY_NAME, ""));
-        return momspressoTopic;
-    }
+//    public static void setMomspressoCategory(Context context, Topics category) {
+//        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+//        Editor _editor = _sharedPref.edit();
+//
+//        _editor.putString(MOMSPRESSO_CATEGORY_ID, category.getId());
+//        _editor.putString(MOMSPRESSO_DISPLAY_NAME, category.getDisplay_name());
+//        _editor.commit();
+//    }
+//
+//    public static Topics getMomspressoCategory(Context context) {
+//        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+//        Topics momspressoTopic = new Topics();
+//        momspressoTopic.setId(_sharedPref.getString(MOMSPRESSO_CATEGORY_ID, ""));
+//        momspressoTopic.setDisplay_name(_sharedPref.getString(MOMSPRESSO_DISPLAY_NAME, ""));
+//        return momspressoTopic;
+//    }
 
     public static void setConfigPopularCategoryVersion(Context pContext, int id) {
         SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
@@ -670,6 +673,18 @@ public class SharedPrefUtils {
     }
 
     public static String getNotificationConfig(Context context, String key) {
+        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return _sharedPref.getString(key, "");
+    }
+
+    public static void setLanguageConfig(Context pContext, String key, String value) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        _editor.putString(key, value);
+        _editor.commit();
+    }
+
+    public static String getLanguageConfig(Context context, String key) {
         SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         return _sharedPref.getString(key, "");
     }
@@ -722,5 +737,17 @@ public class SharedPrefUtils {
     public static String getConfigUserType(Context context, String key) {
         SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         return _sharedPref.getString(key, "");
+    }
+
+    public static void setLanguageFilters(Context pContext, String languageFilters) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        _editor.putString(LANGUAGE_FILTER, languageFilters);
+        _editor.commit();
+    }
+
+    public static String getLanguageFilters(Context context) {
+        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return _sharedPref.getString(LANGUAGE_FILTER, "");
     }
 }

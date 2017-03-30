@@ -21,55 +21,55 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp"
-        android:text="audio1" />
+        android:text="At The Fair - Happy" />
 
     <TextView
         android:id="@+id/audioTextView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp"
-        android:text="audio2" />
+        android:text="Break Time - Happy" />
 
     <TextView
         android:id="@+id/audioTextView3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp"
-        android:text="audio3" />
+        android:text="Floaters - Inspirational" />
 
     <TextView
         android:id="@+id/audioTextView4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp"
-        android:text="audio4" />
+        android:text="Hit My Soul - Happy" />
 
     <TextView
         android:id="@+id/audioTextView5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp"
-        android:text="audio5" />
+        android:text="March On - Angry" />
 
     <TextView
         android:id="@+id/audioTextView6"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp"
-        android:text="audio6" />
+        android:text="Sunday Plans - Funky" />
 
     <TextView
         android:id="@+id/audioTextView7"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp"
-        android:text="audio7" />
+        android:text="The Big Guns - Angry" />
 
     <TextView
         android:id="@+id/audioTextView8"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp"
-        android:text="audio8" />
+        android:text="Where I Am From - Calm" />
 
 </LinearLayout>

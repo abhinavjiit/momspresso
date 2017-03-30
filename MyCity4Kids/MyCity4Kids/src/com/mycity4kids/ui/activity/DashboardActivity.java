@@ -1067,6 +1067,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     public void updateUnreadNotificationCount(String unreadNotifCount) {
         if (StringUtils.isNullOrEmpty(unreadNotifCount) || "0".equals(unreadNotifCount)) {
             itemMessagesBadgeTextView.setVisibility(View.GONE);
+            itemMessagesBadgeTextView.setText("");
         } else {
             itemMessagesBadgeTextView.setVisibility(View.VISIBLE);
             itemMessagesBadgeTextView.setText(unreadNotifCount);

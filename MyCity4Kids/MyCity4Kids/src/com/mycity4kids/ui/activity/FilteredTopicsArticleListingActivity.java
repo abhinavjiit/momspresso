@@ -79,41 +79,49 @@ import retrofit2.Retrofit;
  * @author Hemant Parmar
  */
 
+/*
+* Used for Listing of Topics Article Listing, Hindi, Bangla, Marathi Language Article Listing, Momspresso Article Listing
+*
+* */
+
 public class FilteredTopicsArticleListingActivity extends BaseActivity implements OnClickListener, SwipeRefreshLayout.OnRefreshListener, FilterTopicsDialogFragment.OnTopicsSelectionComplete {
 
-    NewArticlesListingAdapter articlesListingAdapter;
-    ListView listView;
+    private NewArticlesListingAdapter articlesListingAdapter;
+    private ListView listView;
     private Menu menu;
-    ArrayList<ArticleListingResult> articleDataModelsNew;
-    int sortType = 0;
+    private ArrayList<ArticleListingResult> articleDataModelsNew;
     private RelativeLayout mLodingView;
-    FrameLayout frameLayout;
-    FloatingActionsMenu fabMenu;
+    private FrameLayout frameLayout;
+    private FloatingActionsMenu fabMenu;
     private SwipeRefreshLayout swipeRefreshLayout;
     private int nextPageNumber;
     private boolean isReuqestRunning = false;
     private ProgressBar progressBar;
-    boolean isLastPageReached = false;
+    private boolean isLastPageReached = false;
     private TextView noBlogsTextView;
     private TextView sortTextView;
     private TextView filterTextView;
-    private String selectedTopics;
+
     private Toolbar mToolbar;
     private FrameLayout sortBgLayout;
     private int limit = 15;
     private FloatingActionButton popularSortFAB, recentSortFAB, fabSort;
     private TextView bottomMenuRecentSort, bottomMenuPopularSort;
-    private String displayName;
-    private String listingType = "";
-
-    private String followingTopicStatus = "0";
-    private int isTopicFollowed;
     private RelativeLayout bottomOptionMenu;
-    private ArrayList<Topics> allTopicsList;
-    private HashMap<Topics, List<Topics>> allTopicsMap;
+    private TextView titleTextView;
+    private TextView followUnfollowTextView;
     private LinearLayout sortingLayout;
 
-//    private Animation bottomUp, bottomDown;
+    private int sortType = 0;
+    private String displayName;
+    private String listingType = "";
+    private String selectedTopics;
+    private String followingTopicStatus = "0";
+    private int isTopicFollowed;
+    private ArrayList<Topics> allTopicsList;
+    private HashMap<Topics, List<Topics>> allTopicsMap;
+
+    //    private Animation bottomUp, bottomDown;
     private String filteredTopics;
     private String topicLevel;
 
@@ -121,6 +129,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.filtered_topics_articles_activity);
+
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -135,6 +144,9 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
 
+        titleTextView = (TextView) findViewById(R.id.titleTextView);
+        followUnfollowTextView = (TextView) findViewById(R.id.followUnfollowTextView);
+
         bottomOptionMenu = (RelativeLayout) findViewById(R.id.bottomOptionMenu);
         bottomMenuRecentSort = (TextView) findViewById(R.id.recentSort);
         bottomMenuPopularSort = (TextView) findViewById(R.id.popularSort);
@@ -146,6 +158,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         sortBgLayout.setOnClickListener(this);
         bottomMenuRecentSort.setOnClickListener(this);
         bottomMenuPopularSort.setOnClickListener(this);
+        followUnfollowTextView.setOnClickListener(this);
         sortBgLayout.setVisibility(View.GONE);
 
         frameLayout = (FrameLayout) findViewById(R.id.frame_layout);
@@ -187,7 +200,9 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
 
             if (AppConstants.TOPIC_LEVEL_SUB_SUB_CATEGORY.equals(topicLevel) ||
                     AppConstants.MOMSPRESSO_CATEGORYID.equals(selectedTopics) ||
-                    AppConstants.HINDI_CATEGORYID.equals(selectedTopics)) {
+                    AppConstants.HINDI_CATEGORYID.equals(selectedTopics) ||
+                    AppConstants.BANGLA_CATEGORYID.equals(selectedTopics) ||
+                    AppConstants.MARATHI_CATEGORYID.equals(selectedTopics)) {
                 sortBgLayout.setVisibility(View.GONE);
                 bottomOptionMenu.setVisibility(View.GONE);
             } else {
@@ -212,7 +227,15 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         }
 
         if (null != displayName) {
-            getSupportActionBar().setTitle(displayName.toUpperCase());
+            if (AppConstants.MOMSPRESSO_CATEGORYID.equals(selectedTopics) ||
+                    AppConstants.HINDI_CATEGORYID.equals(selectedTopics) ||
+                    AppConstants.BANGLA_CATEGORYID.equals(selectedTopics) ||
+                    AppConstants.MARATHI_CATEGORYID.equals(selectedTopics)) {
+                getSupportActionBar().setTitle(displayName.toUpperCase());
+            } else {
+                getSupportActionBar().setTitle("");
+            }
+            titleTextView.setText(displayName);
         }
         swipeRefreshLayout.setOnRefreshListener((SwipeRefreshLayout.OnRefreshListener) FilteredTopicsArticleListingActivity.this);
         progressBar.setVisibility(View.VISIBLE);
@@ -317,10 +340,19 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
 
         int from = (nextPageNumber - 1) * limit + 1;
         if (StringUtils.isNullOrEmpty(filteredTopics)) {
-            Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1);
+            Call<ArticleListingResponse> filterCall;
+            if (AppConstants.MOMSPRESSO_CATEGORYID.equals(selectedTopics) ||
+                    AppConstants.HINDI_CATEGORYID.equals(selectedTopics) ||
+                    AppConstants.BANGLA_CATEGORYID.equals(selectedTopics) ||
+                    AppConstants.MARATHI_CATEGORYID.equals(selectedTopics)) {
+                filterCall = topicsAPI.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1, "");
+            } else {
+                filterCall = topicsAPI.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(this));
+            }
+//            Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(this));
             filterCall.enqueue(articleListingResponseCallback);
         } else {
-            Call<ArticleListingResponse> filterCall = topicsAPI.getFilteredArticlesForCategories(filteredTopics, sortType, from, from + limit - 1);
+            Call<ArticleListingResponse> filterCall = topicsAPI.getFilteredArticlesForCategories(filteredTopics, sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(this));
             filterCall.enqueue(articleListingResponseCallback);
         }
     }
@@ -372,6 +404,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             isLastPageReached = false;
             if (null != articleDataModelsNew && !articleDataModelsNew.isEmpty()) {
                 //No more next results for search from pagination
+                isLastPageReached = true;
             } else {
                 // No results for search
                 noBlogsTextView.setVisibility(View.VISIBLE);
@@ -420,6 +453,10 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                 hitFilteredTopicsArticleListingApi(1);
                 break;
             case R.id.sortBgLayout:
+                sortBgLayout.setVisibility(View.GONE);
+                break;
+            case R.id.followUnfollowTextView:
+                followUnfollowTopics();
                 sortBgLayout.setVisibility(View.GONE);
                 break;
             case R.id.sortTextView:
@@ -485,7 +522,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         // according to fragment change it
         getMenuInflater().inflate(R.menu.menu_filter_article_by_topics, menu);
         this.menu = menu;
-        menu.getItem(0).setEnabled(false);
+//        menu.getItem(0).setEnabled(false);
         if (!StringUtils.isNullOrEmpty(selectedTopics)) {
             checkFollowingTopicStatus();
         }
@@ -498,6 +535,12 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             String fileContent = convertStreamToString(fileInputStream);
             FollowTopics[] res = new Gson().fromJson(fileContent, FollowTopics[].class);
             if (!checkCurrentCategoryExists(res)) {
+                if (AppConstants.TOPIC_LEVEL_SUB_CATEGORY.equals(topicLevel) || AppConstants.TOPIC_LEVEL_MAIN_CATEGORY.equals(topicLevel)) {
+                    titleTextView.setVisibility(View.VISIBLE);
+                } else {
+                    titleTextView.setVisibility(View.GONE);
+                }
+                followUnfollowTextView.setVisibility(View.GONE);
                 return;
             }
         } catch (FileNotFoundException e) {
@@ -563,10 +606,10 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                         Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
 
                         try {
-                            Topics t = new Topics();
-                            t.setId("");
-                            t.setDisplay_name("");
-                            SharedPrefUtils.setMomspressoCategory(FilteredTopicsArticleListingActivity.this, t);
+//                            Topics t = new Topics();
+//                            t.setId("");
+//                            t.setDisplay_name("");
+//                            SharedPrefUtils.setMomspressoCategory(FilteredTopicsArticleListingActivity.this, t);
 
                             FileInputStream fileInputStream = openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                             String fileContent = convertStreamToString(fileInputStream);
@@ -761,12 +804,14 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                 followingTopicStatus = responseData.getData().getStatus();
                 if ("0".equals(followingTopicStatus)) {
-                    menu.getItem(0).setEnabled(true);
-                    menu.getItem(0).setTitle("FOLLOW");
+//                    menu.getItem(0).setEnabled(true);
+//                    menu.getItem(0).setTitle("FOLLOW");
+                    followUnfollowTextView.setText("FOLLOW");
                     isTopicFollowed = 0;
                 } else {
-                    menu.getItem(0).setEnabled(true);
-                    menu.getItem(0).setTitle("FOLLOWING");
+//                    menu.getItem(0).setEnabled(true);
+//                    menu.getItem(0).setTitle("FOLLOWING");
+                    followUnfollowTextView.setText("FOLLOWING");
                     isTopicFollowed = 1;
                 }
             } else {
@@ -789,10 +834,19 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             case R.id.followUnfollowButton:
                 followUnfollowTopics();
                 break;
+            case R.id.searchButton:
+                startContextualSearch();
+                break;
             default:
                 return super.onOptionsItemSelected(item);
         }
         return true;
+    }
+
+    private void startContextualSearch() {
+        Intent intent = new Intent(this, ContextualSearchActivity.class);
+        intent.putExtra(Constants.CATEGORY_ID, selectedTopics);
+        startActivity(intent);
     }
 
     private void followUnfollowTopics() {
@@ -805,12 +859,14 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         if (isTopicFollowed == 0) {
             Log.d("GTM FOLLOW", displayName + ":" + selectedTopics);
             Utils.pushEventFollowUnfollowTopic(this, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "CategoriesArticleList", "follow", displayName + ":" + selectedTopics);
-            menu.getItem(0).setTitle("FOLLOWING");
+//            menu.getItem(0).setTitle("FOLLOWING");
+            followUnfollowTextView.setText("FOLLOWING");
             isTopicFollowed = 1;
         } else {
             Log.d("GTM UNFOLLOW", displayName + ":" + selectedTopics);
             Utils.pushEventFollowUnfollowTopic(this, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "CategoriesArticleList", "follow", displayName + ":" + selectedTopics);
-            menu.getItem(0).setTitle("FOLLOW");
+//            menu.getItem(0).setTitle("FOLLOW");
+            followUnfollowTextView.setText("FOLLOW");
             isTopicFollowed = 0;
         }
         Call<FollowUnfollowCategoriesResponse> call = topicsCategoryAPI.followCategories(SharedPrefUtils.getUserDetailModel(this).getDynamoId(), followUnfollowCategoriesRequest);

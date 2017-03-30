@@ -17,4 +17,5 @@
     <color name="sourceview_placeholder_text">@color/wp_gray</color>
     <color name="primary">#1d55f1</color>
     <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
 </resources>

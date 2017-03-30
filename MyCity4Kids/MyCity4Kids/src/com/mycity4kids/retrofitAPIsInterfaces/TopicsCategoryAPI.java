@@ -43,19 +43,22 @@ public interface TopicsCategoryAPI {
     Call<ArticleListingResponse> getArticlesForCategory(@Path("categoryId") String categoryId,
                                                         @Query("sort") int sort,
                                                         @Query("start") int start,
-                                                        @Query("end") int end);
+                                                        @Query("end") int end,
+                                                        @Query("lang") String lang);
 
     @GET("/v1/articles/topics")
     Call<ArticleListingResponse> getFilteredArticlesForCategories(@Query("ids") String categoryIds,
                                                                   @Query("sort") int sort,
                                                                   @Query("start") int start,
-                                                                  @Query("end") int end);
+                                                                  @Query("end") int end,
+                                                                  @Query("lang") String lang);
 
     @GET("/v1/articles/cities/{cityId}")
     Call<ArticleListingResponse> getBestArticlesForCity(@Path("cityId") String cityId,
                                                         @Query("sort") int sort,
                                                         @Query("start") int start,
-                                                        @Query("end") int end);
+                                                        @Query("end") int end,
+                                                        @Query("lang") String lang);
 
     @PUT("/v1/users/{userId}/topics")
     Call<FollowUnfollowCategoriesResponse> followCategories(@Path("userId") String userId,

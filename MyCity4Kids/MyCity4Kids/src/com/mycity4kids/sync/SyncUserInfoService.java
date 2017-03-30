@@ -16,6 +16,7 @@ import com.mycity4kids.dbtable.TableKids;
 import com.mycity4kids.models.response.KidsModel;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.models.user.KidsInfo;
+import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.newmodels.PushNotificationModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
@@ -24,6 +25,7 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 import java.util.Random;
 
 import retrofit2.Call;
@@ -77,6 +79,24 @@ public class SyncUserInfoService extends IntentService implements UpdateListener
                 UserDetailResponse responseData = (UserDetailResponse) response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     SharedPrefUtils.setProfileImgUrl(SyncUserInfoService.this, responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp());
+                    UserInfo userInfo = SharedPrefUtils.getUserDetailModel(SyncUserInfoService.this);
+                    userInfo.setIsLangSelection(responseData.getData().get(0).getResult().getIsLangSelection());
+                    SharedPrefUtils.setUserDetailModel(SyncUserInfoService.this, userInfo);
+
+                    Map<String, String> subscribedContentLanguages = responseData.getData().get(0).getResult().getLangSubscription();
+                    String filter = "0";
+                    for (Map.Entry<String, String> entry : subscribedContentLanguages.entrySet()) {
+                        if ("1".equals(entry.getValue())) {
+                            String langKey = SharedPrefUtils.getLanguageConfig(SyncUserInfoService.this, entry.getKey());
+                            if (!StringUtils.isNullOrEmpty(langKey)) {
+                                filter = filter + "," + SharedPrefUtils.getLanguageConfig(SyncUserInfoService.this, entry.getKey());
+                            }
+                        }
+//                        SharedPrefUtils.setLanguageConfig(SyncUserInfoService.this, entry.getKey(), entry.getValue());
+                    }
+
+                    SharedPrefUtils.setLanguageFilters(SyncUserInfoService.this, filter);
+
                     new SaveUserInfoinDB().execute(responseData);
                 } else {
 //                    showToast(responseData.getReason());

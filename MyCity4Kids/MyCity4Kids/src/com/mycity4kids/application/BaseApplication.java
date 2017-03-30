@@ -29,6 +29,7 @@ import com.mycity4kids.models.parentingstop.CommonParentingList;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.newmodels.parentingmodel.ArticleFilterListModel;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 
 import java.io.IOException;
@@ -288,6 +289,7 @@ public class BaseApplication extends Application {
                 requestBuilder.addHeader("appVersion", appVersion);
                 requestBuilder.addHeader("latitude", SharedPrefUtils.getUserLocationLatitude(getApplicationContext()));
                 requestBuilder.addHeader("longitude", SharedPrefUtils.getUserLocationLongitude(getApplicationContext()));
+                requestBuilder.addHeader("userPrint", AppUtils.getDeviceId(getApplicationContext()));
                 Request request = requestBuilder.build();
 
 //                Response response = chain.proceed(request);
@@ -392,6 +394,7 @@ public class BaseApplication extends Application {
                 requestBuilder.addHeader("appVersion", appVersion);
                 requestBuilder.addHeader("latitude", SharedPrefUtils.getUserLocationLatitude(getApplicationContext()));
                 requestBuilder.addHeader("longitude", SharedPrefUtils.getUserLocationLongitude(getApplicationContext()));
+                requestBuilder.addHeader("userPrint", AppUtils.getDeviceId(getApplicationContext()));
                 Request request = requestBuilder.build();
 
 //                Response response = chain.proceed(request);

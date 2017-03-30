@@ -1,10 +1,16 @@
 package com.mycity4kids.ui.activity;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -55,6 +61,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
 import com.mycity4kids.sync.PushTokenService;
 import com.mycity4kids.ui.fragment.FacebookAddEmailDialogFragment;
+import com.mycity4kids.utils.PermissionUtil;
 import com.mycity4kids.widget.CustomFontEditText;
 import com.mycity4kids.widget.CustomFontTextView;
 
@@ -74,6 +81,10 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
 
     public static final int RECOVERABLE_REQUEST_CODE = 98;
 
+    private static final int REQUEST_INIT_PERMISSION = 1;
+    private static String[] PERMISSIONS_INIT = {Manifest.permission.GET_ACCOUNTS};
+    private static String[] PERMISSIONS_GET_ACCOUNT = {Manifest.permission.GET_ACCOUNTS};
+
     private GooglePlusUtils mGooglePlusUtils;
     private CustomFontEditText mEmailId, mPassword;
     CustomFontTextView signinTextView;
@@ -91,6 +102,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
     FacebookAddEmailDialogFragment dialogFragment;
 
     private String loginMode = "";
+    private View mLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +111,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         setContentView(R.layout.aa_loginform);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mLayout = findViewById(R.id.rootLayout);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("Sign In");
         try {
@@ -161,8 +174,21 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
 
             case R.id.connect_googleplus:
                 if (ConnectivityUtils.isNetworkEnabled(this)) {
-                    showProgressDialog("Please Wait");
-                    mGooglePlusUtils.googlePlusLogin();
+
+
+                    if (Build.VERSION.SDK_INT >= 23) {
+                        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.GET_ACCOUNTS)
+                                != PackageManager.PERMISSION_GRANTED) {
+                            Log.i("PERMISSIONS", "Get accounts permission has NOT been granted. Requesting permissions.");
+                            requestGetAccountsPermissions();
+                        } else {
+                            showProgressDialog("Please Wait");
+                            mGooglePlusUtils.googlePlusLogin();
+                        }
+                    } else {
+                        showProgressDialog("Please Wait");
+                        mGooglePlusUtils.googlePlusLogin();
+                    }
                 } else {
                     showToast(getString(R.string.error_network));
                 }
@@ -179,6 +205,63 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
             default:
                 break;
 
+        }
+    }
+
+    private void requestGetAccountsPermissions() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.GET_ACCOUNTS)) {
+            Log.i("Permissions",
+                    "Displaying get accounts permission rationale to provide additional context.");
+
+            // Display a SnackBar with an explanation and a button to trigger the request.
+            Snackbar.make(mLayout, R.string.permission_get_account_rationale,
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.ok, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            requestUngrantedPermissions();
+                        }
+                    })
+                    .show();
+        } else {
+            requestUngrantedPermissions();
+        }
+    }
+
+    private void requestUngrantedPermissions() {
+        ArrayList<String> permissionList = new ArrayList<>();
+        for (int i = 0; i < PERMISSIONS_INIT.length; i++) {
+            if (ActivityCompat.checkSelfPermission(this, PERMISSIONS_INIT[i]) != PackageManager.PERMISSION_GRANTED) {
+                permissionList.add(PERMISSIONS_INIT[i]);
+            }
+        }
+        String[] requiredPermission = permissionList.toArray(new String[permissionList.size()]);
+        ActivityCompat.requestPermissions(this, requiredPermission, REQUEST_INIT_PERMISSION);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+
+        if (requestCode == REQUEST_INIT_PERMISSION) {
+            Log.i("Permissions", "Received response for storage permissions request.");
+
+            if (PermissionUtil.verifyPermissions(grantResults)) {
+                Snackbar.make(mLayout, R.string.permision_available_init,
+                        Snackbar.LENGTH_SHORT)
+                        .show();
+                showProgressDialog("Please Wait");
+                mGooglePlusUtils.googlePlusLogin();
+            } else {
+                Log.i("Permissions", "storage permissions were NOT granted.");
+                Snackbar.make(mLayout, R.string.permissions_not_granted,
+                        Snackbar.LENGTH_SHORT)
+                        .show();
+            }
+
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 
@@ -411,6 +494,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                     model.setLast_name(responseData.getData().get(0).getResult().getLastName());
                     model.setProfilePicUrl(responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp());
                     model.setSessionId(responseData.getData().get(0).getResult().getSessionId());
+                    model.setIsLangSelection(responseData.getData().get(0).getResult().getIsLangSelection());
                     int cityIdFromLocation = SharedPrefUtils.getCurrentCityModel(ActivityLogin.this).getId();
                     if (cityIdFromLocation == AppConstants.OTHERS_CITY_ID) {
                         model.setCityId(responseData.getData().get(0).getResult().getCityId());

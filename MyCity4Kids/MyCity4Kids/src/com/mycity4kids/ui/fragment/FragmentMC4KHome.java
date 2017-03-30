@@ -1,14 +1,20 @@
 package com.mycity4kids.ui.fragment;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.CalendarContract;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
@@ -76,6 +82,7 @@ import com.mycity4kids.ui.adapter.AdapterHomeAppointment;
 import com.mycity4kids.ui.adapter.BusinessListingAdapterevent;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
+import com.mycity4kids.utils.PermissionUtil;
 import com.mycity4kids.utils.location.GPSTracker;
 import com.mycity4kids.volley.HttpVolleyRequest;
 import com.mycity4kids.widget.CustomListView;
@@ -108,6 +115,9 @@ import retrofit2.Retrofit;
  */
 public class FragmentMC4KHome extends BaseFragment implements View.OnClickListener {
 
+    private static final int REQUEST_INIT_PERMISSION = 1;
+    private static String[] PERMISSIONS_INIT = {Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR};
+
     View view;
     CustomListView appointmentList;
     TableAppointmentData tableAppointment;
@@ -126,6 +136,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     private int from = 1;
     private int to = 10;
     private String userId;
+    private int eventPosition;
 
     private ArrayList<BusinessDataListing> mBusinessDataListings;
     private ArrayList<ArticleListingResult> mArticleDataListing;
@@ -311,7 +322,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         RecommendationAPI foryouAPI = retrofit.create(RecommendationAPI.class);
 
-        Call<ArticleListingResponse> filterCall = foryouAPI.getRecommendedArticlesList("" + userId, 10, "");
+        Call<ArticleListingResponse> filterCall = foryouAPI.getRecommendedArticlesList("" + userId, 10, "", SharedPrefUtils.getLanguageFilters(getActivity()));
         filterCall.enqueue(forYouResponseCallback);
     }
 
@@ -329,7 +340,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         if (momspressoCategoryId == null) {
             momspressoCategoryId = AppConstants.MOMSPRESSO_CATEGORYID;
         }
-        Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(momspressoCategoryId, 0, 1, 10);
+        Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(momspressoCategoryId, 0, 1, 10, SharedPrefUtils.getLanguageFilters(getActivity()));
         filterCall.enqueue(momspressoListingResponseCallback);
     }
 
@@ -345,7 +356,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
         int end = AppUtils.randInt(AppConstants.EDITOR_PICKS_MIN_ARTICLES + 1, AppConstants.EDITOR_PICKS_ARTICLE_COUNT + 1);
         int start = end - AppConstants.EDITOR_PICKS_MIN_ARTICLES;
-        Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(AppConstants.EDITOR_PICKS_CATEGORY_ID, 0, start, end);
+        Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(AppConstants.EDITOR_PICKS_CATEGORY_ID, 0, start, end, SharedPrefUtils.getLanguageFilters(getActivity()));
         filterCall.enqueue(editorPicksResponseCallback);
     }
 
@@ -353,7 +364,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
 
-        Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(AppConstants.HINDI_CATEGORYID, 0, 1, 10);
+        Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(AppConstants.HINDI_CATEGORYID, 0, 1, 10, "");
         filterCall.enqueue(hindiArticlesListingResponseCallback);
     }
 
@@ -361,7 +372,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
 
-        Call<ArticleListingResponse> filterCall = topicsAPI.getBestArticlesForCity("" + SharedPrefUtils.getCurrentCityModel(getActivity()).getId(), sortType, 1, 10);
+        Call<ArticleListingResponse> filterCall = topicsAPI.getBestArticlesForCity("" + SharedPrefUtils.getCurrentCityModel(getActivity()).getId(), sortType, 1, 10, SharedPrefUtils.getLanguageFilters(getActivity()));
         filterCall.enqueue(inYourCityListingResponseCallback);
     }
 
@@ -650,7 +661,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         } else {
             funnyVideosListing.clear();
             funnyVideosListing.addAll(responseData.getData().get(0).getResult());
-            funnyVideosSection.setVlogslist(funnyVideosListing);
+            funnyVideosSection.setVlogslist(funnyVideosListing, "dashboard");
         }
     }
 
@@ -678,27 +689,27 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         }
     }
 
-    private String getMomspressoCategory() {
-        if (StringUtils.isNullOrEmpty(SharedPrefUtils.getMomspressoCategory(getActivity()).getId())) {
-            try {
-                FileInputStream fileInputStream = getActivity().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
-                String fileContent = convertStreamToString(fileInputStream);
-                TopicsResponse responseData = new Gson().fromJson(fileContent, TopicsResponse.class);
-
-                for (int i = 0; i < responseData.getData().size(); i++) {
-                    if (AppConstants.MOMSPRESSO_CATEGORYID.equals(responseData.getData().get(i).getId())) {
-                        SharedPrefUtils.setMomspressoCategory(getActivity(), responseData.getData().get(i));
-                        return responseData.getData().get(i).getId();
-                    }
-                }
-            } catch (FileNotFoundException fnfe) {
-
-            }
-        } else {
-            return SharedPrefUtils.getMomspressoCategory(getActivity()).getId();
-        }
-        return null;
-    }
+//    private String getMomspressoCategory() {
+//        if (StringUtils.isNullOrEmpty(SharedPrefUtils.getMomspressoCategory(getActivity()).getId())) {
+//            try {
+//                FileInputStream fileInputStream = getActivity().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+//                String fileContent = convertStreamToString(fileInputStream);
+//                TopicsResponse responseData = new Gson().fromJson(fileContent, TopicsResponse.class);
+//
+//                for (int i = 0; i < responseData.getData().size(); i++) {
+//                    if (AppConstants.MOMSPRESSO_CATEGORYID.equals(responseData.getData().get(i).getId())) {
+//                        SharedPrefUtils.setMomspressoCategory(getActivity(), responseData.getData().get(i));
+//                        return responseData.getData().get(i).getId();
+//                    }
+//                }
+//            } catch (FileNotFoundException fnfe) {
+//
+//            }
+//        } else {
+//            return SharedPrefUtils.getMomspressoCategory(getActivity()).getId();
+//        }
+//        return null;
+//    }
 
     public static String convertStreamToString(InputStream is) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
@@ -1748,35 +1759,22 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
 
                 }
             });
-            final int finalI1 = i;
+            eventPosition = i;
             addEvent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mBusinessDataListings.get(finalI1).isEventAdded()) {
-
-                        ToastUtils.showToast(getActivity(), getActivity().getResources().getString(R.string.event_added));
+                    if (Build.VERSION.SDK_INT >= 23) {
+                        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CALENDAR)
+                                != PackageManager.PERMISSION_GRANTED
+                                || ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_CALENDAR)
+                                != PackageManager.PERMISSION_GRANTED) {
+                            Log.i("PERMISSIONS", "Calendar permissions has NOT been granted. Requesting permissions.");
+                            requestCalendarPermissions();
+                        } else {
+                            addCalendarEvent(eventPosition);
+                        }
                     } else {
-                        final BusinessDataListing information = mBusinessDataListings.get(finalI1);
-                        new AlertDialog.Builder(getActivity(), R.style.MyAlertDialogStyle)
-                                .setTitle("Add Event to calendar")
-                                .setMessage("Do you want add this event to you personal calendar?")
-                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        // continue with delete
-                                        dialog.dismiss();
-                                        //  onButtonClicked.onButtonCLick(0);
-                                        saveCalendar(information.getName(), information.getDescription(), information.getStart_date(), information.getEnd_date(), information.getLocality());
-                                        ToastUtils.showToast(getActivity(), "Successfully added to Calendar");
-                                    }
-                                })
-                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        // do nothing
-                                        dialog.dismiss();
-                                    }
-                                })
-                                .setIcon(android.R.drawable.ic_dialog_alert)
-                                .show();
+                        addCalendarEvent(eventPosition);
                     }
                 }
             });
@@ -1825,6 +1823,92 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         });
     }
 
+    private void requestCalendarPermissions() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                Manifest.permission.READ_CALENDAR) || ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                Manifest.permission.WRITE_CALENDAR)) {
+            Log.i("Permissions",
+                    "Displaying get accounts permission rationale to provide additional context.");
+
+            // Display a SnackBar with an explanation and a button to trigger the request.
+            Snackbar.make(baseScroll, R.string.permission_calendar_rationale,
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.ok, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            requestUngrantedPermissions();
+                        }
+                    })
+                    .show();
+        } else {
+            requestUngrantedPermissions();
+        }
+    }
+
+    private void requestUngrantedPermissions() {
+        ArrayList<String> permissionList = new ArrayList<>();
+        for (int i = 0; i < PERMISSIONS_INIT.length; i++) {
+            if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSIONS_INIT[i]) != PackageManager.PERMISSION_GRANTED) {
+                permissionList.add(PERMISSIONS_INIT[i]);
+            }
+        }
+        String[] requiredPermission = permissionList.toArray(new String[permissionList.size()]);
+        requestPermissions(requiredPermission, REQUEST_INIT_PERMISSION);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+
+        if (requestCode == REQUEST_INIT_PERMISSION) {
+            Log.i("Permissions", "Received response for storage permissions request.");
+
+            if (PermissionUtil.verifyPermissions(grantResults)) {
+                Snackbar.make(baseScroll, R.string.permision_available_init,
+                        Snackbar.LENGTH_SHORT)
+                        .show();
+                addCalendarEvent(eventPosition);
+            } else {
+                Log.i("Permissions", "storage permissions were NOT granted.");
+                Snackbar.make(baseScroll, R.string.permissions_not_granted,
+                        Snackbar.LENGTH_SHORT)
+                        .show();
+            }
+
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    private void addCalendarEvent(int finalI1) {
+        if (mBusinessDataListings.get(finalI1).isEventAdded()) {
+
+            ToastUtils.showToast(getActivity(), getActivity().getResources().getString(R.string.event_added));
+        } else {
+            final BusinessDataListing information = mBusinessDataListings.get(finalI1);
+            new AlertDialog.Builder(getActivity(), R.style.MyAlertDialogStyle)
+                    .setTitle("Add Event to calendar")
+                    .setMessage("Do you want add this event to you personal calendar?")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // continue with delete
+                            dialog.dismiss();
+                            //  onButtonClicked.onButtonCLick(0);
+                            saveCalendar(information.getName(), information.getDescription(), information.getStart_date(), information.getEnd_date(), information.getLocality());
+                            ToastUtils.showToast(getActivity(), "Successfully added to Calendar");
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // do nothing
+                            dialog.dismiss();
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+        }
+    }
+
     private void saveCalendar(String title, String desc, String sDate, String eDate, String location) {
 
         ContentResolver cr = (getActivity()).getContentResolver();
@@ -1845,8 +1929,6 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
 
         // insert event to calendar
         Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
-
-
     }
 
     private class MyWebChromeClient extends WebChromeClient {

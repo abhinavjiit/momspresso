@@ -2,16 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mycity4kids"
-    android:versionCode="55"
-    android:versionName="5.6.6">
+    android:versionCode="57"
+    android:versionName="5.7">
 
     <uses-sdk
         android:minSdkVersion="14"
-        android:targetSdkVersion="22"
+        android:targetSdkVersion="23"
         tools:overrideLibrary="life.knowledge4.videotrimmer" />
     <!-- So that we can get the account name -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-
+    <uses-permission android:name="android.permission.CAMERA" />
     <!-- Used to request data from the Google+ APIs in the SignInActivity -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -519,6 +519,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.IdTokenLoginActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.ContextualSearchActivity"
             android:screenOrientation="portrait" />
 
         <receiver

@@ -273,6 +273,7 @@ public class Constants {
     public static String TODOLIST_FRAGMENT = "fragment_todo";
     public static String CALENDARLIST_FRAGMENT = "fragment_calendar";
     public static String SETTINGS_FRAGMENT="fragment_settings";
+    public static String LANGUAGE_FRAGMENT="fragment_language";
 
     /*Kids Birthday Constants*/
     public static String KIDS_NAME = "kids_name";

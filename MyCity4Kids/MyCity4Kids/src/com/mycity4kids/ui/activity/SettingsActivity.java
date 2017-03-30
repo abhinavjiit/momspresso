@@ -83,17 +83,18 @@ public class SettingsActivity extends BaseActivity {
         lastName = getIntent().getStringExtra("lastName");
         Bundle extras = getIntent().getExtras();
         String fragmentToLoad = "";
-        if (null != extras)
+        if (null != extras) {
             fragmentToLoad = extras.getString("load_fragment", "");
+        }
+
         if (Constants.SETTINGS_FRAGMENT.equals(fragmentToLoad)) {
-            //changeVisibiltyOfArrow(false);
             setTitle("Settings");
             Bundle bundle = new Bundle();
-//            bundle.putString("bio", getIntent().getStringExtra("bio"));
-//            bundle.putString("firstName", getIntent().getStringExtra("firstName"));
-//            bundle.putString("lastName", getIntent().getStringExtra("lastName"));
-//            bundle.putString("phoneNumber", getIntent().getStringExtra("phoneNumber"));
             replaceFragment(new FragmentSetting(), bundle, false);
+        } else if (Constants.LANGUAGE_FRAGMENT.equals(fragmentToLoad)) {
+            setTitle("Language Settings");
+            Bundle bundle = new Bundle();
+            replaceFragment(new LanguageSettingsFragment(), bundle, false);
         }
         getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
             @Override
@@ -162,15 +163,13 @@ public class SettingsActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-                if (topFragment instanceof FragmentSetting) {
+                if (topFragment instanceof FragmentSetting || topFragment instanceof LanguageSettingsFragment) {
                     finish();
                 }
                 switch (v.getId()) {
-
                     case -1:
                         getSupportFragmentManager().popBackStack();
                         break;
-
                     default:
                         break;
                 }

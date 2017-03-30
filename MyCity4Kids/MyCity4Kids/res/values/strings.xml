@@ -445,7 +445,7 @@
 
 
     <string name="permission_title_rationale">Permission needed</string>
-    <string name="permission_read_storage_rationale">Storage read permission is needed to pick files.</string>
+
     <string name="label_select_video">Select Video</string>
     <string name="toast_cannot_retrieve_selected_video">Cannot retrieve selected video</string>
     <string name="label_cancel">Cancel</string>
@@ -473,5 +473,18 @@
     <string name="publish_article.complete_profile.add_children">ADD</string>
 
     <string name="change_city.fetch_available_cities">Please wait while we fetch the list of available cities</string>
+
+    <string name="permision_available_storage">Storage Permission has been granted.</string>
+    <string name="permision_available_camera">Camera Permission has been granted. Preview can now be opened.</string>
+    <string name="permision_available_contacts">Contacts Permissions have been granted. Contacts screen can now be opened.</string>
+    <string name="permissions_not_granted">Required permissions were not granted.</string>
+    <string name="permission_camera_rationale">Camera permission is needed to show the camera preview.</string>
+    <string name="permission_contacts_rationale">Contacts permissions are needed to demonstrate access.</string>
+    <string name="permission_storage_rationale">Storage permission is needed to pick files.</string>
+    <string name="permission_location_rationale">Location permission is required to show relevant events and articles.</string>
+    <string name="permission_phone_state_rationale">Phone state permission is required to keep you updated with latest content via notications.</string>
+    <string name="permision_available_init">All required permissions have been granted.</string>
+    <string name="permission_get_account_rationale">Get account permission is needed to create your account with google login.</string>
+    <string name="permission_calendar_rationale">Calendar permission is needed to add a reminder.</string>
 
 </resources>

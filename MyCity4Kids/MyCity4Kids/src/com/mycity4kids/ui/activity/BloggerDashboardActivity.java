@@ -1,14 +1,18 @@
 
 package com.mycity4kids.ui.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -45,7 +49,6 @@ import com.mycity4kids.models.editor.ArticleDraftRequest;
 import com.mycity4kids.models.parentingdetails.ImageData;
 import com.mycity4kids.models.request.ArticleDetailRequest;
 import com.mycity4kids.models.request.FollowUnfollowUserRequest;
-import com.mycity4kids.models.request.UpdateUserDetail;
 import com.mycity4kids.models.request.UpdateUserDetailsRequest;
 import com.mycity4kids.models.response.ArticleDetailResponse;
 import com.mycity4kids.models.response.ArticleDetailResult;
@@ -62,7 +65,6 @@ import com.mycity4kids.models.response.ReviewResponse;
 import com.mycity4kids.models.response.UserCommentsResponse;
 import com.mycity4kids.models.response.UserCommentsResult;
 import com.mycity4kids.models.response.UserDetailResponse;
-import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
@@ -73,6 +75,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.UserAttributeUpdateAPI;
 import com.mycity4kids.ui.adapter.PublishedArticleListingAdapter;
 import com.mycity4kids.ui.adapter.ReviewsListAdapter;
 import com.mycity4kids.ui.adapter.UserCommentsAdapter;
+import com.mycity4kids.utils.PermissionUtil;
 import com.mycity4kids.utils.RoundedTransformation;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
@@ -110,6 +113,21 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     protected void updateUi(Response response) {
 
     }
+
+    private static final int REQUEST_CAMERA = 0;
+
+    private static final int REQUEST_EDIT_PICTURE = 1;
+
+    private static String[] PERMISSIONS_STORAGE = {Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
+    private static String[] PERMISSIONS_EDIT_PICTURE = {Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
+    /**
+     * Root of the layout of this Activity.
+     */
+    private View mLayout;
 
     private Toolbar mToolbar;
     private ImageView bloggerImageView;
@@ -162,6 +180,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blogger_dashboard);
+        mLayout = findViewById(R.id.rootLayout);
         Utils.pushOpenScreenEvent(BloggerDashboardActivity.this, "User Profile", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         userId = getIntent().getStringExtra(AppConstants.PUBLIC_PROFILE_USER_ID);
         stackClearRequired = getIntent().getBooleanExtra(AppConstants.STACK_CLEAR_REQUIRED, false);
@@ -244,7 +263,30 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
             bloggerImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    chooseImageOptionPopUp(bloggerImageView);
+                    if (Build.VERSION.SDK_INT >= 23) {
+                        if (ActivityCompat.checkSelfPermission(BloggerDashboardActivity.this, Manifest.permission.CAMERA)
+                                != PackageManager.PERMISSION_GRANTED
+                                && ActivityCompat.checkSelfPermission(BloggerDashboardActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                                != PackageManager.PERMISSION_GRANTED
+                                && ActivityCompat.checkSelfPermission(BloggerDashboardActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                                != PackageManager.PERMISSION_GRANTED) {
+                            Log.i("PERMISSIONS", "storage permissions has NOT been granted. Requesting permissions.");
+                            requestCameraAndStoragePermissions();
+                        } else if (ActivityCompat.checkSelfPermission(BloggerDashboardActivity.this, Manifest.permission.CAMERA)
+                                != PackageManager.PERMISSION_GRANTED
+                                && ActivityCompat.checkSelfPermission(BloggerDashboardActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                                == PackageManager.PERMISSION_GRANTED
+                                && ActivityCompat.checkSelfPermission(BloggerDashboardActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                                == PackageManager.PERMISSION_GRANTED) {
+                            Log.i("PERMISSIONS", "storage permissions has NOT been granted. Requesting permissions.");
+                            requestCameraPermission();
+                        } else {
+                            chooseImageOptionPopUp(bloggerImageView);
+                        }
+                    } else {
+                        chooseImageOptionPopUp(bloggerImageView);
+                    }
+
                 }
             });
         } else {
@@ -389,15 +431,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(BloggerDashboardActivity.this, EditProfieActivity.class);
-                if (Bio != null && firstName != null && lastName != null) {
-                    intent.putExtra("bio", Bio);
-                    intent.putExtra("firstName", firstName);
-                    intent.putExtra("lastName", lastName);
-                    intent.putExtra("phoneNumber", phoneNumber);
-                    startActivity(intent);
-                } else {
-                    showToast("Please Wait");
-                }
+                startActivity(intent);
             }
         });
         publishedArticleListView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -1641,6 +1675,130 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
 
         });
         popup.show();
+    }
+
+    /**
+     * Requests the Camera permission.
+     * If the permission has been denied previously, a SnackBar will prompt the user to grant the
+     * permission, otherwise it is requested directly.
+     */
+    private void requestCameraPermission() {
+        Log.i("Permissions", "CAMERA permission has NOT been granted. Requesting permission.");
+
+        // BEGIN_INCLUDE(camera_permission_request)
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.CAMERA)) {
+            // Provide an additional rationale to the user if the permission was not granted
+            // and the user would benefit from additional context for the use of the permission.
+            // For example if the user has previously denied the permission.
+            Log.i("Permissions",
+                    "Displaying camera permission rationale to provide additional context.");
+            Snackbar.make(mLayout, R.string.permission_camera_rationale,
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.ok, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            ActivityCompat.requestPermissions(BloggerDashboardActivity.this,
+                                    new String[]{Manifest.permission.CAMERA},
+                                    REQUEST_CAMERA);
+                        }
+                    })
+                    .show();
+        } else {
+
+            // Camera permission has not been granted yet. Request it directly.
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
+                    REQUEST_CAMERA);
+        }
+        // END_INCLUDE(camera_permission_request)
+    }
+
+    /**
+     * Requests the Storage permissions.
+     * If the permission has been denied previously, a SnackBar will prompt the user to grant the
+     * permission, otherwise it is requested directly.
+     */
+    private void requestCameraAndStoragePermissions() {
+        // BEGIN_INCLUDE(contacts_permission_request)
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                || ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) || ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.CAMERA)) {
+
+            // Provide an additional rationale to the user if the permission was not granted
+            // and the user would benefit from additional context for the use of the permission.
+            // For example, if the request has been denied previously.
+            Log.i("Permissions",
+                    "Displaying stoage permission rationale to provide additional context.");
+
+            // Display a SnackBar with an explanation and a button to trigger the request.
+            Snackbar.make(mLayout, R.string.permission_storage_rationale,
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.ok, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            ActivityCompat
+                                    .requestPermissions(BloggerDashboardActivity.this, PERMISSIONS_EDIT_PICTURE,
+                                            REQUEST_EDIT_PICTURE);
+                        }
+                    })
+                    .show();
+        } else {
+            // Contact permissions have not been granted yet. Request them directly.
+            ActivityCompat.requestPermissions(this, PERMISSIONS_EDIT_PICTURE, REQUEST_EDIT_PICTURE);
+        }
+        // END_INCLUDE(contacts_permission_request)
+    }
+
+    /**
+     * Callback received when a permissions request has been completed.
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+
+        if (requestCode == REQUEST_CAMERA) {
+            // BEGIN_INCLUDE(permission_result)
+            // Received permission result for camera permission.
+            Log.i("Permissions", "Received response for Camera permission request.");
+
+            // Check if the only required permission has been granted
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Camera permission has been granted, preview can be displayed
+                Log.i("Permissions", "CAMERA permission has now been granted. Showing preview.");
+                Snackbar.make(mLayout, R.string.permision_available_camera,
+                        Snackbar.LENGTH_SHORT).show();
+                chooseImageOptionPopUp(bloggerImageView);
+            } else {
+                Log.i("Permissions", "CAMERA permission was NOT granted.");
+                Snackbar.make(mLayout, R.string.permissions_not_granted,
+                        Snackbar.LENGTH_SHORT).show();
+
+            }
+            // END_INCLUDE(permission_result)
+
+        } else if (requestCode == REQUEST_EDIT_PICTURE) {
+            Log.i("Permissions", "Received response for storage permissions request.");
+
+            // We have requested multiple permissions for contacts, so all of them need to be
+            // checked.
+            if (PermissionUtil.verifyPermissions(grantResults)) {
+                // All required permissions have been granted, display contacts fragment.
+                Snackbar.make(mLayout, R.string.permision_available_storage,
+                        Snackbar.LENGTH_SHORT)
+                        .show();
+                chooseImageOptionPopUp(bloggerImageView);
+            } else {
+                Log.i("Permissions", "storage permissions were NOT granted.");
+                Snackbar.make(mLayout, R.string.permissions_not_granted,
+                        Snackbar.LENGTH_SHORT)
+                        .show();
+            }
+
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 
     private File createImageFile() throws IOException {

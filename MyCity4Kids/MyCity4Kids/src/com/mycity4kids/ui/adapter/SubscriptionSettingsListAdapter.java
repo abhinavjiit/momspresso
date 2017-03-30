@@ -7,11 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
-import android.widget.Switch;
 
 import com.mycity4kids.R;
-import com.mycity4kids.models.NotificationSettingsModel;
-import com.mycity4kids.models.SubscriptionSettingsModel;
+import com.mycity4kids.models.SubscriptionAndLanguageSettingsModel;
 
 import java.util.ArrayList;
 
@@ -20,12 +18,12 @@ import java.util.ArrayList;
  */
 public class SubscriptionSettingsListAdapter extends BaseAdapter {
 
-    private ArrayList<SubscriptionSettingsModel> subscriptionSettingsList;
+    private ArrayList<SubscriptionAndLanguageSettingsModel> subscriptionSettingsList;
     private Context mContext;
     private LayoutInflater mInflator;
     private ArrayList<String> tempList;
 
-    public SubscriptionSettingsListAdapter(Context pContext, ArrayList<SubscriptionSettingsModel> subscriptionSettingsList) {
+    public SubscriptionSettingsListAdapter(Context pContext, ArrayList<SubscriptionAndLanguageSettingsModel> subscriptionSettingsList) {
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = pContext;
         this.subscriptionSettingsList = subscriptionSettingsList;

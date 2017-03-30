@@ -1,11 +1,15 @@
 package com.mycity4kids.ui.activity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
@@ -31,6 +35,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
+import life.knowledge4.videotrimmer.utils.FileUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -74,7 +79,7 @@ public class AllVideoSectionActivity extends BaseActivity {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
 
-        Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(momspressoCategoryId, 0, 1, 10);
+        Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(momspressoCategoryId, 0, 1, 10, SharedPrefUtils.getLanguageFilters(this));
         filterCall.enqueue(momspressoListingResponseCallback);
     }
 
@@ -164,31 +169,31 @@ public class AllVideoSectionActivity extends BaseActivity {
         } else {
             funnyVideosListing.clear();
             funnyVideosListing.addAll(responseData.getData().get(0).getResult());
-            funnyVideosSection.setVlogslist(funnyVideosListing);
+            funnyVideosSection.setVlogslist(funnyVideosListing, "allvideosection");
         }
     }
 
-    private String getMomspressoCategory() {
-        if (StringUtils.isNullOrEmpty(SharedPrefUtils.getMomspressoCategory(this).getId())) {
-            try {
-                FileInputStream fileInputStream = openFileInput(AppConstants.CATEGORIES_JSON_FILE);
-                String fileContent = AppUtils.convertStreamToString(fileInputStream);
-                TopicsResponse responseData = new Gson().fromJson(fileContent, TopicsResponse.class);
-
-                for (int i = 0; i < responseData.getData().size(); i++) {
-                    if (AppConstants.MOMSPRESSO_CATEGORYID.equals(responseData.getData().get(i).getId())) {
-                        SharedPrefUtils.setMomspressoCategory(this, responseData.getData().get(i));
-                        return responseData.getData().get(i).getId();
-                    }
-                }
-            } catch (FileNotFoundException fnfe) {
-
-            }
-        } else {
-            return SharedPrefUtils.getMomspressoCategory(this).getId();
-        }
-        return null;
-    }
+//    private String getMomspressoCategory() {
+//        if (StringUtils.isNullOrEmpty(SharedPrefUtils.getMomspressoCategory(this).getId())) {
+//            try {
+//                FileInputStream fileInputStream = openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+//                String fileContent = AppUtils.convertStreamToString(fileInputStream);
+//                TopicsResponse responseData = new Gson().fromJson(fileContent, TopicsResponse.class);
+//
+//                for (int i = 0; i < responseData.getData().size(); i++) {
+//                    if (AppConstants.MOMSPRESSO_CATEGORYID.equals(responseData.getData().get(i).getId())) {
+//                        SharedPrefUtils.setMomspressoCategory(this, responseData.getData().get(i));
+//                        return responseData.getData().get(i).getId();
+//                    }
+//                }
+//            } catch (FileNotFoundException fnfe) {
+//
+//            }
+//        } else {
+//            return SharedPrefUtils.getMomspressoCategory(this).getId();
+//        }
+//        return null;
+//    }
 
     @Override
     protected void updateUi(Response response) {
@@ -207,5 +212,32 @@ public class AllVideoSectionActivity extends BaseActivity {
                 finish();
         }
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+        if (requestCode == AppConstants.REQUEST_VIDEO_TRIMMER) {
+            final Uri selectedUri = data.getData();
+            if (selectedUri != null) {
+                startTrimActivity(selectedUri);
+            } else {
+                Toast.makeText(this, R.string.toast_cannot_retrieve_selected_video, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void startTrimActivity(@NonNull Uri uri) {
+        Intent intent = new Intent(this, VideoTrimmerActivity.class);
+        String filepath = FileUtils.getPath(this, uri);
+        if (null != filepath && filepath.endsWith(".mp4")) {
+            intent.putExtra("EXTRA_VIDEO_PATH", FileUtils.getPath(this, uri));
+            startActivity(intent);
+        } else {
+            showToast("please choose a .mp4 format file");
+        }
     }
 }

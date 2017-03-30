@@ -1,8 +1,15 @@
 package com.mycity4kids.ui.fragment;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +21,15 @@ import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.ui.activity.ActivityLogin;
 import com.mycity4kids.ui.activity.TutorialActivity;
+import com.mycity4kids.utils.PermissionUtil;
 
 import java.util.ArrayList;
 
 
 public class TutorialFragment extends Fragment implements View.OnClickListener {
+
+    private static final int REQUEST_INIT_PERMISSION = 1;
+    private static String[] PERMISSIONS_INIT = {Manifest.permission.GET_ACCOUNTS};
 
     private View view;
     private TextView loginTextView;
@@ -138,12 +149,81 @@ public class TutorialFragment extends Fragment implements View.OnClickListener {
                 ((TutorialActivity) getActivity()).loginWithFacebook();
                 break;
             case R.id.connect_gplus:
-                ((TutorialActivity) getActivity()).loginWithGplus();
+
+                if (Build.VERSION.SDK_INT >= 23) {
+                    if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.GET_ACCOUNTS)
+                            != PackageManager.PERMISSION_GRANTED) {
+                        Log.i("PERMISSIONS", "Get accounts permission has NOT been granted. Requesting permissions.");
+                        requestGetAccountsPermissions();
+                    } else {
+                        ((TutorialActivity) getActivity()).loginWithGplus();
+                    }
+                } else {
+                    ((TutorialActivity) getActivity()).loginWithGplus();
+                }
+
+
                 break;
             case R.id.txvLogin:
                 Intent intent = new Intent(getActivity(), ActivityLogin.class);
                 startActivity(intent);
                 break;
+        }
+    }
+
+    private void requestGetAccountsPermissions() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                Manifest.permission.GET_ACCOUNTS)) {
+            Log.i("Permissions",
+                    "Displaying get accounts permission rationale to provide additional context.");
+
+            // Display a SnackBar with an explanation and a button to trigger the request.
+            Snackbar.make(lnrRoot, R.string.permission_get_account_rationale,
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.ok, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            requestUngrantedPermissions();
+                        }
+                    })
+                    .show();
+        } else {
+            requestUngrantedPermissions();
+        }
+    }
+
+    private void requestUngrantedPermissions() {
+        ArrayList<String> permissionList = new ArrayList<>();
+        for (int i = 0; i < PERMISSIONS_INIT.length; i++) {
+            if (ActivityCompat.checkSelfPermission(getActivity(), PERMISSIONS_INIT[i]) != PackageManager.PERMISSION_GRANTED) {
+                permissionList.add(PERMISSIONS_INIT[i]);
+            }
+        }
+        String[] requiredPermission = permissionList.toArray(new String[permissionList.size()]);
+        requestPermissions(requiredPermission, REQUEST_INIT_PERMISSION);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+
+        if (requestCode == REQUEST_INIT_PERMISSION) {
+            Log.i("Permissions", "Received response for storage permissions request.");
+
+            if (PermissionUtil.verifyPermissions(grantResults)) {
+                Snackbar.make(lnrRoot, R.string.permision_available_init,
+                        Snackbar.LENGTH_SHORT)
+                        .show();
+                ((TutorialActivity) getActivity()).loginWithGplus();
+            } else {
+                Log.i("Permissions", "storage permissions were NOT granted.");
+                Snackbar.make(lnrRoot, R.string.permissions_not_granted,
+                        Snackbar.LENGTH_SHORT)
+                        .show();
+            }
+
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 

@@ -1,5 +1,6 @@
 package com.mycity4kids.ui.activity;
 
+import android.Manifest;
 import android.accounts.NetworkErrorException;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -9,9 +10,14 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
@@ -55,7 +61,9 @@ import com.mycity4kids.retrofitAPIsInterfaces.ForceUpdateAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.sync.CategorySyncService;
 import com.mycity4kids.sync.PushTokenService;
+import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.NearMyCity;
+import com.mycity4kids.utils.PermissionUtil;
 import com.mycity4kids.utils.location.GPSTracker;
 
 import java.util.ArrayList;
@@ -66,6 +74,19 @@ import retrofit2.Callback;
 import retrofit2.Retrofit;
 
 public class SplashActivity extends BaseActivity {
+
+    private static final int REQUEST_INIT_PERMISSION = 1;
+
+    private static String[] PERMISSIONS_INIT = {Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_PHONE_STATE};
+
+    private static String[] PERMISSIONS_STORAGE = {Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
+    private static String[] PERMISSIONS_LOCATION = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
+
+    private static String[] PERMISSIONS_READ_PHONE_STATE = {Manifest.permission.READ_PHONE_STATE};
+
     private boolean isLocationScreen = false;
     private String _deepLinkURL;
     private int isFirstLaunch = 0;
@@ -76,6 +97,7 @@ public class SplashActivity extends BaseActivity {
     private String mDescription;
     Bundle extras;
     FirebaseAnalytics mFirebaseAnalytics;
+    private View mLayout;
 
     // The onNewIntent() is overridden to get and resolve the data for deep linking
     @Override
@@ -105,7 +127,7 @@ public class SplashActivity extends BaseActivity {
         try {
 
             setContentView(R.layout.splash_activity);
-
+            mLayout = findViewById(R.id.rootLayout);
            /* AnalyticsHelper.logEvent("Application Launch...");*/
 
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -123,126 +145,152 @@ public class SplashActivity extends BaseActivity {
             ImageView _spin = (ImageView) findViewById(R.id.spin);
             _spin.startAnimation(AnimationUtils.loadAnimation(this,
                     R.anim.rotate_indefinitely));
-            final VersionApiModel versionApiModel = SharedPrefUtils.getSharedPrefVersion(SplashActivity.this);
 
-            final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            /**
-             * for first time we will check that gps is enabled or not:
-             */
-            if (versionApiModel.getCategoryVersion() == 0.0 && versionApiModel.getCityVersion() == 0.0 && versionApiModel.getLocalityVersion() == 0.0) {
-                if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER) && (!manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))) {
-
-                    buildAlertMessageNoGps();
-                    return;
-                }
-            }
-            Intent mServiceIntent = new Intent(SplashActivity.this, CategorySyncService.class);
-            //     mServiceIntent.setData(Uri.parse("test"));
-            startService(mServiceIntent);
-            GPSTracker getCurrentLocation = new GPSTracker(this);
-            double _latitude = getCurrentLocation.getLatitude();
-            double _longitude = getCurrentLocation.getLongitude();
-
-            SharedPrefUtils.setUserLocationLatitude(this, _latitude);
-            SharedPrefUtils.setUserLocationLongitude(this, _longitude);
-
-            /**
-             * configuration Controller for fetching category,locality,city
-             * according to api versions:
-             */
-            final ConfigurationController _controller = new ConfigurationController(this, this);
-
-
-            /**
-             * this method will give current city model & we get city id according
-             * to current City:- CityId will pass in configuration controller &
-             * according to city id we will get latest locality & category :)
-             */
-
-            if (versionApiModel.getCategoryVersion() == 0.0 && versionApiModel.getCityVersion() == 0.0 && versionApiModel.getLocalityVersion() == 0.0) {
-                new NearMyCity(this, _latitude, _longitude, new NearMyCity.FetchCity() {
-
-                    @Override
-                    public void nearCity(City cityModel) {
-
-
-                        int cityId = cityModel.getCityId();
-                        // mFirebaseAnalytics = FirebaseAnalytics.getInstance(SplashActivity.this);
-                        mFirebaseAnalytics.setUserProperty("CityId", cityId + "");
-                        /**
-                         * save current city id in shared preference
-                         */
-                        MetroCity model = new MetroCity();
-                        model.setId(cityModel.getCityId());
-                        model.setName(cityModel.getCityName());
-                        model.setNewCityId(cityModel.getNewCityId());
-                        /**
-                         * this city model will be save only one time on splash:
-                         */
-                        SharedPrefUtils.setCurrentCityModel(SplashActivity.this, model);
-
-                        if (cityId > 0) {
-                            versionApiModel.setCityId(cityId);
-                            mFirebaseAnalytics.setUserProperty("CityId", cityId + "");
-                            /**
-                             * get current version code ::
-                             */
-                            PackageInfo pInfo = null;
-                            try {
-                                pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-
-                            } catch (PackageManager.NameNotFoundException e) {
-                                e.printStackTrace();
-                            }
-
-                            String version = pInfo.versionName;
-                            if (!StringUtils.isNullOrEmpty(version)) {
-                                versionApiModel.setAppUpdateVersion(version);
-                            }
-
-                            if (!ConnectivityUtils.isNetworkEnabled(SplashActivity.this)) {
-                                ToastUtils.showToast(SplashActivity.this, getString(R.string.error_network));
-                                return;
-
-                            }
-                            isFirstLaunch = 1;
-                            _controller.getData(AppConstants.CONFIGURATION_REQUEST, versionApiModel);
-                        }
-
-                    }
-                });
-            } else {
-                /**
-                 * this will call every time on splash:
-                 */
-
-                versionApiModel.setCityId(SharedPrefUtils.getCurrentCityModel(this).getId());
-                mFirebaseAnalytics.setUserProperty("CityId", SharedPrefUtils.getCurrentCityModel(this).getId() + "");
-                versionApiModel.setAppUpdateVersion(version);
-                if (ConnectivityUtils.isNetworkEnabled(SplashActivity.this)) {
-
-                    _controller.getData(AppConstants.CONFIGURATION_REQUEST, versionApiModel);
-                    Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-                    ForceUpdateAPI forceUpdateAPI = retrofit.create(ForceUpdateAPI.class);
-                    Call<ForceUpdateModel> call = forceUpdateAPI.checkForceUpdateRequired(version, "android");
-                    call.enqueue(checkForceUpdateResponseCallback);
+            if (Build.VERSION.SDK_INT >= 23) {
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED
+                        || ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED
+                        || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED
+                        || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED
+                        || ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    Log.i("PERMISSIONS", "storage permissions has NOT been granted. Requesting permissions.");
+                    requestLocationAndStoragePermissions();
                 } else {
-                    if (SharedPrefUtils.getAppUpgrade(SplashActivity.this)) {
-                        String message = SharedPrefUtils.getAppUgradeMessage(SplashActivity.this);
-                        showUpgradeAppAlertDialog("mycity4kids", message, new OnButtonClicked() {
-                            @Override
-                            public void onButtonCLick(int buttonId) {
-                            }
-                        });
-                        return;
-                    }
-                    isFirstLaunch = 0;
-                    navigateToNextScreen(true);
+                    resumeSplash();
                 }
+            } else {
+                resumeSplash();
             }
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void resumeSplash() {
+
+        String version = AppUtils.getAppVersion(this);
+
+        final VersionApiModel versionApiModel = SharedPrefUtils.getSharedPrefVersion(SplashActivity.this);
+        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        /**
+         * for first time we will check that gps is enabled or not:
+         */
+        if (versionApiModel.getCategoryVersion() == 0.0 && versionApiModel.getCityVersion() == 0.0 && versionApiModel.getLocalityVersion() == 0.0) {
+            if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER) && (!manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))) {
+
+                buildAlertMessageNoGps();
+                return;
+            }
+        }
+
+        Intent mServiceIntent = new Intent(SplashActivity.this, CategorySyncService.class);
+        //     mServiceIntent.setData(Uri.parse("test"));
+        startService(mServiceIntent);
+        GPSTracker getCurrentLocation = new GPSTracker(this);
+        double _latitude = getCurrentLocation.getLatitude();
+        double _longitude = getCurrentLocation.getLongitude();
+
+        SharedPrefUtils.setUserLocationLatitude(this, _latitude);
+        SharedPrefUtils.setUserLocationLongitude(this, _longitude);
+
+        /**
+         * configuration Controller for fetching category,locality,city
+         * according to api versions:
+         */
+        final ConfigurationController _controller = new ConfigurationController(this, this);
+
+
+        /**
+         * this method will give current city model & we get city id according
+         * to current City:- CityId will pass in configuration controller &
+         * according to city id we will get latest locality & category :)
+         */
+
+        if (versionApiModel.getCategoryVersion() == 0.0 && versionApiModel.getCityVersion() == 0.0 && versionApiModel.getLocalityVersion() == 0.0) {
+            new NearMyCity(this, _latitude, _longitude, new NearMyCity.FetchCity() {
+
+                @Override
+                public void nearCity(City cityModel) {
+
+
+                    int cityId = cityModel.getCityId();
+                    // mFirebaseAnalytics = FirebaseAnalytics.getInstance(SplashActivity.this);
+                    mFirebaseAnalytics.setUserProperty("CityId", cityId + "");
+                    /**
+                     * save current city id in shared preference
+                     */
+                    MetroCity model = new MetroCity();
+                    model.setId(cityModel.getCityId());
+                    model.setName(cityModel.getCityName());
+                    model.setNewCityId(cityModel.getNewCityId());
+                    /**
+                     * this city model will be save only one time on splash:
+                     */
+                    SharedPrefUtils.setCurrentCityModel(SplashActivity.this, model);
+
+                    if (cityId > 0) {
+                        versionApiModel.setCityId(cityId);
+                        mFirebaseAnalytics.setUserProperty("CityId", cityId + "");
+                        /**
+                         * get current version code ::
+                         */
+                        PackageInfo pInfo = null;
+                        try {
+                            pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+
+                        } catch (PackageManager.NameNotFoundException e) {
+                            e.printStackTrace();
+                        }
+
+                        String version = pInfo.versionName;
+                        if (!StringUtils.isNullOrEmpty(version)) {
+                            versionApiModel.setAppUpdateVersion(version);
+                        }
+
+                        if (!ConnectivityUtils.isNetworkEnabled(SplashActivity.this)) {
+                            ToastUtils.showToast(SplashActivity.this, getString(R.string.error_network));
+                            return;
+
+                        }
+                        isFirstLaunch = 1;
+                        _controller.getData(AppConstants.CONFIGURATION_REQUEST, versionApiModel);
+                    }
+
+                }
+            });
+        } else {
+            /**
+             * this will call every time on splash:
+             */
+
+            versionApiModel.setCityId(SharedPrefUtils.getCurrentCityModel(this).getId());
+            mFirebaseAnalytics.setUserProperty("CityId", SharedPrefUtils.getCurrentCityModel(this).getId() + "");
+            versionApiModel.setAppUpdateVersion(version);
+            if (ConnectivityUtils.isNetworkEnabled(SplashActivity.this)) {
+
+                _controller.getData(AppConstants.CONFIGURATION_REQUEST, versionApiModel);
+                Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+                ForceUpdateAPI forceUpdateAPI = retrofit.create(ForceUpdateAPI.class);
+                Call<ForceUpdateModel> call = forceUpdateAPI.checkForceUpdateRequired(version, "android");
+                call.enqueue(checkForceUpdateResponseCallback);
+            } else {
+                if (SharedPrefUtils.getAppUpgrade(SplashActivity.this)) {
+                    String message = SharedPrefUtils.getAppUgradeMessage(SplashActivity.this);
+                    showUpgradeAppAlertDialog("mycity4kids", message, new OnButtonClicked() {
+                        @Override
+                        public void onButtonCLick(int buttonId) {
+                        }
+                    });
+                    return;
+                }
+                isFirstLaunch = 0;
+                navigateToNextScreen(true);
+            }
         }
     }
 
@@ -310,6 +358,106 @@ public class SplashActivity extends BaseActivity {
             }
         }
         Log.d("GCM Token ", SharedPrefUtils.getDeviceToken(this));
+    }
+
+    /**
+     * Requests the Storage permissions.
+     * If the permission has been denied previously, a SnackBar will prompt the user to grant the
+     * permission, otherwise it is requested directly.
+     */
+    private void requestLocationAndStoragePermissions() {
+        // BEGIN_INCLUDE(contacts_permission_request)
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                || ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+            // Provide an additional rationale to the user if the permission was not granted
+            // and the user would benefit from additional context for the use of the permission.
+            // For example, if the request has been denied previously.
+            Log.i("Permissions",
+                    "Displaying storage permission rationale to provide additional context.");
+
+            // Display a SnackBar with an explanation and a button to trigger the request.
+            Snackbar.make(mLayout, R.string.permission_storage_rationale,
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.ok, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            requestUngrantedPermissions();
+                        }
+                    })
+                    .show();
+        } else if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION)
+                || ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                ) {
+
+            // Display a SnackBar with an explanation and a button to trigger the request.
+            Snackbar.make(mLayout, R.string.permission_location_rationale,
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.ok, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            requestUngrantedPermissions();
+                        }
+                    })
+                    .show();
+        } else if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.READ_PHONE_STATE)) {
+
+            // Display a SnackBar with an explanation and a button to trigger the request.
+            Snackbar.make(mLayout, R.string.permission_phone_state_rationale,
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.ok, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            requestUngrantedPermissions();
+                        }
+                    })
+                    .show();
+        } else {
+            requestUngrantedPermissions();
+        }
+    }
+
+    private void requestUngrantedPermissions() {
+        ArrayList<String> permissionList = new ArrayList<>();
+        for (int i = 0; i < PERMISSIONS_INIT.length; i++) {
+            if (ActivityCompat.checkSelfPermission(this, PERMISSIONS_INIT[i]) != PackageManager.PERMISSION_GRANTED) {
+                permissionList.add(PERMISSIONS_INIT[i]);
+            }
+        }
+        String[] requiredPermission = permissionList.toArray(new String[permissionList.size()]);
+        ActivityCompat.requestPermissions(this, requiredPermission, REQUEST_INIT_PERMISSION);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+
+        if (requestCode == REQUEST_INIT_PERMISSION) {
+            Log.i("Permissions", "Received response for storage permissions request.");
+
+            // We have requested multiple permissions for contacts, so all of them need to be
+            // checked.
+            if (PermissionUtil.verifyPermissions(grantResults)) {
+                // All required permissions have been granted, display contacts fragment.
+                Snackbar.make(mLayout, R.string.permision_available_init,
+                        Snackbar.LENGTH_SHORT)
+                        .show();
+                resumeSplash();
+            } else {
+                Log.i("Permissions", "storage permissions were NOT granted.");
+                Snackbar.make(mLayout, R.string.permissions_not_granted,
+                        Snackbar.LENGTH_SHORT)
+                        .show();
+            }
+
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 
     private Callback<FollowUnfollowCategoriesResponse> getFollowedTopicsResponseCallback = new Callback<FollowUnfollowCategoriesResponse>() {

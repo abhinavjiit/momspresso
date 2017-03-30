@@ -250,9 +250,11 @@ public class ChangeCityFragment extends BaseFragment implements ChangeCityAdapte
 
                             UserDetailResponse responseData = (UserDetailResponse) response.body();
                             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                                Toast.makeText(getActivity(), "Successfully updated!", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(getActivity(), PushTokenService.class);
-                                getActivity().startService(intent);
+                                if (getActivity() != null) {
+                                    Toast.makeText(getActivity(), "Successfully updated!", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(getActivity(), PushTokenService.class);
+                                    getActivity().startService(intent);
+                                }
                             } else {
                                 Toast.makeText(getActivity(), responseData.getReason(), Toast.LENGTH_SHORT).show();
                             }

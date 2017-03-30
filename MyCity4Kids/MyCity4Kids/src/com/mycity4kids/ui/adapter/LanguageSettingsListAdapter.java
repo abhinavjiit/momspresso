@@ -9,7 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
 
 import com.mycity4kids.R;
-import com.mycity4kids.models.SubscriptionSettingsModel;
+import com.mycity4kids.models.SubscriptionAndLanguageSettingsModel;
 
 import java.util.ArrayList;
 
@@ -18,12 +18,12 @@ import java.util.ArrayList;
  */
 public class LanguageSettingsListAdapter extends BaseAdapter {
 
-    private ArrayList<SubscriptionSettingsModel> languageSettingsList;
+    private ArrayList<SubscriptionAndLanguageSettingsModel> languageSettingsList;
     private Context mContext;
     private LayoutInflater mInflator;
     private ArrayList<String> tempList;
 
-    public LanguageSettingsListAdapter(Context pContext, ArrayList<SubscriptionSettingsModel> languageSettingsList) {
+    public LanguageSettingsListAdapter(Context pContext, ArrayList<SubscriptionAndLanguageSettingsModel> languageSettingsList) {
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = pContext;
         this.languageSettingsList = languageSettingsList;

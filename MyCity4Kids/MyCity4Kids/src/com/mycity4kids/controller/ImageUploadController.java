@@ -13,6 +13,7 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.models.user.BusinessImageUploadRequest;
 import com.mycity4kids.models.user.ImageUploadRequest;
+import com.mycity4kids.preference.SharedPrefUtils;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
@@ -102,6 +103,7 @@ public class ImageUploadController extends BaseController {
         }
         return nameValuePairs;
     }
+
     private List<NameValuePair> setArticleRequestParameters(Object pRequestModel) {
         UrlEncodedFormEntity encodedEntity = null;
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
@@ -112,7 +114,7 @@ public class ImageUploadController extends BaseController {
             nameValuePairs.add(new BasicNameValuePair("profileId", imgUploadRq.getProfileId() ));*/
             nameValuePairs.add(new BasicNameValuePair("file", imgUploadRq.getFile()));
             //nameValuePairs.add(new BasicNameValuePair("type", imgUploadRq.getType()));
-             nameValuePairs.add(new BasicNameValuePair("imageType", imgUploadRq.getImageType()));
+            nameValuePairs.add(new BasicNameValuePair("imageType", imgUploadRq.getImageType()));
             Log.i("imageUpload", nameValuePairs.toString());
 //            encodedEntity = new UrlEncodedFormEntity(nameValuePairs);
         } catch (Exception e) {
@@ -131,7 +133,7 @@ public class ImageUploadController extends BaseController {
         try {
             BusinessImageUploadRequest imgUploadRq = (BusinessImageUploadRequest) pRequestModel;
             nameValuePairs.add(new BasicNameValuePair("userId", imgUploadRq.getUserId()));
-            nameValuePairs.add(new BasicNameValuePair("sessionId", imgUploadRq.getSessionId()));
+            nameValuePairs.add(new BasicNameValuePair("sessionId", SharedPrefUtils.getUserDetailModel(context).getSessionId()));
             nameValuePairs.add(new BasicNameValuePair("businessId", imgUploadRq.getBusinessId()));
             nameValuePairs.add(new BasicNameValuePair("type", imgUploadRq.getType()));
             nameValuePairs.add(new BasicNameValuePair("image", imgUploadRq.getImage()));

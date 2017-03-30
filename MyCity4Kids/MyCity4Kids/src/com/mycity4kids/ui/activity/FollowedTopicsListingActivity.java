@@ -8,9 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
@@ -50,7 +48,6 @@ public class FollowedTopicsListingActivity extends BaseActivity {
 
     private ListView followedTopicsListView;
     private Toolbar mToolbar;
-    ProgressBar progressBar;
     ArrayList<String> mDatalist;
     ArrayList<Topics> followedSubSubTopicList = new ArrayList<>();
 
@@ -125,7 +122,6 @@ public class FollowedTopicsListingActivity extends BaseActivity {
     Callback<ResponseBody> downloadCategoriesJSONCallback = new Callback<ResponseBody>() {
         @Override
         public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-            progressBar.setVisibility(View.GONE);
             if (response == null || response.body() == null) {
                 showToast("Something went wrong from server");
                 return;
@@ -163,7 +159,6 @@ public class FollowedTopicsListingActivity extends BaseActivity {
                     }
                 });
             } catch (Exception e) {
-                progressBar.setVisibility(View.GONE);
                 Crashlytics.logException(e);
                 Log.d("MC4KException", Log.getStackTraceString(e));
                 showToast(getString(R.string.went_wrong));
@@ -172,7 +167,6 @@ public class FollowedTopicsListingActivity extends BaseActivity {
 
         @Override
         public void onFailure(Call<ResponseBody> call, Throwable t) {
-            progressBar.setVisibility(View.GONE);
             showToast(getString(R.string.went_wrong));
             Crashlytics.logException(t);
             Log.d("MC4KException", Log.getStackTraceString(t));

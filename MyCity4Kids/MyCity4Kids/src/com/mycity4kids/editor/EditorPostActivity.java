@@ -22,6 +22,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.BitmapUtils;
@@ -31,9 +32,11 @@ import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.constants.Constants;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.listener.OnButtonClicked;
+import com.mycity4kids.models.FollowTopics;
 import com.mycity4kids.models.response.ArticleDraftResponse;
 import com.mycity4kids.models.response.DraftListResult;
 import com.mycity4kids.models.response.ImageUploadResponse;
@@ -41,8 +44,10 @@ import com.mycity4kids.models.response.PublishDraftObject;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.activity.AddArticleTopicsActivity;
 import com.mycity4kids.ui.activity.EditSelectedTopicsActivity;
+import com.mycity4kids.ui.adapter.FollowedTopicsListAdapter;
 
 import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.editor.EditorMediaUploadListener;
@@ -52,16 +57,20 @@ import org.wordpress.android.util.helpers.MediaFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -551,53 +560,55 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             call.enqueue(new Callback<ArticleDraftResponse>() {
                 @Override
                 public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
-                    int statusCode = response.code();
 
-                    ArticleDraftResponse responseModel = (ArticleDraftResponse) response.body();
-                    // Result<ArticleDraftResult> result=responseModel.getData().getResult();
-                    removeProgressDialog();
-                    if (response == null || response.body() == null) {
-                        showToast("Something went wrong from server");
-                        if (fromBackpress) {
-                            showAlertDialog("Oops!", "Draft could not be saved, your current changes will be lost if you exit now. Would you like to exit?", new OnButtonClicked() {
-                                @Override
-                                public void onButtonCLick(int buttonId) {
-                                    finish();
-                                }
-                            });
+                    try {
+                        ArticleDraftResponse responseModel = (ArticleDraftResponse) response.body();
+                        // Result<ArticleDraftResult> result=responseModel.getData().getResult();
+                        removeProgressDialog();
+                        if (response == null || response.body() == null) {
+                            showToast("Something went wrong from server");
+                            if (fromBackpress) {
+                                showAlertDialog("Oops!", "Draft could not be saved, your current changes will be lost if you exit now. Would you like to exit?", new OnButtonClicked() {
+                                    @Override
+                                    public void onButtonCLick(int buttonId) {
+                                        finish();
+                                    }
+                                });
+                            }
+                            return;
                         }
-                        return;
-                    }
-                    if (responseModel.getCode() != 200) {
-                        showToast(getString(R.string.toast_response_error));
-                        return;
-                    } else {
-                        if (!StringUtils.isNullOrEmpty(responseModel.getData().get(0).getMsg())) {
-                            //  SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
-                            Log.i("Draft message", responseModel.getData().get(0).getMsg());
+                        if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
+                            draftId = responseModel.getData().get(0).getResult().getId() + "";
+                            showToast("Draft Successfully saved");
+                            if (fromBackpress) {
+                                //onBackPressed();
+                                finish();
+                            }
+                        } else {
+                            if (StringUtils.isNullOrEmpty(responseModel.getReason())) {
+                                showToast(getString(R.string.toast_response_error));
+                            } else {
+                                showToast(responseModel.getReason());
+                            }
                         }
-                        draftId = responseModel.getData().get(0).getResult().getId() + "";
-
-                        //setProfileImage(originalImage);
-                        showToast("Draft Successfully saved");
-                        if (fromBackpress) {
-                            //onBackPressed();
-                            finish();
-                        }
-                        //  finish();
+                    } catch (Exception e) {
+                        Crashlytics.logException(e);
+                        Log.d("MC4kException", Log.getStackTraceString(e));
+                        showToast(getString(R.string.went_wrong));
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ArticleDraftResponse> call, Throwable t) {
-
+                    Crashlytics.logException(t);
+                    Log.d("MC4kException", Log.getStackTraceString(t));
+                    showToast(getString(R.string.went_wrong));
                 }
             });
         } else {
 
             Call<ArticleDraftResponse> call = articleDraftAPI.updateDraft(
                     AppConstants.LIVE_URL + "v1/articles/" + draftId1,
-
                     title,
                     body,
                     "0"
@@ -605,38 +616,40 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             call.enqueue(new Callback<ArticleDraftResponse>() {
                 @Override
                 public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
-                    int statusCode = response.code();
 
-                    ArticleDraftResponse responseModel = (ArticleDraftResponse) response.body();
-                    // Result<ArticleDraftResult> result=responseModel.getData().getResult();
-                    removeProgressDialog();
-                    if (response == null || response.body() == null) {
+                    try {
+                        ArticleDraftResponse responseModel = (ArticleDraftResponse) response.body();
+                        removeProgressDialog();
+                        if (response == null || response.body() == null) {
+                            showToast(getString(R.string.went_wrong));
+                            return;
+                        }
+
+                        if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
+                            draftId = responseModel.getData().get(0).getResult().getId() + "";
+                            showToast("Draft Successfully saved");
+                            if (fromBackpress) {
+                                finish();
+                            }
+                        } else {
+                            if (StringUtils.isNullOrEmpty(responseModel.getReason())) {
+                                showToast(getString(R.string.toast_response_error));
+                            } else {
+                                showToast(responseModel.getReason());
+                            }
+                        }
+                    } catch (Exception e) {
+                        Crashlytics.logException(e);
+                        Log.d("MC4kException", Log.getStackTraceString(e));
                         showToast(getString(R.string.went_wrong));
-                        return;
-                    }
-                    if (responseModel.getCode() != 200) {
-                        showToast(getString(R.string.toast_response_error));
-                        return;
-                    } else {
-                        if (!StringUtils.isNullOrEmpty(responseModel.getData().get(0).getMsg())) {
-                            //  SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
-                            Log.i("Draft message", responseModel.getData().get(0).getMsg());
-                        }
-                        draftId = responseModel.getData().get(0).getResult().getId() + "";
-
-                        //setProfileImage(originalImage);
-                        showToast("Draft Successfully saved");
-                        if (fromBackpress) {
-                            //onBackPressed();
-                            finish();
-                        }
-                        //  finish();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ArticleDraftResponse> call, Throwable t) {
-
+                    Crashlytics.logException(t);
+                    Log.d("MC4kException", Log.getStackTraceString(t));
+                    showToast(getString(R.string.went_wrong));
                 }
             });
         }

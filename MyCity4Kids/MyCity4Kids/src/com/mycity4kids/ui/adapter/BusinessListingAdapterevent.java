@@ -416,7 +416,7 @@ public class BusinessListingAdapterevent extends BaseAdapter implements Filterab
                     ToastUtils.showToast(mContext, mContext.getResources().getString(R.string.event_added));
                 } else {
                     final BusinessDataListing information = mBusinessData.get(position);
-                    new AlertDialog.Builder(mContext)
+                    new AlertDialog.Builder(mContext, R.style.MyAlertDialogStyle)
                             .setTitle("Add Event to calendar")
                             .setMessage("Do you want add this event to you personal calendar?")
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {

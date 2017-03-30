@@ -18,16 +18,11 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
-import com.mycity4kids.models.NotificationSettingsModel;
-import com.mycity4kids.models.SubscriptionSettingsModel;
+import com.mycity4kids.models.SubscriptionAndLanguageSettingsModel;
 import com.mycity4kids.models.request.SubscriptionUpdateRequest;
-import com.mycity4kids.models.response.NotificationSettingsResponse;
 import com.mycity4kids.models.response.SubscriptionSettingsResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.retrofitAPIsInterfaces.NotificationsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.SubscriptionsAPI;
-import com.mycity4kids.ui.adapter.LanguageSettingsListAdapter;
-import com.mycity4kids.ui.adapter.NotificationSettingsListAdapter;
 import com.mycity4kids.ui.adapter.SubscriptionSettingsListAdapter;
 
 import java.util.ArrayList;
@@ -44,7 +39,7 @@ import retrofit2.Retrofit;
 public class SubscriptionSettingsFragment extends BaseFragment {
 
     ListView subscriptionListView;
-    ArrayList<SubscriptionSettingsModel> subscriptionSettingsList;
+    ArrayList<SubscriptionAndLanguageSettingsModel> subscriptionSettingsList;
     SubscriptionSettingsListAdapter subscriptionSettingsListAdapter;
 
     @Nullable
@@ -84,48 +79,48 @@ public class SubscriptionSettingsFragment extends BaseFragment {
                         if (entry.getValue() instanceof String) {
                             Log.d("Notification Items = ", entry.getKey() + "/" + entry.getValue());
 
-                            SubscriptionSettingsModel subscriptionSettingsModel = new SubscriptionSettingsModel();
-                            subscriptionSettingsModel.setStatus((String) entry.getValue());
-                            subscriptionSettingsModel.setName(entry.getKey());
+                            SubscriptionAndLanguageSettingsModel subscriptionAndLanguageSettingsModel = new SubscriptionAndLanguageSettingsModel();
+                            subscriptionAndLanguageSettingsModel.setStatus((String) entry.getValue());
+                            subscriptionAndLanguageSettingsModel.setName(entry.getKey());
                             switch (entry.getKey()) {
                                 case "newsletters":
-                                    subscriptionSettingsModel.setDisplayName("Subscribe to the Top Reads Of The Month");
+                                    subscriptionAndLanguageSettingsModel.setDisplayName("Subscribe to the Top Reads Of The Month");
                                     break;
                                 case "trending":
-                                    subscriptionSettingsModel.setDisplayName("Subscribe to the Trending Blog Of The Day");
+                                    subscriptionAndLanguageSettingsModel.setDisplayName("Subscribe to the Trending Blog Of The Day");
                                     break;
                                 case "momspresso":
-                                    subscriptionSettingsModel.setDisplayName("Subscribe to the Momspresso Videos");
+                                    subscriptionAndLanguageSettingsModel.setDisplayName("Subscribe to the Momspresso Videos");
                                     break;
                                 case "editorial":
-                                    subscriptionSettingsModel.setDisplayName("Subscribe to the Best In Your City");
+                                    subscriptionAndLanguageSettingsModel.setDisplayName("Subscribe to the Best In Your City");
                                     break;
                                 default:
-                                    subscriptionSettingsModel.setDisplayName(entry.getKey());
+                                    subscriptionAndLanguageSettingsModel.setDisplayName(entry.getKey());
                             }
-                            subscriptionSettingsList.add(subscriptionSettingsModel);
+                            subscriptionSettingsList.add(subscriptionAndLanguageSettingsModel);
                         } else if (entry.getValue() instanceof Map) {
                             Map<String, String> retMap = new Gson().fromJson(entry.getValue().toString(), new TypeToken<HashMap<String, String>>() {
                             }.getType());
 
                             for (Map.Entry<String, String> langEntry : retMap.entrySet()) {
-                                SubscriptionSettingsModel subscriptionSettingsModel = new SubscriptionSettingsModel();
-                                subscriptionSettingsModel.setStatus(langEntry.getValue());
-                                subscriptionSettingsModel.setName(langEntry.getKey());
+                                SubscriptionAndLanguageSettingsModel subscriptionAndLanguageSettingsModel = new SubscriptionAndLanguageSettingsModel();
+                                subscriptionAndLanguageSettingsModel.setStatus(langEntry.getValue());
+                                subscriptionAndLanguageSettingsModel.setName(langEntry.getKey());
                                 switch (langEntry.getKey()) {
                                     case "hindi":
-                                        subscriptionSettingsModel.setDisplayName("Hindi");
+                                        subscriptionAndLanguageSettingsModel.setDisplayName("Hindi");
                                         break;
                                     case "bengali":
-                                        subscriptionSettingsModel.setDisplayName("Bangla");
+                                        subscriptionAndLanguageSettingsModel.setDisplayName("Bangla");
                                         break;
                                     case "marathi":
-                                        subscriptionSettingsModel.setDisplayName("Marathi");
+                                        subscriptionAndLanguageSettingsModel.setDisplayName("Marathi");
                                         break;
                                     default:
-                                        subscriptionSettingsModel.setDisplayName(entry.getKey());
+                                        subscriptionAndLanguageSettingsModel.setDisplayName(entry.getKey());
                                 }
-                                subscriptionSettingsList.add(subscriptionSettingsModel);
+                                subscriptionSettingsList.add(subscriptionAndLanguageSettingsModel);
                             }
                         }
                     }

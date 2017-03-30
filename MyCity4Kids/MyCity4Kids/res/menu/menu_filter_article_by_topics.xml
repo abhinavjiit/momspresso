@@ -7,4 +7,10 @@
         android:title=""
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/searchButton"
+        android:icon="@drawable/ic_search_white_48dp"
+        android:orderInCategory="100"
+        android:title="search"
+        app:showAsAction="always" />
 </menu>

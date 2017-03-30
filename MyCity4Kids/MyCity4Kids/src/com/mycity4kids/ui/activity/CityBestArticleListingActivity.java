@@ -69,7 +69,7 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.filtered_topics_articles_activity);
+        setContentView(R.layout.best_in_your_city_activity);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -238,7 +238,7 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
         TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
 
         int from = (nextPageNumber - 1) * limit + 1;
-        Call<ArticleListingResponse> filterCall = topicsAPI.getBestArticlesForCity("" + SharedPrefUtils.getCurrentCityModel(this).getId(), sortType, from, from + limit - 1);
+        Call<ArticleListingResponse> filterCall = topicsAPI.getBestArticlesForCity("" + SharedPrefUtils.getCurrentCityModel(this).getId(), sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(this));
         filterCall.enqueue(articleListingResponseCallback);
 
     }
@@ -311,6 +311,7 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_search, menu);
         return true;
     }
 
@@ -319,8 +320,17 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
+                break;
+            case R.id.search:
+                startContextualSearch();
+                break;
         }
         return true;
+    }
+
+    private void startContextualSearch() {
+        Intent intent = new Intent(this, ContextualSearchActivity.class);
+        startActivity(intent);
     }
 
     @Override

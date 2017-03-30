@@ -560,7 +560,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
                     if (response.getResponseObject() instanceof CommonResponse) {
                         CommonResponse responseModel = (CommonResponse) response.getResponseObject();
                         if (responseModel.getResponseCode() != 200) {
-                            showMessageAndFinish(getString(R.string.toast_response_error));
+                            showMessageAndFinish(responseModel.getResult().getMessage());
                             return;
                         } else {
                             showToast("You have successfully uploaded image.");
@@ -806,7 +806,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
     }
 
     public void sendUploadBusinessImageRequest(Bitmap originalImage) {
-        showProgressDialog(getResources().getString(R.string.please_wait));
+//        showProgressDialog(getResources().getString(R.string.please_wait));
         ByteArrayOutputStream bao = new ByteArrayOutputStream();
         originalImage.compress(Bitmap.CompressFormat.PNG, 100, bao);
         byte[] ba = bao.toByteArray();

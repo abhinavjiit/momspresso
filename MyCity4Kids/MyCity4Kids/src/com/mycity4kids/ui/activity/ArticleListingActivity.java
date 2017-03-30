@@ -106,7 +106,7 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
 
         articleDataModelsNew = new ArrayList<ArticleListingResult>();
         nextPageNumber = 1;
-        hitArticleListingApi(nextPageNumber, sortType, true);
+        hitArticleListingApi(nextPageNumber, sortType, false);
 
         swipeRefreshLayout.setOnRefreshListener((SwipeRefreshLayout.OnRefreshListener) this);
 
@@ -173,7 +173,7 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
 
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
             RecommendationAPI recommendationAPI = retrofit.create(RecommendationAPI.class);
-            Call<ArticleListingResponse> call = recommendationAPI.getRecommendedArticlesList(SharedPrefUtils.getUserDetailModel(this).getDynamoId(), 10, chunks);
+            Call<ArticleListingResponse> call = recommendationAPI.getRecommendedArticlesList(SharedPrefUtils.getUserDetailModel(this).getDynamoId(), 10, chunks, SharedPrefUtils.getLanguageFilters(this));
             progressBar.setVisibility(View.VISIBLE);
             call.enqueue(recommendedArticlesResponseCallback);
 
@@ -181,15 +181,13 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
 //                    AppConstants.SEPARATOR_BACKSLASH + from + AppConstants.SEPARATOR_BACKSLASH + to;
         } else if (Constants.KEY_EDITOR_PICKS.equals(sortKey)) {
             url = AppConstants.LIVE_URL + AppConstants.SERVICE_TYPE__EDITORS_PICKS + AppConstants.EDITOR_PICKS_CATEGORY_ID + "?sort=0&sponsored=0&start=" + from +
-                    "&end=" + to;
+                    "&end=" + to + "&lang=" + SharedPrefUtils.getLanguageFilters(this);
+            HttpVolleyRequest.getStringResponse(this, url, null, mGetArticleListingListener, Request.Method.GET, isCacheRequired);
         } else {
             url = AppConstants.LIVE_URL + AppConstants.SERVICE_TYPE_ARTICLE + sortKey +
-                    AppConstants.SEPARATOR_BACKSLASH + from + AppConstants.SEPARATOR_BACKSLASH + to;
+                    AppConstants.SEPARATOR_BACKSLASH + from + AppConstants.SEPARATOR_BACKSLASH + to + "?lang=" + SharedPrefUtils.getLanguageFilters(this);
+            HttpVolleyRequest.getStringResponse(this, url, null, mGetArticleListingListener, Request.Method.GET, isCacheRequired);
         }
-
-        HttpVolleyRequest.getStringResponse(this, url, null, mGetArticleListingListener, Request.Method.GET, isCacheRequired);
-
-
     }
 
     private Callback<ArticleListingResponse> recommendedArticlesResponseCallback = new Callback<ArticleListingResponse>() {
@@ -197,6 +195,7 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
         public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
             progressBar.setVisibility(View.GONE);
             mLodingView.setVisibility(View.GONE);
+            swipeRefreshLayout.setRefreshing(false);
             isReuqestRunning = false;
             if (response == null || null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
@@ -378,6 +377,7 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
             return;
         }
         isLastPageReached = false;
+        chunks = "";
         removeVolleyCache(sortType);
         from = 1;
         to = 15;
