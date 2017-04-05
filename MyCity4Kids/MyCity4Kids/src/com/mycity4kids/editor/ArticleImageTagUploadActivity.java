@@ -1,15 +1,20 @@
 package com.mycity4kids.editor;
 
+import android.Manifest;
 import android.accounts.NetworkErrorException;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -56,6 +61,7 @@ import com.mycity4kids.ui.adapter.ArticleTagsImagesGridAdapter;
 import com.mycity4kids.ui.adapter.MyFunnyVideosListingAdapter;
 import com.mycity4kids.ui.fragment.CompleteProfileDialogFragment;
 import com.mycity4kids.ui.fragment.PublishedArticleShareDialogFragment;
+import com.mycity4kids.utils.PermissionUtil;
 import com.squareup.picasso.Picasso;
 import com.yalantis.ucrop.UCrop;
 
@@ -78,6 +84,11 @@ import retrofit2.Retrofit;
  * Created by anshul on 3/18/16.
  */
 public class ArticleImageTagUploadActivity extends BaseActivity implements View.OnClickListener, ArticleTagsImagesGridAdapter.ITagImageSelect {
+
+    private static String[] PERMISSIONS_INIT = {Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
+
+    private static final int REQUEST_INIT_PERMISSION = 1;
 
     public static final int ADD_MEDIA_ACTIVITY_REQUEST_CODE = 1111;
     public static final String COMMON_PREF_FILE = "my_city_prefs";
@@ -110,6 +121,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
     private ArrayList<ArticleTagsImagesResponse.ArticleTagsImagesData.ArticleTagsImagesResult> tagsImageList;
 
     private ArticleTagsImagesGridAdapter adapter;
+    private View mLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +130,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 //        publish = (Button) findViewById(R.id.publish);
         gridview = (GridView) findViewById(R.id.gridview);
+        mLayout = findViewById(R.id.rootLayout);
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -639,10 +652,109 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
             case R.id.uploadImageContainer:
                 Intent intent1 = new Intent(Intent.ACTION_PICK);
                 intent1.setType("image/*");
-                startActivityForResult(intent1, ADD_MEDIA_ACTIVITY_REQUEST_CODE);
+
+                if (Build.VERSION.SDK_INT >= 23) {
+                    if (ActivityCompat.checkSelfPermission(ArticleImageTagUploadActivity.this, Manifest.permission.CAMERA)
+                            != PackageManager.PERMISSION_GRANTED
+                            || ActivityCompat.checkSelfPermission(ArticleImageTagUploadActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                            != PackageManager.PERMISSION_GRANTED
+                            || ActivityCompat.checkSelfPermission(ArticleImageTagUploadActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                            != PackageManager.PERMISSION_GRANTED) {
+                        requestPermissions();
+                    } else {
+                        startActivityForResult(intent1, ADD_MEDIA_ACTIVITY_REQUEST_CODE);
+                    }
+                } else {
+                    startActivityForResult(intent1, ADD_MEDIA_ACTIVITY_REQUEST_CODE);
+                }
+//                startActivityForResult(intent1, ADD_MEDIA_ACTIVITY_REQUEST_CODE);
                 break;
         }
     }
+
+    private void requestPermissions() {
+        // BEGIN_INCLUDE(contacts_permission_request)
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                || ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+            // Provide an additional rationale to the user if the permission was not granted
+            // and the user would benefit from additional context for the use of the permission.
+            // For example, if the request has been denied previously.
+            Log.i("Permissions",
+                    "Displaying storage permission rationale to provide additional context.");
+
+            // Display a SnackBar with an explanation and a button to trigger the request.
+            Snackbar.make(mLayout, R.string.permission_storage_rationale,
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.ok, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            requestUngrantedPermissions();
+                        }
+                    })
+                    .show();
+        } else if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.CAMERA)) {
+
+            // Display a SnackBar with an explanation and a button to trigger the request.
+            Snackbar.make(mLayout, R.string.permission_camera_rationale,
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.ok, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            requestUngrantedPermissions();
+                        }
+                    })
+                    .show();
+        } else {
+            requestUngrantedPermissions();
+        }
+    }
+
+    private void requestUngrantedPermissions() {
+        ArrayList<String> permissionList = new ArrayList<>();
+        for (int i = 0; i < PERMISSIONS_INIT.length; i++) {
+            if (ActivityCompat.checkSelfPermission(this, PERMISSIONS_INIT[i]) != PackageManager.PERMISSION_GRANTED) {
+                permissionList.add(PERMISSIONS_INIT[i]);
+            }
+        }
+        String[] requiredPermission = permissionList.toArray(new String[permissionList.size()]);
+        ActivityCompat.requestPermissions(this, requiredPermission, REQUEST_INIT_PERMISSION);
+    }
+
+    /**
+     * Callback received when a permissions request has been completed.
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+
+        if (requestCode == REQUEST_INIT_PERMISSION) {
+            Log.i("Permissions", "Received response for storage permissions request.");
+
+            // We have requested multiple permissions for contacts, so all of them need to be
+            // checked.
+            if (PermissionUtil.verifyPermissions(grantResults)) {
+                // All required permissions have been granted, display contacts fragment.
+                Snackbar.make(mLayout, R.string.permision_available_init,
+                        Snackbar.LENGTH_SHORT)
+                        .show();
+                Intent intent1 = new Intent(Intent.ACTION_PICK);
+                intent1.setType("image/*");
+                startActivityForResult(intent1, ADD_MEDIA_ACTIVITY_REQUEST_CODE);
+            } else {
+                Log.i("Permissions", "storage permissions were NOT granted.");
+                Snackbar.make(mLayout, R.string.permissions_not_granted,
+                        Snackbar.LENGTH_SHORT)
+                        .show();
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
 
     @Override
     public void onTagImageSelected(String url) {

@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
@@ -68,6 +70,7 @@ import com.mycity4kids.ui.activity.BusinessListActivity;
 import com.mycity4kids.ui.adapter.BusinessListingAdapter;
 import com.mycity4kids.ui.adapter.BusinessListingAdapterevent;
 import com.mycity4kids.ui.adapter.SubLocalityAdapter;
+import com.mycity4kids.utils.PermissionUtil;
 import com.mycity4kids.utils.tabwidget.MyTabFactory;
 
 import java.text.DateFormat;
@@ -112,7 +115,9 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
     //    private int selected_index_sort = 0;
     private GetFilterAdapter getFilterAdapter;
 
-    public enum FilterType {SubCategory, Locality, AgeGroup, More, Activities, DateValue};
+    public enum FilterType {SubCategory, Locality, AgeGroup, More, Activities, DateValue}
+
+    ;
     //    TabType chosen_tab;
     ArrayList<AdvancedSearch> advancedListFromDb;
     ArrayList<AdvancedSearch> advancedListFromSearch;
@@ -130,6 +135,7 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
     private GoogleApiClient mClient;
     private String TAG;
     private String screenTitle = "Events List";
+    private View businessRoot;
 
     @Nullable
     @Override
@@ -150,6 +156,7 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
             mFilterMap = new HashMap<MapTypeFilter, String>();
             Constants.IS_PAGE_AVAILABLE = true;
             pager_view = (ViewPager) view.findViewById(R.id.viewpager);
+            businessRoot = view.findViewById(R.id.businessRoot);
             //	pager_view.setVisibility(View.GONE);
             pager_view.setOnPageChangeListener(this);
             getFilterAdapter = new GetFilterAdapter(getActivity().getSupportFragmentManager());
@@ -161,7 +168,7 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
             tab_host.setOnTabChangedListener(this);
             tab_host.setVisibility(View.GONE);
             // chosen_tab = TabType.Filter;
-            businessAdapter = new BusinessListingAdapterevent(getActivity());
+            businessAdapter = new BusinessListingAdapterevent(getActivity(), FragmentBusinesslistEvents.this);
             businessOrEventType = getActivity().getIntent().getIntExtra(Constants.PAGE_TYPE, 0);
             categoryId = getActivity().getIntent().getIntExtra(Constants.EXTRA_CATEGORY_ID, 0);
             mAutoSuggestController = new AutoSuggestController(getActivity(), this);
@@ -367,7 +374,7 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
         localityLayout = (LinearLayout) view.findViewById(R.id.localityLayout);
         //	ImageView imgView=(ImageView)findViewById(R.id.filter_icon);
         if (businessOrEventType == Constants.EVENT_PAGE_TYPE) {
-            businessAdapter = new BusinessListingAdapterevent(getActivity());
+            businessAdapter = new BusinessListingAdapterevent(getActivity(), FragmentBusinesslistEvents.this);
             businessListView.setVisibility(View.GONE);
             eventListView.setVisibility(View.VISIBLE);
 
@@ -808,7 +815,7 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
         } else if (isagefilter) {
 //                Log.d("check", "update ui isagefilter " + isagefilter);
             BusinessListResponse responseData = (BusinessListResponse) response.getResponseObject();
-            BusinessListingAdapterevent adapter = new BusinessListingAdapterevent(getActivity());
+            BusinessListingAdapterevent adapter = new BusinessListingAdapterevent(getActivity(), FragmentBusinesslistEvents.this);
             mBusinessDataListings.addAll(responseData.getResult().getData().getData());
             businessAdapter.setListData(mBusinessDataListings, businessOrEventType);
             businessAdapter.notifyDataSetChanged();
@@ -1849,6 +1856,30 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
         mLocalitySearchEtxt.setText("");
         localityLayout.setVisibility(View.GONE);
         search_bar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+
+        if (requestCode == businessAdapter.REQUEST_INIT_PERMISSION) {
+            Log.i("Permissions", "Received response for storage permissions request.");
+
+            if (PermissionUtil.verifyPermissions(grantResults)) {
+                Snackbar.make(businessRoot, R.string.permision_available_init,
+                        Snackbar.LENGTH_SHORT)
+                        .show();
+                businessAdapter.addCalendarEvent(businessAdapter.addCalendarPos);
+            } else {
+                Log.i("Permissions", "storage permissions were NOT granted.");
+                Snackbar.make(businessRoot, R.string.permissions_not_granted,
+                        Snackbar.LENGTH_SHORT)
+                        .show();
+            }
+
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 
 }

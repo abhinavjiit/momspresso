@@ -978,7 +978,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                     for (int j = 0; j < responseData.getData().get(i).getChild().size(); j++) {
                         ArrayList<Topics> tempList = new ArrayList<>();
                         for (int k = 0; k < responseData.getData().get(i).getChild().get(j).getChild().size(); k++) {
-                            if ("1".equals(responseData.getData().get(i).getChild().get(j).getChild().get(k).getPublicVisibility())) {
+                            if ("1".equals(responseData.getData().get(i).getChild().get(j).getChild().get(k).getShowInMenu())) {
                                 //Adding All sub-subcategories
                                 responseData.getData().get(i).getChild().get(j).getChild().get(k)
                                         .setParentId(responseData.getData().get(i).getId());
@@ -990,27 +990,31 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                         responseData.getData().get(i).getChild().get(j).setChild(tempList);
                     }
 
-                    for (int k = 0; k < responseData.getData().get(i).getChild().size(); k++) {
-                        if ("1".equals(responseData.getData().get(i).getChild().get(k).getPublicVisibility())) {
-                            //Adding All subcategories
-                            responseData.getData().get(i).getChild().get(k)
-                                    .setParentId(responseData.getData().get(i).getId());
-                            responseData.getData().get(i).getChild().get(k)
-                                    .setParentName(responseData.getData().get(i).getTitle());
+                    if ("1".equals(responseData.getData().get(i).getShowInMenu())) {
+                        for (int k = 0; k < responseData.getData().get(i).getChild().size(); k++) {
+                            if ("1".equals(responseData.getData().get(i).getChild().get(k).getShowInMenu())) {
+                                //Adding All subcategories
+                                responseData.getData().get(i).getChild().get(k)
+                                        .setParentId(responseData.getData().get(i).getId());
+                                responseData.getData().get(i).getChild().get(k)
+                                        .setParentName(responseData.getData().get(i).getTitle());
 
-                            if (responseData.getData().get(i).getChild().get(k).getChild().isEmpty()) {
-                                ArrayList<Topics> duplicateEntry = new ArrayList<Topics>();
-                                duplicateEntry.add(responseData.getData().get(i).getChild().get(k));
-                                responseData.getData().get(i).getChild().get(k).setChild(duplicateEntry);
+                                // create duplicate entry for subcategories with no child
+                                if (responseData.getData().get(i).getChild().get(k).getChild().isEmpty()) {
+                                    ArrayList<Topics> duplicateEntry = new ArrayList<Topics>();
+                                    duplicateEntry.add(responseData.getData().get(i).getChild().get(k));
+                                    responseData.getData().get(i).getChild().get(k).setChild(duplicateEntry);
+                                }
+                                tempUpList.add(responseData.getData().get(i).getChild().get(k));
                             }
-                            tempUpList.add(responseData.getData().get(i).getChild().get(k));
                         }
                     }
+                    responseData.getData().get(i).setChild(tempUpList);
 
-                    if ("1".equals(responseData.getData().get(i).getPublicVisibility())) {
-                        allTopicsList.add(responseData.getData().get(i));
-                        allTopicsMap.put(responseData.getData().get(i), tempUpList);
-                    }
+//                    if ("1".equals(responseData.getData().get(i).getPublicVisibility())) {
+                    allTopicsList.add(responseData.getData().get(i));
+                    allTopicsMap.put(responseData.getData().get(i), tempUpList);
+//                    }
                 }
                 BaseApplication.setTopicList(allTopicsList);
                 BaseApplication.setTopicsMap(allTopicsMap);

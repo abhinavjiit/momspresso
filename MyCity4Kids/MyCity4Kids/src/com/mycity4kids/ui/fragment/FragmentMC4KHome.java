@@ -329,8 +329,8 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     public void hitBlogListingApi() {
         trendingSection.setProgressBarVisibility(View.VISIBLE);
         String url;
-        url = AppConstants.LIVE_URL + "v1/articles/trending/" + from + "/" + to;
-        HttpVolleyRequest.getStringResponse(getActivity(), url, null, mGetArticleListingListener, Request.Method.GET, true);
+        url = AppConstants.LIVE_URL + "v1/articles/trending/" + from + "/" + to + "?lang=" + SharedPrefUtils.getLanguageFilters(getActivity());
+        HttpVolleyRequest.getStringResponse(getActivity(), url, null, mGetArticleListingListener, Request.Method.GET, false);
 
     }
 
@@ -627,7 +627,12 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
             forYourSection.setEmptyListLabelVisibility(View.VISIBLE);
         } else {
             mArticleForYouListing.clear();
-            mArticleForYouListing.addAll(responseData.getData().get(0).getResult());
+            for (int i = 0; i < responseData.getData().get(0).getResult().size(); i++) {
+                if (!StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().get(i).getId())) {
+                    mArticleForYouListing.add(responseData.getData().get(0).getResult().get(i));
+                }
+            }
+//            mArticleForYouListing.addAll(responseData.getData().get(0).getResult());
             forYourSection.setmDatalist(mArticleForYouListing, Constants.KEY_FOR_YOU);
         }
     }
@@ -956,6 +961,14 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         } else if (SharedPrefUtils.getCurrentCityModel(getActivity()).getId() == AppConstants.OTHERS_CITY_ID) {
             inYourCitySection.setVisibility(View.GONE);
             view.findViewById(R.id.eventsss).setVisibility(View.GONE);
+        }
+
+        if (BaseApplication.isHasLanguagePreferrenceChanged()) {
+            hitForYouListingApi();
+            hitBlogListingApi();
+            hitEditorPicksListingApi();
+            hitInYourCityListingApi();
+            BaseApplication.setHasLanguagePreferrenceChanged(false);
         }
 
         updateUnreadNotificationCount();

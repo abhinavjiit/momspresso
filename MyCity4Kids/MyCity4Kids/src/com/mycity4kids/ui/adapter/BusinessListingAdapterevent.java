@@ -1,15 +1,21 @@
 package com.mycity4kids.ui.adapter;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.CalendarContract;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +41,8 @@ import com.mycity4kids.models.businesslist.BusinessDataListing;
 import com.mycity4kids.models.user.KidsInfo;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.ActivityCreateAppointment;
+import com.mycity4kids.ui.activity.DashboardActivity;
+import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
 import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
@@ -54,6 +62,9 @@ import java.util.TimeZone;
 
 public class BusinessListingAdapterevent extends BaseAdapter implements Filterable {
 
+    public static final int REQUEST_INIT_PERMISSION = 1;
+    public static String[] PERMISSIONS_INIT = {Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR};
+
     private final ArrayList<KidsInfo> kidsInformations;
     private HashMap<String, ColorModel> map;
     private ArrayList<BusinessDataListing> mBusinessData;
@@ -64,6 +75,8 @@ public class BusinessListingAdapterevent extends BaseAdapter implements Filterab
     private ItemFilter mFilter = new ItemFilter();
     private ArrayList<BusinessDataListing> filteredData;
     private ArrayList<String> eventIdList;
+    private FragmentBusinesslistEvents currentFrag;
+    public int addCalendarPos;
 
     public BusinessListingAdapterevent(Context pContext) {
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -72,6 +85,19 @@ public class BusinessListingAdapterevent extends BaseAdapter implements Filterab
         width = displayMetrics.widthPixels;
         height = displayMetrics.heightPixels;
 
+        TableKids tableKids = new TableKids(BaseApplication.getInstance());
+        kidsInformations = (ArrayList<KidsInfo>) tableKids.getAllKids();
+        refreshEventIdList();
+        createColorMap();
+    }
+
+    public BusinessListingAdapterevent(Context pContext, FragmentBusinesslistEvents currentFrag) {
+        mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mContext = pContext;
+        DisplayMetrics displayMetrics = mContext.getResources().getDisplayMetrics();
+        width = displayMetrics.widthPixels;
+        height = displayMetrics.heightPixels;
+        this.currentFrag = currentFrag;
         TableKids tableKids = new TableKids(BaseApplication.getInstance());
         kidsInformations = (ArrayList<KidsInfo>) tableKids.getAllKids();
         refreshEventIdList();
@@ -411,31 +437,19 @@ public class BusinessListingAdapterevent extends BaseAdapter implements Filterab
             @Override
             public void onClick(View v) {
 
-                if (mBusinessData.get(position).isEventAdded()) {
-
-                    ToastUtils.showToast(mContext, mContext.getResources().getString(R.string.event_added));
+                if (Build.VERSION.SDK_INT >= 23) {
+                    if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_CALENDAR)
+                            != PackageManager.PERMISSION_GRANTED
+                            || ActivityCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_CALENDAR)
+                            != PackageManager.PERMISSION_GRANTED) {
+                        Log.i("PERMISSIONS", "Calendar permissions has NOT been granted. Requesting permissions.");
+                        requestCalendarPermissions();
+                        addCalendarPos = position;
+                    } else {
+                        addCalendarEvent(position);
+                    }
                 } else {
-                    final BusinessDataListing information = mBusinessData.get(position);
-                    new AlertDialog.Builder(mContext, R.style.MyAlertDialogStyle)
-                            .setTitle("Add Event to calendar")
-                            .setMessage("Do you want add this event to you personal calendar?")
-                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // continue with delete
-                                    dialog.dismiss();
-                                    //  onButtonClicked.onButtonCLick(0);
-                                    saveCalendar(information.getName(), information.getDescription(), information.getStart_date(), information.getEnd_date(), information.getLocality());
-                                    ToastUtils.showToast(mContext, "Successfully added to Calendar");
-                                }
-                            })
-                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // do nothing
-                                    dialog.dismiss();
-                                }
-                            })
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .show();
+                    addCalendarEvent(position);
                 }
 
             }
@@ -443,6 +457,88 @@ public class BusinessListingAdapterevent extends BaseAdapter implements Filterab
 
 
         return view;
+    }
+
+    private void requestCalendarPermissions() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale((DashboardActivity) mContext,
+                Manifest.permission.READ_CALENDAR) || ActivityCompat.shouldShowRequestPermissionRationale((DashboardActivity) mContext,
+                Manifest.permission.WRITE_CALENDAR)) {
+            Log.i("Permissions",
+                    "Displaying get accounts permission rationale to provide additional context.");
+
+            // Display a SnackBar with an explanation and a button to trigger the request.
+            new AlertDialog.Builder(mContext, R.style.MyAlertDialogStyle)
+                    .setTitle("Calendar Permission")
+                    .setMessage(R.string.permission_calendar_rationale)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // continue with delete
+                            requestUngrantedPermissions();
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // do nothing
+                            dialog.dismiss();
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+
+
+//            Snackbar.make(baseScroll, R.string.permission_calendar_rationale,
+//                    Snackbar.LENGTH_INDEFINITE)
+//                    .setAction(R.string.ok, new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            requestUngrantedPermissions();
+//                        }
+//                    })
+//                    .show();
+        } else {
+            requestUngrantedPermissions();
+        }
+    }
+
+    private void requestUngrantedPermissions() {
+        ArrayList<String> permissionList = new ArrayList<>();
+        for (int i = 0; i < PERMISSIONS_INIT.length; i++) {
+            if (ActivityCompat.checkSelfPermission(mContext, PERMISSIONS_INIT[i]) != PackageManager.PERMISSION_GRANTED) {
+                permissionList.add(PERMISSIONS_INIT[i]);
+            }
+        }
+        String[] requiredPermission = permissionList.toArray(new String[permissionList.size()]);
+        currentFrag.requestPermissions(requiredPermission, REQUEST_INIT_PERMISSION);
+    }
+
+    public void addCalendarEvent(int position) {
+        if (mBusinessData.get(position).isEventAdded()) {
+
+            ToastUtils.showToast(mContext, mContext.getResources().getString(R.string.event_added));
+        } else {
+            final BusinessDataListing information = mBusinessData.get(position);
+            new AlertDialog.Builder(mContext, R.style.MyAlertDialogStyle)
+                    .setTitle("Add Event to calendar")
+                    .setMessage("Do you want add this event to you personal calendar?")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // continue with delete
+                            dialog.dismiss();
+                            //  onButtonClicked.onButtonCLick(0);
+                            saveCalendar(information.getName(), information.getDescription(), information.getStart_date(), information.getEnd_date(), information.getLocality());
+                            ToastUtils.showToast(mContext, "Successfully added to Calendar");
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // do nothing
+                            dialog.dismiss();
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+        }
     }
 
     private void saveCalendar(String title, String desc, String sDate, String eDate, String location) {

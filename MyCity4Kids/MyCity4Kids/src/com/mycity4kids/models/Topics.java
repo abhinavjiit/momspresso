@@ -121,10 +121,12 @@ public class Topics implements Parcelable {
         return publicVisibility;
     }
 
+    // Access level while tagging a topic to a newly written article
     public void setPublicVisibility(String publicVisibility) {
         this.publicVisibility = publicVisibility;
     }
 
+    // Access level for showing in Menu. From where a user can view articles tagged under this topic.
     public String getShowInMenu() {
         return showInMenu;
     }

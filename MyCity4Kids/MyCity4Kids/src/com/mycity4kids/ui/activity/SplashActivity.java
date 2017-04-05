@@ -98,6 +98,7 @@ public class SplashActivity extends BaseActivity {
     Bundle extras;
     FirebaseAnalytics mFirebaseAnalytics;
     private View mLayout;
+    private boolean shouldResumeSplash = false;
 
     // The onNewIntent() is overridden to get and resolve the data for deep linking
     @Override
@@ -168,6 +169,14 @@ public class SplashActivity extends BaseActivity {
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (shouldResumeSplash) {
+            resumeSplash();
         }
     }
 
@@ -447,7 +456,9 @@ public class SplashActivity extends BaseActivity {
                 Snackbar.make(mLayout, R.string.permision_available_init,
                         Snackbar.LENGTH_SHORT)
                         .show();
-                resumeSplash();
+                shouldResumeSplash = true;
+
+//                resumeSplash();
             } else {
                 Log.i("Permissions", "storage permissions were NOT granted.");
                 Snackbar.make(mLayout, R.string.permissions_not_granted,

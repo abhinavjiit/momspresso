@@ -120,6 +120,7 @@ import org.json.JSONException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 
 import okhttp3.ResponseBody;
@@ -406,10 +407,10 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
     private void hitRelatedArticleAPI() {
         String url = AppConstants.LIVE_URL + AppConstants.SERVICE_TYPE_ARTICLE + "trending" +
-                AppConstants.SEPARATOR_BACKSLASH + "1" + AppConstants.SEPARATOR_BACKSLASH + "3";
+                AppConstants.SEPARATOR_BACKSLASH + "1" + AppConstants.SEPARATOR_BACKSLASH + "15" + "?lang=" + SharedPrefUtils.getLanguageFilters(this);
         HttpVolleyRequest.getStringResponse(this, url, null, mGetArticleListingListener, Request.Method.GET, true);
 
-        Call<ArticleListingResponse> categoryRelatedArticlesCall = articleDetailsAPI.getCategoryRelatedArticles(articleId);
+        Call<ArticleListingResponse> categoryRelatedArticlesCall = articleDetailsAPI.getCategoryRelatedArticles(articleId, SharedPrefUtils.getLanguageFilters(this));
         categoryRelatedArticlesCall.enqueue(categoryArticleResponseCallback);
     }
 
@@ -1461,6 +1462,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
                     } else {
                         trendingArticles.setVisibility(View.VISIBLE);
+                        Collections.shuffle(dataList);
                         if (dataList.size() >= 3) {
                             Picasso.with(ArticlesAndBlogsDetailsActivity.this).load(dataList.get(0).getImageUrl().getClientAppThumbnail()).
                                     placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles1.getArticleImageView());
@@ -1513,7 +1515,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 //                showToast("Something went wrong from server");
                 NetworkErrorException nee = new NetworkErrorException("Category related Article API failure");
                 Crashlytics.logException(nee);
-                Call<ArticleListingResponse> callAuthorRecentcall = articleDetailsAPI.getPublishedArticles(authorId, 0, 1, 4);
+                Call<ArticleListingResponse> callAuthorRecentcall = articleDetailsAPI.getPublishedArticles(authorId, 0, 1, 10);
                 callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
                 return;
             }
@@ -1529,12 +1531,12 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                         }
                     }
                     if (dataList.size() == 0) {
-                        Call<ArticleListingResponse> callAuthorRecentcall = articleDetailsAPI.getPublishedArticles(authorId, 0, 1, 4);
+                        Call<ArticleListingResponse> callAuthorRecentcall = articleDetailsAPI.getPublishedArticles(authorId, 0, 1, 10);
                         callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
                     } else {
                         recentAuthorArticleHeading.setText("RELATED ARTICLES");
                         recentAuthorArticles.setVisibility(View.VISIBLE);
-
+                        Collections.shuffle(dataList);
                         if (dataList.size() >= 3) {
                             Picasso.with(ArticlesAndBlogsDetailsActivity.this).load(dataList.get(0).getImageUrl().getClientAppThumbnail()).
                                     placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
@@ -1573,13 +1575,13 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 } else {
                     NetworkErrorException nee = new NetworkErrorException("Category related Article Error Response");
                     Crashlytics.logException(nee);
-                    Call<ArticleListingResponse> callAuthorRecentcall = articleDetailsAPI.getPublishedArticles(authorId, 0, 1, 4);
+                    Call<ArticleListingResponse> callAuthorRecentcall = articleDetailsAPI.getPublishedArticles(authorId, 0, 1, 10);
                     callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-                Call<ArticleListingResponse> callAuthorRecentcall = articleDetailsAPI.getPublishedArticles(authorId, 0, 1, 4);
+                Call<ArticleListingResponse> callAuthorRecentcall = articleDetailsAPI.getPublishedArticles(authorId, 0, 1, 10);
                 callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
             }
         }
@@ -1615,6 +1617,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     if (dataList.size() == 0) {
 
                     } else {
+                        Collections.shuffle(dataList);
                         recentAuthorArticleHeading.setText("RECENT BLOGS FROM " + author);
                         recentAuthorArticles.setVisibility(View.VISIBLE);
 
@@ -2110,9 +2113,9 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             }
         } else {
             if (StringUtils.isNullOrEmpty(responseData.getReason())) {
-                showToast(responseData.getReason());
+//                showToast(responseData.getReason());
             } else {
-                showToast(getString(R.string.went_wrong));
+//                showToast(getString(R.string.went_wrong));
             }
         }
     }

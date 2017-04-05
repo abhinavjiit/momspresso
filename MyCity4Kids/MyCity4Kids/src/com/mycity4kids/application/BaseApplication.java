@@ -127,6 +127,16 @@ public class BaseApplication extends Application {
         topicsMap = topicsMaps;
     }
 
+    private static boolean hasLanguagePreferrenceChanged=false;
+
+    public static boolean isHasLanguagePreferrenceChanged() {
+        return hasLanguagePreferrenceChanged;
+    }
+
+    public static void setHasLanguagePreferrenceChanged(boolean hasLanguagePreferrenceChanged) {
+        BaseApplication.hasLanguagePreferrenceChanged = hasLanguagePreferrenceChanged;
+    }
+
     public enum TrackerName {
         APP_TRACKER, // Tracker used only in this app.
         GLOBAL_TRACKER, // Tracker used by all the apps from a company. eg: roll-up tracking.
@@ -289,7 +299,7 @@ public class BaseApplication extends Application {
                 requestBuilder.addHeader("appVersion", appVersion);
                 requestBuilder.addHeader("latitude", SharedPrefUtils.getUserLocationLatitude(getApplicationContext()));
                 requestBuilder.addHeader("longitude", SharedPrefUtils.getUserLocationLongitude(getApplicationContext()));
-                requestBuilder.addHeader("userPrint", AppUtils.getDeviceId(getApplicationContext()));
+                requestBuilder.addHeader("userPrint", "" + AppUtils.getDeviceId(getApplicationContext()));
                 Request request = requestBuilder.build();
 
 //                Response response = chain.proceed(request);
@@ -394,7 +404,7 @@ public class BaseApplication extends Application {
                 requestBuilder.addHeader("appVersion", appVersion);
                 requestBuilder.addHeader("latitude", SharedPrefUtils.getUserLocationLatitude(getApplicationContext()));
                 requestBuilder.addHeader("longitude", SharedPrefUtils.getUserLocationLongitude(getApplicationContext()));
-                requestBuilder.addHeader("userPrint", AppUtils.getDeviceId(getApplicationContext()));
+                requestBuilder.addHeader("userPrint", "" + AppUtils.getDeviceId(getApplicationContext()));
                 Request request = requestBuilder.build();
 
 //                Response response = chain.proceed(request);

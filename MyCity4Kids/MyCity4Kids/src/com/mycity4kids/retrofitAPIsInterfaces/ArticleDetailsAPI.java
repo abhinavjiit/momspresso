@@ -79,7 +79,8 @@ public interface ArticleDetailsAPI {
     Call<AddBookmarkResponse> deleteBookmark(@Body DeleteBookmarkRequest body);
 
     @GET("v1/recommend/related/{articleId}")
-    Call<ArticleListingResponse> getCategoryRelatedArticles(@Path("articleId") String articleId);
+    Call<ArticleListingResponse> getCategoryRelatedArticles(@Path("articleId") String articleId,
+                                                            @Query("lang") String lang);
 
     @GET("v1/users/likes/{articleId}")
     Call<ArticleRecommendationStatusResponse> getArticleRecommendedStatus(@Path("articleId") String articleId);
