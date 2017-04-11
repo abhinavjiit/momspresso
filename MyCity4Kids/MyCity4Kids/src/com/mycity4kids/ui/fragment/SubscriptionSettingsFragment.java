@@ -216,11 +216,11 @@ public class SubscriptionSettingsFragment extends BaseFragment implements View.O
             if (!subscriptionSettingsList.get(i).getStatus().equals(subscriptionSettingsList.get(i).getOriginalStatus())) {
                 if ("1".equals(subscriptionSettingsList.get(i).getStatus())) {
                     Log.d("GTM Subscription Added", ":" + subscriptionSettingsList.get(i).getDisplayName());
-                    Utils.pushEventLanguageAndSubscriptionSettings(getActivity(), GTMEventType.EMAIL_SUBSCRIBE_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(),
+                    Utils.pushEventSubscriptionSettings(getActivity(), GTMEventType.EMAIL_SUBSCRIBE_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(),
                             "Subscription Settings", subscriptionSettingsList.get(i).getName());
                 } else {
                     Log.d("GTM Subscription Remove", ":" + subscriptionSettingsList.get(i).getDisplayName());
-                    Utils.pushEventLanguageAndSubscriptionSettings(getActivity(), GTMEventType.EMAIL_UNSUBSCRIBE_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(),
+                    Utils.pushEventSubscriptionSettings(getActivity(), GTMEventType.EMAIL_UNSUBSCRIBE_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(),
                             "Subscription Settings", subscriptionSettingsList.get(i).getName());
                 }
             }

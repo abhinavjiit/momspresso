@@ -69,9 +69,15 @@ public class Utils {
         dataLayer.push(DataLayer.mapOf("event", event, GTMTags.USER_ID, user, GTMTags.ScreenName, ScreenName, GTMTags.HandledUrl, titleSlug, GTMTags.TimeSpent, timeSpent, GTMTags.EstimatedTime, estimatedTime));
     }
 
-    public static void pushEventLanguageAndSubscriptionSettings(Context context, GTMEventType event, String user, String ScreenName, String subscriptionType) {
+    public static void pushEventSubscriptionSettings(Context context, GTMEventType event, String user, String ScreenName, String subscriptionType) {
         DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
         // dataLayer.push("user", "monitor1");
         dataLayer.push(DataLayer.mapOf("event", event, GTMTags.USER_ID, user, GTMTags.ScreenName, ScreenName, GTMTags.SubscriptionType, subscriptionType));
+    }
+
+    public static void pushEventFeedLanguage(Context context, GTMEventType event, String user, String ScreenName, String language) {
+        DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
+        // dataLayer.push("user", "monitor1");
+        dataLayer.push(DataLayer.mapOf("event", event, GTMTags.USER_ID, user, GTMTags.ScreenName, ScreenName, GTMTags.FeedLanguage, language));
     }
 }

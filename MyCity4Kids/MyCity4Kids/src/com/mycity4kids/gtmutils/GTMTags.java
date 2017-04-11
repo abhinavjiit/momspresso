@@ -13,5 +13,6 @@ public class GTMTags {
     public static final String EstimatedTime = "estimatedTime";
     public static final String TopicAction = "topicAction";
     public static final String SubscriptionType = "subscriptionType";
+    public static final String FeedLanguage = "language";
     public static final String INDEX = "index";
 }

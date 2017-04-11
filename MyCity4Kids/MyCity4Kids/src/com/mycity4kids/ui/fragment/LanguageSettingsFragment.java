@@ -139,11 +139,11 @@ public class LanguageSettingsFragment extends BaseFragment implements View.OnCli
             if (!languageSettingsList.get(i).getStatus().equals(languageSettingsList.get(i).getOriginalStatus())) {
                 if ("1".equals(languageSettingsList.get(i).getStatus())) {
                     Log.d("GTM Launguage Added", ":" + languageSettingsList.get(i).getName());
-                    Utils.pushEventLanguageAndSubscriptionSettings(getActivity(), GTMEventType.FEED_LANGUAGE_ADD_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(),
+                    Utils.pushEventFeedLanguage(getActivity(), GTMEventType.FEED_LANGUAGE_ADD_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(),
                             "Launguage Settings", languageSettingsList.get(i).getName());
                 } else {
                     Log.d("GTM Launguage Remove", ":" + languageSettingsList.get(i).getName());
-                    Utils.pushEventLanguageAndSubscriptionSettings(getActivity(), GTMEventType.FEED_LANGUAGE_REMOVE_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(),
+                    Utils.pushEventFeedLanguage(getActivity(), GTMEventType.FEED_LANGUAGE_REMOVE_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(),
                             "Launguage Settings", languageSettingsList.get(i).getName());
                 }
             }
