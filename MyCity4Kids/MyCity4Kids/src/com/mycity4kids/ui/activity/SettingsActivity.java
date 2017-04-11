@@ -245,7 +245,7 @@ public class SettingsActivity extends BaseActivity {
                 } else if (topFragment instanceof LanguageSettingsFragment) {
                     ((LanguageSettingsFragment) topFragment).updateLanguageSubscription();
                 } else if (topFragment instanceof SubscriptionSettingsFragment) {
-                    ((SubscriptionSettingsFragment) topFragment).updateLanguageSubscription();
+                    ((SubscriptionSettingsFragment) topFragment).updateSubscriptions();
                 }
                 break;
             case android.R.id.home:

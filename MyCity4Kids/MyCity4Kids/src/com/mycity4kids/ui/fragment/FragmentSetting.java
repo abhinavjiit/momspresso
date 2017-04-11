@@ -149,6 +149,9 @@ public class FragmentSetting extends BaseFragment implements View.OnClickListene
             case 9:
                 cityChange.setText("Change City (Ahmedabad)");
                 break;
+            case 11:
+                cityChange.setText("Change City (" + SharedPrefUtils.getCurrentCityModel(getActivity()).getName() + ")");
+                break;
         }
         return view;
     }

@@ -554,6 +554,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                         startService(intent);
                         Intent intent1 = new Intent(ActivityLogin.this, LoadingActivity.class);
                         startActivity(intent1);
+                        startSyncingUserInfo();
                     }
                 } else {
                     showToast(responseData.getReason());

@@ -28,6 +28,7 @@ public class UserDetailResult {
     private PhoneDetails phone;
     private SocialTokens socialTokens;
     private String isLangSelection = "0";
+    private String subscriptionEmail;
     private Map<String, String> langSubscription;
 
     public String getPhoneNumber() {
@@ -204,6 +205,14 @@ public class UserDetailResult {
 
     public void setLangSubscription(Map<String, String> langSubscription) {
         this.langSubscription = langSubscription;
+    }
+
+    public String getSubscriptionEmail() {
+        return subscriptionEmail;
+    }
+
+    public void setSubscriptionEmail(String subscriptionEmail) {
+        this.subscriptionEmail = subscriptionEmail;
     }
 
     public class SocialTokens {

@@ -2,6 +2,9 @@ package com.mycity4kids.editor;
 
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -9,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
@@ -24,6 +28,8 @@ import com.mycity4kids.models.response.SetupBlogResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
 
+import java.util.Arrays;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -32,10 +38,13 @@ import retrofit2.Retrofit;
  * Created by anshul on 3/18/16.
  */
 public class SetupBlogPageActivity extends BaseActivity {
+    private static final int MAX_WORDS = 200;
     Toolbar mToolbar;
     ImageView blogImage;
     EditText blogTitle, bloggerBio;
     Button createBlog;
+    private InputFilter filter;
+    private TextView textLimit;
 
     @Override
     protected void updateUi(Response response) {
@@ -50,6 +59,8 @@ public class SetupBlogPageActivity extends BaseActivity {
         bloggerBio = (EditText) findViewById(R.id.bloggerBio);
         blogTitle = (EditText) findViewById(R.id.blogTitle);
         createBlog = (Button) findViewById(R.id.createBlog);
+        textLimit = (TextView) findViewById(R.id.textLimit);
+
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Setup your Blog");
@@ -62,6 +73,37 @@ public class SetupBlogPageActivity extends BaseActivity {
         if (!StringUtils.isNullOrEmpty(getIntent().getStringExtra("blogTitle"))) {
             blogTitle.setText(getIntent().getStringExtra("blogTitle"));
         }
+
+        bloggerBio.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                int wordsLength = countWords(s.toString());// words.length;
+                // count == 0 means a new word is going to start
+                if (count == 0 && wordsLength >= MAX_WORDS) {
+                    setCharLimit(bloggerBio, bloggerBio.getText().length());
+                } else {
+                    removeFilter(bloggerBio);
+                }
+
+                textLimit.setText(String.valueOf(wordsLength) + "/" + MAX_WORDS);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+//                int wLength = countWords(s.toString());
+//                Log.d("afterTextChanged", "Length = " + wLength + " --- " + s.toString());
+//                if (wLength > MAX_WORDS) {
+//                    bloggerBio.setText(removeExtraWords(s.toString()));
+//                }
+
+            }
+        });
+
 
         createBlog.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,6 +121,10 @@ public class SetupBlogPageActivity extends BaseActivity {
                     blogTitle.setFocusableInTouchMode(true);
                     blogTitle.setError("Special characters are not allowed!");
                     blogTitle.requestFocus();
+                } else if (countWords(bloggerBio.getText().toString()) > MAX_WORDS) {
+                    bloggerBio.setFocusableInTouchMode(true);
+                    bloggerBio.setError("Maximum limit for bio is " + MAX_WORDS + " words");
+                    bloggerBio.requestFocus();
                 } else {
                     showProgressDialog(getResources().getString(R.string.please_wait));
                     Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
@@ -123,6 +169,36 @@ public class SetupBlogPageActivity extends BaseActivity {
                 }
             }
         });
+    }
+
+    private int countWords(String s) {
+        String trim = s.trim();
+        if (trim.isEmpty())
+            return 0;
+        return trim.split("\\s+").length; // separate string around spaces
+    }
+
+    private String removeExtraWords(String s) {
+        String trim = s.trim();
+        String[] strArr = Arrays.copyOfRange(trim.split("\\s+"), 0, 199);
+        StringBuilder strBuilder = new StringBuilder();
+        for (int i = 0; i < strArr.length; i++) {
+            strBuilder.append(strArr[i] + " ");
+        }
+        String newString = strBuilder.toString();
+        return newString;
+    }
+
+    private void setCharLimit(EditText et, int max) {
+        filter = new InputFilter.LengthFilter(max);
+        et.setFilters(new InputFilter[]{filter});
+    }
+
+    private void removeFilter(EditText et) {
+        if (filter != null) {
+            et.setFilters(new InputFilter[0]);
+            filter = null;
+        }
     }
 
     @Override

@@ -21,6 +21,7 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.IScreen;
@@ -46,6 +47,7 @@ public class FilterTopicsDialogFragment extends DialogFragment {
     private ListView subTopicsListView;
     private ListView subSubTopicsListView;
     private ImageView confirmImageView;
+    private RelativeLayout subTopicsContainer;
 
     private SubTopicsListAdapter subTopicsListAdapter;
     private SubSubTopicsListAdapter subSubTopicsListAdapter;
@@ -74,6 +76,7 @@ public class FilterTopicsDialogFragment extends DialogFragment {
         confirmImageView = (ImageView) rootView.findViewById(R.id.confirmImageView);
         subTopicsListView = (ListView) rootView.findViewById(R.id.subTopicsListView);
         subSubTopicsListView = (ListView) rootView.findViewById(R.id.subSubTopicsListView);
+        subTopicsContainer = (RelativeLayout) rootView.findViewById(R.id.subTopicsContainer);
 
         Bundle extras = getArguments();
         if (extras != null) {
@@ -88,6 +91,7 @@ public class FilterTopicsDialogFragment extends DialogFragment {
             subSubTopicsListView.setAdapter(subSubTopicsListAdapter);
         } else if (AppConstants.TOPIC_LEVEL_SUB_CATEGORY.equals(topicsLevel)) {
             subTopicsListView.setVisibility(View.GONE);
+            subTopicsContainer.setVisibility(View.GONE);
             subSubTopicsListAdapter = new SubSubTopicsListAdapter(getActivity(), R.layout.sub_topics_filter_item, subTopicsArrayList);
             subSubTopicsListView.setAdapter(subSubTopicsListAdapter);
         }

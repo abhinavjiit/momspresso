@@ -17,6 +17,7 @@ import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.SubscriptionAndLanguageSettingsModel;
 import com.mycity4kids.models.response.ConfigResponse;
@@ -27,7 +28,6 @@ import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ConfigAPIs;
 import com.mycity4kids.retrofitAPIsInterfaces.LanguageSettingsAPI;
-import com.mycity4kids.sync.CategorySyncService;
 import com.mycity4kids.ui.adapter.LanguageSettingsListAdapter;
 
 import java.util.ArrayList;
@@ -41,13 +41,14 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 2/4/16.
  */
-public class LanguageSettingsFragment extends BaseFragment {
+public class LanguageSettingsFragment extends BaseFragment implements View.OnClickListener {
 
     private boolean isSubsequentCall = false;
 
-    private ListView languageListView;
     private ArrayList<SubscriptionAndLanguageSettingsModel> languageSettingsList;
     private LanguageSettingsListAdapter languageSettingsListAdapter;
+
+    private ListView languageListView;
 
     @Nullable
     @Override
@@ -85,6 +86,7 @@ public class LanguageSettingsFragment extends BaseFragment {
                         Log.d("Notification Items = ", entry.getKey() + "/" + entry.getValue());
                         SubscriptionAndLanguageSettingsModel subscriptionAndLanguageSettingsModel = new SubscriptionAndLanguageSettingsModel();
                         subscriptionAndLanguageSettingsModel.setStatus(entry.getValue());
+                        subscriptionAndLanguageSettingsModel.setOriginalStatus(entry.getValue());
                         subscriptionAndLanguageSettingsModel.setName(entry.getKey());
                         languageSettingsList.add(subscriptionAndLanguageSettingsModel);
                     }
@@ -113,7 +115,13 @@ public class LanguageSettingsFragment extends BaseFragment {
     }
 
     public void updateLanguageSubscription() {
-        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+
+        if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
+            Toast.makeText(getActivity(), R.string.error_network, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        final Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+
         LanguageSettingsAPI languageSettingsAPI = retrofit.create(LanguageSettingsAPI.class);
         PreferredLanguageUpdateRequest languageUpdateRequest = new PreferredLanguageUpdateRequest();
 
@@ -126,6 +134,21 @@ public class LanguageSettingsFragment extends BaseFragment {
 
         Call<UpdateLanguageSettingsResponse> call = languageSettingsAPI.updatePreferredLanguages(languageUpdateRequest);
         call.enqueue(updateLanguageSettingsCallback);
+
+        for (int i = 0; i < languageSettingsList.size(); i++) {
+            if (!languageSettingsList.get(i).getStatus().equals(languageSettingsList.get(i).getOriginalStatus())) {
+                if ("1".equals(languageSettingsList.get(i).getStatus())) {
+                    Log.d("GTM Launguage Added", ":" + languageSettingsList.get(i).getName());
+                    Utils.pushEventLanguageAndSubscriptionSettings(getActivity(), GTMEventType.FEED_LANGUAGE_ADD_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(),
+                            "Launguage Settings", languageSettingsList.get(i).getName());
+                } else {
+                    Log.d("GTM Launguage Remove", ":" + languageSettingsList.get(i).getName());
+                    Utils.pushEventLanguageAndSubscriptionSettings(getActivity(), GTMEventType.FEED_LANGUAGE_REMOVE_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(),
+                            "Launguage Settings", languageSettingsList.get(i).getName());
+                }
+            }
+            languageSettingsList.get(i).setOriginalStatus(languageSettingsList.get(i).getStatus());
+        }
     }
 
     Callback<UpdateLanguageSettingsResponse> updateLanguageSettingsCallback = new Callback<UpdateLanguageSettingsResponse>() {
@@ -161,6 +184,7 @@ public class LanguageSettingsFragment extends BaseFragment {
                             }
                         }
                         SharedPrefUtils.setLanguageFilters(getActivity(), filter);
+                        BaseApplication.setHasLanguagePreferrenceChanged(true);
                     }
                 } else {
                     if (null != getActivity()) {
@@ -189,10 +213,11 @@ public class LanguageSettingsFragment extends BaseFragment {
 
     private void updateConfigSettings() {
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
+            Toast.makeText(getActivity(), R.string.error_network, Toast.LENGTH_SHORT).show();
             return;
         }
-        isSubsequentCall = true;
         final Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        isSubsequentCall = true;
         ConfigAPIs configAPIs = retrofit.create(ConfigAPIs.class);
         Call<ConfigResponse> call = configAPIs.getConfig();
         call.enqueue(configSettingResponseListener);
@@ -232,4 +257,9 @@ public class LanguageSettingsFragment extends BaseFragment {
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
+
+    @Override
+    public void onClick(View v) {
+
+    }
 }

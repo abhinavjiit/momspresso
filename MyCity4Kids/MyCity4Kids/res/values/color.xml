@@ -173,4 +173,6 @@
     <color name="complete_profile.done">#ec3b57</color>
 
     <color name="article_listing.language_feed">#ec3b57</color>
+
+    <color name="language_settings.edit_email">#ec3b57</color>
 </resources>

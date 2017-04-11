@@ -81,6 +81,12 @@ public class SyncUserInfoService extends IntentService implements UpdateListener
                     SharedPrefUtils.setProfileImgUrl(SyncUserInfoService.this, responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp());
                     UserInfo userInfo = SharedPrefUtils.getUserDetailModel(SyncUserInfoService.this);
                     userInfo.setIsLangSelection(responseData.getData().get(0).getResult().getIsLangSelection());
+                    userInfo.setFirst_name(responseData.getData().get(0).getResult().getFirstName());
+                    userInfo.setLast_name(responseData.getData().get(0).getResult().getLastName());
+                    userInfo.setProfilePicUrl(responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp());
+                    userInfo.setSessionId(responseData.getData().get(0).getResult().getSessionId());
+                    userInfo.setSubscriptionEmail(responseData.getData().get(0).getResult().getSubscriptionEmail());
+
                     SharedPrefUtils.setUserDetailModel(SyncUserInfoService.this, userInfo);
 
                     Map<String, String> subscribedContentLanguages = responseData.getData().get(0).getResult().getLangSubscription();

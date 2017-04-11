@@ -8,14 +8,16 @@ public class SubscriptionAndLanguageSettingsModel {
     private String name;
     private String displayName;
     private String status;
+    private String originalStatus;
 
     public SubscriptionAndLanguageSettingsModel() {
     }
 
-    public SubscriptionAndLanguageSettingsModel(String id, String name, String status) {
+    public SubscriptionAndLanguageSettingsModel(String id, String name, String status, String originalStatus) {
         this.id = id;
         this.name = name;
         this.status = status;
+        this.originalStatus = originalStatus;
     }
 
     public String getId() {
@@ -48,5 +50,13 @@ public class SubscriptionAndLanguageSettingsModel {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getOriginalStatus() {
+        return originalStatus;
+    }
+
+    public void setOriginalStatus(String originalStatus) {
+        this.originalStatus = originalStatus;
     }
 }

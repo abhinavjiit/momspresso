@@ -29,4 +29,7 @@ public interface UserAttributeUpdateAPI {
 
     @PUT("v1/users/")
     Call<UserDetailResponse> updateCityAndKids(@Body UpdateUserDetailsRequest body);
+
+    @PUT("v1/users/")
+    Call<UserDetailResponse> updateSubscriptionEmail(@Body UpdateUserDetailsRequest body);
 }

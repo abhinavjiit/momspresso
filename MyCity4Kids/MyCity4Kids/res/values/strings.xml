@@ -486,5 +486,6 @@
     <string name="permision_available_init">All required permissions have been granted.</string>
     <string name="permission_get_account_rationale">Get account permission is needed to create your account with google login.</string>
     <string name="permission_calendar_rationale">Calendar permission is needed to add a reminder.</string>
+    <string name="language_settings.explanation">Use the toggle above to manage the languages of articles that you want to see on your feed</string>
 
 </resources>

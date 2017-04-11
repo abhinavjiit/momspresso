@@ -120,6 +120,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
     private int isTopicFollowed;
     private ArrayList<Topics> allTopicsList;
     private HashMap<Topics, List<Topics>> allTopicsMap;
+    private ArrayList<Topics> subAndSubSubTopicsList;
 
     //    private Animation bottomUp, bottomDown;
     private String filteredTopics;
@@ -427,8 +428,6 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
 
     }
 
-    ArrayList<Topics> subAndSubSubTopicsList;
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -657,7 +656,6 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
     };
 
     private void getTopicLevelAndPrepareFilterData() {
-        Topics parentCategoryTopic;
         for (int i = 0; i < allTopicsList.size(); i++) {
             subAndSubSubTopicsList = new ArrayList<>();
 
@@ -671,7 +669,6 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             for (int j = 0; j < allTopicsList.get(i).getChild().size(); j++) {
                 if (selectedTopics.equals(allTopicsList.get(i).getChild().get(j).getId())) {
                     //selected topic is Subcategory with no subsubcategories
-                    parentCategoryTopic = allTopicsList.get(i);
                     subAndSubSubTopicsList.addAll(allTopicsList.get(i).getChild().get(j).getChild());
                     if (subAndSubSubTopicsList.isEmpty()) {
                         topicLevel = AppConstants.TOPIC_LEVEL_SUB_SUB_CATEGORY;
@@ -684,7 +681,6 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                 for (int k = 0; k < allTopicsList.get(i).getChild().get(j).getChild().size(); k++) {
                     if (selectedTopics.equals(allTopicsList.get(i).getChild().get(j).getChild().get(k).getId())) {
                         //selected topic is SubSubcategory
-                        parentCategoryTopic = allTopicsList.get(i);
                         subAndSubSubTopicsList.addAll(allTopicsList.get(i).getChild());
                         topicLevel = AppConstants.TOPIC_LEVEL_SUB_SUB_CATEGORY;
                         return;

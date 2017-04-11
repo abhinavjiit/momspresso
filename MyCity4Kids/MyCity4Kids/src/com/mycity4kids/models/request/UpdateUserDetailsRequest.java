@@ -19,6 +19,7 @@ public class UpdateUserDetailsRequest {
     private String cityId;
     private String cityName;
     private String blogTitle;
+    private String subscriptionEmail;
     private ArrayList<KidsModel> kids;
 
     public String getFirstName() {
@@ -99,6 +100,14 @@ public class UpdateUserDetailsRequest {
 
     public void setAttributeType(String attributeType) {
         this.attributeType = attributeType;
+    }
+
+    public String getSubscriptionEmail() {
+        return subscriptionEmail;
+    }
+
+    public void setSubscriptionEmail(String subscriptionEmail) {
+        this.subscriptionEmail = subscriptionEmail;
     }
 
     public ArrayList<KidsModel> getKids() {

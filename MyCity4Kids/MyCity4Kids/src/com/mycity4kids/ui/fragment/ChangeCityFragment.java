@@ -195,79 +195,81 @@ public class ChangeCityFragment extends BaseFragment implements ChangeCityAdapte
             public void nearCity(City cityModel) {
                 int cityId = cityModel.getCityId();
 
-                /**
-                 * save current city in shared preference
-                 */
-                MetroCity model = new MetroCity();
-                model.setId(cityModel.getCityId());
-                model.setName(cityModel.getCityName());
-                model.setNewCityId(cityModel.getNewCityId());
-
-                SharedPrefUtils.setCurrentCityModel(getActivity(), model);
-                SharedPrefUtils.setChangeCityFlag(getActivity(), true);
-
-                if (cityId > 0) {
-                    versionApiModel.setCityId(cityId);
-                    mFirebaseAnalytics.setUserProperty("CityId", cityId + "");
+                if (getActivity() != null) {
                     /**
-                     * get current version code ::
+                     * save current city in shared preference
                      */
-                    PackageInfo pInfo = null;
-                    try {
-                        pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+                    MetroCity model = new MetroCity();
+                    model.setId(cityModel.getCityId());
+                    model.setName(cityModel.getCityName());
+                    model.setNewCityId(cityModel.getNewCityId());
 
-                    } catch (PackageManager.NameNotFoundException e) {
-                        e.printStackTrace();
-                    }
+                    SharedPrefUtils.setCurrentCityModel(getActivity(), model);
+                    SharedPrefUtils.setChangeCityFlag(getActivity(), true);
 
-                    String version = pInfo.versionName;
-                    if (!StringUtils.isNullOrEmpty(version)) {
-                        versionApiModel.setAppUpdateVersion(version);
-                    }
+                    if (cityId > 0) {
+                        versionApiModel.setCityId(cityId);
+                        mFirebaseAnalytics.setUserProperty("CityId", cityId + "");
+                        /**
+                         * get current version code ::
+                         */
+                        PackageInfo pInfo = null;
+                        try {
+                            pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
 
-                    if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
-                        ToastUtils.showToast(getActivity(), getString(R.string.error_network));
-                        return;
+                        } catch (PackageManager.NameNotFoundException e) {
+                            e.printStackTrace();
+                        }
 
-                    }
-                    _controller.getData(AppConstants.CONFIGURATION_REQUEST, versionApiModel);
+                        String version = pInfo.versionName;
+                        if (!StringUtils.isNullOrEmpty(version)) {
+                            versionApiModel.setAppUpdateVersion(version);
+                        }
 
-                    UpdateUserDetailsRequest updateUserDetail = new UpdateUserDetailsRequest();
-                    updateUserDetail.setAttributeName("cityId");
-                    updateUserDetail.setAttributeType("S");
-                    updateUserDetail.setAttributeValue("" + cityModel.getCityId());
-                    Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-                    UserAttributeUpdateAPI userAttributeUpdateAPI = retrofit.create(UserAttributeUpdateAPI.class);
-                    Call<UserDetailResponse> call = userAttributeUpdateAPI.updateCity(updateUserDetail);
-                    call.enqueue(new Callback<UserDetailResponse>() {
-                        @Override
-                        public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
-                            removeProgressDialog();
-                            if (response == null || response.body() == null) {
-                                Toast.makeText(getActivity(), getString(R.string.went_wrong), Toast.LENGTH_SHORT).show();
-                                return;
-                            }
+                        if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
+                            ToastUtils.showToast(getActivity(), getString(R.string.error_network));
+                            return;
 
-                            UserDetailResponse responseData = (UserDetailResponse) response.body();
-                            if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                                if (getActivity() != null) {
-                                    Toast.makeText(getActivity(), "Successfully updated!", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(getActivity(), PushTokenService.class);
-                                    getActivity().startService(intent);
+                        }
+                        _controller.getData(AppConstants.CONFIGURATION_REQUEST, versionApiModel);
+
+                        UpdateUserDetailsRequest updateUserDetail = new UpdateUserDetailsRequest();
+                        updateUserDetail.setAttributeName("cityId");
+                        updateUserDetail.setAttributeType("S");
+                        updateUserDetail.setAttributeValue("" + cityModel.getCityId());
+                        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+                        UserAttributeUpdateAPI userAttributeUpdateAPI = retrofit.create(UserAttributeUpdateAPI.class);
+                        Call<UserDetailResponse> call = userAttributeUpdateAPI.updateCity(updateUserDetail);
+                        call.enqueue(new Callback<UserDetailResponse>() {
+                            @Override
+                            public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
+                                removeProgressDialog();
+                                if (response == null || response.body() == null) {
+                                    Toast.makeText(getActivity(), getString(R.string.went_wrong), Toast.LENGTH_SHORT).show();
+                                    return;
                                 }
-                            } else {
-                                Toast.makeText(getActivity(), responseData.getReason(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
 
-                        @Override
-                        public void onFailure(Call<UserDetailResponse> call, Throwable t) {
-                            removeProgressDialog();
-                            Toast.makeText(getActivity(), getString(R.string.went_wrong), Toast.LENGTH_SHORT).show();
-                            Crashlytics.logException(t);
-                            Log.d("MC4kException", Log.getStackTraceString(t));
-                        }
-                    });
+                                UserDetailResponse responseData = (UserDetailResponse) response.body();
+                                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                                    if (getActivity() != null) {
+                                        Toast.makeText(getActivity(), "Successfully updated!", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(getActivity(), PushTokenService.class);
+                                        getActivity().startService(intent);
+                                    }
+                                } else {
+                                    Toast.makeText(getActivity(), responseData.getReason(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<UserDetailResponse> call, Throwable t) {
+                                removeProgressDialog();
+                                Toast.makeText(getActivity(), getString(R.string.went_wrong), Toast.LENGTH_SHORT).show();
+                                Crashlytics.logException(t);
+                                Log.d("MC4kException", Log.getStackTraceString(t));
+                            }
+                        });
+                    }
                 }
             }
         });

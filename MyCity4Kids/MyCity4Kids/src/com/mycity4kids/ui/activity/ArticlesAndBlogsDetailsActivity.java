@@ -1765,7 +1765,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         followUnfollowCategoriesRequest.setCategories(topicIdLList);
         if (action == 0) {
             Log.d("GTM FOLLOW", "displayName" + selectedTopic);
-            Utils.pushEventFollowUnfollowTopic(this, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Article Details", "follow", ((TextView) tagView.getChildAt(0)).getText() + ":" + selectedTopic);
+            Utils.pushEventFollowUnfollowTopic(this, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Article Details", "follow", ((TextView) tagView.getChildAt(0)).getText().toString() + ":" + selectedTopic);
             ((TextView) tagView.getChildAt(0)).setTag(selectedTopic);
             ((ImageView) tagView.getChildAt(2)).setTag(selectedTopic);
             ((ImageView) tagView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(ArticlesAndBlogsDetailsActivity.this, R.drawable.follow_plus));
@@ -1778,7 +1778,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             });
         } else {
             Log.d("GTM UNFOLLOW", "displayName" + selectedTopic);
-            Utils.pushEventFollowUnfollowTopic(this, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Article Details", "unfollow", ((TextView) tagView.getChildAt(0)) + ":" + selectedTopic);
+            Utils.pushEventFollowUnfollowTopic(this, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Article Details", "unfollow", ((TextView) tagView.getChildAt(0)).getText().toString() + ":" + selectedTopic);
             ((TextView) tagView.getChildAt(0)).setTag(selectedTopic);
             ((ImageView) tagView.getChildAt(2)).setTag(selectedTopic);
             ((ImageView) tagView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(ArticlesAndBlogsDetailsActivity.this, R.drawable.tick));

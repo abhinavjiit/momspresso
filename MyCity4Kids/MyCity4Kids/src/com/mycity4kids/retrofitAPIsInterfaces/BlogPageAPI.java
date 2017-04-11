@@ -24,7 +24,7 @@ public interface BlogPageAPI {
     @FormUrlEncoded
     @POST("/v1/users/blogPage/")
     Call<SetupBlogResponse> createBlogPage(
-                                          @Field("blogTitle") String title,
-                                          @Field("userBio") String userBio
-                                         );
+            @Field("blogTitle") String title,
+            @Field("userBio") String userBio
+    );
 }

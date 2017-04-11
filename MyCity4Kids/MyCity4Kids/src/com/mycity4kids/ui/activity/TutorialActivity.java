@@ -330,6 +330,7 @@ public class TutorialActivity extends BaseActivity implements View.OnClickListen
                         startService(intent);
                         Intent intent1 = new Intent(TutorialActivity.this, LoadingActivity.class);
                         startActivity(intent1);
+                        startSyncingUserInfo();
                     }
                 } else {
                     showToast(responseData.getReason());

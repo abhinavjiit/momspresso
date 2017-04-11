@@ -184,8 +184,13 @@ public class NewArticlesListingAdapter extends BaseAdapter {
             } else {
                 holder = (ViewHolder) view.getTag();
             }
+            ArrayList<Map<String, String>> topicsList;
+            if (articleDataModelsNew.get(position).getTags() != null) {
+                topicsList = articleDataModelsNew.get(position).getTags();
+            } else {
+                topicsList = new ArrayList<>();
+            }
 
-            ArrayList<Map<String, String>> topicsList = articleDataModelsNew.get(position).getTags();
             if (topicsList.size() > 3) {
                 holder.popularSubCatTextView1.setVisibility(View.VISIBLE);
                 holder.popularSubCatTextView1.setText((String) topicsList.get(0).values().toArray()[0]);

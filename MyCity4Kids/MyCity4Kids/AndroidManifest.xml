@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mycity4kids"
-    android:versionCode="58"
-    android:versionName="5.7.1">
+    android:versionCode="59"
+    android:versionName="5.7.2">
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -437,9 +437,8 @@
             android:label="@string/app_name"
             android:noHistory="true">  <!-- optional, removes the previewActivity from the activity stack. -->
             <intent-filter>
-                <data android:scheme="tagmanager.com.mycity4kids" />
+                <data android:scheme="tagmanager.c.com.mycity4kids" />
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>

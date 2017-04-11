@@ -11,5 +11,6 @@
         android:checked="true"
         android:padding="20dp"
         android:text="notification"
+        android:textAllCaps="true"
         android:theme="@style/SwitchStyle" />
 </LinearLayout>

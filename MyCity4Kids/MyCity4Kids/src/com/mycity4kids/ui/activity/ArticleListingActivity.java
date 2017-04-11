@@ -231,9 +231,9 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
             if (dataList.size() == 0) {
                 isLastPageReached = true;
                 if (null != articleDataModelsNew && !articleDataModelsNew.isEmpty()) {
-                    //No more next results for search from pagination
+                    //No more next results from pagination
                 } else {
-                    // No results for search
+                    // No results
                     articleDataModelsNew = dataList;
                     articlesListingAdapter.setNewListData(dataList);
                     articlesListingAdapter.notifyDataSetChanged();
@@ -244,9 +244,18 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
                 noBlogsTextView.setVisibility(View.GONE);
                 if ("".equals(chunks)) {
                     articleDataModelsNew.clear();
-                    articleDataModelsNew.addAll(dataList);
+//                    articleDataModelsNew.addAll(dataList);
+                    for(int j=0;j<dataList.size();j++){
+                        if(!StringUtils.isNullOrEmpty(dataList.get(j).getId())){
+                            articleDataModelsNew.add(dataList.get(j));
+                        }
+                    }
                 } else {
-                    articleDataModelsNew.addAll(dataList);
+                    for(int j=0;j<dataList.size();j++){
+                        if(!StringUtils.isNullOrEmpty(dataList.get(j).getId())){
+                            articleDataModelsNew.add(dataList.get(j));
+                        }
+                    }
                 }
                 if (chunks.equals(responseData.getData().get(0).getChunks())) {
                     isLastPageReached = true;

@@ -359,6 +359,36 @@ public enum GTMEventType {
         public String toString() {
             return "hindiArticleClickEvent";
         }
+    },
+    EMAIL_SUBSCRIBE_EVENT {
+        @Override
+        public String toString() {
+            return "emailSubscribeEvent";
+        }
+    },
+    EMAIL_UNSUBSCRIBE_EVENT {
+        @Override
+        public String toString() {
+            return "emailUnsubscribeEvent";
+        }
+    },
+    SUBSCRIPTION_EMAIL_CHANGED_EVENT {
+        @Override
+        public String toString() {
+            return "subscriptionEmailChangedEvent";
+        }
+    },
+    FEED_LANGUAGE_ADD_EVENT {
+        @Override
+        public String toString() {
+            return "feedLanguageAddEvent";
+        }
+    },
+    FEED_LANGUAGE_REMOVE_EVENT {
+        @Override
+        public String toString() {
+            return "feedLanguageRemoveEvent";
+        }
     }
 
 }
