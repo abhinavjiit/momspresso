@@ -317,7 +317,7 @@ public class SubscriptionSettingsFragment extends BaseFragment implements View.O
                     editSubscriptionEmailTextView.setText("EDIT");
                     subscriptionEmailEditText.setVisibility(View.INVISIBLE);
                     subscriptionEmailTextView.setVisibility(View.VISIBLE);
-                    subscriptionEmailTextView.setText(SharedPrefUtils.getUserDetailModel(getActivity()).getEmail());
+                    subscriptionEmailTextView.setText(SharedPrefUtils.getUserDetailModel(getActivity()).getSubscriptionEmail());
                     InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(subscriptionEmailEditText.getWindowToken(), 0);
                 }
