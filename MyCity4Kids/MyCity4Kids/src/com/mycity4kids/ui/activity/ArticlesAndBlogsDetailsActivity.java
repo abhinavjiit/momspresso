@@ -1358,7 +1358,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     articleViewCountTextView.setText(responseData.getData().get(0).getCount() + " Views");
                     articleCommentCountTextView.setText(responseData.getData().get(0).getCommentCount() + " Comments");
-                    articleRecommendationCountTextView.setText(responseData.getData().get(0).getLikeCount() + " Recommendations");
+                    articleRecommendationCountTextView.setText(responseData.getData().get(0).getLikeCount() + " Likes");
                     if ("0".equals(responseData.getData().get(0).getCommentCount())) {
                         articleCommentCountTextView.setVisibility(View.GONE);
                     }

@@ -78,6 +78,12 @@ public class SetupBlogPageActivity extends BaseActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                int wordsLength = countWords(s.toString());// words.length;
+                Log.d("onTextChanged", "" + wordsLength);
+                if (wordsLength > MAX_WORDS) {
+                    bloggerBio.setText(s.toString().replaceAll(" [^ ]+$", ""));
+                    bloggerBio.setSelection(bloggerBio.length());
+                }
             }
 
             @Override
@@ -85,7 +91,7 @@ public class SetupBlogPageActivity extends BaseActivity {
                 int wordsLength = countWords(s.toString());// words.length;
                 // count == 0 means a new word is going to start
                 if (count == 0 && wordsLength >= MAX_WORDS) {
-                    setCharLimit(bloggerBio, bloggerBio.getText().length());
+//                    setCharLimit(bloggerBio, bloggerBio.getText().length());
                 } else {
                     removeFilter(bloggerBio);
                 }

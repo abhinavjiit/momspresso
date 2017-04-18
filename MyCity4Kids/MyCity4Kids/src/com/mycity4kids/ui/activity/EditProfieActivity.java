@@ -3,6 +3,7 @@ package com.mycity4kids.ui.activity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
@@ -39,6 +40,9 @@ import retrofit2.Retrofit;
  * Created by anshul on 7/29/16.
  */
 public class EditProfieActivity extends BaseActivity {
+
+    private static final int MAX_WORDS = 200;
+    private InputFilter filter;
 
     private ProgressBar progress_bar;
     Toolbar mToolBar;
@@ -82,8 +86,67 @@ public class EditProfieActivity extends BaseActivity {
             return;
         }
 
+        userBioEditText.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                int wordsLength = countWords(s.toString());// words.length;
+                Log.d("onTextChanged", "" + wordsLength);
+                if (wordsLength > MAX_WORDS) {
+                    userBioEditText.setText(s.toString().trim().replaceAll(" [^ ]+$", ""));
+                    userBioEditText.setSelection(userBioEditText.length());
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                int wordsLength = countWords(s.toString());// words.length;
+                // count == 0 means a new word is going to start
+                Log.d("beforeTextChanged", "" + wordsLength);
+                if (count == 0 && wordsLength >= MAX_WORDS) {
+                    //setCharLimit(userBioEditText, userBioEditText.getText().length());
+                } else {
+                    removeFilter(userBioEditText);
+                }
+
+//                textLimit.setText(String.valueOf(wordsLength) + "/" + MAX_WORDS);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                int wordsLength = countWords(s.toString());// words.length;
+                // count == 0 means a new word is going to start
+                Log.d("afterTextChanged", "" + wordsLength);
+//                int wLength = countWords(s.toString());
+//                Log.d("afterTextChanged", "Length = " + wLength + " --- " + s.toString());
+//                if (wLength > MAX_WORDS) {
+//                    bloggerBio.setText(removeExtraWords(s.toString()));
+//                }
+
+            }
+        });
+
         Call<UserDetailResponse> call = bloggerDashboardAPI.getBloggerData(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
         call.enqueue(getUserDetailsResponseCallback);
+    }
+
+    private int countWords(String s) {
+        String trim = s.trim();
+        if (trim.isEmpty())
+            return 0;
+        return trim.split("\\s+").length; // separate string around spaces
+    }
+
+    private void setCharLimit(EditText et, int max) {
+        filter = new InputFilter.LengthFilter(max);
+        et.setFilters(new InputFilter[]{filter});
+    }
+
+    private void removeFilter(EditText et) {
+        if (filter != null) {
+            et.setFilters(new InputFilter[0]);
+            filter = null;
+        }
     }
 
     private TextWatcher OnTextChangeListener = new TextWatcher() {
@@ -236,6 +299,9 @@ public class EditProfieActivity extends BaseActivity {
             return false;
         } else if (StringUtils.isNullOrEmpty(blogTitleEditText.getText().toString().trim())) {
             showToast("Blog Title cannot be empty");
+            return false;
+        } else if (countWords(userBioEditText.getText().toString()) > MAX_WORDS) {
+            showToast("Maximum limit for bio is " + MAX_WORDS + " words");
             return false;
         }
         return true;

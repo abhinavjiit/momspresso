@@ -695,7 +695,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
         @Override
         public void onResponse(Call<ArticleRecommendationStatusResponse> call, retrofit2.Response<ArticleRecommendationStatusResponse> response) {
             if (response == null || null == response.body()) {
-                showToast("Unable to fetch recommendation status");
+                showToast("Unable to fetch like status");
                 return;
             }
             ArticleRecommendationStatusResponse responseData = (ArticleRecommendationStatusResponse) response.body();

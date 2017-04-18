@@ -87,7 +87,7 @@
                     android:layout_marginRight="10dp"
                     android:layout_toRightOf="@+id/articleCommentCountTextView"
                     android:fontFamily="sans-serif-thin"
-                    android:text="Article Recommendations"
+                    android:text="Article Likes"
                     android:textColor="@color/grey"
                     android:textSize="12sp" />
 

@@ -402,7 +402,7 @@
     <string name="videos.upload_option.camera">Take video</string>
     <string name="videos.upload_option.gallery">Choose from gallery</string>
 
-    <string name="ad.recommendation.tootip_text">Tap to Recommend the blog</string>
+    <string name="ad.recommendation.tootip_text">Tap to like the blog</string>
 
     <string-array name="improve_page_views_array">
         <item>Interlink your article to other blog posts</item>

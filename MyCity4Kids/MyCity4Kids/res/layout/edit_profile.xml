@@ -139,7 +139,6 @@
                 android:gravity="center_vertical"
                 android:hint="User Bio"
                 android:inputType="textCapSentences|textMultiLine"
-                android:maxLength="200"
                 android:maxLines="10"
                 android:minHeight="45dp"
                 android:paddingBottom="5dp"

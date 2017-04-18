@@ -13,7 +13,7 @@ import retrofit2.http.Query;
  */
 public interface RecommendationAPI {
 
-    @GET("v1/recommendations/{userId}")
+    @GET("v1/recommendations/v2/{userId}")
     Call<ArticleListingResponse> getRecommendedArticlesList(@Path("userId") String userId,
                                                             @Query("size") int limit,
                                                             @Query("chunks") String chunks,
