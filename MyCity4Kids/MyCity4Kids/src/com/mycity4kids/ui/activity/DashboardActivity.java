@@ -13,7 +13,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -40,12 +39,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.facebook.Settings;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.joanzapata.iconify.widget.IconButton;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
@@ -76,6 +75,7 @@ import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.models.response.DeepLinkingResposnse;
 import com.mycity4kids.models.response.DeepLinkingResult;
+import com.mycity4kids.models.response.LanguageConfigModel;
 import com.mycity4kids.models.version.RateVersion;
 import com.mycity4kids.newmodels.CompleteTaskRequestModel;
 import com.mycity4kids.newmodels.DeleteTaskModel;
@@ -117,7 +117,10 @@ import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
+import org.apmem.tools.layouts.FlowLayout;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -127,7 +130,10 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 
 import life.knowledge4.videotrimmer.utils.FileUtils;
@@ -180,6 +186,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private TextView ui_hot = null;
     private TextView itemMessagesBadgeTextView;
     private FrameLayout badgeLayout;
+    private FlowLayout languageContainer;
 
     // The onNewIntent() is overridden to get and resolve the data for deep linking
     @Override
@@ -193,21 +200,30 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 String blogSlug = notificationExtras.getString("blogSlug");
                 String titleSlug = notificationExtras.getString("titleSlug");
                 Intent intent1 = new Intent(DashboardActivity.this, ArticlesAndBlogsDetailsActivity.class);
+                intent1.putExtra("fromNotification", true);
                 intent1.putExtra(Constants.ARTICLE_ID, articleId);
                 intent1.putExtra(Constants.AUTHOR_ID, authorId);
                 intent1.putExtra(Constants.BLOG_SLUG, blogSlug);
                 intent1.putExtra(Constants.TITLE_SLUG, titleSlug);
+                intent1.putExtra(Constants.ARTICLE_OPENED_FROM, "Notification Popup");
+                intent.putExtra(Constants.FROM_SCREEN, "Notification");
+                intent1.putExtra(Constants.ARTICLE_INDEX, "-1");
                 startActivity(intent1);
             } else if (notificationExtras.getString("type").equalsIgnoreCase("video_details")) {
                 String articleId = notificationExtras.getString("id");
                 String authorId = notificationExtras.getString("userId");
                 Intent intent1 = new Intent(DashboardActivity.this, VlogsDetailActivity.class);
+                intent1.putExtra("fromNotification", true);
                 intent1.putExtra(Constants.VIDEO_ID, articleId);
                 intent1.putExtra(Constants.AUTHOR_ID, authorId);
+                intent1.putExtra(Constants.ARTICLE_OPENED_FROM, "Notification Popup");
+                intent.putExtra(Constants.FROM_SCREEN, "Notification");
+                intent1.putExtra(Constants.ARTICLE_INDEX, "-1");
                 startActivity(intent1);
             } else if (notificationExtras.getString("type").equalsIgnoreCase("event_details")) {
                 String eventId = notificationExtras.getString("id");
                 Intent resultIntent = new Intent(getApplicationContext(), BusinessDetailsActivity.class);
+                resultIntent.putExtra("fromNotification", true);
                 resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 resultIntent.putExtra(Constants.CATEGORY_ID, SharedPrefUtils.getEventIdForCity(getApplication()));
                 resultIntent.putExtra(Constants.BUSINESS_OR_EVENT_ID, eventId + "");
@@ -217,18 +233,24 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             } else if (notificationExtras.getString("type").equalsIgnoreCase("webView")) {
                 String url = notificationExtras.getString("url");
                 Intent intent1 = new Intent(this, LoadWebViewActivity.class);
+                intent1.putExtra("fromNotification", true);
                 intent1.putExtra(Constants.WEB_VIEW_URL, url);
                 startActivity(intent1);
             } else if (notificationExtras.getString("type").equalsIgnoreCase("profile")) {
                 String u_id = notificationExtras.getString("userId");
                 Intent intent1 = new Intent(this, BloggerDashboardActivity.class);
+                intent1.putExtra("fromNotification", true);
                 intent1.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, u_id);
+                intent1.putExtra(AppConstants.AUTHOR_NAME, "");
+                intent1.putExtra(Constants.FROM_SCREEN, "Notification");
                 startActivity(intent1);
             } else if (notificationExtras.getString("type").equalsIgnoreCase("upcoming_event_list")) {
+
                 fragmentToLoad = Constants.BUSINESS_EVENTLIST_FRAGMENT;
 //                intent.getExtras().putString(Constants.LOAD_FRAGMENT, Constants.BUSINESS_EVENTLIST_FRAGMENT);
             } else if (notificationExtras.getString("type").equalsIgnoreCase(AppConstants.APP_SETTINGS_DEEPLINK)) {
                 Intent intent1 = new Intent(this, SettingsActivity.class);
+                intent1.putExtra("fromNotification", true);
                 intent1.putExtra("load_fragment", Constants.SETTINGS_FRAGMENT);
                 startActivity(intent1);
             }
@@ -259,6 +281,22 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                             showToast("This version of android is no more supported.");
                         }
                     }
+                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_ADD_FUNNY_VIDEO_URL)) {
+                    final String bloggerId = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("/") + 1, tempDeepLinkURL.length());
+                    if (!StringUtils.isNullOrEmpty(bloggerId) && !bloggerId.equals(SharedPrefUtils.getUserDetailModel(this).getDynamoId())) {
+                        showAlertDialog("Message", "Logged in as " + SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name(), new OnButtonClicked() {
+                            @Override
+                            public void onButtonCLick(int buttonId) {
+//                                Utils.pushEvent(DashboardActivity.this, GTMEventType.ADD_BLOG_CLICKED_EVENT,
+//                                        SharedPrefUtils.getUserDetailModel(DashboardActivity.this).getDynamoId() + "", "Mobile Deep Link");
+                                launchAddVideoOptions();
+                            }
+                        });
+                    } else {
+//                        Utils.pushEvent(DashboardActivity.this, GTMEventType.ADD_BLOG_CLICKED_EVENT,
+//                                SharedPrefUtils.getUserDetailModel(DashboardActivity.this).getDynamoId() + "", "Mobile Deep Link");
+                        launchAddVideoOptions();
+                    }
                 } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_PROFILE_URL)) {
                     final String bloggerId = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("/") + 1, tempDeepLinkURL.length());
                     if (!StringUtils.isNullOrEmpty(bloggerId) && !bloggerId.equals(SharedPrefUtils.getUserDetailModel(this).getDynamoId())) {
@@ -273,6 +311,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     } else {
                         Intent profileIntent = new Intent(DashboardActivity.this, BloggerDashboardActivity.class);
                         profileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, bloggerId);
+                        profileIntent.putExtra(AppConstants.AUTHOR_NAME, "");
+                        profileIntent.putExtra(Constants.FROM_SCREEN, "Deep Linking");
                         startActivity(profileIntent);
                     }
                 } else {
@@ -333,7 +373,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         downArrow = (ImageView) findViewById(R.id.downarrow);
         profileImage = (ImageView) findViewById(R.id.imgProfile);
         allTaskList = (CustomListView) findViewById(R.id.show_tasklist);
-
+        languageContainer = (FlowLayout) findViewById(R.id.languageContainer);
         txvAllTaskPopup = (TextView) findViewById(R.id.all_tasklist);
 
         Utils.pushOpenScreenEvent(DashboardActivity.this, "DashBoard", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
@@ -461,9 +501,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         findViewById(R.id.rdBtnKids).setOnClickListener(this);
         findViewById(R.id.rdBtnParentingBlogs).setOnClickListener(this);
         findViewById(R.id.rdBtnMomspressoVideo).setOnClickListener(this);
-        findViewById(R.id.rdBtnHindi).setOnClickListener(this);
-        findViewById(R.id.rdBtnBangla).setOnClickListener(this);
-        findViewById(R.id.rdBtnMarathi).setOnClickListener(this);
+//        findViewById(R.id.rdBtnHindi).setOnClickListener(this);
+//        findViewById(R.id.rdBtnBangla).setOnClickListener(this);
+//        findViewById(R.id.rdBtnMarathi).setOnClickListener(this);
         findViewById(R.id.editor).setOnClickListener(this);
         findViewById(R.id.imgProfile).setOnClickListener(this);
         findViewById(R.id.txvUserName).setOnClickListener(this);
@@ -524,6 +564,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         }
 
 
+        populateLanguagesInMenu();
         // manage fragment change
 
         getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
@@ -804,6 +845,39 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
         });
 
+    }
+
+    private void populateLanguagesInMenu() {
+        try {
+            FileInputStream fileInputStream = openFileInput(AppConstants.LANGUAGES_JSON_FILE);
+            String fileContent = AppUtils.convertStreamToString(fileInputStream);
+//            ConfigResult res = new Gson().fromJson(fileContent, ConfigResult.class);
+            LinkedHashMap<String, LanguageConfigModel> retMap = new Gson().fromJson(
+                    fileContent, new TypeToken<LinkedHashMap<String, LanguageConfigModel>>() {
+                    }.getType()
+            );
+            Log.d("Map", "" + retMap.toString());
+            for (final Map.Entry<String, LanguageConfigModel> entry : retMap.entrySet()) {
+                final TextView view = (TextView) getLayoutInflater().inflate(R.layout.language_navigation_menu_item, null);
+                view.setText(entry.getValue().getDisplay_name());
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent languageIntent = new Intent(DashboardActivity.this, FilteredTopicsArticleListingActivity.class);
+                        languageIntent.putExtra("selectedTopics", entry.getValue().getId());
+                        languageIntent.putExtra("displayName", entry.getValue().getDisplay_name());
+                        languageIntent.putExtra("categoryName", entry.getValue().getName());
+                        languageIntent.putExtra("isLanguage", true);
+                        languageIntent.putExtra(Constants.FROM_SCREEN, "Navigation Menu");
+                        startActivity(languageIntent);
+                    }
+                });
+                languageContainer.addView(view);
+            }
+        } catch (FileNotFoundException ffe) {
+            Crashlytics.logException(ffe);
+            Log.d("MC4kException", Log.getStackTraceString(ffe));
+        }
     }
 
     private boolean showUploadVideoTutorial() {
@@ -1214,7 +1288,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 //                completeProfileDialogFragment.show(fm, "Complete blogger profile");
 
                 if (Build.VERSION.SDK_INT > 15) {
-                    Utils.pushEvent(DashboardActivity.this, GTMEventType.ADD_BLOG_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Left Menu Screen");
+                    Utils.pushEvent(DashboardActivity.this, GTMEventType.ADD_BLOG_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Header");
                     launchEditor();
                 } else {
                     showToast("This version of android is no more supported.");
@@ -1550,45 +1624,45 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 setTitle("Kids Resources");
                 replaceFragment(new FragmentHomeCategory(), null, true);
                 break;
-            case R.id.rdBtnHindi:
-                Utils.pushEvent(DashboardActivity.this, GTMEventType.RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Left Menu Screen");
-                Intent hindiIntent = new Intent(this, FilteredTopicsArticleListingActivity.class);
-                Topics hindiTopic = AppUtils.getSpecificLanguageTopic(this, AppConstants.HINDI_CATEGORYID);
-                if (hindiTopic == null) {
-                    hindiIntent.putExtra("selectedTopics", AppConstants.HINDI_CATEGORYID);
-                    hindiIntent.putExtra("displayName", getString(R.string.home_sections_title_hindi));
-                } else {
-                    hindiIntent.putExtra("selectedTopics", AppConstants.HINDI_CATEGORYID);
-                    hindiIntent.putExtra("displayName", hindiTopic.getDisplay_name());
-                }
-                startActivity(hindiIntent);
-                break;
-            case R.id.rdBtnBangla:
-                Utils.pushEvent(DashboardActivity.this, GTMEventType.RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Left Menu Screen");
-                Intent banglaIntent = new Intent(this, FilteredTopicsArticleListingActivity.class);
-                Topics banglaTopic = AppUtils.getSpecificLanguageTopic(this, AppConstants.BANGLA_CATEGORYID);
-                if (banglaTopic == null) {
-                    banglaIntent.putExtra("selectedTopics", AppConstants.BANGLA_CATEGORYID);
-                    banglaIntent.putExtra("displayName", getString(R.string.home_sections_title_bangla));
-                } else {
-                    banglaIntent.putExtra("selectedTopics", AppConstants.BANGLA_CATEGORYID);
-                    banglaIntent.putExtra("displayName", banglaTopic.getDisplay_name());
-                }
-                startActivity(banglaIntent);
-                break;
-            case R.id.rdBtnMarathi:
-                Utils.pushEvent(DashboardActivity.this, GTMEventType.RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Left Menu Screen");
-                Intent marathiIntent = new Intent(this, FilteredTopicsArticleListingActivity.class);
-                Topics marathiTopic = AppUtils.getSpecificLanguageTopic(this, AppConstants.MARATHI_CATEGORYID);
-                if (marathiTopic == null) {
-                    marathiIntent.putExtra("selectedTopics", AppConstants.MARATHI_CATEGORYID);
-                    marathiIntent.putExtra("displayName", getString(R.string.home_sections_title_marathi));
-                } else {
-                    marathiIntent.putExtra("selectedTopics", AppConstants.MARATHI_CATEGORYID);
-                    marathiIntent.putExtra("displayName", marathiTopic.getDisplay_name());
-                }
-                startActivity(marathiIntent);
-                break;
+//            case R.id.rdBtnHindi:
+//                Utils.pushEvent(DashboardActivity.this, GTMEventType.RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Left Menu Screen");
+//                Intent hindiIntent = new Intent(this, FilteredTopicsArticleListingActivity.class);
+//                Topics hindiTopic = AppUtils.getSpecificLanguageTopic(this, AppConstants.HINDI_CATEGORYID);
+//                if (hindiTopic == null) {
+//                    hindiIntent.putExtra("selectedTopics", AppConstants.HINDI_CATEGORYID);
+//                    hindiIntent.putExtra("displayName", getString(R.string.home_sections_title_hindi));
+//                } else {
+//                    hindiIntent.putExtra("selectedTopics", AppConstants.HINDI_CATEGORYID);
+//                    hindiIntent.putExtra("displayName", hindiTopic.getDisplay_name());
+//                }
+//                startActivity(hindiIntent);
+//                break;
+//            case R.id.rdBtnBangla:
+//                Utils.pushEvent(DashboardActivity.this, GTMEventType.RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Left Menu Screen");
+//                Intent banglaIntent = new Intent(this, FilteredTopicsArticleListingActivity.class);
+//                Topics banglaTopic = AppUtils.getSpecificLanguageTopic(this, AppConstants.BANGLA_CATEGORYID);
+//                if (banglaTopic == null) {
+//                    banglaIntent.putExtra("selectedTopics", AppConstants.BANGLA_CATEGORYID);
+//                    banglaIntent.putExtra("displayName", getString(R.string.home_sections_title_bangla));
+//                } else {
+//                    banglaIntent.putExtra("selectedTopics", AppConstants.BANGLA_CATEGORYID);
+//                    banglaIntent.putExtra("displayName", banglaTopic.getDisplay_name());
+//                }
+//                startActivity(banglaIntent);
+//                break;
+//            case R.id.rdBtnMarathi:
+//                Utils.pushEvent(DashboardActivity.this, GTMEventType.RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Left Menu Screen");
+//                Intent marathiIntent = new Intent(this, FilteredTopicsArticleListingActivity.class);
+//                Topics marathiTopic = AppUtils.getSpecificLanguageTopic(this, AppConstants.MARATHI_CATEGORYID);
+//                if (marathiTopic == null) {
+//                    marathiIntent.putExtra("selectedTopics", AppConstants.MARATHI_CATEGORYID);
+//                    marathiIntent.putExtra("displayName", getString(R.string.home_sections_title_marathi));
+//                } else {
+//                    marathiIntent.putExtra("selectedTopics", AppConstants.MARATHI_CATEGORYID);
+//                    marathiIntent.putExtra("displayName", marathiTopic.getDisplay_name());
+//                }
+//                startActivity(marathiIntent);
+//                break;
             case R.id.rdBtnParentingBlogs:
                 Intent intent = new Intent(getApplicationContext(), TopicsFilterActivity.class);
                 startActivity(intent);
@@ -1599,7 +1673,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.editor:
                 if (Build.VERSION.SDK_INT > 15) {
-                    Utils.pushEvent(DashboardActivity.this, GTMEventType.ADD_BLOG_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Left Menu Screen");
+                    Utils.pushEvent(DashboardActivity.this, GTMEventType.ADD_BLOG_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Navigation Menu");
                     launchEditor();
                 } else {
                     showToast("This version of android is no more supported.");
@@ -1616,6 +1690,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.myVideosTextView:
                 Intent funnyIntent = new Intent(DashboardActivity.this, MyFunnyVideosListingActivity.class);
+                funnyIntent.putExtra(Constants.FROM_SCREEN, "Navigation Menu");
                 startActivity(funnyIntent);
                 break;
             case R.id.txvUserName:
@@ -2371,6 +2446,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             Intent intent = new Intent(DashboardActivity.this, BloggerDashboardActivity.class);
             intent.putExtra(AppConstants.PUBLIC_PROFILE_FLAG, true);
             intent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, data.getAuthor_id());
+            intent.putExtra(AppConstants.AUTHOR_NAME, "" + data.getAuthor_name());
+            intent.putExtra(Constants.FROM_SCREEN, "Deep Linking");
             startActivity(intent);
         }
     }
@@ -2430,6 +2507,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             Intent _authorListIntent = new Intent(DashboardActivity.this, BloggerDashboardActivity.class);
             _authorListIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, data.getAuthor_id());
             _authorListIntent.putExtra(Constants.DEEPLINK_URL, deepLinkUrl);
+            _authorListIntent.putExtra(AppConstants.AUTHOR_NAME, "" + data.getAuthor_name());
+            _authorListIntent.putExtra(Constants.FROM_SCREEN, "Deep Linking");
             startActivity(_authorListIntent);
         }
     }
@@ -2439,6 +2518,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             Intent _bloggerListIntent = new Intent(DashboardActivity.this, BloggerDashboardActivity.class);
             _bloggerListIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, data.getAuthor_id());
             _bloggerListIntent.putExtra(Constants.DEEPLINK_URL, deepLinkUrl);
+            _bloggerListIntent.putExtra(AppConstants.AUTHOR_NAME, "" + data.getAuthor_name());
+            _bloggerListIntent.putExtra(Constants.FROM_SCREEN, "Deep Linking");
             startActivity(_bloggerListIntent);
         }
     }
@@ -2449,6 +2530,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             intent.putExtra(Constants.AUTHOR_ID, data.getAuthor_id());
             intent.putExtra(Constants.ARTICLE_ID, data.getArticle_id());
             intent.putExtra(Constants.DEEPLINK_URL, deepLinkUrl);
+            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Deep Linking");
+            intent.putExtra(Constants.ARTICLE_INDEX, "-1");
+            intent.putExtra(Constants.FROM_SCREEN, "Deep Linking");
             startActivity(intent);
         }
     }
@@ -2459,6 +2543,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 //            intent.putExtra(Constants.AUTHOR_ID, data.getAuthor_id());
             intent.putExtra(Constants.VIDEO_ID, data.getId());
             intent.putExtra(Constants.DEEPLINK_URL, deepLinkUrl);
+            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Deep Linking");
+            intent.putExtra(Constants.ARTICLE_INDEX, "-1");
+            intent.putExtra(Constants.FROM_SCREEN, "Deep Linking");
             startActivity(intent);
         }
     }

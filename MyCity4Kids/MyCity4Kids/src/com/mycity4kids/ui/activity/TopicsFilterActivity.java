@@ -197,6 +197,7 @@ public class TopicsFilterActivity extends BaseActivity {
                                 case "bestInyourCity":
                                     Utils.pushEventTopicChoose(TopicsFilterActivity.this, GTMEventType.TOPIC_FILTER_CHOSEN_EVENT, SharedPrefUtils.getUserDetailModel(TopicsFilterActivity.this).getDynamoId() + "", "Filter Topics", "bestInyourCity");
                                     Intent cityIntent = new Intent(TopicsFilterActivity.this, CityBestArticleListingActivity.class);
+                                    cityIntent.putExtra(Constants.FROM_SCREEN, "Topic Articles List");
                                     startActivity(cityIntent);
                                     break;
                                 case "contributors":
@@ -210,6 +211,7 @@ public class TopicsFilterActivity extends BaseActivity {
                                     Intent intent = new Intent(TopicsFilterActivity.this, FilteredTopicsArticleListingActivity.class);
                                     intent.putExtra("selectedTopics", topicList.get(groupPosition).getId());
                                     intent.putExtra("displayName", topicList.get(groupPosition).getDisplay_name());
+                                    intent.putExtra(Constants.FROM_SCREEN, "Topic Articles List");
                                     startActivity(intent);
                                     break;
                             }

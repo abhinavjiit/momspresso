@@ -447,6 +447,7 @@ public class AppConstants {
 
     public static final String DEEPLINK_EDITOR_URL = "mc4k://www.mycity4kids.com/editor";
     public static final String DEEPLINK_PROFILE_URL = "mc4k://www.mycity4kids.com/profile";
+    public static final String DEEPLINK_ADD_FUNNY_VIDEO_URL = "mc4k://www.mycity4kids.com/addfunnyvideo";
 
     public static final String IGNORE_TAG = "ignore";
     public static final String EDITOR_PICKS_CATEGORY_ID = "category-66b6883fd0434683b053f18aa4d52b59";
@@ -471,6 +472,7 @@ public class AppConstants {
     public static final String NOTIFICATION_TYPE_WEBVIEW = "webView";
     public static final String NOTIFICATION_TYPE_UPCOMING_EVENTS = "upcoming_event_list";
     public static final String NOTIFICATION_TYPE_PROFILE = "profile";
+    public static final String NOTIFICATION_TYPE_APP_SETTINGS = "app_settings";
     public static final String NOTIFICATION_TYPE_ARTICLE_DETAILS = "article_details";
     public static final String NOTIFICATION_TYPE_VIDEO_DETAILS = "video_details";
 
@@ -500,4 +502,8 @@ public class AppConstants {
     public static final String TOPIC_LEVEL_MAIN_CATEGORY = "1";
     public static final String TOPIC_LEVEL_SUB_CATEGORY = "2";
     public static final String TOPIC_LEVEL_SUB_SUB_CATEGORY = "3";
+    public static final String LANGUAGES_JSON_FILE = "languagesJsonFile.json";
+
+    public static final String LANG_KEY_HINDI = "1";
+    public static final String AUTHOR_NAME = "authorName";
 }

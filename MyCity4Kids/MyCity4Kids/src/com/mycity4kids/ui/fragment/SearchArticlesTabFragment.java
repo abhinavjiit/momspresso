@@ -25,8 +25,10 @@ import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.SearchArticleResult;
 import com.mycity4kids.models.response.SearchResponse;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.SearchArticlesAuthorsAPI;
 import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
 import com.mycity4kids.ui.activity.SearchArticlesAndAuthorsActivity;
@@ -63,6 +65,9 @@ public class SearchArticlesTabFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View view = null;
         view = getActivity().getLayoutInflater().inflate(R.layout.new_article_layout, container, false);
+
+        Utils.pushOpenScreenEvent(getActivity(), "Search Articles Fragment Listing", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
+
         listView = (ListView) view.findViewById(R.id.scroll);
         listView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.white_color));
         ColorDrawable sage = new ColorDrawable(ContextCompat.getColor(getActivity(), R.color.gray2));
@@ -120,6 +125,9 @@ public class SearchArticlesTabFragment extends BaseFragment {
                 intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
                 intent.putExtra(Constants.BLOG_SLUG, parentingListData.getBlogSlug());
                 intent.putExtra(Constants.TITLE_SLUG, parentingListData.getTitleSlug());
+                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Search");
+                intent.putExtra(Constants.FROM_SCREEN, "Search Articles Fragment Listing");
+                intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
                 startActivity(intent);
 
             }

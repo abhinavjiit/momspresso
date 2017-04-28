@@ -13,7 +13,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -24,7 +23,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.webkit.WebChromeClient;
@@ -42,7 +40,6 @@ import com.android.volley.Request;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.UiLifecycleHelper;
 import com.getbase.floatingactionbutton.FloatingActionButton;
-import com.github.library.bubbleview.BubbleTextVew;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -74,7 +71,6 @@ import com.mycity4kids.models.request.AddCommentRequest;
 import com.mycity4kids.models.request.ArticleDetailRequest;
 import com.mycity4kids.models.request.DeleteBookmarkRequest;
 import com.mycity4kids.models.request.FollowUnfollowUserRequest;
-import com.mycity4kids.models.request.NotificationReadRequest;
 import com.mycity4kids.models.request.RecommendUnrecommendArticleRequest;
 import com.mycity4kids.models.request.UpdateViewCountRequest;
 import com.mycity4kids.models.response.AddBookmarkResponse;
@@ -88,7 +84,6 @@ import com.mycity4kids.models.response.ArticleRecommendationStatusResponse;
 import com.mycity4kids.models.response.FBCommentResponse;
 import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
-import com.mycity4kids.models.response.NotificationCenterListResponse;
 import com.mycity4kids.models.response.ProfilePic;
 import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
 import com.mycity4kids.models.response.ViewCountResponse;
@@ -100,7 +95,6 @@ import com.mycity4kids.observablescrollview.ScrollState;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
-import com.mycity4kids.retrofitAPIsInterfaces.NotificationsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.CircleTransformation;
 import com.mycity4kids.ui.fragment.CommentRepliesDialogFragment;
@@ -108,7 +102,6 @@ import com.mycity4kids.ui.fragment.EditCommentsRepliesFragment;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.utils.TrackArticleReadTime;
 import com.mycity4kids.volley.HttpVolleyRequest;
-import com.mycity4kids.widget.MyBounceInterpolator;
 import com.mycity4kids.widget.RelatedArticlesView;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -218,11 +211,13 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 //    private boolean hasRecommendSuggestionAppeared = true;
     private WebView videoWebView;
     private String isMomspresso;
+    private String userDynamoId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Utils.pushOpenScreenEvent(ArticlesAndBlogsDetailsActivity.this, "Article Details", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+        userDynamoId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
+        Utils.pushOpenScreenEvent(ArticlesAndBlogsDetailsActivity.this, "Article Details", userDynamoId + "");
 
         deepLinkURL = getIntent().getStringExtra(Constants.DEEPLINK_URL);
         TAG = ArticlesAndBlogsDetailsActivity.this.getClass().getSimpleName();
@@ -320,6 +315,15 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 authorId = bundle.getString(Constants.AUTHOR_ID, "");
                 blogSlug = bundle.getString(Constants.BLOG_SLUG);
                 titleSlug = bundle.getString(Constants.TITLE_SLUG);
+
+                if (bundle.getBoolean("fromNotification")) {
+                    Utils.pushEventNotificationClick(this, GTMEventType.NOTIFICATION_CLICK_EVENT, userDynamoId, "Notification Popup", "article_details");
+                } else {
+                    String from = bundle.getString(Constants.ARTICLE_OPENED_FROM);
+                    String index = bundle.getString(Constants.ARTICLE_INDEX);
+                    String screen = bundle.getString(Constants.FROM_SCREEN);
+                    Utils.pushOpenArticleEvent(this, GTMEventType.ARTICLE_DETAILS_CLICK_EVENT, screen, userDynamoId + "", articleId, index, from);
+                }
 //                notificationCenterId = bundle.getString(Constants.NOTIFICATION_CENTER_ID, "");
                 if (!ConnectivityUtils.isNetworkEnabled(this)) {
                     showToast(getString(R.string.error_network));
@@ -368,16 +372,6 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         mWebView.onPause();
         videoWebView.onPause();
     }
-
-//    private void hitNotificationReadAPI() {
-//        NotificationReadRequest notificationReadRequest = new NotificationReadRequest();
-//        notificationReadRequest.setNotifId(notificationCenterId);
-//
-//        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-//        NotificationsAPI notificationsAPI = retrofit.create(NotificationsAPI.class);
-//        Call<NotificationCenterListResponse> call = notificationsAPI.markNotificationAsRead(notificationReadRequest);
-//        call.enqueue(markNotificationReadResponseCallback);
-//    }
 
     private void hitArticleDetailsS3API() {
         Call<ArticleDetailResult> call = articleDetailsAPI.getArticleDetailsFromS3(articleId);
@@ -429,6 +423,15 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     }
 
     private void recommendUnrecommentArticleAPI(String status) {
+
+        if ("1".equals(status)) {
+            Utils.pushArticleLikeUnlikeEvent(ArticlesAndBlogsDetailsActivity.this, GTMEventType.LIKE_ARTICLE_CLICK_EVENT, "Article Details", userDynamoId,
+                    articleId, author + "-" + authorId);
+        } else {
+            Utils.pushArticleLikeUnlikeEvent(ArticlesAndBlogsDetailsActivity.this, GTMEventType.UNLIKE_ARTICLE_CLICK_EVENT, "Article Details", userDynamoId,
+                    articleId, author + "-" + authorId);
+        }
+
         RecommendUnrecommendArticleRequest recommendUnrecommendArticleRequest = new RecommendUnrecommendArticleRequest();
         recommendUnrecommendArticleRequest.setArticleId(articleId);
         recommendUnrecommendArticleRequest.setStatus(status);
@@ -562,7 +565,9 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 } else {
                     shareMessage = "mycity4kids\n\nCheck out this interesting blog post " + "\"" + detailData.getTitle() + "\" by " + author + ".\nRead Here: " + shareUrl;
                 }
-                Utils.pushEventShareURL(ArticlesAndBlogsDetailsActivity.this, GTMEventType.SHARE_BLOG_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Blog Detail", shareUrl);
+//                Utils.pushEventShareURL(ArticlesAndBlogsDetailsActivity.this, GTMEventType.SHARE_BLOG_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Blog Detail", shareUrl);
+                Utils.pushArticleShareEvent(ArticlesAndBlogsDetailsActivity.this, GTMEventType.SHARE_ARTICLE_CLICK_EVENT,
+                        SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Article Details", shareUrl, author + "-" + authorId, "default");
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
                 startActivity(Intent.createChooser(shareIntent, "mycity4kids"));
 
@@ -636,7 +641,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     author_type.setText(AppConstants.AUTHOR_TYPE_BLOGGER.toUpperCase());
                     author_type.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_blogger));
                     if (StringUtils.isNullOrEmpty(deepLinkURL)) {
-                        shareUrl = AppConstants.ARTICLE_SHARE_URL + blogSlug + "/article/" + titleSlug;
+                        shareUrl = AppConstants.ARTICLE_SHARE_URL + detailData.getBlogTitleSlug().trim() + "/article/" + detailData.getTitleSlug();
                     } else {
                         shareUrl = deepLinkURL;
                     }
@@ -644,7 +649,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     author_type.setText(AppConstants.AUTHOR_TYPE_EXPERT.toUpperCase());
                     author_type.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_expert));
                     if (StringUtils.isNullOrEmpty(deepLinkURL)) {
-                        shareUrl = AppConstants.ARTICLE_SHARE_URL + "article/" + titleSlug;
+                        shareUrl = AppConstants.ARTICLE_SHARE_URL + "article/" + detailData.getTitleSlug();
                     } else {
                         shareUrl = deepLinkURL;
                     }
@@ -652,7 +657,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     author_type.setText(AppConstants.AUTHOR_TYPE_EDITOR.toUpperCase());
                     author_type.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_editor));
                     if (StringUtils.isNullOrEmpty(deepLinkURL)) {
-                        shareUrl = AppConstants.ARTICLE_SHARE_URL + "article/" + titleSlug;
+                        shareUrl = AppConstants.ARTICLE_SHARE_URL + "article/" + detailData.getTitleSlug();
                     } else {
                         shareUrl = deepLinkURL;
                     }
@@ -660,7 +665,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     author_type.setText(AppConstants.AUTHOR_TYPE_EDITORIAL.toUpperCase());
                     author_type.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_editorial));
                     if (StringUtils.isNullOrEmpty(deepLinkURL)) {
-                        shareUrl = AppConstants.ARTICLE_SHARE_URL + "article/" + titleSlug;
+                        shareUrl = AppConstants.ARTICLE_SHARE_URL + "article/" + detailData.getTitleSlug();
                     } else {
                         shareUrl = deepLinkURL;
                     }
@@ -668,7 +673,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     author_type.setText(AppConstants.AUTHOR_TYPE_FEATURED.toUpperCase());
                     author_type.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_featured));
                     if (StringUtils.isNullOrEmpty(deepLinkURL)) {
-                        shareUrl = AppConstants.ARTICLE_SHARE_URL + "article/" + titleSlug;
+                        shareUrl = AppConstants.ARTICLE_SHARE_URL + "article/" + detailData.getTitleSlug();
                     } else {
                         shareUrl = deepLinkURL;
                     }
@@ -678,7 +683,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 author_type.setText("Blogger".toUpperCase());
                 author_type.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_blogger));
                 if (StringUtils.isNullOrEmpty(deepLinkURL)) {
-                    shareUrl = AppConstants.ARTICLE_SHARE_URL + blogSlug + "/article/" + titleSlug;
+                    shareUrl = AppConstants.ARTICLE_SHARE_URL + detailData.getBlogTitleSlug().trim() + "/article/" + detailData.getTitleSlug();
                 } else {
                     shareUrl = deepLinkURL;
                 }
@@ -844,7 +849,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
     private void getFollowedTopicsList() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         TopicsCategoryAPI topicsCategoryAPI = retrofit.create(TopicsCategoryAPI.class);
-        Call<FollowUnfollowCategoriesResponse> call = topicsCategoryAPI.getFollowedCategories(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+        Call<FollowUnfollowCategoriesResponse> call = topicsCategoryAPI.getFollowedCategories(userDynamoId);
         call.enqueue(getFollowedTopicsResponseCallback);
     }
 
@@ -873,7 +878,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
             view.setTag(commentList);
 
-            if (!"fb".equals(commentList.getComment_type()) && SharedPrefUtils.getUserDetailModel(this).getDynamoId().equals(commentList.getUserId())) {
+            if (!"fb".equals(commentList.getComment_type()) && userDynamoId.equals(commentList.getUserId())) {
                 holder.editTxt.setVisibility(View.VISIBLE);
             } else {
                 holder.editTxt.setVisibility(View.INVISIBLE);
@@ -1022,6 +1027,8 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                         trackArticleReadTime.resetTimer();
                         Intent profileIntent = new Intent(this, BloggerDashboardActivity.class);
                         profileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, commentData.getUserId());
+                        profileIntent.putExtra(AppConstants.AUTHOR_NAME, commentData.getName());
+                        profileIntent.putExtra(Constants.FROM_SCREEN, "Article Detail Comments");
                         startActivity(profileIntent);
                     }
                     break;
@@ -1032,6 +1039,8 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                         trackArticleReadTime.resetTimer();
                         Intent userProfileIntent = new Intent(this, BloggerDashboardActivity.class);
                         userProfileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, cData.getUserId());
+                        userProfileIntent.putExtra(AppConstants.AUTHOR_NAME, cData.getName());
+                        userProfileIntent.putExtra(Constants.FROM_SCREEN, "Article Detail Comments");
                         startActivity(userProfileIntent);
                     }
                     break;
@@ -1047,36 +1056,38 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     }
                     Intent intentnn = new Intent(this, BloggerDashboardActivity.class);
                     intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, detailData.getUserId());
+                    intentnn.putExtra(AppConstants.AUTHOR_NAME, detailData.getUserName());
+                    intentnn.putExtra(Constants.FROM_SCREEN, "Article Details");
                     startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
                     break;
                 case R.id.relatedArticles1: {
-                    Utils.pushEventRelatedArticle(ArticlesAndBlogsDetailsActivity.this, GTMEventType.RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Blog Detail", ((ArticleListingResult) v.getTag()).getTitleSlug(), 1);
-                    launchRelatedTrendingArticle(v);
+                    Utils.pushEventRelatedArticle(ArticlesAndBlogsDetailsActivity.this, GTMEventType.RELATED_ARTICLE_CLICKED_EVENT, userDynamoId + "", "Blog Detail", ((ArticleListingResult) v.getTag()).getTitleSlug(), 1);
+                    launchRelatedTrendingArticle(v, "articleDetailsRelatedList", 1);
                     break;
                 }
                 case R.id.relatedArticles2: {
-                    Utils.pushEventRelatedArticle(ArticlesAndBlogsDetailsActivity.this, GTMEventType.RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Blog Detail", ((ArticleListingResult) v.getTag()).getTitleSlug(), 2);
-                    launchRelatedTrendingArticle(v);
+                    Utils.pushEventRelatedArticle(ArticlesAndBlogsDetailsActivity.this, GTMEventType.RELATED_ARTICLE_CLICKED_EVENT, userDynamoId + "", "Blog Detail", ((ArticleListingResult) v.getTag()).getTitleSlug(), 2);
+                    launchRelatedTrendingArticle(v, "articleDetailsRelatedList", 2);
                     break;
                 }
                 case R.id.relatedArticles3: {
-                    Utils.pushEventRelatedArticle(ArticlesAndBlogsDetailsActivity.this, GTMEventType.RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Blog Detail", ((ArticleListingResult) v.getTag()).getTitleSlug(), 3);
-                    launchRelatedTrendingArticle(v);
+                    Utils.pushEventRelatedArticle(ArticlesAndBlogsDetailsActivity.this, GTMEventType.RELATED_ARTICLE_CLICKED_EVENT, userDynamoId + "", "Blog Detail", ((ArticleListingResult) v.getTag()).getTitleSlug(), 3);
+                    launchRelatedTrendingArticle(v, "articleDetailsRelatedList", 3);
                     break;
                 }
                 case R.id.trendingRelatedArticles1: {
-                    Utils.pushEventRelatedArticle(ArticlesAndBlogsDetailsActivity.this, GTMEventType.TRENDING_RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Blog Detail", ((ArticleListingResult) v.getTag()).getTitleSlug(), 1);
-                    launchRelatedTrendingArticle(v);
+                    Utils.pushEventRelatedArticle(ArticlesAndBlogsDetailsActivity.this, GTMEventType.TRENDING_RELATED_ARTICLE_CLICKED_EVENT, userDynamoId + "", "Blog Detail", ((ArticleListingResult) v.getTag()).getTitleSlug(), 1);
+                    launchRelatedTrendingArticle(v, "articleDetailsTrendingList", 1);
                     break;
                 }
                 case R.id.trendingRelatedArticles2: {
-                    Utils.pushEventRelatedArticle(ArticlesAndBlogsDetailsActivity.this, GTMEventType.TRENDING_RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Blog Detail", ((ArticleListingResult) v.getTag()).getTitleSlug(), 2);
-                    launchRelatedTrendingArticle(v);
+                    Utils.pushEventRelatedArticle(ArticlesAndBlogsDetailsActivity.this, GTMEventType.TRENDING_RELATED_ARTICLE_CLICKED_EVENT, userDynamoId + "", "Blog Detail", ((ArticleListingResult) v.getTag()).getTitleSlug(), 2);
+                    launchRelatedTrendingArticle(v, "articleDetailsTrendingList", 2);
                     break;
                 }
                 case R.id.trendingRelatedArticles3: {
-                    Utils.pushEventRelatedArticle(ArticlesAndBlogsDetailsActivity.this, GTMEventType.TRENDING_RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Blog Detail", ((ArticleListingResult) v.getTag()).getTitleSlug(), 3);
-                    launchRelatedTrendingArticle(v);
+                    Utils.pushEventRelatedArticle(ArticlesAndBlogsDetailsActivity.this, GTMEventType.TRENDING_RELATED_ARTICLE_CLICKED_EVENT, userDynamoId + "", "Blog Detail", ((ArticleListingResult) v.getTag()).getTitleSlug(), 3);
+                    launchRelatedTrendingArticle(v, "articleDetailsTrendingList", 3);
                     break;
                 }
                 case R.layout.related_tags_view: {
@@ -1108,13 +1119,16 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         }
     }
 
-    private void launchRelatedTrendingArticle(View v) {
+    private void launchRelatedTrendingArticle(View v, String listingType, int index) {
         trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
         trackArticleReadTime.resetTimer();
         Intent intent = new Intent(this, ArticlesAndBlogsDetailsActivity.class);
         ArticleListingResult parentingListData = (ArticleListingResult) v.getTag();
         intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
         intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
+        intent.putExtra(Constants.FROM_SCREEN, "Article Details");
+        intent.putExtra(Constants.ARTICLE_OPENED_FROM, listingType);
+        intent.putExtra(Constants.ARTICLE_INDEX, "" + index);
         startActivity(intent);
     }
 
@@ -1247,11 +1261,15 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         if (isFollowing) {
             isFollowing = false;
             followClick.setText("FOLLOW");
+            Utils.pushAuthorFollowUnfollowEvent(ArticlesAndBlogsDetailsActivity.this, GTMEventType.UNFOLLOW_AUTHOR_CLICK_EVENT, "Article Details", userDynamoId,
+                    articleId, author + "-" + authorId);
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.unfollowUser(request);
             followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback);
         } else {
             isFollowing = true;
             followClick.setText("FOLLOWING");
+            Utils.pushAuthorFollowUnfollowEvent(ArticlesAndBlogsDetailsActivity.this, GTMEventType.FOLLOW_AUTHOR_CLICK_EVENT, "Article Details", userDynamoId,
+                    articleId, author + "-" + authorId);
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.followUser(request);
             followUnfollowUserResponseCall.enqueue(followUserResponseCallback);
         }
@@ -1265,6 +1283,8 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             articleDetailRequest.setArticleId(articleId);
             bookmarkStatus = 1;
             menu.getItem(0).setIcon(R.drawable.ic_favorite_border_white_48dp_fill);
+            Utils.pushArticleBookmarkUnbookmarkEvent(ArticlesAndBlogsDetailsActivity.this, GTMEventType.BOOKMARK_ARTICLE_CLICK_EVENT, "Article Details", userDynamoId,
+                    articleId, author + "-" + authorId);
             Call<AddBookmarkResponse> call = articleDetailsAPI.addBookmark(articleDetailRequest);
             call.enqueue(addBookmarkResponseCallback);
         } else {
@@ -1272,6 +1292,8 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             deleteBookmarkRequest.setId(bookmarkId);
             bookmarkStatus = 0;
             menu.getItem(0).setIcon(R.drawable.ic_favorite_border_white_48dp);
+            Utils.pushArticleBookmarkUnbookmarkEvent(ArticlesAndBlogsDetailsActivity.this, GTMEventType.UNBOOKMARK_ARTICLE_CLICK_EVENT, "Article Details", userDynamoId,
+                    articleId, author + "-" + authorId);
             Call<AddBookmarkResponse> call = articleDetailsAPI.deleteBookmark(deleteBookmarkRequest);
             call.enqueue(addBookmarkResponseCallback);
         }
@@ -1765,7 +1787,8 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
         followUnfollowCategoriesRequest.setCategories(topicIdLList);
         if (action == 0) {
             Log.d("GTM FOLLOW", "displayName" + selectedTopic);
-            Utils.pushEventFollowUnfollowTopic(this, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Article Details", "follow", ((TextView) tagView.getChildAt(0)).getText().toString() + ":" + selectedTopic);
+//            Utils.pushEventFollowUnfollowTopic(this, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, userDynamoId, "Article Details", "follow", ((TextView) tagView.getChildAt(0)).getText().toString() + ":" + selectedTopic);
+            Utils.pushTopicFollowUnfollowEvent(this, GTMEventType.FOLLOW_TOPIC_CLICK_EVENT, userDynamoId, "Article Details", ((TextView) tagView.getChildAt(0)).getText().toString() + "~" + selectedTopic);
             ((TextView) tagView.getChildAt(0)).setTag(selectedTopic);
             ((ImageView) tagView.getChildAt(2)).setTag(selectedTopic);
             ((ImageView) tagView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(ArticlesAndBlogsDetailsActivity.this, R.drawable.follow_plus));
@@ -1778,7 +1801,8 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             });
         } else {
             Log.d("GTM UNFOLLOW", "displayName" + selectedTopic);
-            Utils.pushEventFollowUnfollowTopic(this, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Article Details", "unfollow", ((TextView) tagView.getChildAt(0)).getText().toString() + ":" + selectedTopic);
+//            Utils.pushEventFollowUnfollowTopic(this, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, userDynamoId, "Article Details", "unfollow", ((TextView) tagView.getChildAt(0)).getText().toString() + ":" + selectedTopic);
+            Utils.pushTopicFollowUnfollowEvent(this, GTMEventType.UNFOLLOW_TOPIC_CLICK_EVENT, userDynamoId, "Article Details", ((TextView) tagView.getChildAt(0)).getText().toString() + "~" + selectedTopic);
             ((TextView) tagView.getChildAt(0)).setTag(selectedTopic);
             ((ImageView) tagView.getChildAt(2)).setTag(selectedTopic);
             ((ImageView) tagView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(ArticlesAndBlogsDetailsActivity.this, R.drawable.tick));
@@ -1790,7 +1814,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 }
             });
         }
-        Call<FollowUnfollowCategoriesResponse> call = topicsCategoryAPI.followCategories(SharedPrefUtils.getUserDetailModel(this).getDynamoId(), followUnfollowCategoriesRequest);
+        Call<FollowUnfollowCategoriesResponse> call = topicsCategoryAPI.followCategories(userDynamoId, followUnfollowCategoriesRequest);
         call.enqueue(followUnfollowCategoriesResponseCallback);
     }
 
@@ -1950,7 +1974,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     bookmarkStatus = 1;
                 }
                 bookmarkId = responseData.getData().getResult().getBookmarkId();
-                if (SharedPrefUtils.getUserDetailModel(ArticlesAndBlogsDetailsActivity.this).getDynamoId().equals(authorId)) {
+                if (userDynamoId.equals(authorId)) {
                     followClick.setVisibility(View.INVISIBLE);
                 } else {
                     if ("0".equals(responseData.getData().getResult().getIsFollowed())) {
@@ -1992,7 +2016,7 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                 CommentsData cd = new CommentsData();
                 cd.setId(responseData.getData().getId());
                 cd.setBody(commentText.getText().toString().trim());
-                cd.setUserId(SharedPrefUtils.getUserDetailModel(ArticlesAndBlogsDetailsActivity.this).getDynamoId());
+                cd.setUserId(userDynamoId);
                 cd.setName(SharedPrefUtils.getUserDetailModel(ArticlesAndBlogsDetailsActivity.this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(ArticlesAndBlogsDetailsActivity.this).getLast_name());
                 cd.setReplies(new ArrayList<CommentsData>());
 

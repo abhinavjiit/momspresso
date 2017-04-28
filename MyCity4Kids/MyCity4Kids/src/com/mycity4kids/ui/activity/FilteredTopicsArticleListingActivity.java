@@ -80,7 +80,7 @@ import retrofit2.Retrofit;
  */
 
 /*
-* Used for Listing of Topics Article Listing, Hindi, Bangla, Marathi Language Article Listing, Momspresso Article Listing
+* Used for Listing of Topics Article Listing, Language Specific Article Listing, Momspresso Article Listing
 *
 * */
 
@@ -125,6 +125,9 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
     //    private Animation bottomUp, bottomDown;
     private String filteredTopics;
     private String topicLevel;
+    private boolean isLanguageListing;
+    private String categoryName;
+    private String fromScreen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -185,6 +188,9 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
 
         selectedTopics = getIntent().getStringExtra("selectedTopics");
         displayName = getIntent().getStringExtra("displayName");
+        categoryName = getIntent().getStringExtra("categoryName");
+        isLanguageListing = getIntent().getBooleanExtra("isLanguage", false);
+        fromScreen = getIntent().getStringExtra(Constants.FROM_SCREEN);
 
         try {
             allTopicsList = BaseApplication.getTopicList();
@@ -201,9 +207,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
 
             if (AppConstants.TOPIC_LEVEL_SUB_SUB_CATEGORY.equals(topicLevel) ||
                     AppConstants.MOMSPRESSO_CATEGORYID.equals(selectedTopics) ||
-                    AppConstants.HINDI_CATEGORYID.equals(selectedTopics) ||
-                    AppConstants.BANGLA_CATEGORYID.equals(selectedTopics) ||
-                    AppConstants.MARATHI_CATEGORYID.equals(selectedTopics)) {
+                    isLanguageListing) {
                 sortBgLayout.setVisibility(View.GONE);
                 bottomOptionMenu.setVisibility(View.GONE);
             } else {
@@ -225,13 +229,15 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
 
         if (AppConstants.MOMSPRESSO_CATEGORYID.equals(selectedTopics)) {
             listingType = Constants.KEY_MOMSPRESSO;
+        } else if (isLanguageListing) {
+            listingType = categoryName;
+        } else {
+            listingType = "Topic Articles List";
         }
 
         if (null != displayName) {
             if (AppConstants.MOMSPRESSO_CATEGORYID.equals(selectedTopics) ||
-                    AppConstants.HINDI_CATEGORYID.equals(selectedTopics) ||
-                    AppConstants.BANGLA_CATEGORYID.equals(selectedTopics) ||
-                    AppConstants.MARATHI_CATEGORYID.equals(selectedTopics)) {
+                    isLanguageListing) {
                 getSupportActionBar().setTitle(displayName.toUpperCase());
             } else {
                 getSupportActionBar().setTitle("");
@@ -320,6 +326,12 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                     intent.putExtra(Constants.ARTICLE_COVER_IMAGE, parentingListData.getImageUrl());
                     intent.putExtra(Constants.BLOG_SLUG, parentingListData.getBlogPageSlug());
                     intent.putExtra(Constants.TITLE_SLUG, parentingListData.getTitleSlug());
+                    if (StringUtils.isNullOrEmpty(categoryName)) {
+                        categoryName = displayName;
+                    }
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, categoryName + "~" + selectedTopics);
+                    intent.putExtra(Constants.FROM_SCREEN, "Topic Articles List");
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
                     startActivity(intent);
                 }
             }
@@ -342,17 +354,20 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         int from = (nextPageNumber - 1) * limit + 1;
         if (StringUtils.isNullOrEmpty(filteredTopics)) {
             Call<ArticleListingResponse> filterCall;
-            if (AppConstants.MOMSPRESSO_CATEGORYID.equals(selectedTopics) ||
-                    AppConstants.HINDI_CATEGORYID.equals(selectedTopics) ||
-                    AppConstants.BANGLA_CATEGORYID.equals(selectedTopics) ||
-                    AppConstants.MARATHI_CATEGORYID.equals(selectedTopics)) {
+            if (AppConstants.MOMSPRESSO_CATEGORYID.equals(selectedTopics)) {
+                Utils.pushOpenArticleListingEvent(this, GTMEventType.ARTICLE_LISTING_CLICK_EVENT, fromScreen, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), displayName + "~" + selectedTopics, "" + nextPageNumber);
+                filterCall = topicsAPI.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1, "");
+            } else if (isLanguageListing) {
+                Utils.pushOpenArticleListingEvent(this, GTMEventType.ARTICLE_LISTING_CLICK_EVENT, fromScreen, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), categoryName + "~" + selectedTopics, "" + nextPageNumber);
                 filterCall = topicsAPI.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1, "");
             } else {
+                Utils.pushOpenArticleListingEvent(this, GTMEventType.ARTICLE_LISTING_CLICK_EVENT, fromScreen, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), displayName + "~" + selectedTopics, "" + nextPageNumber);
                 filterCall = topicsAPI.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(this));
             }
 //            Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(this));
             filterCall.enqueue(articleListingResponseCallback);
         } else {
+            Utils.pushOpenArticleListingEvent(this, GTMEventType.ARTICLE_LISTING_CLICK_EVENT, fromScreen, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), displayName + "~" + selectedTopics, "" + nextPageNumber);
             Call<ArticleListingResponse> filterCall = topicsAPI.getFilteredArticlesForCategories(filteredTopics, sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(this));
             filterCall.enqueue(articleListingResponseCallback);
         }
@@ -433,6 +448,8 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         switch (v.getId()) {
             case R.id.recentSort:
             case R.id.recentSortFAB:
+                Utils.pushSortListingEvent(FilteredTopicsArticleListingActivity.this, GTMEventType.SORT_LISTING_EVENT, SharedPrefUtils.getUserDetailModel(FilteredTopicsArticleListingActivity.this).getDynamoId(),
+                        listingType, "recent");
                 sortBgLayout.setVisibility(View.GONE);
                 fabMenu.collapse();
                 articleDataModelsNew.clear();
@@ -443,6 +460,8 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                 break;
             case R.id.popularSort:
             case R.id.popularSortFAB:
+                Utils.pushSortListingEvent(FilteredTopicsArticleListingActivity.this, GTMEventType.SORT_LISTING_EVENT, SharedPrefUtils.getUserDetailModel(FilteredTopicsArticleListingActivity.this).getDynamoId(),
+                        listingType, "popular");
                 sortBgLayout.setVisibility(View.GONE);
                 fabMenu.collapse();
                 articleDataModelsNew.clear();
@@ -854,13 +873,15 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         followUnfollowCategoriesRequest.setCategories(topicIdLList);
         if (isTopicFollowed == 0) {
             Log.d("GTM FOLLOW", displayName + ":" + selectedTopics);
-            Utils.pushEventFollowUnfollowTopic(this, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "CategoriesArticleList", "follow", displayName + ":" + selectedTopics);
+//            Utils.pushEventFollowUnfollowTopic(this, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "CategoriesArticleList", "follow", displayName + ":" + selectedTopics);
+            Utils.pushTopicFollowUnfollowEvent(this, GTMEventType.FOLLOW_TOPIC_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Topic Articles List", displayName + "~" + selectedTopics);
 //            menu.getItem(0).setTitle("FOLLOWING");
             followUnfollowTextView.setText("FOLLOWING");
             isTopicFollowed = 1;
         } else {
             Log.d("GTM UNFOLLOW", displayName + ":" + selectedTopics);
-            Utils.pushEventFollowUnfollowTopic(this, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "CategoriesArticleList", "follow", displayName + ":" + selectedTopics);
+//            Utils.pushEventFollowUnfollowTopic(this, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "CategoriesArticleList", "follow", displayName + ":" + selectedTopics);
+            Utils.pushTopicFollowUnfollowEvent(this, GTMEventType.UNFOLLOW_TOPIC_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Topic Articles List", displayName + "~" + selectedTopics);
 //            menu.getItem(0).setTitle("FOLLOW");
             followUnfollowTextView.setText("FOLLOW");
             isTopicFollowed = 0;

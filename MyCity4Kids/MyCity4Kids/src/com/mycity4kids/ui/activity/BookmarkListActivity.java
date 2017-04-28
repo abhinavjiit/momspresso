@@ -129,6 +129,9 @@ public class BookmarkListActivity extends BaseActivity implements SwipeRefreshLa
                     intent.putExtra(Constants.ARTICLE_COVER_IMAGE, parentingListData.getImageUrl());
                     intent.putExtra(Constants.BLOG_SLUG, parentingListData.getBlogPageSlug());
                     intent.putExtra(Constants.TITLE_SLUG, parentingListData.getTitleSlug());
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "bookmarks");
+                    intent.putExtra(Constants.FROM_SCREEN, "Bookmark List");
+                    intent.putExtra(Constants.ARTICLE_INDEX, ""+i);
                     startActivity(intent);
 
                 }

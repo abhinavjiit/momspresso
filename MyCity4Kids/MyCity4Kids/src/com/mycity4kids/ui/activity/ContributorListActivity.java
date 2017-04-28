@@ -30,6 +30,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.ContributorListResponse;
 import com.mycity4kids.models.response.ContributorListResult;
@@ -124,6 +125,8 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
                 ContributorListResult itemSelected = (ContributorListResult) adapterView.getItemAtPosition(position);
                 Intent intent = new Intent(ContributorListActivity.this, BloggerDashboardActivity.class);
                 intent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, itemSelected.getId());
+                intent.putExtra(AppConstants.AUTHOR_NAME, itemSelected.getFirstName() + " " + itemSelected.getLastName());
+                intent.putExtra(Constants.FROM_SCREEN, "Contributor List");
                 startActivity(intent);
 
             }
@@ -286,6 +289,7 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rankSortFAB:
+                Utils.pushSortListingEvent(ContributorListActivity.this, GTMEventType.SORT_LISTING_EVENT, SharedPrefUtils.getUserDetailModel(ContributorListActivity.this).getDynamoId(), "Contributor List", "rank");
                 fab_menu.collapse();
                 sortType = 2;
                 paginationValue = "0";
@@ -294,6 +298,7 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
                 hitBloggerAPIrequest(sortType, type);
                 break;
             case R.id.nameSortFAB:
+                Utils.pushSortListingEvent(ContributorListActivity.this, GTMEventType.SORT_LISTING_EVENT, SharedPrefUtils.getUserDetailModel(ContributorListActivity.this).getDynamoId(), "Contributor List", "name");
                 fab_menu.collapse();
                 sortType = 1;
                 paginationValue = "0";

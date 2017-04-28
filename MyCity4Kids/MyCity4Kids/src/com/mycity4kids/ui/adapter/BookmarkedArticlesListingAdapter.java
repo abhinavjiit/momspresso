@@ -15,6 +15,7 @@ import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.ui.activity.BloggerDashboardActivity;
 import com.squareup.picasso.Picasso;
@@ -103,6 +104,8 @@ public class BookmarkedArticlesListingAdapter extends BaseAdapter {
                 public void onClick(View view) {
                     Intent intent = new Intent(mContext, BloggerDashboardActivity.class);
                     intent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, articleDataModelsNew.get(position).getUserId());
+                    intent.putExtra(AppConstants.AUTHOR_NAME, articleDataModelsNew.get(position).getUserName());
+                    intent.putExtra(Constants.FROM_SCREEN, "Bookmark List");
                     mContext.startActivity(intent);
                 }
             });

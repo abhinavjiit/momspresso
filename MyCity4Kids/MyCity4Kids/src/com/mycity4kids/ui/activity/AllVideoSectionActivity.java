@@ -25,6 +25,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
@@ -68,6 +69,9 @@ public class AllVideoSectionActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.all_video_section_activity);
+
+        Utils.pushOpenScreenEvent(this, "All Video Screen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+
         rootLayout = findViewById(R.id.rootLayout);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         momspressoSection = (HorizontalScrollCustomView) findViewById(R.id.momspressoSection);
@@ -171,7 +175,7 @@ public class AllVideoSectionActivity extends BaseActivity {
         } else {
             mMomspressoArticleListing.clear();
             mMomspressoArticleListing.addAll(responseData.getData().get(0).getResult());
-            momspressoSection.setmDatalist(mMomspressoArticleListing, Constants.KEY_MOMSPRESSO);
+            momspressoSection.setmDatalist(mMomspressoArticleListing, Constants.KEY_MOMSPRESSO, "All Videos Screen");
         }
     }
 
@@ -182,31 +186,9 @@ public class AllVideoSectionActivity extends BaseActivity {
         } else {
             funnyVideosListing.clear();
             funnyVideosListing.addAll(responseData.getData().get(0).getResult());
-            funnyVideosSection.setVlogslist(funnyVideosListing, "allvideosection");
+            funnyVideosSection.setVlogslist(funnyVideosListing, "allvideosection", "All Videos Screen");
         }
     }
-
-//    private String getMomspressoCategory() {
-//        if (StringUtils.isNullOrEmpty(SharedPrefUtils.getMomspressoCategory(this).getId())) {
-//            try {
-//                FileInputStream fileInputStream = openFileInput(AppConstants.CATEGORIES_JSON_FILE);
-//                String fileContent = AppUtils.convertStreamToString(fileInputStream);
-//                TopicsResponse responseData = new Gson().fromJson(fileContent, TopicsResponse.class);
-//
-//                for (int i = 0; i < responseData.getData().size(); i++) {
-//                    if (AppConstants.MOMSPRESSO_CATEGORYID.equals(responseData.getData().get(i).getId())) {
-//                        SharedPrefUtils.setMomspressoCategory(this, responseData.getData().get(i));
-//                        return responseData.getData().get(i).getId();
-//                    }
-//                }
-//            } catch (FileNotFoundException fnfe) {
-//
-//            }
-//        } else {
-//            return SharedPrefUtils.getMomspressoCategory(this).getId();
-//        }
-//        return null;
-//    }
 
     @Override
     protected void updateUi(Response response) {

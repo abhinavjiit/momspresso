@@ -430,6 +430,8 @@ public class BloggersAnalyticsActivity extends BaseActivity implements OnChartGe
                 ContributorListResult contributorListResult = (ContributorListResult) v.getTag();
                 Intent intent = new Intent(BloggersAnalyticsActivity.this, BloggerDashboardActivity.class);
                 intent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, contributorListResult.getId());
+                intent.putExtra(AppConstants.AUTHOR_NAME, contributorListResult.getFirstName() + " " + contributorListResult.getLastName());
+                intent.putExtra(Constants.FROM_SCREEN, "Blog Analytics");
                 startActivity(intent);
                 break;
 

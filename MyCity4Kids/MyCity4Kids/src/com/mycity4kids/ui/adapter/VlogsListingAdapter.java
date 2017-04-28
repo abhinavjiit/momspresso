@@ -17,6 +17,7 @@ import com.crashlytics.android.Crashlytics;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.ui.activity.BloggerDashboardActivity;
@@ -234,6 +235,8 @@ public class VlogsListingAdapter extends BaseAdapter {
                     }
                     Intent intent = new Intent(mContext, BloggerDashboardActivity.class);
                     intent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, articleDataModelsNew.get(position).getAuthor().getId());
+                    intent.putExtra(AppConstants.AUTHOR_NAME, "" + articleDataModelsNew.get(position).getAuthor().getFirstName() + " " + articleDataModelsNew.get(position).getAuthor().getLastName());
+                    intent.putExtra(Constants.FROM_SCREEN, "Video Listing");
                     mContext.startActivity(intent);
                 }
             });
@@ -245,6 +248,8 @@ public class VlogsListingAdapter extends BaseAdapter {
                     }
                     Intent intent = new Intent(mContext, BloggerDashboardActivity.class);
                     intent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, articleDataModelsNew.get(position).getAuthor().getId());
+                    intent.putExtra(AppConstants.AUTHOR_NAME, "" + articleDataModelsNew.get(position).getAuthor().getFirstName() + " " + articleDataModelsNew.get(position).getAuthor().getLastName());
+                    intent.putExtra(Constants.FROM_SCREEN, "Video Listing");
                     mContext.startActivity(intent);
                 }
             });

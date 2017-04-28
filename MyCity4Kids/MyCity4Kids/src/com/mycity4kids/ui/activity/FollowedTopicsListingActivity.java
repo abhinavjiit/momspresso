@@ -18,6 +18,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.FollowTopics;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse;
@@ -55,6 +56,8 @@ public class FollowedTopicsListingActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.followed_topics_listing_activity);
+
+        Utils.pushOpenScreenEvent(this, "FollowedTopicList", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
         followedTopicsListView = (ListView) findViewById(R.id.followedTopicsListView);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);

@@ -120,6 +120,7 @@ public class SearchTopicsTabFragment extends BaseFragment {
                     intent.putExtra("selectedTopics", topic.getId());
 //                    intent.putExtra("displayName", topic.getTitle());
                     intent.putExtra("displayName", topic.getDisplay_name());
+                    intent.putExtra(Constants.FROM_SCREEN, "Search Topics");
                     startActivity(intent);
 
                 }

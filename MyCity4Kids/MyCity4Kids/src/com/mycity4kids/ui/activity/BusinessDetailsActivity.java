@@ -231,6 +231,10 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
         ((ImageView) findViewById(R.id.imgBack)).setOnClickListener(this);
 
         if (bundle != null) {
+            if (bundle.getBoolean("fromNotification")) {
+                Utils.pushEventNotificationClick(this, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Notification Popup", "event_details");
+            }
+
             UserTable _table = new UserTable((BaseApplication) getApplicationContext());
             categoryId = bundle.getInt(Constants.CATEGORY_ID);
             isbusiness = bundle.getBoolean("isbusiness");

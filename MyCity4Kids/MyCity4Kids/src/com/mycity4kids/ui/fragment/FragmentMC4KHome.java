@@ -60,6 +60,7 @@ import com.mycity4kids.models.businesslist.BusinessDataListing;
 import com.mycity4kids.models.businesslist.BusinessListResponse;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
+import com.mycity4kids.models.response.LanguageConfigModel;
 import com.mycity4kids.models.response.NotificationCenterListResponse;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.models.response.VlogsListingResponse;
@@ -162,7 +163,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     private MyWebChromeClient mWebChromeClient = null;
     ArrayList<WebView> videoIframe = new ArrayList<>();
     private ProgressBar momspressoProgressbar;
-    private HorizontalScrollCustomView forYourSection, trendingSection, editorPicksSection, inYourCitySection, momspressoSection, funnyVideosSection, hindiSection;
+    private HorizontalScrollCustomView forYourSection, trendingSection, editorPicksSection, inYourCitySection, momspressoSection, funnyVideosSection, languageSection;
 
     @Nullable
     @Override
@@ -178,14 +179,14 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         inYourCitySection = (HorizontalScrollCustomView) view.findViewById(R.id.inYourCitySection);
         momspressoSection = (HorizontalScrollCustomView) view.findViewById(R.id.momspressoSection);
         funnyVideosSection = (HorizontalScrollCustomView) view.findViewById(R.id.funnyVideosSection);
-        hindiSection = (HorizontalScrollCustomView) view.findViewById(R.id.hindiSection);
+        languageSection = (HorizontalScrollCustomView) view.findViewById(R.id.languageSection);
 
         forYourSection.setSectionTitle(getString(R.string.home_sections_title_for_you));
         trendingSection.setSectionTitle(getString(R.string.home_sections_title_trending));
         editorPicksSection.setSectionTitle(getString(R.string.home_sections_title_editors_pick));
         momspressoSection.setSectionTitle(getString(R.string.home_sections_title_momspresso));
         funnyVideosSection.setSectionTitle(getString(R.string.home_sections_title_funny_videos));
-        hindiSection.setMultipleSectionsTitle(getString(R.string.home_sections_title_hindi), getString(R.string.home_sections_title_bangla), getString(R.string.home_sections_title_marathi));
+        languageSection.setMultipleSectionsTitle();
 
         appointmentList = (CustomListView) view.findViewById(R.id.home_appointmentList);
         goToCal = (TextView) view.findViewById(R.id.go_to_cal);
@@ -363,9 +364,13 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     private void hitHindiArticlesListing() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
-
-        Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(AppConstants.HINDI_CATEGORYID, 0, 1, 10, "");
-        filterCall.enqueue(hindiArticlesListingResponseCallback);
+        LanguageConfigModel hindiLangModel = AppUtils.getLangModelForLanguage(getActivity(), AppConstants.LANG_KEY_HINDI);
+        if (null != hindiLangModel && !StringUtils.isNullOrEmpty(hindiLangModel.getId())) {
+            Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(hindiLangModel.getId(), 0, 1, 10, "");
+            filterCall.enqueue(hindiArticlesListingResponseCallback);
+        } else {
+            languageSection.setVisibility(View.GONE);
+        }
     }
 
     public void hitInYourCityListingApi() {
@@ -444,7 +449,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                     //clear list to avoid duplicates due to volley caching
                     mArticleDataListing.clear();
                     mArticleDataListing.addAll(responseBlogData.getData().get(0).getResult());
-                    trendingSection.setmDatalist(mArticleDataListing, Constants.KEY_TRENDING);
+                    trendingSection.setmDatalist(mArticleDataListing, Constants.KEY_TRENDING, "Home Screen");
                 } else {
                     trendingSection.setEmptyListLabelVisibility(View.VISIBLE);
                 }
@@ -633,7 +638,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                 }
             }
 //            mArticleForYouListing.addAll(responseData.getData().get(0).getResult());
-            forYourSection.setmDatalist(mArticleForYouListing, Constants.KEY_FOR_YOU);
+            forYourSection.setmDatalist(mArticleForYouListing, Constants.KEY_FOR_YOU, "Home Screen");
         }
     }
 
@@ -644,18 +649,18 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         } else {
             mMomspressoArticleListing.clear();
             mMomspressoArticleListing.addAll(responseData.getData().get(0).getResult());
-            momspressoSection.setmDatalist(mMomspressoArticleListing, Constants.KEY_MOMSPRESSO);
+            momspressoSection.setmDatalist(mMomspressoArticleListing, Constants.KEY_MOMSPRESSO, "Home Screen");
         }
     }
 
     private void processHindiArticlesListingResponse(ArticleListingResponse responseData) {
         ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
         if (dataList.size() == 0) {
-            hindiSection.setEmptyListLabelVisibility(View.VISIBLE);
+            languageSection.setEmptyListLabelVisibility(View.VISIBLE);
         } else {
             hindiArticlesListing.clear();
             hindiArticlesListing.addAll(responseData.getData().get(0).getResult());
-            hindiSection.setmDatalist(hindiArticlesListing, Constants.KEY_HINDI);
+            languageSection.setmDatalist(hindiArticlesListing, Constants.KEY_HINDI, "Home Screen");
         }
     }
 
@@ -666,7 +671,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         } else {
             funnyVideosListing.clear();
             funnyVideosListing.addAll(responseData.getData().get(0).getResult());
-            funnyVideosSection.setVlogslist(funnyVideosListing, "dashboard");
+            funnyVideosSection.setVlogslist(funnyVideosListing, "dashboard", "Home Screen");
         }
     }
 
@@ -677,7 +682,7 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         } else {
             mArticleEditorPicksListing.clear();
             mArticleEditorPicksListing.addAll(responseData.getData().get(0).getResult());
-            editorPicksSection.setmDatalist(mArticleEditorPicksListing, Constants.KEY_EDITOR_PICKS);
+            editorPicksSection.setmDatalist(mArticleEditorPicksListing, Constants.KEY_EDITOR_PICKS, "Home Screen");
         }
     }
 
@@ -690,31 +695,9 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
             inYourCitySection.setEmptyListLabelVisibility(View.GONE);
             mArticleBestCityListing.clear();
             mArticleBestCityListing.addAll(responseData.getData().get(0).getResult());
-            inYourCitySection.setmDatalist(mArticleBestCityListing, Constants.KEY_IN_YOUR_CITY);
+            inYourCitySection.setmDatalist(mArticleBestCityListing, Constants.KEY_IN_YOUR_CITY + "~" + SharedPrefUtils.getCurrentCityModel(getActivity()).getName(), "Home Screen");
         }
     }
-
-//    private String getMomspressoCategory() {
-//        if (StringUtils.isNullOrEmpty(SharedPrefUtils.getMomspressoCategory(getActivity()).getId())) {
-//            try {
-//                FileInputStream fileInputStream = getActivity().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
-//                String fileContent = convertStreamToString(fileInputStream);
-//                TopicsResponse responseData = new Gson().fromJson(fileContent, TopicsResponse.class);
-//
-//                for (int i = 0; i < responseData.getData().size(); i++) {
-//                    if (AppConstants.MOMSPRESSO_CATEGORYID.equals(responseData.getData().get(i).getId())) {
-//                        SharedPrefUtils.setMomspressoCategory(getActivity(), responseData.getData().get(i));
-//                        return responseData.getData().get(i).getId();
-//                    }
-//                }
-//            } catch (FileNotFoundException fnfe) {
-//
-//            }
-//        } else {
-//            return SharedPrefUtils.getMomspressoCategory(getActivity()).getId();
-//        }
-//        return null;
-//    }
 
     public static String convertStreamToString(InputStream is) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));

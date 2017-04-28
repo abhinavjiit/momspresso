@@ -33,12 +33,7 @@
                 android:layout_height="wrap_content" />
 
             <com.mycity4kids.widget.HorizontalScrollCustomView
-                android:id="@+id/funnyVideosSection"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <com.mycity4kids.widget.HorizontalScrollCustomView
-                android:id="@+id/hindiSection"
+                android:id="@+id/languageSection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -237,6 +232,11 @@
                     android:textStyle="bold"
                     android:visibility="gone" />
             </LinearLayout>
+
+            <com.mycity4kids.widget.HorizontalScrollCustomView
+                android:id="@+id/funnyVideosSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
         <RelativeLayout

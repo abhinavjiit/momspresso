@@ -11,6 +11,7 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.preference.SharedPrefUtils;
 
@@ -34,6 +35,9 @@ public class LoadWebViewActivity extends BaseActivity {
 
         String url = getIntent().getStringExtra(Constants.WEB_VIEW_URL);
 
+        if (getIntent().getExtras().getBoolean("fromNotification")) {
+            Utils.pushEventNotificationClick(this, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Notification Popup", "webView");
+        }
         webView = (WebView) findViewById(R.id.webView);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebViewClient(new WebViewClient());

@@ -50,6 +50,9 @@ public class Constants {
     public static final String BLOG_SLUG = "blogSlug";
     public static final String TITLE_SLUG = "titleSlug";
     public static final String NOTIFICATION_CENTER_ID = "notificationCenterId";
+    public static final String FROM_SCREEN = "fromScreen";
+    public static final String ARTICLE_OPENED_FROM = "articleOpenedFrom";
+    public static final String ARTICLE_INDEX = "index";
 
     public static boolean IS_RESET = false;
 

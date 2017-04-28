@@ -159,8 +159,8 @@
     <color name="analytics.engagement.separator">#c7c7c7</color>
     <color name="analytics.engagement.graph">#ABC4F8</color>
 
-    <color name="notification_center.read.bg">#EFEFEF</color>
-    <color name="notification_center.unread.bg">#FFFFFF</color>
+    <color name="notification_center.read.bg">#FFFFFF</color>
+    <color name="notification_center.unread.bg">#EFEFEF</color>
 
     <color name="publish_article.tag_images.selected_bg">#80000000</color>
 

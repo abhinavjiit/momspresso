@@ -40,6 +40,8 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.GTMEventType;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.models.response.VlogsListingResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -86,11 +88,15 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
     private SwipeRefreshLayout swipeRefreshLayout;
     private ProgressBar progressBar;
     private String userId;
+    private String fromScreen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vlogs_listing_activity);
+
+        Utils.pushOpenScreenEvent(this, "My Funny Videos Screen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+
         rootLayout = findViewById(R.id.rootLayout);
         listView = (ListView) findViewById(R.id.vlogsListView);
         mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
@@ -104,6 +110,8 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
         popularSortFAB = (FloatingActionButton) findViewById(R.id.popularSortFAB);
         recentSortFAB = (FloatingActionButton) findViewById(R.id.recentSortFAB);
         fabSort = (FloatingActionButton) findViewById(R.id.fabSort);
+
+        fromScreen = getIntent().getStringExtra(Constants.FROM_SCREEN);
 
         popularSortFAB.setOnClickListener(this);
         recentSortFAB.setOnClickListener(this);
@@ -208,6 +216,9 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
 //                            showToast("This video is Published");
                             intent.putExtra(Constants.VIDEO_ID, parentingListData.getId());
                             intent.putExtra(Constants.AUTHOR_ID, parentingListData.getAuthor().getId());
+                            intent.putExtra(Constants.FROM_SCREEN, "My Funny Videos Screen");
+                            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "My Funny Videos");
+                            intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
                             startActivity(intent);
                             break;
                         }
@@ -235,6 +246,9 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
             return;
         }
         int from = (nextPageNumber - 1) * limit;
+
+        Utils.pushOpenArticleListingEvent(this, GTMEventType.FUNNY_VIDEOS_LISTING_CLICK_EVENT, fromScreen, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "My Funny Videos", "" + nextPageNumber);
+
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI.class);
         Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsAPI.getPublishedVlogs(userId, from, from + limit - 1, sortType);

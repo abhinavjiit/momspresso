@@ -116,6 +116,8 @@ public class SearchAuthorsTabFragment extends BaseFragment {
 
                 Intent intentnn = new Intent(getActivity(), BloggerDashboardActivity.class);
                 intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, itemSelected.getUserId());
+                intentnn.putExtra(AppConstants.AUTHOR_NAME, "" + itemSelected.getFirst_name().replace("<b>", "").replace("</b>", "") + " " + itemSelected.getLast_name().replace("<b>", "").replace("</b>", ""));
+                intentnn.putExtra(Constants.FROM_SCREEN, "Search Authors List");
                 startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
 
 

@@ -35,10 +35,8 @@ import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.OnWebServiceCompleteListener;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
-import com.mycity4kids.models.response.NotificationCenterListResponse;
 import com.mycity4kids.newmodels.VolleyBaseResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.retrofitAPIsInterfaces.NotificationsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.RecommendationAPI;
 import com.mycity4kids.ui.adapter.NewArticlesListingAdapter;
 import com.mycity4kids.utils.ArrayAdapterFactory;
@@ -72,6 +70,7 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
     private int from = 1;
     private int to = 15;
     private String chunks = "";
+    private String fromScreen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +89,10 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
         findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely));
 
         progressBar.setVisibility(View.VISIBLE);
+
         sortType = getIntent().getStringExtra(Constants.SORT_TYPE);
+        fromScreen = getIntent().getStringExtra(Constants.FROM_SCREEN);
+
         if (sortType.equals(Constants.KEY_RECENT)) {
             getSupportActionBar().setTitle("Recent");
         } else if (sortType.equals(Constants.KEY_POPULAR)) {
@@ -103,7 +105,6 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
             getSupportActionBar().setTitle("Top Picks");
         }
 
-
         articleDataModelsNew = new ArrayList<ArticleListingResult>();
         nextPageNumber = 1;
         hitArticleListingApi(nextPageNumber, sortType, false);
@@ -111,6 +112,7 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
         swipeRefreshLayout.setOnRefreshListener((SwipeRefreshLayout.OnRefreshListener) this);
 
         articlesListingAdapter = new NewArticlesListingAdapter(this);
+        articlesListingAdapter.setListingType(sortType);
         articlesListingAdapter.setNewListData(articleDataModelsNew);
         listView.setAdapter(articlesListingAdapter);
         articlesListingAdapter.notifyDataSetChanged();
@@ -140,15 +142,14 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
 
                 Intent intent = new Intent(ArticleListingActivity.this, ArticlesAndBlogsDetailsActivity.class);
                 if (adapterView.getAdapter() instanceof NewArticlesListingAdapter) {
-                    if (Constants.KEY_FOR_YOU.equals(sortType)) {
-                        Utils.pushEvent(ArticleListingActivity.this, GTMEventType.FOR_YOU_ARTICLE_CLICK_EVENT,
-                                SharedPrefUtils.getUserDetailModel(ArticleListingActivity.this).getDynamoId(), "Article Listing Screen");
-                    }
                     ArticleListingResult parentingListData = (ArticleListingResult) ((NewArticlesListingAdapter) adapterView.getAdapter()).getItem(i);
                     intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
                     intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
                     intent.putExtra(Constants.BLOG_SLUG, parentingListData.getBlogPageSlug());
                     intent.putExtra(Constants.TITLE_SLUG, parentingListData.getTitleSlug());
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, sortType);
+                    intent.putExtra(Constants.FROM_SCREEN, "Article Listing Screen");
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
                     startActivity(intent);
 
                 }
@@ -168,6 +169,7 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
             showToast(getString(R.string.error_network));
             return;
         }
+        Utils.pushOpenArticleListingEvent(this, GTMEventType.ARTICLE_LISTING_CLICK_EVENT, fromScreen, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), sortType, "" + pPageCount);
         String url = "";
         if (Constants.KEY_FOR_YOU.equals(sortKey)) {
 
@@ -245,18 +247,19 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
                 if ("".equals(chunks)) {
                     articleDataModelsNew.clear();
 //                    articleDataModelsNew.addAll(dataList);
-                    for(int j=0;j<dataList.size();j++){
-                        if(!StringUtils.isNullOrEmpty(dataList.get(j).getId())){
+                    for (int j = 0; j < dataList.size(); j++) {
+                        if (!StringUtils.isNullOrEmpty(dataList.get(j).getId())) {
                             articleDataModelsNew.add(dataList.get(j));
                         }
                     }
                 } else {
-                    for(int j=0;j<dataList.size();j++){
-                        if(!StringUtils.isNullOrEmpty(dataList.get(j).getId())){
+                    for (int j = 0; j < dataList.size(); j++) {
+                        if (!StringUtils.isNullOrEmpty(dataList.get(j).getId())) {
                             articleDataModelsNew.add(dataList.get(j));
                         }
                     }
                 }
+                nextPageNumber++;
                 if (chunks.equals(responseData.getData().get(0).getChunks())) {
                     isLastPageReached = true;
                 } else {
@@ -365,6 +368,7 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
                 }
                 from = from + 15;
                 to = to + 15;
+                nextPageNumber++;
                 articlesListingAdapter.setNewListData(articleDataModelsNew);
                 articlesListingAdapter.notifyDataSetChanged();
             }
@@ -390,6 +394,7 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
         removeVolleyCache(sortType);
         from = 1;
         to = 15;
+        nextPageNumber = 1;
         hitArticleListingApi(nextPageNumber, sortType, false);
     }
 

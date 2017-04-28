@@ -136,7 +136,8 @@ public class FollowedTopicsListAdapter extends BaseAdapter {
         followUnfollowCategoriesRequest.setCategories(topicIdLList);
         if (mDataList.get(position).isSelected()) {
             Log.d("GTM FOLLOW", mDataList.get(position).getDisplay_name() + ":" + mDataList.get(position).getId());
-            Utils.pushEventFollowUnfollowTopic(mContext, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, currentUserId, "FollowedTopicList", "follow", mDataList.get(position).getDisplay_name() + ":" + mDataList.get(position).getId());
+//            Utils.pushEventFollowUnfollowTopic(mContext, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, currentUserId, "FollowedTopicList", "follow", mDataList.get(position).getDisplay_name() + ":" + mDataList.get(position).getId());
+            Utils.pushTopicFollowUnfollowEvent(mContext, GTMEventType.FOLLOW_TOPIC_CLICK_EVENT, currentUserId, "FollowedTopicList", mDataList.get(position).getDisplay_name() + "~" + mDataList.get(position).getId());
             holder.relativeLoadingView.setVisibility(View.VISIBLE);
             holder.followingTextView.setVisibility(View.INVISIBLE);
             holder.followTextView.setVisibility(View.INVISIBLE);
@@ -144,8 +145,9 @@ public class FollowedTopicsListAdapter extends BaseAdapter {
             new FollowUnfollowAsyncTask(holder, "follow", position).execute(jsonString, "follow");
         } else {
             Log.d("GTM UNFOLLOW", mDataList.get(position).getDisplay_name() + ":" + mDataList.get(position).getId());
-            Utils.pushEventFollowUnfollowTopic(mContext, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, currentUserId, "FollowedTopicList", "unfollow", mDataList.get(position).getDisplay_name() + ":" + mDataList.get(position).getId());
+//            Utils.pushEventFollowUnfollowTopic(mContext, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, currentUserId, "FollowedTopicList", "unfollow", mDataList.get(position).getDisplay_name() + ":" + mDataList.get(position).getId());
             holder.relativeLoadingView.setVisibility(View.VISIBLE);
+            Utils.pushTopicFollowUnfollowEvent(mContext, GTMEventType.UNFOLLOW_TOPIC_CLICK_EVENT, currentUserId, "FollowedTopicList", mDataList.get(position).getDisplay_name() + "~" + mDataList.get(position).getId());
             holder.followingTextView.setVisibility(View.INVISIBLE);
             holder.followTextView.setVisibility(View.INVISIBLE);
             String jsonString = new Gson().toJson(followUnfollowCategoriesRequest);

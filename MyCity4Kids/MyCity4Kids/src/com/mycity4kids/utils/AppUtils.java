@@ -16,10 +16,12 @@ import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
+import com.mycity4kids.models.response.LanguageConfigModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,11 +34,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -293,4 +298,84 @@ public class AppUtils {
         return telephonyManager.getDeviceId();
     }
 
+    public static boolean writeJsonStringToFile(Context context, String jsonString, String fileName) {
+        try {
+            OutputStream outputStream = null;
+            try {
+                outputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
+                outputStream.write(jsonString.getBytes(Charset.forName("UTF-8")));
+                outputStream.flush();
+//            output.close();
+//            Toast.makeText(getApplicationContext(), "Composition saved", Toast.LENGTH_LONG).show();
+                return true;
+            } catch (IOException e) {
+                return false;
+            } finally {
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+            }
+        } catch (IOException ioe) {
+            return false;
+        }
+    }
+
+//    public static boolean writeResponseBodyToDisk(Context context, String body, String filename) {
+//        try {
+//            InputStream inputStream = null;
+//            OutputStream outputStream = null;
+//            try {
+//                byte[] fileReader = new byte[4096];
+//
+//                long fileSize = body.contentLength();
+//                long fileSizeDownloaded = 0;
+//
+//                inputStream = body.byteStream();
+//                outputStream = context.openFileOutput(filename, Context.MODE_PRIVATE);
+//
+//                while (true) {
+//                    int read = inputStream.read(fileReader);
+//                    if (read == -1) {
+//                        break;
+//                    }
+//                    outputStream.write(fileReader, 0, read);
+//                    fileSizeDownloaded += read;
+//                    Log.d("dAWDdawwdawd", "file download: " + fileSizeDownloaded + " of " + fileSize);
+//                }
+//
+//                outputStream.flush();
+//                return true;
+//            } catch (IOException e) {
+//                return false;
+//            } finally {
+//                if (inputStream != null) {
+//                    inputStream.close();
+//                }
+//
+//                if (outputStream != null) {
+//                    outputStream.close();
+//                }
+//            }
+//        } catch (IOException e) {
+//            return false;
+//        }
+//    }
+
+    public static LanguageConfigModel getLangModelForLanguage(Context mContext, String key) {
+        try {
+            FileInputStream fileInputStream = mContext.openFileInput(AppConstants.LANGUAGES_JSON_FILE);
+            String fileContent = AppUtils.convertStreamToString(fileInputStream);
+//            ConfigResult res = new Gson().fromJson(fileContent, ConfigResult.class);
+            LinkedHashMap<String, LanguageConfigModel> retMap = new Gson().fromJson(
+                    fileContent, new TypeToken<LinkedHashMap<String, LanguageConfigModel>>() {
+                    }.getType()
+            );
+            return retMap.get(key);
+//            return (new ArrayList<LanguageConfigModel>(retMap.values())).get(0).getId();
+        } catch (FileNotFoundException ffe) {
+            Crashlytics.logException(ffe);
+            Log.d("MC4kException", Log.getStackTraceString(ffe));
+            return null;
+        }
+    }
 }

@@ -389,6 +389,108 @@ public enum GTMEventType {
         public String toString() {
             return "feedLanguageRemoveEvent";
         }
+    },
+    NOTIFICATION_CLICK_EVENT {
+        @Override
+        public String toString() {
+            return "notificationClickEvent";
+        }
+    },
+    VIDEO_DETAILS_CLICK_EVENT {
+        @Override
+        public String toString() {
+            return "videoDetailsClickEvent";
+        }
+    },
+    ARTICLE_DETAILS_CLICK_EVENT {
+        @Override
+        public String toString() {
+            return "articleDetailsClickEvent";
+        }
+    },
+    ARTICLE_LISTING_CLICK_EVENT {
+        @Override
+        public String toString() {
+            return "articleListingClickEvent";
+        }
+    },
+    FUNNY_VIDEOS_LISTING_CLICK_EVENT {
+        @Override
+        public String toString() {
+            return "funnyVideosListingClickEvent";
+        }
+    },
+    FOLLOW_TOPIC_CLICK_EVENT {
+        @Override
+        public String toString() {
+            return "followTopicClickEvent";
+        }
+    },
+    UNFOLLOW_TOPIC_CLICK_EVENT {
+        @Override
+        public String toString() {
+            return "unfollowTopicClickEvent";
+        }
+    },
+    FOLLOW_AUTHOR_CLICK_EVENT {
+        @Override
+        public String toString() {
+            return "followAuthorClickEvent";
+        }
+    },
+    UNFOLLOW_AUTHOR_CLICK_EVENT {
+        @Override
+        public String toString() {
+            return "unfollowAuthorClickEvent";
+        }
+    },
+    LIKE_ARTICLE_CLICK_EVENT {
+        @Override
+        public String toString() {
+            return "likeArticleClickEvent";
+        }
+    },
+    UNLIKE_ARTICLE_CLICK_EVENT {
+        @Override
+        public String toString() {
+            return "unlikeArticleClickEvent";
+        }
+    },
+    BOOKMARK_ARTICLE_CLICK_EVENT {
+        @Override
+        public String toString() {
+            return "bookmarkArticleClickEvent";
+        }
+    },
+    UNBOOKMARK_ARTICLE_CLICK_EVENT {
+        @Override
+        public String toString() {
+            return "unbookmarkArticleClickEvent";
+        }
+    },
+    SHARE_ARTICLE_CLICK_EVENT {
+        @Override
+        public String toString() {
+            return "shareArticleClickEvent";
+        }
+    },
+    SHARE_FUNNY_VIDEO_CLICK_EVENT {
+        @Override
+        public String toString() {
+            return "shareFunnyVideoClickEvent";
+        }
+    },
+    BLOGGER_DETAILS_CLICKED {
+        @Override
+        public String toString() {
+            return "bloggerDetailsClickEvent";
+        }
+    },
+    SORT_LISTING_EVENT {
+        @Override
+        public String toString() {
+            return "sortListingEvent";
+        }
     }
 
 }

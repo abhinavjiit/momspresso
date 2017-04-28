@@ -40,8 +40,11 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.GTMEventType;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.models.response.VlogsListingResponse;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.adapter.VlogsListingAdapter;
 import com.mycity4kids.ui.fragment.ChooseVideoUploadOptionDialogFragment;
@@ -85,11 +88,13 @@ public class VlogsListingActivity extends BaseActivity implements View.OnClickLi
     private SwipeRefreshLayout swipeRefreshLayout;
     private ProgressBar progressBar;
     private boolean stackClearRequired;
+    private String fromScreen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vlogs_listing_activity);
+        Utils.pushOpenScreenEvent(this, "Funny Videos Listing", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
         stackClearRequired = getIntent().getBooleanExtra(AppConstants.STACK_CLEAR_REQUIRED, false);
         rootLayout = findViewById(R.id.rootLayout);
@@ -136,6 +141,8 @@ public class VlogsListingActivity extends BaseActivity implements View.OnClickLi
                 frameLayout.setOnTouchListener(null);
             }
         });
+
+        fromScreen = getIntent().getStringExtra(Constants.FROM_SCREEN);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -186,6 +193,9 @@ public class VlogsListingActivity extends BaseActivity implements View.OnClickLi
                     VlogsListingAndDetailResult parentingListData = (VlogsListingAndDetailResult) ((VlogsListingAdapter) adapterView.getAdapter()).getItem(i);
                     intent.putExtra(Constants.VIDEO_ID, parentingListData.getId());
                     intent.putExtra(Constants.AUTHOR_ID, parentingListData.getAuthor().getId());
+                    intent.putExtra(Constants.FROM_SCREEN, "Funny Videos Listing");
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Funny Videos");
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
                     startActivity(intent);
 
                 }
@@ -205,6 +215,9 @@ public class VlogsListingActivity extends BaseActivity implements View.OnClickLi
             showToast(getString(R.string.error_network));
             return;
         }
+
+        Utils.pushOpenArticleListingEvent(this, GTMEventType.FUNNY_VIDEOS_LISTING_CLICK_EVENT, fromScreen, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Funny Videos", "" + nextPageNumber);
+
         int from = (nextPageNumber - 1) * limit;
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI.class);

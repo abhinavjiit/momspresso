@@ -46,6 +46,7 @@ import com.mycity4kids.controller.ConfigurationController;
 import com.mycity4kids.dbtable.TableAdult;
 import com.mycity4kids.fragmentdialog.FragmentAlertDialog;
 import com.mycity4kids.gtmutils.ContainerHolderSingleton;
+import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.OnUIView;
 import com.mycity4kids.listener.OnButtonClicked;
@@ -117,6 +118,10 @@ public class SplashActivity extends BaseActivity {
         onNewIntent(getIntent());
         extras = getIntent().getExtras();
         setUpGTM();
+
+        if (getIntent().getBooleanExtra("fromNotification", false)) {
+            Utils.pushEventNotificationClick(this, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Notification Popup", "default");
+        }
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
        /* mFirebaseAnalytics.setUserProperty("CityId","1");*/

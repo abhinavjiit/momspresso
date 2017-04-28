@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.application.BaseApplication;
@@ -14,17 +16,21 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.dbtable.TableKids;
 import com.mycity4kids.models.response.KidsModel;
+import com.mycity4kids.models.response.LanguageConfigModel;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.models.user.KidsInfo;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.newmodels.PushNotificationModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
+import com.mycity4kids.utils.AppUtils;
 
+import java.io.FileInputStream;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Random;
 
@@ -89,13 +95,21 @@ public class SyncUserInfoService extends IntentService implements UpdateListener
 
                     SharedPrefUtils.setUserDetailModel(SyncUserInfoService.this, userInfo);
 
+                    FileInputStream fileInputStream = openFileInput(AppConstants.LANGUAGES_JSON_FILE);
+                    String fileContent = AppUtils.convertStreamToString(fileInputStream);
+                    LinkedHashMap<String, LanguageConfigModel> retMap = new Gson().fromJson(
+                            fileContent, new TypeToken<LinkedHashMap<String, LanguageConfigModel>>() {
+                            }.getType()
+                    );
+
                     Map<String, String> subscribedContentLanguages = responseData.getData().get(0).getResult().getLangSubscription();
                     String filter = "0";
                     for (Map.Entry<String, String> entry : subscribedContentLanguages.entrySet()) {
                         if ("1".equals(entry.getValue())) {
-                            String langKey = SharedPrefUtils.getLanguageConfig(SyncUserInfoService.this, entry.getKey());
-                            if (!StringUtils.isNullOrEmpty(langKey)) {
-                                filter = filter + "," + SharedPrefUtils.getLanguageConfig(SyncUserInfoService.this, entry.getKey());
+                            for (Map.Entry<String, LanguageConfigModel> langEntry : retMap.entrySet()) {
+                                if (entry.getKey().equalsIgnoreCase(langEntry.getValue().getName())) {
+                                    filter = filter + "," + langEntry.getKey();
+                                }
                             }
                         }
 //                        SharedPrefUtils.setLanguageConfig(SyncUserInfoService.this, entry.getKey(), entry.getValue());

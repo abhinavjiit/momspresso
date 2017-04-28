@@ -26,6 +26,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.ITopicSelectionEvent;
 import com.mycity4kids.models.FollowTopics;
 import com.mycity4kids.models.Topics;
@@ -85,6 +86,8 @@ public class TopicsSplashActivity extends BaseActivity implements ITopicSelectio
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.topics_splash_activity);
+
+        Utils.pushOpenScreenEvent(this, "SearchOrDetailsTopicList", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
         previouslyFollowedTopics = getIntent().getStringArrayListExtra("followedTopics");
         isAddMoreTopic = getIntent().getBooleanExtra(AppConstants.IS_ADD_MORE_TOPIC, false);

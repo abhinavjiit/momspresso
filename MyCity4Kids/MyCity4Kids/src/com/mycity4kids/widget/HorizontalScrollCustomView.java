@@ -16,16 +16,20 @@ import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
-import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.response.ArticleListingResult;
+import com.mycity4kids.models.response.LanguageConfigModel;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.AllVideoSectionActivity;
@@ -41,25 +45,34 @@ import com.mycity4kids.ui.fragment.ChooseVideoUploadOptionDialogFragment;
 import com.mycity4kids.utils.AppUtils;
 import com.squareup.picasso.Picasso;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created by hemant on 3/10/16.
  */
 public class HorizontalScrollCustomView extends LinearLayout {
 
-    TextView sectionNameTextView;
-    TextView sectionNameTextView2;
-    TextView sectionNameTextView3;
-    TextView emptyListTextView;
-    TextView addTopicsTextView;
-    ProgressBar progressBar;
-    HorizontalScrollView horizontalScrollView;
-    LinearLayout hsvLinearLayout;
+    private TextView sectionNameTextView;
+    private TextView sectionNameTextView2;
+    private TextView sectionNameTextView3;
+    private TextView emptyListTextView;
+    private TextView addTopicsTextView;
+    private ProgressBar progressBar;
+    private HorizontalScrollView horizontalScrollView;
+    private LinearLayout hsvLinearLayout;
+    private LayoutInflater mInflator;
+    private LinearLayout languageContainer;
+
     private ArrayList<ArticleListingResult> mDatalist;
     private ArrayList<VlogsListingAndDetailResult> vlogslist;
-    private LayoutInflater mInflator;
+
+    private LanguageConfigModel hindiLangModel;
 
     public HorizontalScrollCustomView(Context context) {
         super(context);
@@ -90,6 +103,8 @@ public class HorizontalScrollCustomView extends LinearLayout {
         sectionNameTextView2 = (TextView) this.findViewById(R.id.labelTextView2);
         sectionNameTextView3 = (TextView) this.findViewById(R.id.labelTextView3);
 
+        languageContainer = (LinearLayout) this.findViewById(R.id.headerLayout);
+
         emptyListTextView = (TextView) this.findViewById(R.id.emptyListTextView);
         addTopicsTextView = (TextView) this.findViewById(R.id.addTopicsTextView);
         progressBar = (ProgressBar) this.findViewById(R.id.progressBar);
@@ -102,7 +117,7 @@ public class HorizontalScrollCustomView extends LinearLayout {
         return mDatalist;
     }
 
-    public void setmDatalist(final ArrayList<ArticleListingResult> mDatalist, final String listingType) {
+    public void setmDatalist(final ArrayList<ArticleListingResult> mDatalist, final String listingType, final String currentScreen) {
         if (Constants.KEY_FOR_YOU.equals(listingType)) {
             addTopicsTextView.setVisibility(VISIBLE);
             addTopicsTextView.setOnClickListener(new OnClickListener() {
@@ -114,6 +129,10 @@ public class HorizontalScrollCustomView extends LinearLayout {
                 }
             });
         }
+        if (Constants.KEY_HINDI.equals(listingType)) {
+            hindiLangModel = AppUtils.getLangModelForLanguage(getContext(), AppConstants.LANG_KEY_HINDI);
+        }
+
         this.mDatalist = mDatalist;
         mInflator = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         progressBar.setVisibility(GONE);
@@ -146,15 +165,23 @@ public class HorizontalScrollCustomView extends LinearLayout {
                 public void onClick(View v) {
                     if (Constants.KEY_FOR_YOU.equals(listingType)) {
                         Utils.pushEvent(getContext(), GTMEventType.FOR_YOU_ARTICLE_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(getContext()).getDynamoId(), "Home Screen");
-                    } else if (Constants.KEY_HINDI.equals(listingType)) {
-                        Utils.pushEvent(getContext(), GTMEventType.HINDI_ARTICLE_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(getContext()).getDynamoId(), "Home Screen");
                     }
+//                    else if (Constants.KEY_HINDI.equals(listingType)) {
+//                        Utils.pushEvent(getContext(), GTMEventType.HINDI_ARTICLE_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(getContext()).getDynamoId(), "Home Screen");
+//                    }
                     Intent intent = new Intent(getContext(), ArticlesAndBlogsDetailsActivity.class);
                     ArticleListingResult parentingListData = (ArticleListingResult) (mDatalist.get((int) view.getTag()));
                     intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
                     intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
                     intent.putExtra(Constants.BLOG_SLUG, parentingListData.getBlogPageSlug());
                     intent.putExtra(Constants.TITLE_SLUG, parentingListData.getTitleSlug());
+                    if (Constants.KEY_HINDI.equals(listingType) && null != hindiLangModel && !StringUtils.isNullOrEmpty(hindiLangModel.getId())) {
+                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, hindiLangModel.getName() + "~" + hindiLangModel.getId());
+                    } else {
+                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, listingType);
+                    }
+                    intent.putExtra(Constants.FROM_SCREEN, currentScreen);
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + (int) view.getTag());
                     getContext().startActivity(intent);
                     Log.e("Tag", "" + view.getTag());
                 }
@@ -177,28 +204,39 @@ public class HorizontalScrollCustomView extends LinearLayout {
                 if (Constants.KEY_FOR_YOU.equals(listingType)) {
                     Intent intent1 = new Intent(getContext(), ArticleListingActivity.class);
                     intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_FOR_YOU);
+                    intent1.putExtra(Constants.FROM_SCREEN, currentScreen);
                     getContext().startActivity(intent1);
                 } else if (Constants.KEY_TRENDING.equals(listingType)) {
                     Intent intent1 = new Intent(getContext(), ArticleListingActivity.class);
                     intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_TRENDING);
+                    intent1.putExtra(Constants.FROM_SCREEN, currentScreen);
                     getContext().startActivity(intent1);
-                } else if (Constants.KEY_IN_YOUR_CITY.equals(listingType)) {
+                } else if (listingType != null && listingType.contains(Constants.KEY_IN_YOUR_CITY)) {
                     Intent intent1 = new Intent(getContext(), CityBestArticleListingActivity.class);
+                    intent1.putExtra(Constants.FROM_SCREEN, currentScreen);
                     getContext().startActivity(intent1);
                 } else if (Constants.KEY_EDITOR_PICKS.equals(listingType)) {
                     Intent intent1 = new Intent(getContext(), ArticleListingActivity.class);
                     intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_EDITOR_PICKS);
+                    intent1.putExtra(Constants.FROM_SCREEN, currentScreen);
                     getContext().startActivity(intent1);
                 } else if (Constants.KEY_MOMSPRESSO.equals(listingType)) {
                     Intent intent1 = new Intent(getContext(), FilteredTopicsArticleListingActivity.class);
                     intent1.putExtra("selectedTopics", AppConstants.MOMSPRESSO_CATEGORYID);
                     intent1.putExtra("displayName", getContext().getString(R.string.home_sections_title_momspresso));
+                    intent1.putExtra(Constants.FROM_SCREEN, currentScreen);
                     getContext().startActivity(intent1);
                 } else if (Constants.KEY_HINDI.equals(listingType)) {
                     Intent hindiIntent = new Intent(getContext(), FilteredTopicsArticleListingActivity.class);
-                    hindiIntent.putExtra("selectedTopics", AppConstants.HINDI_CATEGORYID);
-                    hindiIntent.putExtra("displayName", getContext().getString(R.string.home_sections_title_hindi));
-                    getContext().startActivity(hindiIntent);
+                    if (null != hindiLangModel && !StringUtils.isNullOrEmpty(hindiLangModel.getId())) {
+                        hindiIntent.putExtra("selectedTopics", hindiLangModel.getId());
+                        hindiIntent.putExtra("displayName", hindiLangModel.getDisplay_name());
+                        hindiIntent.putExtra("categoryName", hindiLangModel.getName());
+                        hindiIntent.putExtra("isLanguage", true);
+                        hindiIntent.putExtra(Constants.FROM_SCREEN, currentScreen);
+                        getContext().startActivity(hindiIntent);
+                    }
+
                 }
             }
         });
@@ -209,53 +247,59 @@ public class HorizontalScrollCustomView extends LinearLayout {
                 if (Constants.KEY_FOR_YOU.equals(listingType)) {
                     Intent intent1 = new Intent(getContext(), ArticleListingActivity.class);
                     intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_FOR_YOU);
+                    intent1.putExtra(Constants.FROM_SCREEN, currentScreen);
                     getContext().startActivity(intent1);
                 } else if (Constants.KEY_TRENDING.equals(listingType)) {
                     Intent intent1 = new Intent(getContext(), ArticleListingActivity.class);
                     intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_TRENDING);
+                    intent1.putExtra(Constants.FROM_SCREEN, currentScreen);
                     getContext().startActivity(intent1);
-                } else if (Constants.KEY_IN_YOUR_CITY.equals(listingType)) {
+                } else if (listingType != null && listingType.contains(Constants.KEY_IN_YOUR_CITY)) {
                     Intent intent1 = new Intent(getContext(), CityBestArticleListingActivity.class);
+                    intent1.putExtra(Constants.FROM_SCREEN, currentScreen);
                     getContext().startActivity(intent1);
                 } else if (Constants.KEY_EDITOR_PICKS.equals(listingType)) {
                     Intent intent1 = new Intent(getContext(), ArticleListingActivity.class);
                     intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_EDITOR_PICKS);
+                    intent1.putExtra(Constants.FROM_SCREEN, currentScreen);
                     getContext().startActivity(intent1);
                 } else if (Constants.KEY_MOMSPRESSO.equals(listingType)) {
                     Intent intent1 = new Intent(getContext(), FilteredTopicsArticleListingActivity.class);
                     intent1.putExtra("selectedTopics", AppConstants.MOMSPRESSO_CATEGORYID);
                     intent1.putExtra("displayName", getContext().getString(R.string.home_sections_title_momspresso));
+                    intent1.putExtra(Constants.FROM_SCREEN, currentScreen);
                     getContext().startActivity(intent1);
-                } else if (Constants.KEY_HINDI.equals(listingType)) {
-                    Intent hindiIntent = new Intent(getContext(), FilteredTopicsArticleListingActivity.class);
-                    hindiIntent.putExtra("selectedTopics", AppConstants.HINDI_CATEGORYID);
-                    hindiIntent.putExtra("displayName", getContext().getString(R.string.home_sections_title_hindi));
-                    getContext().startActivity(hindiIntent);
                 }
+//                else if (Constants.KEY_HINDI.equals(listingType)) {
+//                    Intent hindiIntent = new Intent(getContext(), FilteredTopicsArticleListingActivity.class);
+//                    hindiIntent.putExtra("selectedTopics", AppConstants.HINDI_CATEGORYID);
+//                    hindiIntent.putExtra("displayName", getContext().getString(R.string.home_sections_title_hindi));
+//                    getContext().startActivity(hindiIntent);
+//                }
             }
         });
 
-        if (Constants.KEY_HINDI.equals(listingType)) {
-            sectionNameTextView2.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent banglaIntent = new Intent(getContext(), FilteredTopicsArticleListingActivity.class);
-                    banglaIntent.putExtra("selectedTopics", AppConstants.BANGLA_CATEGORYID);
-                    banglaIntent.putExtra("displayName", getContext().getString(R.string.home_sections_title_bangla));
-                    getContext().startActivity(banglaIntent);
-                }
-            });
-
-            sectionNameTextView3.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent marathiIntent = new Intent(getContext(), FilteredTopicsArticleListingActivity.class);
-                    marathiIntent.putExtra("selectedTopics", AppConstants.MARATHI_CATEGORYID);
-                    marathiIntent.putExtra("displayName", getContext().getString(R.string.home_sections_title_marathi));
-                    getContext().startActivity(marathiIntent);
-                }
-            });
-        }
+//        if (Constants.KEY_HINDI.equals(listingType)) {
+//            sectionNameTextView2.setOnClickListener(new OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Intent banglaIntent = new Intent(getContext(), FilteredTopicsArticleListingActivity.class);
+//                    banglaIntent.putExtra("selectedTopics", AppConstants.BANGLA_CATEGORYID);
+//                    banglaIntent.putExtra("displayName", getContext().getString(R.string.home_sections_title_bangla));
+//                    getContext().startActivity(banglaIntent);
+//                }
+//            });
+//
+//            sectionNameTextView3.setOnClickListener(new OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Intent marathiIntent = new Intent(getContext(), FilteredTopicsArticleListingActivity.class);
+//                    marathiIntent.putExtra("selectedTopics", AppConstants.MARATHI_CATEGORYID);
+//                    marathiIntent.putExtra("displayName", getContext().getString(R.string.home_sections_title_marathi));
+//                    getContext().startActivity(marathiIntent);
+//                }
+//            });
+//        }
 
         if (mDatalist.isEmpty()) {
             emptyListTextView.setVisibility(View.VISIBLE);
@@ -266,7 +310,7 @@ public class HorizontalScrollCustomView extends LinearLayout {
         return vlogslist;
     }
 
-    public void setVlogslist(final ArrayList<VlogsListingAndDetailResult> vlogslist, final String fromActivity) {
+    public void setVlogslist(final ArrayList<VlogsListingAndDetailResult> vlogslist, final String fromActivity, final String currentScreen) {
         addTopicsTextView.setVisibility(VISIBLE);
         addTopicsTextView.setText("ADD VIDEO");
         addTopicsTextView.setOnClickListener(new OnClickListener() {
@@ -312,6 +356,10 @@ public class HorizontalScrollCustomView extends LinearLayout {
                     VlogsListingAndDetailResult parentingListData = (VlogsListingAndDetailResult) (vlogslist.get((int) view.getTag()));
                     intent.putExtra(Constants.VIDEO_ID, parentingListData.getId());
                     intent.putExtra(Constants.AUTHOR_ID, parentingListData.getAuthor().getId());
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "funnyVideos");
+                    intent.putExtra(Constants.FROM_SCREEN, currentScreen);
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + (int) view.getTag());
+
                     getContext().startActivity(intent);
                     Log.e("Tag", "" + view.getTag());
                 }
@@ -332,6 +380,7 @@ public class HorizontalScrollCustomView extends LinearLayout {
             @Override
             public void onClick(View v) {
                 Intent intent1 = new Intent(getContext(), VlogsListingActivity.class);
+                intent1.putExtra(Constants.FROM_SCREEN, currentScreen);
                 getContext().startActivity(intent1);
             }
         });
@@ -340,6 +389,7 @@ public class HorizontalScrollCustomView extends LinearLayout {
             @Override
             public void onClick(View v) {
                 Intent intent1 = new Intent(getContext(), VlogsListingActivity.class);
+                intent1.putExtra(Constants.FROM_SCREEN, currentScreen);
                 getContext().startActivity(intent1);
             }
         });
@@ -352,14 +402,59 @@ public class HorizontalScrollCustomView extends LinearLayout {
         sectionNameTextView.setText(title);
     }
 
-    public void setMultipleSectionsTitle(String title1, String title2, String title3) {
-        SpannableString content = new SpannableString(title1);
-        content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
-        sectionNameTextView.setText(content);
-        sectionNameTextView2.setVisibility(VISIBLE);
-        sectionNameTextView2.setText(title2);
-        sectionNameTextView3.setVisibility(VISIBLE);
-        sectionNameTextView3.setText(title3);
+    public void setMultipleSectionsTitle() {
+//        SpannableString content = new SpannableString(title1);
+//        content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+//        sectionNameTextView.setText(content);
+//        sectionNameTextView2.setVisibility(VISIBLE);
+//        sectionNameTextView2.setText(title2);
+//        sectionNameTextView3.setVisibility(VISIBLE);
+//        sectionNameTextView3.setText(title3);
+        sectionNameTextView.setVisibility(GONE);
+        populateLanguagesInSection();
+    }
+
+    private void populateLanguagesInSection() {
+        try {
+            FileInputStream fileInputStream = getContext().openFileInput(AppConstants.LANGUAGES_JSON_FILE);
+            String fileContent = AppUtils.convertStreamToString(fileInputStream);
+//            ConfigResult res = new Gson().fromJson(fileContent, ConfigResult.class);
+            LinkedHashMap<String, LanguageConfigModel> retMap = new Gson().fromJson(
+                    fileContent, new TypeToken<LinkedHashMap<String, LanguageConfigModel>>() {
+                    }.getType()
+            );
+            LayoutInflater inflator = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            Log.d("Map", "" + retMap.toString());
+            int i = 0;
+            for (final Map.Entry<String, LanguageConfigModel> entry : retMap.entrySet()) {
+                final TextView view = (TextView) inflator.inflate(R.layout.horizontal_section_language_item, null);
+                if (i == 0) {
+                    SpannableString content = new SpannableString(entry.getValue().getDisplay_name());
+                    content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+                    view.setText(content);
+                } else {
+                    view.setText(entry.getValue().getDisplay_name());
+                }
+
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent languageIntent = new Intent(getContext(), FilteredTopicsArticleListingActivity.class);
+                        languageIntent.putExtra("selectedTopics", entry.getValue().getId());
+                        languageIntent.putExtra("displayName", entry.getValue().getDisplay_name());
+                        languageIntent.putExtra("categoryName", entry.getValue().getName());
+                        languageIntent.putExtra("isLanguage", true);
+                        languageIntent.putExtra(Constants.FROM_SCREEN, "Home Screen");
+                        getContext().startActivity(languageIntent);
+                    }
+                });
+                languageContainer.addView(view);
+                i++;
+            }
+        } catch (FileNotFoundException ffe) {
+            Crashlytics.logException(ffe);
+            Log.d("MC4kException", Log.getStackTraceString(ffe));
+        }
     }
 
     public void setCityNameFromCityId(int cityId) {

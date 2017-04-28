@@ -5,15 +5,10 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
 import com.mycity4kids.constants.AppConstants;
-import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.VersionApiModel;
 import com.mycity4kids.models.city.MetroCity;
-import com.mycity4kids.models.response.CityInfoItem;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.models.version.RateVersion;
-import com.mycity4kids.sync.CategorySyncService;
-import com.mycity4kids.ui.activity.BloggerDashboardActivity;
-import com.mycity4kids.ui.activity.SplashActivity;
 
 /**
  * To save the Preference for My City App

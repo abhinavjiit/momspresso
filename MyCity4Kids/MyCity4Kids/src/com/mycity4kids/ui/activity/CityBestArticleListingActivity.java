@@ -27,9 +27,12 @@ import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.enums.ParentingFilterType;
+import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.models.city.City;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -65,6 +68,7 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
     private RelativeLayout bottomOptionMenu;
     private FloatingActionsMenu fabMenu;
     private FloatingActionButton popularSortFAB, recentSortFAB, fabSort;
+    private String fromScreen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +79,8 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setCityNameAsTitle();
         Utils.pushOpenScreenEvent(CityBestArticleListingActivity.this, "Best of City Listing", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+
+        fromScreen = getIntent().getStringExtra(Constants.FROM_SCREEN);
 
         listView = (ListView) findViewById(R.id.scroll);
         mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
@@ -135,6 +141,7 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
         hitBestofCityArticleListingApi(sortType);
 
         articlesListingAdapter = new NewArticlesListingAdapter(this);
+        articlesListingAdapter.setListingType("Best of City Listing");
         articlesListingAdapter.setNewListData(articleDataModelsNew);
         listView.setAdapter(articlesListingAdapter);
         articlesListingAdapter.notifyDataSetChanged();
@@ -169,6 +176,9 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
                     intent.putExtra(Constants.ARTICLE_COVER_IMAGE, parentingListData.getImageUrl());
                     intent.putExtra(Constants.BLOG_SLUG, parentingListData.getBlogPageSlug());
                     intent.putExtra(Constants.TITLE_SLUG, parentingListData.getTitleSlug());
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, Constants.KEY_IN_YOUR_CITY + "~" + SharedPrefUtils.getCurrentCityModel(CityBestArticleListingActivity.this).getName());
+                    intent.putExtra(Constants.FROM_SCREEN, "Best of City Listing");
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
                     startActivity(intent);
 
                 }
@@ -235,6 +245,7 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
         }
 
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        Utils.pushOpenArticleListingEvent(this, GTMEventType.ARTICLE_LISTING_CLICK_EVENT, fromScreen, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), Constants.KEY_IN_YOUR_CITY + "~" + SharedPrefUtils.getCurrentCityModel(this).getName(), "" + nextPageNumber);
         TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
 
         int from = (nextPageNumber - 1) * limit + 1;
@@ -349,6 +360,8 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.recentSortFAB:
+                Utils.pushSortListingEvent(CityBestArticleListingActivity.this, GTMEventType.SORT_LISTING_EVENT, SharedPrefUtils.getUserDetailModel(CityBestArticleListingActivity.this).getDynamoId(),
+                        "Best of City Listing", "recent");
                 sortBgLayout.setVisibility(View.GONE);
                 fabMenu.collapse();
                 articleDataModelsNew.clear();
@@ -358,6 +371,8 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
                 hitBestofCityArticleListingApi(0);
                 break;
             case R.id.popularSortFAB:
+                Utils.pushSortListingEvent(CityBestArticleListingActivity.this, GTMEventType.SORT_LISTING_EVENT, SharedPrefUtils.getUserDetailModel(CityBestArticleListingActivity.this).getDynamoId(),
+                        "Best of City Listing", "popular");
                 sortBgLayout.setVisibility(View.GONE);
                 fabMenu.collapse();
                 articleDataModelsNew.clear();

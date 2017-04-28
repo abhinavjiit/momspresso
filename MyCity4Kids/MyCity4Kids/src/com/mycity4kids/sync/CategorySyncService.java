@@ -19,6 +19,7 @@ import com.mycity4kids.models.response.UserTypeResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ConfigAPIs;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
+import com.mycity4kids.utils.AppUtils;
 
 import org.json.JSONObject;
 
@@ -94,6 +95,7 @@ public class CategorySyncService extends IntentService {
                                          for (Map.Entry<String, String> entry : responseModel.getData().getResult().getLanguage().entrySet()) {
                                              SharedPrefUtils.setLanguageConfig(CategorySyncService.this, entry.getKey(), entry.getValue());
                                          }
+                                         boolean status = AppUtils.writeJsonStringToFile(CategorySyncService.this, new Gson().toJson(responseModel.getData().getResult().getLanguages()), AppConstants.LANGUAGES_JSON_FILE);
 
                                          version = SharedPrefUtils.getConfigCategoryVersion(CategorySyncService.this);
                                          if (version == 0 || version != responseModel.getData().getResult().getCategory().getVersion()) {

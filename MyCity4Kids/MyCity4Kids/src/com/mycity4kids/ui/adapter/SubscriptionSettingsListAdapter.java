@@ -62,11 +62,6 @@ public class SubscriptionSettingsListAdapter extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
         holder.aSwitch.setText(subscriptionSettingsList.get(position).getDisplayName());
-        if ("1".equals(subscriptionSettingsList.get(position).getStatus())) {
-            holder.aSwitch.setChecked(true);
-        } else {
-            holder.aSwitch.setChecked(false);
-        }
 
         holder.aSwitch.setTag(position);
         holder.aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -82,6 +77,11 @@ public class SubscriptionSettingsListAdapter extends BaseAdapter {
             }
         });
 
+        if ("1".equals(subscriptionSettingsList.get(position).getStatus())) {
+            holder.aSwitch.setChecked(true);
+        } else {
+            holder.aSwitch.setChecked(false);
+        }
         return view;
     }
 }

@@ -17,6 +17,7 @@ public class ArticleDetailResult {
     private String excerpt;
     private String userId;
     private String titleSlug;
+    private String blogTitleSlug;
     private String authorImage;
     private String createdTime;
     private String userType;
@@ -85,6 +86,14 @@ public class ArticleDetailResult {
 
     public void setTitleSlug(String titleSlug) {
         this.titleSlug = titleSlug;
+    }
+
+    public String getBlogTitleSlug() {
+        return blogTitleSlug;
+    }
+
+    public void setBlogTitleSlug(String blogTitleSlug) {
+        this.blogTitleSlug = blogTitleSlug;
     }
 
     public String getAuthorImage() {

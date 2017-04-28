@@ -79,6 +79,8 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
                 Intent intent = new Intent(FollowersAndFollowingListActivity.this, BloggerDashboardActivity.class);
                 intent.putExtra(AppConstants.PUBLIC_PROFILE_FLAG, true);
                 intent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, mDatalist.get(position).getUserId());
+                intent.putExtra(AppConstants.AUTHOR_NAME, mDatalist.get(position).getFirstName() + " " + mDatalist.get(position).getLastName());
+                intent.putExtra(Constants.FROM_SCREEN, "Followers/Following List");
                 startActivity(intent);
             }
         });

@@ -10,17 +10,21 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.SubscriptionAndLanguageSettingsModel;
 import com.mycity4kids.models.response.ConfigResponse;
+import com.mycity4kids.models.response.LanguageConfigModel;
 import com.mycity4kids.models.response.LanguageSettingsResponse;
 import com.mycity4kids.models.response.PreferredLanguageUpdateRequest;
 import com.mycity4kids.models.response.UpdateLanguageSettingsResponse;
@@ -29,9 +33,13 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ConfigAPIs;
 import com.mycity4kids.retrofitAPIsInterfaces.LanguageSettingsAPI;
 import com.mycity4kids.ui.adapter.LanguageSettingsListAdapter;
+import com.mycity4kids.utils.AppUtils;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -92,6 +100,7 @@ public class LanguageSettingsFragment extends BaseFragment implements View.OnCli
                     }
                     languageSettingsListAdapter = new LanguageSettingsListAdapter(getActivity(), languageSettingsList);
                     languageListView.setAdapter(languageSettingsListAdapter);
+                    Log.d("dwaddawad", "" + languageSettingsList);
                 } else {
 
                 }
@@ -169,18 +178,34 @@ public class LanguageSettingsFragment extends BaseFragment implements View.OnCli
 
                         Map<String, String> subscribedContentLanguages = responseData.getData();
                         String filter = "0";
+
+
+                        FileInputStream fileInputStream = getActivity().openFileInput(AppConstants.LANGUAGES_JSON_FILE);
+                        String fileContent = AppUtils.convertStreamToString(fileInputStream);
+//            ConfigResult res = new Gson().fromJson(fileContent, ConfigResult.class);
+                        LinkedHashMap<String, LanguageConfigModel> retMap = new Gson().fromJson(
+                                fileContent, new TypeToken<LinkedHashMap<String, LanguageConfigModel>>() {
+                                }.getType()
+                        );
+
                         for (Map.Entry<String, String> entry : subscribedContentLanguages.entrySet()) {
                             if ("1".equals(entry.getValue())) {
-                                String langKey = SharedPrefUtils.getLanguageConfig(getActivity(), entry.getKey());
-                                if (!StringUtils.isNullOrEmpty(langKey)) {
-                                    filter = filter + "," + SharedPrefUtils.getLanguageConfig(getActivity(), entry.getKey());
-                                } else {
-                                    if (!isSubsequentCall) {
-                                        updateConfigSettings();
-                                        return;
-                                    }
 
+                                for (Map.Entry<String, LanguageConfigModel> langEntry : retMap.entrySet()) {
+                                    if (entry.getKey().equalsIgnoreCase(langEntry.getValue().getName())) {
+                                        filter = filter + "," + langEntry.getKey();
+                                    }
                                 }
+
+//                                String langKey = SharedPrefUtils.getLanguageConfig(getActivity(), entry.getKey());
+//                                if (!StringUtils.isNullOrEmpty(langKey)) {
+//                                    filter = filter + "," + SharedPrefUtils.getLanguageConfig(getActivity(), entry.getKey());
+//                                } else {
+//                                    if (!isSubsequentCall) {
+//                                        updateConfigSettings();
+//                                        return;
+//                                    }
+//                                }
                             }
                         }
                         SharedPrefUtils.setLanguageFilters(getActivity(), filter);
@@ -191,6 +216,10 @@ public class LanguageSettingsFragment extends BaseFragment implements View.OnCli
                         Toast.makeText(getActivity(), "Error while updating subscription settings", Toast.LENGTH_SHORT).show();
                     }
                 }
+            } catch (FileNotFoundException fnfe) {
+                Crashlytics.logException(fnfe);
+                Log.d("MC4kException", Log.getStackTraceString(fnfe));
+                updateConfigSettings();
             } catch (Exception e) {
                 if (null != getActivity()) {
                     Toast.makeText(getActivity(), "Error while updating subscription settings", Toast.LENGTH_SHORT).show();

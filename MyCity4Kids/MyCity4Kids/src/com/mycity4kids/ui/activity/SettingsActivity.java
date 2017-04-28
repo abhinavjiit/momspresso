@@ -18,6 +18,7 @@ import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.facebook.FacebookUtils;
+import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.fragment.ArticlesFragment;
@@ -81,6 +82,11 @@ public class SettingsActivity extends BaseActivity {
         bio = getIntent().getStringExtra("bio");
         firstName = getIntent().getStringExtra("firstName");
         lastName = getIntent().getStringExtra("lastName");
+
+        if (getIntent().getBooleanExtra("fromNotification",false)) {
+            Utils.pushEventNotificationClick(this, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Notification Popup", "app_settings");
+        }
+
         Bundle extras = getIntent().getExtras();
         String fragmentToLoad = "";
         if (null != extras) {

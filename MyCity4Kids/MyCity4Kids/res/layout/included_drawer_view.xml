@@ -143,63 +143,73 @@
             android:textColor="@color/black_color"
             android:textSize="16sp" />
 
-        <LinearLayout
+        <!--<LinearLayout-->
+        <!--android:id="@+id/languageContainer"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:weightSum="3">-->
+        <org.apmem.tools.layouts.FlowLayout
+            android:id="@+id/languageContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="3">
+            android:gravity="fill">
 
-            <TextView
-                android:id="@+id/rdBtnHindi"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:layout_weight="1"
-                android:background="?attr/selectableItemBackground"
-                android:button="@null"
-                android:clickable="true"
-                android:fontFamily="sans-serif-light"
-                android:gravity="center"
-                android:paddingBottom="15dp"
-                android:paddingTop="15dp"
-                android:text="@string/menu.hindi"
-                android:textColor="@color/black_color"
-                android:textSize="16sp" />
+            <!--<TextView-->
+                <!--android:id="@+id/rdBtnHindi"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="2dp"-->
+                <!--android:layout_weight="1"-->
+                <!--android:background="?attr/selectableItemBackground"-->
+                <!--android:button="@null"-->
+                <!--android:clickable="true"-->
+                <!--android:fontFamily="sans-serif-light"-->
+                <!--android:gravity="center"-->
+                <!--android:paddingBottom="15dp"-->
+                <!--android:paddingTop="15dp"-->
+                <!--android:text="@string/menu.hindi"-->
+                <!--android:textColor="@color/black_color"-->
+                <!--android:textSize="16sp"-->
+                <!--android:visibility="gone" />-->
 
-            <TextView
-                android:id="@+id/rdBtnBangla"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:layout_weight="1"
-                android:background="?attr/selectableItemBackground"
-                android:button="@null"
-                android:clickable="true"
-                android:fontFamily="sans-serif-light"
-                android:gravity="center"
-                android:paddingBottom="15dp"
-                android:paddingTop="15dp"
-                android:text="@string/menu.bangla"
-                android:textColor="@color/black_color"
-                android:textSize="16sp" />
+            <!--<TextView-->
+                <!--android:id="@+id/rdBtnBangla"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="2dp"-->
+                <!--android:layout_weight="1"-->
+                <!--android:background="?attr/selectableItemBackground"-->
+                <!--android:button="@null"-->
+                <!--android:clickable="true"-->
+                <!--android:fontFamily="sans-serif-light"-->
+                <!--android:gravity="center"-->
+                <!--android:paddingBottom="15dp"-->
+                <!--android:paddingTop="15dp"-->
+                <!--android:text="@string/menu.bangla"-->
+                <!--android:textColor="@color/black_color"-->
+                <!--android:textSize="16sp"-->
+                <!--android:visibility="gone" />-->
 
-            <TextView
-                android:id="@+id/rdBtnMarathi"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:layout_weight="1"
-                android:background="?attr/selectableItemBackground"
-                android:button="@null"
-                android:clickable="true"
-                android:fontFamily="sans-serif-light"
-                android:gravity="center"
-                android:paddingBottom="15dp"
-                android:paddingTop="15dp"
-                android:text="@string/menu.marathi"
-                android:textColor="@color/black_color"
-                android:textSize="16sp" />
-        </LinearLayout>
+            <!--<TextView-->
+                <!--android:id="@+id/rdBtnMarathi"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="2dp"-->
+                <!--android:layout_weight="1"-->
+                <!--android:background="?attr/selectableItemBackground"-->
+                <!--android:button="@null"-->
+                <!--android:clickable="true"-->
+                <!--android:fontFamily="sans-serif-light"-->
+                <!--android:gravity="center"-->
+                <!--android:paddingBottom="15dp"-->
+                <!--android:paddingTop="15dp"-->
+                <!--android:text="@string/menu.marathi"-->
+                <!--android:textColor="@color/black_color"-->
+                <!--android:textSize="16sp"-->
+                <!--android:visibility="gone" />-->
+            <!--</LinearLayout>-->
+        </org.apmem.tools.layouts.FlowLayout>
 
         <View
             android:layout_width="match_parent"

@@ -26,6 +26,7 @@ import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.SearchArticleResult;
 import com.mycity4kids.models.response.SearchResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -63,7 +64,7 @@ public class ContextualSearchActivity extends BaseActivity implements View.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.contextual_search_activity);
-
+        Utils.pushOpenScreenEvent(ContextualSearchActivity.this, "Contextual Search Screen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         categoryId = getIntent().getStringExtra(Constants.CATEGORY_ID);
 
         listView = (ListView) findViewById(R.id.scroll);
@@ -128,6 +129,9 @@ public class ContextualSearchActivity extends BaseActivity implements View.OnCli
                 intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
                 intent.putExtra(Constants.BLOG_SLUG, parentingListData.getBlogSlug());
                 intent.putExtra(Constants.TITLE_SLUG, parentingListData.getTitleSlug());
+                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "ContextualSearch");
+                intent.putExtra(Constants.FROM_SCREEN, "Contextual Search Screen");
+                intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
                 startActivity(intent);
 
             }

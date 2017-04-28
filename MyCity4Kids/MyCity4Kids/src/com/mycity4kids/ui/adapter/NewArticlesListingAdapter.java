@@ -319,6 +319,8 @@ public class NewArticlesListingAdapter extends BaseAdapter {
                 public void onClick(View view) {
                     Intent intent = new Intent(mContext, BloggerDashboardActivity.class);
                     intent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, articleDataModelsNew.get(position).getUserId());
+                    intent.putExtra(AppConstants.AUTHOR_NAME, "" + articleDataModelsNew.get(position).getUserName());
+                    intent.putExtra(Constants.FROM_SCREEN, listingType);
                     mContext.startActivity(intent);
                 }
             });
@@ -327,6 +329,8 @@ public class NewArticlesListingAdapter extends BaseAdapter {
                 public void onClick(View view) {
                     Intent intent = new Intent(mContext, BloggerDashboardActivity.class);
                     intent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, articleDataModelsNew.get(position).getUserId());
+                    intent.putExtra(AppConstants.AUTHOR_NAME, "" + articleDataModelsNew.get(position).getUserName());
+                    intent.putExtra(Constants.FROM_SCREEN, listingType);
                     mContext.startActivity(intent);
                 }
             });
@@ -373,10 +377,6 @@ public class NewArticlesListingAdapter extends BaseAdapter {
         LinearLayout tvParentLL2;
         LinearLayout tvParentLL3;
         LinearLayout tvParentLL4;
-    }
-
-    public void refreshArticleList(ArrayList<ArticleListingResult> newList) {
-        this.articleDataModelsNew = newList;
     }
 
 }

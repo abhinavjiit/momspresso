@@ -62,11 +62,6 @@ public class LanguageSettingsListAdapter extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
         holder.aSwitch.setText(languageSettingsList.get(position).getName());
-        if ("1".equals(languageSettingsList.get(position).getStatus())) {
-            holder.aSwitch.setChecked(true);
-        } else {
-            holder.aSwitch.setChecked(false);
-        }
 
         holder.aSwitch.setTag(position);
         holder.aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -79,6 +74,12 @@ public class LanguageSettingsListAdapter extends BaseAdapter {
                 }
             }
         });
+
+        if ("1".equals(languageSettingsList.get(position).getStatus())) {
+            holder.aSwitch.setChecked(true);
+        } else {
+            holder.aSwitch.setChecked(false);
+        }
 
         return view;
     }

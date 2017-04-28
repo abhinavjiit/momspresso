@@ -44,6 +44,7 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.editor.DraftListAdapter;
 import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
+import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.editor.ArticleDraftRequest;
 import com.mycity4kids.models.parentingdetails.ImageData;
@@ -184,12 +185,26 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         Utils.pushOpenScreenEvent(BloggerDashboardActivity.this, "User Profile", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         userId = getIntent().getStringExtra(AppConstants.PUBLIC_PROFILE_USER_ID);
         stackClearRequired = getIntent().getBooleanExtra(AppConstants.STACK_CLEAR_REQUIRED, false);
+
+        if (getIntent().getBooleanExtra("fromNotification", false)) {
+            Utils.pushEventNotificationClick(this, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Notification Popup", "profile");
+        }
+
         if (userId == null || userId.equals(SharedPrefUtils.getUserDetailModel(BloggerDashboardActivity.this).getDynamoId())) {
             isPrivateProfile = true;
             userId = SharedPrefUtils.getUserDetailModel(BloggerDashboardActivity.this).getDynamoId();
         } else {
             isPrivateProfile = false;
+            String fromScreen = getIntent().getStringExtra(Constants.FROM_SCREEN);
+            String authorName = getIntent().getStringExtra(AppConstants.AUTHOR_NAME);
+            if (StringUtils.isNullOrEmpty(authorName)) {
+                Utils.pushBloggerDetailsOpenedEvent(this, GTMEventType.BLOGGER_DETAILS_CLICKED, SharedPrefUtils.getUserDetailModel(BloggerDashboardActivity.this).getDynamoId(), fromScreen, "" + userId);
+            } else {
+                Utils.pushBloggerDetailsOpenedEvent(this, GTMEventType.BLOGGER_DETAILS_CLICKED, SharedPrefUtils.getUserDetailModel(BloggerDashboardActivity.this).getDynamoId(), fromScreen, authorName + "~" + userId);
+            }
+
         }
+
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         draftListview = (ListView) findViewById(R.id.draftListView);
         publishedArticleListView = (ListView) findViewById(R.id.publishedArticleListView);
@@ -498,6 +513,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
             @Override
             public void onClick(View v) {
                 if (Build.VERSION.SDK_INT > 15) {
+                    Utils.pushEvent(BloggerDashboardActivity.this, GTMEventType.ADD_BLOG_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(BloggerDashboardActivity.this).getDynamoId() + "", "User Profile");
                     Intent intent1 = new Intent(BloggerDashboardActivity.this, EditorPostActivity.class);
                     Bundle bundle5 = new Bundle();
                     bundle5.putString(EditorPostActivity.TITLE_PARAM, "");
@@ -602,6 +618,14 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                     intent.putExtra(Constants.ARTICLE_ID, articleDataModelsNew.get(position - 1).getId());
                     intent.putExtra(Constants.BLOG_SLUG, articleDataModelsNew.get(position - 1).getBlogPageSlug());
                     intent.putExtra(Constants.TITLE_SLUG, articleDataModelsNew.get(position - 1).getTitleSlug());
+                    if (isPrivateProfile) {
+                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Self Published Articles");
+                        intent.putExtra(Constants.FROM_SCREEN, "Private User Profile");
+                    } else {
+                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Other Authors Published Articles");
+                        intent.putExtra(Constants.FROM_SCREEN, "Public User Profile");
+                    }
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + (position - 1));
                     startActivity(intent);
 
                 }
@@ -620,6 +644,15 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                         Intent intent1 = new Intent(BloggerDashboardActivity.this, VlogsDetailActivity.class);
                         intent1.putExtra(Constants.VIDEO_ID, commentList.get(position - 1).getArticleId());
                         intent1.putExtra(Constants.AUTHOR_ID, commentList.get(position - 1).getUserId());
+                        intent1.putExtra(Constants.FROM_SCREEN, "User Profile");
+                        if (isPrivateProfile) {
+                            intent1.putExtra(Constants.ARTICLE_OPENED_FROM, "Private Comments");
+                            intent1.putExtra(Constants.FROM_SCREEN, "Private User Profile");
+                        } else {
+                            intent1.putExtra(Constants.ARTICLE_OPENED_FROM, "Public Comments");
+                            intent1.putExtra(Constants.FROM_SCREEN, "Public User Profile");
+                        }
+                        intent1.putExtra(Constants.ARTICLE_INDEX, "" + (position - 1));
                         startActivity(intent1);
                     } else {
                         Intent intent = new Intent(BloggerDashboardActivity.this, ArticlesAndBlogsDetailsActivity.class);
@@ -627,6 +660,15 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                         intent.putExtra(Constants.AUTHOR_ID, commentList.get(position - 1).getUserId());
                         intent.putExtra(Constants.BLOG_SLUG, commentList.get(position - 1).getBlogTitleSlug());
                         intent.putExtra(Constants.TITLE_SLUG, commentList.get(position - 1).getTitleSlug());
+                        intent.putExtra(Constants.FROM_SCREEN, "User Profile");
+                        if (isPrivateProfile) {
+                            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Private Comments");
+                            intent.putExtra(Constants.FROM_SCREEN, "Private User Profile");
+                        } else {
+                            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Public Comments");
+                            intent.putExtra(Constants.FROM_SCREEN, "Public User Profile");
+                        }
+                        intent.putExtra(Constants.ARTICLE_INDEX, "" + (position - 1));
                         startActivity(intent);
                     }
                 }
@@ -1049,6 +1091,8 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
             unfollowButton.setVisibility(View.INVISIBLE);
             int followerCount = Integer.parseInt(followersTextView.getText().toString()) - 1;
             followersTextView.setText("" + followerCount);
+            Utils.pushAuthorFollowUnfollowEvent(BloggerDashboardActivity.this, GTMEventType.UNFOLLOW_AUTHOR_CLICK_EVENT, "User Profile", SharedPrefUtils.getUserDetailModel(BloggerDashboardActivity.this).getDynamoId(),
+                    "", firstName + " " + lastName + "-" + userId);
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.unfollowUser(request);
             followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback);
         } else {
@@ -1057,6 +1101,8 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
             unfollowButton.setVisibility(View.VISIBLE);
             int followerCount = Integer.parseInt(followersTextView.getText().toString()) + 1;
             followersTextView.setText("" + followerCount);
+            Utils.pushAuthorFollowUnfollowEvent(BloggerDashboardActivity.this, GTMEventType.FOLLOW_AUTHOR_CLICK_EVENT, "User Profile", SharedPrefUtils.getUserDetailModel(BloggerDashboardActivity.this).getDynamoId(),
+                    "", firstName + " " + lastName + "-" + userId);
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.followUser(request);
             followUnfollowUserResponseCall.enqueue(followUserResponseCallback);
         }

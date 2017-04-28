@@ -214,6 +214,7 @@ public class FilterTopicsParentExpandableListAdapter extends BaseExpandableListA
                     case Constants.KEY_EDITOR_PICKS:
                         Intent intent_1 = new Intent(context, ArticleListingActivity.class);
                         intent_1.putExtra(Constants.SORT_TYPE, map.get(topicList.get(level1GroupPosition)).get(groupPosition).getId());
+                        intent_1.putExtra(Constants.FROM_SCREEN, "Topic Articles List");
                         context.startActivity(intent_1);
                         break;
                     default:
@@ -225,7 +226,7 @@ public class FilterTopicsParentExpandableListAdapter extends BaseExpandableListA
                         } else {
                             intent_3.putExtra("displayName", map.get(topicList.get(level1GroupPosition)).get(groupPosition).getDisplay_name());
                         }
-
+                        intent_3.putExtra(Constants.FROM_SCREEN, "Topic Articles List");
                         context.startActivity(intent_3);
                         break;
                 }
@@ -257,7 +258,7 @@ public class FilterTopicsParentExpandableListAdapter extends BaseExpandableListA
             } else {
                 intent.putExtra("displayName", map.get(topicList.get(level1GroupPosition)).get(groupPosition).getChild().get(childPosition).getDisplay_name());
             }
-
+            intent.putExtra(Constants.FROM_SCREEN, "Topic Articles List");
             context.startActivity(intent);
             return false;
         }

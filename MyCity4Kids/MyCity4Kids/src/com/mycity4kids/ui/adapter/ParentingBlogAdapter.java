@@ -21,6 +21,8 @@ import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.GTMEventType;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.FollowUnfollowUserRequest;
 import com.mycity4kids.models.response.ContributorListResult;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
@@ -200,11 +202,15 @@ public class ParentingBlogAdapter extends BaseAdapter {
             holder.relativeLoadingView.setVisibility(View.VISIBLE);
             holder.bloggerFollow.setVisibility(View.GONE);
             String jsonString = new Gson().toJson(followUnfollowUserRequest);
+            Utils.pushAuthorFollowUnfollowEvent(context, GTMEventType.FOLLOW_AUTHOR_CLICK_EVENT, "Contributor List", SharedPrefUtils.getUserDetailModel(context).getDynamoId(),
+                    "", datalist.get(position).getFirstName() + " " + datalist.get(position).getFirstName() + "-" + datalist.get(position).getId());
             new FollowUnfollowAsyncTask(holder, "follow", position).execute(jsonString, "follow");
         } else {
             holder.relativeLoadingView.setVisibility(View.VISIBLE);
             holder.bloggerFollow.setVisibility(View.GONE);
             String jsonString = new Gson().toJson(followUnfollowUserRequest);
+            Utils.pushAuthorFollowUnfollowEvent(context, GTMEventType.UNFOLLOW_AUTHOR_CLICK_EVENT, "Contributor List", SharedPrefUtils.getUserDetailModel(context).getDynamoId(),
+                    "", datalist.get(position).getFirstName() + " " + datalist.get(position).getFirstName() + "-" + datalist.get(position).getId());
             new FollowUnfollowAsyncTask(holder, "unfollow", position).execute(jsonString, "unfollow");
         }
     }

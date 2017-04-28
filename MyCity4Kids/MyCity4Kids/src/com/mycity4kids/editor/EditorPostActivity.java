@@ -28,7 +28,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.BitmapUtils;
@@ -42,7 +41,6 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.listener.OnButtonClicked;
-import com.mycity4kids.models.FollowTopics;
 import com.mycity4kids.models.response.ArticleDraftResponse;
 import com.mycity4kids.models.response.DraftListResult;
 import com.mycity4kids.models.response.ImageUploadResponse;
@@ -50,10 +48,8 @@ import com.mycity4kids.models.response.PublishDraftObject;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
-import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.activity.AddArticleTopicsActivity;
 import com.mycity4kids.ui.activity.EditSelectedTopicsActivity;
-import com.mycity4kids.ui.adapter.FollowedTopicsListAdapter;
 import com.mycity4kids.utils.PermissionUtil;
 
 import org.wordpress.android.editor.EditorFragmentAbstract;
@@ -64,8 +60,6 @@ import org.wordpress.android.util.helpers.MediaFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
@@ -77,7 +71,6 @@ import java.util.Map;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;

@@ -269,6 +269,14 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
         if (bundle != null) {
             videoId = bundle.getString(Constants.VIDEO_ID);//"videos-67496bfa-b77d-466f-9d18-94e0f98f17c6"
             authorId = bundle.getString(Constants.AUTHOR_ID, "");
+            if (bundle.getBoolean("fromNotification")) {
+                Utils.pushEventNotificationClick(this, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Notification Popup", "video_details");
+            } else {
+                String listingType = bundle.getString(Constants.ARTICLE_OPENED_FROM);
+                String index = bundle.getString(Constants.ARTICLE_INDEX);
+                String screen = bundle.getString(Constants.FROM_SCREEN);
+                Utils.pushOpenArticleEvent(this, GTMEventType.VIDEO_DETAILS_CLICK_EVENT, screen, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", videoId, index, listingType);
+            }
 
             if (!ConnectivityUtils.isNetworkEnabled(this)) {
                 showToast(getString(R.string.error_network));
@@ -480,11 +488,15 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
         if (isFollowing) {
             isFollowing = false;
             followClick.setText("FOLLOW");
+            Utils.pushAuthorFollowUnfollowEvent(VlogsDetailActivity.this, GTMEventType.UNFOLLOW_AUTHOR_CLICK_EVENT, "Video Details", SharedPrefUtils.getUserDetailModel(VlogsDetailActivity.this).getDynamoId(),
+                    videoId, author + "-" + authorId);
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.unfollowUser(request);
             followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback);
         } else {
             isFollowing = true;
             followClick.setText("FOLLOWING");
+            Utils.pushAuthorFollowUnfollowEvent(VlogsDetailActivity.this, GTMEventType.FOLLOW_AUTHOR_CLICK_EVENT, "Video Details", SharedPrefUtils.getUserDetailModel(VlogsDetailActivity.this).getDynamoId(),
+                    videoId, author + "-" + authorId);
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.followUser(request);
             followUnfollowUserResponseCall.enqueue(followUserResponseCallback);
         }
@@ -589,7 +601,12 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                     authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_BLOGGER.toUpperCase());
                     authorTypeTextView.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_blogger));
                     if (StringUtils.isNullOrEmpty(deepLinkURL)) {
-                        shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + blogSlug + "/video/" + titleSlug;
+                        String bSlug = detailData.getAuthor().getBlogTitleSlug();
+                        if (StringUtils.isNullOrEmpty(bSlug)) {
+                            shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + "video/" + detailData.getTitleSlug();
+                        } else {
+                            shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + bSlug + "/video/" + detailData.getTitleSlug();
+                        }
                     } else {
                         shareUrl = deepLinkURL;
                     }
@@ -597,7 +614,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                     authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_EXPERT.toUpperCase());
                     authorTypeTextView.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_expert));
                     if (StringUtils.isNullOrEmpty(deepLinkURL)) {
-                        shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + "video/" + titleSlug;
+                        shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + "video/" + detailData.getTitleSlug();
                     } else {
                         shareUrl = deepLinkURL;
                     }
@@ -605,7 +622,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                     authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_EDITOR.toUpperCase());
                     authorTypeTextView.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_editor));
                     if (StringUtils.isNullOrEmpty(deepLinkURL)) {
-                        shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + "video/" + titleSlug;
+                        shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + "video/" + detailData.getTitleSlug();
                     } else {
                         shareUrl = deepLinkURL;
                     }
@@ -613,7 +630,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                     authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_EDITORIAL.toUpperCase());
                     authorTypeTextView.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_editorial));
                     if (StringUtils.isNullOrEmpty(deepLinkURL)) {
-                        shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + "video/" + titleSlug;
+                        shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + "video/" + detailData.getTitleSlug();
                     } else {
                         shareUrl = deepLinkURL;
                     }
@@ -621,7 +638,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                     authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_FEATURED.toUpperCase());
                     authorTypeTextView.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_featured));
                     if (StringUtils.isNullOrEmpty(deepLinkURL)) {
-                        shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + "video/" + titleSlug;
+                        shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + "video/" + detailData.getTitleSlug();
                     } else {
                         shareUrl = deepLinkURL;
                     }
@@ -629,7 +646,12 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                     authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_USER.toUpperCase());
                     authorTypeTextView.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_blogger));
                     if (StringUtils.isNullOrEmpty(deepLinkURL)) {
-                        shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + blogSlug + "/video/" + titleSlug;
+                        String bSlug = detailData.getAuthor().getBlogTitleSlug();
+                        if (StringUtils.isNullOrEmpty(bSlug)) {
+                            shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + "video/" + detailData.getTitleSlug();
+                        } else {
+                            shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + bSlug + "/video/" + detailData.getTitleSlug();
+                        }
                     } else {
                         shareUrl = deepLinkURL;
                     }
@@ -639,7 +661,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                 authorTypeTextView.setText("Blogger".toUpperCase());
                 authorTypeTextView.setTextColor(ContextCompat.getColor(this, R.color.authortype_colorcode_blogger));
                 if (StringUtils.isNullOrEmpty(deepLinkURL)) {
-                    shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + blogSlug + "/video/" + titleSlug;
+                    shareUrl = AppConstants.VIDEO_ARTICLE_SHARE_URL + detailData.getAuthor().getBlogTitleSlug() + "/video/" + titleSlug;
                 } else {
                     shareUrl = deepLinkURL;
                 }
@@ -1350,7 +1372,8 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
         followUnfollowCategoriesRequest.setCategories(topicIdLList);
         if (action == 0) {
             Log.d("GTM FOLLOW", "displayName" + selectedTopic);
-            Utils.pushEventFollowUnfollowTopic(this, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Video Details", "follow", ((TextView) tagView.getChildAt(0)).getText() + ":" + selectedTopic);
+//            Utils.pushEventFollowUnfollowTopic(this, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Video Details", "follow", ((TextView) tagView.getChildAt(0)).getText() + ":" + selectedTopic);
+            Utils.pushTopicFollowUnfollowEvent(this, GTMEventType.FOLLOW_TOPIC_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Video Details", ((TextView) tagView.getChildAt(0)).getText() + "~" + selectedTopic);
             ((TextView) tagView.getChildAt(0)).setTag(selectedTopic);
             ((ImageView) tagView.getChildAt(2)).setTag(selectedTopic);
             ((ImageView) tagView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(VlogsDetailActivity.this, R.drawable.follow_plus));
@@ -1363,7 +1386,8 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
             });
         } else {
             Log.d("GTM UNFOLLOW", "displayName" + selectedTopic);
-            Utils.pushEventFollowUnfollowTopic(this, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Video Details", "unfollow", ((TextView) tagView.getChildAt(0)) + ":" + selectedTopic);
+//            Utils.pushEventFollowUnfollowTopic(this, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Video Details", "unfollow", ((TextView) tagView.getChildAt(0)) + ":" + selectedTopic);
+            Utils.pushTopicFollowUnfollowEvent(this, GTMEventType.UNFOLLOW_TOPIC_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Video Details", ((TextView) tagView.getChildAt(0)).getText() + "~" + selectedTopic);
             ((TextView) tagView.getChildAt(0)).setTag(selectedTopic);
             ((ImageView) tagView.getChildAt(2)).setTag(selectedTopic);
             ((ImageView) tagView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(VlogsDetailActivity.this, R.drawable.tick));
@@ -1636,6 +1660,8 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
 //                        trackArticleReadTime.resetTimer();
                         Intent profileIntent = new Intent(this, BloggerDashboardActivity.class);
                         profileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, commentData.getUserId());
+                        profileIntent.putExtra(AppConstants.AUTHOR_NAME, "" + commentData.getName());
+                        profileIntent.putExtra(Constants.FROM_SCREEN, "Video Details Comment");
                         startActivity(profileIntent);
                     }
                     break;
@@ -1646,6 +1672,8 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
 //                        trackArticleReadTime.resetTimer();
                         Intent userProfileIntent = new Intent(this, BloggerDashboardActivity.class);
                         userProfileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, cData.getUserId());
+                        userProfileIntent.putExtra(AppConstants.AUTHOR_NAME, "" + cData.getName());
+                        userProfileIntent.putExtra(Constants.FROM_SCREEN, "Video Details Comment");
                         startActivity(userProfileIntent);
                     }
                     break;
@@ -1664,36 +1692,38 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                     }
                     Intent intentnn = new Intent(this, BloggerDashboardActivity.class);
                     intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, authorId);
+                    intentnn.putExtra(AppConstants.AUTHOR_NAME, "" + author);
+                    intentnn.putExtra(Constants.FROM_SCREEN, "Video Details");
                     startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
                     break;
                 case R.id.relatedArticles1: {
                     Utils.pushEventRelatedArticle(VlogsDetailActivity.this, GTMEventType.RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Video Detail", ((VlogsListingAndDetailResult) v.getTag()).getTitleSlug(), 1);
-                    launchRelatedTrendingArticle(v);
+                    launchRelatedTrendingArticle(v, "videoDetailsRelated", 1);
                     break;
                 }
                 case R.id.relatedArticles2: {
                     Utils.pushEventRelatedArticle(VlogsDetailActivity.this, GTMEventType.RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Video Detail", ((VlogsListingAndDetailResult) v.getTag()).getTitleSlug(), 2);
-                    launchRelatedTrendingArticle(v);
+                    launchRelatedTrendingArticle(v, "videoDetailsRelated", 2);
                     break;
                 }
                 case R.id.relatedArticles3: {
                     Utils.pushEventRelatedArticle(VlogsDetailActivity.this, GTMEventType.RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Video Detail", ((VlogsListingAndDetailResult) v.getTag()).getTitleSlug(), 3);
-                    launchRelatedTrendingArticle(v);
+                    launchRelatedTrendingArticle(v, "videoDetailsRelated", 3);
                     break;
                 }
                 case R.id.trendingRelatedArticles1: {
                     Utils.pushEventRelatedArticle(VlogsDetailActivity.this, GTMEventType.TRENDING_RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Video Detail", ((VlogsListingAndDetailResult) v.getTag()).getTitleSlug(), 1);
-                    launchRelatedTrendingArticle(v);
+                    launchRelatedTrendingArticle(v, "videoDetailsTrending", 1);
                     break;
                 }
                 case R.id.trendingRelatedArticles2: {
                     Utils.pushEventRelatedArticle(VlogsDetailActivity.this, GTMEventType.TRENDING_RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Video Detail", ((VlogsListingAndDetailResult) v.getTag()).getTitleSlug(), 2);
-                    launchRelatedTrendingArticle(v);
+                    launchRelatedTrendingArticle(v, "videoDetailsTrending", 2);
                     break;
                 }
                 case R.id.trendingRelatedArticles3: {
                     Utils.pushEventRelatedArticle(VlogsDetailActivity.this, GTMEventType.TRENDING_RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Video Detail", ((VlogsListingAndDetailResult) v.getTag()).getTitleSlug(), 3);
-                    launchRelatedTrendingArticle(v);
+                    launchRelatedTrendingArticle(v, "videoDetailsTrending", 3);
                     break;
                 }
                 case R.layout.related_tags_view: {
@@ -1725,13 +1755,16 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
         }
     }
 
-    private void launchRelatedTrendingArticle(View v) {
+    private void launchRelatedTrendingArticle(View v, String listingType, int index) {
 //        trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
 //        trackArticleReadTime.resetTimer();
         Intent intent = new Intent(this, VlogsDetailActivity.class);
         VlogsListingAndDetailResult parentingListData = (VlogsListingAndDetailResult) v.getTag();
         intent.putExtra(Constants.VIDEO_ID, parentingListData.getId());
         intent.putExtra(Constants.AUTHOR_ID, parentingListData.getAuthor().getId());
+        intent.putExtra(Constants.FROM_SCREEN, "Video Details");
+        intent.putExtra(Constants.ARTICLE_OPENED_FROM, listingType);
+        intent.putExtra(Constants.ARTICLE_INDEX, "" + index);
         startActivity(intent);
     }
 
@@ -1872,7 +1905,9 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                 } else {
                     shareMessage = "mycity4kids\n\nCheck out this interesting blog post " + "\"" + detailData.getTitle() + "\" by " + author + ".\nRead Here: " + shareUrl;
                 }
-                Utils.pushEventShareURL(VlogsDetailActivity.this, GTMEventType.SHARE_BLOG_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Video Detail", shareUrl);
+//                Utils.pushEventShareURL(VlogsDetailActivity.this, GTMEventType.SHARE_BLOG_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Video Detail", shareUrl);
+                Utils.pushArticleShareEvent(VlogsDetailActivity.this, GTMEventType.SHARE_FUNNY_VIDEO_CLICK_EVENT,
+                        SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Video Details", shareUrl, author + "-" + authorId, "default");
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
                 startActivity(Intent.createChooser(shareIntent, "mycity4kids"));
 

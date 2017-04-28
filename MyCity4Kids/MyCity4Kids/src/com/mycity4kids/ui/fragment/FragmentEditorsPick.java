@@ -27,6 +27,7 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.enums.ParentingFilterType;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.OnWebServiceCompleteListener;
 import com.mycity4kids.models.parentingstop.CommonParentingList;
 import com.mycity4kids.models.parentingstop.CommonParentingResponse;
@@ -61,13 +62,15 @@ public class FragmentEditorsPick extends BaseFragment implements SwipeRefreshLay
                              Bundle savedInstanceState) {
         View view = null;
         view = getActivity().getLayoutInflater().inflate(R.layout.fragment_editors_pick, container, false);
+
+        Utils.pushOpenScreenEvent(getActivity(), "Editors Pick Listing", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
+
         listView = (ListView) view.findViewById(R.id.scroll);
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         view.findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_indefinitely));
-
         progressBar.setVisibility(View.VISIBLE);
 
         articleDataModelsNew = new ArrayList<CommonParentingList>();
@@ -111,6 +114,9 @@ public class FragmentEditorsPick extends BaseFragment implements SwipeRefreshLay
                     intent.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.ARTICLES);
                     intent.putExtra(Constants.FILTER_TYPE, parentingListData.getAuthor_type());
                     intent.putExtra(Constants.BLOG_NAME, parentingListData.getBlog_name());
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Editors Pick");
+                    intent.putExtra(Constants.FROM_SCREEN, "Editors Pick Listing");
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
                     startActivity(intent);
 
                 }
