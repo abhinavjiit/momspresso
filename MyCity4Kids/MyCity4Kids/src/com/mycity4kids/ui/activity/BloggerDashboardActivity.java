@@ -20,6 +20,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -29,6 +33,7 @@ import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
@@ -61,6 +66,7 @@ import com.mycity4kids.models.response.DraftListResponse;
 import com.mycity4kids.models.response.DraftListResult;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
 import com.mycity4kids.models.response.ImageUploadResponse;
+import com.mycity4kids.models.response.LanguageRanksModel;
 import com.mycity4kids.models.response.ReviewListingResult;
 import com.mycity4kids.models.response.ReviewResponse;
 import com.mycity4kids.models.response.UserCommentsResponse;
@@ -76,8 +82,10 @@ import com.mycity4kids.retrofitAPIsInterfaces.UserAttributeUpdateAPI;
 import com.mycity4kids.ui.adapter.PublishedArticleListingAdapter;
 import com.mycity4kids.ui.adapter.ReviewsListAdapter;
 import com.mycity4kids.ui.adapter.UserCommentsAdapter;
+import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.PermissionUtil;
 import com.mycity4kids.utils.RoundedTransformation;
+import com.mycity4kids.widget.CustomViewFlipper;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -94,6 +102,7 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -110,11 +119,6 @@ import retrofit2.Retrofit;
  */
 public class BloggerDashboardActivity extends BaseActivity implements View.OnClickListener, PopupMenu.OnMenuItemClickListener {
 
-    @Override
-    protected void updateUi(Response response) {
-
-    }
-
     private static final int REQUEST_CAMERA = 0;
 
     private static final int REQUEST_EDIT_PICTURE = 1;
@@ -129,7 +133,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
      * Root of the layout of this Activity.
      */
     private View mLayout;
-
+    private CustomViewFlipper rankViewFlipper;
     private Toolbar mToolbar;
     private ImageView bloggerImageView;
     ImageView addDraft;
@@ -149,7 +153,9 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     PublishedArticleListingAdapter articlesListingAdapter;
     UserCommentsAdapter commentsListAdapter;
     ReviewsListAdapter reviewsListAdapter;
-    TextView rankingTextView, followersTextView, followingTextView, userBio, blogTitle, editProfileTextView, analyticsTextView;
+    //    private LinearLayout rankLinearLL, rankTwoLinearLL;
+//    TextView rankingTextView, rankingTwoTextView, rankingLabelTextView, rankingTwoLabelTextView;
+    TextView followersTextView, followingTextView, userBio, blogTitle, editProfileTextView, analyticsTextView;
     ImageView draftImageView, publishedImageView, commentsImageView, reviewImageView;
     LinearLayout draftItemLinearLayout, publishedItemLinearLayout, commentsItemLinearLayout, reviewItemLinearLayout;
     private String firstName, lastName, Bio, phoneNumber;
@@ -176,6 +182,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
     Boolean isFollowing = false;
     boolean stackClearRequired = false;
     private int nextPageNumberReview = 1;
+    private TranslateAnimation mInFromLeft;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -220,7 +227,24 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
             addDraft.setVisibility(View.GONE);
         }
         header.setClickable(false);
-        rankingTextView = (TextView) header.findViewById(R.id.rankingTextView);
+
+        AccelerateInterpolator accelerateInterpolator = new AccelerateInterpolator();
+        mInFromLeft = new TranslateAnimation(Animation.RELATIVE_TO_PARENT, -1.0f, Animation.RELATIVE_TO_PARENT, 0.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT, 0.0f);
+        mInFromLeft.setDuration(500);
+        mInFromLeft.setInterpolator(accelerateInterpolator);
+
+        rankViewFlipper = (CustomViewFlipper) header.findViewById(R.id.rankViewFlipper);
+        rankViewFlipper.setInAnimation(AnimationUtils.loadAnimation(this, R.anim.in_from_top));
+        rankViewFlipper.setOutAnimation(AnimationUtils.loadAnimation(this, R.anim.out_from_bottom));
+        rankViewFlipper.setAutoStart(true);
+        rankViewFlipper.setFlipInterval(3000);
+        rankViewFlipper.startFlipping();
+//        rankTwoLinearLL = (LinearLayout) header.findViewById(R.id.rankTwoLinearLL);
+//        rankingTextView = (TextView) header.findViewById(R.id.rankingTextView);
+//        rankingTwoTextView = (TextView) header.findViewById(R.id.rankingTwoTextView);
+//        rankingLabelTextView = (TextView) header.findViewById(R.id.rankingLabelTextView);
+//        rankingTwoLabelTextView = (TextView) header.findViewById(R.id.otherRankedLanguageLabel);
         followersTextView = (TextView) header.findViewById(R.id.followersTextView);
         followingTextView = (TextView) header.findViewById(R.id.followingTextView);
         analyticsTextView = (TextView) header.findViewById(R.id.analyticsTextView);
@@ -536,6 +560,11 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         });
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        rankViewFlipper.clearAnimation();
+    }
 
     private void checkFollowingStatusAPI() {
         if (!ConnectivityUtils.isNetworkEnabled(this)) {
@@ -1256,11 +1285,52 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                                  showToast(responseData.getReason());
                                  return;
                              } else {
-                                 if (StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getRank())) {
-                                     rankingTextView.setText("--");
+//                                 if (StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getRank())) {
+//                                     rankingTextView.setText("--");
+//                                 } else {
+//                                     rankingTextView.setText(responseData.getData().get(0).getResult().getRank());
+//                                 }
+
+                                 if (responseData.getData().get(0).getResult().getRanks() == null || responseData.getData().get(0).getResult().getRanks().size() == 0) {
+                                     LanguageRanksModel languageRanksModel = new LanguageRanksModel();
+                                     languageRanksModel.setRank(-1);
+                                     languageRanksModel.setLangKey("");
+                                     addRankView(languageRanksModel);
+                                     //rankingTextView.setText("--");
+                                     rankViewFlipper.setAutoStart(false);
+                                     rankViewFlipper.stopFlipping();
+                                 } else if (responseData.getData().get(0).getResult().getRanks().size() < 2) {
+                                     addRankView(responseData.getData().get(0).getResult().getRanks().get(0));
+                                     rankViewFlipper.setAutoStart(false);
+                                     rankViewFlipper.stopFlipping();
                                  } else {
-                                     rankingTextView.setText(responseData.getData().get(0).getResult().getRank());
+//                                     rankTwoLinearLL.setVisibility(View.VISIBLE);
+                                     for (int i = 0; i < responseData.getData().get(0).getResult().getRanks().size(); i++) {
+                                         if (AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(i).getLangKey())) {
+                                             //rankingTextView.setText("" + responseData.getData().get(0).getResult().getRanks().get(i).getRank());
+                                             addRankView(responseData.getData().get(0).getResult().getRanks().get(i));
+                                         }
+                                     }
+                                     Collections.sort(responseData.getData().get(0).getResult().getRanks());
+                                     for (int i = 0; i < responseData.getData().get(0).getResult().getRanks().size(); i++) {
+                                         if (!AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(i).getLangKey())) {
+                                             //rankingTextView.setText("" + responseData.getData().get(0).getResult().getRanks().get(i).getRank());
+                                             addRankView(responseData.getData().get(0).getResult().getRanks().get(i));
+                                         }
+                                     }
+
+//                                     if (AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(0).getLangKey())) {
+//                                         rankingTwoTextView.setText("" + responseData.getData().get(0).getResult().getRanks().get(1).getRank());
+//                                         rankingTwoLabelTextView.setText(AppUtils.getLangModelForLanguage(BloggerDashboardActivity.this,
+//                                                 responseData.getData().get(0).getResult().getRanks().get(1).getLangKey()).getDisplay_name());
+//                                     } else {
+//                                         rankingTwoTextView.setText("" + responseData.getData().get(0).getResult().getRanks().get(0).getRank());
+//                                         rankingTwoLabelTextView.setText("Rank in " + AppUtils.getLangModelForLanguage(BloggerDashboardActivity.this,
+//                                                 responseData.getData().get(0).getResult().getRanks().get(0).getLangKey()).getDisplay_name());
+//                                     }
+
                                  }
+
                                  int followerCount = Integer.parseInt(responseData.getData().get(0).getResult().getFollowersCount());
                                  if (followerCount > 999) {
                                      float singleFollowerCount = ((float) followerCount) / 1000;
@@ -1329,6 +1399,25 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                          }
                      }
         );
+    }
+
+    private void addRankView(LanguageRanksModel languageRanksModel) {
+        View rankItem = getLayoutInflater().inflate(R.layout.rank_flipping_item, null);
+        TextView rankTextView = (TextView) rankItem.findViewById(R.id.rankingTextView);
+        TextView rankLabelTextView = (TextView) rankItem.findViewById(R.id.rankingLabelTextView);
+        if (languageRanksModel.getRank() == -1) {
+            rankTextView.setText("--");
+            rankLabelTextView.setText("Rank");
+        } else {
+            rankTextView.setText("" + languageRanksModel.getRank());
+            if (AppConstants.LANG_KEY_ENGLISH.equals(languageRanksModel.getLangKey())) {
+                rankLabelTextView.setText("Rank in English");
+            } else {
+                rankLabelTextView.setText("Rank in " + AppUtils.getLangModelForLanguage(BloggerDashboardActivity.this, languageRanksModel.getLangKey()).getDisplay_name());
+            }
+
+        }
+        rankViewFlipper.addView(rankItem);
     }
 
     @Override
@@ -1874,5 +1963,10 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                 addDraft.setVisibility(View.GONE);
             }
         }
+    }
+
+    @Override
+    protected void updateUi(Response response) {
+
     }
 }

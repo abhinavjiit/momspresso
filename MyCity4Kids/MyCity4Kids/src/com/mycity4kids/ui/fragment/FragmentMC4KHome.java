@@ -611,7 +611,9 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4KException", Log.getStackTraceString(e));
-                ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
+                if (getActivity() != null && isAdded()) {
+                    ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
+                }
             }
         }
 

@@ -38,32 +38,74 @@
             android:orientation="horizontal"
             android:weightSum="3">
 
-            <LinearLayout
-                android:id="@+id/rankLinearLL"
+            <com.mycity4kids.widget.CustomViewFlipper
+                android:id="@+id/rankViewFlipper"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:layout_weight="1">
 
-                <TextView
-                    android:id="@+id/rankingTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:fontFamily="sans-serif-thin"
-                    android:text="--"
-                    android:textColor="@color/black_color"
-                    android:textSize="22sp" />
+                <!--<LinearLayout-->
+                    <!--android:id="@+id/rankLinearLL"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:orientation="vertical">-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="2dp"
-                    android:fontFamily="sans-serif-light"
-                    android:gravity="center"
-                    android:text="rank"
-                    android:textColor="@color/grey_faded"
-                    android:textSize="13sp" />
-            </LinearLayout>
+                    <!--<TextView-->
+                        <!--android:id="@+id/rankingTextView"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:ellipsize="marquee"-->
+                        <!--android:fontFamily="sans-serif-thin"-->
+                        <!--android:maxLines="1"-->
+                        <!--android:text="&#45;&#45;"-->
+                        <!--android:textColor="@color/black_color"-->
+                        <!--android:textSize="22sp" />-->
+
+                    <!--<TextView-->
+                        <!--android:id="@+id/rankingLabelTextView"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:layout_marginTop="2dp"-->
+                        <!--android:ellipsize="marquee"-->
+                        <!--android:fontFamily="sans-serif-light"-->
+                        <!--android:lines="2"-->
+                        <!--android:maxLines="2"-->
+                        <!--android:text="Rank"-->
+                        <!--android:textSize="13sp" />-->
+                <!--</LinearLayout>-->
+
+                <!--<LinearLayout-->
+                    <!--android:id="@+id/rankTwoLinearLL"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignParentLeft="true"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:orientation="vertical"-->
+                    <!--android:visibility="gone">-->
+
+                    <!--<TextView-->
+                        <!--android:id="@+id/rankingTwoTextView"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:ellipsize="marquee"-->
+                        <!--android:fontFamily="sans-serif-thin"-->
+                        <!--android:maxLines="1"-->
+                        <!--android:text="&#45;&#45;"-->
+                        <!--android:textColor="@color/black_color"-->
+                        <!--android:textSize="22sp" />-->
+
+                    <!--<TextView-->
+                        <!--android:id="@+id/otherRankedLanguageLabel"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:layout_marginTop="2dp"-->
+                        <!--android:ellipsize="marquee"-->
+                        <!--android:fontFamily="sans-serif-light"-->
+                        <!--android:maxLines="2"-->
+                        <!--android:text="rank in language"-->
+                        <!--android:textSize="13sp" />-->
+                <!--</LinearLayout>-->
+            </com.mycity4kids.widget.CustomViewFlipper>
 
             <LinearLayout
                 android:id="@+id/FollowersLinearLL"

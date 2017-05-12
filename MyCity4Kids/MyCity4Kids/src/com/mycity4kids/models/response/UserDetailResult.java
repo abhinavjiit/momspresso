@@ -22,6 +22,7 @@ public class UserDetailResult {
     private String followersCount;
     private String followingCount;
     private String rank;
+    private ArrayList<LanguageRanksModel> ranks;
     private String userBio = "";
     private String sessionId;
     private String phoneNumber;
@@ -157,6 +158,14 @@ public class UserDetailResult {
 
     public void setRank(String rank) {
         this.rank = rank;
+    }
+
+    public ArrayList<LanguageRanksModel> getRanks() {
+        return ranks;
+    }
+
+    public void setRanks(ArrayList<LanguageRanksModel> ranks) {
+        this.ranks = ranks;
     }
 
     public String getUserBio() {

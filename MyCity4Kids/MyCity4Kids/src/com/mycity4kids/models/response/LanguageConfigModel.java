@@ -6,10 +6,19 @@ import com.kelltontech.utils.StringUtils;
  * Created by hemant on 19/4/17.
  */
 public class LanguageConfigModel {
+    private String langKey;
     private String name;
     private String id;
     private String tag;
     private String display_name;
+
+    public String getLangKey() {
+        return langKey;
+    }
+
+    public void setLangKey(String langKey) {
+        this.langKey = langKey;
+    }
 
     public String getName() {
         return name;

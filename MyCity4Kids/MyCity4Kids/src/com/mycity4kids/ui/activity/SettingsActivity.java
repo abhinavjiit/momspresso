@@ -40,6 +40,7 @@ import com.mycity4kids.ui.fragment.SubscriptionSettingsFragment;
  */
 public class SettingsActivity extends BaseActivity {
 
+    private String fragmentToLoad = "";
     int cityId;
     TextView cityChange;
     String bio, firstName, lastName;
@@ -83,12 +84,12 @@ public class SettingsActivity extends BaseActivity {
         firstName = getIntent().getStringExtra("firstName");
         lastName = getIntent().getStringExtra("lastName");
 
-        if (getIntent().getBooleanExtra("fromNotification",false)) {
+        if (getIntent().getBooleanExtra("fromNotification", false)) {
             Utils.pushEventNotificationClick(this, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Notification Popup", "app_settings");
         }
 
         Bundle extras = getIntent().getExtras();
-        String fragmentToLoad = "";
+
         if (null != extras) {
             fragmentToLoad = extras.getString("load_fragment", "");
         }
@@ -169,7 +170,7 @@ public class SettingsActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-                if (topFragment instanceof FragmentSetting || topFragment instanceof LanguageSettingsFragment) {
+                if (topFragment instanceof FragmentSetting || (Constants.LANGUAGE_FRAGMENT.equals(fragmentToLoad) && topFragment instanceof LanguageSettingsFragment)) {
                     finish();
                 }
                 switch (v.getId()) {
@@ -270,7 +271,7 @@ public class SettingsActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-        if (topFragment instanceof FragmentSetting) {
+        if (topFragment instanceof FragmentSetting || (Constants.LANGUAGE_FRAGMENT.equals(fragmentToLoad) && topFragment instanceof LanguageSettingsFragment)) {
             finish();
         }
         super.onBackPressed();

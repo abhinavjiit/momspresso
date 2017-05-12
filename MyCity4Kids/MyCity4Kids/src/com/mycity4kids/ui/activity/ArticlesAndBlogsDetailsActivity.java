@@ -318,11 +318,12 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
 
                 if (bundle.getBoolean("fromNotification")) {
                     Utils.pushEventNotificationClick(this, GTMEventType.NOTIFICATION_CLICK_EVENT, userDynamoId, "Notification Popup", "article_details");
+                    Utils.pushOpenArticleEvent(this, GTMEventType.ARTICLE_DETAILS_CLICK_EVENT, "Notification", userDynamoId + "", articleId, "-1" + "~Notification", "Notification");
                 } else {
                     String from = bundle.getString(Constants.ARTICLE_OPENED_FROM);
                     String index = bundle.getString(Constants.ARTICLE_INDEX);
                     String screen = bundle.getString(Constants.FROM_SCREEN);
-                    Utils.pushOpenArticleEvent(this, GTMEventType.ARTICLE_DETAILS_CLICK_EVENT, screen, userDynamoId + "", articleId, index, from);
+                    Utils.pushOpenArticleEvent(this, GTMEventType.ARTICLE_DETAILS_CLICK_EVENT, screen, userDynamoId + "", articleId, index + "~" + from, from);
                 }
 //                notificationCenterId = bundle.getString(Constants.NOTIFICATION_CENTER_ID, "");
                 if (!ConnectivityUtils.isNetworkEnabled(this)) {
@@ -1062,17 +1063,31 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     break;
                 case R.id.relatedArticles1: {
                     Utils.pushEventRelatedArticle(ArticlesAndBlogsDetailsActivity.this, GTMEventType.RELATED_ARTICLE_CLICKED_EVENT, userDynamoId + "", "Blog Detail", ((ArticleListingResult) v.getTag()).getTitleSlug(), 1);
-                    launchRelatedTrendingArticle(v, "articleDetailsRelatedList", 1);
+                    if (recentAuthorArticleHeading.getText() != null && recentAuthorArticleHeading.getText().toString().contains("RELATED")) {
+                        launchRelatedTrendingArticle(v, "articleDetailsRelatedList", 1);
+                    } else {
+                        launchRelatedTrendingArticle(v, "articleDetailsAuthorsRecentList", 1);
+                    }
                     break;
                 }
                 case R.id.relatedArticles2: {
                     Utils.pushEventRelatedArticle(ArticlesAndBlogsDetailsActivity.this, GTMEventType.RELATED_ARTICLE_CLICKED_EVENT, userDynamoId + "", "Blog Detail", ((ArticleListingResult) v.getTag()).getTitleSlug(), 2);
-                    launchRelatedTrendingArticle(v, "articleDetailsRelatedList", 2);
+                    //launchRelatedTrendingArticle(v, "articleDetailsRelatedList", 2);
+                    if (recentAuthorArticleHeading.getText() != null && recentAuthorArticleHeading.getText().toString().contains("RELATED")) {
+                        launchRelatedTrendingArticle(v, "articleDetailsRelatedList", 2);
+                    } else {
+                        launchRelatedTrendingArticle(v, "articleDetailsAuthorsRecentList", 2);
+                    }
                     break;
                 }
                 case R.id.relatedArticles3: {
                     Utils.pushEventRelatedArticle(ArticlesAndBlogsDetailsActivity.this, GTMEventType.RELATED_ARTICLE_CLICKED_EVENT, userDynamoId + "", "Blog Detail", ((ArticleListingResult) v.getTag()).getTitleSlug(), 3);
-                    launchRelatedTrendingArticle(v, "articleDetailsRelatedList", 3);
+//                    launchRelatedTrendingArticle(v, "articleDetailsRelatedList", 3);
+                    if (recentAuthorArticleHeading.getText() != null && recentAuthorArticleHeading.getText().toString().contains("RELATED")) {
+                        launchRelatedTrendingArticle(v, "articleDetailsRelatedList", 3);
+                    } else {
+                        launchRelatedTrendingArticle(v, "articleDetailsAuthorsRecentList", 3);
+                    }
                     break;
                 }
                 case R.id.trendingRelatedArticles1: {

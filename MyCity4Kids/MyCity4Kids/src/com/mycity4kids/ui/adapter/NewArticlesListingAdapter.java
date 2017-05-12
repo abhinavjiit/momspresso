@@ -97,7 +97,7 @@ public class NewArticlesListingAdapter extends BaseAdapter {
             Log.d("Manage", "Language");
             return 0;
         } else {
-            if (1 != languageFeedChosen && position > 0 && position % 10 == 0) {
+            if (1 != languageFeedChosen && position > 0 && position % 3 == 0) {
                 Log.d("Manage", "Language");
                 return 0;
             } else {

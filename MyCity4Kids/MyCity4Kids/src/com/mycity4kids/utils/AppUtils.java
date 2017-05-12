@@ -378,4 +378,22 @@ public class AppUtils {
             return null;
         }
     }
+
+    public static LanguageConfigModel getLangModelFromLanguageKey(Context mContext, String key) {
+        try {
+            FileInputStream fileInputStream = mContext.openFileInput(AppConstants.LANGUAGES_JSON_FILE);
+            String fileContent = AppUtils.convertStreamToString(fileInputStream);
+//            ConfigResult res = new Gson().fromJson(fileContent, ConfigResult.class);
+            LinkedHashMap<String, LanguageConfigModel> retMap = new Gson().fromJson(
+                    fileContent, new TypeToken<LinkedHashMap<String, LanguageConfigModel>>() {
+                    }.getType()
+            );
+            return retMap.get(key);
+//            return (new ArrayList<LanguageConfigModel>(retMap.values())).get(0).getId();
+        } catch (FileNotFoundException ffe) {
+            Crashlytics.logException(ffe);
+            Log.d("MC4kException", Log.getStackTraceString(ffe));
+            return null;
+        }
+    }
 }

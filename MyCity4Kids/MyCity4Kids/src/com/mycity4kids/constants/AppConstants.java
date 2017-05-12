@@ -504,6 +504,7 @@ public class AppConstants {
     public static final String TOPIC_LEVEL_SUB_SUB_CATEGORY = "3";
     public static final String LANGUAGES_JSON_FILE = "languagesJsonFile.json";
 
+    public static final String LANG_KEY_ENGLISH = "0";
     public static final String LANG_KEY_HINDI = "1";
     public static final String AUTHOR_NAME = "authorName";
 }

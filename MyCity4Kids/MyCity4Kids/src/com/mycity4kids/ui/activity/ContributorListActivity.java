@@ -18,10 +18,15 @@ import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -34,12 +39,20 @@ import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.ContributorListResponse;
 import com.mycity4kids.models.response.ContributorListResult;
+import com.mycity4kids.models.response.LanguageConfigModel;
+import com.mycity4kids.models.response.LanguageRanksModel;
 import com.mycity4kids.newmodels.bloggermodel.BlogItemModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ContributorListAPI;
+import com.mycity4kids.ui.adapter.CustomSpinnerAdapter;
 import com.mycity4kids.ui.adapter.ParentingBlogAdapter;
+import com.mycity4kids.utils.AppUtils;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -69,6 +82,11 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
     FloatingActionsMenu fab_menu;
     FrameLayout frameLayout;
     private TextView noBlogsTextView;
+    private TextView contributorTitleTextView;
+    private Spinner spinner_nav;
+    ArrayList<String> list;
+    ArrayList<LanguageConfigModel> languageConfigModelArrayList;
+    private String langKey = "0";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,8 +97,9 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
         mToolBar.setVisibility(View.VISIBLE);
         setSupportActionBar(mToolBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("CONTRIBUTORS");
-
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+//        getSupportActionBar().setTitle("CONTRIBUTORS");
+        spinner_nav = (Spinner) findViewById(R.id.spinner_nav);
         blogListing = (ListView) findViewById(R.id.blog_listing);
         mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
         rankFab = (FloatingActionButton) findViewById(R.id.rankSortFAB);
@@ -88,8 +107,11 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
         fab_menu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
         frameLayout = (FrameLayout) findViewById(R.id.frame_layout);
         noBlogsTextView = (TextView) findViewById(R.id.noBlogsTextView);
-        frameLayout.getBackground().setAlpha(0);
+        contributorTitleTextView = (TextView) findViewById(R.id.contributorTitleTextView);
 
+        addItemsToSpinner();
+
+        frameLayout.getBackground().setAlpha(0);
         findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely));
         contributorArrayList = new ArrayList<>();
         orignalListingData = new ArrayList<>();
@@ -156,6 +178,66 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
         });
     }
 
+    public void addItemsToSpinner() {
+
+        list = new ArrayList<String>();
+        languageConfigModelArrayList = new ArrayList<>();
+        list.add("English");
+        LanguageConfigModel languageConfigModel = new LanguageConfigModel();
+        languageConfigModel.setName("English");
+        languageConfigModel.setDisplay_name("English");
+        languageConfigModel.setId(AppConstants.LANG_KEY_ENGLISH);
+        languageConfigModelArrayList.add(languageConfigModel);
+        try {
+            FileInputStream fileInputStream = openFileInput(AppConstants.LANGUAGES_JSON_FILE);
+            String fileContent = AppUtils.convertStreamToString(fileInputStream);
+//            ConfigResult res = new Gson().fromJson(fileContent, ConfigResult.class);
+            LinkedHashMap<String, LanguageConfigModel> retMap = new Gson().fromJson(
+                    fileContent, new TypeToken<LinkedHashMap<String, LanguageConfigModel>>() {
+                    }.getType()
+            );
+            Log.d("Map", "" + retMap.toString());
+            for (final Map.Entry<String, LanguageConfigModel> entry : retMap.entrySet()) {
+                list.add(entry.getValue().getDisplay_name());
+                entry.getValue().setLangKey(entry.getKey());
+                languageConfigModelArrayList.add(entry.getValue());
+            }
+        } catch (FileNotFoundException ffe) {
+            Crashlytics.logException(ffe);
+            Log.d("MC4kException", Log.getStackTraceString(ffe));
+        }
+
+        CustomSpinnerAdapter spinAdapter = new CustomSpinnerAdapter(
+                getApplicationContext(), list);
+        spinner_nav.setAdapter(spinAdapter);
+        spinner_nav.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapter, View v,
+                                       int position, long id) {
+                if (position == 0) {
+                    fab_menu.setVisibility(View.VISIBLE);
+                } else {
+                    fab_menu.setVisibility(View.GONE);
+                }
+                // On selecting a spinner item
+                String item = adapter.getItemAtPosition(position).toString();
+                // Showing selected spinner item
+                contributorArrayList.clear();
+                paginationValue = "";
+                langKey = languageConfigModelArrayList.get(position).getLangKey();
+                hitBloggerAPIrequest(2, AppConstants.USER_TYPE_BLOGGER);
+//                Toast.makeText(getApplicationContext(), "Selected  : " + item,
+//                        Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+                // TODO Auto-generated method stub
+            }
+        });
+
+    }
+
 
     @Override
     public void onResume() {
@@ -178,38 +260,41 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
             showToast(getString(R.string.error_network));
             return;
         }
-        Call<ContributorListResponse> call = contributorListAPI.getContributorList(AppConstants.LIVE_URL + "v1/users/?limit=" + limit + "&sortType=" + sortType + "&type=" + type + "&pagination=" + paginationValue);
+//        Call<ContributorListResponse> call = contributorListAPI.getContributorList(AppConstants.LIVE_URL + "v1/users/?limit=" + limit + "&sortType=" + sortType + "&type=" + type + "&pagination=" + paginationValue);
+        Call<ContributorListResponse> call = contributorListAPI.getContributorList(limit, sortType, type, langKey, paginationValue);
 //asynchronous call
-        call.enqueue(new Callback<ContributorListResponse>() {
-                         @Override
-                         public void onResponse(Call<ContributorListResponse> call, retrofit2.Response<ContributorListResponse> response) {
-                             int statusCode = response.code();
-                             removeProgressDialog();
-
-                             ContributorListResponse responseModel = response.body();
-                             if (responseModel.getCode() != 200) {
-                                 showToast(getString(R.string.toast_response_error));
-                                 mLodingView.setVisibility(View.GONE);
-                                 return;
-                             } else {
-                                 if (!StringUtils.isNullOrEmpty(responseModel.getData().getMsg())) {
-                                     Log.i("Draft message", responseModel.getData().getMsg());
-                                 }
-                                 processResponse(responseModel);
-                             }
-                             isReuqestRunning = false;
-                             mLodingView.setVisibility(View.GONE);
-                         }
-
-                         @Override
-                         public void onFailure(Call<ContributorListResponse> call, Throwable t) {
-                             removeProgressDialog();
-
-                         }
-                     }
-        );
+        call.enqueue(contributorListResponseCallback);
 
     }
+
+
+    Callback<ContributorListResponse> contributorListResponseCallback = new Callback<ContributorListResponse>() {
+        @Override
+        public void onResponse(Call<ContributorListResponse> call, retrofit2.Response<ContributorListResponse> response) {
+            try {
+                removeProgressDialog();
+                isReuqestRunning = false;
+                mLodingView.setVisibility(View.GONE);
+                ContributorListResponse responseModel = response.body();
+                if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
+                    processResponse(responseModel);
+                } else {
+                    showToast(getString(R.string.toast_response_error));
+                    mLodingView.setVisibility(View.GONE);
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<ContributorListResponse> call, Throwable t) {
+            removeProgressDialog();
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
 
     public boolean isOnline() {
         ConnectivityManager cm =
@@ -310,6 +395,7 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
     }
 
     public void sortParentingBlogListing(String type) {
+        langKey = "0";
         paginationValue = "";
         isSortEnable = true;
         this.type = type;
@@ -319,9 +405,21 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
         isReuqestRunning = true;
         if (!type.equals(AppConstants.USER_TYPE_BLOGGER)) {
             fab_menu.setVisibility(View.GONE);
+            spinner_nav.setVisibility(View.GONE);
+            contributorTitleTextView.setText("Contributors");
+            hitBloggerAPIrequest(sortType, type);
         } else {
             fab_menu.setVisibility(View.VISIBLE);
+            spinner_nav.setVisibility(View.VISIBLE);
+            contributorTitleTextView.setText("Contributor in");
+            if (spinner_nav.getSelectedItemPosition() == 0) {
+                sortType = 2;
+                hitBloggerAPIrequest(sortType, type);
+            } else {
+                spinner_nav.setSelection(0);
+            }
+
         }
-        hitBloggerAPIrequest(sortType, type);
+
     }
 }

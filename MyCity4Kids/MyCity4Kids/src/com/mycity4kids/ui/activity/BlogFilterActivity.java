@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kelltontech.network.Response;
@@ -20,7 +21,8 @@ import com.mycity4kids.preference.SharedPrefUtils;
  */
 public class BlogFilterActivity extends BaseActivity implements View.OnClickListener {
 
-    TextView rankName, blogger, expert, editor, aTOz, editorialTeam, featuredAuthor;
+    private TextView rankName, blogger, expert, editor, aTOz, editorialTeam, featuredAuthor;
+    private RelativeLayout rootLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +33,7 @@ public class BlogFilterActivity extends BaseActivity implements View.OnClickList
         getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
         setContentView(R.layout.blog_filter_activity_layout);
+        rootLayout = (RelativeLayout) findViewById(R.id.rootLayout);
         rankName = (TextView) findViewById(R.id.rank_name);
         blogger = (TextView) findViewById(R.id.bloggers);
         expert = (TextView) findViewById(R.id.experts);
@@ -39,6 +42,7 @@ public class BlogFilterActivity extends BaseActivity implements View.OnClickList
 
         aTOz = (TextView) findViewById(R.id.atoz);
         editorialTeam = (TextView) findViewById(R.id.editorialTeam);
+        rootLayout.setOnClickListener(this);
         rankName.setOnClickListener(this);
         blogger.setOnClickListener(this);
         expert.setOnClickListener(this);
@@ -61,6 +65,9 @@ public class BlogFilterActivity extends BaseActivity implements View.OnClickList
         Intent intent;
 
         switch (view.getId()) {
+            case R.id.rootLayout:
+                finish();
+                break;
 
             case R.id.atoz:
 
