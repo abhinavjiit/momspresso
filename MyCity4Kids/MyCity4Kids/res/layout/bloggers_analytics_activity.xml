@@ -169,21 +169,31 @@
                         android:textColor="@color/black_color"
                         android:textSize="18sp" />
 
-                    <TextView
-                        android:id="@+id/rankTextView"
+                    <com.mycity4kids.widget.CustomViewFlipper
+                        android:id="@+id/rankViewFlipper"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/rankLabel"
                         android:layout_marginBottom="8dp"
                         android:layout_marginTop="8dp"
                         android:layout_toLeftOf="@+id/rankMenuOption"
-                        android:ellipsize="end"
-                        android:fontFamily="sans-serif-thin"
-                        android:maxLines="1"
-                        android:paddingLeft="10dp"
-                        android:singleLine="true"
-                        android:textColor="@color/black_color"
-                        android:textSize="30sp" />
+                        android:paddingLeft="10dp">
+
+                    </com.mycity4kids.widget.CustomViewFlipper>
+
+                    <!--<TextView-->
+                        <!--android:id="@+id/rankTextView"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+
+
+                        <!--android:ellipsize="end"-->
+                        <!--android:fontFamily="sans-serif-thin"-->
+                        <!--android:maxLines="1"-->
+
+                        <!--android:singleLine="true"-->
+                        <!--android:textColor="@color/black_color"-->
+                        <!--android:textSize="30sp" />-->
 
                     <ImageView
                         android:id="@+id/rankMenuOption"

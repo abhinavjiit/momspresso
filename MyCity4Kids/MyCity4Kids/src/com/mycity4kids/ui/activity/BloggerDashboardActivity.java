@@ -1285,18 +1285,11 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                                  showToast(responseData.getReason());
                                  return;
                              } else {
-//                                 if (StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getRank())) {
-//                                     rankingTextView.setText("--");
-//                                 } else {
-//                                     rankingTextView.setText(responseData.getData().get(0).getResult().getRank());
-//                                 }
-
                                  if (responseData.getData().get(0).getResult().getRanks() == null || responseData.getData().get(0).getResult().getRanks().size() == 0) {
                                      LanguageRanksModel languageRanksModel = new LanguageRanksModel();
                                      languageRanksModel.setRank(-1);
                                      languageRanksModel.setLangKey("");
                                      addRankView(languageRanksModel);
-                                     //rankingTextView.setText("--");
                                      rankViewFlipper.setAutoStart(false);
                                      rankViewFlipper.stopFlipping();
                                  } else if (responseData.getData().get(0).getResult().getRanks().size() < 2) {
@@ -1304,31 +1297,17 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                                      rankViewFlipper.setAutoStart(false);
                                      rankViewFlipper.stopFlipping();
                                  } else {
-//                                     rankTwoLinearLL.setVisibility(View.VISIBLE);
                                      for (int i = 0; i < responseData.getData().get(0).getResult().getRanks().size(); i++) {
                                          if (AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(i).getLangKey())) {
-                                             //rankingTextView.setText("" + responseData.getData().get(0).getResult().getRanks().get(i).getRank());
                                              addRankView(responseData.getData().get(0).getResult().getRanks().get(i));
                                          }
                                      }
                                      Collections.sort(responseData.getData().get(0).getResult().getRanks());
                                      for (int i = 0; i < responseData.getData().get(0).getResult().getRanks().size(); i++) {
                                          if (!AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(i).getLangKey())) {
-                                             //rankingTextView.setText("" + responseData.getData().get(0).getResult().getRanks().get(i).getRank());
                                              addRankView(responseData.getData().get(0).getResult().getRanks().get(i));
                                          }
                                      }
-
-//                                     if (AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(0).getLangKey())) {
-//                                         rankingTwoTextView.setText("" + responseData.getData().get(0).getResult().getRanks().get(1).getRank());
-//                                         rankingTwoLabelTextView.setText(AppUtils.getLangModelForLanguage(BloggerDashboardActivity.this,
-//                                                 responseData.getData().get(0).getResult().getRanks().get(1).getLangKey()).getDisplay_name());
-//                                     } else {
-//                                         rankingTwoTextView.setText("" + responseData.getData().get(0).getResult().getRanks().get(0).getRank());
-//                                         rankingTwoLabelTextView.setText("Rank in " + AppUtils.getLangModelForLanguage(BloggerDashboardActivity.this,
-//                                                 responseData.getData().get(0).getResult().getRanks().get(0).getLangKey()).getDisplay_name());
-//                                     }
-
                                  }
 
                                  int followerCount = Integer.parseInt(responseData.getData().get(0).getResult().getFollowersCount());

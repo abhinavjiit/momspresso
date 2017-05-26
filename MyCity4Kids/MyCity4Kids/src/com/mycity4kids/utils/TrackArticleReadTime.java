@@ -63,19 +63,19 @@ public class TrackArticleReadTime {
     }
 
     public void updateTimeAtBackendAndGA(String articleURL, String articleId, long estimatedTime) {
-        timeSpent = timeSpent + System.currentTimeMillis() - startTime;
-        Log.d("updateTimeBackendAndGA", " timeSpent = " + timeSpent + " initStartTime=" + initStartTime + " estimatedtime=" + estimatedTime);
-        Utils.pushArticleDetailsTimeSpent(mContext, GTMEventType.ARTICLE_TIME_SPENT_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(),
-                "Blog Detail", articleURL, "" + timeSpent, "" + estimatedTime);
+        try {
+            timeSpent = timeSpent + System.currentTimeMillis() - startTime;
+            Log.d("updateTimeBackendAndGA", " timeSpent = " + timeSpent + " initStartTime=" + initStartTime + " estimatedtime=" + estimatedTime);
+            Utils.pushArticleDetailsTimeSpent(mContext, GTMEventType.ARTICLE_TIME_SPENT_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(),
+                    "Blog Detail", articleURL, "" + timeSpent, "" + estimatedTime);
 
-        if (estimatedTime == 0) {
-            return;
-        }
-        long timeSpentEstimatedTimePercentage = (timeSpent * 100) / (estimatedTime * 1000);
+            if (estimatedTime == 0) {
+                return;
+            }
+            long timeSpentEstimatedTimePercentage = (timeSpent * 100) / (estimatedTime * 1000);
 
-        Log.d("updateTimeBackendAndGA", "timeSpentEstimatedTimePercentage = " + timeSpentEstimatedTimePercentage);
-        if (timeSpentEstimatedTimePercentage > AppConstants.MIN_PERCENT_FOR_TIMESPENT) {
-            Log.d("updateTimeBackendAndGA", "updateTimeBackendAndGA = " + timeSpentEstimatedTimePercentage);
+            Log.d("updateTimeBackendAndGA", "timeSpentEstimatedTimePercentage = " + timeSpentEstimatedTimePercentage);
+//        if (timeSpentEstimatedTimePercentage > AppConstants.MIN_PERCENT_FOR_TIMESPENT) {
             ArticleReadTimeRequest articleReadTimeRequest = new ArticleReadTimeRequest();
             articleReadTimeRequest.setArticleId(articleId);
             articleReadTimeRequest.setStartTime("" + initStartTime);
@@ -96,7 +96,12 @@ public class TrackArticleReadTime {
                     Log.d("MC4kException", Log.getStackTraceString(t));
                 }
             });
+        } catch (Exception ex) {
+            Log.d("ChronosException", "ChronosException");
+            Crashlytics.logException(ex);
+            Log.d("MC4kException", Log.getStackTraceString(ex));
         }
+//        }
 
     }
 }

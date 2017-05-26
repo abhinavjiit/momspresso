@@ -6,10 +6,12 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -42,12 +44,15 @@ import com.mycity4kids.models.response.BloggerAnalyticsResponse;
 import com.mycity4kids.models.response.BloggerAnalyticsViews;
 import com.mycity4kids.models.response.ContributorListResponse;
 import com.mycity4kids.models.response.ContributorListResult;
+import com.mycity4kids.models.response.LanguageRanksModel;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ContributorListAPI;
 import com.mycity4kids.ui.fragment.AnalyticsStatsDialogFragment;
 import com.mycity4kids.ui.fragment.PageViewsDateRangeDialogFragment;
+import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.widget.CustomViewFlipper;
 import com.mycity4kids.widget.MyMarkerView;
 import com.squareup.picasso.Picasso;
 
@@ -55,6 +60,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -74,6 +80,7 @@ public class BloggersAnalyticsActivity extends BaseActivity implements OnChartGe
     private LayoutInflater mInflater;
     static LineChart mChart;
     static XAxis xAxis;
+    private CustomViewFlipper rankViewFlipper;
 
     static String init_from_date, init_to_date;
     private String userId;
@@ -103,6 +110,14 @@ public class BloggersAnalyticsActivity extends BaseActivity implements OnChartGe
         rankMenuOption = (ImageView) findViewById(R.id.rankMenuOption);
         engagementMenuOption = (ImageView) findViewById(R.id.engagementMenuOption);
         followersMenuOption = (ImageView) findViewById(R.id.followersMenuOption);
+
+        rankViewFlipper = (CustomViewFlipper) findViewById(R.id.rankViewFlipper);
+
+        rankViewFlipper.setInAnimation(AnimationUtils.loadAnimation(this, R.anim.in_from_top));
+        rankViewFlipper.setOutAnimation(AnimationUtils.loadAnimation(this, R.anim.out_from_bottom));
+        rankViewFlipper.setAutoStart(true);
+        rankViewFlipper.setFlipInterval(3000);
+        rankViewFlipper.startFlipping();
 
         customDateMenuOption.setOnClickListener(this);
         pageViewsMenuOption.setOnClickListener(this);
@@ -162,6 +177,12 @@ public class BloggersAnalyticsActivity extends BaseActivity implements OnChartGe
 
         create30daysPageViewGraph();
         fetchTopBloggersList();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        rankViewFlipper.clearAnimation();
     }
 
     private void create30daysPageViewGraph() {
@@ -254,10 +275,34 @@ public class BloggersAnalyticsActivity extends BaseActivity implements OnChartGe
             try {
                 UserDetailResponse responseData = (UserDetailResponse) response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    if (StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getRank())) {
-                        rankTextView.setText("NA");
+//                    if (StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getRank())) {
+//                        rankTextView.setText("NA");
+//                    } else {
+//                        rankTextView.setText(responseData.getData().get(0).getResult().getRank());
+//                    }
+                    if (responseData.getData().get(0).getResult().getRanks() == null || responseData.getData().get(0).getResult().getRanks().size() == 0) {
+                        LanguageRanksModel languageRanksModel = new LanguageRanksModel();
+                        languageRanksModel.setRank(-1);
+                        languageRanksModel.setLangKey("");
+                        addRankView(languageRanksModel);
+                        rankViewFlipper.setAutoStart(false);
+                        rankViewFlipper.stopFlipping();
+                    } else if (responseData.getData().get(0).getResult().getRanks().size() < 2) {
+                        addRankView(responseData.getData().get(0).getResult().getRanks().get(0));
+                        rankViewFlipper.setAutoStart(false);
+                        rankViewFlipper.stopFlipping();
                     } else {
-                        rankTextView.setText(responseData.getData().get(0).getResult().getRank());
+                        for (int i = 0; i < responseData.getData().get(0).getResult().getRanks().size(); i++) {
+                            if (AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(i).getLangKey())) {
+                                addRankView(responseData.getData().get(0).getResult().getRanks().get(i));
+                            }
+                        }
+                        Collections.sort(responseData.getData().get(0).getResult().getRanks());
+                        for (int i = 0; i < responseData.getData().get(0).getResult().getRanks().size(); i++) {
+                            if (!AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(i).getLangKey())) {
+                                addRankView(responseData.getData().get(0).getResult().getRanks().get(i));
+                            }
+                        }
                     }
 
                     int followerCount = Integer.parseInt(responseData.getData().get(0).getResult().getFollowersCount());
@@ -407,6 +452,28 @@ public class BloggersAnalyticsActivity extends BaseActivity implements OnChartGe
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
+
+    private void addRankView(LanguageRanksModel languageRanksModel) {
+        View rankItem = getLayoutInflater().inflate(R.layout.rank_flipping_item, null);
+        TextView rankTextView = (TextView) rankItem.findViewById(R.id.rankingTextView);
+        TextView rankLabelTextView = (TextView) rankItem.findViewById(R.id.rankingLabelTextView);
+
+        rankTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
+        rankLabelTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+
+        if (languageRanksModel.getRank() == -1) {
+            rankTextView.setText("--");
+            rankLabelTextView.setText("Rank");
+        } else {
+            rankTextView.setText("" + languageRanksModel.getRank());
+            if (AppConstants.LANG_KEY_ENGLISH.equals(languageRanksModel.getLangKey())) {
+                rankLabelTextView.setText("Rank in English");
+            } else {
+                rankLabelTextView.setText("Rank in " + AppUtils.getLangModelForLanguage(BloggersAnalyticsActivity.this, languageRanksModel.getLangKey()).getDisplay_name());
+            }
+        }
+        rankViewFlipper.addView(rankItem);
+    }
 
     @Override
     public void onClick(View v) {

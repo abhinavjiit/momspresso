@@ -6,6 +6,44 @@
     android:layout_height="match_parent"
     tools:context=".editor.EditorPostActivity">
 
+    <RelativeLayout
+        android:id="@+id/suggestionOverlaySlider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="6dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/suggestionImageView"
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="2dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/editor_bg" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/suggestionImageView"
+            android:layout_centerHorizontal="true"
+            android:paddingTop="20dp"
+            android:text="Blog in your own language"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/languagesTextView"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="language"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"

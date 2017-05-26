@@ -25,9 +25,15 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.BitmapUtils;
@@ -44,14 +50,19 @@ import com.mycity4kids.listener.OnButtonClicked;
 import com.mycity4kids.models.response.ArticleDraftResponse;
 import com.mycity4kids.models.response.DraftListResult;
 import com.mycity4kids.models.response.ImageUploadResponse;
+import com.mycity4kids.models.response.LanguageConfigModel;
 import com.mycity4kids.models.response.PublishDraftObject;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
 import com.mycity4kids.ui.activity.AddArticleTopicsActivity;
 import com.mycity4kids.ui.activity.EditSelectedTopicsActivity;
+import com.mycity4kids.ui.activity.FilteredTopicsArticleListingActivity;
+import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.PermissionUtil;
+import com.mycity4kids.widget.OnSwipeTouchListener;
 
+import org.apmem.tools.layouts.FlowLayout;
 import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
@@ -60,6 +71,8 @@ import org.wordpress.android.util.helpers.MediaFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
@@ -67,6 +80,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import okhttp3.MediaType;
@@ -127,6 +141,11 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     private Toolbar mToolbar;
     private View mLayout;
     private String imageSelectorType;
+    private FlowLayout suggestionFlowLayout;
+    private TextView languagesTextView;
+    private RelativeLayout suggestionOverlaySlider;
+    private Animation animationSlideDownIn;
+    private Animation animationSlideUpOut;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,11 +156,120 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             Utils.pushOpenScreenEvent(EditorPostActivity.this, "Text Editor", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         }
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        languagesTextView = (TextView) findViewById(R.id.languagesTextView);
+        suggestionOverlaySlider = (RelativeLayout) findViewById(R.id.suggestionOverlaySlider);
+
+        animationSlideDownIn = AnimationUtils.loadAnimation(this, R.anim.slidein_from_top);
+        animationSlideUpOut = AnimationUtils.loadAnimation(this, R.anim.slideout_from_top);
+
+        animationSlideDownIn.setAnimationListener(animationSlideInListener);
+        animationSlideUpOut.setAnimationListener(animationSlideOutListener);
+
+        animationSlideDownIn.setStartOffset(1000);
+        suggestionOverlaySlider.startAnimation(animationSlideDownIn);
+        suggestionOverlaySlider.setVisibility(View.VISIBLE);
+
+        suggestionOverlaySlider.setOnTouchListener(new OnSwipeTouchListener(this) {
+            @Override
+            public void onSwipeTop() {
+                super.onSwipeTop();
+                animationSlideUpOut.setStartOffset(0);
+                suggestionOverlaySlider.startAnimation(animationSlideUpOut);
+            }
+        });
         mLayout = findViewById(R.id.rootLayout);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Write An Article");
         mFailedUploads = new HashMap<>();
+        String coloredBullet = "<font color=#F0BBC2>&#9679;</font>";
+        String langText = coloredBullet + " HINDI " + coloredBullet + " BANGLA " + coloredBullet + " MARATHI " + coloredBullet + " TELUGU " + coloredBullet + " TAMIL";
+        languagesTextView.setText(Html.fromHtml(langText));
+        //inflateSugesstionLayout();
+    }
+
+    private Animation.AnimationListener animationSlideInListener = new Animation.AnimationListener() {
+        @Override
+        public void onAnimationStart(Animation animation) {
+
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+            animationSlideUpOut.setStartOffset(3000);
+            suggestionOverlaySlider.startAnimation(animationSlideUpOut);
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    };
+
+    private Animation.AnimationListener animationSlideOutListener = new Animation.AnimationListener() {
+        @Override
+        public void onAnimationStart(Animation animation) {
+
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+            suggestionOverlaySlider.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+    };
+
+    private void inflateSugesstionLayout() {
+        try {
+            FileInputStream fileInputStream = openFileInput(AppConstants.LANGUAGES_JSON_FILE);
+            String fileContent = AppUtils.convertStreamToString(fileInputStream);
+            LinkedHashMap<String, LanguageConfigModel> retMap = new Gson().fromJson(
+                    fileContent, new TypeToken<LinkedHashMap<String, LanguageConfigModel>>() {
+                    }.getType()
+            );
+            Log.d("Map", "" + retMap.toString());
+            for (final Map.Entry<String, LanguageConfigModel> entry : retMap.entrySet()) {
+                final TextView view = (TextView) getLayoutInflater().inflate(R.layout.editor_banner_language_item, null);
+                view.setText(entry.getValue().getDisplay_name());
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent languageIntent = new Intent(EditorPostActivity.this, FilteredTopicsArticleListingActivity.class);
+                        languageIntent.putExtra("selectedTopics", entry.getValue().getId());
+                        languageIntent.putExtra("displayName", entry.getValue().getDisplay_name());
+                        languageIntent.putExtra("categoryName", entry.getValue().getName());
+                        languageIntent.putExtra("isLanguage", true);
+                        languageIntent.putExtra(Constants.FROM_SCREEN, "Navigation Menu");
+                        startActivity(languageIntent);
+                    }
+                });
+                suggestionFlowLayout.addView(view);
+            }
+            for (final Map.Entry<String, LanguageConfigModel> entry : retMap.entrySet()) {
+                final TextView view = (TextView) getLayoutInflater().inflate(R.layout.editor_banner_language_item, null);
+                view.setText(entry.getValue().getDisplay_name());
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent languageIntent = new Intent(EditorPostActivity.this, FilteredTopicsArticleListingActivity.class);
+                        languageIntent.putExtra("selectedTopics", entry.getValue().getId());
+                        languageIntent.putExtra("displayName", entry.getValue().getDisplay_name());
+                        languageIntent.putExtra("categoryName", entry.getValue().getName());
+                        languageIntent.putExtra("isLanguage", true);
+                        languageIntent.putExtra(Constants.FROM_SCREEN, "Navigation Menu");
+                        startActivity(languageIntent);
+                    }
+                });
+                suggestionFlowLayout.addView(view);
+            }
+        } catch (FileNotFoundException ffe) {
+            Crashlytics.logException(ffe);
+            Log.d("MC4kException", Log.getStackTraceString(ffe));
+        }
     }
 
     @Override
