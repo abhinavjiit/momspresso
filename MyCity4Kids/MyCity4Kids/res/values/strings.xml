@@ -439,6 +439,8 @@
 
     <string name="editor.spell_check.title">Spell Check</string>
     <string name="editor.spell_check.message">Always check spellings before publishing</string>
+    <string name="editor.banner.message">Blog in a language of your choice</string>
+
     <string name="menu.hindi">हिन्दी</string>
     <string name="menu.bangla">বাংলা</string>
     <string name="menu.marathi">मराठी</string>

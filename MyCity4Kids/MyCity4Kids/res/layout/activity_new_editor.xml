@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="6dp"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <ImageView
             android:id="@+id/suggestionImageView"
@@ -27,8 +27,8 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/suggestionImageView"
             android:layout_centerHorizontal="true"
-            android:paddingTop="20dp"
-            android:text="Blog in your own language"
+            android:paddingTop="18dp"
+            android:text="@string/editor.banner.message"
             android:textColor="@color/black"
             android:textSize="20sp" />
 
@@ -38,7 +38,9 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
+            android:paddingTop="10dp"
             android:gravity="center"
+            android:lineSpacingExtra="4dp"
             android:text="language"
             android:textColor="@color/black"
             android:textSize="18sp" />

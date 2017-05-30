@@ -11,6 +11,8 @@ import android.widget.CompoundButton;
 import com.mycity4kids.R;
 import com.mycity4kids.models.SubscriptionAndLanguageSettingsModel;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.util.ArrayList;
 
 /**
@@ -61,7 +63,7 @@ public class SubscriptionSettingsListAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) view.getTag();
         }
-        holder.aSwitch.setText(subscriptionSettingsList.get(position).getDisplayName());
+        holder.aSwitch.setText(StringUtils.capitalize(subscriptionSettingsList.get(position).getDisplayName()));
 
         holder.aSwitch.setTag(position);
         holder.aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

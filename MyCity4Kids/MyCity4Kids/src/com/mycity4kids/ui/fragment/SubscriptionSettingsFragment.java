@@ -132,19 +132,20 @@ public class SubscriptionSettingsFragment extends BaseFragment implements View.O
                                 subscriptionAndLanguageSettingsModel.setStatus(langEntry.getValue());
                                 subscriptionAndLanguageSettingsModel.setOriginalStatus(langEntry.getValue());
                                 subscriptionAndLanguageSettingsModel.setName(langEntry.getKey());
-                                switch (langEntry.getKey()) {
-                                    case "hindi":
-                                        subscriptionAndLanguageSettingsModel.setDisplayName("Hindi");
-                                        break;
-                                    case "bengali":
-                                        subscriptionAndLanguageSettingsModel.setDisplayName("Bangla");
-                                        break;
-                                    case "marathi":
-                                        subscriptionAndLanguageSettingsModel.setDisplayName("Marathi");
-                                        break;
-                                    default:
-                                        subscriptionAndLanguageSettingsModel.setDisplayName(entry.getKey());
-                                }
+                                subscriptionAndLanguageSettingsModel.setDisplayName(langEntry.getKey());
+//                                switch (langEntry.getKey()) {
+//                                    case "hindi":
+//                                        subscriptionAndLanguageSettingsModel.setDisplayName("Hindi");
+//                                        break;
+//                                    case "bengali":
+//                                        subscriptionAndLanguageSettingsModel.setDisplayName("Bangla");
+//                                        break;
+//                                    case "marathi":
+//                                        subscriptionAndLanguageSettingsModel.setDisplayName("Marathi");
+//                                        break;
+//                                    default:
+//                                        subscriptionAndLanguageSettingsModel.setDisplayName(entry.getKey());
+//                                }
                                 subscriptionSettingsList.add(subscriptionAndLanguageSettingsModel);
                             }
                         }

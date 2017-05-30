@@ -183,7 +183,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
         getSupportActionBar().setTitle("Write An Article");
         mFailedUploads = new HashMap<>();
         String coloredBullet = "<font color=#F0BBC2>&#9679;</font>";
-        String langText = coloredBullet + " HINDI " + coloredBullet + " BANGLA " + coloredBullet + " MARATHI " + coloredBullet + " TELUGU " + coloredBullet + " TAMIL";
+        String langText = coloredBullet + " ENGLISH " + coloredBullet + " HINDI " + coloredBullet + " BANGLA " + coloredBullet + " MARATHI " + coloredBullet + " TELUGU " + coloredBullet + " TAMIL";
         languagesTextView.setText(Html.fromHtml(langText));
         //inflateSugesstionLayout();
     }
