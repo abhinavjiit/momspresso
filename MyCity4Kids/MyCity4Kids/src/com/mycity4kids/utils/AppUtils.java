@@ -6,13 +6,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.telephony.TelephonyManager;
+import android.text.Html;
+import android.text.Spanned;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
@@ -40,11 +45,14 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+
+import okhttp3.ResponseBody;
 
 /**
  * Created by hemant on 22/11/16.
@@ -320,46 +328,49 @@ public class AppUtils {
         }
     }
 
-//    public static boolean writeResponseBodyToDisk(Context context, String body, String filename) {
-//        try {
-//            InputStream inputStream = null;
-//            OutputStream outputStream = null;
-//            try {
-//                byte[] fileReader = new byte[4096];
-//
-//                long fileSize = body.contentLength();
-//                long fileSizeDownloaded = 0;
-//
-//                inputStream = body.byteStream();
-//                outputStream = context.openFileOutput(filename, Context.MODE_PRIVATE);
-//
-//                while (true) {
-//                    int read = inputStream.read(fileReader);
-//                    if (read == -1) {
-//                        break;
-//                    }
-//                    outputStream.write(fileReader, 0, read);
-//                    fileSizeDownloaded += read;
-//                    Log.d("dAWDdawwdawd", "file download: " + fileSizeDownloaded + " of " + fileSize);
-//                }
-//
-//                outputStream.flush();
-//                return true;
-//            } catch (IOException e) {
-//                return false;
-//            } finally {
-//                if (inputStream != null) {
-//                    inputStream.close();
-//                }
-//
-//                if (outputStream != null) {
-//                    outputStream.close();
-//                }
-//            }
-//        } catch (IOException e) {
-//            return false;
-//        }
-//    }
+    public static boolean writeResponseBodyToDisk(Context mContext, String fileName, ResponseBody body) {
+        try {
+            InputStream inputStream = null;
+            OutputStream outputStream = null;
+            try {
+                byte[] fileReader = new byte[4096];
+                long fileSize = body.contentLength();
+                long fileSizeDownloaded = 0;
+
+                inputStream = body.byteStream();
+                outputStream = mContext.openFileOutput(fileName, Context.MODE_PRIVATE);
+
+                while (true) {
+                    int read = inputStream.read(fileReader);
+                    if (read == -1) {
+                        break;
+                    }
+                    outputStream.write(fileReader, 0, read);
+                    fileSizeDownloaded += read;
+                    Log.d("TopicsFilterActivity", "file download: " + fileSizeDownloaded + " of " + fileSize);
+                }
+
+                outputStream.flush();
+                return true;
+            } catch (IOException e) {
+                Crashlytics.logException(e);
+                Log.d("MC4KException", Log.getStackTraceString(e));
+                return false;
+            } finally {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+            }
+        } catch (IOException e) {
+            Crashlytics.logException(e);
+            Log.d("MC4KException", Log.getStackTraceString(e));
+            return false;
+        }
+    }
 
     public static LanguageConfigModel getLangModelForLanguage(Context mContext, String key) {
         try {
@@ -395,5 +406,55 @@ public class AppUtils {
             Log.d("MC4kException", Log.getStackTraceString(ffe));
             return null;
         }
+    }
+
+    public static int pxToDp(int px) {
+        return (int) (px / Resources.getSystem().getDisplayMetrics().density);
+    }
+
+    public static int dpTopx(int dp) {
+        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
+    }
+
+    @SuppressWarnings("deprecation")
+    public static Spanned fromHtml(String html) {
+        Spanned result;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            result = Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY);
+        } else {
+            result = Html.fromHtml(html);
+        }
+        return result;
+    }
+
+    public static String stripHtml(String html) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            return Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY).toString();
+        } else {
+            return Html.fromHtml(html).toString();
+        }
+    }
+
+
+    public static boolean testPrep() {
+        Integer[] arr = {1, 2, 3, 4, 2, 6, 7};
+        HashSet<Integer> set = new HashSet<>();
+        int k = 3;
+        for (int i = 0; i < arr.length; i++) {
+            if (i - k > 0) {
+                set.remove(arr[i - k - 1]);
+                if (!set.add(arr[i])) {
+                    System.out.println("FOund");
+                    return true;
+                }
+            } else {
+                if (!set.add(arr[i])) {
+                    System.out.println("Found early");
+                    return true;
+                }
+            }
+        }
+        System.out.println("Not Found");
+        return false;
     }
 }

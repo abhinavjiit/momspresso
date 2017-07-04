@@ -13,7 +13,7 @@ import com.mycity4kids.ui.fragment.TutorialFragment;
 public class TutorialAdapter extends FragmentStatePagerAdapter {
 
     Context mContext;
-    private final int PAGE_COUNT = 3;
+    private final int PAGE_COUNT = 4;
 
     public TutorialAdapter(FragmentManager fm, Context context) {
         super(fm);

@@ -167,7 +167,7 @@
             android:paddingRight="20dp"
             android:paddingTop="10dp"
             android:text="FOLLOW"
-            android:textColor="@color/blog.comments.follow_reply_btn"
+            android:textColor="#507cbe"
             android:textSize="12sp"
             android:visibility="invisible" />
 
@@ -185,7 +185,7 @@
             android:paddingRight="10dp"
             android:paddingTop="10dp"
             android:text="FOLLOWING"
-            android:textColor="@color/blog.comments.follow_reply_btn"
+            android:textColor="#507cbe"
             android:textSize="12sp"
             android:visibility="invisible" />
 

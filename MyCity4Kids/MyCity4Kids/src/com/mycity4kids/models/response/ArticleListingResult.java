@@ -29,6 +29,10 @@ public class ArticleListingResult implements Parcelable {
     private ArrayList<Map<String, String>> tags;
     private String likesCount;
     private String reason;
+    private int listingBookmarkStatus = 0;
+
+    public ArticleListingResult() {
+    }
 
     protected ArticleListingResult(Parcel in) {
         id = in.readString();
@@ -203,6 +207,14 @@ public class ArticleListingResult implements Parcelable {
 
     public void setReason(String reason) {
         this.reason = reason;
+    }
+
+    public int getListingBookmarkStatus() {
+        return listingBookmarkStatus;
+    }
+
+    public void setListingBookmarkStatus(int listingBookmarkStatus) {
+        this.listingBookmarkStatus = listingBookmarkStatus;
     }
 
     @Override

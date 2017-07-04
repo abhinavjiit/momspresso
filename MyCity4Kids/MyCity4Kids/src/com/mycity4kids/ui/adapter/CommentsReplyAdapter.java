@@ -117,7 +117,7 @@ public class CommentsReplyAdapter extends ArrayAdapter<CommentsData> {
         if (position == 0) {
             view.setBackgroundColor(ContextCompat.getColor(mContext, R.color.white_color));
         } else {
-            view.setBackgroundColor(ContextCompat.getColor(mContext, R.color.blog_comments_reply_bg));
+            view.setBackgroundColor(ContextCompat.getColor(mContext, R.color.ad_comment_date));
             if (getItemViewType(position) == TYPE_REPLY_LEVEL_ONE && !"fb".equals(replyList.get(position).getComment_type())) {
                 holder.replyBtnTextView.setVisibility(View.VISIBLE);
             } else {

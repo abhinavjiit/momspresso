@@ -403,6 +403,24 @@
     <string name="videos.upload_option.gallery">Choose from gallery</string>
 
     <string name="ad.recommendation.tootip_text">Tap to like the blog</string>
+    <string name="ad.read_more.text">READ FULL STORY</string>
+    <string name="ad.view_all_tags.text">VIEW ALL</string>
+    <string name="ad.tags_title.text">This article was posted in the below categories</string>
+    <string name="ad.tags_subtitle.text">Follow them to read similar posts</string>
+    <string name="ad.follow_author">FOLLOW</string>
+    <string name="ad.following_author">FOLLOWING</string>
+    <string name="ad.comments.title">COMMENTS</string>
+    <string name="ad.comments.reply_label">Reply</string>
+    <string name="ad.comments.edit_label">Edit</string>
+    <string name="ad.bottom_bar.facebook">FACEBOOK</string>
+    <string name="ad.bottom_bar.whatsapp">WHATSAPP</string>
+    <string name="ad.bottom_bar.email">EMAIL</string>
+    <string name="ad.bottom_bar.bookmark">BOOKMARK</string>
+    <string name="ad.bottom_bar.like">LIKE</string>
+    <string name="ad.bottom_bar.unbookmark">UNBOOKMARK</string>
+    <string name="ad.bottom_bar.unlike">UNLIKE</string>
+    <string name="ad.recent_logs_from.title">RECENT BLOGS FROM</string>
+    <string name="ad.trending.title">TRENDING BLOGS</string>
 
     <string-array name="improve_page_views_array">
         <item>Interlink your article to other blog posts</item>
@@ -489,5 +507,64 @@
     <string name="permission_get_account_rationale">Get account permission is needed to create your account with google login.</string>
     <string name="permission_calendar_rationale">Calendar permission is needed to add a reminder.</string>
     <string name="language_settings.explanation">Use the toggle above to manage the languages of articles that you want to see on your feed</string>
+    <string name="language_settings.title">CHOOSE YOUR PREFERRED LANGUAGES</string>
+    <string name="language_settings.subtitle">Your feed will be served based on your selection</string>
+
+    <string name="bottom_navigation_bar.home">Child\'s Name</string>
+    <string name="bottom_navigation_bar.profile">Child\'s Birthday</string>
+    <string name="bottom_navigation_bar.notification">ADD</string>
+
+    <string name="home.toolbar.title">TRENDING</string>
+    <string name="explore_listing.explore_categories.title">YOU COULD ALSO EXPLORE THE CATEGORIES</string>
+
+    <string name="home_screen.trending.title">TRENDING</string>
+    <string name="home_screen.notification.title">NOTIFICATION</string>
+    <string name="home_screen.profile.title">PROFILE</string>
+    <string name="home_screen.select_an_option.title">SELECT AN OPTION</string>
+    <string name="home_screen.editor.title">EDITOR</string>
+
+    <string-array name="onboarding_title_array">
+        <item>HARNESSING THE WISDOM OF MUMS</item>
+        <item>DISCOVER\'S YOUR CITY\'S BEST</item>
+        <item>CHOOSE YOUR LANGUAGE</item>
+        <item>WATCH VIDEOS</item>
+    </string-array>
+
+    <string-array name="onboarding_desc_array">
+        <item>BLOGS <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> BLOGS <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> EXPERTS </item>
+        <item>EDITORIAL LIST <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> EVENTS <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> RESOURCES</item>
+        <item>ENGLISH <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> HINDI <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> MARATHI <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> TAMIL <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> TELEGU</item>
+        <item>PARENTING ADVICE <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> RECIPES <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> MOMSPRESSO </item>
+    </string-array>
+
+    <string name="onboarding.signin">SIGN IN</string>
+    <string name="onboarding.already_member">Already a member?</string>
+    <string name="onboarding.get_started">GET STARTED</string>
+    <string name="sign_in.welcome_back">WELCOME BACK</string>
+    <string name="sign_in.desc">Discover the joy of motherhood.\n Join our Mum communityto find inspiration &amp; hope.</string>
+    <string name="sign_in.no_account">Don\'t have an account?\u0020</string>
+    <string name="sign_in.sign_up_btn">SIGNUP</string>
+
+    <string name="sign_up.welcome_back">WELCOME BACK</string>
+    <string name="sign_up.desc">Discover the joy of motherhood.\n Join our Mum communityto find inspiration &amp; hope.</string>
+    <string name="sign_up.already_account">Already have an account?\u0020</string>
+    <string name="sign_up.sign_in_btn">SIGNIN</string>
+
+    <string name="login_email.login">LOGIN</string>
+    <string name="login_email.forgot_password">Forgot Password?</string>
+    <string name="login_email.username_hint">Username</string>
+    <string name="login_email.password_hint">Password</string>
+
+
+    <string name="signin.login_via_facebook">LOGIN USING FACEBOOK</string>
+    <string name="signin.login_via_google">LOGIN USING GOOGLE</string>
+    <string name="signin.login_via_email">LOGIN USING EMAIL</string>
+
+    <string name="signup.connect_via_facebook">CONNECT USING FACEBOOK</string>
+    <string name="signup.connect_via_google">CONNECT USING GOOGLE</string>
+
+    <string name="for_you.reason.why_label">Why am I seeing this?</string>
+    <string name="for_you.reason.dont_want_to_see">Don\'t want to see this</string>
+    <string name="for_you.reason.okay">OKAY</string>
 
 </resources>

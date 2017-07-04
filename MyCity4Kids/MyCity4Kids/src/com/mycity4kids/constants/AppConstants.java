@@ -507,4 +507,8 @@ public class AppConstants {
     public static final String LANG_KEY_ENGLISH = "0";
     public static final String LANG_KEY_HINDI = "1";
     public static final String AUTHOR_NAME = "authorName";
+
+    public static final String LAUNCH_FRAGMENT = "launchFragment";
+    public static final String FRAGMENT_SIGNIN = "signinFragment";
+    public static final String FRAGMENT_SIGNUP = "signupFragment";
 }

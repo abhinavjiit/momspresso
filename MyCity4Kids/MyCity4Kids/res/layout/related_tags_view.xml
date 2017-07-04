@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -7,34 +8,33 @@
 
     //Do not change order of the child layouts. Used childAt function
 
-    <TextView
+    <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/subcategoryTextView"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:background="@drawable/tags_bg"
-        android:fontFamily="sans-serif-light"
+        android:layout_height="38dp"
+        android:background="@color/ad.tags.bg"
         android:gravity="center"
         android:hint="Add waddd"
-        android:paddingBottom="6dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="6dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
         android:textColor="@color/ad.tags.text"
-        android:textSize="12sp" />
+        android:textSize="13sp"
+        app:fontName="oswald_regular.ttf" />
 
     <View
         android:id="@+id/seperator"
         android:layout_width="1dp"
-        android:layout_height="match_parent"
+        android:layout_height="38dp"
         android:layout_toRightOf="@+id/subcategoryTextView"
-        android:background="@color/white_color" />
+        android:background="#9a9a9a" />
 
     <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="38dp"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/seperator"
-        android:background="@drawable/tags_bg"
-        android:padding="10dp"
-        android:src="@drawable/follow_plus" />
+        android:background="@color/ad.tags.follow_bg"
+        android:padding="8dp"
+        android:src="@drawable/follow_plus"
+        android:tint="@color/ad.tags.text" />
 </RelativeLayout>

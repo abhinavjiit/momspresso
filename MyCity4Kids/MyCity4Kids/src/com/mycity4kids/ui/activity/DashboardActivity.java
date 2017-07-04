@@ -2,39 +2,29 @@ package com.mycity4kids.ui.activity;
 
 import android.Manifest;
 import android.accounts.AccountManager;
-import android.app.NotificationManager;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.internal.BottomNavigationItemView;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +35,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.joanzapata.iconify.widget.IconButton;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
@@ -53,95 +44,54 @@ import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
-import com.mycity4kids.constants.ColorCode;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.controller.CompleteTaskController;
-import com.mycity4kids.controller.DeleteTaskController;
-import com.mycity4kids.controller.TaskListController;
-import com.mycity4kids.dbtable.TableAppointmentData;
-import com.mycity4kids.dbtable.TableTaskData;
-import com.mycity4kids.dbtable.TableTaskList;
-import com.mycity4kids.dbtable.TaskCompletedTable;
-import com.mycity4kids.dbtable.TaskTableAttendee;
-import com.mycity4kids.dbtable.TaskTableFile;
-import com.mycity4kids.dbtable.TaskTableNotes;
-import com.mycity4kids.dbtable.TaskTableWhoToRemind;
 import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.facebook.FacebookUtils;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.listener.OnButtonClicked;
-import com.mycity4kids.models.Topics;
-import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.models.response.DeepLinkingResposnse;
 import com.mycity4kids.models.response.DeepLinkingResult;
 import com.mycity4kids.models.response.LanguageConfigModel;
 import com.mycity4kids.models.version.RateVersion;
-import com.mycity4kids.newmodels.CompleteTaskRequestModel;
-import com.mycity4kids.newmodels.DeleteTaskModel;
-import com.mycity4kids.newmodels.ExternalEventModel;
-import com.mycity4kids.newmodels.TaskListModel;
-import com.mycity4kids.newmodels.TaskListResponse;
-import com.mycity4kids.newmodels.TaskResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.reminders.Reminder;
 import com.mycity4kids.retrofitAPIsInterfaces.DeepLinkingAPI;
-import com.mycity4kids.ui.adapter.UserTaskListAdapter;
-import com.mycity4kids.ui.fragment.AddTaskListPopUp;
 import com.mycity4kids.ui.fragment.ArticlesFragment;
 import com.mycity4kids.ui.fragment.ChangeCityFragment;
 import com.mycity4kids.ui.fragment.ChooseVideoUploadOptionDialogFragment;
+import com.mycity4kids.ui.fragment.EditorPostFragment;
 import com.mycity4kids.ui.fragment.ExternalCalFragment;
 import com.mycity4kids.ui.fragment.FragmentAdultProfile;
 import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
-import com.mycity4kids.ui.fragment.FragmentCalMonth;
-import com.mycity4kids.ui.fragment.FragmentCalender;
-import com.mycity4kids.ui.fragment.FragmentCityForKids;
-import com.mycity4kids.ui.fragment.FragmentEditorsPick;
 import com.mycity4kids.ui.fragment.FragmentFamilyDetail;
 import com.mycity4kids.ui.fragment.FragmentFamilyProfile;
 import com.mycity4kids.ui.fragment.FragmentHomeCategory;
 import com.mycity4kids.ui.fragment.FragmentKidProfile;
 import com.mycity4kids.ui.fragment.FragmentMC4KHome;
+import com.mycity4kids.ui.fragment.FragmentMC4KHomeNew;
 import com.mycity4kids.ui.fragment.FragmentSetting;
-import com.mycity4kids.ui.fragment.FragmentTaskHome;
 import com.mycity4kids.ui.fragment.NotificationFragment;
+import com.mycity4kids.ui.fragment.ProfileSelectFragment;
 import com.mycity4kids.ui.fragment.RateAppDialogFragment;
 import com.mycity4kids.ui.fragment.SendFeedbackFragment;
-import com.mycity4kids.ui.fragment.SyncSettingFragment;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.PermissionUtil;
-import com.mycity4kids.utils.RoundedTransformation;
-import com.mycity4kids.widget.CustomListView;
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
-
-import org.apmem.tools.layouts.FlowLayout;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.lang.reflect.Field;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Locale;
 import java.util.Map;
-import java.util.TimeZone;
 
 import life.knowledge4.videotrimmer.utils.FileUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
-public class DashboardActivity extends BaseActivity implements View.OnClickListener {
+public class DashboardActivity extends BaseActivity implements View.OnClickListener, FragmentManager.OnBackStackChangedListener {
 
     private static final int REQUEST_CAMERA_PERMISSION = 1;
     private static final int REQUEST_GALLERY_PERMISSION = 2;
@@ -150,43 +100,323 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
 
     private Toolbar mToolbar;
-    private DrawerLayout mDrawerLayout;
-    private ActionBarDrawerToggle mDrawerToggle;
-    private View mDrawerView;
     private CharSequence mTitle;
-    private boolean isPopupOpen;
-    TextView year;
-    Calendar currentdate;
-    int tempyear;
-    SimpleDateFormat form;
-    private TextView mUsernName;
-    private ImageView downArrow;
+    //    private TextView mUsernName;
     public boolean filter = false;
-    public String selected_colorcode = "";
-    private ImageView profileImage;
-    private UserTaskListAdapter taskListAdapter;
-    CustomListView allTaskList;
-    int taskListID = 0;
-    Boolean taskIconFlag = false;
-    private TextView toolBarTitleView;
-    private boolean editTaskList;
-    private String editTaskListname = "";
-    private TextView txvAllTaskPopup;
-    ArrayList<Integer> taskIdlist;
-    ArrayList<Integer> deletedTasksList;
-    private String oldListName = "";
-    private boolean frmPush = false;
-    private int taskId = 0;
-    private TableTaskData taskData;
-    private int blogListPosition;
+    //    private ImageView profileImage;
     Tracker t;
     private String deepLinkUrl;
     String fragmentToLoad = "";
-    private int hot_number = 2;
-    private TextView ui_hot = null;
     private TextView itemMessagesBadgeTextView;
+    private TextView toolbarTitleTextView;
     private FrameLayout badgeLayout;
-    private FlowLayout languageContainer;
+    //    private FlowLayout languageContainer;
+    private BottomNavigationViewEx bottomNavigationView;
+    private RelativeLayout toolbarRelativeLayout;
+    private RelativeLayout rootLayout;
+    private String mToolbarTitle = "";
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_dashboard);
+        t = ((BaseApplication) getApplication()).getTracker(
+                BaseApplication.TrackerName.APP_TRACKER);
+        // Enable Display Features.
+        t.enableAdvertisingIdCollection(true);
+        // Set screen name.
+        t.setScreenName("DashBoard");
+        // You only need to set User ID on a tracker once. By setting it on the tracker, the ID will be
+        // sent with all subsequent hits.
+        // new code
+        t.set("&uid", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+
+        // This hit will be sent with the User ID value and be visible in User-ID-enabled views (profiles).
+        t.send(new HitBuilders.EventBuilder().setCategory("UX").setAction("User Sign In").build());
+        // Send a screen view.
+        t.send(new HitBuilders.ScreenViewBuilder().build());
+
+        onNewIntent(getIntent());
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+
+        if (null != intent.getParcelableExtra("notificationExtras")) {
+            if ("upcoming_event_list".equals(((Bundle) intent.getParcelableExtra("notificationExtras")).getString("type")))
+                fragmentToLoad = Constants.BUSINESS_EVENTLIST_FRAGMENT;
+        }
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.addOnBackStackChangedListener(this);
+//        mUsernName = (TextView) findViewById(R.id.txvUserName);
+        rootLayout = (RelativeLayout) findViewById(R.id.rootLayout);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+//        profileImage = (ImageView) findViewById(R.id.imgProfile);
+//        languageContainer = (FlowLayout) findViewById(R.id.languageContainer);
+        bottomNavigationView = (BottomNavigationViewEx) findViewById(R.id.navigation);
+        toolbarRelativeLayout = (RelativeLayout) mToolbar.findViewById(R.id.toolbarRelativeLayout);
+        toolbarTitleTextView = (TextView) mToolbar.findViewById(R.id.toolbarTitle);
+
+        bottomNavigationView.enableShiftingMode(false);
+        bottomNavigationView.enableItemShiftingMode(false);
+        bottomNavigationView.setTextVisibility(false);
+
+
+        Utils.pushOpenScreenEvent(DashboardActivity.this, "DashBoard", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+
+        // onclick events
+//        findViewById(R.id.rdBtnToday).setOnClickListener(this);
+//        findViewById(R.id.rdBtnUpcoming).setOnClickListener(this);
+//        findViewById(R.id.feed_back).setOnClickListener(this);
+//        findViewById(R.id.addVideosTextView).setOnClickListener(this);
+//        findViewById(R.id.myVideosTextView).setOnClickListener(this);
+        toolbarRelativeLayout.setOnClickListener(this);
+
+        setSupportActionBar(mToolbar);
+
+//        mUsernName.setText(SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name());
+        // setting profile image
+
+        updateImageProfile();
+        final BottomNavigationItemView[] items = bottomNavigationView.getBottomNavigationItemViews();
+        bottomNavigationView.setItemIconTintList(null);
+        bottomNavigationView.setIconSize(30, 30);
+        bottomNavigationView.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        final Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+                        Fragment selectedFragment = null;
+                        switch (item.getItemId()) {
+
+                            case R.id.action_profile:
+//                                if (topFragment instanceof ProfileSelectFragment) {
+//                                    return true;
+//                                }
+//                                ProfileSelectFragment profileSelectFragment = new ProfileSelectFragment();
+//                                Bundle profileBundle = new Bundle();
+//                                profileSelectFragment.setArguments(profileBundle);
+//                                addFragment(profileSelectFragment, profileBundle, true);
+                                Intent intent1 = new Intent(DashboardActivity.this, BloggerDashboardActivity.class);
+                                startActivity(intent1);
+                                break;
+                            case R.id.action_notification:
+                                if (topFragment instanceof NotificationFragment) {
+                                    return true;
+                                }
+                                NotificationFragment fragment = new NotificationFragment();
+                                Bundle mBundle = new Bundle();
+                                fragment.setArguments(mBundle);
+                                addFragment(fragment, mBundle, true);
+                                break;
+                            case R.id.action_home:
+                                if (topFragment instanceof FragmentMC4KHomeNew) {
+                                    return true;
+                                }
+                                FragmentMC4KHomeNew fragment1 = new FragmentMC4KHomeNew();
+                                Bundle mBundle1 = new Bundle();
+                                fragment1.setArguments(mBundle1);
+                                addFragment(fragment1, mBundle1, true);
+                                break;
+                            case R.id.action_write:
+                                if (topFragment instanceof EditorPostFragment) {
+                                    return true;
+                                }
+                                EditorPostFragment editorPostFragment = new EditorPostFragment();
+                                Bundle editorBundle = new Bundle();
+                                editorPostFragment.setArguments(editorBundle);
+                                addFragment(editorPostFragment, editorBundle, true);
+                                break;
+                            case R.id.action_location:
+                                Intent intent = new Intent(DashboardActivity.this, SettingsActivity.class);
+                                intent.putExtra("load_fragment", Constants.SETTINGS_FRAGMENT);
+                                startActivity(intent);
+                                break;
+                        }
+                        return true;
+                    }
+                });
+
+        if (Constants.BUSINESS_EVENTLIST_FRAGMENT.equals(fragmentToLoad)) {
+            setTitle("Upcoming Events");
+            FragmentBusinesslistEvents fragment = new FragmentBusinesslistEvents();
+            Bundle mBundle = new Bundle();
+            mBundle.putInt(Constants.PAGE_TYPE, Constants.EVENT_PAGE_TYPE);
+            mBundle.putInt(Constants.EXTRA_CATEGORY_ID, SharedPrefUtils.getEventIdForCity(DashboardActivity.this));
+            mBundle.putString(Constants.CATEGOTY_NAME, "Events & workshop");
+            fragment.setArguments(mBundle);
+            replaceFragment(fragment, mBundle, true);
+        } else if (Constants.SETTINGS_FRAGMENT.equals(fragmentToLoad)) {
+            setTitle("Settings");
+            Bundle bundle = new Bundle();
+            bundle.putString("bio", getIntent().getStringExtra("bio"));
+            bundle.putString("firstName", getIntent().getStringExtra("firstName"));
+            bundle.putString("lastName", getIntent().getStringExtra("lastName"));
+            replaceFragment(new FragmentSetting(), bundle, true);
+        } else {
+            replaceFragment(new FragmentMC4KHomeNew(), null, false);
+        }
+
+//        if (SharedPrefUtils.isCityFetched(this) && SharedPrefUtils.getCurrentCityModel(this).getId() != AppConstants.OTHERS_CITY_ID) {
+//            findViewById(R.id.rdBtnUpcoming).setVisibility(View.VISIBLE);
+//            findViewById(R.id.rdBtnKids).setVisibility(View.VISIBLE);
+//        } else {
+//            findViewById(R.id.rdBtnUpcoming).setVisibility(View.GONE);
+//            findViewById(R.id.rdBtnKids).setVisibility(View.GONE);
+//        }
+//
+//        findViewById(R.id.rdBtnKids).setOnClickListener(this);
+//        findViewById(R.id.rdBtnParentingBlogs).setOnClickListener(this);
+//        findViewById(R.id.rdBtnMomspressoVideo).setOnClickListener(this);
+//        findViewById(R.id.editor).setOnClickListener(this);
+//        findViewById(R.id.imgProfile).setOnClickListener(this);
+//        findViewById(R.id.txvUserName).setOnClickListener(this);
+
+        /**
+         * this dialog will open App Upgrade
+         */
+
+        RateVersion reteVersionModel = SharedPrefUtils.getRateVersion(this);
+        int currentRateVersion = reteVersionModel.getAppRateVersion();
+        currentRateVersion++;
+        boolean isCompleteRateProcess = reteVersionModel.isAppRateComplete();
+        RateVersion rateModel = new RateVersion();
+        rateModel.setAppRateComplete(isCompleteRateProcess);
+        rateModel.setAppRateVersion(currentRateVersion);
+        SharedPrefUtils.setAppRateVersion(this, rateModel);
+        if (!SharedPrefUtils.getRateVersion(this).isAppRateComplete() && currentRateVersion >= 10) {
+            RateAppDialogFragment rateAppDialogFragment = new RateAppDialogFragment();
+            reteVersionModel.setAppRateVersion(-20);
+            rateAppDialogFragment.show(getFragmentManager(), rateAppDialogFragment.getClass().getSimpleName());
+        }
+
+
+//        populateLanguagesInMenu();
+        // manage fragment change
+
+//        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+//            @Override
+//            public void onBackStackChanged() {
+//                Fragment currentFrag = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+//
+//                if (currentFrag instanceof FragmentMC4KHome) {
+//                    mDrawerToggle.setDrawerIndicatorEnabled(true);
+//                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+//                    mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_UNLOCKED);
+//                    setTitle("");
+//                } else if (currentFrag instanceof FragmentSetting) {
+//                    setTitle("Settings");
+//                    mDrawerToggle.setDrawerIndicatorEnabled(true);
+//                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+//                    mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_UNLOCKED);
+//                } else if (currentFrag instanceof FragmentBusinesslistEvents) {
+//                    setTitle("Upcoming Events");
+//                } else if (currentFrag instanceof FragmentHomeCategory) {
+//                    setTitle("Kids Resources");
+//                } else if (currentFrag instanceof FragmentFamilyDetail) {
+//                    setTitle("Family Details");
+//                    mDrawerToggle.setDrawerIndicatorEnabled(false);
+//                    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//                    getSupportActionBar().setHomeButtonEnabled(true);
+//                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+//                    mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+//                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
+//                } else if (currentFrag instanceof FragmentAdultProfile) {
+//                    mDrawerToggle.setDrawerIndicatorEnabled(false);
+//                    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//                    getSupportActionBar().setHomeButtonEnabled(true);
+//                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+//                    mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+//                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
+//                } else if (currentFrag instanceof FragmentKidProfile) {
+//                    mDrawerToggle.setDrawerIndicatorEnabled(false);
+//                    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//                    getSupportActionBar().setHomeButtonEnabled(true);
+//                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+//                    mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+//                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
+//                } else if (currentFrag instanceof FragmentEditorsPick) {
+//                    mDrawerToggle.setDrawerIndicatorEnabled(true);
+//                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+//                    mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_UNLOCKED);
+//                    if (SharedPrefUtils.getCurrentCityModel(DashboardActivity.this).getName().isEmpty()) {
+//                        switch (SharedPrefUtils.getCurrentCityModel(DashboardActivity.this).getId()) {
+//                            case 1:
+//                                setTitle("Best of " + "Delhi-NCR");
+//                                break;
+//                            case 2:
+//                                setTitle("Best of " + "Bangalore");
+//                                break;
+//                            case 3:
+//                                setTitle("Best of " + "Mumbai");
+//                                break;
+//                            case 4:
+//                                setTitle("Best of " + "Pune");
+//                                break;
+//                            case 5:
+//                                setTitle("Best of " + "Hyderabad");
+//                                break;
+//                            case 6:
+//                                setTitle("Best of " + "Chennai");
+//                                break;
+//                            case 7:
+//                                setTitle("Best of " + "Kolkata");
+//                                break;
+//                            case 8:
+//                                setTitle("Best of " + "Jaipur");
+//                                break;
+//                            case 9:
+//                                setTitle("Best of " + "Ahmedabad");
+//                                break;
+//                            default:
+//                                setTitle("Best of " + "Delhi-NCR");
+//                                break;
+//                        }
+//
+//                    } else {
+//                        if (SharedPrefUtils.getCurrentCityModel(DashboardActivity.this).getName().equals("Delhi-Ncr")) {
+//                            SharedPrefUtils.getCurrentCityModel(DashboardActivity.this).setName("Delhi-NCR");
+//                        }
+//                        setTitle("Best of " + SharedPrefUtils.getCurrentCityModel(DashboardActivity.this).getName());
+//                    }
+//                } else if (currentFrag instanceof SendFeedbackFragment) {
+//                    mDrawerToggle.setDrawerIndicatorEnabled(true);
+//                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+//                    mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_UNLOCKED);
+//                    setTitle("Send Feedback");
+//                } else if (currentFrag instanceof ChangeCityFragment) {
+//                    setTitle("Change City");
+//                    mDrawerToggle.setDrawerIndicatorEnabled(false);
+//                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+//                    mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+//                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
+//                } else if (currentFrag instanceof SyncSettingFragment) {
+//                    setTitle("Sync Settings");
+//                    mDrawerToggle.setDrawerIndicatorEnabled(false);
+//                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+//                    mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+//                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
+//                }
+//                invalidateOptionsMenu();
+//                mDrawerToggle.syncState();
+//
+//            }
+//        });
+//
+//        mDrawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                switch (v.getId()) {
+//                    case -1:
+//                        getSupportFragmentManager().popBackStack();
+//                        break;
+//
+//                    default:
+//                        break;
+//                }
+//            }
+//        });
+
+    }
 
     // The onNewIntent() is overridden to get and resolve the data for deep linking
     @Override
@@ -287,14 +517,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         showAlertDialog("Message", "Logged in as " + SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name(), new OnButtonClicked() {
                             @Override
                             public void onButtonCLick(int buttonId) {
-//                                Utils.pushEvent(DashboardActivity.this, GTMEventType.ADD_BLOG_CLICKED_EVENT,
-//                                        SharedPrefUtils.getUserDetailModel(DashboardActivity.this).getDynamoId() + "", "Mobile Deep Link");
                                 launchAddVideoOptions();
                             }
                         });
                     } else {
-//                        Utils.pushEvent(DashboardActivity.this, GTMEventType.ADD_BLOG_CLICKED_EVENT,
-//                                SharedPrefUtils.getUserDetailModel(DashboardActivity.this).getDynamoId() + "", "Mobile Deep Link");
                         launchAddVideoOptions();
                     }
                 } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_PROFILE_URL)) {
@@ -333,520 +559,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dashboard);
-        t = ((BaseApplication) getApplication()).getTracker(
-                BaseApplication.TrackerName.APP_TRACKER);
-        // Enable Display Features.
-        t.enableAdvertisingIdCollection(true);
-        // Set screen name.
-        t.setScreenName("DashBoard");
-        // You only need to set User ID on a tracker once. By setting it on the tracker, the ID will be
-        // sent with all subsequent hits.
-        // new code
-        t.set("&uid", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-
-        // This hit will be sent with the User ID value and be visible in User-ID-enabled views (profiles).
-        t.send(new HitBuilders.EventBuilder().setCategory("UX").setAction("User Sign In").build());
-        // Send a screen view.
-        t.send(new HitBuilders.ScreenViewBuilder().build());
-
-        onNewIntent(getIntent());
-        Intent intent = getIntent();
-        Bundle extras = intent.getExtras();
-
-        if (null != intent.getParcelableExtra("notificationExtras")) {
-            if ("upcoming_event_list".equals(((Bundle) intent.getParcelableExtra("notificationExtras")).getString("type")))
-                fragmentToLoad = Constants.BUSINESS_EVENTLIST_FRAGMENT;
-        }
-
-        taskData = new TableTaskData(BaseApplication.getInstance());
-
-        form = new SimpleDateFormat("MMM yyyy", Locale.US);
-
-        mUsernName = (TextView) findViewById(R.id.txvUserName);
-        mDrawerView = (View) findViewById(R.id.left_drawerview);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        year = (TextView) findViewById(R.id.year);
-        downArrow = (ImageView) findViewById(R.id.downarrow);
-        profileImage = (ImageView) findViewById(R.id.imgProfile);
-        allTaskList = (CustomListView) findViewById(R.id.show_tasklist);
-        languageContainer = (FlowLayout) findViewById(R.id.languageContainer);
-        txvAllTaskPopup = (TextView) findViewById(R.id.all_tasklist);
-
-        Utils.pushOpenScreenEvent(DashboardActivity.this, "DashBoard", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-
-        // onclick events
-        findViewById(R.id.rdBtnToday).setOnClickListener(this);
-        findViewById(R.id.rdBtnUpcoming).setOnClickListener(this);
-        findViewById(R.id.feed_back).setOnClickListener(this);
-        findViewById(R.id.addVideosTextView).setOnClickListener(this);
-        findViewById(R.id.myVideosTextView).setOnClickListener(this);
-
-        setSupportActionBar(mToolbar);
-
-        taskListAdapter = new UserTaskListAdapter(this, getTaskList(), false);
-        allTaskList.setAdapter(taskListAdapter);
-
-        currentdate = Calendar.getInstance();
-        tempyear = currentdate.get(Calendar.YEAR);
-
-        year.setText(String.valueOf(tempyear));
-        mUsernName.setText(SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name());
-        // setting profile image
-
-        updateImageProfile();
-
-
-        if (Constants.BUSINESS_EVENTLIST_FRAGMENT.equals(fragmentToLoad)) {
-            setTitle("Upcoming Events");
-            FragmentBusinesslistEvents fragment = new FragmentBusinesslistEvents();
-            Bundle mBundle = new Bundle();
-            mBundle.putInt(Constants.PAGE_TYPE, Constants.EVENT_PAGE_TYPE);
-            mBundle.putInt(Constants.EXTRA_CATEGORY_ID, SharedPrefUtils.getEventIdForCity(DashboardActivity.this));
-            mBundle.putString(Constants.CATEGOTY_NAME, "Events & workshop");
-            fragment.setArguments(mBundle);
-            replaceFragment(fragment, mBundle, true);
-        } else if (Constants.TODOLIST_FRAGMENT.equals(fragmentToLoad)) {
-            if (StringUtils.isNullOrEmpty("" + SharedPrefUtils.getUserDetailModel(this).getFamily_id()) ||
-                    SharedPrefUtils.getUserDetailModel(this).getFamily_id() == 0) {
-                showCreateFamilyAlert();
-            } else {
-                setTitle("Weekly To-Do");
-                replaceFragment(new FragmentTaskHome(), null, true);
-            }
-        } else if (Constants.CALENDARLIST_FRAGMENT.equals(fragmentToLoad)) {
-            if (StringUtils.isNullOrEmpty("" + SharedPrefUtils.getUserDetailModel(this).getFamily_id()) ||
-                    SharedPrefUtils.getUserDetailModel(this).getFamily_id() == 0) {
-                showCreateFamilyAlert();
-            } else {
-                setTitle("Weekly Calender");
-                replaceFragment(new FragmentCalender(), null, true);
-            }
-        } else if (Constants.SETTINGS_FRAGMENT.equals(fragmentToLoad)) {
-            changeVisibiltyOfArrow(false);
-            setTitle("Settings");
-            Bundle bundle = new Bundle();
-            bundle.putString("bio", getIntent().getStringExtra("bio"));
-            bundle.putString("firstName", getIntent().getStringExtra("firstName"));
-            bundle.putString("lastName", getIntent().getStringExtra("lastName"));
-            replaceFragment(new FragmentSetting(), bundle, true);
-        } else {
-            replaceFragment(new FragmentMC4KHome(), null, false);
-        }
-
-        if (extras != null) {
-            boolean push = extras.getBoolean("push");
-            taskId = extras.getInt(AppConstants.EXTRA_TASK_ID);
-            String isrecurring = extras.getString(AppConstants.IS_RECURRING);
-            NotificationManager nMgr = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-            nMgr.cancel(extras.getInt(AppConstants.NOTIFICATION_ID, 0));
-            nMgr.cancel(extras.getInt(AppConstants.NOTIFICATION_ID, 2));
-            if (push)
-                replaceFragment(new FragmentFamilyDetail(), null, true);
-
-            else if (taskId > 0) {
-                // delete taskid
-                // check recurring
-                if (!StringUtils.isNullOrEmpty(isrecurring)) {
-                    if (isrecurring.equalsIgnoreCase("yes")) {
-
-                        Calendar c = Calendar.getInstance();
-                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                        String formattedDate = df.format(c.getTime());
-
-                        TaskCompletedTable completedTable = new TaskCompletedTable(BaseApplication.getInstance());
-                        completedTable.AddTasks(formattedDate, taskId);
-
-                        hitApiRequest(AppConstants.TASKS_COMPLETE_REQUEST);
-
-                    } else {
-                        // delete
-                        frmPush = true;
-                        DeleteTaskModel taskModel = new DeleteTaskModel();
-
-                        ArrayList<DeleteTaskModel.Tasks> tasksArrayList = new ArrayList<>();
-
-                        DeleteTaskModel.Tasks model = new DeleteTaskModel().new Tasks();
-                        model.setId(taskId);
-                        tasksArrayList.add(model);
-                        taskModel.setTasks(tasksArrayList);
-
-                        showProgressDialog(getString(R.string.please_wait));
-
-                        DeleteTaskController _controller = new DeleteTaskController(this, this);
-                        _controller.getData(AppConstants.DELETE_TASK_REQUEST, taskModel);
-
-                    }
-
-                }
-
-            }
-        }
-
-        //  title all tasks popup
-        txvAllTaskPopup.setText("All Tasks (" + taskData.getRowsCount() + ")");
-
-
-        if (SharedPrefUtils.isCityFetched(this) && SharedPrefUtils.getCurrentCityModel(this).getId() != AppConstants.OTHERS_CITY_ID) {
-            findViewById(R.id.rdBtnUpcoming).setVisibility(View.VISIBLE);
-            findViewById(R.id.rdBtnKids).setVisibility(View.VISIBLE);
-        } else {
-            findViewById(R.id.rdBtnUpcoming).setVisibility(View.GONE);
-            findViewById(R.id.rdBtnKids).setVisibility(View.GONE);
-        }
-
-        findViewById(R.id.rdBtnKids).setOnClickListener(this);
-        findViewById(R.id.rdBtnParentingBlogs).setOnClickListener(this);
-        findViewById(R.id.rdBtnMomspressoVideo).setOnClickListener(this);
-//        findViewById(R.id.rdBtnHindi).setOnClickListener(this);
-//        findViewById(R.id.rdBtnBangla).setOnClickListener(this);
-//        findViewById(R.id.rdBtnMarathi).setOnClickListener(this);
-        findViewById(R.id.editor).setOnClickListener(this);
-        findViewById(R.id.imgProfile).setOnClickListener(this);
-        findViewById(R.id.txvUserName).setOnClickListener(this);
-        findViewById(R.id.back_month).setOnClickListener(this);
-        findViewById(R.id.next_month).setOnClickListener(this);
-        findViewById(R.id.all_tasklist).setOnClickListener(this);
-        findViewById(R.id.jan).setOnClickListener(this);
-        findViewById(R.id.feb).setOnClickListener(this);
-        findViewById(R.id.mar).setOnClickListener(this);
-        findViewById(R.id.apr).setOnClickListener(this);
-        findViewById(R.id.may).setOnClickListener(this);
-        findViewById(R.id.june).setOnClickListener(this);
-        findViewById(R.id.july).setOnClickListener(this);
-        findViewById(R.id.aug).setOnClickListener(this);
-        findViewById(R.id.sept).setOnClickListener(this);
-        findViewById(R.id.oct).setOnClickListener(this);
-        findViewById(R.id.nov).setOnClickListener(this);
-        findViewById(R.id.dec).setOnClickListener(this);
-        findViewById(R.id.add_tasklist).setOnClickListener(this);
-        findViewById(R.id.downarrow).setOnClickListener(this);
-
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.black_color));
-
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.blank, R.string.blank) {
-            public void onDrawerClosed(View view) {
-                super.onDrawerClosed(view);
-                invalidateOptionsMenu();
-                syncState();
-            }
-
-            public void onDrawerOpened(View drawerView) {
-                // getActionBar().setTitle(mTitle);
-                super.onDrawerOpened(drawerView);
-                invalidateOptionsMenu();
-                syncState();
-            }
-        };
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-        mDrawerToggle.syncState();
-
-        /**
-         * this dialog will open App Upgrade
-         */
-
-        RateVersion reteVersionModel = SharedPrefUtils.getRateVersion(this);
-        int currentRateVersion = reteVersionModel.getAppRateVersion();
-        currentRateVersion++;
-        boolean isCompleteRateProcess = reteVersionModel.isAppRateComplete();
-        RateVersion rateModel = new RateVersion();
-        rateModel.setAppRateComplete(isCompleteRateProcess);
-        rateModel.setAppRateVersion(currentRateVersion);
-        SharedPrefUtils.setAppRateVersion(this, rateModel);
-        if (!SharedPrefUtils.getRateVersion(this).isAppRateComplete() && currentRateVersion >= 10) {
-            RateAppDialogFragment rateAppDialogFragment = new RateAppDialogFragment();
-            reteVersionModel.setAppRateVersion(-20);
-            rateAppDialogFragment.show(getFragmentManager(), rateAppDialogFragment.getClass().getSimpleName());
-        }
-
-
-        populateLanguagesInMenu();
-        // manage fragment change
-
-        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-            @Override
-            public void onBackStackChanged() {
-                Fragment currentFrag = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-
-                if (currentFrag instanceof FragmentCityForKids) {
-                    findViewById(R.id.month_popup).setVisibility(View.GONE);
-                    findViewById(R.id.task_popup).setVisibility(View.GONE);
-                    changeVisibiltyOfArrow(false);
-                    setTitle("");
-                    mDrawerToggle.setDrawerIndicatorEnabled(true);
-                } else if (currentFrag instanceof FragmentMC4KHome) {
-                    mDrawerToggle.setDrawerIndicatorEnabled(true);
-                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-                    mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_UNLOCKED);
-                    findViewById(R.id.month_popup).setVisibility(View.GONE);
-                    findViewById(R.id.task_popup).setVisibility(View.GONE);
-                    changeVisibiltyOfArrow(false);
-                    setTitle("");
-                } else if (currentFrag instanceof FragmentCalender) {
-                    findViewById(R.id.task_popup).setVisibility(View.GONE);
-                    changeVisibiltyOfArrow(true);
-                    mDrawerToggle.setDrawerIndicatorEnabled(true);
-                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-                    mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_UNLOCKED);
-                } else if (currentFrag instanceof FragmentCalMonth) {
-                    findViewById(R.id.task_popup).setVisibility(View.GONE);
-                    findViewById(R.id.month_popup).setVisibility(View.GONE);
-                    mDrawerToggle.setDrawerIndicatorEnabled(true);
-                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-                    mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_UNLOCKED);
-                    changeVisibiltyOfArrow(true);
-                } else if (currentFrag instanceof FragmentSetting) {
-                    changeVisibiltyOfArrow(false);
-                    setTitle("Settings");
-                    mDrawerToggle.setDrawerIndicatorEnabled(true);
-                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-                    mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_UNLOCKED);
-                    findViewById(R.id.month_popup).setVisibility(View.GONE);
-                    findViewById(R.id.task_popup).setVisibility(View.GONE);
-                } else if (currentFrag instanceof FragmentBusinesslistEvents) {
-                    changeVisibiltyOfArrow(false);
-                    setTitle("Upcoming Events");
-                    findViewById(R.id.month_popup).setVisibility(View.GONE);
-                    findViewById(R.id.task_popup).setVisibility(View.GONE);
-                } else if (currentFrag instanceof FragmentHomeCategory) {
-                    changeVisibiltyOfArrow(false);
-                    setTitle("Kids Resources");
-                    findViewById(R.id.month_popup).setVisibility(View.GONE);
-                    findViewById(R.id.task_popup).setVisibility(View.GONE);
-                } else if (currentFrag instanceof FragmentFamilyDetail) {
-                    setTitle("Family Details");
-                    findViewById(R.id.month_popup).setVisibility(View.GONE);
-                    findViewById(R.id.task_popup).setVisibility(View.GONE);
-                    mDrawerToggle.setDrawerIndicatorEnabled(false);
-                    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                    getSupportActionBar().setHomeButtonEnabled(true);
-                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
-                    changeVisibiltyOfArrow(false);
-                } else if (currentFrag instanceof FragmentFamilyProfile) {
-                    findViewById(R.id.month_popup).setVisibility(View.GONE);
-                    findViewById(R.id.task_popup).setVisibility(View.GONE);
-                    mDrawerToggle.setDrawerIndicatorEnabled(false);
-                    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
-                    getSupportActionBar().setHomeButtonEnabled(true);
-                    changeVisibiltyOfArrow(false);
-                } else if (currentFrag instanceof FragmentAdultProfile) {
-                    findViewById(R.id.month_popup).setVisibility(View.GONE);
-                    findViewById(R.id.task_popup).setVisibility(View.GONE);
-                    mDrawerToggle.setDrawerIndicatorEnabled(false);
-                    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                    getSupportActionBar().setHomeButtonEnabled(true);
-                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
-                    changeVisibiltyOfArrow(false);
-                } else if (currentFrag instanceof FragmentKidProfile) {
-                    findViewById(R.id.month_popup).setVisibility(View.GONE);
-                    findViewById(R.id.task_popup).setVisibility(View.GONE);
-                    mDrawerToggle.setDrawerIndicatorEnabled(false);
-                    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                    getSupportActionBar().setHomeButtonEnabled(true);
-                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
-                    changeVisibiltyOfArrow(false);
-                } else if (currentFrag instanceof FragmentTaskHome) {
-                    changeVisibiltyOfArrow(true);
-                    mDrawerToggle.setDrawerIndicatorEnabled(true);
-                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-                    mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_UNLOCKED);
-                    findViewById(R.id.month_popup).setVisibility(View.GONE);
-                    findViewById(R.id.task_popup).setVisibility(View.GONE);
-                    setTitle("All Tasks");
-                } else if (currentFrag instanceof ArticlesFragment) {
-                    changeVisibiltyOfArrow(false);
-                    mDrawerToggle.setDrawerIndicatorEnabled(true);
-                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-                    mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_UNLOCKED);
-                    findViewById(R.id.month_popup).setVisibility(View.GONE);
-                    findViewById(R.id.task_popup).setVisibility(View.GONE);
-                    setTitle("Blogs");
-                } else if (currentFrag instanceof FragmentEditorsPick) {
-                    changeVisibiltyOfArrow(false);
-                    mDrawerToggle.setDrawerIndicatorEnabled(true);
-                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-                    mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_UNLOCKED);
-                    findViewById(R.id.month_popup).setVisibility(View.GONE);
-                    findViewById(R.id.task_popup).setVisibility(View.GONE);
-                    if (SharedPrefUtils.getCurrentCityModel(DashboardActivity.this).getName().isEmpty()) {
-                        switch (SharedPrefUtils.getCurrentCityModel(DashboardActivity.this).getId()) {
-                            case 1:
-                                setTitle("Best of " + "Delhi-NCR");
-                                break;
-                            case 2:
-                                setTitle("Best of " + "Bangalore");
-                                break;
-                            case 3:
-                                setTitle("Best of " + "Mumbai");
-                                break;
-                            case 4:
-                                setTitle("Best of " + "Pune");
-                                break;
-                            case 5:
-                                setTitle("Best of " + "Hyderabad");
-                                break;
-                            case 6:
-                                setTitle("Best of " + "Chennai");
-                                break;
-                            case 7:
-                                setTitle("Best of " + "Kolkata");
-                                break;
-                            case 8:
-                                setTitle("Best of " + "Jaipur");
-                                break;
-                            case 9:
-                                setTitle("Best of " + "Ahmedabad");
-                                break;
-                            default:
-                                setTitle("Best of " + "Delhi-NCR");
-                                break;
-                        }
-
-                    } else {
-                        if (SharedPrefUtils.getCurrentCityModel(DashboardActivity.this).getName().equals("Delhi-Ncr")) {
-                            SharedPrefUtils.getCurrentCityModel(DashboardActivity.this).setName("Delhi-NCR");
-                        }
-                        setTitle("Best of " + SharedPrefUtils.getCurrentCityModel(DashboardActivity.this).getName());
-                    }
-                } else if (currentFrag instanceof SendFeedbackFragment) {
-                    changeVisibiltyOfArrow(false);
-                    mDrawerToggle.setDrawerIndicatorEnabled(true);
-                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-                    mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_UNLOCKED);
-                    findViewById(R.id.month_popup).setVisibility(View.GONE);
-                    findViewById(R.id.task_popup).setVisibility(View.GONE);
-                    setTitle("Send Feedback");
-                } else if (currentFrag instanceof NotificationFragment) {
-                    setTitle("Notifications");
-                    findViewById(R.id.month_popup).setVisibility(View.GONE);
-                    findViewById(R.id.task_popup).setVisibility(View.GONE);
-                    mDrawerToggle.setDrawerIndicatorEnabled(false);
-                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
-                    changeVisibiltyOfArrow(false);
-                } else if (currentFrag instanceof ChangeCityFragment) {
-                    setTitle("Change City");
-                    findViewById(R.id.month_popup).setVisibility(View.GONE);
-                    findViewById(R.id.task_popup).setVisibility(View.GONE);
-                    mDrawerToggle.setDrawerIndicatorEnabled(false);
-                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
-                    changeVisibiltyOfArrow(false);
-                } else if (currentFrag instanceof ExternalCalFragment) {
-                    setTitle("External Calendars");
-                    findViewById(R.id.month_popup).setVisibility(View.GONE);
-                    findViewById(R.id.task_popup).setVisibility(View.GONE);
-                    mDrawerToggle.setDrawerIndicatorEnabled(false);
-                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
-                    changeVisibiltyOfArrow(false);
-                } else if (currentFrag instanceof SyncSettingFragment) {
-                    setTitle("Sync Settings");
-                    findViewById(R.id.month_popup).setVisibility(View.GONE);
-                    findViewById(R.id.task_popup).setVisibility(View.GONE);
-                    mDrawerToggle.setDrawerIndicatorEnabled(false);
-                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
-                    changeVisibiltyOfArrow(false);
-                }
-                invalidateOptionsMenu();
-                mDrawerToggle.syncState();
-
-            }
-        });
-
-        mDrawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (v.getId()) {
-                    case -1:
-                        getSupportFragmentManager().popBackStack();
-                        break;
-
-                    default:
-                        break;
-                }
-            }
-        });
-
-        refreshMonthPopup();
-
-        // Toolbar title listener
-
-        Field titleField = null;
-        try {
-            titleField = Toolbar.class.getDeclaredField("mTitleTextView");
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        }
-        titleField.setAccessible(true);
-        try {
-            toolBarTitleView = (TextView) titleField.get(mToolbar);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        toolBarTitleView.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-                if (topFragment instanceof FragmentCalender) {
-                    if (findViewById(R.id.month_popup).getVisibility() == View.VISIBLE) {
-                        isPopupOpen = false;
-                        findViewById(R.id.month_popup).setVisibility(View.GONE);
-
-                    } else {
-                        isPopupOpen = true;
-                        findViewById(R.id.month_popup).setVisibility(View.VISIBLE);
-
-                    }
-
-                } else if (topFragment instanceof FragmentCalMonth) {
-
-                    if (findViewById(R.id.month_popup).getVisibility() == View.VISIBLE) {
-                        isPopupOpen = false;
-                        findViewById(R.id.month_popup).setVisibility(View.GONE);
-                    } else {
-                        isPopupOpen = true;
-                        findViewById(R.id.month_popup).setVisibility(View.VISIBLE);
-                    }
-
-                    refreshMenu();
-
-                } else if (topFragment instanceof FragmentTaskHome) {
-
-                    findViewById(R.id.month_popup).setVisibility(View.GONE);
-
-                    if (findViewById(R.id.task_popup).getVisibility() == View.VISIBLE) {
-                        findViewById(R.id.task_popup).setVisibility(View.GONE);
-                    } else {
-                        findViewById(R.id.task_popup).setVisibility(View.VISIBLE);
-                    }
-                }
-
-            }
-        });
-
-    }
-
     private void populateLanguagesInMenu() {
         try {
             FileInputStream fileInputStream = openFileInput(AppConstants.LANGUAGES_JSON_FILE);
@@ -872,7 +584,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         startActivity(languageIntent);
                     }
                 });
-                languageContainer.addView(view);
+//                languageContainer.addView(view);
             }
         } catch (FileNotFoundException ffe) {
             Crashlytics.logException(ffe);
@@ -896,70 +608,40 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
         View v = getCurrentFocus();
         boolean ret = super.dispatchTouchEvent(event);
-
-        Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-
-        if (topFragment instanceof FragmentCalender)
-            ((FragmentCalender) topFragment).hideFilter();
-
-        if (topFragment instanceof FragmentCalMonth)
-            ((FragmentCalMonth) topFragment).hideFilter();
         return ret;
     }
 
     public void updateImageProfile() {
         if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getProfileImgUrl(this))) {
-            Picasso.with(this).load(SharedPrefUtils.getProfileImgUrl(this)).memoryPolicy(MemoryPolicy.NO_CACHE).networkPolicy(NetworkPolicy.NO_CACHE)
-                    .placeholder(R.drawable.family_xxhdpi).error(R.drawable.family_xxhdpi).transform(new RoundedTransformation()).into(profileImage);
+//            Picasso.with(this).load(SharedPrefUtils.getProfileImgUrl(this)).memoryPolicy(MemoryPolicy.NO_CACHE).networkPolicy(NetworkPolicy.NO_CACHE)
+//                    .placeholder(R.drawable.family_xxhdpi).error(R.drawable.family_xxhdpi).transform(new RoundedTransformation()).into(profileImage);
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        SharedPrefUtils.setTaskListID(DashboardActivity.this, 0);
-        System.out.println("dashboard destroy");
-    }
-
-    public void changeVisibiltyOfArrow(boolean result) {
-        if (result)
-            downArrow.setVisibility(View.VISIBLE);
-        else
-            downArrow.setVisibility(View.GONE);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         if (showUploadVideoTutorial()) return;
-        mUsernName.setText(SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name());
+//        mUsernName.setText(SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name());
         updateImageProfile();
         final Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-        if (findViewById(R.id.month_popup) != null) {
-            findViewById(R.id.month_popup).setVisibility(View.GONE);
-        }
-        if (findViewById(R.id.task_popup) != null) {
-            findViewById(R.id.task_popup).setVisibility(View.GONE);
-        }
+
         refreshMenu();
-        if (topFragment instanceof FragmentCalender) {
-            ((FragmentCalender) topFragment).refreshView();
-        } else if (topFragment instanceof FragmentCalMonth) {
-            try {
-                ((FragmentCalMonth) topFragment).refreshCalender_afterAdd();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else if (topFragment instanceof FragmentMC4KHome) {
+        if (topFragment instanceof FragmentMC4KHome) {
             try {
                 ((FragmentMC4KHome) topFragment).refreshList();
-                if (SharedPrefUtils.isCityFetched(this) && SharedPrefUtils.getCurrentCityModel(this).getId() != AppConstants.OTHERS_CITY_ID) {
-                    findViewById(R.id.rdBtnUpcoming).setVisibility(View.VISIBLE);
-                    findViewById(R.id.rdBtnKids).setVisibility(View.VISIBLE);
-                } else {
-                    findViewById(R.id.rdBtnUpcoming).setVisibility(View.GONE);
-                    findViewById(R.id.rdBtnKids).setVisibility(View.GONE);
-                }
+//                if (SharedPrefUtils.isCityFetched(this) && SharedPrefUtils.getCurrentCityModel(this).getId() != AppConstants.OTHERS_CITY_ID) {
+//                    findViewById(R.id.rdBtnUpcoming).setVisibility(View.VISIBLE);
+//                    findViewById(R.id.rdBtnKids).setVisibility(View.VISIBLE);
+//                } else {
+//                    findViewById(R.id.rdBtnUpcoming).setVisibility(View.GONE);
+//                    findViewById(R.id.rdBtnKids).setVisibility(View.GONE);
+//                }
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -970,81 +652,19 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else if (topFragment instanceof FragmentTaskHome) {
-
-            // set title header
-
-            TableTaskData taskData = new TableTaskData(BaseApplication.getInstance());
-            txvAllTaskPopup.setText("All Tasks (" + taskData.getRowsCount() + ")");
-
-            // get share prefrence list
-            int listid = SharedPrefUtils.getTaskListID(this);
-            if (listid == 0) {
-                taskIconFlag = false;
-                setTitle("All Tasks");
-                ((FragmentTaskHome) topFragment).NotifyTaskByListId(false, 0);
-            } else {
-                // get name from db according to list
-
-                taskIconFlag = true;
-                setTitle(new TableTaskList(BaseApplication.getInstance()).getListName(listid));
-                ((FragmentTaskHome) topFragment).NotifyTaskByListId(true, listid);
-            }
-
-            notiftTaskList();
-            refreshMenu();
         } else if (topFragment instanceof SendFeedbackFragment) {
             refreshMenu();
             setTitle("Send Feedback");
-        } else if (topFragment instanceof ArticlesFragment) {
-            Log.d("Articles Frag ", "REFRESH TIME");
-            ((ArticlesFragment) topFragment).refreshBlogList();
         }
-
-        allTaskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Fragment topFragment1 = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-                int listid = ((TaskListModel) taskListAdapter.getItem(i)).getId();
-                oldListName = ((TaskListModel) taskListAdapter.getItem(i)).getList_name();
-
-
-                if (topFragment1 instanceof FragmentTaskHome) {
-                    taskListID = ((TaskListModel) taskListAdapter.getItem(i)).getId();
-                    taskIconFlag = true;
-
-                    SharedPrefUtils.setTaskListID(DashboardActivity.this, listid);
-
-                    ((FragmentTaskHome) topFragment1).NotifyTaskByListId(true, listid);
-                    setTitle(((TaskListModel) taskListAdapter.getItem(i)).getList_name());
-                    findViewById(R.id.task_popup).setVisibility(View.GONE);
-                    refreshMenu();
-
-                }
-            }
-        });
-
-        TableAppointmentData data = new TableAppointmentData(BaseApplication.getInstance());
-        TableTaskData taskData = new TableTaskData(BaseApplication.getInstance());
-        int count = data.getRowsCount() + taskData.getRowsCount();
-        if (count > 0) {
-            SharedPrefUtils.setHomeCheckFlag(this, true);
-        } else {
-            SharedPrefUtils.setHomeCheckFlag(this, false);
-        }
-
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        //LocalBroadcastManager.getInstance(this).unregisterReceiver(mGcmUpdate);
     }
 
     public void refreshMenu() {
-        //findViewById(R.id.month_popup).setVisibility(View.GONE);
         invalidateOptionsMenu();
-        mDrawerToggle.syncState();
     }
 
     @Override
@@ -1075,53 +695,22 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             iconButtonMessages.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Log.d("NNNNNN------", "PPPPPPPPPP");
                     Intent wintent = new Intent(getApplicationContext(), NotificationCenterListActivity.class);
                     startActivity(wintent);
                 }
             });
-        } else if (topFragment instanceof FragmentCityForKids) {
-
-        } else if (topFragment instanceof FragmentCalender) {
-            if (filter) {
-                if (StringUtils.isNullOrEmpty(selected_colorcode)) {
-                    getMenuInflater().inflate(R.menu.menu, menu);
-                } else {
-                    menu.clear();
-                    MenuInflater inflater = getMenuInflater();
-                    inflater.inflate(R.menu.menu, menu);
-                    MenuItem item = menu.findItem(R.id.filter);
-
-                    String key = new ColorCode().getKey(selected_colorcode);
-                    Drawable drawable = getResources().getDrawable(getResources()
-                            .getIdentifier("filter_" + key + "xxhdpi", "drawable", getPackageName()));
-                    item.setIcon(drawable);
+            itemMessagesBadgeTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent wintent = new Intent(getApplicationContext(), NotificationCenterListActivity.class);
+                    startActivity(wintent);
                 }
-            } else {
-                getMenuInflater().inflate(R.menu.menu, menu);
-            }
-        } else if (topFragment instanceof FragmentCalMonth) {
-            if (filter) {
-                if (StringUtils.isNullOrEmpty(selected_colorcode)) {
-                    getMenuInflater().inflate(R.menu.menu_change, menu);
-                } else {
-                    menu.clear();
-                    MenuInflater inflater = getMenuInflater();
-                    inflater.inflate(R.menu.menu_change, menu);
-                    MenuItem item = menu.findItem(R.id.filter);
-                    String key = new ColorCode().getKey(selected_colorcode);
-                    Drawable drawable = getResources().getDrawable(getResources()
-                            .getIdentifier("filter_" + key + "xxhdpi", "drawable", getPackageName()));
-                    item.setIcon(drawable);
-
-                }
-            } else {
-                getMenuInflater().inflate(R.menu.menu_change, menu);
-            }
-            //getMenuInflater().inflate(R.menu.menu_change, menu);
+            });
         } else if (topFragment instanceof FragmentFamilyDetail) {
 
             getMenuInflater().inflate(R.menu.forgot_password, menu);
+        } else if (topFragment instanceof FragmentMC4KHomeNew) {
+//            getMenuInflater().inflate(R.menu.forgot_password, menu);
         } else if (topFragment instanceof FragmentFamilyProfile) {
 
             getMenuInflater().inflate(R.menu.forgot_password, menu);
@@ -1133,19 +722,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             getMenuInflater().inflate(R.menu.forgot_password, menu);
         } else if (topFragment instanceof ChangeCityFragment) {
             getMenuInflater().inflate(R.menu.forgot_password, menu);
-        } else if (topFragment instanceof FragmentTaskHome) {
-
-            if (taskIconFlag) {
-                getMenuInflater().inflate(R.menu.task_home_delete, menu);
-            } else {
-                getMenuInflater().inflate(R.menu.task_home, menu);
-            }
         } else if (topFragment instanceof FragmentBusinesslistEvents) {
             getMenuInflater().inflate(R.menu.menu_event, menu);
-        } else if (topFragment instanceof ArticlesFragment) {
-            getMenuInflater().inflate(R.menu.menu_articles, menu);
-        } else if (topFragment instanceof NotificationFragment) {
-            getMenuInflater().inflate(R.menu.forgot_password, menu);
         } else if (topFragment instanceof FragmentHomeCategory) {
             getMenuInflater().inflate(R.menu.kidsresource_listing, menu);
         }
@@ -1163,130 +741,36 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     }
 
-    private void onHotlistSelected() {
-        Log.d("vfvfvfvvfvfvfv", "dwadawd");
-    }
-
-    // call the updating code on the main thread,
-// so we can call this asynchronously
-    public void updateHotCount(final int new_hot_number) {
-        hot_number = new_hot_number;
-        if (ui_hot == null) return;
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (new_hot_number == 0)
-                    ui_hot.setVisibility(View.INVISIBLE);
-                else {
-                    ui_hot.setVisibility(View.VISIBLE);
-                    ui_hot.setText(Integer.toString(new_hot_number));
-                }
-            }
-        });
-    }
-
-
-    static abstract class MyMenuItemStuffListener implements View.OnClickListener, View.OnLongClickListener {
-        private String hint;
-        private View view;
-
-        MyMenuItemStuffListener(View view, String hint) {
-            this.view = view;
-            this.hint = hint;
-            view.setOnClickListener(this);
-            view.setOnLongClickListener(this);
-        }
-
-        @Override
-        abstract public void onClick(View v);
-
-        @Override
-        public boolean onLongClick(View v) {
-            final int[] screenPos = new int[2];
-            final Rect displayFrame = new Rect();
-            view.getLocationOnScreen(screenPos);
-            view.getWindowVisibleDisplayFrame(displayFrame);
-            final Context context = view.getContext();
-            final int width = view.getWidth();
-            final int height = view.getHeight();
-            final int midy = screenPos[1] + height / 2;
-            final int screenWidth = context.getResources().getDisplayMetrics().widthPixels;
-            Toast cheatSheet = Toast.makeText(context, hint, Toast.LENGTH_SHORT);
-            if (midy < displayFrame.height()) {
-                cheatSheet.setGravity(Gravity.TOP | Gravity.RIGHT,
-                        screenWidth - screenPos[0] - width / 2, height);
-            } else {
-                cheatSheet.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, height);
-            }
-            cheatSheet.show();
-            return true;
-        }
-    }
-
     @Override
     public void setTitle(CharSequence title) {
-        mTitle = title;
-        if (getSupportActionBar() != null) {
-            if (StringUtils.isEmpty(mTitle)) {
-                getSupportActionBar().setIcon(R.drawable.myicon);
-            } else {
-                getSupportActionBar().setIcon(null);
-            }
-            getSupportActionBar().setTitle(mTitle);
-        }
+//        mTitle = title;
+//        if (getSupportActionBar() != null) {
+//            if (StringUtils.isEmpty(mTitle)) {
+//                getSupportActionBar().setIcon(R.drawable.myicon);
+//            } else {
+//                getSupportActionBar().setIcon(null);
+//            }
+//            getSupportActionBar().setTitle(mTitle);
+//        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Pass the event to ActionBarDrawerToggle, if it returns
         // true, then it has handled the app icon touch event
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
         Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
 
         switch (item.getItemId()) {
 
-            case R.id.today:
-//                findViewById(R.id.month_popup).setVisibility(View.GONE);
-                if (topFragment instanceof FragmentCalender) {
-                    findViewById(R.id.month_popup).setVisibility(View.GONE);
-                    ((FragmentCalender) topFragment).showTodayIcon(this);
-                } else if (topFragment instanceof FragmentCalMonth) {
-                    ((FragmentCalMonth) topFragment).setTodayCalenderView();
-                    refreshMenu();
-//                    findViewById(R.id.month_popup).setVisibility(View.VISIBLE);
-                }
-
-                break;
-            case R.id.calender:
-                findViewById(R.id.month_popup).setVisibility(View.GONE);
-                refreshMenu();
-                if (topFragment instanceof FragmentCalender) {
-                    ((FragmentCalender) topFragment).showCalender(this);
-                }
-                break;
             case R.id.filter:
-                findViewById(R.id.month_popup).setVisibility(View.GONE);
-                if (topFragment instanceof FragmentCalender) {
-                    ((FragmentCalender) topFragment).showFilter();
-                } else if (topFragment instanceof FragmentCalMonth) {
-                    ((FragmentCalMonth) topFragment).showFilter();
-                } else if (topFragment instanceof FragmentBusinesslistEvents) {
+                if (topFragment instanceof FragmentBusinesslistEvents) {
                     ((FragmentBusinesslistEvents) topFragment).toggleFilter();
                 } else if (topFragment instanceof ArticlesFragment) {
-//                    ((FragmentBusinesslistEvents) topFragment).toggleFilter();
                     Intent intent = new Intent(getApplicationContext(), TopicsFilterActivity.class);
                     startActivity(intent);
-//                    startActivityForResult(intent, Constants.FILTER_ARTICLE);
                 }
                 break;
             case R.id.write:
-//                CompleteProfileDialogFragment completeProfileDialogFragment = new CompleteProfileDialogFragment();
-//                FragmentManager fm = getSupportFragmentManager();
-//                completeProfileDialogFragment.setCancelable(false);
-//                completeProfileDialogFragment.show(fm, "Complete blogger profile");
-
                 if (Build.VERSION.SDK_INT > 15) {
                     Utils.pushEvent(DashboardActivity.this, GTMEventType.ADD_BLOG_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Header");
                     launchEditor();
@@ -1306,10 +790,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 Intent wintent = new Intent(DashboardActivity.this, NotificationCenterListActivity.class);
                 startActivity(wintent);
                 break;
-            case R.id.three_bar:
-                replaceFragment(new FragmentCalender(), null, true);
-                refreshMenu();
-                break;
             case R.id.save:
                 if (topFragment instanceof FragmentAdultProfile) {
                     ((FragmentAdultProfile) topFragment).callService();
@@ -1319,56 +799,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     ((FragmentFamilyProfile) topFragment).callService();
                 } else if (topFragment instanceof FragmentFamilyDetail) {
                     ((FragmentFamilyDetail) topFragment).onHeaderButtonTapped();
-                } else if (topFragment instanceof NotificationFragment) {
-                    ((NotificationFragment) topFragment).saveNotificationSetting();
                 } else if (topFragment instanceof ChangeCityFragment)
                     ((ChangeCityFragment) topFragment).changeCity();
                 break;
             case android.R.id.home:
-                finish();
-                break;
-
-            case R.id.delete:
-                if (topFragment instanceof FragmentTaskHome) {
-                    AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-                    dialog.setMessage(getResources().getString(R.string.delete_list)).setNegativeButton(R.string.new_yes
-                            , new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-                                    TaskListModel taskListModel = new TaskListModel();
-                                    taskListModel.setId(taskListID);
-                                    if (ConnectivityUtils.isNetworkEnabled(DashboardActivity.this)) {
-                                        showProgressDialog(getString(R.string.please_wait));
-
-                                        TaskListController _controller = new TaskListController(DashboardActivity.this, DashboardActivity.this);
-                                        _controller.getData(AppConstants.DELETE_LIST_REQUEST, taskListModel);
-                                    } else {
-                                        showToast(getString(R.string.error_network));
-                                    }
-                                }
-                            }).setPositiveButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            // do nothing
-                            dialog.cancel();
-                        }
-                    }).setIcon(android.R.drawable.ic_dialog_alert);
-
-                    AlertDialog alert11 = dialog.create();
-                    alert11.show();
-
-                    alert11.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.home_light_blue));
-                    alert11.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.canceltxt_color));
-                }
-                break;
-            case R.id.editTaskListId:
-                if (topFragment instanceof FragmentTaskHome) {
-                    AddTaskListPopUp addTaskListPopUp = new AddTaskListPopUp();
-                    Bundle bundle1 = new Bundle();
-                    bundle1.putString("from", "dashboard");
-                    bundle1.putBoolean("editList", true);
-                    addTaskListPopUp.setArguments(bundle1);
-                    addTaskListPopUp.show(getFragmentManager(), "addTaskList");
-                }
+                onBackPressed();
                 break;
             case R.id.kidsresource_bookmark:
                 if (topFragment instanceof FragmentHomeCategory) {
@@ -1401,156 +836,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     protected void updateUi(Response response) {
 
-        Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-
         switch (response.getDataType()) {
-            case AppConstants.TASKS_COMPLETE_REQUEST:
-                try {
-                    CommonResponse responseData = (CommonResponse) response.getResponseObject();
-                    if (responseData.getResponseCode() == 200) {
-                        // mark sync as 1
-                        // remove reminder
-                        for (int taskid : taskIdlist) {
-                            TaskCompletedTable table = new TaskCompletedTable(BaseApplication.getInstance());
-                            ArrayList<String> dbDateList = table.getDatesById(taskid);
-                            for (String date : dbDateList) {
-                                table.updateSyncFlag(date, taskid);
-                            }
-                        }
-                        // update on today screen too
-                        Fragment visibleFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-                        if (visibleFragment instanceof FragmentMC4KHome) {
-
-                            try {
-                                ((FragmentMC4KHome) visibleFragment).refreshList();
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    } else {
-                        Log.e("", "response failed task complete");
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                break;
-
-            case AppConstants.DELETE_TASK_REQUEST:
-                try {
-                    TaskResponse responseData = (TaskResponse) response.getResponseObject();
-                    if (responseData.getResponseCode() == 200) {
-                        // delete from db
-                        TableTaskData tableTask = new TableTaskData(BaseApplication.getInstance());
-                        // check if form push
-                        if (frmPush) {
-                            frmPush = false;
-                            if (taskId > 0) {
-                                removeProgressDialog();
-                                tableTask.deleteTask(taskId);
-                                // get from attendee table
-                                TaskTableAttendee attendeeTable = new TaskTableAttendee(BaseApplication.getInstance());
-                                attendeeTable.deleteTask(taskId);
-                                // get from whotoRemond table
-                                TaskTableWhoToRemind whotoRemindTable = new TaskTableWhoToRemind(BaseApplication.getInstance());
-                                whotoRemindTable.deleteTask(taskId);
-                                // get from FILES
-                                TaskTableFile fileTable = new TaskTableFile(BaseApplication.getInstance());
-                                fileTable.deleteTask(taskId);
-                                // note
-                                TaskTableNotes notesTable = new TaskTableNotes(BaseApplication.getInstance());
-                                notesTable.deleteTask(taskId);
-                                showToast(responseData.getResult().getMessage());
-                                Reminder.with(DashboardActivity.this).cancel(taskId);
-                            }
-                        } else {
-                            for (int taskId : deletedTasksList) {
-                                // delete  in db
-                                tableTask.deleteTask(taskId);
-                                // get from attendee table
-                                TaskTableAttendee attendeeTable = new TaskTableAttendee(BaseApplication.getInstance());
-                                attendeeTable.deleteTask(taskId);
-                                // get from whotoRemond table
-                                TaskTableWhoToRemind whotoRemindTable = new TaskTableWhoToRemind(BaseApplication.getInstance());
-                                whotoRemindTable.deleteTask(taskId);
-                                // get from FILES
-                                TaskTableFile fileTable = new TaskTableFile(BaseApplication.getInstance());
-                                fileTable.deleteTask(taskId);
-                                // note
-                                TaskTableNotes notesTable = new TaskTableNotes(BaseApplication.getInstance());
-                                notesTable.deleteTask(taskId);
-                                Reminder.with(DashboardActivity.this).cancel(taskId);
-                            }
-                        }
-
-                        // update on today screen too
-                        Fragment visibleFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-                        if (visibleFragment instanceof FragmentMC4KHome) {
-                            try {
-                                ((FragmentMC4KHome) visibleFragment).refreshList();
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    } else if (responseData.getResponseCode() == 400) {
-                        Log.e("", "response failed getAppointment");
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                break;
-
-            case AppConstants.CREATE_TASKLIST_REQUEST:
-                try {
-                    TaskListResponse responseData = (TaskListResponse) response.getResponseObject();
-                    if (responseData.getResponseCode() == 200) {
-                        // save in db
-                        saveListData(responseData.getResult().getData());
-                        showToast(responseData.getResult().getMessage());
-
-                    } else if (responseData.getResponseCode() == 400) {
-                        showToast(responseData.getResult().getMessage());
-                    }
-                    removeProgressDialog();
-
-                } catch (Exception e) {
-                    removeProgressDialog();
-                }
-                break;
-
-            case AppConstants.DELETE_LIST_REQUEST:
-
-                try {
-                    TaskResponse responseData = (TaskResponse) response.getResponseObject();
-                    String asb = "";
-                    if (responseData.getResponseCode() == 200) {
-                        // save in db
-                        showToast(responseData.getResult().getMessage());
-                        if (topFragment instanceof FragmentTaskHome) {
-                            TableTaskList tableTaskList = new TableTaskList(BaseApplication.getInstance());
-                            tableTaskList.deleteList(taskListID);
-
-                            TableTaskData taskData = new TableTaskData(BaseApplication.getInstance());
-                            taskData.deleteTaskByListId(taskListID);
-
-                            ((FragmentTaskHome) topFragment).NotifyTaskByListId(false, 0);
-                            setTitle("All Tasks");
-                            notiftTaskList();
-                            refreshMenu();
-
-                            findViewById(R.id.task_popup).setVisibility(View.GONE);
-                            taskIconFlag = false;
-                        }
-                    } else if (responseData.getResponseCode() == 400) {
-                        showToast(responseData.getResult().getMessage());
-                    }
-                    removeProgressDialog();
-
-                } catch (Exception e) {
-                    removeProgressDialog();
-                }
-
-                break;
-
             case AppConstants.DEEP_LINK_RESOLVER_REQUEST:
                 break;
 
@@ -1569,37 +855,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        mDrawerLayout.closeDrawer(mDrawerView);
         Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
         switch (v.getId()) {
-
-            case R.id.downarrow:
-                if (topFragment instanceof FragmentCalender) {
-                    if (findViewById(R.id.month_popup).getVisibility() == View.VISIBLE) {
-                        findViewById(R.id.month_popup).setVisibility(View.GONE);
-                    } else {
-                        isPopupOpen = true;
-                        findViewById(R.id.month_popup).setVisibility(View.VISIBLE);
-                    }
-                } else if (topFragment instanceof FragmentCalMonth) {
-                    if (findViewById(R.id.month_popup).getVisibility() == View.VISIBLE) {
-                        findViewById(R.id.month_popup).setVisibility(View.GONE);
-                    } else {
-                        isPopupOpen = true;
-                        findViewById(R.id.month_popup).setVisibility(View.VISIBLE);
-                    }
-                    refreshMenu();
-                } else if (topFragment instanceof FragmentTaskHome) {
-                    findViewById(R.id.month_popup).setVisibility(View.GONE);
-                    if (findViewById(R.id.task_popup).getVisibility() == View.VISIBLE) {
-                        findViewById(R.id.task_popup).setVisibility(View.GONE);
-                    } else {
-                        findViewById(R.id.task_popup).setVisibility(View.VISIBLE);
-                    }
-                }
-                break;
             case R.id.rdBtnToday:
-                changeVisibiltyOfArrow(false);
                 Utils.pushEvent(DashboardActivity.this, GTMEventType.MC4KToday_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Left Menu Screen");
                 replaceFragment(new FragmentMC4KHome(), null, false);
                 setTitle("");
@@ -1607,7 +865,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             case R.id.rdBtnUpcoming:
                 Utils.pushEvent(DashboardActivity.this, GTMEventType.UPCOMING_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Left Menu Screen");
                 Constants.IS_SEARCH_LISTING = false;
-                changeVisibiltyOfArrow(false);
                 setTitle("Upcoming Events");
                 FragmentBusinesslistEvents fragment = new FragmentBusinesslistEvents();
                 Bundle bundle = new Bundle();
@@ -1620,49 +877,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             case R.id.rdBtnKids:
                 Utils.pushEvent(DashboardActivity.this, GTMEventType.RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Left Menu Screen");
                 Constants.IS_SEARCH_LISTING = false;
-                changeVisibiltyOfArrow(false);
                 setTitle("Kids Resources");
                 replaceFragment(new FragmentHomeCategory(), null, true);
                 break;
-//            case R.id.rdBtnHindi:
-//                Utils.pushEvent(DashboardActivity.this, GTMEventType.RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Left Menu Screen");
-//                Intent hindiIntent = new Intent(this, FilteredTopicsArticleListingActivity.class);
-//                Topics hindiTopic = AppUtils.getSpecificLanguageTopic(this, AppConstants.HINDI_CATEGORYID);
-//                if (hindiTopic == null) {
-//                    hindiIntent.putExtra("selectedTopics", AppConstants.HINDI_CATEGORYID);
-//                    hindiIntent.putExtra("displayName", getString(R.string.home_sections_title_hindi));
-//                } else {
-//                    hindiIntent.putExtra("selectedTopics", AppConstants.HINDI_CATEGORYID);
-//                    hindiIntent.putExtra("displayName", hindiTopic.getDisplay_name());
-//                }
-//                startActivity(hindiIntent);
-//                break;
-//            case R.id.rdBtnBangla:
-//                Utils.pushEvent(DashboardActivity.this, GTMEventType.RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Left Menu Screen");
-//                Intent banglaIntent = new Intent(this, FilteredTopicsArticleListingActivity.class);
-//                Topics banglaTopic = AppUtils.getSpecificLanguageTopic(this, AppConstants.BANGLA_CATEGORYID);
-//                if (banglaTopic == null) {
-//                    banglaIntent.putExtra("selectedTopics", AppConstants.BANGLA_CATEGORYID);
-//                    banglaIntent.putExtra("displayName", getString(R.string.home_sections_title_bangla));
-//                } else {
-//                    banglaIntent.putExtra("selectedTopics", AppConstants.BANGLA_CATEGORYID);
-//                    banglaIntent.putExtra("displayName", banglaTopic.getDisplay_name());
-//                }
-//                startActivity(banglaIntent);
-//                break;
-//            case R.id.rdBtnMarathi:
-//                Utils.pushEvent(DashboardActivity.this, GTMEventType.RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Left Menu Screen");
-//                Intent marathiIntent = new Intent(this, FilteredTopicsArticleListingActivity.class);
-//                Topics marathiTopic = AppUtils.getSpecificLanguageTopic(this, AppConstants.MARATHI_CATEGORYID);
-//                if (marathiTopic == null) {
-//                    marathiIntent.putExtra("selectedTopics", AppConstants.MARATHI_CATEGORYID);
-//                    marathiIntent.putExtra("displayName", getString(R.string.home_sections_title_marathi));
-//                } else {
-//                    marathiIntent.putExtra("selectedTopics", AppConstants.MARATHI_CATEGORYID);
-//                    marathiIntent.putExtra("displayName", marathiTopic.getDisplay_name());
-//                }
-//                startActivity(marathiIntent);
-//                break;
             case R.id.rdBtnParentingBlogs:
                 Intent intent = new Intent(getApplicationContext(), TopicsFilterActivity.class);
                 startActivity(intent);
@@ -1681,7 +898,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.feed_back:
                 Utils.pushEvent(DashboardActivity.this, GTMEventType.FEEDBACK_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Left Menu Screen");
-                changeVisibiltyOfArrow(false);
                 setTitle("Send Feedback");
                 replaceFragment(new SendFeedbackFragment(), null, true);
                 break;
@@ -1698,202 +914,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 Intent intent4 = new Intent(DashboardActivity.this, BloggerDashboardActivity.class);
                 startActivity(intent4);
                 break;
-            case R.id.back_month:
-                year.setText(String.valueOf(Integer.parseInt(String.valueOf(year.getText())) - 1));
-                refreshMonthPopup();
-                break;
-            case R.id.next_month:
-                year.setText(String.valueOf(Integer.parseInt(String.valueOf(year.getText())) + 1));
-                refreshMonthPopup();
-                break;
-            case R.id.jan:
-                if (topFragment instanceof FragmentCalender) {
-                    try {
-                        ((FragmentCalender) topFragment).updateListbyDay(0, Integer.parseInt(String.valueOf(year.getText())));
-                        setTitleFormat(1, Integer.parseInt(String.valueOf(year.getText())));
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                } else if (topFragment instanceof FragmentCalMonth) {
-                    ((FragmentCalMonth) topFragment).setMonthByPopUp(0, Integer.parseInt(String.valueOf(year.getText())));
-                    setTitleFormat(1, Integer.parseInt(String.valueOf(year.getText())));
-
-                }
-                findViewById(R.id.month_popup).setVisibility(View.GONE);
-                break;
-            case R.id.feb:
-                if (topFragment instanceof FragmentCalender) {
-                    try {
-                        ((FragmentCalender) topFragment).updateListbyDay(1, Integer.parseInt(String.valueOf(year.getText())));
-                        setTitleFormat(2, Integer.parseInt(String.valueOf(year.getText())));
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                } else if (topFragment instanceof FragmentCalMonth) {
-
-                    ((FragmentCalMonth) topFragment).setMonthByPopUp(1, Integer.parseInt(String.valueOf(year.getText())));
-                    setTitleFormat(2, Integer.parseInt(String.valueOf(year.getText())));
-                }
-                findViewById(R.id.month_popup).setVisibility(View.GONE);
-                break;
-            case R.id.mar:
-                if (topFragment instanceof FragmentCalender) {
-                    try {
-                        ((FragmentCalender) topFragment).updateListbyDay(2, Integer.parseInt(String.valueOf(year.getText())));
-                        setTitleFormat(3, Integer.parseInt(String.valueOf(year.getText())));
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                } else if (topFragment instanceof FragmentCalMonth) {
-                    ((FragmentCalMonth) topFragment).setMonthByPopUp(2, Integer.parseInt(String.valueOf(year.getText())));
-                    setTitleFormat(3, Integer.parseInt(String.valueOf(year.getText())));
-                }
-                findViewById(R.id.month_popup).setVisibility(View.GONE);
-                break;
-            case R.id.apr:
-                if (topFragment instanceof FragmentCalender) {
-                    try {
-                        ((FragmentCalender) topFragment).updateListbyDay(3, Integer.parseInt(String.valueOf(year.getText())));
-                        setTitleFormat(4, Integer.parseInt(String.valueOf(year.getText())));
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                } else if (topFragment instanceof FragmentCalMonth) {
-                    ((FragmentCalMonth) topFragment).setMonthByPopUp(3, Integer.parseInt(String.valueOf(year.getText())));
-                    setTitleFormat(4, Integer.parseInt(String.valueOf(year.getText())));
-                }
-                findViewById(R.id.month_popup).setVisibility(View.GONE);
-                break;
-            case R.id.may:
-                if (topFragment instanceof FragmentCalender) {
-                    try {
-                        ((FragmentCalender) topFragment).updateListbyDay(4, Integer.parseInt(String.valueOf(year.getText())));
-                        setTitleFormat(5, Integer.parseInt(String.valueOf(year.getText())));
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                } else if (topFragment instanceof FragmentCalMonth) {
-
-                    ((FragmentCalMonth) topFragment).setMonthByPopUp(4, Integer.parseInt(String.valueOf(year.getText())));
-                    setTitleFormat(5, Integer.parseInt(String.valueOf(year.getText())));
-                }
-                findViewById(R.id.month_popup).setVisibility(View.GONE);
-                break;
-            case R.id.june:
-                if (topFragment instanceof FragmentCalender) {
-                    try {
-                        ((FragmentCalender) topFragment).updateListbyDay(5, Integer.parseInt(String.valueOf(year.getText())));
-                        setTitleFormat(6, Integer.parseInt(String.valueOf(year.getText())));
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                } else if (topFragment instanceof FragmentCalMonth) {
-                    ((FragmentCalMonth) topFragment).setMonthByPopUp(5, Integer.parseInt(String.valueOf(year.getText())));
-                    setTitleFormat(6, Integer.parseInt(String.valueOf(year.getText())));
-                }
-                findViewById(R.id.month_popup).setVisibility(View.GONE);
-                break;
-            case R.id.july:
-                if (topFragment instanceof FragmentCalender) {
-                    try {
-                        ((FragmentCalender) topFragment).updateListbyDay(6, Integer.parseInt(String.valueOf(year.getText())));
-                        setTitleFormat(7, Integer.parseInt(String.valueOf(year.getText())));
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                } else if (topFragment instanceof FragmentCalMonth) {
-                    ((FragmentCalMonth) topFragment).setMonthByPopUp(6, Integer.parseInt(String.valueOf(year.getText())));
-                    setTitleFormat(7, Integer.parseInt(String.valueOf(year.getText())));
-                }
-                findViewById(R.id.month_popup).setVisibility(View.GONE);
-                break;
-            case R.id.aug:
-                if (topFragment instanceof FragmentCalender) {
-                    try {
-                        ((FragmentCalender) topFragment).updateListbyDay(7, Integer.parseInt(String.valueOf(year.getText())));
-                        setTitleFormat(8, Integer.parseInt(String.valueOf(year.getText())));
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                } else if (topFragment instanceof FragmentCalMonth) {
-                    ((FragmentCalMonth) topFragment).setMonthByPopUp(7, Integer.parseInt(String.valueOf(year.getText())));
-                    setTitleFormat(8, Integer.parseInt(String.valueOf(year.getText())));
-                }
-                findViewById(R.id.month_popup).setVisibility(View.GONE);
-                break;
-            case R.id.sept:
-                if (topFragment instanceof FragmentCalender) {
-                    try {
-                        ((FragmentCalender) topFragment).updateListbyDay(8, Integer.parseInt(String.valueOf(year.getText())));
-                        setTitleFormat(9, Integer.parseInt(String.valueOf(year.getText())));
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                } else if (topFragment instanceof FragmentCalMonth) {
-                    ((FragmentCalMonth) topFragment).setMonthByPopUp(8, Integer.parseInt(String.valueOf(year.getText())));
-                    setTitleFormat(9, Integer.parseInt(String.valueOf(year.getText())));
-                }
-                findViewById(R.id.month_popup).setVisibility(View.GONE);
-                break;
-            case R.id.oct:
-                if (topFragment instanceof FragmentCalender) {
-                    try {
-                        ((FragmentCalender) topFragment).updateListbyDay(9, Integer.parseInt(String.valueOf(year.getText())));
-                        setTitleFormat(10, Integer.parseInt(String.valueOf(year.getText())));
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                } else if (topFragment instanceof FragmentCalMonth) {
-
-                    ((FragmentCalMonth) topFragment).setMonthByPopUp(9, Integer.parseInt(String.valueOf(year.getText())));
-                    setTitleFormat(10, Integer.parseInt(String.valueOf(year.getText())));
-                }
-                findViewById(R.id.month_popup).setVisibility(View.GONE);
-                break;
-            case R.id.nov:
-                if (topFragment instanceof FragmentCalender) {
-                    try {
-                        ((FragmentCalender) topFragment).updateListbyDay(10, Integer.parseInt(String.valueOf(year.getText())));
-                        setTitleFormat(11, Integer.parseInt(String.valueOf(year.getText())));
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                } else if (topFragment instanceof FragmentCalMonth) {
-                    ((FragmentCalMonth) topFragment).setMonthByPopUp(10, Integer.parseInt(String.valueOf(year.getText())));
-                    setTitleFormat(11, Integer.parseInt(String.valueOf(year.getText())));
-                }
-                findViewById(R.id.month_popup).setVisibility(View.GONE);
-                break;
-            case R.id.dec:
-                if (topFragment instanceof FragmentCalender) {
-                    try {
-                        ((FragmentCalender) topFragment).updateListbyDay(11, Integer.parseInt(String.valueOf(year.getText())));
-                        setTitleFormat(12, Integer.parseInt(String.valueOf(year.getText())));
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                } else if (topFragment instanceof FragmentCalMonth) {
-                    ((FragmentCalMonth) topFragment).setMonthByPopUp(11, Integer.parseInt(String.valueOf(year.getText())));
-                    setTitleFormat(12, Integer.parseInt(String.valueOf(year.getText())));
-                }
-                findViewById(R.id.month_popup).setVisibility(View.GONE);
-                break;
-            case R.id.add_tasklist:
-                AddTaskListPopUp addTaskListPopUp = new AddTaskListPopUp();
-                Bundle bundle1 = new Bundle();
-                bundle1.putString("from", "dashboard");
-                addTaskListPopUp.setArguments(bundle1);
-                addTaskListPopUp.show(getFragmentManager(), "addTaskList");
-                break;
-            case R.id.all_tasklist:
-                if (topFragment instanceof FragmentTaskHome) {
-                    SharedPrefUtils.setTaskListID(DashboardActivity.this, 0);
-                    ((FragmentTaskHome) topFragment).NotifyTaskByListId(false, 0);
-                    setTitle("All Tasks");
-                    findViewById(R.id.task_popup).setVisibility(View.GONE);
-                    taskIconFlag = false;
-                    refreshMenu();
-                }
+            case R.id.toolbarRelativeLayout:
+                ExploreArticleListingTypeFragment fragment1 = new ExploreArticleListingTypeFragment();
+                Bundle mBundle1 = new Bundle();
+                fragment1.setArguments(mBundle1);
+                addFragment(fragment1, mBundle1, true);
                 break;
             default:
                 break;
@@ -1913,6 +938,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void onBackPressed() {
         try {
+            Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+            if (topFragment instanceof ExploreArticleListingTypeFragment) {
+            }
             if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
                 finish();
             } else {
@@ -1922,13 +950,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             e.printStackTrace();
         }
 
-    }
-
-    public void updateDate(int day, int month, int year) {
-        Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-        if (topFragment instanceof FragmentCalMonth) {
-            ((FragmentCalMonth) topFragment).setCurrentDate(day, month, year);
-        }
     }
 
     public CharSequence getTitleText() {
@@ -1971,12 +992,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 //                        ((FragmentFamilyDetail) topFragment).onActivityResultDelegate(requestCode, resultCode, data);
                     }
                     break;
-                case Constants.CREATE_TASK:
-                    if (topFragment instanceof FragmentTaskHome) {
-                        ((FragmentTaskHome) topFragment).refreshTaskList();
-                        notiftTaskList();
-                    }
-                    break;
                 case AppConstants.REQUEST_GOOGLE_PLAY_SERVICES:
                     if (resultCode != RESULT_OK) {
                         isGooglePlayServicesAvailable();
@@ -1991,15 +1006,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         if (topFragment instanceof ExternalCalFragment) {
                             ((ExternalCalFragment) topFragment).setAccountName(accountName);
                         }
-
                     } else if (resultCode == RESULT_CANCELED) {
-//                        mStatusText.setText("Account unspecified.");
                         showToast("Account unspecified.");
                     }
                     break;
                 case AppConstants.REQUEST_AUTHORIZATION:
                     if (resultCode != RESULT_OK) {
-
                         if (topFragment instanceof ExternalCalFragment) {
                             ((ExternalCalFragment) topFragment).chooseAccount();
                         }
@@ -2014,9 +1026,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     }
                     break;
                 default:
-                    if (topFragment instanceof FragmentCalender) {
-//                        ((FragmentCalender) topFragment).refreshView();
-                    } else if (topFragment instanceof FragmentMC4KHome) {
+                    if (topFragment instanceof FragmentMC4KHome) {
                         ((FragmentMC4KHome) topFragment).refreshList();
                         if (SharedPrefUtils.isCityFetched(this) && SharedPrefUtils.getCurrentCityModel(this).getId() != AppConstants.OTHERS_CITY_ID) {
                             findViewById(R.id.rdBtnUpcoming).setVisibility(View.VISIBLE);
@@ -2025,30 +1035,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                             findViewById(R.id.rdBtnUpcoming).setVisibility(View.GONE);
                             findViewById(R.id.rdBtnKids).setVisibility(View.GONE);
                         }
-                    } else if (topFragment instanceof FragmentCalMonth) {
-                        ((FragmentCalMonth) topFragment).refreshCalender_afterAdd();
                     } else if (topFragment instanceof FragmentMC4KHome) {
                         ((FragmentMC4KHome) topFragment).notifyTaskList();
-                    } else if (topFragment instanceof FragmentTaskHome) {
-                        ((FragmentTaskHome) topFragment).refreshTaskList();
-                        notiftTaskList();
                     }
-
                     break;
-
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        if (resultCode == 2) {
-//
-//            if (topFragment instanceof FragmentTaskHome) {
-//
-//                ((FragmentTaskHome) topFragment).refreshTaskList();
-//            }
-//        }
-
     }
 
     private void startTrimActivity(@NonNull Uri uri) {
@@ -2059,280 +1053,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             startActivity(intent);
         } else {
             showToast("please choose a .mp4 format file");
-        }
-    }
-
-    public void setTitleFormat(int month, int year) {
-
-        Calendar calendar = Calendar.getInstance();
-        String headerAtPos = year + " " + month;
-
-        DateFormat format = new SimpleDateFormat("yyyy MM", Locale.US);
-        DateFormat format1 = new SimpleDateFormat("MMM yyyy", Locale.US);
-        Date date = null;
-        try {
-            date = format.parse(headerAtPos);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        System.out.println(date);
-        calendar.setTime(date);
-
-        String temp = format1.format(calendar.getTime());
-
-        setTitle(format1.format(calendar.getTime()));
-    }
-
-
-    public void refreshMonthPopup() {
-
-        SimpleDateFormat form = new SimpleDateFormat("MMM yyyy", Locale.US);
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT+0530"));
-
-        String currentDate = (form.format(calendar.getTime())).toUpperCase();
-
-        if (currentDate.toUpperCase().equals(((TextView) findViewById(R.id.jan)).getText().toString().toUpperCase() + " " + ((TextView) findViewById(R.id.year)).getText().toString())) {
-            ((TextView) findViewById(R.id.jan)).setTextColor(Color.parseColor("#0000FF"));
-        } else if (currentDate.toUpperCase().equals(((TextView) findViewById(R.id.feb)).getText().toString().toUpperCase() + " " + ((TextView) findViewById(R.id.year)).getText().toString())) {
-            ((TextView) findViewById(R.id.feb)).setTextColor(Color.parseColor("#0000FF"));
-        } else if (currentDate.toUpperCase().equals(((TextView) findViewById(R.id.mar)).getText().toString().toUpperCase() + " " + ((TextView) findViewById(R.id.year)).getText().toString())) {
-            ((TextView) findViewById(R.id.mar)).setTextColor(Color.parseColor("#0000FF"));
-        } else if (currentDate.toUpperCase().equals(((TextView) findViewById(R.id.apr)).getText().toString().toUpperCase() + " " + ((TextView) findViewById(R.id.year)).getText().toString())) {
-            ((TextView) findViewById(R.id.apr)).setTextColor(Color.parseColor("#0000FF"));
-        } else if (currentDate.toUpperCase().equals(((TextView) findViewById(R.id.may)).getText().toString().toUpperCase() + " " + ((TextView) findViewById(R.id.year)).getText().toString())) {
-            ((TextView) findViewById(R.id.may)).setTextColor(Color.parseColor("#0000FF"));
-        } else if (currentDate.toUpperCase().equals(((TextView) findViewById(R.id.june)).getText().toString().toUpperCase() + " " + ((TextView) findViewById(R.id.year)).getText().toString())) {
-            ((TextView) findViewById(R.id.june)).setTextColor(Color.parseColor("#0000FF"));
-        } else if (currentDate.toUpperCase().equals(((TextView) findViewById(R.id.july)).getText().toString().toUpperCase() + " " + ((TextView) findViewById(R.id.year)).getText().toString())) {
-            ((TextView) findViewById(R.id.july)).setTextColor(Color.parseColor("#0000FF"));
-        } else if (currentDate.toUpperCase().equals(((TextView) findViewById(R.id.aug)).getText().toString().toUpperCase() + " " + ((TextView) findViewById(R.id.year)).getText().toString())) {
-            ((TextView) findViewById(R.id.aug)).setTextColor(Color.parseColor("#0000FF"));
-        } else if (currentDate.toUpperCase().equals(((TextView) findViewById(R.id.sept)).getText().toString().toUpperCase() + " " + ((TextView) findViewById(R.id.year)).getText().toString())) {
-            ((TextView) findViewById(R.id.sept)).setTextColor(Color.parseColor("#0000FF"));
-        } else if (currentDate.toUpperCase().equals(((TextView) findViewById(R.id.oct)).getText().toString().toUpperCase() + " " + ((TextView) findViewById(R.id.year)).getText().toString())) {
-            ((TextView) findViewById(R.id.oct)).setTextColor(Color.parseColor("#0000FF"));
-        } else if (currentDate.toUpperCase().equals(((TextView) findViewById(R.id.nov)).getText().toString().toUpperCase() + " " + ((TextView) findViewById(R.id.year)).getText().toString())) {
-            ((TextView) findViewById(R.id.nov)).setTextColor(Color.parseColor("#0000FF"));
-        } else if (currentDate.toUpperCase().equals(((TextView) findViewById(R.id.dec)).getText().toString().toUpperCase() + " " + ((TextView) findViewById(R.id.year)).getText().toString())) {
-            ((TextView) findViewById(R.id.dec)).setTextColor(Color.parseColor("#0000FF"));
-        } else {
-            ((TextView) findViewById(R.id.jan)).setTextColor(Color.parseColor("#ec3b55"));
-            ((TextView) findViewById(R.id.feb)).setTextColor(Color.parseColor("#ec3b55"));
-            ((TextView) findViewById(R.id.mar)).setTextColor(Color.parseColor("#ec3b55"));
-            ((TextView) findViewById(R.id.apr)).setTextColor(Color.parseColor("#ec3b55"));
-            ((TextView) findViewById(R.id.may)).setTextColor(Color.parseColor("#ec3b55"));
-            ((TextView) findViewById(R.id.june)).setTextColor(Color.parseColor("#ec3b55"));
-            ((TextView) findViewById(R.id.july)).setTextColor(Color.parseColor("#ec3b55"));
-            ((TextView) findViewById(R.id.aug)).setTextColor(Color.parseColor("#ec3b55"));
-            ((TextView) findViewById(R.id.sept)).setTextColor(Color.parseColor("#ec3b55"));
-            ((TextView) findViewById(R.id.oct)).setTextColor(Color.parseColor("#ec3b55"));
-            ((TextView) findViewById(R.id.nov)).setTextColor(Color.parseColor("#ec3b55"));
-            ((TextView) findViewById(R.id.dec)).setTextColor(Color.parseColor("#ec3b55"));
-        }
-    }
-
-    public ArrayList<TaskListModel> getTaskList() {
-
-        TableTaskList tableTaskList = new TableTaskList(BaseApplication.getInstance());
-
-        ArrayList<TaskListModel> userTaskLists = (ArrayList<TaskListModel>) tableTaskList.getAllList(SharedPrefUtils.getUserDetailModel(this).getId());
-
-        return userTaskLists;
-    }
-
-    public void notiftTaskList() {
-        ArrayList<TaskListModel> sortTaskFolderList = getTaskList();
-        Collections.sort(sortTaskFolderList, new TaskFolderListComparator());
-        taskListAdapter.notifyList(sortTaskFolderList, false);
-        TableTaskData taskData = new TableTaskData(BaseApplication.getInstance());
-        txvAllTaskPopup.setText("All Tasks (" + taskData.getRowsCount() + ")");
-
-    }
-
-
-    public class TaskFolderListComparator implements Comparator<TaskListModel> {
-        @Override
-        public int compare(TaskListModel taskListModel, TaskListModel t1) {
-            if (taskListModel.getSize() > t1.getSize() || taskListModel.getSize() < t1.getSize()) {
-                return t1.getSize() - taskListModel.getSize();
-            } else {
-                return taskListModel.getList_name().compareToIgnoreCase(t1.getList_name());
-            }
-        }
-    }
-
-    public void addTaskList(String name, boolean edit) {
-
-        TaskListModel taskListModel = new TaskListModel();
-
-        if (name != "") {
-
-            if (edit) {
-                editTaskList = true;
-                editTaskListname = name;
-                taskListModel.setList_name(name);
-                taskListModel.setId(SharedPrefUtils.getTaskListID(this));
-
-            } else {
-                taskListModel.setList_name(name);
-                taskListModel.setId(0);
-            }
-
-            if (ConnectivityUtils.isNetworkEnabled(this)) {
-                showProgressDialog(getString(R.string.please_wait));
-
-                TaskListController _controller = new TaskListController(this, this);
-                _controller.getData(AppConstants.CREATE_TASKLIST_REQUEST, taskListModel);
-            } else {
-                showToast(getString(R.string.error_network));
-            }
-        }
-
-    }
-
-    public void saveListData(ArrayList<TaskListResponse.AllList> model) {
-
-        TableTaskList taskTable = new TableTaskList((BaseApplication) getApplicationContext());
-        Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-        if (editTaskList) {
-            editTaskList = false;
-            // update list name
-            taskTable.updateList(editTaskListname, SharedPrefUtils.getTaskListID(this));
-
-            setTitle(editTaskListname);
-
-            if (topFragment instanceof FragmentTaskHome) {
-                ((FragmentTaskHome) topFragment).refreshList(oldListName, editTaskListname, SharedPrefUtils.getTaskListID(this));
-            }
-
-            //taskTable.deleteList(SharedPrefUtils.getTaskListID(this));
-            //taskTable.insertData((model.get(model.size() - 1).getTaskList()));
-
-        } else {
-
-            taskTable.insertData((model.get(model.size() - 1).getTaskList()));
-        }
-
-        notiftTaskList();
-
-    }
-
-    private void hitApiRequest(int requestType) {
-
-        switch (requestType) {
-            case AppConstants.TASKS_COMPLETE_REQUEST:
-
-                //get from db
-                TaskCompletedTable table = new TaskCompletedTable(BaseApplication.getInstance());
-                taskIdlist = table.getIdList();
-
-                if (!taskIdlist.isEmpty()) {
-
-                    CompleteTaskRequestModel mainModel = new CompleteTaskRequestModel();
-
-                    ArrayList<CompleteTaskRequestModel.Todo> todoCompleteList = new ArrayList<>();
-
-                    for (int taskid : taskIdlist) {
-
-                        // get dates
-                        ArrayList<String> dbDateList = table.getDatesById(taskid);
-
-                        CompleteTaskRequestModel.Todo todo = new CompleteTaskRequestModel().new Todo();
-
-                        CompleteTaskRequestModel.CompletedTask modelCompletedTask = new CompleteTaskRequestModel().new CompletedTask();
-
-                        ArrayList<CompleteTaskRequestModel.Dates> modelDateList = new ArrayList<>();
-
-
-                        for (String date : dbDateList) {
-                            CompleteTaskRequestModel.Dates dateModel = new CompleteTaskRequestModel().new Dates();
-                            dateModel.setDate(date);
-
-                            modelDateList.add(dateModel);
-                        }
-                        modelCompletedTask.setTask_id(taskid);
-                        modelCompletedTask.setExcluded_date(modelDateList);
-                        todo.setTask(modelCompletedTask);
-
-                        todoCompleteList.add(todo);
-
-
-                    }
-
-                    mainModel.setTodolist(todoCompleteList);
-
-                    String data = new Gson().toJson(mainModel);
-
-                    CompleteTaskController _controller = new CompleteTaskController(this, this);
-                    _controller.getData(AppConstants.TASKS_COMPLETE_REQUEST, mainModel);
-
-
-                }
-
-
-                break;
-            case AppConstants.DELETE_TASK_REQUEST:
-
-                // get from db
-
-                TableTaskData taskData = new TableTaskData(BaseApplication.getInstance());
-                deletedTasksList = taskData.getInActiveTasksData();
-
-                if (deletedTasksList != null && !deletedTasksList.isEmpty()) {
-                    DeleteTaskModel taskModel = new DeleteTaskModel();
-                    ArrayList<DeleteTaskModel.Tasks> tasksArrayList = new ArrayList<>();
-
-
-                    for (int val : deletedTasksList) {
-                        DeleteTaskModel.Tasks model = new DeleteTaskModel().new Tasks();
-                        model.setId(val);
-                        tasksArrayList.add(model);
-                    }
-
-                    taskModel.setTasks(tasksArrayList);
-
-                    String data = new Gson().toJson(taskModel);
-
-                    DeleteTaskController _controller = new DeleteTaskController(this, this);
-                    _controller.getData(AppConstants.DELETE_TASK_REQUEST, taskModel);
-
-                }
-                break;
-        }
-
-
-    }
-
-
-    public void UploadCompleteTasks() {
-
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                if (ConnectivityUtils.isNetworkEnabled(DashboardActivity.this)) {
-                    hitApiRequest(AppConstants.TASKS_COMPLETE_REQUEST);
-                    hitApiRequest(AppConstants.DELETE_TASK_REQUEST);
-                }
-            }
-        });
-        t.start();
-
-    }
-
-    public void clearResultsText() {
-
-        Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-        if (topFragment instanceof ExternalCalFragment) {
-            ((ExternalCalFragment) topFragment).clearResultsText();
-        }
-    }
-
-    public void updateResultsText(ArrayList<ExternalEventModel> dataFromApi) {
-
-        Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-        if (topFragment instanceof ExternalCalFragment) {
-            ((ExternalCalFragment) topFragment).updateResultsText(dataFromApi);
         }
     }
 
@@ -2478,7 +1198,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private void renderEventListingScreen(DeepLinkingResult data) {
         if (!StringUtils.isNullOrEmpty(data.getCategory_id())) {
             Constants.IS_SEARCH_LISTING = false;
-            changeVisibiltyOfArrow(false);
             setTitle("Upcoming Events");
             FragmentBusinesslistEvents fragment = new FragmentBusinesslistEvents();
             Bundle bundle = new Bundle();
@@ -2558,32 +1277,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
-    private void showCreateFamilyAlert() {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-
-        dialog.setMessage(getResources().getString(R.string.create_family)).setNegativeButton(getResources().getString(R.string.yes)
-                , new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent createFamilyIntent = new Intent(DashboardActivity.this, CreateFamilyActivity.class);
-                        startActivity(createFamilyIntent);
-                        dialog.cancel();
-                    }
-                }).setPositiveButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                // do nothing
-                dialog.cancel();
-
-            }
-        }).setIcon(android.R.drawable.ic_dialog_alert);
-
-        AlertDialog alert11 = dialog.create();
-        alert11.show();
-
-        alert11.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.home_light_blue));
-        alert11.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.canceltxt_color));
-
-    }
-
     public void requestPermissions(final String imageFrom) {
         // BEGIN_INCLUDE(contacts_permission_request)
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
@@ -2598,7 +1291,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     "Displaying storage permission rationale to provide additional context.");
 
             // Display a SnackBar with an explanation and a button to trigger the request.
-            Snackbar.make(mDrawerLayout, R.string.permission_storage_rationale,
+            Snackbar.make(rootLayout, R.string.permission_storage_rationale,
                     Snackbar.LENGTH_INDEFINITE)
                     .setAction(R.string.ok, new View.OnClickListener() {
                         @Override
@@ -2609,9 +1302,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     .show();
         } else if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.CAMERA)) {
-
             // Display a SnackBar with an explanation and a button to trigger the request.
-            Snackbar.make(mDrawerLayout, R.string.permission_camera_rationale,
+            Snackbar.make(rootLayout, R.string.permission_camera_rationale,
                     Snackbar.LENGTH_INDEFINITE)
                     .setAction(R.string.ok, new View.OnClickListener() {
                         @Override
@@ -2649,25 +1341,22 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
         if (requestCode == REQUEST_CAMERA_PERMISSION) {
             Log.i("Permissions", "Received response for camera permissions request.");
-
             if (PermissionUtil.verifyPermissions(grantResults)) {
-                Snackbar.make(mDrawerLayout, R.string.permision_available_init,
+                Snackbar.make(rootLayout, R.string.permision_available_init,
                         Snackbar.LENGTH_SHORT)
                         .show();
                 Intent videoCapture = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
                 startActivityForResult(videoCapture, AppConstants.REQUEST_VIDEO_TRIMMER);
             } else {
                 Log.i("Permissions", "storage permissions were NOT granted.");
-                Snackbar.make(mDrawerLayout, R.string.permissions_not_granted,
+                Snackbar.make(rootLayout, R.string.permissions_not_granted,
                         Snackbar.LENGTH_SHORT)
                         .show();
             }
-
         } else if (requestCode == REQUEST_GALLERY_PERMISSION) {
             Log.i("Permissions", "Received response for storage permissions request.");
-
             if (PermissionUtil.verifyPermissions(grantResults)) {
-                Snackbar.make(mDrawerLayout, R.string.permision_available_init,
+                Snackbar.make(rootLayout, R.string.permision_available_init,
                         Snackbar.LENGTH_SHORT)
                         .show();
                 Intent intent = new Intent();
@@ -2677,13 +1366,73 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)), AppConstants.REQUEST_VIDEO_TRIMMER);
             } else {
                 Log.i("Permissions", "storage permissions were NOT granted.");
-                Snackbar.make(mDrawerLayout, R.string.permissions_not_granted,
+                Snackbar.make(rootLayout, R.string.permissions_not_granted,
                         Snackbar.LENGTH_SHORT)
                         .show();
             }
-
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
+
+    public void setDynamicToolbarTitle(String name) {
+        toolbarTitleTextView.setText(mToolbarTitle);
+        mToolbarTitle = name;
+//        if ("Explore".equals(fragmentId)) {
+//            toolbarRelativeLayout.setOnClickListener(null);
+//            getSupportActionBar().setIcon(null);
+//            toolbarRelativeLayout.setVisibility(View.VISIBLE);
+//            setSupportActionBar(mToolbar);
+//            getSupportActionBar().setDisplayShowHomeEnabled(true);
+//            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        } else {
+
+//        }
+
+    }
+
+    @Override
+    public void onBackStackChanged() {
+        final Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+        System.out.println("====================================================changeeeeeeeeeeeeeeeeeeeeeeeeee" + topFragment);
+        Menu menu = bottomNavigationView.getMenu();
+        if (null != topFragment && topFragment instanceof ExploreArticleListingTypeFragment) {
+            toolbarRelativeLayout.setOnClickListener(null);
+            menu.findItem(R.id.action_home).setChecked(true);
+            toolbarTitleTextView.setText(getString(R.string.home_screen_select_an_option_title));
+            toolbarRelativeLayout.setVisibility(View.VISIBLE);
+            setSupportActionBar(mToolbar);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        } else {
+            if (null != topFragment && topFragment instanceof ProfileSelectFragment) {
+                toolbarRelativeLayout.setOnClickListener(null);
+                toolbarTitleTextView.setText(getString(R.string.home_screen_profile_title));
+                menu.findItem(R.id.action_profile).setChecked(true);
+            } else if (null != topFragment && topFragment instanceof NotificationFragment) {
+                toolbarRelativeLayout.setOnClickListener(null);
+                toolbarTitleTextView.setText(getString(R.string.home_screen_notification_title));
+                menu.findItem(R.id.action_notification).setChecked(true);
+            } else if (null != topFragment && topFragment instanceof FragmentMC4KHomeNew) {
+                toolbarRelativeLayout.setOnClickListener(this);
+                toolbarTitleTextView.setText(getString(R.string.home_screen_trending_title));
+                menu.findItem(R.id.action_home).setChecked(true);
+            } else if (null != topFragment && topFragment instanceof EditorPostFragment) {
+                toolbarRelativeLayout.setOnClickListener(null);
+                toolbarTitleTextView.setText(getString(R.string.home_screen_editor_title));
+                menu.findItem(R.id.action_write).setChecked(true);
+            } else if (null != topFragment && topFragment instanceof TopicsListingFragment) {
+                toolbarRelativeLayout.setOnClickListener(null);
+                toolbarTitleTextView.setText(mToolbarTitle);
+                menu.findItem(R.id.action_home).setChecked(true);
+            }
+
+            toolbarRelativeLayout.setVisibility(View.VISIBLE);
+            setSupportActionBar(mToolbar);
+            getSupportActionBar().setDisplayShowHomeEnabled(false);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        }
+    }
+
+
 }

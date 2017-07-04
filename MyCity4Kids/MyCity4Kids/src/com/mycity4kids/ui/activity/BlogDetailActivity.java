@@ -225,11 +225,6 @@ public class BlogDetailActivity extends BaseActivity implements View.OnClickList
         moreDesc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(BlogDetailActivity.this, ExpendedBlogDescriptionActivity.class);
-                intent.putExtra(Constants.BLOG_DETAILS, blogDetails);
-                intent.putExtra("AUTHOR_FOLLOW", autFollow);
-                startActivityForResult(intent, Constants.BLOG_FOLLOW_STATUS);
-                overridePendingTransition(R.anim.push_down_in, R.anim.push_down_out);
 
             }
         });

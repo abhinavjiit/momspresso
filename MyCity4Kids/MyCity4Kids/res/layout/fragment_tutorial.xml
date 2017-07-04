@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/lnrRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/onboarding1"
+    android:background="@drawable/onboarding_1"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -11,101 +12,138 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="35dp"
         android:layout_marginTop="10dp">
 
-        <TextView
+        <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/txvTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@+id/txvDesc"
-            android:layout_marginTop="8dp"
             android:fontFamily="sans-serif-light"
             android:gravity="center"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
-            android:text="Get Your Shots Of Mommy Wisdom"
-            android:textColor="@color/white_color"
-            android:textSize="18sp" />
+            android:text="WATCH VIDEOS"
+            android:textColor="@color/onboarding.title"
+            android:textSize="22sp"
+            app:fontName="oswald_regular.ttf" />
 
 
-        <TextView
+        <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/txvDesc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/connect_facebook"
+            android:layout_above="@+id/getStartedTextView"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="28dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="16dp"
             android:fontFamily="sans-serif-light"
             android:gravity="center"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:text="Blogs, Videos amp Experts"
-            android:textColor="@color/white_color"
-            android:textSize="16sp" />
+            android:textColor="@color/onboarding.desc"
+            android:textSize="13sp"
+            app:fontName="oswald_regular.ttf" />
 
-        <TextView
-            android:id="@+id/connect_facebook"
-            android:layout_width="130dp"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/txvLogin"
-            android:layout_gravity="center"
-            android:layout_marginRight="30dp"
-            android:layout_toLeftOf="@+id/midSeparator"
-            android:background="@drawable/facebook_rounded_corners_transparent"
-            android:drawableLeft="@drawable/ic_facebook_white_48dp"
-            android:drawablePadding="-14dp"
-            android:fontFamily="sans-serif-light"
-            android:gravity="center"
-            android:paddingBottom="6dp"
-            android:paddingLeft="10dp"
-            android:paddingTop="6dp"
-            android:text="Facebook"
-            android:textColor="@color/white_color"
-            android:textSize="16sp" />
+        <!--<TextView-->
+        <!--android:id="@+id/connect_facebook"-->
+        <!--android:layout_width="130dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_above="@+id/txvLogin"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:layout_marginRight="30dp"-->
+        <!--android:layout_toLeftOf="@+id/midSeparator"-->
+        <!--android:background="@drawable/facebook_rounded_corners_transparent"-->
+        <!--android:drawableLeft="@drawable/ic_facebook_white_48dp"-->
+        <!--android:drawablePadding="-14dp"-->
+        <!--android:fontFamily="sans-serif-light"-->
+        <!--android:gravity="center"-->
+        <!--android:paddingBottom="6dp"-->
+        <!--android:paddingLeft="10dp"-->
+        <!--android:paddingTop="6dp"-->
+        <!--android:text="Facebook"-->
+        <!--android:textColor="@color/white_color"-->
+        <!--android:textSize="16sp" />-->
 
-        <View
-            android:id="@+id/midSeparator"
-            android:layout_width="1dp"
-            android:layout_height="wrap_content"
+        <!--<View-->
+        <!--android:id="@+id/midSeparator"-->
+        <!--android:layout_width="1dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:background="@null" />-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/connect_gplus"-->
+        <!--android:layout_width="130dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_above="@+id/txvLogin"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:layout_marginLeft="30dp"-->
+        <!--android:layout_toRightOf="@+id/midSeparator"-->
+        <!--android:background="@drawable/facebook_rounded_corners_transparent"-->
+        <!--android:drawableLeft="@drawable/ic_gplus_white_48dp"-->
+        <!--android:drawablePadding="-14dp"-->
+        <!--android:fontFamily="sans-serif-light"-->
+        <!--android:gravity="center"-->
+        <!--android:paddingBottom="6dp"-->
+        <!--android:paddingLeft="10dp"-->
+        <!--android:paddingTop="6dp"-->
+        <!--android:text="Google +"-->
+        <!--android:textColor="@color/white_color"-->
+        <!--android:textSize="16sp" />-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/txvLogin"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_above="@+id/indicator_layout"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_marginBottom="10dp"-->
+        <!--android:layout_marginTop="20dp"-->
+        <!--android:fontFamily="sans-serif-light"-->
+        <!--android:padding="10dp"-->
+        <!--android:text="@string/login"-->
+        <!--android:textAppearance="?android:attr/textAppearanceMedium"-->
+        <!--android:textColor="@color/white_color"-->
+        <!--android:textSize="14sp" />-->
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/getStartedTextView"
+            android:layout_width="175dp"
+            android:layout_height="45dp"
+            android:layout_above="@+id/alreadyMemberTextView"
             android:layout_centerHorizontal="true"
-            android:background="@null" />
-
-        <TextView
-            android:id="@+id/connect_gplus"
-            android:layout_width="130dp"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/txvLogin"
-            android:layout_gravity="center"
-            android:layout_marginLeft="30dp"
-            android:layout_toRightOf="@+id/midSeparator"
-            android:background="@drawable/facebook_rounded_corners_transparent"
-            android:drawableLeft="@drawable/ic_gplus_white_48dp"
-            android:drawablePadding="-14dp"
-            android:fontFamily="sans-serif-light"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/get_started_button_bg"
             android:gravity="center"
-            android:paddingBottom="6dp"
-            android:paddingLeft="10dp"
-            android:paddingTop="6dp"
-            android:text="Google +"
-            android:textColor="@color/white_color"
-            android:textSize="16sp" />
+            android:text="@string/onboarding.get_started"
+            android:textColor="@color/onboarding.get_started"
+            android:textSize="19sp"
+            app:fontName="oswald_regular.ttf" />
 
-        <TextView
-            android:id="@+id/txvLogin"
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/alreadyMemberTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/signinTextView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:text="@string/onboarding.already_member"
+            android:textColor="@color/onboarding.already_member"
+            android:textSize="13sp"
+            app:fontName="open_sans_regular.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/signinTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/indicator_layout"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="20dp"
-            android:fontFamily="sans-serif-light"
-            android:padding="10dp"
-            android:text="@string/login"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/white_color"
-            android:textSize="14sp" />
+            android:padding="8dp"
+            android:text="@string/onboarding.signin"
+            android:textColor="@color/onboarding.sign_in"
+            android:textSize="14sp"
+            app:fontName="open_sans_bold.ttf" />
 
         <LinearLayout
             android:id="@+id/indicator_layout"
@@ -119,9 +157,10 @@
                 android:id="@+id/one"
                 android:layout_width="6dp"
                 android:layout_height="6dp"
-                android:alpha="0.2"
+                android:alpha="0.5"
                 android:src="@drawable/white_filled_bg"
-                android:tag="1" />
+                android:tag="1"
+                android:tint="@color/onboarding.already_member" />
 
             <ImageView
                 android:id="@+id/two"
@@ -129,18 +168,29 @@
                 android:layout_height="6dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:alpha="0.2"
+                android:alpha="0.5"
                 android:src="@drawable/white_filled_bg"
-                android:tag="2" />
+                android:tag="2"
+                android:tint="@color/onboarding.already_member" />
 
             <ImageView
                 android:id="@+id/three"
                 android:layout_width="6dp"
                 android:layout_height="6dp"
-                android:alpha="0.2"
+                android:layout_marginRight="5dp"
+                android:alpha="0.5"
                 android:src="@drawable/white_filled_bg"
-                android:tag="3" />
+                android:tag="3"
+                android:tint="@color/onboarding.already_member" />
 
+            <ImageView
+                android:id="@+id/four"
+                android:layout_width="6dp"
+                android:layout_height="6dp"
+                android:alpha="0.5"
+                android:src="@drawable/white_filled_bg"
+                android:tag="4"
+                android:tint="@color/onboarding.already_member" />
         </LinearLayout>
     </RelativeLayout>
 

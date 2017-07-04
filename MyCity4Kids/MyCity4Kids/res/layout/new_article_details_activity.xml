@@ -128,7 +128,7 @@
                 android:layout_marginLeft="90dp"
                 android:padding="10dp"
                 android:text="FOLLOW"
-                android:textColor="@color/blog.comments.follow_reply_btn"
+                android:textColor="#507cbe"
                 android:textSize="14sp" />
 
             <WebView
@@ -378,7 +378,7 @@
                 android:layout_height="40dp"
                 android:layout_gravity="bottom"
                 android:layout_weight=".13"
-                android:background="@color/blog.comments.addcomment_button"
+                android:background="#507cbe"
                 android:gravity="center">
 
                 <ImageView

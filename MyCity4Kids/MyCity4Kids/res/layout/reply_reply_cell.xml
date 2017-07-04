@@ -56,7 +56,7 @@
             android:fontFamily="sans-serif-thin"
             android:paddingLeft="8dp"
             android:text="date"
-            android:textColor="@color/blog.comments.date_comment_text"
+            android:textColor="#507cbe"
             android:textSize="@dimen/ad_comments_date" />
 
         <TextView
@@ -93,7 +93,7 @@
             android:layout_below="@id/txvCommentDescription"
             android:padding="5dp"
             android:text="REPLY"
-            android:textColor="@color/blog.comments.follow_reply_btn"
+            android:textColor="#507cbe"
             android:textSize="@dimen/ad_comments_reply_btn"
             android:visibility="invisible" />
     </RelativeLayout>

@@ -21,8 +21,8 @@
         android:maxLines="3"
         android:paddingLeft="12dp"
         android:paddingTop="4dp"
-        android:text="TITLEE wa w ad"
-        android:textColor="@color/black"
+        android:text=""
+        android:textColor="@color/related_article.title"
         android:textSize="@dimen/ad_related_article_title"
-        app:fontName="georgia.ttf" />
+        app:fontName="oswald_regular.ttf" />
 </merge>

@@ -11,16 +11,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.Session;
@@ -30,18 +24,15 @@ import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
-import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
-import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.LoginController;
-import com.mycity4kids.controller.UpdateMobileController;
 import com.mycity4kids.dbtable.TableKids;
 import com.mycity4kids.facebook.FacebookUtils;
 import com.mycity4kids.google.GooglePlusUtils;
@@ -55,15 +46,14 @@ import com.mycity4kids.models.response.KidsModel;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.models.user.KidsInfo;
 import com.mycity4kids.models.user.UserInfo;
-import com.mycity4kids.models.user.UserRequest;
 import com.mycity4kids.models.user.UserResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
 import com.mycity4kids.sync.PushTokenService;
 import com.mycity4kids.ui.fragment.FacebookAddEmailDialogFragment;
+import com.mycity4kids.ui.fragment.SignInFragment;
+import com.mycity4kids.ui.fragment.SignUpFragment;
 import com.mycity4kids.utils.PermissionUtil;
-import com.mycity4kids.widget.CustomFontEditText;
-import com.mycity4kids.widget.CustomFontTextView;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -83,16 +73,9 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
 
     private static final int REQUEST_INIT_PERMISSION = 1;
     private static String[] PERMISSIONS_INIT = {Manifest.permission.GET_ACCOUNTS};
-    private static String[] PERMISSIONS_GET_ACCOUNT = {Manifest.permission.GET_ACCOUNTS};
 
     private GooglePlusUtils mGooglePlusUtils;
-    private CustomFontEditText mEmailId, mPassword;
-    CustomFontTextView signinTextView;
-    private Toolbar mToolbar;
-    LinearLayout forgotView;
-    private boolean filterchange;
-    private String socialEmailid = "";
-    private String mobileNumberForVerification = "";
+
     private String googleEmailId, userId, currentPersonName, personPhotoUrl;
 
     private String accessToken = "";
@@ -110,53 +93,40 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         Utils.pushOpenScreenEvent(ActivityLogin.this, "Login Screen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         setContentView(R.layout.aa_loginform);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mLayout = findViewById(R.id.rootLayout);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("Sign In");
-        try {
-            mEmailId = (CustomFontEditText) findViewById(R.id.email_login);
-            mPassword = (CustomFontEditText) findViewById(R.id.password_login);
-            signinTextView = (CustomFontTextView) findViewById(R.id.signinTextView);
-            mEmailId.addTextChangedListener(mTextWatcher);
-            mPassword.addTextChangedListener(mTextWatcher);
-            mPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                @Override
-                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                    if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
-                        loginRequest();
-                    }
-                    return false;
-                }
-            });
-
-
-            ((CustomFontTextView) findViewById(R.id.orTextView)).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    changeBaseURL++;
-                    if (changeBaseURL > 9) {
-                        if (BuildConfig.DEBUG) {
-                            BaseApplication.changeApiBaseUrl();
-                            showToast("changed baseurl to " + BaseApplication.getInstance().getRetrofit().baseUrl());
-                            changeBaseURL = 0;
-                        }
-                    }
-                }
-            });
-
-            signinTextView.setEnabled(false);
-
-            signinTextView.setOnClickListener(this);
-            ((CustomFontTextView) findViewById(R.id.forgot_password)).setOnClickListener(this);
-            ((CustomFontTextView) findViewById(R.id.connect_facebook)).setOnClickListener(this);
-            ((CustomFontTextView) findViewById(R.id.connect_googleplus)).setOnClickListener(this);
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        String fragmentToLaunch = getIntent().getStringExtra(AppConstants.LAUNCH_FRAGMENT);
+        if (AppConstants.FRAGMENT_SIGNIN.equals(fragmentToLaunch)) {
+            SignInFragment fragment = new SignInFragment();
+            replaceFragment(fragment, null, true);
+        } else if (AppConstants.FRAGMENT_SIGNUP.equals(fragmentToLaunch)) {
+            SignUpFragment fragment = new SignUpFragment();
+            replaceFragment(fragment, null, true);
+        } else {
+            SignInFragment fragment = new SignInFragment();
+            replaceFragment(fragment, null, true);
         }
+
+        mLayout = findViewById(R.id.rootLayout);
+
         mGooglePlusUtils = new GooglePlusUtils(this, this);
 
+    }
+
+    public void loginWithFacebook() {
+        if (ConnectivityUtils.isNetworkEnabled(this)) {
+            showProgressDialog(getString(R.string.please_wait));
+            FacebookUtils.facebookLogin(this, this);
+        } else {
+            showToast(getString(R.string.error_network));
+        }
+    }
+
+    public void loginWithGplus() {
+        if (ConnectivityUtils.isNetworkEnabled(this)) {
+            showProgressDialog("Please Wait");
+            mGooglePlusUtils.googlePlusLogin();
+        } else {
+            showToast(getString(R.string.error_network));
+        }
     }
 
     @Override
@@ -192,15 +162,6 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                 } else {
                     showToast(getString(R.string.error_network));
                 }
-                break;
-
-            case R.id.forgot_password:
-                intent = new Intent(this, ForgotPasswordActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.signinTextView:
-//                try {
-                loginRequest();
                 break;
             default:
                 break;
@@ -265,27 +226,23 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         }
     }
 
-    private void loginRequest() {
-        if (isDataValid()) {
-            if (ConnectivityUtils.isNetworkEnabled(this)) {
-                showProgressDialog(getString(R.string.please_wait));
-                //mProgressDialog=ProgressDialog.show(this, "", "Please Wait...",true,false);
-                loginMode = "email";
-                String emailId_or_mobile = mEmailId.getText().toString().trim();
-                String password = mPassword.getText().toString().trim();
+    public void loginRequest(String email_id, String password) {
+        if (ConnectivityUtils.isNetworkEnabled(this)) {
+            showProgressDialog(getString(R.string.please_wait));
+            //mProgressDialog=ProgressDialog.show(this, "", "Please Wait...",true,false);
+            loginMode = "email";
 
-                LoginRegistrationRequest lr = new LoginRegistrationRequest();
-                lr.setEmail(emailId_or_mobile);
-                lr.setPassword(password);
-                lr.setRequestMedium("custom");
+            LoginRegistrationRequest lr = new LoginRegistrationRequest();
+            lr.setEmail(email_id);
+            lr.setPassword(password);
+            lr.setRequestMedium("custom");
 
-                Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-                LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
-                Call<UserDetailResponse> call = loginRegistrationAPI.login(lr);
-                call.enqueue(onLoginResponseReceivedListener);
-            } else {
-                showToast(getString(R.string.error_network));
-            }
+            Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+            LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
+            Call<UserDetailResponse> call = loginRegistrationAPI.login(lr);
+            call.enqueue(onLoginResponseReceivedListener);
+        } else {
+            showToast(getString(R.string.error_network));
         }
     }
 
@@ -390,31 +347,6 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         removeProgressDialog();
     }
 
-    private boolean isDataValid() {
-        boolean isLoginOk = true;
-        String email_id = mEmailId.getText().toString().trim();
-
-        if (email_id.trim().length() == 0 || ((!StringUtils.isValidEmail(email_id)) && (!StringUtils.checkMobileNumber(email_id)))) {
-            mEmailId.setFocusableInTouchMode(true);
-            mEmailId.setError("Please enter valid email id");
-            mEmailId.requestFocus();
-            isLoginOk = false;
-        } else if (mPassword.getText().toString().length() == 0) {
-            mPassword.setFocusableInTouchMode(true);
-            mPassword.requestFocus();
-            mPassword.setError("Password can't be left blank");
-            //mPassword.requestFocus();
-            isLoginOk = false;
-        } else if (mPassword.getText().toString().length() < 1) {
-            mPassword.setFocusableInTouchMode(true);
-            mPassword.requestFocus();
-
-            mPassword.setError("Password should not less than 5 character.");
-            //mPassword.requestFocus();
-            isLoginOk = false;
-        }
-        return isLoginOk;
-    }
 
     public class GetGoogleToken extends AsyncTask<Void, String, String> {
 
@@ -803,36 +735,6 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         }
     };
 
-
-    //  create a textWatcher member
-    private TextWatcher mTextWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-        }
-
-        @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-        }
-
-        @Override
-        public void afterTextChanged(Editable editable) {
-            // check Fields For Empty Values
-            checkFieldsForEmptyValues();
-        }
-    };
-
-    void checkFieldsForEmptyValues() {
-
-        String s1 = mEmailId.getText().toString();
-        String s2 = mPassword.getText().toString();
-
-        if (s1.equals("") || s2.equals("")) {
-            signinTextView.setEnabled(false);
-        } else {
-            signinTextView.setEnabled(true);
-        }
-    }
-
     @Override
     protected void onActivityResult(int _requestCode, int _resultCode, Intent _data) {
         super.onActivityResult(_requestCode, _resultCode, _data);//64206,0  -1
@@ -867,6 +769,23 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
             }
             FacebookUtils.onActivityResult(this, _requestCode, _resultCode, _data);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        try {
+            Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
+            if (topFragment instanceof ExploreArticleListingTypeFragment) {
+            }
+            if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+                finish();
+            } else {
+                super.onBackPressed();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
 }

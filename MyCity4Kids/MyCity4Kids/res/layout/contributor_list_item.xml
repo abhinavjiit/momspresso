@@ -137,7 +137,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="10dp"
                     android:text="FOLLOW"
-                    android:textColor="@color/blog.comments.follow_reply_btn"
+                    android:textColor="#507cbe"
                     android:textSize="13sp"
                     android:visibility="visible" />
 

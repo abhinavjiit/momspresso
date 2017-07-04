@@ -318,7 +318,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                Intent intent = new Intent(FilteredTopicsArticleListingActivity.this, ArticlesAndBlogsDetailsActivity.class);
+                Intent intent = new Intent(FilteredTopicsArticleListingActivity.this, ArticleDetailsContainerActivity.class);
                 if (adapterView.getAdapter() instanceof NewArticlesListingAdapter) {
                     ArticleListingResult parentingListData = (ArticleListingResult) ((NewArticlesListingAdapter) adapterView.getAdapter()).getItem(i);
                     intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
@@ -332,6 +332,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                     intent.putExtra(Constants.ARTICLE_OPENED_FROM, categoryName + "~" + selectedTopics);
                     intent.putExtra(Constants.FROM_SCREEN, "Topic Articles List");
                     intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
+                    intent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
                     startActivity(intent);
                 }
             }

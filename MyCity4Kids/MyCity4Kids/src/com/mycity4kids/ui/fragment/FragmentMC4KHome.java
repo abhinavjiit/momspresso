@@ -332,7 +332,6 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         String url;
         url = AppConstants.LIVE_URL + "v1/articles/trending/" + from + "/" + to + "?lang=" + SharedPrefUtils.getLanguageFilters(getActivity());
         HttpVolleyRequest.getStringResponse(getActivity(), url, null, mGetArticleListingListener, Request.Method.GET, false);
-
     }
 
     private void hitMomspressoListingApi(String momspressoCategoryId) {
@@ -834,15 +833,6 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
         switch (view.getId()) {
             case R.id.go_to_cal:
             case R.id.img_go_to_cal:
-            case R.id.txtCal:
-                if (StringUtils.isNullOrEmpty("" + SharedPrefUtils.getUserDetailModel(getActivity()).getFamily_id()) ||
-                        SharedPrefUtils.getUserDetailModel(getActivity()).getFamily_id() == 0) {
-                    showCreateFamilyAlert();
-                } else {
-                    ((DashboardActivity) getActivity()).replaceFragment(new FragmentCalender(), null, true);
-                }
-                break;
-
             case R.id.add_appointment:
                 if (StringUtils.isNullOrEmpty("" + SharedPrefUtils.getUserDetailModel(getActivity()).getFamily_id()) ||
                         SharedPrefUtils.getUserDetailModel(getActivity()).getFamily_id() == 0) {
@@ -1668,9 +1658,6 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        // call service here for completed tasks
-        ((DashboardActivity) getActivity()).UploadCompleteTasks();
-
     }
 
     private void showCreateFamilyAlert() {

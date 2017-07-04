@@ -684,7 +684,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                         intent1.putExtra(Constants.ARTICLE_INDEX, "" + (position - 1));
                         startActivity(intent1);
                     } else {
-                        Intent intent = new Intent(BloggerDashboardActivity.this, ArticlesAndBlogsDetailsActivity.class);
+                        Intent intent = new Intent(BloggerDashboardActivity.this, ArticleDetailsContainerActivity.class);
                         intent.putExtra(Constants.ARTICLE_ID, commentList.get(position - 1).getArticleId());
                         intent.putExtra(Constants.AUTHOR_ID, commentList.get(position - 1).getUserId());
                         intent.putExtra(Constants.BLOG_SLUG, commentList.get(position - 1).getBlogTitleSlug());

@@ -50,7 +50,7 @@
         android:paddingBottom="8dp"
         android:paddingTop="8dp"
         android:text="FOLLOW"
-        android:textColor="@color/blog.comments.follow_reply_btn"
+        android:textColor="#507cbe"
         android:textSize="12sp" />
 
     <TextView
@@ -68,7 +68,7 @@
         android:paddingBottom="8dp"
         android:paddingTop="8dp"
         android:text="FOLLOWING"
-        android:textColor="@color/blog.comments.follow_reply_btn"
+        android:textColor="#507cbe"
         android:textSize="12sp" />
 
     <RelativeLayout

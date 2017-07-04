@@ -134,7 +134,6 @@
                                 android:layout_marginLeft="10dp"
                                 android:layout_toRightOf="@+id/blogger_profile"
                                 android:text="FOLLOW"
-                                android:textColor="@color/blog.comments.follow_reply_btn"
                                 android:textSize="14sp" />
 
                             <TextView
@@ -233,7 +232,6 @@
                             android:paddingLeft="8dp"
                             android:paddingRight="8dp"
                             android:text="More"
-                            android:textColor="@color/blog.comments.follow_reply_btn"
                             android:visibility="gone" />
 
 
@@ -263,7 +261,6 @@
                 app:tabIndicatorColor="@color/tabsScrollColor"
                 app:tabIndicatorHeight="3dp"
                 app:tabMode="fixed"
-                app:tabSelectedTextColor="@color/blog.comments.follow_reply_btn"
                 app:tabTextColor="@color/black_color"
                 app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 

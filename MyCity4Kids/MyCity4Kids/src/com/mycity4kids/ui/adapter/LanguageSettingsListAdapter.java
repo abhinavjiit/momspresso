@@ -1,12 +1,13 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
-import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.TextView;
 
 import com.mycity4kids.R;
 import com.mycity4kids.models.SubscriptionAndLanguageSettingsModel;
@@ -46,7 +47,10 @@ public class LanguageSettingsListAdapter extends BaseAdapter {
     }
 
     class ViewHolder {
-        SwitchCompat aSwitch;
+        //        SwitchCompat aSwitch;
+        TextView languageNameTextView;
+        TextView storyCountTextView;
+        CheckBox languageStatus;
     }
 
     @Override
@@ -56,29 +60,42 @@ public class LanguageSettingsListAdapter extends BaseAdapter {
         if (view == null) {
             view = mInflator.inflate(R.layout.language_settings_item, null);
             holder = new ViewHolder();
-            holder.aSwitch = (SwitchCompat) view.findViewById(R.id.languageStatus);
+            holder.languageNameTextView = (TextView) view.findViewById(R.id.languageTextView);
+            holder.storyCountTextView = (TextView) view.findViewById(R.id.storiesCountTextView);
+            holder.languageStatus = (CheckBox) view.findViewById(R.id.languageStatus);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
         }
-        holder.aSwitch.setText(languageSettingsList.get(position).getName());
+        holder.languageNameTextView.setText(languageSettingsList.get(position).getName());
 
-        holder.aSwitch.setTag(position);
-        holder.aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        holder.languageStatus.setTag(position);
+        holder.languageStatus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    languageSettingsList.get((int) holder.aSwitch.getTag()).setStatus("1");
+                    languageSettingsList.get((int) holder.languageStatus.getTag()).setStatus("1");
                 } else {
-                    languageSettingsList.get((int) holder.aSwitch.getTag()).setStatus("0");
+                    languageSettingsList.get((int) holder.languageStatus.getTag()).setStatus("0");
                 }
             }
         });
-
+        holder.languageNameTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holder.languageStatus.performClick();
+            }
+        });
+        holder.storyCountTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holder.languageStatus.performClick();
+            }
+        });
         if ("1".equals(languageSettingsList.get(position).getStatus())) {
-            holder.aSwitch.setChecked(true);
+            holder.languageStatus.setChecked(true);
         } else {
-            holder.aSwitch.setChecked(false);
+            holder.languageStatus.setChecked(false);
         }
 
         return view;

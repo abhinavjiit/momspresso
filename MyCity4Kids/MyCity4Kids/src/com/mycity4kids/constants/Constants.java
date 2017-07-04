@@ -230,6 +230,13 @@ public class Constants {
     public static final String KEY_MOMSPRESSO = "momspresso";
     public static final String KEY_HINDI = "hindi";
 
+    public static final String TAB_EDITOR_PICKS = "EDITOR'S PICK";
+    public static final String TAB_TRENDING = "TRENDING";
+    public static final String TAB_RECENT = "RECENT";
+    public static final String TAB_POPULAR = "POPULAR";
+    public static final String TAB_IN_YOUR_CITY = "IN YOUR CITY";
+    public static final String TAB_FOR_YOU = "FOR YOU";
+
     public static String SORT_TYPE = "sorttype";
     public static String BLOG_TITLE = "blog_title";
     public static String IS_SEARCH_ACTIVE = "is_Search_Active";
@@ -275,8 +282,8 @@ public class Constants {
     public static String BUSINESS_EVENTLIST_FRAGMENT = "fragment_eventlist";
     public static String TODOLIST_FRAGMENT = "fragment_todo";
     public static String CALENDARLIST_FRAGMENT = "fragment_calendar";
-    public static String SETTINGS_FRAGMENT="fragment_settings";
-    public static String LANGUAGE_FRAGMENT="fragment_language";
+    public static String SETTINGS_FRAGMENT = "fragment_settings";
+    public static String LANGUAGE_FRAGMENT = "fragment_language";
 
     /*Kids Birthday Constants*/
     public static String KIDS_NAME = "kids_name";

@@ -142,7 +142,7 @@
                 android:layout_marginTop="10dp"
                 android:padding="10dp"
                 android:text="FOLLOW"
-                android:textColor="@color/blog.comments.follow_reply_btn"
+                android:textColor="#507cbe"
                 android:textSize="14sp" />
 
             <!--<WebView-->

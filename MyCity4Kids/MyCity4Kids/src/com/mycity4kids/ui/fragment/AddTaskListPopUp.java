@@ -75,7 +75,6 @@ public class AddTaskListPopUp extends android.app.DialogFragment implements View
                 } else {
 
                     if (args.equalsIgnoreCase("dashboard")) {
-                        ((DashboardActivity) getActivity()).addTaskList(listName.getText().toString(), editTaskList);
                     } else if (args.equalsIgnoreCase("createTask")) {
                         ((ActivityCreateTask) getActivity()).addTaskList(listName.getText().toString());
                     } else if (args.equalsIgnoreCase("editTask")) {

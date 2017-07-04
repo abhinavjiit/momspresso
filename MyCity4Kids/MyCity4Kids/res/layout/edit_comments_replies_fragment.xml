@@ -64,7 +64,7 @@
             android:layout_below="@id/commentReplyEditText"
             android:padding="5dp"
             android:text="UPDATE"
-            android:textColor="@color/blog.comments.follow_reply_btn"
+            android:textColor="#507cbe"
             android:textSize="14sp" />
     </RelativeLayout>
 

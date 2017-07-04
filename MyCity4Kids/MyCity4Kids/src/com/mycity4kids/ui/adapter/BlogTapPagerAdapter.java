@@ -6,9 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
-import com.mycity4kids.constants.Constants;
 import com.mycity4kids.observablescrollview.CacheFragmentStatePagerAdapter;
-import com.mycity4kids.ui.fragment.BlogListingViewFragment;
 
 
 /**
@@ -18,8 +16,6 @@ public class BlogTapPagerAdapter extends CacheFragmentStatePagerAdapter {
 
     Activity activity;
     Context context;
-    private BlogListingViewFragment mRecentBlogFragment;
-    private BlogListingViewFragment mPopularBlogFragment;
 
     int currentPosition = 0;
     String authorId = "";
@@ -66,24 +62,6 @@ public class BlogTapPagerAdapter extends CacheFragmentStatePagerAdapter {
         Bundle bundle = new Bundle();
         switch (position) {
 
-            case 0:
-                if (mRecentBlogFragment == null) {
-                    mRecentBlogFragment = new BlogListingViewFragment();
-                    bundle.putInt(Constants.TAB_POSITION, 0);
-                    bundle.putString(Constants.SORT_TYPE, "recent");
-                    bundle.putString(Constants.AUTHOR_ID, authorId);
-                    mRecentBlogFragment.setArguments(bundle);
-                }
-                return mRecentBlogFragment;
-            case 1:
-                if (mPopularBlogFragment == null) {
-                    mPopularBlogFragment = new BlogListingViewFragment();
-                    bundle.putInt(Constants.TAB_POSITION, 1);
-                    bundle.putString(Constants.SORT_TYPE, "popular");
-                    bundle.putString(Constants.AUTHOR_ID, authorId);
-                    mPopularBlogFragment.setArguments(bundle);
-                }
-                return mPopularBlogFragment;
         }
         return null;
     }

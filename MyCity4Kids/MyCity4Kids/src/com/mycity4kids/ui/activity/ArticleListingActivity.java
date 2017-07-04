@@ -38,7 +38,9 @@ import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.newmodels.VolleyBaseResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.RecommendationAPI;
+import com.mycity4kids.ui.adapter.MainArticleListingAdapter;
 import com.mycity4kids.ui.adapter.NewArticlesListingAdapter;
+import com.mycity4kids.ui.fragment.ForYouInfoDialogFragment;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.volley.HttpVolleyRequest;
 
@@ -51,17 +53,12 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 4/8/16.
  */
-public class ArticleListingActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class ArticleListingActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, ForYouInfoDialogFragment.IForYourArticleRemove {
 
-    NewArticlesListingAdapter articlesListingAdapter;
-    ArrayList<ArticleListingResult> articleDataModelsNew;
+    private MainArticleListingAdapter articlesListingAdapter;
+    private ArrayList<ArticleListingResult> articleDataModelsNew;
 
-    ListView listView;
-    private RelativeLayout mLodingView;
-    TextView noBlogsTextView;
-    Toolbar mToolbar;
-
-    String sortType;
+    private String sortType;
     private int nextPageNumber;
     private boolean isLastPageReached = false;
     private boolean isReuqestRunning = false;
@@ -72,18 +69,27 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
     private String chunks = "";
     private String fromScreen;
 
+    private ListView listView;
+    private RelativeLayout mLodingView;
+    private TextView noBlogsTextView;
+    private Toolbar mToolbar;
+    private TextView toolbarTitleTextView;
+    private RelativeLayout toolbarRelativeLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.new_article_layout);
+        setContentView(R.layout.article_listing_activity);
         listView = (ListView) findViewById(R.id.scroll);
         mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
         noBlogsTextView = (TextView) findViewById(R.id.noBlogsTextView);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbarRelativeLayout = (RelativeLayout) mToolbar.findViewById(R.id.toolbarRelativeLayout);
+        toolbarTitleTextView = (TextView) mToolbar.findViewById(R.id.toolbarTitle);
+
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mToolbar.setVisibility(View.VISIBLE);
 
         findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely));
@@ -111,7 +117,7 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
 
         swipeRefreshLayout.setOnRefreshListener((SwipeRefreshLayout.OnRefreshListener) this);
 
-        articlesListingAdapter = new NewArticlesListingAdapter(this);
+        articlesListingAdapter = new MainArticleListingAdapter(this);
         articlesListingAdapter.setListingType(sortType);
         articlesListingAdapter.setNewListData(articleDataModelsNew);
         listView.setAdapter(articlesListingAdapter);
@@ -140,9 +146,9 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                Intent intent = new Intent(ArticleListingActivity.this, ArticlesAndBlogsDetailsActivity.class);
-                if (adapterView.getAdapter() instanceof NewArticlesListingAdapter) {
-                    ArticleListingResult parentingListData = (ArticleListingResult) ((NewArticlesListingAdapter) adapterView.getAdapter()).getItem(i);
+                Intent intent = new Intent(ArticleListingActivity.this, ArticleDetailsContainerActivity.class);
+                if (adapterView.getAdapter() instanceof MainArticleListingAdapter) {
+                    ArticleListingResult parentingListData = (ArticleListingResult) ((MainArticleListingAdapter) adapterView.getAdapter()).getItem(i);
                     intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
                     intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
                     intent.putExtra(Constants.BLOG_SLUG, parentingListData.getBlogPageSlug());
@@ -446,5 +452,14 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
                 break;
         }
         return true;
+    }
+
+    @Override
+    public void onForYouArticleRemoved(int position) {
+        Log.d("Remove For YOu", "position = " + position);
+        if (articleDataModelsNew != null && articleDataModelsNew.size() > position) {
+            articleDataModelsNew.remove(position);
+            articlesListingAdapter.notifyDataSetChanged();
+        }
     }
 }

@@ -11,7 +11,7 @@ public class ImageURL implements Parcelable {
     private String clientApp;
     private String web;
     private String mobileWeb;
-
+    private String thumbMax;
 
     protected ImageURL(Parcel in) {
         mobileWebThumbnail = in.readString();
@@ -20,6 +20,7 @@ public class ImageURL implements Parcelable {
         clientApp = in.readString();
         web = in.readString();
         mobileWeb = in.readString();
+        thumbMax = in.readString();
     }
 
     @Override
@@ -30,6 +31,7 @@ public class ImageURL implements Parcelable {
         dest.writeString(clientApp);
         dest.writeString(web);
         dest.writeString(mobileWeb);
+        dest.writeString(thumbMax);
     }
 
     @Override
@@ -95,5 +97,13 @@ public class ImageURL implements Parcelable {
 
     public void setMobileWeb(String mobileWeb) {
         this.mobileWeb = mobileWeb;
+    }
+
+    public String getThumbMax() {
+        return thumbMax;
+    }
+
+    public void setThumbMax(String thumbMax) {
+        this.thumbMax = thumbMax;
     }
 }

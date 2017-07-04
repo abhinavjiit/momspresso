@@ -31,7 +31,6 @@ import com.mycity4kids.ui.fragment.FragmentHomeCategory;
 import com.mycity4kids.ui.fragment.FragmentKidProfile;
 import com.mycity4kids.ui.fragment.FragmentSetting;
 import com.mycity4kids.ui.fragment.LanguageSettingsFragment;
-import com.mycity4kids.ui.fragment.NotificationFragment;
 import com.mycity4kids.ui.fragment.NotificationSettingsFragment;
 import com.mycity4kids.ui.fragment.SubscriptionSettingsFragment;
 
@@ -193,6 +192,10 @@ public class SettingsActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
+        if (null != mToolBar) {
+            mToolBar.setVisibility(View.VISIBLE);
+        }
+
         Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
         if (topFragment instanceof FragmentFamilyDetail) {
 
@@ -213,14 +216,13 @@ public class SettingsActivity extends BaseActivity {
             getMenuInflater().inflate(R.menu.menu_event, menu);
         } else if (topFragment instanceof ArticlesFragment) {
             getMenuInflater().inflate(R.menu.menu_articles, menu);
-        } else if (topFragment instanceof NotificationFragment) {
-            getMenuInflater().inflate(R.menu.forgot_password, menu);
         } else if (topFragment instanceof FragmentHomeCategory) {
             getMenuInflater().inflate(R.menu.kidsresource_listing, menu);
         } else if (topFragment instanceof NotificationSettingsFragment) {
             getMenuInflater().inflate(R.menu.forgot_password, menu);
         } else if (topFragment instanceof LanguageSettingsFragment) {
             getMenuInflater().inflate(R.menu.forgot_password, menu);
+            mToolBar.setVisibility(View.GONE);
         } else if (topFragment instanceof SubscriptionSettingsFragment) {
             getMenuInflater().inflate(R.menu.forgot_password, menu);
         }
@@ -243,8 +245,6 @@ public class SettingsActivity extends BaseActivity {
                     ((FragmentFamilyProfile) topFragment).callService();
                 } else if (topFragment instanceof FragmentFamilyDetail) {
                     ((FragmentFamilyDetail) topFragment).onHeaderButtonTapped();
-                } else if (topFragment instanceof NotificationFragment) {
-                    ((NotificationFragment) topFragment).saveNotificationSetting();
                 } else if (topFragment instanceof ChangeCityFragment) {
                     ((ChangeCityFragment) topFragment).changeCity();
                 } else if (topFragment instanceof NotificationSettingsFragment) {

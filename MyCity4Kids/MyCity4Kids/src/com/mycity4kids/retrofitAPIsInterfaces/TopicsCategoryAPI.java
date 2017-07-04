@@ -8,6 +8,7 @@ import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse;
 import com.mycity4kids.models.response.TopicsFollowingStatusData;
 import com.mycity4kids.models.response.TopicsFollowingStatusResponse;
+import com.mycity4kids.models.response.TrendingListingResponse;
 import com.mycity4kids.newmodels.FollowUnfollowCategoriesRequest;
 
 import okhttp3.ResponseBody;
@@ -78,4 +79,10 @@ public interface TopicsCategoryAPI {
     Call<ArticleListingResponse> getForYouArticles(@Path("userId") String userId,
                                                    @Path("start") String start,
                                                    @Path("end") String end);
+
+    @GET("v1/categories/trending/{lowerLimit}/{upperLimit}/{articleCount}")
+    Call<TrendingListingResponse> getTrendingTopicAndArticles(@Path("lowerLimit") String lowerLimit,
+                                                              @Path("upperLimit") String upperLimit,
+                                                              @Path("articleCount") String articleCount);
+
 }

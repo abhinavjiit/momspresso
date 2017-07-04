@@ -99,29 +99,97 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen 
             }
         });
 
+    }
 
-//        String tag = fragment.getClass().getSimpleName();
-//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//        Fragment fragmentLocal = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-//        if (fragmentLocal != null && fragmentLocal.getTag().equalsIgnoreCase(tag)) {
-//            ((BaseFragment) fragmentLocal).refreshFragment(bundle);
-//            return;
-//        }
-//
-//        ft.replace(R.id.content_frame, fragment, tag);
-//        fragment.setRetainInstance(true);
-//        if (isAddToBackStack) {
-//            ft.addToBackStack(tag);
-//        }
-//        try {
-//            ft.commit();
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//            try{
-//                ft.commitAllowingStateLoss();
-//            }catch(Exception e){
-//            }
-//        }
+    public void replaceFragmentWithAnimation(final Fragment fragment, Bundle bundle, boolean isAddToBackStack) {
+        if (bundle != null) {
+            fragment.setArguments(bundle);
+        }
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    String backStateName = fragment.getClass().getName();
+                    boolean fragmentPopped = getSupportFragmentManager().popBackStackImmediate(backStateName, 0);
+
+                    if (!fragmentPopped) { // fragment not in back stack, create
+                        // it.
+                        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                        ft.setCustomAnimations(R.anim.transition_enter_from_right, R.anim.transition_exit_to_left, R.anim.transition_enter_from_left, R.anim.transition_exit_to_right);
+                        ft.replace(R.id.content_frame, fragment);
+                        ft.addToBackStack(backStateName);
+                        ft.commit();
+                    }
+                } catch (Exception e) {
+                    // TODO: handle exception
+                }
+
+            }
+        });
+
+    }
+
+    public void addFragment(final Fragment fragment, Bundle bundle, boolean isAddToBackStack) {
+        if (bundle != null) {
+            fragment.setArguments(bundle);
+        }
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    String backStateName = fragment.getClass().getName();
+                    boolean fragmentPopped = getSupportFragmentManager().popBackStackImmediate(backStateName, 0);
+
+                    if (!fragmentPopped) { // fragment not in back stack, create
+                        // it.
+                        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                        ft.setCustomAnimations(R.anim.transition_enter_from_right, R.anim.transition_exit_to_left, R.anim.transition_enter_from_left, R.anim.transition_exit_to_right);
+                        ft.add(R.id.content_frame, fragment);
+                        ft.addToBackStack(backStateName);
+                        ft.commit();
+                    }
+                } catch (Exception e) {
+                    // TODO: handle exception
+                }
+
+            }
+        });
+
+    }
+
+    public void addFragment(final Fragment fragment, Bundle bundle, boolean isAddToBackStack, final String animationType) {
+        if (bundle != null) {
+            fragment.setArguments(bundle);
+        }
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    String backStateName = fragment.getClass().getName();
+                    boolean fragmentPopped = getSupportFragmentManager().popBackStackImmediate(backStateName, 0);
+
+                    if (!fragmentPopped) { // fragment not in back stack, create
+                        // it.
+                        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                        if (animationType.equals("topToBottom")) {
+                            ft.setCustomAnimations(R.anim.transition_enter_from_bottom, R.anim.transition_exit_to_top, R.anim.transition_enter_from_top, R.anim.transition_exit_to_bottom);
+                        } else {
+                            ft.setCustomAnimations(R.anim.transition_enter_from_right, R.anim.transition_exit_to_left, R.anim.transition_enter_from_left, R.anim.transition_exit_to_right);
+                        }
+                        ft.add(R.id.content_frame, fragment);
+                        ft.addToBackStack(backStateName);
+                        ft.commit();
+                    }
+                } catch (Exception e) {
+                    // TODO: handle exception
+                }
+
+            }
+        });
+
     }
 
     protected void startSyncing() {
@@ -129,7 +197,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen 
         startService(intent);
     }
 
-    protected void startSyncingUserInfo() {
+    public void startSyncingUserInfo() {
         Intent intent = new Intent(this, SyncUserInfoService.class);
         startService(intent);
     }

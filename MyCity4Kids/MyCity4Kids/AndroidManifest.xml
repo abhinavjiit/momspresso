@@ -45,7 +45,6 @@
         android:hardwareAccelerated="true"
         android:icon="@drawable/myicon"
         android:label="@string/app_name"
-        android:largeHeap="true"
         android:theme="@style/AppTheme">
 
         <!-- API key For Google Map Local -->
@@ -146,12 +145,6 @@
 
         <activity
             android:name=".ui.activity.ArticleFilterDialogActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.Transparent" />
-
-        <activity
-            android:name=".ui.activity.ExpendedBlogDescriptionActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Transparent" />
@@ -523,6 +516,13 @@
         <activity
             android:name=".ui.activity.ContextualSearchActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.ArticleDetailsContainerActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ExampleActivity" />
+        <activity
+            android:name=".MyActivity"
+            android:screenOrientation="portrait" />
 
         <receiver
             android:name="com.mycity4kids.reminders.BootCompleteReceiver"
@@ -549,6 +549,7 @@
         <service android:name="com.mycity4kids.sync.RemainderEmailService" />
         <service android:name="com.mycity4kids.sync.SyncUserInfoService" />
         <service android:name="com.mycity4kids.sync.CompletedTasksService" />
+        <service android:name="com.mycity4kids.tts.ReadArticleService" />
 
         <receiver
             android:name="com.google.android.gms.analytics.AnalyticsReceiver"
