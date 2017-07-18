@@ -119,7 +119,6 @@
                 android:id="@+id/videoWebView"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/article_details_app_bar_height"
-                android:layout_below="@+id/articleViewCountTextView"
                 android:visibility="gone" />
 
             <com.mikhaellopez.circularimageview.CircularImageView
@@ -177,7 +176,7 @@
                 android:layout_marginTop="10dp"
                 android:padding="10dp"
                 android:text="FOLLOW"
-                android:textColor="@color/blog.comments.follow_reply_btn"
+                android:textColor="#507cbe"
                 android:textSize="14sp" />
 
             <WebView

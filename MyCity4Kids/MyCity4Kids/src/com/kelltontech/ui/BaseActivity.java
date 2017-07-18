@@ -481,16 +481,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen 
         finish();
     }
 
-    public String getImeiNumber() {
-        try {
-            TelephonyManager mngr = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
-            return mngr.getDeviceId();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return "";
-        }
-    }
-
     public void followAPICall(String id) {
 
         ArticleBlogFollowRequest _followRequest = new ArticleBlogFollowRequest();

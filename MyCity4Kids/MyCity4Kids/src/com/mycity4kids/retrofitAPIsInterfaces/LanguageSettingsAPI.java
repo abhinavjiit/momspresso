@@ -14,7 +14,7 @@ import retrofit2.http.POST;
  */
 public interface LanguageSettingsAPI {
 
-    @GET("/v1/users/subscribeLanguage/")
+    @GET("/v2/users/subscribeLanguage/")
     Call<LanguageSettingsResponse> getLanguagesList();
 
     @POST("/v1/users/subscribeLanguage/")

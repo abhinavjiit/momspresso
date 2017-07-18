@@ -1,16 +1,43 @@
 package com.mycity4kids.models.response;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.kelltontech.utils.StringUtils;
 
 /**
  * Created by hemant on 19/4/17.
  */
-public class LanguageConfigModel {
+public class LanguageConfigModel implements Parcelable {
     private String langKey;
     private String name;
     private String id;
     private String tag;
     private String display_name;
+
+    public LanguageConfigModel() {
+
+    }
+
+    protected LanguageConfigModel(Parcel in) {
+        langKey = in.readString();
+        name = in.readString();
+        id = in.readString();
+        tag = in.readString();
+        display_name = in.readString();
+    }
+
+    public static final Creator<LanguageConfigModel> CREATOR = new Creator<LanguageConfigModel>() {
+        @Override
+        public LanguageConfigModel createFromParcel(Parcel in) {
+            return new LanguageConfigModel(in);
+        }
+
+        @Override
+        public LanguageConfigModel[] newArray(int size) {
+            return new LanguageConfigModel[size];
+        }
+    };
 
     public String getLangKey() {
         return langKey;
@@ -50,5 +77,19 @@ public class LanguageConfigModel {
 
     public void setDisplay_name(String display_name) {
         this.display_name = display_name;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(langKey);
+        dest.writeString(name);
+        dest.writeString(id);
+        dest.writeString(tag);
+        dest.writeString(display_name);
     }
 }

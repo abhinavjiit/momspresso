@@ -15,7 +15,12 @@ import retrofit2.http.Query;
  */
 public interface SearchArticlesAuthorsAPI {
 
-    //    @GET("apiparentingstop/searchV1")
+    @GET("/v1/search/find")
+    Call<SearchResponse> getAllSearchResult(@Query("q") String searchString,
+                                                 @Query("type") String type,
+                                                 @Query("start") int start,
+                                                 @Query("end") int end);
+
     @GET("/v1/search/find")
     Call<SearchResponse> getSearchArticlesResult(@Query("q") String searchString,
                                                  @Query("type") String type,

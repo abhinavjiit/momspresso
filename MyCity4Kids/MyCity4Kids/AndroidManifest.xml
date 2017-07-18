@@ -517,11 +517,19 @@
             android:name=".ui.activity.ContextualSearchActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activity.ArticleDetailsContainerActivity"
+            android:name=".ui.activity.LanguageSpecificArticleListingActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".ExampleActivity" />
         <activity
-            android:name=".MyActivity"
+            android:name=".ui.activity.SearchAllActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.SubscribeTopicsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.BloggerProfileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.ArticleDetailsContainerActivity"
             android:screenOrientation="portrait" />
 
         <receiver

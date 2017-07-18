@@ -9,7 +9,7 @@
 
     <item
         android:id="@+id/searchButton"
-        android:icon="@drawable/ic_search_white_48dp"
+        android:icon="@drawable/ic_search"
         android:orderInCategory="100"
         android:title="search"
         app:showAsAction="always" />

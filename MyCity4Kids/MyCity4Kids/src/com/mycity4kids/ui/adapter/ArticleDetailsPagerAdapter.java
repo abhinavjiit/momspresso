@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.ui.fragment.ArticleDetailsFragment;
-import com.mycity4kids.ui.fragment.ArticleDetailsFragmentVideoWebView;
 
 import java.util.ArrayList;
 

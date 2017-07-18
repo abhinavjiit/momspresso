@@ -68,8 +68,10 @@ public class LanguageSettingsListAdapter extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
         holder.languageNameTextView.setText(languageSettingsList.get(position).getName());
+        holder.storyCountTextView.setText(languageSettingsList.get(position).getStories() + " " + mContext.getString(R.string.lang_setting_stories_label));
 
         holder.languageStatus.setTag(position);
+
         holder.languageStatus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

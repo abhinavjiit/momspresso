@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -19,27 +18,20 @@ import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
-import com.kelltontech.utils.StringUtils;
 import com.kelltontech.utils.ToastUtils;
-import com.mycity4kids.ExampleActivity;
-import com.mycity4kids.MyActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
-import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
-import com.mycity4kids.models.response.SearchArticleResult;
 import com.mycity4kids.models.response.TrendingListingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
-import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
+import com.mycity4kids.ui.activity.DashboardActivity;
+import com.mycity4kids.ui.activity.ExploreArticleListingTypeFragment;
 import com.mycity4kids.ui.adapter.MainArticleListingAdapter;
-import com.mycity4kids.ui.adapter.NewArticlesListingAdapter;
-import com.mycity4kids.ui.adapter.SearchArticlesListingAdapter;
 
 import java.util.ArrayList;
 
@@ -63,6 +55,7 @@ public class TrendingTopicsTabFragment extends BaseFragment implements View.OnCl
     private RelativeLayout mLodingView;
     private TextView noBlogsTextView;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private int position;
 
     @Nullable
     @Override
@@ -78,6 +71,7 @@ public class TrendingTopicsTabFragment extends BaseFragment implements View.OnCl
 
         if (getArguments() != null) {
             trendingTopicData = getArguments().getParcelable("trendingTopicsData");
+            position = getArguments().getInt("position");
         }
         Log.d("searchName", "" + trendingTopicData.getDisplay_name());
 
@@ -85,8 +79,12 @@ public class TrendingTopicsTabFragment extends BaseFragment implements View.OnCl
 
         adapter = new MainArticleListingAdapter(getActivity());
         adapter.setNewListData(trendingTopicData.getArticleList());
-        listView.setAdapter(adapter);
 
+        if (position == 0) {
+            View headerView = inflater.inflate(R.layout.trending_list_header_item, null, false);
+            listView.addHeaderView(headerView);
+        }
+        listView.setAdapter(adapter);
 
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -109,10 +107,16 @@ public class TrendingTopicsTabFragment extends BaseFragment implements View.OnCl
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                ArticleListingResult parentingListData = (ArticleListingResult) adapterView.getItemAtPosition(i);
 
-                Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
-                if (adapterView.getAdapter() instanceof MainArticleListingAdapter) {
-                    ArticleListingResult parentingListData = (ArticleListingResult) ((MainArticleListingAdapter) adapterView.getAdapter()).getItem(i);
+                if (null == parentingListData) {
+                    ExploreArticleListingTypeFragment searchTopicFrag = new ExploreArticleListingTypeFragment();
+                    Bundle searchBundle = new Bundle();
+                    searchBundle.putString("fragType", "search");
+                    searchTopicFrag.setArguments(searchBundle);
+                    ((DashboardActivity) getActivity()).addFragment(searchTopicFrag, searchBundle, true);
+                } else {
+                    Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
                     intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
                     intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
                     intent.putExtra(Constants.BLOG_SLUG, parentingListData.getBlogPageSlug());
@@ -123,8 +127,7 @@ public class TrendingTopicsTabFragment extends BaseFragment implements View.OnCl
                     intent.putParcelableArrayListExtra("pagerListData", trendingTopicData.getArticleList());
                     startActivity(intent);
                 }
-//                Intent intent = new Intent(getActivity(), ExampleActivity.class);
-//                startActivity(intent);
+
             }
         });
 

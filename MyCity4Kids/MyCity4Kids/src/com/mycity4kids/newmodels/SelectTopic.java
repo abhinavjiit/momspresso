@@ -1,14 +1,40 @@
 package com.mycity4kids.newmodels;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.mycity4kids.models.Topics;
 
 import java.util.ArrayList;
 
-public class SelectTopic {
+public class SelectTopic implements Parcelable {
     private String id;
     private String displayName;
     private String backgroundImageUrl;
     private ArrayList<Topics> childTopics;
+
+    public SelectTopic() {
+
+    }
+
+    protected SelectTopic(Parcel in) {
+        id = in.readString();
+        displayName = in.readString();
+        backgroundImageUrl = in.readString();
+        childTopics = in.createTypedArrayList(Topics.CREATOR);
+    }
+
+    public static final Creator<SelectTopic> CREATOR = new Creator<SelectTopic>() {
+        @Override
+        public SelectTopic createFromParcel(Parcel in) {
+            return new SelectTopic(in);
+        }
+
+        @Override
+        public SelectTopic[] newArray(int size) {
+            return new SelectTopic[size];
+        }
+    };
 
     public String getId() {
         return id;
@@ -40,5 +66,18 @@ public class SelectTopic {
 
     public void setChildTopics(ArrayList<Topics> childTopics) {
         this.childTopics = childTopics;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(displayName);
+        dest.writeString(backgroundImageUrl);
+        dest.writeTypedList(childTopics);
     }
 }

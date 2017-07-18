@@ -64,6 +64,7 @@ public class BaseApplication extends Application {
 
     private static ArrayList<Topics> topicList;
     private static HashMap<Topics, List<Topics>> topicsMap;
+    private static HashMap<String, Topics> selectedTopicsMap;
 
     /*
      * Google Analytics configuration values.
@@ -127,7 +128,15 @@ public class BaseApplication extends Application {
         topicsMap = topicsMaps;
     }
 
-    private static boolean hasLanguagePreferrenceChanged=false;
+    public static HashMap<String, Topics> getSelectedTopicsMap() {
+        return selectedTopicsMap;
+    }
+
+    public static void setSelectedTopicsMap(HashMap<String, Topics> selectedTopicsMap) {
+        BaseApplication.selectedTopicsMap = selectedTopicsMap;
+    }
+
+    private static boolean hasLanguagePreferrenceChanged = false;
 
     public static boolean isHasLanguagePreferrenceChanged() {
         return hasLanguagePreferrenceChanged;

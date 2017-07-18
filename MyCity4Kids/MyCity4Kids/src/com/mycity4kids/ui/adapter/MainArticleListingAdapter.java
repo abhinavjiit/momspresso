@@ -113,7 +113,7 @@ public class MainArticleListingAdapter extends BaseAdapter {
 
     @Override
     public int getViewTypeCount() {
-        return 2;
+        return 1;
     }
 
     @Override

@@ -30,7 +30,9 @@ public class TrendingTopicsPagerAdapter extends FragmentStatePagerAdapter {
 //        switch (position) {
 //            case 0:
         bundle.putParcelable("trendingTopicsData", trendingListingResults.get(position));
+        bundle.putInt("position", position);
         TrendingTopicsTabFragment tab1 = new TrendingTopicsTabFragment();
+
         tab1.setArguments(bundle);
         return tab1;
 //            case 1:

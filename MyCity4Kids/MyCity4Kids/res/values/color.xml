@@ -240,4 +240,72 @@
     <color name="for_you.reason.body">#545454</color>
     <color name="for_you.reason.okay">#507cbe</color>
     <color name="for_you.reason.dont_want_to_see">#545454</color>
+
+    <color name="lang_setting.stories_label">#9c9dac</color>
+    <color name="lang_setting.not_now">#9c9dac</color>
+    <color name="lang_setting.save">#507cbe</color>
+
+    <color name="search.tabs_bg">#e2e3e3</color>
+    <color name="search.tabs_text_label">#545454</color>
+    <color name="search.tabs_indicator">#507cbe</color>
+    <color name="search.article_label">#9c9dac</color>
+    <color name="search.topic_label">#9c9dac</color>
+    <color name="search.author_label">#9c9dac</color>
+    <color name="search.article_title">#545454</color>
+    <color name="search.article_desc">#9c9dac</color>
+    <color name="search.topic_text">#545454</color>
+    <color name="search.author_text">#545454</color>
+    <color name="search.show_more">#507cbe</color>
+
+    <color name="search_topics.text">#515556</color>
+    <color name="search_topics.hint">#515556</color>
+    <color name="search_topics.search_bg">#f3f3f3</color>
+
+    <color name="home_screen.trending_list_header.bg">#f3f3f3</color>
+    <color name="home_screen.trending_list_header.title">#9c9dac</color>
+    <color name="home_screen.trending_list_header.topics_label">#9c9dac</color>
+    <color name="home_screen.trending_list_header.take_me_there">#507cbe</color>
+
+    <color name="subscribe_topics.toolbar.title">#545454</color>
+    <color name="subscribe_topics.cancel">#545454</color>
+    <color name="subscribe_topics.save">#507cbe</color>
+
+    <color name="myprofile.toolbar.title">#545454</color>
+    <color name="myprofile.dp.bg">#44ff00ff</color>
+    <color name="myprofile.name">#545454</color>
+    <color name="myprofile.author_type">#545454</color>
+    <color name="myprofile.bio">#545454</color>
+    <color name="myprofile.following_bg">#ebebee</color>
+    <color name="myprofile.follower_bg">#f5f6f8</color>
+    <color name="myprofile.rank_bg">#e7e8ea</color>
+    <color name="myprofile.following_label">#507cbe</color>
+    <color name="myprofile.followers_label">#507cbe</color>
+    <color name="myprofile.rank_label">#545454</color>
+    <color name="myprofile.section.articles_label">#545454</color>
+    <color name="myprofile.section.videos_label">#545454</color>
+    <color name="myprofile.section.activity_label">#545454</color>
+    <color name="myprofile.section.myranking_label">#545454</color>
+    <color name="myprofile.section.settings_label">#545454</color>
+    <color name="myprofile.section.signout_label">#545454</color>
+
+
+    <color name="blogger_profile.toolbar.title">#545454</color>
+    <color name="blogger_profile.dp.bg">#44ff00ff</color>
+    <color name="blogger_profile.name">#545454</color>
+    <color name="blogger_profile.author_type">#545454</color>
+    <color name="blogger_profile.bio">#545454</color>
+    <color name="blogger_profile.follow_button">#ffffff</color>
+    <color name="blogger_profile.unfollow_button">#507cbe</color>
+    <color name="blogger_profile.following_bg">#ebebee</color>
+    <color name="blogger_profile.follower_bg">#f5f6f8</color>
+    <color name="blogger_profile.rank_bg">#e7e8ea</color>
+    <color name="blogger_profile.following_label">#507cbe</color>
+    <color name="blogger_profile.followers_label">#507cbe</color>
+    <color name="blogger_profile.rank_label">#545454</color>
+    <color name="blogger_profile.section.articles_label">#545454</color>
+    <color name="blogger_profile.section.videos_label">#545454</color>
+    <color name="blogger_profile.section.activity_label">#545454</color>
+    <color name="blogger_profile.section.myranking_label">#545454</color>
+    <color name="blogger_profile.section.settings_label">#545454</color>
+    <color name="blogger_profile.section.signout_label">#545454</color>
 </resources>

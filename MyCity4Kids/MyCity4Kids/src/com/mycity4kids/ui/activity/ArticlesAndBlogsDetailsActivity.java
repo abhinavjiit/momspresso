@@ -865,9 +865,9 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
             holder.dateTxt = (TextView) view.findViewById(R.id.txvDate);
             holder.replyTxt = (TextView) view.findViewById(R.id.txvReply);
             holder.editTxt = (TextView) view.findViewById(R.id.txvEdit);
-            holder.replierImageView = (CircularImageView) view.findViewById(R.id.replyUserImageView);
-            holder.replyCountTextView = (TextView) view.findViewById(R.id.replyCountTextView);
-            holder.replierUsernameTextView = (TextView) view.findViewById(R.id.replyUserNameTextView);
+//            holder.replierImageView = (CircularImageView) view.findViewById(R.id.replyUserImageView);
+//            holder.replyCountTextView = (TextView) view.findViewById(R.id.replyCountTextView);
+//            holder.replierUsernameTextView = (TextView) view.findViewById(R.id.replyUserNameTextView);
             holder.replyCommentView = (RelativeLayout) view.findViewById(R.id.replyRelativeLayout);
 
             holder.commentorsImage.setOnClickListener(this);
@@ -2191,35 +2191,35 @@ public class ArticlesAndBlogsDetailsActivity extends BaseActivity implements OnC
                     cdata.getReplies().add(updatedComment);
 
                     RelativeLayout replyCommentView = (RelativeLayout) commentLayout.getChildAt(i).findViewById(R.id.replyRelativeLayout);
-                    ImageView replierImageView = (ImageView) replyCommentView.findViewById(R.id.replyUserImageView);
-                    TextView replyCountTextView = (TextView) replyCommentView.findViewById(R.id.replyCountTextView);
-                    TextView replierUsernameTextView = (TextView) replyCommentView.findViewById(R.id.replyUserNameTextView);
+//                    ImageView replierImageView = (ImageView) replyCommentView.findViewById(R.id.replyUserImageView);
+//                    TextView replyCountTextView = (TextView) replyCommentView.findViewById(R.id.replyCountTextView);
+//                    TextView replierUsernameTextView = (TextView) replyCommentView.findViewById(R.id.replyUserNameTextView);
 
-                    if (cdata.getReplies() != null && cdata.getReplies().size() > 0) {
-
-                        replyCommentView.setVisibility(View.VISIBLE);
-                        if (cdata.getReplies().size() > 1) {
-                            replyCountTextView.setText(cdata.getReplies().size() + " replies");
-                        } else {
-                            replyCountTextView.setText(cdata.getReplies().size() + " reply");
-                        }
-                        replierUsernameTextView.setText("" + cdata.getReplies().get(0).getName());
-
-                        if (cdata.getProfile_image() != null && !StringUtils.isNullOrEmpty(cdata.getProfile_image().getClientAppMin())) {
-                            try {
-                                Picasso.with(this).load(cdata.getReplies().get(0).getProfile_image().getClientAppMin())
-                                        .placeholder(R.drawable.default_commentor_img).into(replierImageView);
-                            } catch (Exception e) {
-                                Crashlytics.logException(e);
-                                Log.d("MC4kException", Log.getStackTraceString(e));
-                                Picasso.with(this).load(R.drawable.default_commentor_img).into(replierImageView);
-                            }
-                        } else {
-                            Picasso.with(this).load(R.drawable.default_commentor_img).into(replierImageView);
-                        }
-                    } else {
-                        replyCommentView.setVisibility(View.GONE);
-                    }
+//                    if (cdata.getReplies() != null && cdata.getReplies().size() > 0) {
+//
+//                        replyCommentView.setVisibility(View.VISIBLE);
+//                        if (cdata.getReplies().size() > 1) {
+//                            replyCountTextView.setText(cdata.getReplies().size() + " replies");
+//                        } else {
+//                            replyCountTextView.setText(cdata.getReplies().size() + " reply");
+//                        }
+//                        replierUsernameTextView.setText("" + cdata.getReplies().get(0).getName());
+//
+//                        if (cdata.getProfile_image() != null && !StringUtils.isNullOrEmpty(cdata.getProfile_image().getClientAppMin())) {
+//                            try {
+//                                Picasso.with(this).load(cdata.getReplies().get(0).getProfile_image().getClientAppMin())
+//                                        .placeholder(R.drawable.default_commentor_img).into(replierImageView);
+//                            } catch (Exception e) {
+//                                Crashlytics.logException(e);
+//                                Log.d("MC4kException", Log.getStackTraceString(e));
+//                                Picasso.with(this).load(R.drawable.default_commentor_img).into(replierImageView);
+//                            }
+//                        } else {
+//                            Picasso.with(this).load(R.drawable.default_commentor_img).into(replierImageView);
+//                        }
+//                    } else {
+//                        replyCommentView.setVisibility(View.GONE);
+//                    }
                 }
             }
         }

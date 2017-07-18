@@ -89,6 +89,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.CircleTransformation;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.BloggerDashboardActivity;
+import com.mycity4kids.ui.activity.BloggerProfileActivity;
 import com.mycity4kids.ui.activity.FilteredTopicsArticleListingActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
@@ -1025,7 +1026,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
                         trackArticleReadTime.resetTimer();
                     }
-                    Intent intentnn = new Intent(getActivity(), BloggerDashboardActivity.class);
+                    Intent intentnn = new Intent(getActivity(), BloggerProfileActivity.class);
                     intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, detailData.getUserId());
                     intentnn.putExtra(AppConstants.AUTHOR_NAME, detailData.getUserName());
                     intentnn.putExtra(Constants.FROM_SCREEN, "Article Details");

@@ -2,11 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/action_profile"
-        android:icon="@drawable/ic_add"
+        android:icon="@drawable/selector_profile_tab"
         android:title="" />
     <item
         android:id="@+id/action_notification"
-        android:icon="@drawable/ic_bell"
+        android:icon="@drawable/selector_notification_tab"
         android:title="" />
     <item
         android:id="@+id/action_home"
@@ -14,10 +14,10 @@
         android:title="" />
     <item
         android:id="@+id/action_write"
-        android:icon="@drawable/ic_write_blog"
+        android:icon="@drawable/selector_write_blog_tab"
         android:title="" />
     <item
         android:id="@+id/action_location"
-        android:icon="@drawable/ic_location"
+        android:icon="@drawable/selector_events_tab"
         android:title="" />
 </menu>

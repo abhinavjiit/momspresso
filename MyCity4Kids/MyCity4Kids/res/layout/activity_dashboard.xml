@@ -18,12 +18,13 @@
             android:id="@+id/toolbarRelativeLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/toolbarTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:text="@string/home.toolbar.title"
                 android:textColor="@color/home.toolbar.titlecolor"
                 android:textSize="20sp"
@@ -36,6 +37,19 @@
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@+id/toolbarTitle"
                 android:src="@drawable/arrow_bluexxhdpidown" />
+
+            <ImageView
+                android:id="@+id/searchAllImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:paddingBottom="5dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="10dp"
+                android:paddingTop="5dp"
+                android:src="@drawable/ic_search" />
 
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>

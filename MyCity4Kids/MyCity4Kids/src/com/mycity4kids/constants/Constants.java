@@ -236,6 +236,8 @@ public class Constants {
     public static final String TAB_POPULAR = "POPULAR";
     public static final String TAB_IN_YOUR_CITY = "IN YOUR CITY";
     public static final String TAB_FOR_YOU = "FOR YOU";
+    public static final String TAB_LANGUAGE = "LANGUAGES";
+    public static final String TAB_MOMSPRESSO = "MOMSPRESSO";
 
     public static String SORT_TYPE = "sorttype";
     public static String BLOG_TITLE = "blog_title";

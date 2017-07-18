@@ -24,6 +24,7 @@ import java.util.ArrayList;
 public class ParentTopicsGridAdapter extends BaseAdapter {
 
     private ArrayList<ExploreTopicsModel> topicsList;
+    private ArrayList<ExploreTopicsModel> arraylist;
     private Context mContext;
     private LayoutInflater mInflator;
     private final float density;
@@ -100,11 +101,30 @@ public class ParentTopicsGridAdapter extends BaseAdapter {
 
     public void setDatalist(ArrayList<ExploreTopicsModel> datalist) {
         this.topicsList = datalist;
+        this.arraylist = new ArrayList<ExploreTopicsModel>();
+        this.arraylist.addAll(datalist);
     }
 
     class ViewHolder {
         ImageView tagsImageView;
         TextView topicsNameTextView;
+    }
+
+    // Filter Class
+    public void filter(String charText) {
+        charText = charText.toLowerCase();
+        topicsList.clear();
+        if (charText.length() == 0) {
+            topicsList.addAll(arraylist);
+        } else {
+            for (ExploreTopicsModel wp : arraylist) {
+                if (wp.getDisplay_name().toLowerCase()
+                        .contains(charText)) {
+                    topicsList.add(wp);
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 
 }

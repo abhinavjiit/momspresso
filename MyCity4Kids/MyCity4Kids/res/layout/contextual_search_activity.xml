@@ -42,7 +42,7 @@
                 android:layout_centerVertical="true"
                 android:paddingLeft="10dp"
                 android:paddingRight="20dp"
-                android:src="@drawable/ic_search_white_48dp" />
+                android:src="@drawable/ic_search" />
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 

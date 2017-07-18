@@ -5,12 +5,15 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v7.widget.Toolbar;
+import android.support.v4.app.FragmentManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.TextView;
 
@@ -25,17 +28,15 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.ExploreTopicsModel;
 import com.mycity4kids.models.ExploreTopicsResponse;
-import com.mycity4kids.models.Topics;
-import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.ParentTopicsGridAdapter;
-import com.mycity4kids.ui.fragment.FragmentMC4KHomeNew;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import retrofit2.Retrofit;
 
@@ -44,32 +45,109 @@ import retrofit2.Retrofit;
  */
 public class ExploreArticleListingTypeFragment extends BaseFragment {
 
-    String[] sections = {"TRENDING", "EDITOR'S PICK", "FOR YOU", "RECENT", "POPULAR", "IN YOUR CITY"};
+    String[] sections = {"TRENDING", "EDITOR'S PICK", "FOR YOU", "RECENT", "POPULAR", "IN YOUR CITY", "LANGUAGES", "VIDEOS", "MOMSPRESSO"};
     private ArrayList<ExploreTopicsModel> mainTopicsList;
+    private String fragType = "";
 
     private TabLayout tabLayout;
     private GridView gridview;
-    private Toolbar mToolbar;
 
     private ParentTopicsGridAdapter adapter;
     private View view;
+    private EditText searchTopicsEditText;
+    private TextView exploreCategoriesLabel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.explore_article_listing_type_activity, container, false);
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.explore_article_listing_type_activity);
+        if (getArguments() != null) {
+            fragType = getArguments().getString("fragType", "");
+        }
 
-        mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
-//        setSupportActionBar(mToolbar);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        getSupportActionBar().setTitle("SELECT AN OPTION");
         tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
         gridview = (GridView) view.findViewById(R.id.gridview);
+        exploreCategoriesLabel = (TextView) view.findViewById(R.id.exploreCategoriesLabel);
+        searchTopicsEditText = (EditText) view.findViewById(R.id.searchTopicsEditText);
 
+        if (fragType.equals("search")) {
+            tabLayout.setVisibility(View.GONE);
+            searchTopicsEditText.setVisibility(View.VISIBLE);
+            exploreCategoriesLabel.setText(getString(R.string.search_topics_title));
+        } else {
+//            tabLayout.setVisibility(View.VISIBLE);
+            searchTopicsEditText.setVisibility(View.GONE);
+            exploreCategoriesLabel.setText(getString(R.string.explore_listing_explore_categories_title));
+
+            setUpTabLayout();
+        }
+        try {
+            FileInputStream fileInputStream = getActivity().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+            String fileContent = AppUtils.convertStreamToString(fileInputStream);
+            Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+            ExploreTopicsResponse res = gson.fromJson(fileContent, ExploreTopicsResponse.class);
+            createTopicsData(res);
+        } catch (FileNotFoundException e) {
+            Crashlytics.logException(e);
+            Log.d("FileNotFoundException", Log.getStackTraceString(e));
+            Retrofit retro = BaseApplication.getInstance().getRetrofit();
+            final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
+
+        }
+
+        adapter = new ParentTopicsGridAdapter(getActivity());
+        gridview.setAdapter(adapter);
+        adapter.setDatalist(mainTopicsList);
+
+        searchTopicsEditText.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable arg0) {
+                // TODO Auto-generated method stub
+                String text = searchTopicsEditText.getText().toString().toLowerCase();
+                adapter.filter(text);
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence arg0, int arg1,
+                                          int arg2, int arg3) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void onTextChanged(CharSequence arg0, int arg1, int arg2,
+                                      int arg3) {
+                // TODO Auto-generated method stub
+            }
+        });
+
+        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                if (adapterView.getAdapter() instanceof ParentTopicsGridAdapter) {
+                    ExploreTopicsModel topic = (ExploreTopicsModel) ((ParentTopicsGridAdapter) adapterView.getAdapter()).getItem(position);
+                    if (fragType.equals("search")) {
+                        Intent subscribeTopicIntent = new Intent(getActivity(), SubscribeTopicsActivity.class);
+                        subscribeTopicIntent.putExtra("tabPos", position);
+                        startActivity(subscribeTopicIntent);
+                    } else {
+                        TopicsListingFragment fragment1 = new TopicsListingFragment();
+                        Bundle mBundle1 = new Bundle();
+                        mBundle1.putString("parentTopicId", topic.getId());
+                        fragment1.setArguments(mBundle1);
+                        ((DashboardActivity) getActivity()).addFragment(fragment1, mBundle1, true);
+                    }
+                }
+            }
+        });
+
+        return view;
+    }
+
+    private void setUpTabLayout() {
         for (int i = 0; i < sections.length; i++) {
             tabLayout.addTab(tabLayout.newTab().setText(sections[i]));
         }
+
         tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
         changeTabsFont();
         wrapTabIndicatorToTitle(tabLayout, 25, 25);
@@ -91,6 +169,15 @@ public class ExploreArticleListingTypeFragment extends BaseFragment {
                     cityIntent.putExtra(Constants.SORT_TYPE, Constants.KEY_IN_YOUR_CITY);
                     startActivity(cityIntent);
                     return;
+                } else if (Constants.KEY_TRENDING.equalsIgnoreCase(tab.getText().toString())) {
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+                    fm.popBackStack();
+                    return;
+                } else if (Constants.TAB_LANGUAGE.equalsIgnoreCase(tab.getText().toString())) {
+                    Intent cityIntent = new Intent(getActivity(), LanguageSpecificArticleListingActivity.class);
+                    cityIntent.putExtra(Constants.SORT_TYPE, Constants.KEY_IN_YOUR_CITY);
+                    startActivity(cityIntent);
+                    return;
                 }
                 intent1.putExtra(Constants.FROM_SCREEN, "Topic Articles List");
                 startActivity(intent1);
@@ -106,39 +193,6 @@ public class ExploreArticleListingTypeFragment extends BaseFragment {
 
             }
         });
-        try {
-            FileInputStream fileInputStream = getActivity().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
-            String fileContent = AppUtils.convertStreamToString(fileInputStream);
-            Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
-            ExploreTopicsResponse res = gson.fromJson(fileContent, ExploreTopicsResponse.class);
-            createTopicsData(res);
-        } catch (FileNotFoundException e) {
-            Crashlytics.logException(e);
-            Log.d("FileNotFoundException", Log.getStackTraceString(e));
-            Retrofit retro = BaseApplication.getInstance().getRetrofit();
-            final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
-
-        }
-
-        adapter = new ParentTopicsGridAdapter(getActivity());
-        gridview.setAdapter(adapter);
-        adapter.setDatalist(mainTopicsList);
-
-        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                if (adapterView.getAdapter() instanceof ParentTopicsGridAdapter) {
-                    Topics topic = (Topics) ((ParentTopicsGridAdapter) adapterView.getAdapter()).getItem(position);
-                    TopicsListingFragment fragment1 = new TopicsListingFragment();
-                    Bundle mBundle1 = new Bundle();
-                    mBundle1.putString("parentTopicId", topic.getId());
-                    fragment1.setArguments(mBundle1);
-                    ((DashboardActivity) getActivity()).addFragment(fragment1, mBundle1, true);
-                }
-            }
-        });
-
-        return view;
     }
 
     private void changeTabsFont() {

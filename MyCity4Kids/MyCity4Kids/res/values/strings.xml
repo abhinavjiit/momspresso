@@ -519,9 +519,12 @@
 
     <string name="home_screen.trending.title">TRENDING</string>
     <string name="home_screen.notification.title">NOTIFICATION</string>
-    <string name="home_screen.profile.title">PROFILE</string>
+    <string name="home_screen.profile.title">MY ACCOUNT</string>
     <string name="home_screen.select_an_option.title">SELECT AN OPTION</string>
     <string name="home_screen.editor.title">EDITOR</string>
+    <string name="home_screen.trending_list_header.title">Choose The Topic That You Are Interested To Read About\' Like</string>
+    <string name="home_screen.trending_list_header.topics_label">GETTING PREGNANT, POST PARTUM DEPRESSION ETC.</string>
+    <string name="home_screen.trending_list_header.take_me_there">OKAY GOT IT! TAKE ME THERE</string>
 
     <string-array name="onboarding_title_array">
         <item>HARNESSING THE WISDOM OF MUMS</item>
@@ -566,5 +569,49 @@
     <string name="for_you.reason.why_label">Why am I seeing this?</string>
     <string name="for_you.reason.dont_want_to_see">Don\'t want to see this</string>
     <string name="for_you.reason.okay">OKAY</string>
+
+    <string name="lang_specific.toolbar.title">LANGUAGES</string>
+
+    <string name="lang_setting.stories_label">Stories</string>
+    <string name="lang_setting.not_now">Not now</string>
+    <string name="lang_setting.save">SAVE</string>
+
+    <string name="search.article_label">ARTICLE</string>
+    <string name="search.author_label">AUTHOR</string>
+    <string name="search.topic_label">TOPIC</string>
+    <string name="search.show_more">SHOW MORE</string>
+    <string name="search.article_topic_tab_label">ARTICLES &amp; TOPICS</string>
+    <string name="search.author_tab_label">AUTHORS</string>
+
+    <string name="search_topics.toolbar_title">SELECT CATEGORIES</string>
+    <string name="search_topics.hint">Search with Topics</string>
+    <string name="search_topics.title">CATEGORIES</string>
+
+    <string name="subscribe_topics.toolbar.title">SELECT CATEGORIES</string>
+    <string name="subscribe_topics.cancel">CANCEL</string>
+    <string name="subscribe_topics.save">SAVE</string>
+
+    <string name="myprofile.toolbar.title">MY ACCOUNT</string>
+    <string name="myprofile.following_label">FOLLOWING</string>
+    <string name="myprofile.followers_label">FOLLOWERS</string>
+    <string name="myprofile.section.articles_label">ARTICLES</string>
+    <string name="myprofile.section.videos_label">VIDEOS</string>
+    <string name="myprofile.section.activity_label">ACTIVITY</string>
+    <string name="myprofile.section.myranking_label">MY RANKING</string>
+    <string name="myprofile.section.settings_label">SETTINGS</string>
+    <string name="myprofile.section.signout_label">SIGNOUT</string>
+
+    <string name="blogger_profile.toolbar.title">MY ACCOUNT</string>
+    <string name="blogger_profile.follow_button">FOLLOW</string>
+    <string name="blogger_profile.unfollow_button">FOLLOWING</string>
+    <string name="blogger_profile.following_label">FOLLOWING</string>
+    <string name="blogger_profile.followers_label">FOLLOWERS</string>
+    <string name="blogger_profile.section.articles_label">ARTICLES</string>
+    <string name="blogger_profile.section.videos_label">VIDEOS</string>
+    <string name="blogger_profile.section.activity_label">ACTIVITY</string>
+    <string name="blogger_profile.section.myranking_label">MY RANKING</string>
+    <string name="blogger_profile.section.settings_label">SETTINGS</string>
+    <string name="blogger_profile.section.signout_label">SIGNOUT</string>
+    <string name="blogger_profile.top_3_article">HER TOP 3 ARTICLES</string>
 
 </resources>

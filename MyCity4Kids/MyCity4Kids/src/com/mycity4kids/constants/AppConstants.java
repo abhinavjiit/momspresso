@@ -511,4 +511,11 @@ public class AppConstants {
     public static final String LAUNCH_FRAGMENT = "launchFragment";
     public static final String FRAGMENT_SIGNIN = "signinFragment";
     public static final String FRAGMENT_SIGNUP = "signupFragment";
+
+    public static final String SEARCH_ITEM_TYPE_ARTICLE_HEADER = "articleHeader";
+    public static final String SEARCH_ITEM_TYPE_TOPIC_HEADER = "topicHeader";
+    public static final String SEARCH_ITEM_TYPE_ARTICLE_SHOW_MORE = "articleShowMore";
+    public static final String SEARCH_ITEM_TYPE_TOPIC_SHOW_MORE = "topicShowMore";
+    public static final String SEARCH_ITEM_TYPE_ARTICLE = "article";
+    public static final String SEARCH_ITEM_TYPE_TOPIC = "topic";
 }

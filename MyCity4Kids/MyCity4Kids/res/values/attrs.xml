@@ -17,4 +17,10 @@
         <attr name="articleTitle" format="string" localization="suggested" />
         <attr name="articleImage" format="integer" />
     </declare-styleable>
+
+    <declare-styleable name="SearchArticlesComponent">
+        <attr name="searchArticleTitle" format="string" localization="suggested" />
+        <attr name="searchArticleDesc" format="string" localization="suggested" />
+        <attr name="searchArticleImage" format="integer" />
+    </declare-styleable>
 </resources>

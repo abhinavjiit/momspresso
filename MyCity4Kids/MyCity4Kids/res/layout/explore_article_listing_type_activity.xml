@@ -3,36 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/home_bg"
+    android:background="@color/white"
     android:padding="5dp">
-
-    <!--<android.support.v7.widget.Toolbar-->
-    <!--android:id="@+id/toolbar"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:background="?attr/colorPrimary"-->
-    <!--android:elevation="5dp"-->
-    <!--android:minHeight="?attr/actionBarSize"-->
-    <!--app:theme="@style/ToolbarTheme"-->
-    <!--app:titleTextAppearance="@style/ToolbarTheme.Title">-->
-
-    <!--<RelativeLayout-->
-    <!--android:id="@+id/homeFragmentToolbar"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:visibility="gone">-->
-
-    <!--<com.mycity4kids.widget.CustomFontTextView-->
-    <!--android:id="@+id/toolbarTitle"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:text="@string/home.toolbar.title"-->
-    <!--android:textColor="@color/home.toolbar.titlecolor"-->
-    <!--android:textSize="20sp"-->
-    <!--app:fontName="oswald_regular.ttf" />-->
-
-    <!--</RelativeLayout>-->
-    <!--</android.support.v7.widget.Toolbar>-->
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tab_layout"
@@ -48,11 +20,28 @@
         app:tabTextAppearance="@style/CustomTabText"
         app:tabTextColor="@color/explore_listing.tabbar_text" />
 
+    <com.mycity4kids.widget.CustomFontEditText
+        android:id="@+id/searchTopicsEditText"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_below="@+id/tab_layout"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@color/search_topics.search_bg"
+        android:drawableLeft="@drawable/search"
+        android:drawablePadding="10dp"
+        android:hint="@string/search_topics.hint"
+        android:paddingLeft="15dp"
+        android:textColor="@color/search_topics.text"
+        android:textColorHint="@color/search_topics.hint"
+        android:textSize="16sp"
+        android:visibility="gone" />
+
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/exploreCategoriesLabel"
         android:layout_width="match_parent"
         android:layout_height="52dp"
-        android:layout_below="@+id/tab_layout"
+        android:layout_below="@+id/searchTopicsEditText"
         android:gravity="center"
         android:text="@string/explore_listing.explore_categories.title"
         android:textColor="@color/explore_listing.explore_categories.title"

@@ -440,7 +440,7 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
                 finish();
                 break;
             case R.id.search:
-                Intent intent = new Intent(getApplicationContext(), SearchArticlesAndAuthorsActivity.class);
+                Intent intent = new Intent(getApplicationContext(), SearchAllActivity.class);
                 intent.putExtra(Constants.FILTER_NAME, "");
                 intent.putExtra(Constants.TAB_POSITION, 0);
                 startActivity(intent);

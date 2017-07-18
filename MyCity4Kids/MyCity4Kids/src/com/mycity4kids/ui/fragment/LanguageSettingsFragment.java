@@ -2,11 +2,13 @@ package com.mycity4kids.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -57,6 +59,7 @@ public class LanguageSettingsFragment extends BaseFragment implements View.OnCli
     private LanguageSettingsListAdapter languageSettingsListAdapter;
 
     private ListView languageListView;
+    private TextView notNowTextView, saveTextView;
 
     @Nullable
     @Override
@@ -66,6 +69,12 @@ public class LanguageSettingsFragment extends BaseFragment implements View.OnCli
         setHasOptionsMenu(true);
         languageSettingsList = new ArrayList<>();
         languageListView = (ListView) view.findViewById(R.id.languageSettingListView);
+        saveTextView = (TextView) view.findViewById(R.id.saveTextView);
+        notNowTextView = (TextView) view.findViewById(R.id.notNowTextView);
+
+        notNowTextView.setOnClickListener(this);
+        saveTextView.setOnClickListener(this);
+
         checkLanguageSubscriptionStatus();
         return view;
     }
@@ -90,14 +99,28 @@ public class LanguageSettingsFragment extends BaseFragment implements View.OnCli
                 LanguageSettingsResponse responseData = (LanguageSettingsResponse) response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 //                    responseData.getData().getResult()
-                    for (Map.Entry<String, String> entry : responseData.getData().getResult().entrySet()) {
-                        Log.d("Notification Items = ", entry.getKey() + "/" + entry.getValue());
+                    for (Map<String, String> map : responseData.getData().getResult()) {
+                        Log.d("MAP", map.toString());
                         SubscriptionAndLanguageSettingsModel subscriptionAndLanguageSettingsModel = new SubscriptionAndLanguageSettingsModel();
-                        subscriptionAndLanguageSettingsModel.setStatus(entry.getValue());
-                        subscriptionAndLanguageSettingsModel.setOriginalStatus(entry.getValue());
-                        subscriptionAndLanguageSettingsModel.setName(entry.getKey());
+                        for (Map.Entry<String, String> entry : map.entrySet()) {
+                            if ("stories".equals(entry.getKey())) {
+                                subscriptionAndLanguageSettingsModel.setStories(Integer.parseInt(entry.getValue()));
+                            } else {
+                                subscriptionAndLanguageSettingsModel.setName(entry.getKey());
+                                subscriptionAndLanguageSettingsModel.setOriginalStatus(entry.getValue());
+                                subscriptionAndLanguageSettingsModel.setStatus(entry.getValue());
+                            }
+                        }
                         languageSettingsList.add(subscriptionAndLanguageSettingsModel);
                     }
+//                    for (Map.Entry<String, String> entry : responseData.getData().getResult().entrySet()) {
+//                        Log.d("Notification Items = ", entry.getKey() + "/" + entry.getValue());
+//                        SubscriptionAndLanguageSettingsModel subscriptionAndLanguageSettingsModel = new SubscriptionAndLanguageSettingsModel();
+//                        subscriptionAndLanguageSettingsModel.setStatus(entry.getValue());
+//                        subscriptionAndLanguageSettingsModel.setOriginalStatus(entry.getValue());
+//                        subscriptionAndLanguageSettingsModel.setName(entry.getKey());
+//                        languageSettingsList.add(subscriptionAndLanguageSettingsModel);
+//                    }
                     languageSettingsListAdapter = new LanguageSettingsListAdapter(getActivity(), languageSettingsList);
                     languageListView.setAdapter(languageSettingsListAdapter);
                     Log.d("dwaddawad", "" + languageSettingsList);
@@ -182,7 +205,6 @@ public class LanguageSettingsFragment extends BaseFragment implements View.OnCli
 
                         FileInputStream fileInputStream = getActivity().openFileInput(AppConstants.LANGUAGES_JSON_FILE);
                         String fileContent = AppUtils.convertStreamToString(fileInputStream);
-//            ConfigResult res = new Gson().fromJson(fileContent, ConfigResult.class);
                         LinkedHashMap<String, LanguageConfigModel> retMap = new Gson().fromJson(
                                 fileContent, new TypeToken<LinkedHashMap<String, LanguageConfigModel>>() {
                                 }.getType()
@@ -196,20 +218,12 @@ public class LanguageSettingsFragment extends BaseFragment implements View.OnCli
                                         filter = filter + "," + langEntry.getKey();
                                     }
                                 }
-
-//                                String langKey = SharedPrefUtils.getLanguageConfig(getActivity(), entry.getKey());
-//                                if (!StringUtils.isNullOrEmpty(langKey)) {
-//                                    filter = filter + "," + SharedPrefUtils.getLanguageConfig(getActivity(), entry.getKey());
-//                                } else {
-//                                    if (!isSubsequentCall) {
-//                                        updateConfigSettings();
-//                                        return;
-//                                    }
-//                                }
                             }
                         }
                         SharedPrefUtils.setLanguageFilters(getActivity(), filter);
                         BaseApplication.setHasLanguagePreferrenceChanged(true);
+                        FragmentManager fm = getActivity().getSupportFragmentManager();
+                        fm.popBackStack();
                     }
                 } else {
                     if (null != getActivity()) {
@@ -289,6 +303,14 @@ public class LanguageSettingsFragment extends BaseFragment implements View.OnCli
 
     @Override
     public void onClick(View v) {
-
+        switch (v.getId()) {
+            case R.id.notNowTextView:
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                fm.popBackStack();
+                break;
+            case R.id.saveTextView:
+                updateLanguageSubscription();
+                break;
+        }
     }
 }

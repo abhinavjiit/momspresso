@@ -15,9 +15,7 @@ import android.provider.OpenableColumns;
 import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.text.Spanned;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
@@ -302,8 +300,13 @@ public class AppUtils {
     }
 
     public static String getDeviceId(Context context) {
-        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        return telephonyManager.getDeviceId();
+        try {
+            TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            return telephonyManager.getDeviceId();
+        } catch (SecurityException se) {
+            return "";
+        }
+
     }
 
     public static boolean writeJsonStringToFile(Context context, String jsonString, String fileName) {

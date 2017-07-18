@@ -17,7 +17,7 @@
         app:civ_border_width="1dp"
         app:civ_shadow="false" />
 
-    <TextView
+    <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/authorNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -25,8 +25,8 @@
         android:layout_marginLeft="5dp"
         android:layout_marginStart="5dp"
         android:layout_toRightOf="@+id/authorImageView"
-        android:fontFamily="sans-serif-light"
         android:text=""
-        android:textColor="@color/black_color"
-        android:textSize="18sp" />
+        android:textColor="@color/search.author_text"
+        android:textSize="15sp"
+        app:fontName="oswald_regular.ttf" />
 </RelativeLayout>
