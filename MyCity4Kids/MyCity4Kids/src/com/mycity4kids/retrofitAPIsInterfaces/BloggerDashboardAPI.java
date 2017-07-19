@@ -45,6 +45,12 @@ public interface BloggerDashboardAPI {
     @GET
     Call<ArticleListingResponse> getPublishedArticles(@Url String url);
 
+    @GET("v1/articles/user/{userId}")
+    Call<ArticleListingResponse> getAuthorsPublishedArticles(@Path("userId") String userId,
+                                                             @Query("sort") int sort,
+                                                             @Query("start") int start,
+                                                             @Query("end") int end);
+
     @GET("v1/reports/{userId}/{from}/{to}")
     Call<BloggerAnalyticsResponse> getAnalyticsReport(@Path("userId") String userId,
                                                       @Path("from") String from,

@@ -308,4 +308,42 @@
     <color name="blogger_profile.section.myranking_label">#545454</color>
     <color name="blogger_profile.section.settings_label">#545454</color>
     <color name="blogger_profile.section.signout_label">#545454</color>
+
+    <color name="user_articles.toolbar.title">#545454</color>
+    <color name="user_articles.tabbar.published_label">#545454</color>
+    <color name="user_articles.tabbar.draft_label">#545454</color>
+    <color name="user_articles.draft.title">#545454</color>
+    <color name="user_articles.draft.date">#9c9dac</color>
+    <color name="user_articles.draft.status">#545454</color>
+    <color name="user_articles.draft.edit">#507cbe</color>
+    <color name="user_articles.published.title">#545454</color>
+    <color name="user_articles.published.date">#9c9dac</color>
+    <color name="user_articles.published.stats">#9c9dac</color>
+
+    <color name="app_settings.toolbar.title">#545454</color>
+    <color name="app_settings.tabbar.text">#545454</color>
+    <color name="app_settings.tabbar.edit_prefs">#545454</color>
+    <color name="app_settings.tabbar.change_password">#545454</color>
+    <color name="app_settings.tabbar.edit_profile">#545454</color>
+    <color name="app_settings.edit_profile.hint_fn">#9c9dac</color>
+    <color name="app_settings.edit_profile.text_fn">#545454</color>
+    <color name="app_settings.edit_profile.hint_ln">#9c9dac</color>
+    <color name="app_settings.edit_profile.text_ln">#545454</color>
+    <color name="app_settings.edit_profile.email">#9c9dac</color>
+    <color name="app_settings.edit_profile.hint_phone">#9c9dac</color>
+    <color name="app_settings.edit_profile.text_phone">#545454</color>
+    <color name="app_settings.edit_profile.city">#545454</color>
+    <color name="app_settings.edit_profile.describe_label">#9c9dac</color>
+    <color name="app_settings.edit_profile.text_describe">#545454</color>
+    <color name="app_settings.edit_profile.blog_title_label">#9c9dac</color>
+    <color name="app_settings.edit_profile.text_blog_title">#545454</color>
+    <color name="app_settings.edit_profile.family_detail_label">#9c9dac</color>
+    <color name="app_settings.edit_profile.family_detail_desc">#c8c9d1</color>
+    <color name="app_settings.edit_profile.how_many_child">#545454</color>
+    <color name="app_settings.edit_profile.gender">#9c9dac</color>
+    <color name="app_settings.edit_profile.child">#9c9dac</color>
+    <color name="app_settings.edit_profile.male">#545454</color>
+    <color name="app_settings.edit_profile.female">#545454</color>
+    <color name="app_settings.edit_profile.dob">#545454</color>
+    <color name="app_settings.edit_profile.save">#507cbe</color>
 </resources>

@@ -41,6 +41,8 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.UserAttributeUpdateAPI;
+import com.mycity4kids.ui.activity.AppSettingsActivity;
+import com.mycity4kids.ui.activity.UserPublishedAndDraftsActivity;
 import com.mycity4kids.utils.RoundedTransformation;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
@@ -82,7 +84,9 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
     private View rootView;
     private TextView followingCountTextView, followerCountTextView, rankCountTextView;
     private TextView authorNameTextView, authorTypeTextView, authorBioTextView;
+    private TextView articleSectionTextView, videosSectionTextView, activitySectionTextView, rankingSectionTextView;
     private ImageView imgProfile;
+    private ImageView settingImageView;
 
     private String userId;
 
@@ -96,13 +100,22 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
         followingCountTextView = (TextView) rootView.findViewById(R.id.followingCountTextView);
         followerCountTextView = (TextView) rootView.findViewById(R.id.followerCountTextView);
         rankCountTextView = (TextView) rootView.findViewById(R.id.rankCountTextView);
-
+        articleSectionTextView = (TextView) rootView.findViewById(R.id.articleSectionTextView);
+        videosSectionTextView = (TextView) rootView.findViewById(R.id.videosSectionTextView);
+        activitySectionTextView = (TextView) rootView.findViewById(R.id.activitySectionTextView);
+        rankingSectionTextView = (TextView) rootView.findViewById(R.id.rankingSectionTextView);
         imgProfile = (ImageView) rootView.findViewById(R.id.imgProfile);
+        settingImageView = (ImageView) rootView.findViewById(R.id.settingImageView);
 
         authorNameTextView.setOnClickListener(this);
         authorTypeTextView.setOnClickListener(this);
         authorBioTextView.setOnClickListener(this);
         imgProfile.setOnClickListener(this);
+        articleSectionTextView.setOnClickListener(this);
+        videosSectionTextView.setOnClickListener(this);
+        activitySectionTextView.setOnClickListener(this);
+        rankingSectionTextView.setOnClickListener(this);
+        settingImageView.setOnClickListener(this);
 
         userId = SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId();
 
@@ -292,6 +305,22 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
                 } else {
                     chooseImageOptionPopUp(imgProfile);
                 }
+                break;
+            case R.id.articleSectionTextView:
+                Intent articleIntent = new Intent(getActivity(), UserPublishedAndDraftsActivity.class);
+                articleIntent.putExtra("isPrivateProfile", true);
+                articleIntent.putExtra(Constants.AUTHOR_ID, userId);
+                startActivity(articleIntent);
+                break;
+            case R.id.videosSectionTextView:
+                break;
+            case R.id.activitySectionTextView:
+                break;
+            case R.id.rankingSectionTextView:
+                break;
+            case R.id.settingImageView:
+                Intent settingsIntent = new Intent(getActivity(), AppSettingsActivity.class);
+                startActivity(settingsIntent);
                 break;
         }
     }

@@ -8,26 +8,23 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
-import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -35,12 +32,12 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
-import com.mycity4kids.gtmutils.GTMEventType;
-import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.ArticleDetailRequest;
 import com.mycity4kids.models.request.FollowUnfollowUserRequest;
 import com.mycity4kids.models.request.UpdateUserDetailsRequest;
 import com.mycity4kids.models.response.ArticleDetailResponse;
+import com.mycity4kids.models.response.ArticleListingResponse;
+import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
 import com.mycity4kids.models.response.ImageUploadResponse;
 import com.mycity4kids.models.response.LanguageRanksModel;
@@ -63,6 +60,7 @@ import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 
@@ -96,14 +94,18 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
     private TextView followingCountTextView, followerCountTextView, rankCountTextView;
     private TextView authorNameTextView, authorTypeTextView, authorBioTextView;
     private ImageView imgProfile;
+    private RelativeLayout topArticle_1, topArticle_2, topArticle_3;
     private ImageView imgTopArticle_1, imgTopArticle_2, imgTopArticle_3;
     private TextView txvTopArticle_1, txvTopArticle_2, txvTopArticle_3;
+    private TextView articleSectionTextView, videosSectionTextView, activitySectionTextView, rankingSectionTextView;
     private TextView followButton, unfollowButton;
 
     private Boolean isFollowing = false;
     private String userId;
     private String authorId;
     private TextView toolbarTitle;
+    private LinearLayout topArticleContainer;
+    private TextView topArticleLabel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,8 +128,17 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
         txvTopArticle_1 = (TextView) findViewById(R.id.txvTopArticle_1);
         txvTopArticle_2 = (TextView) findViewById(R.id.txvTopArticle_2);
         txvTopArticle_3 = (TextView) findViewById(R.id.txvTopArticle_3);
+        topArticle_1 = (RelativeLayout) findViewById(R.id.topArticle_1);
+        topArticle_2 = (RelativeLayout) findViewById(R.id.topArticle_2);
+        topArticle_3 = (RelativeLayout) findViewById(R.id.topArticle_3);
+        articleSectionTextView = (TextView) findViewById(R.id.articleSectionTextView);
+        videosSectionTextView = (TextView) findViewById(R.id.videosSectionTextView);
+        activitySectionTextView = (TextView) findViewById(R.id.activitySectionTextView);
+        rankingSectionTextView = (TextView) findViewById(R.id.rankingSectionTextView);
         followButton = (TextView) findViewById(R.id.followTextView);
         unfollowButton = (TextView) findViewById(R.id.unfollowTextView);
+        topArticleLabel = (TextView) findViewById(R.id.topArticleLabel);
+        topArticleContainer = (LinearLayout) findViewById(R.id.topArticleContainer);
 
         authorNameTextView.setOnClickListener(this);
         authorTypeTextView.setOnClickListener(this);
@@ -135,6 +146,10 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
         imgProfile.setOnClickListener(this);
         followButton.setOnClickListener(this);
         unfollowButton.setOnClickListener(this);
+        articleSectionTextView.setOnClickListener(this);
+        videosSectionTextView.setOnClickListener(this);
+        activitySectionTextView.setOnClickListener(this);
+        rankingSectionTextView.setOnClickListener(this);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -150,6 +165,7 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
 
         getUserDetails();
         checkFollowingStatusAPI();
+        getTop3ArticleOfAuthor();
     }
 
     private void getUserDetails() {
@@ -180,11 +196,18 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
         callBookmark.enqueue(isFollowedResponseCallback);
     }
 
+    private void getTop3ArticleOfAuthor() {
+        Retrofit retro = BaseApplication.getInstance().getRetrofit();
+        BloggerDashboardAPI top3ArticlesAPI = retro.create(BloggerDashboardAPI.class);
+        Call<ArticleListingResponse> callBookmark = top3ArticlesAPI.getAuthorsPublishedArticles(authorId, 1, 1, 3);
+        callBookmark.enqueue(top3ArticleResponseListener);
+    }
+
     private void hitFollowUnfollowAPI() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         FollowAPI followAPI = retrofit.create(FollowAPI.class);
         FollowUnfollowUserRequest request = new FollowUnfollowUserRequest();
-        request.setFollowerId(userId);
+        request.setFollowerId(authorId);
 
         if (isFollowing) {
             isFollowing = false;
@@ -432,6 +455,91 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
         }
     };
 
+    private Callback<ArticleListingResponse> top3ArticleResponseListener = new Callback<ArticleListingResponse>() {
+        @Override
+        public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
+            if (response == null || response.body() == null) {
+                showToast(getString(R.string.went_wrong));
+                return;
+            }
+            try {
+                ArticleListingResponse responseData = (ArticleListingResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
+                    if (dataList == null) {
+
+                    } else if (dataList.size() == 1) {
+                        topArticleLabel.setVisibility(View.VISIBLE);
+                        topArticleContainer.setVisibility(View.VISIBLE);
+                        txvTopArticle_1.setText(dataList.get(0).getTitle());
+                        topArticle_2.setVisibility(View.INVISIBLE);
+                        topArticle_3.setVisibility(View.INVISIBLE);
+                        try {
+                            Picasso.with(BloggerProfileActivity.this).load(dataList.get(0).getImageUrl().getMobileWebThumbnail()).
+                                    placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imgTopArticle_1);
+                        } catch (Exception e) {
+                            imgTopArticle_1.setBackgroundResource(R.drawable.article_default);
+                        }
+                    } else if (dataList.size() == 2) {
+                        topArticleLabel.setVisibility(View.VISIBLE);
+                        topArticleContainer.setVisibility(View.VISIBLE);
+                        txvTopArticle_1.setText(dataList.get(0).getTitle());
+                        txvTopArticle_2.setText(dataList.get(1).getTitle());
+                        topArticle_3.setVisibility(View.INVISIBLE);
+                        try {
+                            Picasso.with(BloggerProfileActivity.this).load(dataList.get(0).getImageUrl().getMobileWebThumbnail()).
+                                    placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imgTopArticle_1);
+                        } catch (Exception e) {
+                            imgTopArticle_1.setBackgroundResource(R.drawable.article_default);
+                        }
+                        try {
+                            Picasso.with(BloggerProfileActivity.this).load(dataList.get(1).getImageUrl().getMobileWebThumbnail()).
+                                    placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imgTopArticle_2);
+                        } catch (Exception e) {
+                            imgTopArticle_2.setBackgroundResource(R.drawable.article_default);
+                        }
+                    } else {
+                        topArticleLabel.setVisibility(View.VISIBLE);
+                        topArticleContainer.setVisibility(View.VISIBLE);
+                        txvTopArticle_1.setText(dataList.get(0).getTitle());
+                        txvTopArticle_2.setText(dataList.get(1).getTitle());
+                        txvTopArticle_3.setText(dataList.get(2).getTitle());
+                        try {
+                            Picasso.with(BloggerProfileActivity.this).load(dataList.get(0).getImageUrl().getMobileWebThumbnail()).
+                                    placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imgTopArticle_1);
+                        } catch (Exception e) {
+                            imgTopArticle_1.setBackgroundResource(R.drawable.article_default);
+                        }
+                        try {
+                            Picasso.with(BloggerProfileActivity.this).load(dataList.get(1).getImageUrl().getMobileWebThumbnail()).
+                                    placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imgTopArticle_2);
+                        } catch (Exception e) {
+                            imgTopArticle_2.setBackgroundResource(R.drawable.article_default);
+                        }
+                        try {
+                            Picasso.with(BloggerProfileActivity.this).load(dataList.get(2).getImageUrl().getMobileWebThumbnail()).
+                                    placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imgTopArticle_3);
+                        } catch (Exception e) {
+                            imgTopArticle_3.setBackgroundResource(R.drawable.article_default);
+                        }
+                    }
+                } else {
+
+                }
+            } catch (Exception e) {
+//                showToast(getString(R.string.server_went_wrong));
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
     @Override
     protected void updateUi(Response response) {
 
@@ -473,6 +581,17 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
                 } else {
                     chooseImageOptionPopUp(imgProfile);
                 }
+                break;
+            case R.id.articleSectionTextView:
+                Intent articleIntent = new Intent(this, UserPublishedAndDraftsActivity.class);
+                articleIntent.putExtra(Constants.AUTHOR_ID, authorId);
+                startActivity(articleIntent);
+                break;
+            case R.id.videosSectionTextView:
+                break;
+            case R.id.activitySectionTextView:
+                break;
+            case R.id.rankingSectionTextView:
                 break;
         }
     }

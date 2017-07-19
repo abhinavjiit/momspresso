@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp">
+
+    <com.mycity4kids.widget.CustomFontEditText
+        android:id="@+id/firstNameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/app_settings.edit_profile.hint_fn"
+        android:textColor="@color/app_settings.edit_profile.text_fn"
+        android:textColorHint="@color/app_settings.edit_profile.hint_fn"
+        android:textSize="16sp"
+        app:fontName="oswald.ttf" />
+
+    <com.mycity4kids.widget.CustomFontEditText
+        android:id="@+id/lastNameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/app_settings.edit_profile.hint_ln"
+        android:textColor="@color/app_settings.edit_profile.text_ln"
+        android:textColorHint="@color/app_settings.edit_profile.hint_ln"
+        android:textSize="16sp"
+        app:fontName="oswald.ttf" />
+
+    <com.mycity4kids.widget.CustomFontEditText
+        android:id="@+id/emailEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="email@email.com"
+        android:textColor="@color/app_settings.edit_profile.email"
+        android:textSize="16sp"
+        app:fontName="oswald.ttf" />
+
+    <com.mycity4kids.widget.CustomFontEditText
+        android:id="@+id/phoneEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/app_settings.edit_profile.hint_phone"
+        android:textColor="@color/app_settings.edit_profile.text_phone"
+        android:textColorHint="@color/app_settings.edit_profile.hint_phone"
+        android:textSize="16sp"
+        app:fontName="oswald.ttf" />
+
+    <Spinner
+        android:id="@+id/citySpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:dropDownVerticalOffset="40dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/light_grey1" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:text="@string/app_settings.edit_profile.describe_label"
+        android:textColor="@color/app_settings.edit_profile.describe_label"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:fontName="oswald.ttf" />
+
+    <com.mycity4kids.widget.CustomFontEditText
+        android:id="@+id/describeSelfEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="caoiwj awjda dwoid awnoim v opawd dfoiw w;pawd c,kcawead dawpodaw capodaw dwadd aw wd awd"
+        android:textColor="@color/app_settings.edit_profile.text_describe"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:fontName="oswald.ttf" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/light_grey1" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:text="@string/app_settings.edit_profile.blog_title_label"
+        android:textColor="@color/app_settings.edit_profile.blog_title_label"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:fontName="oswald.ttf" />
+
+    <com.mycity4kids.widget.CustomFontEditText
+        android:id="@+id/blogTitleEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="caoiwj awjda dwoid awnoim v opawd dfoiw w;pawd c,kcawead dawpodaw capodaw dwadd aw wd awd"
+        android:textColor="@color/app_settings.edit_profile.text_blog_title"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:fontName="oswald.ttf" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/light_grey1" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:text="@string/app_settings.edit_profile.family_detail_label"
+        android:textColor="@color/app_settings.edit_profile.family_detail_label"
+        android:textSize="16sp"
+        app:fontName="oswald.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/app_settings.edit_profile.family_detail_desc"
+        android:textColor="@color/app_settings.edit_profile.family_detail_desc"
+        android:textSize="16sp"
+        app:fontName="oswald.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/app_settings.edit_profile.how_many_child"
+        android:textColor="@color/app_settings.edit_profile.how_many_child"
+        android:textSize="16sp"
+        app:fontName="oswald.ttf" />
+
+    <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:dsb_indicatorPopupEnabled="true"
+        app:dsb_max="8"
+        app:dsb_min="1" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/childNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="Child 1" />
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/childNameTextView"
+            android:layout_alignTop="@+id/childNameTextView"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/childNameTextView"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="#507cbe"
+                android:checked="true"
+                android:layoutDirection="rtl"
+                android:padding="4dp"
+                android:text="Male" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="#507cbe"
+                android:layoutDirection="rtl"
+                android:padding="4dp"
+                android:text="Female" />
+        </RadioGroup>
+
+    </RelativeLayout>
+
+</LinearLayout>

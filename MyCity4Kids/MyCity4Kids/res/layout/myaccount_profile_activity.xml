@@ -32,13 +32,14 @@
                 app:civ_shadow="false" />
 
             <ImageView
+                android:id="@+id/settingImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="14dp"
+                android:padding="10dp"
                 android:layout_marginTop="14dp"
-                android:src="@drawable/write_icon"
-                android:tint="@color/white" />
+                android:src="@drawable/ic_edit" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/authorNameTextView"
@@ -179,7 +180,7 @@
             android:layout_width="match_parent"
             android:layout_height="42dp"
             android:layout_below="@+id/statsCountContainer"
-            android:drawableLeft="@drawable/write_icon"
+            android:drawableLeft="@drawable/ic_article"
             android:drawablePadding="20dp"
             android:gravity="center_vertical"
             android:paddingLeft="10dp"
@@ -202,7 +203,7 @@
             android:layout_width="match_parent"
             android:layout_height="42dp"
             android:layout_below="@+id/underline_1"
-            android:drawableLeft="@drawable/write_icon"
+            android:drawableLeft="@drawable/ic_video"
             android:drawablePadding="20dp"
             android:gravity="center_vertical"
             android:paddingLeft="10dp"
@@ -294,7 +295,7 @@
             android:layout_width="match_parent"
             android:layout_height="42dp"
             android:layout_below="@+id/underline_5"
-            android:drawableLeft="@drawable/write_icon"
+            android:drawableLeft="@drawable/ic_sign_out"
             android:drawablePadding="20dp"
             android:gravity="center_vertical"
             android:paddingLeft="10dp"

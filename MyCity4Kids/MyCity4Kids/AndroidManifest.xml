@@ -529,6 +529,12 @@
             android:name=".ui.activity.BloggerProfileActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.activity.UserPublishedAndDraftsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.AppSettingsActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.activity.ArticleDetailsContainerActivity"
             android:screenOrientation="portrait" />
 

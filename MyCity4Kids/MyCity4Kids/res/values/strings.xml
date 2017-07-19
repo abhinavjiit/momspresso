@@ -614,4 +614,29 @@
     <string name="blogger_profile.section.signout_label">SIGNOUT</string>
     <string name="blogger_profile.top_3_article">HER TOP 3 ARTICLES</string>
 
+    <string name="user_article.toolbar.title">ARTICLES</string>
+    <string name="user_article.tabbar.published_label">PUBLISHED</string>
+    <string name="user_article.tabbar.draft_label">DRAFTS</string>
+    <string name="user_article.draft.edit">EDIT DRAFT</string>
+
+    <string name="app_settings.toolbar.title">SETTINGS</string>
+    <string name="app_settings.tabbar.edit_prefs">EDIT PREFERENCES</string>
+    <string name="app_settings.tabbar.change_password">CHANGE PASSWORD</string>
+    <string name="app_settings.tabbar.edit_profile">EDIT DRAFT</string>
+    <string name="app_settings.edit_profile.hint_fn">First Name</string>
+    <string name="app_settings.edit_profile.hint_ln">Last Name</string>
+    <string name="app_settings.edit_profile.hint_phone">Phone</string>
+    <string name="app_settings.edit_profile.describe_label">Describe yourself</string>
+    <string name="app_settings.edit_profile.blog_title_label">Blog Heading</string>
+    <string name="app_settings.edit_profile.family_detail_label">Family Details</string>
+    <string name="app_settings.edit_profile.family_detail_desc">This is just to serve you better and provide you what really suits you. This info would just remain in our records.</string>
+    <string name="app_settings.edit_profile.how_many_child">How many children you have?</string>
+    <string name="app_settings.edit_profile.gender">Gender</string>
+    <string name="app_settings.edit_profile.child">Child</string>
+    <string name="app_settings.edit_profile.male">Male</string>
+    <string name="app_settings.edit_profile.female">Female</string>
+    <string name="app_settings.edit_profile.dob">Date of Birth</string>
+    <string name="app_settings.edit_profile.save">SAVE</string>
+
+
 </resources>
