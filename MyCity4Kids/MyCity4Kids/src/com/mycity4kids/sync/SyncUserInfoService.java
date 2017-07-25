@@ -324,7 +324,7 @@ public class SyncUserInfoService extends IntentService implements UpdateListener
         for (KidsModel kid : kidsList) {
             KidsInfo kidsInfo = new KidsInfo();
             kidsInfo.setName(kid.getName());
-            kidsInfo.setDate_of_birth(convertTime(kid.getBirthDay()));
+            kidsInfo.setDate_of_birth(convertTime(""+kid.getBirthDay()));
             kidsInfo.setColor_code(kid.getColorCode());
             kidsInfoArrayList.add(kidsInfo);
         }

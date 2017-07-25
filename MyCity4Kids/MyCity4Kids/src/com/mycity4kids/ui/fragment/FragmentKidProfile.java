@@ -341,12 +341,12 @@ public class FragmentKidProfile extends BaseFragment implements View.OnClickList
                     KidsModel kmodel = new KidsModel();
                     if (id == i) {
                         kmodel.setName(name.getText().toString().trim());
-                        kmodel.setBirthDay("" + convertStringToTimestamp(kidBdy.getText().toString().trim()));
+                        kmodel.setBirthDay(convertStringToTimestamp(kidBdy.getText().toString().trim()));
                         kmodel.setColorCode(new ColorCode().getValue("" + mColorfrKid.getTag()));
 //                        kmodel.setGender();
                     } else {
                         kmodel.setName(allKidsInfo.get(i).getName());
-                        kmodel.setBirthDay("" + convertStringToTimestamp(allKidsInfo.get(i).getDate_of_birth()));
+                        kmodel.setBirthDay(convertStringToTimestamp(allKidsInfo.get(i).getDate_of_birth()));
                         kmodel.setColorCode(allKidsInfo.get(i).getColor_code());
                     }
                     kidsModelArrayList.add(kmodel);
@@ -438,7 +438,7 @@ public class FragmentKidProfile extends BaseFragment implements View.OnClickList
             for (KidsModel kid : kidsModelArrayList) {
                 KidsInfo kidsInfo = new KidsInfo();
                 kidsInfo.setName(kid.getName());
-                kidsInfo.setDate_of_birth(convertTime(kid.getBirthDay()));
+                kidsInfo.setDate_of_birth(convertTime(""+kid.getBirthDay()));
                 kidsInfo.setColor_code(kid.getColorCode());
                 kidsInfo.setGender(kid.getGender());
 

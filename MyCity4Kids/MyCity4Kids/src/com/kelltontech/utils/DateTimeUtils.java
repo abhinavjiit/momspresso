@@ -239,6 +239,23 @@ public class DateTimeUtils {
         }
     }
 
+    public static String getKidsDOBNanoMilliTimestamp(String timeStampStr) {
+
+        try {
+            Long dobTime = Long.parseLong(timeStampStr);
+            java.text.DateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            Date netDate;
+            if (dobTime > 1000000000000l) {
+                netDate = new Date(dobTime);
+            } else {
+                netDate = new Date(dobTime * 1000);
+            }
+            return sdf.format(netDate);
+        } catch (Exception ex) {
+            return "xx";
+        }
+    }
+
     public static long getTimestampFromStringDate(String date) {
         java.text.DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
         Date dated = null;

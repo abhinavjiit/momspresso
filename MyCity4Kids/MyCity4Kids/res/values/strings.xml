@@ -623,6 +623,7 @@
     <string name="app_settings.tabbar.edit_prefs">EDIT PREFERENCES</string>
     <string name="app_settings.tabbar.change_password">CHANGE PASSWORD</string>
     <string name="app_settings.tabbar.edit_profile">EDIT DRAFT</string>
+
     <string name="app_settings.edit_profile.hint_fn">First Name</string>
     <string name="app_settings.edit_profile.hint_ln">Last Name</string>
     <string name="app_settings.edit_profile.hint_phone">Phone</string>
@@ -637,6 +638,48 @@
     <string name="app_settings.edit_profile.female">Female</string>
     <string name="app_settings.edit_profile.dob">Date of Birth</string>
     <string name="app_settings.edit_profile.save">SAVE</string>
+    <string name="app_settings.edit_profile.toast_fn_empty">First Name cannot be empty</string>
+    <string name="app_settings.edit_profile.toast_blog_title_empty">Blog Title cannot be empty</string>
+    <string name="app_settings.edit_profile.toast_user_bio_empty">User bio cannot be empty</string>
+    <string name="app_settings.edit_profile.toast_user_bio_max">Maximum limit for bio is</string>
+    <string name="app_settings.edit_profile.toast_user_bio_words">words</string>
 
+    <string name="app_settings.edit_prefs.notifications">NOTIFICATIONS</string>
+    <string name="app_settings.edit_prefs.subscriptions">SUBSCRIPTIONS</string>
+    <string name="app_settings.edit_prefs.add_account">ADD ACCOUNTS</string>
+    <string name="app_settings.edit_prefs.facebook">FACEBOOK</string>
+    <string name="app_settings.edit_prefs.twitter">TWITTER</string>
+    <string name="app_settings.edit_prefs.google">GOOGLE</string>
+    <string name="app_settings.edit_prefs.add">ADD</string>
+    <string name="app_settings.edit_prefs.topics_interested">TOPICS OF INTEREST</string>
+    <string name="app_settings.edit_prefs.add_topics">ADD TOPICS</string>
+    <string name="app_settings.edit_prefs.more_topics">MORE...</string>
+    <string name="app_settings.edit_prefs.pref_lang">PREFERRED LANGUAGES</string>
 
+    <string name="app_settings.change_pass.hint_current_pass">Current Password</string>
+    <string name="app_settings.change_pass.hint_new_pass">New Password</string>
+    <string name="app_settings.change_pass.hint_confirm_pass">Confirm Password</string>
+    <string name="app_settings.change_pass.save">SAVE</string>
+    <string name="app_settings.change_pass.toast_current_pass_empty">Current password cannot be empty</string>
+    <string name="app_settings.change_pass.toast_new_pass_empty">New password cannot be empty</string>
+    <string name="app_settings.change_pass.toast_confirm_pass_match">New passwords do not match</string>
+    <string name="app_settings.change_pass.pass_update_fail">Current password is incorrect</string>
+    <string name="app_settings.change_pass.pass_update_success">Password updated successfully</string>
+
+    <string name="blog_setup.toolbar.title">SETUP A BLOG</string>
+    <string name="blog_setup.get_started_label">LET\'S GET YOU STARTED FOR YOUR FIRST BLOG</string>
+    <string name="blog_setup.one_time_label">Setup a blog is a one time process.</string>
+    <string name="blog_setup.okay">OKAY</string>
+    <string name="blog_setup.blog_title_label">BLOG TITLE</string>
+    <string name="blog_setup.blog_title_desc">This is like a title of your digital book and encompasses a description of all your blog posts that you\'ll be publishing here. Eg: Mums diary, My monologue.</string>
+    <string name="blog_setup.hint_blog_title">Type here </string>
+    <string name="blog_setup.about_yourself_label">ABOUT YOURSELF</string>
+    <string name="blog_setup.about_desc">Tell the readers about yourself.</string>
+    <string name="blog_setup.hint_about">Type here </string>
+    <string name="blog_setup.profile_pic_label">PROFILE PICTURE</string>
+    <string name="blog_setup.profile_pic_desc">This is visible to your readers and helps them associate with your writing.</string>
+    <string name="blog_setup.your_details">YOUR DETAILS</string>
+    <string name="blog_setup.your_detail_desc">These details will not show on your public profile but will be used.</string>
+    <string name="blog_setup.hint_phone">Phone Number</string>
+    <string name="blog_setup.save_publish">SAVE &amp; PUBLISH</string>
 </resources>

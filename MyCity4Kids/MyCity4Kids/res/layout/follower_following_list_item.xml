@@ -18,7 +18,7 @@
         app:civ_border_width="1dp"
         app:civ_shadow="false" />
 
-    <TextView
+    <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/authorNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -26,50 +26,57 @@
         android:layout_marginLeft="5dp"
         android:layout_marginStart="5dp"
         android:layout_toEndOf="@+id/authorImageView"
-        android:layout_toLeftOf="@+id/followTextView"
+        android:layout_toLeftOf="@+id/followingTextView"
         android:layout_toRightOf="@+id/authorImageView"
-        android:layout_toStartOf="@+id/followTextView"
+        android:layout_toStartOf="@+id/followingTextView"
         android:background="@color/white_color"
         android:fontFamily="sans-serif-light"
         android:gravity="center_vertical"
         android:text=""
-        android:textColor="@color/black_color"
-        android:textSize="18sp" />
+        android:textColor="@color/follower_following_list.author_name"
+        android:textSize="14sp"
+        app:fontName="oswald_regular.ttf" />
 
-    <TextView
+    <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/followTextView"
-        android:layout_width="85dp"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
-        android:background="@color/white_color"
-        android:gravity="right"
-        android:paddingBottom="8dp"
-        android:paddingTop="8dp"
+        android:background="@drawable/follow_topic_author_bg"
+        android:gravity="center"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp"
         android:text="FOLLOW"
-        android:textColor="#507cbe"
-        android:textSize="12sp" />
+        android:textColor="@color/follower_following_list.follow_label"
+        android:textSize="14sp"
+        app:fontName="oswald.ttf" />
 
-    <TextView
+    <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/followingTextView"
-        android:layout_width="85dp"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
-        android:background="@color/white_color"
+        android:background="@drawable/unfollow_topic_author_bg"
         android:foregroundGravity="center"
-        android:gravity="right"
-        android:paddingBottom="8dp"
-        android:paddingTop="8dp"
+        android:gravity="center"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp"
         android:text="FOLLOWING"
-        android:textColor="#507cbe"
-        android:textSize="12sp" />
+        android:textColor="@color/follower_following_list.following_label"
+        android:textSize="14sp"
+        app:fontName="oswald.ttf" />
 
     <RelativeLayout
         android:id="@+id/relativeLoadingView"
@@ -78,6 +85,7 @@
         android:layout_alignEnd="@+id/followTextView"
         android:layout_alignRight="@+id/followTextView"
         android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/authorNameTextView"
         android:layout_toRightOf="@+id/authorNameTextView"
         android:visibility="gone">
 

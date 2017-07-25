@@ -518,4 +518,5 @@ public class AppConstants {
     public static final String SEARCH_ITEM_TYPE_TOPIC_SHOW_MORE = "topicShowMore";
     public static final String SEARCH_ITEM_TYPE_ARTICLE = "article";
     public static final String SEARCH_ITEM_TYPE_TOPIC = "topic";
+    public static final int MAX_ALLOWED_CHILD_COUNT = 8;
 }

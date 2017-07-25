@@ -37,8 +37,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="14dp"
-                android:padding="10dp"
                 android:layout_marginTop="14dp"
+                android:padding="10dp"
                 android:src="@drawable/ic_edit" />
 
             <com.mycity4kids.widget.CustomFontTextView
@@ -91,6 +91,7 @@
             android:layout_below="@+id/personalDetailsContainer">
 
             <LinearLayout
+                android:id="@+id/followingContainer"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -119,6 +120,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/followerContainer"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

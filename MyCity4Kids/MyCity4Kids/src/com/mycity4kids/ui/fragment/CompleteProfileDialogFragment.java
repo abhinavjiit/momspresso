@@ -257,7 +257,7 @@ public class CompleteProfileDialogFragment extends DialogFragment implements Vie
             }
             long bdaytimestamp = convertStringToTimestamp(ki.getDate_of_birth());
             if (bdaytimestamp != 0) {
-                kmodel.setBirthDay("" + bdaytimestamp);
+                kmodel.setBirthDay(bdaytimestamp);
             } else {
                 Toast.makeText(getActivity(), "incorrect kids bday", Toast.LENGTH_SHORT).show();
                 return;
@@ -581,7 +581,7 @@ public class CompleteProfileDialogFragment extends DialogFragment implements Vie
             for (KidsModel kid : kidsModelArrayList) {
                 KidsInfo kidsInfo = new KidsInfo();
                 kidsInfo.setName(kid.getName());
-                kidsInfo.setDate_of_birth(convertTime(kid.getBirthDay()));
+                kidsInfo.setDate_of_birth(convertTime(""+kid.getBirthDay()));
                 kidsInfoArrayList.add(kidsInfo);
             }
             for (KidsInfo kids : kidsInfoArrayList) {

@@ -325,6 +325,8 @@
     <color name="app_settings.tabbar.edit_prefs">#545454</color>
     <color name="app_settings.tabbar.change_password">#545454</color>
     <color name="app_settings.tabbar.edit_profile">#545454</color>
+
+    <color name="app_settings.edit_profile.edit_text_underline">#9c9dac</color>
     <color name="app_settings.edit_profile.hint_fn">#9c9dac</color>
     <color name="app_settings.edit_profile.text_fn">#545454</color>
     <color name="app_settings.edit_profile.hint_ln">#9c9dac</color>
@@ -346,4 +348,58 @@
     <color name="app_settings.edit_profile.female">#545454</color>
     <color name="app_settings.edit_profile.dob">#545454</color>
     <color name="app_settings.edit_profile.save">#507cbe</color>
+
+    <color name="app_settings.edit_prefs.notifications">#515556</color>
+    <color name="app_settings.edit_prefs.subscriptions">#515556</color>
+    <color name="app_settings.edit_prefs.add_account">#515556</color>
+    <color name="app_settings.edit_prefs.facebook">#545454</color>
+    <color name="app_settings.edit_prefs.twitter">#545454</color>
+    <color name="app_settings.edit_prefs.google">#545454</color>
+    <color name="app_settings.edit_prefs.add">#507cbe</color>
+    <color name="app_settings.edit_prefs.topics_interested">#515556</color>
+    <color name="app_settings.edit_prefs.add_topics">#507cbe</color>
+    <color name="app_settings.edit_prefs.more_topics">#507cbe</color>
+    <color name="app_settings.edit_prefs.pref_lang_label">#515556</color>
+    <color name="app_settings.edit_prefs.pref_lang_name">#545454</color>
+    <color name="app_settings.edit_prefs.subs_notif_name">#545454</color>
+    <color name="app_settings.edit_prefs.email_subs_name">#545454</color>
+    <color name="app_settings.edit_prefs.follow_topic_text">#507cbe</color>
+    <color name="app_settings.edit_prefs.unfollow_topic_text">#ffffff</color>
+
+    <color name="app_settings.change_pass.edit_text_underline">#cccccc</color>
+    <color name="app_settings.change_pass.hint_current_pass">#9c9dac</color>
+    <color name="app_settings.change_pass.hint_new_pass">#9c9dac</color>
+    <color name="app_settings.change_pass.hint_confirm_pass">#9c9dac</color>
+    <color name="app_settings.change_pass.text_current_pass">#545454</color>
+    <color name="app_settings.change_pass.text_new_pass">#545454</color>
+    <color name="app_settings.change_pass.text_confirm_pass">#545454</color>
+    <color name="app_settings.change_pass.save">#507cbe</color>
+
+    <color name="follower_following_list.follow_label">#507cbe</color>
+    <color name="follower_following_list.following_label">#ffffff</color>
+    <color name="follower_following_list.author_name">#545454</color>
+
+    <color name="blog_setup.toolbar.title">#545454</color>
+    <color name="blog_setup.underline">#9c9dac</color>
+    <color name="blog_setup.get_started_label">#515556</color>
+    <color name="blog_setup.get_started_label_2">#98b2d9</color>
+    <color name="blog_setup.one_time_label">#9c9dac</color>
+    <color name="blog_setup.okay">#ffffff</color>
+    <color name="blog_setup.blog_title_label">#545454</color>
+    <color name="blog_setup.blog_title_bg">#f6f9fe</color>
+    <color name="blog_setup.blog_title_desc">#9c9dac</color>
+    <color name="blog_setup.hint_blog_title">#9c9dac</color>
+    <color name="blog_setup.text_blog_title">#545454</color>
+    <color name="blog_setup.about_yourself_label">#545454</color>
+    <color name="blog_setup.about_desc">#9c9dac</color>
+    <color name="blog_setup.hint_about">#9c9dac</color>
+    <color name="blog_setup.text_about">#545454</color>
+    <color name="blog_setup.profile_pic_label">#545454</color>
+    <color name="blog_setup.profile_pic_desc">#9c9dac</color>
+    <color name="blog_setup.your_details">#545454</color>
+    <color name="blog_setup.your_detail_desc">#9c9dac</color>
+    <color name="blog_setup.text_city">#545454</color>
+    <color name="blog_setup.hint_phone">#545454</color>
+    <color name="blog_setup.save_publish">#9c9dac</color>
+
 </resources>

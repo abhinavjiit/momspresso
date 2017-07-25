@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -42,6 +43,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.UserAttributeUpdateAPI;
 import com.mycity4kids.ui.activity.AppSettingsActivity;
+import com.mycity4kids.ui.activity.FollowersAndFollowingListActivity;
 import com.mycity4kids.ui.activity.UserPublishedAndDraftsActivity;
 import com.mycity4kids.utils.RoundedTransformation;
 import com.squareup.picasso.MemoryPolicy;
@@ -87,6 +89,7 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
     private TextView articleSectionTextView, videosSectionTextView, activitySectionTextView, rankingSectionTextView;
     private ImageView imgProfile;
     private ImageView settingImageView;
+    private LinearLayout followerContainer, followingContainer;
 
     private String userId;
 
@@ -106,6 +109,8 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
         rankingSectionTextView = (TextView) rootView.findViewById(R.id.rankingSectionTextView);
         imgProfile = (ImageView) rootView.findViewById(R.id.imgProfile);
         settingImageView = (ImageView) rootView.findViewById(R.id.settingImageView);
+        followerContainer = (LinearLayout) rootView.findViewById(R.id.followerContainer);
+        followingContainer = (LinearLayout) rootView.findViewById(R.id.followingContainer);
 
         authorNameTextView.setOnClickListener(this);
         authorTypeTextView.setOnClickListener(this);
@@ -116,6 +121,8 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
         activitySectionTextView.setOnClickListener(this);
         rankingSectionTextView.setOnClickListener(this);
         settingImageView.setOnClickListener(this);
+        followingContainer.setOnClickListener(this);
+        followerContainer.setOnClickListener(this);
 
         userId = SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId();
 
@@ -322,6 +329,19 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
                 Intent settingsIntent = new Intent(getActivity(), AppSettingsActivity.class);
                 startActivity(settingsIntent);
                 break;
+            case R.id.followingContainer: {
+                Intent intent = new Intent(getActivity(), FollowersAndFollowingListActivity.class);
+                intent.putExtra(AppConstants.FOLLOW_LIST_TYPE, AppConstants.FOLLOWING_LIST);
+                intent.putExtra(AppConstants.USER_ID_FOR_FOLLOWING_FOLLOWERS, userId);
+                startActivity(intent);
+            }
+            break;
+            case R.id.followerContainer: {
+                Intent intent = new Intent(getActivity(), FollowersAndFollowingListActivity.class);
+                intent.putExtra(AppConstants.FOLLOW_LIST_TYPE, AppConstants.FOLLOWER_LIST);
+                intent.putExtra(AppConstants.USER_ID_FOR_FOLLOWING_FOLLOWERS, userId);
+                startActivity(intent);
+            }
         }
     }
 

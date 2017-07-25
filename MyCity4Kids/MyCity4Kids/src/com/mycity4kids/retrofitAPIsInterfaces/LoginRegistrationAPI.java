@@ -1,9 +1,11 @@
 package com.mycity4kids.retrofitAPIsInterfaces;
 
 import com.mycity4kids.models.request.AddEditKidsInformationRequest;
+import com.mycity4kids.models.request.ChangePasswordRequest;
 import com.mycity4kids.models.request.LoginRegistrationRequest;
 import com.mycity4kids.models.request.SocialConnectRequest;
 import com.mycity4kids.models.response.BaseResponse;
+import com.mycity4kids.models.response.ChangePasswordResponse;
 import com.mycity4kids.models.response.ForgotPasswordResponse;
 import com.mycity4kids.models.response.UserDetailResponse;
 
@@ -27,6 +29,9 @@ public interface LoginRegistrationAPI {
 
     @GET("v1/users/{userId}")
     Call<UserDetailResponse> getUserDetails(@Path("userId") String userId);
+
+    @PUT("v2/users/updatePassword/")
+    Call<ChangePasswordResponse> changePassword(@Body ChangePasswordRequest body);
 
     @POST("v1/users/link/password/")
     Call<ForgotPasswordResponse> resetPassword(@Body LoginRegistrationRequest body);

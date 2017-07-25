@@ -537,6 +537,9 @@
         <activity
             android:name=".ui.activity.ArticleDetailsContainerActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.BlogSetupActivity"
+            android:screenOrientation="portrait" />
 
         <receiver
             android:name="com.mycity4kids.reminders.BootCompleteReceiver"

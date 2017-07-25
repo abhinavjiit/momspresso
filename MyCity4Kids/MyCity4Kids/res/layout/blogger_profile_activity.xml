@@ -153,6 +153,7 @@
             android:layout_below="@+id/personalDetailsContainer">
 
             <LinearLayout
+                android:id="@+id/followingContainer"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -181,6 +182,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/followerContainer"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

@@ -766,7 +766,8 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
 
     }
 
-//    public void refreshList() throws ParseException {
+    public void refreshList() {
+//        updateUnreadNotificationCount();
 //        if (SharedPrefUtils.isChangeCity(getActivity()) && SharedPrefUtils.getCurrentCityModel(getActivity()).getId() != AppConstants.OTHERS_CITY_ID) {
 //            inYourCitySection.setVisibility(View.VISIBLE);
 //            view.findViewById(R.id.eventsss).setVisibility(View.VISIBLE);
@@ -809,7 +810,7 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
-//    }
+    }
 
     private void updateUnreadNotificationCount() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
@@ -1039,6 +1040,13 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
 //        // insert event to calendar
 //        Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
 //    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateUnreadNotificationCount();
+    }
 
     private Callback<NotificationCenterListResponse> unreadNotificationCountResponseCallback = new Callback<NotificationCenterListResponse>() {
         @Override

@@ -99,6 +99,7 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
     private TextView txvTopArticle_1, txvTopArticle_2, txvTopArticle_3;
     private TextView articleSectionTextView, videosSectionTextView, activitySectionTextView, rankingSectionTextView;
     private TextView followButton, unfollowButton;
+    private LinearLayout followerContainer, followingContainer;
 
     private Boolean isFollowing = false;
     private String userId;
@@ -139,6 +140,8 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
         unfollowButton = (TextView) findViewById(R.id.unfollowTextView);
         topArticleLabel = (TextView) findViewById(R.id.topArticleLabel);
         topArticleContainer = (LinearLayout) findViewById(R.id.topArticleContainer);
+        followerContainer = (LinearLayout) findViewById(R.id.followerContainer);
+        followingContainer = (LinearLayout) findViewById(R.id.followingContainer);
 
         authorNameTextView.setOnClickListener(this);
         authorTypeTextView.setOnClickListener(this);
@@ -150,6 +153,8 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
         videosSectionTextView.setOnClickListener(this);
         activitySectionTextView.setOnClickListener(this);
         rankingSectionTextView.setOnClickListener(this);
+        followingContainer.setOnClickListener(this);
+        followerContainer.setOnClickListener(this);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -593,6 +598,20 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
                 break;
             case R.id.rankingSectionTextView:
                 break;
+            case R.id.followingContainer: {
+                Intent intent = new Intent(this, FollowersAndFollowingListActivity.class);
+                intent.putExtra(AppConstants.FOLLOW_LIST_TYPE, AppConstants.FOLLOWING_LIST);
+                intent.putExtra(AppConstants.USER_ID_FOR_FOLLOWING_FOLLOWERS, authorId);
+                startActivity(intent);
+            }
+            break;
+            case R.id.followerContainer: {
+                Intent intent = new Intent(this, FollowersAndFollowingListActivity.class);
+                intent.putExtra(AppConstants.FOLLOW_LIST_TYPE, AppConstants.FOLLOWER_LIST);
+                intent.putExtra(AppConstants.USER_ID_FOR_FOLLOWING_FOLLOWERS, authorId);
+                startActivity(intent);
+            }
+            break;
         }
     }
 

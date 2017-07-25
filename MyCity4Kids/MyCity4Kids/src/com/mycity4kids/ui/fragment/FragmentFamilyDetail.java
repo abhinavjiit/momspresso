@@ -473,7 +473,7 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
             for (KidsModel kid : kidsModelArrayList) {
                 KidsInfo kidsInfo = new KidsInfo();
                 kidsInfo.setName(kid.getName());
-                kidsInfo.setDate_of_birth(convertTime(kid.getBirthDay()));
+                kidsInfo.setDate_of_birth(convertTime(""+kid.getBirthDay()));
                 kidsInfo.setColor_code(kid.getColorCode());
                 kidsInfo.setGender(kid.getGender());
                 kidsInfoArrayList.add(kidsInfo);
@@ -585,7 +585,7 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
 
             long bdaytimestamp = convertStringToTimestamp(ki.getDate_of_birth());
             if (bdaytimestamp != 0) {
-                kmodel.setBirthDay("" + bdaytimestamp);
+                kmodel.setBirthDay(bdaytimestamp);
             } else {
                 Toast.makeText(getActivity(), "incorrect kids bday", Toast.LENGTH_SHORT).show();
                 return;
@@ -602,7 +602,7 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
             kmodel.setName(ki.getName());
             long bdaytimestamp = convertStringToTimestamp(ki.getDate_of_birth());
             if (bdaytimestamp != 0) {
-                kmodel.setBirthDay("" + bdaytimestamp);
+                kmodel.setBirthDay(bdaytimestamp);
             } else {
                 Toast.makeText(getActivity(), "incorrect kids bday", Toast.LENGTH_SHORT).show();
                 return;

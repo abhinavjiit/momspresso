@@ -4,6 +4,7 @@ import android.Manifest;
 import android.accounts.AccountManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,8 +18,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -88,6 +91,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import life.knowledge4.videotrimmer.utils.FileUtils;
+import q.rorbin.badgeview.Badge;
+import q.rorbin.badgeview.QBadgeView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -224,10 +229,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 if (topFragment instanceof EditorPostFragment) {
                                     return true;
                                 }
-                                EditorPostFragment editorPostFragment = new EditorPostFragment();
-                                Bundle editorBundle = new Bundle();
-                                editorPostFragment.setArguments(editorBundle);
-                                addFragment(editorPostFragment, editorBundle, true);
+//                                EditorPostFragment editorPostFragment = new EditorPostFragment();
+//                                Bundle editorBundle = new Bundle();
+//                                editorPostFragment.setArguments(editorBundle);
+//                                addFragment(editorPostFragment, editorBundle, true);
+                                Intent blogIntent = new Intent(DashboardActivity.this, BlogSetupActivity.class);
+                                startActivity(blogIntent);
                                 break;
                             case R.id.action_location:
                                 Intent intent = new Intent(DashboardActivity.this, SettingsActivity.class);
@@ -735,13 +742,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     public void updateUnreadNotificationCount(String unreadNotifCount) {
         if (StringUtils.isNullOrEmpty(unreadNotifCount) || "0".equals(unreadNotifCount)) {
-            itemMessagesBadgeTextView.setVisibility(View.GONE);
-            itemMessagesBadgeTextView.setText("");
         } else {
-            itemMessagesBadgeTextView.setVisibility(View.VISIBLE);
-            itemMessagesBadgeTextView.setText(unreadNotifCount);
+            addBadgeAt(1, unreadNotifCount);
         }
-
     }
 
     @Override
@@ -1453,5 +1456,19 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
+    private Badge addBadgeAt(int position, String number) {
+        // add badge
+        return new QBadgeView(this)
+                .setBadgeText(number)
+                .setGravityOffset(12, 2, true)
+                .bindTarget(bottomNavigationView.getBottomNavigationItemView(position))
+                .setOnDragStateChangedListener(new Badge.OnDragStateChangedListener() {
+                    @Override
+                    public void onDragStateChanged(int dragState, Badge badge, View targetView) {
+                        if (Badge.OnDragStateChangedListener.STATE_SUCCEED == dragState)
+                            Toast.makeText(DashboardActivity.this, "bage removed", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
+    }
 }
