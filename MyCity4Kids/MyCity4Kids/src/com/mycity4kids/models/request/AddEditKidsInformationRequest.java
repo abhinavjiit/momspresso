@@ -1,7 +1,5 @@
 package com.mycity4kids.models.request;
 
-import com.mycity4kids.models.response.KidsModel;
-
 import java.util.ArrayList;
 
 /**
@@ -9,13 +7,13 @@ import java.util.ArrayList;
  */
 public class AddEditKidsInformationRequest {
 
-    private ArrayList<KidsModel> kids;
+    private ArrayList<AddRemoveKidsRequest> kids;
 
-    public ArrayList<KidsModel> getKids() {
+    public ArrayList<AddRemoveKidsRequest> getKids() {
         return kids;
     }
 
-    public void setKids(ArrayList<KidsModel> kids) {
+    public void setKids(ArrayList<AddRemoveKidsRequest> kids) {
         this.kids = kids;
     }
 }

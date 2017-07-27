@@ -294,9 +294,13 @@
                 <ImageView
                     android:layout_width="35dp"
                     android:layout_height="35dp"
+                    android:layout_alignEnd="@+id/profilePicImageView"
                     android:layout_alignRight="@+id/profilePicImageView"
                     android:layout_alignTop="@+id/profilePicImageView"
-                    android:src="@drawable/follow_blog" />
+                    android:background="@drawable/circular_textview"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_plus"
+                    android:tint="@color/white" />
 
                 <View
                     android:id="@+id/underline5"

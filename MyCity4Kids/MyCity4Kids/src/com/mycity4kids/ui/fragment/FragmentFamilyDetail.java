@@ -54,6 +54,7 @@ import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.models.profile.KidsInformation;
 import com.mycity4kids.models.profile.SignUpModel;
 import com.mycity4kids.models.request.AddEditKidsInformationRequest;
+import com.mycity4kids.models.request.AddRemoveKidsRequest;
 import com.mycity4kids.models.response.KidsModel;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.models.user.ImageUploadRequest;
@@ -111,7 +112,7 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
     private File mFileTemp;
     private ScrollView scrollview;
     private boolean ifAdultAdded = false;
-    ArrayList<KidsModel> kidsModelArrayList;
+    ArrayList<AddRemoveKidsRequest> kidsModelArrayList;
 
     @Nullable
     @Override
@@ -470,10 +471,10 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
 
             ArrayList<KidsInfo> kidsInfoArrayList = new ArrayList<>();
 
-            for (KidsModel kid : kidsModelArrayList) {
+            for (AddRemoveKidsRequest kid : kidsModelArrayList) {
                 KidsInfo kidsInfo = new KidsInfo();
                 kidsInfo.setName(kid.getName());
-                kidsInfo.setDate_of_birth(convertTime(""+kid.getBirthDay()));
+                kidsInfo.setDate_of_birth(convertTime("" + kid.getBirthDay()));
                 kidsInfo.setColor_code(kid.getColorCode());
                 kidsInfo.setGender(kid.getGender());
                 kidsInfoArrayList.add(kidsInfo);
@@ -580,7 +581,7 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
 
         kidsModelArrayList = new ArrayList<>();
         for (KidsInfo ki : kidsList) {
-            KidsModel kmodel = new KidsModel();
+            AddRemoveKidsRequest kmodel = new AddRemoveKidsRequest();
             kmodel.setName(ki.getName());
 
             long bdaytimestamp = convertStringToTimestamp(ki.getDate_of_birth());
@@ -598,7 +599,7 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
         }
 
         for (KidsInfo ki : kidsInformations) {
-            KidsModel kmodel = new KidsModel();
+            AddRemoveKidsRequest kmodel = new AddRemoveKidsRequest();
             kmodel.setName(ki.getName());
             long bdaytimestamp = convertStringToTimestamp(ki.getDate_of_birth());
             if (bdaytimestamp != 0) {

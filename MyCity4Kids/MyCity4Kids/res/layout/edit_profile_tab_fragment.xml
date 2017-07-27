@@ -49,6 +49,8 @@
                 android:id="@+id/emailTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
                 android:background="@drawable/dotted_line"
                 android:text="email@email.com"
                 android:textColor="@color/app_settings.edit_profile.email"
@@ -68,16 +70,27 @@
                 android:textSize="16sp"
                 app:fontName="oswald.ttf" />
 
-            <Spinner
-                android:id="@+id/citySpinner"
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/cityNameTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:dropDownVerticalOffset="40dp" />
+                android:drawablePadding="10dp"
+                android:drawableRight="@drawable/ic_down_arrow"
+                android:paddingBottom="10dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="30dp"
+                android:paddingTop="10dp"
+                android:text="City Name"
+                android:textColor="@color/app_settings.edit_profile.city"
+                android:textSize="15sp"
+                app:fontName="oswald.ttf" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/light_grey1" />
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@color/app_settings.edit_profile.edit_text_underline" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:layout_width="match_parent"
@@ -117,11 +130,6 @@
                 android:textColor="@color/app_settings.edit_profile.text_blog_title"
                 android:textSize="16sp"
                 app:fontName="oswald.ttf" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/light_grey1" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:layout_width="match_parent"

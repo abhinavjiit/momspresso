@@ -9,6 +9,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
@@ -16,7 +17,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -24,7 +24,6 @@ import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +45,7 @@ import com.mycity4kids.models.VersionApiModel;
 import com.mycity4kids.models.city.City;
 import com.mycity4kids.models.city.MetroCity;
 import com.mycity4kids.models.configuration.ConfigurationApiModel;
+import com.mycity4kids.models.request.AddRemoveKidsRequest;
 import com.mycity4kids.models.request.UpdateUserDetailsRequest;
 import com.mycity4kids.models.response.CityConfigResponse;
 import com.mycity4kids.models.response.CityInfoItem;
@@ -58,7 +58,6 @@ import com.mycity4kids.rangebar.RangeBar;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ConfigAPIs;
 import com.mycity4kids.retrofitAPIsInterfaces.UserAttributeUpdateAPI;
-import com.mycity4kids.ui.adapter.CitySpinnerAdapter;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.widget.KidsInfoCustomView;
 
@@ -77,26 +76,30 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 19/7/17.
  */
-public class EditProfileTabFragment extends BaseFragment implements View.OnClickListener {
+public class EditProfileTabFragment extends BaseFragment implements View.OnClickListener, CityListingDialogFragment.IChangeCity {
 
     private static final int MAX_WORDS = 200;
     private static final int MAX_CHARACTER = 200;
 
+    private CityListingDialogFragment cityFragment;
     private InputFilter filter;
     private View view;
     private ScrollView scrollView;
     private LinearLayout childInfoContainer;
     private EditText firstNameEditText, lastNameEditText, phoneEditText, describeSelfEditText, blogTitleEditText;
     private TextView emailTextView;
-    private Spinner citySpinner;
+    private TextView cityNameTextView;
     private RangeBar rangebar;
     private ProgressBar progressBar;
     private TextView saveTextView;
     private static TextView dobTextView;
 
+    public ArrayList<CityInfoItem> mDatalist;
     private int selectedCityId;
     private City cityModel;
-    private ArrayList<KidsModel> kidsModelArrayList;
+    private ArrayList<AddRemoveKidsRequest> kidsModelArrayList;
+    private String currentCityName;
+    private String newSelectedCityId;
 
     @Nullable
     @Override
@@ -111,12 +114,13 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
         phoneEditText = (EditText) view.findViewById(R.id.phoneEditText);
         describeSelfEditText = (EditText) view.findViewById(R.id.describeSelfEditText);
         blogTitleEditText = (EditText) view.findViewById(R.id.blogTitleEditText);
-        citySpinner = (Spinner) view.findViewById(R.id.citySpinner);
+        cityNameTextView = (TextView) view.findViewById(R.id.cityNameTextView);
         rangebar = (RangeBar) view.findViewById(R.id.rangebar);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         saveTextView = (TextView) view.findViewById(R.id.saveTextView);
 
         saveTextView.setOnClickListener(this);
+        cityNameTextView.setOnClickListener(this);
 
         describeSelfEditText.addTextChangedListener(new TextWatcher() {
 
@@ -158,25 +162,25 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
         Call<CityConfigResponse> cityCall = cityConfigAPI.getCityConfig();
         cityCall.enqueue(cityConfigResponseCallback);
 
-        citySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // An item was selected. You can retrieve the selected item using
-                Log.d("Selected City = ", "city is " + parent.getItemAtPosition(position));
-                if ("Others".equals(((CityInfoItem) parent.getItemAtPosition(position)).getCityName())) {
-                    selectedCityId = AppConstants.OTHERS_CITY_ID;
-                } else {
-                    selectedCityId = Integer.parseInt(((CityInfoItem) parent.getItemAtPosition(position)).getId().replace("city-", ""));
-                }
-                CityInfoItem cii = (CityInfoItem) parent.getItemAtPosition(position);
-                cityModel = new City(cii.getCityName(), cii.getLat(), cii.getLon(), selectedCityId, cii.getId());
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+//        citySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                // An item was selected. You can retrieve the selected item using
+//                Log.d("Selected City = ", "city is " + parent.getItemAtPosition(position));
+//                if ("Others".equals(((CityInfoItem) parent.getItemAtPosition(position)).getCityName())) {
+//                    selectedCityId = AppConstants.OTHERS_CITY_ID;
+//                } else {
+//                    selectedCityId = Integer.parseInt(((CityInfoItem) parent.getItemAtPosition(position)).getId().replace("city-", ""));
+//                }
+//                CityInfoItem cii = (CityInfoItem) parent.getItemAtPosition(position);
+//                cityModel = new City(cii.getCityName(), cii.getLat(), cii.getLon(), selectedCityId, cii.getId());
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//
+//            }
+//        });
 
         return view;
     }
@@ -257,7 +261,6 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
     };
 
     private Callback<CityConfigResponse> cityConfigResponseCallback = new Callback<CityConfigResponse>() {
-        public ArrayList<CityInfoItem> mDatalist;
 
         @Override
         public void onResponse(Call<CityConfigResponse> call, retrofit2.Response<CityConfigResponse> response) {
@@ -276,22 +279,38 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
 //                        gotToProfile();
                         return;
                     }
+                    MetroCity currentCity = SharedPrefUtils.getCurrentCityModel(getActivity());
                     for (int i = 0; i < responseData.getData().getResult().getCityData().size(); i++) {
                         if (!AppConstants.ALL_CITY_NEW_ID.equals(responseData.getData().getResult().getCityData().get(i).getId())) {
                             mDatalist.add(responseData.getData().getResult().getCityData().get(i));
                         }
-                    }
-                    CitySpinnerAdapter citySpinnerAdapter = new CitySpinnerAdapter(getActivity(), R.layout.text_current_locality, mDatalist);
-                    citySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    // Apply the adapter to the spinner
-                    citySpinner.setAdapter(citySpinnerAdapter);
-                    int currentCityId = SharedPrefUtils.getCurrentCityModel(getActivity()).getId();
-                    for (int i = 0; i < mDatalist.size(); i++) {
-                        int cId = Integer.parseInt(mDatalist.get(i).getId().replace("city-", ""));
-                        if (currentCityId == cId) {
-                            citySpinner.setSelection(i, true);
+                        if (AppConstants.OTHERS_NEW_CITY_ID.equals(responseData.getData().getResult().getCityData().get(i).getId())) {
+                            if (currentCity.getName() != null && !"Others".equals(currentCity.getName()) && currentCity.getId() == AppConstants.OTHERS_CITY_ID) {
+                                mDatalist.get(mDatalist.size() - 1).setCityName("Others(" + currentCity.getName() + ")");
+                            }
                         }
                     }
+
+                    for (int i = 0; i < mDatalist.size(); i++) {
+                        int cId = Integer.parseInt(mDatalist.get(i).getId().replace("city-", ""));
+                        if (currentCity.getId() == cId) {
+                            mDatalist.get(i).setSelected(true);
+                            cityNameTextView.setText(mDatalist.get(i).getCityName());
+                        } else {
+                            mDatalist.get(i).setSelected(false);
+                        }
+                    }
+//                    CitySpinnerAdapter citySpinnerAdapter = new CitySpinnerAdapter(getActivity(), R.layout.text_current_locality, mDatalist);
+//                    citySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//                    // Apply the adapter to the spinner
+//                    citySpinner.setAdapter(citySpinnerAdapter);
+//                    int currentCityId = SharedPrefUtils.getCurrentCityModel(getActivity()).getId();
+//                    for (int i = 0; i < mDatalist.size(); i++) {
+//                        int cId = Integer.parseInt(mDatalist.get(i).getId().replace("city-", ""));
+//                        if (currentCityId == cId) {
+//                            citySpinner.setSelection(i, true);
+//                        }
+//                    }
                 } else {
                 }
             } catch (Exception e) {
@@ -337,7 +356,7 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
 
         kidsModelArrayList = new ArrayList<>();
         for (KidsInfo ki : kidsList) {
-            KidsModel kmodel = new KidsModel();
+            AddRemoveKidsRequest kmodel = new AddRemoveKidsRequest();
             long bdaytimestamp = convertStringToTimestamp(ki.getDate_of_birth());
             if (bdaytimestamp != 0) {
                 kmodel.setBirthDay(bdaytimestamp * 1000);
@@ -398,6 +417,7 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
         addCityAndKidsInformationRequest.setKids(kidsModelArrayList);
 
         addCityAndKidsInformationRequest.setCityId("" + selectedCityId);
+        addCityAndKidsInformationRequest.setCityName("" + currentCityName);
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         UserAttributeUpdateAPI userAttributeUpdateAPI = retrofit.create(UserAttributeUpdateAPI.class);
         Call<UserDetailResponse> call = userAttributeUpdateAPI.updateCityAndKids(addCityAndKidsInformationRequest);
@@ -449,15 +469,15 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
 
         MetroCity model = new MetroCity();
 
-        model.setId(cityModel.getCityId());
-        model.setName(cityModel.getCityName());
-        model.setNewCityId(cityModel.getNewCityId());
+        model.setId(selectedCityId);
+        model.setName(currentCityName);
+        model.setNewCityId(newSelectedCityId);
 
         SharedPrefUtils.setCurrentCityModel(getActivity(), model);
         SharedPrefUtils.setChangeCityFlag(getActivity(), true);
 
-        if (cityModel.getCityId() > 0) {
-            versionApiModel.setCityId(cityModel.getCityId());
+        if (selectedCityId > 0) {
+            versionApiModel.setCityId(selectedCityId);
 //            mFirebaseAnalytics.setUserProperty("CityId", cityModel.getCityId() + "");
 
             String version = AppUtils.getAppVersion(getActivity());
@@ -469,6 +489,9 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
                 ToastUtils.showToast(getActivity(), getString(R.string.error_network));
                 return;
 
+            }
+            if (null != cityFragment) {
+                cityFragment.dismiss();
             }
             _controller.getData(AppConstants.CONFIGURATION_REQUEST, versionApiModel);
         }
@@ -524,6 +547,23 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
     public void showDatePickerDialog() {
         DialogFragment newFragment = new DatePickerFragment();
         newFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
+    }
+
+    @Override
+    public void onCitySelect(CityInfoItem cityItem) {
+        cityNameTextView.setText(cityItem.getCityName());
+        currentCityName = cityItem.getCityName();
+        selectedCityId = Integer.parseInt(cityItem.getId().replace("city-", ""));
+        newSelectedCityId = cityItem.getId();
+    }
+
+    @Override
+    public void onOtherCitySelect(int pos, String cityName) {
+        currentCityName = cityName;
+        selectedCityId = Integer.parseInt(mDatalist.get(pos).getId().replace("city-", ""));
+        newSelectedCityId = mDatalist.get(pos).getId();
+        mDatalist.get(pos).setCityName("Others(" + cityName + ")");
+        cityNameTextView.setText(mDatalist.get(pos).getCityName());
     }
 
     public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
@@ -589,6 +629,17 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
                     saveUserDetails();
                     saveKidsAndCity();
                 }
+                break;
+            case R.id.cityNameTextView:
+                cityFragment = new CityListingDialogFragment();
+                cityFragment.setTargetFragment(this, 0);
+                Bundle _args = new Bundle();
+                _args.putParcelableArrayList("cityList", mDatalist);
+                _args.putString("fromScreen", "editProfile");
+                cityFragment.setArguments(_args);
+                FragmentManager fm = getChildFragmentManager();
+                cityFragment.show(fm, "Replies");
+
                 break;
         }
     }

@@ -146,7 +146,7 @@
     <string name="leave_comment">LEAVE A COMMENT</string>
     <string name="submit">SUBMIT</string>
     <string name="write_comment">Write a comment</string>
-    <string name="add_reply">Add a reply</string>
+    <string name="add_reply">Type here</string>
     <string name="cancle_filer">CANCEL</string>
     <string name="search_filer">SEARCH</string>
     <string name="follow">You are following </string>
@@ -412,6 +412,8 @@
     <string name="ad.comments.title">COMMENTS</string>
     <string name="ad.comments.reply_label">Reply</string>
     <string name="ad.comments.edit_label">Edit</string>
+    <string name="ad.comments.save">SAVE</string>
+    <string name="ad.comments.toolbar.title">Comments</string>
     <string name="ad.bottom_bar.facebook">FACEBOOK</string>
     <string name="ad.bottom_bar.whatsapp">WHATSAPP</string>
     <string name="ad.bottom_bar.email">EMAIL</string>

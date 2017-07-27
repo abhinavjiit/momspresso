@@ -196,5 +196,6 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
 
     public void hideToolbarPerm() {
         mToolbar.setVisibility(View.GONE);
+        backNavigationImageView.setVisibility(View.GONE);
     }
 }

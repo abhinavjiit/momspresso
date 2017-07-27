@@ -134,7 +134,11 @@
     <color name="ad.comment.reply_label">#507cbe</color>
     <color name="ad.comment.edit_label">#507cbe</color>
     <color name="ad.comment.reply_bg">#e1e2e2</color>
-    <color name="ad.comment.date">#efefef</color>
+    <color name="ad.comment.date">#9c9dac</color>
+    <color name="ad.comment.save">#ffffff</color>
+    <color name="ad.comments.edit_text">#545454</color>
+    <color name="ad.comment.save_bg">#507cbe</color>
+    <color name="ad.comments.toolbar.title">#545454</color>
     <color name="ad.bottom_bar.items">#507cbe</color>
     <color name="ad.related_article.title">#333333</color>
     <color name="ad.trending.title">#333333</color>
@@ -396,6 +400,7 @@
     <color name="blog_setup.text_about">#545454</color>
     <color name="blog_setup.profile_pic_label">#545454</color>
     <color name="blog_setup.profile_pic_desc">#9c9dac</color>
+    <color name="blog_setup.profile_pic_add">#507cbe</color>
     <color name="blog_setup.your_details">#545454</color>
     <color name="blog_setup.your_detail_desc">#9c9dac</color>
     <color name="blog_setup.text_city">#545454</color>

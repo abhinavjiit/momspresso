@@ -293,8 +293,8 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
     }
 
     public void refreshAllArticles(String searchText, String sortType) {
-        if (null != articleDataModelsNew) {
-            articleDataModelsNew.clear();
+        if (null != data) {
+            data.clear();
         }
         showMoreType = "";
         nextPageNumber = 1;
@@ -304,8 +304,8 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
     }
 
     public void resetOnceLoadedFlag(String searchTxt) {
-        if (null != articleDataModelsNew) {
-            articleDataModelsNew.clear();
+        if (null != data) {
+            data.clear();
         }
         isLastPageReached = true;
         searchName = searchTxt;

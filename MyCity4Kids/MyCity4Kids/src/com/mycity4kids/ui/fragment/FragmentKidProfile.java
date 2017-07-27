@@ -26,20 +26,17 @@ import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
-import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.ColorCode;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.controller.EditProfileController;
 import com.mycity4kids.dbtable.TableKids;
 import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.models.profile.KidsInformation;
 import com.mycity4kids.models.request.AddEditKidsInformationRequest;
-import com.mycity4kids.models.response.KidsModel;
+import com.mycity4kids.models.request.AddRemoveKidsRequest;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.models.user.KidsInfo;
 import com.mycity4kids.reminders.AppointmentManager;
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
-import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.SettingsActivity;
 
 import java.text.DateFormat;
@@ -73,7 +70,7 @@ public class FragmentKidProfile extends BaseFragment implements View.OnClickList
     private String color_selected = "";
     private HashMap<String, String> used_colors = new HashMap<>();
     KidsInformation _requestModel;
-    private ArrayList<KidsModel> kidsModelArrayList;
+    private ArrayList<AddRemoveKidsRequest> kidsModelArrayList;
 
     @Nullable
     @Override
@@ -338,7 +335,7 @@ public class FragmentKidProfile extends BaseFragment implements View.OnClickList
                 kidsModelArrayList = new ArrayList<>();
 
                 for (int i = 0; i < allKidsInfo.size(); i++) {
-                    KidsModel kmodel = new KidsModel();
+                    AddRemoveKidsRequest kmodel = new AddRemoveKidsRequest();
                     if (id == i) {
                         kmodel.setName(name.getText().toString().trim());
                         kmodel.setBirthDay(convertStringToTimestamp(kidBdy.getText().toString().trim()));
@@ -435,7 +432,7 @@ public class FragmentKidProfile extends BaseFragment implements View.OnClickList
 
             ArrayList<KidsInfo> kidsInfoArrayList = new ArrayList<>();
 
-            for (KidsModel kid : kidsModelArrayList) {
+            for (AddRemoveKidsRequest kid : kidsModelArrayList) {
                 KidsInfo kidsInfo = new KidsInfo();
                 kidsInfo.setName(kid.getName());
                 kidsInfo.setDate_of_birth(convertTime(""+kid.getBirthDay()));

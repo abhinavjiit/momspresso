@@ -17,35 +17,54 @@
         app:theme="@style/ToolbarTheme"
         app:titleTextAppearance="@style/ToolbarTheme.Title">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/cross_icon_back" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/closeImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:src="@drawable/cross_icon_back" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/closeImageView"
+                android:text="@string/ad.comments.toolbar.title"
+                android:textColor="@color/ad.comments.toolbar.title"
+                android:textSize="20sp" />
+        </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
-    <EditText
-        android:id="@+id/addReplyEditText"
+    <com.mycity4kids.widget.CustomFontEditText
+        android:id="@+id/commentReplyEditText"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/addCommentTextView"
         android:layout_below="@+id/toolbar"
-        android:capitalize="sentences"
-        android:gravity="top|left"
+        android:gravity="top|start"
         android:hint="@string/add_reply"
+        android:inputType="textCapSentences"
         android:padding="12dp"
         android:singleLine="false"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/black_color"
-        android:visibility="visible" />
+        android:textColor="@color/ad.comments.edit_text"
+        android:textSize="15sp"
+        android:visibility="visible"
+        app:fontName="oswald_regular.ttf" />
 
-    <TextView
+    <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/addCommentTextView"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="56dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/blue_bg"
+        android:background="@color/ad.comment.save_bg"
         android:gravity="center"
-        android:text="Add Comment" />
-
+        android:text="@string/ad.comments.save"
+        android:textColor="@color/ad.comment.save"
+        android:textSize="20sp"
+        app:fontName="oswald_regular.ttf" />
 
 </RelativeLayout>

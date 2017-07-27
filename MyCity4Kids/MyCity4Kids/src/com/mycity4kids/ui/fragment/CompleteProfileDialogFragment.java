@@ -48,10 +48,10 @@ import com.mycity4kids.models.VersionApiModel;
 import com.mycity4kids.models.city.City;
 import com.mycity4kids.models.city.MetroCity;
 import com.mycity4kids.models.configuration.ConfigurationApiModel;
+import com.mycity4kids.models.request.AddRemoveKidsRequest;
 import com.mycity4kids.models.request.UpdateUserDetailsRequest;
 import com.mycity4kids.models.response.CityConfigResponse;
 import com.mycity4kids.models.response.CityInfoItem;
-import com.mycity4kids.models.response.KidsModel;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.models.user.KidsInfo;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -87,7 +87,7 @@ public class CompleteProfileDialogFragment extends DialogFragment implements Vie
     private TextView cancel, done;
     private ProgressBar progressBar;
 
-    private ArrayList<KidsModel> kidsModelArrayList;
+    private ArrayList<AddRemoveKidsRequest> kidsModelArrayList;
 
     private int childCount = 0;
     private int selectedCityId;
@@ -249,7 +249,7 @@ public class CompleteProfileDialogFragment extends DialogFragment implements Vie
 
         kidsModelArrayList = new ArrayList<>();
         for (KidsInfo ki : kidsList) {
-            KidsModel kmodel = new KidsModel();
+            AddRemoveKidsRequest kmodel = new AddRemoveKidsRequest();
             kmodel.setName(ki.getName());
             if (StringUtils.isNullOrEmpty(ki.getName())) {
                 Toast.makeText(getActivity(), "Please enter kids name to continue", Toast.LENGTH_SHORT).show();
@@ -578,10 +578,10 @@ public class CompleteProfileDialogFragment extends DialogFragment implements Vie
         try {
             kidsTable.beginTransaction();
             ArrayList<KidsInfo> kidsInfoArrayList = new ArrayList<>();
-            for (KidsModel kid : kidsModelArrayList) {
+            for (AddRemoveKidsRequest kid : kidsModelArrayList) {
                 KidsInfo kidsInfo = new KidsInfo();
                 kidsInfo.setName(kid.getName());
-                kidsInfo.setDate_of_birth(convertTime(""+kid.getBirthDay()));
+                kidsInfo.setDate_of_birth(convertTime("" + kid.getBirthDay()));
                 kidsInfoArrayList.add(kidsInfo);
             }
             for (KidsInfo kids : kidsInfoArrayList) {

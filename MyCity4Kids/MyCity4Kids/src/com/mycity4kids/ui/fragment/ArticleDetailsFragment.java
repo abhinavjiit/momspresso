@@ -13,7 +13,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -119,7 +118,7 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 6/6/17.
  */
-public class ArticleDetailsFragment extends BaseFragment implements View.OnClickListener, ObservableScrollViewCallbacks {
+public class ArticleDetailsFragment extends BaseFragment implements View.OnClickListener, ObservableScrollViewCallbacks, AddEditCommentReplyFragment.IAddCommentReply {
 
     private final static int ADD_BOOKMARK = 1;
 
@@ -467,12 +466,10 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
         if ("db".equals(commentType)) {
             ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
-
             Call<ResponseBody> call = articleDetailsAPI.getComments(commentURL);
             call.enqueue(commentsCallback);
         } else {
             ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
-
             Call<FBCommentResponse> call = articleDetailsAPI.getFBComments(articleId, pagination);
             call.enqueue(fbCommentsCallback);
         }
@@ -745,32 +742,36 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             holder.commentName = (TextView) view.findViewById(R.id.txvCommentTitle);
             holder.commentDescription = (TextView) view.findViewById(R.id.txvCommentDescription);
             holder.dateTxt = (TextView) view.findViewById(R.id.txvDate);
-            holder.replyTxt = (TextView) view.findViewById(R.id.txvReply);
-            holder.editTxt = (TextView) view.findViewById(R.id.txvEdit);
-//            holder.replierImageView = (CircularImageView) view.findViewById(R.id.replyUserImageView);
-//            holder.replyCountTextView = (TextView) view.findViewById(R.id.replyCountTextView);
-//            holder.replierUsernameTextView = (TextView) view.findViewById(R.id.replyUserNameTextView);
-            holder.replyCommentView = (RelativeLayout) view.findViewById(R.id.replyRelativeLayout);
+            holder.commentCellReplyTxt = (TextView) view.findViewById(R.id.txvCommentCellReply);
+            holder.commentCellEditTxt = (TextView) view.findViewById(R.id.txvCommentCellEdit);
+            holder.replyCommentView = (LinearLayout) view.findViewById(R.id.replyRelativeLayout);
 
             holder.commentorsImage.setOnClickListener(this);
             holder.commentName.setOnClickListener(this);
             holder.replyCommentView.setOnClickListener(this);
             holder.replyCommentView.setTag(commentList);
-            holder.replyTxt.setOnClickListener(this);
-            holder.editTxt.setOnClickListener(this);
+
+            holder.commentCellReplyTxt.setOnClickListener(this);
+            holder.commentCellEditTxt.setOnClickListener(this);
 
             view.setTag(commentList);
 
             if (!"fb".equals(commentList.getComment_type()) && userDynamoId.equals(commentList.getUserId())) {
-                holder.editTxt.setVisibility(View.VISIBLE);
+                holder.commentCellEditTxt.setVisibility(View.VISIBLE);
             } else {
-                holder.editTxt.setVisibility(View.INVISIBLE);
+                holder.commentCellEditTxt.setVisibility(View.INVISIBLE);
             }
 
             if ("fb".equals(commentList.getComment_type())) {
-                holder.replyTxt.setVisibility(View.GONE);
+                holder.commentCellReplyTxt.setVisibility(View.INVISIBLE);
             } else {
-                holder.replyTxt.setVisibility(View.VISIBLE);
+                holder.commentCellReplyTxt.setVisibility(View.VISIBLE);
+            }
+
+            if (holder.commentCellEditTxt.getVisibility() == View.VISIBLE) {
+                holder.commentCellReplyTxt.setVisibility(View.INVISIBLE);
+            } else {
+                holder.commentCellReplyTxt.setVisibility(View.VISIBLE);
             }
 
             if (!StringUtils.isNullOrEmpty(commentList.getName())) {
@@ -808,59 +809,44 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 holder.replyCommentView.setVisibility(View.VISIBLE);
                 ViewHolder replyViewholder = new ViewHolder();
                 for (int j = 0; j < commentList.getReplies().size(); j++) {
-                    displayReplies(replyViewholder, commentList.getReplies().get(j), holder.replyCommentView, REPLY_LEVEL_PARENT);
+                    displayReplies(replyViewholder, commentList.getReplies().get(j), holder.replyCommentView, REPLY_LEVEL_PARENT, j);
                 }
-
-//                if (commentList.getReplies().size() > 1) {
-//                    holder.replyCountTextView.setText(commentList.getReplies().size() + " replies");
-//                } else {
-//                    holder.replyCountTextView.setText(commentList.getReplies().size() + " reply");
-//                }
-//                holder.replierUsernameTextView.setText("" + commentList.getReplies().get(0).getName());
-//
-//                if (commentList.getProfile_image() != null && !StringUtils.isNullOrEmpty(commentList.getProfile_image().getClientAppMin())) {
-//                    try {
-//                        Picasso.with(getActivity()).load(commentList.getReplies().get(0).getProfile_image().getClientAppMin())
-//                                .placeholder(R.drawable.default_commentor_img).into(holder.replierImageView);
-//                    } catch (Exception e) {
-//                        Crashlytics.logException(e);
-//                        Log.d("MC4kException", Log.getStackTraceString(e));
-//                        Picasso.with(getActivity()).load(R.drawable.default_commentor_img).into(holder.replierImageView);
-//                    }
-//                } else {
-//                    Picasso.with(getActivity()).load(R.drawable.default_commentor_img).into(holder.replierImageView);
-//                }
             } else {
                 holder.replyCommentView.setVisibility(View.GONE);
             }
         }
     }
 
-    private void displayReplies(ViewHolder replyViewholder, CommentsData replies, RelativeLayout parentView, int replyLevel) {
+    private void displayReplies(ViewHolder replyViewholder, CommentsData replies, LinearLayout parentView, int replyLevel, int replyPos) {
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         View view = inflater.inflate(R.layout.custom_reply_cell, null);
+        replyViewholder.replyIndicatorImageView = (ImageView) view.findViewById(R.id.replyIndicatorImageView);
         replyViewholder.commentorsImage = (ImageView) view.findViewById(R.id.network_img);
         replyViewholder.commentName = (TextView) view.findViewById(R.id.txvCommentTitle);
         replyViewholder.commentDescription = (TextView) view.findViewById(R.id.txvCommentDescription);
         replyViewholder.dateTxt = (TextView) view.findViewById(R.id.txvDate);
-        replyViewholder.replyTxt = (TextView) view.findViewById(R.id.txvReply);
-        replyViewholder.editTxt = (TextView) view.findViewById(R.id.txvEdit);
-        replyViewholder.replyCommentView = (RelativeLayout) view.findViewById(R.id.replyRelativeLayout);
-//        replyViewholder.replierImageView = (CircularImageView) view.findViewById(R.id.replyUserImageView);
-//        replyViewholder.replyCountTextView = (TextView) view.findViewById(R.id.replyCountTextView);
-//        replyViewholder.replierUsernameTextView = (TextView) view.findViewById(R.id.replyUserNameTextView);
-//        replyViewholder.replyCommentView = (RelativeLayout) view.findViewById(R.id.replyRelativeLayout);
+        replyViewholder.replyCellReplyTxt = (TextView) view.findViewById(R.id.txvReplyCellReply);
+        replyViewholder.replyCellEditTxt = (TextView) view.findViewById(R.id.txvReplyCellEdit);
+        replyViewholder.replyCommentView = (LinearLayout) view.findViewById(R.id.replyRelativeLayout);
 
         replyViewholder.commentorsImage.setOnClickListener(this);
         replyViewholder.commentName.setOnClickListener(this);
 
-//        replyViewholder.replyCommentView.setOnClickListener(this);
-//        replyViewholder.replyCommentView.setTag(replies);
-        replyViewholder.replyTxt.setOnClickListener(this);
-        replyViewholder.editTxt.setOnClickListener(this);
-        if (replyLevel == REPLY_LEVEL_CHILD) {
-            replyViewholder.replyTxt.setVisibility(View.GONE);
-            replyViewholder.editTxt.setVisibility(View.GONE);
+        replyViewholder.replyCellReplyTxt.setOnClickListener(this);
+        replyViewholder.replyCellEditTxt.setOnClickListener(this);
+
+        if (!"fb".equals(replies.getComment_type()) && userDynamoId.equals(replies.getUserId())) {
+            replyViewholder.replyCellEditTxt.setVisibility(View.VISIBLE);
+            replyViewholder.replyCellReplyTxt.setVisibility(View.INVISIBLE);
+        } else {
+            replyViewholder.replyCellEditTxt.setVisibility(View.INVISIBLE);
+            replyViewholder.replyCellReplyTxt.setVisibility(View.VISIBLE);
+        }
+
+        if (replyLevel == REPLY_LEVEL_PARENT && replyPos == 0) {
+            replyViewholder.replyIndicatorImageView.setVisibility(View.VISIBLE);
+        } else {
+            replyViewholder.replyIndicatorImageView.setVisibility(View.INVISIBLE);
         }
 
         view.setTag(replies);
@@ -892,32 +878,12 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         }
         parentView.addView(view);
 
-        if (replyLevel == REPLY_LEVEL_PARENT && replies.getReplies() != null && replies.getReplies().size() > 0) {
+        if (replies.getReplies() != null && replies.getReplies().size() > 0) {
             replyViewholder.replyCommentView.setVisibility(View.VISIBLE);
             ViewHolder replyReplyViewholder = new ViewHolder();
             for (int j = 0; j < replies.getReplies().size(); j++) {
-                displayReplies(replyReplyViewholder, replies.getReplies().get(j), replyViewholder.replyCommentView, REPLY_LEVEL_CHILD);
+                displayReplies(replyReplyViewholder, replies.getReplies().get(j), parentView, REPLY_LEVEL_CHILD, j);
             }
-
-//                if (commentList.getReplies().size() > 1) {
-//                    holder.replyCountTextView.setText(commentList.getReplies().size() + " replies");
-//                } else {
-//                    holder.replyCountTextView.setText(commentList.getReplies().size() + " reply");
-//                }
-//                holder.replierUsernameTextView.setText("" + commentList.getReplies().get(0).getName());
-//
-//                if (commentList.getProfile_image() != null && !StringUtils.isNullOrEmpty(commentList.getProfile_image().getClientAppMin())) {
-//                    try {
-//                        Picasso.with(getActivity()).load(commentList.getReplies().get(0).getProfile_image().getClientAppMin())
-//                                .placeholder(R.drawable.default_commentor_img).into(holder.replierImageView);
-//                    } catch (Exception e) {
-//                        Crashlytics.logException(e);
-//                        Log.d("MC4kException", Log.getStackTraceString(e));
-//                        Picasso.with(getActivity()).load(R.drawable.default_commentor_img).into(holder.replierImageView);
-//                    }
-//                } else {
-//                    Picasso.with(getActivity()).load(R.drawable.default_commentor_img).into(holder.replierImageView);
-//                }
         } else {
             replyViewholder.replyCommentView.setVisibility(View.GONE);
         }
@@ -941,54 +907,22 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     break;
                 case R.id.add_comment:
                     break;
-                case R.id.txvReply:
-                    try {
-                        commentFragment = new CommentRepliesDialogFragment();
-                        Bundle _args = new Bundle();
-                        _args.putParcelable("commentData", (CommentsData) ((View) v.getParent().getParent()).getTag());
-                        _args.putString("articleId", articleId);
-                        _args.putString("type", "article");
-                        commentFragment.setArguments(_args);
-                        FragmentManager fm = getFragmentManager();
-                        commentFragment.show(fm, "Replies");
-                    } catch (Exception e) {
-                        Crashlytics.logException(e);
-                        Log.d("MC4kException", Log.getStackTraceString(e));
-                    }
+                case R.id.txvCommentCellReply:
+                    openCommentDialog((CommentsData) ((View) v.getParent().getParent()).getTag(), "ADD");
                     break;
-                case R.id.replyRelativeLayout:
-                    try {
-                        commentFragment = new CommentRepliesDialogFragment();
-                        Bundle commentArgs = new Bundle();
-                        commentArgs.putParcelable("commentData", (CommentsData) ((View) v.getParent()).getTag());
-                        commentArgs.putString("articleId", articleId);
-                        commentArgs.putString("type", "article");
-                        commentFragment.setArguments(commentArgs);
-                        FragmentManager fm = getFragmentManager();
-                        commentFragment.show(fm, "Replies");
-                    } catch (Exception e) {
-                        Crashlytics.logException(e);
-                        Log.d("MC4kException", Log.getStackTraceString(e));
-                    }
+                case R.id.txvReplyCellReply:
+                    openCommentDialog((CommentsData) ((View) v.getParent()).getTag(), "ADD");
                     break;
-                case R.id.txvEdit:
-                    try {
-                        editCommentsRepliesFragment = new EditCommentsRepliesFragment();
-                        CommentsData cData = (CommentsData) ((View) v.getParent().getParent()).getTag();
-                        commentEditView = (View) v.getParent().getParent();
-                        Bundle _args = new Bundle();
-                        _args.putParcelable("commentData", cData);
-                        _args.putString("articleId", articleId);
-                        _args.putString("type", "article");
-                        _args.putInt(AppConstants.COMMENT_OR_REPLY_OR_NESTED_REPLY, 0);
-                        editCommentsRepliesFragment.setArguments(_args);
-                        FragmentManager fm = getFragmentManager();
-                        editCommentsRepliesFragment.show(fm, "Replies");
-                    } catch (Exception e) {
-                        Crashlytics.logException(e);
-                        Log.d("MC4kException", Log.getStackTraceString(e));
-                    }
-                    break;
+                case R.id.txvCommentCellEdit: {
+                    CommentsData cData = (CommentsData) ((View) v.getParent().getParent()).getTag();
+                    openCommentDialog(cData, "EDIT");
+                }
+                break;
+                case R.id.txvReplyCellEdit: {
+                    CommentsData cData = (CommentsData) ((View) v.getParent()).getTag();
+                    openCommentDialog(cData, "EDIT");
+                }
+                break;
                 case R.id.bookmarkTextView:
                     addRemoveBookmark();
                     break;
@@ -1087,7 +1021,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     break;
                 }
                 case R.id.commentFloatingActionButton:
-                    openCommentDialog();
+                    openCommentDialog(null, "ADD");
                     break;
                 case R.id.likeTextView: {
                     if (recommendStatus == 0) {
@@ -1165,7 +1099,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         }
                     }
 
-
                     break;
             }
         } catch (Exception e) {
@@ -1174,14 +1107,151 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         }
     }
 
-    private void openCommentDialog() {
+    private void openCommentDialog(CommentsData comData, String opType) {
         try {
-            AddCommentFragment commentFrag = new AddCommentFragment();
+            AddEditCommentReplyFragment commentFrag = new AddEditCommentReplyFragment();
+            commentFrag.setTargetFragment(this, 0);
+            Bundle _args = new Bundle();
+            _args.putString(Constants.ARTICLE_ID, articleId);
+            _args.putString("opType", opType);
+            if (comData != null) {
+                _args.putParcelable("commentData", comData);
+            }
+            commentFrag.setArguments(_args);
             ((ArticleDetailsContainerActivity) getActivity()).hideToolbarPerm();
             ((ArticleDetailsContainerActivity) getActivity()).addFragment(commentFrag, null, true, "topToBottom");
         } catch (Exception e) {
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
+        }
+    }
+
+    @Override
+    public void onCommentAddition(CommentsData cd) {
+        displayComments(new ViewHolder(), cd, false);
+    }
+
+    @Override
+    public void onReplyAddition(CommentsData updatedComment) {
+        for (int i = 0; i < commentLayout.getChildCount(); i++) {
+            CommentsData cdata = (CommentsData) commentLayout.getChildAt(i).getTag();
+            CommentsData searchedData = recursiveSearch(cdata, updatedComment);
+            if (searchedData != null) {
+                searchedData.getReplies().add(updatedComment);
+                ViewHolder viewHolder = new ViewHolder();
+                displayCommentsAtPosition(viewHolder, cdata, false, i);
+                break;
+            } else {
+                Log.d("Nothing in comment ", cdata.getBody());
+            }
+        }
+    }
+
+    @Override
+    public void onCommentReplyEditSuccess(CommentsData cd) {
+        for (int i = 0; i < commentLayout.getChildCount(); i++) {
+            CommentsData cdata = (CommentsData) commentLayout.getChildAt(i).getTag();
+            CommentsData searchedData = recursiveSearch(cdata, cd);
+            if (searchedData != null) {
+                ViewHolder viewHolder = new ViewHolder();
+                displayCommentsAtPosition(viewHolder, cdata, false, i);
+                break;
+            } else {
+                Log.d("Nothing in comment ", cdata.getBody());
+            }
+        }
+    }
+
+    private CommentsData recursiveSearch(CommentsData cd1, CommentsData upComment) {
+        if (cd1.getId().equals(upComment.getParent_id())) {
+            return cd1;
+        }
+        ArrayList<CommentsData> children = cd1.getReplies();
+        CommentsData res = null;
+        for (int i = 0; res == null && i < children.size(); i++) {
+            res = recursiveSearch(children.get(i), upComment);
+        }
+        return res;
+    }
+
+    private void displayCommentsAtPosition(ViewHolder holder, CommentsData commentList,
+                                           boolean isNewComment, int position) {
+        if (holder != null) {
+            LayoutInflater inflater = LayoutInflater.from(getActivity());
+            View view = inflater.inflate(R.layout.custom_comment_cell, null);
+            holder.commentorsImage = (ImageView) view.findViewById(R.id.network_img);
+            holder.commentName = (TextView) view.findViewById(R.id.txvCommentTitle);
+            holder.commentDescription = (TextView) view.findViewById(R.id.txvCommentDescription);
+            holder.dateTxt = (TextView) view.findViewById(R.id.txvDate);
+            holder.commentCellReplyTxt = (TextView) view.findViewById(R.id.txvCommentCellReply);
+            holder.commentCellEditTxt = (TextView) view.findViewById(R.id.txvCommentCellEdit);
+            holder.replyCommentView = (LinearLayout) view.findViewById(R.id.replyRelativeLayout);
+
+            holder.commentorsImage.setOnClickListener(this);
+            holder.commentName.setOnClickListener(this);
+            holder.replyCommentView.setOnClickListener(this);
+            holder.replyCommentView.setTag(commentList);
+
+            holder.commentCellReplyTxt.setOnClickListener(this);
+            holder.commentCellEditTxt.setOnClickListener(this);
+
+            view.setTag(commentList);
+
+            if (!"fb".equals(commentList.getComment_type()) && userDynamoId.equals(commentList.getUserId())) {
+                holder.commentCellEditTxt.setVisibility(View.VISIBLE);
+            } else {
+                holder.commentCellEditTxt.setVisibility(View.INVISIBLE);
+            }
+
+            if ("fb".equals(commentList.getComment_type())) {
+                holder.commentCellReplyTxt.setVisibility(View.INVISIBLE);
+            } else {
+                holder.commentCellReplyTxt.setVisibility(View.VISIBLE);
+            }
+
+            if (holder.commentCellEditTxt.getVisibility() == View.VISIBLE) {
+                holder.commentCellReplyTxt.setVisibility(View.INVISIBLE);
+            } else {
+                holder.commentCellReplyTxt.setVisibility(View.VISIBLE);
+            }
+
+            if (!StringUtils.isNullOrEmpty(commentList.getName())) {
+                holder.commentName.setText(commentList.getName());
+            } else {
+                holder.commentName.setText("User");
+            }
+            if (!StringUtils.isNullOrEmpty(commentList.getBody())) {
+                holder.commentDescription.setText(commentList.getBody());
+            }
+            if (!StringUtils.isNullOrEmpty(commentList.getCreate())) {
+                holder.dateTxt.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(Long.parseLong(commentList.getCreate())));
+            } else {
+                holder.dateTxt.setText("NA");
+            }
+
+            if (commentList.getProfile_image() != null && !StringUtils.isNullOrEmpty(commentList.getProfile_image().getClientAppMin())) {
+                try {
+                    Picasso.with(getActivity()).load(commentList.getProfile_image().getClientAppMin()).placeholder(R.drawable.default_commentor_img).into(holder.commentorsImage);
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Log.d("MC4kException", Log.getStackTraceString(e));
+                    Picasso.with(getActivity()).load(R.drawable.default_commentor_img).into(holder.commentorsImage);
+                }
+            } else {
+                Picasso.with(getActivity()).load(R.drawable.default_commentor_img).into(holder.commentorsImage);
+            }
+
+            commentLayout.removeViewAt(position);
+            commentLayout.addView(view, position);
+            if (commentList.getReplies() != null && commentList.getReplies().size() > 0) {
+                holder.replyCommentView.setVisibility(View.VISIBLE);
+                ViewHolder replyViewholder = new ViewHolder();
+                for (int j = 0; j < commentList.getReplies().size(); j++) {
+                    displayReplies(replyViewholder, commentList.getReplies().get(j), holder.replyCommentView, REPLY_LEVEL_PARENT, j);
+                }
+            } else {
+                holder.replyCommentView.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -1361,12 +1431,15 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         private TextView commentName;
         private TextView commentDescription;
         private TextView dateTxt;
-        private TextView replyTxt;
-        private TextView editTxt;
+        private TextView commentCellReplyTxt;
+        private TextView replyCellReplyTxt;
+        private TextView commentCellEditTxt;
+        private TextView replyCellEditTxt;
         private CircularImageView replierImageView;
         private TextView replierUsernameTextView;
         private TextView replyCountTextView;
-        private RelativeLayout replyCommentView;
+        private LinearLayout replyCommentView;
+        public ImageView replyIndicatorImageView;
     }
 
     public void followAPICall(String id) {

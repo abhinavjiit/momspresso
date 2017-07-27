@@ -1,8 +1,11 @@
-package com.mycity4kids.models.response;
+package com.mycity4kids.models.request;
 
-public class KidsModel {
+/**
+ * Created by hemant on 26/7/17.
+ */
+public class AddRemoveKidsRequest {
     private String name;
-    private String birthDay;
+    private long birthDay;
     private String colorCode;
     private String gender;
 
@@ -14,11 +17,11 @@ public class KidsModel {
         this.name = name;
     }
 
-    public String getBirthDay() {
+    public long getBirthDay() {
         return birthDay;
     }
 
-    public void setBirthDay(String birthDay) {
+    public void setBirthDay(long birthDay) {
         this.birthDay = birthDay;
     }
 
