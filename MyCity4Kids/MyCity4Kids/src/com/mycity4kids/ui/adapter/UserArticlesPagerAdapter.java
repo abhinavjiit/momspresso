@@ -18,6 +18,7 @@ import java.util.ArrayList;
  * Created by hemant on 24/5/17.
  */
 public class UserArticlesPagerAdapter extends FragmentStatePagerAdapter {
+
     private int mNumOfTabs;
     private UserPublishedArticleTabFragment userPublishedArticleTabFragment;
     private UserDraftArticleTabFragment userDraftArticleTabFragment;

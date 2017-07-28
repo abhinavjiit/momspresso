@@ -234,17 +234,6 @@ public class MainArticleListingAdapter extends BaseAdapter {
                 holder.videoIndicatorImageView.setVisibility(View.INVISIBLE);
             }
 
-            holder.txvAuthorName.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(mContext, BloggerDashboardActivity.class);
-                    intent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, articleDataModelsNew.get(position).getUserId());
-                    intent.putExtra(AppConstants.AUTHOR_NAME, "" + articleDataModelsNew.get(position).getUserName());
-                    intent.putExtra(Constants.FROM_SCREEN, listingType);
-                    mContext.startActivity(intent);
-                }
-            });
-
             if (articleDataModelsNew.get(position).getListingBookmarkStatus() == 0) {
                 holder.bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
             } else {

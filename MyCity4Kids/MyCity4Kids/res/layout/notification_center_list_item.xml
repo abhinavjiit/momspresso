@@ -1,53 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/notification_center.unread.bg"
-    android:paddingBottom="10dp"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:paddingTop="10dp">
+    android:paddingBottom="18dp"
+    android:paddingLeft="18dp"
+    android:paddingRight="18dp"
+    android:paddingTop="18dp">
 
-    <ImageView
-        android:id="@+id/notificationImageView"
-        android:layout_width="66dp"
-        android:layout_height="50dp"
-        android:layout_marginRight="10dp"
-        android:src="@drawable/default_article" />
-
-    <TextView
+    <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/notificationTitleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/notificationDateTextView"
-        android:layout_toRightOf="@+id/notificationImageView"
-        android:fontFamily="sans-serif"
-        android:text="mycity4kids"
-        android:textColor="@color/black_color"
-        android:textSize="14sp" />
+        android:text="TRENDING TOPIC OF DAY"
+        android:textColor="@color/notification_center.title"
+        android:textSize="15sp"
+        app:fontName="oswald.ttf" />
 
-    <TextView
+    <ImageView
+        android:id="@+id/notificationImageView"
+        android:layout_width="90dp"
+        android:layout_height="60dp"
+        android:layout_below="@+id/notificationTitleTextView"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/default_article" />
+
+    <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/notificationBodyTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/notificationTitleTextView"
-        android:layout_marginTop="2dp"
+        android:layout_alignTop="@+id/notificationImageView"
+        android:layout_marginLeft="14dp"
+        android:layout_marginStart="14dp"
+        android:layout_toEndOf="@+id/notificationImageView"
         android:layout_toRightOf="@+id/notificationImageView"
         android:ellipsize="end"
-        android:fontFamily="sans-serif-light"
         android:text="Review Title"
-        android:textColor="@color/black_color"
-        android:textSize="12sp" />
+        android:textColor="@color/notification_center.body"
+        android:textSize="14sp"
+        app:fontName="oswald_regular.ttf" />
 
-    <TextView
+    <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/notificationDateTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:fontFamily="sans-serif-light"
-        android:paddingLeft="10dp"
+        android:layout_alignLeft="@+id/notificationBodyTextView"
+        android:layout_alignStart="@+id/notificationBodyTextView"
+        android:layout_below="@+id/notificationBodyTextView"
+        android:layout_marginTop="10dp"
         android:text="Address and Date"
-        android:textSize="11sp" />
+        android:textColor="@color/notification_center.date"
+        android:textSize="14sp"
+        app:fontName="oswald.ttf" />
 
 </RelativeLayout>

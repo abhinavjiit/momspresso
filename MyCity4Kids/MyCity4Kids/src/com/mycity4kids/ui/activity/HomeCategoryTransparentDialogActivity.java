@@ -36,7 +36,6 @@ import com.mycity4kids.models.category.GroupCategoryModel;
 import com.mycity4kids.models.category.SubCategory;
 import com.mycity4kids.ui.adapter.CategoryListAdapter;
 import com.mycity4kids.ui.adapter.SubLocalityAdapter;
-import com.mycity4kids.widget.Header;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,7 +44,6 @@ public class HomeCategoryTransparentDialogActivity extends BaseActivity implemen
 	
 	private ExpandableListView mCategoryExpandList;
 	private CategoryListTable mCategoryListTable;
-	private Header header;
 	private ListView mSearchList;
 	private EditText mQuerySearchEtxt;
 	private EditText mLocalitySearchEtxt;

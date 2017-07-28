@@ -181,8 +181,11 @@
     <color name="analytics.engagement.separator">#c7c7c7</color>
     <color name="analytics.engagement.graph">#ABC4F8</color>
 
+    <color name="notification_center.title">#515556</color>
+    <color name="notification_center.body">#545454</color>
+    <color name="notification_center.date">#9c9dac</color>
     <color name="notification_center.read.bg">#FFFFFF</color>
-    <color name="notification_center.unread.bg">#EFEFEF</color>
+    <color name="notification_center.unread.bg">#F3F3F3</color>
 
     <color name="publish_article.tag_images.selected_bg">#80000000</color>
 
@@ -264,6 +267,8 @@
     <color name="search_topics.text">#515556</color>
     <color name="search_topics.hint">#515556</color>
     <color name="search_topics.search_bg">#f3f3f3</color>
+
+    <color name="common_underline">#9c9dac</color>
 
     <color name="home_screen.trending_list_header.bg">#f3f3f3</color>
     <color name="home_screen.trending_list_header.title">#9c9dac</color>
@@ -406,5 +411,28 @@
     <color name="blog_setup.text_city">#545454</color>
     <color name="blog_setup.hint_phone">#545454</color>
     <color name="blog_setup.save_publish">#9c9dac</color>
+
+    <color name="ranking.toolbar.title">#545454</color>
+    <color name="ranking.tabs_label">#545454</color>
+    <color name="ranking.tab_indicator">#507cbe</color>
+    <color name="ranking.pop_menu_bg">#f9f9f9</color>
+    <color name="ranking.views_label">#545454</color>
+    <color name="ranking.time_picker">#545454</color>
+    <color name="ranking.menu_custom_label">#545454</color>
+    <color name="ranking.menu_30_days_label">#545454</color>
+    <color name="ranking.from_to_date">#545454</color>
+    <color name="ranking.improve_views_label">#507cbe</color>
+    <color name="ranking.improve_social_share">#507cbe</color>
+    <color name="ranking.page_views_label">#545454</color>
+    <color name="ranking.engagement">#545454</color>
+    <color name="ranking.stats_text">#545454</color>
+    <color name="ranking.stats_bg">#e0e0e0</color>
+    <color name="ranking.how_calculated">#545454</color>
+    <color name="ranking.top_bloggers">#545454</color>
+    <color name="ranking.language_selected">#545454</color>
+    <color name="ranking.author_name">#545454</color>
+    <color name="ranking.follower_count">#545454</color>
+    <color name="ranking.top_blogger_rank">#545454</color>
+    <color name="ranking.boxes_bg">#e0e0e0</color>
 
 </resources>

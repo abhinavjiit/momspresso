@@ -498,23 +498,16 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
             if (response == null || null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                 Crashlytics.logException(nee);
-//                showToast("Something went wrong from server");
                 return;
             }
             try {
                 FollowUnfollowCategoriesResponse responseData = (FollowUnfollowCategoriesResponse) response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-//                    Intent intent = new Intent(ConfirmFollowedTopicsActivity.this, DashboardActivity.class);
-//                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-//                    startActivity(intent);
-//                    finish();
-                } else {
-//                    showToast(responseData.getReason());
+                    SharedPrefUtils.setFollowedTopicsCount(getActivity(), responseData.getData().size());
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-//                showToast(getString(R.string.went_wrong));
             }
         }
 
@@ -523,7 +516,6 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
             removeProgressDialog();
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
-//            showToast(getString(R.string.went_wrong));
         }
     };
 

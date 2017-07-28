@@ -56,6 +56,7 @@ public class TrendingTopicsTabFragment extends BaseFragment implements View.OnCl
     private TextView noBlogsTextView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private int position;
+    private boolean isHeaderVisible = false;
 
     @Nullable
     @Override
@@ -64,7 +65,7 @@ public class TrendingTopicsTabFragment extends BaseFragment implements View.OnCl
 
         View view = inflater.inflate(R.layout.new_article_layout, container, false);
 
-        ListView listView = (ListView) view.findViewById(R.id.scroll);
+        final ListView listView = (ListView) view.findViewById(R.id.scroll);
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
@@ -80,9 +81,12 @@ public class TrendingTopicsTabFragment extends BaseFragment implements View.OnCl
         adapter = new MainArticleListingAdapter(getActivity());
         adapter.setNewListData(trendingTopicData.getArticleList());
 
-        if (position == 0) {
+        if (position == 0 && SharedPrefUtils.getFollowedTopicsCount(getActivity()) < 5) {
             View headerView = inflater.inflate(R.layout.trending_list_header_item, null, false);
             listView.addHeaderView(headerView);
+            isHeaderVisible = true;
+        } else {
+            isHeaderVisible = false;
         }
         listView.setAdapter(adapter);
 
@@ -107,6 +111,7 @@ public class TrendingTopicsTabFragment extends BaseFragment implements View.OnCl
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                listView.getItemAtPosition(i);
                 ArticleListingResult parentingListData = (ArticleListingResult) adapterView.getItemAtPosition(i);
 
                 if (null == parentingListData) {
@@ -123,7 +128,12 @@ public class TrendingTopicsTabFragment extends BaseFragment implements View.OnCl
                     intent.putExtra(Constants.TITLE_SLUG, parentingListData.getTitleSlug());
                     intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Trending");
                     intent.putExtra(Constants.FROM_SCREEN, "Article Listing Screen");
-                    intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
+                    if (isHeaderVisible == true) {
+                        intent.putExtra(Constants.ARTICLE_INDEX, "" + (i - 1));
+                    } else {
+                        intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
+                    }
+
                     intent.putParcelableArrayListExtra("pagerListData", trendingTopicData.getArticleList());
                     startActivity(intent);
                 }

@@ -4,7 +4,6 @@ import android.Manifest;
 import android.accounts.AccountManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,10 +17,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -173,12 +170,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
         Utils.pushOpenScreenEvent(DashboardActivity.this, "DashBoard", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
-        // onclick events
-//        findViewById(R.id.rdBtnToday).setOnClickListener(this);
-//        findViewById(R.id.rdBtnUpcoming).setOnClickListener(this);
-//        findViewById(R.id.feed_back).setOnClickListener(this);
-//        findViewById(R.id.addVideosTextView).setOnClickListener(this);
-//        findViewById(R.id.myVideosTextView).setOnClickListener(this);
         toolbarTitleTextView.setOnClickListener(this);
         searchAllImageView.setOnClickListener(this);
         setSupportActionBar(mToolbar);
@@ -266,25 +257,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             replaceFragment(new FragmentMC4KHomeNew(), null, false);
         }
 
-//        if (SharedPrefUtils.isCityFetched(this) && SharedPrefUtils.getCurrentCityModel(this).getId() != AppConstants.OTHERS_CITY_ID) {
-//            findViewById(R.id.rdBtnUpcoming).setVisibility(View.VISIBLE);
-//            findViewById(R.id.rdBtnKids).setVisibility(View.VISIBLE);
-//        } else {
-//            findViewById(R.id.rdBtnUpcoming).setVisibility(View.GONE);
-//            findViewById(R.id.rdBtnKids).setVisibility(View.GONE);
-//        }
-//
-//        findViewById(R.id.rdBtnKids).setOnClickListener(this);
-//        findViewById(R.id.rdBtnParentingBlogs).setOnClickListener(this);
-//        findViewById(R.id.rdBtnMomspressoVideo).setOnClickListener(this);
-//        findViewById(R.id.editor).setOnClickListener(this);
-//        findViewById(R.id.imgProfile).setOnClickListener(this);
-//        findViewById(R.id.txvUserName).setOnClickListener(this);
-
-        /**
-         * this dialog will open App Upgrade
-         */
-
         RateVersion reteVersionModel = SharedPrefUtils.getRateVersion(this);
         int currentRateVersion = reteVersionModel.getAppRateVersion();
         currentRateVersion++;
@@ -298,134 +270,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             reteVersionModel.setAppRateVersion(-20);
             rateAppDialogFragment.show(getFragmentManager(), rateAppDialogFragment.getClass().getSimpleName());
         }
-
-
-//        populateLanguagesInMenu();
-        // manage fragment change
-
-//        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-//            @Override
-//            public void onBackStackChanged() {
-//                Fragment currentFrag = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-//
-//                if (currentFrag instanceof FragmentMC4KHome) {
-//                    mDrawerToggle.setDrawerIndicatorEnabled(true);
-//                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-//                    mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_UNLOCKED);
-//                    setTitle("");
-//                } else if (currentFrag instanceof FragmentSetting) {
-//                    setTitle("Settings");
-//                    mDrawerToggle.setDrawerIndicatorEnabled(true);
-//                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-//                    mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_UNLOCKED);
-//                } else if (currentFrag instanceof FragmentBusinesslistEvents) {
-//                    setTitle("Upcoming Events");
-//                } else if (currentFrag instanceof FragmentHomeCategory) {
-//                    setTitle("Kids Resources");
-//                } else if (currentFrag instanceof FragmentFamilyDetail) {
-//                    setTitle("Family Details");
-//                    mDrawerToggle.setDrawerIndicatorEnabled(false);
-//                    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//                    getSupportActionBar().setHomeButtonEnabled(true);
-//                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-//                    mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-//                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
-//                } else if (currentFrag instanceof FragmentAdultProfile) {
-//                    mDrawerToggle.setDrawerIndicatorEnabled(false);
-//                    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//                    getSupportActionBar().setHomeButtonEnabled(true);
-//                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-//                    mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-//                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
-//                } else if (currentFrag instanceof FragmentKidProfile) {
-//                    mDrawerToggle.setDrawerIndicatorEnabled(false);
-//                    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//                    getSupportActionBar().setHomeButtonEnabled(true);
-//                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-//                    mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-//                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
-//                } else if (currentFrag instanceof FragmentEditorsPick) {
-//                    mDrawerToggle.setDrawerIndicatorEnabled(true);
-//                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-//                    mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_UNLOCKED);
-//                    if (SharedPrefUtils.getCurrentCityModel(DashboardActivity.this).getName().isEmpty()) {
-//                        switch (SharedPrefUtils.getCurrentCityModel(DashboardActivity.this).getId()) {
-//                            case 1:
-//                                setTitle("Best of " + "Delhi-NCR");
-//                                break;
-//                            case 2:
-//                                setTitle("Best of " + "Bangalore");
-//                                break;
-//                            case 3:
-//                                setTitle("Best of " + "Mumbai");
-//                                break;
-//                            case 4:
-//                                setTitle("Best of " + "Pune");
-//                                break;
-//                            case 5:
-//                                setTitle("Best of " + "Hyderabad");
-//                                break;
-//                            case 6:
-//                                setTitle("Best of " + "Chennai");
-//                                break;
-//                            case 7:
-//                                setTitle("Best of " + "Kolkata");
-//                                break;
-//                            case 8:
-//                                setTitle("Best of " + "Jaipur");
-//                                break;
-//                            case 9:
-//                                setTitle("Best of " + "Ahmedabad");
-//                                break;
-//                            default:
-//                                setTitle("Best of " + "Delhi-NCR");
-//                                break;
-//                        }
-//
-//                    } else {
-//                        if (SharedPrefUtils.getCurrentCityModel(DashboardActivity.this).getName().equals("Delhi-Ncr")) {
-//                            SharedPrefUtils.getCurrentCityModel(DashboardActivity.this).setName("Delhi-NCR");
-//                        }
-//                        setTitle("Best of " + SharedPrefUtils.getCurrentCityModel(DashboardActivity.this).getName());
-//                    }
-//                } else if (currentFrag instanceof SendFeedbackFragment) {
-//                    mDrawerToggle.setDrawerIndicatorEnabled(true);
-//                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-//                    mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_UNLOCKED);
-//                    setTitle("Send Feedback");
-//                } else if (currentFrag instanceof ChangeCityFragment) {
-//                    setTitle("Change City");
-//                    mDrawerToggle.setDrawerIndicatorEnabled(false);
-//                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-//                    mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-//                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
-//                } else if (currentFrag instanceof SyncSettingFragment) {
-//                    setTitle("Sync Settings");
-//                    mDrawerToggle.setDrawerIndicatorEnabled(false);
-//                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-//                    mDrawerToggle.onDrawerStateChanged(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-//                    mDrawerToggle.setHomeAsUpIndicator(R.drawable.back_arroow);
-//                }
-//                invalidateOptionsMenu();
-//                mDrawerToggle.syncState();
-//
-//            }
-//        });
-//
-//        mDrawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                switch (v.getId()) {
-//                    case -1:
-//                        getSupportFragmentManager().popBackStack();
-//                        break;
-//
-//                    default:
-//                        break;
-//                }
-//            }
-//        });
-
     }
 
     // The onNewIntent() is overridden to get and resolve the data for deep linking
@@ -1461,14 +1305,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         return new QBadgeView(this)
                 .setBadgeText(number)
                 .setGravityOffset(12, 2, true)
-                .bindTarget(bottomNavigationView.getBottomNavigationItemView(position))
-                .setOnDragStateChangedListener(new Badge.OnDragStateChangedListener() {
-                    @Override
-                    public void onDragStateChanged(int dragState, Badge badge, View targetView) {
-                        if (Badge.OnDragStateChangedListener.STATE_SUCCEED == dragState)
-                            Toast.makeText(DashboardActivity.this, "bage removed", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                .bindTarget(bottomNavigationView.getBottomNavigationItemView(position));
 
     }
 }

@@ -54,8 +54,6 @@ import com.mycity4kids.dbtable.TaskCompletedTable;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.OnWebServiceCompleteListener;
-import com.mycity4kids.models.Topics;
-import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.businesslist.BusinessDataListing;
 import com.mycity4kids.models.businesslist.BusinessListResponse;
 import com.mycity4kids.models.response.ArticleListingResponse;
@@ -77,7 +75,6 @@ import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.activity.ActivityCreateAppointment;
 import com.mycity4kids.ui.activity.ActivityShowAppointment;
 import com.mycity4kids.ui.activity.BusinessDetailsActivity;
-import com.mycity4kids.ui.activity.CreateFamilyActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.adapter.AdapterHomeAppointment;
 import com.mycity4kids.ui.adapter.BusinessListingAdapterevent;
@@ -91,8 +88,6 @@ import com.mycity4kids.widget.HorizontalScrollCustomView;
 import com.squareup.picasso.Picasso;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -228,7 +223,6 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
                 public void onClick(View view) {
                     if (StringUtils.isNullOrEmpty("" + SharedPrefUtils.getUserDetailModel(getActivity()).getFamily_id()) ||
                             SharedPrefUtils.getUserDetailModel(getActivity()).getFamily_id() == 0) {
-                        showCreateFamilyAlert();
                     } else {
                         Intent appointmentIntent = new Intent(getActivity(), ActivityCreateAppointment.class);
                         startActivity(appointmentIntent);
@@ -836,7 +830,6 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
             case R.id.add_appointment:
                 if (StringUtils.isNullOrEmpty("" + SharedPrefUtils.getUserDetailModel(getActivity()).getFamily_id()) ||
                         SharedPrefUtils.getUserDetailModel(getActivity()).getFamily_id() == 0) {
-                    showCreateFamilyAlert();
                 } else {
                     intent = new Intent(getActivity(), ActivityCreateAppointment.class);
                     startActivity(intent);
@@ -1658,32 +1651,6 @@ public class FragmentMC4KHome extends BaseFragment implements View.OnClickListen
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-    }
-
-    private void showCreateFamilyAlert() {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
-
-        dialog.setMessage(getResources().getString(R.string.create_family)).setNegativeButton(getResources().getString(R.string.yes)
-                , new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent createFamilyIntent = new Intent(getActivity(), CreateFamilyActivity.class);
-                        startActivity(createFamilyIntent);
-                        dialog.cancel();
-                    }
-                }).setPositiveButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                // do nothing
-                dialog.cancel();
-
-            }
-        }).setIcon(android.R.drawable.ic_dialog_alert);
-
-        AlertDialog alert11 = dialog.create();
-        alert11.show();
-
-        alert11.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.home_light_blue));
-        alert11.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.canceltxt_color));
-
     }
 
     public String getMonth(int month) {

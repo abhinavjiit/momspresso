@@ -1,11 +1,8 @@
 package com.mycity4kids.utils;
 
-import java.util.ArrayList;
-
 import android.Manifest.permission;
 import android.accounts.NetworkErrorException;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.util.Log;
 
@@ -16,13 +13,9 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.city.City;
 import com.mycity4kids.models.response.CityConfigResponse;
 import com.mycity4kids.models.response.CityInfoItem;
-import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse;
-import com.mycity4kids.newmodels.ForceUpdateModel;
-import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ConfigAPIs;
-import com.mycity4kids.retrofitAPIsInterfaces.ForceUpdateAPI;
-import com.mycity4kids.ui.activity.SplashActivity;
-import com.mycity4kids.ui.activity.TopicsSplashActivity;
+
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;

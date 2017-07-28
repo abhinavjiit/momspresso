@@ -333,6 +333,7 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
             try {
                 FollowUnfollowCategoriesResponse responseData = (FollowUnfollowCategoriesResponse) response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    SharedPrefUtils.setFollowedTopicsCount(SubscribeTopicsActivity.this, responseData.getData().size());
                     Intent intent = new Intent(SubscribeTopicsActivity.this, DashboardActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);

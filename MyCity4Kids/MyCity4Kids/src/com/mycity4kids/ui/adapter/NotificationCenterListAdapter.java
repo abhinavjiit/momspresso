@@ -28,6 +28,7 @@ import com.mycity4kids.models.response.NotificationCenterResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.NotificationsAPI;
 import com.mycity4kids.ui.CircleTransformation;
+import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
 import com.mycity4kids.ui.activity.BloggerDashboardActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
@@ -129,7 +130,7 @@ public class NotificationCenterListAdapter extends BaseAdapter {
                     hitNotificationReadAPI(notificationList.get(position).getId());
                     notifyDataSetChanged();
                     Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "article_details");
-                    Intent intent = new Intent(mContext, ArticlesAndBlogsDetailsActivity.class);
+                    Intent intent = new Intent(mContext, ArticleDetailsContainerActivity.class);
                     intent.putExtra(Constants.ARTICLE_ID, notificationList.get(position).getArticleId());
                     intent.putExtra(Constants.AUTHOR_ID, notificationList.get(position).getAuthorId());
                     intent.putExtra(Constants.BLOG_SLUG, notificationList.get(position).getBlogTitleSlug());
@@ -137,11 +138,6 @@ public class NotificationCenterListAdapter extends BaseAdapter {
                     intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Notification Center");
                     intent.putExtra(Constants.FROM_SCREEN, "Notification Center List");
                     intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
-//                    if (AppConstants.NOTIFICATION_STATUS_UNREAD.equals(notificationList.get(position).getIsRead())) {
-//                        intent.putExtra(Constants.NOTIFICATION_CENTER_ID, notificationList.get(position).getId());
-//                    } else {
-//                        intent.putExtra(Constants.NOTIFICATION_CENTER_ID, "");
-//                    }
                     mContext.startActivity(intent);
                 }
             });

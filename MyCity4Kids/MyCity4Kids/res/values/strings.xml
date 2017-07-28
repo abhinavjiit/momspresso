@@ -684,4 +684,23 @@
     <string name="blog_setup.your_detail_desc">These details will not show on your public profile but will be used.</string>
     <string name="blog_setup.hint_phone">Phone Number</string>
     <string name="blog_setup.save_publish">SAVE &amp; PUBLISH</string>
+
+    <string name="ranking.toolbar.title">MY RANKING</string>
+    <string name="ranking.tabs_your_rank_label">YOUR RANK</string>
+    <string name="ranking.tabs_page_views_label">YOUR PAGE VIEWS</string>
+    <string name="ranking.views_label">BLOG PAGE VIEWS</string>
+    <string name="ranking.menu_30_days_label">30 DAYS VIEW</string>
+    <string name="ranking.menu_custom_label">CUSTOM</string>
+    <string name="ranking.from_to_date">TO</string>
+    <string name="ranking.improve_views_label">How can I improve my Page views?</string>
+    <string name="ranking.improve_social_share">How can I improve my Social Share?</string>
+    <string name="ranking.page_views_label">PAGE VIEWS: </string>
+    <string name="ranking.engagement">ENGAGEMENTS</string>
+    <string name="ranking.stats_like">LIKES</string>
+    <string name="ranking.stats_shares">SHARES</string>
+    <string name="ranking.stats_comments">COMMENTS</string>
+    <string name="ranking.how_calculated">How is this calculated?</string>
+    <string name="ranking.top_bloggers">TOP BLOGGERS IN</string>
+    <string name="ranking.followers_label">FOLLOWERS</string>
+
 </resources>

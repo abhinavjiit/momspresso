@@ -492,22 +492,15 @@ public class SplashActivity extends BaseActivity {
                 FollowUnfollowCategoriesResponse responseData = (FollowUnfollowCategoriesResponse) response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     ArrayList<String> mDatalist = (ArrayList<String>) responseData.getData();
-                    if (mDatalist.size() < AppConstants.MINIMUM_TOPICS_FOLLOW_REQUIREMENT) {
-                        Intent intent = new Intent(SplashActivity.this, TopicsSplashActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putStringArrayListExtra("followedTopics", mDatalist);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        gotoDashboard();
-                    }
+                    SharedPrefUtils.setFollowedTopicsCount(SplashActivity.this, mDatalist.size());
+                    gotoDashboard();
                 } else {
+                    gotoDashboard();
                     showToast(responseData.getReason());
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-//                showToast(getString(R.string.went_wrong));
                 gotoDashboard();
             }
         }
@@ -517,7 +510,6 @@ public class SplashActivity extends BaseActivity {
             removeProgressDialog();
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
-//            showToast(getString(R.string.went_wrong));
             gotoDashboard();
         }
 

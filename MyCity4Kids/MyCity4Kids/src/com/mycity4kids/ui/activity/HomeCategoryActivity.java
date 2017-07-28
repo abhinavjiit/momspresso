@@ -23,9 +23,7 @@ import com.mycity4kids.models.category.CategoryModel;
 import com.mycity4kids.models.category.GroupCategoryModel;
 import com.mycity4kids.models.category.SubCategory;
 import com.mycity4kids.models.logout.LogoutResponse;
-import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.adapter.CategoryListAdapter;
-import com.mycity4kids.widget.Header;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,7 +31,6 @@ import java.util.HashMap;
 public class HomeCategoryActivity extends BaseActivity implements OnClickListener{
 	private ExpandableListView mCategoryExpandList;
 	private CategoryListTable mCategoryListTable;
-	private Header header;
 	private TextView mNoResultTxt;
 	private ArrayList<GroupCategoryModel> groupCategoryList;
 	private HashMap<GroupCategoryModel,  ArrayList<CategoryModel>> categoryData;
@@ -96,11 +93,6 @@ public class HomeCategoryActivity extends BaseActivity implements OnClickListene
 	}
 
 	private void setHeader() {
-		header=(Header)findViewById(R.id.header);
-		header.inflateHeader();
-		header.openSlidingDrawer();
-		header.updateHeaderText("", false);
-		header.updateSelectedCity(SharedPrefUtils.getCurrentCityModel(HomeCategoryActivity.this).getName(), true);
 
 	}
 
@@ -113,23 +105,16 @@ public class HomeCategoryActivity extends BaseActivity implements OnClickListene
 	@Override
 	protected void onRestart() {
 		super.onRestart();
-		header.updateSelectedCity(SharedPrefUtils.getCurrentCityModel(HomeCategoryActivity.this).getName(), true);
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
-		if(header!=null){
-			header.closeDrawer();
-		}
 	}
 
 	@Override
 	protected void updateUi(Response response) {
 		removeProgressDialog();
-		if(header!=null){
-			header.closeDrawer();
-		}
 		if( response==null){
 
 			showToast(getString(R.string.went_wrong));

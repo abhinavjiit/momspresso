@@ -113,6 +113,8 @@ public class SharedPrefUtils {
     private static final String USER_CITY_ID = "userCityId";
     private static final String LANGUAGE_FILTER = "languageFilter";
 
+    private static final String FOLLOWED_TOPIC_COUNT = "followedTopicCount";
+
     /**
      * this shared preference save current versions for control city,locality,category APIs .
      *
@@ -747,5 +749,17 @@ public class SharedPrefUtils {
     public static String getLanguageFilters(Context context) {
         SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         return _sharedPref.getString(LANGUAGE_FILTER, "");
+    }
+
+    public static void setFollowedTopicsCount(Context pContext, int topicCount) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        _editor.putInt(FOLLOWED_TOPIC_COUNT, topicCount);
+        _editor.commit();
+    }
+
+    public static int getFollowedTopicsCount(Context context) {
+        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return _sharedPref.getInt(FOLLOWED_TOPIC_COUNT, 0);
     }
 }

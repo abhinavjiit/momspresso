@@ -44,6 +44,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.UserAttributeUpdateAPI;
 import com.mycity4kids.ui.activity.AppSettingsActivity;
 import com.mycity4kids.ui.activity.FollowersAndFollowingListActivity;
+import com.mycity4kids.ui.activity.RankingActivity;
 import com.mycity4kids.ui.activity.UserPublishedAndDraftsActivity;
 import com.mycity4kids.utils.RoundedTransformation;
 import com.squareup.picasso.MemoryPolicy;
@@ -323,8 +324,11 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
                 break;
             case R.id.activitySectionTextView:
                 break;
-            case R.id.rankingSectionTextView:
-                break;
+            case R.id.rankingSectionTextView: {
+                Intent intent = new Intent(getActivity(), RankingActivity.class);
+                startActivity(intent);
+            }
+            break;
             case R.id.settingImageView:
                 Intent settingsIntent = new Intent(getActivity(), AppSettingsActivity.class);
                 startActivity(settingsIntent);

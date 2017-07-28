@@ -6,11 +6,6 @@
     android:background="@color/white_color"
     android:orientation="vertical" >
 
-    <com.mycity4kids.widget.Header
-        android:id="@+id/header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
     <include
         android:id="@+id/simple_header"
         android:layout_width="match_parent"
