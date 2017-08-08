@@ -256,6 +256,19 @@ public class DateTimeUtils {
         }
     }
 
+    public static long convertStringToTimestamp(String str_date) {
+        try {
+            java.text.DateFormat formatter;
+            formatter = new SimpleDateFormat("dd-MM-yyyy");
+            // you can change format of date
+            Date date = formatter.parse(str_date);
+            return date.getTime() / 1000;
+        } catch (ParseException e) {
+            System.out.println("Exception :" + e);
+            return 0;
+        }
+    }
+
     public static long getTimestampFromStringDate(String date) {
         java.text.DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
         Date dated = null;

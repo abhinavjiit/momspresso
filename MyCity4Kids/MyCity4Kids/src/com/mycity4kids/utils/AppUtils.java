@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
+import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.text.Spanned;
@@ -21,6 +22,7 @@ import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.kelltontech.utils.StringUtils;
+import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
@@ -459,5 +461,21 @@ public class AppUtils {
         }
         System.out.println("Not Found");
         return false;
+    }
+
+    public static String getShareUrl(String userType, String blogSlug, String titleSlug) {
+        String shareUrl = "";
+        if (AppConstants.USER_TYPE_BLOGGER.equals(userType)) {
+            shareUrl = AppConstants.ARTICLE_SHARE_URL + blogSlug + "/article/" + titleSlug;
+        } else if (AppConstants.USER_TYPE_EXPERT.equals(userType)) {
+            shareUrl = AppConstants.ARTICLE_SHARE_URL + "article/" + titleSlug;
+        } else if (AppConstants.USER_TYPE_EDITOR.equals(userType)) {
+            shareUrl = AppConstants.ARTICLE_SHARE_URL + "article/" + titleSlug;
+        } else if (AppConstants.USER_TYPE_EDITORIAL.equals(userType)) {
+            shareUrl = AppConstants.ARTICLE_SHARE_URL + "article/" + titleSlug;
+        } else if (AppConstants.USER_TYPE_FEATURED.equals(userType)) {
+            shareUrl = AppConstants.ARTICLE_SHARE_URL + "article/" + titleSlug;
+        }
+        return shareUrl;
     }
 }

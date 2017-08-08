@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="6dp"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/suggestionImageView"
@@ -38,9 +38,9 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:paddingTop="10dp"
             android:gravity="center"
             android:lineSpacingExtra="4dp"
+            android:paddingTop="10dp"
             android:text="language"
             android:textColor="@color/black"
             android:textSize="18sp" />
@@ -55,7 +55,48 @@
         android:elevation="5dp"
         android:minHeight="?attr/actionBarSize"
         app:theme="@style/ToolbarTheme"
-        app:titleTextAppearance="@style/Toolbar.TitleText" />
+        app:titleTextAppearance="@style/Toolbar.TitleText">
+
+        <RelativeLayout
+            android:id="@+id/toolbarRelativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/closeEditorImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="20dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="20dp"
+                android:paddingTop="20dp"
+                android:src="@drawable/cross_icon_back" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/lastSavedTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="last saved by 20 sec ago"
+                android:textColor="@color/editor.last_saved"
+                android:textSize="14sp"
+                app:fontName="oswald.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/publishTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:padding="12dp"
+                android:text="@string/editor.publish"
+                android:textColor="@color/editor.publish"
+                android:textSize="20sp"
+                app:fontName="oswald_regular.ttf" />
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
 
     <fragment
         android:id="@+id/postEditor"

@@ -325,6 +325,7 @@
     <color name="user_articles.draft.date">#9c9dac</color>
     <color name="user_articles.draft.status">#545454</color>
     <color name="user_articles.draft.edit">#507cbe</color>
+    <color name="user_articles.published.edit">#507cbe</color>
     <color name="user_articles.published.title">#545454</color>
     <color name="user_articles.published.date">#9c9dac</color>
     <color name="user_articles.published.stats">#9c9dac</color>
@@ -427,12 +428,68 @@
     <color name="ranking.engagement">#545454</color>
     <color name="ranking.stats_text">#545454</color>
     <color name="ranking.stats_bg">#e0e0e0</color>
-    <color name="ranking.how_calculated">#545454</color>
+    <color name="ranking.how_calculated">#507cbe</color>
     <color name="ranking.top_bloggers">#545454</color>
-    <color name="ranking.language_selected">#545454</color>
+    <color name="ranking.language_selected">#e12148</color>
+    <color name="ranking.your_rank_label">#545454</color>
+    <color name="ranking.my_rank">#545454</color>
     <color name="ranking.author_name">#545454</color>
-    <color name="ranking.follower_count">#545454</color>
-    <color name="ranking.top_blogger_rank">#545454</color>
+    <color name="ranking.follower_count">#507cbe</color>
+    <color name="ranking.top_blogger_rank">#e12148</color>
     <color name="ranking.boxes_bg">#e0e0e0</color>
 
+    <color name="editor.last_saved">#9c9dac</color>
+    <color name="editor.publish">#507cbe</color>
+
+    <color name="add_article_topics.clear_all">#9c9dac</color>
+    <color name="add_article_topics.toolbar.title">#545454</color>
+    <color name="add_article_topics.max_topics">#9c9dac</color>
+    <color name="add_article_topics.apply">#507cbe</color>
+
+    <color name="choose_article_image.toolbar.title">#545454</color>
+    <color name="choose_article_image.upload_photo">#545454</color>
+    <color name="choose_article_image.publish">#507cbe</color>
+
+    <color name="become_blogger.get_started">#545454</color>
+    <color name="become_blogger.title">#545454</color>
+    <color name="become_blogger.message">#545454</color>
+
+    <color name="moderation_or_share.way_to_go">#545454</color>
+    <color name="moderation_or_share.moderation_message">#9c9dac</color>
+    <color name="moderation_or_share.publish_message">#9c9dac</color>
+    <color name="moderation_or_share.later">#9c9dac</color>
+    <color name="moderation_or_share.okay">#ffffff</color>
+
+    <color name="complete_blogger_profile.complete_label">#545454</color>
+    <color name="complete_blogger_profile.paid_eligibility">#9c9dac</color>
+    <color name="complete_blogger_profile.save">#507cbe</color>
+
+    <color name="add_video_details.title_hint">#515556</color>
+    <color name="add_video_details.title_text">#545454</color>
+    <color name="add_video_details.mute_label">#545454</color>
+    <color name="add_video_details.add_music">#507cbe</color>
+    <color name="add_video_details.playing_audio_text">#545454</color>
+    <color name="add_video_details.save_upload">#507cbe</color>
+    <color name="add_video_details.audio_title">#507cbe</color>
+    <color name="add_video_details.toolbar.title">#545454</color>
+    <color name="add_video_details.audio_picker.title">#545454</color>
+    <color name="add_video_details.remove">#507cbe</color>
+
+    <color name="video_progress.uploading_label">#545454</color>
+    <color name="video_progress.uploading_msg">#545454</color>
+    <color name="video_progress.way_to_go">#545454</color>
+    <color name="video_progress.success_msg">#545454</color>
+    <color name="video_progress.okay">#507cbe</color>
+
+    <color name="user_activities.toolbar.title">#545454</color>
+    <color name="user_activities.tabbar.text">#545454</color>
+    <color name="user_activities.tabbar.indicator">#507cbe</color>
+    <color name="user_activities.bookmarks.remove">#507cbe</color>
+    <color name="user_activities.comments.date">#9c9dac</color>
+    <color name="user_activities.comments.body">#9c9dac</color>
+    <color name="user_activities.comments.edit">#507cbe</color>
+
+    <color name="explore.city">#507cbe</color>
+
+    <color name="all_videos.toolbar.title">#545454</color>
 </resources>

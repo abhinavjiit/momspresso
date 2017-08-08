@@ -27,17 +27,14 @@ import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
-import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.enums.ParentingFilterType;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
-import com.mycity4kids.models.city.City;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
-import com.mycity4kids.ui.adapter.NewArticlesListingAdapter;
+import com.mycity4kids.ui.adapter.MainArticleListingAdapter;
 
 import java.util.ArrayList;
 
@@ -50,7 +47,7 @@ import retrofit2.Retrofit;
  */
 public class CityBestArticleListingActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
 
-    NewArticlesListingAdapter articlesListingAdapter;
+    MainArticleListingAdapter articlesListingAdapter;
     ArrayList<ArticleListingResult> articleDataModelsNew;
     ListView listView;
     private Toolbar mToolbar;
@@ -140,7 +137,7 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
         nextPageNumber = 1;
         hitBestofCityArticleListingApi(sortType);
 
-        articlesListingAdapter = new NewArticlesListingAdapter(this);
+        articlesListingAdapter = new MainArticleListingAdapter(this);
         articlesListingAdapter.setListingType("Best of City Listing");
         articlesListingAdapter.setNewListData(articleDataModelsNew);
         listView.setAdapter(articlesListingAdapter);
@@ -169,8 +166,8 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                 Intent intent = new Intent(CityBestArticleListingActivity.this, ArticlesAndBlogsDetailsActivity.class);
-                if (adapterView.getAdapter() instanceof NewArticlesListingAdapter) {
-                    ArticleListingResult parentingListData = (ArticleListingResult) ((NewArticlesListingAdapter) adapterView.getAdapter()).getItem(i);
+                if (adapterView.getAdapter() instanceof MainArticleListingAdapter) {
+                    ArticleListingResult parentingListData = (ArticleListingResult) ((MainArticleListingAdapter) adapterView.getAdapter()).getItem(i);
                     intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
                     intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
                     intent.putExtra(Constants.ARTICLE_COVER_IMAGE, parentingListData.getImageUrl());

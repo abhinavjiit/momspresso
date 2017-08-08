@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -31,11 +32,12 @@ public class UserDraftArticleAdapter extends RecyclerView.Adapter<UserDraftArtic
     private final float density;
     private RecyclerViewClickListener mListener;
 
-    public UserDraftArticleAdapter(Context pContext) {
+    public UserDraftArticleAdapter(Context pContext, RecyclerViewClickListener listener) {
 
         density = pContext.getResources().getDisplayMetrics().density;
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = pContext;
+        this.mListener = listener;
     }
 
     public void setListData(ArrayList<DraftListResult> mParentingLists) {
@@ -69,43 +71,35 @@ public class UserDraftArticleAdapter extends RecyclerView.Adapter<UserDraftArtic
             switch (articleDataModelsNew.get(position).getArticleType()) {
                 case "0": {
                     holder.txvStatus.setVisibility(View.INVISIBLE);
-                    holder.rootLayout.setBackgroundColor(Color.WHITE);
                     holder.rootLayout.setClickable(false);
-//                    holder.popupButton.setClickable(true);
-                    holder.txvArticleTitle.setTextColor(Color.BLACK);
+                    holder.deleteDraftImageView.setVisibility(View.VISIBLE);
                     break;
                 }
                 case "1": {
                     holder.txvStatus.setVisibility(View.VISIBLE);
-                    holder.txvStatus.setText("Pending for Approval");
-                    holder.rootLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.gray_color));
-                    holder.txvArticleTitle.setTextColor(ContextCompat.getColor(mContext, R.color.faded_text));
+                    holder.txvStatus.setText(mContext.getString(R.string.user_article_draft_status_pending_approval));
                     holder.rootLayout.setClickable(true);
-//                    holder.popupButton.setClickable(false);
+                    holder.deleteDraftImageView.setVisibility(View.INVISIBLE);
                     break;
                 }
                 case "2": {
                     holder.txvStatus.setVisibility(View.VISIBLE);
-                    holder.rootLayout.setBackgroundColor(Color.WHITE);
+                    holder.txvStatus.setText(mContext.getString(R.string.user_article_draft_status_unapproved));
                     holder.rootLayout.setClickable(false);
-//                    holder.popupButton.setClickable(true);
-                    holder.txvArticleTitle.setTextColor(Color.BLACK);
+                    holder.deleteDraftImageView.setVisibility(View.INVISIBLE);
                     break;
                 }
                 case "4": {
                     holder.txvStatus.setVisibility(View.VISIBLE);
-                    holder.rootLayout.setBackgroundColor(Color.WHITE);
+                    holder.txvStatus.setText(mContext.getString(R.string.user_article_draft_status_unpublished));
                     holder.rootLayout.setClickable(false);
-//                    holder.popupButton.setClickable(true);
-                    holder.txvArticleTitle.setTextColor(Color.BLACK);
+                    holder.deleteDraftImageView.setVisibility(View.VISIBLE);
                     break;
                 }
                 default:
                     holder.txvStatus.setVisibility(View.INVISIBLE);
-                    holder.rootLayout.setBackgroundColor(Color.WHITE);
                     holder.rootLayout.setClickable(false);
-//                    holder.popupButton.setClickable(true);
-                    holder.txvArticleTitle.setTextColor(Color.BLACK);
+                    holder.deleteDraftImageView.setVisibility(View.VISIBLE);
                     break;
             }
         }
@@ -118,9 +112,9 @@ public class UserDraftArticleAdapter extends RecyclerView.Adapter<UserDraftArtic
 
             Long diff = System.currentTimeMillis() - articleDataModelsNew.get(position).getUpdatedTime() * 1000;
             if (diff / (1000 * 60 * 60) > 24 && !sdf.format(System.currentTimeMillis()).equals(sdf.format((articleDataModelsNew.get(position).getUpdatedTime() * 1000)))) {
-                holder.txvPublishDate.setText(DateTimeUtils.getDateFromTimestamp(articleDataModelsNew.get(position).getUpdatedTime()));
+                holder.txvPublishDate.setText(mContext.getString(R.string.user_article_draft_saved_on) + " " + DateTimeUtils.getDateFromTimestamp(articleDataModelsNew.get(position).getUpdatedTime()));
             } else {
-                holder.txvPublishDate.setText(sdf1.format(calendar1.getTime()));
+                holder.txvPublishDate.setText(mContext.getString(R.string.user_article_draft_saved_on) + " " + sdf1.format(calendar1.getTime()));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -140,6 +134,8 @@ public class UserDraftArticleAdapter extends RecyclerView.Adapter<UserDraftArtic
         TextView txvArticleTitle;
         TextView txvPublishDate;
         TextView txvStatus;
+        TextView editDraftTextView;
+        ImageView deleteDraftImageView;
         RelativeLayout rootLayout;
         View popupButton;
 
@@ -148,7 +144,11 @@ public class UserDraftArticleAdapter extends RecyclerView.Adapter<UserDraftArtic
             txvArticleTitle = (TextView) itemView.findViewById(R.id.txvArticleTitle);
             txvPublishDate = (TextView) itemView.findViewById(R.id.txvPublishDate);
             txvStatus = (TextView) itemView.findViewById(R.id.txvStatus);
+            editDraftTextView = (TextView) itemView.findViewById(R.id.editDraftTextView);
+            deleteDraftImageView = (ImageView) itemView.findViewById(R.id.deleteDraftImageView);
             rootLayout = (RelativeLayout) itemView.findViewById(R.id.rootLayout);
+            deleteDraftImageView.setOnClickListener(this);
+            editDraftTextView.setOnClickListener(this);
             itemView.setOnClickListener(this);
         }
 

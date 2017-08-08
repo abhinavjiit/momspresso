@@ -20,6 +20,7 @@
             android:layout_width="@dimen/ad_comments_profile_pic_width"
             android:layout_height="@dimen/ad_comments_profile_pic_width"
             android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:contentDescription="@string/author_img"
             android:src="@drawable/default_commentor_img"
@@ -29,12 +30,16 @@
             android:id="@+id/txvCommentTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
+            android:layout_marginLeft="3dp"
+            android:layout_marginStart="3dp"
+            android:layout_toEndOf="@+id/network_img"
             android:layout_toRightOf="@+id/network_img"
             android:ellipsize="end"
             android:maxLines="1"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
             android:singleLine="false"
-            android:text="Payal Shah"
+            android:text=""
             android:textColor="@color/ad.comment.username"
             android:textSize="@dimen/ad_comments_username"
             app:fontName="oswald_regular.ttf" />
@@ -48,66 +53,71 @@
             android:layout_below="@id/txvCommentTitle"
             android:layout_marginTop="8dp"
             android:ellipsize="end"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
             android:singleLine="false"
             android:text="@string/upload_video.tutorial.description"
             android:textColor="@color/ad.comment.body"
             android:textSize="@dimen/ad_comments_text"
-            app:fontName="oswald_regular.ttf" />
+            app:fontName="open_sans.ttf" />
 
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/txvCommentCellReply"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/txvCommentTitle"
             android:layout_alignStart="@+id/txvCommentTitle"
             android:layout_below="@+id/txvCommentDescription"
-            android:layout_marginTop="5dp"
-            android:padding="5dp"
-            android:text="@string/ad.comments.reply_label"
-            android:textColor="@color/ad.comment.reply_label"
-            android:textSize="@dimen/ad_comments_reply_btn"
-            android:visibility="visible"
-            app:fontName="oswald_regular.ttf" />
+            android:orientation="horizontal">
 
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/txvCommentCellEdit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/txvCommentTitle"
-            android:layout_alignStart="@+id/txvCommentTitle"
-            android:layout_below="@+id/txvCommentDescription"
-            android:layout_marginTop="5dp"
-            android:padding="5dp"
-            android:text="@string/ad.comments.edit_label"
-            android:textColor="@color/ad.comment.edit_label"
-            android:textSize="@dimen/ad_comments_edit_btn"
-            android:visibility="gone"
-            app:fontName="oswald_regular.ttf" />
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/txvCommentCellReply"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="5dp"
+                android:padding="5dp"
+                android:text="@string/ad.comments.reply_label"
+                android:textColor="@color/ad.comment.reply_label"
+                android:textSize="@dimen/ad_comments_reply_btn"
+                android:visibility="visible"
+                app:fontName="oswald_regular.ttf" />
 
-        <View
-            android:id="@+id/separatorView"
-            android:layout_width="1dp"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/txvCommentCellReply"
-            android:layout_alignTop="@+id/txvCommentCellReply"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_toEndOf="@+id/txvCommentCellReply"
-            android:layout_toRightOf="@+id/txvCommentCellReply"
-            android:background="@color/grey" />
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/txvCommentCellEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="5dp"
+                android:padding="5dp"
+                android:text="@string/ad.comments.edit_label"
+                android:textColor="@color/ad.comment.edit_label"
+                android:textSize="@dimen/ad_comments_edit_btn"
+                android:visibility="gone"
+                app:fontName="oswald_regular.ttf" />
 
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/txvDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/txvCommentDescription"
-            android:layout_marginTop="5dp"
-            android:layout_toRightOf="@+id/separatorView"
-            android:padding="5dp"
-            android:text="date"
-            android:textColor="@color/ad.comment.date"
-            android:textSize="@dimen/ad_comments_date"
-            app:fontName="oswald_regular.ttf" />
+            <View
+                android:id="@+id/separatorView"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="6dp"
+                android:layout_marginEnd="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="12dp"
+                android:background="@color/common_underline" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/txvDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:padding="5dp"
+                android:text=""
+                android:textColor="@color/ad.comment.date"
+                android:textSize="@dimen/ad_comments_date"
+                app:fontName="oswald_regular.ttf" />
+        </LinearLayout>
     </RelativeLayout>
 
     <LinearLayout

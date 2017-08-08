@@ -145,7 +145,7 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
 
     private void processTrendingResponse(TrendingListingResponse responseData) {
         trendingArraylist.addAll(responseData.getData().get(0).getResult());
-        Collections.shuffle(trendingArraylist);
+//        Collections.shuffle(trendingArraylist);
         tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
         for (int i = 0; i < trendingArraylist.size(); i++) {
             tabLayout.addTab(tabLayout.newTab().setText(trendingArraylist.get(i).getDisplay_name()));

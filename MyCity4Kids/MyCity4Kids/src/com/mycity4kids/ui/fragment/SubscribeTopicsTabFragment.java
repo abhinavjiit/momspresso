@@ -65,7 +65,7 @@ public class SubscribeTopicsTabFragment extends BaseFragment {
         position = getArguments().getInt("position");
         previouslyFollowedTopics = (ArrayList<String>) getArguments().getStringArrayList("previouslyFollowedTopics");
 
-        populateTopicsList();
+        createTopicsData(null);
 //        trendingArraylist = new ArrayList<>();
 //        hitTrendingDataAPI();
         return view;

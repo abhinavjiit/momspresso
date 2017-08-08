@@ -36,6 +36,7 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
+import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -584,7 +585,7 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
             AddRemoveKidsRequest kmodel = new AddRemoveKidsRequest();
             kmodel.setName(ki.getName());
 
-            long bdaytimestamp = convertStringToTimestamp(ki.getDate_of_birth());
+            long bdaytimestamp = DateTimeUtils.convertStringToTimestamp(ki.getDate_of_birth());
             if (bdaytimestamp != 0) {
                 kmodel.setBirthDay(bdaytimestamp);
             } else {
@@ -601,7 +602,7 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
         for (KidsInfo ki : kidsInformations) {
             AddRemoveKidsRequest kmodel = new AddRemoveKidsRequest();
             kmodel.setName(ki.getName());
-            long bdaytimestamp = convertStringToTimestamp(ki.getDate_of_birth());
+            long bdaytimestamp = DateTimeUtils.convertStringToTimestamp(ki.getDate_of_birth());
             if (bdaytimestamp != 0) {
                 kmodel.setBirthDay(bdaytimestamp);
             } else {
@@ -661,20 +662,6 @@ public class FragmentFamilyDetail extends BaseFragment implements View.OnClickLi
             Toast.makeText(getActivity(), getString(R.string.went_wrong), Toast.LENGTH_SHORT).show();
         }
     };
-
-    public long convertStringToTimestamp(String str_date) {
-        try {
-            DateFormat formatter;
-            formatter = new SimpleDateFormat("dd-MM-yyyy");
-            // you can change format of date
-            Date date = formatter.parse(str_date);
-
-            return date.getTime() / 1000;
-        } catch (ParseException e) {
-            System.out.println("Exception :" + e);
-            return 0;
-        }
-    }
 
     public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 

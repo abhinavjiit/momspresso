@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rootLayout"
     android:layout_width="match_parent"
-    android:layout_height="100dp">
+    android:layout_height="100dp"
+    android:background="@color/white">
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/txvArticleTitle"
@@ -21,7 +22,7 @@
         android:ellipsize="end"
         android:gravity="top"
         android:maxLines="1"
-        android:text="Becoming the mother of moron, psycho children"
+        android:text="F"
         android:textColor="@color/user_articles.published.title"
         android:textSize="13sp"
         app:fontName="oswald_regular.ttf" />
@@ -35,7 +36,7 @@
         android:layout_marginLeft="15dp"
         android:gravity="left"
         android:singleLine="true"
-        android:text="Published on : No Fuk given"
+        android:text="Published on "
         android:textColor="@color/user_articles.published.date"
         android:textSize="11sp"
         app:fontName="oswald.ttf" />
@@ -71,7 +72,8 @@
         android:layout_marginRight="18dp"
         android:layout_toLeftOf="@+id/editDraftTextView"
         android:layout_toStartOf="@+id/editDraftTextView"
-        android:src="@drawable/trash_grey" />
+        android:padding="5dp"
+        android:src="@drawable/ic_delete" />
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/editDraftTextView"

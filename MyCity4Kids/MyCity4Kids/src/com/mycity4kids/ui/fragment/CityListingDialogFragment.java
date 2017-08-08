@@ -22,16 +22,13 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.kelltontech.network.Response;
 import com.kelltontech.utils.StringUtils;
 import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.response.CityInfoItem;
-import com.mycity4kids.newmodels.AttendeeModel;
 import com.mycity4kids.ui.activity.BlogSetupActivity;
 import com.mycity4kids.ui.adapter.ChangeCityAdapter;
-import com.mycity4kids.ui.adapter.CommentsReplyAdapter;
 
 import java.util.ArrayList;
 
@@ -100,7 +97,7 @@ public class CityListingDialogFragment extends DialogFragment implements ChangeC
             }
         }
         adapter.notifyDataSetChanged();
-        if ("editProfile".equals(fromScreen)) {
+        if ("editProfile".equals(fromScreen) || "explore".equals(fromScreen)) {
             IChangeCity changeCity = (IChangeCity) getTargetFragment();
             changeCity.onCitySelect(data.get(position));
         } else {
@@ -118,7 +115,7 @@ public class CityListingDialogFragment extends DialogFragment implements ChangeC
             }
         }
         adapter.notifyDataSetChanged();
-        if ("editProfile".equals(fromScreen)) {
+        if ("editProfile".equals(fromScreen) || "explore".equals(fromScreen)) {
             IChangeCity changeCity = (IChangeCity) getTargetFragment();
             changeCity.onOtherCitySelect(position, otherCityName);
         } else {

@@ -34,6 +34,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.IScreen;
 import com.kelltontech.utils.ConnectivityUtils;
+import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
 import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
@@ -255,7 +256,7 @@ public class CompleteProfileDialogFragment extends DialogFragment implements Vie
                 Toast.makeText(getActivity(), "Please enter kids name to continue", Toast.LENGTH_SHORT).show();
                 return;
             }
-            long bdaytimestamp = convertStringToTimestamp(ki.getDate_of_birth());
+            long bdaytimestamp = DateTimeUtils.convertStringToTimestamp(ki.getDate_of_birth());
             if (bdaytimestamp != 0) {
                 kmodel.setBirthDay(bdaytimestamp);
             } else {
@@ -593,19 +594,6 @@ public class CompleteProfileDialogFragment extends DialogFragment implements Vie
         }
 
         mChildContainer.removeAllViews();
-    }
-
-    public long convertStringToTimestamp(String str_date) {
-        try {
-            DateFormat formatter;
-            formatter = new SimpleDateFormat("dd-MM-yyyy");
-            // you can change format of date
-            Date date = formatter.parse(str_date);
-            return date.getTime() / 1000;
-        } catch (ParseException e) {
-            System.out.println("Exception :" + e);
-            return 0;
-        }
     }
 
     public String convertTime(String time) {

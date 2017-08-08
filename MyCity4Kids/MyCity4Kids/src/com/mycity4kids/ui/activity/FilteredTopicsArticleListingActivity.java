@@ -54,7 +54,7 @@ import com.mycity4kids.models.response.TopicsFollowingStatusResponse;
 import com.mycity4kids.newmodels.FollowUnfollowCategoriesRequest;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
-import com.mycity4kids.ui.adapter.NewArticlesListingAdapter;
+import com.mycity4kids.ui.adapter.MainArticleListingAdapter;
 import com.mycity4kids.ui.fragment.FilterTopicsDialogFragment;
 
 import org.json.JSONObject;
@@ -86,7 +86,7 @@ import retrofit2.Retrofit;
 
 public class FilteredTopicsArticleListingActivity extends BaseActivity implements OnClickListener, SwipeRefreshLayout.OnRefreshListener, FilterTopicsDialogFragment.OnTopicsSelectionComplete {
 
-    private NewArticlesListingAdapter articlesListingAdapter;
+    private MainArticleListingAdapter articlesListingAdapter;
     private ListView listView;
     private Menu menu;
     private ArrayList<ArticleListingResult> articleDataModelsNew;
@@ -251,7 +251,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         nextPageNumber = 1;
         hitFilteredTopicsArticleListingApi(sortType);
 
-        articlesListingAdapter = new NewArticlesListingAdapter(this);
+        articlesListingAdapter = new MainArticleListingAdapter(this);
         articlesListingAdapter.setNewListData(articleDataModelsNew);
         articlesListingAdapter.setListingType(listingType);
         listView.setAdapter(articlesListingAdapter);
@@ -319,8 +319,8 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                 Intent intent = new Intent(FilteredTopicsArticleListingActivity.this, ArticleDetailsContainerActivity.class);
-                if (adapterView.getAdapter() instanceof NewArticlesListingAdapter) {
-                    ArticleListingResult parentingListData = (ArticleListingResult) ((NewArticlesListingAdapter) adapterView.getAdapter()).getItem(i);
+                if (adapterView.getAdapter() instanceof MainArticleListingAdapter) {
+                    ArticleListingResult parentingListData = (ArticleListingResult) ((MainArticleListingAdapter) adapterView.getAdapter()).getItem(i);
                     intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
                     intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
                     intent.putExtra(Constants.ARTICLE_COVER_IMAGE, parentingListData.getImageUrl());

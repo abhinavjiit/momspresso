@@ -2,6 +2,7 @@ package com.mycity4kids.ui.fragment;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -14,6 +15,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -23,29 +25,56 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
+import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.controller.LogoutController;
+import com.mycity4kids.dbtable.ExternalCalendarTable;
+import com.mycity4kids.dbtable.TableAdult;
+import com.mycity4kids.dbtable.TableApiEvents;
+import com.mycity4kids.dbtable.TableAppointmentData;
+import com.mycity4kids.dbtable.TableAttendee;
+import com.mycity4kids.dbtable.TableFamily;
+import com.mycity4kids.dbtable.TableFile;
+import com.mycity4kids.dbtable.TableKids;
+import com.mycity4kids.dbtable.TableNotes;
+import com.mycity4kids.dbtable.TableTaskData;
+import com.mycity4kids.dbtable.TableTaskList;
+import com.mycity4kids.dbtable.TableWhoToRemind;
+import com.mycity4kids.dbtable.TaskCompletedTable;
+import com.mycity4kids.dbtable.TaskTableAttendee;
+import com.mycity4kids.dbtable.TaskTableFile;
+import com.mycity4kids.dbtable.TaskTableNotes;
+import com.mycity4kids.dbtable.TaskTableWhoToRemind;
+import com.mycity4kids.dbtable.UserTable;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
+import com.mycity4kids.models.logout.LogoutResponse;
 import com.mycity4kids.models.request.UpdateUserDetailsRequest;
 import com.mycity4kids.models.response.ImageUploadResponse;
 import com.mycity4kids.models.response.LanguageRanksModel;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.reminders.AppointmentManager;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.UserAttributeUpdateAPI;
+import com.mycity4kids.ui.activity.ActivityLogin;
 import com.mycity4kids.ui.activity.AppSettingsActivity;
 import com.mycity4kids.ui.activity.FollowersAndFollowingListActivity;
+import com.mycity4kids.ui.activity.MyFunnyVideosListingActivity;
 import com.mycity4kids.ui.activity.RankingActivity;
+import com.mycity4kids.ui.activity.UserActivitiesActivity;
 import com.mycity4kids.ui.activity.UserPublishedAndDraftsActivity;
+import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.RoundedTransformation;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
@@ -86,8 +115,9 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
 
     private View rootView;
     private TextView followingCountTextView, followerCountTextView, rankCountTextView;
+    private TextView rankLanguageTextView;
     private TextView authorNameTextView, authorTypeTextView, authorBioTextView;
-    private TextView articleSectionTextView, videosSectionTextView, activitySectionTextView, rankingSectionTextView;
+    private TextView articleSectionTextView, videosSectionTextView, activitySectionTextView, rankingSectionTextView, settingsSectionTextView, signoutSectionTextView;
     private ImageView imgProfile;
     private ImageView settingImageView;
     private LinearLayout followerContainer, followingContainer;
@@ -104,10 +134,13 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
         followingCountTextView = (TextView) rootView.findViewById(R.id.followingCountTextView);
         followerCountTextView = (TextView) rootView.findViewById(R.id.followerCountTextView);
         rankCountTextView = (TextView) rootView.findViewById(R.id.rankCountTextView);
+        rankLanguageTextView = (TextView) rootView.findViewById(R.id.rankLanguageTextView);
         articleSectionTextView = (TextView) rootView.findViewById(R.id.articleSectionTextView);
         videosSectionTextView = (TextView) rootView.findViewById(R.id.videosSectionTextView);
         activitySectionTextView = (TextView) rootView.findViewById(R.id.activitySectionTextView);
         rankingSectionTextView = (TextView) rootView.findViewById(R.id.rankingSectionTextView);
+        settingsSectionTextView = (TextView) rootView.findViewById(R.id.settingsSectionTextView);
+        signoutSectionTextView = (TextView) rootView.findViewById(R.id.signoutSectionTextView);
         imgProfile = (ImageView) rootView.findViewById(R.id.imgProfile);
         settingImageView = (ImageView) rootView.findViewById(R.id.settingImageView);
         followerContainer = (LinearLayout) rootView.findViewById(R.id.followerContainer);
@@ -121,6 +154,8 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
         videosSectionTextView.setOnClickListener(this);
         activitySectionTextView.setOnClickListener(this);
         rankingSectionTextView.setOnClickListener(this);
+        settingsSectionTextView.setOnClickListener(this);
+        signoutSectionTextView.setOnClickListener(this);
         settingImageView.setOnClickListener(this);
         followingContainer.setOnClickListener(this);
         followerContainer.setOnClickListener(this);
@@ -136,15 +171,15 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onResume() {
+        super.onResume();
+        Log.d("dwadaw", "vfvfdrv");
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 getUserDetails();
             }
-        }, 1000);
-
+        }, 200);
     }
 
     private void getUserDetails() {
@@ -179,6 +214,13 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
 //                    rankViewFlipper.setAutoStart(false);
 //                    rankViewFlipper.stopFlipping();
                 } else if (responseData.getData().get(0).getResult().getRanks().size() < 2) {
+                    rankCountTextView.setText("" + responseData.getData().get(0).getResult().getRanks().get(0).getRank());
+                    if (AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(0).getLangKey())) {
+                        rankLanguageTextView.setText(getString(R.string.blogger_profile_rank_in) + " ENGLISH");
+                    } else {
+                        rankLanguageTextView.setText(getString(R.string.blogger_profile_rank_in)
+                                + " " + AppUtils.getLangModelForLanguage(getActivity(), responseData.getData().get(0).getResult().getRanks().get(0).getLangKey()).getDisplay_name());
+                    }
 //                    addRankView(responseData.getData().get(0).getResult().getRanks().get(0));
 //                    rankViewFlipper.setAutoStart(false);
 //                    rankViewFlipper.stopFlipping();
@@ -186,14 +228,31 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
                     for (int i = 0; i < responseData.getData().get(0).getResult().getRanks().size(); i++) {
                         if (AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(i).getLangKey())) {
 //                            addRankView(responseData.getData().get(0).getResult().getRanks().get(i));
+                            rankCountTextView.setText("" + responseData.getData().get(0).getResult().getRanks().get(i).getRank());
+                            rankLanguageTextView.setText(getString(R.string.blogger_profile_rank_in) + " ENGLISH");
+                            return;
                         }
                     }
                     Collections.sort(responseData.getData().get(0).getResult().getRanks());
                     for (int i = 0; i < responseData.getData().get(0).getResult().getRanks().size(); i++) {
                         if (!AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(i).getLangKey())) {
-//                            addRankView(responseData.getData().get(0).getResult().getRanks().get(i));
+                            rankLanguageTextView.setText("" + responseData.getData().get(0).getResult().getRanks().get(i).getRank());
+                            rankLanguageTextView.setText(getString(R.string.blogger_profile_rank_in)
+                                    + " " + AppUtils.getLangModelForLanguage(getActivity(), responseData.getData().get(0).getResult().getRanks().get(0).getLangKey()).getDisplay_name());
+                            return;
                         }
                     }
+//                    for (int i = 0; i < responseData.getData().get(0).getResult().getRanks().size(); i++) {
+//                        if (AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(i).getLangKey())) {
+////                            addRankView(responseData.getData().get(0).getResult().getRanks().get(i));
+//                        }
+//                    }
+//                    Collections.sort(responseData.getData().get(0).getResult().getRanks());
+//                    for (int i = 0; i < responseData.getData().get(0).getResult().getRanks().size(); i++) {
+//                        if (!AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(i).getLangKey())) {
+////                            addRankView(responseData.getData().get(0).getResult().getRanks().get(i));
+//                        }
+//                    }
                 }
 
                 int followerCount = Integer.parseInt(responseData.getData().get(0).getResult().getFollowersCount());
@@ -216,19 +275,32 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
                 switch (responseData.getData().get(0).getResult().getUserType()) {
                     case AppConstants.USER_TYPE_BLOGGER:
                         authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_BLOGGER.toUpperCase());
+                        rankingSectionTextView.setVisibility(View.VISIBLE);
+                        rootView.findViewById(R.id.underline_4).setVisibility(View.VISIBLE);
                         break;
                     case AppConstants.USER_TYPE_EDITOR:
+                        rankingSectionTextView.setVisibility(View.GONE);
+                        rootView.findViewById(R.id.underline_4).setVisibility(View.GONE);
                         authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_EDITOR.toUpperCase());
                         break;
                     case AppConstants.USER_TYPE_EDITORIAL:
+                        rankingSectionTextView.setVisibility(View.GONE);
+                        rootView.findViewById(R.id.underline_4).setVisibility(View.GONE);
                         authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_EDITORIAL.toUpperCase());
                         break;
                     case AppConstants.USER_TYPE_EXPERT:
+                        rankingSectionTextView.setVisibility(View.GONE);
+                        rootView.findViewById(R.id.underline_4).setVisibility(View.GONE);
                         authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_EXPERT.toUpperCase());
                         break;
                     case AppConstants.USER_TYPE_USER:
+                        rankingSectionTextView.setVisibility(View.GONE);
+                        rootView.findViewById(R.id.underline_4).setVisibility(View.GONE);
                         authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_USER.toUpperCase());
                         break;
+                    default:
+                        rankingSectionTextView.setVisibility(View.GONE);
+                        rootView.findViewById(R.id.underline_4).setVisibility(View.GONE);
                 }
 //                blogTitle.setText(responseData.getData().get(0).getResult().getBlogTitle());
 //                getSupportActionBar().setTitle(responseData.getData().get(0).getResult().getFirstName());
@@ -277,7 +349,79 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
 
     @Override
     protected void updateUi(Response response) {
+        removeProgressDialog();
+        if (response == null) {
+            Toast.makeText(getActivity(), getResources().getString(R.string.server_error), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        LogoutResponse responseData = (LogoutResponse) response.getResponseObject();
+        String message = responseData.getResult().getMessage();
+        if (responseData.getResponseCode() == 200) {
+            String pushToken = SharedPrefUtils.getDeviceToken(getActivity());
+            SharedPrefUtils.clearPrefrence(getActivity());
+            SharedPrefUtils.setDeviceToken(getActivity(), pushToken);
+            /**
+             * delete table from local also;
+             */
+            UserTable _tables = new UserTable((BaseApplication) getActivity().getApplicationContext());
+            _tables.deleteAll();
 
+            TableFamily _familytables = new TableFamily((BaseApplication) getActivity().getApplicationContext());
+            _familytables.deleteAll();
+
+            TableAdult _adulttables = new TableAdult((BaseApplication) getActivity().getApplicationContext());
+            _adulttables.deleteAll();
+
+            TableKids _kidtables = new TableKids((BaseApplication) getActivity().getApplicationContext());
+            _kidtables.deleteAll();
+
+            new TableAppointmentData(BaseApplication.getInstance()).deleteAll();
+            new TableNotes(BaseApplication.getInstance()).deleteAll();
+            new TableFile(BaseApplication.getInstance()).deleteAll();
+            new TableAttendee(BaseApplication.getInstance()).deleteAll();
+            new TableWhoToRemind(BaseApplication.getInstance()).deleteAll();
+
+
+            new TableTaskData(BaseApplication.getInstance()).deleteAll();
+            new TableTaskList(BaseApplication.getInstance()).deleteAll();
+            new TaskTableAttendee(BaseApplication.getInstance()).deleteAll();
+            new TaskTableWhoToRemind(BaseApplication.getInstance()).deleteAll();
+            new TaskTableFile(BaseApplication.getInstance()).deleteAll();
+            new TaskTableNotes(BaseApplication.getInstance()).deleteAll();
+            new TaskCompletedTable(BaseApplication.getInstance()).deleteAll();
+            new TableApiEvents(BaseApplication.getInstance()).deleteAll();
+
+            new ExternalCalendarTable(BaseApplication.getInstance()).deleteAll();
+
+            // clear cachee
+            AppointmentManager.getInstance(getActivity()).clearList();
+            BaseApplication.setBlogResponse(null);
+            BaseApplication.setBusinessREsponse(null);
+
+            // clear all sessions
+
+            if (StringUtils.isNullOrEmpty(message)) {
+                Toast.makeText(getActivity(), getString(R.string.went_wrong), Toast.LENGTH_SHORT).show();
+
+            } else {
+                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+            }
+
+            // set logout flag
+            SharedPrefUtils.setLogoutFlag(getActivity(), true);
+            Intent intent = new Intent(getActivity(), ActivityLogin.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+
+            getActivity().finish();
+
+        } else if (responseData.getResponseCode() == 400) {
+            if (StringUtils.isNullOrEmpty(message)) {
+                Toast.makeText(getActivity(), getString(R.string.went_wrong), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     @Override
@@ -289,6 +433,7 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
                 break;
             case R.id.authorBioTextView:
                 break;
+            case R.id.settingImageView:
             case R.id.imgProfile:
                 if (Build.VERSION.SDK_INT >= 23) {
                     if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
@@ -321,17 +466,27 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
                 startActivity(articleIntent);
                 break;
             case R.id.videosSectionTextView:
+                Intent funnyIntent = new Intent(getActivity(), MyFunnyVideosListingActivity.class);
+                funnyIntent.putExtra(Constants.FROM_SCREEN, "Navigation Menu");
+                startActivity(funnyIntent);
                 break;
-            case R.id.activitySectionTextView:
-                break;
+            case R.id.activitySectionTextView: {
+                Intent intent = new Intent(getActivity(), UserActivitiesActivity.class);
+                intent.putExtra(Constants.AUTHOR_ID, userId);
+                startActivity(intent);
+            }
+            break;
             case R.id.rankingSectionTextView: {
                 Intent intent = new Intent(getActivity(), RankingActivity.class);
                 startActivity(intent);
             }
             break;
-            case R.id.settingImageView:
+            case R.id.settingsSectionTextView:
                 Intent settingsIntent = new Intent(getActivity(), AppSettingsActivity.class);
                 startActivity(settingsIntent);
+                break;
+            case R.id.signoutSectionTextView:
+                logoutUser();
                 break;
             case R.id.followingContainer: {
                 Intent intent = new Intent(getActivity(), FollowersAndFollowingListActivity.class);
@@ -346,6 +501,33 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
                 intent.putExtra(AppConstants.USER_ID_FOR_FOLLOWING_FOLLOWERS, userId);
                 startActivity(intent);
             }
+        }
+    }
+
+    private void logoutUser() {
+        if (ConnectivityUtils.isNetworkEnabled(getActivity())) {
+            final LogoutController _controller = new LogoutController(getActivity(), this);
+            AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity(), R.style.MyAlertDialogStyle);
+
+            dialog.setMessage(getResources().getString(R.string.logout_msg)).setNegativeButton(R.string.new_yes
+                    , new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                            showProgressDialog(getResources().getString(R.string.please_wait));
+                            _controller.getData(AppConstants.LOGOUT_REQUEST, "");
+                        }
+                    }).setPositiveButton(R.string.new_cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    // do nothing
+                    dialog.cancel();
+                }
+            }).setIcon(android.R.drawable.ic_dialog_alert);
+            AlertDialog alert11 = dialog.create();
+            alert11.show();
+            alert11.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.home_light_blue));
+            alert11.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.canceltxt_color));
+        } else {
+            ToastUtils.showToast(getActivity(), getString(R.string.error_network));
         }
     }
 

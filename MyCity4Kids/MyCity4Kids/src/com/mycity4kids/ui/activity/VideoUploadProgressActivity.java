@@ -3,7 +3,6 @@ package com.mycity4kids.ui.activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -32,8 +32,6 @@ import com.mycity4kids.ui.TusAndroidUpload;
 import com.mycity4kids.ui.TusClient;
 import com.mycity4kids.ui.TusUpload;
 import com.mycity4kids.ui.TusUploader;
-import com.natasa.progressviews.CircleProgressBar;
-import com.natasa.progressviews.utils.ProgressStartPoint;
 
 import java.net.URL;
 
@@ -45,13 +43,14 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 11/1/17.
  */
-public class VideoUploadProgressActivity extends BaseActivity {
+public class VideoUploadProgressActivity extends BaseActivity implements View.OnClickListener {
 
     private Toolbar mToolbar;
-    private CircleProgressBar mCircleView;
+    //    private CircleProgressBar mCircleView;
+    RelativeLayout uploadFinishContainer, uploadingContainer;
     private TusClient client;
-    private TextView status;
-    private TextView cancelTextView;
+    private TextView status, okayTextView;
+//    private TextView cancelTextView;
 
     private UploadTask uploadTask;
     private Uri contentURI;
@@ -65,17 +64,20 @@ public class VideoUploadProgressActivity extends BaseActivity {
         contentURI = getIntent().getParcelableExtra("uri");
         title = getIntent().getStringExtra("title");
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mCircleView = (CircleProgressBar) findViewById(R.id.circleView);
-        cancelTextView = (TextView) findViewById(R.id.cancelTextView);
+        uploadingContainer = (RelativeLayout) findViewById(R.id.uploadingContainer);
+        uploadFinishContainer = (RelativeLayout) findViewById(R.id.uploadFinishContainer);
+//        mCircleView = (CircleProgressBar) findViewById(R.id.circleView);
+//        cancelTextView = (TextView) findViewById(R.id.cancelTextView);
         status = (TextView) findViewById(R.id.status);
+        okayTextView = (TextView) findViewById(R.id.okayTextView);
 
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Video Upload");
+        okayTextView.setOnClickListener(this);
 
-        mCircleView.setStartPositionInDegrees(ProgressStartPoint.DEFAULT);
-        mCircleView.setLinearGradientProgress(false);
+        uploadingContainer.setVisibility(View.VISIBLE);
+        uploadFinishContainer.setVisibility(View.GONE);
+
+//        mCircleView.setStartPositionInDegrees(ProgressStartPoint.DEFAULT);
+//        mCircleView.setLinearGradientProgress(false);
 
         try {
             SharedPreferences pref = getSharedPreferences("tus", 0);
@@ -94,13 +96,6 @@ public class VideoUploadProgressActivity extends BaseActivity {
 //            showError(e);
         }
 
-        cancelTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cancelUpload();
-            }
-        });
-
     }
 
     private void setStatus(String text) {
@@ -108,8 +103,8 @@ public class VideoUploadProgressActivity extends BaseActivity {
     }
 
     private void setUploadProgress(int progress) {
-        mCircleView.setProgress(progress);
-        mCircleView.setText("" + progress + "%", Color.DKGRAY);
+//        mCircleView.setProgress(progress);
+//        mCircleView.setText("" + progress + "%", Color.DKGRAY);
     }
 
     private class UploadTask extends AsyncTask<Void, Long, String> {
@@ -126,14 +121,14 @@ public class VideoUploadProgressActivity extends BaseActivity {
 
         @Override
         protected void onPreExecute() {
-            activity.setStatus("Upload selected...");
+//            activity.setStatus("Upload selected...");
             activity.setPauseButtonEnabled(true);
         }
 
         @Override
         protected void onPostExecute(String videoId) {
             if (!StringUtils.isNullOrEmpty(videoId)) {
-                cancelTextView.setVisibility(View.GONE);
+//                cancelTextView.setVisibility(View.GONE);
 
                 UploadVideoRequest uploadVideoRequest = new UploadVideoRequest();
                 uploadVideoRequest.setVideo_id(videoId);
@@ -144,7 +139,7 @@ public class VideoUploadProgressActivity extends BaseActivity {
                 Call<UpdateVideoDetailsResponse> updateVideoUrlCall = updateVideoUrlAPI.updateUploadedVideoURL(uploadVideoRequest);
                 updateVideoUrlCall.enqueue(updateVideoUrlResponseCallback);
             } else {
-                showToast("Error occured while uploading your video. Please try again.");
+                showToast(getString(R.string.video_progress_uploading_error));
                 finish();
             }
 //            activity.setStatus("Upload finished!\n");
@@ -164,8 +159,8 @@ public class VideoUploadProgressActivity extends BaseActivity {
         protected void onProgressUpdate(Long... updates) {
             long uploadedBytes = updates[0];
             long totalBytes = updates[1];
-            activity.setStatus("Upload in progress");
-            activity.setUploadProgress((int) ((double) uploadedBytes / totalBytes * 100));
+//            activity.setStatus("Upload in progress");
+//            activity.setUploadProgress((int) ((double) uploadedBytes / totalBytes * 100));
         }
 
         @Override
@@ -239,32 +234,33 @@ public class VideoUploadProgressActivity extends BaseActivity {
                 UpdateVideoDetailsResponse responseData = (UpdateVideoDetailsResponse) response.body();
                 Log.d("Response Body = ", "" + new Gson().toJson(responseData));
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    setStatus("Upload finished!");
+//                    setStatus("Upload finished!");
                     setPauseButtonEnabled(false);
 //                    showToast("Your video has been succesfully uploaded and sent for moderation. We will notify you once it is published.");
-
-                    showOkDialog("Video Uploaded Successfully", "Video has been successfully uploaded and send for moderation. We will notifiy you once moderated",
-                            new OnButtonClicked() {
-                                @Override
-                                public void onButtonCLick(int buttonId) {
-                                    Intent intent = new Intent(VideoUploadProgressActivity.this, DashboardActivity.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                    startActivity(intent);
-                                    finish();
-                                }
-                            });
+                    uploadingContainer.setVisibility(View.GONE);
+                    uploadFinishContainer.setVisibility(View.VISIBLE);
+//                    showOkDialog("Video Uploaded Successfully", "Video has been successfully uploaded and send for moderation. We will notifiy you once moderated",
+//                            new OnButtonClicked() {
+//                                @Override
+//                                public void onButtonCLick(int buttonId) {
+//                                    Intent intent = new Intent(VideoUploadProgressActivity.this, DashboardActivity.class);
+//                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                                    startActivity(intent);
+//                                    finish();
+//                                }
+//                            });
 
 //                    Intent intent = new Intent(VideoUploadProgressActivity.this, DashboardActivity.class);
 //                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 //                    startActivity(intent);
 //                    finish();
                 } else {
-                    setStatus("Uploading Failed.");
+                    setStatus(getString(R.string.video_progress_uploading_failed));
                     showToast(responseData.getReason());
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
-                setStatus("Uploading Failed.");
+                setStatus(getString(R.string.video_progress_uploading_failed));
                 Log.d("MC4KException", Log.getStackTraceString(e));
                 showToast(getString(R.string.went_wrong));
             }
@@ -274,7 +270,7 @@ public class VideoUploadProgressActivity extends BaseActivity {
         public void onFailure(Call<UpdateVideoDetailsResponse> call, Throwable t) {
             Crashlytics.logException(t);
             Log.d("MC4KException", Log.getStackTraceString(t));
-            setStatus("Uploading Failed.");
+            setStatus(getString(R.string.video_progress_uploading_failed));
             showToast(getString(R.string.went_wrong));
         }
     };
@@ -282,7 +278,7 @@ public class VideoUploadProgressActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         if (null != uploadTask && uploadTask.getStatus() == AsyncTask.Status.RUNNING) {
-            showAlertDialog("mycity4kids", "Your upload progress will be lost. Are you sure you want to exit?", new OnButtonClicked() {
+            showAlertDialog("mycity4kids", getString(R.string.video_progress_progress_lost_msg), new OnButtonClicked() {
                 @Override
                 public void onButtonCLick(int buttonId) {
                     uploadTask.cancel(true);
@@ -304,5 +300,17 @@ public class VideoUploadProgressActivity extends BaseActivity {
                 return super.onOptionsItemSelected(item);
         }
         return true;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.okayTextView:
+                Intent intent = new Intent(VideoUploadProgressActivity.this, DashboardActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+                break;
+        }
     }
 }

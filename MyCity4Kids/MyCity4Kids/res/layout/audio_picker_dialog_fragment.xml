@@ -11,65 +11,156 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
-        android:elevation="5dp"
         android:minHeight="?attr/actionBarSize"
         app:theme="@style/ToolbarTheme"
-        app:titleTextAppearance="@style/ToolbarTheme.Title" />
+        app:titleTextAppearance="@style/ToolbarTheme.Title">
 
-    <TextView
+        <RelativeLayout
+            android:id="@+id/toolbarRelativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible">
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/toolbarTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/add_video_details.audio_picker.title"
+                android:textColor="@color/add_video_details.audio_picker.title"
+                android:textSize="20sp"
+                app:fontName="oswald_regular.ttf" />
+
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
+
+    <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/audioTextView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp"
-        android:text="At The Fair - Happy" />
+        android:text="At The Fair - Happy"
+        android:textColor="@color/add_video_details.audio_title"
+        android:textSize="15sp"
+        app:fontName="oswald.ttf" />
 
-    <TextView
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@color/common_underline" />
+
+    <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/audioTextView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp"
-        android:text="Break Time - Happy" />
+        android:text="Break Time - Happy"
+        android:textColor="@color/add_video_details.audio_title"
+        android:textSize="15sp"
+        app:fontName="oswald.ttf" />
 
-    <TextView
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@color/common_underline" />
+
+    <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/audioTextView3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp"
-        android:text="Floaters - Inspirational" />
+        android:text="Floaters - Inspirational"
+        android:textColor="@color/add_video_details.audio_title"
+        android:textSize="15sp"
+        app:fontName="oswald.ttf" />
 
-    <TextView
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@color/common_underline" />
+
+    <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/audioTextView4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp"
-        android:text="Hit My Soul - Happy" />
+        android:text="Hit My Soul - Happy"
+        android:textColor="@color/add_video_details.audio_title"
+        android:textSize="15sp"
+        app:fontName="oswald.ttf" />
 
-    <TextView
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@color/common_underline" />
+
+    <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/audioTextView5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp"
-        android:text="March On - Angry" />
+        android:text="March On - Angry"
+        android:textColor="@color/add_video_details.audio_title"
+        android:textSize="15sp"
+        app:fontName="oswald.ttf" />
 
-    <TextView
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@color/common_underline" />
+
+    <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/audioTextView6"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp"
-        android:text="Sunday Plans - Funky" />
+        android:text="Sunday Plans - Funky"
+        android:textColor="@color/add_video_details.audio_title"
+        android:textSize="15sp"
+        app:fontName="oswald.ttf" />
 
-    <TextView
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@color/common_underline" />
+
+    <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/audioTextView7"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp"
-        android:text="The Big Guns - Angry" />
+        android:text="The Big Guns - Angry"
+        android:textColor="@color/add_video_details.audio_title"
+        android:textSize="15sp"
+        app:fontName="oswald.ttf" />
 
-    <TextView
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@color/common_underline" />
+
+    <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/audioTextView8"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp"
-        android:text="Where I Am From - Calm" />
+        android:text="Where I Am From - Calm"
+        android:textColor="@color/add_video_details.audio_title"
+        android:textSize="15sp"
+        app:fontName="oswald.ttf" />
 
 </LinearLayout>

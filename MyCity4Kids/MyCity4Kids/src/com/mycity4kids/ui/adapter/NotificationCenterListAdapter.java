@@ -27,10 +27,8 @@ import com.mycity4kids.models.response.NotificationCenterListResponse;
 import com.mycity4kids.models.response.NotificationCenterResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.NotificationsAPI;
-import com.mycity4kids.ui.CircleTransformation;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
-import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
-import com.mycity4kids.ui.activity.BloggerDashboardActivity;
+import com.mycity4kids.ui.activity.BloggerProfileActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.LoadWebViewActivity;
 import com.mycity4kids.ui.activity.SettingsActivity;
@@ -186,7 +184,7 @@ public class NotificationCenterListAdapter extends BaseAdapter {
                     hitNotificationReadAPI(notificationList.get(position).getId());
                     notifyDataSetChanged();
                     Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "profile");
-                    Intent intent1 = new Intent(mContext, BloggerDashboardActivity.class);
+                    Intent intent1 = new Intent(mContext, BloggerProfileActivity.class);
                     if (!StringUtils.isNullOrEmpty(notificationList.get(position).getAuthorId())) {
                         intent1.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, notificationList.get(position).getAuthorId());
                     } else {

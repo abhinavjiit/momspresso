@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
     android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
@@ -10,33 +10,35 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:background="@color/primary"
-        android:elevation="5dp"
+        android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
-        app:theme="@style/FilterToobar"
-        app:titleTextAppearance="@style/ToolbarTheme.Title" />
+        app:theme="@style/ToolbarTheme"
+        app:titleTextAppearance="@style/ToolbarTheme.Title">
 
-    <TextView
-        android:id="@+id/textMessage"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar"
-        android:layout_gravity="center"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:paddingBottom="5dp"
-        android:paddingTop="5dp"
-        android:text="@string/publish_article.upload_image.title"
-        android:textSize="20sp" />
+        <RelativeLayout
+            android:id="@+id/toolbarRelativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible">
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/toolbarTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/choose_article_image.toolbar.title"
+                android:textColor="@color/choose_article_image.toolbar.title"
+                android:textSize="20sp"
+                app:fontName="oswald_regular.ttf" />
+
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
 
     <android.support.v7.widget.CardView
         android:id="@+id/uploadImageLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/textMessage"
+        android:layout_below="@id/toolbar"
         android:layout_marginBottom="2dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
@@ -52,32 +54,32 @@
 
             <ImageView
                 android:id="@+id/imvAuthorThumb"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/icon_cam" />
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="20dp"
+                android:src="@drawable/ic_camera" />
 
-            <TextView
+            <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/txvArticleTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/imvAuthorThumb"
+                android:layout_marginBottom="20dp"
                 android:ellipsize="end"
-                android:fontFamily="sans-serif"
                 android:gravity="center"
-                android:maxLines="3"
-                android:paddingTop="5dp"
-                android:singleLine="false"
-                android:text="@string/publish_article.upload_image.click_to_upload_picture"
-                android:textColor="@color/grey"
-                android:textSize="14sp" />
+                android:text="@string/choose_article_image.upload_photo"
+                android:textColor="@color/choose_article_image.upload_photo"
+                android:textSize="17sp"
+                app:fontName="oswald.ttf" />
         </RelativeLayout>
 
         <ImageView
             android:id="@+id/articleImage"
             android:layout_width="match_parent"
             android:layout_height="180dp"
-            android:layout_below="@id/textMessage"
+            android:layout_below="@id/toolbar"
             android:scaleType="center"
             android:src="@drawable/default_article"
             android:visibility="gone" />
@@ -101,6 +103,7 @@
         android:id="@+id/gridview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/publishTextView"
         android:layout_below="@id/uploadImageLayout"
         android:layout_marginTop="10dp"
         android:gravity="center"
@@ -123,7 +126,7 @@
         android:id="@+id/relativeLoadingView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_alignBottom="@+id/gridview"
         android:background="#80000000"
         android:paddingBottom="5dp"
         android:visibility="gone">
@@ -158,5 +161,19 @@
             android:src="@drawable/progress_spinner" />
     </RelativeLayout>
 
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/publishTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="10dp"
+        android:background="@color/white"
+        android:elevation="20dp"
+        android:gravity="center"
+        android:padding="15dp"
+        android:text="@string/choose_article_image.publish"
+        android:textColor="@color/choose_article_image.publish"
+        android:textSize="17sp"
+        app:fontName="oswald_regular.ttf" />
 
 </RelativeLayout>

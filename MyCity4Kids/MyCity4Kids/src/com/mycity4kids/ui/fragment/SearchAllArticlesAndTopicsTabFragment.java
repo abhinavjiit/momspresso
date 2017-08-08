@@ -112,37 +112,6 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
 
     }
 
-    private void getArticleResponse(SearchResponse responseData) {
-        ArrayList<SearchArticleResult> dataList = responseData.getData().getResult().getArticle();
-
-        if (dataList.size() == 0) {
-
-            isLastPageReached = false;
-            if (null != articleDataModelsNew && !articleDataModelsNew.isEmpty()) {
-                //No more next results for search from pagination
-
-            } else {
-                // No results for search
-                articleDataModelsNew = dataList;
-                articlesListingAdapter.setListData(dataList);
-                articlesListingAdapter.notifyDataSetChanged();
-                noBlogsTextView.setVisibility(View.VISIBLE);
-                noBlogsTextView.setText("No articles found");
-            }
-
-        } else {
-            noBlogsTextView.setVisibility(View.GONE);
-            if (nextPageNumber == 1) {
-                articleDataModelsNew = dataList;
-            } else {
-                articleDataModelsNew.addAll(dataList);
-            }
-            articlesListingAdapter.setListData(articleDataModelsNew);
-            nextPageNumber = nextPageNumber + 1;
-            articlesListingAdapter.notifyDataSetChanged();
-        }
-    }
-
     private void newSearchTopicArticleListingApi(String searchName, String type) {
         if (nextPageNumber == 1 && null != progressBar) {
             progressBar.setVisibility(View.VISIBLE);

@@ -137,6 +137,11 @@ public class RankingStatsTabFragment extends BaseFragment implements OnChartGest
         pageViewLabel = getString(R.string.ranking_page_views_label);
 
         userId = SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId();
+        String authorId = getArguments().getString("authorId");
+        if (!StringUtils.isNullOrEmpty(authorId)) {
+            userId = authorId;
+        }
+
         colorCode = ContextCompat.getColor(getActivity(), R.color.analytics_engagement_graph);
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         bloggerDashboardAPI = retrofit.create(BloggerDashboardAPI.class);

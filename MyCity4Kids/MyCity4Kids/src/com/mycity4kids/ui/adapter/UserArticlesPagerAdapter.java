@@ -23,11 +23,13 @@ public class UserArticlesPagerAdapter extends FragmentStatePagerAdapter {
     private UserPublishedArticleTabFragment userPublishedArticleTabFragment;
     private UserDraftArticleTabFragment userDraftArticleTabFragment;
     private String authorId;
+    private boolean isPrivateProfile;
 
-    public UserArticlesPagerAdapter(FragmentManager fm, int NumOfTabs, String authorId) {
+    public UserArticlesPagerAdapter(FragmentManager fm, int NumOfTabs, String authorId, boolean isPrivateProfile) {
         super(fm);
         this.mNumOfTabs = NumOfTabs;
         this.authorId = authorId;
+        this.isPrivateProfile = isPrivateProfile;
     }
 
     @Override
@@ -41,6 +43,7 @@ public class UserArticlesPagerAdapter extends FragmentStatePagerAdapter {
                     userPublishedArticleTabFragment = new UserPublishedArticleTabFragment();
                 }
                 bundle.putString(Constants.AUTHOR_ID, authorId);
+                bundle.putBoolean("isPrivateProfile", isPrivateProfile);
                 userPublishedArticleTabFragment.setArguments(bundle);
                 return userPublishedArticleTabFragment;
             case 1:
@@ -48,6 +51,7 @@ public class UserArticlesPagerAdapter extends FragmentStatePagerAdapter {
                     userDraftArticleTabFragment = new UserDraftArticleTabFragment();
                 }
                 bundle.putString(Constants.AUTHOR_ID, authorId);
+                bundle.putBoolean("isPrivateProfile", isPrivateProfile);
                 userDraftArticleTabFragment.setArguments(bundle);
                 return userDraftArticleTabFragment;
         }

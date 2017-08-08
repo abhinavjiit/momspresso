@@ -26,7 +26,7 @@ import com.mycity4kids.newmodels.PushNotificationModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.reminders.ShareArticleReceiver;
 import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
-import com.mycity4kids.ui.activity.BloggerDashboardActivity;
+import com.mycity4kids.ui.activity.BloggerProfileActivity;
 import com.mycity4kids.ui.activity.BusinessDetailsActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.LoadWebViewActivity;
@@ -336,7 +336,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         resultIntent.putExtra("fromNotification", true);
                         contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                     } else {
-                        resultIntent = new Intent(getApplicationContext(), BloggerDashboardActivity.class);
+                        resultIntent = new Intent(getApplicationContext(), BloggerProfileActivity.class);
                         resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         resultIntent.putExtra("fromNotification", true);
                         resultIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, pushNotificationModel.getUser_id());
@@ -345,7 +345,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
 
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
                         // Adds the back stack
-                        stackBuilder.addParentStack(BloggerDashboardActivity.class);
+                        stackBuilder.addParentStack(BloggerProfileActivity.class);
                         // Adds the Intent to the top of the stack
                         stackBuilder.addNextIntent(resultIntent);
                         contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);

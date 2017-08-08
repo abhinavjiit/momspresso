@@ -3,6 +3,7 @@ package com.mycity4kids.preference;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.support.v4.app.FragmentActivity;
 
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.VersionApiModel;
@@ -114,6 +115,8 @@ public class SharedPrefUtils {
     private static final String LANGUAGE_FILTER = "languageFilter";
 
     private static final String FOLLOWED_TOPIC_COUNT = "followedTopicCount";
+
+    private static final String BECOME_BLOGGER_FLAG = "becomeBloggerFlag";
 
     /**
      * this shared preference save current versions for control city,locality,category APIs .
@@ -761,5 +764,18 @@ public class SharedPrefUtils {
     public static int getFollowedTopicsCount(Context context) {
         SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         return _sharedPref.getInt(FOLLOWED_TOPIC_COUNT, 0);
+    }
+
+    public static void setBecomeBloggerFlag(Context pContext, boolean flag) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        _editor.putBoolean(BECOME_BLOGGER_FLAG, flag);
+        _editor.commit();
+    }
+
+    public static boolean getBecomeBloggerFlag(Context context) {
+        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        boolean flag = (_sharedPref.getBoolean(BECOME_BLOGGER_FLAG, false));
+        return flag;
     }
 }

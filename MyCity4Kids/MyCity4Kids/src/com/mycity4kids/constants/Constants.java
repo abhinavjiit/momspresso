@@ -238,6 +238,7 @@ public class Constants {
     public static final String TAB_FOR_YOU = "FOR YOU";
     public static final String TAB_LANGUAGE = "LANGUAGES";
     public static final String TAB_MOMSPRESSO = "MOMSPRESSO";
+    public static final String TAB_VIDEOS = "VIDEOS";
 
     public static String SORT_TYPE = "sorttype";
     public static String BLOG_TITLE = "blog_title";

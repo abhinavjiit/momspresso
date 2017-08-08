@@ -36,7 +36,6 @@ import com.mycity4kids.newmodels.AttendeeModel;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
 import com.mycity4kids.ui.activity.VlogsDetailActivity;
-import com.mycity4kids.ui.adapter.CommentsReplyAdapter;
 
 import java.util.ArrayList;
 
@@ -50,7 +49,6 @@ import retrofit2.Retrofit;
 public class EditCommentsRepliesFragment extends DialogFragment implements OnClickListener, IScreen {
 
     ArrayList<AttendeeModel> data;
-    CommentsReplyAdapter adapter;
     private CommentsData commentsData, nestedReplyData;
     private EditText commentReplyEditText;
     private TextView updateCommentReplyTextView;

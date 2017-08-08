@@ -56,7 +56,11 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticlePublishAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
+import com.mycity4kids.ui.activity.ArticleModerationOrShareActivity;
+import com.mycity4kids.ui.activity.BlogSetupActivity;
 import com.mycity4kids.ui.activity.BloggerDashboardActivity;
+import com.mycity4kids.ui.activity.BloggerProfileActivity;
+import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.adapter.ArticleTagsImagesGridAdapter;
 import com.mycity4kids.ui.adapter.MyFunnyVideosListingAdapter;
 import com.mycity4kids.ui.fragment.CompleteProfileDialogFragment;
@@ -100,7 +104,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
     private ProgressBar progressBar;
     private ImageView articleImage;
     private Button publish;
-    private TextView changePictureTextView;
+    private TextView changePictureTextView, publishTextView;
     private RelativeLayout mLodingView;
 
     private SharedPreferences pref;
@@ -134,12 +138,13 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Publish Blog");
+//        getSupportActionBar().setTitle("Publish Blog");
         articleImage = (ImageView) findViewById(R.id.articleImage);
         uploadImageCardView = (RelativeLayout) findViewById(R.id.uploadImageContainer);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         changePictureTextView = (TextView) findViewById(R.id.changePictureTextView);
         mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
+        publishTextView = (TextView) findViewById(R.id.publishTextView);
 
         findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely));
 
@@ -162,7 +167,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
         }
 
         articleImage.setOnClickListener(this);
-//        publish.setOnClickListener(this);
+        publishTextView.setOnClickListener(this);
         uploadImageCardView.setOnClickListener(this);
         changePictureTextView.setOnClickListener(this);
 
@@ -303,13 +308,11 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        // according to fragment change it
-        getMenuInflater().inflate(R.menu.menu_publish_article, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.menu_publish_article, menu);
+//        return true;
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -318,19 +321,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                 finish();
                 break;
             case R.id.publish:
-                if (null == url) {
-                    showToast(getString(R.string.publish_article_upload_image_please_upload_or_choose_image));
-                    return true;
-                }
-                Utils.pushEvent(ArticleImageTagUploadActivity.this, GTMEventType.PUBLISH_ARTICLE_BUTTON_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(ArticleImageTagUploadActivity.this).getDynamoId() + "", "Article Image Upload");
-                pref = getSharedPreferences(COMMON_PREF_FILE, MODE_PRIVATE);
-                blogSetup = pref.getBoolean("blogSetup", false);
-                Log.e("blogsetup", blogSetup + "");
-                if (blogSetup == false) {
-                    getBlogPage();
-                } else {
-                    publishArticleRequest();
-                }
+
                 break;
         }
         return true;
@@ -393,19 +384,10 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                                  }
                                  if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
                                      if (!StringUtils.isNullOrEmpty(responseModel.getData().get(0).getMsg())) {
-                                         //  SharedPrefUtils.setProfileImgUrl(EditorPostActivity.this, responseModel.getResult().getMessage());
                                          Log.i("Retro Publish Message", responseModel.getData().get(0).getMsg());
-                                         if (StringUtils.isNullOrEmpty(responseModel.getData().get(0).getResult().getUrl())) {
-                                             alertDialog(responseModel.getData().get(0).getMsg());
-                                         } else {
-                                             PublishedArticleShareDialogFragment publishedArticleShareDialogFragment = new PublishedArticleShareDialogFragment();
-                                             Bundle _args = new Bundle();
-                                             _args.putString("shareUrl", responseModel.getData().get(0).getResult().getUrl());
-                                             publishedArticleShareDialogFragment.setArguments(_args);
-                                             FragmentManager fm = getSupportFragmentManager();
-                                             publishedArticleShareDialogFragment.setCancelable(false);
-                                             publishedArticleShareDialogFragment.show(fm, "Share Published Article");
-                                         }
+                                         Intent intent = new Intent(ArticleImageTagUploadActivity.this, ArticleModerationOrShareActivity.class);
+                                         intent.putExtra("shareUrl", "" + responseModel.getData().get(0).getResult().getUrl());
+                                         startActivity(intent);
                                      } else {
                                          showToast(responseModel.getReason().toString());
                                      }
@@ -459,17 +441,9 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                     ArticleDraftResponse responseModel = (ArticleDraftResponse) response.body();
                     if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
                         id = responseModel.getData().get(0).getResult().getId() + "";
-                        if (StringUtils.isNullOrEmpty(responseModel.getData().get(0).getResult().getUrl())) {
-                            alertDialog(responseModel.getData().get(0).getMsg());
-                        } else {
-                            PublishedArticleShareDialogFragment publishedArticleShareDialogFragment = new PublishedArticleShareDialogFragment();
-                            Bundle _args = new Bundle();
-                            _args.putString("shareUrl", responseModel.getData().get(0).getResult().getUrl());
-                            publishedArticleShareDialogFragment.setArguments(_args);
-                            FragmentManager fm = getSupportFragmentManager();
-                            publishedArticleShareDialogFragment.setCancelable(false);
-                            publishedArticleShareDialogFragment.show(fm, "Share Published Article");
-                        }
+                        Intent intent = new Intent(ArticleImageTagUploadActivity.this, ArticleModerationOrShareActivity.class);
+                        intent.putExtra("shareUrl", "" + responseModel.getData().get(0).getResult().getUrl());
+                        startActivity(intent);
                     } else {
                         if (!StringUtils.isNullOrEmpty(responseModel.getReason())) {
                             showToast(responseModel.getReason());
@@ -526,13 +500,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                         publishArticleRequest();
 
                     } else if (responseModel.getData().getResult().getIsSetup() == 0) {
-                        Intent intent = new Intent(ArticleImageTagUploadActivity.this, SetupBlogPageActivity.class);
-                        if (!StringUtils.isNullOrEmpty(responseModel.getData().getResult().getUserBio())) {
-                            intent.putExtra("userBio", responseModel.getData().getResult().getUserBio());
-                        }
-                        if (!StringUtils.isNullOrEmpty(responseModel.getData().getResult().getBlogTitle())) {
-                            intent.putExtra("blogTitle", responseModel.getData().getResult().getBlogTitle());
-                        }
+                        Intent intent = new Intent(ArticleImageTagUploadActivity.this, BlogSetupActivity.class);
                         startActivity(intent);
                     }
                 }
@@ -559,7 +527,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                         TableKids tableKids = new TableKids(BaseApplication.getInstance());
                         ArrayList<KidsInfo> kidsInformations = (ArrayList<KidsInfo>) tableKids.getAllKids();
                         if (kidsInformations != null && !kidsInformations.isEmpty()) {
-                            Intent intent = new Intent(ArticleImageTagUploadActivity.this, BloggerDashboardActivity.class);
+                            Intent intent = new Intent(ArticleImageTagUploadActivity.this, DashboardActivity.class);
                             intent.putExtra(AppConstants.STACK_CLEAR_REQUIRED, true);
                             startActivity(intent);
                             finish();
@@ -668,6 +636,21 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                     startActivityForResult(intent1, ADD_MEDIA_ACTIVITY_REQUEST_CODE);
                 }
 //                startActivityForResult(intent1, ADD_MEDIA_ACTIVITY_REQUEST_CODE);
+                break;
+            case R.id.publishTextView:
+                if (null == url) {
+                    showToast(getString(R.string.publish_article_upload_image_please_upload_or_choose_image));
+                    return;
+                }
+                Utils.pushEvent(ArticleImageTagUploadActivity.this, GTMEventType.PUBLISH_ARTICLE_BUTTON_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(ArticleImageTagUploadActivity.this).getDynamoId() + "", "Article Image Upload");
+                pref = getSharedPreferences(COMMON_PREF_FILE, MODE_PRIVATE);
+                blogSetup = pref.getBoolean("blogSetup", false);
+                Log.e("blogsetup", blogSetup + "");
+                if (blogSetup == false) {
+                    getBlogPage();
+                } else {
+                    publishArticleRequest();
+                }
                 break;
         }
     }

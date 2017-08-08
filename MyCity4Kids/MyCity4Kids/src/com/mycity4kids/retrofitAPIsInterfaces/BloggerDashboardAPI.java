@@ -1,18 +1,13 @@
 package com.mycity4kids.retrofitAPIsInterfaces;
 
-import com.mycity4kids.models.parentingstop.CommonParentingResponse;
-import com.mycity4kids.models.response.ArticleDraftResponse;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.BloggerAnalyticsResponse;
 import com.mycity4kids.models.response.ReviewResponse;
 import com.mycity4kids.models.response.UserCommentsResponse;
 import com.mycity4kids.models.response.UserDetailResponse;
-import com.mycity4kids.newmodels.BloggerDashboardModel;
-import com.mycity4kids.newmodels.PublishedArticlesModel;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -24,10 +19,6 @@ import retrofit2.http.Url;
 public interface BloggerDashboardAPI {
     /*@GET("apiblogs/bloggerDashboardData?")
     Call<BloggerDashboardModel> getBloggerData(@Query("userId") String userId);*/
-
-    @GET("v1/user/bookmark/{from}/{to}")
-    Call<ArticleListingResponse> getBookmarkedList(@Path("from") int from,
-                                                   @Path("to") int to);
 
     @GET("apiblogs/publishedArticle?")
     Call<ResponseBody> getPublishedArticleList(@Query("userId") String userId,
@@ -55,4 +46,20 @@ public interface BloggerDashboardAPI {
     Call<BloggerAnalyticsResponse> getAnalyticsReport(@Path("userId") String userId,
                                                       @Path("from") String from,
                                                       @Path("to") String to);
+
+    @GET("v1/users/recommendationList/{userId}")
+    Call<ArticleListingResponse> getUsersRecommendation(@Path("userId") String userId);
+
+    @GET("v1/users/bookmark/")
+    Call<ArticleListingResponse> getBookmarkedList(@Query("limit") int limit,
+                                                   @Query("pagination") String pagination);
+
+    @GET("v1/users/bookmarkVideo/")
+    Call<ArticleListingResponse> getUsersWatchLaterVideos(@Query("limit") int limit,
+                                                          @Query("pagination") String pagination);
+
+    @GET("v1/comments/{userId}")
+    Call<UserCommentsResponse> getUsersComments(@Path("userId") String userId,
+                                                @Query("limit") int limit,
+                                                @Query("pagination") String pagination);
 }

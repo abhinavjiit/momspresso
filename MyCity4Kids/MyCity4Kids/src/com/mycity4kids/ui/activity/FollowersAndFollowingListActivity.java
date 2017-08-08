@@ -76,7 +76,7 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
         followerFollowingListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(FollowersAndFollowingListActivity.this, BloggerDashboardActivity.class);
+                Intent intent = new Intent(FollowersAndFollowingListActivity.this, BloggerProfileActivity.class);
                 intent.putExtra(AppConstants.PUBLIC_PROFILE_FLAG, true);
                 intent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, mDatalist.get(position).getUserId());
                 intent.putExtra(AppConstants.AUTHOR_NAME, mDatalist.get(position).getFirstName() + " " + mDatalist.get(position).getLastName());

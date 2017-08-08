@@ -423,6 +423,8 @@
     <string name="ad.bottom_bar.unlike">UNLIKE</string>
     <string name="ad.recent_logs_from.title">RECENT BLOGS FROM</string>
     <string name="ad.trending.title">TRENDING BLOGS</string>
+    <string name="vd.recent_videos_from.title">RECENT VIDEOS FROM</string>
+    <string name="vd.trending.title">TRENDING BLOGS</string>
 
     <string-array name="improve_page_views_array">
         <item>Interlink your article to other blog posts</item>
@@ -465,7 +467,7 @@
     <string name="menu.bangla">বাংলা</string>
     <string name="menu.marathi">मराठी</string>
 
-
+    <string name="dob">Date of Birth</string>
     <string name="permission_title_rationale">Permission needed</string>
 
     <string name="label_select_video">Select Video</string>
@@ -523,7 +525,11 @@
     <string name="home_screen.notification.title">NOTIFICATION</string>
     <string name="home_screen.profile.title">MY ACCOUNT</string>
     <string name="home_screen.select_an_option.title">SELECT AN OPTION</string>
+    <string name="home_screen.trending.become_blogger">SHARE YOUR STORY</string>
     <string name="home_screen.editor.title">EDITOR</string>
+    <string name="home_screen.explore.title">EXPLORE</string>
+    <string name="home_screen.upcoming_events.title">UPCOMING EVENTS</string>
+    <string name="home_screen.kids_res.title">KIDS RESOURCES</string>
     <string name="home_screen.trending_list_header.title">Choose The Topic That You Are Interested To Read About\' Like</string>
     <string name="home_screen.trending_list_header.topics_label">GETTING PREGNANT, POST PARTUM DEPRESSION ETC.</string>
     <string name="home_screen.trending_list_header.take_me_there">OKAY GOT IT! TAKE ME THERE</string>
@@ -605,6 +611,7 @@
 
     <string name="blogger_profile.toolbar.title">MY ACCOUNT</string>
     <string name="blogger_profile.follow_button">FOLLOW</string>
+    <string name="blogger_profile.rank_in">RANK IN</string>
     <string name="blogger_profile.unfollow_button">FOLLOWING</string>
     <string name="blogger_profile.following_label">FOLLOWING</string>
     <string name="blogger_profile.followers_label">FOLLOWERS</string>
@@ -619,7 +626,12 @@
     <string name="user_article.toolbar.title">ARTICLES</string>
     <string name="user_article.tabbar.published_label">PUBLISHED</string>
     <string name="user_article.tabbar.draft_label">DRAFTS</string>
+    <string name="user_article.draft.saved_on">Saved on</string>
     <string name="user_article.draft.edit">EDIT DRAFT</string>
+    <string name="user_article.published.edit">EDIT</string>
+    <string name="user_article.draft.status_pending_approval">PENDING FOR APPROVAL</string>
+    <string name="user_article.draft.status_unapproved">UNAPPROVED</string>
+    <string name="user_article.draft.status_unpublished">UNPUBLISHED</string>
 
     <string name="app_settings.toolbar.title">SETTINGS</string>
     <string name="app_settings.tabbar.edit_prefs">EDIT PREFERENCES</string>
@@ -642,6 +654,7 @@
     <string name="app_settings.edit_profile.save">SAVE</string>
     <string name="app_settings.edit_profile.toast_fn_empty">First Name cannot be empty</string>
     <string name="app_settings.edit_profile.toast_blog_title_empty">Blog Title cannot be empty</string>
+    <string name="app_settings.edit_profile.toast_special_not_allowed">Special characters are not allowed</string>
     <string name="app_settings.edit_profile.toast_user_bio_empty">User bio cannot be empty</string>
     <string name="app_settings.edit_profile.toast_user_bio_max">Maximum limit for bio is</string>
     <string name="app_settings.edit_profile.toast_user_bio_words">words</string>
@@ -702,5 +715,82 @@
     <string name="ranking.how_calculated">How is this calculated?</string>
     <string name="ranking.top_bloggers">TOP BLOGGERS IN</string>
     <string name="ranking.followers_label">FOLLOWERS</string>
+    <string name="ranking.in">IN</string>
 
+    <string name="editor.publish">PUBLISH</string>
+
+    <string name="add_article_topics.toolbar.title">CHOOSE TOPICS</string>
+    <string name="add_article_topics.clear_all">CLEAR ALL</string>
+    <string name="add_article_topics.min_topics">Please select atleast one topics to continue</string>
+    <string name="add_article_topics.max_topics">You can choose maximum 8 topics</string>
+    <string name="add_article_topics.apply">APPLY</string>
+
+    <string name="choose_article_image.toolbar.title">CHOOSE IMAGE</string>
+    <string name="choose_article_image.upload_photo">CLICK TO UPLOAD PHOTO</string>
+    <string name="choose_article_image.publish">PUBLISH</string>
+
+    <string name="add_article_or_video.upload_video">UPLOAD A VIDEO</string>
+    <string name="add_article_or_video.write_article">WRITE AN ARTICLE</string>
+    <string name="add_article_or_video.become_blogger">BECOME A BLOGGER</string>
+
+    <string name="become_blogger.get_started">LET\'S GET STARTED</string>
+    <string-array name="become_blogger_title_array">
+        <item>BECOME A BLOGGER</item>
+        <item>HOW CAN YOU CONTRIBUTE?</item>
+        <item>DO YOU GET PAID FOR YOUR CONTRIBUTION?</item>
+        <item>WHO CAN CONTRIBUTE?</item>
+    </string-array>
+    <string-array name="become_blogger_desc_array">
+        <item>You are one click away from sharing your thoughts, opinions, and stories with India\'s largest parenting community, in the language of your choice. With a reach of over 8 million Mums per month, your voice can be the source of hope, inspiration, comfort and knowledge.</item>
+        <item>You can share your parenting stories via the website or our IOS and Android app. Express yourself in the language of your choice - English, Hindi, Bengali, Marathi, Telugu or Tamil.</item>
+        <item>mycity4kids does not pay each blogger on publishing their own posts. We do however offer paid writing assignments which are commissioned by brands. This is offered to bloggers based on the quality of content they produce.</item>
+        <item>Whether your story is about parenthood, womenhood, relationships, struggles, joys or personal well-being, this is the platform to write about it. Join the 3500+ Mums in seeking &amp; sharing advice, opinions and recommendations.\n Do refrain from publishing copied or \'slightly modified\' content.</item>
+    </string-array>
+
+    <string name="moderation_or_share.way_to_go">WAY TO GO!</string>
+    <string name="moderation_or_share.moderation_message">Your article is up for moderation. You\'ll receive an email within 24 hours regarding the status of the blog</string>
+    <string name="moderation_or_share.publish_message">Congrats! Your blog has been published.\n Share it with your friends and family.</string>
+    <string name="moderation_or_share.later">MAYBE LATER</string>
+    <string name="moderation_or_share.okay">OKAY</string>
+
+    <string name="complete_blogger_profile.complete_label">COMPLETE YOUR BLOGGERS PROFILE</string>
+    <string name="complete_blogger_profile.paid_eligibility">Be eligible for paid writing assignments.\n All this information is safe with us.</string>
+    <string name="complete_blogger_profile.save">SAVE</string>
+    <string name="complete_blogger_profile.incorrect_date">Please choose correct date for date of birth.</string>
+
+    <string name="add_video_details.title_hint">ENTER A TITLE FOR THE VIDEO</string>
+    <string name="add_video_details.mute_label">MUTE SOUND</string>
+    <string name="add_video_details.add_music">ADD MUSIC</string>
+    <string name="add_video_details.remove">REMOVE</string>
+    <string name="add_video_details.error_empty_title">Please enter the title of the video</string>
+    <string name="add_video_details.save_upload">SAVE &amp; UPLOAD</string>
+    <string name="add_video_details.toolbar.title">UPLOAD A VIDEO</string>
+    <string name="add_video_details.audio_picker.title">ADD MUSIC</string>
+
+    <string name="video_progress.uploading_label">UPLOADING ...</string>
+    <string name="video_progress.uploading_msg">Please do not exit or kill the app, it will cancel the upload automatically. You can use the app while uploading.</string>
+    <string name="video_progress.way_to_go">WAY TO GO!</string>
+    <string name="video_progress.success_msg">Video has been successfully uploaded and sent for moderation. We will notify you once moderated.</string>
+    <string name="video_progress.okay">OKAY</string>
+    <string name="video_progress.uploading_failed">Uploading Failed.</string>
+    <string name="video_progress.uploading_error">Error occured while uploading your video. Please try again.</string>
+    <string name="video_progress.progress_lost_msg">Your upload progress will be lost. Are you sure you want to exit?</string>
+
+    <string name="user_activities.toolbar.title">ACTIVITY</string>
+    <string name="user_activities.tabs.recommended">RECOMMENDED</string>
+    <string name="user_activities.tabs.bookmark">BOOKMARKS</string>
+    <string name="user_activities.tabs.watch_later">WATCH LATER</string>
+    <string name="user_activities.tabs.comment">COMMENTS</string>
+    <string name="user_activities.bookmarks.remove">REMOVE</string>
+    <string name="user_activities.bookmarks.by">By</string>
+    <string name="user_activities.comments.saved_on">Saved on:</string>
+    <string name="user_activities.comments.edit">EDIT</string>
+
+    <string name="explore.section.events">EVENTS</string>
+    <string name="explore.section.resources">RESOURCES</string>
+    <string name="explore.section.top_things">TOP THING TO DO</string>
+
+    <string name="all_videos.toolbar.title">VIDEOS</string>
+    <string name="all_videos.tabbar.momspresso_label">MOMSPRESSO</string>
+    <string name="all_videos.tabbar.funny_label">VIDEOS</string>
 </resources>

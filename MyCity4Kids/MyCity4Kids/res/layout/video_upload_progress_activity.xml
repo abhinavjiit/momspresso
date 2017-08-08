@@ -3,98 +3,152 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/home_bg"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+    <RelativeLayout
+        android:id="@+id/uploadingContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:background="?attr/colorPrimary"
-        android:elevation="5dp"
-        android:minHeight="?attr/actionBarSize"
-        app:theme="@style/ToolbarTheme"
-        app:titleTextAppearance="@style/ToolbarTheme.Title" />
+        android:layout_height="match_parent"
+        android:layout_marginTop="80dp"
+        android:visibility="visible">
 
-    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/chartLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
-        android:layout_marginBottom="4dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="6dp"
-        card_view:cardElevation="4dp">
+        <ImageView
+            android:id="@+id/uploadingImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_uploadin_icon" />
 
-        <RelativeLayout
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/uploadingImageView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:autoLink="web"
+            android:gravity="center_horizontal"
+            android:text="@string/video_progress.uploading_label"
+            android:textColor="@color/video_progress.uploading_label"
+            android:textSize="22sp"
+            app:fontName="oswald_regular.ttf" />
+
+        <View
+            android:id="@+id/view11"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="1dp"
+            android:layout_below="@+id/status"
+            android:layout_marginTop="40dp"
+            android:background="@color/common_underline" />
+        <!--<com.natasa.progressviews.CircleProgressBar-->
+        <!--android:id="@+id/circleView"-->
+        <!--android:layout_width="120dp"-->
+        <!--android:layout_height="120dp"-->
+        <!--android:layout_below="@+id/status"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_marginBottom="25dp"-->
+        <!--android:layout_marginTop="25dp"-->
+        <!--app:bar_width="12dp"-->
+        <!--app:bar_color="@color/home_bg"-->
+        <!--app:progress_color="@color/upload_video.progress.progress_bar"-->
+        <!--app:progress_width="10dp" />-->
 
-            <TextView
-                android:id="@+id/status"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
-                android:autoLink="web"
-                android:fontFamily="sans-serif-light"
-                android:gravity="center_horizontal"
-                android:paddingBottom="10dp"
-                android:paddingLeft="10dp"
-                android:text="Uploading ..."
-                android:textColor="@color/black"
-                android:textSize="22sp" />
 
-            <com.natasa.progressviews.CircleProgressBar
-                android:id="@+id/circleView"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:layout_below="@+id/status"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="25dp"
-                android:layout_marginTop="25dp"
-                app:bar_width="12dp"
-                app:bar_color="@color/home_bg"
-                app:progress_color="@color/upload_video.progress.progress_bar"
-                app:progress_width="10dp" />
-
-            <TextView
-                android:id="@+id/cancelTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/circleView"
-                android:layout_centerHorizontal="true"
-                android:padding="10dp"
-                android:text="CANCEL"
-                android:textColor="@color/red_selected"
-                android:textSize="18sp" />
-        </RelativeLayout>
-    </android.support.v7.widget.CardView>
-
-    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/descCardView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/chartLayout"
-        android:layout_marginBottom="4dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="6dp"
-        card_view:cardElevation="4dp">
-
-        <TextView
+        <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/descriptionTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/cancelTextView"
-            android:layout_centerHorizontal="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/view11"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
             android:padding="20dp"
-            android:text="Please do not exit or kill the app, it will cancel the upload automatically."
-            android:textColor="@color/black"
-            android:textStyle="italic" />
-    </android.support.v7.widget.CardView>
+            android:text="@string/video_progress.uploading_msg"
+            android:textColor="@color/video_progress.uploading_msg"
+            app:fontName="oswald.ttf" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/uploadFinishContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:layout_marginTop="80dp">
+
+        <ImageView
+            android:id="@+id/uploadFinishImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_uploaded" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/wayToGo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/uploadFinishImageView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:autoLink="web"
+            android:gravity="center_horizontal"
+            android:text="@string/video_progress.way_to_go"
+            android:textColor="@color/video_progress.way_to_go"
+            android:textSize="22sp"
+            app:fontName="oswald_regular.ttf" />
+
+        <View
+            android:id="@+id/underline2"
+            android:layout_width="40dp"
+            android:layout_height="1dp"
+            android:layout_below="@+id/wayToGo"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:background="#507cbe" />
+        <!--<com.natasa.progressviews.CircleProgressBar-->
+        <!--android:id="@+id/circleView"-->
+        <!--android:layout_width="120dp"-->
+        <!--android:layout_height="120dp"-->
+        <!--android:layout_below="@+id/status"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_marginBottom="25dp"-->
+        <!--android:layout_marginTop="25dp"-->
+        <!--app:bar_width="12dp"-->
+        <!--app:bar_color="@color/home_bg"-->
+        <!--app:progress_color="@color/upload_video.progress.progress_bar"-->
+        <!--app:progress_width="10dp" />-->
+
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/successMsg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/underline2"
+            android:gravity="center"
+            android:padding="20dp"
+            android:text="@string/video_progress.success_msg"
+            android:textColor="@color/video_progress.success_msg"
+            app:fontName="oswald.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/okayTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/underline2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="51dp"
+            android:gravity="center"
+            android:paddingBottom="14dp"
+            android:paddingLeft="60dp"
+            android:paddingRight="60dp"
+            android:paddingTop="14dp"
+            android:text="@string/video_progress.okay"
+            android:textColor="@color/video_progress.okay"
+            android:textSize="18sp"
+            app:fontName="oswald.ttf" />
+    </RelativeLayout>
 </RelativeLayout>

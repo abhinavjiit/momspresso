@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.kelltontech.network.Response;
@@ -44,7 +45,7 @@ public class UserPublishedAndDraftsActivity extends BaseActivity {
             tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.user_article_tabbar_draft_label)));
         }
 
-        UserArticlesPagerAdapter adapter = new UserArticlesPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), authorId);
+        UserArticlesPagerAdapter adapter = new UserArticlesPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), authorId, isPrivateProfile);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -65,6 +66,16 @@ public class UserPublishedAndDraftsActivity extends BaseActivity {
         });
 
 //        viewPager.setCurrentItem(0);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

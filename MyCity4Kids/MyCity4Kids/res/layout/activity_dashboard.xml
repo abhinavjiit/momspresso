@@ -49,7 +49,22 @@
                 android:paddingLeft="5dp"
                 android:paddingRight="10dp"
                 android:paddingTop="5dp"
+                android:visibility="gone"
                 android:src="@drawable/ic_search" />
+
+            <ImageView
+                android:id="@+id/filterEventsImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
+                android:src="@drawable/filter_xxhdpi"
+                android:visibility="visible" />
 
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>

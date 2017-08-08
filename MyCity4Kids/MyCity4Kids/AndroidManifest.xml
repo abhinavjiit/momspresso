@@ -386,7 +386,8 @@
             android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|uiMode|keyboard"
             android:label="@string/app_name"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.rankingTheme" />
         <activity
             android:name=".ui.activity.ActivityFamilyProfile"
             android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|uiMode|keyboard"
@@ -536,9 +537,26 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.RankingActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.rankingTheme" />
         <activity
             android:name=".ui.activity.BlogSetupActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.nnn" />
+        <activity
+            android:name=".ui.activity.AddArticleTopicsActivityNew"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.ArticleModerationOrShareActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.CompleteBloggerProfileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.UserActivitiesActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.AllVideosListingActivity"
             android:screenOrientation="portrait" />
 
         <receiver

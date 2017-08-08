@@ -24,6 +24,7 @@ import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
+import com.kelltontech.utils.DateTimeUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.ColorCode;
@@ -338,12 +339,12 @@ public class FragmentKidProfile extends BaseFragment implements View.OnClickList
                     AddRemoveKidsRequest kmodel = new AddRemoveKidsRequest();
                     if (id == i) {
                         kmodel.setName(name.getText().toString().trim());
-                        kmodel.setBirthDay(convertStringToTimestamp(kidBdy.getText().toString().trim()));
+                        kmodel.setBirthDay(DateTimeUtils.convertStringToTimestamp(kidBdy.getText().toString().trim()));
                         kmodel.setColorCode(new ColorCode().getValue("" + mColorfrKid.getTag()));
 //                        kmodel.setGender();
                     } else {
                         kmodel.setName(allKidsInfo.get(i).getName());
-                        kmodel.setBirthDay(convertStringToTimestamp(allKidsInfo.get(i).getDate_of_birth()));
+                        kmodel.setBirthDay(DateTimeUtils.convertStringToTimestamp(allKidsInfo.get(i).getDate_of_birth()));
                         kmodel.setColorCode(allKidsInfo.get(i).getColor_code());
                     }
                     kidsModelArrayList.add(kmodel);
@@ -470,20 +471,6 @@ public class FragmentKidProfile extends BaseFragment implements View.OnClickList
 //        mChildContainer.removeAllViews();
 //        setList();
 
-    }
-
-    public long convertStringToTimestamp(String str_date) {
-        try {
-            DateFormat formatter;
-            formatter = new SimpleDateFormat("dd-MM-yyyy");
-            // you can change format of date
-            Date date = formatter.parse(str_date);
-
-            return date.getTime();
-        } catch (ParseException e) {
-            System.out.println("Exception :" + e);
-            return 0;
-        }
     }
 
     public String convertTime(String time) {

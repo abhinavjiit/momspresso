@@ -287,7 +287,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                 call.enqueue(articleDetailResponseCallback);
 
             }
-        }, isPrivateProfile);
+        }, true);
 
         bloggerImageView = (ImageView) header.findViewById(R.id.bloggerImageView);
 

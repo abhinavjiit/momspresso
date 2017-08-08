@@ -7,12 +7,16 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -32,6 +36,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.facebook.widget.FacebookDialog;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.github.library.bubbleview.BubbleTextVew;
 import com.google.android.gms.appindexing.Action;
@@ -45,13 +50,10 @@ import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerFragment;
 import com.google.android.youtube.player.YouTubePlayerView;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
-import com.kelltontech.utils.ToastUtils;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -59,16 +61,12 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
-import com.mycity4kids.interfaces.OnWebServiceCompleteListener;
 import com.mycity4kids.models.parentingdetails.CommentsData;
-import com.mycity4kids.models.request.AddCommentRequest;
 import com.mycity4kids.models.request.ArticleDetailRequest;
 import com.mycity4kids.models.request.FollowUnfollowUserRequest;
 import com.mycity4kids.models.request.RecommendUnrecommendArticleRequest;
 import com.mycity4kids.models.response.AddCommentResponse;
 import com.mycity4kids.models.response.ArticleDetailResponse;
-import com.mycity4kids.models.response.ArticleListingResponse;
-import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.ArticleRecommendationStatusResponse;
 import com.mycity4kids.models.response.FBCommentResponse;
 import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse;
@@ -80,7 +78,6 @@ import com.mycity4kids.models.response.VlogsDetailResponse;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.models.response.VlogsListingResponse;
 import com.mycity4kids.newmodels.FollowUnfollowCategoriesRequest;
-import com.mycity4kids.newmodels.VolleyBaseResponse;
 import com.mycity4kids.observablescrollview.ObservableScrollView;
 import com.mycity4kids.observablescrollview.ObservableScrollViewCallbacks;
 import com.mycity4kids.observablescrollview.ScrollState;
@@ -89,10 +86,12 @@ import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
+import com.mycity4kids.ui.fragment.AddEditCommentReplyFragment;
 import com.mycity4kids.ui.fragment.CommentRepliesDialogFragment;
+import com.mycity4kids.ui.fragment.EditCommentDialogFragment;
 import com.mycity4kids.ui.fragment.EditCommentsRepliesFragment;
 import com.mycity4kids.utils.AppUtils;
-import com.mycity4kids.utils.ArrayAdapterFactory;
+import com.mycity4kids.widget.CustomFontTextView;
 import com.mycity4kids.widget.RelatedArticlesView;
 import com.mycity4kids.youtube.DeveloperKey;
 import com.squareup.picasso.Picasso;
@@ -105,6 +104,7 @@ import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.ResponseBody;
@@ -116,9 +116,12 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 3/1/17.
  */
-public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.OnInitializedListener, View.OnClickListener, ObservableScrollViewCallbacks {
+public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.OnInitializedListener, View.OnClickListener, ObservableScrollViewCallbacks, AddEditCommentReplyFragment.IAddCommentReply {
 
     private static final int RECOVERY_REQUEST = 1;
+
+    private final static int REPLY_LEVEL_PARENT = 1;
+    private final static int REPLY_LEVEL_CHILD = 2;
 
     private YouTubePlayerView youTubePlayerView;
     private YouTubePlayer youTubePlayer;
@@ -137,7 +140,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
     private FlowLayout tagsLayout;
     private TextView articleViewCountTextView;
     private Toolbar mToolbar;
-    private FloatingActionButton recommendFloatingActionButton;
+    private FloatingActionButton commentFloatingActionButton;
     private ImageView authorImageView;
     private TextView followClick;
     private EditText commentText;
@@ -146,9 +149,9 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
     private TextView authorTypeTextView, authorNameTextView;
     private TextView article_title;
     private TextView articleCreatedDateTextView;
-    private LinearLayout newCommentLayout;
+    //    private LinearLayout newCommentLayout;
     private Menu menu;
-    private ImageView commentBtn;
+    //    private ImageView commentBtn;
     private View commentEditView;
     private LinearLayout addCommentLinearLayout;
 
@@ -184,12 +187,17 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
     EditCommentsRepliesFragment editCommentsRepliesFragment;
     CommentRepliesDialogFragment commentFragment;
 
+    private CustomFontTextView facebookShareTextView, whatsappShareTextView, emailShareTextView, likeArticleTextView, bookmarkArticleTextView;
+    private String userDynamoId;
+    private ImageView backNavigationImageView;
+    private LinearLayout bottomToolbarLL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vlogs_detail_activity);
-        Utils.pushOpenScreenEvent(VlogsDetailActivity.this, "Video Details", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+        userDynamoId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
+        Utils.pushOpenScreenEvent(VlogsDetailActivity.this, "Video Details", userDynamoId + "");
 
         deepLinkURL = getIntent().getStringExtra(Constants.DEEPLINK_URL);
         mClient = new GoogleApiClient.Builder(this).addApi(AppIndex.APP_INDEX_API).build();
@@ -216,6 +224,14 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
         trendingRelatedArticles1 = (RelatedArticlesView) findViewById(R.id.trendingRelatedArticles1);
         trendingRelatedArticles2 = (RelatedArticlesView) findViewById(R.id.trendingRelatedArticles2);
         trendingRelatedArticles3 = (RelatedArticlesView) findViewById(R.id.trendingRelatedArticles3);
+
+        bottomToolbarLL = (LinearLayout) findViewById(R.id.bottomToolbarLL);
+        facebookShareTextView = (CustomFontTextView) findViewById(R.id.facebookShareTextView);
+        whatsappShareTextView = (CustomFontTextView) findViewById(R.id.whatsappShareTextView);
+        emailShareTextView = (CustomFontTextView) findViewById(R.id.emailShareTextView);
+        likeArticleTextView = (CustomFontTextView) findViewById(R.id.likeTextView);
+        bookmarkArticleTextView = (CustomFontTextView) findViewById(R.id.bookmarkTextView);
+
         relatedArticles1.setOnClickListener(this);
         relatedArticles2.setOnClickListener(this);
         relatedArticles3.setOnClickListener(this);
@@ -223,16 +239,20 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
         trendingRelatedArticles2.setOnClickListener(this);
         trendingRelatedArticles3.setOnClickListener(this);
 
+        facebookShareTextView.setOnClickListener(this);
+        whatsappShareTextView.setOnClickListener(this);
+        emailShareTextView.setOnClickListener(this);
+        likeArticleTextView.setOnClickListener(this);
+        bookmarkArticleTextView.setOnClickListener(this);
+
         recommendSuggestion = (BubbleTextVew) findViewById(R.id.recommendSuggestion);
         tagsLayout = (FlowLayout) findViewById(R.id.tagsLayout);
         articleViewCountTextView = (TextView) findViewById(R.id.articleViewCountTextView);
 
         authorImageView = (ImageView) findViewById(R.id.user_image);
         authorImageView.setOnClickListener(this);
-        recommendFloatingActionButton = (FloatingActionButton) findViewById(R.id.recommendFloatingActionButton);
-        recommendFloatingActionButton.setOnClickListener(this);
-        recommendFloatingActionButton.setEnabled(false);
-        recommendFloatingActionButton.setVisibility(View.INVISIBLE);
+        commentFloatingActionButton = (FloatingActionButton) findViewById(R.id.commentFloatingActionButton);
+        commentFloatingActionButton.setOnClickListener(this);
 
         article_title = (TextView) findViewById(R.id.article_title);
         authorTypeTextView = (TextView) findViewById(R.id.blogger_type);
@@ -243,17 +263,20 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
 
         initializeAnimations();
         mToolbar = (Toolbar) findViewById(R.id.anim_toolbar);
+        backNavigationImageView = (ImageView) findViewById(R.id.backNavigationImageView);
+        backNavigationImageView.setOnClickListener(this);
+
         commLayout = ((LinearLayout) findViewById(R.id.commnetLout));
         commentLayout = ((LinearLayout) findViewById(R.id.commnetLout));
-        newCommentLayout = (LinearLayout) findViewById(R.id.comment_layout);
-        commentBtn = (ImageView) findViewById(R.id.add_comment_btn);
+//        newCommentLayout = (LinearLayout) findViewById(R.id.comment_layout);
+//        commentBtn = (ImageView) findViewById(R.id.add_comment_btn);
         addCommentLinearLayout = (LinearLayout) findViewById(R.id.addCommentLinearLayout);
 
 
         mScrollView.setScrollViewCallbacks(this);
         followClick.setOnClickListener(this);
         followClick.setEnabled(false);
-        commentBtn.setOnClickListener(this);
+//        commentBtn.setOnClickListener(this);
 
         mToolbar = (Toolbar) findViewById(R.id.anim_toolbar);
         setSupportActionBar(mToolbar);
@@ -503,42 +526,18 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
 
     }
 
-    @Override
-    public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
-        View view = (View) mScrollView.getChildAt(mScrollView.getChildCount() - 1);
-        View tagsView = (View) mScrollView.findViewById(R.id.tagsLayout);
-        Rect scrollBounds = new Rect();
-        mScrollView.getHitRect(scrollBounds);
-        int diff = (view.getBottom() - (mScrollView.getHeight() + mScrollView.getScrollY()));
-        if (diff <= 10 && !isLoading && !StringUtils.isNullOrEmpty(commentURL) && commentURL.contains("http") && !AppConstants.PAGINATION_END_VALUE.equals(pagination)) {
-            getMoreComments();
-        }
-
-//        int permanentDiff = (tagsView.getBottom() - (mScrollView.getHeight() + mScrollView.getScrollY()));
-//        if (permanentDiff <= 0) {
-//            isArticleDetailEndReached = true;
-//            if (!hasRecommendSuggestionAppeared && recommendSuggestion.getVisibility() == View.INVISIBLE) {
-//                hasRecommendSuggestionAppeared = true;
-//                recommendSuggestion.setVisibility(View.VISIBLE);
-//                recommendSuggestion.startAnimation(showRecommendAnim);
-//            }
-//            if (recommendFloatingActionButton.getVisibility() == View.INVISIBLE) {
-//                showFloatingActionButton();
-//            }
-//        } else {
-//            isArticleDetailEndReached = false;
+//    @Override
+//    public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
+//        View view = (View) mScrollView.getChildAt(mScrollView.getChildCount() - 1);
+//        View tagsView = (View) mScrollView.findViewById(R.id.tagsLayout);
+//        Rect scrollBounds = new Rect();
+//        mScrollView.getHitRect(scrollBounds);
+//        int diff = (view.getBottom() - (mScrollView.getHeight() + mScrollView.getScrollY()));
+//        if (diff <= 10 && !isLoading && !StringUtils.isNullOrEmpty(commentURL) && commentURL.contains("http") && !AppConstants.PAGINATION_END_VALUE.equals(pagination)) {
+//            getMoreComments();
 //        }
-    }
+//    }
 
-    @Override
-    public void onDownMotionEvent() {
-
-    }
-
-    @Override
-    public void onUpOrCancelMotionEvent(ScrollState scrollState) {
-
-    }
 
     private Callback<VlogsDetailResponse> vlogDetailResponseCallback = new Callback<VlogsDetailResponse>() {
         @Override
@@ -551,7 +550,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
             }
             try {
                 VlogsDetailResponse responseData = (VlogsDetailResponse) response.body();
-                newCommentLayout.setVisibility(View.VISIBLE);
+//                newCommentLayout.setVisibility(View.VISIBLE);
                 updateUIfromResponse(responseData.getData().getResult());
                 if (StringUtils.isNullOrEmpty(authorId)) {
                     authorId = responseData.getData().getResult().getAuthor().getId();
@@ -721,16 +720,26 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                 return;
             }
             ArticleRecommendationStatusResponse responseData = (ArticleRecommendationStatusResponse) response.body();
-            recommendFloatingActionButton.setEnabled(true);
+//            recommendFloatingActionButton.setEnabled(true);
             recommendationFlag = responseData.getData().getStatus();
+//            if ("0".equals(recommendationFlag)) {
+//                hasRecommendSuggestionAppeared = false;
+//                recommendFloatingActionButton.setIconDrawable(ContextCompat.getDrawable(VlogsDetailActivity.this, R.drawable.heart_outline));
+//                recommendStatus = 0;
+//            } else {
+//                hasRecommendSuggestionAppeared = true;
+//                recommendFloatingActionButton.setIconDrawable(ContextCompat.getDrawable(VlogsDetailActivity.this, R.drawable.heart_filled));
+//                recommendStatus = 1;
+//            }
+
             if ("0".equals(recommendationFlag)) {
-                hasRecommendSuggestionAppeared = false;
-                recommendFloatingActionButton.setIconDrawable(ContextCompat.getDrawable(VlogsDetailActivity.this, R.drawable.heart_outline));
                 recommendStatus = 0;
+                Drawable top = ContextCompat.getDrawable(VlogsDetailActivity.this, R.drawable.ic_recommend);
+                likeArticleTextView.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null);
             } else {
-                hasRecommendSuggestionAppeared = true;
-                recommendFloatingActionButton.setIconDrawable(ContextCompat.getDrawable(VlogsDetailActivity.this, R.drawable.heart_filled));
                 recommendStatus = 1;
+                Drawable top = ContextCompat.getDrawable(VlogsDetailActivity.this, R.drawable.ic_recommended);
+                likeArticleTextView.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null);
             }
         }
 
@@ -846,36 +855,40 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
         if (holder != null) {
             LayoutInflater inflater = LayoutInflater.from(this);
             View view = inflater.inflate(R.layout.custom_comment_cell, null);
-            holder.commentorsImage = (CircularImageView) view.findViewById(R.id.network_img);
+            holder.commentorsImage = (ImageView) view.findViewById(R.id.network_img);
             holder.commentName = (TextView) view.findViewById(R.id.txvCommentTitle);
             holder.commentDescription = (TextView) view.findViewById(R.id.txvCommentDescription);
             holder.dateTxt = (TextView) view.findViewById(R.id.txvDate);
-            holder.replyTxt = (TextView) view.findViewById(R.id.txvReply);
-            holder.editTxt = (TextView) view.findViewById(R.id.txvEdit);
-//            holder.replierImageView = (CircularImageView) view.findViewById(R.id.replyUserImageView);
-//            holder.replyCountTextView = (TextView) view.findViewById(R.id.replyCountTextView);
-//            holder.replierUsernameTextView = (TextView) view.findViewById(R.id.replyUserNameTextView);
-            holder.replyCommentView = (RelativeLayout) view.findViewById(R.id.replyRelativeLayout);
+            holder.commentCellReplyTxt = (TextView) view.findViewById(R.id.txvCommentCellReply);
+            holder.commentCellEditTxt = (TextView) view.findViewById(R.id.txvCommentCellEdit);
+            holder.replyCommentView = (LinearLayout) view.findViewById(R.id.replyRelativeLayout);
 
             holder.commentorsImage.setOnClickListener(this);
             holder.commentName.setOnClickListener(this);
             holder.replyCommentView.setOnClickListener(this);
             holder.replyCommentView.setTag(commentList);
-            holder.replyTxt.setOnClickListener(this);
-            holder.editTxt.setOnClickListener(this);
+
+            holder.commentCellReplyTxt.setOnClickListener(this);
+            holder.commentCellEditTxt.setOnClickListener(this);
 
             view.setTag(commentList);
 
-            if (!"fb".equals(commentList.getComment_type()) && SharedPrefUtils.getUserDetailModel(this).getDynamoId().equals(commentList.getUserId())) {
-                holder.editTxt.setVisibility(View.VISIBLE);
+            if (!"fb".equals(commentList.getComment_type()) && userDynamoId.equals(commentList.getUserId())) {
+                holder.commentCellEditTxt.setVisibility(View.VISIBLE);
             } else {
-                holder.editTxt.setVisibility(View.INVISIBLE);
+                holder.commentCellEditTxt.setVisibility(View.INVISIBLE);
             }
 
             if ("fb".equals(commentList.getComment_type())) {
-                holder.replyTxt.setVisibility(View.GONE);
+                holder.commentCellReplyTxt.setVisibility(View.INVISIBLE);
             } else {
-                holder.replyTxt.setVisibility(View.VISIBLE);
+                holder.commentCellReplyTxt.setVisibility(View.VISIBLE);
+            }
+
+            if (holder.commentCellEditTxt.getVisibility() == View.VISIBLE) {
+                holder.commentCellReplyTxt.setVisibility(View.INVISIBLE);
+            } else {
+                holder.commentCellReplyTxt.setVisibility(View.VISIBLE);
             }
 
             if (!StringUtils.isNullOrEmpty(commentList.getName())) {
@@ -910,32 +923,170 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                 commentLayout.addView(view);
             }
             if (commentList.getReplies() != null && commentList.getReplies().size() > 0) {
-
                 holder.replyCommentView.setVisibility(View.VISIBLE);
-                if (commentList.getReplies().size() > 1) {
-                    holder.replyCountTextView.setText(commentList.getReplies().size() + " replies");
-                } else {
-                    holder.replyCountTextView.setText(commentList.getReplies().size() + " reply");
-                }
-                holder.replierUsernameTextView.setText("" + commentList.getReplies().get(0).getName());
-
-                if (commentList.getProfile_image() != null && !StringUtils.isNullOrEmpty(commentList.getProfile_image().getClientAppMin())) {
-                    try {
-                        Picasso.with(this).load(commentList.getReplies().get(0).getProfile_image().getClientAppMin())
-                                .placeholder(R.drawable.default_commentor_img).into(holder.replierImageView);
-                    } catch (Exception e) {
-                        Crashlytics.logException(e);
-                        Log.d("MC4kException", Log.getStackTraceString(e));
-                        Picasso.with(this).load(R.drawable.default_commentor_img).into(holder.replierImageView);
-                    }
-                } else {
-                    Picasso.with(this).load(R.drawable.default_commentor_img).into(holder.replierImageView);
+                ViewHolder replyViewholder = new ViewHolder();
+                for (int j = 0; j < commentList.getReplies().size(); j++) {
+                    displayReplies(replyViewholder, commentList.getReplies().get(j), holder.replyCommentView, REPLY_LEVEL_PARENT, j);
                 }
             } else {
                 holder.replyCommentView.setVisibility(View.GONE);
             }
         }
     }
+
+    private void displayReplies(ViewHolder replyViewholder, CommentsData replies, LinearLayout parentView, int replyLevel, int replyPos) {
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View view = inflater.inflate(R.layout.custom_reply_cell, null);
+        replyViewholder.replyIndicatorImageView = (ImageView) view.findViewById(R.id.replyIndicatorImageView);
+        replyViewholder.commentorsImage = (ImageView) view.findViewById(R.id.network_img);
+        replyViewholder.commentName = (TextView) view.findViewById(R.id.txvCommentTitle);
+        replyViewholder.commentDescription = (TextView) view.findViewById(R.id.txvCommentDescription);
+        replyViewholder.dateTxt = (TextView) view.findViewById(R.id.txvDate);
+        replyViewholder.replyCellReplyTxt = (TextView) view.findViewById(R.id.txvReplyCellReply);
+        replyViewholder.replyCellEditTxt = (TextView) view.findViewById(R.id.txvReplyCellEdit);
+        replyViewholder.replyCommentView = (LinearLayout) view.findViewById(R.id.replyRelativeLayout);
+
+        replyViewholder.commentorsImage.setOnClickListener(this);
+        replyViewholder.commentName.setOnClickListener(this);
+
+        replyViewholder.replyCellReplyTxt.setOnClickListener(this);
+        replyViewholder.replyCellEditTxt.setOnClickListener(this);
+
+        if (!"fb".equals(replies.getComment_type()) && userDynamoId.equals(replies.getUserId())) {
+            replyViewholder.replyCellEditTxt.setVisibility(View.VISIBLE);
+            replyViewholder.replyCellReplyTxt.setVisibility(View.INVISIBLE);
+        } else {
+            replyViewholder.replyCellEditTxt.setVisibility(View.INVISIBLE);
+            replyViewholder.replyCellReplyTxt.setVisibility(View.VISIBLE);
+        }
+
+        if (replyLevel == REPLY_LEVEL_PARENT && replyPos == 0) {
+            replyViewholder.replyIndicatorImageView.setVisibility(View.VISIBLE);
+        } else {
+            replyViewholder.replyIndicatorImageView.setVisibility(View.INVISIBLE);
+        }
+
+        view.setTag(replies);
+
+        if (!StringUtils.isNullOrEmpty(replies.getName())) {
+            replyViewholder.commentName.setText(replies.getName());
+        } else {
+            replyViewholder.commentName.setText("User");
+        }
+        if (!StringUtils.isNullOrEmpty(replies.getBody())) {
+            replyViewholder.commentDescription.setText(replies.getBody());
+        }
+        if (!StringUtils.isNullOrEmpty(replies.getCreate())) {
+            replyViewholder.dateTxt.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(Long.parseLong(replies.getCreate())));
+        } else {
+            replyViewholder.dateTxt.setText("NA");
+        }
+
+        if (replies.getProfile_image() != null && !StringUtils.isNullOrEmpty(replies.getProfile_image().getClientAppMin())) {
+            try {
+                Picasso.with(this).load(replies.getProfile_image().getClientAppMin()).placeholder(R.drawable.default_commentor_img).into(replyViewholder.commentorsImage);
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+                Picasso.with(this).load(R.drawable.default_commentor_img).into(replyViewholder.commentorsImage);
+            }
+        } else {
+            Picasso.with(this).load(R.drawable.default_commentor_img).into(replyViewholder.commentorsImage);
+        }
+        parentView.addView(view);
+
+        if (replies.getReplies() != null && replies.getReplies().size() > 0) {
+            replyViewholder.replyCommentView.setVisibility(View.VISIBLE);
+            ViewHolder replyReplyViewholder = new ViewHolder();
+            for (int j = 0; j < replies.getReplies().size(); j++) {
+                displayReplies(replyReplyViewholder, replies.getReplies().get(j), parentView, REPLY_LEVEL_CHILD, j);
+            }
+        } else {
+            replyViewholder.replyCommentView.setVisibility(View.GONE);
+        }
+    }
+
+    private void displayCommentsAtPosition(ViewHolder holder, CommentsData commentList,
+                                           boolean isNewComment, int position) {
+        if (holder != null) {
+            LayoutInflater inflater = LayoutInflater.from(this);
+            View view = inflater.inflate(R.layout.custom_comment_cell, null);
+            holder.commentorsImage = (ImageView) view.findViewById(R.id.network_img);
+            holder.commentName = (TextView) view.findViewById(R.id.txvCommentTitle);
+            holder.commentDescription = (TextView) view.findViewById(R.id.txvCommentDescription);
+            holder.dateTxt = (TextView) view.findViewById(R.id.txvDate);
+            holder.commentCellReplyTxt = (TextView) view.findViewById(R.id.txvCommentCellReply);
+            holder.commentCellEditTxt = (TextView) view.findViewById(R.id.txvCommentCellEdit);
+            holder.replyCommentView = (LinearLayout) view.findViewById(R.id.replyRelativeLayout);
+
+            holder.commentorsImage.setOnClickListener(this);
+            holder.commentName.setOnClickListener(this);
+            holder.replyCommentView.setOnClickListener(this);
+            holder.replyCommentView.setTag(commentList);
+
+            holder.commentCellReplyTxt.setOnClickListener(this);
+            holder.commentCellEditTxt.setOnClickListener(this);
+
+            view.setTag(commentList);
+
+            if (!"fb".equals(commentList.getComment_type()) && userDynamoId.equals(commentList.getUserId())) {
+                holder.commentCellEditTxt.setVisibility(View.VISIBLE);
+            } else {
+                holder.commentCellEditTxt.setVisibility(View.INVISIBLE);
+            }
+
+            if ("fb".equals(commentList.getComment_type())) {
+                holder.commentCellReplyTxt.setVisibility(View.INVISIBLE);
+            } else {
+                holder.commentCellReplyTxt.setVisibility(View.VISIBLE);
+            }
+
+            if (holder.commentCellEditTxt.getVisibility() == View.VISIBLE) {
+                holder.commentCellReplyTxt.setVisibility(View.INVISIBLE);
+            } else {
+                holder.commentCellReplyTxt.setVisibility(View.VISIBLE);
+            }
+
+            if (!StringUtils.isNullOrEmpty(commentList.getName())) {
+                holder.commentName.setText(commentList.getName());
+            } else {
+                holder.commentName.setText("User");
+            }
+            if (!StringUtils.isNullOrEmpty(commentList.getBody())) {
+                holder.commentDescription.setText(commentList.getBody());
+            }
+            if (!StringUtils.isNullOrEmpty(commentList.getCreate())) {
+                holder.dateTxt.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(Long.parseLong(commentList.getCreate())));
+            } else {
+                holder.dateTxt.setText("NA");
+            }
+
+            if (commentList.getProfile_image() != null && !StringUtils.isNullOrEmpty(commentList.getProfile_image().getClientAppMin())) {
+                try {
+                    Picasso.with(this).load(commentList.getProfile_image().getClientAppMin()).placeholder(R.drawable.default_commentor_img).into(holder.commentorsImage);
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Log.d("MC4kException", Log.getStackTraceString(e));
+                    Picasso.with(this).load(R.drawable.default_commentor_img).into(holder.commentorsImage);
+                }
+            } else {
+                Picasso.with(this).load(R.drawable.default_commentor_img).into(holder.commentorsImage);
+            }
+
+            commentLayout.removeViewAt(position);
+            commentLayout.addView(view, position);
+            if (commentList.getReplies() != null && commentList.getReplies().size() > 0) {
+                holder.replyCommentView.setVisibility(View.VISIBLE);
+                ViewHolder replyViewholder = new ViewHolder();
+                for (int j = 0; j < commentList.getReplies().size(); j++) {
+                    displayReplies(replyViewholder, commentList.getReplies().get(j), holder.replyCommentView, REPLY_LEVEL_PARENT, j);
+                }
+            } else {
+                holder.replyCommentView.setVisibility(View.GONE);
+            }
+        }
+    }
+
 
     Callback<FollowUnfollowUserResponse> followUserResponseCallback = new Callback<FollowUnfollowUserResponse>() {
         @Override
@@ -1524,16 +1675,19 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
     }
 
     private class ViewHolder {
-        private CircularImageView commentorsImage;
+        private ImageView commentorsImage;
         private TextView commentName;
         private TextView commentDescription;
         private TextView dateTxt;
-        private TextView replyTxt;
-        private TextView editTxt;
+        private TextView commentCellReplyTxt;
+        private TextView replyCellReplyTxt;
+        private TextView commentCellEditTxt;
+        private TextView replyCellEditTxt;
         private CircularImageView replierImageView;
         private TextView replierUsernameTextView;
         private TextView replyCountTextView;
-        private RelativeLayout replyCommentView;
+        private LinearLayout replyCommentView;
+        public ImageView replyIndicatorImageView;
     }
 
     /**
@@ -1587,96 +1741,36 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
     public void onClick(View v) {
         try {
             switch (v.getId()) {
-
+                case R.id.backNavigationImageView:
+                    finish();
+                    break;
                 case R.id.add_comment:
-                    break;
-                case R.id.txvReply:
-                    try {
-                        commentFragment = new CommentRepliesDialogFragment();
-                        Bundle _args = new Bundle();
-                        _args.putParcelable("commentData", (CommentsData) ((View) v.getParent().getParent()).getTag());
-                        _args.putString("articleId", videoId);
-                        commentFragment.setArguments(_args);
-                        FragmentManager fm = getSupportFragmentManager();
-                        commentFragment.show(fm, "Replies");
-                    } catch (Exception e) {
-                        Crashlytics.logException(e);
-                        Log.d("MC4kException", Log.getStackTraceString(e));
-                    }
-                    break;
-                case R.id.replyRelativeLayout:
-                    try {
-                        commentFragment = new CommentRepliesDialogFragment();
-                        Bundle commentArgs = new Bundle();
-                        commentArgs.putParcelable("commentData", (CommentsData) ((View) v.getParent()).getTag());
-                        commentArgs.putString("articleId", videoId);
-                        commentFragment.setArguments(commentArgs);
-                        FragmentManager fm = getSupportFragmentManager();
-                        commentFragment.show(fm, "Replies");
-                    } catch (Exception e) {
-                        Crashlytics.logException(e);
-                        Log.d("MC4kException", Log.getStackTraceString(e));
-                    }
-                    break;
-                case R.id.txvEdit:
-                    try {
-                        editCommentsRepliesFragment = new EditCommentsRepliesFragment();
-                        CommentsData cData = (CommentsData) ((View) v.getParent().getParent()).getTag();
-                        commentEditView = (View) v.getParent().getParent();
-                        Bundle _args = new Bundle();
-                        _args.putParcelable("commentData", cData);
-                        _args.putString("articleId", videoId);
-                        _args.putString("type", "vlog");
-                        _args.putInt(AppConstants.COMMENT_OR_REPLY_OR_NESTED_REPLY, 0);
-                        editCommentsRepliesFragment.setArguments(_args);
-                        FragmentManager fm = getSupportFragmentManager();
-                        editCommentsRepliesFragment.show(fm, "Replies");
-                    } catch (Exception e) {
-                        Crashlytics.logException(e);
-                        Log.d("MC4kException", Log.getStackTraceString(e));
-                    }
-                    break;
-                case R.id.addCommentLinearLayout:
-                case R.id.add_comment_btn:
-
-                    if (StringUtils.isNullOrEmpty(commentText.getText().toString())) {
-                        ToastUtils.showToast(getApplicationContext(), "Please write to comment...", Toast.LENGTH_SHORT);
-                    } else {
-                        String contentData = commentText.getText().toString();
-                        Retrofit retro = BaseApplication.getInstance().getRetrofit();
-                        ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
-                        AddCommentRequest addCommentRequest = new AddCommentRequest();
-                        addCommentRequest.setArticleId(videoId);
-                        addCommentRequest.setUserComment(contentData);
-                        Call<AddCommentResponse> callBookmark = articleDetailsAPI.addComment(addCommentRequest);
-                        callBookmark.enqueue(addCommentsResponseCallback);
-                        showProgressDialog("Please wait ...");
-                    }
                     break;
                 case R.id.network_img:
                     CommentsData commentData = (CommentsData) ((View) v.getParent().getParent()).getTag();
                     if (!"fb".equals(commentData.getComment_type())) {
 //                        trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
 //                        trackArticleReadTime.resetTimer();
-                        Intent profileIntent = new Intent(this, BloggerDashboardActivity.class);
+                        Intent profileIntent = new Intent(this, BloggerProfileActivity.class);
                         profileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, commentData.getUserId());
                         profileIntent.putExtra(AppConstants.AUTHOR_NAME, "" + commentData.getName());
                         profileIntent.putExtra(Constants.FROM_SCREEN, "Video Details Comment");
                         startActivity(profileIntent);
                     }
                     break;
-                case R.id.txvCommentTitle:
+                case R.id.txvCommentTitle: {
                     CommentsData cData = (CommentsData) ((View) v.getParent().getParent()).getTag();
                     if (!"fb".equals(cData.getComment_type())) {
 //                        trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
 //                        trackArticleReadTime.resetTimer();
-                        Intent userProfileIntent = new Intent(this, BloggerDashboardActivity.class);
+                        Intent userProfileIntent = new Intent(this, BloggerProfileActivity.class);
                         userProfileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, cData.getUserId());
                         userProfileIntent.putExtra(AppConstants.AUTHOR_NAME, "" + cData.getName());
                         userProfileIntent.putExtra(Constants.FROM_SCREEN, "Video Details Comment");
                         startActivity(userProfileIntent);
                     }
                     break;
+                }
                 case R.id.follow_click:
                     followAPICall(authorId);
                     break;
@@ -1690,7 +1784,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                     if (AppConstants.USER_TYPE_USER.equals(authorType)) {
                         return;
                     }
-                    Intent intentnn = new Intent(this, BloggerDashboardActivity.class);
+                    Intent intentnn = new Intent(this, BloggerProfileActivity.class);
                     intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, authorId);
                     intentnn.putExtra(AppConstants.AUTHOR_NAME, "" + author);
                     intentnn.putExtra(Constants.FROM_SCREEN, "Video Details");
@@ -1736,16 +1830,103 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                     startActivity(intent);
                     break;
                 }
-                case R.id.recommendFloatingActionButton: {
+                case R.id.commentFloatingActionButton:
+                    openCommentDialog(null, "ADD");
+                    break;
+                case R.id.txvCommentCellReply:
+                    openCommentDialog((CommentsData) ((View) v.getParent().getParent()).getTag(), "ADD");
+                    break;
+                case R.id.txvReplyCellReply:
+                    openCommentDialog((CommentsData) ((View) v.getParent()).getTag(), "ADD");
+                    break;
+                case R.id.txvCommentCellEdit: {
+                    CommentsData cData = (CommentsData) ((View) v.getParent().getParent()).getTag();
+                    openCommentDialog(cData, "EDIT");
+                }
+                break;
+                case R.id.txvReplyCellEdit: {
+                    CommentsData cData = (CommentsData) ((View) v.getParent()).getTag();
+                    openCommentDialog(cData, "EDIT");
+                }
+                break;
+                case R.id.likeTextView: {
                     if (recommendStatus == 0) {
                         recommendStatus = 1;
-                        recommendFloatingActionButton.setIconDrawable(ContextCompat.getDrawable(VlogsDetailActivity.this, R.drawable.heart_filled));
+                        Drawable top = ContextCompat.getDrawable(VlogsDetailActivity.this, R.drawable.ic_recommended);
+                        likeArticleTextView.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null);
+//                        commentFloatingActionButton.setIconDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.heart_filled));
                         recommendUnrecommentArticleAPI("1");
+
                     } else {
                         recommendStatus = 0;
-                        recommendFloatingActionButton.setIconDrawable(ContextCompat.getDrawable(VlogsDetailActivity.this, R.drawable.heart_outline));
+                        Drawable top = ContextCompat.getDrawable(VlogsDetailActivity.this, R.drawable.ic_recommend);
+                        likeArticleTextView.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null);
+//                        commentFloatingActionButton.setIconDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.heart_outline));
                         recommendUnrecommentArticleAPI("0");
                     }
+                    break;
+                }
+                case R.id.facebookShareTextView: {
+                    if (FacebookDialog.canPresentShareDialog(VlogsDetailActivity.this, FacebookDialog.ShareDialogFeature.SHARE_DIALOG) && !StringUtils.isNullOrEmpty(shareUrl)) {
+                        FacebookDialog shareDialog = new FacebookDialog.ShareDialogBuilder(
+                                VlogsDetailActivity.this).setName("mycity4kids")
+                                .setDescription("Check out this interesting blog post")
+                                .setLink(shareUrl).build();
+                        shareDialog.present();
+                    } else {
+                        Toast.makeText(VlogsDetailActivity.this, "Unable to share with facebook.", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                }
+                case R.id.whatsappShareTextView: {
+                    if (StringUtils.isNullOrEmpty(shareUrl)) {
+                        Toast.makeText(VlogsDetailActivity.this, "Unable to share with whatsapp.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
+                        whatsappIntent.setType("text/plain");
+                        whatsappIntent.setPackage("com.whatsapp");
+                        whatsappIntent.putExtra(Intent.EXTRA_TEXT, "mycity4kids\n\nCheck out this interesting blog post\n " + shareUrl);
+                        try {
+                            startActivity(whatsappIntent);
+                        } catch (android.content.ActivityNotFoundException ex) {
+                            Toast.makeText(VlogsDetailActivity.this, "Whatsapp have not been installed.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    break;
+                }
+                case R.id.emailShareTextView: {
+                    Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                    intent.setType("text/html");
+                    final PackageManager pm = getPackageManager();
+                    final List<ResolveInfo> matches = pm.queryIntentActivities(intent, 0);
+                    ResolveInfo best = null;
+                    for (final ResolveInfo info : matches) {
+                        if (info.activityInfo.packageName.endsWith(".gm") || info.activityInfo.name.toLowerCase().contains("gmail")) {
+                            best = info;
+                            break;
+                        }
+                    }
+                    if (best != null) {
+                        intent.setClassName(best.activityInfo.packageName, best.activityInfo.name);
+                    }
+                    intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "mycity4kids");
+                    intent.putExtra(android.content.Intent.EXTRA_TEXT, AppUtils.fromHtml("mycity4kids\n\nCheck out this interesting blog post\n " + shareUrl));
+
+                    try {
+                        startActivity(intent);
+                    } catch (Exception e) {
+                        Intent i = new Intent(Intent.ACTION_SEND);
+                        i.setType("plain/text");
+                        i.putExtra(Intent.EXTRA_EMAIL, new String[]{});
+                        i.putExtra(Intent.EXTRA_SUBJECT, "");
+                        i.putExtra(Intent.EXTRA_TEXT, "mycity4kids\n\nCheck out this interesting blog post\n " + shareUrl);
+                        try {
+                            startActivity(Intent.createChooser(i, "Send mail..."));
+                        } catch (android.content.ActivityNotFoundException ex) {
+                            Toast.makeText(VlogsDetailActivity.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
                     break;
                 }
             }
@@ -1753,6 +1934,29 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
+    }
+
+    private void openCommentDialog(CommentsData comData, String opType) {
+        try {
+            EditCommentDialogFragment commentFrag = new EditCommentDialogFragment();
+            Bundle _args = new Bundle();
+            _args.putString(Constants.VIDEO_ID, videoId);
+            _args.putString("opType", opType);
+            if (comData != null) {
+                _args.putParcelable("commentData", comData);
+                _args.putString("type", "video");
+            }
+            commentFrag.setArguments(_args);
+            FragmentManager fm = getSupportFragmentManager();
+            commentFrag.show(fm, "Replies");
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
+    }
+
+    public void hideToolbarPerm() {
+        mToolbar.setVisibility(View.GONE);
     }
 
     private void launchRelatedTrendingArticle(View v, String listingType, int index) {
@@ -1839,27 +2043,27 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
     }
 
     public void hideFloatingActionButton() {
-        recommendFloatingActionButton.animate()
+        commentFloatingActionButton.animate()
                 .alpha(0)
                 .setInterpolator(new LinearInterpolator())
                 .setDuration(180)
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
-                        recommendFloatingActionButton.setVisibility(View.INVISIBLE);
+                        commentFloatingActionButton.setVisibility(View.INVISIBLE);
                     }
                 });
     }
 
     public void showFloatingActionButton() {
-        recommendFloatingActionButton.animate()
+        commentFloatingActionButton.animate()
                 .alpha(1)
                 .setInterpolator(new LinearInterpolator())
                 .setDuration(180)
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
-                        recommendFloatingActionButton.setVisibility(View.VISIBLE);
+                        commentFloatingActionButton.setVisibility(View.VISIBLE);
                     }
                 });
     }
@@ -1915,5 +2119,185 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onCommentAddition(CommentsData cd) {
+        displayComments(new ViewHolder(), cd, false);
+    }
+
+    @Override
+    public void onCommentReplyEditSuccess(CommentsData cd) {
+        for (int i = 0; i < commentLayout.getChildCount(); i++) {
+            CommentsData cdata = (CommentsData) commentLayout.getChildAt(i).getTag();
+            CommentsData searchedData = recursiveSearch(cdata, cd);
+            if (searchedData != null) {
+                ViewHolder viewHolder = new ViewHolder();
+                displayCommentsAtPosition(viewHolder, cdata, false, i);
+                break;
+            } else {
+                Log.d("Nothing in comment ", cdata.getBody());
+            }
+        }
+    }
+
+    @Override
+    public void onReplyAddition(CommentsData updatedComment) {
+        for (int i = 0; i < commentLayout.getChildCount(); i++) {
+            CommentsData cdata = (CommentsData) commentLayout.getChildAt(i).getTag();
+            CommentsData searchedData = recursiveSearch(cdata, updatedComment);
+            if (searchedData != null) {
+                searchedData.getReplies().add(updatedComment);
+                ViewHolder viewHolder = new ViewHolder();
+                displayCommentsAtPosition(viewHolder, cdata, false, i);
+                break;
+            } else {
+                Log.d("Nothing in comment ", cdata.getBody());
+            }
+        }
+    }
+
+    private CommentsData recursiveSearch(CommentsData cd1, CommentsData upComment) {
+        if (cd1.getId().equals(upComment.getId()) || cd1.getId().equals(upComment.getParent_id())) {
+            return cd1;
+        }
+        ArrayList<CommentsData> children = cd1.getReplies();
+        CommentsData res = null;
+        for (int i = 0; res == null && i < children.size(); i++) {
+            res = recursiveSearch(children.get(i), upComment);
+        }
+        return res;
+    }
+
+    @Override
+    public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
+        View view = (View) mScrollView.getChildAt(mScrollView.getChildCount() - 1);
+        View tagsView = (View) mScrollView.findViewById(R.id.recentAuthorArticles);
+        Rect scrollBounds = new Rect();
+        mScrollView.getHitRect(scrollBounds);
+        int diff = (view.getBottom() - (mScrollView.getHeight() + mScrollView.getScrollY()));
+        if (diff <= 10 && !isLoading && !StringUtils.isNullOrEmpty(commentURL) && commentURL.contains("http") && !AppConstants.PAGINATION_END_VALUE.equals(pagination)) {
+            getMoreComments();
+        }
+
+        int permanentDiff = (tagsView.getBottom() - (mScrollView.getHeight() + mScrollView.getScrollY()));
+        if (permanentDiff <= 0) {
+            isArticleDetailEndReached = true;
+
+            if (commentFloatingActionButton.getVisibility() == View.INVISIBLE) {
+                showFloatingActionButton();
+            }
+        } else {
+            isArticleDetailEndReached = false;
+        }
+    }
+
+    @Override
+    public void onDownMotionEvent() {
+
+    }
+
+    @Override
+    public void onUpOrCancelMotionEvent(ScrollState scrollState) {
+        ActionBar ab = getSupportActionBar();
+        if (ab == null) {
+            return;
+        }
+        if (scrollState == ScrollState.UP) {
+            if (ab.isShowing()) {
+                hideMainToolbar();
+            }
+            if (bottomToolbarLL.getVisibility() == View.VISIBLE) {
+                hideToolbar();
+            }
+            if (!isArticleDetailEndReached && commentFloatingActionButton.getVisibility() == View.VISIBLE) {
+                hideFloatingActionButton();
+            }
+        } else if (scrollState == ScrollState.DOWN) {
+            if (!ab.isShowing()) {
+                showMainToolbar();
+            }
+            if (bottomToolbarLL.getVisibility() != View.VISIBLE) {
+                showToolbar();
+            }
+            if (commentFloatingActionButton.getVisibility() == View.INVISIBLE) {
+                showFloatingActionButton();
+            }
+        }
+    }
+
+    public void hideMainToolbar() {
+        mToolbar.animate()
+                .translationY(-mToolbar.getHeight())
+                .setInterpolator(new LinearInterpolator())
+                .setDuration(180)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        getSupportActionBar().hide();
+                    }
+                });
+        backNavigationImageView.animate()
+                .alpha(1)
+                .setInterpolator(new LinearInterpolator())
+                .setDuration(180)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        backNavigationImageView.setVisibility(View.VISIBLE);
+                    }
+                });
+    }
+
+    private void hideToolbar() {
+        bottomToolbarLL.animate()
+                .translationY(bottomToolbarLL.getHeight())
+                .setInterpolator(new LinearInterpolator())
+                .setDuration(180)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+//                        getSupportActionBar().hide();
+                        bottomToolbarLL.setVisibility(View.GONE);
+                    }
+                });
+    }
+
+    private void showToolbar() {
+        bottomToolbarLL.animate()
+                .translationY(0)
+                .setInterpolator(new LinearInterpolator())
+                .setDuration(180)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+//                        getSupportActionBar().show();
+                        bottomToolbarLL.setVisibility(View.VISIBLE);
+                    }
+
+                });
+    }
+
+    public void showMainToolbar() {
+        mToolbar.animate()
+                .translationY(0)
+                .setInterpolator(new LinearInterpolator())
+                .setDuration(180)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                        getSupportActionBar().show();
+                    }
+                });
+        backNavigationImageView.animate()
+                .alpha(0)
+                .setInterpolator(new LinearInterpolator())
+                .setDuration(180)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                        backNavigationImageView.setVisibility(View.GONE);
+                    }
+                });
     }
 }

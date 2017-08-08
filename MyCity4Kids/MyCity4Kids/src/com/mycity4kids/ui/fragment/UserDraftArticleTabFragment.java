@@ -1,5 +1,8 @@
 package com.mycity4kids.ui.fragment;
 
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,10 +18,15 @@ import com.google.gson.reflect.TypeToken;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
+import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.models.editor.ArticleDraftRequest;
+import com.mycity4kids.models.response.ArticleDraftResponse;
 import com.mycity4kids.models.response.DraftListData;
 import com.mycity4kids.models.response.DraftListResponse;
 import com.mycity4kids.models.response.DraftListResult;
@@ -43,7 +51,7 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant.parmar on 21-04-2016.
  */
-public class UserDraftArticleTabFragment extends BaseFragment implements View.OnClickListener {
+public class UserDraftArticleTabFragment extends BaseFragment implements View.OnClickListener, UserDraftArticleAdapter.RecyclerViewClickListener {
 
     ArrayList<DraftListResult> draftList;
     RecyclerView recyclerView;
@@ -62,7 +70,7 @@ public class UserDraftArticleTabFragment extends BaseFragment implements View.On
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
 
-        adapter = new UserDraftArticleAdapter(getActivity());
+        adapter = new UserDraftArticleAdapter(getActivity(), this);
         final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
@@ -193,20 +201,71 @@ public class UserDraftArticleTabFragment extends BaseFragment implements View.On
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-//            case R.id.searchArticleShowMoreTextView:
-//                if (!isReuqestRunning) {
-//                    showMoreType = "article";
-//                    isReuqestRunning = true;
-//                    newSearchTopicArticleListingApi(searchName, "article");
-//                }
-//                break;
-//            case R.id.searchTopicShowMoreTextView:
-//                if (!isReuqestRunning) {
-//                    showMoreType = "topic";
-//                    isReuqestRunning = true;
-//                    newSearchTopicArticleListingApi(searchName, "topic");
-//                    break;
-//                }
+
         }
     }
+
+    @Override
+    public void onClick(View view, int position) {
+        switch (view.getId()) {
+            case R.id.editDraftTextView:
+                if (Build.VERSION.SDK_INT > 15) {
+                    Intent intent = new Intent(getActivity(), EditorPostActivity.class);
+                    intent.putExtra("draftItem", draftList.get(position));
+                    intent.putExtra("from", "draftList");
+                    startActivity(intent);
+                } else {
+                    Intent viewIntent =
+                            new Intent("android.intent.action.VIEW",
+                                    Uri.parse("http://www.mycity4kids.com/parenting/admin/setupablog"));
+                    startActivity(viewIntent);
+                }
+                break;
+            case R.id.deleteDraftImageView:
+                deleteDraftAPI(draftList.get(position), position);
+                break;
+        }
+    }
+
+    public void deleteDraftAPI(DraftListResult draftObject, final int position) {
+        showProgressDialog(getResources().getString(R.string.please_wait));
+        ArticleDraftRequest articleDraftRequest = new ArticleDraftRequest();
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        // prepare call in Retrofit 2.0
+        ArticleDraftAPI articleDraftAPI = retrofit.create(ArticleDraftAPI.class);
+        Call<ArticleDraftResponse> call = articleDraftAPI.deleteDraft(
+                AppConstants.LIVE_URL + "v1/articles/" + draftObject.getId());
+
+        call.enqueue(new Callback<ArticleDraftResponse>() {
+                         @Override
+                         public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
+                             removeProgressDialog();
+                             if (response == null || response.body() == null) {
+//                                 showToast(getString(R.string.went_wrong));
+                                 return;
+                             }
+                             ArticleDraftResponse responseModel = (ArticleDraftResponse) response.body();
+
+                             if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
+                                 draftList.remove(position);
+                                 adapter.notifyDataSetChanged();
+                             } else {
+                                 if (StringUtils.isNullOrEmpty(responseModel.getReason())) {
+//                                     showToast(getString(R.string.toast_response_error));
+                                 } else {
+//                                     showToast(responseModel.getReason());
+                                 }
+                             }
+                         }
+
+                         @Override
+                         public void onFailure(Call<ArticleDraftResponse> call, Throwable t) {
+                             Crashlytics.logException(t);
+                             Log.d("MC4kException", Log.getStackTraceString(t));
+                         }
+                     }
+        );
+    }
+
+
 }

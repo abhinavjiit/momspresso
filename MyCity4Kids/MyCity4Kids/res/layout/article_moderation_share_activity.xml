@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <ImageView
+            android:id="@+id/headerImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_moderation" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/wayToGoTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/headerImageView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:text="@string/moderation_or_share.way_to_go"
+            android:textColor="@color/moderation_or_share.way_to_go"
+            android:textSize="18sp"
+            app:fontName="oswald_regular.ttf" />
+
+        <View
+            android:id="@+id/underline1"
+            android:layout_width="40dp"
+            android:layout_height="1dp"
+            android:layout_below="@+id/wayToGoTextView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:background="#507cbe" />
+
+        <LinearLayout
+            android:id="@+id/moderationContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/underline1"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="18dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/moderationMsgTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingLeft="60dp"
+                android:paddingRight="60dp"
+                android:text="@string/moderation_or_share.moderation_message"
+                android:textColor="@color/moderation_or_share.moderation_message"
+                android:textSize="18sp"
+                app:fontName="oswald.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/okayTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:background="@drawable/unfollow_topic_author_bg"
+                android:gravity="center"
+                android:paddingBottom="14dp"
+                android:paddingLeft="60dp"
+                android:paddingRight="60dp"
+                android:paddingTop="14dp"
+                android:text="@string/moderation_or_share.okay"
+                android:textColor="@color/moderation_or_share.okay"
+                android:textSize="18sp"
+                app:fontName="oswald.ttf" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/publishContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/underline1"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="18dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/publishMsgTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingLeft="40dp"
+                android:paddingRight="40dp"
+                android:text="@string/moderation_or_share.publish_message"
+                android:textColor="@color/moderation_or_share.publish_message"
+                android:textSize="18sp"
+                app:fontName="oswald.ttf" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/shareTextView"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="15dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp">
+
+                <ImageView
+                    android:id="@+id/facebookImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/unfollow_topic_author_bg"
+                    android:padding="10dp"
+                    android:src="@drawable/share_facebook" />
+
+                <ImageView
+                    android:id="@+id/googlePlusImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:layout_toRightOf="@+id/facebookImageView"
+                    android:background="@drawable/unfollow_topic_author_bg"
+                    android:padding="11dp"
+                    android:src="@drawable/ic_gplus_white_48dp" />
+
+                <ImageView
+                    android:id="@+id/whatsappImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:layout_toRightOf="@+id/googlePlusImageView"
+                    android:background="@drawable/unfollow_topic_author_bg"
+                    android:padding="10dp"
+                    android:src="@drawable/share_whatsapp" />
+
+                <ImageView
+                    android:id="@+id/twitterImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:layout_toRightOf="@+id/whatsappImageView"
+                    android:background="@drawable/unfollow_topic_author_bg"
+                    android:padding="10dp"
+                    android:src="@drawable/share_twitter" />
+
+            </RelativeLayout>
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/laterTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="@string/moderation_or_share.later"
+                android:textColor="@color/moderation_or_share.later"
+                android:textSize="18sp"
+                app:fontName="oswald.ttf" />
+
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

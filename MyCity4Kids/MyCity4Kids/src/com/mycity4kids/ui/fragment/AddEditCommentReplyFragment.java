@@ -70,7 +70,9 @@ public class AddEditCommentReplyFragment extends BaseFragment implements OnClick
             commentsData = extras.getParcelable("commentData");
             operation = extras.getString("opType");
         }
-        commentReplyEditText.setText(commentsData.getBody());
+        if (commentsData != null) {
+            commentReplyEditText.setText("" + commentsData.getBody());
+        }
         addCommentTextView.setOnClickListener(this);
         closeImageView.setOnClickListener(this);
 

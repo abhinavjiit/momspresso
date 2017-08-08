@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
@@ -58,6 +59,16 @@ public class AppSettingsActivity extends BaseActivity {
         });
 
 //        viewPager.setCurrentItem(0);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

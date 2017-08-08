@@ -331,13 +331,13 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
     private void addKidView(KidsModel km) {
         final KidsInfoCustomView kidsInfo1 = new KidsInfoCustomView(getActivity());
         if (km == null) {
-            kidsInfo1.setKids_bdy("Date of Birth");
+            kidsInfo1.setKids_bdy(getString(R.string.dob));
         } else {
             kidsInfo1.setKids_bdy(DateTimeUtils.getKidsDOBNanoMilliTimestamp("" + km.getBirthDay()));
             if ("0".equals(km.getGender())) {
-                kidsInfo1.setFemaleRadioButton(true);
-            } else {
                 kidsInfo1.setMaleRadioButton(true);
+            } else {
+                kidsInfo1.setFemaleRadioButton(true);
             }
         }
         kidsInfo1.getKidsDOBTextView().setOnClickListener(new View.OnClickListener() {
@@ -357,11 +357,11 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
         kidsModelArrayList = new ArrayList<>();
         for (KidsInfo ki : kidsList) {
             AddRemoveKidsRequest kmodel = new AddRemoveKidsRequest();
-            long bdaytimestamp = convertStringToTimestamp(ki.getDate_of_birth());
+            long bdaytimestamp = DateTimeUtils.convertStringToTimestamp(ki.getDate_of_birth());
             if (bdaytimestamp != 0) {
                 kmodel.setBirthDay(bdaytimestamp * 1000);
             } else {
-                Toast.makeText(getActivity(), "incorrect kids bday", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.complete_blogger_profile_incorrect_date), Toast.LENGTH_SHORT).show();
                 return;
             }
             kmodel.setGender(ki.getGender());
@@ -494,19 +494,6 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
                 cityFragment.dismiss();
             }
             _controller.getData(AppConstants.CONFIGURATION_REQUEST, versionApiModel);
-        }
-    }
-
-    public long convertStringToTimestamp(String str_date) {
-        try {
-            DateFormat formatter;
-            formatter = new SimpleDateFormat("dd-MM-yyyy");
-            // you can change format of date
-            Date date = formatter.parse(str_date);
-            return date.getTime() / 1000;
-        } catch (ParseException e) {
-            System.out.println("Exception :" + e);
-            return 0;
         }
     }
 

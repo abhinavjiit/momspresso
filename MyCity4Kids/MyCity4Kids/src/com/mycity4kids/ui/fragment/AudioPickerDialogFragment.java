@@ -162,28 +162,28 @@ public class AudioPickerDialogFragment extends DialogFragment implements OnClick
         showProgressDialog("please wait");
         switch (v.getId()) {
             case R.id.audioTextView1:
-                iAudioSelectionComplete.onAudioSelectionComplete("audio1.aac");
+                iAudioSelectionComplete.onAudioSelectionComplete("audio1.aac", audioTextView1.getText().toString());
                 break;
             case R.id.audioTextView2:
-                iAudioSelectionComplete.onAudioSelectionComplete("audio2.aac");
+                iAudioSelectionComplete.onAudioSelectionComplete("audio2.aac", audioTextView2.getText().toString());
                 break;
             case R.id.audioTextView3:
-                iAudioSelectionComplete.onAudioSelectionComplete("audio3.aac");
+                iAudioSelectionComplete.onAudioSelectionComplete("audio3.aac", audioTextView3.getText().toString());
                 break;
             case R.id.audioTextView4:
-                iAudioSelectionComplete.onAudioSelectionComplete("audio4.aac");
+                iAudioSelectionComplete.onAudioSelectionComplete("audio4.aac", audioTextView4.getText().toString());
                 break;
             case R.id.audioTextView5:
-                iAudioSelectionComplete.onAudioSelectionComplete("audio5.aac");
+                iAudioSelectionComplete.onAudioSelectionComplete("audio5.aac", audioTextView5.getText().toString());
                 break;
             case R.id.audioTextView6:
-                iAudioSelectionComplete.onAudioSelectionComplete("audio6.aac");
+                iAudioSelectionComplete.onAudioSelectionComplete("audio6.aac", audioTextView6.getText().toString());
                 break;
             case R.id.audioTextView7:
-                iAudioSelectionComplete.onAudioSelectionComplete("audio7.aac");
+                iAudioSelectionComplete.onAudioSelectionComplete("audio7.aac", audioTextView7.getText().toString());
                 break;
             case R.id.audioTextView8:
-                iAudioSelectionComplete.onAudioSelectionComplete("audio8.aac");
+                iAudioSelectionComplete.onAudioSelectionComplete("audio8.aac", audioTextView8.getText().toString());
                 break;
         }
         removeProgressDialog();
@@ -215,7 +215,7 @@ public class AudioPickerDialogFragment extends DialogFragment implements OnClick
     }
 
     public interface IAudioSelectionComplete {
-        void onAudioSelectionComplete(String topics);
+        void onAudioSelectionComplete(String topics, String audioName);
     }
 
 }

@@ -13,6 +13,7 @@ import com.mycity4kids.ui.fragment.RankingStatsTabFragment;
  * Created by hemant on 28/7/17.
  */
 public class RankingPagerAdapter extends FragmentStatePagerAdapter {
+    private String authorId;
     private int mNumOfTabs;
     private RankingInfoTabFragment rankingInfoTabFragment;
     private RankingStatsTabFragment rankingStatsTabFragment;
@@ -22,10 +23,17 @@ public class RankingPagerAdapter extends FragmentStatePagerAdapter {
         this.mNumOfTabs = NumOfTabs;
     }
 
+    public RankingPagerAdapter(FragmentManager fm, int NumOfTabs, String authorId) {
+        super(fm);
+        this.mNumOfTabs = NumOfTabs;
+        this.authorId = authorId;
+    }
+
     @Override
     public Fragment getItem(int position) {
 
         Bundle bundle = new Bundle();
+        bundle.putString("authorId", authorId);
         switch (position) {
 
             case 0:

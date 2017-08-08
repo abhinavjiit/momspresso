@@ -28,12 +28,15 @@ public class UserPublishedArticleAdapter extends RecyclerView.Adapter<UserPublis
     ArrayList<ArticleListingResult> articleDataModelsNew;
     private final float density;
     private RecyclerViewClickListener mListener;
+    private boolean isPrivateProfile;
 
-    public UserPublishedArticleAdapter(Context pContext) {
+    public UserPublishedArticleAdapter(Context pContext, RecyclerViewClickListener listener, boolean isPrivateProfile) {
 
         density = pContext.getResources().getDisplayMetrics().density;
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = pContext;
+        this.mListener = listener;
+        this.isPrivateProfile = isPrivateProfile;
     }
 
     public void setListData(ArrayList<ArticleListingResult> mParentingLists) {
@@ -62,6 +65,12 @@ public class UserPublishedArticleAdapter extends RecyclerView.Adapter<UserPublis
         holder.viewCountTextView.setText(articleDataModelsNew.get(position).getArticleCount());
         holder.commentCountTextView.setText(articleDataModelsNew.get(position).getCommentsCount());
         holder.recommendCountTextView.setText(articleDataModelsNew.get(position).getLikesCount());
+        if (isPrivateProfile) {
+            holder.editPublishedTextView.setVisibility(View.VISIBLE);
+        } else {
+            holder.editPublishedTextView.setVisibility(View.GONE);
+        }
+
         try {
             Calendar calendar1 = Calendar.getInstance();
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
@@ -96,6 +105,7 @@ public class UserPublishedArticleAdapter extends RecyclerView.Adapter<UserPublis
         TextView commentCountTextView;
         TextView recommendCountTextView;
         ImageView shareArticleImageView;
+        TextView editPublishedTextView;
         View popupButton;
 
         public UserPublishedArticleViewHolder(View itemView, RecyclerViewClickListener listener) {
@@ -107,6 +117,9 @@ public class UserPublishedArticleAdapter extends RecyclerView.Adapter<UserPublis
             recommendCountTextView = (TextView) itemView.findViewById(R.id.recommendCountTextView);
             articleImageView = (ImageView) itemView.findViewById(R.id.articleImageView);
             shareArticleImageView = (ImageView) itemView.findViewById(R.id.shareArticleImageView);
+            editPublishedTextView = (TextView) itemView.findViewById(R.id.editPublishedTextView);
+            shareArticleImageView.setOnClickListener(this);
+            editPublishedTextView.setOnClickListener(this);
             itemView.setOnClickListener(this);
         }
 

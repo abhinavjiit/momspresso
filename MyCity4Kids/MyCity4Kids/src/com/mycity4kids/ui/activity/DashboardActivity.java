@@ -57,10 +57,12 @@ import com.mycity4kids.models.response.LanguageConfigModel;
 import com.mycity4kids.models.version.RateVersion;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.DeepLinkingAPI;
+import com.mycity4kids.ui.fragment.AddArticleVideoFragment;
 import com.mycity4kids.ui.fragment.ArticlesFragment;
+import com.mycity4kids.ui.fragment.BecomeBloggerFragment;
 import com.mycity4kids.ui.fragment.ChangeCityFragment;
 import com.mycity4kids.ui.fragment.ChooseVideoUploadOptionDialogFragment;
-import com.mycity4kids.ui.fragment.EditorPostFragment;
+import com.mycity4kids.ui.fragment.ExploreFragment;
 import com.mycity4kids.ui.fragment.ExternalCalFragment;
 import com.mycity4kids.ui.fragment.FragmentAdultProfile;
 import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
@@ -81,9 +83,7 @@ import com.mycity4kids.utils.PermissionUtil;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -116,7 +116,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private TextView itemMessagesBadgeTextView;
     private TextView toolbarTitleTextView;
     private FrameLayout badgeLayout;
-    private ImageView searchAllImageView;
+    private ImageView searchAllImageView, filterEventsImageView;
     private BottomNavigationViewEx bottomNavigationView;
     private RelativeLayout toolbarRelativeLayout;
     private RelativeLayout rootLayout;
@@ -162,6 +162,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         toolbarRelativeLayout = (RelativeLayout) mToolbar.findViewById(R.id.toolbarRelativeLayout);
         toolbarTitleTextView = (TextView) mToolbar.findViewById(R.id.toolbarTitle);
         searchAllImageView = (ImageView) mToolbar.findViewById(R.id.searchAllImageView);
+        filterEventsImageView = (ImageView) mToolbar.findViewById(R.id.filterEventsImageView);
 
         bottomNavigationView.enableShiftingMode(false);
         bottomNavigationView.enableItemShiftingMode(false);
@@ -172,6 +173,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
         toolbarTitleTextView.setOnClickListener(this);
         searchAllImageView.setOnClickListener(this);
+        filterEventsImageView.setOnClickListener(this);
         setSupportActionBar(mToolbar);
 
 //        mUsernName.setText(SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name());
@@ -217,20 +219,26 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 addFragment(fragment1, mBundle1, true);
                                 break;
                             case R.id.action_write:
-                                if (topFragment instanceof EditorPostFragment) {
+                                if (topFragment instanceof AddArticleVideoFragment) {
                                     return true;
                                 }
-//                                EditorPostFragment editorPostFragment = new EditorPostFragment();
-//                                Bundle editorBundle = new Bundle();
-//                                editorPostFragment.setArguments(editorBundle);
-//                                addFragment(editorPostFragment, editorBundle, true);
-                                Intent blogIntent = new Intent(DashboardActivity.this, BlogSetupActivity.class);
-                                startActivity(blogIntent);
+                                AddArticleVideoFragment editorPostFragment = new AddArticleVideoFragment();
+                                Bundle editorBundle = new Bundle();
+                                editorPostFragment.setArguments(editorBundle);
+                                addFragment(editorPostFragment, editorBundle, true);
+//                                Intent blogIntent = new Intent(DashboardActivity.this, BlogSetupActivity.class);
+//                                startActivity(blogIntent);
+//                                launchEditor();
                                 break;
                             case R.id.action_location:
-                                Intent intent = new Intent(DashboardActivity.this, SettingsActivity.class);
-                                intent.putExtra("load_fragment", Constants.SETTINGS_FRAGMENT);
-                                startActivity(intent);
+                                ExploreFragment exploreFragment = new ExploreFragment();
+                                Bundle eBundle = new Bundle();
+                                exploreFragment.setArguments(eBundle);
+                                addFragment(exploreFragment, eBundle, true);
+
+//                                Intent intent = new Intent(DashboardActivity.this, SettingsActivity.class);
+//                                intent.putExtra("load_fragment", Constants.SETTINGS_FRAGMENT);
+//                                startActivity(intent);
                                 break;
                         }
                         return true;
@@ -322,12 +330,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 startActivity(intent1);
             } else if (notificationExtras.getString("type").equalsIgnoreCase("profile")) {
                 String u_id = notificationExtras.getString("userId");
-                Intent intent1 = new Intent(this, BloggerDashboardActivity.class);
-                intent1.putExtra("fromNotification", true);
-                intent1.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, u_id);
-                intent1.putExtra(AppConstants.AUTHOR_NAME, "");
-                intent1.putExtra(Constants.FROM_SCREEN, "Notification");
-                startActivity(intent1);
+                if (!SharedPrefUtils.getUserDetailModel(this).getDynamoId().equals(u_id)) {
+                    Intent intent1 = new Intent(this, BloggerProfileActivity.class);
+                    intent1.putExtra("fromNotification", true);
+                    intent1.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, u_id);
+                    intent1.putExtra(AppConstants.AUTHOR_NAME, "");
+                    intent1.putExtra(Constants.FROM_SCREEN, "Notification");
+                    startActivity(intent1);
+                }
             } else if (notificationExtras.getString("type").equalsIgnoreCase("upcoming_event_list")) {
 
                 fragmentToLoad = Constants.BUSINESS_EVENTLIST_FRAGMENT;
@@ -383,13 +393,13 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         showAlertDialog("Message", "Logged in as " + SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name(), new OnButtonClicked() {
                             @Override
                             public void onButtonCLick(int buttonId) {
-                                Intent profileIntent = new Intent(DashboardActivity.this, BloggerDashboardActivity.class);
+                                Intent profileIntent = new Intent(DashboardActivity.this, BloggerProfileActivity.class);
                                 profileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, SharedPrefUtils.getUserDetailModel(DashboardActivity.this).getDynamoId());
                                 startActivity(profileIntent);
                             }
                         });
                     } else {
-                        Intent profileIntent = new Intent(DashboardActivity.this, BloggerDashboardActivity.class);
+                        Intent profileIntent = new Intent(DashboardActivity.this, BloggerProfileActivity.class);
                         profileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, bloggerId);
                         profileIntent.putExtra(AppConstants.AUTHOR_NAME, "");
                         profileIntent.putExtra(Constants.FROM_SCREEN, "Deep Linking");
@@ -694,15 +704,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     }
 
-    public String getTodayTime() {
-
-        Calendar c = Calendar.getInstance();
-        SimpleDateFormat df = new SimpleDateFormat("dd MMM, EEEE");
-        String formattedDate = df.format(c.getTime());
-
-        return formattedDate;
-    }
-
     @Override
     public void onClick(View v) {
         Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
@@ -761,7 +762,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 break;
             case R.id.txvUserName:
             case R.id.imgProfile:
-                Intent intent4 = new Intent(DashboardActivity.this, BloggerDashboardActivity.class);
+                Intent intent4 = new Intent(DashboardActivity.this, BloggerProfileActivity.class);
                 startActivity(intent4);
                 break;
             case R.id.toolbarTitle:
@@ -775,6 +776,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 searchIntent.putExtra(Constants.FILTER_NAME, "");
                 searchIntent.putExtra(Constants.TAB_POSITION, 0);
                 startActivity(searchIntent);
+                break;
+            case R.id.filterEventsImageView:
+                if (topFragment instanceof FragmentBusinesslistEvents) {
+                    ((FragmentBusinesslistEvents) topFragment).toggleFilter();
+                }
                 break;
             default:
                 break;
@@ -1019,7 +1025,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     private void renderAuthorDetailScreen(DeepLinkingResult data) {
         if (!StringUtils.isNullOrEmpty(data.getAuthor_id())) {
-            Intent intent = new Intent(DashboardActivity.this, BloggerDashboardActivity.class);
+            Intent intent = new Intent(DashboardActivity.this, BloggerProfileActivity.class);
             intent.putExtra(AppConstants.PUBLIC_PROFILE_FLAG, true);
             intent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, data.getAuthor_id());
             intent.putExtra(AppConstants.AUTHOR_NAME, "" + data.getAuthor_name());
@@ -1079,7 +1085,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     private void renderAuthorListingScreen(DeepLinkingResult data) {
         if (!StringUtils.isNullOrEmpty(data.getAuthor_name())) {
-            Intent _authorListIntent = new Intent(DashboardActivity.this, BloggerDashboardActivity.class);
+            Intent _authorListIntent = new Intent(DashboardActivity.this, BloggerProfileActivity.class);
             _authorListIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, data.getAuthor_id());
             _authorListIntent.putExtra(Constants.DEEPLINK_URL, deepLinkUrl);
             _authorListIntent.putExtra(AppConstants.AUTHOR_NAME, "" + data.getAuthor_name());
@@ -1090,7 +1096,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     private void renderBloggerListingScreen(DeepLinkingResult data) {
         if (!StringUtils.isNullOrEmpty(data.getBlog_title())) {
-            Intent _bloggerListIntent = new Intent(DashboardActivity.this, BloggerDashboardActivity.class);
+            Intent _bloggerListIntent = new Intent(DashboardActivity.this, BloggerProfileActivity.class);
             _bloggerListIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, data.getAuthor_id());
             _bloggerListIntent.putExtra(Constants.DEEPLINK_URL, deepLinkUrl);
             _bloggerListIntent.putExtra(AppConstants.AUTHOR_NAME, "" + data.getAuthor_name());
@@ -1234,17 +1240,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     public void setDynamicToolbarTitle(String name) {
         toolbarTitleTextView.setText(mToolbarTitle);
         mToolbarTitle = name;
-//        if ("Explore".equals(fragmentId)) {
-//            toolbarRelativeLayout.setOnClickListener(null);
-//            getSupportActionBar().setIcon(null);
-//            toolbarRelativeLayout.setVisibility(View.VISIBLE);
-//            setSupportActionBar(mToolbar);
-//            getSupportActionBar().setDisplayShowHomeEnabled(true);
-//            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        } else {
-
-//        }
-
     }
 
     @Override
@@ -1252,12 +1247,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         final Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
         System.out.println("====================================================changeeeeeeeeeeeeeeeeeeeeeeeeee" + topFragment);
         Menu menu = bottomNavigationView.getMenu();
+        searchAllImageView.setVisibility(View.VISIBLE);
+        filterEventsImageView.setVisibility(View.GONE);
         if (null != topFragment && topFragment instanceof ExploreArticleListingTypeFragment) {
             String fragType = "";
             if (topFragment.getArguments() != null) {
                 fragType = topFragment.getArguments().getString("fragType", "");
             }
-
+            mToolbar.setVisibility(View.VISIBLE);
             toolbarTitleTextView.setOnClickListener(null);
             menu.findItem(R.id.action_home).setChecked(true);
             if (fragType.equals("search")) {
@@ -1270,34 +1267,85 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             setSupportActionBar(mToolbar);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        } else if (null != topFragment && topFragment instanceof BecomeBloggerFragment) {
+            mToolbar.setVisibility(View.VISIBLE);
+            toolbarTitleTextView.setOnClickListener(null);
+            toolbarTitleTextView.setText(getString(R.string.home_screen_trending_become_blogger));
+            menu.findItem(R.id.action_write).setChecked(true);
+            toolbarRelativeLayout.setVisibility(View.VISIBLE);
+            setSupportActionBar(mToolbar);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         } else {
+            mToolbar.setVisibility(View.VISIBLE);
             if (null != topFragment && topFragment instanceof MyAccountProfileFragment) {
                 toolbarTitleTextView.setOnClickListener(null);
                 toolbarTitleTextView.setText(getString(R.string.home_screen_profile_title));
                 menu.findItem(R.id.action_profile).setChecked(true);
+                toolbarRelativeLayout.setVisibility(View.VISIBLE);
+                setSupportActionBar(mToolbar);
+                getSupportActionBar().setDisplayShowHomeEnabled(false);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             } else if (null != topFragment && topFragment instanceof NotificationFragment) {
                 toolbarTitleTextView.setOnClickListener(null);
                 toolbarTitleTextView.setText(getString(R.string.home_screen_notification_title));
                 menu.findItem(R.id.action_notification).setChecked(true);
+                toolbarRelativeLayout.setVisibility(View.VISIBLE);
+                setSupportActionBar(mToolbar);
+                getSupportActionBar().setDisplayShowHomeEnabled(false);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             } else if (null != topFragment && topFragment instanceof FragmentMC4KHomeNew) {
                 toolbarTitleTextView.setOnClickListener(this);
                 toolbarTitleTextView.setText(getString(R.string.home_screen_trending_title));
                 menu.findItem(R.id.action_home).setChecked(true);
-            } else if (null != topFragment && topFragment instanceof EditorPostFragment) {
+                toolbarRelativeLayout.setVisibility(View.VISIBLE);
+                setSupportActionBar(mToolbar);
+                getSupportActionBar().setDisplayShowHomeEnabled(false);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            } else if (null != topFragment && topFragment instanceof AddArticleVideoFragment) {
                 toolbarTitleTextView.setOnClickListener(null);
                 toolbarTitleTextView.setText(getString(R.string.home_screen_editor_title));
                 menu.findItem(R.id.action_write).setChecked(true);
+                mToolbar.setVisibility(View.GONE);
             } else if (null != topFragment && topFragment instanceof TopicsListingFragment) {
                 toolbarTitleTextView.setOnClickListener(null);
                 toolbarTitleTextView.setText(mToolbarTitle);
                 menu.findItem(R.id.action_home).setChecked(true);
+                toolbarRelativeLayout.setVisibility(View.VISIBLE);
+                setSupportActionBar(mToolbar);
+                getSupportActionBar().setDisplayShowHomeEnabled(false);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            } else if (null != topFragment && topFragment instanceof ExploreFragment) {
+                toolbarTitleTextView.setOnClickListener(null);
+                toolbarTitleTextView.setText(getString(R.string.home_screen_explore_title));
+                menu.findItem(R.id.action_location).setChecked(true);
+                toolbarRelativeLayout.setVisibility(View.VISIBLE);
+                setSupportActionBar(mToolbar);
+                getSupportActionBar().setDisplayShowHomeEnabled(false);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            } else if (null != topFragment && topFragment instanceof FragmentBusinesslistEvents) {
+                toolbarTitleTextView.setOnClickListener(null);
+                toolbarTitleTextView.setText(getString(R.string.home_screen_upcoming_events_title));
+                menu.findItem(R.id.action_location).setChecked(true);
+                toolbarRelativeLayout.setVisibility(View.VISIBLE);
+                searchAllImageView.setVisibility(View.GONE);
+//                filterEventsImageView.setVisibility(View.GONE);
+                setSupportActionBar(mToolbar);
+                getSupportActionBar().setDisplayShowHomeEnabled(false);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            } else if (null != topFragment && topFragment instanceof FragmentHomeCategory) {
+                toolbarTitleTextView.setOnClickListener(null);
+                toolbarTitleTextView.setText(getString(R.string.home_screen_kids_res_title));
+                menu.findItem(R.id.action_location).setChecked(true);
+                toolbarRelativeLayout.setVisibility(View.VISIBLE);
+                searchAllImageView.setVisibility(View.GONE);
+//                filterEventsImageView.setVisibility(View.GONE);
+                setSupportActionBar(mToolbar);
+                getSupportActionBar().setDisplayShowHomeEnabled(false);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             }
-
-            toolbarRelativeLayout.setVisibility(View.VISIBLE);
-            setSupportActionBar(mToolbar);
-            getSupportActionBar().setDisplayShowHomeEnabled(false);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         }
+
     }
 
     private Badge addBadgeAt(int position, String number) {

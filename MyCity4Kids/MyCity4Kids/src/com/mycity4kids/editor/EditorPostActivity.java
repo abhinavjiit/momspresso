@@ -26,7 +26,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,11 +56,11 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
 import com.mycity4kids.ui.activity.AddArticleTopicsActivity;
+import com.mycity4kids.ui.activity.AddArticleTopicsActivityNew;
 import com.mycity4kids.ui.activity.EditSelectedTopicsActivity;
 import com.mycity4kids.ui.activity.FilteredTopicsArticleListingActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.PermissionUtil;
-import com.mycity4kids.widget.OnSwipeTouchListener;
 
 import org.apmem.tools.layouts.FlowLayout;
 import org.wordpress.android.editor.EditorFragmentAbstract;
@@ -92,7 +92,7 @@ import retrofit2.Retrofit;
 /**
  * Created by anshul on 2/29/16.
  */
-public class EditorPostActivity extends BaseActivity implements EditorFragmentAbstract.EditorFragmentListener {
+public class EditorPostActivity extends BaseActivity implements EditorFragmentAbstract.EditorFragmentListener, View.OnClickListener {
 
     private static String[] PERMISSIONS_INIT = {Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
@@ -147,6 +147,10 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     private Animation animationSlideDownIn;
     private Animation animationSlideUpOut;
 
+    private ImageView closeEditorImageView;
+    private TextView publishTextView;
+    private TextView lastSavedTextView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -156,35 +160,42 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             Utils.pushOpenScreenEvent(EditorPostActivity.this, "Text Editor", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         }
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        languagesTextView = (TextView) findViewById(R.id.languagesTextView);
-        suggestionOverlaySlider = (RelativeLayout) findViewById(R.id.suggestionOverlaySlider);
+        closeEditorImageView = (ImageView) findViewById(R.id.closeEditorImageView);
+        lastSavedTextView = (TextView) findViewById(R.id.lastSavedTextView);
+        publishTextView = (TextView) findViewById(R.id.publishTextView);
 
-        animationSlideDownIn = AnimationUtils.loadAnimation(this, R.anim.slidein_from_top);
-        animationSlideUpOut = AnimationUtils.loadAnimation(this, R.anim.slideout_from_top);
+        closeEditorImageView.setOnClickListener(this);
+        publishTextView.setOnClickListener(this);
 
-        animationSlideDownIn.setAnimationListener(animationSlideInListener);
-        animationSlideUpOut.setAnimationListener(animationSlideOutListener);
-
-        animationSlideDownIn.setStartOffset(1000);
-        suggestionOverlaySlider.startAnimation(animationSlideDownIn);
-        suggestionOverlaySlider.setVisibility(View.VISIBLE);
-
-        suggestionOverlaySlider.setOnTouchListener(new OnSwipeTouchListener(this) {
-            @Override
-            public void onSwipeTop() {
-                super.onSwipeTop();
-                animationSlideUpOut.setStartOffset(0);
-                suggestionOverlaySlider.startAnimation(animationSlideUpOut);
-            }
-        });
+//        languagesTextView = (TextView) findViewById(R.id.languagesTextView);
+//        suggestionOverlaySlider = (RelativeLayout) findViewById(R.id.suggestionOverlaySlider);
+//
+//        animationSlideDownIn = AnimationUtils.loadAnimation(this, R.anim.slidein_from_top);
+//        animationSlideUpOut = AnimationUtils.loadAnimation(this, R.anim.slideout_from_top);
+//
+//        animationSlideDownIn.setAnimationListener(animationSlideInListener);
+//        animationSlideUpOut.setAnimationListener(animationSlideOutListener);
+//
+//        animationSlideDownIn.setStartOffset(1000);
+//        suggestionOverlaySlider.startAnimation(animationSlideDownIn);
+//        suggestionOverlaySlider.setVisibility(View.VISIBLE);
+//
+//        suggestionOverlaySlider.setOnTouchListener(new OnSwipeTouchListener(this) {
+//            @Override
+//            public void onSwipeTop() {
+//                super.onSwipeTop();
+//                animationSlideUpOut.setStartOffset(0);
+//                suggestionOverlaySlider.startAnimation(animationSlideUpOut);
+//            }
+//        });
         mLayout = findViewById(R.id.rootLayout);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Write An Article");
+//        setSupportActionBar(mToolbar);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setTitle("Write An Article");
         mFailedUploads = new HashMap<>();
-        String coloredBullet = "<font color=#F0BBC2>&#9679;</font>";
-        String langText = coloredBullet + " ENGLISH " + coloredBullet + " HINDI " + coloredBullet + " BANGLA " + coloredBullet + " MARATHI " + coloredBullet + " TELUGU " + coloredBullet + " TAMIL";
-        languagesTextView.setText(AppUtils.fromHtml(langText));
+//        String coloredBullet = "<font color=#F0BBC2>&#9679;</font>";
+//        String langText = coloredBullet + " ENGLISH " + coloredBullet + " HINDI " + coloredBullet + " BANGLA " + coloredBullet + " MARATHI " + coloredBullet + " TELUGU " + coloredBullet + " TAMIL";
+//        languagesTextView.setText(AppUtils.fromHtml(langText));
         //inflateSugesstionLayout();
     }
 
@@ -324,8 +335,8 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
         switch (item.getItemId()) {
             case SELECT_IMAGE_MENU_POSITION:
                 intent.setType("image/*");
-              /*  intent.setAction(Intent.ACTION_GET_CONTENT);
-                intent = Intent.createChooser(intent, getString(R.string.select_image));*/
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                intent = Intent.createChooser(intent, getString(R.string.select_image));
                 imageSelectorType = "STORAGE";
                 if (Build.VERSION.SDK_INT >= 23) {
                     if (ActivityCompat.checkSelfPermission(EditorPostActivity.this, Manifest.permission.CAMERA)
@@ -528,22 +539,22 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
 
                 if (resultCode == Activity.RESULT_OK) {
                     try {
-                        Uri selectedImage = data.getData();
-                        String[] filePathColumn = {MediaStore.Images.Media.DATA};
-
-                        Cursor cursor = this.getContentResolver().query(
-                                selectedImage, filePathColumn, null, null, null);
-                        cursor.moveToFirst();
-
-                        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                        String filePath = cursor.getString(columnIndex);
-                        cursor.close();
-                        Log.e("File", "filePath: " + filePath);
-                        filePath = filePath.replaceAll("[^a-zA-Z0-9.-/_]", "_");
-                        file = new File(new URI("file://"
-                                + filePath.replaceAll(" ", "%20")));
-                        int maxImageSize = BitmapUtils.getMaxSize(this);
-                        maxImageSize = 512;
+//                        Uri selectedImage = data.getData();
+//                        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+//
+//                        Cursor cursor = getContentResolver().query(
+//                                selectedImage, filePathColumn, null, null, null);
+//                        cursor.moveToFirst();
+//
+//                        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+//                        String filePath = cursor.getString(columnIndex);
+//                        cursor.close();
+//                        Log.e("File", "filePath: " + filePath);
+//                        filePath = filePath.replaceAll("[^a-zA-Z0-9.-/_]", "_");
+//                        file = new File(new URI("file://"
+//                                + filePath.replaceAll(" ", "%20")));
+//                        int maxImageSize = BitmapUtils.getMaxSize(this);
+//                        maxImageSize = 512;
                         Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(EditorPostActivity.this.getContentResolver(), imageUri);
                         float actualHeight = imageBitmap.getHeight();
                         float actualWidth = imageBitmap.getWidth();
@@ -576,16 +587,11 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                         Bitmap finalBitmap = Bitmap.createScaledBitmap(imageBitmap, (int) actualWidth, (int) actualHeight, true);
                         ByteArrayOutputStream stream = new ByteArrayOutputStream();
                         finalBitmap.compress(Bitmap.CompressFormat.PNG, 75, stream);
-                        byte[] byteArrayFromGallery = stream.toByteArray();
-                        //    byteArrayToSend = byteArrayFromGallery;
-                        //    imageString = Base64.encodeToString(byteArrayToSend, Base64.DEFAULT);
                         String path = MediaStore.Images.Media.insertImage(EditorPostActivity.this.getContentResolver(), finalBitmap, "Title", null);
                         Uri imageUriTemp = Uri.parse(path);
                         mEditorFragment.imageUploading = 0;
-                        //new FileUploadTask().execute();
                         File file2 = FileUtils.getFile(this, imageUriTemp);
                         sendUploadProfileImageRequest(file2);
-                        // compressImage(filePath);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1086,5 +1092,59 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     @Override
     protected void updateUi(Response response) {
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.closeEditorImageView:
+                onBackPressed();
+                break;
+            case R.id.publishTextView:
+                if (mEditorFragment.getTitle().toString().isEmpty()) {
+                    showToast("Title can't be empty");
+                } else if (mEditorFragment.getTitle().toString().length() > 150) {
+                    showToast("Unable to save draft. Title should smaller than 150 characters");
+                } else if (mEditorFragment.getContent().toString().isEmpty()) {
+                    showToast("Body can't be empty");
+                } else if (mEditorFragment.getContent().toString().replace("&nbsp;", " ").split("\\s+").length < 299 && !BuildConfig.DEBUG) {
+                    showToast("Please write atleast 300 words to publish");
+                } else if (mEditorFragment.imageUploading == 0) {
+                    Log.e("imageuploading", mEditorFragment.imageUploading + "");
+                    showToast("Please wait while image is being uploaded");
+                } else {
+                    showAlertDialog(getString(R.string.editor_spell_check_title), getString(R.string.editor_spell_check_message), new OnButtonClicked() {
+                        @Override
+                        public void onButtonCLick(int buttonId) {
+                            PublishDraftObject draftObject = new PublishDraftObject();
+
+                            draftObject.setBody(contentFormatting(mEditorFragment.getContent().toString()));
+                            draftObject.setTitle(titleFormatting(mEditorFragment.getTitle().toString().trim()));
+                            Log.d("draftId = ", draftId + "");
+                            if ((getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) || ("4".equals(moderation_status))) {
+                                // coming from edit published articles
+                                Intent intent_1 = new Intent(EditorPostActivity.this, AddArticleTopicsActivityNew.class);
+                                draftObject.setId(articleId);
+                                intent_1.putExtra("draftItem", draftObject);
+                                intent_1.putExtra("imageUrl", thumbnailUrl);
+                                intent_1.putExtra("from", "publishedList");
+                                intent_1.putExtra("articleId", articleId);
+                                intent_1.putExtra("tag", tag);
+                                intent_1.putExtra("cities", cities);
+                                startActivity(intent_1);
+                            } else {
+                                Intent intent_3 = new Intent(EditorPostActivity.this, AddArticleTopicsActivityNew.class);
+                                if (!StringUtils.isNullOrEmpty(draftId)) {
+                                    draftObject.setId(draftId);
+                                }
+                                intent_3.putExtra("draftItem", draftObject);
+                                intent_3.putExtra("from", "editor");
+                                startActivity(intent_3);
+                            }
+                        }
+                    });
+                }
+                break;
+        }
     }
 }

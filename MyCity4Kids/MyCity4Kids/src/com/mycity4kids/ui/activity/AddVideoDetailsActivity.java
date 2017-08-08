@@ -2,6 +2,7 @@ package com.mycity4kids.ui.activity;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.media.MediaCodec;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
@@ -12,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -62,7 +64,8 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
     private Switch muteSwitch;
     private Toolbar mToolbar;
     private TextView audioTextView;
-    private ImageView removeCustomAudioImageView;
+    private TextView removeCustomAudioTextView;
+    private TextView saveUploadTextView;
 
     private Uri originalUri;
     private String vRotation;
@@ -84,7 +87,12 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         player = (EasyVideoPlayer) findViewById(R.id.player);
         audioTextView = (TextView) findViewById(R.id.audioTextView);
-        removeCustomAudioImageView = (ImageView) findViewById(R.id.removeCustomAudioImageView);
+        removeCustomAudioTextView = (TextView) findViewById(R.id.removeCustomAudioTextView);
+        audioTextView = (TextView) findViewById(R.id.audioTextView);
+        saveUploadTextView = (TextView) findViewById(R.id.saveUploadTextView);
+
+        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/oswald_regular.ttf");
+        muteSwitch.setTypeface(font);
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -98,9 +106,10 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
 
         originalPath = getIntent().getStringExtra("uriPath");
 
+        saveUploadTextView.setOnClickListener(this);
         audioTextView.setOnClickListener(this);
-        removeCustomAudioImageView.setOnClickListener(this);
-        removeCustomAudioImageView.setVisibility(View.GONE);
+        removeCustomAudioTextView.setOnClickListener(this);
+        removeCustomAudioTextView.setVisibility(View.GONE);
 
         player.setCallback(this);
         player.setAutoPlay(true);
@@ -145,9 +154,20 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
             case R.id.audioTextView:
                 openAudioFilePickerDialog();
                 break;
-            case R.id.removeCustomAudioImageView:
+            case R.id.saveUploadTextView:
+                if (StringUtils.isNullOrEmpty(videoTitleEditText.getText().toString())) {
+                    videoTitleEditText.setFocusableInTouchMode(true);
+                    videoTitleEditText.setError(getString(R.string.add_video_details_error_empty_title));
+                    videoTitleEditText.requestFocus();
+                } else {
+                    uploadVideo();
+                }
+                break;
+            case R.id.removeCustomAudioTextView:
                 restoreOriginalSound();
-                removeCustomAudioImageView.setVisibility(View.GONE);
+                removeCustomAudioTextView.setVisibility(View.GONE);
+                audioTextView.setText(getString(R.string.add_video_details_add_music));
+                audioTextView.setTextColor(ContextCompat.getColor(this, R.color.add_video_details_add_music));
                 break;
         }
     }
@@ -235,12 +255,6 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_upload_video, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -279,7 +293,7 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
                 contentURI = AppUtils.getVideoUriFromMediaProvider(mutedUri.getPath(), getContentResolver());
             }
         } else {
-            if (removeCustomAudioImageView.getVisibility() == View.VISIBLE) {
+            if (removeCustomAudioTextView.getVisibility() == View.VISIBLE) {
                 contentURI = AppUtils.exportToGallery(audioAppendedFileUri.getPath(), getContentResolver(), this);
                 contentURI = AppUtils.getVideoUriFromMediaProvider(audioAppendedFileUri.getPath(), getContentResolver());
             } else {
@@ -425,7 +439,7 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
     }
 
     @Override
-    public void onAudioSelectionComplete(String topics) {
+    public void onAudioSelectionComplete(String topics, String audioName) {
         Log.d("AudioSelectionComplete", topics);
         player.stop();
         mp4mux(topics);
@@ -433,6 +447,8 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
         audioAppendedFileUri = Uri.parse(tempF.getAbsolutePath());
         player.setSource(audioAppendedFileUri);
         player.start();
-        removeCustomAudioImageView.setVisibility(View.VISIBLE);
+        removeCustomAudioTextView.setVisibility(View.VISIBLE);
+        audioTextView.setText("" + audioName.toUpperCase());
+        audioTextView.setTextColor(ContextCompat.getColor(this, R.color.add_video_details_playing_audio_text));
     }
 }

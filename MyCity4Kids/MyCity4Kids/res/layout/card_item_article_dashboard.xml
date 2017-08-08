@@ -31,12 +31,12 @@
 
             <ImageView
                 android:id="@+id/videoIndicatorImageView"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="30dp"
-                android:src="@drawable/ic_video_icon"
+                android:src="@drawable/ic_videos"
                 android:visibility="invisible" />
 
             <TextView

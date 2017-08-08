@@ -167,6 +167,7 @@
                     app:fontName="oswald_regular.ttf" />
 
                 <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/rankLanguageTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
@@ -228,7 +229,7 @@
             android:layout_width="match_parent"
             android:layout_height="42dp"
             android:layout_below="@+id/underline_2"
-            android:drawableLeft="@drawable/write_icon"
+            android:drawableLeft="@drawable/ic_activity"
             android:drawablePadding="20dp"
             android:gravity="center_vertical"
             android:paddingLeft="10dp"
@@ -251,11 +252,12 @@
             android:layout_width="match_parent"
             android:layout_height="42dp"
             android:layout_below="@+id/underline_3"
-            android:drawableLeft="@drawable/write_icon"
-            android:drawablePadding="20dp"
+            android:drawableLeft="@drawable/ic_my_ranking"
+            android:drawablePadding="16dp"
             android:gravity="center_vertical"
-            android:paddingLeft="10dp"
+            android:paddingLeft="6dp"
             android:text="@string/myprofile.section.myranking_label"
+            android:visibility="gone"
             app:fontName="oswald.ttf" />
 
         <View
@@ -267,14 +269,15 @@
             android:layout_marginLeft="40dp"
             android:layout_marginRight="20dp"
             android:layout_marginStart="40dp"
-            android:background="@color/light_grey1" />
+            android:background="@color/light_grey1"
+            android:visibility="gone" />
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/settingsSectionTextView"
             android:layout_width="match_parent"
             android:layout_height="42dp"
             android:layout_below="@+id/underline_4"
-            android:drawableLeft="@drawable/write_icon"
+            android:drawableLeft="@drawable/ic_settings"
             android:drawablePadding="20dp"
             android:gravity="center_vertical"
             android:paddingLeft="10dp"

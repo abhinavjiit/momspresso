@@ -17,19 +17,22 @@
         app:theme="@style/ToolbarTheme"
         app:titleTextAppearance="@style/ToolbarTheme.Title" />
 
-    <fragment
-        android:id="@+id/youtube_fragment"
-        android:name="com.google.android.youtube.player.YouTubePlayerFragment"
-        android:layout_width="match_parent"
+    <ImageView
+        android:id="@+id/backNavigationImageView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/anim_toolbar" />
+        android:layout_margin="10dp"
+        android:background="@drawable/article_details_back_btn_bg"
+        android:elevation="6dp"
+        android:src="@drawable/back_arroow"
+        android:visibility="gone" />
 
     <com.mycity4kids.observablescrollview.ObservableScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/bottom_Lout"
-        android:layout_below="@+id/youtube_fragment">
+        android:layout_below="@+id/anim_toolbar">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -42,29 +45,30 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"
-                android:fontFamily="sans-serif-thin"
                 android:gravity="center_vertical"
                 android:lineSpacingExtra="-4dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:text=""
                 android:textColor="@color/ad.title"
-                android:textSize="28sp"
-                app:fontName="_ptsan_.ttf" />
+                android:textSize="16sp"
+                app:fontName="oswald_regular.ttf" />
 
-            <TextView
+            <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/articleViewCountTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/article_title"
                 android:layout_marginBottom="10dp"
-                android:fontFamily="sans-serif-thin"
+                android:drawableLeft="@drawable/ic_views"
+                android:drawablePadding="3dp"
                 android:paddingLeft="10dp"
-                android:text="Article Views"
-                android:textColor="@color/grey"
-                android:textSize="12sp" />
+                android:text=""
+                android:textColor="@color/ad.stats.text"
+                android:textSize="12sp"
+                app:fontName="open_sans.ttf" />
 
-            <TextView
+            <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/article_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -72,10 +76,17 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@+id/articleViewCountTextView"
-                android:fontFamily="sans-serif-thin"
-                android:text="Article Date"
-                android:textColor="@color/grey"
-                android:textSize="12sp" />
+                android:text=""
+                android:textColor="@color/ad.stats.text"
+                android:textSize="12sp"
+                app:fontName="open_sans.ttf" />
+
+            <fragment
+                android:id="@+id/youtube_fragment"
+                android:name="com.google.android.youtube.player.YouTubePlayerFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/articleViewCountTextView" />
 
             <!--<ImageView-->
             <!--android:id="@+id/cover_image"-->
@@ -91,7 +102,7 @@
                 android:id="@+id/user_image"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_below="@+id/articleViewCountTextView"
+                android:layout_below="@+id/youtube_fragment"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="10dp"
                 android:clickable="true"
@@ -103,47 +114,48 @@
                 app:civ_shadow_color="@color/grey"
                 app:civ_shadow_radius="4" />
 
-            <TextView
+            <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/articleViewCountTextView"
+                android:layout_below="@+id/youtube_fragment"
                 android:layout_marginTop="10dp"
                 android:layout_toRightOf="@+id/user_image"
-                android:fontFamily="sans-serif-light"
                 android:gravity="center"
                 android:paddingBottom="2dp"
                 android:paddingLeft="10dp"
                 android:paddingTop="5dp"
                 android:text="author name"
-                android:textColor="@color/black"
-                android:textSize="14sp" />
+                android:textColor="@color/ad.author_name.text"
+                android:textSize="12sp"
+                app:fontName="open_sans.ttf" />
 
-            <TextView
+            <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/blogger_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/user_name"
                 android:layout_toRightOf="@+id/user_image"
-                android:fontFamily="sans-serif-thin"
                 android:paddingLeft="10dp"
                 android:paddingTop="2dp"
-                android:text="USER"
-                android:textColor="@color/blue_light"
-                android:textSize="13sp" />
+                android:text="EDITOR"
+                android:textColor="@color/ad.author_type.text"
+                android:textSize="12sp"
+                app:fontName="open_sans.ttf" />
 
-            <TextView
+            <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/follow_click"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_below="@+id/articleViewCountTextView"
+                android:layout_below="@+id/youtube_fragment"
                 android:layout_marginLeft="90dp"
                 android:layout_marginTop="10dp"
                 android:padding="10dp"
-                android:text="FOLLOW"
-                android:textColor="#507cbe"
-                android:textSize="14sp" />
+                android:text="@string/ad.follow_author"
+                android:textColor="@color/ad.follow_following_text"
+                android:textSize="14sp"
+                app:fontName="oswald_regular.ttf" />
 
             <!--<WebView-->
             <!--android:id="@+id/articleWebView"-->
@@ -183,15 +195,16 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <TextView
+                <com.mycity4kids.widget.CustomFontTextView
                     android:id="@+id/recentAuthorArticleHeading"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
-                    android:text="RECENT BLOGS FROM"
+                    android:text="@string/vd.recent_videos_from.title"
                     android:textAllCaps="true"
-                    android:textColor="@color/primary_blue"
-                    android:textSize="@dimen/ad_recent" />
+                    android:textColor="@color/ad.related_article.title"
+                    android:textSize="@dimen/ad_recent"
+                    app:fontName="oswald_regular.ttf" />
 
                 <com.mycity4kids.widget.RelatedArticlesView
                     android:id="@+id/relatedArticles1"
@@ -200,7 +213,7 @@
                     android:paddingBottom="5dp"
                     android:paddingTop="5dp"
                     app:articleImage="@drawable/progress_spinner"
-                    app:articleTitle="labda" />
+                    app:articleTitle="" />
 
                 <View
                     android:layout_width="match_parent"
@@ -214,7 +227,7 @@
                     android:paddingBottom="5dp"
                     android:paddingTop="5dp"
                     app:articleImage="@drawable/progress_spinner"
-                    app:articleTitle="labda" />
+                    app:articleTitle="" />
 
                 <View
                     android:layout_width="match_parent"
@@ -228,7 +241,7 @@
                     android:paddingBottom="5dp"
                     android:paddingTop="5dp"
                     app:articleImage="@drawable/progress_spinner"
-                    app:articleTitle="labda" />
+                    app:articleTitle="" />
 
                 <View
                     android:layout_width="match_parent"
@@ -247,14 +260,15 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <TextView
+                <com.mycity4kids.widget.CustomFontTextView
                     android:id="@+id/trendingArticlesHeading"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
-                    android:text="TRENDING VIDEOS"
-                    android:textColor="@color/primary_blue"
-                    android:textSize="@dimen/ad_trending" />
+                    android:text="@string/vd.trending.title"
+                    android:textColor="@color/ad.trending.title"
+                    android:textSize="@dimen/ad_trending"
+                    app:fontName="oswald_regular.ttf" />
 
                 <com.mycity4kids.widget.RelatedArticlesView
                     android:id="@+id/trendingRelatedArticles1"
@@ -263,7 +277,7 @@
                     android:paddingBottom="5dp"
                     android:paddingTop="5dp"
                     app:articleImage="@drawable/progress_spinner"
-                    app:articleTitle="labda" />
+                    app:articleTitle="" />
 
                 <View
                     android:layout_width="match_parent"
@@ -277,7 +291,7 @@
                     android:paddingBottom="5dp"
                     android:paddingTop="5dp"
                     app:articleImage="@drawable/progress_spinner"
-                    app:articleTitle="labda" />
+                    app:articleTitle="" />
 
                 <View
                     android:layout_width="match_parent"
@@ -291,7 +305,7 @@
                     android:paddingBottom="5dp"
                     android:paddingTop="5dp"
                     app:articleImage="@drawable/progress_spinner"
-                    app:articleTitle="labda" />
+                    app:articleTitle="" />
 
                 <View
                     android:layout_width="match_parent"
@@ -332,16 +346,16 @@
     </com.mycity4kids.observablescrollview.ObservableScrollView>
 
     <com.getbase.floatingactionbutton.FloatingActionButton
-        android:id="@+id/recommendFloatingActionButton"
+        android:id="@+id/commentFloatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/bottom_Lout"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="12dp"
         android:layout_marginRight="17dp"
-        app:fab_colorNormal="@color/white_color"
-        app:fab_colorPressed="@color/white_color"
-        app:fab_icon="@drawable/heart_outline"
+        app:fab_colorNormal="@color/ad.fab.bg"
+        app:fab_colorPressed="@color/ad.fab.bg"
+        app:fab_icon="@drawable/ic_add_comments"
         app:fab_plusIconColor="@color/white_color"
         app:fab_size="normal" />
 
@@ -351,7 +365,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/bottom_Lout"
         android:layout_marginBottom="32dp"
-        android:layout_toLeftOf="@+id/recommendFloatingActionButton"
+        android:layout_toLeftOf="@+id/commentFloatingActionButton"
         android:gravity="center"
         android:padding="8dp"
         android:text="@string/ad.recommendation.tootip_text"
@@ -375,8 +389,6 @@
             android:id="@+id/relativeLoadingView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/bottom_Lout"
-            android:layout_centerHorizontal="true"
             android:background="#80000000"
             android:paddingBottom="5dp"
             android:visibility="gone">
@@ -412,61 +424,142 @@
         </RelativeLayout>
 
         <LinearLayout
-            android:id="@+id/comment_layout"
+            android:id="@+id/bottomToolbarLL"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:background="@color/white_color"
-            android:orientation="horizontal"
-            android:weightSum="1">
+            android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/editCommentTxt"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".87"
-                android:background="@drawable/edit_text"
-                android:gravity="top|left"
-                android:hint="@string/write_comment"
-                android:maxLines="4"
-                android:padding="12dp"
-                android:singleLine="false"
-                android:textColor="@color/black_color"
-                android:textSize="@dimen/ad_comments_edit_text"
-                android:visibility="visible" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey" />
 
             <LinearLayout
-                android:id="@+id/addCommentLinearLayout"
-                android:layout_width="0dp"
-                android:layout_height="44dp"
-                android:layout_gravity="bottom"
-                android:layout_weight=".13"
-                android:background="@color/primary_blue"
-                android:gravity="center">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal"
+                android:paddingBottom="6dp"
+                android:paddingTop="6dp">
 
-                <ImageView
-                    android:id="@+id/add_comment_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/send_new"
-                    android:clickable="true" />
+                <!--<ImageView-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="30dp"-->
+                <!--android:layout_weight="1"-->
+                <!--android:src="@drawable/ic_facebook" />-->
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/facebookShareTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/ic_facebook"
+                    android:gravity="center"
+                    android:text="@string/ad.bottom_bar.facebook"
+                    android:textColor="@color/ad.bottom_bar.items"
+                    android:textSize="11sp" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/whatsappShareTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/ic_whats_app"
+                    android:gravity="center"
+                    android:text="@string/ad.bottom_bar.whatsapp"
+                    android:textColor="@color/ad.bottom_bar.items"
+                    android:textSize="11sp" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/emailShareTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/ic_email"
+                    android:gravity="center"
+                    android:text="@string/ad.bottom_bar.email"
+                    android:textColor="@color/ad.bottom_bar.items"
+                    android:textSize="11sp" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/bookmarkTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/ic_bookmark"
+                    android:gravity="center"
+                    android:text="@string/ad.bottom_bar.bookmark"
+                    android:textColor="@color/ad.bottom_bar.items"
+                    android:textSize="11sp" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/likeTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/ic_recommend"
+                    android:gravity="center"
+                    android:text="@string/ad.bottom_bar.like"
+                    android:textColor="@color/ad.bottom_bar.items"
+                    android:textSize="11sp" />
 
             </LinearLayout>
-
         </LinearLayout>
+        <!--<LinearLayout-->
+        <!--android:id="@+id/comment_layout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="2dp"-->
+        <!--android:background="@color/white_color"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:weightSum="1">-->
 
-        <TextView
-            android:id="@+id/add_comment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:background="@color/a_baseblue"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="@string/leave_comment"
-            android:textColor="@color/white_color"
-            android:textSize="@dimen/common_button_txt_size"
-            android:visibility="gone" />
+        <!--<EditText-->
+        <!--android:id="@+id/editCommentTxt"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight=".87"-->
+        <!--android:background="@drawable/edit_text"-->
+        <!--android:gravity="top|left"-->
+        <!--android:hint="@string/write_comment"-->
+        <!--android:maxLines="4"-->
+        <!--android:padding="12dp"-->
+        <!--android:singleLine="false"-->
+        <!--android:textColor="@color/black_color"-->
+        <!--android:textSize="@dimen/ad_comments_edit_text"-->
+        <!--android:visibility="visible" />-->
+
+        <!--<LinearLayout-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="44dp"-->
+        <!--android:layout_gravity="bottom"-->
+        <!--android:layout_weight=".13"-->
+        <!--android:background="@color/primary_blue"-->
+        <!--android:gravity="center">-->
+
+        <!--<ImageView-->
+        <!--android:id="@+id/add_comment_btn"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="@drawable/send_new"-->
+        <!--android:clickable="true" />-->
+
+        <!--</LinearLayout>-->
+
+        <!--</LinearLayout>-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/add_comment"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center_vertical"-->
+        <!--android:background="@color/a_baseblue"-->
+        <!--android:gravity="center"-->
+        <!--android:padding="10dp"-->
+        <!--android:text="@string/leave_comment"-->
+        <!--android:textColor="@color/white_color"-->
+        <!--android:textSize="@dimen/common_button_txt_size"-->
+        <!--android:visibility="gone" />-->
     </LinearLayout>
 
 </RelativeLayout>

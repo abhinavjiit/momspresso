@@ -87,7 +87,6 @@ import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.CircleTransformation;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
-import com.mycity4kids.ui.activity.BloggerDashboardActivity;
 import com.mycity4kids.ui.activity.BloggerProfileActivity;
 import com.mycity4kids.ui.activity.FilteredTopicsArticleListingActivity;
 import com.mycity4kids.utils.AppUtils;
@@ -743,6 +742,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             holder.commentDescription = (TextView) view.findViewById(R.id.txvCommentDescription);
             holder.dateTxt = (TextView) view.findViewById(R.id.txvDate);
             holder.commentCellReplyTxt = (TextView) view.findViewById(R.id.txvCommentCellReply);
+            holder.separatorView = view.findViewById(R.id.separatorView);
             holder.commentCellEditTxt = (TextView) view.findViewById(R.id.txvCommentCellEdit);
             holder.replyCommentView = (LinearLayout) view.findViewById(R.id.replyRelativeLayout);
 
@@ -758,21 +758,28 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
             if (!"fb".equals(commentList.getComment_type()) && userDynamoId.equals(commentList.getUserId())) {
                 holder.commentCellEditTxt.setVisibility(View.VISIBLE);
+                holder.commentCellReplyTxt.setVisibility(View.GONE);
             } else {
-                holder.commentCellEditTxt.setVisibility(View.INVISIBLE);
+                holder.commentCellEditTxt.setVisibility(View.GONE);
+                if ("fb".equals(commentList.getComment_type())) {
+                    holder.commentCellReplyTxt.setVisibility(View.GONE);
+                    holder.separatorView.setVisibility(View.GONE);
+                } else {
+                    holder.commentCellReplyTxt.setVisibility(View.VISIBLE);
+                }
             }
 
-            if ("fb".equals(commentList.getComment_type())) {
-                holder.commentCellReplyTxt.setVisibility(View.INVISIBLE);
-            } else {
-                holder.commentCellReplyTxt.setVisibility(View.VISIBLE);
-            }
-
-            if (holder.commentCellEditTxt.getVisibility() == View.VISIBLE) {
-                holder.commentCellReplyTxt.setVisibility(View.INVISIBLE);
-            } else {
-                holder.commentCellReplyTxt.setVisibility(View.VISIBLE);
-            }
+//            if ("fb".equals(commentList.getComment_type())) {
+//                holder.commentCellReplyTxt.setVisibility(View.INVISIBLE);
+//            } else {
+//                holder.commentCellReplyTxt.setVisibility(View.VISIBLE);
+//            }
+//
+//            if (holder.commentCellEditTxt.getVisibility() == View.VISIBLE) {
+//                holder.commentCellReplyTxt.setVisibility(View.INVISIBLE);
+//            } else {
+//                holder.commentCellReplyTxt.setVisibility(View.VISIBLE);
+//            }
 
             if (!StringUtils.isNullOrEmpty(commentList.getName())) {
                 holder.commentName.setText(commentList.getName());
@@ -809,6 +816,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 holder.replyCommentView.setVisibility(View.VISIBLE);
                 ViewHolder replyViewholder = new ViewHolder();
                 for (int j = 0; j < commentList.getReplies().size(); j++) {
+                    if ("fb".equals(commentList.getComment_type())) {
+                        commentList.getReplies().get(j).setComment_type("fb");
+                    }
                     displayReplies(replyViewholder, commentList.getReplies().get(j), holder.replyCommentView, REPLY_LEVEL_PARENT, j);
                 }
             } else {
@@ -826,6 +836,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         replyViewholder.commentDescription = (TextView) view.findViewById(R.id.txvCommentDescription);
         replyViewholder.dateTxt = (TextView) view.findViewById(R.id.txvDate);
         replyViewholder.replyCellReplyTxt = (TextView) view.findViewById(R.id.txvReplyCellReply);
+        replyViewholder.separatorView = view.findViewById(R.id.separatorView);
         replyViewholder.replyCellEditTxt = (TextView) view.findViewById(R.id.txvReplyCellEdit);
         replyViewholder.replyCommentView = (LinearLayout) view.findViewById(R.id.replyRelativeLayout);
 
@@ -837,17 +848,34 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
         if (!"fb".equals(replies.getComment_type()) && userDynamoId.equals(replies.getUserId())) {
             replyViewholder.replyCellEditTxt.setVisibility(View.VISIBLE);
-            replyViewholder.replyCellReplyTxt.setVisibility(View.INVISIBLE);
+            replyViewholder.replyCellReplyTxt.setVisibility(View.GONE);
         } else {
-            replyViewholder.replyCellEditTxt.setVisibility(View.INVISIBLE);
-            replyViewholder.replyCellReplyTxt.setVisibility(View.VISIBLE);
+            replyViewholder.replyCellEditTxt.setVisibility(View.GONE);
+            if ("fb".equals(replies.getComment_type())) {
+                replyViewholder.replyCellReplyTxt.setVisibility(View.GONE);
+                replyViewholder.separatorView.setVisibility(View.GONE);
+            } else {
+                if (replyLevel == REPLY_LEVEL_CHILD) {
+                    replyViewholder.replyCellReplyTxt.setVisibility(View.GONE);
+                    replyViewholder.separatorView.setVisibility(View.GONE);
+                } else {
+                    replyViewholder.replyCellReplyTxt.setVisibility(View.VISIBLE);
+                }
+            }
         }
+
+//        if (!"fb".equals(replies.getComment_type()) && replyLevel != REPLY_LEVEL_CHILD) {
+//            replyViewholder.replyCellReplyTxt.setVisibility(View.VISIBLE);
+//        } else {
+//            replyViewholder.replyCellReplyTxt.setVisibility(View.GONE);
+//        }
 
         if (replyLevel == REPLY_LEVEL_PARENT && replyPos == 0) {
             replyViewholder.replyIndicatorImageView.setVisibility(View.VISIBLE);
         } else {
             replyViewholder.replyIndicatorImageView.setVisibility(View.INVISIBLE);
         }
+
 
         view.setTag(replies);
 
@@ -882,6 +910,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             replyViewholder.replyCommentView.setVisibility(View.VISIBLE);
             ViewHolder replyReplyViewholder = new ViewHolder();
             for (int j = 0; j < replies.getReplies().size(); j++) {
+                if ("fb".equals(replies.getComment_type())) {
+                    replies.getReplies().get(j).setComment_type("fb");
+                }
                 displayReplies(replyReplyViewholder, replies.getReplies().get(j), parentView, REPLY_LEVEL_CHILD, j);
             }
         } else {
@@ -931,7 +962,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     if (!"fb".equals(commentData.getComment_type())) {
                         trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
                         trackArticleReadTime.resetTimer();
-                        Intent profileIntent = new Intent(getActivity(), BloggerDashboardActivity.class);
+                        Intent profileIntent = new Intent(getActivity(), BloggerProfileActivity.class);
                         profileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, commentData.getUserId());
                         profileIntent.putExtra(AppConstants.AUTHOR_NAME, commentData.getName());
                         profileIntent.putExtra(Constants.FROM_SCREEN, "Article Detail Comments");
@@ -943,7 +974,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     if (!"fb".equals(cData.getComment_type())) {
                         trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
                         trackArticleReadTime.resetTimer();
-                        Intent userProfileIntent = new Intent(getActivity(), BloggerDashboardActivity.class);
+                        Intent userProfileIntent = new Intent(getActivity(), BloggerProfileActivity.class);
                         userProfileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, cData.getUserId());
                         userProfileIntent.putExtra(AppConstants.AUTHOR_NAME, cData.getName());
                         userProfileIntent.putExtra(Constants.FROM_SCREEN, "Article Detail Comments");
@@ -1163,7 +1194,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     }
 
     private CommentsData recursiveSearch(CommentsData cd1, CommentsData upComment) {
-        if (cd1.getId().equals(upComment.getParent_id())) {
+        if (cd1.getId().equals(upComment.getId()) || cd1.getId().equals(upComment.getParent_id())) {
             return cd1;
         }
         ArrayList<CommentsData> children = cd1.getReplies();
@@ -1302,24 +1333,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         if (ab == null) {
             return;
         }
-//        if (scrollState == ScrollState.UP) {
-//            if (ab.isShowing()) {
-//                hideToolbar();
-//            }
-//            if (!isArticleDetailEndReached && commentFloatingActionButton.getVisibility() == View.VISIBLE) {
-//                hideFloatingActionButton();
-//            }
-////            if (recommendSuggestion.getVisibility() == View.VISIBLE) {
-////                recommendSuggestion.setVisibility(View.INVISIBLE);
-////            }
-//        } else if (scrollState == ScrollState.DOWN) {
-//            if (!ab.isShowing()) {
-//                showToolbar();
-//            }
-//            if (commentFloatingActionButton.getVisibility() == View.INVISIBLE) {
-//                showFloatingActionButton();
-//            }
-//        }
         if (scrollState == ScrollState.UP) {
             if (ab.isShowing()) {
                 ((ArticleDetailsContainerActivity) getActivity()).hideMainToolbar();
@@ -1330,9 +1343,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             if (!isArticleDetailEndReached && commentFloatingActionButton.getVisibility() == View.VISIBLE) {
                 hideFloatingActionButton();
             }
-//            if (recommendSuggestion.getVisibility() == View.VISIBLE) {
-//                recommendSuggestion.setVisibility(View.INVISIBLE);
-//            }
         } else if (scrollState == ScrollState.DOWN) {
             if (!ab.isShowing()) {
                 ((ArticleDetailsContainerActivity) getActivity()).showMainToolbar();
@@ -1347,17 +1357,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     }
 
     private void hideToolbar() {
-
-//        mToolbar.animate()
-//                .translationY(-mToolbar.getHeight())
-//                .setInterpolator(new LinearInterpolator())
-//                .setDuration(180)
-//                .setListener(new AnimatorListenerAdapter() {
-//                    @Override
-//                    public void onAnimationEnd(Animator animation) {
-//                        getSupportActionBar().hide();
-//                    }
-//                });
         bottomToolbarLL.animate()
                 .translationY(bottomToolbarLL.getHeight())
                 .setInterpolator(new LinearInterpolator())
@@ -1372,16 +1371,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     }
 
     private void showToolbar() {
-//        mToolbar.animate()
-//                .translationY(0)
-//                .setInterpolator(new LinearInterpolator())
-//                .setDuration(180)
-//                .setListener(new AnimatorListenerAdapter() {
-//                    @Override
-//                    public void onAnimationStart(Animator animation) {
-//                        getSupportActionBar().show();
-//                    }
-//                });
         bottomToolbarLL.animate()
                 .translationY(0)
                 .setInterpolator(new LinearInterpolator())
@@ -1432,6 +1421,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         private TextView commentDescription;
         private TextView dateTxt;
         private TextView commentCellReplyTxt;
+        private View separatorView;
         private TextView replyCellReplyTxt;
         private TextView commentCellEditTxt;
         private TextView replyCellEditTxt;

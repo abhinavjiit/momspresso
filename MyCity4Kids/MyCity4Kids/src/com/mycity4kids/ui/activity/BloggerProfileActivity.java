@@ -48,6 +48,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.UserAttributeUpdateAPI;
+import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.RoundedTransformation;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
@@ -99,6 +100,7 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
     private TextView txvTopArticle_1, txvTopArticle_2, txvTopArticle_3;
     private TextView articleSectionTextView, videosSectionTextView, activitySectionTextView, rankingSectionTextView;
     private TextView followButton, unfollowButton;
+    private TextView rankLanguageTextView;
     private LinearLayout followerContainer, followingContainer;
 
     private Boolean isFollowing = false;
@@ -122,6 +124,7 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
         followingCountTextView = (TextView) findViewById(R.id.followingCountTextView);
         followerCountTextView = (TextView) findViewById(R.id.followerCountTextView);
         rankCountTextView = (TextView) findViewById(R.id.rankCountTextView);
+        rankLanguageTextView = (TextView) findViewById(R.id.rankLanguageTextView);
         imgProfile = (ImageView) findViewById(R.id.imgProfile);
         imgTopArticle_1 = (ImageView) findViewById(R.id.imgTopArticle_1);
         imgTopArticle_2 = (ImageView) findViewById(R.id.imgTopArticle_2);
@@ -156,6 +159,9 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
         followingContainer.setOnClickListener(this);
         followerContainer.setOnClickListener(this);
 
+//        rankingSectionTextView.setVisibility(View.GONE);
+//        findViewById(R.id.underline_4).setVisibility(View.GONE);
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -171,6 +177,16 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
         getUserDetails();
         checkFollowingStatusAPI();
         getTop3ArticleOfAuthor();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void getUserDetails() {
@@ -256,21 +272,50 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
 //                    rankViewFlipper.setAutoStart(false);
 //                    rankViewFlipper.stopFlipping();
                 } else if (responseData.getData().get(0).getResult().getRanks().size() < 2) {
+                    rankCountTextView.setText("" + responseData.getData().get(0).getResult().getRanks().get(0).getRank());
+                    if (AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(0).getLangKey())) {
+                        rankLanguageTextView.setText(getString(R.string.blogger_profile_rank_in) + " ENGLISH");
+                    } else {
+                        rankLanguageTextView.setText(getString(R.string.blogger_profile_rank_in)
+                                + " " + AppUtils.getLangModelForLanguage(BloggerProfileActivity.this, responseData.getData().get(0).getResult().getRanks().get(0).getLangKey()).getDisplay_name());
+                    }
 //                    addRankView(responseData.getData().get(0).getResult().getRanks().get(0));
 //                    rankViewFlipper.setAutoStart(false);
 //                    rankViewFlipper.stopFlipping();
                 } else {
+                    boolean isEnglishLangAvailable = false;
                     for (int i = 0; i < responseData.getData().get(0).getResult().getRanks().size(); i++) {
                         if (AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(i).getLangKey())) {
 //                            addRankView(responseData.getData().get(0).getResult().getRanks().get(i));
+                            isEnglishLangAvailable = true;
+                            rankCountTextView.setText("" + responseData.getData().get(0).getResult().getRanks().get(i).getRank());
+                            rankLanguageTextView.setText(getString(R.string.blogger_profile_rank_in) + " ENGLISH");
+                            break;
                         }
                     }
-                    Collections.sort(responseData.getData().get(0).getResult().getRanks());
-                    for (int i = 0; i < responseData.getData().get(0).getResult().getRanks().size(); i++) {
-                        if (!AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(i).getLangKey())) {
-//                            addRankView(responseData.getData().get(0).getResult().getRanks().get(i));
+                    if (!isEnglishLangAvailable) {
+                        Collections.sort(responseData.getData().get(0).getResult().getRanks());
+                        for (int i = 0; i < responseData.getData().get(0).getResult().getRanks().size(); i++) {
+                            if (!AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(i).getLangKey())) {
+                                rankCountTextView.setText("" + responseData.getData().get(0).getResult().getRanks().get(i).getRank());
+                                rankLanguageTextView.setText(getString(R.string.blogger_profile_rank_in)
+                                        + " " + AppUtils.getLangModelForLanguage(BloggerProfileActivity.this, responseData.getData().get(0).getResult().getRanks().get(i).getLangKey()).getDisplay_name());
+                                break;
+                            }
                         }
                     }
+
+//                    for (int i = 0; i < responseData.getData().get(0).getResult().getRanks().size(); i++) {
+//                        if (AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(i).getLangKey())) {
+////                            addRankView(responseData.getData().get(0).getResult().getRanks().get(i));
+//                        }
+//                    }
+//                    Collections.sort(responseData.getData().get(0).getResult().getRanks());
+//                    for (int i = 0; i < responseData.getData().get(0).getResult().getRanks().size(); i++) {
+//                        if (!AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(i).getLangKey())) {
+////                            addRankView(responseData.getData().get(0).getResult().getRanks().get(i));
+//                        }
+//                    }
                 }
 
                 int followerCount = Integer.parseInt(responseData.getData().get(0).getResult().getFollowersCount());
@@ -470,8 +515,8 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
             try {
                 ArticleListingResponse responseData = (ArticleListingResponse) response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
-                    if (dataList == null) {
+                    final ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
+                    if (dataList == null || dataList.size() == 0) {
 
                     } else if (dataList.size() == 1) {
                         topArticleLabel.setVisibility(View.VISIBLE);
@@ -485,6 +530,20 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
                         } catch (Exception e) {
                             imgTopArticle_1.setBackgroundResource(R.drawable.article_default);
                         }
+                        topArticle_1.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(BloggerProfileActivity.this, ArticleDetailsContainerActivity.class);
+                                intent.putExtra(Constants.ARTICLE_ID, dataList.get(0).getId());
+                                intent.putExtra(Constants.AUTHOR_ID, dataList.get(0).getUserName());
+                                intent.putExtra(Constants.BLOG_SLUG, dataList.get(0).getBlogPageSlug());
+                                intent.putExtra(Constants.TITLE_SLUG, dataList.get(0).getTitleSlug());
+                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Notification Center");
+                                intent.putExtra(Constants.FROM_SCREEN, "Notification Center List");
+                                intent.putExtra(Constants.ARTICLE_INDEX, "" + 0);
+                                startActivity(intent);
+                            }
+                        });
                     } else if (dataList.size() == 2) {
                         topArticleLabel.setVisibility(View.VISIBLE);
                         topArticleContainer.setVisibility(View.VISIBLE);
@@ -503,6 +562,34 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
                         } catch (Exception e) {
                             imgTopArticle_2.setBackgroundResource(R.drawable.article_default);
                         }
+                        topArticle_1.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(BloggerProfileActivity.this, ArticleDetailsContainerActivity.class);
+                                intent.putExtra(Constants.ARTICLE_ID, dataList.get(0).getId());
+                                intent.putExtra(Constants.AUTHOR_ID, dataList.get(0).getUserName());
+                                intent.putExtra(Constants.BLOG_SLUG, dataList.get(0).getBlogPageSlug());
+                                intent.putExtra(Constants.TITLE_SLUG, dataList.get(0).getTitleSlug());
+                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Notification Center");
+                                intent.putExtra(Constants.FROM_SCREEN, "Notification Center List");
+                                intent.putExtra(Constants.ARTICLE_INDEX, "" + 0);
+                                startActivity(intent);
+                            }
+                        });
+                        topArticle_2.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(BloggerProfileActivity.this, ArticleDetailsContainerActivity.class);
+                                intent.putExtra(Constants.ARTICLE_ID, dataList.get(1).getId());
+                                intent.putExtra(Constants.AUTHOR_ID, dataList.get(1).getUserName());
+                                intent.putExtra(Constants.BLOG_SLUG, dataList.get(1).getBlogPageSlug());
+                                intent.putExtra(Constants.TITLE_SLUG, dataList.get(1).getTitleSlug());
+                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Notification Center");
+                                intent.putExtra(Constants.FROM_SCREEN, "Notification Center List");
+                                intent.putExtra(Constants.ARTICLE_INDEX, "" + 1);
+                                startActivity(intent);
+                            }
+                        });
                     } else {
                         topArticleLabel.setVisibility(View.VISIBLE);
                         topArticleContainer.setVisibility(View.VISIBLE);
@@ -527,6 +614,48 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
                         } catch (Exception e) {
                             imgTopArticle_3.setBackgroundResource(R.drawable.article_default);
                         }
+                        topArticle_1.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(BloggerProfileActivity.this, ArticleDetailsContainerActivity.class);
+                                intent.putExtra(Constants.ARTICLE_ID, dataList.get(0).getId());
+                                intent.putExtra(Constants.AUTHOR_ID, dataList.get(0).getUserName());
+                                intent.putExtra(Constants.BLOG_SLUG, dataList.get(0).getBlogPageSlug());
+                                intent.putExtra(Constants.TITLE_SLUG, dataList.get(0).getTitleSlug());
+                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Notification Center");
+                                intent.putExtra(Constants.FROM_SCREEN, "Notification Center List");
+                                intent.putExtra(Constants.ARTICLE_INDEX, "" + 0);
+                                startActivity(intent);
+                            }
+                        });
+                        topArticle_2.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(BloggerProfileActivity.this, ArticleDetailsContainerActivity.class);
+                                intent.putExtra(Constants.ARTICLE_ID, dataList.get(1).getId());
+                                intent.putExtra(Constants.AUTHOR_ID, dataList.get(1).getUserName());
+                                intent.putExtra(Constants.BLOG_SLUG, dataList.get(1).getBlogPageSlug());
+                                intent.putExtra(Constants.TITLE_SLUG, dataList.get(1).getTitleSlug());
+                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Notification Center");
+                                intent.putExtra(Constants.FROM_SCREEN, "Notification Center List");
+                                intent.putExtra(Constants.ARTICLE_INDEX, "" + 1);
+                                startActivity(intent);
+                            }
+                        });
+                        topArticle_3.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(BloggerProfileActivity.this, ArticleDetailsContainerActivity.class);
+                                intent.putExtra(Constants.ARTICLE_ID, dataList.get(2).getId());
+                                intent.putExtra(Constants.AUTHOR_ID, dataList.get(2).getUserName());
+                                intent.putExtra(Constants.BLOG_SLUG, dataList.get(2).getBlogPageSlug());
+                                intent.putExtra(Constants.TITLE_SLUG, dataList.get(2).getTitleSlug());
+                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Notification Center");
+                                intent.putExtra(Constants.FROM_SCREEN, "Notification Center List");
+                                intent.putExtra(Constants.ARTICLE_INDEX, "" + 2);
+                                startActivity(intent);
+                            }
+                        });
                     }
                 } else {
 
@@ -594,10 +723,18 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
                 break;
             case R.id.videosSectionTextView:
                 break;
-            case R.id.activitySectionTextView:
-                break;
-            case R.id.rankingSectionTextView:
-                break;
+            case R.id.activitySectionTextView: {
+                Intent intent = new Intent(BloggerProfileActivity.this, UserActivitiesActivity.class);
+                intent.putExtra(Constants.AUTHOR_ID, authorId);
+                startActivity(intent);
+            }
+            break;
+            case R.id.rankingSectionTextView: {
+                Intent intent = new Intent(this, RankingActivity.class);
+                intent.putExtra("authorId", authorId);
+                startActivity(intent);
+            }
+            break;
             case R.id.followingContainer: {
                 Intent intent = new Intent(this, FollowersAndFollowingListActivity.class);
                 intent.putExtra(AppConstants.FOLLOW_LIST_TYPE, AppConstants.FOLLOWING_LIST);

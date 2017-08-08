@@ -45,7 +45,7 @@ import retrofit2.Retrofit;
  */
 public class ExploreArticleListingTypeFragment extends BaseFragment {
 
-    String[] sections = {"TRENDING", "EDITOR'S PICK", "FOR YOU", "RECENT", "POPULAR", "IN YOUR CITY", "LANGUAGES", "VIDEOS", "MOMSPRESSO"};
+    String[] sections = {"TRENDING", "EDITOR'S PICK", "FOR YOU", "RECENT", "POPULAR", "LANGUAGES", "VIDEOS"};
     private ArrayList<ExploreTopicsModel> mainTopicsList;
     private String fragType = "";
 
@@ -176,6 +176,10 @@ public class ExploreArticleListingTypeFragment extends BaseFragment {
                 } else if (Constants.TAB_LANGUAGE.equalsIgnoreCase(tab.getText().toString())) {
                     Intent cityIntent = new Intent(getActivity(), LanguageSpecificArticleListingActivity.class);
                     cityIntent.putExtra(Constants.SORT_TYPE, Constants.KEY_IN_YOUR_CITY);
+                    startActivity(cityIntent);
+                    return;
+                } else if (Constants.TAB_VIDEOS.equalsIgnoreCase(tab.getText().toString())) {
+                    Intent cityIntent = new Intent(getActivity(), AllVideosListingActivity.class);
                     startActivity(cityIntent);
                     return;
                 }
