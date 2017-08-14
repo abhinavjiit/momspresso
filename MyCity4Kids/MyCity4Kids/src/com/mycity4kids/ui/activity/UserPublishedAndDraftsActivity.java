@@ -14,6 +14,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.ui.adapter.SubscribeTopicsPagerAdapter;
 import com.mycity4kids.ui.adapter.UserArticlesPagerAdapter;
+import com.mycity4kids.utils.AppUtils;
 
 /**
  * Created by hemant on 19/7/17.
@@ -44,7 +45,7 @@ public class UserPublishedAndDraftsActivity extends BaseActivity {
         if (isPrivateProfile) {
             tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.user_article_tabbar_draft_label)));
         }
-
+        AppUtils.changeTabsFont(this, tabLayout);
         UserArticlesPagerAdapter adapter = new UserArticlesPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), authorId, isPrivateProfile);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,9 +23,7 @@ import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.BlogPageResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
-import com.mycity4kids.ui.activity.BlogSetupActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
-import com.mycity4kids.ui.activity.ExploreArticleListingTypeFragment;
 
 import retrofit2.Call;
 import retrofit2.Callback;

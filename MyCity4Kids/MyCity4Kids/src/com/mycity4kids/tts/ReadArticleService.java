@@ -27,8 +27,7 @@ public class ReadArticleService extends Service implements TextToSpeech.OnInitLi
 
     @Override
     public void onCreate() {
-
-
+        mTTS = new TextToSpeech(getApplicationContext(), this);
     }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
@@ -37,7 +36,6 @@ public class ReadArticleService extends Service implements TextToSpeech.OnInitLi
         Log.d("", "TTSService Created!");
         content = intent.getStringExtra("content");
         langCode = intent.getStringExtra("langCategoryId");
-        mTTS = new TextToSpeech(getApplicationContext(), this);
         return super.onStartCommand(intent, flags, startId);
 
     }
@@ -109,7 +107,7 @@ public class ReadArticleService extends Service implements TextToSpeech.OnInitLi
     }
 
     private void startReading(final HashMap<String, String> params) {
-        Toast.makeText(ReadArticleService.this, content, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(ReadArticleService.this, content, Toast.LENGTH_SHORT).show();
         Log.d("Read Language", "" + mTTS.getLanguage());
         new Thread(new Runnable() {
             @Override

@@ -8,15 +8,20 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
+import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
@@ -477,5 +482,22 @@ public class AppUtils {
             shareUrl = AppConstants.ARTICLE_SHARE_URL + "article/" + titleSlug;
         }
         return shareUrl;
+    }
+
+    public static void changeTabsFont(Context mContext, TabLayout tabLayout) {
+        //Typeface font = Typeface.createFromAsset(getAssets(), "fonts/androidnation.ttf");
+        Typeface myTypeface = Typeface.createFromAsset(mContext.getAssets(), "fonts/" + "oswald_regular.ttf");
+        ViewGroup vg = (ViewGroup) tabLayout.getChildAt(0);
+        int tabsCount = vg.getChildCount();
+        for (int j = 0; j < tabsCount; j++) {
+            ViewGroup vgTab = (ViewGroup) vg.getChildAt(j);
+            int tabChildsCount = vgTab.getChildCount();
+            for (int i = 0; i < tabChildsCount; i++) {
+                View tabViewChild = vgTab.getChildAt(i);
+                if (tabViewChild instanceof TextView) {
+                    ((TextView) tabViewChild).setTypeface(myTypeface, Typeface.NORMAL);
+                }
+            }
+        }
     }
 }

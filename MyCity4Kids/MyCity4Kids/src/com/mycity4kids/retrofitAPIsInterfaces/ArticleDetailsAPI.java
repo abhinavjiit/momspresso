@@ -32,6 +32,10 @@ import retrofit2.http.Url;
  */
 public interface ArticleDetailsAPI {
 
+    @GET("/v1/articles/article/{articleId}")
+    Call<ArticleDetailResult> getArticleDetailsFromRedis(@Path("articleId") String articleId,
+                                                         @Query("type") String type);
+
     @GET("https://s3-ap-southeast-1.amazonaws.com/mycity4kids-phoenix/articles-data/{articleId}.json")
     Call<ArticleDetailResult> getArticleDetailsFromS3(@Path("articleId") String articleId);
 
@@ -45,6 +49,9 @@ public interface ArticleDetailsAPI {
     @GET("v1/users/checkFollowingBookmarkStatus/")
     Call<ArticleDetailResponse> checkFollowingBookmarkStatus(@Query("articleId") String articleId,
                                                              @Query("authorId") String authorId);
+
+    @POST("/v1/users/isBookmarkVideo/")
+    Call<ArticleDetailResponse> checkBookmarkVideoStatus(@Body ArticleDetailRequest body);
 
     @GET("v1/articles/user/{userId}")
     Call<ArticleListingResponse> getPublishedArticles(@Path("userId") String userId,
@@ -75,8 +82,14 @@ public interface ArticleDetailsAPI {
     @POST("v1/users/bookmark/")
     Call<AddBookmarkResponse> addBookmark(@Body ArticleDetailRequest body);
 
+    @POST("v1/users/bookmarkVideo/")
+    Call<AddBookmarkResponse> addVideoWatchLater(@Body ArticleDetailRequest body);
+
     @POST("v1/users/deleteBookmark/")
     Call<AddBookmarkResponse> deleteBookmark(@Body DeleteBookmarkRequest body);
+
+    @POST("v1/users/deleteBookmarkVideo/")
+    Call<AddBookmarkResponse> deleteVideoWatchLater(@Body DeleteBookmarkRequest body);
 
     @GET("v1/recommend/related/{articleId}")
     Call<ArticleListingResponse> getCategoryRelatedArticles(@Path("articleId") String articleId,

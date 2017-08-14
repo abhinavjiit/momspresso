@@ -34,6 +34,7 @@ import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
+import com.mycity4kids.animation.MyCityAnimationsUtil;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
@@ -85,6 +86,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 
@@ -109,6 +111,8 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
 
     private static final String SAMPLE_CROPPED_IMAGE_NAME = "SampleCropImage";
 
+    private String userId;
+    private ArrayList<LanguageRanksModel> multipleRankList = new ArrayList<>();
     private File photoFile;
     private String mCurrentPhotoPath, absoluteImagePath;
     private Uri imageUri;
@@ -120,9 +124,7 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
     private TextView articleSectionTextView, videosSectionTextView, activitySectionTextView, rankingSectionTextView, settingsSectionTextView, signoutSectionTextView;
     private ImageView imgProfile;
     private ImageView settingImageView;
-    private LinearLayout followerContainer, followingContainer;
-
-    private String userId;
+    private LinearLayout followerContainer, followingContainer, rankContainer;
 
     @Nullable
     @Override
@@ -145,6 +147,7 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
         settingImageView = (ImageView) rootView.findViewById(R.id.settingImageView);
         followerContainer = (LinearLayout) rootView.findViewById(R.id.followerContainer);
         followingContainer = (LinearLayout) rootView.findViewById(R.id.followingContainer);
+        rankContainer = (LinearLayout) rootView.findViewById(R.id.rankContainer);
 
         authorNameTextView.setOnClickListener(this);
         authorTypeTextView.setOnClickListener(this);
@@ -207,12 +210,8 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
             UserDetailResponse responseData = (UserDetailResponse) response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                 if (responseData.getData().get(0).getResult().getRanks() == null || responseData.getData().get(0).getResult().getRanks().size() == 0) {
-                    LanguageRanksModel languageRanksModel = new LanguageRanksModel();
-                    languageRanksModel.setRank(-1);
-                    languageRanksModel.setLangKey("");
-//                    addRankView(languageRanksModel);
-//                    rankViewFlipper.setAutoStart(false);
-//                    rankViewFlipper.stopFlipping();
+                    rankCountTextView.setText("--");
+                    rankLanguageTextView.setText(getString(R.string.myprofile_rank_label));
                 } else if (responseData.getData().get(0).getResult().getRanks().size() < 2) {
                     rankCountTextView.setText("" + responseData.getData().get(0).getResult().getRanks().get(0).getRank());
                     if (AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(0).getLangKey())) {
@@ -221,38 +220,20 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
                         rankLanguageTextView.setText(getString(R.string.blogger_profile_rank_in)
                                 + " " + AppUtils.getLangModelForLanguage(getActivity(), responseData.getData().get(0).getResult().getRanks().get(0).getLangKey()).getDisplay_name());
                     }
-//                    addRankView(responseData.getData().get(0).getResult().getRanks().get(0));
-//                    rankViewFlipper.setAutoStart(false);
-//                    rankViewFlipper.stopFlipping();
                 } else {
                     for (int i = 0; i < responseData.getData().get(0).getResult().getRanks().size(); i++) {
                         if (AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(i).getLangKey())) {
-//                            addRankView(responseData.getData().get(0).getResult().getRanks().get(i));
-                            rankCountTextView.setText("" + responseData.getData().get(0).getResult().getRanks().get(i).getRank());
-                            rankLanguageTextView.setText(getString(R.string.blogger_profile_rank_in) + " ENGLISH");
-                            return;
+                            multipleRankList.add(responseData.getData().get(0).getResult().getRanks().get(i));
+                            break;
                         }
                     }
                     Collections.sort(responseData.getData().get(0).getResult().getRanks());
                     for (int i = 0; i < responseData.getData().get(0).getResult().getRanks().size(); i++) {
                         if (!AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(i).getLangKey())) {
-                            rankLanguageTextView.setText("" + responseData.getData().get(0).getResult().getRanks().get(i).getRank());
-                            rankLanguageTextView.setText(getString(R.string.blogger_profile_rank_in)
-                                    + " " + AppUtils.getLangModelForLanguage(getActivity(), responseData.getData().get(0).getResult().getRanks().get(0).getLangKey()).getDisplay_name());
-                            return;
+                            multipleRankList.add(responseData.getData().get(0).getResult().getRanks().get(i));
                         }
                     }
-//                    for (int i = 0; i < responseData.getData().get(0).getResult().getRanks().size(); i++) {
-//                        if (AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(i).getLangKey())) {
-////                            addRankView(responseData.getData().get(0).getResult().getRanks().get(i));
-//                        }
-//                    }
-//                    Collections.sort(responseData.getData().get(0).getResult().getRanks());
-//                    for (int i = 0; i < responseData.getData().get(0).getResult().getRanks().size(); i++) {
-//                        if (!AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(i).getLangKey())) {
-////                            addRankView(responseData.getData().get(0).getResult().getRanks().get(i));
-//                        }
-//                    }
+                    MyCityAnimationsUtil.animate(getActivity(), rankContainer, multipleRankList, 0, true);
                 }
 
                 int followerCount = Integer.parseInt(responseData.getData().get(0).getResult().getFollowersCount());

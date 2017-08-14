@@ -80,7 +80,6 @@ public class AllVideoSectionActivity extends BaseActivity {
         funnyVideosSection.setSectionTitle(getString(R.string.home_sections_title_funny_videos));
 
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("VIDEOS");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mMomspressoArticleListing = new ArrayList<>();

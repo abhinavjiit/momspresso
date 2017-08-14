@@ -52,6 +52,7 @@ import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.ui.activity.BloggersAnalyticsActivity;
+import com.mycity4kids.ui.activity.RankingActivity;
 import com.mycity4kids.widget.MyMarkerView;
 
 import java.text.DateFormat;
@@ -95,6 +96,7 @@ public class RankingStatsTabFragment extends BaseFragment implements OnChartGest
     private static TextView toDateTextView;
     private TextView dateChooserTextView;
     private RelativeLayout customDatePickerView;
+    private TextView improvePageViewTextView, improveSocialShareTextView;
 
     @Nullable
     @Override
@@ -105,6 +107,8 @@ public class RankingStatsTabFragment extends BaseFragment implements OnChartGest
         likesCountTextView = (TextView) view.findViewById(R.id.likeCountTV);
         shareCountTextView = (TextView) view.findViewById(R.id.shareCountTV);
         commentsCountTextView = (TextView) view.findViewById(R.id.commentCountTV);
+        improvePageViewTextView = (TextView) view.findViewById(R.id.improvePageViewTextView);
+        improveSocialShareTextView = (TextView) view.findViewById(R.id.improveSocialShareTextView);
         pageViewCountTextView = (TextView) view.findViewById(R.id.pageViewCountTextView);
         fromDateTextView = (TextView) view.findViewById(R.id.fromDateTextView);
         toDateTextView = (TextView) view.findViewById(R.id.toDateTextView);
@@ -114,7 +118,8 @@ public class RankingStatsTabFragment extends BaseFragment implements OnChartGest
         dateChooserTextView.setOnClickListener(this);
         fromDateTextView.setOnClickListener(this);
         toDateTextView.setOnClickListener(this);
-
+        improvePageViewTextView.setOnClickListener(this);
+        improveSocialShareTextView.setOnClickListener(this);
 
         fromCalen = Calendar.getInstance();
         fromCalen.set(Calendar.HOUR_OF_DAY, 0);
@@ -647,6 +652,22 @@ public class RankingStatsTabFragment extends BaseFragment implements OnChartGest
                 b1.putString("type", "to");
                 fromFragment.setArguments(b1);
                 fromFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
+            }
+            break;
+            case R.id.improvePageViewTextView: {
+                ImproveRankPageViewsSocialFragment analyticsStatsDialogFragment = new ImproveRankPageViewsSocialFragment();
+                Bundle b = new Bundle();
+                b.putString(AppConstants.ANALYTICS_INFO_TYPE, AppConstants.ANALYTICS_INFO_IMPROVE_PAGE_VIEWS);
+                analyticsStatsDialogFragment.setArguments(b);
+                ((RankingActivity) getActivity()).addFragment(analyticsStatsDialogFragment, b, false);
+            }
+            break;
+            case R.id.improveSocialShareTextView: {
+                ImproveRankPageViewsSocialFragment analyticsStatsDialogFragment = new ImproveRankPageViewsSocialFragment();
+                Bundle b = new Bundle();
+                b.putString(AppConstants.ANALYTICS_INFO_TYPE, AppConstants.ANALYTICS_INFO_IMPROVE_SOCIAL_SHARE);
+                analyticsStatsDialogFragment.setArguments(b);
+                ((RankingActivity) getActivity()).addFragment(analyticsStatsDialogFragment, b, false);
             }
             break;
         }

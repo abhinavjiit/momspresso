@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
+        android:elevation="5dp"
         android:minHeight="?attr/actionBarSize"
         app:theme="@style/ToolbarTheme"
         app:titleTextAppearance="@style/ToolbarTheme.Title">
@@ -25,18 +26,60 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
                 android:text="@string/home.toolbar.title"
                 android:textColor="@color/home.toolbar.titlecolor"
                 android:textSize="20sp"
                 app:fontName="oswald_regular.ttf" />
 
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/selectOptToolbarTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_toLeftOf="@+id/searchAllImageView"
+                android:layout_toStartOf="@+id/searchAllImageView"
+                android:gravity="center"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:text="@string/home_screen.select_an_option.title"
+                android:textColor="@color/select_option.toolbar.titlecolor"
+                android:textSize="20sp"
+                android:visibility="gone"
+                app:fontName="oswald_regular.ttf" />
+
             <ImageView
+                android:id="@+id/downArrowImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@+id/toolbarTitle"
                 android:layout_toRightOf="@+id/toolbarTitle"
                 android:src="@drawable/arrow_bluexxhdpidown" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/readAllTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:paddingBottom="10dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
+                android:text="@string/notification.read_all"
+                android:textColor="@color/notification.read_all"
+                android:textSize="15sp"
+                android:visibility="gone"
+                app:fontName="oswald_regular.ttf" />
 
             <ImageView
                 android:id="@+id/searchAllImageView"
@@ -49,21 +92,7 @@
                 android:paddingLeft="5dp"
                 android:paddingRight="10dp"
                 android:paddingTop="5dp"
-                android:visibility="gone"
-                android:src="@drawable/ic_search" />
-
-            <ImageView
-                android:id="@+id/filterEventsImageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:paddingBottom="10dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingTop="10dp"
-                android:src="@drawable/filter_xxhdpi"
+                android:src="@drawable/ic_search"
                 android:visibility="visible" />
 
         </RelativeLayout>
@@ -80,10 +109,11 @@
     <com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
         android:id="@+id/navigation"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="48dp"
         android:layout_alignParentBottom="true"
         android:background="@color/primary"
         android:elevation="9dp"
+        android:paddingBottom="6dp"
         app:itemTextColor="@color/bottom_navigation_bar.textColor"
         app:menu="@menu/menu_bottom_navigation_bar" />
 </RelativeLayout>

@@ -196,7 +196,7 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
     }
 
 
-    private void markAllNotificationAsRead() {
+    public void markAllNotificationAsRead() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         NotificationsAPI notificationsAPI = retrofit.create(NotificationsAPI.class);
 
@@ -221,6 +221,7 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
                 NotificationCenterListResponse responseData = (NotificationCenterListResponse) response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     paginationValue = "";
+//                    ((DashboardActivity) getActivity()).updateUnreadNotificationCount("0");
                     getNotificationFromAPI();
                 } else {
 //                    showToast(responseData.getReason());

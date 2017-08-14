@@ -111,7 +111,6 @@ public class TrendingTopicsTabFragment extends BaseFragment implements View.OnCl
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                listView.getItemAtPosition(i);
                 ArticleListingResult parentingListData = (ArticleListingResult) adapterView.getItemAtPosition(i);
 
                 if (null == parentingListData) {

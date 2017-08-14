@@ -11,8 +11,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -23,6 +23,7 @@ import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
+import com.mycity4kids.animation.MyCityAnimationsUtil;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
@@ -35,6 +36,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ContributorListAPI;
 import com.mycity4kids.ui.activity.BloggerProfileActivity;
+import com.mycity4kids.ui.activity.RankingActivity;
 import com.mycity4kids.ui.adapter.RankingTopBloggerAdapter;
 import com.mycity4kids.utils.AppUtils;
 
@@ -54,6 +56,7 @@ import retrofit2.Retrofit;
  */
 public class RankingInfoTabFragment extends BaseFragment implements View.OnClickListener, RankingTopBloggerAdapter.RecyclerViewClickListener {
 
+    private ArrayList<LanguageRanksModel> multipleRankList = new ArrayList<>();
     private ArrayList<String> list;
     private ArrayList<LanguageConfigModel> languageConfigModelArrayList;
     private ArrayList<ContributorListResult> contributorListResults;
@@ -66,12 +69,11 @@ public class RankingInfoTabFragment extends BaseFragment implements View.OnClick
     private RankingTopBloggerAdapter topBloggerAdapter;
 
     private View view;
+    private RelativeLayout rankingContainer;
     private TextView topBloggerLabelTV;
-    private ImageView rank1BloggerImageView, rank2BloggerImageView;
-    private TextView rank1BloggerNameTV, rank2BloggerNameTV;
-    private TextView rank1FollowersCount, rank2FollowersCount;
     private TextView myRankTextView;
     private TextView languageTextView;
+    private TextView improveRankTextView;
     private RecyclerView topBloggerRecyclerView;
     private PopupMenu popup;
 
@@ -87,18 +89,15 @@ public class RankingInfoTabFragment extends BaseFragment implements View.OnClick
             authorId = userId;
         }
 
+        rankingContainer = (RelativeLayout) view.findViewById(R.id.rankingContainer);
         myRankTextView = (TextView) view.findViewById(R.id.myRankTextView);
         languageTextView = (TextView) view.findViewById(R.id.languageTextView);
+        improveRankTextView = (TextView) view.findViewById(R.id.improveRankTextView);
         topBloggerLabelTV = (TextView) view.findViewById(R.id.topBloggerLabel);
-        rank1BloggerImageView = (ImageView) view.findViewById(R.id.rank1BloggerImageView);
-        rank1BloggerNameTV = (TextView) view.findViewById(R.id.rank1BloggerNameTV);
-        rank1FollowersCount = (TextView) view.findViewById(R.id.rank1FollowersCount);
-        rank2BloggerImageView = (ImageView) view.findViewById(R.id.rank2BloggerImageView);
-        rank2BloggerNameTV = (TextView) view.findViewById(R.id.rank2BloggerNameTV);
-        rank2FollowersCount = (TextView) view.findViewById(R.id.rank2FollowersCount);
         topBloggerRecyclerView = (RecyclerView) view.findViewById(R.id.topBloggerRecyclerView);
 
         topBloggerLabelTV.setOnClickListener(this);
+        improveRankTextView.setOnClickListener(this);
 
         contributorListResults = new ArrayList<>();
         topBloggerAdapter = new RankingTopBloggerAdapter(getActivity(), contributorListResults, this);
@@ -205,42 +204,30 @@ public class RankingInfoTabFragment extends BaseFragment implements View.OnClick
             UserDetailResponse responseData = (UserDetailResponse) response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                 if (responseData.getData().get(0).getResult().getRanks() == null || responseData.getData().get(0).getResult().getRanks().size() == 0) {
-                    LanguageRanksModel languageRanksModel = new LanguageRanksModel();
-                    languageRanksModel.setRank(-1);
-                    languageRanksModel.setLangKey("");
-//                    addRankView(languageRanksModel);
-//                    rankViewFlipper.setAutoStart(false);
-//                    rankViewFlipper.stopFlipping();
+                    myRankTextView.setText("--");
+                    languageTextView.setText("");
                 } else if (responseData.getData().get(0).getResult().getRanks().size() < 2) {
-//                    addRankView(responseData.getData().get(0).getResult().getRanks().get(0));
                     myRankTextView.setText("" + responseData.getData().get(0).getResult().getRanks().get(0).getRank());
                     if (AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(0).getLangKey())) {
                         languageTextView.setText(getString(R.string.ranking_in) + " ENGLISH");
                     } else {
                         languageTextView.setText(getString(R.string.ranking_in) + " " + AppUtils.getLangModelForLanguage(getActivity(), responseData.getData().get(0).getResult().getRanks().get(0).getLangKey()).getDisplay_name());
                     }
-
-//                    rankViewFlipper.setAutoStart(false);
-//                    rankViewFlipper.stopFlipping();
                 } else {
                     for (int i = 0; i < responseData.getData().get(0).getResult().getRanks().size(); i++) {
                         if (AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(i).getLangKey())) {
-//                            addRankView(responseData.getData().get(0).getResult().getRanks().get(i));
-                            myRankTextView.setText("" + responseData.getData().get(0).getResult().getRanks().get(i).getRank());
-                            languageTextView.setText(getString(R.string.ranking_in) + " ENGLISH");
-                            return;
+                            multipleRankList.add(responseData.getData().get(0).getResult().getRanks().get(i));
+                            break;
                         }
                     }
                     Collections.sort(responseData.getData().get(0).getResult().getRanks());
                     for (int i = 0; i < responseData.getData().get(0).getResult().getRanks().size(); i++) {
                         if (!AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(i).getLangKey())) {
-                            myRankTextView.setText("" + responseData.getData().get(0).getResult().getRanks().get(i).getRank());
-                            languageTextView.setText(getString(R.string.ranking_in) + " " + AppUtils.getLangModelForLanguage(getActivity(), responseData.getData().get(0).getResult().getRanks().get(0).getLangKey()).getDisplay_name());
-                            return;
+                            multipleRankList.add(responseData.getData().get(0).getResult().getRanks().get(i));
                         }
                     }
+                    MyCityAnimationsUtil.animate(getActivity(), rankingContainer, multipleRankList, 0, true);
                 }
-
             } else {
             }
         }
@@ -305,6 +292,14 @@ public class RankingInfoTabFragment extends BaseFragment implements View.OnClick
             case R.id.topBloggerLabel:
                 popup.show();
                 break;
+            case R.id.improveRankTextView:
+                ImproveRankPageViewsSocialFragment analyticsStatsDialogFragment = new ImproveRankPageViewsSocialFragment();
+                Bundle b = new Bundle();
+                b.putString(AppConstants.ANALYTICS_INFO_TYPE, AppConstants.ANALYTICS_INFO_RANK_CALCULATION);
+                analyticsStatsDialogFragment.setArguments(b);
+                ((RankingActivity) getActivity()).addFragment(analyticsStatsDialogFragment, b, false);
+                break;
+
         }
     }
 

@@ -20,7 +20,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -58,13 +57,9 @@ import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
 import com.mycity4kids.ui.activity.ArticleModerationOrShareActivity;
 import com.mycity4kids.ui.activity.BlogSetupActivity;
-import com.mycity4kids.ui.activity.BloggerDashboardActivity;
-import com.mycity4kids.ui.activity.BloggerProfileActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.adapter.ArticleTagsImagesGridAdapter;
-import com.mycity4kids.ui.adapter.MyFunnyVideosListingAdapter;
 import com.mycity4kids.ui.fragment.CompleteProfileDialogFragment;
-import com.mycity4kids.ui.fragment.PublishedArticleShareDialogFragment;
 import com.mycity4kids.utils.PermissionUtil;
 import com.squareup.picasso.Picasso;
 import com.yalantis.ucrop.UCrop;
@@ -498,7 +493,6 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                         Log.e("blog setup in update ui", true + "");
                         editor.commit();
                         publishArticleRequest();
-
                     } else if (responseModel.getData().getResult().getIsSetup() == 0) {
                         Intent intent = new Intent(ArticleImageTagUploadActivity.this, BlogSetupActivity.class);
                         startActivity(intent);

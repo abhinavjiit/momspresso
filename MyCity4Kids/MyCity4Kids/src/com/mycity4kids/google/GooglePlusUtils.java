@@ -23,8 +23,7 @@ public class GooglePlusUtils implements GoogleApiClient.ConnectionCallbacks, Goo
     private GoogleApiClient mPlusClient;
     //  private static final int REQUEST_CODE_GET_GOOGLE_PLAY_SERVICES = 2;
 
-    public static final String SCOPES = "https://www.googleapis.com/auth/plus.login " + " email "
-            +"https://www.googleapis.com/auth/drive.file";
+    public static final String SCOPES = "https://www.googleapis.com/auth/plus.login " + " email ";
     private boolean isGooglePlusConnecting = false;
 
 

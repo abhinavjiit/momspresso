@@ -200,17 +200,13 @@ public class LoadingActivity extends BaseActivity {
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     ArrayList<String> mDatalist = (ArrayList<String>) responseData.getData();
                     if (mDatalist.size() < AppConstants.MINIMUM_TOPICS_FOLLOW_REQUIREMENT) {
-                        Intent intent = new Intent(LoadingActivity.this, TopicsSplashActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putStringArrayListExtra("followedTopics", mDatalist);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        Intent intent = new Intent(LoadingActivity.this, DashboardActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                        finish();
+                        ArrayList<String> topicList = (ArrayList<String>) responseData.getData();
+                        SharedPrefUtils.setFollowedTopicsCount(LoadingActivity.this, topicList.size());
                     }
+                    Intent intent = new Intent(LoadingActivity.this, DashboardActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    finish();
                 } else {
                     showToast(responseData.getReason());
                 }

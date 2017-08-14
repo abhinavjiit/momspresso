@@ -83,6 +83,7 @@ public interface TopicsCategoryAPI {
     @GET("v1/categories/trending/{lowerLimit}/{upperLimit}/{articleCount}")
     Call<TrendingListingResponse> getTrendingTopicAndArticles(@Path("lowerLimit") String lowerLimit,
                                                               @Path("upperLimit") String upperLimit,
-                                                              @Path("articleCount") String articleCount);
+                                                              @Path("articleCount") String articleCount,
+                                                              @Query("lang") String lang);
 
 }

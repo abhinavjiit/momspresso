@@ -12,6 +12,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.adapter.UserActivitiesPagerAdapter;
+import com.mycity4kids.utils.AppUtils;
 
 /**
  * Created by hemant on 3/8/17.
@@ -51,7 +52,7 @@ public class UserActivitiesActivity extends BaseActivity {
             tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.user_activities_tabs_comment)));
             adapter = new UserActivitiesPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), authorId, false);
         }
-
+        AppUtils.changeTabsFont(this, tabLayout);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

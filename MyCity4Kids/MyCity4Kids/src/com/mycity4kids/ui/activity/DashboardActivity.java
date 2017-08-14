@@ -16,7 +16,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -34,10 +33,7 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
-import com.joanzapata.iconify.widget.IconButton;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -53,7 +49,6 @@ import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.listener.OnButtonClicked;
 import com.mycity4kids.models.response.DeepLinkingResposnse;
 import com.mycity4kids.models.response.DeepLinkingResult;
-import com.mycity4kids.models.response.LanguageConfigModel;
 import com.mycity4kids.models.version.RateVersion;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.DeepLinkingAPI;
@@ -72,7 +67,6 @@ import com.mycity4kids.ui.fragment.FragmentHomeCategory;
 import com.mycity4kids.ui.fragment.FragmentKidProfile;
 import com.mycity4kids.ui.fragment.FragmentMC4KHome;
 import com.mycity4kids.ui.fragment.FragmentMC4KHomeNew;
-import com.mycity4kids.ui.fragment.FragmentSetting;
 import com.mycity4kids.ui.fragment.MyAccountProfileFragment;
 import com.mycity4kids.ui.fragment.NotificationFragment;
 import com.mycity4kids.ui.fragment.RateAppDialogFragment;
@@ -80,12 +74,8 @@ import com.mycity4kids.ui.fragment.SendFeedbackFragment;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.PermissionUtil;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import life.knowledge4.videotrimmer.utils.FileUtils;
 import q.rorbin.badgeview.Badge;
@@ -116,11 +106,13 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private TextView itemMessagesBadgeTextView;
     private TextView toolbarTitleTextView;
     private FrameLayout badgeLayout;
-    private ImageView searchAllImageView, filterEventsImageView;
+    private ImageView searchAllImageView;
     private BottomNavigationViewEx bottomNavigationView;
     private RelativeLayout toolbarRelativeLayout;
     private RelativeLayout rootLayout;
-
+    private ImageView downArrowImageView;
+    private TextView selectOptToolbarTitle;
+    private TextView readAllNotificationTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,13 +148,15 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 //        mUsernName = (TextView) findViewById(R.id.txvUserName);
         rootLayout = (RelativeLayout) findViewById(R.id.rootLayout);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        downArrowImageView = (ImageView) findViewById(R.id.downArrowImageView);
 //        profileImage = (ImageView) findViewById(R.id.imgProfile);
 //        languageContainer = (FlowLayout) findViewById(R.id.languageContainer);
         bottomNavigationView = (BottomNavigationViewEx) findViewById(R.id.navigation);
         toolbarRelativeLayout = (RelativeLayout) mToolbar.findViewById(R.id.toolbarRelativeLayout);
         toolbarTitleTextView = (TextView) mToolbar.findViewById(R.id.toolbarTitle);
         searchAllImageView = (ImageView) mToolbar.findViewById(R.id.searchAllImageView);
-        filterEventsImageView = (ImageView) mToolbar.findViewById(R.id.filterEventsImageView);
+        selectOptToolbarTitle = (TextView) findViewById(R.id.selectOptToolbarTitle);
+        readAllNotificationTextView = (TextView) findViewById(R.id.readAllTextView);
 
         bottomNavigationView.enableShiftingMode(false);
         bottomNavigationView.enableItemShiftingMode(false);
@@ -173,7 +167,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
         toolbarTitleTextView.setOnClickListener(this);
         searchAllImageView.setOnClickListener(this);
-        filterEventsImageView.setOnClickListener(this);
+        readAllNotificationTextView.setOnClickListener(this);
         setSupportActionBar(mToolbar);
 
 //        mUsernName.setText(SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name());
@@ -254,13 +248,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             mBundle.putString(Constants.CATEGOTY_NAME, "Events & workshop");
             fragment.setArguments(mBundle);
             replaceFragment(fragment, mBundle, true);
-        } else if (Constants.SETTINGS_FRAGMENT.equals(fragmentToLoad)) {
-            setTitle("Settings");
-            Bundle bundle = new Bundle();
-            bundle.putString("bio", getIntent().getStringExtra("bio"));
-            bundle.putString("firstName", getIntent().getStringExtra("firstName"));
-            bundle.putString("lastName", getIntent().getStringExtra("lastName"));
-            replaceFragment(new FragmentSetting(), bundle, true);
+        } else if (Constants.PROFILE_FRAGMENT.equals(fragmentToLoad)) {
+            MyAccountProfileFragment fragment0 = new MyAccountProfileFragment();
+            Bundle mBundle0 = new Bundle();
+            fragment0.setArguments(mBundle0);
+            addFragment(fragment0, mBundle0, true);
         } else {
             replaceFragment(new FragmentMC4KHomeNew(), null, false);
         }
@@ -291,7 +283,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 String authorId = notificationExtras.getString("userId");
                 String blogSlug = notificationExtras.getString("blogSlug");
                 String titleSlug = notificationExtras.getString("titleSlug");
-                Intent intent1 = new Intent(DashboardActivity.this, ArticlesAndBlogsDetailsActivity.class);
+                Intent intent1 = new Intent(DashboardActivity.this, ArticleDetailsContainerActivity.class);
                 intent1.putExtra("fromNotification", true);
                 intent1.putExtra(Constants.ARTICLE_ID, articleId);
                 intent1.putExtra(Constants.AUTHOR_ID, authorId);
@@ -337,13 +329,15 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     intent1.putExtra(AppConstants.AUTHOR_NAME, "");
                     intent1.putExtra(Constants.FROM_SCREEN, "Notification");
                     startActivity(intent1);
+                } else {
+                    fragmentToLoad = Constants.PROFILE_FRAGMENT;
                 }
             } else if (notificationExtras.getString("type").equalsIgnoreCase("upcoming_event_list")) {
 
                 fragmentToLoad = Constants.BUSINESS_EVENTLIST_FRAGMENT;
 //                intent.getExtras().putString(Constants.LOAD_FRAGMENT, Constants.BUSINESS_EVENTLIST_FRAGMENT);
             } else if (notificationExtras.getString("type").equalsIgnoreCase(AppConstants.APP_SETTINGS_DEEPLINK)) {
-                Intent intent1 = new Intent(this, SettingsActivity.class);
+                Intent intent1 = new Intent(this, AppSettingsActivity.class);
                 intent1.putExtra("fromNotification", true);
                 intent1.putExtra("load_fragment", Constants.SETTINGS_FRAGMENT);
                 startActivity(intent1);
@@ -420,39 +414,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 replaceFragment(fragment, mBundle, true);
             }
             deepLinkUrl = intent.getStringExtra(AppConstants.DEEP_LINK_URL);
-        }
-    }
-
-    private void populateLanguagesInMenu() {
-        try {
-            FileInputStream fileInputStream = openFileInput(AppConstants.LANGUAGES_JSON_FILE);
-            String fileContent = AppUtils.convertStreamToString(fileInputStream);
-//            ConfigResult res = new Gson().fromJson(fileContent, ConfigResult.class);
-            LinkedHashMap<String, LanguageConfigModel> retMap = new Gson().fromJson(
-                    fileContent, new TypeToken<LinkedHashMap<String, LanguageConfigModel>>() {
-                    }.getType()
-            );
-            Log.d("Map", "" + retMap.toString());
-            for (final Map.Entry<String, LanguageConfigModel> entry : retMap.entrySet()) {
-                final TextView view = (TextView) getLayoutInflater().inflate(R.layout.language_navigation_menu_item, null);
-                view.setText(entry.getValue().getDisplay_name());
-                view.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent languageIntent = new Intent(DashboardActivity.this, FilteredTopicsArticleListingActivity.class);
-                        languageIntent.putExtra("selectedTopics", entry.getValue().getId());
-                        languageIntent.putExtra("displayName", entry.getValue().getDisplay_name());
-                        languageIntent.putExtra("categoryName", entry.getValue().getName());
-                        languageIntent.putExtra("isLanguage", true);
-                        languageIntent.putExtra(Constants.FROM_SCREEN, "Navigation Menu");
-                        startActivity(languageIntent);
-                    }
-                });
-//                languageContainer.addView(view);
-            }
-        } catch (FileNotFoundException ffe) {
-            Crashlytics.logException(ffe);
-            Log.d("MC4kException", Log.getStackTraceString(ffe));
         }
     }
 
@@ -537,39 +498,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         // according to fragment change it
         final Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
         if (topFragment instanceof FragmentMC4KHome) {
-            getMenuInflater().inflate(R.menu.menu_home, menu);
-            MenuItem itemMessages = menu.findItem(R.id.notification_center);
 
-            badgeLayout = (FrameLayout) MenuItemCompat.getActionView(itemMessages);
-            String notifCount = "";
-            if (null != itemMessagesBadgeTextView && itemMessagesBadgeTextView.getText() != null) {
-                notifCount = itemMessagesBadgeTextView.getText().toString();
-            }
-            itemMessagesBadgeTextView = (TextView) badgeLayout.findViewById(R.id.badge_textView);
-            itemMessagesBadgeTextView.setText(notifCount);
-
-            if (StringUtils.isNullOrEmpty(itemMessagesBadgeTextView.getText().toString())) {
-                itemMessagesBadgeTextView.setVisibility(View.GONE); // initially hidden
-            }
-
-            IconButton iconButtonMessages = (IconButton) badgeLayout.findViewById(R.id.badge_icon_button);
-//            iconButtonMessages.setText("{fa-envelope}");
-            iconButtonMessages.setTextColor(ContextCompat.getColor(this, R.color.grey));
-
-            iconButtonMessages.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent wintent = new Intent(getApplicationContext(), NotificationCenterListActivity.class);
-                    startActivity(wintent);
-                }
-            });
-            itemMessagesBadgeTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent wintent = new Intent(getApplicationContext(), NotificationCenterListActivity.class);
-                    startActivity(wintent);
-                }
-            });
         } else if (topFragment instanceof FragmentFamilyDetail) {
 
             getMenuInflater().inflate(R.menu.forgot_password, menu);
@@ -772,14 +701,14 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 addFragment(fragment1, mBundle1, true);
                 break;
             case R.id.searchAllImageView:
-                Intent searchIntent = new Intent(getApplicationContext(), SearchAllActivity.class);
+                Intent searchIntent = new Intent(this, SearchAllActivity.class);
                 searchIntent.putExtra(Constants.FILTER_NAME, "");
                 searchIntent.putExtra(Constants.TAB_POSITION, 0);
                 startActivity(searchIntent);
                 break;
-            case R.id.filterEventsImageView:
-                if (topFragment instanceof FragmentBusinesslistEvents) {
-                    ((FragmentBusinesslistEvents) topFragment).toggleFilter();
+            case R.id.readAllTextView:
+                if (topFragment instanceof NotificationFragment) {
+                    ((NotificationFragment) topFragment).markAllNotificationAsRead();
                 }
                 break;
             default:
@@ -1133,7 +1062,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     private void renderAppSettingsScreen(DeepLinkingResult data) {
         if (!StringUtils.isNullOrEmpty(data.getId())) {
-            Intent intent = new Intent(DashboardActivity.this, SettingsActivity.class);
+            Intent intent = new Intent(DashboardActivity.this, AppSettingsActivity.class);
             intent.putExtra("load_fragment", Constants.SETTINGS_FRAGMENT);
             startActivity(intent);
         }
@@ -1245,10 +1174,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void onBackStackChanged() {
         final Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-        System.out.println("====================================================changeeeeeeeeeeeeeeeeeeeeeeeeee" + topFragment);
         Menu menu = bottomNavigationView.getMenu();
         searchAllImageView.setVisibility(View.VISIBLE);
-        filterEventsImageView.setVisibility(View.GONE);
+        selectOptToolbarTitle.setVisibility(View.GONE);
+        toolbarTitleTextView.setVisibility(View.VISIBLE);
+        downArrowImageView.setVisibility(View.INVISIBLE);
+        readAllNotificationTextView.setVisibility(View.GONE);
         if (null != topFragment && topFragment instanceof ExploreArticleListingTypeFragment) {
             String fragType = "";
             if (topFragment.getArguments() != null) {
@@ -1256,14 +1187,17 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
             mToolbar.setVisibility(View.VISIBLE);
             toolbarTitleTextView.setOnClickListener(null);
+            toolbarTitleTextView.setVisibility(View.GONE);
+            downArrowImageView.setVisibility(View.GONE);
+            toolbarRelativeLayout.setVisibility(View.VISIBLE);
+            selectOptToolbarTitle.setVisibility(View.VISIBLE);
             menu.findItem(R.id.action_home).setChecked(true);
             if (fragType.equals("search")) {
-                toolbarTitleTextView.setText(getString(R.string.search_topics_toolbar_title));
+                selectOptToolbarTitle.setText(getString(R.string.search_topics_toolbar_title));
             } else {
-                toolbarTitleTextView.setText(getString(R.string.home_screen_select_an_option_title));
+                selectOptToolbarTitle.setText(getString(R.string.home_screen_select_an_option_title));
             }
 
-            toolbarRelativeLayout.setVisibility(View.VISIBLE);
             setSupportActionBar(mToolbar);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -1278,17 +1212,20 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         } else {
             mToolbar.setVisibility(View.VISIBLE);
+            toolbarTitleTextView.setOnClickListener(null);
             if (null != topFragment && topFragment instanceof MyAccountProfileFragment) {
-                toolbarTitleTextView.setOnClickListener(null);
                 toolbarTitleTextView.setText(getString(R.string.home_screen_profile_title));
+                toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.myprofile_toolbar_title));
                 menu.findItem(R.id.action_profile).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
                 setSupportActionBar(mToolbar);
                 getSupportActionBar().setDisplayShowHomeEnabled(false);
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             } else if (null != topFragment && topFragment instanceof NotificationFragment) {
-                toolbarTitleTextView.setOnClickListener(null);
                 toolbarTitleTextView.setText(getString(R.string.home_screen_notification_title));
+                toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.notification_toolbar_title));
+                searchAllImageView.setVisibility(View.GONE);
+                readAllNotificationTextView.setVisibility(View.VISIBLE);
                 menu.findItem(R.id.action_notification).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
                 setSupportActionBar(mToolbar);
@@ -1297,49 +1234,47 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             } else if (null != topFragment && topFragment instanceof FragmentMC4KHomeNew) {
                 toolbarTitleTextView.setOnClickListener(this);
                 toolbarTitleTextView.setText(getString(R.string.home_screen_trending_title));
+                toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.home_toolbar_titlecolor));
                 menu.findItem(R.id.action_home).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
+                downArrowImageView.setVisibility(View.VISIBLE);
                 setSupportActionBar(mToolbar);
                 getSupportActionBar().setDisplayShowHomeEnabled(false);
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             } else if (null != topFragment && topFragment instanceof AddArticleVideoFragment) {
-                toolbarTitleTextView.setOnClickListener(null);
-                toolbarTitleTextView.setText(getString(R.string.home_screen_editor_title));
                 menu.findItem(R.id.action_write).setChecked(true);
                 mToolbar.setVisibility(View.GONE);
             } else if (null != topFragment && topFragment instanceof TopicsListingFragment) {
-                toolbarTitleTextView.setOnClickListener(null);
                 toolbarTitleTextView.setText(mToolbarTitle);
+                toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.notification_toolbar_title));
                 menu.findItem(R.id.action_home).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
                 setSupportActionBar(mToolbar);
                 getSupportActionBar().setDisplayShowHomeEnabled(false);
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             } else if (null != topFragment && topFragment instanceof ExploreFragment) {
-                toolbarTitleTextView.setOnClickListener(null);
                 toolbarTitleTextView.setText(getString(R.string.home_screen_explore_title));
+                toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.notification_toolbar_title));
                 menu.findItem(R.id.action_location).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
                 setSupportActionBar(mToolbar);
                 getSupportActionBar().setDisplayShowHomeEnabled(false);
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             } else if (null != topFragment && topFragment instanceof FragmentBusinesslistEvents) {
-                toolbarTitleTextView.setOnClickListener(null);
                 toolbarTitleTextView.setText(getString(R.string.home_screen_upcoming_events_title));
+                toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.notification_toolbar_title));
                 menu.findItem(R.id.action_location).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
                 searchAllImageView.setVisibility(View.GONE);
-//                filterEventsImageView.setVisibility(View.GONE);
                 setSupportActionBar(mToolbar);
                 getSupportActionBar().setDisplayShowHomeEnabled(false);
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             } else if (null != topFragment && topFragment instanceof FragmentHomeCategory) {
-                toolbarTitleTextView.setOnClickListener(null);
                 toolbarTitleTextView.setText(getString(R.string.home_screen_kids_res_title));
+                toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.notification_toolbar_title));
                 menu.findItem(R.id.action_location).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
                 searchAllImageView.setVisibility(View.GONE);
-//                filterEventsImageView.setVisibility(View.GONE);
                 setSupportActionBar(mToolbar);
                 getSupportActionBar().setDisplayShowHomeEnabled(false);
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
@@ -1356,4 +1291,5 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 .bindTarget(bottomNavigationView.getBottomNavigationItemView(position));
 
     }
+
 }

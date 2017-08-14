@@ -5,10 +5,17 @@
     android:background="@color/white"
     android:orientation="vertical">
 
+    <View
+        android:id="@+id/toolbarUnderline"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/login_grey" />
+
     <ListView
         android:id="@+id/notificationListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/toolbarUnderline"
         android:divider="@color/blog_setup.underline"
         android:dividerHeight="1dp" />
 

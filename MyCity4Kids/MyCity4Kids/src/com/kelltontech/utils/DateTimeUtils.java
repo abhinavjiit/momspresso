@@ -256,6 +256,19 @@ public class DateTimeUtils {
         }
     }
 
+    public static boolean isValidDate(String str_date) {
+        try {
+            java.text.DateFormat formatter;
+            formatter = new SimpleDateFormat("dd-MM-yyyy");
+            // you can change format of date
+            Date date = formatter.parse(str_date);
+            return true;
+        } catch (ParseException e) {
+            System.out.println("Exception :" + e);
+            return false;
+        }
+    }
+
     public static long convertStringToTimestamp(String str_date) {
         try {
             java.text.DateFormat formatter;

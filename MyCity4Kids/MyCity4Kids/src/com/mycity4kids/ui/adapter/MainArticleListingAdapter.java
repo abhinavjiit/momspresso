@@ -134,6 +134,7 @@ public class MainArticleListingAdapter extends BaseAdapter {
 
                 holder.authorTypeTextView = (TextView) view.findViewById(R.id.authorTypeTextView);
                 holder.bookmarkArticleImageView = (ImageView) view.findViewById(R.id.bookmarkArticleImageView);
+                holder.watchLaterImageView = (ImageView) view.findViewById(R.id.watchLaterImageView);
                 view.setTag(holder);
             } else {
                 holder = (ViewHolder) view.getTag();
@@ -229,11 +230,35 @@ public class MainArticleListingAdapter extends BaseAdapter {
                 holder.videoIndicatorImageView.setVisibility(View.INVISIBLE);
             }
 
-            if (articleDataModelsNew.get(position).getListingBookmarkStatus() == 0) {
-                holder.bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
+            if ("1".equals(articleDataModelsNew.get(position).getIsMomspresso())) {
+                holder.bookmarkArticleImageView.setVisibility(View.INVISIBLE);
+                holder.watchLaterImageView.setVisibility(View.VISIBLE);
+
+                if (articleDataModelsNew.get(position).getListingWatchLaterStatus() == 0) {
+                    holder.watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch));
+                } else {
+                    holder.watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch_added));
+                }
             } else {
-                holder.bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
+                holder.bookmarkArticleImageView.setVisibility(View.VISIBLE);
+                holder.watchLaterImageView.setVisibility(View.INVISIBLE);
+
+                if (articleDataModelsNew.get(position).getListingBookmarkStatus() == 0) {
+                    holder.bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
+                } else {
+                    holder.bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
+                }
             }
+
+            holder.watchLaterImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    addRemoveWatchLater(articleDataModelsNew.get(position).getListingWatchLaterStatus(), articleDataModelsNew.get(position).getId());
+                    articleDataModelsNew.get(position).setListingWatchLaterStatus(1);
+                    holder.watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch_added));
+                }
+            });
+
             holder.bookmarkArticleImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -243,17 +268,6 @@ public class MainArticleListingAdapter extends BaseAdapter {
                 }
             });
 
-//            if (type == 0) {
-//                holder.languageFeedTextView.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//
-//                        Intent resultIntent = new Intent(mContext, SettingsActivity.class);
-//                        resultIntent.putExtra("load_fragment", Constants.LANGUAGE_FRAGMENT);
-//                        mContext.startActivity(resultIntent);
-//                    }
-//                });
-//            }
         } catch (Exception ex) {
             Crashlytics.logException(ex);
             Log.d("MC4kException", Log.getStackTraceString(ex));
@@ -267,12 +281,22 @@ public class MainArticleListingAdapter extends BaseAdapter {
         if (bookmarkStatus == 0) {
             ArticleDetailRequest articleDetailRequest = new ArticleDetailRequest();
             articleDetailRequest.setArticleId(articleId);
-            bookmarkStatus = 1;
-//            Utils.pushArticleBookmarkUnbookmarkEvent(getActivity(), GTMEventType.BOOKMARK_ARTICLE_CLICK_EVENT, "Article Details", userDynamoId,
-//                    articleId, author + "-" + authorId);
             Retrofit retro = BaseApplication.getInstance().getRetrofit();
             articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
             Call<AddBookmarkResponse> call = articleDetailsAPI.addBookmark(articleDetailRequest);
+            call.enqueue(addBookmarkResponseCallback);
+        }
+
+    }
+
+    private void addRemoveWatchLater(int bookmarkStatus, String articleId) {
+
+        if (bookmarkStatus == 0) {
+            ArticleDetailRequest articleDetailRequest = new ArticleDetailRequest();
+            articleDetailRequest.setArticleId(articleId);
+            Retrofit retro = BaseApplication.getInstance().getRetrofit();
+            articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
+            Call<AddBookmarkResponse> call = articleDetailsAPI.addVideoWatchLater(articleDetailRequest);
             call.enqueue(addBookmarkResponseCallback);
         }
 
@@ -310,6 +334,7 @@ public class MainArticleListingAdapter extends BaseAdapter {
         TextView recommendCountTextView;
         TextView authorTypeTextView;
         ImageView bookmarkArticleImageView;
+        ImageView watchLaterImageView;
         TextView rankTextView;
         FlowLayout flowLayout;
         TextView popularSubCatTextView1;

@@ -79,7 +79,7 @@
                 android:layout_below="@+id/imgProfile"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
-                android:text="Anupama Singh"
+                android:text=""
                 android:textColor="@color/blogger_profile.name"
                 android:textSize="15sp"
                 app:fontName="oswald_regular.ttf" />
@@ -91,7 +91,7 @@
                 android:layout_below="@+id/authorNameTextView"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="8dp"
-                android:text="Blogger"
+                android:text=""
                 android:textColor="@color/blogger_profile.author_type"
                 android:textSize="12sp"
                 app:fontName="oswald_regular.ttf" />
@@ -109,7 +109,7 @@
                 android:layout_marginStart="40dp"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
-                android:text="A mother who believes in creating shitty stories. Loves to beat the shit out of her children.With Slipper as the choice of weapon she can bring upon heavenly judgement."
+                android:text=""
                 android:textColor="@color/blogger_profile.bio"
                 android:textSize="13sp"
                 app:fontName="oswald.ttf" />
@@ -154,35 +154,6 @@
             android:layout_below="@+id/personalDetailsContainer">
 
             <LinearLayout
-                android:id="@+id/followingContainer"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@color/blogger_profile.following_bg"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <com.mycity4kids.widget.CustomFontTextView
-                    android:id="@+id/followingCountTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="--"
-                    android:textColor="@color/blogger_profile.following_label"
-                    android:textSize="12sp"
-                    app:fontName="oswald_regular.ttf" />
-
-                <com.mycity4kids.widget.CustomFontTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:text="@string/blogger_profile.following_label"
-                    android:textColor="@color/blogger_profile.following_label"
-                    android:textSize="12sp"
-                    app:fontName="oswald.ttf" />
-            </LinearLayout>
-
-            <LinearLayout
                 android:id="@+id/followerContainer"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -212,6 +183,36 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/followingContainer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/blogger_profile.following_bg"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/followingCountTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="--"
+                    android:textColor="@color/blogger_profile.following_label"
+                    android:textSize="12sp"
+                    app:fontName="oswald_regular.ttf" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/blogger_profile.following_label"
+                    android:textColor="@color/blogger_profile.following_label"
+                    android:textSize="12sp"
+                    app:fontName="oswald.ttf" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/rankContainer"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -290,7 +291,7 @@
                     android:ellipsize="end"
                     android:maxLines="2"
                     android:padding="5dp"
-                    android:text="mom why can't you be like "
+                    android:text=""
                     android:textColor="@color/white"
                     android:textSize="11sp" />
             </RelativeLayout>
@@ -325,7 +326,7 @@
                     android:ellipsize="end"
                     android:maxLines="2"
                     android:padding="5dp"
-                    android:text="mom why can't you be like "
+                    android:text=""
                     android:textColor="@color/white"
                     android:textSize="11sp" />
             </RelativeLayout>
@@ -360,7 +361,7 @@
                     android:ellipsize="end"
                     android:maxLines="2"
                     android:padding="5dp"
-                    android:text="mom why can't you be ld wd ad aw da wd awdike "
+                    android:text=""
                     android:textColor="@color/white"
                     android:textSize="11sp" />
 
@@ -408,7 +409,6 @@
             android:gravity="center_vertical"
             android:paddingLeft="10dp"
             android:text="@string/blogger_profile.section.videos_label"
-            android:visibility="gone"
             app:fontName="oswald.ttf" />
 
         <View
@@ -420,8 +420,7 @@
             android:layout_marginLeft="40dp"
             android:layout_marginRight="20dp"
             android:layout_marginStart="40dp"
-            android:background="@color/light_grey1"
-            android:visibility="gone" />
+            android:background="@color/light_grey1" />
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/activitySectionTextView"
@@ -467,7 +466,7 @@
             android:layout_marginLeft="40dp"
             android:layout_marginRight="20dp"
             android:layout_marginStart="40dp"
-            android:background="@color/light_grey1" />
+            android:background="@color/light_grey1"/>
 
     </RelativeLayout>
 </ScrollView>

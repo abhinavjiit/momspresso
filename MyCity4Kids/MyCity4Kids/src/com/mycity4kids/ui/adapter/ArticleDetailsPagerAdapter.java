@@ -17,11 +17,15 @@ import java.util.ArrayList;
 public class ArticleDetailsPagerAdapter extends FragmentStatePagerAdapter {
     private int mNumOfTabs;
     ArrayList<ArticleListingResult> articleList;
+    private boolean isSwipeNextAvailable = false;
 
     public ArticleDetailsPagerAdapter(FragmentManager fm, int NumOfTabs, ArrayList<ArticleListingResult> articleList) {
         super(fm);
         this.mNumOfTabs = NumOfTabs;
         this.articleList = articleList;
+        if (articleList != null && articleList.size() > 1) {
+            isSwipeNextAvailable = true;
+        }
     }
 
     @Override
@@ -48,6 +52,7 @@ public class ArticleDetailsPagerAdapter extends FragmentStatePagerAdapter {
         bundle.putString(Constants.ARTICLE_OPENED_FROM, "Notification Popup");
         bundle.putString(Constants.ARTICLE_INDEX, "-1");
         bundle.putBoolean("fromNotification", false);
+        bundle.putBoolean("swipeNext", isSwipeNextAvailable);
 
         fragment.setArguments(bundle);
         return fragment;

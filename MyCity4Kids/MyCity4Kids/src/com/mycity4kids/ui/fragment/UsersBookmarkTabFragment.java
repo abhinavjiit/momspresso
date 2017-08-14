@@ -22,9 +22,12 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.models.request.DeleteBookmarkRequest;
+import com.mycity4kids.models.response.AddBookmarkResponse;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.UserPublishedAndDraftsActivity;
@@ -48,6 +51,7 @@ public class UsersBookmarkTabFragment extends BaseFragment implements UsersBookm
     private boolean isLastPageReached = false;
     private boolean isReuqestRunning = false;
     private int limit = 15;
+    private int bookmarkDeletePos;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
 
     private UsersBookmarksRecycleAdapter adapter;
@@ -161,7 +165,6 @@ public class UsersBookmarkTabFragment extends BaseFragment implements UsersBookm
                     adapter.setListData(bookmarksList);
                     adapter.notifyDataSetChanged();
                     noBlogsTextView.setVisibility(View.VISIBLE);
-                    noBlogsTextView.setText("No articles found");
                 }
             } else {
                 noBlogsTextView.setVisibility(View.GONE);
@@ -204,8 +207,8 @@ public class UsersBookmarkTabFragment extends BaseFragment implements UsersBookm
                 startActivity(Intent.createChooser(shareIntent, "mycity4kids"));
                 break;
             case R.id.removeBookmarkTextView:
-                bookmarksList.remove(position);
-                adapter.notifyDataSetChanged();
+                bookmarkDeletePos = position;
+                hitDeleteBookmarkAPI(bookmarksList.get(position));
                 break;
             case R.id.rootView:
                 Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
@@ -226,4 +229,36 @@ public class UsersBookmarkTabFragment extends BaseFragment implements UsersBookm
                 break;
         }
     }
+
+    private void hitDeleteBookmarkAPI(ArticleListingResult bookmarkArticle) {
+        DeleteBookmarkRequest deleteBookmarkRequest = new DeleteBookmarkRequest();
+        deleteBookmarkRequest.setId(bookmarkArticle.getBookmarkId());
+        Retrofit retro = BaseApplication.getInstance().getRetrofit();
+        ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
+        Call<AddBookmarkResponse> call = articleDetailsAPI.deleteBookmark(deleteBookmarkRequest);
+        call.enqueue(removeBookmarkResponseCallback);
+    }
+
+    private Callback<AddBookmarkResponse> removeBookmarkResponseCallback = new Callback<AddBookmarkResponse>() {
+        @Override
+        public void onResponse(Call<AddBookmarkResponse> call, retrofit2.Response<AddBookmarkResponse> response) {
+            if (response == null || null == response.body()) {
+//                showToast("Something went wrong from server");
+                return;
+            }
+            AddBookmarkResponse responseData = (AddBookmarkResponse) response.body();
+            if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                bookmarksList.remove(bookmarkDeletePos);
+                adapter.notifyDataSetChanged();
+            } else {
+
+            }
+        }
+
+        @Override
+        public void onFailure(Call<AddBookmarkResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("RemoveBookmarkException", Log.getStackTraceString(t));
+        }
+    };
 }

@@ -205,18 +205,18 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
 
             getTopicLevelAndPrepareFilterData();
 
-            if (AppConstants.TOPIC_LEVEL_SUB_SUB_CATEGORY.equals(topicLevel) ||
-                    AppConstants.MOMSPRESSO_CATEGORYID.equals(selectedTopics) ||
-                    isLanguageListing) {
-                sortBgLayout.setVisibility(View.GONE);
-                bottomOptionMenu.setVisibility(View.GONE);
-            } else {
-                frameLayout.setVisibility(View.GONE);
-                fabMenu.setVisibility(View.GONE);
-                fabSort.setVisibility(View.GONE);
-                popularSortFAB.setVisibility(View.GONE);
-                recentSortFAB.setVisibility(View.GONE);
-            }
+//            if (AppConstants.TOPIC_LEVEL_SUB_SUB_CATEGORY.equals(topicLevel) ||
+//                    AppConstants.MOMSPRESSO_CATEGORYID.equals(selectedTopics) ||
+//                    isLanguageListing) {
+            sortBgLayout.setVisibility(View.GONE);
+            bottomOptionMenu.setVisibility(View.GONE);
+//            } else {
+//                frameLayout.setVisibility(View.GONE);
+//                fabMenu.setVisibility(View.GONE);
+//                fabSort.setVisibility(View.GONE);
+//                popularSortFAB.setVisibility(View.GONE);
+//                recentSortFAB.setVisibility(View.GONE);
+//            }
         } catch (FileNotFoundException e) {
             Crashlytics.logException(e);
             Log.d("FileNotFoundException", Log.getStackTraceString(e));
@@ -555,7 +555,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             FollowTopics[] res = new Gson().fromJson(fileContent, FollowTopics[].class);
             if (!checkCurrentCategoryExists(res)) {
                 if (AppConstants.TOPIC_LEVEL_SUB_CATEGORY.equals(topicLevel) || AppConstants.TOPIC_LEVEL_MAIN_CATEGORY.equals(topicLevel)) {
-                    titleTextView.setVisibility(View.VISIBLE);
+//                    titleTextView.setVisibility(View.VISIBLE);
                 } else {
                     titleTextView.setVisibility(View.GONE);
                 }
@@ -635,16 +635,16 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                             TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
                             createTopicsData(res);
                             getTopicLevelAndPrepareFilterData();
-                            if (AppConstants.TOPIC_LEVEL_SUB_SUB_CATEGORY.equals(topicLevel)) {
-                                sortBgLayout.setVisibility(View.GONE);
-                                bottomOptionMenu.setVisibility(View.GONE);
-                            } else {
-                                frameLayout.setVisibility(View.GONE);
-                                fabMenu.setVisibility(View.GONE);
-                                fabSort.setVisibility(View.GONE);
-                                popularSortFAB.setVisibility(View.GONE);
-                                recentSortFAB.setVisibility(View.GONE);
-                            }
+//                            if (AppConstants.TOPIC_LEVEL_SUB_SUB_CATEGORY.equals(topicLevel)) {
+                            sortBgLayout.setVisibility(View.GONE);
+                            bottomOptionMenu.setVisibility(View.GONE);
+//                            } else {
+//                                frameLayout.setVisibility(View.GONE);
+//                                fabMenu.setVisibility(View.GONE);
+//                                fabSort.setVisibility(View.GONE);
+//                                popularSortFAB.setVisibility(View.GONE);
+//                                recentSortFAB.setVisibility(View.GONE);
+//                            }
 //                            openFilterDialog();
                         } catch (FileNotFoundException e) {
                             Crashlytics.logException(e);
@@ -1020,7 +1020,20 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                                 // create duplicate entry for subcategories with no child
                                 if (responseData.getData().get(i).getChild().get(k).getChild().isEmpty()) {
                                     ArrayList<Topics> duplicateEntry = new ArrayList<Topics>();
-                                    duplicateEntry.add(responseData.getData().get(i).getChild().get(k));
+                                    //adding exact same object adds the object recursively producing stackoverflow exception when writing for Parcel.
+                                    //So need to create different object with same params
+                                    Topics dupChildTopic = new Topics();
+                                    dupChildTopic.setChild(new ArrayList<Topics>());
+                                    dupChildTopic.setId(responseData.getData().get(i).getChild().get(k).getId());
+                                    dupChildTopic.setIsSelected(responseData.getData().get(i).getChild().get(k).isSelected());
+                                    dupChildTopic.setParentId(responseData.getData().get(i).getChild().get(k).getParentId());
+                                    dupChildTopic.setDisplay_name(responseData.getData().get(i).getChild().get(k).getDisplay_name());
+                                    dupChildTopic.setParentName(responseData.getData().get(i).getChild().get(k).getParentName());
+                                    dupChildTopic.setPublicVisibility(responseData.getData().get(i).getChild().get(k).getPublicVisibility());
+                                    dupChildTopic.setShowInMenu(responseData.getData().get(i).getChild().get(k).getShowInMenu());
+                                    dupChildTopic.setSlug(responseData.getData().get(i).getChild().get(k).getSlug());
+                                    dupChildTopic.setTitle(responseData.getData().get(i).getChild().get(k).getTitle());
+                                    duplicateEntry.add(dupChildTopic);
                                     responseData.getData().get(i).getChild().get(k).setChild(duplicateEntry);
                                 }
                                 tempUpList.add(responseData.getData().get(i).getChild().get(k));

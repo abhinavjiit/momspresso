@@ -12,6 +12,7 @@
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         app:theme="@style/ToolbarTheme"
+        android:elevation="5dp"
         app:titleTextAppearance="@style/ToolbarTheme.Title">
 
         <RelativeLayout

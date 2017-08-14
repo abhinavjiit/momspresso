@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
@@ -48,6 +49,7 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
     private ArrayList<ArticleListingResult> articleDataModelsNew;
     private RecyclerView recyclerView;
     private RelativeLayout mLodingView;
+    private TextView noBlogsTextView;
 
     private UserPublishedArticleAdapter adapter;
 
@@ -66,9 +68,9 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
 
         Utils.pushOpenScreenEvent(getActivity(), "Search Articles Fragment Listing", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
 
-
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
+        noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
 
         if (getArguments() != null) {
             authorId = getArguments().getString(Constants.AUTHOR_ID);
@@ -166,13 +168,11 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
             if (null != articleDataModelsNew && !articleDataModelsNew.isEmpty()) {
                 //No more next results for search from pagination
             } else {
-                // No results for search
+                // No results
                 articleDataModelsNew.addAll(dataList);
                 adapter.setListData(articleDataModelsNew);
                 adapter.notifyDataSetChanged();
-                if (recyclerView.getVisibility() == View.VISIBLE) {
-//                    noArticleTextView.setVisibility(View.VISIBLE);
-                }
+                noBlogsTextView.setVisibility(View.VISIBLE);
             }
         } else {
             if (nextPageNumber == 1) {

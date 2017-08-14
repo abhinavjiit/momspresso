@@ -645,6 +645,15 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
             Toast.makeText(getActivity(), getString(R.string.app_settings_edit_profile_toast_user_bio_max)
                     + " " + MAX_WORDS + " " + getString(R.string.app_settings_edit_profile_toast_user_bio_words), Toast.LENGTH_SHORT).show();
             return false;
+        } else {
+            for (int position = 0; position < childInfoContainer.getChildCount(); position++) {
+                View innerLayout = (View) childInfoContainer.getChildAt(position);
+                TextView dobOfKidSpn = (TextView) innerLayout.findViewById(R.id.kidsDOBTextView);
+                if (StringUtils.isNullOrEmpty(dobOfKidSpn.getText().toString()) || !DateTimeUtils.isValidDate(dobOfKidSpn.getText().toString())) {
+                    Toast.makeText(getActivity(), getString(R.string.app_settings_edit_profile_toast_incorrect_date), Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            }
         }
         return true;
     }

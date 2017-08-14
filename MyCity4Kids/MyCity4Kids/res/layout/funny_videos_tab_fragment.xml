@@ -89,9 +89,6 @@
             android:id="@+id/fab_menu"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignBottom="@+id/scroll"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             android:layout_gravity="right|bottom"
             fab:fab_addButtonColorNormal="@color/transparent"
             fab:fab_addButtonColorPressed="@color/transparent"
@@ -104,23 +101,23 @@
                 android:id="@+id/recentSortFAB"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                fab:fab_colorNormal="@color/fab.pink"
-                fab:fab_colorPressed="@color/fab.pink"
-                fab:fab_icon="@drawable/recent"
+                fab:fab_colorNormal="@color/fab.white"
+                fab:fab_colorPressed="@color/fab.white"
+                fab:fab_icon="@drawable/ic_recent"
                 fab:fab_plusIconColor="@color/white_color"
                 fab:fab_size="mini"
-                fab:fab_title="Recent" />
+                fab:fab_title="@string/sort.recent" />
 
             <com.getbase.floatingactionbutton.FloatingActionButton
                 android:id="@+id/popularSortFAB"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                fab:fab_colorNormal="@color/fab.pink"
-                fab:fab_colorPressed="@color/fab.pink"
-                fab:fab_icon="@drawable/popular"
+                fab:fab_colorNormal="@color/fab.white"
+                fab:fab_colorPressed="@color/fab.white"
+                fab:fab_icon="@drawable/ic_popular"
                 fab:fab_plusIconColor="@color/white_color"
                 fab:fab_size="mini"
-                fab:fab_title="Popular" />
+                fab:fab_title="@string/sort.popular" />
         </com.getbase.floatingactionbutton.FloatingActionsMenu>
     </FrameLayout>
 
@@ -132,7 +129,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_gravity="right|bottom"
-        fab:fab_colorNormal="@color/fab.pink"
-        fab:fab_colorPressed="@color/fab.pink"
-        fab:fab_icon="@drawable/sort_icon" />
+        fab:fab_colorNormal="@color/fab.white"
+        fab:fab_colorPressed="@color/fab.white"
+        fab:fab_icon="@drawable/ic_flip" />
 </RelativeLayout>

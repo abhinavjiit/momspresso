@@ -178,53 +178,47 @@
                 android:layout_marginTop="9dp"
                 android:background="@color/light_grey1" />
 
-            <LinearLayout
-                android:id="@+id/articleWebView1"
+
+            <WebView
+                android:id="@+id/articleWebView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/webViewSeparator"
-                android:orientation="vertical">
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:autoLink="web"
+                android:background="@color/white_color"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-light"
+                android:minHeight="1000dp" />
 
-                <WebView
-                    android:id="@+id/articleWebView"
-                    android:layout_width="match_parent"
-                    android:layout_height="250dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:autoLink="web"
-                    android:background="@color/white_color"
-                    android:ellipsize="end"
-                    android:fontFamily="sans-serif-light"
-                    android:minHeight="1000dp" />
-            </LinearLayout>
+            <!--<LinearLayout-->
+            <!--android:id="@+id/readMoreContainerLL"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="100dp"-->
+            <!--android:layout_alignBottom="@+id/articleWebView1"-->
+            <!--android:background="@drawable/read_more_gradient_bg"-->
+            <!--android:gravity="center">-->
 
-            <LinearLayout
-                android:id="@+id/readMoreContainerLL"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_alignBottom="@+id/articleWebView1"
-                android:background="@drawable/read_more_gradient_bg"
-                android:gravity="center">
-
-                <TextView
-                    android:id="@+id/readMoreTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/read_more_button_bg"
-                    android:gravity="center"
-                    android:padding="15dp"
-                    android:text="@string/ad.read_more.text"
-                    android:textColor="@color/ad.readmore.text" />
-            </LinearLayout>
+            <!--<TextView-->
+            <!--android:id="@+id/readMoreTextView"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="@drawable/read_more_button_bg"-->
+            <!--android:gravity="center"-->
+            <!--android:padding="15dp"-->
+            <!--android:text="@string/ad.read_more.text"-->
+            <!--android:textColor="@color/ad.readmore.text" />-->
+            <!--</LinearLayout>-->
 
             <RelativeLayout
                 android:id="@+id/tagsLayoutContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/articleWebView1"
+                android:layout_below="@+id/articleWebView"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="4dp"
-                android:visibility="gone">
+                android:visibility="visible">
                 <!--<RelativeLayout-->
                 <!--android:id="@+id/tagsLayoutContainer"-->
                 <!--android:layout_width="match_parent"-->
@@ -467,24 +461,21 @@
         app:fab_plusIconColor="@color/white_color"
         app:fab_size="normal" />
 
-    <com.github.library.bubbleview.BubbleTextVew
-        android:id="@+id/recommendSuggestion"
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/swipeNextTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/bottom_Lout"
-        android:layout_marginBottom="32dp"
-        android:layout_toLeftOf="@+id/commentFloatingActionButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/article_swipe_hint_bg"
         android:gravity="center"
         android:padding="8dp"
-        android:text="@string/ad.recommendation.tootip_text"
+        android:text="@string/ad.swipe_tootip_text"
         android:textColor="@color/white_color"
-        android:visibility="invisible"
-        app:angle="5dp"
-        app:arrowHeight="8dp"
-        app:arrowLocation="right"
-        app:arrowPosition="12dp"
-        app:arrowWidth="8dp"
-        app:bubbleColor="@color/ad.recommend.tooltip.bg" />
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:fontName="oswald.ttf" />
 
     <LinearLayout
         android:id="@+id/bottom_Lout"

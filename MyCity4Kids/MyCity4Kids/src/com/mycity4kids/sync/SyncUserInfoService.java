@@ -101,7 +101,7 @@ public class SyncUserInfoService extends IntentService implements UpdateListener
                             fileContent, new TypeToken<LinkedHashMap<String, LanguageConfigModel>>() {
                             }.getType()
                     );
-
+                    new SaveUserInfoinDB().execute(responseData);
                     Map<String, String> subscribedContentLanguages = responseData.getData().get(0).getResult().getLangSubscription();
                     String filter = "0";
                     for (Map.Entry<String, String> entry : subscribedContentLanguages.entrySet()) {
@@ -112,12 +112,9 @@ public class SyncUserInfoService extends IntentService implements UpdateListener
                                 }
                             }
                         }
-//                        SharedPrefUtils.setLanguageConfig(SyncUserInfoService.this, entry.getKey(), entry.getValue());
                     }
 
                     SharedPrefUtils.setLanguageFilters(SyncUserInfoService.this, filter);
-
-                    new SaveUserInfoinDB().execute(responseData);
                 } else {
 //                    showToast(responseData.getReason());
                 }
@@ -324,7 +321,7 @@ public class SyncUserInfoService extends IntentService implements UpdateListener
         for (KidsModel kid : kidsList) {
             KidsInfo kidsInfo = new KidsInfo();
             kidsInfo.setName(kid.getName());
-            kidsInfo.setDate_of_birth(convertTime(""+kid.getBirthDay()));
+            kidsInfo.setDate_of_birth(convertTime("" + kid.getBirthDay()));
             kidsInfo.setColor_code(kid.getColorCode());
             kidsInfoArrayList.add(kidsInfo);
         }

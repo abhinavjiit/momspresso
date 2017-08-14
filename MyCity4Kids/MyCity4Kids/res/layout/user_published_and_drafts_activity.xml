@@ -25,8 +25,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="@string/subscribe_topics.toolbar.title"
-                android:textColor="@color/subscribe_topics.toolbar.title"
+                android:text="@string/user_article.toolbar.title"
+                android:textColor="@color/user_articles.toolbar.title"
                 android:textSize="20sp"
                 app:fontName="oswald_regular.ttf" />
 

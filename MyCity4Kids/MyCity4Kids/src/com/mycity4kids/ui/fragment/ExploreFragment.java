@@ -18,7 +18,6 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
-import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
@@ -41,10 +40,8 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ConfigAPIs;
 import com.mycity4kids.retrofitAPIsInterfaces.UserAttributeUpdateAPI;
 import com.mycity4kids.sync.PushTokenService;
-import com.mycity4kids.ui.activity.ArticleListingActivity;
 import com.mycity4kids.ui.activity.CityBestArticleListingActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
-import com.mycity4kids.ui.activity.ExploreArticleListingTypeFragment;
 import com.mycity4kids.utils.NearMyCity;
 
 import java.util.ArrayList;

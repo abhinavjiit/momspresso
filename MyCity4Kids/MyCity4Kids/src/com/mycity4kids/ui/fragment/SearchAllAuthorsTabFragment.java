@@ -28,6 +28,7 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.SearchAuthorResult;
 import com.mycity4kids.models.response.SearchResponse;
 import com.mycity4kids.retrofitAPIsInterfaces.SearchArticlesAuthorsAPI;
+import com.mycity4kids.ui.activity.BloggerDashboardActivity;
 import com.mycity4kids.ui.activity.BloggerProfileActivity;
 import com.mycity4kids.ui.activity.SearchArticlesAndAuthorsActivity;
 import com.mycity4kids.ui.adapter.SearchAuthorsListingAdapter;

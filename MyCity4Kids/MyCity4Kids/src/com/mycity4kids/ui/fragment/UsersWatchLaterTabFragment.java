@@ -17,17 +17,22 @@ import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
+import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.models.request.DeleteBookmarkRequest;
+import com.mycity4kids.models.response.AddBookmarkResponse;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.UserPublishedAndDraftsActivity;
 import com.mycity4kids.ui.adapter.UsersBookmarksRecycleAdapter;
+import com.mycity4kids.utils.AppUtils;
 
 import java.util.ArrayList;
 
@@ -47,6 +52,7 @@ public class UsersWatchLaterTabFragment extends BaseFragment implements UsersBoo
     private boolean isReuqestRunning = false;
     private int limit = 15;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
+    private int bookmarkDeletePos;
 
     private UsersBookmarksRecycleAdapter adapter;
 
@@ -160,7 +166,6 @@ public class UsersWatchLaterTabFragment extends BaseFragment implements UsersBoo
                     adapter.setListData(watchLaterList);
                     adapter.notifyDataSetChanged();
                     noBlogsTextView.setVisibility(View.VISIBLE);
-                    noBlogsTextView.setText("No articles found");
                 }
             } else {
                 noBlogsTextView.setVisibility(View.GONE);
@@ -186,8 +191,25 @@ public class UsersWatchLaterTabFragment extends BaseFragment implements UsersBoo
     @Override
     public void onClick(View view, int position) {
         switch (view.getId()) {
+            case R.id.shareImageView:
+                Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+                String shareUrl = AppUtils.getShareUrl(watchLaterList.get(position).getUserType(),
+                        watchLaterList.get(position).getBlogPageSlug(), watchLaterList.get(position).getTitleSlug());
+                String shareMessage;
+                if (StringUtils.isNullOrEmpty(shareUrl)) {
+                    shareMessage = "mycity4kids\n\nCheck out this interesting blog post " + "\"" +
+                            watchLaterList.get(position).getTitle() + "\" by " + watchLaterList.get(position).getUserName() + ".";
+                } else {
+                    shareMessage = "mycity4kids\n\nCheck out this interesting blog post " + "\"" +
+                            watchLaterList.get(position).getTitle() + "\" by " + watchLaterList.get(position).getUserName() + ".\nRead Here: " + shareUrl;
+                }
+                shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
+                startActivity(Intent.createChooser(shareIntent, "mycity4kids"));
+                break;
             case R.id.removeBookmarkTextView:
-                watchLaterList.remove(position);
+                bookmarkDeletePos = position;
+                hitDeleteBookmarkAPI(watchLaterList.get(position));
                 adapter.notifyDataSetChanged();
                 break;
             case R.id.rootView:
@@ -209,4 +231,36 @@ public class UsersWatchLaterTabFragment extends BaseFragment implements UsersBoo
                 break;
         }
     }
+
+    private void hitDeleteBookmarkAPI(ArticleListingResult bookmarkArticle) {
+        DeleteBookmarkRequest deleteBookmarkRequest = new DeleteBookmarkRequest();
+        deleteBookmarkRequest.setId(bookmarkArticle.getBookmarkId());
+        Retrofit retro = BaseApplication.getInstance().getRetrofit();
+        ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
+        Call<AddBookmarkResponse> call = articleDetailsAPI.deleteVideoWatchLater(deleteBookmarkRequest);
+        call.enqueue(removeBookmarkResponseCallback);
+    }
+
+    private Callback<AddBookmarkResponse> removeBookmarkResponseCallback = new Callback<AddBookmarkResponse>() {
+        @Override
+        public void onResponse(Call<AddBookmarkResponse> call, retrofit2.Response<AddBookmarkResponse> response) {
+            if (response == null || null == response.body()) {
+//                showToast("Something went wrong from server");
+                return;
+            }
+            AddBookmarkResponse responseData = (AddBookmarkResponse) response.body();
+            if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                watchLaterList.remove(bookmarkDeletePos);
+                adapter.notifyDataSetChanged();
+            } else {
+
+            }
+        }
+
+        @Override
+        public void onFailure(Call<AddBookmarkResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("RemoveBookmarkException", Log.getStackTraceString(t));
+        }
+    };
 }

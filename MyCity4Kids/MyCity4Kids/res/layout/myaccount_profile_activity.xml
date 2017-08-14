@@ -48,7 +48,7 @@
                 android:layout_below="@+id/imgProfile"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
-                android:text="Anupama Singh"
+                android:text=""
                 android:textColor="@color/myprofile.name"
                 android:textSize="15sp"
                 app:fontName="oswald_regular.ttf" />
@@ -60,7 +60,7 @@
                 android:layout_below="@+id/authorNameTextView"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
-                android:text="Blogger"
+                android:text=""
                 android:textColor="@color/myprofile.author_type"
                 android:textSize="12sp"
                 app:fontName="oswald_regular.ttf" />
@@ -78,7 +78,7 @@
                 android:layout_marginStart="40dp"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
-                android:text="A mother who believes in creating shitty stories. Loves to beat the shit out of her children.With Slipper as the choice of weapon she can bring upon heavenly judgement."
+                android:text=""
                 android:textColor="@color/myprofile.bio"
                 android:textSize="13sp"
                 app:fontName="oswald.ttf" />
@@ -89,35 +89,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/personalDetailsContainer">
-
-            <LinearLayout
-                android:id="@+id/followingContainer"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@color/myprofile.following_bg"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <com.mycity4kids.widget.CustomFontTextView
-                    android:id="@+id/followingCountTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="--"
-                    android:textColor="@color/myprofile.following_label"
-                    android:textSize="12sp"
-                    app:fontName="oswald_regular.ttf" />
-
-                <com.mycity4kids.widget.CustomFontTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:text="@string/myprofile.following_label"
-                    android:textColor="@color/myprofile.following_label"
-                    android:textSize="12sp"
-                    app:fontName="oswald.ttf" />
-            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/followerContainer"
@@ -144,6 +115,35 @@
                     android:layout_marginBottom="10dp"
                     android:text="@string/myprofile.followers_label"
                     android:textColor="@color/myprofile.followers_label"
+                    android:textSize="12sp"
+                    app:fontName="oswald.ttf" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/followingContainer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/myprofile.following_bg"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/followingCountTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="--"
+                    android:textColor="@color/myprofile.following_label"
+                    android:textSize="12sp"
+                    app:fontName="oswald_regular.ttf" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/myprofile.following_label"
+                    android:textColor="@color/myprofile.following_label"
                     android:textSize="12sp"
                     app:fontName="oswald.ttf" />
             </LinearLayout>

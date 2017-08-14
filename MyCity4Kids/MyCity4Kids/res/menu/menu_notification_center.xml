@@ -7,6 +7,7 @@
         app:showAsAction="always">
         <item
             android:id="@+id/markRead"
-            android:title="Mark all as read" />
+            android:actionMenuTextColor="@color/black_color"
+            android:title="@string/notification.read_all" />
     </item>
 </menu>

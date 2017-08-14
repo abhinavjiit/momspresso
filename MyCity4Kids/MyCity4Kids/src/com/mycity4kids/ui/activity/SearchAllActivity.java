@@ -29,6 +29,7 @@ import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.adapter.SearchAllPagerAdapter;
 import com.mycity4kids.ui.adapter.SearchArticlesAndAuthorsPagerAdapter;
+import com.mycity4kids.utils.AppUtils;
 
 /**
  * Created by hemant on 19/4/16.
@@ -100,7 +101,7 @@ public class SearchAllActivity extends BaseActivity implements View.OnClickListe
             }
         });
 
-        changeTabsFont();
+        AppUtils.changeTabsFont(this, mSlidingTabLayout);
         searchImageView.setOnClickListener(this);
     }
 

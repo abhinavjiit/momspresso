@@ -1,16 +1,11 @@
 package com.mycity4kids.ui.activity;
 
-import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -21,9 +16,11 @@ import com.facebook.Session;
 import com.facebook.model.GraphUser;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.plus.Plus;
-import com.google.android.gms.plus.model.people.Person;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -38,7 +35,6 @@ import com.mycity4kids.facebook.FacebookUtils;
 import com.mycity4kids.google.GooglePlusUtils;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.IFacebookUser;
-import com.mycity4kids.interfaces.IPlusClient;
 import com.mycity4kids.models.request.LoginRegistrationRequest;
 import com.mycity4kids.models.request.SocialConnectRequest;
 import com.mycity4kids.models.response.BaseResponse;
@@ -46,14 +42,12 @@ import com.mycity4kids.models.response.KidsModel;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.models.user.KidsInfo;
 import com.mycity4kids.models.user.UserInfo;
-import com.mycity4kids.models.user.UserResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
 import com.mycity4kids.sync.PushTokenService;
 import com.mycity4kids.ui.fragment.FacebookAddEmailDialogFragment;
 import com.mycity4kids.ui.fragment.SignInFragment;
 import com.mycity4kids.ui.fragment.SignUpFragment;
-import com.mycity4kids.utils.PermissionUtil;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -65,16 +59,14 @@ import retrofit2.Callback;
 import retrofit2.Retrofit;
 
 /**
- * Created by khushboo.goyal on 19-06-2015.
+ * Created by Hemant Parmar on 19-06-2016.
  */
-public class ActivityLogin extends BaseActivity implements View.OnClickListener, IPlusClient, IFacebookUser {
+public class ActivityLogin extends BaseActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener, IFacebookUser {
 
     public static final int RECOVERABLE_REQUEST_CODE = 98;
+    private static final int RC_SIGN_IN = 007;
 
-    private static final int REQUEST_INIT_PERMISSION = 1;
-    private static String[] PERMISSIONS_INIT = {Manifest.permission.GET_ACCOUNTS};
-
-    private GooglePlusUtils mGooglePlusUtils;
+    private GoogleApiClient mGoogleApiClient;
 
     private String googleEmailId, userId, currentPersonName, personPhotoUrl;
 
@@ -93,6 +85,15 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         Utils.pushOpenScreenEvent(ActivityLogin.this, "Login Screen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         setContentView(R.layout.aa_loginform);
 
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+
         String fragmentToLaunch = getIntent().getStringExtra(AppConstants.LAUNCH_FRAGMENT);
         if (AppConstants.FRAGMENT_SIGNIN.equals(fragmentToLaunch)) {
             SignInFragment fragment = new SignInFragment();
@@ -107,7 +108,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
 
         mLayout = findViewById(R.id.rootLayout);
 
-        mGooglePlusUtils = new GooglePlusUtils(this, this);
+//        mGooglePlusUtils = new GooglePlusUtils(this, this);
 
     }
 
@@ -121,109 +122,19 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
     }
 
     public void loginWithGplus() {
-        if (ConnectivityUtils.isNetworkEnabled(this)) {
+        /*if (ConnectivityUtils.isNetworkEnabled(this)) {
             showProgressDialog("Please Wait");
             mGooglePlusUtils.googlePlusLogin();
         } else {
             showToast(getString(R.string.error_network));
-        }
+        }*/
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
     @Override
     public void onClick(View v) {
-        Intent intent = null;
-        switch (v.getId()) {
-            case R.id.connect_facebook:
-                if (ConnectivityUtils.isNetworkEnabled(this)) {
-                    showProgressDialog(getString(R.string.please_wait));
-                    FacebookUtils.facebookLogin(this, this);
-                } else {
-                    showToast(getString(R.string.error_network));
-                }
-                break;
 
-            case R.id.connect_googleplus:
-                if (ConnectivityUtils.isNetworkEnabled(this)) {
-
-
-                    if (Build.VERSION.SDK_INT >= 23) {
-                        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.GET_ACCOUNTS)
-                                != PackageManager.PERMISSION_GRANTED) {
-                            Log.i("PERMISSIONS", "Get accounts permission has NOT been granted. Requesting permissions.");
-                            requestGetAccountsPermissions();
-                        } else {
-                            showProgressDialog("Please Wait");
-                            mGooglePlusUtils.googlePlusLogin();
-                        }
-                    } else {
-                        showProgressDialog("Please Wait");
-                        mGooglePlusUtils.googlePlusLogin();
-                    }
-                } else {
-                    showToast(getString(R.string.error_network));
-                }
-                break;
-            default:
-                break;
-
-        }
-    }
-
-    private void requestGetAccountsPermissions() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                Manifest.permission.GET_ACCOUNTS)) {
-            Log.i("Permissions",
-                    "Displaying get accounts permission rationale to provide additional context.");
-
-            // Display a SnackBar with an explanation and a button to trigger the request.
-            Snackbar.make(mLayout, R.string.permission_get_account_rationale,
-                    Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.ok, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            requestUngrantedPermissions();
-                        }
-                    })
-                    .show();
-        } else {
-            requestUngrantedPermissions();
-        }
-    }
-
-    private void requestUngrantedPermissions() {
-        ArrayList<String> permissionList = new ArrayList<>();
-        for (int i = 0; i < PERMISSIONS_INIT.length; i++) {
-            if (ActivityCompat.checkSelfPermission(this, PERMISSIONS_INIT[i]) != PackageManager.PERMISSION_GRANTED) {
-                permissionList.add(PERMISSIONS_INIT[i]);
-            }
-        }
-        String[] requiredPermission = permissionList.toArray(new String[permissionList.size()]);
-        ActivityCompat.requestPermissions(this, requiredPermission, REQUEST_INIT_PERMISSION);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-
-        if (requestCode == REQUEST_INIT_PERMISSION) {
-            Log.i("Permissions", "Received response for storage permissions request.");
-
-            if (PermissionUtil.verifyPermissions(grantResults)) {
-                Snackbar.make(mLayout, R.string.permision_available_init,
-                        Snackbar.LENGTH_SHORT)
-                        .show();
-                showProgressDialog("Please Wait");
-                mGooglePlusUtils.googlePlusLogin();
-            } else {
-                Log.i("Permissions", "storage permissions were NOT granted.");
-                Snackbar.make(mLayout, R.string.permissions_not_granted,
-                        Snackbar.LENGTH_SHORT)
-                        .show();
-            }
-
-        } else {
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
     }
 
     public void loginRequest(String email_id, String password) {
@@ -280,40 +191,29 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         }
     }
 
-    @Override
-    public void getGooglePlusInfo(GoogleApiClient plusClient) {
+    //@Override
+    public void getGooglePlusInfo(GoogleSignInResult result) {
         try {
             if (isFinishing())
                 return;
-            showProgressDialog(getString(R.string.please_wait));
+
             final LoginController _controller = new LoginController(this, this);
-            if (Plus.PeopleApi.getCurrentPerson(plusClient) != null) {
-                loginMode = "gp";
-                Person currentPerson = Plus.PeopleApi.getCurrentPerson(plusClient);
-                currentPersonName = currentPerson.getDisplayName();
-                userId = currentPerson.getId();
-                googleEmailId = Plus.AccountApi.getAccountName(plusClient);
-                personPhotoUrl = currentPerson.getImage().getUrl();
+            loginMode = "gp";
+            currentPersonName = result.getSignInAccount().getDisplayName();
+            userId = result.getSignInAccount().getId();
+            googleEmailId = result.getSignInAccount().getEmail();
 
-                personPhotoUrl = personPhotoUrl.substring(0, personPhotoUrl.lastIndexOf("?"));
-
-                if (StringUtils.isNullOrEmpty(googleEmailId)) {
-                    googleEmailId = "Email not fetch from google.";
-                }
-                if (StringUtils.isNullOrEmpty(currentPersonName)) {
-                    currentPersonName = getString(R.string.unknown_person);
-                }
-                if (StringUtils.isNullOrEmpty(userId)) {
-                    userId = getString(R.string.unknown_person);
-                }
-
-                new GetGoogleToken().execute();
-
-            } else {
-                removeProgressDialog();
-                Log.i("ActivityLogin", "GoogleApiClient persona information is null");
+            if (StringUtils.isNullOrEmpty(googleEmailId)) {
+                googleEmailId = "Email not fetch from google.";
             }
-            removeProgressDialog();
+            if (StringUtils.isNullOrEmpty(currentPersonName)) {
+                currentPersonName = getString(R.string.unknown_person);
+            }
+            if (StringUtils.isNullOrEmpty(userId)) {
+                userId = getString(R.string.unknown_person);
+            }
+
+            new GetGoogleToken().execute();
         } catch (Exception e) {
             removeProgressDialog();
             showToast("Try again later.");
@@ -325,17 +225,11 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
     @Override
     protected void onStop() {
         super.onStop();
-        //removeProgressDialog();
-        if (mGooglePlusUtils != null)
-            mGooglePlusUtils.onStop();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        if (mGooglePlusUtils != null)
-            mGooglePlusUtils.onStart();
-
     }
 
     @Override
@@ -343,10 +237,9 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
     }
 
     @Override
-    public void onGooglePlusLoginFailed() {
-        removeProgressDialog();
-    }
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+    }
 
     public class GetGoogleToken extends AsyncTask<Void, String, String> {
 
@@ -529,7 +422,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         for (KidsModel kid : kidsList) {
             KidsInfo kidsInfo = new KidsInfo();
             kidsInfo.setName(kid.getName());
-            kidsInfo.setDate_of_birth(convertTime(""+kid.getBirthDay()));
+            kidsInfo.setDate_of_birth(convertTime("" + kid.getBirthDay()));
             kidsInfo.setColor_code(kid.getColorCode());
             kidsInfoArrayList.add(kidsInfo);
         }
@@ -558,66 +451,6 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         } catch (NumberFormatException nfe) {
             return "";
         }
-    }
-
-    public void saveDatainDB(UserResponse model) {
-
-//        UserTable table = new UserTable(BaseApplication.getInstance());
-//        if (table.getRowsCount() > 0) {
-//
-//            try {
-//                String profileimg = table.getAllUserData().getProfile().getProfile_image();
-//                if (!StringUtils.isNullOrEmpty(profileimg)) {
-//                    SharedPrefUtils.setProfileImgUrl(this, profileimg);
-//                }
-//            } catch (Exception e) {
-//            }
-//
-//        }
-
-
-//        TableAdult adultTable = new TableAdult((BaseApplication) getApplicationContext());
-//        adultTable.deleteAll();
-//        try {
-//
-//            adultTable.beginTransaction();
-//            for (UserModel.AdultsInfo user : model.getResult().getData().getAdult()) {
-//
-//                adultTable.insertData(user.getUser());
-//            }
-//            adultTable.setTransactionSuccessful();
-//        } finally {
-//            adultTable.endTransaction();
-//        }
-
-        // saving child data
-        TableKids kidsTable = new TableKids((BaseApplication) getApplicationContext());
-        kidsTable.deleteAll();
-        try {
-            kidsTable.beginTransaction();
-            for (KidsInfo kids : model.getResult().getData().getKidsInformation()) {
-
-                kidsTable.insertData(kids);
-
-            }
-            kidsTable.setTransactionSuccessful();
-        } finally {
-            kidsTable.endTransaction();
-        }
-
-        // saving family
-
-//        TableFamily familyTable = new TableFamily((BaseApplication) getApplicationContext());
-//        familyTable.deleteAll();
-//        try {
-//
-//            SharedPrefUtils.setpinCode(ActivityLogin.this, model.getResult().getData().getUser().getPincode());
-//            familyTable.insertData(model.getResult().getData().getFamily());
-//
-//        } catch (Exception e) {
-//            e.getMessage();
-//        }
-
     }
 
     public void showVerifyEmailDialog(String title, String message) {
@@ -738,31 +571,9 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
     @Override
     protected void onActivityResult(int _requestCode, int _resultCode, Intent _data) {
         super.onActivityResult(_requestCode, _resultCode, _data);//64206,0  -1
-        if (_requestCode == GooglePlusUtils.REQUEST_CODE_SIGN_IN) {
-            mGooglePlusUtils.onActivityResult(this, _requestCode, _resultCode, _data);
-            if (_resultCode != -1) {
-                removeProgressDialog();
-            }
-
-        } else if (_requestCode == RECOVERABLE_REQUEST_CODE) {
-            removeProgressDialog();
-
-            Bundle extra = _data.getExtras();
-            googleToken = extra.getString("authtoken");
-
-            if (StringUtils.isNullOrEmpty(googleToken))
-                return;
-
-            LoginRegistrationRequest lr = new LoginRegistrationRequest();
-            lr.setCityId("" + SharedPrefUtils.getCurrentCityModel(this).getId());
-            lr.setRequestMedium("gp");
-            lr.setSocialToken(googleToken);
-
-            Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-            LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
-            Call<UserDetailResponse> call = loginRegistrationAPI.login(lr);
-            call.enqueue(onLoginResponseReceivedListener);
-
+        if (_requestCode == RC_SIGN_IN) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(_data);
+            getGooglePlusInfo(result);
         } else {
             if (_resultCode == 0) {
                 removeProgressDialog();

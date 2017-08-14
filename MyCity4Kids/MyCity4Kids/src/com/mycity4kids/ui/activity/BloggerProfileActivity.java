@@ -3,9 +3,7 @@ package com.mycity4kids.ui.activity;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -28,6 +26,7 @@ import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
+import com.mycity4kids.animation.MyCityAnimationsUtil;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
@@ -101,8 +100,9 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
     private TextView articleSectionTextView, videosSectionTextView, activitySectionTextView, rankingSectionTextView;
     private TextView followButton, unfollowButton;
     private TextView rankLanguageTextView;
-    private LinearLayout followerContainer, followingContainer;
+    private LinearLayout followerContainer, followingContainer, rankContainer;
 
+    private ArrayList<LanguageRanksModel> multipleRankList = new ArrayList<>();
     private Boolean isFollowing = false;
     private String userId;
     private String authorId;
@@ -145,6 +145,7 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
         topArticleContainer = (LinearLayout) findViewById(R.id.topArticleContainer);
         followerContainer = (LinearLayout) findViewById(R.id.followerContainer);
         followingContainer = (LinearLayout) findViewById(R.id.followingContainer);
+        rankContainer = (LinearLayout) findViewById(R.id.rankContainer);
 
         authorNameTextView.setOnClickListener(this);
         authorTypeTextView.setOnClickListener(this);
@@ -169,10 +170,10 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
         userId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
         authorId = getIntent().getStringExtra(AppConstants.PUBLIC_PROFILE_USER_ID);
 
-        if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getProfileImgUrl(this))) {
-            Picasso.with(this).load(SharedPrefUtils.getProfileImgUrl(this)).placeholder(R.drawable.family_xxhdpi)
-                    .error(R.drawable.family_xxhdpi).transform(new RoundedTransformation()).into(imgProfile);
-        }
+//        if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getProfileImgUrl(this))) {
+//            Picasso.with(this).load(SharedPrefUtils.getProfileImgUrl(this)).placeholder(R.drawable.family_xxhdpi)
+//                    .error(R.drawable.family_xxhdpi).transform(new RoundedTransformation()).into(imgProfile);
+//        }
 
         getUserDetails();
         checkFollowingStatusAPI();
@@ -265,12 +266,8 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
             UserDetailResponse responseData = (UserDetailResponse) response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                 if (responseData.getData().get(0).getResult().getRanks() == null || responseData.getData().get(0).getResult().getRanks().size() == 0) {
-                    LanguageRanksModel languageRanksModel = new LanguageRanksModel();
-                    languageRanksModel.setRank(-1);
-                    languageRanksModel.setLangKey("");
-//                    addRankView(languageRanksModel);
-//                    rankViewFlipper.setAutoStart(false);
-//                    rankViewFlipper.stopFlipping();
+                    rankCountTextView.setText("--");
+                    rankLanguageTextView.setText(getString(R.string.blogger_profile_rank_label));
                 } else if (responseData.getData().get(0).getResult().getRanks().size() < 2) {
                     rankCountTextView.setText("" + responseData.getData().get(0).getResult().getRanks().get(0).getRank());
                     if (AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(0).getLangKey())) {
@@ -279,43 +276,20 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
                         rankLanguageTextView.setText(getString(R.string.blogger_profile_rank_in)
                                 + " " + AppUtils.getLangModelForLanguage(BloggerProfileActivity.this, responseData.getData().get(0).getResult().getRanks().get(0).getLangKey()).getDisplay_name());
                     }
-//                    addRankView(responseData.getData().get(0).getResult().getRanks().get(0));
-//                    rankViewFlipper.setAutoStart(false);
-//                    rankViewFlipper.stopFlipping();
                 } else {
-                    boolean isEnglishLangAvailable = false;
                     for (int i = 0; i < responseData.getData().get(0).getResult().getRanks().size(); i++) {
                         if (AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(i).getLangKey())) {
-//                            addRankView(responseData.getData().get(0).getResult().getRanks().get(i));
-                            isEnglishLangAvailable = true;
-                            rankCountTextView.setText("" + responseData.getData().get(0).getResult().getRanks().get(i).getRank());
-                            rankLanguageTextView.setText(getString(R.string.blogger_profile_rank_in) + " ENGLISH");
+                            multipleRankList.add(responseData.getData().get(0).getResult().getRanks().get(i));
                             break;
                         }
                     }
-                    if (!isEnglishLangAvailable) {
-                        Collections.sort(responseData.getData().get(0).getResult().getRanks());
-                        for (int i = 0; i < responseData.getData().get(0).getResult().getRanks().size(); i++) {
-                            if (!AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(i).getLangKey())) {
-                                rankCountTextView.setText("" + responseData.getData().get(0).getResult().getRanks().get(i).getRank());
-                                rankLanguageTextView.setText(getString(R.string.blogger_profile_rank_in)
-                                        + " " + AppUtils.getLangModelForLanguage(BloggerProfileActivity.this, responseData.getData().get(0).getResult().getRanks().get(i).getLangKey()).getDisplay_name());
-                                break;
-                            }
+                    Collections.sort(responseData.getData().get(0).getResult().getRanks());
+                    for (int i = 0; i < responseData.getData().get(0).getResult().getRanks().size(); i++) {
+                        if (!AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(i).getLangKey())) {
+                            multipleRankList.add(responseData.getData().get(0).getResult().getRanks().get(i));
                         }
                     }
-
-//                    for (int i = 0; i < responseData.getData().get(0).getResult().getRanks().size(); i++) {
-//                        if (AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(i).getLangKey())) {
-////                            addRankView(responseData.getData().get(0).getResult().getRanks().get(i));
-//                        }
-//                    }
-//                    Collections.sort(responseData.getData().get(0).getResult().getRanks());
-//                    for (int i = 0; i < responseData.getData().get(0).getResult().getRanks().size(); i++) {
-//                        if (!AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(i).getLangKey())) {
-////                            addRankView(responseData.getData().get(0).getResult().getRanks().get(i));
-//                        }
-//                    }
+                    MyCityAnimationsUtil.animate(BloggerProfileActivity.this, rankContainer, multipleRankList, 0, true);
                 }
 
                 int followerCount = Integer.parseInt(responseData.getData().get(0).getResult().getFollowersCount());
@@ -691,37 +665,16 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
                 break;
             case R.id.authorBioTextView:
                 break;
-            case R.id.imgProfile:
-                if (Build.VERSION.SDK_INT >= 23) {
-                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                            != PackageManager.PERMISSION_GRANTED
-                            && ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                            != PackageManager.PERMISSION_GRANTED
-                            && ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                            != PackageManager.PERMISSION_GRANTED) {
-                        Log.i("PERMISSIONS", "storage permissions has NOT been granted. Requesting permissions.");
-                        requestCameraAndStoragePermissions();
-                    } else if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                            != PackageManager.PERMISSION_GRANTED
-                            && ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                            == PackageManager.PERMISSION_GRANTED
-                            && ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                            == PackageManager.PERMISSION_GRANTED) {
-                        Log.i("PERMISSIONS", "storage permissions has NOT been granted. Requesting permissions.");
-                        requestCameraPermission();
-                    } else {
-                        chooseImageOptionPopUp(imgProfile);
-                    }
-                } else {
-                    chooseImageOptionPopUp(imgProfile);
-                }
-                break;
             case R.id.articleSectionTextView:
                 Intent articleIntent = new Intent(this, UserPublishedAndDraftsActivity.class);
                 articleIntent.putExtra(Constants.AUTHOR_ID, authorId);
                 startActivity(articleIntent);
                 break;
             case R.id.videosSectionTextView:
+                Intent funnyIntent = new Intent(this, MyFunnyVideosListingActivity.class);
+                funnyIntent.putExtra(Constants.AUTHOR_ID, authorId);
+                funnyIntent.putExtra(Constants.FROM_SCREEN, "Navigation Menu");
+                startActivity(funnyIntent);
                 break;
             case R.id.activitySectionTextView: {
                 Intent intent = new Intent(BloggerProfileActivity.this, UserActivitiesActivity.class);

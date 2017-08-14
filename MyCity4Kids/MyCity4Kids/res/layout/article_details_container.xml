@@ -15,7 +15,36 @@
         android:minHeight="?attr/actionBarSize"
         android:visibility="visible"
         app:theme="@style/ToolbarTheme"
-        app:titleTextAppearance="@style/ToolbarTheme.Title" />
+        app:titleTextAppearance="@style/ToolbarTheme.Title">
+
+        <RelativeLayout
+            android:id="@+id/toolbarRelativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible">
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/toolbarTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text=""
+                android:textSize="20sp"
+                app:fontName="oswald_regular.ttf" />
+
+            <ImageView
+                android:id="@+id/playTtsTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5dp"
+                android:padding="12dp"
+                android:src="@drawable/ic_play_tts" />
+
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
 
     <ImageView
         android:id="@+id/backNavigationImageView"

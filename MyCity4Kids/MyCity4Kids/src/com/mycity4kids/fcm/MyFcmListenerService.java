@@ -25,7 +25,7 @@ import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.newmodels.PushNotificationModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.reminders.ShareArticleReceiver;
-import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
+import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.BloggerProfileActivity;
 import com.mycity4kids.ui.activity.BusinessDetailsActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
@@ -160,7 +160,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         intent.putExtra("fromNotification", true);
                         contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                     } else {
-                        intent = new Intent(getApplicationContext(), ArticlesAndBlogsDetailsActivity.class);
+                        intent = new Intent(getApplicationContext(), ArticleDetailsContainerActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("fromNotification", true);
                         intent.putExtra(Constants.ARTICLE_ID, "" + pushNotificationModel.getId());
@@ -173,7 +173,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
 
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
                         // Adds the back stack
-                        stackBuilder.addParentStack(ArticlesAndBlogsDetailsActivity.class);
+                        stackBuilder.addParentStack(ArticleDetailsContainerActivity.class);
                         // Adds the Intent to the top of the stack
                         stackBuilder.addNextIntent(intent);
                         contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -261,7 +261,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         resultIntent.putExtra(Constants.DISTANCE, "0");
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
                         // Adds the back stack
-                        stackBuilder.addParentStack(ArticlesAndBlogsDetailsActivity.class);
+                        stackBuilder.addParentStack(BusinessDetailsActivity.class);
                         // Adds the Intent to the top of the stack
                         stackBuilder.addNextIntent(resultIntent);
                         contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);

@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/infoRootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
     android:orientation="horizontal">
 
     <ImageView
@@ -12,12 +15,14 @@
         android:src="@drawable/dot_img" />
 
     <!--Do not change order here using getChildAt(position) to fetch the text view-->
-    <TextView
+    <com.mycity4kids.widget.CustomFontTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="6dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="6dp"
         android:text=""
-        android:textColor="@color/black" />
+        android:textSize="15sp"
+        android:textColor="@color/ranking.improve_view.info_text"
+        app:fontName="oswald.ttf" />
 </LinearLayout>

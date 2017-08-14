@@ -4,11 +4,13 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.ui.adapter.AllVideosPagerAdapter;
+import com.mycity4kids.utils.AppUtils;
 
 /**
  * Created by hemant on 8/8/17.
@@ -33,7 +35,7 @@ public class AllVideosListingActivity extends BaseActivity {
 
         videosTabLayout.addTab(videosTabLayout.newTab().setText(getString(R.string.all_videos_tabbar_momspresso_label)));
         videosTabLayout.addTab(videosTabLayout.newTab().setText(getString(R.string.all_videos_tabbar_funny_label)));
-
+        AppUtils.changeTabsFont(this, videosTabLayout);
         AllVideosPagerAdapter adapter = new AllVideosPagerAdapter(getSupportFragmentManager(), videosTabLayout.getTabCount());
         videosViewPager.setAdapter(adapter);
         videosViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(videosTabLayout));
@@ -54,6 +56,16 @@ public class AllVideosListingActivity extends BaseActivity {
             }
         });
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return true;
     }
 
     @Override

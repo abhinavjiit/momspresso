@@ -1,16 +1,8 @@
 package com.mycity4kids.ui.fragment;
 
-import android.Manifest;
 import android.accounts.NetworkErrorException;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
-import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,23 +13,13 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
-import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.ForYouArticleRemoveRequest;
 import com.mycity4kids.models.response.ForYourArticleRemoveResponse;
-import com.mycity4kids.models.response.VlogsListingResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.RecommendationAPI;
-import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
-import com.mycity4kids.ui.activity.AllVideoSectionActivity;
-import com.mycity4kids.ui.activity.DashboardActivity;
-import com.mycity4kids.ui.activity.MyFunnyVideosListingActivity;
-import com.mycity4kids.ui.activity.VlogsListingActivity;
 import com.mycity4kids.utils.AppUtils;
-import com.mycity4kids.utils.PermissionUtil;
-
-import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;

@@ -10,7 +10,6 @@
         android:targetSdkVersion="23"
         tools:overrideLibrary="life.knowledge4.videotrimmer" />
     <!-- So that we can get the account name -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.CAMERA" />
     <!-- Used to request data from the Google+ APIs in the SignInActivity -->
     <uses-permission android:name="android.permission.INTERNET" />

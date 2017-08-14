@@ -6,15 +6,19 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -27,7 +31,6 @@ import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.LanguageConfigModel;
-import com.mycity4kids.models.response.TrendingListingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
@@ -50,6 +53,7 @@ public class LanguageSpecificArticlesTabFragment extends BaseFragment implements
     private boolean isLastPageReached = false;
     private String chunks = "";
     private LanguageConfigModel trendingTopicData;
+    private int sortType = 0;
 
     private MainArticleListingAdapter articlesListingAdapter;
     private ArrayList<ArticleListingResult> articleDataModelsNew;
@@ -57,6 +61,11 @@ public class LanguageSpecificArticlesTabFragment extends BaseFragment implements
     private RelativeLayout mLodingView;
     private TextView noBlogsTextView;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private FrameLayout frameLayout;
+    private FloatingActionsMenu fabMenu;
+    private FloatingActionButton popularSortFAB;
+    private FloatingActionButton recentSortFAB;
+    private FloatingActionButton fabSort;
 
     @Nullable
     @Override
@@ -69,6 +78,47 @@ public class LanguageSpecificArticlesTabFragment extends BaseFragment implements
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
+
+        frameLayout = (FrameLayout) view.findViewById(R.id.frame_layout);
+        frameLayout.getBackground().setAlpha(0);
+        fabMenu = (FloatingActionsMenu) view.findViewById(R.id.fab_menu);
+        popularSortFAB = (FloatingActionButton) view.findViewById(R.id.popularSortFAB);
+        recentSortFAB = (FloatingActionButton) view.findViewById(R.id.recentSortFAB);
+        fabSort = (FloatingActionButton) view.findViewById(R.id.fabSort);
+        frameLayout.setVisibility(View.VISIBLE);
+        fabSort.setVisibility(View.VISIBLE);
+        popularSortFAB.setOnClickListener(this);
+        recentSortFAB.setOnClickListener(this);
+        fabSort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (fabMenu.isExpanded()) {
+                    fabMenu.collapse();
+                } else {
+                    fabMenu.expand();
+                }
+            }
+        });
+
+        fabMenu.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
+            @Override
+            public void onMenuExpanded() {
+                frameLayout.getBackground().setAlpha(240);
+                frameLayout.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        fabMenu.collapse();
+                        return true;
+                    }
+                });
+            }
+
+            @Override
+            public void onMenuCollapsed() {
+                frameLayout.getBackground().setAlpha(0);
+                frameLayout.setOnTouchListener(null);
+            }
+        });
 
         if (getArguments() != null) {
             trendingTopicData = getArguments().getParcelable("languageData");
@@ -83,7 +133,7 @@ public class LanguageSpecificArticlesTabFragment extends BaseFragment implements
 
         articleDataModelsNew = new ArrayList<ArticleListingResult>();
         nextPageNumber = 1;
-        hitFilteredTopicsArticleListingApi(0);
+        hitFilteredTopicsArticleListingApi(sortType);
 
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -97,7 +147,7 @@ public class LanguageSpecificArticlesTabFragment extends BaseFragment implements
                 boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
                 if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && !isLastPageReached) {
                     mLodingView.setVisibility(View.VISIBLE);
-                    hitFilteredTopicsArticleListingApi(0);
+                    hitFilteredTopicsArticleListingApi(sortType);
                     isReuqestRunning = true;
                 }
             }
@@ -229,40 +279,6 @@ public class LanguageSpecificArticlesTabFragment extends BaseFragment implements
 
     }
 
-//    private void processArticleListingResponse(ArticleListingResponse responseData) {
-//
-//        ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
-//
-//        if (dataList.size() == 0) {
-//            isLastPageReached = false;
-//            if (null != trendingTopicData.getArticleList() && !trendingTopicData.getArticleList().isEmpty()) {
-//                //No more next results for search from pagination
-//                isLastPageReached = true;
-//            } else {
-//                // No results for search
-//                noBlogsTextView.setVisibility(View.VISIBLE);
-//                noBlogsTextView.setText("No articles found");
-////                articleDataModelsNew = dataList;
-//                trendingTopicData.setArticleList(dataList);
-//                adapter.setNewListData(trendingTopicData.getArticleList());
-//                adapter.notifyDataSetChanged();
-//            }
-//        } else {
-//            noBlogsTextView.setVisibility(View.GONE);
-//            if (nextPageNumber == 1 && (trendingTopicData.getArticleList() == null || trendingTopicData.getArticleList().isEmpty())) {
-////                articleDataModelsNew = dataList;
-//                trendingTopicData.setArticleList(dataList);
-//            } else {
-////                articleDataModelsNew.addAll(dataList);
-//                trendingTopicData.getArticleList().addAll(dataList);
-//            }
-//            adapter.setNewListData(trendingTopicData.getArticleList());
-//            nextPageNumber = nextPageNumber + 1;
-//            adapter.notifyDataSetChanged();
-//        }
-//
-//    }
-
     @Override
     protected void updateUi(Response response) {
 
@@ -271,7 +287,28 @@ public class LanguageSpecificArticlesTabFragment extends BaseFragment implements
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-
+            case R.id.recentSortFAB:
+//                Utils.pushSortListingEvent(FilteredTopicsArticleListingActivity.this, GTMEventType.SORT_LISTING_EVENT, SharedPrefUtils.getUserDetailModel(FilteredTopicsArticleListingActivity.this).getDynamoId(),
+//                        listingType, "recent");
+                fabMenu.collapse();
+                articleDataModelsNew.clear();
+                articlesListingAdapter.notifyDataSetChanged();
+                sortType = 0;
+                nextPageNumber = 1;
+                chunks = "";
+                hitFilteredTopicsArticleListingApi(0);
+                break;
+            case R.id.popularSortFAB:
+//                Utils.pushSortListingEvent(FilteredTopicsArticleListingActivity.this, GTMEventType.SORT_LISTING_EVENT, SharedPrefUtils.getUserDetailModel(FilteredTopicsArticleListingActivity.this).getDynamoId(),
+//                        listingType, "popular");
+                fabMenu.collapse();
+                articleDataModelsNew.clear();
+                articlesListingAdapter.notifyDataSetChanged();
+                sortType = 1;
+                nextPageNumber = 1;
+                chunks = "";
+                hitFilteredTopicsArticleListingApi(1);
+                break;
         }
     }
 

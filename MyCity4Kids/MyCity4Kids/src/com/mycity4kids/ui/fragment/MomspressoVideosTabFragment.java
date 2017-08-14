@@ -5,15 +5,19 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -38,10 +42,11 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 8/8/17.
  */
-public class MomspressoVideosTabFragment extends BaseFragment {
+public class MomspressoVideosTabFragment extends BaseFragment implements View.OnClickListener {
 
     private int nextPageNumber = 1;
     private int limit = 15;
+    private int sortType = 0;
     private boolean isReuqestRunning = false;
     private boolean isLastPageReached = false;
     private ArrayList<ArticleListingResult> mDatalist;
@@ -50,6 +55,11 @@ public class MomspressoVideosTabFragment extends BaseFragment {
 
     private RelativeLayout mLodingView;
     private TextView noBlogsTextView;
+    private FrameLayout frameLayout;
+    private FloatingActionsMenu fabMenu;
+    private FloatingActionButton popularSortFAB;
+    private FloatingActionButton recentSortFAB;
+    private FloatingActionButton fabSort;
 
     @Nullable
     @Override
@@ -59,13 +69,53 @@ public class MomspressoVideosTabFragment extends BaseFragment {
         ListView listView = (ListView) view.findViewById(R.id.scroll);
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
+        frameLayout = (FrameLayout) view.findViewById(R.id.frame_layout);
+        frameLayout.getBackground().setAlpha(0);
+        fabMenu = (FloatingActionsMenu) view.findViewById(R.id.fab_menu);
+        popularSortFAB = (FloatingActionButton) view.findViewById(R.id.popularSortFAB);
+        recentSortFAB = (FloatingActionButton) view.findViewById(R.id.recentSortFAB);
+        fabSort = (FloatingActionButton) view.findViewById(R.id.fabSort);
+        frameLayout.setVisibility(View.VISIBLE);
+        fabSort.setVisibility(View.VISIBLE);
+        popularSortFAB.setOnClickListener(this);
+        recentSortFAB.setOnClickListener(this);
+        fabSort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (fabMenu.isExpanded()) {
+                    fabMenu.collapse();
+                } else {
+                    fabMenu.expand();
+                }
+            }
+        });
+
+        fabMenu.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
+            @Override
+            public void onMenuExpanded() {
+                frameLayout.getBackground().setAlpha(240);
+                frameLayout.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        fabMenu.collapse();
+                        return true;
+                    }
+                });
+            }
+
+            @Override
+            public void onMenuCollapsed() {
+                frameLayout.getBackground().setAlpha(0);
+                frameLayout.setOnTouchListener(null);
+            }
+        });
 
         mDatalist = new ArrayList<>();
         adapter = new MainArticleListingAdapter(getActivity());
         adapter.setNewListData(mDatalist);
         listView.setAdapter(adapter);
 
-        hitFilteredTopicsArticleListingApi(0);
+        hitFilteredTopicsArticleListingApi(sortType);
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -78,7 +128,7 @@ public class MomspressoVideosTabFragment extends BaseFragment {
                 boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
                 if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && !isLastPageReached) {
                     mLodingView.setVisibility(View.VISIBLE);
-                    hitFilteredTopicsArticleListingApi(0);
+                    hitFilteredTopicsArticleListingApi(sortType);
                     isReuqestRunning = true;
                 }
             }
@@ -202,5 +252,31 @@ public class MomspressoVideosTabFragment extends BaseFragment {
     @Override
     protected void updateUi(Response response) {
 
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.recentSortFAB:
+//                Utils.pushSortListingEvent(FilteredTopicsArticleListingActivity.this, GTMEventType.SORT_LISTING_EVENT, SharedPrefUtils.getUserDetailModel(FilteredTopicsArticleListingActivity.this).getDynamoId(),
+//                        listingType, "recent");
+                fabMenu.collapse();
+                mDatalist.clear();
+                adapter.notifyDataSetChanged();
+                sortType = 0;
+                nextPageNumber = 1;
+                hitFilteredTopicsArticleListingApi(0);
+                break;
+            case R.id.popularSortFAB:
+//                Utils.pushSortListingEvent(FilteredTopicsArticleListingActivity.this, GTMEventType.SORT_LISTING_EVENT, SharedPrefUtils.getUserDetailModel(FilteredTopicsArticleListingActivity.this).getDynamoId(),
+//                        listingType, "popular");
+                fabMenu.collapse();
+                mDatalist.clear();
+                adapter.notifyDataSetChanged();
+                sortType = 1;
+                nextPageNumber = 1;
+                hitFilteredTopicsArticleListingApi(1);
+                break;
+        }
     }
 }

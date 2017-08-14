@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.fragment;
 
 import android.accounts.NetworkErrorException;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -49,6 +50,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.NotificationsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.SubscriptionsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.activity.DashboardActivity;
+import com.mycity4kids.ui.activity.SubscribeTopicsActivity;
 import com.mycity4kids.ui.adapter.EmailSubscriptionAdapter;
 import com.mycity4kids.ui.adapter.NotificationSubscriptionAdapter;
 import com.mycity4kids.ui.adapter.PreferredLanguagesAdapter;
@@ -812,6 +814,8 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
                 showMoreFollowedTopicsTextView.setVisibility(View.GONE);
                 break;
             case R.id.addTopicsBtn:
+                Intent subscribeTopicIntent = new Intent(getActivity(), SubscribeTopicsActivity.class);
+                startActivityForResult(subscribeTopicIntent, 1111);
                 break;
             case R.id.saveTextView:
                 updateNotificationSettings();
@@ -820,5 +824,19 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
                 updateFollowedUnfollowedTopics();
                 break;
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        try {
+            super.onActivityResult(requestCode, resultCode, data);
+            if (requestCode == 1111 && resultCode == Activity.RESULT_OK) {
+                flowLayout.removeAllViews();
+                followedSubSubTopicList.clear();
+                getFollowedTopics();
+            }
+        } catch (Exception ex) {
+        }
+
     }
 }

@@ -90,6 +90,9 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
         toolbarTitleTextView = (TextView) mToolbar.findViewById(R.id.toolbarTitle);
 
         setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         mToolbar.setVisibility(View.VISIBLE);
 
         findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely));
@@ -100,15 +103,15 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
         fromScreen = getIntent().getStringExtra(Constants.FROM_SCREEN);
 
         if (sortType.equals(Constants.KEY_RECENT)) {
-            getSupportActionBar().setTitle("Recent");
+            toolbarTitleTextView.setText(getString(R.string.article_listing_toolbar_title_recent));
         } else if (sortType.equals(Constants.KEY_POPULAR)) {
-            getSupportActionBar().setTitle("Popular");
+            toolbarTitleTextView.setText(getString(R.string.article_listing_toolbar_title_popular));
         } else if (sortType.equals(Constants.KEY_TRENDING)) {
-            getSupportActionBar().setTitle("Trending");
+            toolbarTitleTextView.setText(getString(R.string.article_listing_toolbar_title_trending));
         } else if (sortType.equals(Constants.KEY_FOR_YOU)) {
-            getSupportActionBar().setTitle("For You");
+            toolbarTitleTextView.setText(getString(R.string.article_listing_toolbar_title_for_you));
         } else {
-            getSupportActionBar().setTitle("Top Picks");
+            toolbarTitleTextView.setText(getString(R.string.article_listing_toolbar_title_editor_picks));
         }
 
         articleDataModelsNew = new ArrayList<ArticleListingResult>();
@@ -425,11 +428,11 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (Constants.KEY_FOR_YOU.equals(sortType)) {
-            getMenuInflater().inflate(R.menu.menu_followed_topics, menu);
-        } else {
-            getMenuInflater().inflate(R.menu.menu_search, menu);
-        }
+//        if (Constants.KEY_FOR_YOU.equals(sortType)) {
+//            getMenuInflater().inflate(R.menu.menu_followed_topics, menu);
+//        } else {
+//            getMenuInflater().inflate(R.menu.menu_search, menu);
+//        }
         return true;
     }
 

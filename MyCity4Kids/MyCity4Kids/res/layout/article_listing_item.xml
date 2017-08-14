@@ -258,14 +258,34 @@
 
                 <ImageView
                     android:id="@+id/bookmarkArticleImageView"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:layout_alignTop="@+id/txvAuthorName"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:paddingTop="5dp"
-                    android:src="@drawable/ic_bookmark" />
+                    android:paddingTop="15dp"
+                    android:src="@drawable/ic_bookmark"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/watchLaterImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/bookmarkArticleImageView"
+                    android:layout_alignLeft="@+id/bookmarkArticleImageView"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignStart="@+id/bookmarkArticleImageView"
+                    android:layout_alignTop="@+id/txvAuthorName"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="15dp"
+                    android:src="@drawable/ic_watch"
+                    android:visibility="invisible" />
                 <!--<TextView-->
                 <!--android:id="@+id/authorTypeTextView"-->
                 <!--android:layout_width="wrap_content"-->

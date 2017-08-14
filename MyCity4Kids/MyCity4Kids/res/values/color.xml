@@ -159,6 +159,7 @@
     <color name="articlelist.reason.text">#737373</color>
 
     <color name="fab.pink">#ec3b57</color>
+    <color name="fab.white">#ffffff</color>
 
     <color name="navigation.drawer.divider">#e5e5e5</color>
     <color name="navigation.drawer.endtext">#737373</color>
@@ -212,6 +213,7 @@
     <color name="home.toolbar.titlecolor">#507cbe</color>
     <color name="home.trending.topics">#545454</color>
     <color name="home.trending.tabbar_text">#545454</color>
+    <color name="select_option.toolbar.titlecolor">#545454</color>
     <color name="home.trending.tabbar_indicator">#507cbe</color>
 
     <color name="explore_listing.explore_categories.title">#515556</color>
@@ -242,6 +244,8 @@
     <color name="login_email.password_hint">#FFFFFF</color>
     <color name="login_email.email_text">#FFFFFF</color>
     <color name="login_email.password_text">#FFFFFF</color>
+
+    <color name="empty_list_msg">#545454</color>
 
     <color name="for_you.reason.why_label">#545454</color>
     <color name="for_you.reason.body">#545454</color>
@@ -284,8 +288,8 @@
     <color name="myprofile.name">#545454</color>
     <color name="myprofile.author_type">#545454</color>
     <color name="myprofile.bio">#545454</color>
-    <color name="myprofile.following_bg">#ebebee</color>
-    <color name="myprofile.follower_bg">#f5f6f8</color>
+    <color name="myprofile.following_bg">#f5f6f8</color>
+    <color name="myprofile.follower_bg">#ebebee</color>
     <color name="myprofile.rank_bg">#e7e8ea</color>
     <color name="myprofile.following_label">#507cbe</color>
     <color name="myprofile.followers_label">#507cbe</color>
@@ -305,8 +309,8 @@
     <color name="blogger_profile.bio">#545454</color>
     <color name="blogger_profile.follow_button">#ffffff</color>
     <color name="blogger_profile.unfollow_button">#507cbe</color>
-    <color name="blogger_profile.following_bg">#ebebee</color>
-    <color name="blogger_profile.follower_bg">#f5f6f8</color>
+    <color name="blogger_profile.following_bg">#f5f6f8</color>
+    <color name="blogger_profile.follower_bg">#ebebee</color>
     <color name="blogger_profile.rank_bg">#e7e8ea</color>
     <color name="blogger_profile.following_label">#507cbe</color>
     <color name="blogger_profile.followers_label">#507cbe</color>
@@ -437,6 +441,8 @@
     <color name="ranking.follower_count">#507cbe</color>
     <color name="ranking.top_blogger_rank">#e12148</color>
     <color name="ranking.boxes_bg">#e0e0e0</color>
+    <color name="ranking.improve_view.title">#545454</color>
+    <color name="ranking.improve_view.info_text">#545454</color>
 
     <color name="editor.last_saved">#9c9dac</color>
     <color name="editor.publish">#507cbe</color>
@@ -491,5 +497,10 @@
 
     <color name="explore.city">#507cbe</color>
 
+    <color name="user_funny_video.toolbar.title">#545454</color>
+
     <color name="all_videos.toolbar.title">#545454</color>
+
+    <color name="notification.read_all">#545454</color>
+    <color name="notification.toolbar.title">#545454</color>
 </resources>

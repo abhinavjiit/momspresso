@@ -6,6 +6,12 @@
     android:background="@color/white_color"
     android:orientation="vertical">
 
+    <View
+        android:id="@+id/toolbarUnderline"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/login_grey" />
+
     <RelativeLayout
         android:id="@+id/relative_parent"
         android:layout_width="match_parent"

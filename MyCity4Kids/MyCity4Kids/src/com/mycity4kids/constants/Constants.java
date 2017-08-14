@@ -287,6 +287,7 @@ public class Constants {
     public static String CALENDARLIST_FRAGMENT = "fragment_calendar";
     public static String SETTINGS_FRAGMENT = "fragment_settings";
     public static String LANGUAGE_FRAGMENT = "fragment_language";
+    public static String PROFILE_FRAGMENT = "fragment_profile";
 
     /*Kids Birthday Constants*/
     public static String KIDS_NAME = "kids_name";

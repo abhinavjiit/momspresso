@@ -9,6 +9,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -268,25 +270,24 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
 
         commLayout = ((LinearLayout) findViewById(R.id.commnetLout));
         commentLayout = ((LinearLayout) findViewById(R.id.commnetLout));
-//        newCommentLayout = (LinearLayout) findViewById(R.id.comment_layout);
-//        commentBtn = (ImageView) findViewById(R.id.add_comment_btn);
         addCommentLinearLayout = (LinearLayout) findViewById(R.id.addCommentLinearLayout);
 
+        likeArticleTextView.setEnabled(false);
+        bookmarkArticleTextView.setEnabled(false);
+        likeArticleTextView.setTextColor(ContextCompat.getColor(this, R.color.grey));
+        bookmarkArticleTextView.setTextColor(ContextCompat.getColor(this, R.color.grey));
+        setTextViewDrawableColor(likeArticleTextView, R.color.grey);
+        setTextViewDrawableColor(bookmarkArticleTextView, R.color.grey);
 
         mScrollView.setScrollViewCallbacks(this);
         followClick.setOnClickListener(this);
         followClick.setEnabled(false);
-//        commentBtn.setOnClickListener(this);
 
         mToolbar = (Toolbar) findViewById(R.id.anim_toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setIcon(R.drawable.app_logo);
-//        setActionBar(mToolbar);
-//        getActionBar().setTitle("");
-//        getActionBar().setDisplayHomeAsUpEnabled(true);
-//        getActionBar().setIcon(R.drawable.app_logo);
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -1850,21 +1851,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                 }
                 break;
                 case R.id.likeTextView: {
-                    if (recommendStatus == 0) {
-                        recommendStatus = 1;
-                        Drawable top = ContextCompat.getDrawable(VlogsDetailActivity.this, R.drawable.ic_recommended);
-                        likeArticleTextView.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null);
-//                        commentFloatingActionButton.setIconDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.heart_filled));
-                        recommendUnrecommentArticleAPI("1");
 
-                    } else {
-                        recommendStatus = 0;
-                        Drawable top = ContextCompat.getDrawable(VlogsDetailActivity.this, R.drawable.ic_recommend);
-                        likeArticleTextView.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null);
-//                        commentFloatingActionButton.setIconDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.heart_outline));
-                        recommendUnrecommentArticleAPI("0");
-                    }
-                    break;
                 }
                 case R.id.facebookShareTextView: {
                     if (FacebookDialog.canPresentShareDialog(VlogsDetailActivity.this, FacebookDialog.ShareDialogFeature.SHARE_DIALOG) && !StringUtils.isNullOrEmpty(shareUrl)) {
@@ -2167,6 +2154,14 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
             res = recursiveSearch(children.get(i), upComment);
         }
         return res;
+    }
+
+    private void setTextViewDrawableColor(TextView textView, int color) {
+        for (Drawable drawable : textView.getCompoundDrawables()) {
+            if (drawable != null) {
+                drawable.setColorFilter(new PorterDuffColorFilter(ContextCompat.getColor(this, color), PorterDuff.Mode.SRC_IN));
+            }
+        }
     }
 
     @Override

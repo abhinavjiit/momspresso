@@ -4,10 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <com.mycity4kids.widget.CustomFontTextView
@@ -289,6 +288,7 @@
             android:layout_below="@+id/shareContainer"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
+            android:padding="5dp"
             android:text="@string/ranking.improve_social_share"
             android:textColor="@color/ranking.improve_social_share"
             android:textSize="12sp"

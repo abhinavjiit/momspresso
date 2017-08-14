@@ -15,6 +15,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.adapter.RankingPagerAdapter;
+import com.mycity4kids.utils.AppUtils;
 
 /**
  * Created by hemant on 28/7/17.
@@ -41,6 +42,7 @@ public class RankingHomeFragment extends BaseFragment {
 
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.ranking_tabs_your_rank_label)));
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.ranking_tabs_page_views_label)));
+        AppUtils.changeTabsFont(getActivity(), tabLayout);
         RankingPagerAdapter rankingPagerAdapter = new RankingPagerAdapter(getChildFragmentManager(), tabLayout.getTabCount(), authorId);
         viewPager.setAdapter(rankingPagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));

@@ -11,7 +11,6 @@ import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
 
-import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
@@ -21,7 +20,6 @@ import com.mycity4kids.ui.activity.ActivityEditAppointment;
 import com.mycity4kids.ui.activity.ActivityEditTask;
 import com.mycity4kids.ui.activity.ActivityShowAppointment;
 import com.mycity4kids.ui.activity.ActivityShowTask;
-import com.mycity4kids.ui.activity.ArticlesAndBlogsDetailsActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.KidsBirthdayActivity;
 

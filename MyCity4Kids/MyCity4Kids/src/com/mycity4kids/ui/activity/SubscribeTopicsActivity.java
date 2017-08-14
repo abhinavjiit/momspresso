@@ -7,6 +7,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -53,10 +54,11 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
     private ArrayList<String> previouslyFollowedTopics = new ArrayList<>();
     int tabPos;
     private HashMap<String, Topics> selectedTopicsMap;
+    private ArrayList<String> updateTopicList;
 
     private Toolbar toolbar;
     private TabLayout tabLayout;
-    private TextView saveTextView;
+    private TextView saveTextView, cancelTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,8 +71,10 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         saveTextView = (TextView) findViewById(R.id.saveTextView);
+        cancelTextView = (TextView) findViewById(R.id.cancelTextView);
 
         saveTextView.setOnClickListener(this);
+        cancelTextView.setOnClickListener(this);
 
         tabPos = getIntent().getIntExtra("tabPos", 0);
 
@@ -289,7 +293,6 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
             case R.id.saveTextView:
                 ArrayList<Topics> topicsList = new ArrayList<Topics>(BaseApplication.getSelectedTopicsMap().values());
 
-                final ArrayList<String> updateTopicList;
                 Set<String> updateSet = new HashSet<>();
 
                 //create datalist for updating the topics at backend
@@ -317,6 +320,9 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
                 categoriesResponseCall.enqueue(followUnfollowCategoriesResponseCallback);
                 Log.d("dwad", "dwad");
                 break;
+            case R.id.cancelTextView:
+                finish();
+                break;
         }
     }
 
@@ -334,10 +340,10 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
                 FollowUnfollowCategoriesResponse responseData = (FollowUnfollowCategoriesResponse) response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     SharedPrefUtils.setFollowedTopicsCount(SubscribeTopicsActivity.this, responseData.getData().size());
-                    Intent intent = new Intent(SubscribeTopicsActivity.this, DashboardActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                    finish();
+                    showToast(getString(R.string.subscribe_topics_toast_topic_updated));
+                    Intent intent = getIntent();
+                    intent.putStringArrayListExtra("updatedTopicList", updateTopicList);
+                    setResult(RESULT_OK, intent);
                 } else {
                     showToast(responseData.getReason());
                 }
@@ -356,4 +362,14 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
             showToast(getString(R.string.went_wrong));
         }
     };
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }

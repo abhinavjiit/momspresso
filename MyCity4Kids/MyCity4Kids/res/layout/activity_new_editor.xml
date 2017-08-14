@@ -52,8 +52,16 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:background="?attr/colorPrimary"
+        android:contentInsetEnd="0dp"
+        android:contentInsetLeft="0dp"
+        android:contentInsetRight="0dp"
+        android:contentInsetStart="0dp"
         android:elevation="5dp"
         android:minHeight="?attr/actionBarSize"
+        app:contentInsetEnd="0dp"
+        app:contentInsetLeft="0dp"
+        app:contentInsetRight="0dp"
+        app:contentInsetStart="0dp"
         app:theme="@style/ToolbarTheme"
         app:titleTextAppearance="@style/Toolbar.TitleText">
 
@@ -68,7 +76,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingBottom="20dp"
-                android:paddingLeft="10dp"
+                android:paddingLeft="20dp"
                 android:paddingRight="20dp"
                 android:paddingTop="20dp"
                 android:src="@drawable/cross_icon_back" />
@@ -81,6 +89,7 @@
                 android:text="last saved by 20 sec ago"
                 android:textColor="@color/editor.last_saved"
                 android:textSize="14sp"
+                android:visibility="gone"
                 app:fontName="oswald.ttf" />
 
             <com.mycity4kids.widget.CustomFontTextView

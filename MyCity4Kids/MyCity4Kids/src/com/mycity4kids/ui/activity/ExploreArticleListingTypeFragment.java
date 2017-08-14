@@ -74,10 +74,8 @@ public class ExploreArticleListingTypeFragment extends BaseFragment {
             searchTopicsEditText.setVisibility(View.VISIBLE);
             exploreCategoriesLabel.setText(getString(R.string.search_topics_title));
         } else {
-//            tabLayout.setVisibility(View.VISIBLE);
             searchTopicsEditText.setVisibility(View.GONE);
             exploreCategoriesLabel.setText(getString(R.string.explore_listing_explore_categories_title));
-
             setUpTabLayout();
         }
         try {
@@ -149,7 +147,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment {
         }
 
         tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
-        changeTabsFont();
+        AppUtils.changeTabsFont(getActivity(), tabLayout);
         wrapTabIndicatorToTitle(tabLayout, 25, 25);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override

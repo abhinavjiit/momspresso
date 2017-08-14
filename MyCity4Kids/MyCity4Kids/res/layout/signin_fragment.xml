@@ -77,7 +77,7 @@
             android:layout_marginLeft="45dp"
             android:layout_marginRight="45dp"
             android:layout_marginTop="10dp"
-            android:background="@drawable/facebook_rounded_corners"
+            android:background="@drawable/unfollow_topic_author_bg"
             android:drawablePadding="-30dp"
             android:gravity="center"
             android:paddingBottom="8dp"

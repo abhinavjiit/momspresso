@@ -6,6 +6,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -68,7 +69,7 @@ public class LanguageSpecificArticleListingActivity extends BaseActivity {
                 languageConfigModelArrayList.add(entry.getValue());
             }
 
-            changeTabsFont();
+            AppUtils.changeTabsFont(this, languagesTabLayout);
 //            wrapTabIndicatorToTitle(tabLayout, 25, 25);
             final LanguageSpecificArticlePagerAdapter adapter = new LanguageSpecificArticlePagerAdapter
                     (getSupportFragmentManager(), languagesTabLayout.getTabCount(), languageConfigModelArrayList);
@@ -111,6 +112,16 @@ public class LanguageSpecificArticleListingActivity extends BaseActivity {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return true;
     }
 
     @Override

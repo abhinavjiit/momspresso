@@ -29,7 +29,10 @@ public class ArticleListingResult implements Parcelable {
     private ArrayList<Map<String, String>> tags;
     private String likesCount;
     private String reason;
+    private String bookmarkId;
     private int listingBookmarkStatus = 0;
+    private String isMomspresso;
+    private int listingWatchLaterStatus = 0;
 
     public ArticleListingResult() {
     }
@@ -51,6 +54,8 @@ public class ArticleListingResult implements Parcelable {
         articleCount = in.readString();
         videoUrl = in.readString();
         reason = in.readString();
+        bookmarkId = in.readString();
+        isMomspresso = in.readString();
     }
 
     public static final Creator<ArticleListingResult> CREATOR = new Creator<ArticleListingResult>() {
@@ -217,6 +222,30 @@ public class ArticleListingResult implements Parcelable {
         this.listingBookmarkStatus = listingBookmarkStatus;
     }
 
+    public String getBookmarkId() {
+        return bookmarkId;
+    }
+
+    public void setBookmarkId(String bookmarkId) {
+        this.bookmarkId = bookmarkId;
+    }
+
+    public String getIsMomspresso() {
+        return isMomspresso;
+    }
+
+    public void setIsMomspresso(String isMomspresso) {
+        this.isMomspresso = isMomspresso;
+    }
+
+    public int getListingWatchLaterStatus() {
+        return listingWatchLaterStatus;
+    }
+
+    public void setListingWatchLaterStatus(int listingWatchLaterStatus) {
+        this.listingWatchLaterStatus = listingWatchLaterStatus;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -240,6 +269,8 @@ public class ArticleListingResult implements Parcelable {
         dest.writeString(articleCount);
         dest.writeString(videoUrl);
         dest.writeString(reason);
+        dest.writeString(bookmarkId);
+        dest.writeString(isMomspresso);
     }
 
 

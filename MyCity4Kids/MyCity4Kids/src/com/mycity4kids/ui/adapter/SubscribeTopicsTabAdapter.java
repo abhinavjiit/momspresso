@@ -1,23 +1,17 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mycity4kids.R;
-import com.mycity4kids.gtmutils.GTMEventType;
-import com.mycity4kids.gtmutils.Utils;
-import com.mycity4kids.interfaces.ITopicSelectionEvent;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.newmodels.SelectTopic;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -103,17 +97,20 @@ public class SubscribeTopicsTabAdapter extends BaseAdapter {
         holder.rootView.removeAllViews();
 
         for (int i = 0; i < top3Cat.size(); i++) {
-            LinearLayout ll = (LinearLayout) mInflator.inflate(R.layout.search_topic_item, null);
-            final TextView tv = (TextView) ((LinearLayout) ll.getChildAt(0)).getChildAt(0);
+            LinearLayout ll = (LinearLayout) mInflator.inflate(R.layout.topic_follow_unfollow_item, null);
+            final TextView tv = (TextView) ll.getChildAt(0);
             tv.setText(top3Cat.get(i).getDisplay_name().toUpperCase());
             tv.setTag(top3Cat.get(i));
-            final LinearLayout ll_main = (LinearLayout) ll.getChildAt(0);
+
+//            final LinearLayout ll_main = (LinearLayout) ll.getChildAt(0);
             if (null == selectedTopicsMap.get(((Topics) tv.getTag()).getId())) {
-                ll_main.setBackgroundResource(R.drawable.search_topics_transparent_bg);
-                tv.setTextColor(ContextCompat.getColor(mContext, R.color.splashtopics_search_topic_item_text));
+                tv.setSelected(false);
+//                ll_main.setBackgroundResource(R.drawable.search_topics_transparent_bg);
+//                tv.setTextColor(ContextCompat.getColor(mContext, R.color.splashtopics_search_topic_item_text));
             } else {
-                ll_main.setBackgroundResource(R.drawable.search_topics_filled_bg);
-                tv.setTextColor(ContextCompat.getColor(mContext, R.color.white_color));
+                tv.setSelected(true);
+//                ll_main.setBackgroundResource(R.drawable.search_topics_filled_bg);
+//                tv.setTextColor(ContextCompat.getColor(mContext, R.color.white_color));
             }
 
             tv.setOnClickListener(new View.OnClickListener() {
@@ -122,23 +119,25 @@ public class SubscribeTopicsTabAdapter extends BaseAdapter {
                     int action = 0;
                     if (null == selectedTopicsMap.get(((Topics) tv.getTag()).getId())) {
 //                        Utils.pushEventFollowUnfollowTopic(mContext, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, userId, "SearchOrDetailsTopicList", "follow", ((Topics) tv.getTag()).getDisplay_name() + ":" + ((Topics) tv.getTag()).getId());
-                        Utils.pushTopicFollowUnfollowEvent(mContext, GTMEventType.FOLLOW_TOPIC_CLICK_EVENT, userId, "SearchOrDetailsTopicList", ((Topics) tv.getTag()).getDisplay_name() + "~" + ((Topics) tv.getTag()).getId());
+//                        Utils.pushTopicFollowUnfollowEvent(mContext, GTMEventType.FOLLOW_TOPIC_CLICK_EVENT, userId, "SearchOrDetailsTopicList", ((Topics) tv.getTag()).getDisplay_name() + "~" + ((Topics) tv.getTag()).getId());
                         selectedTopicsMap.put(((Topics) tv.getTag()).getId(), (Topics) tv.getTag());
                         ((Topics) tv.getTag()).setIsSelected(true);
-                        ll_main.setBackgroundResource(R.drawable.search_topics_filled_bg);
-                        tv.setTextColor(ContextCompat.getColor(mContext, R.color.white_color));
+                        tv.setSelected(true);
+//                        ll_main.setBackgroundResource(R.drawable.search_topics_filled_bg);
+//                        tv.setTextColor(ContextCompat.getColor(mContext, R.color.white_color));
                         action = 1;
                     } else {
 //                        Utils.pushEventFollowUnfollowTopic(mContext, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, userId, "SearchOrDetailsTopicList", "unfollow", ((Topics) tv.getTag()).getDisplay_name() + ":" + ((Topics) tv.getTag()).getId());
-                        Utils.pushTopicFollowUnfollowEvent(mContext, GTMEventType.UNFOLLOW_TOPIC_CLICK_EVENT, userId, "SearchOrDetailsTopicList", ((Topics) tv.getTag()).getDisplay_name() + "~" + ((Topics) tv.getTag()).getId());
+//                        Utils.pushTopicFollowUnfollowEvent(mContext, GTMEventType.UNFOLLOW_TOPIC_CLICK_EVENT, userId, "SearchOrDetailsTopicList", ((Topics) tv.getTag()).getDisplay_name() + "~" + ((Topics) tv.getTag()).getId());
                         selectedTopicsMap.remove(((Topics) tv.getTag()).getId());
                         ((Topics) tv.getTag()).setIsSelected(false);
-                        ll_main.setBackgroundResource(R.drawable.search_topics_transparent_bg);
-                        tv.setTextColor(ContextCompat.getColor(mContext, R.color.splashtopics_search_topic_item_text));
+                        tv.setSelected(false);
+//                        ll_main.setBackgroundResource(R.drawable.search_topics_transparent_bg);
+//                        tv.setTextColor(ContextCompat.getColor(mContext, R.color.splashtopics_search_topic_item_text));
                         action = 0;
                     }
 //                    iTopicSelectionEvent.onTopicSelectionChanged(selectedTopicsMap.size(), action);
-                    ll_main.startAnimation(holder.anim);
+//                    ll_main.startAnimation(holder.anim);
                 }
             });
 
@@ -147,68 +146,5 @@ public class SubscribeTopicsTabAdapter extends BaseAdapter {
 
         return view;
     }
-
-//    @Override
-//    public Filter getFilter() {
-//        if (mContactsFilter == null)
-//            mContactsFilter = new ContactsFilter();
-//
-//        return mContactsFilter;
-//    }
-
-//    private class ContactsFilter extends Filter {
-//
-//        @Override
-//        protected FilterResults performFiltering(CharSequence constraint) {
-//            // Create a FilterResults object
-//            FilterResults results = new FilterResults();
-//
-//            // If the constraint (search string/pattern) is null
-//            // or its length is 0, i.e., its empty then
-//            // we just set the `values` property to the
-//            // original contacts list which contains all of them
-//            if (constraint == null || constraint.length() == 0) {
-//                results.values = selectTopicArrayList;
-//                results.count = selectTopicArrayList.size();
-//            } else {
-//                // Some search copnstraint has been passed
-//                // so let's filter accordingly
-//                ArrayList<SelectTopic> filteredContacts = new ArrayList<SelectTopic>();
-//
-//                // We'll go through all the contacts and see
-//                // if they contain the supplied string
-//                for (SelectTopic st : selectTopicArrayList) {
-//                    SelectTopic std = new SelectTopic();
-//                    ArrayList<Topics> tt = new ArrayList<>();
-//                    for (Topics c : st.getChildTopics()) {
-//                        if (c.getDisplay_name().toUpperCase().contains(constraint.toString().toUpperCase())) {
-//                            // if `contains` == true then add it
-//                            // to our filtered list
-//                            tt.add(c);
-//                        }
-//                    }
-//                    if (!tt.isEmpty()) {
-//                        std.setChildTopics(tt);
-//                        std.setId(st.getId());
-//                        std.setDisplayName(st.getDisplayName());
-//                        filteredContacts.add(std);
-//                    }
-//                }
-//
-//                // Finally set the filtered values and size/count
-//                results.values = filteredContacts;
-//                results.count = filteredContacts.size();
-//            }
-//
-//            // Return our FilterResults object
-//            return results;
-//        }
-//
-//        @Override
-//        protected void publishResults(CharSequence constraint, FilterResults results) {
-//            filteredSelectTopicArrayList = (ArrayList<SelectTopic>) results.values;
-//            notifyDataSetChanged();
-//        }
-//    }
 
 }

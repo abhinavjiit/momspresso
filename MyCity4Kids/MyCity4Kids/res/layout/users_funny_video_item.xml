@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:paddingBottom="10dp"
+    android:paddingLeft="18dp"
+    android:paddingRight="18dp"
+    android:paddingTop="10dp">
+
+    <ImageView
+        android:id="@+id/articleImageView"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:src="@drawable/default_article" />
+
+    <ImageView
+        android:id="@+id/videoIndicatorImageView"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignBottom="@+id/authorTextView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="25dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_videos" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/articleTitleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@+id/articleImageView"
+        android:layout_toRightOf="@+id/articleImageView"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:text="@string/title"
+        android:textColor="@color/article_listing.title"
+        android:textSize="14sp"
+        app:fontName="oswald_regular.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/dateTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/articleTitleTextView"
+        android:layout_alignStart="@+id/articleTitleTextView"
+        android:layout_below="@+id/articleTitleTextView"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="@string/title"
+        android:textColor="@color/article_listing.author_name"
+        android:textSize="12sp"
+        app:fontName="oswald.ttf" />
+
+    <ImageView
+        android:id="@+id/shareImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/dateTextView"
+        android:layout_alignRight="@+id/dateTextView"
+        android:layout_below="@+id/dateTextView"
+        android:background="@drawable/unfollow_topic_author_bg"
+        android:padding="10dp"
+        android:src="@drawable/ic_share_white" />
+
+    <View
+        android:id="@+id/view12"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/shareImageView"
+        android:layout_marginTop="10dp"
+        android:background="@color/common_underline" />
+</RelativeLayout>

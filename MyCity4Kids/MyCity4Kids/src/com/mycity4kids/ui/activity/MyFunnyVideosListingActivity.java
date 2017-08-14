@@ -2,21 +2,17 @@ package com.mycity4kids.ui.activity;
 
 import android.Manifest;
 import android.accounts.NetworkErrorException;
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -36,6 +32,7 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
+import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -47,7 +44,6 @@ import com.mycity4kids.models.response.VlogsListingResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.adapter.MyFunnyVideosListingAdapter;
-import com.mycity4kids.ui.fragment.ChooseVideoUploadOptionDialogFragment;
 import com.mycity4kids.utils.PermissionUtil;
 
 import java.util.ArrayList;
@@ -87,7 +83,8 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
     private boolean isReuqestRunning = false;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ProgressBar progressBar;
-    private String userId;
+    //    private String userId;
+    private String authorId;
     private String fromScreen;
 
     @Override
@@ -112,6 +109,10 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
         fabSort = (FloatingActionButton) findViewById(R.id.fabSort);
 
         fromScreen = getIntent().getStringExtra(Constants.FROM_SCREEN);
+        authorId = getIntent().getStringExtra(Constants.AUTHOR_ID);
+        if (StringUtils.isNullOrEmpty(authorId)) {
+            authorId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
+        }
 
         popularSortFAB.setOnClickListener(this);
         recentSortFAB.setOnClickListener(this);
@@ -150,12 +151,10 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
         fabSort.setVisibility(View.INVISIBLE);
         fabMenu.setVisibility(View.INVISIBLE);
 
-        userId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
-
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("FUNNY VIDEOS");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely));
 
@@ -251,7 +250,7 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
 
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI.class);
-        Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsAPI.getPublishedVlogs(userId, from, from + limit - 1, sortType);
+        Call<VlogsListingResponse> callRecentVideoArticles = vlogsListingAndDetailsAPI.getPublishedVlogs(authorId, from, from + limit - 1, sortType);
         callRecentVideoArticles.enqueue(userVideosListResponseCallback);
         progressBar.setVisibility(View.VISIBLE);
 
@@ -308,7 +307,6 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
             } else {
                 // No results for search
                 noBlogsTextView.setVisibility(View.VISIBLE);
-                noBlogsTextView.setText("No articles found");
                 articleDataModelsNew = dataList;
                 articlesListingAdapter.setNewListData(articleDataModelsNew);
                 articlesListingAdapter.notifyDataSetChanged();
@@ -345,25 +343,10 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_my_videos, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
-                break;
-            case R.id.add_video:
-                ChooseVideoUploadOptionDialogFragment chooseVideoUploadOptionDialogFragment = new ChooseVideoUploadOptionDialogFragment();
-                FragmentManager fm = getSupportFragmentManager();
-                Bundle _args = new Bundle();
-                _args.putString("activity", "myfunnyvideos");
-                chooseVideoUploadOptionDialogFragment.setArguments(_args);
-                chooseVideoUploadOptionDialogFragment.setCancelable(true);
-                chooseVideoUploadOptionDialogFragment.show(fm, "Choose video option");
                 break;
         }
         return true;

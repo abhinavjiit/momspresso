@@ -73,6 +73,9 @@ public class BaseApplication extends Application {
     private static Tracker mTracker;
     public static String base_url;
     public String appVersion;
+
+    public static boolean isFirstSwipe = true;
+
     // Placeholder property ID.this was old which create by own account.
     //private static final String GA_PROPERTY_ID = "UA-50870780-1";
 
@@ -144,6 +147,14 @@ public class BaseApplication extends Application {
 
     public static void setHasLanguagePreferrenceChanged(boolean hasLanguagePreferrenceChanged) {
         BaseApplication.hasLanguagePreferrenceChanged = hasLanguagePreferrenceChanged;
+    }
+
+    public static boolean isFirstSwipe() {
+        return isFirstSwipe;
+    }
+
+    public static void setFirstSwipe(boolean firstSwipe) {
+        isFirstSwipe = firstSwipe;
     }
 
     public enum TrackerName {

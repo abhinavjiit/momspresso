@@ -20,6 +20,7 @@
         android:paddingTop="20dp">
 
         <RelativeLayout
+            android:id="@+id/rankingContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true">
@@ -84,7 +85,7 @@
         android:background="@color/common_underline" />
 
     <com.mycity4kids.widget.CustomFontTextView
-        android:id="@+id/improvePageViewTextView"
+        android:id="@+id/improveRankTextView"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:layout_alignEnd="@+id/rankContainer"
@@ -108,7 +109,7 @@
         android:id="@+id/underline2"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@+id/improvePageViewTextView"
+        android:layout_below="@+id/improveRankTextView"
         android:layout_marginTop="20dp"
         android:background="@color/common_underline" />
 

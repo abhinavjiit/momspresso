@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
@@ -36,8 +35,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
-import com.kelltontech.utils.BitmapUtils;
 import com.kelltontech.utils.ConnectivityUtils;
+import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
@@ -75,12 +74,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import okhttp3.MediaType;
@@ -106,12 +106,14 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     String mCurrentPhotoPath, absoluteImagePath;
     File photoFile;
 
+    DraftListResult draftObject;
     File file;
     MediaFile mediaFile;
     String mediaId;
     String response;
     Boolean fromBackpress = false;
     String draftId = "";
+
     public static final String EDITOR_PARAM = "EDITOR_PARAM";
     public static final String TITLE_PARAM = "TITLE_PARAM";
     public static final String CONTENT_PARAM = "CONTENT_PARAM";
@@ -167,6 +169,24 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
         closeEditorImageView.setOnClickListener(this);
         publishTextView.setOnClickListener(this);
 
+        if (null != draftObject) {
+            try {
+                Calendar calendar1 = Calendar.getInstance();
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+                SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm", Locale.US);
+                calendar1.setTimeInMillis(draftObject.getUpdatedTime() * 1000);
+                Long diff = System.currentTimeMillis() - draftObject.getUpdatedTime() * 1000;
+                if (diff / (1000 * 60 * 60) > 24 && !sdf.format(System.currentTimeMillis()).equals(sdf.format((draftObject.getUpdatedTime() * 1000)))) {
+                    lastSavedTextView.setText(getString(R.string.editor_last_saved_on, DateTimeUtils.getDateFromTimestamp(draftObject.getUpdatedTime())));
+                } else {
+                    lastSavedTextView.setText(getString(R.string.editor_last_saved_at, sdf1.format(calendar1.getTime())));
+                }
+                lastSavedTextView.setVisibility(View.VISIBLE);
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
 //        languagesTextView = (TextView) findViewById(R.id.languagesTextView);
 //        suggestionOverlaySlider = (RelativeLayout) findViewById(R.id.suggestionOverlaySlider);
 //
@@ -539,22 +559,6 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
 
                 if (resultCode == Activity.RESULT_OK) {
                     try {
-//                        Uri selectedImage = data.getData();
-//                        String[] filePathColumn = {MediaStore.Images.Media.DATA};
-//
-//                        Cursor cursor = getContentResolver().query(
-//                                selectedImage, filePathColumn, null, null, null);
-//                        cursor.moveToFirst();
-//
-//                        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-//                        String filePath = cursor.getString(columnIndex);
-//                        cursor.close();
-//                        Log.e("File", "filePath: " + filePath);
-//                        filePath = filePath.replaceAll("[^a-zA-Z0-9.-/_]", "_");
-//                        file = new File(new URI("file://"
-//                                + filePath.replaceAll(" ", "%20")));
-//                        int maxImageSize = BitmapUtils.getMaxSize(this);
-//                        maxImageSize = 512;
                         Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(EditorPostActivity.this.getContentResolver(), imageUri);
                         float actualHeight = imageBitmap.getHeight();
                         float actualWidth = imageBitmap.getWidth();
@@ -759,16 +763,16 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                     showAlertDialog(getString(R.string.editor_spell_check_title), getString(R.string.editor_spell_check_message), new OnButtonClicked() {
                         @Override
                         public void onButtonCLick(int buttonId) {
-                            PublishDraftObject draftObject = new PublishDraftObject();
+                            PublishDraftObject publishObject = new PublishDraftObject();
 
-                            draftObject.setBody(contentFormatting(mEditorFragment.getContent().toString()));
-                            draftObject.setTitle(titleFormatting(mEditorFragment.getTitle().toString().trim()));
+                            publishObject.setBody(contentFormatting(mEditorFragment.getContent().toString()));
+                            publishObject.setTitle(titleFormatting(mEditorFragment.getTitle().toString().trim()));
                             Log.d("draftId = ", draftId + "");
                             if ((getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) || ("4".equals(moderation_status))) {
                                 // coming from edit published articles
                                 Intent intent_1 = new Intent(EditorPostActivity.this, EditSelectedTopicsActivity.class);
-                                draftObject.setId(articleId);
-                                intent_1.putExtra("draftItem", draftObject);
+                                publishObject.setId(articleId);
+                                intent_1.putExtra("draftItem", publishObject);
                                 intent_1.putExtra("imageUrl", thumbnailUrl);
                                 intent_1.putExtra("from", "publishedList");
                                 intent_1.putExtra("articleId", articleId);
@@ -778,9 +782,9 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                             } else {
                                 Intent intent_3 = new Intent(EditorPostActivity.this, AddArticleTopicsActivity.class);
                                 if (!StringUtils.isNullOrEmpty(draftId)) {
-                                    draftObject.setId(draftId);
+                                    publishObject.setId(draftId);
                                 }
-                                intent_3.putExtra("draftItem", draftObject);
+                                intent_3.putExtra("draftItem", publishObject);
                                 intent_3.putExtra("from", "editor");
                                 startActivity(intent_3);
                             }
@@ -965,28 +969,19 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
         content = getIntent().getStringExtra(CONTENT_PARAM);
         boolean isLocalDraft = getIntent().getBooleanExtra(DRAFT_PARAM, true);
         if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("draftList")) {
-            DraftListResult draftObject = (DraftListResult) getIntent().getSerializableExtra("draftItem");
+            draftObject = (DraftListResult) getIntent().getSerializableExtra("draftItem");
             title = draftObject.getTitle();
             title = title.trim();
             content = draftObject.getBody();
             draftId = draftObject.getId();
-            //  path = draftObject.getPath();
-            //  moderation_status = draftObject.getModeration_status();
+
             if (StringUtils.isNullOrEmpty(moderation_status)) {
                 moderation_status = "0";
             }
-            Log.e("moderation_status", "" + moderation_status);
-            // node_id = draftObject.getNode_id();
             mEditorFragment.setTitle(title);
             mEditorFragment.setContent(content);
-            if ("4".equals(moderation_status)) {
-//                tag = getIntent().getStringExtra("tag");
-            }
-          /*  if (moderation_status.equals("3")) {
-                mEditorFragment.toggleTitleView(true);
-            }*/
+
         } else if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) {
-            //  PublishedArticlesModel.PublishedArticleData draftObject=(PublishedArticlesModel.PublishedArticleData) getIntent().getSerializableExtra("publishedItem");
             title = getIntent().getStringExtra("title");
             title = title.trim();
             content = getIntent().getStringExtra("content");
@@ -1116,16 +1111,16 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                     showAlertDialog(getString(R.string.editor_spell_check_title), getString(R.string.editor_spell_check_message), new OnButtonClicked() {
                         @Override
                         public void onButtonCLick(int buttonId) {
-                            PublishDraftObject draftObject = new PublishDraftObject();
+                            PublishDraftObject publishObject = new PublishDraftObject();
 
-                            draftObject.setBody(contentFormatting(mEditorFragment.getContent().toString()));
-                            draftObject.setTitle(titleFormatting(mEditorFragment.getTitle().toString().trim()));
+                            publishObject.setBody(contentFormatting(mEditorFragment.getContent().toString()));
+                            publishObject.setTitle(titleFormatting(mEditorFragment.getTitle().toString().trim()));
                             Log.d("draftId = ", draftId + "");
                             if ((getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) || ("4".equals(moderation_status))) {
                                 // coming from edit published articles
                                 Intent intent_1 = new Intent(EditorPostActivity.this, AddArticleTopicsActivityNew.class);
-                                draftObject.setId(articleId);
-                                intent_1.putExtra("draftItem", draftObject);
+                                publishObject.setId(articleId);
+                                intent_1.putExtra("draftItem", publishObject);
                                 intent_1.putExtra("imageUrl", thumbnailUrl);
                                 intent_1.putExtra("from", "publishedList");
                                 intent_1.putExtra("articleId", articleId);
@@ -1135,9 +1130,9 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                             } else {
                                 Intent intent_3 = new Intent(EditorPostActivity.this, AddArticleTopicsActivityNew.class);
                                 if (!StringUtils.isNullOrEmpty(draftId)) {
-                                    draftObject.setId(draftId);
+                                    publishObject.setId(draftId);
                                 }
-                                intent_3.putExtra("draftItem", draftObject);
+                                intent_3.putExtra("draftItem", publishObject);
                                 intent_3.putExtra("from", "editor");
                                 startActivity(intent_3);
                             }

@@ -27,7 +27,8 @@
         android:text="Parenting"
         android:textAllCaps="true"
         android:textColor="@color/black"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/followUnfollowTextView"
@@ -39,7 +40,8 @@
         android:gravity="center"
         android:padding="10dp"
         android:text="FOLLOW"
-        android:textColor="@color/toolbar.menu_items" />
+        android:textColor="@color/toolbar.menu_items"
+        android:visibility="gone" />
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
@@ -128,8 +130,8 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_gravity="right|bottom"
-            fab:fab_addButtonColorNormal="@color/fab.pink"
-            fab:fab_addButtonColorPressed="@color/fab.pink"
+            fab:fab_addButtonColorNormal="@color/fab.white"
+            fab:fab_addButtonColorPressed="@color/fab.white"
             fab:fab_addButtonPlusIconColor="@color/white_color"
             fab:fab_addButtonStrokeVisible="false"
             fab:fab_labelStyle="@style/menu_labels_style"
@@ -139,23 +141,23 @@
                 android:id="@+id/recentSortFAB"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                fab:fab_colorNormal="@color/fab.pink"
-                fab:fab_colorPressed="@color/fab.pink"
-                fab:fab_icon="@drawable/recent"
+                fab:fab_colorNormal="@color/fab.white"
+                fab:fab_colorPressed="@color/fab.white"
+                fab:fab_icon="@drawable/ic_recent"
                 fab:fab_plusIconColor="@color/white_color"
                 fab:fab_size="mini"
-                fab:fab_title="Recent" />
+                fab:fab_title="@string/sort.recent" />
 
             <com.getbase.floatingactionbutton.FloatingActionButton
                 android:id="@+id/popularSortFAB"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                fab:fab_colorNormal="@color/fab.pink"
-                fab:fab_colorPressed="@color/fab.pink"
-                fab:fab_icon="@drawable/popular"
+                fab:fab_colorNormal="@color/fab.white"
+                fab:fab_colorPressed="@color/fab.white"
+                fab:fab_icon="@drawable/ic_popular"
                 fab:fab_plusIconColor="@color/white_color"
                 fab:fab_size="mini"
-                fab:fab_title="Popular" />
+                fab:fab_title="@string/sort.popular" />
 
         </com.getbase.floatingactionbutton.FloatingActionsMenu>
     </FrameLayout>
@@ -168,9 +170,9 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_gravity="right|bottom"
-        fab:fab_colorNormal="@color/fab.pink"
-        fab:fab_colorPressed="@color/fab.pink"
-        fab:fab_icon="@drawable/sort_icon" />
+        fab:fab_colorNormal="@color/fab.white"
+        fab:fab_colorPressed="@color/fab.white"
+        fab:fab_icon="@drawable/ic_flip" />
 
     <RelativeLayout
         android:id="@+id/bottomOptionMenu"
@@ -220,7 +222,8 @@
         android:id="@+id/sortBgLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/trans_gray">
+        android:background="@color/trans_gray"
+        android:visibility="gone">
 
         <LinearLayout
             android:id="@+id/sortingLayout"

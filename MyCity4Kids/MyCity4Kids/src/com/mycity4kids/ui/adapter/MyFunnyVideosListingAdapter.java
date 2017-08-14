@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
  */
 public class MyFunnyVideosListingAdapter extends BaseAdapter {
 
+    private final static String VIDEO_PUBLISHED_STATUS = "3";
     private ArrayList<VlogsListingAndDetailResult> mArticleListData;
     private Context mContext;
     private LayoutInflater mInflator;
@@ -69,19 +71,12 @@ public class MyFunnyVideosListingAdapter extends BaseAdapter {
         try {
             final ViewHolder holder;
             if (view == null) {
-                view = mInflator.inflate(R.layout.video_listing_item, null);
+                view = mInflator.inflate(R.layout.users_funny_video_item, null);
                 holder = new ViewHolder();
-                holder.txvArticleTitle = (TextView) view.findViewById(R.id.txvArticleTitle);
-                holder.txvAuthorName = (TextView) view.findViewById(R.id.txvAuthorName);
+                holder.txvArticleTitle = (TextView) view.findViewById(R.id.articleTitleTextView);
                 holder.articleImageView = (ImageView) view.findViewById(R.id.articleImageView);
-                holder.authorImageView = (ImageView) view.findViewById(R.id.authorImageView);
-                holder.forYouDescriptionTextView = (TextView) view.findViewById(R.id.forYouDescriptionTextView);
-
-                holder.viewCountTextView = (TextView) view.findViewById(R.id.viewCountTextView);
-                holder.commentCountTextView = (TextView) view.findViewById(R.id.commentCountTextView);
-                holder.recommendCountTextView = (TextView) view.findViewById(R.id.recommendCountTextView);
-
-                holder.authorTypeTextView = (TextView) view.findViewById(R.id.authorTypeTextView);
+                holder.shareImageView = (ImageView) view.findViewById(R.id.shareImageView);
+                holder.dateTextView = (TextView) view.findViewById(R.id.dateTextView);
 
                 view.setTag(holder);
             } else {
@@ -94,52 +89,21 @@ public class MyFunnyVideosListingAdapter extends BaseAdapter {
                 holder.txvArticleTitle.setText(articleDataModelsNew.get(position).getTitleSlug());
             }
 
-            holder.viewCountTextView.setVisibility(View.GONE);
-            holder.commentCountTextView.setVisibility(View.GONE);
-            holder.recommendCountTextView.setVisibility(View.GONE);
-
-//            switch (articleDataModelsNew.get(position).getPublication_status()) {
-//                case AppConstants.VIDEO_STATUS_DRAFT: {
-//                    holder.authorTypeTextView.setText(AppConstants.VIDEO_TYPE_DRAFT.toUpperCase());
-//                }
-//                case AppConstants.VIDEO_STATUS_APPROVAL_PENDING: {
-//                    holder.authorTypeTextView.setText(AppConstants.VIDEO_TYPE_APPROVAL_PENDING.toUpperCase());
-//                }
-//                case AppConstants.VIDEO_STATUS_APPROVAL_CANCELLED: {
-//                    holder.authorTypeTextView.setText(AppConstants.VIDEO_TYPE_APPROVAL_CANCELLED.toUpperCase());
-//                }
-//                case AppConstants.VIDEO_STATUS_PUBLISHED: {
-//                    holder.authorTypeTextView.setText(AppConstants.VIDEO_TYPE_PUBLISHED.toUpperCase());
-//                }
-//                case AppConstants.VIDEO_STATUS_UNPUBLISHED: {
-//                    holder.authorTypeTextView.setText(AppConstants.VIDEO_TYPE_UNPUBLISHED.toUpperCase());
-//                }
-//            }
-//            holder.authorTypeTextView.setTextColor(ContextCompat.getColor(mContext, R.color.blue_color));
-//            holder.authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_BLOGGER.toUpperCase());
-//            holder.authorTypeTextView.setTextColor(ContextCompat.getColor(mContext, R.color.authortype_colorcode_blogger));
-
-            String userName = articleDataModelsNew.get(position).getAuthor().getFirstName() + " " + articleDataModelsNew.get(position).getAuthor().getLastName();
-            if (StringUtils.isNullOrEmpty(userName) || userName.trim().equalsIgnoreCase("")) {
-                holder.txvAuthorName.setText("NA");
-            } else {
-                holder.txvAuthorName.setText(userName);
-            }
             if (StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getUrl())) {
                 Picasso.with(mContext).load(R.drawable.default_article)
                         .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
-
             } else {
                 Picasso.with(mContext).load(AppUtils.getYoutubeThumbnailURL(articleDataModelsNew.get(position).getUrl()))
                         .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
             }
 
-//            if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getAuthor().getProfilePic().getClientAppMin())) {
-//                Picasso.with(mContext).load(articleDataModelsNew.get(position).getAuthor().getProfilePic().getClientAppMin())
-//                        .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img).into(holder.authorImageView);
-//            } else {
-//                holder.authorImageView.setBackgroundResource(R.drawable.default_commentor_img);
-//            }
+            holder.dateTextView.setText(mContext.getString(R.string.user_funny_video_published_on, DateTimeUtils.getDateFromTimestamp(Long.parseLong(articleDataModelsNew.get(position).getPublished_time()))));
+
+            if (VIDEO_PUBLISHED_STATUS.equals(articleDataModelsNew.get(position).getPublication_status())) {
+                holder.shareImageView.setVisibility(View.VISIBLE);
+            } else {
+                holder.shareImageView.setVisibility(View.INVISIBLE);
+            }
         } catch (Exception ex) {
             Crashlytics.logException(ex);
             Log.d("MC4kException", Log.getStackTraceString(ex));
@@ -152,7 +116,8 @@ public class MyFunnyVideosListingAdapter extends BaseAdapter {
         TextView txvArticleTitle;
         TextView txvAuthorName;
         ImageView articleImageView;
-        ImageView authorImageView;
+        TextView dateTextView;
+        ImageView shareImageView;
         TextView forYouDescriptionTextView;
         TextView viewCountTextView;
         TextView commentCountTextView;

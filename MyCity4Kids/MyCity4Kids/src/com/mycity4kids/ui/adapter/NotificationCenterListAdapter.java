@@ -33,6 +33,8 @@ import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.LoadWebViewActivity;
 import com.mycity4kids.ui.activity.SettingsActivity;
 import com.mycity4kids.ui.activity.VlogsDetailActivity;
+import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
+import com.mycity4kids.ui.fragment.MyAccountProfileFragment;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -163,16 +165,18 @@ public class NotificationCenterListAdapter extends BaseAdapter {
                     hitNotificationReadAPI(notificationList.get(position).getId());
                     notifyDataSetChanged();
                     Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "upcoming_event_list");
-                    Intent intent1 = new Intent(mContext, DashboardActivity.class);
+                    FragmentBusinesslistEvents fragment = new FragmentBusinesslistEvents();
                     Bundle bundle = new Bundle();
-                    bundle.putString("type", "upcoming_event_list");
-                    if (AppConstants.NOTIFICATION_STATUS_UNREAD.equals(notificationList.get(position).getIsRead())) {
-                        bundle.putString(Constants.NOTIFICATION_CENTER_ID, notificationList.get(position).getId());
-                    } else {
-                        bundle.putString(Constants.NOTIFICATION_CENTER_ID, "");
-                    }
-                    intent1.putExtra("notificationExtras", bundle);
-                    mContext.startActivity(intent1);
+                    bundle.putInt(Constants.PAGE_TYPE, Constants.EVENT_PAGE_TYPE);
+                    bundle.putInt(Constants.EXTRA_CATEGORY_ID, SharedPrefUtils.getEventIdForCity(mContext));
+                    bundle.putString(Constants.CATEGOTY_NAME, "Events & workshop");
+                    fragment.setArguments(bundle);
+                    ((DashboardActivity) mContext).addFragment(fragment, bundle, true);
+//                    Intent intent1 = new Intent(mContext, DashboardActivity.class);
+//                    Bundle bundle = new Bundle();
+//                    bundle.putString("type", "upcoming_event_list");
+//                    intent1.putExtra("notificationExtras", bundle);
+//                    mContext.startActivity(intent1);
                 }
             });
         } else if ((StringUtils.isNullOrEmpty(nType) && "2".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_PROFILE.equals(nType)) {
@@ -184,20 +188,19 @@ public class NotificationCenterListAdapter extends BaseAdapter {
                     hitNotificationReadAPI(notificationList.get(position).getId());
                     notifyDataSetChanged();
                     Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "profile");
-                    Intent intent1 = new Intent(mContext, BloggerProfileActivity.class);
-                    if (!StringUtils.isNullOrEmpty(notificationList.get(position).getAuthorId())) {
+                    if (notificationList.get(position).getAuthorId().equals(notificationList.get(position).getUserId())) {
+                        MyAccountProfileFragment fragment0 = new MyAccountProfileFragment();
+                        Bundle mBundle0 = new Bundle();
+                        fragment0.setArguments(mBundle0);
+                        ((DashboardActivity) mContext).addFragment(fragment0, mBundle0, true);
+                    } else {
+                        Intent intent1 = new Intent(mContext, BloggerProfileActivity.class);
                         intent1.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, notificationList.get(position).getAuthorId());
-                    } else {
-                        intent1.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, notificationList.get(position).getUserId());
+                        intent1.putExtra(AppConstants.AUTHOR_NAME, "");
+                        intent1.putExtra(Constants.FROM_SCREEN, "Notification Center List");
+                        mContext.startActivity(intent1);
                     }
-                    if (AppConstants.NOTIFICATION_STATUS_UNREAD.equals(notificationList.get(position).getIsRead())) {
-                        intent1.putExtra(Constants.NOTIFICATION_CENTER_ID, notificationList.get(position).getId());
-                    } else {
-                        intent1.putExtra(Constants.NOTIFICATION_CENTER_ID, "");
-                    }
-                    intent1.putExtra(AppConstants.AUTHOR_NAME, "");
-                    intent1.putExtra(Constants.FROM_SCREEN, "Notification Center List");
-                    mContext.startActivity(intent1);
+
                 }
             });
         } else if ((StringUtils.isNullOrEmpty(nType) && "-1".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_APP_SETTINGS.equals(nType)) {

@@ -21,8 +21,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -235,11 +238,12 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         mInFromLeft.setInterpolator(accelerateInterpolator);
 
         rankViewFlipper = (CustomViewFlipper) header.findViewById(R.id.rankViewFlipper);
-        rankViewFlipper.setInAnimation(AnimationUtils.loadAnimation(this, R.anim.in_from_top));
-        rankViewFlipper.setOutAnimation(AnimationUtils.loadAnimation(this, R.anim.out_from_bottom));
+        rankViewFlipper.setInAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_in));
+        rankViewFlipper.setOutAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_out));
         rankViewFlipper.setAutoStart(true);
         rankViewFlipper.setFlipInterval(3000);
         rankViewFlipper.startFlipping();
+
 //        rankTwoLinearLL = (LinearLayout) header.findViewById(R.id.rankTwoLinearLL);
 //        rankingTextView = (TextView) header.findViewById(R.id.rankingTextView);
 //        rankingTwoTextView = (TextView) header.findViewById(R.id.rankingTwoTextView);
@@ -290,6 +294,7 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         }, true);
 
         bloggerImageView = (ImageView) header.findViewById(R.id.bloggerImageView);
+        int imagesToShow[] = {R.drawable.default_article, R.drawable.default_blogger, R.drawable.default_commentor_img};
 
         if (isPrivateProfile) {
             editProfileTextView.setVisibility(View.VISIBLE);
@@ -556,6 +561,57 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                                     Uri.parse("http://www.mycity4kids.com/parenting/admin/setupablog"));
                     startActivity(viewIntent);
                 }
+            }
+        });
+    }
+
+
+    private void animate(final ImageView imageView, final int images[], final int imageIndex, final boolean forever) {
+
+        //imageView <-- The View which displays the images
+        //images[] <-- Holds R references to the images to display
+        //imageIndex <-- index of the first image to show in images[]
+        //forever <-- If equals true then after the last image it starts all over again with the first image resulting in an infinite loop. You have been warned.
+
+        int fadeInDuration = 500; // Configure time values here
+        int timeBetween = 3000;
+        int fadeOutDuration = 1000;
+
+        blogTitle.setVisibility(View.INVISIBLE);    //Visible or invisible by default - this will apply when the animation ends
+        blogTitle.setText(""+arr.get(imageIndex).getRank());
+
+        Animation fadeIn = new AlphaAnimation(0, 1);
+        fadeIn.setInterpolator(new DecelerateInterpolator()); // add this
+        fadeIn.setDuration(fadeInDuration);
+
+        Animation fadeOut = new AlphaAnimation(1, 0);
+        fadeOut.setInterpolator(new AccelerateInterpolator()); // and this
+        fadeOut.setStartOffset(fadeInDuration + timeBetween);
+        fadeOut.setDuration(fadeOutDuration);
+
+        AnimationSet animation = new AnimationSet(false); // change to false
+        animation.addAnimation(fadeIn);
+        animation.addAnimation(fadeOut);
+        animation.setRepeatCount(1);
+        blogTitle.setAnimation(animation);
+
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            public void onAnimationEnd(Animation animation) {
+                if (arr.size() - 1 > imageIndex) {
+                    animate(imageView, images, imageIndex + 1, forever); //Calls itself until it gets to the end of the array
+                } else {
+                    if (forever) {
+                        animate(imageView, images, 0, forever);  //Calls itself to start the animation all over again in a loop if forever = true
+                    }
+                }
+            }
+
+            public void onAnimationRepeat(Animation animation) {
+                // TODO Auto-generated method stub
+            }
+
+            public void onAnimationStart(Animation animation) {
+                // TODO Auto-generated method stub
             }
         });
     }
@@ -1257,6 +1313,8 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
         }
     }
 
+    private ArrayList<LanguageRanksModel> arr = new ArrayList<>();
+
     private void getBloggerDashboardDetails() {
 
         showProgressDialog("please wait ...");
@@ -1300,14 +1358,18 @@ public class BloggerDashboardActivity extends BaseActivity implements View.OnCli
                                      for (int i = 0; i < responseData.getData().get(0).getResult().getRanks().size(); i++) {
                                          if (AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(i).getLangKey())) {
                                              addRankView(responseData.getData().get(0).getResult().getRanks().get(i));
+                                             arr.add(responseData.getData().get(0).getResult().getRanks().get(i));
                                          }
                                      }
                                      Collections.sort(responseData.getData().get(0).getResult().getRanks());
                                      for (int i = 0; i < responseData.getData().get(0).getResult().getRanks().size(); i++) {
                                          if (!AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(i).getLangKey())) {
                                              addRankView(responseData.getData().get(0).getResult().getRanks().get(i));
+                                             arr.add(responseData.getData().get(0).getResult().getRanks().get(i));
                                          }
                                      }
+                                     int imagesToShow[] = {R.drawable.default_article, R.drawable.default_blogger, R.drawable.default_commentor_img};
+                                     animate(null, imagesToShow, 0, true);
                                  }
 
                                  int followerCount = Integer.parseInt(responseData.getData().get(0).getResult().getFollowersCount());
