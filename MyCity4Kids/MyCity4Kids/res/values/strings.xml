@@ -415,6 +415,7 @@
     <string name="ad.comments.edit_label">Edit</string>
     <string name="ad.comments.save">SAVE</string>
     <string name="ad.comments.toolbar.title">Comments</string>
+    <string name="ad.comments.replying_to">You are replying to %1$s</string>
     <string name="ad.bottom_bar.facebook">FACEBOOK</string>
     <string name="ad.bottom_bar.whatsapp">WHATSAPP</string>
     <string name="ad.bottom_bar.email">EMAIL</string>
@@ -424,6 +425,8 @@
     <string name="ad.bottom_bar.unlike">UNLIKE</string>
     <string name="ad.recent_logs_from.title">RECENT BLOGS FROM</string>
     <string name="ad.trending.title">TRENDING BLOGS</string>
+    <string name="ad.tts.toast_unplayable_article">Unable to play this article</string>
+
     <string name="vd.recent_videos_from.title">RECENT VIDEOS FROM</string>
     <string name="vd.trending.title">TRENDING BLOGS</string>
 
@@ -674,6 +677,7 @@
     <string name="app_settings.edit_prefs.twitter">TWITTER</string>
     <string name="app_settings.edit_prefs.google">GOOGLE</string>
     <string name="app_settings.edit_prefs.add">ADD</string>
+    <string name="app_settings.edit_prefs.connected">CONNECTED</string>
     <string name="app_settings.edit_prefs.topics_interested">TOPICS OF INTEREST</string>
     <string name="app_settings.edit_prefs.add_topics">ADD TOPICS</string>
     <string name="app_settings.edit_prefs.more_topics">MORE...</string>
@@ -804,6 +808,7 @@
     <string name="explore.section.events">EVENTS</string>
     <string name="explore.section.resources">RESOURCES</string>
     <string name="explore.section.top_things">TOP THING TO DO</string>
+    <string name="explore.section.no_resources">We do not have any events or resources for your city at present.</string>
 
     <string name="all_videos.toolbar.title">VIDEOS</string>
     <string name="all_videos.tabbar.momspresso_label">MOMSPRESSO</string>

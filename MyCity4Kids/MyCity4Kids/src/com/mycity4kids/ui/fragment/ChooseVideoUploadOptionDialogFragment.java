@@ -3,10 +3,8 @@ package com.mycity4kids.ui.fragment;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -22,16 +20,13 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
-import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.ui.activity.AllVideoSectionActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.MyFunnyVideosListingActivity;
 import com.mycity4kids.ui.activity.VlogsListingActivity;
 import com.mycity4kids.utils.PermissionUtil;
 
-import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -93,7 +88,6 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
                         } else if ("vlogslisting".equals(activity)) {
                             ((VlogsListingActivity) getActivity()).requestPermissions("camera");
                         } else if ("allvideosection".equals(activity)) {
-                            ((AllVideoSectionActivity) getActivity()).requestPermissions("camera");
                         }
                     } else {
                         openVideoCapture();
@@ -119,7 +113,6 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
                         } else if ("vlogslisting".equals(activity)) {
                             ((VlogsListingActivity) getActivity()).requestPermissions("gallery");
                         } else if ("allvideosection".equals(activity)) {
-                            ((AllVideoSectionActivity) getActivity()).requestPermissions("gallery");
                         }
                     } else {
                         pickFromGallery();
@@ -242,7 +235,6 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
             } else if ("vlogslisting".equals(activity)) {
                 ((VlogsListingActivity) getActivity()).startActivityForResult(videoCapture, AppConstants.REQUEST_VIDEO_TRIMMER);
             } else if ("allvideosection".equals(activity)) {
-                ((AllVideoSectionActivity) getActivity()).startActivityForResult(videoCapture, AppConstants.REQUEST_VIDEO_TRIMMER);
             }
         } catch (Exception e) {
             Crashlytics.logException(e);
@@ -263,7 +255,6 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
             } else if ("vlogslisting".equals(activity)) {
                 ((VlogsListingActivity) getActivity()).startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)), AppConstants.REQUEST_VIDEO_TRIMMER);
             } else if ("allvideosection".equals(activity)) {
-                ((AllVideoSectionActivity) getActivity()).startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)), AppConstants.REQUEST_VIDEO_TRIMMER);
             }
         } catch (Exception e) {
             Crashlytics.logException(e);

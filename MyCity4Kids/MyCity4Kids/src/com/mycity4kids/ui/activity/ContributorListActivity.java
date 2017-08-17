@@ -145,7 +145,7 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 ContributorListResult itemSelected = (ContributorListResult) adapterView.getItemAtPosition(position);
-                Intent intent = new Intent(ContributorListActivity.this, BloggerDashboardActivity.class);
+                Intent intent = new Intent(ContributorListActivity.this, BloggerProfileActivity.class);
                 intent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, itemSelected.getId());
                 intent.putExtra(AppConstants.AUTHOR_NAME, itemSelected.getFirstName() + " " + itemSelected.getLastName());
                 intent.putExtra(Constants.FROM_SCREEN, "Contributor List");

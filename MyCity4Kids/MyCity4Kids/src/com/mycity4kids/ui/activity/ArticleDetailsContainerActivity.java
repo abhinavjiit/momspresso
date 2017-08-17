@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
+import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
@@ -189,7 +190,12 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
             case R.id.playTtsTextView:
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1 && !isAudioPlaying) {
                     Intent readArticleIntent = new Intent(this, ReadArticleService.class);
-                    readArticleIntent.putExtra("content", ((ArticleDetailsFragment) mViewPagerAdapter.instantiateItem(mViewPager, mViewPager.getCurrentItem())).getArticleContent());
+                    String playContent = ((ArticleDetailsFragment) mViewPagerAdapter.instantiateItem(mViewPager, mViewPager.getCurrentItem())).getArticleContent();
+                    if (StringUtils.isNullOrEmpty(playContent)) {
+                        showToast(getString(R.string.ad_tts_toast_unplayable_article));
+                        return;
+                    }
+                    readArticleIntent.putExtra("content", playContent);
                     readArticleIntent.putExtra("langCategoryId", "" + ((ArticleDetailsFragment) mViewPagerAdapter.instantiateItem(mViewPager, mViewPager.getCurrentItem())).getArticleLanguageCategoryId());
                     startService(readArticleIntent);
                     playTtsTextView.setImageDrawable(ContextCompat.getDrawable(ArticleDetailsContainerActivity.this, R.drawable.ic_stop_tts));
@@ -207,5 +213,9 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
     public void hideToolbarPerm() {
         mToolbar.setVisibility(View.GONE);
         backNavigationImageView.setVisibility(View.GONE);
+    }
+
+    public void showPlayArticleAudioButton() {
+        playTtsTextView.setVisibility(View.VISIBLE);
     }
 }

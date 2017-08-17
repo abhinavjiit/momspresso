@@ -267,32 +267,6 @@
                     android:paddingTop="5dp"
                     android:src="@drawable/ic_bookmark"
                     android:visibility="gone" />
-                <!--<TextView-->
-                <!--android:id="@+id/authorTypeTextView"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_alignParentRight="true"-->
-                <!--android:layout_below="@+id/articleImageView"-->
-                <!--android:fontFamily="sans-serif-light"-->
-                <!--android:paddingBottom="5dp"-->
-                <!--android:paddingRight="10dp"-->
-                <!--android:paddingTop="8dp"-->
-                <!--android:text="BLOGGER"-->
-                <!--android:textColor="@color/black"-->
-                <!--android:textSize="13sp" />-->
-
-                <!--<TextView-->
-                <!--android:id="@+id/rankTextView"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_alignParentRight="true"-->
-                <!--android:layout_below="@+id/authorTypeTextView"-->
-                <!--android:drawableLeft="@drawable/rank_icon"-->
-                <!--android:fontFamily="sans-serif-light"-->
-                <!--android:paddingRight="10dp"-->
-                <!--android:text="NA"-->
-                <!--android:textColor="@color/card_listing.stats"-->
-                <!--android:textSize="12sp" />-->
             </RelativeLayout>
 
             <LinearLayout
@@ -303,9 +277,9 @@
                 android:orientation="horizontal"
                 android:paddingBottom="12dp"
                 android:paddingLeft="10dp"
-                android:visibility="gone"
                 android:paddingRight="10dp"
-                android:paddingTop="12dp">
+                android:paddingTop="12dp"
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/one"

@@ -28,6 +28,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -57,6 +61,7 @@ import com.mycity4kids.dbtable.TaskTableFile;
 import com.mycity4kids.dbtable.TaskTableNotes;
 import com.mycity4kids.dbtable.TaskTableWhoToRemind;
 import com.mycity4kids.dbtable.UserTable;
+import com.mycity4kids.facebook.FacebookUtils;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.models.logout.LogoutResponse;
 import com.mycity4kids.models.request.UpdateUserDetailsRequest;
@@ -99,7 +104,7 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 18/7/17.
  */
-public class MyAccountProfileFragment extends BaseFragment implements View.OnClickListener {
+public class MyAccountProfileFragment extends BaseFragment implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
 
     private static final int REQUEST_CAMERA = 0;
     private static final int REQUEST_EDIT_PICTURE = 1;
@@ -126,10 +131,22 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
     private ImageView settingImageView;
     private LinearLayout followerContainer, followingContainer, rankContainer;
 
+    private GoogleApiClient mGoogleApiClient;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.myaccount_profile_activity, container, false);
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                .enableAutoManage(getActivity(), this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+
         authorNameTextView = (TextView) rootView.findViewById(R.id.authorNameTextView);
         authorTypeTextView = (TextView) rootView.findViewById(R.id.authorTypeTextView);
         authorBioTextView = (TextView) rootView.findViewById(R.id.authorBioTextView);
@@ -157,6 +174,7 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
         videosSectionTextView.setOnClickListener(this);
         activitySectionTextView.setOnClickListener(this);
         rankingSectionTextView.setOnClickListener(this);
+        rankContainer.setOnClickListener(this);
         settingsSectionTextView.setOnClickListener(this);
         signoutSectionTextView.setOnClickListener(this);
         settingImageView.setOnClickListener(this);
@@ -338,6 +356,10 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
         LogoutResponse responseData = (LogoutResponse) response.getResponseObject();
         String message = responseData.getResult().getMessage();
         if (responseData.getResponseCode() == 200) {
+
+            FacebookUtils.logout(getActivity());
+            gPlusSignOut();
+
             String pushToken = SharedPrefUtils.getDeviceToken(getActivity());
             SharedPrefUtils.clearPrefrence(getActivity());
             SharedPrefUtils.setDeviceToken(getActivity(), pushToken);
@@ -405,6 +427,14 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
         }
     }
 
+    private void gPlusSignOut() {
+        if (mGoogleApiClient.isConnected()) {
+            Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+            mGoogleApiClient.disconnect();
+            mGoogleApiClient.connect();
+        }
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -457,6 +487,12 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
                 startActivity(intent);
             }
             break;
+            case R.id.rankContainer:
+                if (rankingSectionTextView.getVisibility() == View.VISIBLE) {
+                    Intent intent = new Intent(getActivity(), RankingActivity.class);
+                    startActivity(intent);
+                }
+                break;
             case R.id.rankingSectionTextView: {
                 Intent intent = new Intent(getActivity(), RankingActivity.class);
                 startActivity(intent);
@@ -764,6 +800,20 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
                     final Throwable cropError = UCrop.getError(data);
                 }
             }
+        }
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.stopAutoManage(getActivity());
+            mGoogleApiClient.disconnect();
         }
     }
 }

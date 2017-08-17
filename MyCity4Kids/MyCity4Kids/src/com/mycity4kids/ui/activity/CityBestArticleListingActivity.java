@@ -165,7 +165,7 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                Intent intent = new Intent(CityBestArticleListingActivity.this, ArticlesAndBlogsDetailsActivity.class);
+                Intent intent = new Intent(CityBestArticleListingActivity.this, ArticleDetailsContainerActivity.class);
                 if (adapterView.getAdapter() instanceof MainArticleListingAdapter) {
                     ArticleListingResult parentingListData = (ArticleListingResult) ((MainArticleListingAdapter) adapterView.getAdapter()).getItem(i);
                     intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
@@ -176,6 +176,7 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
                     intent.putExtra(Constants.ARTICLE_OPENED_FROM, Constants.KEY_IN_YOUR_CITY + "~" + SharedPrefUtils.getCurrentCityModel(CityBestArticleListingActivity.this).getName());
                     intent.putExtra(Constants.FROM_SCREEN, "Best of City Listing");
                     intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
+                    intent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
                     startActivity(intent);
 
                 }
@@ -337,7 +338,7 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
     }
 
     private void startContextualSearch() {
-        Intent intent = new Intent(this, ContextualSearchActivity.class);
+        Intent intent = new Intent(this, SearchAllActivity.class);
         startActivity(intent);
     }
 

@@ -41,17 +41,41 @@
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/replyToTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:layout_margin="15dp"
+        android:background="@drawable/replying_to_bg"
+        android:padding="15dp"
+        android:text=""
+        android:textColor="@color/ad.comments.replying_to"
+        android:textSize="15sp"
+        android:visibility="gone"
+        app:fontName="oswald_regular.ttf" />
+
+    <View
+        android:id="@+id/separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/replyToTextView"
+        android:background="@color/common_underline"
+        android:visibility="gone" />
+
     <com.mycity4kids.widget.CustomFontEditText
         android:id="@+id/commentReplyEditText"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/addCommentTextView"
-        android:layout_below="@+id/toolbar"
+        android:layout_below="@+id/separator"
         android:gravity="top|start"
         android:hint="@string/add_reply"
-        android:inputType="textCapSentences"
-        android:padding="12dp"
-        android:singleLine="false"
+        android:inputType="textCapSentences|textMultiLine"
+        android:lines="10"
+        android:maxLines="30"
+        android:minLines="5"
+        android:padding="15dp"
         android:textColor="@color/ad.comments.edit_text"
         android:textSize="15sp"
         android:visibility="visible"

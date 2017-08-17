@@ -17,6 +17,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.facebook.Session;
+import com.facebook.model.GraphUser;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.kelltontech.network.Response;
@@ -26,13 +28,17 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.facebook.FacebookUtils;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.interfaces.IFacebookUser;
 import com.mycity4kids.models.FollowTopics;
 import com.mycity4kids.models.NotificationSettingsModel;
 import com.mycity4kids.models.SubscriptionAndLanguageSettingsModel;
 import com.mycity4kids.models.Topics;
+import com.mycity4kids.models.request.SocialConnectRequest;
 import com.mycity4kids.models.request.SubscriptionUpdateRequest;
+import com.mycity4kids.models.response.BaseResponse;
 import com.mycity4kids.models.response.ConfigResponse;
 import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse;
 import com.mycity4kids.models.response.LanguageConfigModel;
@@ -46,10 +52,10 @@ import com.mycity4kids.newmodels.FollowUnfollowCategoriesRequest;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ConfigAPIs;
 import com.mycity4kids.retrofitAPIsInterfaces.LanguageSettingsAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.NotificationsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.SubscriptionsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
-import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.SubscribeTopicsActivity;
 import com.mycity4kids.ui.adapter.EmailSubscriptionAdapter;
 import com.mycity4kids.ui.adapter.NotificationSubscriptionAdapter;
@@ -74,9 +80,10 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 19/7/17.
  */
-public class EditPreferencesTabFragment extends BaseFragment implements View.OnClickListener {
+public class EditPreferencesTabFragment extends BaseFragment implements View.OnClickListener, IFacebookUser {
 
     private boolean isSubsequentCall = false;
+    private String accessToken;
 
     private ArrayList<SubscriptionAndLanguageSettingsModel> subscriptionSettingsList;
     private ArrayList<NotificationSettingsModel> notificationSettingsList;
@@ -84,8 +91,8 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
     private ArrayList<String> mDatalist;
     ArrayList<Topics> followedSubSubTopicList = new ArrayList<>();
 
-
     private View view;
+    private TextView facebookConnectTextView;
     private TextView showMoreFollowedTopicsTextView;
     private TextView addTopicsBtn;
     private TextView saveTextView;
@@ -93,7 +100,6 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
     private RecyclerView notificationSettingRecyclerView;
     private RecyclerView subscriptionSettingRecyclerView;
     private RecyclerView preferredLanguageRecyclerView;
-
     private EmailSubscriptionAdapter subscriptionSettingsListAdapter;
     private NotificationSubscriptionAdapter notificationSettingsListAdapter;
     private PreferredLanguagesAdapter preferredLanguagesAdapter;
@@ -114,10 +120,17 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
         subscriptionSettingRecyclerView = (RecyclerView) view.findViewById(R.id.subscriptionSettingRecyclerView);
         notificationSettingRecyclerView = (RecyclerView) view.findViewById(R.id.notificationSettingRecyclerView);
         preferredLanguageRecyclerView = (RecyclerView) view.findViewById(R.id.prefLanguagesRecyclerView);
+        facebookConnectTextView = (TextView) view.findViewById(R.id.fbConnectBtn);
 
         addTopicsBtn.setOnClickListener(this);
         saveTextView.setOnClickListener(this);
         showMoreFollowedTopicsTextView.setOnClickListener(this);
+
+        if ("1".equals(SharedPrefUtils.getFacebookConnectedFlag(getActivity()))) {
+            facebookConnectTextView.setText(getString(R.string.app_settings_edit_prefs_add));
+        } else {
+            facebookConnectTextView.setText(getString(R.string.app_settings_edit_prefs_connected));
+        }
 
         final LinearLayoutManager emailLayoutManager = new LinearLayoutManager(getActivity());
         emailLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -357,9 +370,6 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
                         callDownloadAPI.enqueue(downloadCategoriesJSONCallback);
                     }
                     inflateFollowedTopics();
-//                    mDatalistAdapter mDatalistAdapter = new mDatalistAdapter(mDatalistingActivity.this);
-//                    mDatalistView.setAdapter(mDatalistAdapter);
-//                    mDatalistAdapter.setData(followedSubSubTopicList);
                 } else {
 //                    showToast(responseData.getReason());
                 }
@@ -434,7 +444,6 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
     };
 
     private boolean checkCurrentCategoryExists(FollowTopics[] res, ArrayList<String> followedTopicsIdList) {
-        Log.d("cttbhtbtbtb", "btrdsefafs");
         for (int i = 0; i < res.length; i++) {
             for (int j = 0; j < res[i].getChild().size(); j++) {
                 for (int k = 0; k < followedTopicsIdList.size(); k++) {
@@ -545,13 +554,11 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
                     } else {
                         if (null != getActivity()) {
                             Toast.makeText(getActivity(), "Error while updating notification settings", Toast.LENGTH_SHORT).show();
-                            ;
                         }
                     }
                 } catch (Exception e) {
                     if (null != getActivity()) {
                         Toast.makeText(getActivity(), "Error while updating notification settings", Toast.LENGTH_SHORT).show();
-                        ;
                     }
                     removeProgressDialog();
                     Crashlytics.logException(e);
@@ -823,6 +830,12 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
                 updateLanguageSubscription();
                 updateFollowedUnfollowedTopics();
                 break;
+            case R.id.fbConnectBtn:
+                if (getString(R.string.app_settings_edit_prefs_add).equals(facebookConnectTextView.getText().toString())) {
+//                    Utils.pushEvent(getActivity(), GTMEventType.FACEBOOK_CONNECT_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), "settings");
+                    FacebookUtils.facebookLogin(getActivity(), this);
+                }
+                break;
         }
     }
 
@@ -835,8 +848,66 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
                 followedSubSubTopicList.clear();
                 getFollowedTopics();
             }
+            FacebookUtils.onActivityResult(getActivity(), requestCode, resultCode, data);
         } catch (Exception ex) {
         }
 
     }
+
+    @Override
+    public void getFacebookUser(GraphUser user) {
+        try {
+            if (user != null) {
+
+                Session session = Session.getActiveSession();
+                if (session.isOpened()) {
+                    accessToken = session.getAccessToken();
+                }
+
+                SocialConnectRequest socialConnectRequest = new SocialConnectRequest();
+                socialConnectRequest.setToken(accessToken);
+                socialConnectRequest.setReferer("fb");
+
+                Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+                LoginRegistrationAPI socialConnectAPI = retrofit.create(LoginRegistrationAPI.class);
+                Call<BaseResponse> call = socialConnectAPI.socialConnect(socialConnectRequest);
+                call.enqueue(socialConnectResponseListener);
+
+            }
+        } catch (Exception e) {
+            // e.printStackTrace();
+            removeProgressDialog();
+//            showToast("Try again later.");
+        }
+    }
+
+    private Callback<BaseResponse> socialConnectResponseListener = new Callback<BaseResponse>() {
+        @Override
+        public void onResponse(Call<BaseResponse> call, retrofit2.Response<BaseResponse> response) {
+            if (response == null || response.body() == null) {
+//                showToast("Something went wrong from server");
+                return;
+            }
+            try {
+                BaseResponse responseData = (BaseResponse) response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    Log.d("socialConnectListen", "SUCCESS");
+                    facebookConnectTextView.setText(getString(R.string.app_settings_edit_prefs_connected));
+                } else {
+                    Log.d("socialConnectListener", "FAILURE");
+                    facebookConnectTextView.setText(getString(R.string.app_settings_edit_prefs_add));
+                }
+            } catch (Exception e) {
+                removeProgressDialog();
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<BaseResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
 }

@@ -89,9 +89,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.fragment.AddEditCommentReplyFragment;
-import com.mycity4kids.ui.fragment.CommentRepliesDialogFragment;
 import com.mycity4kids.ui.fragment.EditCommentDialogFragment;
-import com.mycity4kids.ui.fragment.EditCommentsRepliesFragment;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.widget.CustomFontTextView;
 import com.mycity4kids.widget.RelatedArticlesView;
@@ -186,9 +184,6 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
     private VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI;
     private GoogleApiClient mClient;
 
-    EditCommentsRepliesFragment editCommentsRepliesFragment;
-    CommentRepliesDialogFragment commentFragment;
-
     private CustomFontTextView facebookShareTextView, whatsappShareTextView, emailShareTextView, likeArticleTextView, bookmarkArticleTextView;
     private String userDynamoId;
     private ImageView backNavigationImageView;
@@ -270,7 +265,6 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
 
         commLayout = ((LinearLayout) findViewById(R.id.commnetLout));
         commentLayout = ((LinearLayout) findViewById(R.id.commnetLout));
-        addCommentLinearLayout = (LinearLayout) findViewById(R.id.addCommentLinearLayout);
 
         likeArticleTextView.setEnabled(false);
         bookmarkArticleTextView.setEnabled(false);
@@ -721,17 +715,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                 return;
             }
             ArticleRecommendationStatusResponse responseData = (ArticleRecommendationStatusResponse) response.body();
-//            recommendFloatingActionButton.setEnabled(true);
             recommendationFlag = responseData.getData().getStatus();
-//            if ("0".equals(recommendationFlag)) {
-//                hasRecommendSuggestionAppeared = false;
-//                recommendFloatingActionButton.setIconDrawable(ContextCompat.getDrawable(VlogsDetailActivity.this, R.drawable.heart_outline));
-//                recommendStatus = 0;
-//            } else {
-//                hasRecommendSuggestionAppeared = true;
-//                recommendFloatingActionButton.setIconDrawable(ContextCompat.getDrawable(VlogsDetailActivity.this, R.drawable.heart_filled));
-//                recommendStatus = 1;
-//            }
 
             if ("0".equals(recommendationFlag)) {
                 recommendStatus = 0;
@@ -1835,18 +1819,18 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                     openCommentDialog(null, "ADD");
                     break;
                 case R.id.txvCommentCellReply:
-                    openCommentDialog((CommentsData) ((View) v.getParent().getParent()).getTag(), "ADD");
+                    openCommentDialog((CommentsData) ((View) v.getParent().getParent().getParent()).getTag(), "ADD");
                     break;
                 case R.id.txvReplyCellReply:
-                    openCommentDialog((CommentsData) ((View) v.getParent()).getTag(), "ADD");
+                    openCommentDialog((CommentsData) ((View) v.getParent().getParent()).getTag(), "ADD");
                     break;
                 case R.id.txvCommentCellEdit: {
-                    CommentsData cData = (CommentsData) ((View) v.getParent().getParent()).getTag();
+                    CommentsData cData = (CommentsData) ((View) v.getParent().getParent().getParent()).getTag();
                     openCommentDialog(cData, "EDIT");
                 }
                 break;
                 case R.id.txvReplyCellEdit: {
-                    CommentsData cData = (CommentsData) ((View) v.getParent()).getTag();
+                    CommentsData cData = (CommentsData) ((View) v.getParent().getParent()).getTag();
                     openCommentDialog(cData, "EDIT");
                 }
                 break;

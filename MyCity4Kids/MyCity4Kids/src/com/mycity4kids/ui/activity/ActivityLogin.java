@@ -44,6 +44,7 @@ import com.mycity4kids.models.user.KidsInfo;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
+import com.mycity4kids.sync.CategorySyncService;
 import com.mycity4kids.sync.PushTokenService;
 import com.mycity4kids.ui.fragment.FacebookAddEmailDialogFragment;
 import com.mycity4kids.ui.fragment.SignInFragment;
@@ -377,6 +378,8 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                         }
                         Intent intent = new Intent(ActivityLogin.this, PushTokenService.class);
                         startService(intent);
+                        Intent mServiceIntent = new Intent(ActivityLogin.this, CategorySyncService.class);
+                        startService(mServiceIntent);
                         Intent intent1 = new Intent(ActivityLogin.this, LoadingActivity.class);
                         startActivity(intent1);
                         startSyncingUserInfo();

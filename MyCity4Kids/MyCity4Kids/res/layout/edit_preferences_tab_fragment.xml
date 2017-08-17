@@ -127,6 +127,7 @@
                 android:paddingBottom="10dp"
                 android:paddingLeft="20dp"
                 android:paddingTop="10dp"
+                android:visibility="gone"
                 android:text="@string/app_settings.edit_prefs.twitter"
                 android:textColor="@color/app_settings.edit_prefs.twitter"
                 android:textSize="16sp"
@@ -141,6 +142,7 @@
                 android:layout_below="@+id/fbConnectLabel"
                 android:paddingBottom="10dp"
                 android:paddingLeft="20dp"
+                android:visibility="gone"
                 android:paddingRight="20dp"
                 android:paddingTop="10dp"
                 android:text="@string/app_settings.edit_prefs.add"
@@ -158,6 +160,7 @@
                 android:paddingLeft="20dp"
                 android:paddingTop="10dp"
                 android:text="@string/app_settings.edit_prefs.google"
+                android:visibility="gone"
                 android:textColor="@color/app_settings.edit_prefs.google"
                 android:textSize="16sp"
                 app:fontName="oswald.ttf" />
@@ -174,6 +177,7 @@
                 android:paddingRight="20dp"
                 android:paddingTop="10dp"
                 android:text="@string/app_settings.edit_prefs.add"
+                android:visibility="gone"
                 android:textColor="@color/app_settings.edit_prefs.add"
                 android:textSize="16sp"
                 app:fontName="oswald.ttf" />

@@ -3,7 +3,6 @@ package com.mycity4kids.editor;
 import android.Manifest;
 import android.accounts.NetworkErrorException;
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -15,8 +14,6 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -38,9 +35,7 @@ import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
-import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.dbtable.TableKids;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
@@ -50,16 +45,13 @@ import com.mycity4kids.models.response.ArticleTagsImagesResponse;
 import com.mycity4kids.models.response.BlogPageResponse;
 import com.mycity4kids.models.response.ImageUploadResponse;
 import com.mycity4kids.models.response.PublishDraftObject;
-import com.mycity4kids.models.user.KidsInfo;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticlePublishAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
 import com.mycity4kids.ui.activity.ArticleModerationOrShareActivity;
 import com.mycity4kids.ui.activity.BlogSetupActivity;
-import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.adapter.ArticleTagsImagesGridAdapter;
-import com.mycity4kids.ui.fragment.CompleteProfileDialogFragment;
 import com.mycity4kids.utils.PermissionUtil;
 import com.squareup.picasso.Picasso;
 import com.yalantis.ucrop.UCrop;
@@ -386,6 +378,8 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                                      } else {
                                          showToast(responseModel.getReason().toString());
                                      }
+                                 } else {
+                                     showToast(responseModel.getReason().toString());
                                  }
                              }
 
@@ -508,36 +502,6 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
             }
         });
 
-    }
-
-    private void alertDialog(String msg) {
-        new AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
-                .setTitle("MyCity4Kids")
-                .setMessage(msg)
-                .setCancelable(false)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        TableKids tableKids = new TableKids(BaseApplication.getInstance());
-                        ArrayList<KidsInfo> kidsInformations = (ArrayList<KidsInfo>) tableKids.getAllKids();
-                        if (kidsInformations != null && !kidsInformations.isEmpty()) {
-                            Intent intent = new Intent(ArticleImageTagUploadActivity.this, DashboardActivity.class);
-                            intent.putExtra(AppConstants.STACK_CLEAR_REQUIRED, true);
-                            startActivity(intent);
-                            finish();
-                        } else {
-                            CompleteProfileDialogFragment completeProfileDialogFragment = new CompleteProfileDialogFragment();
-                            FragmentManager fm = getSupportFragmentManager();
-                            completeProfileDialogFragment.setCancelable(false);
-                            completeProfileDialogFragment.show(fm, "Share Published Article");
-                        }
-//                        Intent intent = new Intent(ArticleImageTagUploadActivity.this, BloggerDashboardActivity.class);
-//                        intent.putExtra(AppConstants.STACK_CLEAR_REQUIRED, true);
-//                        startActivity(intent);
-//                        finish();
-                    }
-                })
-                .show();
     }
 
     public void sendUploadProfileImageRequest(File file) {

@@ -41,7 +41,8 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="5dp"
                 android:padding="12dp"
-                android:src="@drawable/ic_play_tts" />
+                android:src="@drawable/ic_play_tts"
+                android:visibility="gone" />
 
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>

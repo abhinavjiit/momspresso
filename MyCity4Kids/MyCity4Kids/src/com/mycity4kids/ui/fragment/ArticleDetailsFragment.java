@@ -18,7 +18,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
@@ -42,6 +41,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -73,6 +73,7 @@ import com.mycity4kids.models.response.ArticleRecommendationStatusResponse;
 import com.mycity4kids.models.response.FBCommentResponse;
 import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
+import com.mycity4kids.models.response.LanguageConfigModel;
 import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
 import com.mycity4kids.models.response.ViewCountResponse;
 import com.mycity4kids.newmodels.FollowUnfollowCategoriesRequest;
@@ -101,10 +102,12 @@ import org.apmem.tools.layouts.FlowLayout;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.io.FileInputStream;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -178,7 +181,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
     //New UI changes
     ImageView floatingActionButton;
-    private Menu menu;
     private LinearLayout commLayout;
     private RelativeLayout coordinatorLayout;
     private FlowLayout tagsLayout;
@@ -192,8 +194,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private ArticleDetailsAPI articleDetailsAPI;
     private String bookmarkId;
 
-    private EditCommentsRepliesFragment editCommentsRepliesFragment;
-    private CommentRepliesDialogFragment commentFragment;
     private String blogSlug;
     private String titleSlug;
     private String commentType = "db";
@@ -478,7 +478,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
     private void getMoreComments() {
         isLoading = true;
-        if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
+        if (isAdded() && !ConnectivityUtils.isNetworkEnabled(getActivity())) {
             ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.error_network));
             return;
         }
@@ -682,7 +682,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                 floatingActionButton.setPadding(-1, -1, -1, -1);
-                floatingActionButton.setImageDrawable(new BitmapDrawable(getResources(), bitmap));
+                if (isAdded())
+                    floatingActionButton.setImageDrawable(new BitmapDrawable(getResources(), bitmap));
             }
 
             @Override
@@ -718,18 +719,43 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
     private void setArticleLanguageCategoryId() {
         ArrayList<Map<String, String>> tagsList = detailData.getTags();
-        for (int i = 0; i < tagsList.size(); i++) {
-            for (Map.Entry<String, String> entry : tagsList.get(i).entrySet()) {
-                switch (entry.getKey()) {
-                    case AppConstants.HINDI_CATEGORYID:
-                        articleLanguageCategoryId = AppConstants.HINDI_CATEGORYID;
-                        break;
-                    case AppConstants.BANGLA_CATEGORYID:
-                        articleLanguageCategoryId = AppConstants.BANGLA_CATEGORYID;
-                        break;
+        try {
+            FileInputStream fileInputStream = getActivity().openFileInput(AppConstants.LANGUAGES_JSON_FILE);
+            String fileContent = AppUtils.convertStreamToString(fileInputStream);
+//            ConfigResult res = new Gson().fromJson(fileContent, ConfigResult.class);
+            LinkedHashMap<String, LanguageConfigModel> retMap = new Gson().fromJson(
+                    fileContent, new TypeToken<LinkedHashMap<String, LanguageConfigModel>>() {
+                    }.getType()
+            );
+            Log.d("Map", "" + retMap.toString());
+//            ArrayList<LanguageConfigModel> languageConfigModelArrayList = new ArrayList<>();
+            for (final Map.Entry<String, LanguageConfigModel> langEntry : retMap.entrySet()) {
+                for (int i = 0; i < tagsList.size(); i++) {
+                    for (Map.Entry<String, String> tagEntry : tagsList.get(i).entrySet()) {
+                        if (tagEntry.getKey().equals(langEntry.getValue().getId())) {
+                            //The current category is a language category. Display play button if hindi or bangla else hide button.
+                            switch (tagEntry.getKey()) {
+                                case AppConstants.HINDI_CATEGORYID:
+                                    articleLanguageCategoryId = AppConstants.HINDI_CATEGORYID;
+                                    ((ArticleDetailsContainerActivity) getActivity()).showPlayArticleAudioButton();
+                                    return;
+                                case AppConstants.BANGLA_CATEGORYID:
+                                    articleLanguageCategoryId = AppConstants.BANGLA_CATEGORYID;
+                                    ((ArticleDetailsContainerActivity) getActivity()).showPlayArticleAudioButton();
+                                    return;
+                                default:
+                                    return;
+                            }
+                        }
+                    }
                 }
             }
+            ((ArticleDetailsContainerActivity) getActivity()).showPlayArticleAudioButton();
+            return;
+        } catch (Exception e) {
+
         }
+
     }
 
     public String getArticleLanguageCategoryId() {
@@ -960,18 +986,18 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 case R.id.add_comment:
                     break;
                 case R.id.txvCommentCellReply:
-                    openCommentDialog((CommentsData) ((View) v.getParent().getParent()).getTag(), "ADD");
+                    openCommentDialog((CommentsData) ((View) v.getParent().getParent().getParent()).getTag(), "ADD");
                     break;
                 case R.id.txvReplyCellReply:
-                    openCommentDialog((CommentsData) ((View) v.getParent()).getTag(), "ADD");
+                    openCommentDialog((CommentsData) ((View) v.getParent().getParent()).getTag(), "ADD");
                     break;
                 case R.id.txvCommentCellEdit: {
-                    CommentsData cData = (CommentsData) ((View) v.getParent().getParent()).getTag();
+                    CommentsData cData = (CommentsData) ((View) v.getParent().getParent().getParent()).getTag();
                     openCommentDialog(cData, "EDIT");
                 }
                 break;
                 case R.id.txvReplyCellEdit: {
-                    CommentsData cData = (CommentsData) ((View) v.getParent()).getTag();
+                    CommentsData cData = (CommentsData) ((View) v.getParent().getParent()).getTag();
                     openCommentDialog(cData, "EDIT");
                 }
                 break;
@@ -1080,14 +1106,12 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         recommendStatus = 1;
                         Drawable top = ContextCompat.getDrawable(getActivity(), R.drawable.ic_recommended);
                         likeArticleTextView.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null);
-//                        commentFloatingActionButton.setIconDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.heart_filled));
                         recommendUnrecommentArticleAPI("1");
 
                     } else {
                         recommendStatus = 0;
                         Drawable top = ContextCompat.getDrawable(getActivity(), R.drawable.ic_recommend);
                         likeArticleTextView.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null);
-//                        commentFloatingActionButton.setIconDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.heart_outline));
                         recommendUnrecommentArticleAPI("0");
                     }
                     break;
@@ -1439,6 +1463,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     }
 
     public String getArticleContent() {
+        if (detailData == null || detailData.getBody() == null) {
+            return "";
+        }
         return AppUtils.stripHtml(detailData.getBody().getText());
     }
 
@@ -1608,7 +1635,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         public void onResponse(Call<ArticleDetailWebserviceResponse> call, retrofit2.Response<ArticleDetailWebserviceResponse> response) {
             removeProgressDialog();
             if (response == null || response.body() == null) {
-                ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
+                if (isAdded())
+                    ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
                 return;
             }
             try {
@@ -1646,6 +1674,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         @Override
         public void onWebServiceComplete(VolleyBaseResponse response, boolean isError) {
             Log.d("Response back =", " " + response.getResponseBody());
+            if (!isAdded()) {
+                return;
+            }
             if (isError) {
                 if (null != this && response.getResponseCode() != 999)
                     ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
@@ -1665,7 +1696,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 } catch (JsonSyntaxException jse) {
                     Crashlytics.logException(jse);
                     Log.d("JsonSyntaxException", Log.getStackTraceString(jse));
-                    ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
+                    if (isAdded())
+                        ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
                     removeProgressDialog();
                     return;
                 }
@@ -1738,10 +1770,12 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 ArticleListingResponse responseData = (ArticleListingResponse) response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
-                    for (int i = 0; i < dataList.size(); i++) {
-                        if (dataList.get(i).getId().equals(articleId)) {
-                            dataList.remove(i);
-                            break;
+                    if (dataList != null) {
+                        for (int i = 0; i < dataList.size(); i++) {
+                            if (dataList.get(i).getId().equals(articleId)) {
+                                dataList.remove(i);
+                                break;
+                            }
                         }
                     }
                     if (dataList.size() == 0) {
@@ -1814,7 +1848,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 mLodingView.setVisibility(View.GONE);
             }
             if (response == null || response.body() == null) {
-                ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
+                if (isAdded())
+                    ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
                 return;
             }
 
@@ -1871,12 +1906,14 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         }
                     }
                 } else {
-                    ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                    if (isAdded())
+                        ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-                ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.went_wrong));
+                if (isAdded())
+                    ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.went_wrong));
             }
         }
 
@@ -1892,7 +1929,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             if (response == null || null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                 Crashlytics.logException(nee);
-                ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
+                if (isAdded())
+                    ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
                 return;
             }
             try {
@@ -1958,7 +1996,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         }
                     }
                 } else {
-                    ((ArticleDetailsContainerActivity) getActivity()).showToast(responseData.getReason());
+                    if (isAdded())
+                        ((ArticleDetailsContainerActivity) getActivity()).showToast(responseData.getReason());
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
@@ -2025,20 +2064,24 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             if (response == null || null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                 Crashlytics.logException(nee);
-                ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
+                if (isAdded())
+                    ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
                 return;
             }
             try {
                 FollowUnfollowCategoriesResponse responseData = (FollowUnfollowCategoriesResponse) response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    ((ArticleDetailsContainerActivity) getActivity()).showToast(responseData.getReason());
+                    if (isAdded())
+                        ((ArticleDetailsContainerActivity) getActivity()).showToast(responseData.getReason());
                 } else {
-                    ((ArticleDetailsContainerActivity) getActivity()).showToast(responseData.getReason());
+                    if (isAdded())
+                        ((ArticleDetailsContainerActivity) getActivity()).showToast(responseData.getReason());
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-                ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.went_wrong));
+                if (isAdded())
+                    ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.went_wrong));
             }
         }
 
@@ -2047,7 +2090,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             removeProgressDialog();
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
-            ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.went_wrong));
+            if (isAdded())
+                ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.went_wrong));
         }
     };
 
@@ -2059,7 +2103,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             if (response == null || null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                 Crashlytics.logException(nee);
-                ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
+                if (isAdded())
+                    ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
                 isLoading = false;
                 commentType = "fb";
                 commentURL = "http";
@@ -2091,11 +2136,14 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             } catch (JSONException jsonexception) {
                 Crashlytics.logException(jsonexception);
                 Log.d("JSONException", Log.getStackTraceString(jsonexception));
-                ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong while parsing response from server");
+                if (isAdded())
+                    ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong while parsing response from server");
             } catch (Exception ex) {
                 Crashlytics.logException(ex);
                 Log.d("MC4kException", Log.getStackTraceString(ex));
-                ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
+                if (isAdded()) {
+                    ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
+                }
             }
         }
 
@@ -2112,7 +2160,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             removeProgressDialog();
             mLodingView.setVisibility(View.GONE);
             if (response == null || null == response.body()) {
-                ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
+                if (isAdded())
+                    ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
                 return;
             }
 
@@ -2135,12 +2184,14 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         }
                     }
                 } else {
-                    ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                    if (isAdded())
+                        ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-                ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.went_wrong));
+                if (isAdded())
+                    ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.went_wrong));
             }
         }
 
@@ -2156,6 +2207,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         @Override
         public void onResponse(Call<ArticleDetailResponse> call, retrofit2.Response<ArticleDetailResponse> response) {
             if (response == null || null == response.body()) {
+                if (!isAdded()) {
+                    return;
+                }
                 ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
                 return;
             }
@@ -2164,6 +2218,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                 if (!"1".equals(isMomspresso)) {
                     bookmarkFlag = responseData.getData().getResult().getBookmarkStatus();
+                    if (!isAdded()) {
+                        return;
+                    }
                     if ("0".equals(bookmarkFlag)) {
                         bookmarkStatus = 0;
                         Drawable top = ContextCompat.getDrawable(getActivity(), R.drawable.ic_bookmark);
@@ -2189,7 +2246,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     }
                 }
             } else {
-                ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                if (isAdded())
+                    ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
             }
         }
 
@@ -2203,6 +2261,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         @Override
         public void onResponse(Call<ArticleDetailResponse> call, retrofit2.Response<ArticleDetailResponse> response) {
             if (response == null || null == response.body()) {
+                if (!isAdded()) {
+                    return;
+                }
                 ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
                 return;
             }
@@ -2210,6 +2271,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             ArticleDetailResponse responseData = (ArticleDetailResponse) response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                 bookmarkFlag = responseData.getData().getResult().getBookmarkStatus();
+                if (!isAdded()) {
+                    return;
+                }
                 if ("0".equals(bookmarkFlag)) {
                     bookmarkStatus = 0;
                     Drawable top = ContextCompat.getDrawable(getActivity(), R.drawable.ic_bookmark);
@@ -2221,7 +2285,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 }
                 bookmarkId = responseData.getData().getResult().getBookmarkId();
             } else {
-                ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                if (isAdded())
+                    ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
             }
         }
 
@@ -2247,7 +2312,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         @Override
         public void onResponse(Call<AddBookmarkResponse> call, retrofit2.Response<AddBookmarkResponse> response) {
             if (response == null || null == response.body()) {
-                ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
+                if (isAdded())
+                    ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
                 return;
             }
             AddBookmarkResponse responseData = (AddBookmarkResponse) response.body();
@@ -2264,11 +2330,15 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         @Override
         public void onResponse(Call<ArticleRecommendationStatusResponse> call, retrofit2.Response<ArticleRecommendationStatusResponse> response) {
             if (response == null || null == response.body()) {
-                ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
+                if (isAdded())
+                    ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
                 return;
             }
             ArticleRecommendationStatusResponse responseData = (ArticleRecommendationStatusResponse) response.body();
             recommendationFlag = responseData.getData().getStatus();
+            if (!isAdded()) {
+                return;
+            }
             if ("0".equals(recommendationFlag)) {
                 recommendStatus = 0;
                 Drawable top = ContextCompat.getDrawable(getActivity(), R.drawable.ic_recommend);
@@ -2291,6 +2361,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         @Override
         public void onResponse(Call<RecommendUnrecommendArticleResponse> call, retrofit2.Response<RecommendUnrecommendArticleResponse> response) {
             if (response == null || null == response.body()) {
+                if (!isAdded()) {
+                    return;
+                }
                 ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
                 return;
             }
@@ -2298,6 +2371,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             try {
                 RecommendUnrecommendArticleResponse responseData = (RecommendUnrecommendArticleResponse) response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    if (!isAdded()) {
+                        return;
+                    }
                     if (null == responseData.getData() && responseData.getData().isEmpty()) {
                         ((ArticleDetailsContainerActivity) getActivity()).showToast(responseData.getReason());
                     } else {
@@ -2309,7 +2385,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-                ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.went_wrong));
+                if (isAdded())
+                    ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.went_wrong));
             }
         }
 
@@ -2354,7 +2431,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         @Override
         public void onResponse(Call<FollowUnfollowUserResponse> call, retrofit2.Response<FollowUnfollowUserResponse> response) {
             if (response == null || response.body() == null) {
-                ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.went_wrong));
+                if (isAdded())
+                    ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.went_wrong));
                 return;
             }
             try {
@@ -2366,7 +2444,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     isFollowing = false;
                 }
             } catch (Exception e) {
-                ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                if (isAdded())
+                    ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
@@ -2374,7 +2453,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
         @Override
         public void onFailure(Call<FollowUnfollowUserResponse> call, Throwable t) {
-            ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+            if (isAdded())
+                ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
@@ -2384,7 +2464,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         @Override
         public void onResponse(Call<FollowUnfollowUserResponse> call, retrofit2.Response<FollowUnfollowUserResponse> response) {
             if (response == null || response.body() == null) {
-                ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.went_wrong));
+                if (isAdded())
+                    ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.went_wrong));
                 return;
             }
             try {
@@ -2396,7 +2477,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     isFollowing = true;
                 }
             } catch (Exception e) {
-                ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                if (isAdded())
+                    ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
@@ -2404,7 +2486,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
         @Override
         public void onFailure(Call<FollowUnfollowUserResponse> call, Throwable t) {
-            ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+            if (isAdded())
+                ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }

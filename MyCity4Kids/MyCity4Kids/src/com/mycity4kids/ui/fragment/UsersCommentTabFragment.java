@@ -67,8 +67,9 @@ public class UsersCommentTabFragment extends BaseFragment implements UsersCommen
 
 //        userId = SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId();
         authorId = getArguments().getString(Constants.AUTHOR_ID);
+        boolean isPrivate = getArguments().getBoolean("isPrivateProfile");
 
-        adapter = new UsersCommentsRecycleAdapter(getActivity(), this);
+        adapter = new UsersCommentsRecycleAdapter(getActivity(), this, isPrivate);
         final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
@@ -195,7 +196,7 @@ public class UsersCommentTabFragment extends BaseFragment implements UsersCommen
                 break;
             case R.id.rootView:
                 Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
-                intent.putExtra(Constants.ARTICLE_ID, commentsList.get(position).getId());
+                intent.putExtra(Constants.ARTICLE_ID, commentsList.get(position).getArticleId());
                 intent.putExtra(Constants.AUTHOR_ID, commentsList.get(position).getUserId());
                 intent.putExtra(Constants.BLOG_SLUG, commentsList.get(position).getBlogTitleSlug());
                 intent.putExtra(Constants.TITLE_SLUG, commentsList.get(position).getTitleSlug());

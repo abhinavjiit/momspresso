@@ -21,6 +21,7 @@ import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.ArticleListingResponse;
@@ -81,7 +82,7 @@ public class TrendingTopicsTabFragment extends BaseFragment implements View.OnCl
         adapter = new MainArticleListingAdapter(getActivity());
         adapter.setNewListData(trendingTopicData.getArticleList());
 
-        if (position == 0 && SharedPrefUtils.getFollowedTopicsCount(getActivity()) < 5) {
+        if (position == 0 && SharedPrefUtils.getFollowedTopicsCount(getActivity()) < AppConstants.MINIMUM_TOPICS_FOLLOW_REQUIREMENT) {
             View headerView = inflater.inflate(R.layout.trending_list_header_item, null, false);
             listView.addHeaderView(headerView);
             isHeaderVisible = true;

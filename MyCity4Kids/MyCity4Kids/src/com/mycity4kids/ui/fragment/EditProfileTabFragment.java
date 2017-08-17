@@ -214,7 +214,12 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
                 if (responseData.getData().get(0).getResult().getKids() == null) {
                     rangebar.setRangePinsByValue(0, 0);
                 } else {
-                    rangebar.setRangePinsByValue(0, responseData.getData().get(0).getResult().getKids().size());
+                    if (responseData.getData().get(0).getResult().getKids().size() > 8) {
+                        rangebar.setRangePinsByValue(0, 8);
+                    } else {
+                        rangebar.setRangePinsByValue(0, responseData.getData().get(0).getResult().getKids().size());
+                    }
+
                     for (KidsModel km : responseData.getData().get(0).getResult().getKids()) {
                         addKidView(km);
                     }
@@ -416,8 +421,10 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
         UpdateUserDetailsRequest addCityAndKidsInformationRequest = new UpdateUserDetailsRequest();
         addCityAndKidsInformationRequest.setKids(kidsModelArrayList);
 
-        addCityAndKidsInformationRequest.setCityId("" + selectedCityId);
-        addCityAndKidsInformationRequest.setCityName("" + currentCityName);
+        if (selectedCityId != 0) {
+            addCityAndKidsInformationRequest.setCityId("" + selectedCityId);
+            addCityAndKidsInformationRequest.setCityName("" + currentCityName);
+        }
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         UserAttributeUpdateAPI userAttributeUpdateAPI = retrofit.create(UserAttributeUpdateAPI.class);
         Call<UserDetailResponse> call = userAttributeUpdateAPI.updateCityAndKids(addCityAndKidsInformationRequest);
@@ -438,7 +445,10 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
             try {
                 UserDetailResponse responseData = (UserDetailResponse) response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    updateEventsResourcesConfigForCity();
+                    if (selectedCityId != 0) {
+                        updateEventsResourcesConfigForCity();
+                    }
+
 //                    saveDatainDB();
                 } else {
                     Toast.makeText(getActivity(), responseData.getReason(), Toast.LENGTH_SHORT).show();

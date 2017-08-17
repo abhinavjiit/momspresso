@@ -18,7 +18,6 @@ import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.models.response.DraftListResult;
-import com.mycity4kids.ui.activity.BloggerDashboardActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -87,7 +86,6 @@ public class DraftListAdapter extends BaseAdapter {
                             Log.e("edit", "clicked");
                             return true;
                         } else if (i == R.id.delete) {
-                            ((BloggerDashboardActivity) context).deleteDraftAPI((DraftListResult) getItem(position), position);
                             Log.e("delete", "clicked");
                             return true;
                         } else {

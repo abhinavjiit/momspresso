@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mycity4kids"
-    android:versionCode="63"
-    android:versionName="5.7.6">
+    android:versionCode="65"
+    android:versionName="6.0.0">
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -139,31 +139,12 @@
             android:name="com.facebook.LoginActivity"
             android:label="@string/app_name" />
 
-        <activity
-            android:name=".ui.activity.ArticleFilterDialogActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.Transparent" />
-
 
         <activity
             android:name=".ui.activity.BlogFilterActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Transparent" />
-
-        <activity
-            android:name=".ui.activity.BloggerDashboardActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.nnn" />
-
-        <activity
-            android:name=".ui.activity.BlogDetailActivity"
-            android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|uiMode|keyboard"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
 
         <activity
             android:name=".ui.activity.ActivityCreateTask"
@@ -338,31 +319,7 @@
             android:theme="@style/Theme.Transparent"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".ui.activity.ArticlesAndBlogsDetailsActivity"
-            android:parentActivityName=".ui.activity.DashboardActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.Transparent"
-            android:windowSoftInputMode="adjustPan">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mycity4kids.ui.activity.DashboardActivity" />
-        </activity>
-        <activity
-            android:name=".ui.activity.SearchArticlesAndAuthorsActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.Transparent"
-            android:windowSoftInputMode="stateVisible|adjustPan" />
-        <activity
             android:name=".ui.activity.KidsBirthdayActivity"
-            android:parentActivityName=".ui.activity.DashboardActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mycity4kids.ui.activity.DashboardActivity" />
-        </activity>
-        <activity
-            android:name=".ui.activity.PlanYourWeekActivity"
             android:parentActivityName=".ui.activity.DashboardActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
@@ -435,13 +392,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activity.BookmarkListActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.activity.EditProfieActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.TopicsFilterActivity"
             android:screenOrientation="portrait" />
 
         <activity
@@ -475,10 +426,6 @@
             android:name=".ui.activity.FollowedTopicsListingActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activity.BloggersAnalyticsActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.nnn" />
-        <activity
             android:name=".ui.activity.NotificationCenterListActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.nnn" />
@@ -497,9 +444,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.VideoUploadProgressActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.AllVideoSectionActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.MyFunnyVideosListingActivity"

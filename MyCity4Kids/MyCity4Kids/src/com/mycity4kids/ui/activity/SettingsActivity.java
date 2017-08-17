@@ -21,7 +21,6 @@ import com.mycity4kids.facebook.FacebookUtils;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.ui.fragment.ArticlesFragment;
 import com.mycity4kids.ui.fragment.ChangeCityFragment;
 import com.mycity4kids.ui.fragment.FragmentAdultProfile;
 import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
@@ -214,8 +213,6 @@ public class SettingsActivity extends BaseActivity {
 
         } else if (topFragment instanceof FragmentBusinesslistEvents) {
             getMenuInflater().inflate(R.menu.menu_event, menu);
-        } else if (topFragment instanceof ArticlesFragment) {
-            getMenuInflater().inflate(R.menu.menu_articles, menu);
         } else if (topFragment instanceof FragmentHomeCategory) {
             getMenuInflater().inflate(R.menu.kidsresource_listing, menu);
         } else if (topFragment instanceof NotificationSettingsFragment) {

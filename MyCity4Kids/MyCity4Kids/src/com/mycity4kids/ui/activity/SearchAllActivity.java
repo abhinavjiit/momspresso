@@ -28,7 +28,6 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.adapter.SearchAllPagerAdapter;
-import com.mycity4kids.ui.adapter.SearchArticlesAndAuthorsPagerAdapter;
 import com.mycity4kids.utils.AppUtils;
 
 /**

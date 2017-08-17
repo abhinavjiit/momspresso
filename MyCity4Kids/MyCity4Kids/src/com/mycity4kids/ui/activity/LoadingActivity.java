@@ -199,17 +199,17 @@ public class LoadingActivity extends BaseActivity {
                 FollowUnfollowCategoriesResponse responseData = (FollowUnfollowCategoriesResponse) response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     ArrayList<String> mDatalist = (ArrayList<String>) responseData.getData();
-                    if (mDatalist.size() < AppConstants.MINIMUM_TOPICS_FOLLOW_REQUIREMENT) {
+                    if (mDatalist != null) {
                         ArrayList<String> topicList = (ArrayList<String>) responseData.getData();
                         SharedPrefUtils.setFollowedTopicsCount(LoadingActivity.this, topicList.size());
                     }
-                    Intent intent = new Intent(LoadingActivity.this, DashboardActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                    finish();
                 } else {
                     showToast(responseData.getReason());
                 }
+                Intent intent = new Intent(LoadingActivity.this, DashboardActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));

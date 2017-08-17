@@ -37,6 +37,7 @@ public class UserActivitiesPagerAdapter extends FragmentStatePagerAdapter {
 
         Bundle bundle = new Bundle();
         bundle.putString(Constants.AUTHOR_ID, authorId);
+        bundle.putBoolean("isPrivateProfile", isPrivateProfile);
         switch (position) {
             case 0:
                 if (usersRecommendationTabFragment == null) {

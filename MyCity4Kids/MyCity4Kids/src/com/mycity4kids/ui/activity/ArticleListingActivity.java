@@ -39,7 +39,6 @@ import com.mycity4kids.newmodels.VolleyBaseResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.RecommendationAPI;
 import com.mycity4kids.ui.adapter.MainArticleListingAdapter;
-import com.mycity4kids.ui.adapter.NewArticlesListingAdapter;
 import com.mycity4kids.ui.fragment.ForYouInfoDialogFragment;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.volley.HttpVolleyRequest;

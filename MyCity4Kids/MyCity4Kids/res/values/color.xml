@@ -139,6 +139,7 @@
     <color name="ad.comments.edit_text">#545454</color>
     <color name="ad.comment.save_bg">#507cbe</color>
     <color name="ad.comments.toolbar.title">#545454</color>
+    <color name="ad.comments.replying_to">#545454</color>
     <color name="ad.bottom_bar.items">#507cbe</color>
     <color name="ad.related_article.title">#333333</color>
     <color name="ad.trending.title">#333333</color>
@@ -496,6 +497,7 @@
     <color name="user_activities.comments.edit">#507cbe</color>
 
     <color name="explore.city">#507cbe</color>
+    <color name="explore.section.no_resources">#545454</color>
 
     <color name="user_funny_video.toolbar.title">#545454</color>
 

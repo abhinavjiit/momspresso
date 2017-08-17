@@ -53,7 +53,6 @@ import com.mycity4kids.models.version.RateVersion;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.DeepLinkingAPI;
 import com.mycity4kids.ui.fragment.AddArticleVideoFragment;
-import com.mycity4kids.ui.fragment.ArticlesFragment;
 import com.mycity4kids.ui.fragment.BecomeBloggerFragment;
 import com.mycity4kids.ui.fragment.ChangeCityFragment;
 import com.mycity4kids.ui.fragment.ChooseVideoUploadOptionDialogFragment;
@@ -65,7 +64,6 @@ import com.mycity4kids.ui.fragment.FragmentFamilyDetail;
 import com.mycity4kids.ui.fragment.FragmentFamilyProfile;
 import com.mycity4kids.ui.fragment.FragmentHomeCategory;
 import com.mycity4kids.ui.fragment.FragmentKidProfile;
-import com.mycity4kids.ui.fragment.FragmentMC4KHome;
 import com.mycity4kids.ui.fragment.FragmentMC4KHomeNew;
 import com.mycity4kids.ui.fragment.MyAccountProfileFragment;
 import com.mycity4kids.ui.fragment.NotificationFragment;
@@ -74,7 +72,6 @@ import com.mycity4kids.ui.fragment.SendFeedbackFragment;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.PermissionUtil;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 
 import life.knowledge4.videotrimmer.utils.FileUtils;
@@ -113,6 +110,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private ImageView downArrowImageView;
     private TextView selectOptToolbarTitle;
     private TextView readAllNotificationTextView;
+    private Badge badge;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -225,6 +223,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 //                                launchEditor();
                                 break;
                             case R.id.action_location:
+                                if (topFragment instanceof ExploreFragment) {
+                                    return true;
+                                }
                                 ExploreFragment exploreFragment = new ExploreFragment();
                                 Bundle eBundle = new Bundle();
                                 exploreFragment.setArguments(eBundle);
@@ -457,20 +458,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         final Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
 
         refreshMenu();
-        if (topFragment instanceof FragmentMC4KHome) {
-            try {
-                ((FragmentMC4KHome) topFragment).refreshList();
-//                if (SharedPrefUtils.isCityFetched(this) && SharedPrefUtils.getCurrentCityModel(this).getId() != AppConstants.OTHERS_CITY_ID) {
-//                    findViewById(R.id.rdBtnUpcoming).setVisibility(View.VISIBLE);
-//                    findViewById(R.id.rdBtnKids).setVisibility(View.VISIBLE);
-//                } else {
-//                    findViewById(R.id.rdBtnUpcoming).setVisibility(View.GONE);
-//                    findViewById(R.id.rdBtnKids).setVisibility(View.GONE);
-//                }
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        } else if (topFragment instanceof FragmentBusinesslistEvents) {
+        if (topFragment instanceof FragmentBusinesslistEvents) {
 
             try {
                 ((FragmentBusinesslistEvents) topFragment).refreshList();
@@ -497,9 +485,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         // Inflate the menu; this adds items to the action bar if it is present.
         // according to fragment change it
         final Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-        if (topFragment instanceof FragmentMC4KHome) {
-
-        } else if (topFragment instanceof FragmentFamilyDetail) {
+        if (topFragment instanceof FragmentFamilyDetail) {
 
             getMenuInflater().inflate(R.menu.forgot_password, menu);
         } else if (topFragment instanceof FragmentMC4KHomeNew) {
@@ -554,30 +540,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             case R.id.filter:
                 if (topFragment instanceof FragmentBusinesslistEvents) {
                     ((FragmentBusinesslistEvents) topFragment).toggleFilter();
-                } else if (topFragment instanceof ArticlesFragment) {
-                    Intent intent = new Intent(getApplicationContext(), TopicsFilterActivity.class);
-                    startActivity(intent);
                 }
-                break;
-            case R.id.write:
-                if (Build.VERSION.SDK_INT > 15) {
-                    Utils.pushEvent(DashboardActivity.this, GTMEventType.ADD_BLOG_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Header");
-                    launchEditor();
-                } else {
-                    showToast("This version of android is no more supported.");
-                }
-                break;
-            case R.id.search:
-                if (topFragment instanceof ArticlesFragment || topFragment instanceof FragmentMC4KHome) {
-                    Intent intent = new Intent(getApplicationContext(), SearchArticlesAndAuthorsActivity.class);
-                    intent.putExtra(Constants.FILTER_NAME, "");
-                    intent.putExtra(Constants.TAB_POSITION, 0);
-                    startActivity(intent);
-                }
-                break;
-            case R.id.notification_center:
-                Intent wintent = new Intent(DashboardActivity.this, NotificationCenterListActivity.class);
-                startActivity(wintent);
                 break;
             case R.id.save:
                 if (topFragment instanceof FragmentAdultProfile) {
@@ -637,37 +600,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     public void onClick(View v) {
         Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
         switch (v.getId()) {
-            case R.id.rdBtnToday:
-                Utils.pushEvent(DashboardActivity.this, GTMEventType.MC4KToday_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Left Menu Screen");
-                replaceFragment(new FragmentMC4KHome(), null, false);
-                setTitle("");
-                break;
-            case R.id.rdBtnUpcoming:
-                Utils.pushEvent(DashboardActivity.this, GTMEventType.UPCOMING_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Left Menu Screen");
-                Constants.IS_SEARCH_LISTING = false;
-                setTitle("Upcoming Events");
-                FragmentBusinesslistEvents fragment = new FragmentBusinesslistEvents();
-                Bundle bundle = new Bundle();
-                bundle.putInt(Constants.PAGE_TYPE, Constants.EVENT_PAGE_TYPE);
-                bundle.putInt(Constants.EXTRA_CATEGORY_ID, SharedPrefUtils.getEventIdForCity(DashboardActivity.this));
-                bundle.putString(Constants.CATEGOTY_NAME, "Events & workshop");
-                fragment.setArguments(bundle);
-                replaceFragment(fragment, bundle, true);
-                break;
-            case R.id.rdBtnKids:
-                Utils.pushEvent(DashboardActivity.this, GTMEventType.RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Left Menu Screen");
-                Constants.IS_SEARCH_LISTING = false;
-                setTitle("Kids Resources");
-                replaceFragment(new FragmentHomeCategory(), null, true);
-                break;
-            case R.id.rdBtnParentingBlogs:
-                Intent intent = new Intent(getApplicationContext(), TopicsFilterActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.rdBtnMomspressoVideo:
-                Intent videoArticlesIntent = new Intent(this, AllVideoSectionActivity.class);
-                startActivity(videoArticlesIntent);
-                break;
             case R.id.editor:
                 if (Build.VERSION.SDK_INT > 15) {
                     Utils.pushEvent(DashboardActivity.this, GTMEventType.ADD_BLOG_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Navigation Menu");
@@ -694,6 +626,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 Intent intent4 = new Intent(DashboardActivity.this, BloggerProfileActivity.class);
                 startActivity(intent4);
                 break;
+            case R.id.downArrowImageView:
             case R.id.toolbarTitle:
                 ExploreArticleListingTypeFragment fragment1 = new ExploreArticleListingTypeFragment();
                 Bundle mBundle1 = new Bundle();
@@ -817,18 +750,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     }
                     break;
                 default:
-                    if (topFragment instanceof FragmentMC4KHome) {
-                        ((FragmentMC4KHome) topFragment).refreshList();
-                        if (SharedPrefUtils.isCityFetched(this) && SharedPrefUtils.getCurrentCityModel(this).getId() != AppConstants.OTHERS_CITY_ID) {
-                            findViewById(R.id.rdBtnUpcoming).setVisibility(View.VISIBLE);
-                            findViewById(R.id.rdBtnKids).setVisibility(View.VISIBLE);
-                        } else {
-                            findViewById(R.id.rdBtnUpcoming).setVisibility(View.GONE);
-                            findViewById(R.id.rdBtnKids).setVisibility(View.GONE);
-                        }
-                    } else if (topFragment instanceof FragmentMC4KHome) {
-                        ((FragmentMC4KHome) topFragment).notifyTaskList();
-                    }
                     break;
             }
         } catch (Exception e) {
@@ -949,7 +870,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void renderArticleListingScreen(DeepLinkingResult data) {
-        replaceFragment(new ArticlesFragment(), null, true);
     }
 
     private void renderAuthorDetailScreen(DeepLinkingResult data) {
@@ -1036,7 +956,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     private void renderArticleDetailScreen(DeepLinkingResult data) {
         if (!StringUtils.isNullOrEmpty(data.getArticle_id())) {
-            Intent intent = new Intent(DashboardActivity.this, ArticlesAndBlogsDetailsActivity.class);
+            Intent intent = new Intent(DashboardActivity.this, ArticleDetailsContainerActivity.class);
             intent.putExtra(Constants.AUTHOR_ID, data.getAuthor_id());
             intent.putExtra(Constants.ARTICLE_ID, data.getArticle_id());
             intent.putExtra(Constants.DEEPLINK_URL, deepLinkUrl);
@@ -1284,12 +1204,16 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     }
 
     private Badge addBadgeAt(int position, String number) {
+        if (badge != null) {
+            badge.setBadgeText(number);
+            return badge;
+        }
         // add badge
-        return new QBadgeView(this)
+        badge = new QBadgeView(this)
                 .setBadgeText(number)
                 .setGravityOffset(12, 2, true)
                 .bindTarget(bottomNavigationView.getBottomNavigationItemView(position));
-
+        return badge;
     }
 
 }

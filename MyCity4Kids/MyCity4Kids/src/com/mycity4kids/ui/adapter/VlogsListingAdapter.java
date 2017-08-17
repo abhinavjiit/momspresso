@@ -75,7 +75,6 @@ public class VlogsListingAdapter extends BaseAdapter {
                 holder.txvAuthorName = (TextView) view.findViewById(R.id.txvAuthorName);
                 holder.articleImageView = (ImageView) view.findViewById(R.id.articleImageView);
                 holder.authorImageView = (ImageView) view.findViewById(R.id.authorImageView);
-                holder.forYouDescriptionTextView = (TextView) view.findViewById(R.id.forYouDescriptionTextView);
 
                 holder.viewCountTextView = (TextView) view.findViewById(R.id.viewCountTextView);
                 holder.commentCountTextView = (TextView) view.findViewById(R.id.commentCountTextView);
@@ -114,7 +113,6 @@ public class VlogsListingAdapter extends BaseAdapter {
         TextView txvAuthorName;
         ImageView articleImageView;
         ImageView authorImageView;
-        TextView forYouDescriptionTextView;
         TextView viewCountTextView;
         TextView commentCountTextView;
         TextView recommendCountTextView;

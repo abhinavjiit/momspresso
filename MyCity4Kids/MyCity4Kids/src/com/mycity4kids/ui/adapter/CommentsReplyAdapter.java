@@ -1,7 +1,6 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,12 +12,9 @@ import android.widget.TextView;
 import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
-import com.mycity4kids.constants.AppConstants;
-import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.parentingdetails.CommentsData;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.CircleTransformation;
-import com.mycity4kids.ui.activity.BloggerDashboardActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -92,11 +88,6 @@ public class CommentsReplyAdapter extends ArrayAdapter<CommentsData> {
             @Override
             public void onClick(View v) {
                 if (!"fb".equals(replyList.get(position).getComment_type())) {
-                    Intent userProfileIntent = new Intent(mContext, BloggerDashboardActivity.class);
-                    userProfileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, replyList.get(position).getUserId());
-                    userProfileIntent.putExtra(AppConstants.AUTHOR_NAME, replyList.get(position).getName());
-                    userProfileIntent.putExtra(Constants.FROM_SCREEN, "Article Detail Comments");
-                    mContext.startActivity(userProfileIntent);
                 }
             }
         });
@@ -105,11 +96,6 @@ public class CommentsReplyAdapter extends ArrayAdapter<CommentsData> {
             @Override
             public void onClick(View v) {
                 if (!"fb".equals(replyList.get(position).getComment_type())) {
-                    Intent userProfileIntent = new Intent(mContext, BloggerDashboardActivity.class);
-                    userProfileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, replyList.get(position).getUserId());
-                    userProfileIntent.putExtra(AppConstants.AUTHOR_NAME, replyList.get(position).getName());
-                    userProfileIntent.putExtra(Constants.FROM_SCREEN, "Article Detail Comments");
-                    mContext.startActivity(userProfileIntent);
                 }
             }
         });

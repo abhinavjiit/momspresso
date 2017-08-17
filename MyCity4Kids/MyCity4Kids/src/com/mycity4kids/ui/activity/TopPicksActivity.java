@@ -1,7 +1,5 @@
 package com.mycity4kids.ui.activity;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,13 +28,14 @@ import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.ParentingStopController;
-import com.mycity4kids.enums.ParentingFilterType;
 import com.mycity4kids.models.parentingstop.CommonParentingList;
 import com.mycity4kids.models.parentingstop.CommonParentingResponse;
 import com.mycity4kids.models.parentingstop.ParentingRequest;
 import com.mycity4kids.models.parentingstop.ParentingSort;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.adapter.TopPicksListingAdapter;
+
+import java.util.ArrayList;
 
 /**
  * @author ArshVardhan
@@ -125,23 +124,6 @@ public class TopPicksActivity extends BaseActivity implements OnClickListener {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int pos,
 					long id) {
-		//		Intent intent = new Intent(TopPicksActivity.this,TopPicksDetailActivity.class);
-				Intent intent = new Intent(TopPicksActivity.this,ArticlesAndBlogsDetailsActivity.class);
-
-				//String topPicksId = null;
-				if (parent.getAdapter() instanceof TopPicksListingAdapter) {
-					
-					CommonParentingList parentingListData = (CommonParentingList) ((TopPicksListingAdapter) parent.getAdapter()).getItem(pos);
-					intent.putExtra(Constants.ARTICLE_ID,parentingListData.getId());
-					intent.putExtra(Constants.PARENTING_TYPE, ParentingFilterType.TOP_PICS);
-					startActivity(intent);
-					/*ParentingArticleListModel topPicksData = (ParentingArticleListModel) ((TopPicksListingAdapter) parent.getAdapter()).getItem(pos);
-					topPicksId = Integer.toString(topPicksData.getArticleId());
-					intent.putExtra(Constants.EXTRA_TOP_PICKS_DATA_MODEL,topPicksData);
-					intent.putExtra(Constants.EXTRA_TOP_PICKS_ID, topPicksId);
-					startActivityForResult(intent,Constants.SHOW_TOP_PICKS_DETAIL);*/
-
-				}
 			}
 		});
 	}

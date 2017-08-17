@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,18 +21,12 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.dbtable.TableKids;
-import com.mycity4kids.models.response.KidsModel;
 import com.mycity4kids.models.response.UserDetailResponse;
-import com.mycity4kids.models.user.KidsInfo;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.rangebar.RangeBar;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
-import com.mycity4kids.ui.fragment.CompleteProfileDialogFragment;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -63,7 +56,7 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
         TextView laterTextView = (TextView) findViewById(R.id.laterTextView);
         TextView okayTextView = (TextView) findViewById(R.id.okayTextView);
 
-        if (!StringUtils.isNullOrEmpty(shareUrl)) {
+        if (StringUtils.isNullOrEmpty(shareUrl)) {
             moderationContainer.setVisibility(View.VISIBLE);
             publishContainer.setVisibility(View.GONE);
         } else {
@@ -196,7 +189,7 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
                     startActivity(intent);
                 } else {
                     Intent intent = new Intent(ArticleModerationOrShareActivity.this, DashboardActivity.class);
-                    intent.putExtra(AppConstants.STACK_CLEAR_REQUIRED, true);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                     finish();
                 }

@@ -860,7 +860,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
     }
 
     private void startContextualSearch() {
-        Intent intent = new Intent(this, ContextualSearchActivity.class);
+        Intent intent = new Intent(this, SearchAllActivity.class);
         intent.putExtra(Constants.CATEGORY_ID, selectedTopics);
         startActivity(intent);
     }

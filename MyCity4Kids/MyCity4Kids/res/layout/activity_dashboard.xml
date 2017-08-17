@@ -58,10 +58,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:layout_marginStart="10dp"
                 android:layout_toEndOf="@+id/toolbarTitle"
                 android:layout_toRightOf="@+id/toolbarTitle"
+                android:paddingBottom="15dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="15dp"
                 android:src="@drawable/arrow_bluexxhdpidown" />
 
             <com.mycity4kids.widget.CustomFontTextView
@@ -88,10 +90,10 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:paddingBottom="5dp"
-                android:paddingLeft="5dp"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:paddingTop="5dp"
+                android:paddingTop="10dp"
                 android:src="@drawable/ic_search"
                 android:visibility="visible" />
 

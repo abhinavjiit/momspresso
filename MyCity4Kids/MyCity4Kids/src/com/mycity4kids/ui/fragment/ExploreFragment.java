@@ -59,8 +59,14 @@ public class ExploreFragment extends BaseFragment implements View.OnClickListene
 
     private TextView cityNameTextView;
     private CityListingDialogFragment cityFragment;
+    private ImageView eventsImageView;
+    private ImageView resImageView;
+    private ImageView thingToDoImageView;
+    private TextView noResourcesTextView;
+
     private int selectedCityId;
     private String newSelectedCityId;
+    private String currentCityName;
 
     @Nullable
     @Override
@@ -69,9 +75,10 @@ public class ExploreFragment extends BaseFragment implements View.OnClickListene
         View view = inflater.inflate(R.layout.explore_fragment, container, false);
 
         cityNameTextView = (TextView) view.findViewById(R.id.cityNameTextView);
-        ImageView eventsImageView = (ImageView) view.findViewById(R.id.eventsImageView);
-        ImageView resImageView = (ImageView) view.findViewById(R.id.resImageView);
-        ImageView thingToDoImageView = (ImageView) view.findViewById(R.id.thingToDoImageView);
+        noResourcesTextView = (TextView) view.findViewById(R.id.noResourcesTextView);
+        eventsImageView = (ImageView) view.findViewById(R.id.eventsImageView);
+        resImageView = (ImageView) view.findViewById(R.id.resImageView);
+        thingToDoImageView = (ImageView) view.findViewById(R.id.thingToDoImageView);
 
         cityNameTextView.setOnClickListener(this);
         eventsImageView.setOnClickListener(this);
@@ -84,6 +91,7 @@ public class ExploreFragment extends BaseFragment implements View.OnClickListene
             eventsImageView.setVisibility(View.GONE);
             resImageView.setVisibility(View.GONE);
             thingToDoImageView.setVisibility(View.GONE);
+            noResourcesTextView.setVisibility(View.VISIBLE);
         }
 
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
@@ -115,9 +123,13 @@ public class ExploreFragment extends BaseFragment implements View.OnClickListene
                     }
                     MetroCity currentCity = SharedPrefUtils.getCurrentCityModel(getActivity());
                     for (int i = 0; i < responseData.getData().getResult().getCityData().size(); i++) {
-                        if (!AppConstants.ALL_CITY_NEW_ID.equals(responseData.getData().getResult().getCityData().get(i).getId())
-                                && !AppConstants.OTHERS_NEW_CITY_ID.equals(responseData.getData().getResult().getCityData().get(i).getId())) {
+                        if (!AppConstants.ALL_CITY_NEW_ID.equals(responseData.getData().getResult().getCityData().get(i).getId())) {
                             mDatalist.add(responseData.getData().getResult().getCityData().get(i));
+                        }
+                        if (AppConstants.OTHERS_NEW_CITY_ID.equals(responseData.getData().getResult().getCityData().get(i).getId())) {
+                            if (currentCity.getName() != null && !"Others".equals(currentCity.getName()) && currentCity.getId() == AppConstants.OTHERS_CITY_ID) {
+                                mDatalist.get(mDatalist.size() - 1).setCityName("Others(" + currentCity.getName() + ")");
+                            }
                         }
                     }
 
@@ -211,8 +223,19 @@ public class ExploreFragment extends BaseFragment implements View.OnClickListene
     @Override
     public void onCitySelect(CityInfoItem cityItem) {
         cityNameTextView.setText(cityItem.getCityName());
+        currentCityName = cityItem.getCityName();
         selectedCityId = Integer.parseInt(cityItem.getId().replace("city-", ""));
         newSelectedCityId = cityItem.getId();
+        saveCityData();
+    }
+
+    @Override
+    public void onOtherCitySelect(int pos, String cityName) {
+        currentCityName = cityName;
+        selectedCityId = Integer.parseInt(mDatalist.get(pos).getId().replace("city-", ""));
+        newSelectedCityId = mDatalist.get(pos).getId();
+        mDatalist.get(pos).setCityName("Others(" + cityName + ")");
+        cityNameTextView.setText(mDatalist.get(pos).getCityName());
         saveCityData();
     }
 
@@ -243,9 +266,9 @@ public class ExploreFragment extends BaseFragment implements View.OnClickListene
                  * save current city in shared preference
                  */
                 MetroCity model = new MetroCity();
-                model.setId(cityModel.getCityId());
-                model.setName(cityModel.getCityName());
-                model.setNewCityId(cityModel.getNewCityId());
+                model.setId(selectedCityId);
+                model.setName(currentCityName);
+                model.setNewCityId(newSelectedCityId);
 
                 SharedPrefUtils.setCurrentCityModel(getActivity(), model);
                 SharedPrefUtils.setChangeCityFlag(getActivity(), true);
@@ -289,6 +312,18 @@ public class ExploreFragment extends BaseFragment implements View.OnClickListene
                             UserDetailResponse responseData = (UserDetailResponse) response.body();
                             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 //                                Toast.makeText(BlogSetupActivity.this, "Successfully updated!", Toast.LENGTH_SHORT).show();
+                                if (selectedCityId == AppConstants.OTHERS_CITY_ID) {
+                                    noResourcesTextView.setVisibility(View.VISIBLE);
+                                    eventsImageView.setVisibility(View.GONE);
+                                    resImageView.setVisibility(View.GONE);
+                                    thingToDoImageView.setVisibility(View.GONE);
+                                } else {
+                                    noResourcesTextView.setVisibility(View.GONE);
+                                    eventsImageView.setVisibility(View.VISIBLE);
+                                    resImageView.setVisibility(View.VISIBLE);
+                                    thingToDoImageView.setVisibility(View.VISIBLE);
+                                }
+
                                 Intent intent = new Intent(getActivity(), PushTokenService.class);
                                 getActivity().startService(intent);
 //                                finish();
@@ -313,8 +348,4 @@ public class ExploreFragment extends BaseFragment implements View.OnClickListene
         });
     }
 
-    @Override
-    public void onOtherCitySelect(int pos, String cityName) {
-
-    }
 }

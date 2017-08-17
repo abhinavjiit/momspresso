@@ -28,9 +28,8 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.SearchAuthorResult;
 import com.mycity4kids.models.response.SearchResponse;
 import com.mycity4kids.retrofitAPIsInterfaces.SearchArticlesAuthorsAPI;
-import com.mycity4kids.ui.activity.BloggerDashboardActivity;
 import com.mycity4kids.ui.activity.BloggerProfileActivity;
-import com.mycity4kids.ui.activity.SearchArticlesAndAuthorsActivity;
+import com.mycity4kids.ui.activity.SearchAllActivity;
 import com.mycity4kids.ui.adapter.SearchAuthorsListingAdapter;
 
 import java.util.ArrayList;
@@ -152,7 +151,7 @@ public class SearchAllAuthorsTabFragment extends BaseFragment {
                 noAuthorsTextView.setVisibility(View.VISIBLE);
             }
 
-            //((SearchArticlesAndAuthorsActivity) getActivity()).showToast(responseData.getResult().getMessage());
+            //((SearchAllActivity) getActivity()).showToast(responseData.getResult().getMessage());
         } else {
             noAuthorsTextView.setVisibility(View.GONE);
             if (nextPageNumber == 1) {
@@ -173,7 +172,7 @@ public class SearchAllAuthorsTabFragment extends BaseFragment {
         }
 
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
-            ((SearchArticlesAndAuthorsActivity) getActivity()).showToast("No connectivity available");
+            ((SearchAllActivity) getActivity()).showToast("No connectivity available");
             return;
         }
 
@@ -216,7 +215,7 @@ public class SearchAllAuthorsTabFragment extends BaseFragment {
                 mLodingView.setVisibility(View.GONE);
             }
             if (response == null || response.body() == null) {
-                ((SearchArticlesAndAuthorsActivity) getActivity()).showToast("Something went wrong from server");
+                ((SearchAllActivity) getActivity()).showToast("Something went wrong from server");
                 return;
             }
             try {
@@ -224,10 +223,10 @@ public class SearchAllAuthorsTabFragment extends BaseFragment {
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     updateBloggerResponse(responseData);
                 } else {
-                    ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(responseData.getReason());
+                    ((SearchAllActivity) getActivity()).showToast(responseData.getReason());
                 }
             } catch (Exception e) {
-                ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                ((SearchAllActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
@@ -241,7 +240,7 @@ public class SearchAllAuthorsTabFragment extends BaseFragment {
                 mLodingView.setVisibility(View.GONE);
             }
             if (getActivity() != null) {
-                ((SearchArticlesAndAuthorsActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                ((SearchAllActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
             }
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));

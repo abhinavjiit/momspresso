@@ -48,7 +48,8 @@ public class AddEditCommentReplyFragment extends BaseFragment implements OnClick
     private ProgressDialog mProgressDialog;
 
     private ImageView closeImageView;
-    private TextView addCommentTextView;
+    private TextView addCommentTextView, replyToTextView;
+    private View separator;
     private EditText commentReplyEditText;
     private CommentsData commentsData;
     private String operation;
@@ -63,6 +64,8 @@ public class AddEditCommentReplyFragment extends BaseFragment implements OnClick
         closeImageView = (ImageView) rootView.findViewById(R.id.closeImageView);
         addCommentTextView = (TextView) rootView.findViewById(R.id.addCommentTextView);
         commentReplyEditText = (EditText) rootView.findViewById(R.id.commentReplyEditText);
+        replyToTextView = (TextView) rootView.findViewById(R.id.replyToTextView);
+        separator = rootView.findViewById(R.id.separator);
 
         Bundle extras = getArguments();
         if (extras != null) {
@@ -70,8 +73,15 @@ public class AddEditCommentReplyFragment extends BaseFragment implements OnClick
             commentsData = extras.getParcelable("commentData");
             operation = extras.getString("opType");
         }
-        if (commentsData != null) {
+        if (commentsData != null && "EDIT".equals(operation)) {
             commentReplyEditText.setText("" + commentsData.getBody());
+            replyToTextView.setVisibility(View.GONE);
+            separator.setVisibility(View.GONE);
+        }
+        if ("ADD".equals(operation)) {
+            replyToTextView.setVisibility(View.VISIBLE);
+            separator.setVisibility(View.VISIBLE);
+            replyToTextView.setText(getString(R.string.ad_comments_replying_to, commentsData.getName()));
         }
         addCommentTextView.setOnClickListener(this);
         closeImageView.setOnClickListener(this);

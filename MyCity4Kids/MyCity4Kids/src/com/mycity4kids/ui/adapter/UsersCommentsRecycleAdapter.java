@@ -28,13 +28,15 @@ public class UsersCommentsRecycleAdapter extends RecyclerView.Adapter<UsersComme
     ArrayList<UserCommentsResult> articleDataModelsNew;
     private final float density;
     private RecyclerViewClickListener mListener;
+    private boolean isPrivate = false;
 
-    public UsersCommentsRecycleAdapter(Context pContext, RecyclerViewClickListener listener) {
+    public UsersCommentsRecycleAdapter(Context pContext, RecyclerViewClickListener listener, boolean isPrivate) {
 
         density = pContext.getResources().getDisplayMetrics().density;
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = pContext;
         this.mListener = listener;
+        this.isPrivate = isPrivate;
     }
 
     public void setListData(ArrayList<UserCommentsResult> mParentingLists) {
@@ -56,6 +58,11 @@ public class UsersCommentsRecycleAdapter extends RecyclerView.Adapter<UsersComme
         holder.commentBodyTextView.setText(articleDataModelsNew.get(position).getUserComment());
         holder.dateTextView.setText(mContext.getString(R.string.user_activities_comments_saved_on) + " " + DateTimeUtils.getDateFromTimestamp(articleDataModelsNew.get(position).getUpdatedTime()));
 
+        if (isPrivate) {
+            holder.editCommentTextView.setVisibility(View.VISIBLE);
+        } else {
+            holder.editCommentTextView.setVisibility(View.INVISIBLE);
+        }
 //        if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getVideoUrl())
 //                && (articleDataModelsNew.get(position).getImageUrl().getWebThumbnail() == null || articleDataModelsNew.get(position).getImageUrl().getWebThumbnail().endsWith("default.jpg"))) {
 //            Picasso.with(mContext).load(AppUtils.getYoutubeThumbnailURLMomspresso(articleDataModelsNew.get(position).getVideoUrl())).placeholder(R.drawable.default_article).into(holder.articleImageView);

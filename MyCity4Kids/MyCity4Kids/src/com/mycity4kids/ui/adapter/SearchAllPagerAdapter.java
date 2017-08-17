@@ -12,10 +12,6 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.newmodels.parentingmodel.ArticleModelNew;
 import com.mycity4kids.ui.fragment.SearchAllArticlesAndTopicsTabFragment;
 import com.mycity4kids.ui.fragment.SearchAllAuthorsTabFragment;
-import com.mycity4kids.ui.fragment.SearchArticlesTabFragment;
-import com.mycity4kids.ui.fragment.SearchAuthorsTabFragment;
-import com.mycity4kids.ui.fragment.SearchBlogsTabFragment;
-import com.mycity4kids.ui.fragment.SearchTopicsTabFragment;
 
 /**
  * Created by hemant on 19/4/16.
@@ -27,8 +23,6 @@ public class SearchAllPagerAdapter extends FragmentStatePagerAdapter {
     Context context;
     private SearchAllArticlesAndTopicsTabFragment mArticlefragment;
     private SearchAllAuthorsTabFragment mAuthorsFragment;
-    private SearchTopicsTabFragment mTopicsFragment;
-    private SearchBlogsTabFragment mBlogsFragment;
     String searchName = "";
 
     int currentPosition = 0;

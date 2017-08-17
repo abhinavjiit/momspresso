@@ -14,6 +14,7 @@ import com.kelltontech.utils.DataUtils;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.dbtable.UserTable;
+import com.mycity4kids.facebook.FacebookUtils;
 import com.mycity4kids.models.logout.LogoutResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 
