@@ -66,7 +66,7 @@ public class TopPicksActivity extends BaseActivity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_top_picks);
-		((ImageView) findViewById(R.id.imgBack)).setOnClickListener(this);
+		findViewById(R.id.imgBack).setOnClickListener(this);
 		mTabWidget=(TabWidget)findViewById(android.R.id.tabs);
 		mHorizontalScrollView=(HorizontalScrollView)findViewById(R.id.horizontalList);
 		mTopPicksList = new ArrayList<CommonParentingList>();
@@ -87,7 +87,7 @@ public class TopPicksActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private void manageView() {
-		rltLoadingView = (RelativeLayout) findViewById(R.id.rltLoadingView);
+		rltLoadingView = findViewById(R.id.rltLoadingView);
 		findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely));
 		topPicksListView = (ListView) findViewById(R.id.topPicksListView);
 		topPicksAdapter = new TopPicksListingAdapter(TopPicksActivity.this);
@@ -181,11 +181,11 @@ public class TopPicksActivity extends BaseActivity implements OnClickListener {
 			} else if (responseData.getResponseCode() == 400) {
 				Constants.IS_PAGE_AVAILABLE = false;
 				if (mTopPicksList.isEmpty()) {
-					((TextView) findViewById(R.id.txvNoData)).setVisibility(View.VISIBLE);
+					findViewById(R.id.txvNoData).setVisibility(View.VISIBLE);
 
 					topPicksListView.setVisibility(View.GONE);
 				} else {
-					((TextView) findViewById(R.id.txvNoData)).setVisibility(View.GONE);
+					findViewById(R.id.txvNoData).setVisibility(View.GONE);
 
 					topPicksListView.setVisibility(View.VISIBLE);
 				}
@@ -217,10 +217,10 @@ public class TopPicksActivity extends BaseActivity implements OnClickListener {
 		topPicksAdapter.notifyDataSetChanged();
 		mIsRequestRunning = false;
 		if (mTopPicksList.isEmpty()) {
-			((TextView) findViewById(R.id.txvNoData)).setVisibility(View.VISIBLE);
+			findViewById(R.id.txvNoData).setVisibility(View.VISIBLE);
 			topPicksListView.setVisibility(View.GONE);
 		} else {
-			((TextView) findViewById(R.id.txvNoData)).setVisibility(View.GONE);
+			findViewById(R.id.txvNoData).setVisibility(View.GONE);
 			topPicksListView.setVisibility(View.VISIBLE);
 		}
 
@@ -270,7 +270,7 @@ public class TopPicksActivity extends BaseActivity implements OnClickListener {
 					@SuppressWarnings("unused")
 					@Override
 					public void onClick(View v) {
-						View view=(View)v;
+						View view= v;
 						int position=(Integer) view.getTag();
 						mTabWidget.getChildAt(j).setSelected(true);
 

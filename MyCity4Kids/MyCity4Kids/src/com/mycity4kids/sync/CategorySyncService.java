@@ -78,7 +78,7 @@ public class CategorySyncService extends IntentService {
                          @Override
                          public void onResponse(Call<ConfigResponse> call, retrofit2.Response<ConfigResponse> response) {
                              int statusCode = response.code();
-                             final ConfigResponse responseModel = (ConfigResponse) response.body();
+                             final ConfigResponse responseModel = response.body();
                              try {
                                  if (responseModel.getCode() != 200) {
                                      return;
@@ -201,7 +201,7 @@ public class CategorySyncService extends IntentService {
                 return;
             }
             try {
-                UserTypeResponse responseData = (UserTypeResponse) response.body();
+                UserTypeResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     for (Map.Entry<String, String> entry : responseData.getData().getResult().entrySet()) {
                         SharedPrefUtils.setConfigUserType(CategorySyncService.this, entry.getValue(), entry.getKey());

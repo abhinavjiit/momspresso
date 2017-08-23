@@ -263,7 +263,7 @@ public class TutorialActivity extends BaseActivity implements View.OnClickListen
             }
 
             try {
-                UserDetailResponse responseData = (UserDetailResponse) response.body();
+                UserDetailResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     UserInfo model = new UserInfo();
                     model.setId(responseData.getData().get(0).getResult().getId());
@@ -401,7 +401,7 @@ public class TutorialActivity extends BaseActivity implements View.OnClickListen
             }
 
             try {
-                UserDetailResponse responseData = (UserDetailResponse) response.body();
+                UserDetailResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
                 } else {
@@ -527,7 +527,7 @@ public class TutorialActivity extends BaseActivity implements View.OnClickListen
             }
 
             try {
-                UserDetailResponse responseData = (UserDetailResponse) response.body();
+                UserDetailResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
                     dialogFragment.dismiss();

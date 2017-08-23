@@ -36,6 +36,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ContributorListAPI;
 import com.mycity4kids.ui.activity.BloggerProfileActivity;
+import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.RankingActivity;
 import com.mycity4kids.ui.adapter.RankingTopBloggerAdapter;
 import com.mycity4kids.utils.AppUtils;
@@ -201,7 +202,7 @@ public class RankingInfoTabFragment extends BaseFragment implements View.OnClick
 //                showToast("Something went wrong from server");
                 return;
             }
-            UserDetailResponse responseData = (UserDetailResponse) response.body();
+            UserDetailResponse responseData = response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                 if (responseData.getData().get(0).getResult().getRanks() == null || responseData.getData().get(0).getResult().getRanks().size() == 0) {
                     myRankTextView.setText("--");
@@ -226,7 +227,8 @@ public class RankingInfoTabFragment extends BaseFragment implements View.OnClick
                             multipleRankList.add(responseData.getData().get(0).getResult().getRanks().get(i));
                         }
                     }
-                    MyCityAnimationsUtil.animate(getActivity(), rankingContainer, multipleRankList, 0, true);
+                    if (isAdded())
+                        MyCityAnimationsUtil.animate(getActivity(), rankingContainer, multipleRankList, 0, true);
                 }
             } else {
             }
@@ -305,11 +307,17 @@ public class RankingInfoTabFragment extends BaseFragment implements View.OnClick
 
     @Override
     public void onClick(View view, int position) {
-        ContributorListResult itemSelected = (ContributorListResult) contributorListResults.get(position);
-        Intent intent = new Intent(getActivity(), BloggerProfileActivity.class);
-        intent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, itemSelected.getId());
-        intent.putExtra(AppConstants.AUTHOR_NAME, itemSelected.getFirstName() + " " + itemSelected.getLastName());
-        intent.putExtra(Constants.FROM_SCREEN, "Ranking");
-        startActivity(intent);
+        ContributorListResult itemSelected = contributorListResults.get(position);
+        if (userId.equals(itemSelected.getId())) {
+            Intent profileIntent = new Intent(getActivity(), DashboardActivity.class);
+            profileIntent.putExtra("TabType", "profile");
+            startActivity(profileIntent);
+        } else {
+            Intent intent = new Intent(getActivity(), BloggerProfileActivity.class);
+            intent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, itemSelected.getId());
+            intent.putExtra(AppConstants.AUTHOR_NAME, itemSelected.getFirstName() + " " + itemSelected.getLastName());
+            intent.putExtra(Constants.FROM_SCREEN, "Ranking");
+            startActivity(intent);
+        }
     }
 }

@@ -139,11 +139,11 @@ public class WriteReviewActivity extends BaseActivity implements IOnSubmitGaller
             writeReviewSpinner = (Spinner) findViewById(R.id.SpinnerWhatReview);
 //			textHeader=(TextView)findViewById(R.id.txvHeaderText);
 //			textHeader.setText("Write A Review");
-            ((TextView) findViewById(R.id.backbtn)).setOnClickListener(this);
+            findViewById(R.id.backbtn).setOnClickListener(this);
 
             //	mwhatReviewEtxt.setOnFocusChangeListener(this);
             mAutoSuggestController = new AutoSuggestController(this, this);
-            ((TextView) findViewById(R.id.save)).setOnClickListener(this);
+            findViewById(R.id.save).setOnClickListener(this);
             markArray = new JSONArray();
             Bundle bundle = getIntent().getExtras();
             if (bundle != null) {
@@ -152,8 +152,8 @@ public class WriteReviewActivity extends BaseActivity implements IOnSubmitGaller
                 businessOrEventId = bundle.getString(Constants.BUSINESS_OR_EVENT_ID);
                 writeReviewSpinner.setVisibility(View.GONE);
                 mwhatReviewEtxt.setVisibility(View.GONE);
-                ((TableRow) findViewById(R.id.spinner_row)).setVisibility(View.GONE);
-                ((TableRow) findViewById(R.id.auto_suggest_row)).setVisibility(View.GONE);
+                findViewById(R.id.spinner_row).setVisibility(View.GONE);
+                findViewById(R.id.auto_suggest_row).setVisibility(View.GONE);
             } else {
 
                 CategoryListTable _categoryTable = new CategoryListTable((BaseApplication) getApplication());

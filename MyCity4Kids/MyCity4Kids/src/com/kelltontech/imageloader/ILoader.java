@@ -4,5 +4,5 @@ import android.graphics.Bitmap;
 import android.widget.ImageView;
 
 public interface ILoader {
-	public void downloaded(String url , Bitmap bmp , ImageView img_view) ;  
+	void downloaded(String url, Bitmap bmp, ImageView img_view) ;
 }

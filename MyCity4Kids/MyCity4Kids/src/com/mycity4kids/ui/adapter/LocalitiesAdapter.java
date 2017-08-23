@@ -50,7 +50,7 @@ public class LocalitiesAdapter extends BaseExpandableListAdapter {
         if (fragment == null){
             mFilterMap = ((BusinessListActivityKidsResources)pContext).mFilterMap;
         } else {
-            mFilterMap = ((FragmentBusinesslistEvents) fragment).mFilterMap;
+            mFilterMap = FragmentBusinesslistEvents.mFilterMap;
         }
         mGroupPosition = -1;
         mContext = pContext;
@@ -93,7 +93,7 @@ public class LocalitiesAdapter extends BaseExpandableListAdapter {
         if (childPosition != 0)
             holder.txtLocalityName.setText(localityModel.getLocalityName());
         else {
-            int count = mLocalityData.get((ZoneModel) getGroup(groupPosition)).size() - 1;
+            int count = mLocalityData.get(getGroup(groupPosition)).size() - 1;
             holder.txtLocalityName.setText(localityModel.getLocalityName() + " (" + count + ")");
         }
 

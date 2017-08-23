@@ -49,7 +49,7 @@ public class SubscribeTopicsTabFragment extends BaseFragment {
         selectedTopicsMap = new HashMap<>();
         selectTopic = getArguments().getParcelableArrayList("selectTopicList");
         position = getArguments().getInt("position");
-        previouslyFollowedTopics = (ArrayList<String>) getArguments().getStringArrayList("previouslyFollowedTopics");
+        previouslyFollowedTopics = getArguments().getStringArrayList("previouslyFollowedTopics");
 
         createTopicsData();
         return view;

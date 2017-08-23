@@ -247,6 +247,7 @@
     <color name="login_email.password_text">#FFFFFF</color>
 
     <color name="empty_list_msg">#545454</color>
+    <color name="various_list.toolbar.title">#545454</color>
 
     <color name="for_you.reason.why_label">#545454</color>
     <color name="for_you.reason.body">#545454</color>

@@ -20,6 +20,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -67,23 +68,23 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
     MyFunnyVideosListingAdapter articlesListingAdapter;
     ArrayList<VlogsListingAndDetailResult> articleDataModelsNew;
 
-    FloatingActionsMenu fabMenu;
-    ListView listView;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private ProgressBar progressBar;
+    private FloatingActionsMenu fabMenu;
+    private ListView listView;
     private RelativeLayout mLodingView;
-    TextView noBlogsTextView;
-    Toolbar mToolbar;
-    FloatingActionButton popularSortFAB, recentSortFAB, fabSort;
-    FrameLayout frameLayout;
+    private TextView noBlogsTextView;
+    private Toolbar mToolbar;
+    private FloatingActionButton popularSortFAB, recentSortFAB, fabSort;
+    private FrameLayout frameLayout;
     private View rootLayout;
+    private ImageView searchAllImageView;
 
     private int sortType = 0;
     private int nextPageNumber;
     private int limit = 10;
     private boolean isLastPageReached = false;
     private boolean isReuqestRunning = false;
-    private SwipeRefreshLayout swipeRefreshLayout;
-    private ProgressBar progressBar;
-    //    private String userId;
     private String authorId;
     private String fromScreen;
 
@@ -100,13 +101,17 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
         noBlogsTextView = (TextView) findViewById(R.id.noBlogsTextView);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
-
+        searchAllImageView = (ImageView) findViewById(R.id.searchAllImageView);
         frameLayout = (FrameLayout) findViewById(R.id.frame_layout);
-        frameLayout.getBackground().setAlpha(0);
         fabMenu = (FloatingActionsMenu) findViewById(R.id.fab_menu);
         popularSortFAB = (FloatingActionButton) findViewById(R.id.popularSortFAB);
         recentSortFAB = (FloatingActionButton) findViewById(R.id.recentSortFAB);
         fabSort = (FloatingActionButton) findViewById(R.id.fabSort);
+
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         fromScreen = getIntent().getStringExtra(Constants.FROM_SCREEN);
         authorId = getIntent().getStringExtra(Constants.AUTHOR_ID);
@@ -114,6 +119,8 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
             authorId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
         }
 
+        frameLayout.getBackground().setAlpha(0);
+        searchAllImageView.setOnClickListener(this);
         popularSortFAB.setOnClickListener(this);
         recentSortFAB.setOnClickListener(this);
         fabSort.setOnClickListener(new View.OnClickListener() {
@@ -150,21 +157,15 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
         recentSortFAB.setVisibility(View.INVISIBLE);
         fabSort.setVisibility(View.INVISIBLE);
         fabMenu.setVisibility(View.INVISIBLE);
-
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        progressBar.setVisibility(View.VISIBLE);
 
         findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely));
-
-        progressBar.setVisibility(View.VISIBLE);
 
         articleDataModelsNew = new ArrayList<VlogsListingAndDetailResult>();
         nextPageNumber = 1;
         hitArticleListingApi();
 
-        swipeRefreshLayout.setOnRefreshListener((SwipeRefreshLayout.OnRefreshListener) this);
+        swipeRefreshLayout.setOnRefreshListener(this);
 
         articlesListingAdapter = new MyFunnyVideosListingAdapter(this);
         articlesListingAdapter.setNewListData(articleDataModelsNew);
@@ -188,7 +189,6 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
             }
         });
 
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -197,7 +197,7 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
                 if (adapterView.getAdapter() instanceof MyFunnyVideosListingAdapter) {
 //                    Utils.pushEvent(VlogsListingActivity.this, GTMEventType.FOR_YOU_ARTICLE_CLICK_EVENT,
 //                            SharedPrefUtils.getUserDetailModel(VlogsListingActivity.this).getDynamoId(), "Video Listing Screen");
-                    VlogsListingAndDetailResult parentingListData = (VlogsListingAndDetailResult) ((MyFunnyVideosListingAdapter) adapterView.getAdapter()).getItem(i);
+                    VlogsListingAndDetailResult parentingListData = (VlogsListingAndDetailResult) adapterView.getAdapter().getItem(i);
                     switch (parentingListData.getPublication_status()) {
                         case AppConstants.VIDEO_STATUS_DRAFT: {
                             showToast("This video is draft");
@@ -270,7 +270,7 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
                 return;
             }
             try {
-                VlogsListingResponse responseData = (VlogsListingResponse) response.body();
+                VlogsListingResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     processResponse(responseData);
 //                    notificationCenterResultArrayList.addAll(responseData.getData().getResult());
@@ -372,6 +372,12 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
                 sortType = 1;
                 nextPageNumber = 1;
                 hitArticleListingApi();
+                break;
+            case R.id.searchAllImageView:
+                Intent searchIntent = new Intent(this, SearchAllActivity.class);
+                searchIntent.putExtra(Constants.FILTER_NAME, "");
+                searchIntent.putExtra(Constants.TAB_POSITION, 0);
+                startActivity(searchIntent);
                 break;
         }
     }

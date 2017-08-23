@@ -18,14 +18,14 @@
             android:id="@+id/toolbarRelativeLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/toolbarTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/home.toolbar.title"
-                android:textColor="@color/home.toolbar.titlecolor"
+                android:text=""
+                android:textColor="@color/various_list.toolbar.title"
                 android:textSize="20sp"
                 app:fontName="oswald_regular.ttf" />
 
@@ -35,7 +35,8 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@+id/toolbarTitle"
-                android:src="@drawable/arrow_bluexxhdpidown" />
+                android:src="@drawable/arrow_bluexxhdpidown"
+                android:visibility="gone" />
 
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>

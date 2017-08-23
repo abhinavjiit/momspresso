@@ -96,7 +96,7 @@ public class ForYouInfoDialogFragment extends DialogFragment implements OnClickL
                 return;
             }
             try {
-                ForYourArticleRemoveResponse responseData = (ForYourArticleRemoveResponse) response.body();
+                ForYourArticleRemoveResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     listener.onForYouArticleRemoved(position);
                     dismiss();

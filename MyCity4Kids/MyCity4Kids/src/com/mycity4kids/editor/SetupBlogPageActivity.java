@@ -153,7 +153,7 @@ public class SetupBlogPageActivity extends BaseActivity {
                                              return;
                                          }
 
-                                         SetupBlogResponse responseData = (SetupBlogResponse) response.body();
+                                         SetupBlogResponse responseData = response.body();
                                          if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                                              showToast(responseData.getData().getMsg());
                                              finish();

@@ -11,7 +11,7 @@ public enum ParentingFilterType {
 
 	private String mParentingType;
 
-	private ParentingFilterType(String pParentingType){
+	ParentingFilterType(String pParentingType){
 		mParentingType=pParentingType;
 	}
 

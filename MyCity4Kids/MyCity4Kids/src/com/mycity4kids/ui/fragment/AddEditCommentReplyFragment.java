@@ -78,7 +78,7 @@ public class AddEditCommentReplyFragment extends BaseFragment implements OnClick
             replyToTextView.setVisibility(View.GONE);
             separator.setVisibility(View.GONE);
         }
-        if ("ADD".equals(operation)) {
+        if ("ADD".equals(operation) && commentsData != null) {
             replyToTextView.setVisibility(View.VISIBLE);
             separator.setVisibility(View.VISIBLE);
             replyToTextView.setText(getString(R.string.ad_comments_replying_to, commentsData.getName()));
@@ -103,6 +103,10 @@ public class AddEditCommentReplyFragment extends BaseFragment implements OnClick
                 if (isValid()) {
                     if ("ADD".equals(operation)) {
                         String contentData = commentReplyEditText.getText().toString();
+                        if (StringUtils.isNullOrEmpty(contentData)) {
+                            if (isAdded())
+                                Toast.makeText(getActivity(), getString(R.string.ad_comments_toast_empty_comment), Toast.LENGTH_SHORT).show();
+                        }
                         Retrofit retro = BaseApplication.getInstance().getRetrofit();
                         ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
                         AddCommentRequest addCommentRequest = new AddCommentRequest();
@@ -116,10 +120,15 @@ public class AddEditCommentReplyFragment extends BaseFragment implements OnClick
                         showProgressDialog("Please wait ...");
                     } else {
                         String commentId;
+                        String contentData = commentReplyEditText.getText().toString();
+                        if (StringUtils.isNullOrEmpty(contentData)) {
+                            if (isAdded())
+                                Toast.makeText(getActivity(), getString(R.string.ad_comments_toast_empty_comment), Toast.LENGTH_SHORT).show();
+                        }
                         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
                         ArticleDetailsAPI articleDetailsAPI = retrofit.create(ArticleDetailsAPI.class);
                         AddCommentRequest addCommentRequest = new AddCommentRequest();
-                        addCommentRequest.setUserComment(commentReplyEditText.getText().toString());
+                        addCommentRequest.setUserComment(contentData);
                         Call<AddCommentResponse> callBookmark = articleDetailsAPI.editComment(commentsData.getId(), addCommentRequest);
                         callBookmark.enqueue(editCommentsResponseCallback);
                         showProgressDialog("Please wait ...");
@@ -145,7 +154,7 @@ public class AddEditCommentReplyFragment extends BaseFragment implements OnClick
                 return;
             }
 
-            AddCommentResponse responseData = (AddCommentResponse) response.body();
+            AddCommentResponse responseData = response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                 UserInfo userInfo = SharedPrefUtils.getUserDetailModel(getActivity());
                 CommentsData cd = new CommentsData();
@@ -191,7 +200,7 @@ public class AddEditCommentReplyFragment extends BaseFragment implements OnClick
                 return;
             }
 
-            AddCommentResponse responseData = (AddCommentResponse) response.body();
+            AddCommentResponse responseData = response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 //                if ("article".equals(type)) {
 //                    ((ArticlesAndBlogsDetailsActivity) getActivity()).showToast("Comment edited successfully!");

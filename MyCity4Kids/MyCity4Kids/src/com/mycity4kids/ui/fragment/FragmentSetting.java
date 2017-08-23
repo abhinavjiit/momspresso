@@ -56,10 +56,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.reminders.AppointmentManager;
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
 import com.mycity4kids.ui.activity.ActivityLogin;
-import com.mycity4kids.ui.activity.EditProfieActivity;
-import com.mycity4kids.ui.activity.FollowedTopicsListingActivity;
 import com.mycity4kids.ui.activity.IdTokenLoginActivity;
-import com.mycity4kids.ui.activity.SettingsActivity;
 import com.mycity4kids.utils.AppUtils;
 
 import retrofit2.Call;
@@ -95,13 +92,13 @@ public class FragmentSetting extends BaseFragment implements View.OnClickListene
         appVersionLayout = (LinearLayout) view.findViewById(R.id.appVersionLayout);
         appVersionTextView = (TextView) view.findViewById(R.id.appVersionTextView);
 
-        ((TextView) view.findViewById(R.id.logout)).setOnClickListener(this);
-        ((TextView) view.findViewById(R.id.family_details)).setOnClickListener(this);
-        ((TextView) view.findViewById(R.id.viewFollowingTopics)).setOnClickListener(this);
-        ((TextView) view.findViewById(R.id.editProfile)).setOnClickListener(this);
-        ((TextView) view.findViewById(R.id.notifications)).setOnClickListener(this);
-        ((TextView) view.findViewById(R.id.subscriptions)).setOnClickListener(this);
-        ((TextView) view.findViewById(R.id.languageSubscriptions)).setOnClickListener(this);
+        view.findViewById(R.id.logout).setOnClickListener(this);
+        view.findViewById(R.id.family_details).setOnClickListener(this);
+        view.findViewById(R.id.viewFollowingTopics).setOnClickListener(this);
+        view.findViewById(R.id.editProfile).setOnClickListener(this);
+        view.findViewById(R.id.notifications).setOnClickListener(this);
+        view.findViewById(R.id.subscriptions).setOnClickListener(this);
+        view.findViewById(R.id.languageSubscriptions).setOnClickListener(this);
 
         appVersionLayout.setOnClickListener(this);
         facebookConnectTextView.setOnClickListener(this);
@@ -193,31 +190,21 @@ public class FragmentSetting extends BaseFragment implements View.OnClickListene
                 }
                 break;
             case R.id.family_details:
-                ((SettingsActivity) getActivity()).replaceFragment(new FragmentFamilyDetail(), null, true);
                 break;
             case R.id.editProfile:
-                Intent intent = new Intent(getActivity(), EditProfieActivity.class);
-//                intent.putExtra("bio", bio);
-//                intent.putExtra("firstName", firstName);
-//                intent.putExtra("lastName", lastName);
-//                intent.putExtra("phoneNumber", phoneNumber);
-                startActivity(intent);
                 break;
             case R.id.cityChange:
-                ((SettingsActivity) getActivity()).replaceFragment(new ChangeCityFragment(), null, true);
                 break;
             case R.id.notifications:
-                ((SettingsActivity) getActivity()).replaceFragment(new NotificationSettingsFragment(), null, true);
+//                ((SettingsActivity) getActivity()).replaceFragment(new NotificationSettingsFragment(), null, true);
                 break;
             case R.id.languageSubscriptions:
-                ((SettingsActivity) getActivity()).replaceFragment(new LanguageSettingsFragment(), null, true);
+//                ((SettingsActivity) getActivity()).replaceFragment(new LanguageSettingsFragment(), null, true);
                 break;
             case R.id.subscriptions:
-                ((SettingsActivity) getActivity()).replaceFragment(new SubscriptionSettingsFragment(), null, true);
+//                ((SettingsActivity) getActivity()).replaceFragment(new SubscriptionSettingsFragment(), null, true);
                 break;
             case R.id.viewFollowingTopics:
-                Intent intenrt = new Intent(getActivity(), FollowedTopicsListingActivity.class);
-                startActivity(intenrt);
                 break;
             case R.id.facebookConnect:
                 if ("CONNECT".equals(facebookConnectTextView.getText().toString())) {
@@ -357,7 +344,7 @@ public class FragmentSetting extends BaseFragment implements View.OnClickListene
                 return;
             }
             try {
-                BaseResponse responseData = (BaseResponse) response.body();
+                BaseResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     Log.d("socialConnectListen", "SUCCESS");
                     facebookConnectTextView.setText("CONNECTED");

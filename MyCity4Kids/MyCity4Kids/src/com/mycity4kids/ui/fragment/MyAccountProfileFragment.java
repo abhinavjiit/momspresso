@@ -194,7 +194,6 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
     @Override
     public void onResume() {
         super.onResume();
-        Log.d("dwadaw", "vfvfdrv");
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -206,10 +205,8 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
     private void getUserDetails() {
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
             removeProgressDialog();
-//            showToast(getString(R.string.error_network));
             return;
         }
-        showProgressDialog("please wait ...");
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         // prepare call in Retrofit 2.0
         BloggerDashboardAPI bloggerDashboardAPI = retrofit.create(BloggerDashboardAPI.class);
@@ -225,7 +222,7 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
 //                showToast("Something went wrong from server");
                 return;
             }
-            UserDetailResponse responseData = (UserDetailResponse) response.body();
+            UserDetailResponse responseData = response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                 if (responseData.getData().get(0).getResult().getRanks() == null || responseData.getData().get(0).getResult().getRanks().size() == 0) {
                     rankCountTextView.setText("--");
@@ -251,7 +248,8 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
                             multipleRankList.add(responseData.getData().get(0).getResult().getRanks().get(i));
                         }
                     }
-                    MyCityAnimationsUtil.animate(getActivity(), rankContainer, multipleRankList, 0, true);
+                    if (isAdded())
+                        MyCityAnimationsUtil.animate(getActivity(), rankContainer, multipleRankList, 0, true);
                 }
 
                 int followerCount = Integer.parseInt(responseData.getData().get(0).getResult().getFollowersCount());
@@ -301,22 +299,6 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
                         rankingSectionTextView.setVisibility(View.GONE);
                         rootView.findViewById(R.id.underline_4).setVisibility(View.GONE);
                 }
-//                blogTitle.setText(responseData.getData().get(0).getResult().getBlogTitle());
-//                getSupportActionBar().setTitle(responseData.getData().get(0).getResult().getFirstName());
-//                Bio = responseData.getData().get(0).getResult().getUserBio();
-//                firstName = responseData.getData().get(0).getResult().getFirstName();
-//                lastName = responseData.getData().get(0).getResult().getLastName();
-//                if (isPrivateProfile && AppConstants.USER_TYPE_BLOGGER.equals(responseData.getData().get(0).getResult().getUserType())) {
-//                    analyticsTextView.setVisibility(View.VISIBLE);
-//                    analyticsTextView.setOnClickListener(MyAccountProfileFragment.this);
-//                } else if (null != analyticsTextView) {
-//                    analyticsTextView.setVisibility(View.GONE);
-//                }
-//                if (null == responseData.getData().get(0).getResult().getPhone()) {
-//                    phoneNumber = " ";
-//                } else {
-//                    phoneNumber = responseData.getData().get(0).getResult().getPhone().getMobile();
-//                }
 
                 if (!StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp())) {
                     Picasso.with(getActivity()).load(responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp())
@@ -554,32 +536,24 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
      * permission, otherwise it is requested directly.
      */
     private void requestCameraPermission() {
-        Log.i("Permissions", "CAMERA permission has NOT been granted. Requesting permission.");
-
-        // BEGIN_INCLUDE(camera_permission_request)
         if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
                 Manifest.permission.CAMERA)) {
-            // Provide an additional rationale to the user if the permission was not granted
-            // and the user would benefit from additional context for the use of the permission.
-            // For example if the user has previously denied the permission.
-            Log.i("Permissions",
-                    "Displaying camera permission rationale to provide additional context.");
-            Snackbar.make(rootView, R.string.permission_camera_rationale,
-                    Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.ok, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            ActivityCompat.requestPermissions(getActivity(),
-                                    new String[]{Manifest.permission.CAMERA},
-                                    REQUEST_CAMERA);
-                        }
-                    })
-                    .show();
+            if (isAdded())
+                Snackbar.make(rootView, R.string.permission_camera_rationale,
+                        Snackbar.LENGTH_INDEFINITE)
+                        .setAction(R.string.ok, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                ActivityCompat.requestPermissions(getActivity(),
+                                        new String[]{Manifest.permission.CAMERA},
+                                        REQUEST_CAMERA);
+                            }
+                        })
+                        .show();
         } else {
-
-            // Camera permission has not been granted yet. Request it directly.
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA},
-                    REQUEST_CAMERA);
+            if (isAdded())
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA},
+                        REQUEST_CAMERA);
         }
     }
 
@@ -589,36 +563,28 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
      * permission, otherwise it is requested directly.
      */
     private void requestCameraAndStoragePermissions() {
-        // BEGIN_INCLUDE(contacts_permission_request)
         if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 || ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
                 Manifest.permission.WRITE_EXTERNAL_STORAGE) || ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
                 Manifest.permission.CAMERA)) {
 
-            // Provide an additional rationale to the user if the permission was not granted
-            // and the user would benefit from additional context for the use of the permission.
-            // For example, if the request has been denied previously.
-            Log.i("Permissions",
-                    "Displaying stoage permission rationale to provide additional context.");
-
-            // Display a SnackBar with an explanation and a button to trigger the request.
-            Snackbar.make(rootView, R.string.permission_storage_rationale,
-                    Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.ok, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            ActivityCompat
-                                    .requestPermissions(getActivity(), PERMISSIONS_EDIT_PICTURE,
-                                            REQUEST_EDIT_PICTURE);
-                        }
-                    })
-                    .show();
+            if (isAdded())
+                Snackbar.make(rootView, R.string.permission_storage_rationale,
+                        Snackbar.LENGTH_INDEFINITE)
+                        .setAction(R.string.ok, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                ActivityCompat
+                                        .requestPermissions(getActivity(), PERMISSIONS_EDIT_PICTURE,
+                                                REQUEST_EDIT_PICTURE);
+                            }
+                        })
+                        .show();
         } else {
-            // Contact permissions have not been granted yet. Request them directly.
-            ActivityCompat.requestPermissions(getActivity(), PERMISSIONS_EDIT_PICTURE, REQUEST_EDIT_PICTURE);
+            if (isAdded())
+                ActivityCompat.requestPermissions(getActivity(), PERMISSIONS_EDIT_PICTURE, REQUEST_EDIT_PICTURE);
         }
-        // END_INCLUDE(contacts_permission_request)
     }
 
     public void chooseImageOptionPopUp(ImageView profileImageView) {
@@ -628,7 +594,6 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
             public boolean onMenuItemClick(MenuItem item) {
                 int i = item.getItemId();
                 if (i == R.id.camera) {
-//                    mClickListener.onBtnClick(position);
                     Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                     if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
                         // Create the File where the photo should go
@@ -669,7 +634,6 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
                 dir      // directory
         );
 
-        // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = "file:" + image.getAbsolutePath();
         absoluteImagePath = image.getAbsolutePath();
         return image;
@@ -682,7 +646,7 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
         UCrop uCrop = UCrop.of(uri, Uri.fromFile(new File(getActivity().getCacheDir(), destinationFileName)));
         uCrop.withAspectRatio(1, 1);
         uCrop.withMaxResultSize(300, 300);
-        uCrop.start(getActivity());
+        uCrop.start(getActivity(), this);
     }
 
     public void sendUploadProfileImageRequest(File file) {

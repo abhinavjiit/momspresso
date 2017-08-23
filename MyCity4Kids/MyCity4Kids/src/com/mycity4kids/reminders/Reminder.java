@@ -71,67 +71,64 @@ public class Reminder {
     }
 
     public Reminder setRecurring(String recurring) {
-        isRecurring = false;
-        if (!StringUtils.isNullOrEmpty(recurring) && recurring.equalsIgnoreCase("yes")) {
-            isRecurring = true;
-        }
+        isRecurring = !StringUtils.isNullOrEmpty(recurring) && recurring.equalsIgnoreCase("yes");
         return reminder;
     }
 
     public void create(int reminderId) {
 //        long reminderTriggerMilles = ReminderUtils.calculateTimeDifference(startTimeMillis, remindBefore);
-        long reminderTriggerMilles = startTimeMillis;
-        if (!StringUtils.isNullOrEmpty(remindBefore)) {
-            reminderTriggerMilles = ReminderUtils.calculateTimeDifference(startTimeMillis, remindBefore);
-        }
-
-        if (System.currentTimeMillis() > reminderTriggerMilles || (isRecurring && repeat.equalsIgnoreCase("Days"))) {
-            if (isRecurring) {
-                reminderTriggerMilles = ReminderUtils.calculateNextReminderTime(reminderType, startTimeMillis, remindBefore, repeat, repeatFrequency, repeatNum, repeatUntill);
-            } else {
-                reminderTriggerMilles = 0;
-            }
-        }
-        Log.i("Reminder", "reminderTriggerMilles -------------- " + reminderTriggerMilles);
-        if (reminderTriggerMilles == 0) {
-            return;
-        }
-
-        AlarmManager am = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
-        Intent i = new Intent(mContext, AlarmReceiver.class);
-        i.putExtra(Constants.EXTRA_ALARM_TYPE, reminderType);
-        i.putExtra(Constants.EXTRA_ALARM_DESC, reminderDesc);
-        i.putExtra(Constants.EXTRA_ALARM_RECURRING, isRecurring ? "yes" : "no");
-        i.putExtra(Constants.EXTRA_ALARM_START_MILLIS, startTimeMillis);
-
-        if (!StringUtils.isNullOrEmpty(repeat)) {
-            i.putExtra(Constants.EXTRA_ALARM_REPEAT, repeat);
-        }
-        if (!StringUtils.isNullOrEmpty(repeatFrequency)) {
-            i.putExtra(Constants.EXTRA_ALARM_REPEAT_FREQ, repeatFrequency);
-        }
-        if (!StringUtils.isNullOrEmpty(repeatNum)) {
-            i.putExtra(Constants.EXTRA_ALARM_REPEAT_NUM, repeatNum);
-        }
-        if (!StringUtils.isNullOrEmpty(repeatUntill)) {
-            i.putExtra(Constants.EXTRA_ALARM_REPEAT_UNTILL, repeatUntill);
-        }
-        i.putExtra(Constants.EXTRA_ALARM_ID, reminderId);
-
-
-        PendingIntent pi = PendingIntent.getBroadcast(mContext, reminderId, i, PendingIntent.FLAG_UPDATE_CURRENT);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            am.setExact(AlarmManager.RTC_WAKEUP, reminderTriggerMilles, pi);
-        } else {
-            am.set(AlarmManager.RTC_WAKEUP, reminderTriggerMilles, pi);
-        }
+//        long reminderTriggerMilles = startTimeMillis;
+//        if (!StringUtils.isNullOrEmpty(remindBefore)) {
+//            reminderTriggerMilles = ReminderUtils.calculateTimeDifference(startTimeMillis, remindBefore);
+//        }
+//
+//        if (System.currentTimeMillis() > reminderTriggerMilles || (isRecurring && repeat.equalsIgnoreCase("Days"))) {
+//            if (isRecurring) {
+//                reminderTriggerMilles = ReminderUtils.calculateNextReminderTime(reminderType, startTimeMillis, remindBefore, repeat, repeatFrequency, repeatNum, repeatUntill);
+//            } else {
+//                reminderTriggerMilles = 0;
+//            }
+//        }
+//        Log.i("Reminder", "reminderTriggerMilles -------------- " + reminderTriggerMilles);
+//        if (reminderTriggerMilles == 0) {
+//            return;
+//        }
+//
+//        AlarmManager am = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+//        Intent i = new Intent(mContext, AlarmReceiver.class);
+//        i.putExtra(Constants.EXTRA_ALARM_TYPE, reminderType);
+//        i.putExtra(Constants.EXTRA_ALARM_DESC, reminderDesc);
+//        i.putExtra(Constants.EXTRA_ALARM_RECURRING, isRecurring ? "yes" : "no");
+//        i.putExtra(Constants.EXTRA_ALARM_START_MILLIS, startTimeMillis);
+//
+//        if (!StringUtils.isNullOrEmpty(repeat)) {
+//            i.putExtra(Constants.EXTRA_ALARM_REPEAT, repeat);
+//        }
+//        if (!StringUtils.isNullOrEmpty(repeatFrequency)) {
+//            i.putExtra(Constants.EXTRA_ALARM_REPEAT_FREQ, repeatFrequency);
+//        }
+//        if (!StringUtils.isNullOrEmpty(repeatNum)) {
+//            i.putExtra(Constants.EXTRA_ALARM_REPEAT_NUM, repeatNum);
+//        }
+//        if (!StringUtils.isNullOrEmpty(repeatUntill)) {
+//            i.putExtra(Constants.EXTRA_ALARM_REPEAT_UNTILL, repeatUntill);
+//        }
+//        i.putExtra(Constants.EXTRA_ALARM_ID, reminderId);
+//
+//
+//        PendingIntent pi = PendingIntent.getBroadcast(mContext, reminderId, i, PendingIntent.FLAG_UPDATE_CURRENT);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//            am.setExact(AlarmManager.RTC_WAKEUP, reminderTriggerMilles, pi);
+//        } else {
+//            am.set(AlarmManager.RTC_WAKEUP, reminderTriggerMilles, pi);
+//        }
     }
 
     public void cancel(int reminderId) {
-        AlarmManager am = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
-        Intent i = new Intent(mContext, AlarmReceiver.class);
-        PendingIntent pi = PendingIntent.getBroadcast(mContext, reminderId, i, PendingIntent.FLAG_UPDATE_CURRENT);
-        am.cancel(pi);
+//        AlarmManager am = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+//        Intent i = new Intent(mContext, AlarmReceiver.class);
+//        PendingIntent pi = PendingIntent.getBroadcast(mContext, reminderId, i, PendingIntent.FLAG_UPDATE_CURRENT);
+//        am.cancel(pi);
     }
 
     public Reminder startTime(long startTimeMillis) {

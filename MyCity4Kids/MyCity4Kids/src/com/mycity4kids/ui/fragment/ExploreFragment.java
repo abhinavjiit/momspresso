@@ -113,7 +113,7 @@ public class ExploreFragment extends BaseFragment implements View.OnClickListene
                 return;
             }
             try {
-                CityConfigResponse responseData = (CityConfigResponse) response.body();
+                CityConfigResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 //                    mDatalist = responseData.getData().getResult().getCityData();
                     mDatalist = new ArrayList<>();
@@ -309,7 +309,7 @@ public class ExploreFragment extends BaseFragment implements View.OnClickListene
                                 return;
                             }
 
-                            UserDetailResponse responseData = (UserDetailResponse) response.body();
+                            UserDetailResponse responseData = response.body();
                             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 //                                Toast.makeText(BlogSetupActivity.this, "Successfully updated!", Toast.LENGTH_SHORT).show();
                                 if (selectedCityId == AppConstants.OTHERS_CITY_ID) {

@@ -306,7 +306,7 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
             }
 //            swipeRefreshLayout.setRefreshing(false);
             try {
-                ArticleListingResponse responseData = (ArticleListingResponse) response.body();
+                ArticleListingResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     processArticleListingResponse(responseData);
                 } else {

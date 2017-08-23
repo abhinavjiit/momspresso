@@ -37,7 +37,7 @@ public class BookOrPayWebActivity extends BaseActivity implements OnClickListene
 			bookOrPayWebView=(WebView)findViewById(R.id.book_or_pay_web_view);
 			TextView headerTxt=(TextView)findViewById(R.id.txvHeaderText);
 			headerTxt.setText("Payment");
-			((ImageView)findViewById(R.id.cross_icon)).setOnClickListener(this);
+			findViewById(R.id.cross_icon).setOnClickListener(this);
 			Bundle bundle=getIntent().getExtras();
 
 			if(bundle!=null){

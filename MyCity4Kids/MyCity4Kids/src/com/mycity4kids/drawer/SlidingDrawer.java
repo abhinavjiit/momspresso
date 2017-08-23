@@ -116,11 +116,11 @@ public class SlidingDrawer extends FrameLayout {
 	}*/
 	
 
-    public static interface IDrawerCallbacks {
+    public interface IDrawerCallbacks {
 
-        public void onDrawerOpened();
+        void onDrawerOpened();
 
-        public void onDrawerClosed();
+        void onDrawerClosed();
     }
 
     public static class SmoothInterpolator implements Interpolator {

@@ -33,7 +33,7 @@ public class SyncSettingFragment extends BaseFragment implements View.OnClickLis
         if (getArguments() != null) {
             isCommingFromSetting = getArguments().getBoolean(Constants.IS_COMMING_FROM_SETTING);
             if (isCommingFromSetting) {
-                ((DashboardActivity) getActivity()).setTitle("Sync Settings");
+                getActivity().setTitle("Sync Settings");
             } else {
             }
         }

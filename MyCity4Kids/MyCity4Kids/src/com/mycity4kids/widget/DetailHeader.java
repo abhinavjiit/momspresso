@@ -83,16 +83,16 @@ public class DetailHeader extends RelativeLayout implements OnClickListener {
         //anupama
     /*	RelativeLayout bottomLineLout = (RelativeLayout) view.findViewById(R.id.bottomLineLout);
         bottomLineLout.setOnClickListener(this);*/
-        View transparent = (View) view.findViewById(R.id.transparentView);
+        View transparent = view.findViewById(R.id.transparentView);
         transparent.setOnClickListener(this);
         //anupama
         /*((TextView) view.findViewById(R.id.favorite)).setOnClickListener(this);
         ((TextView) view.findViewById(R.id.been_there)).setOnClickListener(this);
 		((TextView) view.findViewById(R.id.share_with_frnd)).setOnClickListener(this);*/
-        ((TextView) view.findViewById(R.id.write_a_review)).setOnClickListener(this);
-        ((TextView) view.findViewById(R.id.add_a_photo)).setOnClickListener(this);
-        ((TextView) view.findViewById(R.id.direction)).setOnClickListener(this);
-        ((TextView) view.findViewById(R.id.recentlyviewed)).setOnClickListener(this);
+        view.findViewById(R.id.write_a_review).setOnClickListener(this);
+        view.findViewById(R.id.add_a_photo).setOnClickListener(this);
+        view.findViewById(R.id.direction).setOnClickListener(this);
+        view.findViewById(R.id.recentlyviewed).setOnClickListener(this);
 
 
         if (mEventOrBusiness == Constants.EVENT_PAGE_TYPE) {
@@ -282,11 +282,6 @@ public class DetailHeader extends RelativeLayout implements OnClickListener {
                     break;
                 case R.id.direction:
                     _activity.moveToMap();
-                    break;
-                case R.id.add_to_calendar:
-                    if (detailsResponse != null) {
-                        saveCalendarEvent(detailsResponse);
-                    }
                     break;
                 case R.id.transparentView:
                     Animation bottomUp1 = AnimationUtils.loadAnimation(getContext(),

@@ -182,7 +182,7 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
                 return;
             }
 
-            UserDetailResponse responseData = (UserDetailResponse) response.body();
+            UserDetailResponse responseData = response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                 if (responseData.getData().get(0).getResult().getKids() == null || responseData.getData().get(0).getResult().getKids().size() == 0) {
                     Intent intent = new Intent(ArticleModerationOrShareActivity.this, CompleteBloggerProfileActivity.class);

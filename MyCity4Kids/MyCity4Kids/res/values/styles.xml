@@ -32,20 +32,6 @@
         <item name="android:indeterminate">true</item>
     </style>
 
-    <style name="SearchResultRadioButtonStyle">
-        <item name="android:layout_width">0dip</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:background">@drawable/radio_btn_selector</item>
-        <item name="android:button">@android:color/transparent</item>
-        <item name="android:gravity">center</item>
-        <item name="android:paddingBottom">3dp</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:textColor">@color/white_color</item>
-        <item name="android:textSize">12sp</item>
-    </style>
-    <!-- transparent theme -->
-
     <style name="Theme.D1NoTitleDim" parent="android:style/Theme.Translucent">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowContentOverlay">@null</item>

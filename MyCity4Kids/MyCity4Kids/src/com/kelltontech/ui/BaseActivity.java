@@ -14,7 +14,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -41,8 +40,6 @@ import com.mycity4kids.controller.ArticleBlogFollowController;
 import com.mycity4kids.listener.OnButtonClicked;
 import com.mycity4kids.models.parentingstop.ArticleBlogFollowRequest;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.sync.SyncService;
-import com.mycity4kids.sync.SyncSocialMediaEventService;
 import com.mycity4kids.sync.SyncUserInfoService;
 import com.mycity4kids.ui.activity.DashboardActivity;
 
@@ -192,21 +189,10 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen 
 
     }
 
-    protected void startSyncing() {
-        Intent intent = new Intent(this, SyncService.class);
-        startService(intent);
-    }
-
     public void startSyncingUserInfo() {
         Intent intent = new Intent(this, SyncUserInfoService.class);
         startService(intent);
     }
-
-    protected void startSyncingSocialEvents() {
-        Intent intent = new Intent(this, SyncSocialMediaEventService.class);
-        startService(intent);
-    }
-
 
     @Override
     protected void onStart() {
@@ -378,10 +364,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen 
             mProgressDialog.setOnKeyListener(new Dialog.OnKeyListener() {
                 @Override
                 public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                    if (keyCode == KeyEvent.KEYCODE_CAMERA || keyCode == KeyEvent.KEYCODE_SEARCH) {
-                        return true; //
-                    }
-                    return false;
+                    return keyCode == KeyEvent.KEYCODE_CAMERA || keyCode == KeyEvent.KEYCODE_SEARCH;
                 }
             });
         }

@@ -35,9 +35,9 @@ public class CameraFragmentDialog extends DialogFragment implements OnClickListe
 		dialog.getWindow().setBackgroundDrawable(  
 				new ColorDrawable(Color.TRANSPARENT));  
 		  dialog.show();  
-		 ((Button) dialog.findViewById(R.id.albumBtn)).setOnClickListener(this);  
-		 ( (Button) dialog.findViewById(R.id.cameraBtn)).setOnClickListener(this);
-		 ( (Button) dialog.findViewById(R.id.cancelBtn)).setOnClickListener(this);
+		 dialog.findViewById(R.id.albumBtn).setOnClickListener(this);
+		 dialog.findViewById(R.id.cameraBtn).setOnClickListener(this);
+		 dialog.findViewById(R.id.cancelBtn).setOnClickListener(this);
 
 		
 		return dialog;  

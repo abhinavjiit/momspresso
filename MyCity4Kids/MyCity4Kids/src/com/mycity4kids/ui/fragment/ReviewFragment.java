@@ -89,7 +89,7 @@ public class ReviewFragment extends BaseFragment {
 
                 if (mReviewList != null && !mReviewList.isEmpty()) {
                     _reviewLayout.setVisibility(View.VISIBLE);
-                    ((TextView) view.findViewById(R.id.txt_no_data)).setVisibility(View.GONE);
+                    view.findViewById(R.id.txt_no_data).setVisibility(View.GONE);
                     updateReviewList();
                 }
                 //reviewcount.setText(mReviewList.get());
@@ -165,7 +165,7 @@ public class ReviewFragment extends BaseFragment {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
                         if (parent.getAdapter() instanceof GalleryAdapter) {
-                            GalleryListtingData galleryVideoData = (GalleryListtingData) ((GalleryAdapter) parent.getAdapter()).getItem(pos);
+                            GalleryListtingData galleryVideoData = (GalleryListtingData) parent.getAdapter().getItem(pos);
                             Intent intent = new Intent(getActivity(), YouTubeVideoActivity.class);
                             intent.putExtra("youTubeUrl", galleryVideoData.getPlayImageUrl());
                             startActivity(intent);
@@ -194,7 +194,7 @@ public class ReviewFragment extends BaseFragment {
     }
 
     private void updateReviewList() {
-        LayoutInflater inflater = (LayoutInflater) getActivity().getLayoutInflater();
+        LayoutInflater inflater = getActivity().getLayoutInflater();
 
         int id = 0;
         for (int i = 0; i < mReviewList.size(); i++) {

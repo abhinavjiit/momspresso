@@ -38,7 +38,7 @@ public class ImproveRankPageViewsSocialFragment extends BaseFragment {
         LinearLayout sl = (LinearLayout) rootView.findViewById(R.id.secondLinearLayout);
         TextView headerTextView = (TextView) rootView.findViewById(R.id.headerTextView);
         TextView secondHeaderTextView = (TextView) rootView.findViewById(R.id.secondHeaderTextView);
-        View separatorView = (View) rootView.findViewById(R.id.separatorView);
+        View separatorView = rootView.findViewById(R.id.separatorView);
 
 
         String infoType = getArguments().getString(AppConstants.ANALYTICS_INFO_TYPE);

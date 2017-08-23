@@ -43,6 +43,7 @@
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@drawable/myicon"
+        android:largeHeap="true"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
 
@@ -147,13 +148,6 @@
             android:theme="@style/Theme.Transparent" />
 
         <activity
-            android:name=".ui.activity.ActivityCreateTask"
-            android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|uiMode|keyboard"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-
-        <activity
             android:name=".ui.activity.MissingPlaceActivity"
             android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|uiMode|keyboard"
             android:label="@string/app_name"
@@ -161,27 +155,7 @@
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".ui.activity.ActivityShowTask"
-            android:configChanges="keyboardHidden|screenSize|orientation"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-
-        <activity
             android:name=".ui.activity.NewsLetterWebviewActivity"
-            android:configChanges="keyboardHidden|screenSize|orientation"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".ui.activity.ActivityEditTask"
-            android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|uiMode|keyboard"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustPan" />
-
-        <activity
-            android:name=".ui.activity.ActivityShowAppointment"
             android:configChanges="keyboardHidden|screenSize|orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
@@ -208,35 +182,10 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
 
-        <activity
-            android:name=".ui.activity.ActivityCreateAppointment"
-            android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|uiMode|keyboard"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-
-        <activity
-            android:name=".ui.activity.ActivityViewPager"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-
-        <activity
-            android:name=".ui.activity.ActivityEditAppointment"
-            android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|uiMode|keyboard"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-
         <activity android:name=".googlemap.MapActivity" />
         <activity
             android:name=".ui.activity.HomeCategoryActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".ui.activity.HomeCategoryTransparentDialogActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.activity.ForgotPasswordActivity"
@@ -257,21 +206,12 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".ui.activity.ProfileActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.activity.WriteReviewActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".ui.activity.BusinessDetailsActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".ui.activity.AddBusinesEventActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
@@ -301,11 +241,6 @@
             android:theme="@style/Theme.Transparent"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".ui.activity.PhotoActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.Transparent"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
             android:name=".ui.activity.ReportAnErrorActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -328,28 +263,12 @@
                 android:value="com.mycity4kids.ui.activity.DashboardActivity" />
         </activity>
         <activity
-            android:name=".ui.activity.ArticleBlogSearchDialogActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.Transparent"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".ui.activity.AddCommentReplyActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/total_transparent_dialog"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
             android:name=".ui.activity.DashboardActivity"
             android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|uiMode|keyboard"
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.rankingTheme" />
-        <activity
-            android:name=".ui.activity.ActivityFamilyProfile"
-            android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|uiMode|keyboard"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.activity.TutorialActivity"
             android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|uiMode|keyboard"
@@ -374,9 +293,6 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Dialog" />
         <activity
-            android:name=".ui.activity.SettingsActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.activity.ContributorListActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -391,17 +307,6 @@
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ui.activity.EditProfieActivity"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".ui.activity.AddArticleTopicsActivity"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".ui.activity.EditSelectedTopicsActivity"
-            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.activity.ArticleListingActivity"
@@ -415,20 +320,6 @@
         <activity
             android:name=".ui.activity.FollowersAndFollowingListActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.TopicsSplashActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" />
-        <activity
-            android:name=".ui.activity.ConfirmFollowedTopicsActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.FollowedTopicsListingActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.NotificationCenterListActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.nnn" />
         <activity
             android:name=".ui.activity.VlogsDetailActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -447,9 +338,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.MyFunnyVideosListingActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activity.UploadVideoFLActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.IdTokenLoginActivity"
@@ -516,14 +404,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
-        <receiver android:name="com.mycity4kids.reminders.AlarmReceiver" />
         <receiver android:name="com.mycity4kids.reminders.CancelNotificationReceiver" />
         <receiver android:name="com.mycity4kids.reminders.ShareNotificationReceiver" />
         <receiver android:name="com.mycity4kids.reminders.ShareArticleReceiver" />
 
         <!-- <service android:name="com.mycity4kids.gcm.GcmIntentService" />-->
         <service android:name="com.mycity4kids.sync.PushTokenService" />
-        <service android:name="com.mycity4kids.sync.SyncService" />
         <service android:name="com.mycity4kids.sync.RemainderEmailService" />
         <service android:name="com.mycity4kids.sync.SyncUserInfoService" />
         <service android:name="com.mycity4kids.sync.CompletedTasksService" />

@@ -123,7 +123,7 @@ public class ContextualSearchActivity extends BaseActivity implements View.OnCli
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                 Intent intent = new Intent(ContextualSearchActivity.this, ArticleDetailsContainerActivity.class);
-                SearchArticleResult parentingListData = (SearchArticleResult) ((SearchArticlesListingAdapter) adapterView.getAdapter()).getItem(i);
+                SearchArticleResult parentingListData = (SearchArticleResult) adapterView.getAdapter().getItem(i);
                 intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
                 intent.putExtra(Constants.ARTICLE_COVER_IMAGE, parentingListData.getImage());
                 intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
@@ -197,7 +197,7 @@ public class ContextualSearchActivity extends BaseActivity implements View.OnCli
                 return;
             }
             try {
-                SearchResponse responseData = (SearchResponse) response.body();
+                SearchResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     getArticleResponse(responseData);
                 } else {

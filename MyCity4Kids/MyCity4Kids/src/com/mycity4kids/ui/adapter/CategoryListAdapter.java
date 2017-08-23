@@ -116,8 +116,8 @@ public class CategoryListAdapter extends BaseExpandableListAdapter {
             convertView = mInflater.inflate(R.layout.custom_group_cell, null);
         }
         if (getChildrenCount(groupPosition) == 0) {
-            ((RelativeLayout) convertView.findViewById(R.id.group_lout)).setVisibility(View.GONE);
-            ((RelativeLayout) convertView.findViewById(R.id.child_lout)).setVisibility(View.VISIBLE);
+            convertView.findViewById(R.id.group_lout).setVisibility(View.GONE);
+            convertView.findViewById(R.id.child_lout).setVisibility(View.VISIBLE);
             TextView _childTxt = (TextView) convertView.findViewById(R.id.without_child_txt);
             ImageView _childImg = (ImageView) convertView.findViewById(R.id.child_img);
             _childTxt.setText(_categoryData.getCategoryGroup());
@@ -128,7 +128,7 @@ public class CategoryListAdapter extends BaseExpandableListAdapter {
                 _childImg.setImageResource(R.drawable.gc_birthdays);
             }
 
-            ((RelativeLayout) convertView.findViewById(R.id.child_lout)).setOnClickListener(new OnClickListener() {
+            convertView.findViewById(R.id.child_lout).setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     activityAccordingToCategoty(_categoryData);
@@ -138,13 +138,13 @@ public class CategoryListAdapter extends BaseExpandableListAdapter {
                     //	((HomeCategoryActivity) mContext).hitBusinessListingApi(_categoryData.getMainCategoryId());
                 }
             });
-            ((ImageView) convertView.findViewById(R.id.plus_minus_img)).setVisibility(View.GONE);
+            convertView.findViewById(R.id.plus_minus_img).setVisibility(View.GONE);
         } else {
-            ((ImageView) convertView.findViewById(R.id.plus_minus_img)).setVisibility(View.VISIBLE);
-            ((RelativeLayout) convertView.findViewById(R.id.group_lout)).setVisibility(View.VISIBLE);
-            ((RelativeLayout) convertView.findViewById(R.id.child_lout)).setVisibility(View.GONE);
+            convertView.findViewById(R.id.plus_minus_img).setVisibility(View.VISIBLE);
+            convertView.findViewById(R.id.group_lout).setVisibility(View.VISIBLE);
+            convertView.findViewById(R.id.child_lout).setVisibility(View.GONE);
 
-            ((RelativeLayout) convertView.findViewById(R.id.child_lout)).setOnClickListener(null);
+            convertView.findViewById(R.id.child_lout).setOnClickListener(null);
 
 
             if (isExpanded) {

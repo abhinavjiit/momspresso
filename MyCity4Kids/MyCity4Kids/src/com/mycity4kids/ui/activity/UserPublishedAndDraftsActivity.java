@@ -1,29 +1,30 @@
 package com.mycity4kids.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.TextView;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
-import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.ui.adapter.SubscribeTopicsPagerAdapter;
 import com.mycity4kids.ui.adapter.UserArticlesPagerAdapter;
 import com.mycity4kids.utils.AppUtils;
 
 /**
  * Created by hemant on 19/7/17.
  */
-public class UserPublishedAndDraftsActivity extends BaseActivity {
+public class UserPublishedAndDraftsActivity extends BaseActivity implements View.OnClickListener {
 
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private ImageView searchAllImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +34,9 @@ public class UserPublishedAndDraftsActivity extends BaseActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         viewPager = (ViewPager) findViewById(R.id.pager);
+        searchAllImageView = (ImageView) findViewById(R.id.searchAllImageView);
+
+        searchAllImageView.setOnClickListener(this);
 
         String authorId = getIntent().getStringExtra(Constants.AUTHOR_ID);
         boolean isPrivateProfile = getIntent().getBooleanExtra("isPrivateProfile", false);
@@ -82,5 +86,17 @@ public class UserPublishedAndDraftsActivity extends BaseActivity {
     @Override
     protected void updateUi(Response response) {
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.searchAllImageView:
+                Intent searchIntent = new Intent(this, SearchAllActivity.class);
+                searchIntent.putExtra(Constants.FILTER_NAME, "");
+                searchIntent.putExtra(Constants.TAB_POSITION, 0);
+                startActivity(searchIntent);
+                break;
+        }
     }
 }

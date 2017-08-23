@@ -157,7 +157,7 @@ public class VlogsListingActivity extends BaseActivity implements View.OnClickLi
         nextPageNumber = 1;
         hitArticleListingApi();
 
-        swipeRefreshLayout.setOnRefreshListener((SwipeRefreshLayout.OnRefreshListener) this);
+        swipeRefreshLayout.setOnRefreshListener(this);
 
         articlesListingAdapter = new VlogsListingAdapter(this);
         articlesListingAdapter.setNewListData(articleDataModelsNew);
@@ -190,7 +190,7 @@ public class VlogsListingActivity extends BaseActivity implements View.OnClickLi
                 if (adapterView.getAdapter() instanceof VlogsListingAdapter) {
 //                    Utils.pushEvent(VlogsListingActivity.this, GTMEventType.FOR_YOU_ARTICLE_CLICK_EVENT,
 //                            SharedPrefUtils.getUserDetailModel(VlogsListingActivity.this).getDynamoId(), "Video Listing Screen");
-                    VlogsListingAndDetailResult parentingListData = (VlogsListingAndDetailResult) ((VlogsListingAdapter) adapterView.getAdapter()).getItem(i);
+                    VlogsListingAndDetailResult parentingListData = (VlogsListingAndDetailResult) adapterView.getAdapter().getItem(i);
                     intent.putExtra(Constants.VIDEO_ID, parentingListData.getId());
                     intent.putExtra(Constants.AUTHOR_ID, parentingListData.getAuthor().getId());
                     intent.putExtra(Constants.FROM_SCREEN, "Funny Videos Listing");
@@ -241,7 +241,7 @@ public class VlogsListingActivity extends BaseActivity implements View.OnClickLi
                 return;
             }
             try {
-                VlogsListingResponse responseData = (VlogsListingResponse) response.body();
+                VlogsListingResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     processResponse(responseData);
 //                    notificationCenterResultArrayList.addAll(responseData.getData().getResult());

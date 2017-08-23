@@ -1,7 +1,5 @@
 package com.mycity4kids.ui.fragment;
 
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -9,44 +7,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.gson.Gson;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
-import com.kelltontech.utils.ConnectivityUtils;
-import com.kelltontech.utils.StringUtils;
-import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
-import com.mycity4kids.asynctask.HeavyDbTask;
-import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.controller.ConfigurationController;
 import com.mycity4kids.gtmutils.Utils;
-import com.mycity4kids.interfaces.OnUIView;
 import com.mycity4kids.models.NotificationSettingsModel;
-import com.mycity4kids.models.VersionApiModel;
-import com.mycity4kids.models.city.City;
-import com.mycity4kids.models.city.MetroCity;
-import com.mycity4kids.models.configuration.ConfigurationApiModel;
 import com.mycity4kids.models.response.NotificationSettingsResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.NotificationsAPI;
-import com.mycity4kids.ui.activity.SettingsActivity;
 import com.mycity4kids.ui.adapter.NotificationSettingsListAdapter;
-import com.mycity4kids.utils.NearMyCity;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -93,7 +70,7 @@ public class NotificationSettingsFragment extends BaseFragment {
                 return;
             }
             try {
-                NotificationSettingsResponse responseData = (NotificationSettingsResponse) response.body();
+                NotificationSettingsResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
                     for (Map.Entry<String, String> entry : responseData.getData().getResult().entrySet()) {
@@ -143,7 +120,7 @@ public class NotificationSettingsFragment extends BaseFragment {
                     return;
                 }
                 try {
-                    NotificationSettingsResponse responseData = (NotificationSettingsResponse) response.body();
+                    NotificationSettingsResponse responseData = response.body();
                     if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                         if (null != getActivity()) {
                             Toast.makeText(getActivity(), "Notification settings updated successfully", Toast.LENGTH_SHORT).show();
@@ -151,13 +128,11 @@ public class NotificationSettingsFragment extends BaseFragment {
                     } else {
                         if (null != getActivity()) {
                             Toast.makeText(getActivity(), "Error while updating notification settings", Toast.LENGTH_SHORT).show();
-                            ;
                         }
                     }
                 } catch (Exception e) {
                     if (null != getActivity()) {
                         Toast.makeText(getActivity(), "Error while updating notification settings", Toast.LENGTH_SHORT).show();
-                        ;
                     }
                     removeProgressDialog();
                     Crashlytics.logException(e);
@@ -169,7 +144,6 @@ public class NotificationSettingsFragment extends BaseFragment {
             public void onFailure(Call<NotificationSettingsResponse> call, Throwable t) {
                 if (null != getActivity()) {
                     Toast.makeText(getActivity(), "Error while updating notification settings", Toast.LENGTH_SHORT).show();
-                    ;
                 }
                 Crashlytics.logException(t);
                 Log.d("MC4kException", Log.getStackTraceString(t));

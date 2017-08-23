@@ -46,67 +46,6 @@
             android:textSize="13sp"
             app:fontName="oswald_regular.ttf" />
 
-        <!--<TextView-->
-        <!--android:id="@+id/connect_facebook"-->
-        <!--android:layout_width="130dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_above="@+id/txvLogin"-->
-        <!--android:layout_gravity="center"-->
-        <!--android:layout_marginRight="30dp"-->
-        <!--android:layout_toLeftOf="@+id/midSeparator"-->
-        <!--android:background="@drawable/facebook_rounded_corners_transparent"-->
-        <!--android:drawableLeft="@drawable/ic_facebook_white_48dp"-->
-        <!--android:drawablePadding="-14dp"-->
-        <!--android:fontFamily="sans-serif-light"-->
-        <!--android:gravity="center"-->
-        <!--android:paddingBottom="6dp"-->
-        <!--android:paddingLeft="10dp"-->
-        <!--android:paddingTop="6dp"-->
-        <!--android:text="Facebook"-->
-        <!--android:textColor="@color/white_color"-->
-        <!--android:textSize="16sp" />-->
-
-        <!--<View-->
-        <!--android:id="@+id/midSeparator"-->
-        <!--android:layout_width="1dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_centerHorizontal="true"-->
-        <!--android:background="@null" />-->
-
-        <!--<TextView-->
-        <!--android:id="@+id/connect_gplus"-->
-        <!--android:layout_width="130dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_above="@+id/txvLogin"-->
-        <!--android:layout_gravity="center"-->
-        <!--android:layout_marginLeft="30dp"-->
-        <!--android:layout_toRightOf="@+id/midSeparator"-->
-        <!--android:background="@drawable/facebook_rounded_corners_transparent"-->
-        <!--android:drawableLeft="@drawable/ic_gplus_white_48dp"-->
-        <!--android:drawablePadding="-14dp"-->
-        <!--android:fontFamily="sans-serif-light"-->
-        <!--android:gravity="center"-->
-        <!--android:paddingBottom="6dp"-->
-        <!--android:paddingLeft="10dp"-->
-        <!--android:paddingTop="6dp"-->
-        <!--android:text="Google +"-->
-        <!--android:textColor="@color/white_color"-->
-        <!--android:textSize="16sp" />-->
-
-        <!--<TextView-->
-        <!--android:id="@+id/txvLogin"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_above="@+id/indicator_layout"-->
-        <!--android:layout_centerHorizontal="true"-->
-        <!--android:layout_marginBottom="10dp"-->
-        <!--android:layout_marginTop="20dp"-->
-        <!--android:fontFamily="sans-serif-light"-->
-        <!--android:padding="10dp"-->
-        <!--android:text="@string/login"-->
-        <!--android:textAppearance="?android:attr/textAppearanceMedium"-->
-        <!--android:textColor="@color/white_color"-->
-        <!--android:textSize="14sp" />-->
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/getStartedTextView"
             android:layout_width="175dp"

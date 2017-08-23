@@ -229,11 +229,11 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
         try {
             Intent videoCapture = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
             if ("dashboard".equals(activity)) {
-                ((DashboardActivity) getActivity()).startActivityForResult(videoCapture, AppConstants.REQUEST_VIDEO_TRIMMER);
+                getActivity().startActivityForResult(videoCapture, AppConstants.REQUEST_VIDEO_TRIMMER);
             } else if ("myfunnyvideos".equals(activity)) {
-                ((MyFunnyVideosListingActivity) getActivity()).startActivityForResult(videoCapture, AppConstants.REQUEST_VIDEO_TRIMMER);
+                getActivity().startActivityForResult(videoCapture, AppConstants.REQUEST_VIDEO_TRIMMER);
             } else if ("vlogslisting".equals(activity)) {
-                ((VlogsListingActivity) getActivity()).startActivityForResult(videoCapture, AppConstants.REQUEST_VIDEO_TRIMMER);
+                getActivity().startActivityForResult(videoCapture, AppConstants.REQUEST_VIDEO_TRIMMER);
             } else if ("allvideosection".equals(activity)) {
             }
         } catch (Exception e) {
@@ -249,11 +249,11 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
             intent.setAction(Intent.ACTION_GET_CONTENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             if ("dashboard".equals(activity)) {
-                ((DashboardActivity) getActivity()).startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)), AppConstants.REQUEST_VIDEO_TRIMMER);
+                getActivity().startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)), AppConstants.REQUEST_VIDEO_TRIMMER);
             } else if ("myfunnyvideos".equals(activity)) {
-                ((MyFunnyVideosListingActivity) getActivity()).startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)), AppConstants.REQUEST_VIDEO_TRIMMER);
+                getActivity().startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)), AppConstants.REQUEST_VIDEO_TRIMMER);
             } else if ("vlogslisting".equals(activity)) {
-                ((VlogsListingActivity) getActivity()).startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)), AppConstants.REQUEST_VIDEO_TRIMMER);
+                getActivity().startActivityForResult(Intent.createChooser(intent, getString(R.string.label_select_video)), AppConstants.REQUEST_VIDEO_TRIMMER);
             } else if ("allvideosection".equals(activity)) {
             }
         } catch (Exception e) {

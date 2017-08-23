@@ -114,7 +114,7 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
                 return;
             }
             try {
-                FollowersFollowingResponse responseData = (FollowersFollowingResponse) response.body();
+                FollowersFollowingResponse responseData = response.body();
                 processFollowersListResponse(responseData);
             } catch (Exception e) {
                 showToast(getString(R.string.server_went_wrong));

@@ -10,8 +10,6 @@ import android.widget.TextView;
 
 import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
-import com.mycity4kids.ui.activity.ActivityShowAppointment;
-import com.mycity4kids.ui.activity.ActivityShowTask;
 
 /**
  * Created by user on 08-06-2015.
@@ -57,10 +55,10 @@ public class NotesDialogFragment extends android.app.DialogFragment {
                 } else {
 
                     if (ifTask.equalsIgnoreCase("task")) {
-                        ((ActivityShowTask) getActivity()).setNotes(notes.getText().toString().trim());
+//                        ((ActivityShowTask) getActivity()).setNotes(notes.getText().toString().trim());
                         getDialog().dismiss();
                     } else {
-                        ((ActivityShowAppointment) getActivity()).setNotes(notes.getText().toString().trim());
+//                        ((ActivityShowAppointment) getActivity()).setNotes(notes.getText().toString().trim());
                         getDialog().dismiss();
                     }
 

@@ -125,7 +125,7 @@ public class LanguageSpecificArticlesTabFragment extends BaseFragment implements
         }
         Log.d("searchName", "" + trendingTopicData.getDisplay_name());
 
-        swipeRefreshLayout.setOnRefreshListener((SwipeRefreshLayout.OnRefreshListener) this);
+        swipeRefreshLayout.setOnRefreshListener(this);
 
         articlesListingAdapter = new MainArticleListingAdapter(getActivity());
 //        adapter.setNewListData(trendingTopicData.getArticleList());
@@ -159,7 +159,7 @@ public class LanguageSpecificArticlesTabFragment extends BaseFragment implements
 
                 Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
                 if (adapterView.getAdapter() instanceof MainArticleListingAdapter) {
-                    ArticleListingResult parentingListData = (ArticleListingResult) ((MainArticleListingAdapter) adapterView.getAdapter()).getItem(i);
+                    ArticleListingResult parentingListData = (ArticleListingResult) adapterView.getAdapter().getItem(i);
                     intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
                     intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
                     intent.putExtra(Constants.BLOG_SLUG, parentingListData.getBlogPageSlug());
@@ -208,7 +208,7 @@ public class LanguageSpecificArticlesTabFragment extends BaseFragment implements
                 return;
             }
             try {
-                ArticleListingResponse responseData = (ArticleListingResponse) response.body();
+                ArticleListingResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     processForYouResponse(responseData);
                 } else {

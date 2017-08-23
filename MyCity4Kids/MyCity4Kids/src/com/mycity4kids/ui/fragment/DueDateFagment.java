@@ -14,8 +14,6 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 
 import com.mycity4kids.R;
-import com.mycity4kids.ui.activity.ActivityCreateTask;
-import com.mycity4kids.ui.activity.ActivityEditTask;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -75,9 +73,9 @@ public class DueDateFagment extends android.app.DialogFragment implements View.O
                 calendar.add(Calendar.DAY_OF_YEAR, 7);
 
                 if (edit.equalsIgnoreCase("edit")) {
-                    ((ActivityEditTask) getActivity()).setTaskTime(format.format(calendar.getTime()));
+//                    ((ActivityEditTask) getActivity()).setTaskTime(format.format(calendar.getTime()));
                 } else {
-                    ((ActivityCreateTask) getActivity()).setTaskTime(format.format(calendar.getTime()));
+//                    ((ActivityCreateTask) getActivity()).setTaskTime(format.format(calendar.getTime()));
                 }
 
                 getDialog().dismiss();
@@ -89,9 +87,9 @@ public class DueDateFagment extends android.app.DialogFragment implements View.O
                 calendar.add(Calendar.DAY_OF_YEAR, 30);
 
                 if (edit.equalsIgnoreCase("edit")) {
-                    ((ActivityEditTask) getActivity()).setTaskTime(format.format(calendar.getTime()));
+//                    ((ActivityEditTask) getActivity()).setTaskTime(format.format(calendar.getTime()));
                 } else {
-                    ((ActivityCreateTask) getActivity()).setTaskTime(format.format(calendar.getTime()));
+//                    ((ActivityCreateTask) getActivity()).setTaskTime(format.format(calendar.getTime()));
                 }
 
                 getDialog().dismiss();
@@ -103,9 +101,9 @@ public class DueDateFagment extends android.app.DialogFragment implements View.O
 
             case R.id.none:
                 if (edit.equalsIgnoreCase("edit")) {
-                    ((ActivityEditTask) getActivity()).setTaskTime(format.format(calendar.getTime()));
+//                    ((ActivityEditTask) getActivity()).setTaskTime(format.format(calendar.getTime()));
                 } else {
-                    ((ActivityCreateTask) getActivity()).setTaskTime(format.format(calendar.getTime()));
+//                    ((ActivityCreateTask) getActivity()).setTaskTime(format.format(calendar.getTime()));
                 }
 
                 getDialog().dismiss();
@@ -156,15 +154,15 @@ public class DueDateFagment extends android.app.DialogFragment implements View.O
                         if (currentTs < selectedTs) {
 
                             if (edit.equalsIgnoreCase("edit")) {
-                                ((ActivityEditTask) getActivity()).setTaskTime(date);
+//                                ((ActivityEditTask) getActivity()).setTaskTime(date);
                             } else {
-                                ((ActivityCreateTask) getActivity()).setTaskTime(date);
+//                                ((ActivityCreateTask) getActivity()).setTaskTime(date);
                             }
                         } else {
                             if (edit.equalsIgnoreCase("edit")) {
-                                ((ActivityEditTask) getActivity()).setTaskTime(dateTemp);
+//                                ((ActivityEditTask) getActivity()).setTaskTime(dateTemp);
                             } else {
-                                ((ActivityCreateTask) getActivity()).setTaskTime(dateTemp);
+//                                ((ActivityCreateTask) getActivity()).setTaskTime(dateTemp);
                             }
                         }
 

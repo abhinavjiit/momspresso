@@ -72,29 +72,6 @@ public class ParentTopicsGridAdapter extends BaseAdapter {
         } catch (Exception e) {
             holder.tagsImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.default_article));
         }
-//        if (!StringUtils.isNullOrEmpty(topicsList.get(position).getExtraData().get(0).getCategoryBackImage().getApp())) {
-//
-//        } else {
-//
-//        }
-
-//        if (topicsList.get(position).isSelected()) {
-//            holder.selectedLayerLayout.setVisibility(View.VISIBLE);
-//        } else {
-//            holder.selectedLayerLayout.setVisibility(View.INVISIBLE);
-//        }
-
-//        holder.tagsImageView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                for (int i = 0; i < topicsList.size(); i++) {
-//                    topicsList.get(i).setSelected(false);
-//                }
-//                topicsList.get(position).setSelected(true);
-//                iTagImageSelect.onTagImageSelected(topicsList.get(position).getImageUrl().getClientApp());
-//                notifyDataSetChanged();
-//            }
-//        });
 
         return view;
     }

@@ -1,13 +1,8 @@
 package com.mycity4kids.ui.fragment;
 
-import android.annotation.SuppressLint;
-import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,7 +10,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.DatePicker;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -45,19 +39,17 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.BloggerAnalyticsResponse;
 import com.mycity4kids.models.response.BloggerAnalyticsViews;
-import com.mycity4kids.models.response.LanguageRanksModel;
-import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.ui.activity.RankingActivity;
 import com.mycity4kids.widget.MyMarkerView;
+import com.mycity4kids.widget.PageViewsDatePickerFragment;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -68,29 +60,29 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 28/7/17.
  */
-public class RankingStatsTabFragment extends BaseFragment implements OnChartGestureListener, OnChartValueSelectedListener, View.OnClickListener {
+public class RankingStatsTabFragment extends BaseFragment implements OnChartGestureListener, OnChartValueSelectedListener, View.OnClickListener, PageViewsDatePickerFragment.IDateSelection {
 
     private static String userId;
-    static LineChart mChart;
-    static XAxis xAxis;
-    static String init_from_date, init_to_date;
-    static ArrayList<String> datesList;
-    private static int colorCode;
-    static String toDate;
-    static String fromDate;
-    static Calendar toCalen;
-    static Calendar fromCalen;
-    static String pageViewLabel;
+    private LineChart mChart;
+    private XAxis xAxis;
+    private String init_from_date, init_to_date;
+    private ArrayList<String> datesList;
+    private int colorCode;
+    private String toDate;
+    private String fromDate;
+    private Calendar toCalen;
+    private Calendar fromCalen;
+    private String pageViewLabel;
 
-    BloggerDashboardAPI bloggerDashboardAPI;
+    private BloggerDashboardAPI bloggerDashboardAPI;
 
     private View view;
     private TextView likesCountTextView;
     private TextView shareCountTextView;
     private TextView commentsCountTextView;
-    private static TextView pageViewCountTextView;
-    private static TextView fromDateTextView;
-    private static TextView toDateTextView;
+    private TextView pageViewCountTextView;
+    private TextView fromDateTextView;
+    private TextView toDateTextView;
     private TextView dateChooserTextView;
     private RelativeLayout customDatePickerView;
     private TextView improvePageViewTextView, improveSocialShareTextView;
@@ -147,8 +139,8 @@ public class RankingStatsTabFragment extends BaseFragment implements OnChartGest
         colorCode = ContextCompat.getColor(getActivity(), R.color.analytics_engagement_graph);
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         bloggerDashboardAPI = retrofit.create(BloggerDashboardAPI.class);
-        Call<UserDetailResponse> call = bloggerDashboardAPI.getBloggerData(userId);
-        call.enqueue(bloggerDetailsResponseListener);
+//        Call<UserDetailResponse> call = bloggerDashboardAPI.getBloggerData(userId);
+//        call.enqueue(bloggerDetailsResponseListener);
 
         datesList = new ArrayList<>();
 
@@ -207,7 +199,6 @@ public class RankingStatsTabFragment extends BaseFragment implements OnChartGest
         fromCal.getTimeInMillis();
         init_from_date = new SimpleDateFormat("dd-MM-yyyy").format(fromCal.getTime());
 
-
         Calendar toCal = Calendar.getInstance();
         toCal.set(Calendar.HOUR_OF_DAY, 0);
         toCal.set(Calendar.MINUTE, 0);
@@ -221,7 +212,7 @@ public class RankingStatsTabFragment extends BaseFragment implements OnChartGest
         callAnalytics.enqueue(analyticsResponseListener);
     }
 
-    private static void setData(ArrayList<BloggerAnalyticsViews> viewsList) {
+    private void setData(ArrayList<BloggerAnalyticsViews> viewsList) {
 
         ArrayList<Entry> values = new ArrayList<Entry>();
 
@@ -269,74 +260,6 @@ public class RankingStatsTabFragment extends BaseFragment implements OnChartGest
         }
     }
 
-    private Callback<UserDetailResponse> bloggerDetailsResponseListener = new Callback<UserDetailResponse>() {
-        @Override
-        public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
-            if (response == null || null == response.body()) {
-//                showToast("Something went wrong from server");
-                return;
-            }
-            try {
-                UserDetailResponse responseData = (UserDetailResponse) response.body();
-                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-//                    if (StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getRank())) {
-//                        rankTextView.setText("NA");
-//                    } else {
-//                        rankTextView.setText(responseData.getData().get(0).getResult().getRank());
-//                    }
-                    if (responseData.getData().get(0).getResult().getRanks() == null || responseData.getData().get(0).getResult().getRanks().size() == 0) {
-                        LanguageRanksModel languageRanksModel = new LanguageRanksModel();
-                        languageRanksModel.setRank(-1);
-                        languageRanksModel.setLangKey("");
-//                        addRankView(languageRanksModel);
-//                        rankViewFlipper.setAutoStart(false);
-//                        rankViewFlipper.stopFlipping();
-                    } else if (responseData.getData().get(0).getResult().getRanks().size() < 2) {
-//                        addRankView(responseData.getData().get(0).getResult().getRanks().get(0));
-//                        rankViewFlipper.setAutoStart(false);
-//                        rankViewFlipper.stopFlipping();
-                    } else {
-                        for (int i = 0; i < responseData.getData().get(0).getResult().getRanks().size(); i++) {
-                            if (AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(i).getLangKey())) {
-//                                addRankView(responseData.getData().get(0).getResult().getRanks().get(i));
-                            }
-                        }
-                        Collections.sort(responseData.getData().get(0).getResult().getRanks());
-                        for (int i = 0; i < responseData.getData().get(0).getResult().getRanks().size(); i++) {
-                            if (!AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(i).getLangKey())) {
-//                                addRankView(responseData.getData().get(0).getResult().getRanks().get(i));
-                            }
-                        }
-                    }
-
-                    int followerCount = Integer.parseInt(responseData.getData().get(0).getResult().getFollowersCount());
-                    if (followerCount > 999) {
-                        float singleFollowerCount = ((float) followerCount) / 1000;
-//                        followersTextView.setText("" + singleFollowerCount + "k");
-                    } else {
-//                        followersTextView.setText("" + followerCount);
-                    }
-
-                } else {
-                    if (!StringUtils.isNullOrEmpty(responseData.getReason())) {
-//                        showToast(responseData.getReason());
-                    } else {
-//                        showToast(getString(R.string.server_went_wrong));
-                    }
-                }
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<UserDetailResponse> call, Throwable t) {
-            Crashlytics.logException(t);
-            Log.d("MC4kException", Log.getStackTraceString(t));
-        }
-    };
-
     private Callback<BloggerAnalyticsResponse> analyticsResponseListener = new Callback<BloggerAnalyticsResponse>() {
         @Override
         public void onResponse(Call<BloggerAnalyticsResponse> call, retrofit2.Response<BloggerAnalyticsResponse> response) {
@@ -345,7 +268,7 @@ public class RankingStatsTabFragment extends BaseFragment implements OnChartGest
                 return;
             }
             try {
-                BloggerAnalyticsResponse responseData = (BloggerAnalyticsResponse) response.body();
+                BloggerAnalyticsResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     if (null == responseData.getData().getSocial().getLikes()) {
                         likesCountTextView.setText("0" + " " + getString(R.string.ranking_stats_like));
@@ -397,7 +320,7 @@ public class RankingStatsTabFragment extends BaseFragment implements OnChartGest
         }
     };
 
-    public static List<String> getDatesL(ArrayList<BloggerAnalyticsViews> bloggerAnalyticsViewsList) {
+    public List<String> getDatesL(ArrayList<BloggerAnalyticsViews> bloggerAnalyticsViewsList) {
         DateFormat df1 = new SimpleDateFormat("MMM dd");
         datesList.clear();
 
@@ -409,7 +332,7 @@ public class RankingStatsTabFragment extends BaseFragment implements OnChartGest
         return datesList;
     }
 
-    public static void changeDataset(BloggerAnalyticsResponse bloggerAnalyticsResponse, final List<String> dList, String viewsDateType) {
+    public void changeDataset(BloggerAnalyticsResponse bloggerAnalyticsResponse, final List<String> dList, String viewsDateType) {
 
         ArrayList<BloggerAnalyticsViews> list = bloggerAnalyticsResponse.getData().getViews();
         if (null == list || list.isEmpty()) {
@@ -459,11 +382,6 @@ public class RankingStatsTabFragment extends BaseFragment implements OnChartGest
                 } else {
                     customDatePickerView.setVisibility(View.VISIBLE);
                     dateChooserTextView.setText(getString(R.string.ranking_menu_custom_label));
-//                    PageViewsDateRangeDialogFragment pageViewsDateRangeDialogFragment = new PageViewsDateRangeDialogFragment();
-//                    Bundle b = new Bundle();
-//                    b.putString("type", "from");
-//                    pageViewsDateRangeDialogFragment.setArguments(b);
-//                    pageViewsDateRangeDialogFragment.show(getChildFragmentManager(), "datePicker");
                     return true;
 
                 }
@@ -473,86 +391,56 @@ public class RankingStatsTabFragment extends BaseFragment implements OnChartGest
         popup.show();
     }
 
-    public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
-
-        boolean cancel;
-        String type = "";
-        final Calendar c = Calendar.getInstance();
-        int curent_year = c.get(Calendar.YEAR);
-        int current_month = c.get(Calendar.MONTH);
-        int current_day = c.get(Calendar.DAY_OF_MONTH);
-
-        @Override
-        public void onCreate(@Nullable Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-
-        }
-
-        @SuppressLint("NewApi")
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Use the current date as the default date in the picker
-            DatePickerDialog dlg = new DatePickerDialog(getActivity(), android.R.style.Theme_Holo_Light_Dialog_NoActionBar, this, curent_year, current_month, current_day);
-            dlg.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-            type = getArguments().getString("type", "");
-            dlg.getDatePicker().setMaxDate(c.getTimeInMillis());
-            return dlg;
-
-        }
-
-        public void onDateSet(DatePicker view, int year, int month, int day) {
-
-            Log.d("TTTTYYYPPEEE ==== ", "dekho is haivaan ko = " + type);
-            String sel_date = "" + day + "-" + (month + 1) + "-" + year;
-
-            if (type.equals("to")) {
-                toDateTextView.setText(sel_date);
-                toDate = sel_date;
-                toCalen.clear();
-                toCalen = Calendar.getInstance();
-                toCalen.set(Calendar.HOUR_OF_DAY, 0);
-                toCalen.set(Calendar.MINUTE, 0);
-                toCalen.set(Calendar.SECOND, 0);
-                toCalen.set(Calendar.MILLISECOND, 0);
-                toCalen.set(Calendar.YEAR, year);
-                toCalen.set(Calendar.MONTH, month);
-                toCalen.set(Calendar.DAY_OF_MONTH, day);
-                getPageViewData();
-            } else {
-                fromDateTextView.setText(sel_date);
-                fromDate = sel_date;
-                fromCalen.clear();
-                fromCalen = Calendar.getInstance();
-                fromCalen.set(Calendar.HOUR_OF_DAY, 0);
-                fromCalen.set(Calendar.MINUTE, 0);
-                fromCalen.set(Calendar.SECOND, 0);
-                fromCalen.set(Calendar.MILLISECOND, 0);
-                fromCalen.set(Calendar.YEAR, year);
-                fromCalen.set(Calendar.MONTH, month);
-                fromCalen.set(Calendar.DAY_OF_MONTH, day);
-            }
-
+    @Override
+    public void onDateSelection(String dateType, String selectedDate, int year, int month, int day) {
+        if (dateType.equals("to")) {
+            toDateTextView.setText(selectedDate);
+            toDate = selectedDate;
+            toCalen.clear();
+            toCalen = Calendar.getInstance();
+            toCalen.set(Calendar.HOUR_OF_DAY, 0);
+            toCalen.set(Calendar.MINUTE, 0);
+            toCalen.set(Calendar.SECOND, 0);
+            toCalen.set(Calendar.MILLISECOND, 0);
+            toCalen.set(Calendar.YEAR, year);
+            toCalen.set(Calendar.MONTH, month);
+            toCalen.set(Calendar.DAY_OF_MONTH, day);
+            getPageViewData();
+        } else {
+            fromDateTextView.setText(selectedDate);
+            fromDate = selectedDate;
+            fromCalen.clear();
+            fromCalen = Calendar.getInstance();
+            fromCalen.set(Calendar.HOUR_OF_DAY, 0);
+            fromCalen.set(Calendar.MINUTE, 0);
+            fromCalen.set(Calendar.SECOND, 0);
+            fromCalen.set(Calendar.MILLISECOND, 0);
+            fromCalen.set(Calendar.YEAR, year);
+            fromCalen.set(Calendar.MONTH, month);
+            fromCalen.set(Calendar.DAY_OF_MONTH, day);
+            getPageViewData();
         }
     }
 
-    private static void getPageViewData() {
+    private void getPageViewData() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         BloggerDashboardAPI bloggerDashboardAPI = retrofit.create(BloggerDashboardAPI.class);
-
+        if (fromCalen.getTimeInMillis() > toCalen.getTimeInMillis()) {
+            Toast.makeText(getActivity(), getString(R.string.ranking_toast_start_end_date), Toast.LENGTH_SHORT).show();
+        }
         Call<BloggerAnalyticsResponse> callAnalytics = bloggerDashboardAPI.getAnalyticsReport(userId,
                 "" + fromCalen.getTimeInMillis() / 1000, "" + toCalen.getTimeInMillis() / 1000);
         callAnalytics.enqueue(analyticsResponseListener1);
     }
 
-    private static Callback<BloggerAnalyticsResponse> analyticsResponseListener1 = new Callback<BloggerAnalyticsResponse>() {
+    private Callback<BloggerAnalyticsResponse> analyticsResponseListener1 = new Callback<BloggerAnalyticsResponse>() {
         @Override
         public void onResponse(Call<BloggerAnalyticsResponse> call, retrofit2.Response<BloggerAnalyticsResponse> response) {
             if (response == null || null == response.body()) {
                 return;
             }
             try {
-                BloggerAnalyticsResponse responseData = (BloggerAnalyticsResponse) response.body();
+                BloggerAnalyticsResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     changeDataset(responseData, getDatesL(responseData.getData().getViews()), "custom");
                 } else {
@@ -636,7 +524,8 @@ public class RankingStatsTabFragment extends BaseFragment implements OnChartGest
                 openCustomDatePickerMenu(dateChooserTextView);
                 break;
             case R.id.fromDateTextView: {
-                DialogFragment fromFragment = new DatePickerFragment();
+                PageViewsDatePickerFragment fromFragment = new PageViewsDatePickerFragment();
+                fromFragment.setTargetFragment(this, 0);
                 Bundle b1 = new Bundle();
                 b1.putString("type", "from");
                 fromFragment.setArguments(b1);
@@ -644,11 +533,12 @@ public class RankingStatsTabFragment extends BaseFragment implements OnChartGest
             }
             break;
             case R.id.toDateTextView: {
-                DialogFragment fromFragment = new DatePickerFragment();
+                PageViewsDatePickerFragment toFragment = new PageViewsDatePickerFragment();
+                toFragment.setTargetFragment(this, 0);
                 Bundle b1 = new Bundle();
                 b1.putString("type", "to");
-                fromFragment.setArguments(b1);
-                fromFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
+                toFragment.setArguments(b1);
+                toFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
             }
             break;
             case R.id.improvePageViewTextView: {
@@ -702,9 +592,6 @@ public class RankingStatsTabFragment extends BaseFragment implements OnChartGest
             return false;
         }
 
-        if (eDate.compareTo(sDate) > 0) {
-            return true;
-        }
-        return false;
+        return eDate.compareTo(sDate) > 0;
     }
 }

@@ -134,7 +134,7 @@ public class ReminderUtils {
                 currentTime.set(Calendar.SECOND, startTime.get(Calendar.SECOND));
 
                 SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy");
-                Date date = (Date) formatter.parse(repeatUntill);
+                Date date = formatter.parse(repeatUntill);
                 Calendar calenderRepeatUntill = Calendar.getInstance(TimeZone.getTimeZone("GMT+0530"));
                 calenderRepeatUntill.setTime(date);
                 calenderRepeatUntill.set(Calendar.HOUR_OF_DAY, startTime.get(Calendar.HOUR_OF_DAY));

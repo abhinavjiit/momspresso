@@ -3,6 +3,7 @@ package org.wordpress.android.editor;
 import android.annotation.SuppressLint;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -18,6 +19,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.URLUtil;
 import android.webkit.WebView;
 import android.widget.TextView;
@@ -988,7 +990,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                         mTitlePlaceholder + "');");
                 mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_content').setPlaceholderText('" +
                         mContentPlaceholder + "');");
-
+                mWebView.execJavaScriptFromString("ZSSEditor.getField('zss_field_title').focus();");
                 // Load title and content into ZSSEditor
                 updateVisualEditorFields();
 

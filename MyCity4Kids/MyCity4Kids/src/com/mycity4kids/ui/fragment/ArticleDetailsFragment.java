@@ -88,6 +88,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.CircleTransformation;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.BloggerProfileActivity;
+import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.FilteredTopicsArticleListingActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
@@ -233,7 +234,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
             coordinatorLayout = (RelativeLayout) fragmentView.findViewById(R.id.coordinatorLayout);
 //            ((TextView) fragmentView.findViewById(R.id.add_comment)).setOnClickListener(this);
-            ((TextView) fragmentView.findViewById(R.id.user_name)).setOnClickListener(this);
+            fragmentView.findViewById(R.id.user_name).setOnClickListener(this);
 
             floatingActionButton = (ImageView) fragmentView.findViewById(R.id.user_image);
             floatingActionButton.setOnClickListener(this);
@@ -750,7 +751,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     }
                 }
             }
-            ((ArticleDetailsContainerActivity) getActivity()).showPlayArticleAudioButton();
+            if (!"1".equals(isMomspresso))
+                ((ArticleDetailsContainerActivity) getActivity()).showPlayArticleAudioButton();
             return;
         } catch (Exception e) {
 
@@ -784,7 +786,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         if (holder != null) {
             LayoutInflater inflater = LayoutInflater.from(getActivity());
             View view = inflater.inflate(R.layout.custom_comment_cell, null);
-            holder.commentorsImage = (ImageView) view.findViewById(R.id.network_img);
+            holder.commentorsImage = (ImageView) view.findViewById(R.id.commentorImageView);
             holder.commentName = (TextView) view.findViewById(R.id.txvCommentTitle);
             holder.commentDescription = (TextView) view.findViewById(R.id.txvCommentDescription);
             holder.dateTxt = (TextView) view.findViewById(R.id.txvDate);
@@ -878,8 +880,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         View view = inflater.inflate(R.layout.custom_reply_cell, null);
         replyViewholder.replyIndicatorImageView = (ImageView) view.findViewById(R.id.replyIndicatorImageView);
-        replyViewholder.commentorsImage = (ImageView) view.findViewById(R.id.network_img);
-        replyViewholder.commentName = (TextView) view.findViewById(R.id.txvCommentTitle);
+        replyViewholder.commentorsImage = (ImageView) view.findViewById(R.id.replierImageView);
+        replyViewholder.commentName = (TextView) view.findViewById(R.id.txvReplyTitle);
         replyViewholder.commentDescription = (TextView) view.findViewById(R.id.txvCommentDescription);
         replyViewholder.dateTxt = (TextView) view.findViewById(R.id.txvDate);
         replyViewholder.replyCellReplyTxt = (TextView) view.findViewById(R.id.txvReplyCellReply);
@@ -983,8 +985,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     tagsLayout.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                     viewAllTagsTextView.setVisibility(View.GONE);
                     break;
-                case R.id.add_comment:
-                    break;
                 case R.id.txvCommentCellReply:
                     openCommentDialog((CommentsData) ((View) v.getParent().getParent().getParent()).getTag(), "ADD");
                     break;
@@ -1004,30 +1004,47 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 case R.id.bookmarkTextView:
                     addRemoveBookmark();
                     break;
-                case R.id.network_img:
+                case R.id.txvCommentTitle:
+                case R.id.commentorImageView: {
                     CommentsData commentData = (CommentsData) ((View) v.getParent().getParent()).getTag();
                     if (!"fb".equals(commentData.getComment_type())) {
                         trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
                         trackArticleReadTime.resetTimer();
-                        Intent profileIntent = new Intent(getActivity(), BloggerProfileActivity.class);
-                        profileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, commentData.getUserId());
-                        profileIntent.putExtra(AppConstants.AUTHOR_NAME, commentData.getName());
-                        profileIntent.putExtra(Constants.FROM_SCREEN, "Article Detail Comments");
-                        startActivity(profileIntent);
+                        if (userDynamoId.equals(commentData.getUserId())) {
+                            Intent profileIntent = new Intent(getActivity(), DashboardActivity.class);
+                            profileIntent.putExtra("TabType", "profile");
+                            startActivity(profileIntent);
+                        } else {
+                            Intent profileIntent = new Intent(getActivity(), BloggerProfileActivity.class);
+                            profileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, commentData.getUserId());
+                            profileIntent.putExtra(AppConstants.AUTHOR_NAME, commentData.getName());
+                            profileIntent.putExtra(Constants.FROM_SCREEN, "Article Detail Comments");
+                            startActivity(profileIntent);
+                        }
+
                     }
-                    break;
-                case R.id.txvCommentTitle:
-                    CommentsData cData = (CommentsData) ((View) v.getParent().getParent()).getTag();
-                    if (!"fb".equals(cData.getComment_type())) {
+                }
+                break;
+                case R.id.txvReplyTitle:
+                case R.id.replierImageView: {
+                    CommentsData commentData = (CommentsData) ((View) v.getParent()).getTag();
+                    if (!"fb".equals(commentData.getComment_type())) {
                         trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
                         trackArticleReadTime.resetTimer();
-                        Intent userProfileIntent = new Intent(getActivity(), BloggerProfileActivity.class);
-                        userProfileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, cData.getUserId());
-                        userProfileIntent.putExtra(AppConstants.AUTHOR_NAME, cData.getName());
-                        userProfileIntent.putExtra(Constants.FROM_SCREEN, "Article Detail Comments");
-                        startActivity(userProfileIntent);
+                        if (userDynamoId.equals(commentData.getUserId())) {
+                            Intent profileIntent = new Intent(getActivity(), DashboardActivity.class);
+                            profileIntent.putExtra("TabType", "profile");
+                            startActivity(profileIntent);
+                        } else {
+                            Intent profileIntent = new Intent(getActivity(), BloggerProfileActivity.class);
+                            profileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, commentData.getUserId());
+                            profileIntent.putExtra(AppConstants.AUTHOR_NAME, commentData.getName());
+                            profileIntent.putExtra(Constants.FROM_SCREEN, "Article Detail Comments");
+                            startActivity(profileIntent);
+                        }
                     }
-                    break;
+                }
+                break;
                 case R.id.follow_click:
                     followAPICall(authorId);
                     break;
@@ -1038,11 +1055,17 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
                         trackArticleReadTime.resetTimer();
                     }
-                    Intent intentnn = new Intent(getActivity(), BloggerProfileActivity.class);
-                    intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, detailData.getUserId());
-                    intentnn.putExtra(AppConstants.AUTHOR_NAME, detailData.getUserName());
-                    intentnn.putExtra(Constants.FROM_SCREEN, "Article Details");
-                    startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
+                    if (userDynamoId.equals(detailData.getUserId())) {
+                        Intent profileIntent = new Intent(getActivity(), DashboardActivity.class);
+                        profileIntent.putExtra("TabType", "profile");
+                        startActivity(profileIntent);
+                    } else {
+                        Intent intentnn = new Intent(getActivity(), BloggerProfileActivity.class);
+                        intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, detailData.getUserId());
+                        intentnn.putExtra(AppConstants.AUTHOR_NAME, detailData.getUserName());
+                        intentnn.putExtra(Constants.FROM_SCREEN, "Article Details");
+                        startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
+                    }
                     break;
                 case R.id.relatedArticles1: {
 //                    Utils.pushEventRelatedArticle(getActivity(), GTMEventType.RELATED_ARTICLE_CLICKED_EVENT, userDynamoId + "", "Blog Detail", ((ArticleListingResult) v.getTag()).getTitleSlug(), 1);
@@ -1255,7 +1278,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         if (holder != null) {
             LayoutInflater inflater = LayoutInflater.from(getActivity());
             View view = inflater.inflate(R.layout.custom_comment_cell, null);
-            holder.commentorsImage = (ImageView) view.findViewById(R.id.network_img);
+            holder.commentorsImage = (ImageView) view.findViewById(R.id.commentorImageView);
             holder.commentName = (TextView) view.findViewById(R.id.txvCommentTitle);
             holder.commentDescription = (TextView) view.findViewById(R.id.txvCommentDescription);
             holder.dateTxt = (TextView) view.findViewById(R.id.txvDate);
@@ -1340,15 +1363,15 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         intent.putExtra(Constants.AUTHOR_ID, parentingListData.get(index - 1).getUserId());
         intent.putExtra(Constants.FROM_SCREEN, "Article Details");
         intent.putExtra(Constants.ARTICLE_OPENED_FROM, listingType);
-        intent.putExtra(Constants.ARTICLE_INDEX, "" + index);
+        intent.putExtra(Constants.ARTICLE_INDEX, "" + (index - 1));
         intent.putParcelableArrayListExtra("pagerListData", parentingListData);
         startActivity(intent);
     }
 
     @Override
     public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
-        View view = (View) mScrollView.getChildAt(mScrollView.getChildCount() - 1);
-        View tagsView = (View) mScrollView.findViewById(R.id.tagsLayoutContainer);
+        View view = mScrollView.getChildAt(mScrollView.getChildCount() - 1);
+        View tagsView = mScrollView.findViewById(R.id.tagsLayoutContainer);
         Rect scrollBounds = new Rect();
         mScrollView.getHitRect(scrollBounds);
         int diff = (view.getBottom() - (mScrollView.getHeight() + mScrollView.getScrollY()));
@@ -1555,7 +1578,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 return;
             }
             try {
-                ArticleDetailResult responseData = (ArticleDetailResult) response.body();
+                ArticleDetailResult responseData = response.body();
 //                newCommentLayout.setVisibility(View.VISIBLE);
                 getResponseUpdateUi(responseData);
                 authorId = detailData.getUserId();
@@ -1597,7 +1620,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 return;
             }
             try {
-                ViewCountResponse responseData = (ViewCountResponse) response.body();
+                ViewCountResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     articleViewCountTextView.setText(responseData.getData().get(0).getCount());
                     articleCommentCountTextView.setText(responseData.getData().get(0).getCommentCount());
@@ -1640,7 +1663,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 return;
             }
             try {
-                ArticleDetailWebserviceResponse responseData = (ArticleDetailWebserviceResponse) response.body();
+                ArticleDetailWebserviceResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 //                    newCommentLayout.setVisibility(View.VISIBLE);
                     getResponseUpdateUi(responseData.getData());
@@ -1767,7 +1790,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             }
 
             try {
-                ArticleListingResponse responseData = (ArticleListingResponse) response.body();
+                ArticleListingResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
                     if (dataList != null) {
@@ -1854,7 +1877,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             }
 
             try {
-                ArticleListingResponse responseData = (ArticleListingResponse) response.body();
+                ArticleListingResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
                     for (int i = 0; i < dataList.size(); i++) {
@@ -1934,7 +1957,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 return;
             }
             try {
-                FollowUnfollowCategoriesResponse responseData = (FollowUnfollowCategoriesResponse) response.body();
+                FollowUnfollowCategoriesResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
                     ArrayList<String> previouslyFollowedTopics = (ArrayList<String>) responseData.getData();
@@ -1952,15 +1975,15 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
                             RelativeLayout topicView = (RelativeLayout) mInflater.inflate(R.layout.related_tags_view, null, false);
                             topicView.setClickable(true);
-                            ((TextView) topicView.getChildAt(0)).setTag(key);
-                            ((ImageView) topicView.getChildAt(2)).setTag(key);
+                            topicView.getChildAt(0).setTag(key);
+                            topicView.getChildAt(2).setTag(key);
                             ((TextView) topicView.getChildAt(0)).setText(value.toUpperCase());
                             if (null != previouslyFollowedTopics && previouslyFollowedTopics.contains(key)) {
 //                                ((TextView) topicView.getChildAt(0)).setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.home_green));
                                 ((ImageView) topicView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.tick));
-                                ((ImageView) topicView.getChildAt(2)).setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.ad_tags_following_bg));
+                                topicView.getChildAt(2).setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.ad_tags_following_bg));
                                 ((ImageView) topicView.getChildAt(2)).setColorFilter(ContextCompat.getColor(getActivity(), R.color.white_color));
-                                ((ImageView) topicView.getChildAt(2)).setOnClickListener(new View.OnClickListener() {
+                                topicView.getChildAt(2).setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
                                         Log.d("TOPICS ----- ", "UNFOLLOW");
@@ -1969,9 +1992,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                                 });
                             } else {
                                 ((ImageView) topicView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.follow_plus));
-                                ((ImageView) topicView.getChildAt(2)).setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.ad_tags_follow_bg));
+                                topicView.getChildAt(2).setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.ad_tags_follow_bg));
                                 ((ImageView) topicView.getChildAt(2)).setColorFilter(ContextCompat.getColor(getActivity(), R.color.ad_tags_following_bg));
-                                ((ImageView) topicView.getChildAt(2)).setOnClickListener(new View.OnClickListener() {
+                                topicView.getChildAt(2).setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
                                         Log.d("TOPICS ----- ", "FOLLOW");
@@ -1980,7 +2003,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                                 });
                             }
 
-                            ((TextView) topicView.getChildAt(0)).setOnClickListener(new View.OnClickListener() {
+                            topicView.getChildAt(0).setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
@@ -2024,12 +2047,12 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             Log.d("GTM FOLLOW", "displayName" + selectedTopic);
 //            Utils.pushEventFollowUnfollowTopic(this, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, userDynamoId, "Article Details", "follow", ((TextView) tagView.getChildAt(0)).getText().toString() + ":" + selectedTopic);
             Utils.pushTopicFollowUnfollowEvent(getActivity(), GTMEventType.FOLLOW_TOPIC_CLICK_EVENT, userDynamoId, "Article Details", ((TextView) tagView.getChildAt(0)).getText().toString() + "~" + selectedTopic);
-            ((TextView) tagView.getChildAt(0)).setTag(selectedTopic);
-            ((ImageView) tagView.getChildAt(2)).setTag(selectedTopic);
+            tagView.getChildAt(0).setTag(selectedTopic);
+            tagView.getChildAt(2).setTag(selectedTopic);
             ((ImageView) tagView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.follow_plus));
-            ((ImageView) tagView.getChildAt(2)).setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.ad_tags_follow_bg));
+            tagView.getChildAt(2).setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.ad_tags_follow_bg));
             ((ImageView) tagView.getChildAt(2)).setColorFilter(ContextCompat.getColor(getActivity(), R.color.ad_tags_following_bg));
-            ((ImageView) tagView.getChildAt(2)).setOnClickListener(new View.OnClickListener() {
+            tagView.getChildAt(2).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Log.d("TOPICS ----- ", "FOLLOW");
@@ -2040,12 +2063,12 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             Log.d("GTM UNFOLLOW", "displayName" + selectedTopic);
 //            Utils.pushEventFollowUnfollowTopic(this, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, userDynamoId, "Article Details", "unfollow", ((TextView) tagView.getChildAt(0)).getText().toString() + ":" + selectedTopic);
             Utils.pushTopicFollowUnfollowEvent(getActivity(), GTMEventType.UNFOLLOW_TOPIC_CLICK_EVENT, userDynamoId, "Article Details", ((TextView) tagView.getChildAt(0)).getText().toString() + "~" + selectedTopic);
-            ((TextView) tagView.getChildAt(0)).setTag(selectedTopic);
-            ((ImageView) tagView.getChildAt(2)).setTag(selectedTopic);
+            tagView.getChildAt(0).setTag(selectedTopic);
+            tagView.getChildAt(2).setTag(selectedTopic);
             ((ImageView) tagView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.tick));
-            ((ImageView) tagView.getChildAt(2)).setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.ad_tags_following_bg));
+            tagView.getChildAt(2).setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.ad_tags_following_bg));
             ((ImageView) tagView.getChildAt(2)).setColorFilter(ContextCompat.getColor(getActivity(), R.color.white_color));
-            ((ImageView) tagView.getChildAt(2)).setOnClickListener(new View.OnClickListener() {
+            tagView.getChildAt(2).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Log.d("TOPICS ----- ", "UNFOLLOW");
@@ -2069,7 +2092,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 return;
             }
             try {
-                FollowUnfollowCategoriesResponse responseData = (FollowUnfollowCategoriesResponse) response.body();
+                FollowUnfollowCategoriesResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     if (isAdded())
                         ((ArticleDetailsContainerActivity) getActivity()).showToast(responseData.getReason());
@@ -2167,7 +2190,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
             try {
                 isLoading = false;
-                FBCommentResponse responseData = (FBCommentResponse) response.body();
+                FBCommentResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     ArrayList<CommentsData> dataList = responseData.getData().getResult();
                     pagination = responseData.getData().getPagination();
@@ -2214,7 +2237,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 return;
             }
 
-            ArticleDetailResponse responseData = (ArticleDetailResponse) response.body();
+            ArticleDetailResponse responseData = response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                 if (!"1".equals(isMomspresso)) {
                     bookmarkFlag = responseData.getData().getResult().getBookmarkStatus();
@@ -2268,7 +2291,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 return;
             }
 
-            ArticleDetailResponse responseData = (ArticleDetailResponse) response.body();
+            ArticleDetailResponse responseData = response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                 bookmarkFlag = responseData.getData().getResult().getBookmarkStatus();
                 if (!isAdded()) {
@@ -2316,7 +2339,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
                 return;
             }
-            AddBookmarkResponse responseData = (AddBookmarkResponse) response.body();
+            AddBookmarkResponse responseData = response.body();
             updateBookmarkStatus(ADD_BOOKMARK, responseData);
         }
 
@@ -2334,7 +2357,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
                 return;
             }
-            ArticleRecommendationStatusResponse responseData = (ArticleRecommendationStatusResponse) response.body();
+            ArticleRecommendationStatusResponse responseData = response.body();
             recommendationFlag = responseData.getData().getStatus();
             if (!isAdded()) {
                 return;
@@ -2369,7 +2392,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             }
 
             try {
-                RecommendUnrecommendArticleResponse responseData = (RecommendUnrecommendArticleResponse) response.body();
+                RecommendUnrecommendArticleResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     if (!isAdded()) {
                         return;
@@ -2436,7 +2459,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 return;
             }
             try {
-                FollowUnfollowUserResponse responseData = (FollowUnfollowUserResponse) response.body();
+                FollowUnfollowUserResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
                 } else {
@@ -2469,7 +2492,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 return;
             }
             try {
-                FollowUnfollowUserResponse responseData = (FollowUnfollowUserResponse) response.body();
+                FollowUnfollowUserResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
                 } else {
@@ -2504,7 +2527,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 callback.onCustomViewHidden();
                 return;
             }
-            mContentView = (RelativeLayout) ((ArticleDetailsContainerActivity) getActivity()).findViewById(R.id.content_frame);
+            mContentView = (RelativeLayout) getActivity().findViewById(R.id.content_frame);
             mContentView.setVisibility(View.GONE);
             mCustomViewContainer = new FrameLayout(getActivity());
             mCustomViewContainer.setLayoutParams(LayoutParameters);
@@ -2514,7 +2537,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             mCustomView = view;
             mCustomViewCallback = callback;
             mCustomViewContainer.setVisibility(View.VISIBLE);
-            ((ArticleDetailsContainerActivity) getActivity()).setContentView(mCustomViewContainer);
+            getActivity().setContentView(mCustomViewContainer);
             mCustomViewContainer.bringToFront();
         }
 
@@ -2532,7 +2555,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 mCustomViewCallback.onCustomViewHidden();
                 // Show the content view.
                 mContentView.setVisibility(View.VISIBLE);
-                ((ArticleDetailsContainerActivity) getActivity()).setContentView(mContentView);
+                getActivity().setContentView(mContentView);
             }
         }
     }

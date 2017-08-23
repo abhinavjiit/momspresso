@@ -913,7 +913,7 @@ public class InformationFragmentBusiness extends BaseFragment implements OnClick
                 }
                 CameraFragmentDialog fragmentDialog = new CameraFragmentDialog();
                 fragmentDialog.setSubmitListner((IOnSubmitGallery) getActivity());
-                fragmentDialog.show(((FragmentActivity) getActivity()).getSupportFragmentManager(), "");
+                fragmentDialog.show(getActivity().getSupportFragmentManager(), "");
                 ((BusinessDetailsActivity) getActivity()).writeReviewFromHeader(AddReviewOrPhoto.AddPhoto);
                 break;
             }

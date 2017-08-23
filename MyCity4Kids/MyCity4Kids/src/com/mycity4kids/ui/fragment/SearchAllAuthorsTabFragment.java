@@ -27,8 +27,10 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.SearchAuthorResult;
 import com.mycity4kids.models.response.SearchResponse;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.SearchArticlesAuthorsAPI;
 import com.mycity4kids.ui.activity.BloggerProfileActivity;
+import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.SearchAllActivity;
 import com.mycity4kids.ui.adapter.SearchAuthorsListingAdapter;
 
@@ -43,18 +45,17 @@ import retrofit2.Retrofit;
  */
 public class SearchAllAuthorsTabFragment extends BaseFragment {
 
-    SearchAuthorsListingAdapter authorsListingAdapter;
-    ListView listView;
-    TextView noAuthorsTextView;
-    String searchName = "";
+    private String dynamoUserId;
+    private SearchAuthorsListingAdapter authorsListingAdapter;
+    private ListView listView;
+    private TextView noAuthorsTextView;
+    private String searchName = "";
     private RelativeLayout mLodingView;
     private int nextPageNumber = 0;
-    ArrayList<SearchAuthorResult> listingData;
+    private ArrayList<SearchAuthorResult> listingData;
     private boolean isReuqestRunning = false;
     private boolean fragmentResume = false;
     private boolean fragmentVisible = false;
-    private boolean fragmentOnCreated = false;
-    private boolean isDataLoadedOnce = false;
     boolean loadMore = true;
     private ProgressBar progressBar;
 
@@ -63,6 +64,9 @@ public class SearchAllAuthorsTabFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View view = null;
         view = getActivity().getLayoutInflater().inflate(R.layout.fragment_author_listing, container, false);
+
+        dynamoUserId = SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId();
+
         listView = (ListView) view.findViewById(R.id.authorListView);
         listView.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.white_color));
 
@@ -86,7 +90,6 @@ public class SearchAllAuthorsTabFragment extends BaseFragment {
         } else if (!fragmentResume && fragmentVisible) {   //only when first time fragment is created
             nextPageNumber = 1;
             hitBloggerAPIrequest(nextPageNumber);
-            isDataLoadedOnce = true;
         }
 
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -113,11 +116,17 @@ public class SearchAllAuthorsTabFragment extends BaseFragment {
 
                 SearchAuthorResult itemSelected = (SearchAuthorResult) adapterView.getItemAtPosition(position);
 
-                Intent intentnn = new Intent(getActivity(), BloggerProfileActivity.class);
-                intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, itemSelected.getUserId());
-                intentnn.putExtra(AppConstants.AUTHOR_NAME, "" + itemSelected.getFirst_name().replace("<b>", "").replace("</b>", "") + " " + itemSelected.getLast_name().replace("<b>", "").replace("</b>", ""));
-                intentnn.putExtra(Constants.FROM_SCREEN, "Search Authors List");
-                startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
+                if (dynamoUserId.equals(itemSelected.getUserId())) {
+                    Intent profileIntent = new Intent(getActivity(), DashboardActivity.class);
+                    profileIntent.putExtra("TabType", "profile");
+                    startActivity(profileIntent);
+                } else {
+                    Intent intentnn = new Intent(getActivity(), BloggerProfileActivity.class);
+                    intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, itemSelected.getUserId());
+                    intentnn.putExtra(AppConstants.AUTHOR_NAME, "" + itemSelected.getFirst_name().replace("<b>", "").replace("</b>", "") + " " + itemSelected.getLast_name().replace("<b>", "").replace("</b>", ""));
+                    intentnn.putExtra(Constants.FROM_SCREEN, "Search Authors List");
+                    startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
+                }
 
 
 //                Intent intent = new Intent(getActivity(), BloggerDashboardActivity.class);
@@ -192,7 +201,6 @@ public class SearchAllAuthorsTabFragment extends BaseFragment {
         nextPageNumber = 1;
         loadMore = true;
         searchName = searchTxt;
-        isDataLoadedOnce = true;
         hitBloggerAPIrequest(nextPageNumber);
     }
 
@@ -200,7 +208,6 @@ public class SearchAllAuthorsTabFragment extends BaseFragment {
         if (null != listingData) {
             listingData.clear();
         }
-        isDataLoadedOnce = false;
         loadMore = true;
         searchName = searchTxt;
     }
@@ -219,7 +226,7 @@ public class SearchAllAuthorsTabFragment extends BaseFragment {
                 return;
             }
             try {
-                SearchResponse responseData = (SearchResponse) response.body();
+                SearchResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     updateBloggerResponse(responseData);
                 } else {

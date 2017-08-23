@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -43,7 +42,6 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.editor.EditorPostActivity;
-import com.mycity4kids.facebook.FacebookUtils;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.listener.OnButtonClicked;
@@ -54,22 +52,15 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.DeepLinkingAPI;
 import com.mycity4kids.ui.fragment.AddArticleVideoFragment;
 import com.mycity4kids.ui.fragment.BecomeBloggerFragment;
-import com.mycity4kids.ui.fragment.ChangeCityFragment;
 import com.mycity4kids.ui.fragment.ChooseVideoUploadOptionDialogFragment;
 import com.mycity4kids.ui.fragment.ExploreFragment;
-import com.mycity4kids.ui.fragment.ExternalCalFragment;
-import com.mycity4kids.ui.fragment.FragmentAdultProfile;
 import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
-import com.mycity4kids.ui.fragment.FragmentFamilyDetail;
-import com.mycity4kids.ui.fragment.FragmentFamilyProfile;
 import com.mycity4kids.ui.fragment.FragmentHomeCategory;
-import com.mycity4kids.ui.fragment.FragmentKidProfile;
 import com.mycity4kids.ui.fragment.FragmentMC4KHomeNew;
 import com.mycity4kids.ui.fragment.MyAccountProfileFragment;
 import com.mycity4kids.ui.fragment.NotificationFragment;
 import com.mycity4kids.ui.fragment.RateAppDialogFragment;
 import com.mycity4kids.ui.fragment.SendFeedbackFragment;
-import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.PermissionUtil;
 
 import java.util.ArrayList;
@@ -163,6 +154,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
         Utils.pushOpenScreenEvent(DashboardActivity.this, "DashBoard", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
+        downArrowImageView.setOnClickListener(this);
         toolbarTitleTextView.setOnClickListener(this);
         searchAllImageView.setOnClickListener(this);
         readAllNotificationTextView.setOnClickListener(this);
@@ -172,7 +164,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         // setting profile image
 
         updateImageProfile();
-        final BottomNavigationItemView[] items = bottomNavigationView.getBottomNavigationItemViews();
         bottomNavigationView.setItemIconTintList(null);
         bottomNavigationView.setIconSize(30, 30);
         bottomNavigationView.setOnNavigationItemSelectedListener(
@@ -256,6 +247,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             addFragment(fragment0, mBundle0, true);
         } else {
             replaceFragment(new FragmentMC4KHomeNew(), null, false);
+            String tabType = getIntent().getStringExtra("TabType");
+            if ("profile".equals(tabType))
+                bottomNavigationView.setSelectedItemId(R.id.action_profile);
         }
 
         RateVersion reteVersionModel = SharedPrefUtils.getRateVersion(this);
@@ -418,17 +412,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
-    private boolean showUploadVideoTutorial() {
-        String version = AppUtils.getAppVersion(this);
-        if (version.equals(AppConstants.UPLOAD_VIDEO_RELEASE_VERSION) && SharedPrefUtils.isUploadVideoFirstLaunch(this)) {
-            SharedPrefUtils.setUploadVideoFirstLaunch(this, false);
-            Intent videoFlIntent = new Intent(this, UploadVideoFLActivity.class);
-            startActivity(videoFlIntent);
-            return true;
-        }
-        return false;
-    }
-
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
 
@@ -452,8 +435,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
-        if (showUploadVideoTutorial()) return;
-//        mUsernName.setText(SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name());
         updateImageProfile();
         final Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
 
@@ -485,22 +466,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         // Inflate the menu; this adds items to the action bar if it is present.
         // according to fragment change it
         final Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-        if (topFragment instanceof FragmentFamilyDetail) {
+        if (topFragment instanceof FragmentMC4KHomeNew) {
 
-            getMenuInflater().inflate(R.menu.forgot_password, menu);
-        } else if (topFragment instanceof FragmentMC4KHomeNew) {
-//            getMenuInflater().inflate(R.menu.forgot_password, menu);
-        } else if (topFragment instanceof FragmentFamilyProfile) {
-
-            getMenuInflater().inflate(R.menu.forgot_password, menu);
-        } else if (topFragment instanceof FragmentAdultProfile) {
-
-            getMenuInflater().inflate(R.menu.forgot_password, menu);
-        } else if (topFragment instanceof FragmentKidProfile) {
-
-            getMenuInflater().inflate(R.menu.forgot_password, menu);
-        } else if (topFragment instanceof ChangeCityFragment) {
-            getMenuInflater().inflate(R.menu.forgot_password, menu);
         } else if (topFragment instanceof FragmentBusinesslistEvents) {
             getMenuInflater().inflate(R.menu.menu_event, menu);
         } else if (topFragment instanceof FragmentHomeCategory) {
@@ -511,6 +478,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     public void updateUnreadNotificationCount(String unreadNotifCount) {
         if (StringUtils.isNullOrEmpty(unreadNotifCount) || "0".equals(unreadNotifCount)) {
+            addBadgeAt(1, "0");
         } else {
             addBadgeAt(1, unreadNotifCount);
         }
@@ -543,16 +511,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 }
                 break;
             case R.id.save:
-                if (topFragment instanceof FragmentAdultProfile) {
-                    ((FragmentAdultProfile) topFragment).callService();
-                } else if (topFragment instanceof FragmentKidProfile) {
-                    ((FragmentKidProfile) topFragment).callService();
-                } else if (topFragment instanceof FragmentFamilyProfile) {
-                    ((FragmentFamilyProfile) topFragment).callService();
-                } else if (topFragment instanceof FragmentFamilyDetail) {
-                    ((FragmentFamilyDetail) topFragment).onHeaderButtonTapped();
-                } else if (topFragment instanceof ChangeCityFragment)
-                    ((ChangeCityFragment) topFragment).changeCity();
+
                 break;
             case android.R.id.home:
                 onBackPressed();
@@ -600,28 +559,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     public void onClick(View v) {
         Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
         switch (v.getId()) {
-            case R.id.editor:
-                if (Build.VERSION.SDK_INT > 15) {
-                    Utils.pushEvent(DashboardActivity.this, GTMEventType.ADD_BLOG_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Navigation Menu");
-                    launchEditor();
-                } else {
-                    showToast("This version of android is no more supported.");
-                }
-                break;
             case R.id.feed_back:
                 Utils.pushEvent(DashboardActivity.this, GTMEventType.FEEDBACK_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Left Menu Screen");
                 setTitle("Send Feedback");
                 replaceFragment(new SendFeedbackFragment(), null, true);
                 break;
-            case R.id.addVideosTextView:
-                launchAddVideoOptions();
-                break;
-            case R.id.myVideosTextView:
-                Intent funnyIntent = new Intent(DashboardActivity.this, MyFunnyVideosListingActivity.class);
-                funnyIntent.putExtra(Constants.FROM_SCREEN, "Navigation Menu");
-                startActivity(funnyIntent);
-                break;
-            case R.id.txvUserName:
             case R.id.imgProfile:
                 Intent intent4 = new Intent(DashboardActivity.this, BloggerProfileActivity.class);
                 startActivity(intent4);
@@ -642,7 +584,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             case R.id.readAllTextView:
                 if (topFragment instanceof NotificationFragment) {
                     ((NotificationFragment) topFragment).markAllNotificationAsRead();
+                    updateUnreadNotificationCount("0");
                 }
+
                 break;
             default:
                 break;
@@ -689,32 +633,13 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         try {
             Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
 
-            if (topFragment instanceof ExternalCalFragment) {
-                FacebookUtils.onActivityResult(this, requestCode, resultCode, data);
-            }
-
             switch (requestCode) {
                 case Constants.OPEN_GALLERY:
-                    if (topFragment instanceof FragmentFamilyProfile) {
-                        topFragment.onActivityResult(requestCode, resultCode, data);
-                    } else if (topFragment instanceof FragmentFamilyDetail) {
-//                        ((FragmentFamilyDetail) topFragment).onActivityResultDelegate(requestCode, resultCode, data);
-                    }
                     break;
                 case Constants.TAKE_PICTURE:
-                    if (topFragment instanceof FragmentFamilyProfile) {
-                        topFragment.onActivityResult(requestCode, resultCode, data);
-                    } else if (topFragment instanceof FragmentFamilyDetail) {
-//                        ((FragmentFamilyDetail) topFragment).onActivityResultDelegate(requestCode, resultCode, data);
-                    }
                     break;
 
                 case Constants.CROP_IMAGE:
-                    if (topFragment instanceof FragmentFamilyProfile) {
-                        topFragment.onActivityResult(requestCode, resultCode, data);
-                    } else if (topFragment instanceof FragmentFamilyDetail) {
-//                        ((FragmentFamilyDetail) topFragment).onActivityResultDelegate(requestCode, resultCode, data);
-                    }
                     break;
                 case AppConstants.REQUEST_GOOGLE_PLAY_SERVICES:
                     if (resultCode != RESULT_OK) {
@@ -727,18 +652,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     if (resultCode == RESULT_OK && data != null &&
                             data.getExtras() != null) {
                         String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-                        if (topFragment instanceof ExternalCalFragment) {
-                            ((ExternalCalFragment) topFragment).setAccountName(accountName);
-                        }
                     } else if (resultCode == RESULT_CANCELED) {
                         showToast("Account unspecified.");
                     }
                     break;
                 case AppConstants.REQUEST_AUTHORIZATION:
                     if (resultCode != RESULT_OK) {
-                        if (topFragment instanceof ExternalCalFragment) {
-                            ((ExternalCalFragment) topFragment).chooseAccount();
-                        }
                     }
                     break;
                 case AppConstants.REQUEST_VIDEO_TRIMMER:
@@ -770,10 +689,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
 
     public void showGooglePlayServicesAvailabilityErrorDialog(int connectionStatusCode) {
 
-        Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
-        if (topFragment instanceof ExternalCalFragment) {
-            ((ExternalCalFragment) topFragment).showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode);
-        }
     }
 
     private boolean isGooglePlayServicesAvailable() {
@@ -807,7 +722,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             public void onResponse(Call<DeepLinkingResposnse> call, retrofit2.Response<DeepLinkingResposnse> response) {
                 removeProgressDialog();
                 try {
-                    DeepLinkingResposnse responseData = (DeepLinkingResposnse) response.body();
+                    DeepLinkingResposnse responseData = response.body();
                     if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                         identifyTargetScreen(responseData.getData().getResult());
                     } else {
@@ -1206,6 +1121,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private Badge addBadgeAt(int position, String number) {
         if (badge != null) {
             badge.setBadgeText(number);
+            if (number.equals("0")) {
+                badge.hide(false);
+            }
             return badge;
         }
         // add badge
@@ -1213,6 +1131,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 .setBadgeText(number)
                 .setGravityOffset(12, 2, true)
                 .bindTarget(bottomNavigationView.getBottomNavigationItemView(position));
+        if (number.equals("0")) {
+            badge.hide(false);
+        }
         return badge;
     }
 

@@ -68,8 +68,8 @@ public class AutoSuggestTransparentDialogActivity extends BaseActivity implement
 			mProgressBar=(ProgressBar)findViewById(R.id.progress_bar);
 			mLoutProgress=(LinearLayout)findViewById(R.id.lout_f_Progress);
 			mLocalitySearchLout=(LinearLayout)findViewById(R.id.localityLayout);
-			((TextView)findViewById(R.id.btnCancel)).setOnClickListener(this);
-			((TextView)findViewById(R.id.btnSubmit)).setOnClickListener(this);
+			findViewById(R.id.btnCancel).setOnClickListener(this);
+			findViewById(R.id.btnSubmit).setOnClickListener(this);
 
 			mAutoSuggestController=new AutoSuggestController(this, this);
 
@@ -87,7 +87,7 @@ public class AutoSuggestTransparentDialogActivity extends BaseActivity implement
 						 * its related to search query adapter:
 						 */
 						String whichAdapterDataIsLoaded=(String)parent.getTag();
-						String listItem = (String)parent.getAdapter().getItem(pos).toString();
+						String listItem = parent.getAdapter().getItem(pos).toString();
 						mQuerySearchEtxt.removeTextChangedListener(textWatcher);
 						if(!listItem.contains(","))
 						{

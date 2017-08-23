@@ -216,9 +216,9 @@ public class AppointmentManager {
                                 SimpleDateFormat f2 = new SimpleDateFormat("dd MMMM yyyy");
 
                                 Date dateCurrent = new Date();
-                                dateCurrent = (Date) f1.parse(currentdate);
+                                dateCurrent = f1.parse(currentdate);
 
-                                Date dateUntil = (Date) f2.parse(pickdate);
+                                Date dateUntil = f2.parse(pickdate);
                                 String untilFinal = f1.format(dateUntil);
 
                                 Calendar calendarCurrent = Calendar.getInstance(TimeZone.getTimeZone("GMT+0530"));
@@ -396,8 +396,8 @@ public class AppointmentManager {
         Date dateStart = new Date();
         try {
 
-            dateCurrent = (Date) f1.parse(currentdate);
-            dateStart = (Date) f1.parse(taskstartdate);
+            dateCurrent = f1.parse(currentdate);
+            dateStart = f1.parse(taskstartdate);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -430,7 +430,7 @@ public class AppointmentManager {
         SimpleDateFormat f1 = new SimpleDateFormat("yyyy-MM-dd");
 
         Date date = new Date();
-        date = (Date) f1.parse(cureentdate);
+        date = f1.parse(cureentdate);
         SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
         String dayOfTheWeek = sdf.format(date);
 
@@ -452,7 +452,7 @@ public class AppointmentManager {
         calendar.setTimeInMillis(apointmenttime);
 
         Date date = new Date();
-        date = (Date) f1.parse(cureentdate);
+        date = f1.parse(cureentdate);
 
         Calendar calendar1 = Calendar.getInstance(TimeZone.getTimeZone("GMT+0530"));
         calendar1.clear();
@@ -515,7 +515,7 @@ public class AppointmentManager {
         calendar.setTimeInMillis(apointmenttime);
 
         Date date = new Date();
-        date = (Date) f1.parse(cureentdate);
+        date = f1.parse(cureentdate);
 
         Calendar calendar1 = Calendar.getInstance(TimeZone.getTimeZone("GMT+0530"));
         calendar1.clear();

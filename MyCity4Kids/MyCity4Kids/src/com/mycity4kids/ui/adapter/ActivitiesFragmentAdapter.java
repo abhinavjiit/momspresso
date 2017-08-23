@@ -40,7 +40,7 @@ public class ActivitiesFragmentAdapter extends BaseAdapter implements Filterable
 		if (fragment == null) {
 			mFilterMap = ((BusinessListActivityKidsResources)pContext).mFilterMap;
 		} else {
-			mFilterMap=((FragmentBusinesslistEvents)fragment).mFilterMap;
+			mFilterMap= FragmentBusinesslistEvents.mFilterMap;
 		}
 		checkboxlist=new ArrayList<>();
 		checkBoxState=new boolean[mActivitiesList.size()];

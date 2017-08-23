@@ -13,5 +13,5 @@ import com.kelltontech.utils.facebook.model.FriendList;
  */
 public interface FacebookFriendListListener 
 {
-	public void doAfterFriendList(List<FriendList> friendLists);
+	void doAfterFriendList(List<FriendList> friendLists);
 }

@@ -29,8 +29,8 @@ public class RateAppDialogFragment extends android.app.DialogFragment implements
 
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
-        ((TextView) view.findViewById(R.id.not_now)).setOnClickListener(this);
-        ((TextView) view.findViewById(R.id.rate_now)).setOnClickListener(this);
+        view.findViewById(R.id.not_now).setOnClickListener(this);
+        view.findViewById(R.id.rate_now).setOnClickListener(this);
 
         return view;
     }

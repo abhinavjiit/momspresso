@@ -82,7 +82,7 @@ public class SyncUserInfoService extends IntentService implements UpdateListener
             }
 
             try {
-                UserDetailResponse responseData = (UserDetailResponse) response.body();
+                UserDetailResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     SharedPrefUtils.setProfileImgUrl(SyncUserInfoService.this, responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp());
                     UserInfo userInfo = SharedPrefUtils.getUserDetailModel(SyncUserInfoService.this);

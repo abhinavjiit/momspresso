@@ -2,14 +2,12 @@ package com.mycity4kids.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -34,7 +32,6 @@ import com.mycity4kids.ui.activity.FilteredTopicsArticleListingActivity;
 import com.mycity4kids.ui.activity.SearchAllActivity;
 import com.mycity4kids.ui.adapter.SearchAllArticlesTopicsListingAdapter;
 import com.mycity4kids.ui.adapter.SearchArticlesListingAdapter;
-import com.mycity4kids.widget.SearchArticlesView;
 
 import java.util.ArrayList;
 
@@ -54,23 +51,11 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
     String sortType;
     String searchName = "";
     private int limit = 3;
-    private RelativeLayout mLodingView;
     private int nextPageNumber = 2;
     private boolean isReuqestRunning = false;
     private boolean fragmentResume = false;
     private boolean fragmentVisible = false;
-    private ProgressBar progressBar;
     boolean isLastPageReached = true;
-    private SwipeRefreshLayout swipe_refresh_layout;
-    private LinearLayout searchTopicContainer;
-    private LinearLayout searchArticleContainer;
-    private TextView searchArticleShowMoreTextView;
-    private TextView searchTopicShowMoreTextView;
-    private TextView topicLabelTextView;
-    private TextView articleLabelTextView;
-    private boolean isShowMoreArticleRequest = false;
-    private boolean isShowMoreTopicRequest = false;
-    private String showMoreType = "";
     private int articleShowMoreIndex = 0;
     private int topicShowMoreIndex = 0;
     private SearchAllArticlesTopicsListingAdapter adapter;
@@ -86,6 +71,8 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
 
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
+
         adapter = new SearchAllArticlesTopicsListingAdapter(getActivity(), this);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -113,9 +100,6 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
     }
 
     private void newSearchTopicArticleListingApi(String searchName, String type) {
-        if (nextPageNumber == 1 && null != progressBar) {
-            progressBar.setVisibility(View.VISIBLE);
-        }
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
             ((SearchAllActivity) getActivity()).showToast("No connectivity available");
             return;
@@ -146,23 +130,20 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
         @Override
         public void onResponse(Call<SearchResponse> call, retrofit2.Response<SearchResponse> response) {
             isReuqestRunning = false;
-//            progressBar.setVisibility(View.INVISIBLE);
-//            if (mLodingView.getVisibility() == View.VISIBLE) {
-//                mLodingView.setVisibility(View.GONE);
-//            }
             if (response == null || response.body() == null) {
                 ((SearchAllActivity) getActivity()).showToast("Something went wrong from server");
                 return;
             }
             try {
-                SearchResponse responseData = (SearchResponse) response.body();
+                SearchResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     processResponseArticle(responseData);
                     processResponseTopic(responseData);
                     adapter.setListData(data);
                     adapter.notifyDataSetChanged();
-//                    addSearchArticleView(responseData);
-//                    addSearchTopicView(responseData);
+                    if (articleShowMoreIndex == 0 && topicShowMoreIndex == 0 && data.size() == 0) {
+                        noBlogsTextView.setVisibility(View.VISIBLE);
+                    }
                 } else {
                     ((SearchAllActivity) getActivity()).showToast(responseData.getReason());
                 }
@@ -176,10 +157,6 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
 
         @Override
         public void onFailure(Call<SearchResponse> call, Throwable t) {
-//            progressBar.setVisibility(View.GONE);
-//            if (mLodingView.getVisibility() == View.VISIBLE) {
-//                mLodingView.setVisibility(View.GONE);
-//            }
             if (null != getActivity()) {
                 ((SearchAllActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
             }
@@ -265,7 +242,7 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
         if (null != data) {
             data.clear();
         }
-        showMoreType = "";
+        noBlogsTextView.setVisibility(View.GONE);
         nextPageNumber = 1;
         isLastPageReached = true;
         searchName = searchText;
@@ -280,79 +257,10 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
         searchName = searchTxt;
     }
 
-    private void addSearchArticleView(SearchResponse responseData) {
-        if (showMoreType.equals("topic")) {
-            return;
-        }
-        if (StringUtils.isNullOrEmpty(showMoreType)) {
-            searchArticleContainer.removeAllViews();
-        }
-        ArrayList<SearchArticleResult> dataList = responseData.getData().getResult().getArticle();
-        if (dataList.size() == 0 && searchArticleContainer.getChildCount() == 0) {
-            articleLabelTextView.setVisibility(View.GONE);
-            searchArticleContainer.setVisibility(View.GONE);
-            searchArticleShowMoreTextView.setVisibility(View.GONE);
-        } else {
-            articleLabelTextView.setVisibility(View.VISIBLE);
-            searchArticleContainer.setVisibility(View.VISIBLE);
-            searchArticleShowMoreTextView.setVisibility(View.VISIBLE);
-            for (int i = 0; i < dataList.size(); i++) {
-                SearchArticlesView searchArticlesView = new SearchArticlesView(getActivity());
-                searchArticlesView.setArticleTitleTextView(dataList.get(i).getTitle());
-                searchArticlesView.setArticleDescTextView(dataList.get(i).getBody());
-                searchArticlesView.setArticleImageView(dataList.get(i).getImage());
-                searchArticleContainer.addView(searchArticlesView);
-            }
-            if (dataList.size() < limit) {
-                searchArticleShowMoreTextView.setVisibility(View.GONE);
-            }
-        }
-    }
-
-    private void addSearchTopicView(SearchResponse responseData) {
-        if (showMoreType.equals("article")) {
-            return;
-        }
-        if (StringUtils.isNullOrEmpty(showMoreType)) {
-            searchTopicContainer.removeAllViews();
-        }
-        ArrayList<SearchTopicResult> dataList = responseData.getData().getResult().getTopic();
-        if (dataList.size() == 0 && searchTopicContainer.getChildCount() == 0) {
-            topicLabelTextView.setVisibility(View.GONE);
-            searchTopicContainer.setVisibility(View.GONE);
-            searchTopicShowMoreTextView.setVisibility(View.GONE);
-        } else {
-            topicLabelTextView.setVisibility(View.VISIBLE);
-            searchTopicContainer.setVisibility(View.VISIBLE);
-            searchTopicShowMoreTextView.setVisibility(View.VISIBLE);
-            for (int i = 0; i < dataList.size(); i++) {
-                SearchArticlesView searchArticlesView = new SearchArticlesView(getActivity());
-                searchArticlesView.setArticleTitleTextView(dataList.get(i).getTitle());
-                searchTopicContainer.addView(searchArticlesView);
-            }
-            if (dataList.size() < limit) {
-                searchTopicShowMoreTextView.setVisibility(View.GONE);
-            }
-        }
-    }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-//            case R.id.searchArticleShowMoreTextView:
-//                if (!isReuqestRunning) {
-//                    showMoreType = "article";
-//                    isReuqestRunning = true;
-//                    newSearchTopicArticleListingApi(searchName, "article");
-//                }
-//                break;
-//            case R.id.searchTopicShowMoreTextView:
-//                if (!isReuqestRunning) {
-//                    showMoreType = "topic";
-//                    isReuqestRunning = true;
-//                    newSearchTopicArticleListingApi(searchName, "topic");
-//                    break;
-//                }
         }
     }
 
@@ -396,9 +304,7 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
         }
     }
 
-
     public class SearchArticleTopicResult {
-
         private String id;
         private String userId;
         private String titleSlug;

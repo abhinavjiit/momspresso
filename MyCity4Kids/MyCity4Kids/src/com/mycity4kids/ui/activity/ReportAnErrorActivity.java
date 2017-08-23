@@ -77,8 +77,8 @@ public class ReportAnErrorActivity extends BaseActivity implements
         separator.setVisibility(View.GONE);
         //	((TextView) findViewById(R.id.btnReportError)).setOnClickListener(this);
 //		((ImageView) findViewById(R.id.cross_icon)).setOnClickListener(this);
-        ((TextView) findViewById(R.id.backbtn)).setOnClickListener(this);
-        ((TextView) findViewById(R.id.save)).setOnClickListener(this);
+        findViewById(R.id.backbtn).setOnClickListener(this);
+        findViewById(R.id.save).setOnClickListener(this);
         //headerText.setText("Report an Error");
 
 

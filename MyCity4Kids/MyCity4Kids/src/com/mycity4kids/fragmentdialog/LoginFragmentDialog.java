@@ -39,8 +39,8 @@ public class LoginFragmentDialog extends DialogFragment implements OnClickListen
 		dialog.setContentView(R.layout.login_alert_dialog);  
 		dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));    
 		dialog.show();  
-		((Button) dialog.findViewById(R.id.login_btn)).setOnClickListener(this);  
-		((Button) dialog.findViewById(R.id.cancelBtn)).setOnClickListener(this);
+		dialog.findViewById(R.id.login_btn).setOnClickListener(this);
+		dialog.findViewById(R.id.cancelBtn).setOnClickListener(this);
 
 
 		return dialog;  

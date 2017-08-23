@@ -61,11 +61,11 @@ public class HomeCategoryActivity extends BaseActivity implements OnClickListene
 			mNoResultTxt=(TextView)findViewById(R.id.no_result);
 			mBusinessSearch=(ImageView)findViewById(R.id.business_search_img);
 			mParentLout=(LinearLayout)findViewById(R.id.parent_laout);
-			((LinearLayout)findViewById(R.id.searchLout)).setOnClickListener(this);
+			findViewById(R.id.searchLout).setOnClickListener(this);
 
 
-			((ImageView)findViewById(R.id.write_a_review)).setOnClickListener(this);
-			((ImageView)findViewById(R.id.parentingStop)).setOnClickListener(this);
+			findViewById(R.id.write_a_review).setOnClickListener(this);
+			findViewById(R.id.parentingStop).setOnClickListener(this);
 
 			setHeader();
 			mCategoryExpandList=(ExpandableListView)findViewById(R.id.expandable_list);
@@ -200,9 +200,9 @@ public class HomeCategoryActivity extends BaseActivity implements OnClickListene
 
 			startActivity(new Intent(HomeCategoryActivity.this, WriteReviewActivity.class));
 			break;
-		case R.id.alphaView:
-			mCategoryExpandList.bringToFront();
-			break;
+//		case R.id.alphaView:
+//			mCategoryExpandList.bringToFront();
+//			break;
 		case R.id.searchLout:
 			Intent intent=new Intent(HomeCategoryActivity.this,AutoSuggestTransparentDialogActivity.class);
 			startActivity(intent);

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -88,10 +87,6 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
         toolbarRelativeLayout = (RelativeLayout) mToolbar.findViewById(R.id.toolbarRelativeLayout);
         toolbarTitleTextView = (TextView) mToolbar.findViewById(R.id.toolbarTitle);
 
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-
         mToolbar.setVisibility(View.VISIBLE);
 
         findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely));
@@ -112,12 +107,15 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
         } else {
             toolbarTitleTextView.setText(getString(R.string.article_listing_toolbar_title_editor_picks));
         }
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         articleDataModelsNew = new ArrayList<ArticleListingResult>();
         nextPageNumber = 1;
         hitArticleListingApi(nextPageNumber, sortType, false);
 
-        swipeRefreshLayout.setOnRefreshListener((SwipeRefreshLayout.OnRefreshListener) this);
+        swipeRefreshLayout.setOnRefreshListener(this);
 
         articlesListingAdapter = new MainArticleListingAdapter(this);
         articlesListingAdapter.setListingType(sortType);
@@ -150,7 +148,7 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
 
                 Intent intent = new Intent(ArticleListingActivity.this, ArticleDetailsContainerActivity.class);
                 if (adapterView.getAdapter() instanceof MainArticleListingAdapter) {
-                    ArticleListingResult parentingListData = (ArticleListingResult) ((MainArticleListingAdapter) adapterView.getAdapter()).getItem(i);
+                    ArticleListingResult parentingListData = (ArticleListingResult) adapterView.getAdapter().getItem(i);
                     intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
                     intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
                     intent.putExtra(Constants.BLOG_SLUG, parentingListData.getBlogPageSlug());
@@ -214,7 +212,7 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
                 return;
             }
             try {
-                ArticleListingResponse responseData = (ArticleListingResponse) response.body();
+                ArticleListingResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     processForYouResponse(responseData);
 //                    notificationCenterResultArrayList.addAll(responseData.getData().getResult());
@@ -426,31 +424,10 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-//        if (Constants.KEY_FOR_YOU.equals(sortType)) {
-//            getMenuInflater().inflate(R.menu.menu_followed_topics, menu);
-//        } else {
-//            getMenuInflater().inflate(R.menu.menu_search, menu);
-//        }
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
-                break;
-            case R.id.search:
-                Intent intent = new Intent(getApplicationContext(), SearchAllActivity.class);
-                intent.putExtra(Constants.FILTER_NAME, "");
-                intent.putExtra(Constants.TAB_POSITION, 0);
-                startActivity(intent);
-                break;
-            case R.id.addTopics:
-                Intent addTopicsIntent = new Intent(this, TopicsSplashActivity.class);
-                addTopicsIntent.putExtra(AppConstants.IS_ADD_MORE_TOPIC, true);
-                startActivity(addTopicsIntent);
                 break;
         }
         return true;

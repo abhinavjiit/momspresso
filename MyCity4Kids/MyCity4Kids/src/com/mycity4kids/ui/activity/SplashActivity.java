@@ -489,7 +489,7 @@ public class SplashActivity extends BaseActivity {
                 return;
             }
             try {
-                FollowUnfollowCategoriesResponse responseData = (FollowUnfollowCategoriesResponse) response.body();
+                FollowUnfollowCategoriesResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     ArrayList<String> mDatalist = (ArrayList<String>) responseData.getData();
                     SharedPrefUtils.setFollowedTopicsCount(SplashActivity.this, mDatalist.size());
@@ -686,7 +686,7 @@ public class SplashActivity extends BaseActivity {
                 return;
             }
             try {
-                ForceUpdateModel responseData = (ForceUpdateModel) response.body();
+                ForceUpdateModel responseData = response.body();
                 if (responseData.getResponseCode() == 200) {
                     if (responseData.getResult().getData().getIsAppUpdateRequired() == 1) {
                         SharedPrefUtils.setAppUgrade(SplashActivity.this, true);

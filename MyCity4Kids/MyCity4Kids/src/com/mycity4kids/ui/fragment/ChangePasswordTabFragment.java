@@ -88,7 +88,7 @@ public class ChangePasswordTabFragment extends BaseFragment implements View.OnCl
 //                showToast(getString(R.string.went_wrong));
                 return;
             }
-            ChangePasswordResponse responseData = (ChangePasswordResponse) response.body();
+            ChangePasswordResponse responseData = response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                 Toast.makeText(getActivity(), getString(R.string.app_settings_change_pass_pass_update_success), Toast.LENGTH_SHORT).show();
             } else {

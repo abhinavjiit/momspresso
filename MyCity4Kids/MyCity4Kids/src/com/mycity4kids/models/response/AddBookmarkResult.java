@@ -5,6 +5,7 @@ package com.mycity4kids.models.response;
  */
 public class AddBookmarkResult {
     private String id;
+    private String articleId;
 
     public String getBookmarkId() {
         return id;
@@ -12,5 +13,13 @@ public class AddBookmarkResult {
 
     public void setBookmarkId(String id) {
         this.id = id;
+    }
+
+    public String getArticleId() {
+        return articleId;
+    }
+
+    public void setArticleId(String articleId) {
+        this.articleId = articleId;
     }
 }

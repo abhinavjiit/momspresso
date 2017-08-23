@@ -67,7 +67,7 @@ public class SearchTopicsSplashAdapter extends BaseAdapter implements Filterable
 //            }
 //        }
         for (int i = 0; i < allItems.size(); i++) {
-            LinearLayout lll = (LinearLayout) ((FlowLayout) ((RelativeLayout) childAt).findViewById(R.id.rootView)).getChildAt(i);
+            LinearLayout lll = (LinearLayout) ((FlowLayout) childAt.findViewById(R.id.rootView)).getChildAt(i);
             final TextView tv = (TextView) ((LinearLayout) lll.getChildAt(0)).getChildAt(0);
 //            tv.setText(allItems.get(i).getDisplay_name().toUpperCase());
 //            tv.setTag(allItems.get(i));
@@ -83,7 +83,7 @@ public class SearchTopicsSplashAdapter extends BaseAdapter implements Filterable
     public void deselectAllItems(View childAt) {
         List<Topics> allItems = filteredSelectTopicArrayList.get(0).getChildTopics();
         for (int i = 0; i < allItems.size(); i++) {
-            LinearLayout lll = (LinearLayout) ((FlowLayout) ((RelativeLayout) childAt).findViewById(R.id.rootView)).getChildAt(i);
+            LinearLayout lll = (LinearLayout) ((FlowLayout) childAt.findViewById(R.id.rootView)).getChildAt(i);
             final TextView tv = (TextView) ((LinearLayout) lll.getChildAt(0)).getChildAt(0);
             final LinearLayout ll_main = (LinearLayout) lll.getChildAt(0);
             selectedTopicsMap.remove(((Topics) tv.getTag()).getId());

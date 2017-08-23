@@ -12,10 +12,6 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.mycity4kids.R;
-import com.mycity4kids.ui.activity.ActivityCreateAppointment;
-import com.mycity4kids.ui.activity.ActivityCreateTask;
-import com.mycity4kids.ui.activity.ActivityEditAppointment;
-import com.mycity4kids.ui.activity.ActivityEditTask;
 
 import java.util.ArrayList;
 
@@ -97,17 +93,17 @@ public class DaysFragment extends android.app.DialogFragment implements View.OnC
                 if (edit) {
 
                     if (ifTask.equalsIgnoreCase("task")) {
-                        ((ActivityEditTask) getActivity()).setRepeat("", "Days", getDays());
+//                        ((ActivityEditTask) getActivity()).setRepeat("", "Days", getDays());
                     } else {
-                        ((ActivityEditAppointment) getActivity()).setRepeat("", "Days", getDays());
+//                        ((ActivityEditAppointment) getActivity()).setRepeat("", "Days", getDays());
                     }
 
                 } else {
 
                     if (ifTask.equalsIgnoreCase("task")) {
-                        ((ActivityCreateTask) getActivity()).setRepeat("", "Days", getDays());
+//                        ((ActivityCreateTask) getActivity()).setRepeat("", "Days", getDays());
                     } else {
-                        ((ActivityCreateAppointment) getActivity()).setRepeat("", "Days", getDays());
+//                        ((ActivityCreateAppointment) getActivity()).setRepeat("", "Days", getDays());
                     }
                 }
 

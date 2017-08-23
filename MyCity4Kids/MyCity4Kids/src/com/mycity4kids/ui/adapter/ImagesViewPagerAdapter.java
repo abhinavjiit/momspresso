@@ -63,7 +63,7 @@ public class ImagesViewPagerAdapter extends PagerAdapter {
         View layout = infalter.inflate(R.layout.view_pager_item, null);
         ImageView imgQueue = (ImageView) layout.findViewById(R.id.imgItem);
 
-        ((ViewPager) container).addView(layout);
+        container.addView(layout);
 
         if(isFromAppointment){
             try {

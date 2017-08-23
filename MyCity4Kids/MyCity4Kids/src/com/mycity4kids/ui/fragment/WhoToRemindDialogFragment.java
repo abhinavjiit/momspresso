@@ -16,10 +16,6 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.dbtable.TableAdult;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.newmodels.AttendeeModel;
-import com.mycity4kids.ui.activity.ActivityCreateAppointment;
-import com.mycity4kids.ui.activity.ActivityCreateTask;
-import com.mycity4kids.ui.activity.ActivityEditAppointment;
-import com.mycity4kids.ui.activity.ActivityEditTask;
 import com.mycity4kids.ui.adapter.AttendeeCustomAdapter;
 
 import java.util.ArrayList;
@@ -70,7 +66,7 @@ public class WhoToRemindDialogFragment extends android.app.DialogFragment {
 
 
         TableAdult tableAdult = new TableAdult(BaseApplication.getInstance());
-        ArrayList<UserInfo> userInfos = (ArrayList<UserInfo>) tableAdult.getAllAdults();
+        ArrayList<UserInfo> userInfos = tableAdult.getAllAdults();
 
         ArrayList<AttendeeModel> attendeeList = new ArrayList<AttendeeModel>();
 
@@ -150,18 +146,18 @@ public class WhoToRemindDialogFragment extends android.app.DialogFragment {
                         if (edit) {
 
                             if (!StringUtils.isNullOrEmpty(iftask) && iftask.equalsIgnoreCase("iftask")) {
-                                ((ActivityEditTask) getActivity()).setWhoToRemind(adapter.getAttendeeList());
+//                                ((ActivityEditTask) getActivity()).setWhoToRemind(adapter.getAttendeeList());
                             } else {
-                                ((ActivityEditAppointment) getActivity()).setWhoToRemind(adapter.getAttendeeList());
+//                                ((ActivityEditAppointment) getActivity()).setWhoToRemind(adapter.getAttendeeList());
                             }
 
                             getDialog().dismiss();
                         } else {
 
                             if (!StringUtils.isNullOrEmpty(iftask) && iftask.equalsIgnoreCase("iftask")) {
-                                ((ActivityCreateTask) getActivity()).setWhoToRemind(adapter.getAttendeeList());
+//                                ((ActivityCreateTask) getActivity()).setWhoToRemind(adapter.getAttendeeList());
                             } else {
-                                ((ActivityCreateAppointment) getActivity()).setWhoToRemind(adapter.getAttendeeList());
+//                                ((ActivityCreateAppointment) getActivity()).setWhoToRemind(adapter.getAttendeeList());
                             }
 
                             getDialog().dismiss();
@@ -208,18 +204,6 @@ public class WhoToRemindDialogFragment extends android.app.DialogFragment {
     }
 
     private void openAddAdultDialog() {
-        AddAdultDialogFragment dialogFragment = new AddAdultDialogFragment();
 
-        Bundle args = new Bundle();
-        args.putStringArrayList("chkValues", chklist);
-        args.putBoolean("All", all);
-        args.putBoolean("edit", edit);
-        args.putString("iftask", iftask);
-        args.putString("dialogTitle", dialogTitle);
-        dialogFragment.setArguments(args);
-
-        dialogFragment.setTargetFragment(dialogFragment, 2);
-        dialogFragment.show(getFragmentManager(), "add_adult");
-        getDialog().dismiss();
     }
 }

@@ -199,7 +199,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
             progressBar.setVisibility(View.GONE);
             mLodingView.setVisibility(View.GONE);
             isReuqestRunning = false;
-            ArticleTagsImagesResponse responseModel = (ArticleTagsImagesResponse) response.body();
+            ArticleTagsImagesResponse responseModel = response.body();
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
@@ -295,12 +295,6 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
         }
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.menu_publish_article, menu);
-//        return true;
-//    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -321,7 +315,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
             jsonArray = new JSONArray(tags);
             for (int i = 0; i < jsonArray.length(); i++) {
                 HashMap<String, String> map = new HashMap<>();
-                String key = (String) jsonArray.getJSONObject(i).keys().next();
+                String key = jsonArray.getJSONObject(i).keys().next();
                 tagsKeyList.add(key);
                 map.put(key, jsonArray.getJSONObject(i).getString(key));
                 tagsList.add(map);
@@ -362,7 +356,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                              @Override
                              public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
                                  removeProgressDialog();
-                                 ArticleDraftResponse responseModel = (ArticleDraftResponse) response.body();
+                                 ArticleDraftResponse responseModel = response.body();
                                  if (response == null || response.body() == null) {
                                      NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                                      Crashlytics.logException(nee);
@@ -405,7 +399,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                     cityArray = new JSONArray(cities);
                     for (int i = 0; i < cityArray.length(); i++) {
                         HashMap<String, String> map = new HashMap<>();
-                        String key = (String) cityArray.getJSONObject(i).keys().next();
+                        String key = cityArray.getJSONObject(i).keys().next();
                         map.put(key, cityArray.getJSONObject(i).getString(key));
                         cityList.add(map);
                     }
@@ -427,7 +421,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                         showToast("Something went wrong from server");
                         return;
                     }
-                    ArticleDraftResponse responseModel = (ArticleDraftResponse) response.body();
+                    ArticleDraftResponse responseModel = response.body();
                     if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
                         id = responseModel.getData().get(0).getResult().getId() + "";
                         Intent intent = new Intent(ArticleImageTagUploadActivity.this, ArticleModerationOrShareActivity.class);
@@ -469,7 +463,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
         call.enqueue(new Callback<BlogPageResponse>() {
             @Override
             public void onResponse(Call<BlogPageResponse> call, retrofit2.Response<BlogPageResponse> response) {
-                BlogPageResponse responseModel = (BlogPageResponse) response
+                BlogPageResponse responseModel = response
                         .body();
                 removeProgressDialog();
                 if (responseModel.getCode() != 200) {

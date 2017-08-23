@@ -64,7 +64,6 @@ public class HttpClientConnection extends Thread {
                 return statusCode == 200;
             }
         };
-        ;
     }
 
     public static HttpClientConnection getInstance() {
@@ -108,30 +107,30 @@ public class HttpClientConnection extends Thread {
     /**
      * {@link ServiceRequest} with {@link PRIORITY#HIGH} are executed before {@link ServiceRequest} with {@link PRIORITY#LOW}
      */
-    public static interface PRIORITY {
+    public interface PRIORITY {
         /**
          * When-ever a new {@link ServiceRequest} with {@link PRIORITY#LOW} is added,
          * it gets lower priority than previous requests with same priority.
          */
-        public static byte LOW = 0;
+        byte LOW = 0;
         /**
          * When-ever a new {@link ServiceRequest} with {@link PRIORITY#HIGH} is added,
          * it gets higher priority than previous requests with same priority.
          */
-        public static byte HIGH = 1;
+        byte HIGH = 1;
     }
 
-    public static interface HTTP_METHOD {
-        public static byte GET = 0;
-        public static byte POST = 1;
-        public static byte PUT = 2;
-        public static byte DELETE = 3;
+    public interface HTTP_METHOD {
+        byte GET = 0;
+        byte POST = 1;
+        byte PUT = 2;
+        byte DELETE = 3;
     }
 
     /**
      * Specific instance of StatusCodeChecker can be set in ServiceRequest
      */
-    public static interface StatusCodeChecker {
+    public interface StatusCodeChecker {
         boolean isSuccess(int statusCode);
     }
 
@@ -152,9 +151,9 @@ public class HttpClientConnection extends Thread {
 
     private boolean nextRequest() {
         if (highPriorityQueue.size() > 0) {
-            currentRequest = (ServiceRequest) highPriorityQueue.remove(0);
+            currentRequest = highPriorityQueue.remove(0);
         } else if (lowPriorityQueue.size() > 0) {
-            currentRequest = (ServiceRequest) lowPriorityQueue.remove(0);
+            currentRequest = lowPriorityQueue.remove(0);
         } else {
             currentRequest = null;
         }

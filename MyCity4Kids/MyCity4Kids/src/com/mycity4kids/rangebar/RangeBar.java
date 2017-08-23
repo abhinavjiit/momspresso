@@ -1477,22 +1477,22 @@ public class RangeBar extends View {
      */
     public interface OnRangeBarChangeListener {
 
-        public void onRangeChangeListener(RangeBar rangeBar, int leftPinIndex,
-                int rightPinIndex, String leftPinValue, String rightPinValue);
+        void onRangeChangeListener(RangeBar rangeBar, int leftPinIndex,
+                                   int rightPinIndex, String leftPinValue, String rightPinValue);
     }
 
     public interface PinTextFormatter {
 
-        public String getText(String value);
+        String getText(String value);
     }
 
     /**
      * @author robmunro
      *         A callback that allows getting pin text exernally
      */
-    public static interface OnRangeBarTextListener {
+    public interface OnRangeBarTextListener {
 
-        public String getPinValue(RangeBar rangeBar, int tickIndex);
+        String getPinValue(RangeBar rangeBar, int tickIndex);
     }
 
 

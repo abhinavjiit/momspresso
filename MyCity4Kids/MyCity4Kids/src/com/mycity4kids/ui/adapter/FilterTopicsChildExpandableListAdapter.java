@@ -166,7 +166,7 @@ public class FilterTopicsChildExpandableListAdapter extends BaseExpandableListAd
         if (childPosition != 0)
             holder.txtLocalityName.setText(localitySubCategoryChild.getDisplay_name().toUpperCase());
         else {
-            int count = mSubCategoriesChildMap.get((Topics) getGroup(groupPosition)).size() - 1;
+            int count = mSubCategoriesChildMap.get(getGroup(groupPosition)).size() - 1;
 //            holder.txtLocalityName.setText(localitySubCategoryChild.getTitle() + " (" + count + ")");
             holder.txtLocalityName.setText(localitySubCategoryChild.getDisplay_name().toUpperCase());
         }

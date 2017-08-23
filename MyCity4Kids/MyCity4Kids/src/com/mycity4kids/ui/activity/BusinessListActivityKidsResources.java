@@ -122,11 +122,8 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
 
     enum TabType {Filter, Sort}
 
-    ;
-
     public enum FilterType {SubCategory, Locality, AgeGroup, More, Activities, DateValue}
 
-    ;
     TabType chosen_tab;
     ArrayList<AdvancedSearch> advancedListFromDb;
     ArrayList<AdvancedSearch> advancedListFromSearch;
@@ -259,7 +256,7 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
                      * its related to search query adapter:
                      */
                     String whichAdapterDataIsLoaded = (String) parent.getTag();
-                    String listItem = (String) parent.getAdapter().getItem(pos).toString();
+                    String listItem = parent.getAdapter().getItem(pos).toString();
 
                     mQuerySearchEtxt.removeTextChangedListener(textWatcher);
                     if (!listItem.contains(",")) {
@@ -284,7 +281,7 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
 
 
                 } else if (parent.getAdapter() instanceof SubLocalityAdapter) {
-                    String listItem = (String) parent.getAdapter().getItem(pos).toString();
+                    String listItem = parent.getAdapter().getItem(pos).toString();
                     ///if(pos == 0 && ((SubLocalityAdapter)parent.getAdapter()).getSublocalities().get(0).equals("Current Location")) {
                     String queryData = mQuerySearchEtxt.getText().toString();
                     String locality = mLocalitySearchEtxt.getText().toString();
@@ -421,7 +418,7 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
         findViewById(R.id.txvSortBy).setOnClickListener(this);
         // findViewById(R.id.imgSearch).setOnClickListener(this);
         localityLayout = (LinearLayout) findViewById(R.id.localityLayout);
-        rltLoadingView = (RelativeLayout) findViewById(R.id.rltLoadingView);
+        rltLoadingView = findViewById(R.id.rltLoadingView);
         findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely));
         eventListView = (ListView) findViewById(R.id.eventListView);
         businessListView = (ListView) findViewById(R.id.searchResultListView);
@@ -549,7 +546,7 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
                 Intent intent = new Intent(BusinessListActivityKidsResources.this, BusinessDetailsActivity.class);
                 String businessId = null;
                 if (parent.getAdapter() instanceof BusinessListingAdapter) {
-                    BusinessDataListing businessListData = (BusinessDataListing) ((BusinessListingAdapter) parent.getAdapter()).getItem(pos);
+                    BusinessDataListing businessListData = (BusinessDataListing) parent.getAdapter().getItem(pos);
                     businessId = businessListData.getId();
                     intent.putExtra(Constants.CATEGORY_ID, categoryId);
                     intent.putExtra(Constants.BUSINESS_OR_EVENT_ID, businessId);
@@ -577,7 +574,7 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
                 Intent intent = new Intent(BusinessListActivityKidsResources.this, BusinessDetailsActivity.class);
                 String businessId = null;
                 if (parent.getAdapter() instanceof BusinessListingAdapter) {
-                    BusinessDataListing businessListData = (BusinessDataListing) ((BusinessListingAdapter) parent.getAdapter()).getItem(pos);
+                    BusinessDataListing businessListData = (BusinessDataListing) parent.getAdapter().getItem(pos);
                     businessId = businessListData.getId();
                     intent.putExtra(Constants.CATEGORY_ID, categoryId);
                     intent.putExtra(Constants.BUSINESS_OR_EVENT_ID, businessId);
@@ -597,14 +594,14 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
             Animation bottomUp = AnimationUtils.loadAnimation(this, R.anim.bottom_up);
             tab_host.startAnimation(bottomUp);
             tab_host.setVisibility(View.GONE);
-            ((TextView) findViewById(R.id.txvFilter)).setBackgroundColor(getResources().getColor(R.color.tab_unchecked));
+            findViewById(R.id.txvFilter).setBackgroundColor(getResources().getColor(R.color.tab_unchecked));
 
 
         } else if (pager_view.getVisibility() == View.VISIBLE && businessOrEventType == Constants.EVENT_PAGE_TYPE) {
             Animation bottomUp = AnimationUtils.loadAnimation(this, R.anim.bottom_up);
             bottomUp.setAnimationListener(makeTopGone);
             pager_view.startAnimation(bottomUp);
-            ((TextView) findViewById(R.id.txvFilter)).setBackgroundColor(getResources().getColor(R.color.tab_unchecked));
+            findViewById(R.id.txvFilter).setBackgroundColor(getResources().getColor(R.color.tab_unchecked));
         } else {
             finish();
         }
@@ -694,7 +691,7 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
                 if (!queryList.isEmpty()) {
                     businessListView.setVisibility(View.GONE);
                     mSearchList.setVisibility(View.VISIBLE);
-                    ((TextView) findViewById(R.id.txt_no_data_business)).setVisibility(View.GONE);
+                    findViewById(R.id.txt_no_data_business).setVisibility(View.GONE);
                     //mLoutProgress.setVisibility(View.GONE);
                     ArrayAdapter<String> mQueryAdapter = new ArrayAdapter<String>(BusinessListActivityKidsResources.this, R.layout.text_for_locality, queryList);
                     mSearchList.setAdapter(mQueryAdapter);
@@ -740,19 +737,19 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
                     businessAdapter.notifyDataSetChanged();
                     if (!mBusinessDataListings.isEmpty()) {
                         businessListView.setVisibility(View.VISIBLE);
-                        ((TextView) findViewById(R.id.txt_no_data_business)).setVisibility(View.GONE);
+                        findViewById(R.id.txt_no_data_business).setVisibility(View.GONE);
                     } else {
-                        ((TextView) findViewById(R.id.txt_no_data_business)).setVisibility(View.VISIBLE);
+                        findViewById(R.id.txt_no_data_business).setVisibility(View.VISIBLE);
                         businessListView.setVisibility(View.GONE);
                     }
                 } else if (responseData.getResponseCode() == 400) {
                     Constants.IS_PAGE_AVAILABLE = false;
                     if (mBusinessDataListings.isEmpty()) {
-                        ((TextView) findViewById(R.id.txt_no_data_business)).setVisibility(View.VISIBLE);
+                        findViewById(R.id.txt_no_data_business).setVisibility(View.VISIBLE);
                         businessListView.setVisibility(View.GONE);
                         eventListView.setVisibility(View.GONE);
                     } else {
-                        ((TextView) findViewById(R.id.txt_no_data_business)).setVisibility(View.GONE);
+                        findViewById(R.id.txt_no_data_business).setVisibility(View.GONE);
                         if (businessOrEventType == Constants.EVENT_PAGE_TYPE) {
                             eventListView.setVisibility(View.VISIBLE);
                         } else {
@@ -785,10 +782,10 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
 
                     businessAdapter.notifyDataSetChanged();
                     if (mBusinessDataListings.isEmpty()) {
-                        ((TextView) findViewById(R.id.txt_no_data_business)).setVisibility(View.VISIBLE);
+                        findViewById(R.id.txt_no_data_business).setVisibility(View.VISIBLE);
                         businessListView.setVisibility(View.GONE);
                     } else {
-                        ((TextView) findViewById(R.id.txt_no_data_business)).setVisibility(View.GONE);
+                        findViewById(R.id.txt_no_data_business).setVisibility(View.GONE);
                         if (businessOrEventType == Constants.EVENT_PAGE_TYPE) {
                             eventListView.setVisibility(View.VISIBLE);
                         } else {
@@ -804,15 +801,15 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
                         businessListView.setVisibility(View.GONE);
                         eventListView.setVisibility(View.GONE);
                         if (businessOrEventType == Constants.EVENT_PAGE_TYPE) {
-                            ((TextView) findViewById(R.id.txt_no_data_business)).setVisibility(View.VISIBLE);
+                            findViewById(R.id.txt_no_data_business).setVisibility(View.VISIBLE);
                             ((TextView) findViewById(R.id.txt_no_data_business)).setText(getString(R.string.event_list));
                         } else {
-                            ((TextView) findViewById(R.id.txt_no_data_business)).setVisibility(View.VISIBLE);
+                            findViewById(R.id.txt_no_data_business).setVisibility(View.VISIBLE);
                         }
 
                         //	businessListView.setVisibility(View.GONE);
                     } else {
-                        ((TextView) findViewById(R.id.txt_no_data_business)).setVisibility(View.GONE);
+                        findViewById(R.id.txt_no_data_business).setVisibility(View.GONE);
                         if (businessOrEventType == Constants.EVENT_PAGE_TYPE) {
                             eventListView.setVisibility(View.VISIBLE);
                         } else {
@@ -842,19 +839,19 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
                     businessAdapter.notifyDataSetChanged();
                     if (!mBusinessDataListings.isEmpty()) {
                         businessListView.setVisibility(View.VISIBLE);
-                        ((TextView) findViewById(R.id.txt_no_data_business)).setVisibility(View.GONE);
+                        findViewById(R.id.txt_no_data_business).setVisibility(View.GONE);
                     } else {
-                        ((TextView) findViewById(R.id.txt_no_data_business)).setVisibility(View.VISIBLE);
+                        findViewById(R.id.txt_no_data_business).setVisibility(View.VISIBLE);
                         businessListView.setVisibility(View.GONE);
                     }
                 } else if (responseData.getResponseCode() == 400) {
                     Constants.IS_PAGE_AVAILABLE = false;
                     if (mBusinessDataListings.isEmpty()) {
-                        ((TextView) findViewById(R.id.txt_no_data_business)).setVisibility(View.VISIBLE);
+                        findViewById(R.id.txt_no_data_business).setVisibility(View.VISIBLE);
                         businessListView.setVisibility(View.GONE);
                         eventListView.setVisibility(View.GONE);
                     } else {
-                        ((TextView) findViewById(R.id.txt_no_data_business)).setVisibility(View.GONE);
+                        findViewById(R.id.txt_no_data_business).setVisibility(View.GONE);
                         if (businessOrEventType == Constants.EVENT_PAGE_TYPE) {
                             eventListView.setVisibility(View.VISIBLE);
                         } else {
@@ -1149,7 +1146,7 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
     @Override
     public void onTabChanged(String arg0) {
 
-        ((TextView) findViewById(R.id.txt_no_data_business)).setVisibility(View.GONE);
+        findViewById(R.id.txt_no_data_business).setVisibility(View.GONE);
 
         //	Toast.makeText(BusinessListActivity.this, "call "+arg0, Toast.LENGTH_SHORT).show();
 
@@ -1696,8 +1693,8 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
 
     @Override
     public void cancel(int type) {
-        ((TextView) findViewById(R.id.txvSortBy)).setBackgroundColor(getResources().getColor(R.color.tab_unchecked));
-        ((TextView) findViewById(R.id.txvFilter)).setBackgroundColor(getResources().getColor(R.color.tab_unchecked));
+        findViewById(R.id.txvSortBy).setBackgroundColor(getResources().getColor(R.color.tab_unchecked));
+        findViewById(R.id.txvFilter).setBackgroundColor(getResources().getColor(R.color.tab_unchecked));
 
         Animation bottomUp = AnimationUtils.loadAnimation(this, R.anim.bottom_up);
         bottomUp.setAnimationListener(makeTopGoneTabHost);
@@ -1707,8 +1704,8 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
 
     @Override
     public void reject(int type) {
-        ((TextView) findViewById(R.id.txvSortBy)).setBackgroundColor(getResources().getColor(R.color.tab_unchecked));
-        ((TextView) findViewById(R.id.txvFilter)).setBackgroundColor(getResources().getColor(R.color.tab_unchecked));
+        findViewById(R.id.txvSortBy).setBackgroundColor(getResources().getColor(R.color.tab_unchecked));
+        findViewById(R.id.txvFilter).setBackgroundColor(getResources().getColor(R.color.tab_unchecked));
         mFilterMap = new HashMap<MapTypeFilter, String>();
         mBusinessDataListings = new ArrayList<BusinessDataListing>();
         mPageCount = 1;
@@ -1778,7 +1775,7 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
                 Utils.pushEvent(BusinessListActivityKidsResources.this, GTMEventType.FILTER_RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Resources List");
 
                 if (chosen_tab == TabType.Filter) {
-                    ((TextView) findViewById(R.id.txt_no_data_business)).setVisibility(View.GONE);
+                    findViewById(R.id.txt_no_data_business).setVisibility(View.GONE);
                     //	tab_host.setVisibility(View.GONE) ;
 
                     if (tab_host.getVisibility() == View.GONE) {
@@ -1792,14 +1789,14 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
                         Animation bottomUp = AnimationUtils.loadAnimation(this, R.anim.bottom_down);
                         tab_host.startAnimation(bottomUp);
                         tab_host.setVisibility(View.VISIBLE);
-                        ((TextView) findViewById(R.id.txvSortBy)).setBackgroundColor(getResources().getColor(R.color.tab_unchecked));
-                        ((TextView) findViewById(R.id.txvFilter)).setBackgroundColor(getResources().getColor(R.color.tab_checked));
+                        findViewById(R.id.txvSortBy).setBackgroundColor(getResources().getColor(R.color.tab_unchecked));
+                        findViewById(R.id.txvFilter).setBackgroundColor(getResources().getColor(R.color.tab_checked));
                     } else {
                         Animation bottomUp = AnimationUtils.loadAnimation(this, R.anim.bottom_up);
                         tab_host.startAnimation(bottomUp);
                         tab_host.setVisibility(View.GONE);
                         ///	((TextView)findViewById(R.id.txvSortBy)).setBackgroundColor(getResources().getColor(R.color.tab_unchecked));
-                        ((TextView) findViewById(R.id.txvFilter)).setBackgroundColor(getResources().getColor(R.color.tab_unchecked));
+                        findViewById(R.id.txvFilter).setBackgroundColor(getResources().getColor(R.color.tab_unchecked));
 
                     }
                 } else {
@@ -1812,8 +1809,8 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
                     tab_host.startAnimation(bottomUp);
                     tab_host.setVisibility(View.VISIBLE);
                     pager_view.setVisibility(View.VISIBLE);
-                    ((TextView) findViewById(R.id.txvSortBy)).setBackgroundColor(getResources().getColor(R.color.tab_unchecked));
-                    ((TextView) findViewById(R.id.txvFilter)).setBackgroundColor(getResources().getColor(R.color.tab_checked));
+                    findViewById(R.id.txvSortBy).setBackgroundColor(getResources().getColor(R.color.tab_unchecked));
+                    findViewById(R.id.txvFilter).setBackgroundColor(getResources().getColor(R.color.tab_checked));
 
                 }
                 break;
@@ -2124,7 +2121,7 @@ public class BusinessListActivityKidsResources extends BaseActivity implements O
                         adapter.notifyDataSetChanged();
                         mSearchList.setVisibility(View.VISIBLE);
                         businessListView.setVisibility(View.GONE);
-                        ((TextView) findViewById(R.id.txt_no_data_business)).setVisibility(View.GONE);
+                        findViewById(R.id.txt_no_data_business).setVisibility(View.GONE);
                         mSearchList.setAdapter(adapter);
                         adapter.notifyDataSetChanged();
                         mSearchList.setTag(Constants.LOCALITY_LIST_TAG);

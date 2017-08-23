@@ -95,6 +95,6 @@ public class FamilyInvitesAdapter extends ArrayAdapter<FamilyInvites> {
     }
 
     public interface InvitationResponse {
-        public void onInvitationResponse(String response, int position);
+        void onInvitationResponse(String response, int position);
     }
 }

@@ -69,7 +69,7 @@ public class AddArticleTopicsTabFragment extends BaseFragment implements AddArti
         selectedTopicsMap = new HashMap<>();
         selectTopic = getArguments().getParcelableArrayList("selectTopicList");
         position = getArguments().getInt("position");
-        previouslyFollowedTopics = (ArrayList<String>) getArguments().getStringArrayList("previouslyFollowedTopics");
+        previouslyFollowedTopics = getArguments().getStringArrayList("previouslyFollowedTopics");
         processTopicsDataForList();
         createTopicsData(null);
 //        trendingArraylist = new ArrayList<>();

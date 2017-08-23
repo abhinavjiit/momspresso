@@ -6,6 +6,8 @@
     android:layout_height="wrap_content"
     android:background="@color/white_color">
 
+    //Change View hierarchy with caution. getParent method is in use in the class file
+
     <RelativeLayout
         android:id="@+id/relativeMainContainer"
         android:layout_width="match_parent"
@@ -16,7 +18,7 @@
         android:paddingTop="8dp">
 
         <ImageView
-            android:id="@+id/network_img"
+            android:id="@+id/commentorImageView"
             android:layout_width="@dimen/ad_comments_profile_pic_width"
             android:layout_height="@dimen/ad_comments_profile_pic_width"
             android:layout_alignParentLeft="true"
@@ -32,8 +34,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="3dp"
             android:layout_marginStart="3dp"
-            android:layout_toEndOf="@+id/network_img"
-            android:layout_toRightOf="@+id/network_img"
+            android:layout_toEndOf="@+id/commentorImageView"
+            android:layout_toRightOf="@+id/commentorImageView"
             android:ellipsize="end"
             android:maxLines="1"
             android:paddingLeft="5dp"

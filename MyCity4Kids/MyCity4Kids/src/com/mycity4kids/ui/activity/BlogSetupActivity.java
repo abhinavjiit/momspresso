@@ -155,7 +155,7 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                 return;
             }
 
-            UserDetailResponse responseData = (UserDetailResponse) response.body();
+            UserDetailResponse responseData = response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
                 blogTitleEditText.setText(responseData.getData().get(0).getResult().getBlogTitle());
@@ -189,7 +189,7 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                 return;
             }
             try {
-                CityConfigResponse responseData = (CityConfigResponse) response.body();
+                CityConfigResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 //                    mDatalist = responseData.getData().getResult().getCityData();
                     mDatalist = new ArrayList<>();
@@ -526,7 +526,7 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                 showToast(getString(R.string.went_wrong));
                 return;
             }
-            UserDetailResponse responseData = (UserDetailResponse) response.body();
+            UserDetailResponse responseData = response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                 saveCityData();
             } else {
@@ -624,7 +624,7 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                                 return;
                             }
 
-                            UserDetailResponse responseData = (UserDetailResponse) response.body();
+                            UserDetailResponse responseData = response.body();
                             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                                 Toast.makeText(BlogSetupActivity.this, "Successfully updated!", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(BlogSetupActivity.this, PushTokenService.class);

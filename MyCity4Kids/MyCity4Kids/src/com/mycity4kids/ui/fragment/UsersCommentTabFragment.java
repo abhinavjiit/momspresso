@@ -127,7 +127,7 @@ public class UsersCommentTabFragment extends BaseFragment implements UsersCommen
                 return;
             }
             try {
-                UserCommentsResponse responseData = (UserCommentsResponse) response.body();
+                UserCommentsResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     processCommentsResponse(responseData);
                 } else {

@@ -40,7 +40,6 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.widget.FacebookDialog;
 import com.getbase.floatingactionbutton.FloatingActionButton;
-import com.github.library.bubbleview.BubbleTextVew;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -66,7 +65,6 @@ import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.parentingdetails.CommentsData;
 import com.mycity4kids.models.request.ArticleDetailRequest;
 import com.mycity4kids.models.request.FollowUnfollowUserRequest;
-import com.mycity4kids.models.request.RecommendUnrecommendArticleRequest;
 import com.mycity4kids.models.response.AddCommentResponse;
 import com.mycity4kids.models.response.ArticleDetailResponse;
 import com.mycity4kids.models.response.ArticleRecommendationStatusResponse;
@@ -74,7 +72,6 @@ import com.mycity4kids.models.response.FBCommentResponse;
 import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
 import com.mycity4kids.models.response.ProfilePic;
-import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
 import com.mycity4kids.models.response.ViewCountResponse;
 import com.mycity4kids.models.response.VlogsDetailResponse;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
@@ -131,7 +128,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
     private LinearLayout commentLayout;
     private ProgressDialog mProgressDialog;
     private ObservableScrollView mScrollView;
-    private BubbleTextVew recommendSuggestion;
+    //    private BubbleTextVew recommendSuggestion;
     private TextView recentAuthorArticleHeading;
     private RelatedArticlesView relatedArticles1, relatedArticles2, relatedArticles3;
     private RelatedArticlesView trendingRelatedArticles1, trendingRelatedArticles2, trendingRelatedArticles3;
@@ -143,7 +140,6 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
     private FloatingActionButton commentFloatingActionButton;
     private ImageView authorImageView;
     private TextView followClick;
-    private EditText commentText;
     private LinearLayout commLayout;
     private Rect scrollBounds;
     private TextView authorTypeTextView, authorNameTextView;
@@ -208,7 +204,6 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
 
 //        youTubePlayerView.initialize(DeveloperKey.DEVELOPER_KEY, this);
         mScrollView = (ObservableScrollView) findViewById(R.id.scroll_view);
-        commentText = (EditText) findViewById(R.id.editCommentTxt);
         mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
         findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely));
 
@@ -242,7 +237,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
         likeArticleTextView.setOnClickListener(this);
         bookmarkArticleTextView.setOnClickListener(this);
 
-        recommendSuggestion = (BubbleTextVew) findViewById(R.id.recommendSuggestion);
+//        recommendSuggestion = (BubbleTextVew) findViewById(R.id.recommendSuggestion);
         tagsLayout = (FlowLayout) findViewById(R.id.tagsLayout);
         articleViewCountTextView = (TextView) findViewById(R.id.articleViewCountTextView);
 
@@ -258,7 +253,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
         followClick = (TextView) findViewById(R.id.follow_click);
         authorNameTextView.setOnClickListener(this);
 
-        initializeAnimations();
+//        initializeAnimations();
         mToolbar = (Toolbar) findViewById(R.id.anim_toolbar);
         backNavigationImageView = (ImageView) findViewById(R.id.backNavigationImageView);
         backNavigationImageView.setOnClickListener(this);
@@ -381,12 +376,12 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                recommendSuggestion.setVisibility(View.VISIBLE);
+//                recommendSuggestion.setVisibility(View.VISIBLE);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        recommendSuggestion.setVisibility(View.INVISIBLE);
-                        recommendSuggestion.startAnimation(hideRecommendAnim);
+//                        recommendSuggestion.setVisibility(View.INVISIBLE);
+//                        recommendSuggestion.startAnimation(hideRecommendAnim);
                     }
                 }, 5000);
             }
@@ -405,7 +400,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                recommendSuggestion.setVisibility(View.INVISIBLE);
+//                recommendSuggestion.setVisibility(View.INVISIBLE);
             }
 
             @Override
@@ -474,17 +469,6 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
         callRecentVideoArticles.enqueue(recentArticleResponseCallback);
     }
 
-    private void recommendUnrecommentArticleAPI(String status) {
-        if (recommendSuggestion.getVisibility() == View.VISIBLE) {
-            recommendSuggestion.setVisibility(View.INVISIBLE);
-        }
-        RecommendUnrecommendArticleRequest recommendUnrecommendArticleRequest = new RecommendUnrecommendArticleRequest();
-        recommendUnrecommendArticleRequest.setArticleId(videoId);
-        recommendUnrecommendArticleRequest.setStatus(status);
-        Call<RecommendUnrecommendArticleResponse> recommendUnrecommendArticle = vlogsListingAndDetailsAPI.recommendUnrecommendArticle(recommendUnrecommendArticleRequest);
-        recommendUnrecommendArticle.enqueue(recommendUnrecommendArticleResponseCallback);
-    }
-
     private void getFollowedTopicsList() {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         TopicsCategoryAPI topicsCategoryAPI = retrofit.create(TopicsCategoryAPI.class);
@@ -544,7 +528,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                 return;
             }
             try {
-                VlogsDetailResponse responseData = (VlogsDetailResponse) response.body();
+                VlogsDetailResponse responseData = response.body();
 //                newCommentLayout.setVisibility(View.VISIBLE);
                 updateUIfromResponse(responseData.getData().getResult());
                 if (StringUtils.isNullOrEmpty(authorId)) {
@@ -688,7 +672,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                 return;
             }
             try {
-                ViewCountResponse responseData = (ViewCountResponse) response.body();
+                ViewCountResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     articleViewCountTextView.setText(responseData.getData().get(0).getResult() + " Views");
                 } else {
@@ -714,7 +698,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                 showToast("Unable to fetch like status");
                 return;
             }
-            ArticleRecommendationStatusResponse responseData = (ArticleRecommendationStatusResponse) response.body();
+            ArticleRecommendationStatusResponse responseData = response.body();
             recommendationFlag = responseData.getData().getStatus();
 
             if ("0".equals(recommendationFlag)) {
@@ -802,7 +786,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
 
             try {
                 isLoading = false;
-                FBCommentResponse responseData = (FBCommentResponse) response.body();
+                FBCommentResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     ArrayList<CommentsData> dataList = responseData.getData().getResult();
                     pagination = responseData.getData().getPagination();
@@ -840,7 +824,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
         if (holder != null) {
             LayoutInflater inflater = LayoutInflater.from(this);
             View view = inflater.inflate(R.layout.custom_comment_cell, null);
-            holder.commentorsImage = (ImageView) view.findViewById(R.id.network_img);
+            holder.commentorsImage = (ImageView) view.findViewById(R.id.commentorImageView);
             holder.commentName = (TextView) view.findViewById(R.id.txvCommentTitle);
             holder.commentDescription = (TextView) view.findViewById(R.id.txvCommentDescription);
             holder.dateTxt = (TextView) view.findViewById(R.id.txvDate);
@@ -923,7 +907,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
         LayoutInflater inflater = LayoutInflater.from(this);
         View view = inflater.inflate(R.layout.custom_reply_cell, null);
         replyViewholder.replyIndicatorImageView = (ImageView) view.findViewById(R.id.replyIndicatorImageView);
-        replyViewholder.commentorsImage = (ImageView) view.findViewById(R.id.network_img);
+        replyViewholder.commentorsImage = (ImageView) view.findViewById(R.id.replierImageView);
         replyViewholder.commentName = (TextView) view.findViewById(R.id.txvCommentTitle);
         replyViewholder.commentDescription = (TextView) view.findViewById(R.id.txvCommentDescription);
         replyViewholder.dateTxt = (TextView) view.findViewById(R.id.txvDate);
@@ -996,7 +980,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
         if (holder != null) {
             LayoutInflater inflater = LayoutInflater.from(this);
             View view = inflater.inflate(R.layout.custom_comment_cell, null);
-            holder.commentorsImage = (ImageView) view.findViewById(R.id.network_img);
+            holder.commentorsImage = (ImageView) view.findViewById(R.id.commentorImageView);
             holder.commentName = (TextView) view.findViewById(R.id.txvCommentTitle);
             holder.commentDescription = (TextView) view.findViewById(R.id.txvCommentDescription);
             holder.dateTxt = (TextView) view.findViewById(R.id.txvDate);
@@ -1081,7 +1065,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                 return;
             }
             try {
-                FollowUnfollowUserResponse responseData = (FollowUnfollowUserResponse) response.body();
+                FollowUnfollowUserResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
                 } else {
@@ -1111,7 +1095,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                 return;
             }
             try {
-                FollowUnfollowUserResponse responseData = (FollowUnfollowUserResponse) response.body();
+                FollowUnfollowUserResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
                 } else {
@@ -1141,7 +1125,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                 return;
             }
 
-            ArticleDetailResponse responseData = (ArticleDetailResponse) response.body();
+            ArticleDetailResponse responseData = response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 //                bookmarkFlag = responseData.getData().getResult().getBookmarkStatus();
 //                if ("0".equals(bookmarkFlag)) {
@@ -1178,80 +1162,6 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
         }
     };
 
-    private Callback<RecommendUnrecommendArticleResponse> recommendUnrecommendArticleResponseCallback = new Callback<RecommendUnrecommendArticleResponse>() {
-        @Override
-        public void onResponse(Call<RecommendUnrecommendArticleResponse> call, retrofit2.Response<RecommendUnrecommendArticleResponse> response) {
-            if (response == null || null == response.body()) {
-                showToast("Something went wrong from server");
-                return;
-            }
-
-            try {
-                RecommendUnrecommendArticleResponse responseData = (RecommendUnrecommendArticleResponse) response.body();
-                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    if (null == responseData.getData() && responseData.getData().isEmpty()) {
-                        showToast(responseData.getReason());
-                    } else {
-                        showToast(responseData.getReason());
-                    }
-                } else {
-                    showToast(getString(R.string.server_went_wrong));
-                }
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-                showToast(getString(R.string.went_wrong));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<RecommendUnrecommendArticleResponse> call, Throwable t) {
-            handleExceptions(t);
-        }
-    };
-
-    private Callback<AddCommentResponse> addCommentsResponseCallback = new Callback<AddCommentResponse>() {
-        @Override
-        public void onResponse(Call<AddCommentResponse> call, retrofit2.Response<AddCommentResponse> response) {
-            removeProgressDialog();
-            if (response == null || null == response.body()) {
-                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
-                showToast("Something went wrong from server");
-                return;
-            }
-
-            AddCommentResponse responseData = (AddCommentResponse) response.body();
-            if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                showToast("Comment added successfully!");
-                ViewHolder vh = new ViewHolder();
-                CommentsData cd = new CommentsData();
-                cd.setId(responseData.getData().getId());
-                cd.setBody(commentText.getText().toString().trim());
-                cd.setUserId(SharedPrefUtils.getUserDetailModel(VlogsDetailActivity.this).getDynamoId());
-                cd.setName(SharedPrefUtils.getUserDetailModel(VlogsDetailActivity.this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(VlogsDetailActivity.this).getLast_name());
-                cd.setReplies(new ArrayList<CommentsData>());
-
-                ProfilePic profilePic = new ProfilePic();
-                profilePic.setClientApp(SharedPrefUtils.getProfileImgUrl(VlogsDetailActivity.this));
-                profilePic.setClientAppMin(SharedPrefUtils.getProfileImgUrl(VlogsDetailActivity.this));
-                cd.setProfile_image(profilePic);
-                cd.setCreate("" + System.currentTimeMillis() / 1000);
-                commentText.setText("");
-                displayComments(vh, cd, false);
-
-            } else {
-                showToast(responseData.getReason());
-            }
-        }
-
-        @Override
-        public void onFailure(Call<AddCommentResponse> call, Throwable t) {
-            removeProgressDialog();
-            handleExceptions(t);
-        }
-    };
-
     private Callback<VlogsListingResponse> bloggersArticleResponseCallback = new Callback<VlogsListingResponse>() {
         @Override
         public void onResponse(Call<VlogsListingResponse> call, retrofit2.Response<VlogsListingResponse> response) {
@@ -1265,7 +1175,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
             }
 
             try {
-                VlogsListingResponse responseData = (VlogsListingResponse) response.body();
+                VlogsListingResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     ArrayList<VlogsListingAndDetailResult> dataList = responseData.getData().get(0).getResult();
                     if (dataList == null) {
@@ -1347,7 +1257,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
             }
 
             try {
-                VlogsListingResponse responseData = (VlogsListingResponse) response.body();
+                VlogsListingResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     ArrayList<VlogsListingAndDetailResult> dataList = responseData.getData().get(0).getResult();
                     if (dataList == null) {
@@ -1426,7 +1336,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                 return;
             }
             try {
-                FollowUnfollowCategoriesResponse responseData = (FollowUnfollowCategoriesResponse) response.body();
+                FollowUnfollowCategoriesResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
                     ArrayList<String> previouslyFollowedTopics = (ArrayList<String>) responseData.getData();
@@ -1444,13 +1354,13 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
 
                             RelativeLayout topicView = (RelativeLayout) mInflater.inflate(R.layout.related_tags_view, null, false);
                             topicView.setClickable(true);
-                            ((TextView) topicView.getChildAt(0)).setTag(key);
-                            ((ImageView) topicView.getChildAt(2)).setTag(key);
+                            topicView.getChildAt(0).setTag(key);
+                            topicView.getChildAt(2).setTag(key);
                             ((TextView) topicView.getChildAt(0)).setText(value.toUpperCase());
                             if (null != previouslyFollowedTopics && previouslyFollowedTopics.contains(key)) {
 //                                ((TextView) topicView.getChildAt(0)).setBackgroundColor(ContextCompat.getColor(ArticlesAndBlogsDetailsActivity.this, R.color.home_green));
                                 ((ImageView) topicView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(VlogsDetailActivity.this, R.drawable.tick));
-                                ((ImageView) topicView.getChildAt(2)).setOnClickListener(new View.OnClickListener() {
+                                topicView.getChildAt(2).setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
                                         Log.d("TOPICS ----- ", "UNFOLLOW");
@@ -1459,7 +1369,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                                 });
                             } else {
                                 ((ImageView) topicView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(VlogsDetailActivity.this, R.drawable.follow_plus));
-                                ((ImageView) topicView.getChildAt(2)).setOnClickListener(new View.OnClickListener() {
+                                topicView.getChildAt(2).setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
                                         Log.d("TOPICS ----- ", "FOLLOW");
@@ -1468,7 +1378,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                                 });
                             }
 
-                            ((TextView) topicView.getChildAt(0)).setOnClickListener(new View.OnClickListener() {
+                            topicView.getChildAt(0).setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
 //                                    trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
@@ -1510,10 +1420,10 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
             Log.d("GTM FOLLOW", "displayName" + selectedTopic);
 //            Utils.pushEventFollowUnfollowTopic(this, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Video Details", "follow", ((TextView) tagView.getChildAt(0)).getText() + ":" + selectedTopic);
             Utils.pushTopicFollowUnfollowEvent(this, GTMEventType.FOLLOW_TOPIC_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Video Details", ((TextView) tagView.getChildAt(0)).getText() + "~" + selectedTopic);
-            ((TextView) tagView.getChildAt(0)).setTag(selectedTopic);
-            ((ImageView) tagView.getChildAt(2)).setTag(selectedTopic);
+            tagView.getChildAt(0).setTag(selectedTopic);
+            tagView.getChildAt(2).setTag(selectedTopic);
             ((ImageView) tagView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(VlogsDetailActivity.this, R.drawable.follow_plus));
-            ((ImageView) tagView.getChildAt(2)).setOnClickListener(new View.OnClickListener() {
+            tagView.getChildAt(2).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Log.d("TOPICS ----- ", "FOLLOW");
@@ -1524,10 +1434,10 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
             Log.d("GTM UNFOLLOW", "displayName" + selectedTopic);
 //            Utils.pushEventFollowUnfollowTopic(this, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Video Details", "unfollow", ((TextView) tagView.getChildAt(0)) + ":" + selectedTopic);
             Utils.pushTopicFollowUnfollowEvent(this, GTMEventType.UNFOLLOW_TOPIC_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Video Details", ((TextView) tagView.getChildAt(0)).getText() + "~" + selectedTopic);
-            ((TextView) tagView.getChildAt(0)).setTag(selectedTopic);
-            ((ImageView) tagView.getChildAt(2)).setTag(selectedTopic);
+            tagView.getChildAt(0).setTag(selectedTopic);
+            tagView.getChildAt(2).setTag(selectedTopic);
             ((ImageView) tagView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(VlogsDetailActivity.this, R.drawable.tick));
-            ((ImageView) tagView.getChildAt(2)).setOnClickListener(new View.OnClickListener() {
+            tagView.getChildAt(2).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Log.d("TOPICS ----- ", "UNFOLLOW");
@@ -1550,7 +1460,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                 return;
             }
             try {
-                FollowUnfollowCategoriesResponse responseData = (FollowUnfollowCategoriesResponse) response.body();
+                FollowUnfollowCategoriesResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     showToast(responseData.getReason());
                 } else {
@@ -1686,10 +1596,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
             mProgressDialog.setOnKeyListener(new Dialog.OnKeyListener() {
                 @Override
                 public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                    if (keyCode == KeyEvent.KEYCODE_CAMERA || keyCode == KeyEvent.KEYCODE_SEARCH) {
-                        return true; //
-                    }
-                    return false;
+                    return keyCode == KeyEvent.KEYCODE_CAMERA || keyCode == KeyEvent.KEYCODE_SEARCH;
                 }
             });
         }
@@ -1729,33 +1636,47 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                 case R.id.backNavigationImageView:
                     finish();
                     break;
-                case R.id.add_comment:
-                    break;
-                case R.id.network_img:
+                case R.id.txvCommentTitle:
+                case R.id.commentorImageView: {
                     CommentsData commentData = (CommentsData) ((View) v.getParent().getParent()).getTag();
                     if (!"fb".equals(commentData.getComment_type())) {
 //                        trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
 //                        trackArticleReadTime.resetTimer();
-                        Intent profileIntent = new Intent(this, BloggerProfileActivity.class);
-                        profileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, commentData.getUserId());
-                        profileIntent.putExtra(AppConstants.AUTHOR_NAME, "" + commentData.getName());
-                        profileIntent.putExtra(Constants.FROM_SCREEN, "Video Details Comment");
-                        startActivity(profileIntent);
+                        if (userDynamoId.equals(commentData.getUserId())) {
+                            Intent profileIntent = new Intent(this, DashboardActivity.class);
+                            profileIntent.putExtra("TabType", "profile");
+                            startActivity(profileIntent);
+                        } else {
+                            Intent profileIntent = new Intent(this, BloggerProfileActivity.class);
+                            profileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, commentData.getUserId());
+                            profileIntent.putExtra(AppConstants.AUTHOR_NAME, commentData.getName());
+                            profileIntent.putExtra(Constants.FROM_SCREEN, "Article Detail Comments");
+                            startActivity(profileIntent);
+                        }
+
                     }
-                    break;
-                case R.id.txvCommentTitle: {
-                    CommentsData cData = (CommentsData) ((View) v.getParent().getParent()).getTag();
-                    if (!"fb".equals(cData.getComment_type())) {
+                }
+                break;
+                case R.id.txvReplyTitle:
+                case R.id.replierImageView: {
+                    CommentsData commentData = (CommentsData) ((View) v.getParent()).getTag();
+                    if (!"fb".equals(commentData.getComment_type())) {
 //                        trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
 //                        trackArticleReadTime.resetTimer();
-                        Intent userProfileIntent = new Intent(this, BloggerProfileActivity.class);
-                        userProfileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, cData.getUserId());
-                        userProfileIntent.putExtra(AppConstants.AUTHOR_NAME, "" + cData.getName());
-                        userProfileIntent.putExtra(Constants.FROM_SCREEN, "Video Details Comment");
-                        startActivity(userProfileIntent);
+                        if (userDynamoId.equals(commentData.getUserId())) {
+                            Intent profileIntent = new Intent(this, DashboardActivity.class);
+                            profileIntent.putExtra("TabType", "profile");
+                            startActivity(profileIntent);
+                        } else {
+                            Intent profileIntent = new Intent(this, BloggerProfileActivity.class);
+                            profileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, commentData.getUserId());
+                            profileIntent.putExtra(AppConstants.AUTHOR_NAME, commentData.getName());
+                            profileIntent.putExtra(Constants.FROM_SCREEN, "Article Detail Comments");
+                            startActivity(profileIntent);
+                        }
                     }
-                    break;
                 }
+                break;
                 case R.id.follow_click:
                     followAPICall(authorId);
                     break;
@@ -1769,11 +1690,17 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                     if (AppConstants.USER_TYPE_USER.equals(authorType)) {
                         return;
                     }
-                    Intent intentnn = new Intent(this, BloggerProfileActivity.class);
-                    intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, authorId);
-                    intentnn.putExtra(AppConstants.AUTHOR_NAME, "" + author);
-                    intentnn.putExtra(Constants.FROM_SCREEN, "Video Details");
-                    startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
+                    if (userDynamoId.equals(authorId)) {
+                        Intent profileIntent = new Intent(this, DashboardActivity.class);
+                        profileIntent.putExtra("TabType", "profile");
+                        startActivity(profileIntent);
+                    } else {
+                        Intent intentnn = new Intent(this, BloggerProfileActivity.class);
+                        intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, authorId);
+                        intentnn.putExtra(AppConstants.AUTHOR_NAME, "" + author);
+                        intentnn.putExtra(Constants.FROM_SCREEN, "Video Details");
+                        startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
+                    }
                     break;
                 case R.id.relatedArticles1: {
                     Utils.pushEventRelatedArticle(VlogsDetailActivity.this, GTMEventType.RELATED_ARTICLE_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Video Detail", ((VlogsListingAndDetailResult) v.getTag()).getTitleSlug(), 1);
@@ -2150,8 +2077,8 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
 
     @Override
     public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
-        View view = (View) mScrollView.getChildAt(mScrollView.getChildCount() - 1);
-        View tagsView = (View) mScrollView.findViewById(R.id.recentAuthorArticles);
+        View view = mScrollView.getChildAt(mScrollView.getChildCount() - 1);
+        View tagsView = mScrollView.findViewById(R.id.recentAuthorArticles);
         Rect scrollBounds = new Rect();
         mScrollView.getHitRect(scrollBounds);
         int diff = (view.getBottom() - (mScrollView.getHeight() + mScrollView.getScrollY()));

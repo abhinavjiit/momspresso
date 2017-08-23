@@ -124,7 +124,7 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
                 return;
             }
             try {
-                NotificationCenterListResponse responseData = (NotificationCenterListResponse) response.body();
+                NotificationCenterListResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     processResponse(responseData);
 //                    notificationCenterResultArrayList.addAll(responseData.getData().getResult());
@@ -218,7 +218,7 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
                 return;
             }
             try {
-                NotificationCenterListResponse responseData = (NotificationCenterListResponse) response.body();
+                NotificationCenterListResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     paginationValue = "";
 //                    ((DashboardActivity) getActivity()).updateUnreadNotificationCount("0");

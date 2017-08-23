@@ -244,7 +244,7 @@ public class UserDraftArticleTabFragment extends BaseFragment implements View.On
 //                                 showToast(getString(R.string.went_wrong));
                                  return;
                              }
-                             ArticleDraftResponse responseModel = (ArticleDraftResponse) response.body();
+                             ArticleDraftResponse responseModel = response.body();
 
                              if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
                                  draftList.remove(position);

@@ -91,10 +91,7 @@ public class RecentlyViewController extends BaseController {
 		}
 */
         ExternalEventModel _requestModel = (ExternalEventModel) pRequestData;
-        if (_requestModel.isfromEvents())
-            fromEvents = true;
-        else
-            fromEvents = false;
+        fromEvents = _requestModel.isfromEvents();
 
         StringBuilder builder = new StringBuilder();
 //		if (! StringUtils.isNullOrEmpty(""+userId)) {

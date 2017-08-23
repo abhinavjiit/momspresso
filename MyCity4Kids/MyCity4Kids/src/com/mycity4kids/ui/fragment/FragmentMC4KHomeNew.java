@@ -79,7 +79,7 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
             }
 
             try {
-                TrendingListingResponse responseData = (TrendingListingResponse) response.body();
+                TrendingListingResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     processTrendingResponse(responseData);
                 } else {
@@ -228,7 +228,7 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
             }
 
             try {
-                NotificationCenterListResponse responseData = (NotificationCenterListResponse) response.body();
+                NotificationCenterListResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     ((DashboardActivity) getActivity()).updateUnreadNotificationCount(responseData.getData().getTotal());
                 } else {

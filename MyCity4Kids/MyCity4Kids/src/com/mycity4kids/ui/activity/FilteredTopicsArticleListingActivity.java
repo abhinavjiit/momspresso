@@ -154,8 +154,6 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         bottomOptionMenu = (RelativeLayout) findViewById(R.id.bottomOptionMenu);
         bottomMenuRecentSort = (TextView) findViewById(R.id.recentSort);
         bottomMenuPopularSort = (TextView) findViewById(R.id.popularSort);
-//        bottomUp = AnimationUtils.loadAnimation(this, R.anim.slide_up_from_bottom);
-//        bottomDown = AnimationUtils.loadAnimation(this, R.anim.slide_down_to_bottom);
         sortBgLayout = (FrameLayout) findViewById(R.id.sortBgLayout);
         sortTextView.setOnClickListener(this);
         filterTextView.setOnClickListener(this);
@@ -244,7 +242,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             }
             titleTextView.setText(displayName);
         }
-        swipeRefreshLayout.setOnRefreshListener((SwipeRefreshLayout.OnRefreshListener) FilteredTopicsArticleListingActivity.this);
+        swipeRefreshLayout.setOnRefreshListener(FilteredTopicsArticleListingActivity.this);
         progressBar.setVisibility(View.VISIBLE);
 
         articleDataModelsNew = new ArrayList<ArticleListingResult>();
@@ -320,7 +318,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
 
                 Intent intent = new Intent(FilteredTopicsArticleListingActivity.this, ArticleDetailsContainerActivity.class);
                 if (adapterView.getAdapter() instanceof MainArticleListingAdapter) {
-                    ArticleListingResult parentingListData = (ArticleListingResult) ((MainArticleListingAdapter) adapterView.getAdapter()).getItem(i);
+                    ArticleListingResult parentingListData = (ArticleListingResult) adapterView.getAdapter().getItem(i);
                     intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
                     intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
                     intent.putExtra(Constants.ARTICLE_COVER_IMAGE, parentingListData.getImageUrl());
@@ -388,7 +386,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             }
             swipeRefreshLayout.setRefreshing(false);
             try {
-                ArticleListingResponse responseData = (ArticleListingResponse) response.body();
+                ArticleListingResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     processArticleListingResponse(responseData);
                 } else {
@@ -816,7 +814,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                 return;
             }
 
-            TopicsFollowingStatusResponse responseData = (TopicsFollowingStatusResponse) response.body();
+            TopicsFollowingStatusResponse responseData = response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                 followingTopicStatus = responseData.getData().getStatus();
                 if ("0".equals(followingTopicStatus)) {
@@ -902,7 +900,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                 return;
             }
             try {
-                FollowUnfollowCategoriesResponse responseData = (FollowUnfollowCategoriesResponse) response.body();
+                FollowUnfollowCategoriesResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
                 } else {

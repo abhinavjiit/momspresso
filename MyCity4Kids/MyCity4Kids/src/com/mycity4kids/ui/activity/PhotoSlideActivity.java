@@ -35,7 +35,7 @@ public class PhotoSlideActivity extends BaseActivity{
 				
 		}
 		
-		((ImageView)findViewById(R.id.cross_icon)).setOnClickListener(new OnClickListener() {
+		findViewById(R.id.cross_icon).setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {

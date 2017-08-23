@@ -30,9 +30,9 @@ public class ImportCalDialogFragment extends android.app.DialogFragment implemen
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.aa_impot_calendar, container, false);
 
-        ((ImageView) view.findViewById(R.id.fb_events)).setOnClickListener(this);
-        ((ImageView) view.findViewById(R.id.google_events)).setOnClickListener(this);
-        ((TextView) view.findViewById(R.id.not_now)).setOnClickListener(this);
+        view.findViewById(R.id.fb_events).setOnClickListener(this);
+        view.findViewById(R.id.google_events).setOnClickListener(this);
+        view.findViewById(R.id.not_now).setOnClickListener(this);
 
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 

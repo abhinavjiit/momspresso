@@ -87,7 +87,7 @@ public class CompleteBloggerProfileActivity extends BaseActivity implements View
                 return;
             }
 
-            UserDetailResponse responseData = (UserDetailResponse) response.body();
+            UserDetailResponse responseData = response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                 if (responseData.getData().get(0).getResult().getKids() == null) {
                     rangebar.setRangePinsByValue(0, 0);
@@ -189,7 +189,7 @@ public class CompleteBloggerProfileActivity extends BaseActivity implements View
         ArrayList<KidsInfo> kidsInfoList = new ArrayList<KidsInfo>();
 
         for (int position = 0; position < childInfoContainer.getChildCount(); position++) {
-            View innerLayout = (View) childInfoContainer.getChildAt(position);
+            View innerLayout = childInfoContainer.getChildAt(position);
 
             final TextView dobOfKidSpn = (TextView) innerLayout.findViewById(R.id.kidsDOBTextView);
             RadioGroup genderRadioGroup = (RadioGroup) innerLayout.findViewById(R.id.genderRadioGroup);
@@ -244,7 +244,7 @@ public class CompleteBloggerProfileActivity extends BaseActivity implements View
             }
 
             try {
-                UserDetailResponse responseData = (UserDetailResponse) response.body();
+                UserDetailResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                 } else {
                     showToast("" + responseData.getReason());
@@ -311,7 +311,7 @@ public class CompleteBloggerProfileActivity extends BaseActivity implements View
         String timestamp = "";
         try {
             DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-            Date dateobj = (Date) formatter.parse(convertdate);
+            Date dateobj = formatter.parse(convertdate);
             timestamp = "" + (dateobj.getTime()) / 1000;
             return timestamp;
         } catch (ParseException e) {

@@ -81,7 +81,7 @@ public class LocalitiesFragment extends Fragment implements OnClickListener {
 		});*/
 
         final EditText _searchTxt = (EditText) view.findViewById(R.id.txt_search_locality);
-        _table = new LocalityTable((BaseApplication) (Context) getActivity().getApplication());
+        _table = new LocalityTable((BaseApplication) getActivity().getApplication());
         mZoneCityList = _table.getZoneModel();
         for (ZoneModel _zoneModel : mZoneCityList) {
             ArrayList<LocalityModel> localityList = new ArrayList<LocalityModel>();
@@ -95,9 +95,9 @@ public class LocalitiesFragment extends Fragment implements OnClickListener {
         _localityExpandAdapter = new LocalitiesAdapter(getActivity(), parentFragment);
         _localityExpandAdapter.setLocalityData(mZoneCityList, localityData);
         mLocalitiesExpandList.setAdapter(_localityExpandAdapter);
-        ((TextView) view.findViewById(R.id.list_reset)).setOnClickListener(this);
-        ((TextView) view.findViewById(R.id.list_apply)).setOnClickListener(this);
-        ((TextView) view.findViewById(R.id.cancel)).setOnClickListener(this);
+        view.findViewById(R.id.list_reset).setOnClickListener(this);
+        view.findViewById(R.id.list_apply).setOnClickListener(this);
+        view.findViewById(R.id.cancel).setOnClickListener(this);
         _searchTxt.addTextChangedListener(new TextWatcher() {
 
             @Override

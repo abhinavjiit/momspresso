@@ -45,7 +45,7 @@ public class ColorCode {
         Iterator myVeryOwnIterator = colorMap.keySet().iterator();
         while (myVeryOwnIterator.hasNext()) {
             String key = (String) myVeryOwnIterator.next();
-            String val = (String) colorMap.get(key);
+            String val = colorMap.get(key);
             if (val.equals(value)) {
                 return key;
             }

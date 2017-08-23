@@ -11,10 +11,6 @@ import android.widget.TextView;
 
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
-import com.mycity4kids.ui.activity.ActivityCreateAppointment;
-import com.mycity4kids.ui.activity.ActivityCreateTask;
-import com.mycity4kids.ui.activity.ActivityEditAppointment;
-import com.mycity4kids.ui.activity.ActivityEditTask;
 
 /**
  * Created by manish.soni on 30-06-2015.
@@ -166,19 +162,19 @@ public class OtherFragment extends android.app.DialogFragment implements View.On
 
                     if (!StringUtils.isNullOrEmpty(ifTask) && ifTask.equalsIgnoreCase("task")) {
                         if ((stringDWM.getValue() + "").equalsIgnoreCase("0")) {
-                            ((ActivityEditTask) getActivity()).setRepeat("Other", stringDWM.getValue() + "", valuesDays.getValue() + "");
+//                            ((ActivityEditTask) getActivity()).setRepeat("Other", stringDWM.getValue() + "", valuesDays.getValue() + "");
                         } else if ((stringDWM.getValue() + "").equalsIgnoreCase("1")) {
-                            ((ActivityEditTask) getActivity()).setRepeat("Other", stringDWM.getValue() + "", valuesWeeks.getValue() + "");
+//                            ((ActivityEditTask) getActivity()).setRepeat("Other", stringDWM.getValue() + "", valuesWeeks.getValue() + "");
                         } else if ((stringDWM.getValue() + "").equalsIgnoreCase("2")) {
-                            ((ActivityEditTask) getActivity()).setRepeat("Other", stringDWM.getValue() + "", valuesMonths.getValue() + "");
+//                            ((ActivityEditTask) getActivity()).setRepeat("Other", stringDWM.getValue() + "", valuesMonths.getValue() + "");
                         }
                     } else {
                         if ((stringDWM.getValue() + "").equalsIgnoreCase("0")) {
-                            ((ActivityEditAppointment) getActivity()).setRepeat("Other", stringDWM.getValue() + "", valuesDays.getValue() + "");
+//                            ((ActivityEditAppointment) getActivity()).setRepeat("Other", stringDWM.getValue() + "", valuesDays.getValue() + "");
                         } else if ((stringDWM.getValue() + "").equalsIgnoreCase("1")) {
-                            ((ActivityEditAppointment) getActivity()).setRepeat("Other", stringDWM.getValue() + "", valuesWeeks.getValue() + "");
+//                            ((ActivityEditAppointment) getActivity()).setRepeat("Other", stringDWM.getValue() + "", valuesWeeks.getValue() + "");
                         } else if ((stringDWM.getValue() + "").equalsIgnoreCase("2")) {
-                            ((ActivityEditAppointment) getActivity()).setRepeat("Other", stringDWM.getValue() + "", valuesMonths.getValue() + "");
+//                            ((ActivityEditAppointment) getActivity()).setRepeat("Other", stringDWM.getValue() + "", valuesMonths.getValue() + "");
                         }
                     }
 
@@ -187,19 +183,19 @@ public class OtherFragment extends android.app.DialogFragment implements View.On
 
                     if (!StringUtils.isNullOrEmpty(ifTask) && ifTask.equalsIgnoreCase("task")) {
                         if ((stringDWM.getValue() + "").equalsIgnoreCase("0")) {
-                            ((ActivityCreateTask) getActivity()).setRepeat("Other", stringDWM.getValue() + "", valuesDays.getValue() + "");
+//                            ((ActivityCreateTask) getActivity()).setRepeat("Other", stringDWM.getValue() + "", valuesDays.getValue() + "");
                         } else if ((stringDWM.getValue() + "").equalsIgnoreCase("1")) {
-                            ((ActivityCreateTask) getActivity()).setRepeat("Other", stringDWM.getValue() + "", valuesWeeks.getValue() + "");
+//                            ((ActivityCreateTask) getActivity()).setRepeat("Other", stringDWM.getValue() + "", valuesWeeks.getValue() + "");
                         } else if ((stringDWM.getValue() + "").equalsIgnoreCase("2")) {
-                            ((ActivityCreateTask) getActivity()).setRepeat("Other", stringDWM.getValue() + "", valuesMonths.getValue() + "");
+//                            ((ActivityCreateTask) getActivity()).setRepeat("Other", stringDWM.getValue() + "", valuesMonths.getValue() + "");
                         }
                     } else {
                         if ((stringDWM.getValue() + "").equalsIgnoreCase("0")) {
-                            ((ActivityCreateAppointment) getActivity()).setRepeat("Other", stringDWM.getValue() + "", valuesDays.getValue() + "");
+//                            ((ActivityCreateAppointment) getActivity()).setRepeat("Other", stringDWM.getValue() + "", valuesDays.getValue() + "");
                         } else if ((stringDWM.getValue() + "").equalsIgnoreCase("1")) {
-                            ((ActivityCreateAppointment) getActivity()).setRepeat("Other", stringDWM.getValue() + "", valuesWeeks.getValue() + "");
+//                            ((ActivityCreateAppointment) getActivity()).setRepeat("Other", stringDWM.getValue() + "", valuesWeeks.getValue() + "");
                         } else if ((stringDWM.getValue() + "").equalsIgnoreCase("2")) {
-                            ((ActivityCreateAppointment) getActivity()).setRepeat("Other", stringDWM.getValue() + "", valuesMonths.getValue() + "");
+//                            ((ActivityCreateAppointment) getActivity()).setRepeat("Other", stringDWM.getValue() + "", valuesMonths.getValue() + "");
                         }
                     }
 

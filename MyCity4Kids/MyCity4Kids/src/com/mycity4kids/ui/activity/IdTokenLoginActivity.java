@@ -101,7 +101,7 @@ public class IdTokenLoginActivity extends BaseActivity implements View.OnClickLi
             }
 
             try {
-                UserDetailResponse responseData = (UserDetailResponse) response.body();
+                UserDetailResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     UserInfo model = new UserInfo();
                     model.setId(responseData.getData().get(0).getResult().getId());

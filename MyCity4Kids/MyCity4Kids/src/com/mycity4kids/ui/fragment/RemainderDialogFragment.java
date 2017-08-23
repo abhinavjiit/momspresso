@@ -14,10 +14,6 @@ import android.widget.TextView;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.newmodels.AttendeeModel;
-import com.mycity4kids.ui.activity.ActivityCreateAppointment;
-import com.mycity4kids.ui.activity.ActivityCreateTask;
-import com.mycity4kids.ui.activity.ActivityEditAppointment;
-import com.mycity4kids.ui.activity.ActivityEditTask;
 import com.mycity4kids.ui.adapter.AttendeeCustomAdapter;
 
 import java.util.ArrayList;
@@ -102,11 +98,7 @@ public class RemainderDialogFragment extends android.app.DialogFragment implemen
     public boolean chkMinutesValidation(int minute) {
         boolean result = true;
         if (differenceMin != 0) {
-            if (minute <= differenceMin) {
-                result = true;
-            } else {
-                result = false;
-            }
+            result = minute <= differenceMin;
 
         }
 
@@ -125,17 +117,17 @@ public class RemainderDialogFragment extends android.app.DialogFragment implemen
                     if (edit)
 
                         if (ifTask.equalsIgnoreCase("task")) {
-                            ((ActivityEditTask) getActivity()).setRemainder("0 Minute", "0");
+//                            ((ActivityEditTask) getActivity()).setRemainder("0 Minute", "0");
                         } else {
-                            ((ActivityEditAppointment) getActivity()).setRemainder("0 Minute", "0");
+//                            ((ActivityEditAppointment) getActivity()).setRemainder("0 Minute", "0");
                         }
 
                     else {
 
                         if (ifTask.equalsIgnoreCase("task")) {
-                            ((ActivityCreateTask) getActivity()).setRemainder("0 Minute", "0");
+//                            ((ActivityCreateTask) getActivity()).setRemainder("0 Minute", "0");
                         } else {
-                            ((ActivityCreateAppointment) getActivity()).setRemainder("0 Minute", "0");
+//                            ((ActivityCreateAppointment) getActivity()).setRemainder("0 Minute", "0");
                         }
                     }
 
@@ -152,17 +144,17 @@ public class RemainderDialogFragment extends android.app.DialogFragment implemen
                     if (edit)
 
                         if (ifTask.equalsIgnoreCase("task")) {
-                            ((ActivityEditTask) getActivity()).setRemainder("5 Minutes", "5");
+//                            ((ActivityEditTask) getActivity()).setRemainder("5 Minutes", "5");
                         } else {
-                            ((ActivityEditAppointment) getActivity()).setRemainder("5 Minutes", "5");
+//                            ((ActivityEditAppointment) getActivity()).setRemainder("5 Minutes", "5");
                         }
 
                     else {
 
                         if (ifTask.equalsIgnoreCase("task")) {
-                            ((ActivityCreateTask) getActivity()).setRemainder("5 Minutes", "5");
+//                            ((ActivityCreateTask) getActivity()).setRemainder("5 Minutes", "5");
                         } else {
-                            ((ActivityCreateAppointment) getActivity()).setRemainder("5 Minutes", "5");
+//                            ((ActivityCreateAppointment) getActivity()).setRemainder("5 Minutes", "5");
                         }
                     }
 
@@ -181,17 +173,17 @@ public class RemainderDialogFragment extends android.app.DialogFragment implemen
                     if (edit)
 
                         if (ifTask.equalsIgnoreCase("task")) {
-                            ((ActivityEditTask) getActivity()).setRemainder("10 Minutes", "10");
+//                            ((ActivityEditTask) getActivity()).setRemainder("10 Minutes", "10");
                         } else {
-                            ((ActivityEditAppointment) getActivity()).setRemainder("10 Minutes", "10");
+//                            ((ActivityEditAppointment) getActivity()).setRemainder("10 Minutes", "10");
                         }
 
                     else {
 
                         if (ifTask.equalsIgnoreCase("task")) {
-                            ((ActivityCreateTask) getActivity()).setRemainder("10 Minutes", "10");
+//                            ((ActivityCreateTask) getActivity()).setRemainder("10 Minutes", "10");
                         } else {
-                            ((ActivityCreateAppointment) getActivity()).setRemainder("10 Minutes", "10");
+//                            ((ActivityCreateAppointment) getActivity()).setRemainder("10 Minutes", "10");
                         }
                     }
 
@@ -209,17 +201,17 @@ public class RemainderDialogFragment extends android.app.DialogFragment implemen
                     if (edit)
 
                         if (ifTask.equalsIgnoreCase("task")) {
-                            ((ActivityEditTask) getActivity()).setRemainder("15 Minutes", "15");
+//                            ((ActivityEditTask) getActivity()).setRemainder("15 Minutes", "15");
                         } else {
-                            ((ActivityEditAppointment) getActivity()).setRemainder("15 Minutes", "15");
+//                            ((ActivityEditAppointment) getActivity()).setRemainder("15 Minutes", "15");
                         }
 
                     else {
 
                         if (ifTask.equalsIgnoreCase("task")) {
-                            ((ActivityCreateTask) getActivity()).setRemainder("15 Minutes", "15");
+//                            ((ActivityCreateTask) getActivity()).setRemainder("15 Minutes", "15");
                         } else {
-                            ((ActivityCreateAppointment) getActivity()).setRemainder("15 Minutes", "15");
+//                            ((ActivityCreateAppointment) getActivity()).setRemainder("15 Minutes", "15");
                         }
                     }
 
@@ -237,17 +229,17 @@ public class RemainderDialogFragment extends android.app.DialogFragment implemen
                     if (edit)
 
                         if (ifTask.equalsIgnoreCase("task")) {
-                            ((ActivityEditTask) getActivity()).setRemainder("30 Minutes", "30");
+//                            ((ActivityEditTask) getActivity()).setRemainder("30 Minutes", "30");
                         } else {
-                            ((ActivityEditAppointment) getActivity()).setRemainder("30 Minutes", "30");
+//                            ((ActivityEditAppointment) getActivity()).setRemainder("30 Minutes", "30");
                         }
 
                     else {
 
                         if (ifTask.equalsIgnoreCase("task")) {
-                            ((ActivityCreateTask) getActivity()).setRemainder("30 Minutes", "30");
+//                            ((ActivityCreateTask) getActivity()).setRemainder("30 Minutes", "30");
                         } else {
-                            ((ActivityCreateAppointment) getActivity()).setRemainder("30 Minutes", "30");
+//                            ((ActivityCreateAppointment) getActivity()).setRemainder("30 Minutes", "30");
                         }
                     }
                     getDialog().dismiss();
@@ -265,17 +257,17 @@ public class RemainderDialogFragment extends android.app.DialogFragment implemen
                     if (edit)
 
                         if (ifTask.equalsIgnoreCase("task")) {
-                            ((ActivityEditTask) getActivity()).setRemainder("45 Minutes", "45");
+//                            ((ActivityEditTask) getActivity()).setRemainder("45 Minutes", "45");
                         } else {
-                            ((ActivityEditAppointment) getActivity()).setRemainder("45 Minutes", "45");
+//                            ((ActivityEditAppointment) getActivity()).setRemainder("45 Minutes", "45");
                         }
 
                     else {
 
                         if (ifTask.equalsIgnoreCase("task")) {
-                            ((ActivityCreateTask) getActivity()).setRemainder("45 Minutes", "45");
+//                            ((ActivityCreateTask) getActivity()).setRemainder("45 Minutes", "45");
                         } else {
-                            ((ActivityCreateAppointment) getActivity()).setRemainder("45 Minutes", "45");
+//                            ((ActivityCreateAppointment) getActivity()).setRemainder("45 Minutes", "45");
                         }
                     }
 
@@ -294,17 +286,17 @@ public class RemainderDialogFragment extends android.app.DialogFragment implemen
                     if (edit)
 
                         if (ifTask.equalsIgnoreCase("task")) {
-                            ((ActivityEditTask) getActivity()).setRemainder("1 Hour", "60");
+//                            ((ActivityEditTask) getActivity()).setRemainder("1 Hour", "60");
                         } else {
-                            ((ActivityEditAppointment) getActivity()).setRemainder("1 Hour", "60");
+//                            ((ActivityEditAppointment) getActivity()).setRemainder("1 Hour", "60");
                         }
 
                     else {
 
                         if (ifTask.equalsIgnoreCase("task")) {
-                            ((ActivityCreateTask) getActivity()).setRemainder("1 Hour", "60");
+//                            ((ActivityCreateTask) getActivity()).setRemainder("1 Hour", "60");
                         } else {
-                            ((ActivityCreateAppointment) getActivity()).setRemainder("1 Hour", "60");
+//                            ((ActivityCreateAppointment) getActivity()).setRemainder("1 Hour", "60");
                         }
                     }
 
@@ -321,17 +313,17 @@ public class RemainderDialogFragment extends android.app.DialogFragment implemen
                     if (edit)
 
                         if (ifTask.equalsIgnoreCase("task")) {
-                            ((ActivityEditTask) getActivity()).setRemainder("24 Hours", "1440");
+//                            ((ActivityEditTask) getActivity()).setRemainder("24 Hours", "1440");
                         } else {
-                            ((ActivityEditAppointment) getActivity()).setRemainder("24 Hours", "1440");
+//                            ((ActivityEditAppointment) getActivity()).setRemainder("24 Hours", "1440");
                         }
 
                     else {
 
                         if (ifTask.equalsIgnoreCase("task")) {
-                            ((ActivityCreateTask) getActivity()).setRemainder("24 Hours", "1440");
+//                            ((ActivityCreateTask) getActivity()).setRemainder("24 Hours", "1440");
                         } else {
-                            ((ActivityCreateAppointment) getActivity()).setRemainder("24 Hours", "1440");
+//                            ((ActivityCreateAppointment) getActivity()).setRemainder("24 Hours", "1440");
                         }
                     }
 
@@ -348,17 +340,17 @@ public class RemainderDialogFragment extends android.app.DialogFragment implemen
                     if (edit)
 
                         if (ifTask.equalsIgnoreCase("task")) {
-                            ((ActivityEditTask) getActivity()).setRemainder("48 Hours", "2880");
+//                            ((ActivityEditTask) getActivity()).setRemainder("48 Hours", "2880");
                         } else {
-                            ((ActivityEditAppointment) getActivity()).setRemainder("48 Hours", "2880");
+//                            ((ActivityEditAppointment) getActivity()).setRemainder("48 Hours", "2880");
                         }
 
                     else {
 
                         if (ifTask.equalsIgnoreCase("task")) {
-                            ((ActivityCreateTask) getActivity()).setRemainder("48 Hours", "2880");
+//                            ((ActivityCreateTask) getActivity()).setRemainder("48 Hours", "2880");
                         } else {
-                            ((ActivityCreateAppointment) getActivity()).setRemainder("48 Hours", "2880");
+//                            ((ActivityCreateAppointment) getActivity()).setRemainder("48 Hours", "2880");
                         }
                     }
 

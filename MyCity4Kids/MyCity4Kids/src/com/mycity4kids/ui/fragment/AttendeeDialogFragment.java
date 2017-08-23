@@ -16,10 +16,6 @@ import com.mycity4kids.dbtable.TableKids;
 import com.mycity4kids.models.user.KidsInfo;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.newmodels.AttendeeModel;
-import com.mycity4kids.ui.activity.ActivityCreateAppointment;
-import com.mycity4kids.ui.activity.ActivityCreateTask;
-import com.mycity4kids.ui.activity.ActivityEditAppointment;
-import com.mycity4kids.ui.activity.ActivityEditTask;
 import com.mycity4kids.ui.adapter.AttendeeCustomAdapter;
 
 import java.util.ArrayList;
@@ -64,10 +60,10 @@ public class AttendeeDialogFragment extends android.app.DialogFragment {
         }
 
         TableKids tableKids = new TableKids(BaseApplication.getInstance());
-        ArrayList<KidsInfo> kidsInformations = (ArrayList<KidsInfo>) tableKids.getAllKids();
+        ArrayList<KidsInfo> kidsInformations = tableKids.getAllKids();
 
         TableAdult tableAdult = new TableAdult(BaseApplication.getInstance());
-        ArrayList<UserInfo> userInfos = (ArrayList<UserInfo>) tableAdult.getAllAdults();
+        ArrayList<UserInfo> userInfos = tableAdult.getAllAdults();
 
         ArrayList<AttendeeModel> attendeeList = new ArrayList<AttendeeModel>();
 
@@ -125,18 +121,18 @@ public class AttendeeDialogFragment extends android.app.DialogFragment {
                     if (edit) {
 
                         if (iftask.equalsIgnoreCase("iftask")) {
-                            ((ActivityEditTask) getActivity()).setAttendee(adapter.getAttendeeList());
+//                            ((ActivityEditTask) getActivity()).setAttendee(adapter.getAttendeeList());
                         } else {
-                            ((ActivityEditAppointment) getActivity()).setAttendee(adapter.getAttendeeList());
+//                            ((ActivityEditAppointment) getActivity()).setAttendee(adapter.getAttendeeList());
                         }
 
                         getDialog().dismiss();
                     } else {
 
                         if (iftask.equalsIgnoreCase("iftask")) {
-                            ((ActivityCreateTask) getActivity()).setAttendee(adapter.getAttendeeList());
+//                            ((ActivityCreateTask) getActivity()).setAttendee(adapter.getAttendeeList());
                         } else {
-                            ((ActivityCreateAppointment) getActivity()).setAttendee(adapter.getAttendeeList());
+//                            ((ActivityCreateAppointment) getActivity()).setAttendee(adapter.getAttendeeList());
                         }
 
                         getDialog().dismiss();

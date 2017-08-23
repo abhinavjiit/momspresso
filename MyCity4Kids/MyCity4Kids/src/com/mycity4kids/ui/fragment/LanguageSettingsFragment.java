@@ -96,7 +96,7 @@ public class LanguageSettingsFragment extends BaseFragment implements View.OnCli
                 return;
             }
             try {
-                LanguageSettingsResponse responseData = (LanguageSettingsResponse) response.body();
+                LanguageSettingsResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 //                    responseData.getData().getResult()
                     for (Map<String, String> map : responseData.getData().getResult()) {
@@ -191,7 +191,7 @@ public class LanguageSettingsFragment extends BaseFragment implements View.OnCli
                 return;
             }
             try {
-                UpdateLanguageSettingsResponse responseData = (UpdateLanguageSettingsResponse) response.body();
+                UpdateLanguageSettingsResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     if (null != getActivity()) {
                         Toast.makeText(getActivity(), "Language content settings updated successfully", Toast.LENGTH_SHORT).show();
@@ -273,7 +273,7 @@ public class LanguageSettingsFragment extends BaseFragment implements View.OnCli
                 return;
             }
             try {
-                ConfigResponse responseData = (ConfigResponse) response.body();
+                ConfigResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     for (Map.Entry<String, String> entry : responseData.getData().getResult().getLanguage().entrySet()) {
                         SharedPrefUtils.setLanguageConfig(getActivity(), entry.getKey(), entry.getValue());

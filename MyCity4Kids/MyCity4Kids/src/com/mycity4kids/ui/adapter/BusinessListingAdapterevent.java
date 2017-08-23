@@ -5,13 +5,10 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.CalendarContract;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
@@ -34,13 +31,9 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.dbtable.TableApiEvents;
 import com.mycity4kids.dbtable.TableKids;
-import com.mycity4kids.gtmutils.GTMEventType;
-import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.ColorModel;
 import com.mycity4kids.models.businesslist.BusinessDataListing;
 import com.mycity4kids.models.user.KidsInfo;
-import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.ui.activity.ActivityCreateAppointment;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
 import com.squareup.picasso.Picasso;
@@ -86,7 +79,7 @@ public class BusinessListingAdapterevent extends BaseAdapter implements Filterab
         height = displayMetrics.heightPixels;
 
         TableKids tableKids = new TableKids(BaseApplication.getInstance());
-        kidsInformations = (ArrayList<KidsInfo>) tableKids.getAllKids();
+        kidsInformations = tableKids.getAllKids();
         refreshEventIdList();
         createColorMap();
     }
@@ -99,7 +92,7 @@ public class BusinessListingAdapterevent extends BaseAdapter implements Filterab
         height = displayMetrics.heightPixels;
         this.currentFrag = currentFrag;
         TableKids tableKids = new TableKids(BaseApplication.getInstance());
-        kidsInformations = (ArrayList<KidsInfo>) tableKids.getAllKids();
+        kidsInformations = tableKids.getAllKids();
         refreshEventIdList();
         createColorMap();
     }

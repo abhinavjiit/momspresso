@@ -130,7 +130,7 @@ public class UsersWatchLaterTabFragment extends BaseFragment implements UsersBoo
                 return;
             }
             try {
-                ArticleListingResponse responseData = (ArticleListingResponse) response.body();
+                ArticleListingResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     processResponse(responseData);
                 } else {
@@ -248,7 +248,7 @@ public class UsersWatchLaterTabFragment extends BaseFragment implements UsersBoo
 //                showToast("Something went wrong from server");
                 return;
             }
-            AddBookmarkResponse responseData = (AddBookmarkResponse) response.body();
+            AddBookmarkResponse responseData = response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                 watchLaterList.remove(bookmarkDeletePos);
                 adapter.notifyDataSetChanged();

@@ -77,7 +77,7 @@ public class HTTPPoster {
      * @param kvPairs {@link HashMap} for key value.
      */
     public static String doPost(String url, Map<String, String> kvPairs, Map<String, String> header, Context context)
-            throws ClientProtocolException, IOException, PackageManager.NameNotFoundException {
+            throws IOException, PackageManager.NameNotFoundException {
 //		HttpClient httpClient = getNewHttpClient(new BasicHttpParams());
         HttpClient httpClient = new DefaultHttpClient();
         HttpPost httppost = new HttpPost(url);
@@ -144,7 +144,7 @@ public class HTTPPoster {
      * @throws ClientProtocolException
      * @throws IOException
      */
-    public static String doPost(String url, Map<String, String> header, String body, Context context) throws ClientProtocolException,
+    public static String doPost(String url, Map<String, String> header, String body, Context context) throws
             IOException {
         HttpClient httpclient = getNewHttpClient(new BasicHttpParams());
 
@@ -230,7 +230,7 @@ public class HTTPPoster {
      * @throws ClientProtocolException
      * @throws IOException
      */
-    public static String doPut(String webserviceUrl, String jsonData, Context context) throws ClientProtocolException, IOException {
+    public static String doPut(String webserviceUrl, String jsonData, Context context) throws IOException {
 
         HttpClient httpclient = getNewHttpClient(new BasicHttpParams());
         HttpPut httpPut = new HttpPut(webserviceUrl);

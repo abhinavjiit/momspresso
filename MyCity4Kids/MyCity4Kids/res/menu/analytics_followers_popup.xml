@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id="@+id/improveFollowers"
-        android:actionMenuTextColor="@color/black_color"
-        android:title="@string/analytics.popup.increase_followers" />
-</menu>

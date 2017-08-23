@@ -78,7 +78,7 @@ public class LoadingActivity extends BaseActivity {
                 return;
             }
             try {
-                CityConfigResponse responseData = (CityConfigResponse) response.body();
+                CityConfigResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     ArrayList<CityInfoItem> mDatalist = responseData.getData().getResult().getCityData();
                     for (int i = 0; i < mDatalist.size(); i++) {
@@ -196,7 +196,7 @@ public class LoadingActivity extends BaseActivity {
                 return;
             }
             try {
-                FollowUnfollowCategoriesResponse responseData = (FollowUnfollowCategoriesResponse) response.body();
+                FollowUnfollowCategoriesResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     ArrayList<String> mDatalist = (ArrayList<String>) responseData.getData();
                     if (mDatalist != null) {

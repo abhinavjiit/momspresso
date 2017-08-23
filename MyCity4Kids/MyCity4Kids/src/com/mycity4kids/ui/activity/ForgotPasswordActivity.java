@@ -102,7 +102,7 @@ public class ForgotPasswordActivity extends BaseActivity {
             }
 
             try {
-                ForgotPasswordResponse responseData = (ForgotPasswordResponse) response.body();
+                ForgotPasswordResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     showToast(responseData.getData().get(0).getMsg());
                 } else {

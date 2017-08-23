@@ -99,7 +99,7 @@ public class UsersRecommendationTabFragment extends BaseFragment implements User
                 return;
             }
             try {
-                ArticleListingResponse responseData = (ArticleListingResponse) response.body();
+                ArticleListingResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     processRecommendationsResponse(responseData);
                 } else {

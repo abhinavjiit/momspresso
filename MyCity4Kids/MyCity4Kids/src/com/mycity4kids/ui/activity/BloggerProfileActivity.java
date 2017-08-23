@@ -25,6 +25,7 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
+import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.animation.MyCityAnimationsUtil;
 import com.mycity4kids.application.BaseApplication;
@@ -160,15 +161,17 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
         followingContainer.setOnClickListener(this);
         followerContainer.setOnClickListener(this);
 
-//        rankingSectionTextView.setVisibility(View.GONE);
-//        findViewById(R.id.underline_4).setVisibility(View.GONE);
-
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         userId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
         authorId = getIntent().getStringExtra(AppConstants.PUBLIC_PROFILE_USER_ID);
+
+        if (AppConstants.DEBUGGING_USER_ID.equals(userId)) {
+            rankingSectionTextView.setVisibility(View.VISIBLE);
+            findViewById(R.id.underline_4).setVisibility(View.VISIBLE);
+        }
 
 //        if (!StringUtils.isNullOrEmpty(SharedPrefUtils.getProfileImgUrl(this))) {
 //            Picasso.with(this).load(SharedPrefUtils.getProfileImgUrl(this)).placeholder(R.drawable.family_xxhdpi)
@@ -263,7 +266,7 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
 //                showToast("Something went wrong from server");
                 return;
             }
-            UserDetailResponse responseData = (UserDetailResponse) response.body();
+            UserDetailResponse responseData = response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                 if (responseData.getData().get(0).getResult().getRanks() == null || responseData.getData().get(0).getResult().getRanks().size() == 0) {
                     rankCountTextView.setText("--");
@@ -380,7 +383,7 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
                 return;
             }
 
-            ArticleDetailResponse responseData = (ArticleDetailResponse) response.body();
+            ArticleDetailResponse responseData = response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
                 followButton.setEnabled(true);
@@ -421,7 +424,7 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
                 return;
             }
             try {
-                FollowUnfollowUserResponse responseData = (FollowUnfollowUserResponse) response.body();
+                FollowUnfollowUserResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
                 } else {
@@ -454,7 +457,7 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
                 return;
             }
             try {
-                FollowUnfollowUserResponse responseData = (FollowUnfollowUserResponse) response.body();
+                FollowUnfollowUserResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
                 } else {
@@ -487,7 +490,7 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
                 return;
             }
             try {
-                ArticleListingResponse responseData = (ArticleListingResponse) response.body();
+                ArticleListingResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     final ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
                     if (dataList == null || dataList.size() == 0) {
@@ -948,7 +951,7 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
                 }
                 break;
             case UCrop.REQUEST_CROP: {
-                if (resultCode == this.RESULT_OK) {
+                if (resultCode == RESULT_OK) {
                     final Uri resultUri = UCrop.getOutput(data);
                     Log.e("resultUri", resultUri.toString());
                     File file2 = FileUtils.getFile(this, resultUri);

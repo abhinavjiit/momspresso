@@ -27,11 +27,11 @@ import com.mycity4kids.models.response.NotificationCenterListResponse;
 import com.mycity4kids.models.response.NotificationCenterResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.NotificationsAPI;
+import com.mycity4kids.ui.activity.AppSettingsActivity;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.BloggerProfileActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.LoadWebViewActivity;
-import com.mycity4kids.ui.activity.SettingsActivity;
 import com.mycity4kids.ui.activity.VlogsDetailActivity;
 import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
 import com.mycity4kids.ui.fragment.MyAccountProfileFragment;
@@ -212,7 +212,7 @@ public class NotificationCenterListAdapter extends BaseAdapter {
                     hitNotificationReadAPI(notificationList.get(position).getId());
                     notifyDataSetChanged();
                     Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "app_settings");
-                    Intent intent1 = new Intent(mContext, SettingsActivity.class);
+                    Intent intent1 = new Intent(mContext, AppSettingsActivity.class);
                     intent1.putExtra("fromNotification", true);
                     intent1.putExtra("load_fragment", Constants.SETTINGS_FRAGMENT);
                     mContext.startActivity(intent1);
@@ -248,7 +248,7 @@ public class NotificationCenterListAdapter extends BaseAdapter {
                 return;
             }
             try {
-                NotificationCenterListResponse responseData = (NotificationCenterListResponse) response.body();
+                NotificationCenterListResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
                 } else {

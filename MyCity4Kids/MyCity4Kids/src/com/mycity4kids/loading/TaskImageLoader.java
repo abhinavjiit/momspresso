@@ -161,10 +161,8 @@ public class TaskImageLoader {
 	    
 	    boolean imageViewReused(PhotoToLoad photoToLoad){
 	        String tag=imageViews.get(photoToLoad.imageView);
-	        if(tag==null || !tag.equals(photoToLoad.url))
-	            return true;
-	        return false;
-	    }
+			return tag == null || !tag.equals(photoToLoad.url);
+		}
 	    
 	    //Used to display bitmap in the UI thread
 	    class BitmapDisplayer implements Runnable

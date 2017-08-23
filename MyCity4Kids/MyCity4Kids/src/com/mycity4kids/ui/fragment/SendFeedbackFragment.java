@@ -29,9 +29,9 @@ public class SendFeedbackFragment extends BaseFragment implements View.OnClickLi
 
         View view = inflater.inflate(R.layout.aa_feedback, null, false);
 
-        ((LinearLayout) view.findViewById(R.id.missing_place)).setOnClickListener(this);
-        ((LinearLayout) view.findViewById(R.id.report_incorrect)).setOnClickListener(this);
-        ((LinearLayout) view.findViewById(R.id.feed_back)).setOnClickListener(this);
+        view.findViewById(R.id.missing_place).setOnClickListener(this);
+        view.findViewById(R.id.report_incorrect).setOnClickListener(this);
+        view.findViewById(R.id.feed_back).setOnClickListener(this);
 
 
         return view;

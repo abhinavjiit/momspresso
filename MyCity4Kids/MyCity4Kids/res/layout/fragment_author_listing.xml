@@ -23,13 +23,16 @@
         android:divider="@null"
         android:drawSelectorOnTop="true" />
 
-    <TextView
+    <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/noAuthorsTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="No Authors found."
-        android:visibility="gone" />
+        android:text="@string/search.author_no_result"
+        android:textColor="@color/empty_list_msg"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:fontName="oswald_regular.ttf" />
 
     <RelativeLayout
         android:id="@+id/relativeLoadingView"

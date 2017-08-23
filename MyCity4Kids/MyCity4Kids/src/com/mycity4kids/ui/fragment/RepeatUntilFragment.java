@@ -13,10 +13,6 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 
 import com.mycity4kids.R;
-import com.mycity4kids.ui.activity.ActivityCreateAppointment;
-import com.mycity4kids.ui.activity.ActivityCreateTask;
-import com.mycity4kids.ui.activity.ActivityEditAppointment;
-import com.mycity4kids.ui.activity.ActivityEditTask;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -70,18 +66,18 @@ public class RepeatUntilFragment extends android.app.DialogFragment implements V
                 if (edit) {
 
                     if (iftask.equalsIgnoreCase("task")) {
-                        ((ActivityEditTask) getActivity()).setRepeatUntil("Forever", "");
+//                        ((ActivityEditTask) getActivity()).setRepeatUntil("Forever", "");
                     } else {
-                        ((ActivityEditAppointment) getActivity()).setRepeatUntil("Forever", "");
+//                        ((ActivityEditAppointment) getActivity()).setRepeatUntil("Forever", "");
                     }
 
 
                 } else {
 
                     if (iftask.equalsIgnoreCase("task")) {
-                        ((ActivityCreateTask) getActivity()).setRepeatUntil("Forever", "");
+//                        ((ActivityCreateTask) getActivity()).setRepeatUntil("Forever", "");
                     } else {
-                        ((ActivityCreateAppointment) getActivity()).setRepeatUntil("Forever", "");
+//                        ((ActivityCreateAppointment) getActivity()).setRepeatUntil("Forever", "");
                     }
 
 
@@ -115,7 +111,7 @@ public class RepeatUntilFragment extends android.app.DialogFragment implements V
         String timestamp = "";
         try {
             DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-            Date dateobj = (Date) formatter.parse(convertdate);
+            Date dateobj = formatter.parse(convertdate);
             timestamp = "" + (dateobj.getTime()) / 1000;
             return timestamp;
         } catch (ParseException e) {
@@ -222,9 +218,9 @@ public class RepeatUntilFragment extends android.app.DialogFragment implements V
                             if (edit) {
 //                                ((ActivityEditAppointment) getActivity()).setRepeatUntil(sel_date, "");\
                                 if (iftask.equalsIgnoreCase("task")) {
-                                    ((ActivityEditTask) getActivity()).setRepeatUntil(format.format(calendar1.getTime()), "");
+//                                    ((ActivityEditTask) getActivity()).setRepeatUntil(format.format(calendar1.getTime()), "");
                                 } else {
-                                    ((ActivityEditAppointment) getActivity()).setRepeatUntil(format.format(calendar1.getTime()), "");
+//                                    ((ActivityEditAppointment) getActivity()).setRepeatUntil(format.format(calendar1.getTime()), "");
                                 }
 
 
@@ -232,10 +228,10 @@ public class RepeatUntilFragment extends android.app.DialogFragment implements V
 //                                ((ActivityCreateAppointment) getActivity()).setRepeatUntil(sel_date, "");
 
                                 if (iftask.equalsIgnoreCase("task")) {
-                                    ((ActivityCreateTask) getActivity()).setRepeatUntil(format.format(calendar1.getTime()), "");
+//                                    ((ActivityCreateTask) getActivity()).setRepeatUntil(format.format(calendar1.getTime()), "");
 
                                 } else {
-                                    ((ActivityCreateAppointment) getActivity()).setRepeatUntil(format.format(calendar1.getTime()), "");
+//                                    ((ActivityCreateAppointment) getActivity()).setRepeatUntil(format.format(calendar1.getTime()), "");
 
                                 }
 
@@ -253,9 +249,9 @@ public class RepeatUntilFragment extends android.app.DialogFragment implements V
                             if (edit) {
 //                                ((ActivityEditAppointment) getActivity()).setRepeatUntil(sel_date, "");\
                                 if (iftask.equalsIgnoreCase("task")) {
-                                    ((ActivityEditTask) getActivity()).setRepeatUntil(format.format(calendar1.getTime()), "");
+//                                    ((ActivityEditTask) getActivity()).setRepeatUntil(format.format(calendar1.getTime()), "");
                                 } else {
-                                    ((ActivityEditAppointment) getActivity()).setRepeatUntil(format.format(calendar1.getTime()), "");
+//                                    ((ActivityEditAppointment) getActivity()).setRepeatUntil(format.format(calendar1.getTime()), "");
                                 }
 
 
@@ -263,10 +259,10 @@ public class RepeatUntilFragment extends android.app.DialogFragment implements V
 //                                ((ActivityCreateAppointment) getActivity()).setRepeatUntil(sel_date, "");
 
                                 if (iftask.equalsIgnoreCase("task")) {
-                                    ((ActivityCreateTask) getActivity()).setRepeatUntil(format.format(calendar1.getTime()), "");
+//                                    ((ActivityCreateTask) getActivity()).setRepeatUntil(format.format(calendar1.getTime()), "");
 
                                 } else {
-                                    ((ActivityCreateAppointment) getActivity()).setRepeatUntil(format.format(calendar1.getTime()), "");
+//                                    ((ActivityCreateAppointment) getActivity()).setRepeatUntil(format.format(calendar1.getTime()), "");
 
                                 }
                             }

@@ -90,12 +90,12 @@ public class FragmentHomeCategory extends BaseFragment implements OnClickListene
             mBusinessSearch = (ImageView) view.findViewById(R.id.business_search_img);
             mParentLout = (LinearLayout) view.findViewById(R.id.parent_laout);
             mSearchList = (ListView) view.findViewById(R.id.searchList);
-            ((LinearLayout) view.findViewById(R.id.searchLout)).setOnClickListener(this);
+            view.findViewById(R.id.searchLout).setOnClickListener(this);
             mQuerySearchEtxt = (EditText) view.findViewById(R.id.query_search);
             mQuerySearchEtxt.addTextChangedListener(textWatcher);
             mLocalitySearchEtxt.addTextChangedListener(textWatcher);
-            ((ImageView) view.findViewById(R.id.write_a_review)).setOnClickListener(this);
-            ((ImageView) view.findViewById(R.id.parentingStop)).setOnClickListener(this);
+            view.findViewById(R.id.write_a_review).setOnClickListener(this);
+            view.findViewById(R.id.parentingStop).setOnClickListener(this);
 
 //			setHeader();
             mCategoryExpandList = (ExpandableListView) view.findViewById(R.id.expandable_list);
@@ -137,7 +137,7 @@ public class FragmentHomeCategory extends BaseFragment implements OnClickListene
                          * its related to search query adapter:
                          */
                         String whichAdapterDataIsLoaded = (String) parent.getTag();
-                        String listItem = (String) parent.getAdapter().getItem(pos).toString();
+                        String listItem = parent.getAdapter().getItem(pos).toString();
                         //Log.d("check", "check ArrayAdapter ");
                         //Log.d("check", "check listItem " + listItem);
                         mQuerySearchEtxt.removeTextChangedListener(textWatcher);
@@ -426,9 +426,9 @@ public class FragmentHomeCategory extends BaseFragment implements OnClickListene
 
                 startActivity(new Intent(getActivity(), WriteReviewActivity.class));
                 break;
-            case R.id.alphaView:
-                mCategoryExpandList.bringToFront();
-                break;
+//            case R.id.alphaView:
+//                mCategoryExpandList.bringToFront();
+//                break;
             case R.id.searchLout:
                 Intent intent = new Intent(getActivity(), AutoSuggestTransparentDialogActivity.class);
                 startActivity(intent);

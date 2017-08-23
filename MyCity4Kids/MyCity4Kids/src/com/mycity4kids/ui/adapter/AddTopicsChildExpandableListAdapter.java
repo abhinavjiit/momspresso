@@ -40,7 +40,7 @@ public class AddTopicsChildExpandableListAdapter extends BaseExpandableListAdapt
     public void setTopicsData(List<Topics> mSubCategoriesList, HashMap<Topics, List<Topics>> mSubCategoriesChildMap, AddTopicsParentExpandableListAdapter totalSelectedItems) {
         this.mSubCategoriesList = mSubCategoriesList;
         this.mSubCategoriesChildMap = mSubCategoriesChildMap;
-        this.totalSelectedItems = (TotalSelectedItems) totalSelectedItems;
+        this.totalSelectedItems = totalSelectedItems;
     }
 
     @Override

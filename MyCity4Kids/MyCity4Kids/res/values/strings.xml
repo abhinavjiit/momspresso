@@ -414,6 +414,7 @@
     <string name="ad.comments.reply_label">Reply</string>
     <string name="ad.comments.edit_label">Edit</string>
     <string name="ad.comments.save">SAVE</string>
+    <string name="ad.comments.toast_empty_comment">Please enter some valid text.</string>
     <string name="ad.comments.toolbar.title">Comments</string>
     <string name="ad.comments.replying_to">You are replying to %1$s</string>
     <string name="ad.bottom_bar.facebook">FACEBOOK</string>
@@ -526,6 +527,7 @@
 
     <string name="home.toolbar.title">TRENDING</string>
     <string name="explore_listing.explore_categories.title">YOU COULD ALSO EXPLORE THE CATEGORIES</string>
+    <string name="explore_listing.explore_categories.meet_contributor">Meet Our Contributors</string>
 
     <string name="home_screen.trending.title">TRENDING</string>
     <string name="home_screen.notification.title">NOTIFICATION</string>
@@ -548,10 +550,10 @@
     </string-array>
 
     <string-array name="onboarding_desc_array">
-        <item>BLOGS <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> BLOGS <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> EXPERTS </item>
-        <item>EDITORIAL LIST <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> EVENTS <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> RESOURCES</item>
-        <item>ENGLISH <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> HINDI <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> MARATHI <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> TAMIL <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> TELEGU</item>
-        <item>PARENTING ADVICE <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> RECIPES <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> MOMSPRESSO </item>
+        <item>BLOGS <![CDATA[<font color=#e89ba5>&#9679;</font>]]> VIDEOS <![CDATA[<font color=#e89ba5>&#9679;</font>]]> EXPERTS </item>
+        <item>EDITORIAL LIST <![CDATA[<font color=#e89ba5>&#9679;</font>]]> EVENTS <![CDATA[<font color=#e89ba5>&#9679;</font>]]> RESOURCES</item>
+        <item>ENGLISH <![CDATA[<font color=#e89ba5>&#9679;</font>]]> HINDI <![CDATA[<font color=#e89ba5>&#9679;</font>]]> MARATHI <![CDATA[<font color=#e89ba5>&#9679;</font>]]> TAMIL <![CDATA[<font color=#e89ba5>&#9679;</font>]]> TELEGU</item>
+        <item>PARENTING ADVICE <![CDATA[<font color=#e89ba5>&#9679;</font>]]> RECIPES <![CDATA[<font color=#e89ba5>&#9679;</font>]]> MOMSPRESSO </item>
     </string-array>
 
     <string name="onboarding.signin">SIGN IN</string>
@@ -569,7 +571,7 @@
 
     <string name="login_email.login">LOGIN</string>
     <string name="login_email.forgot_password">Forgot Password?</string>
-    <string name="login_email.username_hint">Username</string>
+    <string name="login_email.username_hint">Email</string>
     <string name="login_email.password_hint">Password</string>
 
 
@@ -596,6 +598,8 @@
     <string name="search.show_more">SHOW MORE</string>
     <string name="search.article_topic_tab_label">ARTICLES &amp; TOPICS</string>
     <string name="search.author_tab_label">AUTHORS</string>
+    <string name="search.article_no_result">No articles or topics found.</string>
+    <string name="search.author_no_result">No authors found.</string>
 
     <string name="search_topics.toolbar_title">SELECT CATEGORIES</string>
     <string name="search_topics.hint">Search with Topics</string>
@@ -646,7 +650,7 @@
     <string name="app_settings.toolbar.title">SETTINGS</string>
     <string name="app_settings.tabbar.edit_prefs">EDIT PREFERENCES</string>
     <string name="app_settings.tabbar.change_password">CHANGE PASSWORD</string>
-    <string name="app_settings.tabbar.edit_profile">EDIT DRAFT</string>
+    <string name="app_settings.tabbar.edit_profile">EDIT PROFILE</string>
 
     <string name="app_settings.edit_profile.hint_fn">First Name</string>
     <string name="app_settings.edit_profile.hint_ln">Last Name</string>
@@ -662,6 +666,7 @@
     <string name="app_settings.edit_profile.female">Female</string>
     <string name="app_settings.edit_profile.dob">Date of Birth</string>
     <string name="app_settings.edit_profile.save">SAVE</string>
+    <string name="app_settings.edit_profile.update_success">User profile updated successfully</string>
     <string name="app_settings.edit_profile.toast_fn_empty">First Name cannot be empty</string>
     <string name="app_settings.edit_profile.toast_blog_title_empty">Blog Title cannot be empty</string>
     <string name="app_settings.edit_profile.toast_special_not_allowed">Special characters are not allowed</string>
@@ -731,6 +736,7 @@
     <string name="ranking.in">IN</string>
     <string name="ranking.rank_english">RANK IN ENGLISH</string>
     <string name="ranking.rank_in">RANK IN ENGLISH</string>
+    <string name="ranking.toast_start_end_date">Start date must be less than end date</string>
 
     <string name="editor.publish">PUBLISH</string>
 

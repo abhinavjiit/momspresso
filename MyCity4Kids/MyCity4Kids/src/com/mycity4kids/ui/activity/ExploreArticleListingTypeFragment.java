@@ -45,7 +45,8 @@ import retrofit2.Retrofit;
  */
 public class ExploreArticleListingTypeFragment extends BaseFragment {
 
-    String[] sections = {"TRENDING", "EDITOR'S PICK", "FOR YOU", "RECENT", "POPULAR", "LANGUAGES", "VIDEOS"};
+    private final static String MEET_CONTRIBUTOR_ID = "meetContributorId";
+    private String[] sections = {"TRENDING", "EDITOR'S PICK", "FOR YOU", "RECENT", "POPULAR", "LANGUAGES", "VIDEOS"};
     private ArrayList<ExploreTopicsModel> mainTopicsList;
     private String fragType = "";
 
@@ -100,7 +101,6 @@ public class ExploreArticleListingTypeFragment extends BaseFragment {
 
             @Override
             public void afterTextChanged(Editable arg0) {
-                // TODO Auto-generated method stub
                 String text = searchTopicsEditText.getText().toString().toLowerCase();
                 adapter.filter(text);
             }
@@ -108,13 +108,11 @@ public class ExploreArticleListingTypeFragment extends BaseFragment {
             @Override
             public void beforeTextChanged(CharSequence arg0, int arg1,
                                           int arg2, int arg3) {
-                // TODO Auto-generated method stub
             }
 
             @Override
             public void onTextChanged(CharSequence arg0, int arg1, int arg2,
                                       int arg3) {
-                // TODO Auto-generated method stub
             }
         });
 
@@ -122,17 +120,22 @@ public class ExploreArticleListingTypeFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 if (adapterView.getAdapter() instanceof ParentTopicsGridAdapter) {
-                    ExploreTopicsModel topic = (ExploreTopicsModel) ((ParentTopicsGridAdapter) adapterView.getAdapter()).getItem(position);
+                    ExploreTopicsModel topic = (ExploreTopicsModel) adapterView.getAdapter().getItem(position);
                     if (fragType.equals("search")) {
                         Intent subscribeTopicIntent = new Intent(getActivity(), SubscribeTopicsActivity.class);
                         subscribeTopicIntent.putExtra("tabPos", position);
                         startActivity(subscribeTopicIntent);
                     } else {
-                        TopicsListingFragment fragment1 = new TopicsListingFragment();
-                        Bundle mBundle1 = new Bundle();
-                        mBundle1.putString("parentTopicId", topic.getId());
-                        fragment1.setArguments(mBundle1);
-                        ((DashboardActivity) getActivity()).addFragment(fragment1, mBundle1, true);
+                        if (MEET_CONTRIBUTOR_ID.equals(topic.getId())) {
+                            Intent intent = new Intent(getActivity(), ContributorListActivity.class);
+                            startActivity(intent);
+                        } else {
+                            TopicsListingFragment fragment1 = new TopicsListingFragment();
+                            Bundle mBundle1 = new Bundle();
+                            mBundle1.putString("parentTopicId", topic.getId());
+                            fragment1.setArguments(mBundle1);
+                            ((DashboardActivity) getActivity()).addFragment(fragment1, mBundle1, true);
+                        }
                     }
                 }
             }
@@ -153,7 +156,6 @@ public class ExploreArticleListingTypeFragment extends BaseFragment {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 Intent intent1 = new Intent(getActivity(), ArticleListingActivity.class);
-
                 if (Constants.TAB_FOR_YOU.equalsIgnoreCase(tab.getText().toString())) {
                     intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_FOR_YOU);
                 } else if (Constants.TAB_POPULAR.equalsIgnoreCase(tab.getText().toString())) {
@@ -192,7 +194,36 @@ public class ExploreArticleListingTypeFragment extends BaseFragment {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-
+                Intent intent1 = new Intent(getActivity(), ArticleListingActivity.class);
+                if (Constants.TAB_FOR_YOU.equalsIgnoreCase(tab.getText().toString())) {
+                    intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_FOR_YOU);
+                } else if (Constants.TAB_POPULAR.equalsIgnoreCase(tab.getText().toString())) {
+                    intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_POPULAR);
+                } else if (Constants.TAB_EDITOR_PICKS.equalsIgnoreCase(tab.getText().toString())) {
+                    intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_EDITOR_PICKS);
+                } else if (Constants.TAB_RECENT.equalsIgnoreCase(tab.getText().toString())) {
+                    intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_RECENT);
+                } else if (Constants.TAB_IN_YOUR_CITY.equalsIgnoreCase(tab.getText().toString())) {
+                    Intent cityIntent = new Intent(getActivity(), ArticleListingActivity.class);
+                    cityIntent.putExtra(Constants.SORT_TYPE, Constants.KEY_IN_YOUR_CITY);
+                    startActivity(cityIntent);
+                    return;
+                } else if (Constants.KEY_TRENDING.equalsIgnoreCase(tab.getText().toString())) {
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+                    fm.popBackStack();
+                    return;
+                } else if (Constants.TAB_LANGUAGE.equalsIgnoreCase(tab.getText().toString())) {
+                    Intent cityIntent = new Intent(getActivity(), LanguageSpecificArticleListingActivity.class);
+                    cityIntent.putExtra(Constants.SORT_TYPE, Constants.KEY_IN_YOUR_CITY);
+                    startActivity(cityIntent);
+                    return;
+                } else if (Constants.TAB_VIDEOS.equalsIgnoreCase(tab.getText().toString())) {
+                    Intent cityIntent = new Intent(getActivity(), AllVideosListingActivity.class);
+                    startActivity(cityIntent);
+                    return;
+                }
+                intent1.putExtra(Constants.FROM_SCREEN, "Topic Articles List");
+                startActivity(intent1);
             }
         });
     }
@@ -266,6 +297,12 @@ public class ExploreArticleListingTypeFragment extends BaseFragment {
                     if ("1".equals(responseData.getData().get(i).getPublicVisibility())) {
                         mainTopicsList.add(responseData.getData().get(i));
                     }
+                }
+                if (!fragType.equals("search")) {
+                    ExploreTopicsModel contributorListModel = new ExploreTopicsModel();
+                    contributorListModel.setDisplay_name(getString(R.string.explore_listing_explore_categories_meet_contributor));
+                    contributorListModel.setId(MEET_CONTRIBUTOR_ID);
+                    mainTopicsList.add(contributorListModel);
                 }
 
             } else {

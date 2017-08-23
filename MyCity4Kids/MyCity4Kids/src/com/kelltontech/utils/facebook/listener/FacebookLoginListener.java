@@ -10,6 +10,6 @@ import com.kelltontech.utils.facebook.model.UserInfo;
  */
 public interface FacebookLoginListener {
 
-	public void doAfterLogin(UserInfo userInfo);
+	void doAfterLogin(UserInfo userInfo);
 
 }

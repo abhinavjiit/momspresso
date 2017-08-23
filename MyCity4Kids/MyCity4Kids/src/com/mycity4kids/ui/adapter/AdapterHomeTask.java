@@ -57,7 +57,7 @@ public class AdapterHomeTask extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup viewGroup) {
 
-        final TaskMappingModel taskItems = (TaskMappingModel) datalist.get(position);
+        final TaskMappingModel taskItems = datalist.get(position);
         tableTaskData = new TableTaskData(BaseApplication.getInstance());
 
         final ViewHolder holder;

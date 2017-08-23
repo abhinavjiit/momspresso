@@ -701,7 +701,7 @@ public final class DiskLruCache implements Closeable {
 		return Util.readFully(new InputStreamReader(in, Util.UTF_8));
 	}
 
-	private boolean writeBitmapToFile(Bitmap bitmap, DiskLruCache.Editor editor , CompressFormat compress_format , int imageQuality ) throws IOException, FileNotFoundException  {
+	private boolean writeBitmapToFile(Bitmap bitmap, DiskLruCache.Editor editor , CompressFormat compress_format , int imageQuality ) throws IOException {
 		OutputStream out = null;
 		try {
 			out = new BufferedOutputStream(editor.newOutputStream(0),

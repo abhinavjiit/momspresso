@@ -95,7 +95,7 @@ public class SubscriptionSettingsFragment extends BaseFragment implements View.O
                 return;
             }
             try {
-                SubscriptionSettingsResponse responseData = (SubscriptionSettingsResponse) response.body();
+                SubscriptionSettingsResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
                     for (Map.Entry<String, Object> entry : responseData.getData().getResult().entrySet()) {
@@ -237,7 +237,7 @@ public class SubscriptionSettingsFragment extends BaseFragment implements View.O
                 return;
             }
             try {
-                UserDetailResponse responseData = (UserDetailResponse) response.body();
+                UserDetailResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     editSubscriptionEmailTextView.setText("EDIT");
                     subscriptionEmailEditText.setVisibility(View.INVISIBLE);
@@ -273,7 +273,7 @@ public class SubscriptionSettingsFragment extends BaseFragment implements View.O
                 return;
             }
             try {
-                SubscriptionSettingsResponse responseData = (SubscriptionSettingsResponse) response.body();
+                SubscriptionSettingsResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     if (null != getActivity()) {
                         Toast.makeText(getActivity(), "Subscription settings updated successfully", Toast.LENGTH_SHORT).show();

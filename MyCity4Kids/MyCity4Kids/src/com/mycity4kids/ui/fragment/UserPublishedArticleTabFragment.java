@@ -29,6 +29,7 @@ import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
+import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.UserPublishedAndDraftsActivity;
 import com.mycity4kids.ui.adapter.UserPublishedArticleAdapter;
 import com.mycity4kids.utils.AppUtils;
@@ -139,7 +140,7 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
                 return;
             }
             try {
-                ArticleListingResponse responseData = (ArticleListingResponse) response.body();
+                ArticleListingResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     processPublisedArticlesResponse(responseData);
                 } else {
@@ -197,6 +198,23 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
     @Override
     public void onClick(View view, int position) {
         switch (view.getId()) {
+            case R.id.rootLayout:
+                Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
+                intent.putExtra(Constants.ARTICLE_ID, articleDataModelsNew.get(position).getId());
+                intent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(position).getUserId());
+                intent.putExtra(Constants.BLOG_SLUG, articleDataModelsNew.get(position).getBlogPageSlug());
+                intent.putExtra(Constants.TITLE_SLUG, articleDataModelsNew.get(position).getTitleSlug());
+                intent.putExtra(Constants.FROM_SCREEN, "User Profile");
+                if (true) {
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Private Comments");
+                    intent.putExtra(Constants.FROM_SCREEN, "Private User Profile");
+                } else {
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Public Comments");
+                    intent.putExtra(Constants.FROM_SCREEN, "Public User Profile");
+                }
+                intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
+                startActivity(intent);
+                break;
             case R.id.editPublishedTextView:
                 Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
                 ArticleDetailsAPI articleDetailsAPI = retrofit.create(ArticleDetailsAPI.class);
@@ -231,7 +249,7 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
                 return;
             }
             try {
-                ArticleDetailResult responseData = (ArticleDetailResult) response.body();
+                ArticleDetailResult responseData = response.body();
                 getResponseUpdateUi(responseData);
             } catch (Exception e) {
 //                showToast(getString(R.string.server_went_wrong));

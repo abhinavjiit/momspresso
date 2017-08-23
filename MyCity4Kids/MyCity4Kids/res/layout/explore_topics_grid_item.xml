@@ -39,6 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="TOPICS"
+                android:gravity="center"
                 android:textColor="@color/explore_listing.explore_categories.category_name"
                 android:textSize="18sp"
                 app:fontName="oswald_regular.ttf" />

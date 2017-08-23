@@ -211,7 +211,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
         }
         rootLayout = findViewById(R.id.rootLayout);
         density = getResources().getDisplayMetrics().density;
-        ((ImageView) findViewById(R.id.img_round)).setOnClickListener(this);
+        findViewById(R.id.img_round).setOnClickListener(this);
         txvaddress = (TextView) findViewById(R.id.description);
         ratingHeader = (TextView) findViewById(R.id.ratingHeader);
         txvdistance = (TextView) findViewById(R.id.distance);
@@ -228,7 +228,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
 
         setUpObservableScroll();
 
-        ((ImageView) findViewById(R.id.imgBack)).setOnClickListener(this);
+        findViewById(R.id.imgBack).setOnClickListener(this);
 
         if (bundle != null) {
             if (bundle.getBoolean("fromNotification")) {
@@ -273,7 +273,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
         }
         mDetailsHeader = (DetailHeader) findViewById(R.id.detailsHeader);
         mDetailsHeader.inflateHeader(mEventOrBusiness);
-        ((TextView) mDetailsHeader.findViewById(R.id.report_an_error)).setOnClickListener(this);
+        mDetailsHeader.findViewById(R.id.report_an_error).setOnClickListener(this);
         mDetailsHeader.bringToFront();
         mDetailsHeader.requestFocus();
 
@@ -866,7 +866,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
         UserTable _table = new UserTable((BaseApplication) getApplicationContext());
         int count = _table.getCount();
 
-        FavoriteAndBeenThereController _controller = new FavoriteAndBeenThereController(BusinessDetailsActivity.this, (IScreen) BusinessDetailsActivity.this);
+        FavoriteAndBeenThereController _controller = new FavoriteAndBeenThereController(BusinessDetailsActivity.this, BusinessDetailsActivity.this);
 
         if (mEventOrBusiness == Constants.BUSINESS_PAGE_TYPE) {
             switch (v.getId()) {
@@ -903,7 +903,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
                     Utils.pushEvent(BusinessDetailsActivity.this, GTMEventType.ADDPHOTOS_RESOURCES_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Resource/Event Details");
 
                     CameraFragmentDialog fragmentDialog = new CameraFragmentDialog();
-                    fragmentDialog.setSubmitListner((IOnSubmitGallery) BusinessDetailsActivity.this);
+                    fragmentDialog.setSubmitListner(BusinessDetailsActivity.this);
                     fragmentDialog.show(getSupportFragmentManager(), "");
                     writeReviewFromHeader(AddReviewOrPhoto.AddPhoto);
                 }
@@ -1235,7 +1235,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
                          public void onResponse(Call<CommonResponse> call, retrofit2.Response<CommonResponse> response) {
                              int statusCode = response.code();
 
-                             CommonResponse bookmarkResponse = (CommonResponse) response.body();
+                             CommonResponse bookmarkResponse = response.body();
 
                              removeProgressDialog();
                              if (bookmarkResponse.getResponseCode() == 200) {
@@ -1634,7 +1634,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
                 return;
             }
             try {
-                DetailsResponse responseData = (DetailsResponse) response.body();
+                DetailsResponse responseData = response.body();
                 updateUiWithDetailsResponse(responseData);
             } catch (Exception e) {
                 Crashlytics.logException(e);

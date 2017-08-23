@@ -159,7 +159,7 @@ public class EditCommentDialogFragment extends DialogFragment implements OnClick
                 return;
             }
 
-            AddCommentResponse responseData = (AddCommentResponse) response.body();
+            AddCommentResponse responseData = response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                 UserInfo userInfo = SharedPrefUtils.getUserDetailModel(getActivity());
                 CommentsData cd = new CommentsData();
@@ -212,7 +212,7 @@ public class EditCommentDialogFragment extends DialogFragment implements OnClick
                 return;
             }
 
-            AddCommentResponse responseData = (AddCommentResponse) response.body();
+            AddCommentResponse responseData = response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 //                if ("article".equals(type)) {
 //                    ((ArticlesAndBlogsDetailsActivity) getActivity()).showToast("Comment edited successfully!");

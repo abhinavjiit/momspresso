@@ -10,7 +10,7 @@ Authors("authors"),Blogs("blogs"),Bloggers("authors"),Tags("tags"),Topics("topic
 
 private String mSearchListType;
 
-private SearchListType(String pSearchListType){
+SearchListType(String pSearchListType){
 	mSearchListType=pSearchListType;
 }
 

@@ -55,7 +55,7 @@ public class AdapterKidAdultList extends BaseAdapter {
 
             holder = new ViewHolder();
             holder.name = (TextView) view.findViewById(R.id.name);
-            holder.viewColor = (View) view.findViewById(R.id.view_colorCode);
+            holder.viewColor = view.findViewById(R.id.view_colorCode);
 
             view.setTag(holder);
         } else {

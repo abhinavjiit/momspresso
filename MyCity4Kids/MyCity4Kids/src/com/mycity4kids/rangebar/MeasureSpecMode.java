@@ -19,7 +19,7 @@ public enum MeasureSpecMode {
 
     // Constructor /////////////////////////////////////////////////////////////
 
-    private MeasureSpecMode(int modeValue) {
+    MeasureSpecMode(int modeValue) {
         mModeValue = modeValue;
     }
 

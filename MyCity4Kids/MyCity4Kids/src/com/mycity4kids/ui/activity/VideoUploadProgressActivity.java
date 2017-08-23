@@ -91,7 +91,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         try {
             TusUpload upload = new TusAndroidUpload(contentURI, this);
             uploadTask = new UploadTask(this, client, upload);
-            uploadTask.execute(new Void[0]);
+            uploadTask.execute();
         } catch (Exception e) {
 //            showError(e);
         }
@@ -231,7 +231,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
                 return;
             }
             try {
-                UpdateVideoDetailsResponse responseData = (UpdateVideoDetailsResponse) response.body();
+                UpdateVideoDetailsResponse responseData = response.body();
                 Log.d("Response Body = ", "" + new Gson().toJson(responseData));
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 //                    setStatus("Upload finished!");

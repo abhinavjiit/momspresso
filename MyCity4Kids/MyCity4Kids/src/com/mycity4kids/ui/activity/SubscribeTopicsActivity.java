@@ -101,7 +101,7 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
                 return;
             }
             try {
-                FollowUnfollowCategoriesResponse responseData = (FollowUnfollowCategoriesResponse) response.body();
+                FollowUnfollowCategoriesResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     if (responseData.getData() == null) {
                         previouslyFollowedTopics = new ArrayList<>();
@@ -337,7 +337,7 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
                 return;
             }
             try {
-                FollowUnfollowCategoriesResponse responseData = (FollowUnfollowCategoriesResponse) response.body();
+                FollowUnfollowCategoriesResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     SharedPrefUtils.setFollowedTopicsCount(SubscribeTopicsActivity.this, responseData.getData().size());
                     showToast(getString(R.string.subscribe_topics_toast_topic_updated));

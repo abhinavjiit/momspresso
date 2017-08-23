@@ -60,7 +60,7 @@ public class EasySSLSocketFactory implements LayeredSocketFactory {
 	 *      InetAddress, int, HttpParams)
 	 */
 	public Socket connectSocket(Socket sock, String host, int port, InetAddress localAddress, int localPort,
-			HttpParams params) throws IOException, UnknownHostException, ConnectTimeoutException {
+			HttpParams params) throws IOException {
 		int connTimeout = HttpConnectionParams.getConnectionTimeout(params);
 		int soTimeout = HttpConnectionParams.getSoTimeout(params);
 
@@ -100,8 +100,7 @@ public class EasySSLSocketFactory implements LayeredSocketFactory {
 	 * @see LayeredSocketFactory#createSocket(Socket, String, int,
 	 *      boolean)
 	 */
-	public Socket createSocket(Socket socket, String host, int port, boolean autoClose) throws IOException,
-			UnknownHostException {
+	public Socket createSocket(Socket socket, String host, int port, boolean autoClose) throws IOException {
 		//return getSSLContext().getSocketFactory().createSocket();
 		return getSSLContext().getSocketFactory().createSocket(socket, host, port, autoClose);
 	}

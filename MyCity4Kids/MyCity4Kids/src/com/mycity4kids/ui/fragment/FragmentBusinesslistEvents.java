@@ -117,7 +117,6 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
 
     public enum FilterType {SubCategory, Locality, AgeGroup, More, Activities, DateValue}
 
-    ;
     //    TabType chosen_tab;
     ArrayList<AdvancedSearch> advancedListFromDb;
     ArrayList<AdvancedSearch> advancedListFromSearch;
@@ -354,14 +353,14 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
             linearLayout1.setVisibility(View.VISIBLE);
             view.findViewById(R.id.tabline).setVisibility(View.VISIBLE);
             pager_view.setVisibility(View.VISIBLE);
-            ((TextView) view.findViewById(R.id.txt_no_data_business)).setVisibility(View.GONE);
+            view.findViewById(R.id.txt_no_data_business).setVisibility(View.GONE);
 
         }
     }
 
     private void manageView() {
 
-        rltLoadingView = (RelativeLayout) view.findViewById(R.id.rltLoadingView);
+        rltLoadingView = view.findViewById(R.id.rltLoadingView);
         view.findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_indefinitely));
         eventListView = (ListView) view.findViewById(R.id.eventListView);
         businessListView = (ListView) view.findViewById(R.id.searchResultListView);
@@ -397,7 +396,7 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
                      * its related to search query adapter:
                      */
                     String whichAdapterDataIsLoaded = (String) parent.getTag();
-                    String listItem = (String) parent.getAdapter().getItem(pos).toString();
+                    String listItem = parent.getAdapter().getItem(pos).toString();
                     searchName.removeTextChangedListener(textWatcher);
                     if (!listItem.contains(",")) {
                         isContainCommaQuery = false;
@@ -419,7 +418,7 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
                     searchName.addTextChangedListener(textWatcher);
 
                 } else if (parent.getAdapter() instanceof SubLocalityAdapter) {
-                    String listItem = (String) parent.getAdapter().getItem(pos).toString();
+                    String listItem = parent.getAdapter().getItem(pos).toString();
                     String queryData = searchName.getText().toString();
                     String locality = mLocalitySearchEtxt.getText().toString();
                     String localitysearch = "";
@@ -573,7 +572,7 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
                 Intent intent = new Intent(getActivity(), BusinessDetailsActivity.class);
                 String businessId = null;
                 if (parent.getAdapter() instanceof BusinessListingAdapter) {
-                    BusinessDataListing businessListData = (BusinessDataListing) ((BusinessListingAdapter) parent.getAdapter()).getItem(pos);
+                    BusinessDataListing businessListData = (BusinessDataListing) parent.getAdapter().getItem(pos);
                     businessId = businessListData.getId();
                     intent.putExtra(Constants.CATEGORY_ID, categoryId);
                     intent.putExtra(Constants.BUSINESS_OR_EVENT_ID, businessId);
@@ -599,7 +598,7 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
                 Intent intent = new Intent(getActivity(), BusinessDetailsActivity.class);
                 String businessId = null;
                 if (parent.getAdapter() instanceof BusinessListingAdapter) {
-                    BusinessDataListing businessListData = (BusinessDataListing) ((BusinessListingAdapter) parent.getAdapter()).getItem(pos);
+                    BusinessDataListing businessListData = (BusinessDataListing) parent.getAdapter().getItem(pos);
                     businessId = businessListData.getId();
                     intent.putExtra(Constants.CATEGORY_ID, categoryId);
                     intent.putExtra(Constants.BUSINESS_OR_EVENT_ID, businessId);
@@ -607,7 +606,7 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
                     intent.putExtra(Constants.DISTANCE, businessListData.getDistance());
                     startActivity(intent);
                 } else if (parent.getAdapter() instanceof BusinessListingAdapterevent) {
-                    BusinessDataListing businessListData = (BusinessDataListing) ((BusinessListingAdapterevent) parent.getAdapter()).getItem(pos);
+                    BusinessDataListing businessListData = (BusinessDataListing) parent.getAdapter().getItem(pos);
                     businessId = businessListData.getId();
                     intent.putExtra(Constants.CATEGORY_ID, categoryId);
                     intent.putExtra(Constants.BUSINESS_OR_EVENT_ID, businessId);
@@ -792,7 +791,7 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
                 if (!queryList.isEmpty()) {
                     eventListView.setVisibility(View.GONE);
                     mSearchList.setVisibility(View.VISIBLE);
-                    ((TextView) view.findViewById(R.id.txt_no_data_business)).setVisibility(View.GONE);
+                    view.findViewById(R.id.txt_no_data_business).setVisibility(View.GONE);
                     //mLoutProgress.setVisibility(View.GONE);
                     ArrayAdapter<String> mQueryAdapter = new ArrayAdapter<String>(getActivity(), R.layout.text_for_locality, queryList);
                     mSearchList.setAdapter(mQueryAdapter);
@@ -845,10 +844,10 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
                         businessAdapter.setListData(mBusinessDataListings, businessOrEventType);
                         businessAdapter.notifyDataSetChanged();
                         if (mBusinessDataListings.isEmpty()) {
-                            ((TextView) view.findViewById(R.id.txt_no_data_business)).setVisibility(View.VISIBLE);
+                            view.findViewById(R.id.txt_no_data_business).setVisibility(View.VISIBLE);
                             businessListView.setVisibility(View.GONE);
                         } else {
-                            ((TextView) view.findViewById(R.id.txt_no_data_business)).setVisibility(View.GONE);
+                            view.findViewById(R.id.txt_no_data_business).setVisibility(View.GONE);
                             if (businessOrEventType == Constants.EVENT_PAGE_TYPE) {
                                 eventListView.setVisibility(View.VISIBLE);
                             } else {
@@ -864,15 +863,15 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
                             businessListView.setVisibility(View.GONE);
                             eventListView.setVisibility(View.GONE);
                             if (businessOrEventType == Constants.EVENT_PAGE_TYPE) {
-                                ((TextView) view.findViewById(R.id.txt_no_data_business)).setVisibility(View.VISIBLE);
+                                view.findViewById(R.id.txt_no_data_business).setVisibility(View.VISIBLE);
                                 ((TextView) view.findViewById(R.id.txt_no_data_business)).setText(getString(R.string.event_list));
                             } else {
-                                ((TextView) view.findViewById(R.id.txt_no_data_business)).setVisibility(View.VISIBLE);
+                                view.findViewById(R.id.txt_no_data_business).setVisibility(View.VISIBLE);
                             }
 
                             //	businessListView.setVisibility(View.GONE);
                         } else {
-                            ((TextView) view.findViewById(R.id.txt_no_data_business)).setVisibility(View.GONE);
+                            view.findViewById(R.id.txt_no_data_business).setVisibility(View.GONE);
                             if (businessOrEventType == Constants.EVENT_PAGE_TYPE) {
                                 eventListView.setVisibility(View.VISIBLE);
                             } else {
@@ -904,19 +903,19 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
                         businessAdapter.notifyDataSetChanged();
                         if (!mBusinessDataListings.isEmpty()) {
                             businessListView.setVisibility(View.VISIBLE);
-                            ((TextView) view.findViewById(R.id.txt_no_data_business)).setVisibility(View.GONE);
+                            view.findViewById(R.id.txt_no_data_business).setVisibility(View.GONE);
                         } else {
-                            ((TextView) view.findViewById(R.id.txt_no_data_business)).setVisibility(View.VISIBLE);
+                            view.findViewById(R.id.txt_no_data_business).setVisibility(View.VISIBLE);
                             businessListView.setVisibility(View.GONE);
                         }
                     } else if (responseData.getResponseCode() == 400) {
                         Constants.IS_PAGE_AVAILABLE = false;
                         if (mBusinessDataListings.isEmpty()) {
-                            ((TextView) view.findViewById(R.id.txt_no_data_business)).setVisibility(View.VISIBLE);
+                            view.findViewById(R.id.txt_no_data_business).setVisibility(View.VISIBLE);
                             businessListView.setVisibility(View.GONE);
                             eventListView.setVisibility(View.GONE);
                         } else {
-                            ((TextView) view.findViewById(R.id.txt_no_data_business)).setVisibility(View.GONE);
+                            view.findViewById(R.id.txt_no_data_business).setVisibility(View.GONE);
                             if (businessOrEventType == Constants.EVENT_PAGE_TYPE) {
                                 eventListView.setVisibility(View.VISIBLE);
                             } else {
@@ -950,21 +949,21 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
                         businessAdapter.notifyDataSetChanged();
                         if (!mBusinessDataListings1.isEmpty()) {
                             businessListView.setVisibility(View.VISIBLE);
-                            ((TextView) view.findViewById(R.id.txt_no_data_business)).setVisibility(View.GONE);
+                            view.findViewById(R.id.txt_no_data_business).setVisibility(View.GONE);
                         } else {
-                            ((TextView) view.findViewById(R.id.txt_no_data_business)).setVisibility(View.VISIBLE);
+                            view.findViewById(R.id.txt_no_data_business).setVisibility(View.VISIBLE);
                             businessListView.setVisibility(View.GONE);
                         }
                     } else if (responseData.getResponseCode() == 400) {
                         Constants.IS_PAGE_AVAILABLE = false;
                         if (mBusinessDataListings1.isEmpty()) {
 //                                Log.d("check", "mBusinessDataListings size 400 if" + mBusinessDataListings1.size());
-                            ((TextView) view.findViewById(R.id.txt_no_data_business)).setVisibility(View.VISIBLE);
+                            view.findViewById(R.id.txt_no_data_business).setVisibility(View.VISIBLE);
                             businessListView.setVisibility(View.GONE);
                             eventListView.setVisibility(View.GONE);
                         } else {
 //                                Log.d("check", "mBusinessDataListings size 400 else " + mBusinessDataListings1.size());
-                            ((TextView) view.findViewById(R.id.txt_no_data_business)).setVisibility(View.GONE);
+                            view.findViewById(R.id.txt_no_data_business).setVisibility(View.GONE);
                             if (businessOrEventType == Constants.EVENT_PAGE_TYPE) {
                                 eventListView.setVisibility(View.VISIBLE);
                             } else {
@@ -1254,7 +1253,7 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
     @Override
     public void onTabChanged(String arg0) {
 
-        ((TextView) view.findViewById(R.id.txt_no_data_business)).setVisibility(View.GONE);
+        view.findViewById(R.id.txt_no_data_business).setVisibility(View.GONE);
 
         //	Toast.makeText(BusinessListActivity.this, "call "+arg0, Toast.LENGTH_SHORT).show();
 
@@ -1686,8 +1685,8 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
 
     @Override
     public void cancel(int type) {
-        ((TextView) view.findViewById(R.id.txvSortBy)).setBackgroundColor(getResources().getColor(R.color.tab_unchecked));
-        ((TextView) view.findViewById(R.id.txvFilter)).setBackgroundColor(getResources().getColor(R.color.tab_unchecked));
+        view.findViewById(R.id.txvSortBy).setBackgroundColor(getResources().getColor(R.color.tab_unchecked));
+        view.findViewById(R.id.txvFilter).setBackgroundColor(getResources().getColor(R.color.tab_unchecked));
 
         Animation bottomUp = AnimationUtils.loadAnimation(getActivity(), R.anim.bottom_up);
         bottomUp.setAnimationListener(makeTopGone);
@@ -1697,8 +1696,8 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
 
     @Override
     public void reject(int type) {
-        ((TextView) view.findViewById(R.id.txvSortBy)).setBackgroundColor(getResources().getColor(R.color.tab_unchecked));
-        ((TextView) view.findViewById(R.id.txvFilter)).setBackgroundColor(getResources().getColor(R.color.tab_unchecked));
+        view.findViewById(R.id.txvSortBy).setBackgroundColor(getResources().getColor(R.color.tab_unchecked));
+        view.findViewById(R.id.txvFilter).setBackgroundColor(getResources().getColor(R.color.tab_unchecked));
         mFilterMap = new HashMap<MapTypeFilter, String>();
         mBusinessDataListings = new ArrayList<BusinessDataListing>();
 
@@ -1814,7 +1813,7 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
                         adapter.notifyDataSetChanged();
                         mSearchList.setVisibility(View.VISIBLE);
                         eventListView.setVisibility(View.GONE);
-                        ((TextView) view.findViewById(R.id.txt_no_data_business)).setVisibility(View.GONE);
+                        view.findViewById(R.id.txt_no_data_business).setVisibility(View.GONE);
                         mSearchList.setAdapter(adapter);
                         adapter.notifyDataSetChanged();
                         mSearchList.setTag(Constants.LOCALITY_LIST_TAG);
@@ -1862,7 +1861,7 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
 
-        if (requestCode == businessAdapter.REQUEST_INIT_PERMISSION) {
+        if (requestCode == BusinessListingAdapterevent.REQUEST_INIT_PERMISSION) {
             Log.i("Permissions", "Received response for storage permissions request.");
 
             if (PermissionUtil.verifyPermissions(grantResults)) {

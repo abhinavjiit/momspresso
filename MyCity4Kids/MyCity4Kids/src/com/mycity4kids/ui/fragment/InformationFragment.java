@@ -352,17 +352,17 @@ public class InformationFragment extends BaseFragment implements OnClickListener
             //Batches:-
             if (batchList != null && !batchList.isEmpty()) {
 
-                ((LinearLayout) view.findViewById(R.id.orgview)).setVisibility(View.GONE);
-                ((LinearLayout) view.findViewById(R.id.dateview)).setVisibility(View.GONE);
-                ((LinearLayout) view.findViewById(R.id.desview)).setVisibility(View.GONE);
+                view.findViewById(R.id.orgview).setVisibility(View.GONE);
+                view.findViewById(R.id.dateview).setVisibility(View.GONE);
+                view.findViewById(R.id.desview).setVisibility(View.GONE);
                 ifBatchAvl.setVisibility(View.VISIBLE);
 
                 if (!StringUtils.isNullOrEmpty(mBusinessInfoModel.getOrganised_by())) {
                     ((TextView) view.findViewById(R.id.batch_org_value)).setText(mBusinessInfoModel.getOrganised_by());
-                    ((LinearLayout) view.findViewById(R.id.org_batch)).setVisibility(View.VISIBLE);
+                    view.findViewById(R.id.org_batch).setVisibility(View.VISIBLE);
                 } else {
-                    ((ImageView) view.findViewById(R.id.separator_btwn_orgDesc)).setVisibility(View.GONE);
-                    ((LinearLayout) view.findViewById(R.id.org_batch)).setVisibility(View.GONE);
+                    view.findViewById(R.id.separator_btwn_orgDesc).setVisibility(View.GONE);
+                    view.findViewById(R.id.org_batch).setVisibility(View.GONE);
                 }
                 if (!StringUtils.isNullOrEmpty(mBusinessInfoModel.getContact().getEmail()) || !StringUtils.isNullOrEmpty(mBusinessInfoModel.getContact().getContact_no())) {
 
@@ -374,16 +374,16 @@ public class InformationFragment extends BaseFragment implements OnClickListener
                         contact.append(mBusinessInfoModel.getContact().getEmail().toString());
                     }
                     ((TextView) view.findViewById(R.id.batch_contact_value)).setText(contact.toString());
-                    ((LinearLayout) view.findViewById(R.id.contact_batch)).setVisibility(View.VISIBLE);
+                    view.findViewById(R.id.contact_batch).setVisibility(View.VISIBLE);
                 } else {
-                    ((ImageView) view.findViewById(R.id.separator_btwn_descCont)).setVisibility(View.GONE);
-                    ((LinearLayout) view.findViewById(R.id.contact_batch)).setVisibility(View.GONE);
+                    view.findViewById(R.id.separator_btwn_descCont).setVisibility(View.GONE);
+                    view.findViewById(R.id.contact_batch).setVisibility(View.GONE);
                 }
                 if (!StringUtils.isNullOrEmpty(mBusinessInfoModel.getDescription())) {
                     ((TextView) view.findViewById(R.id.batch_desc_value)).setText(mBusinessInfoModel.getDescription());
-                    ((LinearLayout) view.findViewById(R.id.desc_batch)).setVisibility(View.VISIBLE);
+                    view.findViewById(R.id.desc_batch).setVisibility(View.VISIBLE);
                 } else {
-                    ((LinearLayout) view.findViewById(R.id.desc_batch)).setVisibility(View.GONE);
+                    view.findViewById(R.id.desc_batch).setVisibility(View.GONE);
                 }
 
 
@@ -1087,7 +1087,7 @@ public class InformationFragment extends BaseFragment implements OnClickListener
                 }
                 CameraFragmentDialog fragmentDialog = new CameraFragmentDialog();
                 fragmentDialog.setSubmitListner((IOnSubmitGallery) getActivity());
-                fragmentDialog.show(((FragmentActivity) getActivity()).getSupportFragmentManager(), "");
+                fragmentDialog.show(getActivity().getSupportFragmentManager(), "");
                 ((BusinessDetailsActivity) getActivity()).writeReviewFromHeader(AddReviewOrPhoto.AddPhoto);
                 break;
             }

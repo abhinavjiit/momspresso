@@ -25,13 +25,13 @@ import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.newmodels.PushNotificationModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.reminders.ShareArticleReceiver;
+import com.mycity4kids.ui.activity.AppSettingsActivity;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.BloggerProfileActivity;
 import com.mycity4kids.ui.activity.BusinessDetailsActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.LoadWebViewActivity;
 import com.mycity4kids.ui.activity.NewsLetterWebviewActivity;
-import com.mycity4kids.ui.activity.SettingsActivity;
 import com.mycity4kids.ui.activity.SplashActivity;
 import com.mycity4kids.ui.activity.VlogsDetailActivity;
 
@@ -97,7 +97,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                     shareIntent.putExtra(AppConstants.NOTIFICATION_ID, requestID);
                     shareIntent.putExtra(AppConstants.SHARE_CONTENT, pushNotificationModel.getShare_content());
                     shareIntent.putExtra(AppConstants.SHARE_URL, pushNotificationModel.getUrl());
-                    PendingIntent sharePendingIntent = PendingIntent.getBroadcast((BaseApplication) getApplicationContext(), 0, shareIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    PendingIntent sharePendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, shareIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
                     PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                     NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setLargeIcon(icon).setSmallIcon(R.drawable.icon_notify).setContentTitle(title).setStyle(new NotificationCompat.BigTextStyle().bigText(message)).setContentText(message);
@@ -191,7 +191,6 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                                     .setContentIntent(contentIntent)
                                     .setContentText(body)
                                     .setAutoCancel(true);
-                    ;
                     // Gets an instance of the NotificationManager service
                     NotificationManager mNotifyMgr =
                             (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -236,7 +235,6 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                                     .setContentIntent(contentIntent)
                                     .setContentText(body)
                                     .setAutoCancel(true);
-                    ;
                     // Gets an instance of the NotificationManager service
                     NotificationManager mNotifyMgr =
                             (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -279,7 +277,6 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                                     .setContentIntent(contentIntent)
                                     .setContentText(body)
                                     .setAutoCancel(true);
-                    ;
                     // Gets an instance of the NotificationManager service
                     NotificationManager mNotifyMgr =
                             (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -379,13 +376,13 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         resultIntent.putExtra("fromNotification", true);
                         contentIntent = PendingIntent.getActivity(this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                     } else {
-                        resultIntent = new Intent(getApplicationContext(), SettingsActivity.class);
+                        resultIntent = new Intent(getApplicationContext(), AppSettingsActivity.class);
                         resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         resultIntent.putExtra("fromNotification", true);
                         resultIntent.putExtra("load_fragment", Constants.SETTINGS_FRAGMENT);
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
                         // Adds the back stack
-                        stackBuilder.addParentStack(SettingsActivity.class);
+                        stackBuilder.addParentStack(AppSettingsActivity.class);
                         // Adds the Intent to the top of the stack
                         stackBuilder.addNextIntent(resultIntent);
                         contentIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);

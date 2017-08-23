@@ -42,7 +42,7 @@ public class ImageAdapter extends PagerAdapter {
 
 	@Override
 	public boolean isViewFromObject(View view, Object object) {
-		return view == ((ImageView) object);
+		return view == object;
 	}
 
 	@Override
@@ -53,19 +53,19 @@ public class ImageAdapter extends PagerAdapter {
 		if(!mPhotoList.get(position).getImagePath().equals("")){
 			imageView = new ImageView(mContext);
 			imageView.setImageBitmap(getImageBitmap(mPhotoList.get(position).getImagePath()));
-			((ViewPager) container).addView(imageView, 0);
+			container.addView(imageView, 0);
 			return imageView;
 		}else{
 			networkImageView =new NetworkImageView(mContext);
 			networkImageView.setImageUrl(mPhotoList.get(position).getImageUrl(), imageLoader);
-			((ViewPager) container).addView(networkImageView, 0);
+			container.addView(networkImageView, 0);
 			return networkImageView;
 		}
 	}
 
 	@Override
 	public void destroyItem(ViewGroup container, int position, Object object) {
-		((ViewPager) container).removeView((ImageView) object);
+		container.removeView((ImageView) object);
 	}
 	private Bitmap getImageBitmap(String path){
 		Bitmap sourceBitmap = null;

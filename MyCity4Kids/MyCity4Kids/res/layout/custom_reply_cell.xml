@@ -9,6 +9,8 @@
     android:paddingRight="10dp"
     android:paddingTop="8dp">
 
+    //Change View hierarchy with caution. getParent method is in use in the class file
+
     <ImageView
         android:id="@+id/replyIndicatorImageView"
         android:layout_width="wrap_content"
@@ -17,7 +19,7 @@
         android:src="@drawable/ic_comments_arrow" />
 
     <ImageView
-        android:id="@+id/network_img"
+        android:id="@+id/replierImageView"
         android:layout_width="@dimen/ad_comments_profile_pic_width"
         android:layout_height="@dimen/ad_comments_profile_pic_width"
         android:layout_alignParentTop="true"
@@ -30,13 +32,13 @@
         android:visibility="visible" />
 
     <com.mycity4kids.widget.CustomFontTextView
-        android:id="@+id/txvCommentTitle"
+        android:id="@+id/txvReplyTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="3dp"
         android:layout_marginStart="3dp"
-        android:layout_toEndOf="@+id/network_img"
-        android:layout_toRightOf="@+id/network_img"
+        android:layout_toEndOf="@+id/replierImageView"
+        android:layout_toRightOf="@+id/replierImageView"
         android:ellipsize="end"
         android:maxLines="1"
         android:paddingLeft="5dp"
@@ -50,9 +52,9 @@
         android:id="@+id/txvCommentDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/txvCommentTitle"
-        android:layout_alignStart="@+id/txvCommentTitle"
-        android:layout_below="@id/txvCommentTitle"
+        android:layout_alignLeft="@+id/txvReplyTitle"
+        android:layout_alignStart="@+id/txvReplyTitle"
+        android:layout_below="@id/txvReplyTitle"
         android:layout_marginTop="8dp"
         android:ellipsize="end"
         android:paddingLeft="5dp"
@@ -67,8 +69,8 @@
         android:id="@+id/replyActionContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/txvCommentTitle"
-        android:layout_alignStart="@+id/txvCommentTitle"
+        android:layout_alignLeft="@+id/txvReplyTitle"
+        android:layout_alignStart="@+id/txvReplyTitle"
         android:layout_below="@+id/txvCommentDescription"
         android:orientation="horizontal">
 

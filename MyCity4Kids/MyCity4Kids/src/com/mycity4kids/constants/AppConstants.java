@@ -519,4 +519,6 @@ public class AppConstants {
     public static final String SEARCH_ITEM_TYPE_ARTICLE = "article";
     public static final String SEARCH_ITEM_TYPE_TOPIC = "topic";
     public static final int MAX_ALLOWED_CHILD_COUNT = 8;
+
+    public static final String DEBUGGING_USER_ID = "6f57d7cb01fa46c89bf85e3d2ade7de3";
 }

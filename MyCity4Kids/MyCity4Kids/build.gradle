@@ -30,7 +30,7 @@ dependencies {
     }
     compile project(':WordPressEditor')
     compile files('libs/comscore.jar')
-    compile project(':progressviewslib')
+//    compile project(':progressviewslib')
     compile 'com.google.android.gms:play-services-plus:10.0.1'
     compile 'com.google.android.gms:play-services-plus:10.0.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
@@ -63,15 +63,11 @@ dependencies {
     compile 'org.apmem.tools:layouts:1.10@aar'
     compile 'com.yalantis:ucrop:2.1.1'
     compile 'com.getbase:floatingactionbutton:1.10.1'
-    compile 'com.lguipeng.bubbleview:library:1.0.0'
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.1'
-    compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.1.+'
     compile 'life.knowledge4:k4l-video-trimmer:1.0'
     compile 'io.tus.java.client:tus-java-client:0.3.1'
     compile 'io.tus.android.client:tus-android-client:0.1.4'
-    compile 'com.github.jakob-grabner:Circle-Progress-View:v1.3'
     compile 'com.afollestad:easyvideoplayer:0.3.0'
-    compile 'com.plattysoft.leonids:LeonidsLib:1.3.2'
     compile 'commons-io:commons-io:2.4'
     compile 'com.github.ittianyu:BottomNavigationViewEx:1.1.9'
     compile 'q.rorbin:badgeview:1.1.0'

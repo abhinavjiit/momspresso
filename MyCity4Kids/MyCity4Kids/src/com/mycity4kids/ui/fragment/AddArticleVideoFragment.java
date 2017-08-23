@@ -89,7 +89,7 @@ public class AddArticleVideoFragment extends BaseFragment implements View.OnClic
                          @Override
                          public void onResponse(Call<BlogPageResponse> call, retrofit2.Response<BlogPageResponse> response) {
                              removeProgressDialog();
-                             BlogPageResponse responseModel = (BlogPageResponse) response.body();
+                             BlogPageResponse responseModel = response.body();
                              if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
                                  if (responseModel.getData().getResult().getIsSetup() == 1) {
                                      writeArticleImageView.setVisibility(View.VISIBLE);

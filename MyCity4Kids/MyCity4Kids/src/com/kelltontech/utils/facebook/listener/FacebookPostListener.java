@@ -8,5 +8,5 @@ package com.kelltontech.utils.facebook.listener;
  */
 public interface FacebookPostListener 
 {
-	public void doAfterPostOnWall(boolean status);
+	void doAfterPostOnWall(boolean status);
 }

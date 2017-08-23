@@ -76,7 +76,7 @@ public class BlogShareSpouseController extends BaseController {
         try {
 
             if (reqtype == AppConstants.SHARE_SPOUSE_BLOG) {
-                BlogShareSpouseModel _blogShareModel = (BlogShareSpouseModel) requestData;
+                BlogShareSpouseModel _blogShareModel = requestData;
                 nameValuePairs.add(new BasicNameValuePair("user_id", "" + SharedPrefUtils.getUserDetailModel(context).getId()));
                 nameValuePairs.add(new BasicNameValuePair("article_id", _blogShareModel.getArticleId()));
                 nameValuePairs.add(new BasicNameValuePair("share_spouse_data", data));

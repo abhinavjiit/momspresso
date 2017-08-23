@@ -77,7 +77,7 @@ public class TrendingTopicsTabFragment extends BaseFragment implements View.OnCl
         }
         Log.d("searchName", "" + trendingTopicData.getDisplay_name());
 
-        swipeRefreshLayout.setOnRefreshListener((SwipeRefreshLayout.OnRefreshListener) this);
+        swipeRefreshLayout.setOnRefreshListener(this);
 
         adapter = new MainArticleListingAdapter(getActivity());
         adapter.setNewListData(trendingTopicData.getArticleList());
@@ -157,24 +157,6 @@ public class TrendingTopicsTabFragment extends BaseFragment implements View.OnCl
         TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
 
         int from = (nextPageNumber - 1) * limit + 1;
-//        if (StringUtils.isNullOrEmpty(filteredTopics)) {
-//            Call<ArticleListingResponse> filterCall;
-//            if (AppConstants.MOMSPRESSO_CATEGORYID.equals(selectedTopics)) {
-//                Utils.pushOpenArticleListingEvent(this, GTMEventType.ARTICLE_LISTING_CLICK_EVENT, fromScreen, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), displayName + "~" + selectedTopics, "" + nextPageNumber);
-//                filterCall = topicsAPI.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1, "");
-//            } else if (isLanguageListing) {
-//                Utils.pushOpenArticleListingEvent(this, GTMEventType.ARTICLE_LISTING_CLICK_EVENT, fromScreen, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), categoryName + "~" + selectedTopics, "" + nextPageNumber);
-//                filterCall = topicsAPI.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1, "");
-//            } else {
-//                Utils.pushOpenArticleListingEvent(this, GTMEventType.ARTICLE_LISTING_CLICK_EVENT, fromScreen, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), displayName + "~" + selectedTopics, "" + nextPageNumber);
-//                filterCall = topicsAPI.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(this));
-//            }
-//            filterCall.enqueue(articleListingResponseCallback);
-//        } else {
-//            Utils.pushOpenArticleListingEvent(this, GTMEventType.ARTICLE_LISTING_CLICK_EVENT, fromScreen, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), displayName + "~" + selectedTopics, "" + nextPageNumber);
-//            Call<ArticleListingResponse> filterCall = topicsAPI.getFilteredArticlesForCategories(filteredTopics, sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(this));
-//            filterCall.enqueue(articleListingResponseCallback);
-//        }
 
 //        Utils.pushOpenArticleListingEvent(this, GTMEventType.ARTICLE_LISTING_CLICK_EVENT, "fromScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), displayName + "~" + selectedTopics, "" + nextPageNumber);
         Call<ArticleListingResponse> filterCall = topicsAPI.getFilteredArticlesForCategories(trendingTopicData.getId(), sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(getActivity()));
@@ -196,7 +178,7 @@ public class TrendingTopicsTabFragment extends BaseFragment implements View.OnCl
             }
 //            swipeRefreshLayout.setRefreshing(false);
             try {
-                ArticleListingResponse responseData = (ArticleListingResponse) response.body();
+                ArticleListingResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     processArticleListingResponse(responseData);
                 } else {

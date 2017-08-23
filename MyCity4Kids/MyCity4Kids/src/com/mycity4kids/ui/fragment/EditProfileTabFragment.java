@@ -162,26 +162,6 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
         Call<CityConfigResponse> cityCall = cityConfigAPI.getCityConfig();
         cityCall.enqueue(cityConfigResponseCallback);
 
-//        citySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                // An item was selected. You can retrieve the selected item using
-//                Log.d("Selected City = ", "city is " + parent.getItemAtPosition(position));
-//                if ("Others".equals(((CityInfoItem) parent.getItemAtPosition(position)).getCityName())) {
-//                    selectedCityId = AppConstants.OTHERS_CITY_ID;
-//                } else {
-//                    selectedCityId = Integer.parseInt(((CityInfoItem) parent.getItemAtPosition(position)).getId().replace("city-", ""));
-//                }
-//                CityInfoItem cii = (CityInfoItem) parent.getItemAtPosition(position);
-//                cityModel = new City(cii.getCityName(), cii.getLat(), cii.getLon(), selectedCityId, cii.getId());
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//
-//            }
-//        });
-
         return view;
     }
 
@@ -202,14 +182,11 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
     private Callback<UserDetailResponse> getUserDetailsResponseCallback = new Callback<UserDetailResponse>() {
         @Override
         public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
-            removeProgressDialog();
             if (response == null || response.body() == null) {
-//                noDataFoundTextView.setVisibility(View.VISIBLE);
-//                showToast(getString(R.string.went_wrong));
                 return;
             }
 
-            UserDetailResponse responseData = (UserDetailResponse) response.body();
+            UserDetailResponse responseData = response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                 if (responseData.getData().get(0).getResult().getKids() == null) {
                     rangebar.setRangePinsByValue(0, 0);
@@ -244,22 +221,16 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
                 blogTitleEditText.setText(responseData.getData().get(0).getResult().getBlogTitle());
                 describeSelfEditText.setText(responseData.getData().get(0).getResult().getUserBio());
 
-                if (null == responseData.getData().get(0).getResult().getPhone()) {
-                    phoneEditText.setText(" ");
+                if (null == responseData.getData().get(0).getResult().getPhone() || StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getPhone().getMobile())) {
                 } else {
                     phoneEditText.setText(responseData.getData().get(0).getResult().getPhone().getMobile());
                 }
             } else {
-//                noDataFoundTextView.setVisibility(View.VISIBLE);
-//                showToast(responseData.getReason());
             }
         }
 
         @Override
         public void onFailure(Call<UserDetailResponse> call, Throwable t) {
-//            noDataFoundTextView.setVisibility(View.VISIBLE);
-            removeProgressDialog();
-//            showToast(getString(R.string.server_went_wrong));
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
@@ -272,16 +243,13 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
             if (response == null || null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                 Crashlytics.logException(nee);
-//                gotToProfile();
                 return;
             }
             try {
-                CityConfigResponse responseData = (CityConfigResponse) response.body();
+                CityConfigResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-//                    mDatalist = responseData.getData().getResult().getCityData();
                     mDatalist = new ArrayList<>();
                     if (mDatalist == null) {
-//                        gotToProfile();
                         return;
                     }
                     MetroCity currentCity = SharedPrefUtils.getCurrentCityModel(getActivity());
@@ -305,23 +273,11 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
                             mDatalist.get(i).setSelected(false);
                         }
                     }
-//                    CitySpinnerAdapter citySpinnerAdapter = new CitySpinnerAdapter(getActivity(), R.layout.text_current_locality, mDatalist);
-//                    citySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//                    // Apply the adapter to the spinner
-//                    citySpinner.setAdapter(citySpinnerAdapter);
-//                    int currentCityId = SharedPrefUtils.getCurrentCityModel(getActivity()).getId();
-//                    for (int i = 0; i < mDatalist.size(); i++) {
-//                        int cId = Integer.parseInt(mDatalist.get(i).getId().replace("city-", ""));
-//                        if (currentCityId == cId) {
-//                            citySpinner.setSelection(i, true);
-//                        }
-//                    }
                 } else {
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-//                gotToProfile();
             }
         }
 
@@ -329,7 +285,6 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
         public void onFailure(Call<CityConfigResponse> call, Throwable t) {
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
-//            gotToProfile();
         }
     };
 
@@ -380,18 +335,13 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
         ArrayList<KidsInfo> kidsInfoList = new ArrayList<KidsInfo>();
 
         for (int position = 0; position < childInfoContainer.getChildCount(); position++) {
-            View innerLayout = (View) childInfoContainer.getChildAt(position);
+            View innerLayout = childInfoContainer.getChildAt(position);
 
             final TextView dobOfKidSpn = (TextView) innerLayout.findViewById(R.id.kidsDOBTextView);
             RadioGroup genderRadioGroup = (RadioGroup) innerLayout.findViewById(R.id.genderRadioGroup);
             RadioButton maleRadio = (RadioButton) innerLayout.findViewById(R.id.maleRadioButton);
-            RadioButton femaleRadio = (RadioButton) innerLayout.findViewById(R.id.femaleRadioButton);
 
             int radioButtonID = genderRadioGroup.getCheckedRadioButtonId();
-            View radioButton = genderRadioGroup.findViewById(radioButtonID);
-//            int idx = genderRadioGroup.indexOfChild(radioButton);
-//            RadioButton r = (RadioButton) genderRadioGroup.getChildAt(idx);
-//            String selectedGender = r.getText().toString();
 
             dobOfKidSpn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -438,18 +388,15 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
             progressBar.setVisibility(View.GONE);
             if (response == null || response.body() == null) {
                 Toast.makeText(getActivity(), getString(R.string.went_wrong), Toast.LENGTH_SHORT).show();
-//                gotToProfile();
                 return;
             }
 
             try {
-                UserDetailResponse responseData = (UserDetailResponse) response.body();
+                UserDetailResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     if (selectedCityId != 0) {
                         updateEventsResourcesConfigForCity();
                     }
-
-//                    saveDatainDB();
                 } else {
                     Toast.makeText(getActivity(), responseData.getReason(), Toast.LENGTH_SHORT).show();
                 }
@@ -459,7 +406,6 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
                 if (null != getActivity()) {
                     Toast.makeText(getActivity(), getString(R.string.went_wrong), Toast.LENGTH_SHORT).show();
                 }
-//                gotToProfile();
             }
         }
 
@@ -505,12 +451,6 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
             }
             _controller.getData(AppConstants.CONFIGURATION_REQUEST, versionApiModel);
         }
-    }
-
-    public String convertTime(String time) {
-        Date date = new Date(Long.parseLong(time) * 1000);
-        Format format = new SimpleDateFormat("dd-MM-yyyy");
-        return format.format(date);
     }
 
     @Override
@@ -608,7 +548,7 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
         String timestamp = "";
         try {
             DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-            Date dateobj = (Date) formatter.parse(convertdate);
+            Date dateobj = formatter.parse(convertdate);
             timestamp = "" + (dateobj.getTime()) / 1000;
             return timestamp;
         } catch (ParseException e) {
@@ -657,7 +597,7 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
             return false;
         } else {
             for (int position = 0; position < childInfoContainer.getChildCount(); position++) {
-                View innerLayout = (View) childInfoContainer.getChildAt(position);
+                View innerLayout = childInfoContainer.getChildAt(position);
                 TextView dobOfKidSpn = (TextView) innerLayout.findViewById(R.id.kidsDOBTextView);
                 if (StringUtils.isNullOrEmpty(dobOfKidSpn.getText().toString()) || !DateTimeUtils.isValidDate(dobOfKidSpn.getText().toString())) {
                     Toast.makeText(getActivity(), getString(R.string.app_settings_edit_profile_toast_incorrect_date), Toast.LENGTH_SHORT).show();
@@ -687,7 +627,6 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
         }
 
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        showProgressDialog(getResources().getString(R.string.please_wait));
         UserAttributeUpdateAPI userAttributeUpdateAPI = retrofit.create(UserAttributeUpdateAPI.class);
         Call<UserDetailResponse> call = userAttributeUpdateAPI.updateProfile(updateUserDetail);
         call.enqueue(userDetailsUpdateResponseListener);
@@ -696,14 +635,15 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
     private Callback<UserDetailResponse> userDetailsUpdateResponseListener = new Callback<UserDetailResponse>() {
         @Override
         public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
-            removeProgressDialog();
             if (response == null || response.body() == null) {
 //                showToast(getString(R.string.went_wrong));
                 return;
             }
-            UserDetailResponse responseData = (UserDetailResponse) response.body();
+            UserDetailResponse responseData = response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-//                showToast("Successfully updated!");
+                if (isAdded()) {
+                    Toast.makeText(getActivity(), getString(R.string.app_settings_edit_profile_update_success), Toast.LENGTH_SHORT).show();
+                }
                 UserInfo model = SharedPrefUtils.getUserDetailModel(getActivity());
                 model.setFirst_name(firstNameEditText.getText().toString());
                 model.setLast_name(lastNameEditText.getText().toString());
@@ -715,7 +655,6 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
 
         @Override
         public void onFailure(Call<UserDetailResponse> call, Throwable t) {
-            removeProgressDialog();
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }

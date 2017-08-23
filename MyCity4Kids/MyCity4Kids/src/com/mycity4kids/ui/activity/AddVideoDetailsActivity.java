@@ -260,15 +260,6 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
             case android.R.id.home:
                 finish();
                 break;
-            case R.id.uploadButton:
-                if (StringUtils.isNullOrEmpty(videoTitleEditText.getText().toString())) {
-                    videoTitleEditText.setFocusableInTouchMode(true);
-                    videoTitleEditText.setError("Please enter the title of the video");
-                    videoTitleEditText.requestFocus();
-                } else {
-                    uploadVideo();
-                }
-                break;
             default:
                 return super.onOptionsItemSelected(item);
         }

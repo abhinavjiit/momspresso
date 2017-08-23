@@ -67,24 +67,9 @@ public class TopicsListingFragment extends BaseFragment {
 //        setContentView(R.layout.explore_article_listing_type_activity);
 
         mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
-//        setSupportActionBar(mToolbar);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        getSupportActionBar().setTitle("SELECT AN OPTION");
 
         tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
 
-//        try {
-//            FileInputStream fileInputStream = getActivity().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
-//            String fileContent = AppUtils.convertStreamToString(fileInputStream);
-//            TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
-//            createTopicsData(res);
-//        } catch (FileNotFoundException e) {
-//            Crashlytics.logException(e);
-//            Log.d("FileNotFoundException", Log.getStackTraceString(e));
-//            Retrofit retro = BaseApplication.getInstance().getRetrofit();
-//            final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
-//
-//        }
         parentTopicId = getArguments().getString("parentTopicId");
         try {
             allTopicsList = BaseApplication.getTopicList();

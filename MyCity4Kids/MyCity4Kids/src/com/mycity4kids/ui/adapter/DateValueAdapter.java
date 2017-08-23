@@ -42,7 +42,7 @@ public class DateValueAdapter extends BaseAdapter implements IGetDate {
         if (fragment == null) {
             mFilterMap = ((BusinessListActivityKidsResources)pContext).mFilterMap;
         } else {
-            mFilterMap=((FragmentBusinesslistEvents)fragment).mFilterMap;
+            mFilterMap= FragmentBusinesslistEvents.mFilterMap;
         }
     }
     @Override

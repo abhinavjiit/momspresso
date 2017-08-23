@@ -1,6 +1,7 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -14,10 +15,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.gson.Gson;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
-import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.request.ArticleDetailRequest;
+import com.mycity4kids.models.request.DeleteBookmarkRequest;
 import com.mycity4kids.models.response.AddBookmarkResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -27,13 +30,16 @@ import com.mycity4kids.ui.fragment.ForYouInfoDialogFragment;
 import com.mycity4kids.utils.AppUtils;
 import com.squareup.picasso.Picasso;
 
-import org.apmem.tools.layouts.FlowLayout;
-
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Retrofit;
 
 /**
  * Created by hemant on 25/5/17.
@@ -185,24 +191,6 @@ public class MainArticleListingAdapter extends BaseAdapter {
                 holder.recommendCountTextView.setText(articleDataModelsNew.get(position).getLikesCount());
             }
 
-//            if (AppConstants.USER_TYPE_BLOGGER.equals(articleDataModelsNew.get(position).getUserType())) {
-//                holder.authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_BLOGGER.toUpperCase());
-//                holder.authorTypeTextView.setTextColor(ContextCompat.getColor(mContext, R.color.authortype_colorcode_blogger));
-//            } else if (AppConstants.USER_TYPE_EDITOR.equals(articleDataModelsNew.get(position).getUserType())) {
-//                holder.authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_EDITOR.toUpperCase());
-//                holder.authorTypeTextView.setTextColor(ContextCompat.getColor(mContext, R.color.authortype_colorcode_editor));
-//            } else if (AppConstants.USER_TYPE_EDITORIAL.equals(articleDataModelsNew.get(position).getUserType())) {
-//                holder.authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_EDITORIAL.toUpperCase());
-//                holder.authorTypeTextView.setTextColor(ContextCompat.getColor(mContext, R.color.authortype_colorcode_editorial));
-//            } else if (AppConstants.USER_TYPE_EXPERT.equals(articleDataModelsNew.get(position).getUserType())) {
-//                holder.authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_EXPERT.toUpperCase());
-//                holder.authorTypeTextView.setTextColor(ContextCompat.getColor(mContext, R.color.authortype_colorcode_expert));
-//            } else if (AppConstants.USER_TYPE_FEATURED.equals(articleDataModelsNew.get(position).getUserType())) {
-//                holder.authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_FEATURED.toUpperCase());
-//                holder.authorTypeTextView.setTextColor(ContextCompat.getColor(mContext, R.color.authortype_colorcode_featured));
-//            }
-
-
             if (StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getUserName()) || articleDataModelsNew.get(position).getUserName().toString().trim().equalsIgnoreCase("")) {
                 holder.txvAuthorName.setText("NA");
             } else {
@@ -253,18 +241,18 @@ public class MainArticleListingAdapter extends BaseAdapter {
             holder.watchLaterImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    addRemoveWatchLater(articleDataModelsNew.get(position).getListingWatchLaterStatus(), articleDataModelsNew.get(position).getId());
-                    articleDataModelsNew.get(position).setListingWatchLaterStatus(1);
-                    holder.watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch_added));
+                    addRemoveWatchLater(position, holder);
+//                    articleDataModelsNew.get(position).setListingWatchLaterStatus(1);
+//                    holder.watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch_added));
                 }
             });
 
             holder.bookmarkArticleImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    addRemoveBookmark(articleDataModelsNew.get(position).getListingBookmarkStatus(), articleDataModelsNew.get(position).getId());
-                    articleDataModelsNew.get(position).setListingBookmarkStatus(1);
-                    holder.bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
+                    addRemoveBookmark(position, holder);
+//                    articleDataModelsNew.get(position).setListingBookmarkStatus(1);
+//                    holder.bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
                 }
             });
 
@@ -276,57 +264,191 @@ public class MainArticleListingAdapter extends BaseAdapter {
         return view;
     }
 
-    private void addRemoveBookmark(int bookmarkStatus, String articleId) {
-
-        if (bookmarkStatus == 0) {
+    private void addRemoveBookmark(int position, ViewHolder holder) {
+        if (articleDataModelsNew.get(position).getListingBookmarkStatus() == 0) {
             ArticleDetailRequest articleDetailRequest = new ArticleDetailRequest();
-            articleDetailRequest.setArticleId(articleId);
-            Retrofit retro = BaseApplication.getInstance().getRetrofit();
-            articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
-            Call<AddBookmarkResponse> call = articleDetailsAPI.addBookmark(articleDetailRequest);
-            call.enqueue(addBookmarkResponseCallback);
+            articleDetailRequest.setArticleId(articleDataModelsNew.get(position).getId());
+            String jsonString = new Gson().toJson(articleDetailRequest);
+            new AddRemoveBookmarkAsyncTask(holder, "bookmarkArticle", position).execute(jsonString, "bookmarkArticle");
+        } else {
+            DeleteBookmarkRequest deleteBookmarkRequest = new DeleteBookmarkRequest();
+            deleteBookmarkRequest.setId(articleDataModelsNew.get(position).getBookmarkId());
+            String jsonString = new Gson().toJson(deleteBookmarkRequest);
+            new AddRemoveBookmarkAsyncTask(holder, "unbookmarkArticle", position).execute(jsonString, "unbookmarkArticle");
         }
+    }
+
+    private void addRemoveWatchLater(int position, ViewHolder holder) {
+        if (articleDataModelsNew.get(position).getListingWatchLaterStatus() == 0) {
+            ArticleDetailRequest articleDetailRequest = new ArticleDetailRequest();
+            articleDetailRequest.setArticleId(articleDataModelsNew.get(position).getId());
+            String jsonString = new Gson().toJson(articleDetailRequest);
+            new AddRemoveBookmarkAsyncTask(holder, "bookmarkVideo", position).execute(jsonString, "bookmarkVideo");
+        } else {
+            DeleteBookmarkRequest deleteBookmarkRequest = new DeleteBookmarkRequest();
+            deleteBookmarkRequest.setId(articleDataModelsNew.get(position).getBookmarkId());
+            String jsonString = new Gson().toJson(deleteBookmarkRequest);
+            new AddRemoveBookmarkAsyncTask(holder, "unbookmarkVideo", position).execute(jsonString, "unbookmarkVideo");
+        }
+//        if (bookmarkStatus == 0) {
+//            ArticleDetailRequest articleDetailRequest = new ArticleDetailRequest();
+//            articleDetailRequest.setArticleId(articleId);
+//            Retrofit retro = BaseApplication.getInstance().getRetrofit();
+//            articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
+//            Call<AddBookmarkResponse> call = articleDetailsAPI.addVideoWatchLater(articleDetailRequest);
+//            call.enqueue(addBookmarkResponseCallback);
+//        } else {
+//            DeleteBookmarkRequest deleteBookmarkRequest = new DeleteBookmarkRequest();
+//            deleteBookmarkRequest.setId(bookmarkId);
+//        }
 
     }
 
-    private void addRemoveWatchLater(int bookmarkStatus, String articleId) {
+    private class AddRemoveBookmarkAsyncTask extends AsyncTask<String, String, String> {
 
-        if (bookmarkStatus == 0) {
-            ArticleDetailRequest articleDetailRequest = new ArticleDetailRequest();
-            articleDetailRequest.setArticleId(articleId);
-            Retrofit retro = BaseApplication.getInstance().getRetrofit();
-            articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
-            Call<AddBookmarkResponse> call = articleDetailsAPI.addVideoWatchLater(articleDetailRequest);
-            call.enqueue(addBookmarkResponseCallback);
+        // The variable is moved here, we only need it here while displaying the
+        // progress dialog.
+        ViewHolder viewHolder;
+        String type;
+        int pos;
+
+        public AddRemoveBookmarkAsyncTask(ViewHolder viewHolder, String type, int position) {
+            this.viewHolder = viewHolder;
+            this.type = type;
+            pos = position;
         }
 
-    }
-
-    private Callback<AddBookmarkResponse> addBookmarkResponseCallback = new Callback<AddBookmarkResponse>() {
         @Override
-        public void onResponse(Call<AddBookmarkResponse> call, retrofit2.Response<AddBookmarkResponse> response) {
-            if (response == null || null == response.body()) {
+        protected String doInBackground(String... strings) {
+
+            String JsonResponse;
+            String JsonDATA = strings[0];
+
+            HttpURLConnection urlConnection = null;
+            BufferedReader reader = null;
+            try {
+                URL url;
+                if ("bookmarkArticle".equals(strings[1])) {
+                    url = new URL(AppConstants.BASE_URL + "v1/users/bookmark/");
+                } else if ("unbookmarkArticle".equals(strings[1])) {
+                    url = new URL(AppConstants.BASE_URL + "v1/users/deleteBookmark/");
+                } else if ("bookmarkVideo".equals(strings[1])) {
+                    url = new URL(AppConstants.BASE_URL + "v1/users/bookmarkVideo/");
+                } else {
+                    url = new URL(AppConstants.BASE_URL + "v1/users/deleteBookmarkVideo/");
+                }
+
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setDoOutput(true);
+                // is output buffer writter
+                urlConnection.setRequestMethod("POST");
+                urlConnection.setRequestProperty("Content-Type", "application/json");
+                urlConnection.setRequestProperty("Accept", "application/json");
+                urlConnection.addRequestProperty("id", SharedPrefUtils.getUserDetailModel(mContext).getDynamoId());
+                urlConnection.addRequestProperty("mc4kToken", SharedPrefUtils.getUserDetailModel(mContext).getMc4kToken());
+
+                //set headers and method
+                Writer writer = new BufferedWriter(new OutputStreamWriter(urlConnection.getOutputStream(), "UTF-8"));
+                writer.write(JsonDATA);
+                // json data
+                writer.close();
+                InputStream inputStream = urlConnection.getInputStream();
+                //input stream
+                StringBuffer buffer = new StringBuffer();
+                if (inputStream == null) {
+                    // Nothing to do.
+                    return null;
+                }
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String inputLine;
+                while ((inputLine = reader.readLine()) != null)
+                    buffer.append(inputLine + "\n");
+                if (buffer.length() == 0) {
+                    // Stream was empty. No point in parsing.
+                    return null;
+                }
+                JsonResponse = buffer.toString();
+
+                Log.i("RESPONSE " + type, JsonResponse);
+                //send to post execute
+                return JsonResponse;
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e("TAAGG", "Error closing stream", e);
+                    }
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+
+            if (result == null) {
+                resetFollowUnfollowStatus();
                 return;
             }
-//            AddBookmarkResponse responseData = (AddBookmarkResponse) response.body();
-//            if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-//
-//            }
+            try {
+                AddBookmarkResponse responseData = new Gson().fromJson(result, AddBookmarkResponse.class);
+//                if ((responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) ||
+//                        (responseData.getCode() == 200 && Constants.FAILURE.equals(responseData.getStatus()) && "already bookmarked".equals(responseData.getReason()))) {
+                if (responseData.getCode() == 200) {
+                    for (int i = 0; i < articleDataModelsNew.size(); i++) {
+                        if (articleDataModelsNew.get(i).getId().equals(responseData.getData().getResult().getArticleId())) {
+                            if ("bookmarkArticle".equals(type)) {
+                                articleDataModelsNew.get(i).setListingBookmarkStatus(1);
+                                articleDataModelsNew.get(i).setBookmarkId(responseData.getData().getResult().getBookmarkId());
+                                viewHolder.bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
+                            } else if ("unbookmarkArticle".equals(type)) {
+                                articleDataModelsNew.get(i).setListingBookmarkStatus(0);
+                                articleDataModelsNew.get(i).setBookmarkId("");
+                                viewHolder.bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
+                            } else if ("bookmarkVideo".equals(type)) {
+                                articleDataModelsNew.get(i).setListingWatchLaterStatus(1);
+                                articleDataModelsNew.get(i).setBookmarkId(responseData.getData().getResult().getBookmarkId());
+                                viewHolder.watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch_added));
+                            } else if ("unbookmarkVideo".equals(type)) {
+                                articleDataModelsNew.get(i).setListingWatchLaterStatus(0);
+                                articleDataModelsNew.get(i).setBookmarkId("");
+                                viewHolder.watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch));
+                            }
+                        }
+                    }
+                } else {
+                    resetFollowUnfollowStatus();
+                }
+            } catch (Exception e) {
+                resetFollowUnfollowStatus();
+            }
         }
 
-        @Override
-        public void onFailure(Call<AddBookmarkResponse> call, Throwable t) {
-
+        void resetFollowUnfollowStatus() {
+            if (type.equals("bookmark")) {
+                viewHolder.bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
+            } else if ("unbookmarkArticle".equals(type)) {
+                viewHolder.bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
+            } else if ("bookmarkVideo".equals(type)) {
+                viewHolder.watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch));
+            } else if ("unbookmarkVideo".equals(type)) {
+                viewHolder.watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch_added));
+            }
         }
-    };
+
+    }
 
     class ViewHolder {
-        TextView languageFeedTextView;
-
         TextView txvArticleTitle;
         TextView txvAuthorName;
         ImageView articleImageView;
-        ImageView authorImageView;
         ImageView videoIndicatorImageView;
         LinearLayout forYouInfoLL;
         TextView viewCountTextView;
@@ -335,16 +457,6 @@ public class MainArticleListingAdapter extends BaseAdapter {
         TextView authorTypeTextView;
         ImageView bookmarkArticleImageView;
         ImageView watchLaterImageView;
-        TextView rankTextView;
-        FlowLayout flowLayout;
-        TextView popularSubCatTextView1;
-        TextView popularSubCatTextView2;
-        TextView popularSubCatTextView3;
-        TextView popularSubCatTextView4;
-        LinearLayout tvParentLL1;
-        LinearLayout tvParentLL2;
-        LinearLayout tvParentLL3;
-        LinearLayout tvParentLL4;
     }
 
 }

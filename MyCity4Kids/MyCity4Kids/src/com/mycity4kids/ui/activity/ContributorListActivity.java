@@ -87,6 +87,7 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
     ArrayList<String> list;
     ArrayList<LanguageConfigModel> languageConfigModelArrayList;
     private String langKey = "0";
+    private String dynamoUserId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -95,6 +96,8 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
         Utils.pushOpenScreenEvent(ContributorListActivity.this, "Contributor List", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         mToolBar = (Toolbar) findViewById(R.id.toolbar);
         mToolBar.setVisibility(View.VISIBLE);
+        dynamoUserId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
+
         setSupportActionBar(mToolBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -145,11 +148,17 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 ContributorListResult itemSelected = (ContributorListResult) adapterView.getItemAtPosition(position);
-                Intent intent = new Intent(ContributorListActivity.this, BloggerProfileActivity.class);
-                intent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, itemSelected.getId());
-                intent.putExtra(AppConstants.AUTHOR_NAME, itemSelected.getFirstName() + " " + itemSelected.getLastName());
-                intent.putExtra(Constants.FROM_SCREEN, "Contributor List");
-                startActivity(intent);
+                if (dynamoUserId.equals(itemSelected.getId())) {
+                    Intent profileIntent = new Intent(ContributorListActivity.this, DashboardActivity.class);
+                    profileIntent.putExtra("TabType", "profile");
+                    startActivity(profileIntent);
+                } else {
+                    Intent intent = new Intent(ContributorListActivity.this, BloggerProfileActivity.class);
+                    intent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, itemSelected.getId());
+                    intent.putExtra(AppConstants.AUTHOR_NAME, itemSelected.getFirstName() + " " + itemSelected.getLastName());
+                    intent.putExtra(Constants.FROM_SCREEN, "Contributor List");
+                    startActivity(intent);
+                }
 
             }
         });

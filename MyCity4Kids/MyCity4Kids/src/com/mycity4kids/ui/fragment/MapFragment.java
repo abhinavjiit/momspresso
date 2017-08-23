@@ -430,11 +430,7 @@ public class MapFragment extends BaseFragment implements OnClickListener, OnMapR
 
     private boolean isEnableNetwork() {
         final LocationManager manager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER) && (!manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))) {
-            return false;
-        } else {
-            return true;
-        }
+        return !(!manager.isProviderEnabled(LocationManager.GPS_PROVIDER) && (!manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)));
 
     }
 

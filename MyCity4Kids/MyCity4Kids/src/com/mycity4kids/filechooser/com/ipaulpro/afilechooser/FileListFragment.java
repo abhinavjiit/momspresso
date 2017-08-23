@@ -48,7 +48,7 @@ public class FileListFragment extends ListFragment implements
          *
          * @param file The file selected
          */
-        public void onFileSelected(File file);
+        void onFileSelected(File file);
     }
 
     private static final int LOADER_ID = 0;
@@ -110,7 +110,7 @@ public class FileListFragment extends ListFragment implements
     public void onListItemClick(ListView l, View v, int position, long id) {
         FileListAdapter adapter = (FileListAdapter) l.getAdapter();
         if (adapter != null) {
-            File file = (File) adapter.getItem(position);
+            File file = adapter.getItem(position);
             mPath = file.getAbsolutePath();
             mListener.onFileSelected(file);
         }

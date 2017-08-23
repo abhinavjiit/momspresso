@@ -178,7 +178,6 @@
                 android:layout_marginTop="9dp"
                 android:background="@color/light_grey1" />
 
-
             <WebView
                 android:id="@+id/articleWebView"
                 android:layout_width="match_parent"
@@ -192,25 +191,6 @@
                 android:fontFamily="sans-serif-light"
                 android:minHeight="1000dp" />
 
-            <!--<LinearLayout-->
-            <!--android:id="@+id/readMoreContainerLL"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="100dp"-->
-            <!--android:layout_alignBottom="@+id/articleWebView1"-->
-            <!--android:background="@drawable/read_more_gradient_bg"-->
-            <!--android:gravity="center">-->
-
-            <!--<TextView-->
-            <!--android:id="@+id/readMoreTextView"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:background="@drawable/read_more_button_bg"-->
-            <!--android:gravity="center"-->
-            <!--android:padding="15dp"-->
-            <!--android:text="@string/ad.read_more.text"-->
-            <!--android:textColor="@color/ad.readmore.text" />-->
-            <!--</LinearLayout>-->
-
             <RelativeLayout
                 android:id="@+id/tagsLayoutContainer"
                 android:layout_width="match_parent"
@@ -219,12 +199,6 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="4dp"
                 android:visibility="visible">
-                <!--<RelativeLayout-->
-                <!--android:id="@+id/tagsLayoutContainer"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginBottom="10dp"-->
-                <!--android:layout_marginTop="4dp">-->
 
                 <com.mycity4kids.widget.CustomFontTextView
                     android:id="@+id/tagsTitleTextView"

@@ -89,7 +89,7 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
     private ArrayList<NotificationSettingsModel> notificationSettingsList;
     private ArrayList<SubscriptionAndLanguageSettingsModel> languagesList;
     private ArrayList<String> mDatalist;
-    ArrayList<Topics> followedSubSubTopicList = new ArrayList<>();
+    private ArrayList<Topics> followedSubSubTopicList = new ArrayList<>();
 
     private View view;
     private TextView facebookConnectTextView;
@@ -197,7 +197,7 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
                 return;
             }
             try {
-                SubscriptionSettingsResponse responseData = (SubscriptionSettingsResponse) response.body();
+                SubscriptionSettingsResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
                     for (Map.Entry<String, Object> entry : responseData.getData().getResult().entrySet()) {
@@ -267,7 +267,7 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
                 return;
             }
             try {
-                NotificationSettingsResponse responseData = (NotificationSettingsResponse) response.body();
+                NotificationSettingsResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
                     for (Map.Entry<String, String> entry : responseData.getData().getResult().entrySet()) {
@@ -304,7 +304,7 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
                 return;
             }
             try {
-                LanguageSettingsResponse responseData = (LanguageSettingsResponse) response.body();
+                LanguageSettingsResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     for (Map<String, String> map : responseData.getData().getResult()) {
                         Log.d("MAP", map.toString());
@@ -352,7 +352,7 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
                 return;
             }
             try {
-                FollowUnfollowCategoriesResponse responseData = (FollowUnfollowCategoriesResponse) response.body();
+                FollowUnfollowCategoriesResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     mDatalist = (ArrayList<String>) responseData.getData();
                     try {
@@ -457,6 +457,10 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
     }
 
     private void inflateFollowedTopics() {
+        if (followedSubSubTopicList == null || followedSubSubTopicList.size() == 0) {
+            showMoreFollowedTopicsTextView.setVisibility(View.GONE);
+            return;
+        }
         for (int i = 0; i < followedSubSubTopicList.size(); i++) {
             followedSubSubTopicList.get(i).setIsSelected(true);
             final LinearLayout subsubLL = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.topic_follow_unfollow_item, null);
@@ -512,7 +516,7 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
                 return;
             }
             try {
-                FollowUnfollowCategoriesResponse responseData = (FollowUnfollowCategoriesResponse) response.body();
+                FollowUnfollowCategoriesResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     SharedPrefUtils.setFollowedTopicsCount(getActivity(), responseData.getData().size());
                 }
@@ -546,10 +550,10 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
                     return;
                 }
                 try {
-                    NotificationSettingsResponse responseData = (NotificationSettingsResponse) response.body();
+                    NotificationSettingsResponse responseData = response.body();
                     if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                         if (null != getActivity()) {
-                            Toast.makeText(getActivity(), "Notification settings updated successfully", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "Settings updated successfully", Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         if (null != getActivity()) {
@@ -570,7 +574,6 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
             public void onFailure(Call<NotificationSettingsResponse> call, Throwable t) {
                 if (null != getActivity()) {
                     Toast.makeText(getActivity(), "Error while updating notification settings", Toast.LENGTH_SHORT).show();
-                    ;
                 }
                 Crashlytics.logException(t);
                 Log.d("MC4kException", Log.getStackTraceString(t));
@@ -623,10 +626,10 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
                 return;
             }
             try {
-                SubscriptionSettingsResponse responseData = (SubscriptionSettingsResponse) response.body();
+                SubscriptionSettingsResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     if (null != getActivity()) {
-                        Toast.makeText(getActivity(), "Subscription settings updated successfully", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getActivity(), "Subscription settings updated successfully", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     if (null != getActivity()) {
@@ -698,10 +701,10 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
                 return;
             }
             try {
-                UpdateLanguageSettingsResponse responseData = (UpdateLanguageSettingsResponse) response.body();
+                UpdateLanguageSettingsResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     if (null != getActivity()) {
-                        Toast.makeText(getActivity(), "Language content settings updated successfully", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getActivity(), "Language content settings updated successfully", Toast.LENGTH_SHORT).show();
                         UserInfo userInfo = SharedPrefUtils.getUserDetailModel(getActivity());
                         userInfo.setIsLangSelection("1");
                         SharedPrefUtils.setUserDetailModel(getActivity(), userInfo);
@@ -780,7 +783,7 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
                 return;
             }
             try {
-                ConfigResponse responseData = (ConfigResponse) response.body();
+                ConfigResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     for (Map.Entry<String, String> entry : responseData.getData().getResult().getLanguage().entrySet()) {
                         SharedPrefUtils.setLanguageConfig(getActivity(), entry.getKey(), entry.getValue());
@@ -889,7 +892,7 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
                 return;
             }
             try {
-                BaseResponse responseData = (BaseResponse) response.body();
+                BaseResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     Log.d("socialConnectListen", "SUCCESS");
                     facebookConnectTextView.setText(getString(R.string.app_settings_edit_prefs_connected));

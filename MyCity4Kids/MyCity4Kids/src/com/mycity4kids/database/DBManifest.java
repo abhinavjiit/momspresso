@@ -37,11 +37,11 @@ public interface DBManifest {
     /**
      * Common constants for database and for all tables
      */
-    public final static String DB_NAME = "mycity4kids";
-    public final static int DB_VERSION = 9;
+    String DB_NAME = "mycity4kids";
+    int DB_VERSION = 9;
 
-    public final static String DB_COLUMN_ID = "id";
-    public final static int DB_INVALID_ID = -1;
+    String DB_COLUMN_ID = "id";
+    int DB_INVALID_ID = -1;
 
 
     //table names...

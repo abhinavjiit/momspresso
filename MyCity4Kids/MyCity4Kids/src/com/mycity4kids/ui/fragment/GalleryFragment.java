@@ -227,7 +227,7 @@ public class GalleryFragment extends BaseFragment implements IOnSubmitGallery {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
                         if (parent.getAdapter() instanceof GalleryAdapter) {
-                            GalleryListtingData galleryVideoData = (GalleryListtingData) ((GalleryAdapter) parent.getAdapter()).getItem(pos);
+                            GalleryListtingData galleryVideoData = (GalleryListtingData) parent.getAdapter().getItem(pos);
                             Intent intent = new Intent(getActivity(), YouTubeVideoActivity.class);
                             intent.putExtra("youTubeUrl", galleryVideoData.getPlayImageUrl());
                             startActivity(intent);

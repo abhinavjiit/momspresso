@@ -50,7 +50,7 @@ public class AgeGroupAdapter extends BaseAdapter {
         if (fragment == null) {
             mFilterMap = ((BusinessListActivityKidsResources) pContext).mFilterMap;
         } else {
-            mFilterMap = ((FragmentBusinesslistEvents) fragment).mFilterMap;
+            mFilterMap = FragmentBusinesslistEvents.mFilterMap;
         }
 
         setAge();

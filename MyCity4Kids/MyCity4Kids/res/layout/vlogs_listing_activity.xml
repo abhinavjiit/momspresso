@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
+        android:elevation="5dp"
         android:minHeight="?attr/actionBarSize"
         fab:theme="@style/ToolbarTheme"
         fab:titleTextAppearance="@style/ToolbarTheme.Title">

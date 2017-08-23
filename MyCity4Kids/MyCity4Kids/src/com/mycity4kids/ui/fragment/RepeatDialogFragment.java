@@ -9,10 +9,6 @@ import android.view.Window;
 import android.widget.TextView;
 
 import com.mycity4kids.R;
-import com.mycity4kids.ui.activity.ActivityCreateAppointment;
-import com.mycity4kids.ui.activity.ActivityCreateTask;
-import com.mycity4kids.ui.activity.ActivityEditAppointment;
-import com.mycity4kids.ui.activity.ActivityEditTask;
 
 /**
  * Created by manish.soni on 30-06-2015.
@@ -75,18 +71,18 @@ public class RepeatDialogFragment extends android.app.DialogFragment implements 
                 if (edit) {
 
                     if (ifTask.equalsIgnoreCase("task")) {
-                        ((ActivityEditTask) getActivity()).setRepeat("", "No Repeat", "0");
+//                        ((ActivityEditTask) getActivity()).setRepeat("", "No Repeat", "0");
                     } else {
-                        ((ActivityEditAppointment) getActivity()).setRepeat("", "No Repeat", "0");
+//                        ((ActivityEditAppointment) getActivity()).setRepeat("", "No Repeat", "0");
                     }
 
 
                 } else {
 
                     if (ifTask.equalsIgnoreCase("task")) {
-                        ((ActivityCreateTask) getActivity()).setRepeat("", "No Repeat", "0");
+//                        ((ActivityCreateTask) getActivity()).setRepeat("", "No Repeat", "0");
                     } else {
-                        ((ActivityCreateAppointment) getActivity()).setRepeat("", "No Repeat", "0");
+//                        ((ActivityCreateAppointment) getActivity()).setRepeat("", "No Repeat", "0");
                     }
 
                 }
@@ -111,18 +107,18 @@ public class RepeatDialogFragment extends android.app.DialogFragment implements 
                 if (edit) {
 
                     if (ifTask.equalsIgnoreCase("task")) {
-                        ((ActivityEditTask) getActivity()).setRepeat("", "Daily", "0");
+//                        ((ActivityEditTask) getActivity()).setRepeat("", "Daily", "0");
                     } else {
-                        ((ActivityEditAppointment) getActivity()).setRepeat("", "Daily", "0");
+//                        ((ActivityEditAppointment) getActivity()).setRepeat("", "Daily", "0");
                     }
 
 
                 } else {
 
                     if (ifTask.equalsIgnoreCase("task")) {
-                        ((ActivityCreateTask) getActivity()).setRepeat("", "Daily", "0");
+//                        ((ActivityCreateTask) getActivity()).setRepeat("", "Daily", "0");
                     } else {
-                        ((ActivityCreateAppointment) getActivity()).setRepeat("", "Daily", "0");
+//                        ((ActivityCreateAppointment) getActivity()).setRepeat("", "Daily", "0");
                     }
 
                 }
@@ -135,18 +131,18 @@ public class RepeatDialogFragment extends android.app.DialogFragment implements 
                 if (edit) {
 
                     if (ifTask.equalsIgnoreCase("task")) {
-                        ((ActivityEditTask) getActivity()).setRepeat("", "Weekly", "0");
+//                        ((ActivityEditTask) getActivity()).setRepeat("", "Weekly", "0");
                     } else {
-                        ((ActivityEditAppointment) getActivity()).setRepeat("", "Weekly", "0");
+//                        ((ActivityEditAppointment) getActivity()).setRepeat("", "Weekly", "0");
                     }
 
 
                 } else {
 
                     if (ifTask.equalsIgnoreCase("task")) {
-                        ((ActivityCreateTask) getActivity()).setRepeat("", "Weekly", "0");
+//                        ((ActivityCreateTask) getActivity()).setRepeat("", "Weekly", "0");
                     } else {
-                        ((ActivityCreateAppointment) getActivity()).setRepeat("", "Weekly", "0");
+//                        ((ActivityCreateAppointment) getActivity()).setRepeat("", "Weekly", "0");
                     }
 
                 }
@@ -160,18 +156,18 @@ public class RepeatDialogFragment extends android.app.DialogFragment implements 
                 if (edit) {
 
                     if (ifTask.equalsIgnoreCase("task")) {
-                        ((ActivityEditTask) getActivity()).setRepeat("", "Monthly", "0");
+//                        ((ActivityEditTask) getActivity()).setRepeat("", "Monthly", "0");
                     } else {
-                        ((ActivityEditAppointment) getActivity()).setRepeat("", "Monthly", "0");
+//                        ((ActivityEditAppointment) getActivity()).setRepeat("", "Monthly", "0");
                     }
 
 
                 } else {
 
                     if (ifTask.equalsIgnoreCase("task")) {
-                        ((ActivityCreateTask) getActivity()).setRepeat("", "Monthly", "0");
+//                        ((ActivityCreateTask) getActivity()).setRepeat("", "Monthly", "0");
                     } else {
-                        ((ActivityCreateAppointment) getActivity()).setRepeat("", "Monthly", "0");
+//                        ((ActivityCreateAppointment) getActivity()).setRepeat("", "Monthly", "0");
                     }
 
                 }
@@ -184,18 +180,18 @@ public class RepeatDialogFragment extends android.app.DialogFragment implements 
                 if (edit) {
 
                     if (ifTask.equalsIgnoreCase("task")) {
-                        ((ActivityEditTask) getActivity()).setRepeat("", "Yearly", "0");
+//                        ((ActivityEditTask) getActivity()).setRepeat("", "Yearly", "0");
                     } else {
-                        ((ActivityEditAppointment) getActivity()).setRepeat("", "Yearly", "0");
+//                        ((ActivityEditAppointment) getActivity()).setRepeat("", "Yearly", "0");
                     }
 
 
                 } else {
 
                     if (ifTask.equalsIgnoreCase("task")) {
-                        ((ActivityCreateTask) getActivity()).setRepeat("", "Yearly", "0");
+//                        ((ActivityCreateTask) getActivity()).setRepeat("", "Yearly", "0");
                     } else {
-                        ((ActivityCreateAppointment) getActivity()).setRepeat("", "Yearly", "0");
+//                        ((ActivityCreateAppointment) getActivity()).setRepeat("", "Yearly", "0");
                     }
 
                 }

@@ -49,12 +49,12 @@ public class MoreFragment extends Fragment implements OnClickListener {
 			mMoreListView = (ListView) view.findViewById(R.id.moreListView);
 			 _adapter=new MoreFilterAdapter(getActivity(), parentFragment, mFilterList );
 			mMoreListView.setAdapter(_adapter);
-			((TextView) view.findViewById(R.id.list_apply)).setOnClickListener(this);
-			((TextView) view.findViewById(R.id.list_reset)).setOnClickListener(this);
-			((TextView) view.findViewById(R.id.cancel)).setOnClickListener(this);
+			view.findViewById(R.id.list_apply).setOnClickListener(this);
+			view.findViewById(R.id.list_reset).setOnClickListener(this);
+			view.findViewById(R.id.cancel).setOnClickListener(this);
 		} else {
-			((RelativeLayout) view.findViewById(R.id.layout_age_non_blank)).setVisibility(View.GONE);
-			((TextView) view.findViewById(R.id.txt_no_data)).setVisibility(View.VISIBLE);
+			view.findViewById(R.id.layout_age_non_blank).setVisibility(View.GONE);
+			view.findViewById(R.id.txt_no_data).setVisibility(View.VISIBLE);
 			((TextView) view.findViewById(R.id.txt_no_data)).setText(getString(R.string.no_age_group));
 		}
 		return view;
@@ -74,7 +74,7 @@ public class MoreFragment extends Fragment implements OnClickListener {
 				// kids resources flow
 				filterMap = ((BusinessListActivityKidsResources) getActivity()).mFilterMap;
 			} else {
-				filterMap = ((FragmentBusinesslistEvents) parentFragment).mFilterMap;
+				filterMap = FragmentBusinesslistEvents.mFilterMap;
 			}
 			if (filterMap != null && !filterMap.isEmpty() && ifilter != null) {
 				ifilter.doNewFilter(businessOrEvent);

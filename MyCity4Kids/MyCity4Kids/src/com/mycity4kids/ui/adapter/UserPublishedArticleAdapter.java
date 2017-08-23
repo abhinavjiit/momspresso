@@ -106,7 +106,6 @@ public class UserPublishedArticleAdapter extends RecyclerView.Adapter<UserPublis
         TextView recommendCountTextView;
         ImageView shareArticleImageView;
         TextView editPublishedTextView;
-        View popupButton;
 
         public UserPublishedArticleViewHolder(View itemView, RecyclerViewClickListener listener) {
             super(itemView);

@@ -8,6 +8,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
  *
  */
 public interface IPlusClient {
-	public void getGooglePlusInfo(GoogleApiClient plusClient);
+	void getGooglePlusInfo(GoogleApiClient plusClient);
 	void onGooglePlusLoginFailed();
 }

@@ -39,7 +39,7 @@ public class NearMyCity {
     ArrayList<City> addresses = new ArrayList<City>();
 
     public interface FetchCity {
-        public void nearCity(City message);
+        void nearCity(City message);
     }
 
     public NearMyCity(Context context, double lat, double longitude, FetchCity _fetch) {
@@ -105,7 +105,7 @@ public class NearMyCity {
                 return;
             }
             try {
-                CityConfigResponse responseData = (CityConfigResponse) response.body();
+                CityConfigResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     ArrayList<CityInfoItem> mDatalist = responseData.getData().getResult().getCityData();
                     cityList.addAll(mDatalist);

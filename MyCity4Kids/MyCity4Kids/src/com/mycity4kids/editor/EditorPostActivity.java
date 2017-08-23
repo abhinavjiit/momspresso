@@ -20,19 +20,13 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
 import android.view.ContextMenu;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -49,19 +43,13 @@ import com.mycity4kids.listener.OnButtonClicked;
 import com.mycity4kids.models.response.ArticleDraftResponse;
 import com.mycity4kids.models.response.DraftListResult;
 import com.mycity4kids.models.response.ImageUploadResponse;
-import com.mycity4kids.models.response.LanguageConfigModel;
 import com.mycity4kids.models.response.PublishDraftObject;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
-import com.mycity4kids.ui.activity.AddArticleTopicsActivity;
 import com.mycity4kids.ui.activity.AddArticleTopicsActivityNew;
-import com.mycity4kids.ui.activity.EditSelectedTopicsActivity;
-import com.mycity4kids.ui.activity.FilteredTopicsArticleListingActivity;
-import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.PermissionUtil;
 
-import org.apmem.tools.layouts.FlowLayout;
 import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
@@ -70,8 +58,6 @@ import org.wordpress.android.util.helpers.MediaFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -79,7 +65,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -143,11 +128,6 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     private Toolbar mToolbar;
     private View mLayout;
     private String imageSelectorType;
-    private FlowLayout suggestionFlowLayout;
-    private TextView languagesTextView;
-    private RelativeLayout suggestionOverlaySlider;
-    private Animation animationSlideDownIn;
-    private Animation animationSlideUpOut;
 
     private ImageView closeEditorImageView;
     private TextView publishTextView;
@@ -187,120 +167,8 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }
         }
-//        languagesTextView = (TextView) findViewById(R.id.languagesTextView);
-//        suggestionOverlaySlider = (RelativeLayout) findViewById(R.id.suggestionOverlaySlider);
-//
-//        animationSlideDownIn = AnimationUtils.loadAnimation(this, R.anim.slidein_from_top);
-//        animationSlideUpOut = AnimationUtils.loadAnimation(this, R.anim.slideout_from_top);
-//
-//        animationSlideDownIn.setAnimationListener(animationSlideInListener);
-//        animationSlideUpOut.setAnimationListener(animationSlideOutListener);
-//
-//        animationSlideDownIn.setStartOffset(1000);
-//        suggestionOverlaySlider.startAnimation(animationSlideDownIn);
-//        suggestionOverlaySlider.setVisibility(View.VISIBLE);
-//
-//        suggestionOverlaySlider.setOnTouchListener(new OnSwipeTouchListener(this) {
-//            @Override
-//            public void onSwipeTop() {
-//                super.onSwipeTop();
-//                animationSlideUpOut.setStartOffset(0);
-//                suggestionOverlaySlider.startAnimation(animationSlideUpOut);
-//            }
-//        });
         mLayout = findViewById(R.id.rootLayout);
-//        setSupportActionBar(mToolbar);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        getSupportActionBar().setTitle("Write An Article");
         mFailedUploads = new HashMap<>();
-//        String coloredBullet = "<font color=#F0BBC2>&#9679;</font>";
-//        String langText = coloredBullet + " ENGLISH " + coloredBullet + " HINDI " + coloredBullet + " BANGLA " + coloredBullet + " MARATHI " + coloredBullet + " TELUGU " + coloredBullet + " TAMIL";
-//        languagesTextView.setText(AppUtils.fromHtml(langText));
-        //inflateSugesstionLayout();
-    }
-
-    private Animation.AnimationListener animationSlideInListener = new Animation.AnimationListener() {
-        @Override
-        public void onAnimationStart(Animation animation) {
-
-        }
-
-        @Override
-        public void onAnimationEnd(Animation animation) {
-            animationSlideUpOut.setStartOffset(3000);
-            suggestionOverlaySlider.startAnimation(animationSlideUpOut);
-        }
-
-        @Override
-        public void onAnimationRepeat(Animation animation) {
-
-        }
-    };
-
-    private Animation.AnimationListener animationSlideOutListener = new Animation.AnimationListener() {
-        @Override
-        public void onAnimationStart(Animation animation) {
-
-        }
-
-        @Override
-        public void onAnimationEnd(Animation animation) {
-            suggestionOverlaySlider.setVisibility(View.GONE);
-        }
-
-        @Override
-        public void onAnimationRepeat(Animation animation) {
-
-        }
-    };
-
-    private void inflateSugesstionLayout() {
-        try {
-            FileInputStream fileInputStream = openFileInput(AppConstants.LANGUAGES_JSON_FILE);
-            String fileContent = AppUtils.convertStreamToString(fileInputStream);
-            LinkedHashMap<String, LanguageConfigModel> retMap = new Gson().fromJson(
-                    fileContent, new TypeToken<LinkedHashMap<String, LanguageConfigModel>>() {
-                    }.getType()
-            );
-            Log.d("Map", "" + retMap.toString());
-            for (final Map.Entry<String, LanguageConfigModel> entry : retMap.entrySet()) {
-                final TextView view = (TextView) getLayoutInflater().inflate(R.layout.editor_banner_language_item, null);
-                view.setText(entry.getValue().getDisplay_name());
-                view.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent languageIntent = new Intent(EditorPostActivity.this, FilteredTopicsArticleListingActivity.class);
-                        languageIntent.putExtra("selectedTopics", entry.getValue().getId());
-                        languageIntent.putExtra("displayName", entry.getValue().getDisplay_name());
-                        languageIntent.putExtra("categoryName", entry.getValue().getName());
-                        languageIntent.putExtra("isLanguage", true);
-                        languageIntent.putExtra(Constants.FROM_SCREEN, "Navigation Menu");
-                        startActivity(languageIntent);
-                    }
-                });
-                suggestionFlowLayout.addView(view);
-            }
-            for (final Map.Entry<String, LanguageConfigModel> entry : retMap.entrySet()) {
-                final TextView view = (TextView) getLayoutInflater().inflate(R.layout.editor_banner_language_item, null);
-                view.setText(entry.getValue().getDisplay_name());
-                view.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent languageIntent = new Intent(EditorPostActivity.this, FilteredTopicsArticleListingActivity.class);
-                        languageIntent.putExtra("selectedTopics", entry.getValue().getId());
-                        languageIntent.putExtra("displayName", entry.getValue().getDisplay_name());
-                        languageIntent.putExtra("categoryName", entry.getValue().getName());
-                        languageIntent.putExtra("isLanguage", true);
-                        languageIntent.putExtra(Constants.FROM_SCREEN, "Navigation Menu");
-                        startActivity(languageIntent);
-                    }
-                });
-                suggestionFlowLayout.addView(view);
-            }
-        } catch (FileNotFoundException ffe) {
-            Crashlytics.logException(ffe);
-            Log.d("MC4kException", Log.getStackTraceString(ffe));
-        }
     }
 
     @Override
@@ -321,11 +189,10 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
         } else {
             //Toast.makeText(this,"Draft Saved",Toast.LENGTH_LONG).show();
             if ((mEditorFragment.getTitle().toString().isEmpty() && (mEditorFragment.getContent().toString().isEmpty())) || (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList"))) {
-                finish();
                 super.onBackPressed();
-
-            } else if (mEditorFragment.imageUploading == 0) {
-                Log.e("imageuploading", mEditorFragment.imageUploading + "");
+                finish();
+            } else if (EditorFragmentAbstract.imageUploading == 0) {
+                Log.e("imageuploading", EditorFragmentAbstract.imageUploading + "");
                 showToast("Please wait while image is being uploaded");
             } else {
                 if (!ConnectivityUtils.isNetworkEnabled(this)) {
@@ -334,10 +201,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                 }
                 fromBackpress = true;
                 saveDraftRequest(titleFormatting(mEditorFragment.getTitle().toString().trim()), mEditorFragment.getContent().toString(), draftId);
-
             }
-            // super.onBackPressed();
-
         }
     }
 
@@ -593,7 +457,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                         finalBitmap.compress(Bitmap.CompressFormat.PNG, 75, stream);
                         String path = MediaStore.Images.Media.insertImage(EditorPostActivity.this.getContentResolver(), finalBitmap, "Title", null);
                         Uri imageUriTemp = Uri.parse(path);
-                        mEditorFragment.imageUploading = 0;
+                        EditorFragmentAbstract.imageUploading = 0;
                         File file2 = FileUtils.getFile(this, imageUriTemp);
                         sendUploadProfileImageRequest(file2);
                     } catch (Exception e) {
@@ -674,7 +538,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                         fos.flush();
                         fos.close();
                         imageUri = Uri.fromFile(photoFile);
-                        mEditorFragment.imageUploading = 0;
+                        EditorFragmentAbstract.imageUploading = 0;
                         File file2 = FileUtils.getFile(this, imageUri);
                         sendUploadProfileImageRequest(file2);
                         // compressImage(filePath);
@@ -699,103 +563,6 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
         matrix.postRotate(angle);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix,
                 true);
-    }
-
-    public boolean toggleDraftOptionVisibility() {
-        if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) {
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_editor, menu);
-        if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) {
-            MenuItem item = menu.findItem(R.id.draft);
-            item.setVisible(false);
-        }
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home: {
-                onBackPressed();
-            }
-            break;
-            case R.id.draft: {
-                if (mEditorFragment.getTitle().toString().isEmpty() && mEditorFragment.getContent().toString().isEmpty()) {
-                    showToast("There is nothing to save in draft");
-                } else if (mEditorFragment.getTitle().toString().length() > 150) {
-                    showToast("Unable to save draft. Title should smaller than 150 characters");
-                } else if (mEditorFragment.imageUploading == 0) {
-                    Log.e("imageuploading", mEditorFragment.imageUploading + "");
-                    showToast("Please wait while image is being uploaded");
-                } else if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) {
-                    showToast("Published Articles are not allowed to be saved in drafts");
-                } else {
-                    Log.e("draftId", draftId + "");
-                    if (!ConnectivityUtils.isNetworkEnabled(this)) {
-                        showToast(getString(R.string.error_network));
-                        return true;
-                    }
-                    saveDraftRequest(titleFormatting(mEditorFragment.getTitle().toString().trim()), mEditorFragment.getContent().toString(), draftId);
-                    fromBackpress = false;
-                }
-            }
-            break;
-            case R.id.publish: {
-                if (mEditorFragment.getTitle().toString().isEmpty()) {
-                    showToast("Title can't be empty");
-                } else if (mEditorFragment.getTitle().toString().length() > 150) {
-                    showToast("Unable to save draft. Title should smaller than 150 characters");
-                } else if (mEditorFragment.getContent().toString().isEmpty()) {
-                    showToast("Body can't be empty");
-                } else if (mEditorFragment.getContent().toString().replace("&nbsp;", " ").split("\\s+").length < 299 && !BuildConfig.DEBUG) {
-                    showToast("Please write atleast 300 words to publish");
-                } else if (mEditorFragment.imageUploading == 0) {
-                    Log.e("imageuploading", mEditorFragment.imageUploading + "");
-                    showToast("Please wait while image is being uploaded");
-                } else {
-                    showAlertDialog(getString(R.string.editor_spell_check_title), getString(R.string.editor_spell_check_message), new OnButtonClicked() {
-                        @Override
-                        public void onButtonCLick(int buttonId) {
-                            PublishDraftObject publishObject = new PublishDraftObject();
-
-                            publishObject.setBody(contentFormatting(mEditorFragment.getContent().toString()));
-                            publishObject.setTitle(titleFormatting(mEditorFragment.getTitle().toString().trim()));
-                            Log.d("draftId = ", draftId + "");
-                            if ((getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) || ("4".equals(moderation_status))) {
-                                // coming from edit published articles
-                                Intent intent_1 = new Intent(EditorPostActivity.this, EditSelectedTopicsActivity.class);
-                                publishObject.setId(articleId);
-                                intent_1.putExtra("draftItem", publishObject);
-                                intent_1.putExtra("imageUrl", thumbnailUrl);
-                                intent_1.putExtra("from", "publishedList");
-                                intent_1.putExtra("articleId", articleId);
-                                intent_1.putExtra("tag", tag);
-                                intent_1.putExtra("cities", cities);
-                                startActivity(intent_1);
-                            } else {
-                                Intent intent_3 = new Intent(EditorPostActivity.this, AddArticleTopicsActivity.class);
-                                if (!StringUtils.isNullOrEmpty(draftId)) {
-                                    publishObject.setId(draftId);
-                                }
-                                intent_3.putExtra("draftItem", publishObject);
-                                intent_3.putExtra("from", "editor");
-                                startActivity(intent_3);
-                            }
-                        }
-                    });
-                }
-            }
-            break;
-        }
-        return super.onOptionsItemSelected(item);
-
     }
 
     public void saveDraftRequest(String title, String body, String draftId1) {
@@ -826,7 +593,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                 public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
 
                     try {
-                        ArticleDraftResponse responseModel = (ArticleDraftResponse) response.body();
+                        ArticleDraftResponse responseModel = response.body();
                         // Result<ArticleDraftResult> result=responseModel.getData().getResult();
                         removeProgressDialog();
                         if (response == null || response.body() == null) {
@@ -882,7 +649,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                 public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
 
                     try {
-                        ArticleDraftResponse responseModel = (ArticleDraftResponse) response.body();
+                        ArticleDraftResponse responseModel = response.body();
                         removeProgressDialog();
                         if (response == null || response.body() == null) {
                             showToast(getString(R.string.went_wrong));
@@ -1104,8 +871,8 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                     showToast("Body can't be empty");
                 } else if (mEditorFragment.getContent().toString().replace("&nbsp;", " ").split("\\s+").length < 299 && !BuildConfig.DEBUG) {
                     showToast("Please write atleast 300 words to publish");
-                } else if (mEditorFragment.imageUploading == 0) {
-                    Log.e("imageuploading", mEditorFragment.imageUploading + "");
+                } else if (EditorFragmentAbstract.imageUploading == 0) {
+                    Log.e("imageuploading", EditorFragmentAbstract.imageUploading + "");
                     showToast("Please wait while image is being uploaded");
                 } else {
                     showAlertDialog(getString(R.string.editor_spell_check_title), getString(R.string.editor_spell_check_message), new OnButtonClicked() {

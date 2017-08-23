@@ -46,7 +46,7 @@ public class AttendeeListAdapter extends BaseAdapter {
         if (view == null) {
             holder = new ViewHolder();
             view = inflater.inflate(R.layout.filter_attendee, null, true);
-            holder.colorCode = (View) view.findViewById(R.id.attendee_colorcode);
+            holder.colorCode = view.findViewById(R.id.attendee_colorcode);
             holder.name = (TextView) view.findViewById(R.id.attendee_name);
             view.setTag(holder);
         } else {
