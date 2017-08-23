@@ -229,7 +229,13 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
 
         @Override
         public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
-
+            progressBar.setVisibility(View.GONE);
+            mLodingView.setVisibility(View.GONE);
+            swipeRefreshLayout.setRefreshing(false);
+            isReuqestRunning = false;
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+            showToast(getString(R.string.went_wrong));
         }
     };
 

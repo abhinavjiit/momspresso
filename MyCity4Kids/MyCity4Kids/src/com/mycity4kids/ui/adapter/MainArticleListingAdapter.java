@@ -198,14 +198,11 @@ public class MainArticleListingAdapter extends BaseAdapter {
             }
 
             if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getVideoUrl())
-                    && (articleDataModelsNew.get(position).getImageUrl().getWebThumbnail() == null || articleDataModelsNew.get(position).getImageUrl().getWebThumbnail().endsWith("default.jpg"))) {
+                    && (articleDataModelsNew.get(position).getImageUrl().getThumbMax() == null || articleDataModelsNew.get(position).getImageUrl().getThumbMax().endsWith("default.jpg"))) {
                 Picasso.with(mContext).load(AppUtils.getYoutubeThumbnailURLMomspresso(articleDataModelsNew.get(position).getVideoUrl())).placeholder(R.drawable.default_article).into(holder.articleImageView);
             } else {
-                if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getImageUrl().getWebThumbnail())) {
-                    Picasso.with(mContext).load(articleDataModelsNew.get(position).getImageUrl().getWebThumbnail())
-                            .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
-                } else if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getImageUrl().getMobileWebThumbnail())) {
-                    Picasso.with(mContext).load(articleDataModelsNew.get(position).getImageUrl().getMobileWebThumbnail())
+                if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getImageUrl().getThumbMax())) {
+                    Picasso.with(mContext).load(articleDataModelsNew.get(position).getImageUrl().getThumbMax())
                             .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
                 } else {
                     holder.articleImageView.setBackgroundResource(R.drawable.default_article);

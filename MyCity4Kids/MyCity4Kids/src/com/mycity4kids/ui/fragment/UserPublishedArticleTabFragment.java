@@ -299,7 +299,7 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
         intent.putExtra("from", "publishedList");
         intent.putExtra("title", detailData.getTitle());
         intent.putExtra("content", content);
-        intent.putExtra("thumbnailUrl", detailData.getImageUrl().getClientApp());
+        intent.putExtra("thumbnailUrl", detailData.getImageUrl().getThumbMax());
         intent.putExtra("articleId", detailData.getId());
         intent.putExtra("tag", new Gson().toJson(detailData.getTags()));
         intent.putExtra("cities", new Gson().toJson(detailData.getCities()));

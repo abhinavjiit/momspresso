@@ -64,8 +64,8 @@ public class ArticleTagsImagesGridAdapter extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
 
-        if (!StringUtils.isNullOrEmpty(tagsImageUrlList.get(position).getImageUrl().getClientApp())) {
-            Picasso.with(mContext).load(tagsImageUrlList.get(position).getImageUrl().getClientApp()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
+        if (!StringUtils.isNullOrEmpty(tagsImageUrlList.get(position).getImageUrl().getThumbMax())) {
+            Picasso.with(mContext).load(tagsImageUrlList.get(position).getImageUrl().getThumbMax()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
                     .fit().into(holder.tagsImageView);
         } else {
             holder.tagsImageView.setBackgroundResource(R.drawable.article_default);
@@ -84,7 +84,7 @@ public class ArticleTagsImagesGridAdapter extends BaseAdapter {
                     tagsImageUrlList.get(i).setSelected(false);
                 }
                 tagsImageUrlList.get(position).setSelected(true);
-                iTagImageSelect.onTagImageSelected(tagsImageUrlList.get(position).getImageUrl().getClientApp());
+                iTagImageSelect.onTagImageSelected(tagsImageUrlList.get(position).getImageUrl().getThumbMax());
                 notifyDataSetChanged();
             }
         });

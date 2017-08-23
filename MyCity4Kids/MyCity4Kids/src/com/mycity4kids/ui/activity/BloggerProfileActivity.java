@@ -502,7 +502,7 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
                         topArticle_2.setVisibility(View.INVISIBLE);
                         topArticle_3.setVisibility(View.INVISIBLE);
                         try {
-                            Picasso.with(BloggerProfileActivity.this).load(dataList.get(0).getImageUrl().getMobileWebThumbnail()).
+                            Picasso.with(BloggerProfileActivity.this).load(dataList.get(0).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imgTopArticle_1);
                         } catch (Exception e) {
                             imgTopArticle_1.setBackgroundResource(R.drawable.article_default);
@@ -528,13 +528,13 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
                         txvTopArticle_2.setText(dataList.get(1).getTitle());
                         topArticle_3.setVisibility(View.INVISIBLE);
                         try {
-                            Picasso.with(BloggerProfileActivity.this).load(dataList.get(0).getImageUrl().getMobileWebThumbnail()).
+                            Picasso.with(BloggerProfileActivity.this).load(dataList.get(0).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imgTopArticle_1);
                         } catch (Exception e) {
                             imgTopArticle_1.setBackgroundResource(R.drawable.article_default);
                         }
                         try {
-                            Picasso.with(BloggerProfileActivity.this).load(dataList.get(1).getImageUrl().getMobileWebThumbnail()).
+                            Picasso.with(BloggerProfileActivity.this).load(dataList.get(1).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imgTopArticle_2);
                         } catch (Exception e) {
                             imgTopArticle_2.setBackgroundResource(R.drawable.article_default);
@@ -574,19 +574,19 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
                         txvTopArticle_2.setText(dataList.get(1).getTitle());
                         txvTopArticle_3.setText(dataList.get(2).getTitle());
                         try {
-                            Picasso.with(BloggerProfileActivity.this).load(dataList.get(0).getImageUrl().getMobileWebThumbnail()).
+                            Picasso.with(BloggerProfileActivity.this).load(dataList.get(0).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imgTopArticle_1);
                         } catch (Exception e) {
                             imgTopArticle_1.setBackgroundResource(R.drawable.article_default);
                         }
                         try {
-                            Picasso.with(BloggerProfileActivity.this).load(dataList.get(1).getImageUrl().getMobileWebThumbnail()).
+                            Picasso.with(BloggerProfileActivity.this).load(dataList.get(1).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imgTopArticle_2);
                         } catch (Exception e) {
                             imgTopArticle_2.setBackgroundResource(R.drawable.article_default);
                         }
                         try {
-                            Picasso.with(BloggerProfileActivity.this).load(dataList.get(2).getImageUrl().getMobileWebThumbnail()).
+                            Picasso.with(BloggerProfileActivity.this).load(dataList.get(2).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imgTopArticle_3);
                         } catch (Exception e) {
                             imgTopArticle_3.setBackgroundResource(R.drawable.article_default);

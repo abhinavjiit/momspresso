@@ -457,7 +457,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
     }
 
     public void showVerifyEmailDialog(String title, String message) {
-        new AlertDialog.Builder(this)
+        new AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
                 .setTitle(title)
                 .setMessage(message)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {

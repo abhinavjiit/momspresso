@@ -153,6 +153,11 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
     private void processResponse(NotificationCenterListResponse responseData) {
         //	parentingResponse = responseData ;
         try {
+            if (responseData.getData() == null) {
+                isLastPageReached = true;
+                noBlogsTextView.setVisibility(View.VISIBLE);
+                return;
+            }
             ArrayList<NotificationCenterResult> dataList = responseData.getData().getResult();
 
             if (dataList.size() == 0) {

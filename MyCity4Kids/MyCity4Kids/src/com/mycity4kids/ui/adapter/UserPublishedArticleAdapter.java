@@ -26,13 +26,11 @@ public class UserPublishedArticleAdapter extends RecyclerView.Adapter<UserPublis
     private Context mContext;
     private LayoutInflater mInflator;
     ArrayList<ArticleListingResult> articleDataModelsNew;
-    private final float density;
     private RecyclerViewClickListener mListener;
     private boolean isPrivateProfile;
 
     public UserPublishedArticleAdapter(Context pContext, RecyclerViewClickListener listener, boolean isPrivateProfile) {
 
-        density = pContext.getResources().getDisplayMetrics().density;
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = pContext;
         this.mListener = listener;
@@ -55,7 +53,7 @@ public class UserPublishedArticleAdapter extends RecyclerView.Adapter<UserPublis
     public void onBindViewHolder(UserPublishedArticleViewHolder holder, int position) {
 
         if (null != articleDataModelsNew.get(position).getImageUrl()) {
-            Picasso.with(mContext).load(articleDataModelsNew.get(position).getImageUrl().getMobileWebThumbnail()).
+            Picasso.with(mContext).load(articleDataModelsNew.get(position).getImageUrl().getThumbMin()).
                     placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
         } else {
             holder.articleImageView.setBackgroundResource(R.drawable.article_default);
