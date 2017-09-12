@@ -16,6 +16,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -121,6 +122,7 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
     private File photoFile;
     private String mCurrentPhotoPath, absoluteImagePath;
     private Uri imageUri;
+    private boolean isExpanded = false;
 
     private View rootView;
     private TextView followingCountTextView, followerCountTextView, rankCountTextView;
@@ -218,6 +220,9 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
         @Override
         public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
             removeProgressDialog();
+            if (!isAdded()) {
+                return;
+            }
             if (response == null || null == response.body()) {
 //                showToast("Something went wrong from server");
                 return;
@@ -293,7 +298,7 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
                     case AppConstants.USER_TYPE_USER:
                         rankingSectionTextView.setVisibility(View.GONE);
                         rootView.findViewById(R.id.underline_4).setVisibility(View.GONE);
-                        authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_USER.toUpperCase());
+                        authorTypeTextView.setVisibility(View.GONE);
                         break;
                     default:
                         rankingSectionTextView.setVisibility(View.GONE);
@@ -343,8 +348,16 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
             gPlusSignOut();
 
             String pushToken = SharedPrefUtils.getDeviceToken(getActivity());
+            boolean homeCoach = SharedPrefUtils.isCoachmarksShownFlag(getActivity(), "home");
+            boolean topicsCoach = SharedPrefUtils.isCoachmarksShownFlag(getActivity(), "topics");
+            boolean topicsArticleCoach = SharedPrefUtils.isCoachmarksShownFlag(getActivity(), "topics_article");
+            boolean articleCoach = SharedPrefUtils.isCoachmarksShownFlag(getActivity(), "article_details");
             SharedPrefUtils.clearPrefrence(getActivity());
             SharedPrefUtils.setDeviceToken(getActivity(), pushToken);
+            SharedPrefUtils.setCoachmarksShownFlag(getActivity(), "home", homeCoach);
+            SharedPrefUtils.setCoachmarksShownFlag(getActivity(), "topics", topicsCoach);
+            SharedPrefUtils.setCoachmarksShownFlag(getActivity(), "topics_article", topicsArticleCoach);
+            SharedPrefUtils.setCoachmarksShownFlag(getActivity(), "article_details", articleCoach);
             /**
              * delete table from local also;
              */
@@ -425,6 +438,14 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
             case R.id.authorTypeTextView:
                 break;
             case R.id.authorBioTextView:
+                if (isExpanded) {
+                    authorBioTextView.setMaxLines(3);
+                    authorBioTextView.setEllipsize(TextUtils.TruncateAt.END);
+                } else {
+                    authorBioTextView.setMaxLines(Integer.MAX_VALUE);
+                    authorBioTextView.setEllipsize(null);
+                }
+                isExpanded = !isExpanded;
                 break;
             case R.id.settingImageView:
             case R.id.imgProfile:

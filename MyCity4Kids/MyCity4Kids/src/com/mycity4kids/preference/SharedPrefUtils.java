@@ -101,6 +101,11 @@ public class SharedPrefUtils {
     private static final String FB_CONNECT_FIRST_LAUNCH_FLAG = "fbConnectFirstLaunchFlag";
     private static final String UPLOAD_VIDEO_FIRST_LAUNCH_FLAG = "uploadVideoFirstLaunchFlag";
 
+    private static final String COACHMARK_HOME = "coachmarkHome";
+    private static final String COACHMARK_TOPICS = "coachmarkTopics";
+    private static final String COACHMARK_TOPICS_ARTICLE = "coachmarkTopicsArticle";
+    private static final String COACHMARK_ARTICLE_DETAILS = "coachmarkArticleDetails";
+
     private static final String CHANGE_CITY_FLAG = "changeCityFlag";
 
 
@@ -575,6 +580,36 @@ public class SharedPrefUtils {
     public static boolean isPhoenixFirstLaunch(Context context) {
         SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         return _sharedPref.getBoolean(PHOENIX_FIRST_LAUNCH_FLAG, true);
+    }
+
+    public static void setCoachmarksShownFlag(Context context, String screenName, boolean flag) {
+        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        if ("home".equals(screenName)) {
+            _editor.putBoolean(COACHMARK_HOME, flag);
+        } else if ("topics".equals(screenName)) {
+            _editor.putBoolean(COACHMARK_TOPICS, flag);
+        } else if ("topics_article".equals(screenName)) {
+            _editor.putBoolean(COACHMARK_TOPICS_ARTICLE, flag);
+        } else if ("article_details".equals(screenName)) {
+            _editor.putBoolean(COACHMARK_ARTICLE_DETAILS, flag);
+        }
+
+        _editor.commit();
+    }
+
+    public static boolean isCoachmarksShownFlag(Context context, String screenName) {
+        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        if ("home".equals(screenName)) {
+            return _sharedPref.getBoolean(COACHMARK_HOME, false);
+        } else if ("topics".equals(screenName)) {
+            return _sharedPref.getBoolean(COACHMARK_TOPICS, false);
+        } else if ("topics_article".equals(screenName)) {
+            return _sharedPref.getBoolean(COACHMARK_TOPICS_ARTICLE, false);
+        } else if ("article_details".equals(screenName)) {
+            return _sharedPref.getBoolean(COACHMARK_ARTICLE_DETAILS, false);
+        }
+        return true;
     }
 
     public static void setFBConnectFirstLaunch(Context context, boolean flag) {

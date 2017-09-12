@@ -109,6 +109,7 @@
                 android:layout_marginStart="40dp"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
+                android:maxLines="3"
                 android:text=""
                 android:textColor="@color/blogger_profile.bio"
                 android:textSize="13sp"
@@ -137,13 +138,13 @@
                 android:layout_below="@+id/authorBioTextView"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="10dp"
-                android:background="@drawable/follow_topic_author_bg"
+                android:background="@drawable/unfollow_topic_author_bg"
                 android:paddingBottom="10dp"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
                 android:paddingTop="10dp"
                 android:text="@string/blogger_profile.unfollow_button"
-                android:textColor="@color/blogger_profile.unfollow_button"
+                android:textColor="@color/blogger_profile.follow_button"
                 app:fontName="oswald_regular.ttf" />
         </RelativeLayout>
 
@@ -168,7 +169,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:text="--"
-                    android:textColor="@color/blogger_profile.followers_label"
+                    android:textColor="@color/blogger_profile.view_count_label"
                     android:textSize="12sp"
                     app:fontName="oswald_regular.ttf" />
 
@@ -176,8 +177,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:text="@string/blogger_profile.followers_label"
-                    android:textColor="@color/blogger_profile.followers_label"
+                    android:text="@string/blogger_profile.view_count_label"
+                    android:textColor="@color/blogger_profile.view_count_label"
                     android:textSize="12sp"
                     app:fontName="oswald.ttf" />
             </LinearLayout>
@@ -197,7 +198,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:text="--"
-                    android:textColor="@color/blogger_profile.following_label"
+                    android:textColor="@color/blogger_profile.article_count_label"
                     android:textSize="12sp"
                     app:fontName="oswald_regular.ttf" />
 
@@ -205,8 +206,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:text="@string/blogger_profile.following_label"
-                    android:textColor="@color/blogger_profile.following_label"
+                    android:text="@string/blogger_profile.article_count_label"
+                    android:textColor="@color/blogger_profile.article_count_label"
                     android:textSize="12sp"
                     app:fontName="oswald.ttf" />
             </LinearLayout>
@@ -251,7 +252,8 @@
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
             android:text="@string/blogger_profile.top_3_article"
-            android:visibility="gone" />
+            android:visibility="gone"
+            app:fontName="oswald_regular.ttf" />
 
         <LinearLayout
             android:id="@+id/topArticleContainer"
@@ -293,7 +295,8 @@
                     android:padding="5dp"
                     android:text=""
                     android:textColor="@color/white"
-                    android:textSize="11sp" />
+                    android:textSize="11sp"
+                    app:fontName="oswald.ttf" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -328,7 +331,8 @@
                     android:padding="5dp"
                     android:text=""
                     android:textColor="@color/white"
-                    android:textSize="11sp" />
+                    android:textSize="11sp"
+                    app:fontName="oswald.ttf" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -363,7 +367,8 @@
                     android:padding="5dp"
                     android:text=""
                     android:textColor="@color/white"
-                    android:textSize="11sp" />
+                    android:textSize="11sp"
+                    app:fontName="oswald.ttf" />
 
             </RelativeLayout>
         </LinearLayout>

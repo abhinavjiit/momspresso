@@ -40,7 +40,7 @@
             android:textColor="@color/white_color"
             android:textColorHint="@color/login_email.email_hint"
             android:textSize="14sp"
-            app:fontName="roboto_light.ttf" />
+            app:fontName="open_sans.ttf" />
 
         <com.mycity4kids.widget.CustomFontEditText
             android:id="@+id/passwordEditText"
@@ -61,7 +61,7 @@
             android:textColor="@color/white_color"
             android:textColorHint="@color/login_email.password_hint"
             android:textSize="14sp"
-            app:fontName="roboto_light.ttf" />
+            app:fontName="open_sans.ttf" />
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/forgotPasswordTextView"
@@ -93,7 +93,7 @@
             android:text="@string/login_email.login"
             android:textColor="@color/white_color"
             android:textSize="14sp"
-            app:fontName="roboto_light.ttf" />
+            app:fontName="open_sans.ttf" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -109,7 +109,7 @@
                 android:text="@string/sign_in.no_account"
                 android:textColor="@color/sign_in.welcome_back"
                 android:textSize="13sp"
-                app:fontName="open_sans_regular.ttf" />
+                app:fontName="open_sans.ttf" />
 
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/signupTextView"
@@ -119,7 +119,7 @@
                 android:text="@string/sign_in.sign_up_btn"
                 android:textColor="@color/sign_in.sign_up_btn"
                 android:textSize="13sp"
-                app:fontName="open_sans_regular.ttf" />
+                app:fontName="open_sans.ttf" />
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

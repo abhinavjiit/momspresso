@@ -1,16 +1,12 @@
 package com.mycity4kids.ui.activity;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
-import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
@@ -23,7 +19,6 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
-import com.mycity4kids.ui.adapter.ParentTopicsGridAdapter;
 import com.mycity4kids.ui.adapter.TopicsPagerAdapter;
 import com.mycity4kids.utils.AppUtils;
 
@@ -46,13 +41,10 @@ import retrofit2.Retrofit;
 public class TopicsListingFragment extends BaseFragment {
 
     private View view;
-    private Toolbar mToolbar;
     private TabLayout tabLayout;
-    private GridView gridview;
     private ViewPager viewPager;
 
     private TopicsPagerAdapter pagerAdapter;
-    private ParentTopicsGridAdapter adapter;
 
     private HashMap<Topics, List<Topics>> allTopicsMap;
     private ArrayList<Topics> allTopicsList;
@@ -63,10 +55,6 @@ public class TopicsListingFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.topic_listing_activity, container, false);
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.explore_article_listing_type_activity);
-
-        mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
 
         tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
 
@@ -119,27 +107,7 @@ public class TopicsListingFragment extends BaseFragment {
 
             }
         });
-//        adapter = new ParentTopicsGridAdapter(getActivity());
-//        gridview.setAdapter(adapter);
-//        adapter.setDatalist(subTopicsList);
         return view;
-    }
-
-    private void changeTabsFont() {
-        //Typeface font = Typeface.createFromAsset(getAssets(), "fonts/androidnation.ttf");
-        Typeface myTypeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/" + "oswald_regular.ttf");
-        ViewGroup vg = (ViewGroup) tabLayout.getChildAt(0);
-        int tabsCount = vg.getChildCount();
-        for (int j = 0; j < tabsCount; j++) {
-            ViewGroup vgTab = (ViewGroup) vg.getChildAt(j);
-            int tabChildsCount = vgTab.getChildCount();
-            for (int i = 0; i < tabChildsCount; i++) {
-                View tabViewChild = vgTab.getChildAt(i);
-                if (tabViewChild instanceof TextView) {
-                    ((TextView) tabViewChild).setTypeface(myTypeface, Typeface.NORMAL);
-                }
-            }
-        }
     }
 
     private void createTopicsData(TopicsResponse responseData) {
@@ -202,10 +170,8 @@ public class TopicsListingFragment extends BaseFragment {
                     }
                     responseData.getData().get(i).setChild(tempUpList);
 
-//                    if ("1".equals(responseData.getData().get(i).getPublicVisibility())) {
                     allTopicsList.add(responseData.getData().get(i));
                     allTopicsMap.put(responseData.getData().get(i), tempUpList);
-//                    }
                 }
                 BaseApplication.setTopicList(allTopicsList);
                 BaseApplication.setTopicsMap(allTopicsMap);
@@ -256,27 +222,12 @@ public class TopicsListingFragment extends BaseFragment {
                         Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
 
                         try {
-//                            Topics t = new Topics();
-//                            t.setId("");
-//                            t.setDisplay_name("");
-//                            SharedPrefUtils.setMomspressoCategory(FilteredTopicsArticleListingActivity.this, t);
 
                             FileInputStream fileInputStream = getActivity().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                             String fileContent = AppUtils.convertStreamToString(fileInputStream);
                             TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
                             createTopicsData(res);
                             getCurrentParentTopicCategoriesAndSubCategories();
-//                            if (AppConstants.TOPIC_LEVEL_SUB_SUB_CATEGORY.equals(topicLevel)) {
-//                                sortBgLayout.setVisibility(View.GONE);
-//                                bottomOptionMenu.setVisibility(View.GONE);
-//                            } else {
-//                                frameLayout.setVisibility(View.GONE);
-//                                fabMenu.setVisibility(View.GONE);
-//                                fabSort.setVisibility(View.GONE);
-//                                popularSortFAB.setVisibility(View.GONE);
-//                                recentSortFAB.setVisibility(View.GONE);
-//                            }
-//                            openFilterDialog();
                         } catch (FileNotFoundException e) {
                             Crashlytics.logException(e);
                             Log.d("FileNotFoundException", Log.getStackTraceString(e));

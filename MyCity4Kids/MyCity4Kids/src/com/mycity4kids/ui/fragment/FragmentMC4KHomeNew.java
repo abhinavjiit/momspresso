@@ -104,23 +104,6 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
         }
     };
 
-    private void changeTabsFont() {
-        //Typeface font = Typeface.createFromAsset(getAssets(), "fonts/androidnation.ttf");
-        Typeface myTypeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/" + "oswald_regular.ttf");
-        ViewGroup vg = (ViewGroup) tabLayout.getChildAt(0);
-        int tabsCount = vg.getChildCount();
-        for (int j = 0; j < tabsCount; j++) {
-            ViewGroup vgTab = (ViewGroup) vg.getChildAt(j);
-            int tabChildsCount = vgTab.getChildCount();
-            for (int i = 0; i < tabChildsCount; i++) {
-                View tabViewChild = vgTab.getChildAt(i);
-                if (tabViewChild instanceof TextView) {
-                    ((TextView) tabViewChild).setTypeface(myTypeface, Typeface.NORMAL);
-                }
-            }
-        }
-    }
-
     private void processTrendingResponse(TrendingListingResponse responseData) {
         trendingArraylist.addAll(responseData.getData().get(0).getResult());
 //        Collections.shuffle(trendingArraylist);
@@ -129,7 +112,7 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
             tabLayout.addTab(tabLayout.newTab().setText(trendingArraylist.get(i).getDisplay_name()));
         }
         AppUtils.changeTabsFont(getActivity(), tabLayout);
-        wrapTabIndicatorToTitle(tabLayout, 25, 25);
+//        wrapTabIndicatorToTitle(tabLayout, 25, 25);
         final ViewPager viewPager = (ViewPager) view.findViewById(R.id.pager);
         final TrendingTopicsPagerAdapter adapter = new TrendingTopicsPagerAdapter
                 (getChildFragmentManager(), tabLayout.getTabCount(), trendingArraylist);

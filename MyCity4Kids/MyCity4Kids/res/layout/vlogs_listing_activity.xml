@@ -60,9 +60,9 @@
             android:layout_height="match_parent"
             android:layout_below="@+id/toolbar"
             android:layout_marginTop="2dp"
-            android:background="@color/grey_light"
-            android:divider="@color/transparent"
-            android:drawSelectorOnTop="true" />
+            android:background="@color/white"
+            android:clipToPadding="false"
+            android:paddingBottom="70dp" />
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <com.mycity4kids.widget.CustomFontTextView

@@ -10,7 +10,7 @@
         android:id="@+id/notificationListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@color/blog_setup.underline"
+        android:divider="@color/light_grey1"
         android:dividerHeight="1dp" />
 
     <RelativeLayout

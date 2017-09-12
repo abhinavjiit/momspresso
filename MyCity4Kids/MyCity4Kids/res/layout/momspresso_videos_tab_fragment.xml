@@ -5,21 +5,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_refresh_layout"
+    <com.mycity4kids.observablescrollview.ObservableListView
+        android:id="@+id/scroll"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/header">
-
-        <com.mycity4kids.observablescrollview.ObservableListView
-            android:id="@+id/scroll"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/toolbar"
-            android:background="@color/grey_light"
-            android:divider="@color/transparent"
-            android:drawSelectorOnTop="true" />
-    </android.support.v4.widget.SwipeRefreshLayout>
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:background="@color/grey_light"
+        android:divider="@color/transparent"
+        android:drawSelectorOnTop="true" />
 
     <TextView
         android:id="@+id/noBlogsTextView"

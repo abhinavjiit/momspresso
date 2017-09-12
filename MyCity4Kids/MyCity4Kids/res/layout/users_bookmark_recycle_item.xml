@@ -66,6 +66,20 @@
         android:textSize="12sp"
         app:fontName="open_sans.ttf" />
 
+    <View
+        android:id="@+id/separatorView1"
+        android:layout_width="1dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/viewCountTextView"
+        android:layout_alignTop="@+id/viewCountTextView"
+        android:layout_marginBottom="3dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="3dp"
+        android:layout_toEndOf="@+id/viewCountTextView"
+        android:layout_toRightOf="@+id/viewCountTextView"
+        android:background="@color/common_underline" />
+
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/commentCountTextView"
         android:layout_width="wrap_content"
@@ -85,6 +99,20 @@
         android:textColor="@color/article_listing.stats"
         android:textSize="12sp"
         app:fontName="open_sans.ttf" />
+
+    <View
+        android:id="@+id/separatorView2"
+        android:layout_width="1dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/viewCountTextView"
+        android:layout_alignTop="@+id/viewCountTextView"
+        android:layout_marginBottom="3dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="3dp"
+        android:layout_toEndOf="@+id/commentCountTextView"
+        android:layout_toRightOf="@+id/commentCountTextView"
+        android:background="@color/common_underline" />
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/recommendCountTextView"
@@ -114,7 +142,7 @@
         android:layout_alignRight="@+id/authorTextView"
         android:layout_below="@+id/authorTextView"
         android:background="@drawable/unfollow_topic_author_bg"
-        android:padding="10dp"
+        android:padding="6dp"
         android:src="@drawable/ic_share_white" />
 
     <com.mycity4kids.widget.CustomFontTextView
@@ -139,5 +167,5 @@
         android:layout_height="1dp"
         android:layout_below="@+id/shareImageView"
         android:layout_marginTop="10dp"
-        android:background="@color/common_underline" />
+        android:background="@color/light_underline" />
 </RelativeLayout>

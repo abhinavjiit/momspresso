@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kelltontech.utils.DateTimeUtils;
+import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.squareup.picasso.Picasso;
@@ -61,8 +62,23 @@ public class UserPublishedArticleAdapter extends RecyclerView.Adapter<UserPublis
 
         holder.txvArticleTitle.setText(articleDataModelsNew.get(position).getTitle());
         holder.viewCountTextView.setText(articleDataModelsNew.get(position).getArticleCount());
+
         holder.commentCountTextView.setText(articleDataModelsNew.get(position).getCommentsCount());
+        if (StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getCommentsCount()) || "0".equals(articleDataModelsNew.get(position).getCommentsCount())) {
+            holder.commentCountTextView.setVisibility(View.GONE);
+            holder.separatorView1.setVisibility(View.GONE);
+        } else {
+            holder.commentCountTextView.setVisibility(View.VISIBLE);
+            holder.separatorView1.setVisibility(View.VISIBLE);
+        }
         holder.recommendCountTextView.setText(articleDataModelsNew.get(position).getLikesCount());
+        if (StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getLikesCount()) || "0".equals(articleDataModelsNew.get(position).getLikesCount())) {
+            holder.recommendCountTextView.setVisibility(View.GONE);
+            holder.separatorView2.setVisibility(View.GONE);
+        } else {
+            holder.recommendCountTextView.setVisibility(View.VISIBLE);
+            holder.separatorView2.setVisibility(View.VISIBLE);
+        }
         if (isPrivateProfile) {
             holder.editPublishedTextView.setVisibility(View.VISIBLE);
         } else {
@@ -104,6 +120,8 @@ public class UserPublishedArticleAdapter extends RecyclerView.Adapter<UserPublis
         TextView recommendCountTextView;
         ImageView shareArticleImageView;
         TextView editPublishedTextView;
+        View separatorView1;
+        View separatorView2;
 
         public UserPublishedArticleViewHolder(View itemView, RecyclerViewClickListener listener) {
             super(itemView);
@@ -115,6 +133,8 @@ public class UserPublishedArticleAdapter extends RecyclerView.Adapter<UserPublis
             articleImageView = (ImageView) itemView.findViewById(R.id.articleImageView);
             shareArticleImageView = (ImageView) itemView.findViewById(R.id.shareArticleImageView);
             editPublishedTextView = (TextView) itemView.findViewById(R.id.editPublishedTextView);
+            separatorView1 = itemView.findViewById(R.id.separatorView1);
+            separatorView2 = itemView.findViewById(R.id.separatorView2);
             shareArticleImageView.setOnClickListener(this);
             editPublishedTextView.setOnClickListener(this);
             itemView.setOnClickListener(this);

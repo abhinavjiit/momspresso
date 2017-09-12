@@ -4,15 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:clickable="true"
-    android:padding="5dp">
+    android:clickable="true">
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
+        android:elevation="3dp"
         android:minHeight="?attr/actionBarSize"
+        android:paddingLeft="10dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:tabIndicatorColor="@color/explore_listing.tabbar_indicator"
         app:tabIndicatorHeight="2dp"
@@ -28,6 +29,7 @@
         android:layout_below="@+id/tab_layout"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
+        android:layout_marginTop="4dp"
         android:background="@color/search_topics.search_bg"
         android:drawableLeft="@drawable/search"
         android:drawablePadding="10dp"
@@ -54,10 +56,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/exploreCategoriesLabel"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:gravity="center"
-        android:horizontalSpacing="5dp"
+        android:horizontalSpacing="15dp"
         android:numColumns="2"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="20dp"
+        android:verticalSpacing="15dp"
         android:visibility="visible" />
 </RelativeLayout>

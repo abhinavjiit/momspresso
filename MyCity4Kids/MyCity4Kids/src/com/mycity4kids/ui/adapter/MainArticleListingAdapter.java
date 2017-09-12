@@ -197,17 +197,22 @@ public class MainArticleListingAdapter extends BaseAdapter {
                 holder.txvAuthorName.setText(articleDataModelsNew.get(position).getUserName());
             }
 
-            if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getVideoUrl())
-                    && (articleDataModelsNew.get(position).getImageUrl().getThumbMax() == null || articleDataModelsNew.get(position).getImageUrl().getThumbMax().endsWith("default.jpg"))) {
-                Picasso.with(mContext).load(AppUtils.getYoutubeThumbnailURLMomspresso(articleDataModelsNew.get(position).getVideoUrl())).placeholder(R.drawable.default_article).into(holder.articleImageView);
-            } else {
-                if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getImageUrl().getThumbMax())) {
-                    Picasso.with(mContext).load(articleDataModelsNew.get(position).getImageUrl().getThumbMax())
-                            .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
+            try {
+                if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getVideoUrl())
+                        && (articleDataModelsNew.get(position).getImageUrl().getThumbMax() == null || articleDataModelsNew.get(position).getImageUrl().getThumbMax().contains("default.jp"))) {
+                    Picasso.with(mContext).load(AppUtils.getYoutubeThumbnailURLMomspresso(articleDataModelsNew.get(position).getVideoUrl())).placeholder(R.drawable.default_article).into(holder.articleImageView);
                 } else {
-                    holder.articleImageView.setBackgroundResource(R.drawable.default_article);
+                    if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getImageUrl().getThumbMax())) {
+                        Picasso.with(mContext).load(articleDataModelsNew.get(position).getImageUrl().getThumbMax())
+                                .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
+                    } else {
+                        holder.articleImageView.setBackgroundResource(R.drawable.default_article);
+                    }
                 }
+            } catch (Exception e) {
+                holder.articleImageView.setBackgroundResource(R.drawable.default_article);
             }
+
 
             if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getVideoUrl())) {
                 holder.videoIndicatorImageView.setVisibility(View.VISIBLE);

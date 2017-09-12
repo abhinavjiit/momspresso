@@ -254,15 +254,6 @@
             android:theme="@style/Theme.Transparent"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".ui.activity.KidsBirthdayActivity"
-            android:parentActivityName=".ui.activity.DashboardActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mycity4kids.ui.activity.DashboardActivity" />
-        </activity>
-        <activity
             android:name=".ui.activity.DashboardActivity"
             android:configChanges="keyboardHidden|screenSize|orientation|screenLayout|uiMode|keyboard"
             android:label="@string/app_name"

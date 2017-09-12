@@ -114,10 +114,10 @@
     <color name="ad.title">#333333</color>
     <color name="ad.body">#ec3b55</color>
     <color name="ad.tags.text">#507cbe</color>
-    <color name="ad.tags.follow_bg">#e9e9e9</color>
+    <color name="ad.tags.follow_bg">#efefef</color>
     <color name="ad.tags.following_bg">#507cbe</color>
     <color name="ad.author.follow">#507cbe</color>
-    <color name="ad.tags.bg">#e9e9e9</color>
+    <color name="ad.tags.bg">#efefef</color>
     <color name="ad.fab.bg">#6190ca</color>
     <color name="ad.recommend.tooltip.bg">#4185f2</color>
     <color name="ad.readmore.text">#507cde</color>
@@ -130,6 +130,7 @@
     <color name="ad.author_type.text">#9c9dac</color>
     <color name="ad.follow_following_text">#507cbe</color>
     <color name="ad.comment.username">#515556</color>
+    <color name="ad.comment.title">#515556</color>
     <color name="ad.comment.body">#9c9dac</color>
     <color name="ad.comment.reply_label">#507cbe</color>
     <color name="ad.comment.edit_label">#507cbe</color>
@@ -171,7 +172,7 @@
     <color name="splashtopics.bottombar.bg">#efefef</color>
     <color name="splashtopics.search.topic_item_bg">#ec3b57</color>
     <color name="splashtopics.search.topic_item_selected_text">#ec3b57</color>
-    <color name="splashtopics.search.topic_parent_text">#333333</color>
+    <color name="splashtopics.search.topic_parent_text">#9c9dac</color>
     <color name="splashtopics.search.topic_item_text">#555555</color>
     <color name="home.foryou.addTopics">#656565</color>
 
@@ -247,7 +248,7 @@
     <color name="login_email.password_text">#FFFFFF</color>
 
     <color name="empty_list_msg">#545454</color>
-    <color name="various_list.toolbar.title">#545454</color>
+    <color name="various_list.toolbar.title">#507cbe</color>
 
     <color name="for_you.reason.why_label">#545454</color>
     <color name="for_you.reason.body">#545454</color>
@@ -275,6 +276,7 @@
     <color name="search_topics.search_bg">#f3f3f3</color>
 
     <color name="common_underline">#9c9dac</color>
+    <color name="light_underline">#cccccc</color>
 
     <color name="home_screen.trending_list_header.bg">#f3f3f3</color>
     <color name="home_screen.trending_list_header.title">#9c9dac</color>
@@ -316,6 +318,8 @@
     <color name="blogger_profile.rank_bg">#e7e8ea</color>
     <color name="blogger_profile.following_label">#507cbe</color>
     <color name="blogger_profile.followers_label">#507cbe</color>
+    <color name="blogger_profile.view_count_label">#545454</color>
+    <color name="blogger_profile.article_count_label">#545454</color>
     <color name="blogger_profile.rank_label">#545454</color>
     <color name="blogger_profile.section.articles_label">#545454</color>
     <color name="blogger_profile.section.videos_label">#545454</color>
@@ -342,7 +346,7 @@
     <color name="app_settings.tabbar.change_password">#545454</color>
     <color name="app_settings.tabbar.edit_profile">#545454</color>
 
-    <color name="app_settings.edit_profile.edit_text_underline">#9c9dac</color>
+    <color name="app_settings.edit_profile.edit_text_underline">#cccccc</color>
     <color name="app_settings.edit_profile.hint_fn">#9c9dac</color>
     <color name="app_settings.edit_profile.text_fn">#545454</color>
     <color name="app_settings.edit_profile.hint_ln">#9c9dac</color>
@@ -392,7 +396,7 @@
     <color name="app_settings.change_pass.save">#507cbe</color>
 
     <color name="follower_following_list.follow_label">#507cbe</color>
-    <color name="follower_following_list.following_label">#ffffff</color>
+    <color name="follower_following_list.following_label">#507cbe</color>
     <color name="follower_following_list.author_name">#545454</color>
 
     <color name="blog_setup.toolbar.title">#545454</color>
@@ -504,6 +508,17 @@
 
     <color name="all_videos.toolbar.title">#545454</color>
 
+    <color name="spell_check.black">#545454</color>
+
+    <color name="videos.dialog.title">#545454</color>
+    <color name="videos.upload_option.camera">#545454</color>
+    <color name="videos.upload_option.gallery">#545454</color>
+    <color name="videos.upload_option.cancel">#507cbe</color>
+
     <color name="notification.read_all">#545454</color>
     <color name="notification.toolbar.title">#545454</color>
+
+    <color name="city_picker.toolbar.title">#545454</color>
+    <color name="city_picker.radio_button">#507cbe</color>
+    <color name="city_picker.city_name">#545454</color>
 </resources>

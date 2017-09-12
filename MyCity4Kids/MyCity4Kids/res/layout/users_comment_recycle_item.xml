@@ -82,5 +82,5 @@
         android:layout_height="1dp"
         android:layout_below="@+id/editCommentTextView"
         android:layout_marginTop="10dp"
-        android:background="@color/common_underline" />
+        android:background="@color/light_underline" />
 </RelativeLayout>

@@ -32,10 +32,8 @@ dependencies {
     compile files('libs/comscore.jar')
 //    compile project(':progressviewslib')
     compile 'com.google.android.gms:play-services-plus:10.0.1'
-    compile 'com.google.android.gms:play-services-plus:10.0.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.android.support:appcompat-v7:25.3.0'
-    compile 'org.apache.httpcomponents:httpmime:4.5'
     compile 'com.google.android.gms:play-services-maps:10.0.1'
     compile 'com.google.android.gms:play-services-gcm:10.0.1'
     compile 'com.google.android.gms:play-services-location:10.0.1'

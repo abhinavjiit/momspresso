@@ -24,6 +24,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.ArticleListingResult;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.tts.ReadArticleService;
 import com.mycity4kids.ui.adapter.ArticleDetailsPagerAdapter;
 import com.mycity4kids.ui.fragment.ArticleDetailsFragment;
@@ -33,13 +34,15 @@ import java.util.ArrayList;
 /**
  * Created by hemant on 6/6/17.
  */
-public class ArticleDetailsContainerActivity extends BaseActivity implements View.OnClickListener {
+public class ArticleDetailsContainerActivity extends BaseActivity implements View.OnClickListener, ArticleDetailsFragment.ISwipeRelated {
 
+    //    String sample = "Mrs. Sudha Murthy needs no introduction. She launched her latest book The Serpent’s Revenge Unusual Tales from the Mahabharata today in Mumbai amidst a very excited and enthusiastic bunch of children making sure to write every child’s name on the book while signing it. She was in conversation with RJ Anita from Radio One. Mrs Murthy started the conversation by emphasizing the importance of reading amongst young children. She says If you read more, you will learn more, you will discover new aspects, you will develop a viewpoint and you will tell unusual or your own interpretation of the tale. She has been an avid reader from a very young age and she reads about 100-150 pages every single day. She reads a variety of books from Shashi Tharoor, accomplished UK authors to lighter reads by Twinkle Khanna. Over the years she has become so addicted to reading that she feels she may end up reading the newspaper 3 times if she doesn’t have any books to read!. She is particularly fond of the Indian scriptures and mythology. However they are quite complex for young children. Most of the good books are thick, there is a lot of narration and large part of it is about praising the Gods which small children find difficult to follow. They lose interest beyond a point.  Her own children, when small, could not go beyond the first 10 pages. So it is her wish to convey these stories in simple language & with age appropriate narration so as to catch the attention of the young readers. And she tries to write unusual stories. In today’s time of television and YouTube, most children know of Krishna as a naughty boy who is always up to some mischief. One incidence she shares is when she visited her granddaughters in London. The kid’s version of the story was - Krishna is a very naughty boy. Once he saw some aunties in the swimming pool. So he took out the dresses of all the aunties from the locker and hid them. When the aunties were done with their swim, they came out and took a shower. When they went to their locker to take out their dress all the dresses were missing? The aunties knew who was up to mischief, so they all came to Krishna’s house and complained to his mother. When Krishna was summoned, he justified by saying that the aunties complain all the time about him opening their refrigerator and eating their cheese. That is why he hid all their clothes, so as to teach them a lesson.";
     private ViewPager mViewPager;
     private ArticleDetailsPagerAdapter mViewPagerAdapter;
     private Toolbar mToolbar;
     private ImageView backNavigationImageView;
     private ImageView playTtsTextView;
+    private ImageView coachmarksImageView;
     private boolean isAudioPlaying = false;
 
     @Override
@@ -50,6 +53,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
         mToolbar = (Toolbar) findViewById(R.id.anim_toolbar);
         backNavigationImageView = (ImageView) findViewById(R.id.backNavigationImageView);
         playTtsTextView = (ImageView) findViewById(R.id.playTtsTextView);
+        coachmarksImageView = (ImageView) findViewById(R.id.coachmarksImageView);
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("");
@@ -58,6 +62,8 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
 
         Bundle bundle = getIntent().getExtras();
         ArrayList<ArticleListingResult> articleList = bundle.getParcelableArrayList("pagerListData");
+        String fromScreen = bundle.getString(Constants.FROM_SCREEN);
+
         if (articleList == null || articleList.isEmpty()) {
             String articleId = bundle.getString(Constants.ARTICLE_ID);
             String authorId = bundle.getString(Constants.AUTHOR_ID);
@@ -78,12 +84,13 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
 
         backNavigationImageView.setOnClickListener(this);
         playTtsTextView.setOnClickListener(this);
+        coachmarksImageView.setOnClickListener(this);
 
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
             playTtsTextView.setVisibility(View.GONE);
         }
 
-        mViewPagerAdapter = new ArticleDetailsPagerAdapter(getSupportFragmentManager(), articleList.size(), articleList);
+        mViewPagerAdapter = new ArticleDetailsPagerAdapter(getSupportFragmentManager(), articleList.size(), articleList, fromScreen);
         mViewPager.setAdapter(mViewPagerAdapter);
         mViewPager.setCurrentItem(pos);
 
@@ -106,6 +113,14 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
                 BaseApplication.setFirstSwipe(false);
             }
         });
+
+        if (!SharedPrefUtils.isCoachmarksShownFlag(this, "article_details")) {
+            coachmarksImageView.setVisibility(View.VISIBLE);
+        }
+
+
+        Intent readArticleIntent = new Intent(this, ReadArticleService.class);
+        startService(readArticleIntent);
     }
 
     public void hideMainToolbar() {
@@ -187,6 +202,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
         switch (v.getId()) {
             case R.id.backNavigationImageView:
                 finish();
+                break;
             case R.id.playTtsTextView:
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1 && !isAudioPlaying) {
                     Intent readArticleIntent = new Intent(this, ReadArticleService.class);
@@ -207,6 +223,10 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
                     isAudioPlaying = false;
                 }
                 break;
+            case R.id.coachmarksImageView:
+                coachmarksImageView.setVisibility(View.GONE);
+                SharedPrefUtils.setCoachmarksShownFlag(this, "article_details", true);
+                break;
         }
     }
 
@@ -217,5 +237,11 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
 
     public void showPlayArticleAudioButton() {
         playTtsTextView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onRelatedSwipe(ArrayList<ArticleListingResult> articleList) {
+//        mViewPagerAdapter = new ArticleDetailsPagerAdapter(getSupportFragmentManager(), articleList.size(), articleList);
+//        mViewPager.setAdapter(mViewPagerAdapter);
     }
 }

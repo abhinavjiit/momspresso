@@ -46,12 +46,20 @@
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
+    <View
+        android:id="@+id/toolbarUnderline"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/toolbar"
+        android:background="@color/light_underline" />
+
     <android.support.design.widget.TabLayout
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
+        android:layout_below="@+id/toolbarUnderline"
         android:background="?attr/colorPrimary"
+        android:elevation="3dp"
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:tabIndicatorColor="@color/home.trending.tabbar_indicator"
@@ -65,8 +73,15 @@
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:layout_above="@+id/changeTopicsContainer"
+        android:layout_above="@+id/bottombarUnderline"
         android:layout_below="@id/tab_layout" />
+
+    <View
+        android:id="@+id/bottombarUnderline"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@+id/changeTopicsContainer"
+        android:background="@color/light_underline" />
 
     <RelativeLayout
         android:id="@+id/changeTopicsContainer"

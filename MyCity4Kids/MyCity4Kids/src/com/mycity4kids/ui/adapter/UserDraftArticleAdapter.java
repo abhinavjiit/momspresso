@@ -73,6 +73,7 @@ public class UserDraftArticleAdapter extends RecyclerView.Adapter<UserDraftArtic
                     holder.txvStatus.setVisibility(View.INVISIBLE);
                     holder.rootLayout.setClickable(false);
                     holder.deleteDraftImageView.setVisibility(View.VISIBLE);
+                    holder.editDraftTextView.setVisibility(View.VISIBLE);
                     break;
                 }
                 case "1": {
@@ -80,13 +81,15 @@ public class UserDraftArticleAdapter extends RecyclerView.Adapter<UserDraftArtic
                     holder.txvStatus.setText(mContext.getString(R.string.user_article_draft_status_pending_approval));
                     holder.rootLayout.setClickable(true);
                     holder.deleteDraftImageView.setVisibility(View.INVISIBLE);
+                    holder.editDraftTextView.setVisibility(View.INVISIBLE);
                     break;
                 }
                 case "2": {
                     holder.txvStatus.setVisibility(View.VISIBLE);
                     holder.txvStatus.setText(mContext.getString(R.string.user_article_draft_status_unapproved));
                     holder.rootLayout.setClickable(false);
-                    holder.deleteDraftImageView.setVisibility(View.INVISIBLE);
+                    holder.deleteDraftImageView.setVisibility(View.VISIBLE);
+                    holder.editDraftTextView.setVisibility(View.VISIBLE);
                     break;
                 }
                 case "4": {
@@ -94,11 +97,13 @@ public class UserDraftArticleAdapter extends RecyclerView.Adapter<UserDraftArtic
                     holder.txvStatus.setText(mContext.getString(R.string.user_article_draft_status_unpublished));
                     holder.rootLayout.setClickable(false);
                     holder.deleteDraftImageView.setVisibility(View.VISIBLE);
+                    holder.editDraftTextView.setVisibility(View.VISIBLE);
                     break;
                 }
                 default:
                     holder.txvStatus.setVisibility(View.INVISIBLE);
                     holder.rootLayout.setClickable(false);
+                    holder.editDraftTextView.setVisibility(View.VISIBLE);
                     holder.deleteDraftImageView.setVisibility(View.VISIBLE);
                     break;
             }

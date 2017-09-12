@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -72,7 +73,7 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
     private TextView noBlogsTextView;
     private Toolbar mToolbar;
     private TextView toolbarTitleTextView;
-    private RelativeLayout toolbarRelativeLayout;
+    private ImageView downArrowImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +85,7 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbarRelativeLayout = (RelativeLayout) mToolbar.findViewById(R.id.toolbarRelativeLayout);
+        downArrowImageView = (ImageView) mToolbar.findViewById(R.id.downArrowImageView);
         toolbarTitleTextView = (TextView) mToolbar.findViewById(R.id.toolbarTitle);
 
         mToolbar.setVisibility(View.VISIBLE);
@@ -108,8 +109,6 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
             toolbarTitleTextView.setText(getString(R.string.article_listing_toolbar_title_editor_picks));
         }
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         articleDataModelsNew = new ArrayList<ArticleListingResult>();
         nextPageNumber = 1;
@@ -141,7 +140,6 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
             }
         });
 
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -159,6 +157,19 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
                     startActivity(intent);
 
                 }
+            }
+        });
+
+        downArrowImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+        toolbarTitleTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
             }
         });
     }

@@ -62,7 +62,6 @@ import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.widget.KidsInfoCustomView;
 
 import java.text.DateFormat;
-import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -289,25 +288,30 @@ public class EditProfileTabFragment extends BaseFragment implements View.OnClick
     };
 
     private void addKidView(KidsModel km) {
-        final KidsInfoCustomView kidsInfo1 = new KidsInfoCustomView(getActivity());
-        if (km == null) {
-            kidsInfo1.setKids_bdy(getString(R.string.dob));
-        } else {
-            kidsInfo1.setKids_bdy(DateTimeUtils.getKidsDOBNanoMilliTimestamp("" + km.getBirthDay()));
-            if ("0".equals(km.getGender())) {
-                kidsInfo1.setMaleRadioButton(true);
+        try {
+            final KidsInfoCustomView kidsInfo1 = new KidsInfoCustomView(getActivity());
+            if (km == null) {
+                kidsInfo1.setKids_bdy(getString(R.string.dob));
             } else {
-                kidsInfo1.setFemaleRadioButton(true);
+                kidsInfo1.setKids_bdy(DateTimeUtils.getKidsDOBNanoMilliTimestamp("" + km.getBirthDay()));
+                if ("0".equals(km.getGender())) {
+                    kidsInfo1.setMaleRadioButton(true);
+                } else {
+                    kidsInfo1.setFemaleRadioButton(true);
+                }
             }
+            kidsInfo1.getKidsDOBTextView().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dobTextView = kidsInfo1.getKidsDOBTextView();
+                    showDatePickerDialog();
+                }
+            });
+            childInfoContainer.addView(kidsInfo1);
+        } catch (Exception ex) {
+            Crashlytics.logException(ex);
+            Log.d("MC4KException", Log.getStackTraceString(ex));
         }
-        kidsInfo1.getKidsDOBTextView().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dobTextView = kidsInfo1.getKidsDOBTextView();
-                showDatePickerDialog();
-            }
-        });
-        childInfoContainer.addView(kidsInfo1);
     }
 
     public void saveKidsAndCity() {

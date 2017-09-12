@@ -5,6 +5,9 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
@@ -20,6 +23,8 @@ public class AllVideosListingActivity extends BaseActivity {
     private Toolbar toolbar;
     private TabLayout videosTabLayout;
     private ViewPager videosViewPager;
+    private TextView toolbarTitleTextView;
+    private ImageView downArrowImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,9 +34,23 @@ public class AllVideosListingActivity extends BaseActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         videosTabLayout = (TabLayout) findViewById(R.id.videosTabLayout);
         videosViewPager = (ViewPager) findViewById(R.id.videosViewPager);
+        downArrowImageView = (ImageView) toolbar.findViewById(R.id.downArrowImageView);
+        toolbarTitleTextView = (TextView) toolbar.findViewById(R.id.toolbarTitle);
 
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        downArrowImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+        toolbarTitleTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
         videosTabLayout.addTab(videosTabLayout.newTab().setText(getString(R.string.all_videos_tabbar_momspresso_label)));
         videosTabLayout.addTab(videosTabLayout.newTab().setText(getString(R.string.all_videos_tabbar_funny_label)));

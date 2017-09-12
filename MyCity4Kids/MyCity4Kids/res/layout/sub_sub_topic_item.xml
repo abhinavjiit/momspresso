@@ -8,9 +8,11 @@
 
     <com.mycity4kids.widget.CustomFontTextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="36dp"
         android:background="@drawable/topic_selector_bg"
-        android:padding="10dp"
+        android:gravity="center"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:text="One"
         android:textColor="@color/topic_selector_text"
         app:fontName="oswald_regular.ttf" />

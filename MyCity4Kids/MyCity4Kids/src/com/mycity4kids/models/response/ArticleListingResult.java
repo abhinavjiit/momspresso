@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -17,9 +18,10 @@ public class ArticleListingResult implements Parcelable {
     private String titleSlug;
     private ImageURL imageUrl;
     private String userName;
-    private ProfilePic profilePic;
+    private List<ProfilePic> profilePic;
     private String userId;
     private String userType;
+    private String commentCount;
     private String commentsCount;
     private String trendingCount;
     private String blogTitleSlug;
@@ -44,9 +46,11 @@ public class ArticleListingResult implements Parcelable {
         titleSlug = in.readString();
         imageUrl = in.readParcelable(ImageURL.class.getClassLoader());
         userName = in.readString();
-        profilePic = in.readParcelable(ProfilePic.class.getClassLoader());
+        profilePic = new ArrayList<>();
+        in.readTypedList(profilePic, ProfilePic.CREATOR);
         userId = in.readString();
         userType = in.readString();
+        commentCount = in.readString();
         commentsCount = in.readString();
         trendingCount = in.readString();
         blogTitleSlug = in.readString();
@@ -118,11 +122,20 @@ public class ArticleListingResult implements Parcelable {
         this.userName = userName;
     }
 
-    public ProfilePic getProfilePic() {
+//    public ProfilePic getProfilePic() {
+//        return profilePic;
+//    }
+//
+//    public void setProfilePic(ProfilePic profilePic) {
+//        this.profilePic = profilePic;
+//    }
+
+
+    public List<ProfilePic> getProfilePic() {
         return profilePic;
     }
 
-    public void setProfilePic(ProfilePic profilePic) {
+    public void setProfilePic(List<ProfilePic> profilePic) {
         this.profilePic = profilePic;
     }
 
@@ -140,6 +153,14 @@ public class ArticleListingResult implements Parcelable {
 
     public void setUserType(String userType) {
         this.userType = userType;
+    }
+
+    public String getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(String commentCount) {
+        this.commentCount = commentCount;
     }
 
     public String getCommentsCount() {
@@ -259,9 +280,10 @@ public class ArticleListingResult implements Parcelable {
         dest.writeString(titleSlug);
         dest.writeParcelable(imageUrl, flags);
         dest.writeString(userName);
-        dest.writeParcelable(profilePic, flags);
+        dest.writeTypedList(profilePic);
         dest.writeString(userId);
         dest.writeString(userType);
+        dest.writeString(commentCount);
         dest.writeString(commentsCount);
         dest.writeString(trendingCount);
         dest.writeString(blogTitleSlug);

@@ -1,35 +1,17 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.text.Editable;
+import android.graphics.Typeface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
-import android.widget.TableRow;
-import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.kelltontech.persistence.SharedPrefsUtils;
-import com.kelltontech.utils.StringUtils;
-import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
-import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.response.CityInfoItem;
-import com.mycity4kids.models.response.VlogsListingAndDetailResult;
-import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.utils.AppUtils;
-import com.squareup.picasso.Picasso;
-
-import org.apmem.tools.layouts.FlowLayout;
 
 import java.util.ArrayList;
 
@@ -40,9 +22,9 @@ public class ChangeCityAdapter extends BaseAdapter {
 
     private Context mContext;
     private LayoutInflater mInflator;
-    ArrayList<CityInfoItem> cityInfoItemArrayList;
+    private ArrayList<CityInfoItem> cityInfoItemArrayList;
     private int currentCityId;
-
+    private Typeface font;
     private IOtherCity iOtherCity;
 
 
@@ -51,6 +33,7 @@ public class ChangeCityAdapter extends BaseAdapter {
         mContext = pContext;
         this.cityInfoItemArrayList = cityInfoItemArrayList;
         this.iOtherCity = iOtherCity;
+        font = Typeface.createFromAsset(pContext.getAssets(), "fonts/" + "oswald.ttf");
     }
 
     @Override
@@ -77,32 +60,18 @@ public class ChangeCityAdapter extends BaseAdapter {
                 view = mInflator.inflate(R.layout.change_city_listing_item, null);
                 holder = new ViewHolder();
                 holder.cityRadioButton = (RadioButton) view.findViewById(R.id.cityRadioButton);
+                holder.cityRadioButton.setTypeface(font);
                 view.setTag(holder);
             } else {
                 holder = (ViewHolder) view.getTag();
             }
+
             holder.cityRadioButton.setText(cityInfoItemArrayList.get(position).getCityName());
             if (cityInfoItemArrayList.get(position).isSelected()) {
                 holder.cityRadioButton.setChecked(true);
             } else {
                 holder.cityRadioButton.setChecked(false);
             }
-//            holder.cityRadioButton.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    for (int i = 0; i < cityInfoItemArrayList.size(); i++) {
-//                        if (i == position) {
-//                            cityInfoItemArrayList.get(i).setSelected(true);
-//                        } else {
-//                            cityInfoItemArrayList.get(i).setSelected(false);
-//                        }
-//                    }
-//                    notifyDataSetChanged();
-//                    if (cId == AppConstants.OTHERS_CITY_ID) {
-//                        showAddNewCityNameDialog();
-//                    }
-//                }
-//            });
         } catch (Exception ex) {
             Crashlytics.logException(ex);
             Log.d("MC4kException", Log.getStackTraceString(ex));

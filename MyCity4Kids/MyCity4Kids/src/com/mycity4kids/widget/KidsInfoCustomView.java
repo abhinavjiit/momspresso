@@ -2,6 +2,7 @@ package com.mycity4kids.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -49,7 +50,9 @@ public class KidsInfoCustomView extends RelativeLayout {
         genderRadioGroup = (RadioGroup) this.findViewById(R.id.genderRadioGroup);
         maleRadioButton = (RadioButton) this.findViewById(R.id.maleRadioButton);
         femaleRadioButton = (RadioButton) this.findViewById(R.id.femaleRadioButton);
-
+        Typeface font = Typeface.createFromAsset(context.getAssets(), "fonts/" + "oswald.ttf");
+        maleRadioButton.setTypeface(font);
+        femaleRadioButton.setTypeface(font);
     }
 
     @Override

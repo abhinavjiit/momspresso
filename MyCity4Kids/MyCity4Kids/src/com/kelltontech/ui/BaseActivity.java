@@ -1,6 +1,5 @@
 package com.kelltontech.ui;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -27,11 +26,6 @@ import com.comscore.analytics.comScore;
 import com.google.android.gms.analytics.Tracker;
 import com.kelltontech.network.Response;
 import com.kelltontech.utils.ConnectivityUtils;
-import com.kelltontech.utils.StringUtils;
-import com.kelltontech.utils.facebook.listener.FacebookLoginListener;
-import com.kelltontech.utils.facebook.listener.FacebookPostListener;
-import com.kelltontech.utils.facebook.model.FacebookUtils;
-import com.kelltontech.utils.facebook.model.UserInfo;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -41,7 +35,6 @@ import com.mycity4kids.listener.OnButtonClicked;
 import com.mycity4kids.models.parentingstop.ArticleBlogFollowRequest;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.sync.SyncUserInfoService;
-import com.mycity4kids.ui.activity.DashboardActivity;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -457,13 +450,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen 
                 .show(); // Don’t forget to show!
     }
 
-    public void sendToHomeScreen() {
-        Intent intent1 = new Intent(this, DashboardActivity.class);
-        intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent1);
-        finish();
-    }
-
     public void followAPICall(String id) {
 
         ArticleBlogFollowRequest _followRequest = new ArticleBlogFollowRequest();
@@ -475,52 +461,5 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen 
         _followController.getData(AppConstants.ARTICLE_BLOG_FOLLOW_REQUEST, _followRequest);
 
     }
-
-    public void facebookAPICall(final Activity activity, final String url, final String title) {
-        showProgressDialog(getString(R.string.loading_));
-        FacebookUtils.loginFacebook(activity, new FacebookLoginListener() {
-
-            @Override
-            public void doAfterLogin(UserInfo userInfo) {
-                removeProgressDialog();
-                //System.out.println("Test");
-                Log.d("facebook", "Login Completed.");
-                String shareUrl = "";
-                if (StringUtils.isNullOrEmpty(url)) {
-                    shareUrl = "";
-                } else {
-                    shareUrl = url;
-                }
-                FacebookUtils.postOnWall(activity,
-                        new FacebookPostListener() {
-                            @Override
-                            public void doAfterPostOnWall(boolean status) {
-                                removeProgressDialog();
-                                showToast("Message has been successfully posted on your wall.");
-                                Log.d("facebook", "Post On Wall  Completed.");
-                                System.out.println(status);
-                            }
-                        }, shareUrl, title);
-            }
-        });
-    }
-
-//    public void twitterAPICall(String url, String title) {
-//
-//        Twitter.getInstance(Constants.TWITTER_OAUTH_KEY,
-//                Constants.TWITTER_OAUTH_SECRET, Constants.CALLBACK_URL,
-//                this).doLogin(new ITLogin() {
-//            @Override
-//            public void success(TwitterUser user) {
-//                showToast("Tweet has been successfully posted.");
-//            }
-//        }, title + " on mycity4kids. Check it out here " + url);
-//
-//    }
-
-    public void rssAPICall() {
-
-    }
-
 
 }

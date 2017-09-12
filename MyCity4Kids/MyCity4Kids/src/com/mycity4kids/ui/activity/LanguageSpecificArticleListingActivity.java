@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -37,6 +38,8 @@ public class LanguageSpecificArticleListingActivity extends BaseActivity {
     private Toolbar toolbar;
     private TabLayout languagesTabLayout;
     private ViewPager languagesViewPager;
+    private ImageView downArrowImageView;
+    private TextView toolbarTitleTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,9 +49,23 @@ public class LanguageSpecificArticleListingActivity extends BaseActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         languagesTabLayout = (TabLayout) findViewById(R.id.languagesTabLayout);
         languagesViewPager = (ViewPager) findViewById(R.id.languagesViewPager);
+        downArrowImageView = (ImageView) toolbar.findViewById(R.id.downArrowImageView);
+        toolbarTitleTextView = (TextView) toolbar.findViewById(R.id.toolbarTitle);
+
+        downArrowImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+        toolbarTitleTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         populateLanguagesTabs();
     }

@@ -2,21 +2,24 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/white">
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="4dp"
-        card_view:cardElevation="4dp">
+        android:layout_marginBottom="2dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="10dp"
+        card_view:cardCornerRadius="0dp"
+        card_view:cardElevation="0dp">
 
         <RelativeLayout
             android:id="@+id/titleContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/topics_border_bg"
             android:orientation="vertical">
 
             <com.mycity4kids.widget.CustomFontTextView
@@ -66,123 +69,6 @@
                     android:src="@drawable/ic_videos"
                     android:visibility="invisible" />
 
-                <!--<org.apmem.tools.layouts.FlowLayout-->
-                <!--android:id="@+id/flowLayout"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="24dp"-->
-                <!--android:layout_alignBottom="@+id/articleImageView"-->
-                <!--android:layout_marginBottom="2dp"-->
-                <!--android:paddingLeft="10dp"-->
-                <!--android:paddingRight="10dp">-->
-
-                <!--<LinearLayout-->
-                <!--android:id="@+id/popularSubcatLL_1"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginBottom="5dp"-->
-                <!--android:layout_marginLeft="2dp"-->
-                <!--android:layout_marginRight="2dp"-->
-                <!--android:layout_marginTop="5dp"-->
-                <!--android:background="@drawable/topics_transparent_bg"-->
-                <!--android:clickable="true">-->
-
-                <!--<TextView-->
-                <!--android:id="@+id/popularSubcatTextView_1"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:fontFamily="sans-serif-light"-->
-                <!--android:gravity="center"-->
-                <!--android:paddingBottom="1dp"-->
-                <!--android:paddingLeft="4dp"-->
-                <!--android:paddingRight="4dp"-->
-                <!--android:text=""-->
-                <!--android:textAllCaps="true"-->
-                <!--android:textColor="@color/white_color"-->
-                <!--android:textSize="9sp" />-->
-                <!--</LinearLayout>-->
-
-                <!--<LinearLayout-->
-                <!--android:id="@+id/popularSubcatLL_2"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginBottom="5dp"-->
-                <!--android:layout_marginLeft="2dp"-->
-                <!--android:layout_marginRight="2dp"-->
-                <!--android:layout_marginTop="5dp"-->
-                <!--android:layout_toRightOf="@+id/popularSubcatLL_1"-->
-                <!--android:background="@drawable/topics_transparent_bg"-->
-                <!--android:clickable="true">-->
-
-                <!--<TextView-->
-                <!--android:id="@+id/popularSubcatTextView_2"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:fontFamily="sans-serif-light"-->
-                <!--android:gravity="center"-->
-                <!--android:paddingBottom="1dp"-->
-                <!--android:paddingLeft="4dp"-->
-                <!--android:paddingRight="4dp"-->
-                <!--android:text=""-->
-                <!--android:textAllCaps="true"-->
-                <!--android:textColor="@color/white_color"-->
-                <!--android:textSize="9sp" />-->
-                <!--</LinearLayout>-->
-
-                <!--<LinearLayout-->
-                <!--android:id="@+id/popularSubcatLL_3"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginBottom="5dp"-->
-                <!--android:layout_marginLeft="2dp"-->
-                <!--android:layout_marginRight="2dp"-->
-                <!--android:layout_marginTop="5dp"-->
-                <!--android:layout_toRightOf="@+id/popularSubcatLL_2"-->
-                <!--android:background="@drawable/topics_transparent_bg"-->
-                <!--android:clickable="true">-->
-
-                <!--<TextView-->
-                <!--android:id="@+id/popularSubcatTextView_3"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:fontFamily="sans-serif-light"-->
-                <!--android:gravity="center"-->
-                <!--android:paddingBottom="1dp"-->
-                <!--android:paddingLeft="4dp"-->
-                <!--android:paddingRight="4dp"-->
-                <!--android:text=""-->
-                <!--android:textAllCaps="true"-->
-                <!--android:textColor="@color/white_color"-->
-                <!--android:textSize="9sp" />-->
-                <!--</LinearLayout>-->
-
-                <!--<LinearLayout-->
-                <!--android:id="@+id/popularSubcatLL_4"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginBottom="5dp"-->
-                <!--android:layout_marginLeft="2dp"-->
-                <!--android:layout_marginRight="2dp"-->
-                <!--android:layout_marginTop="5dp"-->
-                <!--android:layout_toRightOf="@+id/popularSubcatLL_3"-->
-                <!--android:background="@drawable/topics_transparent_bg"-->
-                <!--android:clickable="true">-->
-
-                <!--<TextView-->
-                <!--android:id="@+id/popularSubcatTextView_4"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:fontFamily="sans-serif-light"-->
-                <!--android:gravity="center"-->
-                <!--android:paddingBottom="1dp"-->
-                <!--android:paddingLeft="4dp"-->
-                <!--android:paddingRight="4dp"-->
-                <!--android:text=""-->
-                <!--android:textAllCaps="true"-->
-                <!--android:textColor="@color/white_color"-->
-                <!--android:textSize="9sp" />-->
-                <!--</LinearLayout>-->
-                <!--</org.apmem.tools.layouts.FlowLayout>-->
-
                 <com.mycity4kids.widget.CustomFontTextView
                     android:id="@+id/txvAuthorName"
                     android:layout_width="wrap_content"
@@ -190,7 +76,6 @@
                     android:layout_below="@+id/articleImageView"
                     android:layout_gravity="bottom"
                     android:clickable="true"
-                    android:fontFamily="sans-serif-light"
                     android:gravity="bottom"
                     android:paddingBottom="5dp"
                     android:paddingLeft="10dp"
@@ -211,7 +96,6 @@
                     android:layout_marginLeft="9dp"
                     android:drawableLeft="@drawable/ic_views"
                     android:drawablePadding="4dp"
-                    android:fontFamily="sans-serif-light"
                     android:gravity="center"
                     android:paddingLeft="2dp"
                     android:text="0"
@@ -230,8 +114,7 @@
                     android:layout_toRightOf="@+id/viewCountTextView"
                     android:drawableLeft="@drawable/ic_comments"
                     android:drawablePadding="4dp"
-                    android:fontFamily="sans-serif-light"
-                    android:gravity="center"
+                    android:gravity="top"
                     android:text="0"
                     android:textColor="@color/article_listing.stats"
                     android:textSize="12sp"
@@ -248,7 +131,6 @@
                     android:layout_toRightOf="@+id/commentCountTextView"
                     android:drawableLeft="@drawable/ic_likes"
                     android:drawablePadding="4dp"
-                    android:fontFamily="sans-serif-light"
                     android:gravity="center"
                     android:text="0"
                     android:textColor="@color/article_listing.stats"

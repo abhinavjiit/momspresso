@@ -62,6 +62,9 @@ public interface ArticleDetailsAPI {
     @GET
     Call<ResponseBody> getComments(@Url String url);
 
+    @GET("v1/comments/batch/{commentId}")
+    Call<ResponseBody> getCommentsFromId(@Path("commentId") String commentId);
+
     @GET("v1/articles/views/{articleId}")
     Call<ViewCountResponse> getViewCount(@Path("articleId") String articleId);
 
@@ -93,6 +96,8 @@ public interface ArticleDetailsAPI {
 
     @GET("v1/recommend/related/{articleId}")
     Call<ArticleListingResponse> getCategoryRelatedArticles(@Path("articleId") String articleId,
+                                                            @Query("start") int start,
+                                                            @Query("end") int end,
                                                             @Query("lang") String lang);
 
     @GET("v1/users/likes/{articleId}")

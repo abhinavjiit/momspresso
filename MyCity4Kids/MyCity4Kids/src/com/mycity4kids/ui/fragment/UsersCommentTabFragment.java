@@ -25,10 +25,12 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.parentingdetails.CommentsData;
 import com.mycity4kids.models.response.UserCommentsResponse;
 import com.mycity4kids.models.response.UserCommentsResult;
+import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.UserActivitiesActivity;
+import com.mycity4kids.ui.activity.VlogsDetailActivity;
 import com.mycity4kids.ui.adapter.UsersCommentsRecycleAdapter;
 
 import java.util.ArrayList;
@@ -195,21 +197,31 @@ public class UsersCommentTabFragment extends BaseFragment implements UsersCommen
                 adapter.notifyDataSetChanged();
                 break;
             case R.id.rootView:
-                Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
-                intent.putExtra(Constants.ARTICLE_ID, commentsList.get(position).getArticleId());
-                intent.putExtra(Constants.AUTHOR_ID, commentsList.get(position).getUserId());
-                intent.putExtra(Constants.BLOG_SLUG, commentsList.get(position).getBlogTitleSlug());
-                intent.putExtra(Constants.TITLE_SLUG, commentsList.get(position).getTitleSlug());
-                intent.putExtra(Constants.FROM_SCREEN, "User Profile");
-                if (true) {
-                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Private Comments");
-                    intent.putExtra(Constants.FROM_SCREEN, "Private User Profile");
+                if (commentsList.get(position).getArticleId().contains("video")) {
+                    Intent intent = new Intent(getActivity(), VlogsDetailActivity.class);
+                    intent.putExtra(Constants.VIDEO_ID, commentsList.get(position).getArticleId());
+                    intent.putExtra(Constants.AUTHOR_ID, commentsList.get(position).getUserId());
+                    intent.putExtra(Constants.FROM_SCREEN, "Funny Videos Listing");
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Funny Videos");
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
+                    startActivity(intent);
                 } else {
-                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Public Comments");
-                    intent.putExtra(Constants.FROM_SCREEN, "Public User Profile");
+                    Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
+                    intent.putExtra(Constants.ARTICLE_ID, commentsList.get(position).getArticleId());
+                    intent.putExtra(Constants.AUTHOR_ID, commentsList.get(position).getUserId());
+                    intent.putExtra(Constants.BLOG_SLUG, commentsList.get(position).getBlogTitleSlug());
+                    intent.putExtra(Constants.TITLE_SLUG, commentsList.get(position).getTitleSlug());
+                    intent.putExtra(Constants.FROM_SCREEN, "User Comments");
+                    if (true) {
+                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Private Comments");
+                        intent.putExtra(Constants.FROM_SCREEN, "Private User Profile");
+                    } else {
+                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Public Comments");
+                        intent.putExtra(Constants.FROM_SCREEN, "Public User Profile");
+                    }
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
+                    startActivity(intent);
                 }
-                intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
-                startActivity(intent);
                 break;
         }
     }

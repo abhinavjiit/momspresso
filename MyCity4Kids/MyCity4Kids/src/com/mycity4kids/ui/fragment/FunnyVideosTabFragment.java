@@ -62,7 +62,6 @@ public class FunnyVideosTabFragment extends BaseFragment implements View.OnClick
     private int limit = 10;
     private boolean isLastPageReached = false;
     private boolean isReuqestRunning = false;
-    private SwipeRefreshLayout swipeRefreshLayout;
     private ProgressBar progressBar;
     private String fromScreen;
 
@@ -76,7 +75,6 @@ public class FunnyVideosTabFragment extends BaseFragment implements View.OnClick
         listView = (ListView) view.findViewById(R.id.vlogsListView);
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         frameLayout = (FrameLayout) view.findViewById(R.id.frame_layout);
         fabMenu = (FloatingActionsMenu) view.findViewById(R.id.fab_menu);
@@ -125,8 +123,6 @@ public class FunnyVideosTabFragment extends BaseFragment implements View.OnClick
         articleDataModelsNew = new ArrayList<VlogsListingAndDetailResult>();
         nextPageNumber = 1;
         hitArticleListingApi();
-
-        swipeRefreshLayout.setOnRefreshListener(this);
 
         articlesListingAdapter = new VlogsListingAdapter(getActivity());
         articlesListingAdapter.setNewListData(articleDataModelsNew);
@@ -200,7 +196,6 @@ public class FunnyVideosTabFragment extends BaseFragment implements View.OnClick
             progressBar.setVisibility(View.GONE);
             mLodingView.setVisibility(View.GONE);
             isReuqestRunning = false;
-            swipeRefreshLayout.setRefreshing(false);
             if (response == null || null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                 Crashlytics.logException(nee);
@@ -225,7 +220,6 @@ public class FunnyVideosTabFragment extends BaseFragment implements View.OnClick
 
         @Override
         public void onFailure(Call<VlogsListingResponse> call, Throwable t) {
-            swipeRefreshLayout.setRefreshing(false);
             if (mLodingView.getVisibility() == View.VISIBLE) {
                 mLodingView.setVisibility(View.GONE);
             }
@@ -266,7 +260,6 @@ public class FunnyVideosTabFragment extends BaseFragment implements View.OnClick
     @Override
     public void onRefresh() {
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
-            swipeRefreshLayout.setRefreshing(false);
             removeProgressDialog();
 //            showToast(getString(R.string.error_network));
             return;

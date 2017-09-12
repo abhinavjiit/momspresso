@@ -414,7 +414,7 @@ div.field[contenteditable] {
 
 div.field[placeholderText][contenteditable=true]:empty:before {
     content: attr(placeholderText);
-    color: #87a6bc;
+    color: #9c9dac;
     transition: 0.2s ease opacity;
 }
 

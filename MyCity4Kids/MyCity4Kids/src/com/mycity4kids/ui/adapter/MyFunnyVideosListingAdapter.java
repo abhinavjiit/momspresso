@@ -1,13 +1,13 @@
 package com.mycity4kids.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -17,8 +17,6 @@ import com.mycity4kids.R;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.utils.AppUtils;
 import com.squareup.picasso.Picasso;
-
-import org.apmem.tools.layouts.FlowLayout;
 
 import java.util.ArrayList;
 
@@ -102,8 +100,27 @@ public class MyFunnyVideosListingAdapter extends BaseAdapter {
             if (VIDEO_PUBLISHED_STATUS.equals(articleDataModelsNew.get(position).getPublication_status())) {
                 holder.shareImageView.setVisibility(View.VISIBLE);
             } else {
-                holder.shareImageView.setVisibility(View.INVISIBLE);
+                holder.shareImageView.setVisibility(View.GONE);
             }
+
+            holder.shareImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+                    shareIntent.setType("text/plain");
+                    String shareUrl = articleDataModelsNew.get(position).getUrl();
+                    String shareMessage;
+                    if (StringUtils.isNullOrEmpty(shareUrl)) {
+                        shareMessage = "mycity4kids\n\nCheck out this interesting blog post " + "\"" +
+                                articleDataModelsNew.get(position).getTitle() + "\" by " + articleDataModelsNew.get(position).getAuthor().getFirstName() + ".";
+                    } else {
+                        shareMessage = "mycity4kids\n\nCheck out this interesting blog post " + "\"" +
+                                articleDataModelsNew.get(position).getTitle() + "\" by " + articleDataModelsNew.get(position).getAuthor().getFirstName() + ".\nRead Here: " + shareUrl;
+                    }
+                    shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
+                    mContext.startActivity(Intent.createChooser(shareIntent, "mycity4kids"));
+                }
+            });
         } catch (Exception ex) {
             Crashlytics.logException(ex);
             Log.d("MC4kException", Log.getStackTraceString(ex));
@@ -114,25 +131,9 @@ public class MyFunnyVideosListingAdapter extends BaseAdapter {
 
     class ViewHolder {
         TextView txvArticleTitle;
-        TextView txvAuthorName;
         ImageView articleImageView;
         TextView dateTextView;
         ImageView shareImageView;
-        TextView forYouDescriptionTextView;
-        TextView viewCountTextView;
-        TextView commentCountTextView;
-        TextView recommendCountTextView;
-        TextView authorTypeTextView;
-        TextView rankTextView;
-        FlowLayout flowLayout;
-        TextView popularSubCatTextView1;
-        TextView popularSubCatTextView2;
-        TextView popularSubCatTextView3;
-        TextView popularSubCatTextView4;
-        LinearLayout tvParentLL1;
-        LinearLayout tvParentLL2;
-        LinearLayout tvParentLL3;
-        LinearLayout tvParentLL4;
     }
 
 }

@@ -3,6 +3,8 @@ package com.mycity4kids.ui.fragment;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -40,8 +42,6 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
     private static String[] PERMISSIONS_STORAGE_CAMERA = {Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
 
-    //    private static final int REQUEST_VIDEO_TRIMMER = 0x01;
-    static final String EXTRA_VIDEO_PATH = "EXTRA_VIDEO_PATH";
     private String activity;
     private View rootLayout;
 
@@ -51,6 +51,7 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
 
         final View rootView = inflater.inflate(R.layout.choose_video_option_dialog, container,
                 false);
+        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         Utils.pushOpenScreenEvent(getActivity(), "Upload video Option Menu", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
         Bundle extras = getArguments();
         if (extras != null) {
@@ -261,11 +262,5 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
     }
-
-//    private void startTrimActivity(@NonNull Uri uri) {
-//        Intent intent = new Intent(getActivity(), VideoTrimmerActivity.class);
-//        intent.putExtra(EXTRA_VIDEO_PATH, FileUtils.getPath((DashboardActivity) getActivity(), uri));
-//        startActivity(intent);
-//    }
 
 }

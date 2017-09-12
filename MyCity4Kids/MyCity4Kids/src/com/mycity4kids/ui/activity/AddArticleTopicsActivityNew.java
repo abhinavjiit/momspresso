@@ -10,7 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -30,6 +30,7 @@ import com.mycity4kids.models.response.PublishDraftObject;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.AddArticleTopicsPagerAdapter;
+import com.mycity4kids.utils.AppUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -55,20 +56,23 @@ import retrofit2.Retrofit;
 
 public class AddArticleTopicsActivityNew extends BaseActivity {
 
-    int pageNum;
     private Toolbar mToolbar;
-    PublishDraftObject draftObject;
+    private TextView clearAllTextView;
     private ProgressBar progressBar;
-    ArrayList<Topics> topicList;
-    HashMap<Topics, List<Topics>> topicsMap;
+    private TabLayout tabLayout;
+    private TextView applyTextView;
+
+    private PublishDraftObject draftObject;
+    private ArrayList<Topics> topicList;
+    private ArrayList<Topics> chosenTopicsList = new ArrayList<>();
+    private ArrayList<String> selectedTopicsIdList = new ArrayList<>();
+    private HashMap<Topics, List<Topics>> topicsMap;
     private String userNavigatingFrom;
     private String imageURL;
     private String articleId;
-    private ArrayList<Topics> chosenTopicsList = new ArrayList<>();
-    private ArrayList<String> selectedTopicsIdList = new ArrayList<>();
-    private TabLayout tabLayout;
-    private TextView applyTextView;
     private String tags, cities;
+
+    private AddArticleTopicsPagerAdapter adapter;
 
     /**
      * Called when the activity is first created.
@@ -87,7 +91,7 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         applyTextView = (TextView) findViewById(R.id.applyTextView);
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-//        parentExpandableListView = (ExpandableListView) findViewById(R.id.parentExpandableListView);
+        clearAllTextView = (TextView) findViewById(R.id.clearAllTextView);
 
         userNavigatingFrom = getIntent().getStringExtra("from");
         draftObject = (PublishDraftObject) getIntent().getSerializableExtra("draftItem");
@@ -160,7 +164,12 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
             }
         });
 
-
+        clearAllTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearTopicsSelection();
+            }
+        });
     }
 
     /*
@@ -203,8 +212,6 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
         try {
             progressBar.setVisibility(View.GONE);
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-
-//                nextButton.setVisibility(View.VISIBLE);
 
                 topicsMap = new HashMap<Topics, List<Topics>>();
                 topicList = new ArrayList<>();
@@ -272,10 +279,9 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
         for (int i = 0; i < topicList.size(); i++) {
             tabLayout.addTab(tabLayout.newTab().setText(topicList.get(i).getDisplay_name()));
         }
-//        changeTabsFont();
-//        wrapTabIndicatorToTitle(tabLayout, 25, 25);
+        AppUtils.changeTabsFont(this, tabLayout);
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        final AddArticleTopicsPagerAdapter adapter = new AddArticleTopicsPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), topicList);
+        adapter = new AddArticleTopicsPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), topicList);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -321,11 +327,6 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
                         Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
 
                         try {
-//                            Topics t = new Topics();
-//                            t.setId("");
-//                            t.setDisplay_name("");
-//                            SharedPrefUtils.setMomspressoCategory(AddArticleTopicsActivity.this, t);
-
                             FileInputStream fileInputStream = openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                             String fileContent = convertStreamToString(fileInputStream);
                             TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
@@ -474,5 +475,16 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
             Log.d("IOException", Log.getStackTraceString(e));
         }
         return sb.toString();
+    }
+
+    private void clearTopicsSelection() {
+        for (int i = 0; i < topicList.size(); i++) {
+            for (int j = 0; j < topicList.get(i).getChild().size(); j++) {
+                for (int k = 0; k < topicList.get(i).getChild().get(j).getChild().size(); k++) {
+                    topicList.get(i).getChild().get(j).getChild().get(k).setIsSelected(false);
+                }
+            }
+        }
+        adapter.notifyDataSetChanged();
     }
 }

@@ -62,4 +62,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/anim_toolbar" />
+
+    <ImageView
+        android:id="@+id/coachmarksImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="5dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/coachmark_article"
+        android:visibility="gone" />
 </RelativeLayout>

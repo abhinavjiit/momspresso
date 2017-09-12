@@ -13,10 +13,10 @@
         android:layout_marginBottom="6dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="6dp"
-        android:buttonTint="@color/primary_blue"
+        android:buttonTint="@color/city_picker.radio_button"
         android:clickable="false"
         android:paddingLeft="10dp"
         android:text="Delhi-NCR"
-        android:textColor="@color/black_color"
+        android:textColor="@color/city_picker.city_name"
         android:textSize="18dp" />
 </LinearLayout>

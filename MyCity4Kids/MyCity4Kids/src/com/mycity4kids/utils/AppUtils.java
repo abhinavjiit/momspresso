@@ -422,7 +422,7 @@ public class AppUtils {
         return (int) (px / Resources.getSystem().getDisplayMetrics().density);
     }
 
-    public static int dpTopx(int dp) {
+    public static int dpTopx(float dp) {
         return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
     }
 
@@ -499,5 +499,13 @@ public class AppUtils {
                 }
             }
         }
+    }
+
+    public static String withSuffix(long count) {
+        if (count < 1000) return "" + count;
+        int exp = (int) (Math.log(count) / Math.log(1000));
+        return String.format("%.1f %c",
+                count / Math.pow(1000, exp),
+                "kMGTPE".charAt(exp - 1));
     }
 }

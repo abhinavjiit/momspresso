@@ -31,6 +31,8 @@ public class UserDetailResult {
     private String isLangSelection = "0";
     private String subscriptionEmail;
     private Map<String, String> langSubscription;
+    private String totalArticles;
+    private String totalArticlesViews;
 
     public String getPhoneNumber() {
         return phoneNumber;
@@ -222,6 +224,22 @@ public class UserDetailResult {
 
     public void setSubscriptionEmail(String subscriptionEmail) {
         this.subscriptionEmail = subscriptionEmail;
+    }
+
+    public String getTotalArticles() {
+        return totalArticles;
+    }
+
+    public void setTotalArticles(String totalArticles) {
+        this.totalArticles = totalArticles;
+    }
+
+    public String getTotalArticlesViews() {
+        return totalArticlesViews;
+    }
+
+    public void setTotalArticlesViews(String totalArticlesViews) {
+        this.totalArticlesViews = totalArticlesViews;
     }
 
     public class SocialTokens {

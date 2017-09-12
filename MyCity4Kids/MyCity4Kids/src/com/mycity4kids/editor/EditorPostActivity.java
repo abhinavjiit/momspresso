@@ -16,6 +16,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
@@ -48,6 +49,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
 import com.mycity4kids.ui.activity.AddArticleTopicsActivityNew;
+import com.mycity4kids.ui.fragment.SpellCheckDialogFragment;
 import com.mycity4kids.utils.PermissionUtil;
 
 import org.wordpress.android.editor.EditorFragmentAbstract;
@@ -77,7 +79,7 @@ import retrofit2.Retrofit;
 /**
  * Created by anshul on 2/29/16.
  */
-public class EditorPostActivity extends BaseActivity implements EditorFragmentAbstract.EditorFragmentListener, View.OnClickListener {
+public class EditorPostActivity extends BaseActivity implements EditorFragmentAbstract.EditorFragmentListener, View.OnClickListener, SpellCheckDialogFragment.ISpellcheckResult {
 
     private static String[] PERMISSIONS_INIT = {Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
@@ -875,38 +877,48 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                     Log.e("imageuploading", EditorFragmentAbstract.imageUploading + "");
                     showToast("Please wait while image is being uploaded");
                 } else {
-                    showAlertDialog(getString(R.string.editor_spell_check_title), getString(R.string.editor_spell_check_message), new OnButtonClicked() {
-                        @Override
-                        public void onButtonCLick(int buttonId) {
-                            PublishDraftObject publishObject = new PublishDraftObject();
-
-                            publishObject.setBody(contentFormatting(mEditorFragment.getContent().toString()));
-                            publishObject.setTitle(titleFormatting(mEditorFragment.getTitle().toString().trim()));
-                            Log.d("draftId = ", draftId + "");
-                            if ((getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) || ("4".equals(moderation_status))) {
-                                // coming from edit published articles
-                                Intent intent_1 = new Intent(EditorPostActivity.this, AddArticleTopicsActivityNew.class);
-                                publishObject.setId(articleId);
-                                intent_1.putExtra("draftItem", publishObject);
-                                intent_1.putExtra("imageUrl", thumbnailUrl);
-                                intent_1.putExtra("from", "publishedList");
-                                intent_1.putExtra("articleId", articleId);
-                                intent_1.putExtra("tag", tag);
-                                intent_1.putExtra("cities", cities);
-                                startActivity(intent_1);
-                            } else {
-                                Intent intent_3 = new Intent(EditorPostActivity.this, AddArticleTopicsActivityNew.class);
-                                if (!StringUtils.isNullOrEmpty(draftId)) {
-                                    publishObject.setId(draftId);
-                                }
-                                intent_3.putExtra("draftItem", publishObject);
-                                intent_3.putExtra("from", "editor");
-                                startActivity(intent_3);
-                            }
-                        }
-                    });
+                    launchSpellCheckDialog();
                 }
                 break;
+        }
+    }
+
+    public void launchSpellCheckDialog() {
+        SpellCheckDialogFragment spellCheckDialogFragment = new SpellCheckDialogFragment();
+        FragmentManager fm = getSupportFragmentManager();
+        Bundle _args = new Bundle();
+        _args.putString("activity", "dashboard");
+        spellCheckDialogFragment.setArguments(_args);
+        spellCheckDialogFragment.setCancelable(true);
+        spellCheckDialogFragment.show(fm, "Spell Check");
+    }
+
+    @Override
+    public void onContinuePublish() {
+        PublishDraftObject publishObject = new PublishDraftObject();
+
+        publishObject.setBody(contentFormatting(mEditorFragment.getContent().toString()));
+        publishObject.setTitle(titleFormatting(mEditorFragment.getTitle().toString().trim()));
+        Log.d("draftId = ", draftId + "");
+        if ((getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) || ("4".equals(moderation_status))) {
+            // coming from edit published articles
+            Intent intent_1 = new Intent(EditorPostActivity.this, AddArticleTopicsActivityNew.class);
+            publishObject.setId(articleId);
+            intent_1.putExtra("draftItem", publishObject);
+            intent_1.putExtra("imageUrl", thumbnailUrl);
+            intent_1.putExtra("from", "publishedList");
+            intent_1.putExtra("articleId", articleId);
+            intent_1.putExtra("tag", tag);
+            intent_1.putExtra("cities", cities);
+            startActivity(intent_1);
+        } else {
+            Intent intent_3 = new Intent(EditorPostActivity.this, AddArticleTopicsActivityNew.class);
+            if (!StringUtils.isNullOrEmpty(draftId)) {
+                publishObject.setId(draftId);
+            }
+            intent_3.putExtra("draftItem", publishObject);
+            intent_3.putExtra("from", "editor");
+            startActivity(intent_3);
         }
     }
 }

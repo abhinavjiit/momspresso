@@ -351,7 +351,7 @@
     <string name="starting_legacy_editor">Starting legacy editor</string>
     <string name="starting_new_editor">Starting new editor</string>
     <string name="example_post_visual_title">I\'m editing a post!</string>
-    <string name="example_post_title_placeholder">Post title</string>
+    <string name="example_post_title_placeholder">Article Title</string>
     <string name="example_post_content_placeholder">Share your story here…</string>
     <string name="example_post_1_title">Post 1</string>
     <string name="example_post_1_content">Post 1 Content:\nBest post ever!</string>
@@ -401,6 +401,7 @@
     <string name="videos.dialog.title">Choose a video to upload</string>
     <string name="videos.upload_option.camera">Take video</string>
     <string name="videos.upload_option.gallery">Choose from gallery</string>
+    <string name="videos.upload_option.cancel">CANCEL</string>
 
     <string name="ad.recommendation.tootip_text">Tap to like the blog</string>
     <string name="ad.swipe_tootip_text">SWIPE RIGHT TO READ NEXT ARTICLE</string>
@@ -424,7 +425,7 @@
     <string name="ad.bottom_bar.like">LIKE</string>
     <string name="ad.bottom_bar.unbookmark">UNBOOKMARK</string>
     <string name="ad.bottom_bar.unlike">UNLIKE</string>
-    <string name="ad.recent_logs_from.title">RECENT BLOGS FROM</string>
+    <string name="ad.recent_logs_from.title">MORE FROM AUTHOR</string>
     <string name="ad.trending.title">TRENDING BLOGS</string>
     <string name="ad.tts.toast_unplayable_article">Unable to play this article</string>
 
@@ -464,8 +465,10 @@
         <item>Share your blog across all networks you are a part of, such as Facebook, Whatsapp and so on</item>
     </string-array>
 
-    <string name="editor.spell_check.title">Spell Check</string>
-    <string name="editor.spell_check.message">Always check spellings before publishing</string>
+    <string name="editor.spell_check.title">Spellcheck</string>
+    <string name="editor.spell_check.message">Are you sure you have completed the spellcheck?</string>
+    <string name="editor.spell_check.no">NO</string>
+    <string name="editor.spell_check.continue">YES CONTINUE PUBLISHING</string>
     <string name="editor.banner.message">Blog in a language of your choice</string>
     <string name="editor.last_saved_at">Last saved at %1$s</string>
     <string name="editor.last_saved_on">Last saved on %1$s</string>
@@ -544,23 +547,38 @@
 
     <string-array name="onboarding_title_array">
         <item>HARNESSING THE WISDOM OF MUMS</item>
-        <item>DISCOVER\'S YOUR CITY\'S BEST</item>
-        <item>CHOOSE YOUR LANGUAGE</item>
+        <item>BLOG IN ANY ONE OF 6 LANGUAGE</item>
         <item>WATCH VIDEOS</item>
+        <item>DISCOVER YOUR CITY\'S BEST</item>
     </string-array>
 
     <string-array name="onboarding_desc_array">
-        <item>BLOGS <![CDATA[<font color=#e89ba5>&#9679;</font>]]> VIDEOS <![CDATA[<font color=#e89ba5>&#9679;</font>]]> EXPERTS </item>
-        <item>EDITORIAL LIST <![CDATA[<font color=#e89ba5>&#9679;</font>]]> EVENTS <![CDATA[<font color=#e89ba5>&#9679;</font>]]> RESOURCES</item>
-        <item>ENGLISH <![CDATA[<font color=#e89ba5>&#9679;</font>]]> HINDI <![CDATA[<font color=#e89ba5>&#9679;</font>]]> MARATHI <![CDATA[<font color=#e89ba5>&#9679;</font>]]> TAMIL <![CDATA[<font color=#e89ba5>&#9679;</font>]]> TELEGU</item>
-        <item>PARENTING ADVICE <![CDATA[<font color=#e89ba5>&#9679;</font>]]> RECIPES <![CDATA[<font color=#e89ba5>&#9679;</font>]]> MOMSPRESSO </item>
+        <item>BLOGS <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> VIDEOS <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> EXPERTS </item>
+        <item>EDITORIAL LIST <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> EVENTS <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> RESOURCES</item>
+        <item>ENGLISH <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> HINDI <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> MARATHI <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> TAMIL <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> TELEGU</item>
+        <item>PARENTING ADVICE <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> RECIPES <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> MOMSPRESSO </item>
     </string-array>
+    <string name="onboarding_desc_array.tutorial_1.blogs">BLOGS</string>
+    <string name="onboarding_desc_array.tutorial_1.videos">MOMVLOGS</string>
+    <string name="onboarding_desc_array.tutorial_1.expert">EXPERTS</string>
+    <string name="onboarding_desc_array.tutorial_2.english">ENGLISH</string>
+    <string name="onboarding_desc_array.tutorial_2.hindi">HINDI</string>
+    <string name="onboarding_desc_array.tutorial_2.bengali">BENGALI</string>
+    <string name="onboarding_desc_array.tutorial_2.marathi">MARATHI</string>
+    <string name="onboarding_desc_array.tutorial_2.tamil">TAMIL</string>
+    <string name="onboarding_desc_array.tutorial_2.telugu">TELUGU</string>
+    <string name="onboarding_desc_array.tutorial_3.parenting">PARENTING</string>
+    <string name="onboarding_desc_array.tutorial_3.recipe">RECIPES</string>
+    <string name="onboarding_desc_array.tutorial_3.expert_advice">EXPERT ADVICE</string>
+    <string name="onboarding_desc_array.tutorial_4.editorial">CURATED LISTS</string>
+    <string name="onboarding_desc_array.tutorial_4.events">EVENTS</string>
+    <string name="onboarding_desc_array.tutorial_4.resources">RESOURCES</string>
 
     <string name="onboarding.signin">SIGN IN</string>
     <string name="onboarding.already_member">Already a member?</string>
     <string name="onboarding.get_started">GET STARTED</string>
     <string name="sign_in.welcome_back">WELCOME BACK</string>
-    <string name="sign_in.desc">Discover the joy of motherhood.\n Join our Mum communityto find inspiration &amp; hope.</string>
+    <string name="sign_in.desc">Discover the joy of motherhood.\n Join our Mum community to find inspiration &amp; hope.</string>
     <string name="sign_in.no_account">Don\'t have an account?\u0020</string>
     <string name="sign_in.sign_up_btn">SIGNUP</string>
 
@@ -627,6 +645,8 @@
     <string name="blogger_profile.unfollow_button">FOLLOWING</string>
     <string name="blogger_profile.following_label">FOLLOWING</string>
     <string name="blogger_profile.followers_label">FOLLOWERS</string>
+    <string name="blogger_profile.view_count_label">VIEWS</string>
+    <string name="blogger_profile.article_count_label">POSTS</string>
     <string name="blogger_profile.section.articles_label">ARTICLES</string>
     <string name="blogger_profile.section.videos_label">VIDEOS</string>
     <string name="blogger_profile.section.activity_label">ACTIVITY</string>
@@ -835,4 +855,6 @@
 
     <string name="sort.recent">RECENT</string>
     <string name="sort.popular">POPULAR</string>
+
+    <string name="city_picker.toolbar.title">Choose City</string>
 </resources>

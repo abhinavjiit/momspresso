@@ -14,7 +14,7 @@
         android:id="@+id/notificationTitleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TRENDING TOPIC OF DAY"
+        android:text=""
         android:textColor="@color/notification_center.title"
         android:textSize="15sp"
         app:fontName="oswald.ttf" />

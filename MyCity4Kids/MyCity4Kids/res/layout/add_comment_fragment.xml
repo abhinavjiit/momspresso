@@ -47,7 +47,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar"
         android:layout_margin="15dp"
-        android:background="@drawable/replying_to_bg"
         android:padding="15dp"
         android:text=""
         android:textColor="@color/ad.comments.replying_to"
@@ -60,7 +59,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@+id/replyToTextView"
-        android:background="@color/common_underline"
+        android:background="@color/light_underline"
         android:visibility="gone" />
 
     <com.mycity4kids.widget.CustomFontEditText

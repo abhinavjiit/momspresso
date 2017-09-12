@@ -70,4 +70,7 @@
     <dimen name="ad_related_article_title">13sp</dimen>
 
     <dimen name="article_listing.article_image">180dp</dimen>
+
+    <dimen name="related_article.article_image.width">30dp</dimen>
+    <dimen name="related_article.article_image.height">38dp</dimen>
 </resources>

@@ -20,24 +20,50 @@
             android:layout_height="wrap_content"
             android:visibility="visible">
 
+
             <com.mycity4kids.widget.CustomFontTextView
                 android:id="@+id/toolbarTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
                 android:text="@string/all_videos.toolbar.title"
-                android:textColor="@color/all_videos.toolbar.title"
+                android:textColor="@color/home.toolbar.titlecolor"
                 android:textSize="20sp"
                 app:fontName="oswald_regular.ttf" />
 
+            <ImageView
+                android:id="@+id/downArrowImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/toolbarTitle"
+                android:layout_toRightOf="@+id/toolbarTitle"
+                android:paddingBottom="15dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="15dp"
+                android:src="@drawable/arrow_bluexxhdpidown"
+                android:tint="#507cbe" />
+
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
+
+    <View
+        android:id="@+id/toolbarUnderline"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/toolbar"
+        android:background="@color/light_underline" />
 
     <android.support.design.widget.TabLayout
         android:id="@+id/videosTabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
+        android:layout_below="@+id/toolbarUnderline"
         android:background="?attr/colorPrimary"
+        android:elevation="3dp"
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:tabIndicatorColor="@color/home.trending.tabbar_indicator"

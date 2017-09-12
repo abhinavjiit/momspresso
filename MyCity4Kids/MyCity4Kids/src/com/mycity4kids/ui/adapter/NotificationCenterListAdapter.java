@@ -89,7 +89,7 @@ public class NotificationCenterListAdapter extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
 
-        holder.notificationTitleTextView.setText("" + notificationList.get(position).getTitle());
+        holder.notificationTitleTextView.setText(("" + notificationList.get(position).getTitle()).toUpperCase());
         holder.notificationBodyTextView.setText("" + notificationList.get(position).getBody());
         holder.notificationDateTextView.setText("" + DateTimeUtils.getMMMDDFormatDate(notificationList.get(position).getCreatedTime()));
 

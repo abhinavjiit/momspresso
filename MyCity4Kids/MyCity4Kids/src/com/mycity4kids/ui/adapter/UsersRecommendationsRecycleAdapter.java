@@ -52,37 +52,45 @@ public class UsersRecommendationsRecycleAdapter extends RecyclerView.Adapter<Use
 
         holder.txvArticleTitle.setText(articleDataModelsNew.get(position).getTitle());
 
-        if (null == articleDataModelsNew.get(position).getArticleCount() || "0".equals(articleDataModelsNew.get(position).getArticleCount())) {
+        if (StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getArticleCount()) || "0".equals(articleDataModelsNew.get(position).getArticleCount())) {
             holder.viewCountTextView.setVisibility(View.GONE);
         } else {
             holder.viewCountTextView.setVisibility(View.VISIBLE);
             holder.viewCountTextView.setText(articleDataModelsNew.get(position).getArticleCount());
         }
 
-        if (null == articleDataModelsNew.get(position).getCommentsCount() || "0".equals(articleDataModelsNew.get(position).getCommentsCount())) {
+        holder.commentCountTextView.setText(articleDataModelsNew.get(position).getCommentCount());
+        if (StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getCommentCount()) || "0".equals(articleDataModelsNew.get(position).getCommentCount())) {
             holder.commentCountTextView.setVisibility(View.GONE);
+            holder.separatorView1.setVisibility(View.GONE);
         } else {
             holder.commentCountTextView.setVisibility(View.VISIBLE);
-            holder.commentCountTextView.setText(articleDataModelsNew.get(position).getCommentsCount());
+            holder.separatorView1.setVisibility(View.VISIBLE);
         }
 
-        if (null == articleDataModelsNew.get(position).getLikesCount() || "0".equals(articleDataModelsNew.get(position).getLikesCount())) {
+        holder.recommendCountTextView.setText(articleDataModelsNew.get(position).getLikesCount());
+        if (StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getLikesCount()) || "0".equals(articleDataModelsNew.get(position).getLikesCount())) {
             holder.recommendCountTextView.setVisibility(View.GONE);
+            holder.separatorView2.setVisibility(View.GONE);
         } else {
             holder.recommendCountTextView.setVisibility(View.VISIBLE);
-            holder.recommendCountTextView.setText(articleDataModelsNew.get(position).getLikesCount());
+            holder.separatorView2.setVisibility(View.VISIBLE);
         }
 
-        if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getVideoUrl())
-                && (articleDataModelsNew.get(position).getImageUrl().getThumbMax() == null || articleDataModelsNew.get(position).getImageUrl().getThumbMax().endsWith("default.jpg"))) {
-            Picasso.with(mContext).load(AppUtils.getYoutubeThumbnailURLMomspresso(articleDataModelsNew.get(position).getVideoUrl())).placeholder(R.drawable.default_article).into(holder.articleImageView);
-        } else {
-            if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getImageUrl().getThumbMax())) {
-                Picasso.with(mContext).load(articleDataModelsNew.get(position).getImageUrl().getThumbMax())
-                        .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
+        try {
+            if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getVideoUrl())
+                    && (articleDataModelsNew.get(position).getImageUrl().getThumbMax() == null || articleDataModelsNew.get(position).getImageUrl().getThumbMax().endsWith("default.jpg"))) {
+                Picasso.with(mContext).load(AppUtils.getYoutubeThumbnailURLMomspresso(articleDataModelsNew.get(position).getVideoUrl())).placeholder(R.drawable.default_article).into(holder.articleImageView);
             } else {
-                holder.articleImageView.setBackgroundResource(R.drawable.default_article);
+                if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getImageUrl().getThumbMax())) {
+                    Picasso.with(mContext).load(articleDataModelsNew.get(position).getImageUrl().getThumbMax())
+                            .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
+                } else {
+                    holder.articleImageView.setBackgroundResource(R.drawable.default_article);
+                }
             }
+        } catch (Exception e) {
+            holder.articleImageView.setBackgroundResource(R.drawable.default_article);
         }
     }
 
@@ -98,6 +106,8 @@ public class UsersRecommendationsRecycleAdapter extends RecyclerView.Adapter<Use
         TextView viewCountTextView;
         TextView commentCountTextView;
         TextView recommendCountTextView;
+        View separatorView1;
+        View separatorView2;
 
         public UserRecommendationsViewHolder(View itemView, RecyclerViewClickListener listener) {
             super(itemView);
@@ -107,6 +117,8 @@ public class UsersRecommendationsRecycleAdapter extends RecyclerView.Adapter<Use
             commentCountTextView = (TextView) itemView.findViewById(R.id.commentCountTextView);
             recommendCountTextView = (TextView) itemView.findViewById(R.id.recommendCountTextView);
             shareImageView = (ImageView) itemView.findViewById(R.id.shareImageView);
+            separatorView1 = itemView.findViewById(R.id.separatorView1);
+            separatorView2 = itemView.findViewById(R.id.separatorView2);
             shareImageView.setOnClickListener(this);
             itemView.setOnClickListener(this);
         }

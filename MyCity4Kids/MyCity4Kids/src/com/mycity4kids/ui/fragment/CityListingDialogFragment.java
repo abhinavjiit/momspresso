@@ -21,6 +21,7 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.kelltontech.utils.StringUtils;
 import com.kelltontech.utils.ToastUtils;
@@ -37,12 +38,17 @@ import java.util.ArrayList;
  */
 public class CityListingDialogFragment extends DialogFragment implements ChangeCityAdapter.IOtherCity {
 
-    ArrayList<CityInfoItem> data;
-    ListView cityListView;
-    ChangeCityAdapter adapter;
-    Toolbar mToolbar;
+
+    private Toolbar mToolbar;
+    private ListView cityListView;
+    private TextView toolbarTitleTextView;
     private ProgressDialog mProgressDialog;
+
+    private ChangeCityAdapter adapter;
+
+    private ArrayList<CityInfoItem> data;
     private String fromScreen;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -51,8 +57,8 @@ public class CityListingDialogFragment extends DialogFragment implements ChangeC
         final View rootView = inflater.inflate(R.layout.city_list_dialog, container,
                 false);
         mToolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-        mToolbar.setTitle("Choose City");
-        mToolbar.setTitleTextColor(ContextCompat.getColor(getActivity(), R.color.colorControlNormal));
+        toolbarTitleTextView = (TextView) mToolbar.findViewById(R.id.toolbarTitle);
+
         Drawable upArrow = ContextCompat.getDrawable(getActivity(), R.drawable.back_arroow);
         upArrow.setColorFilter(ContextCompat.getColor(getActivity(), R.color.colorControlNormal), PorterDuff.Mode.SRC_ATOP);
         mToolbar.setNavigationIcon(upArrow);

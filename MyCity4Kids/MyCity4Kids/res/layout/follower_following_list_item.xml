@@ -66,7 +66,7 @@
         android:layout_centerVertical="true"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
-        android:background="@drawable/unfollow_topic_author_bg"
+        android:background="@drawable/follow_topic_author_bg"
         android:foregroundGravity="center"
         android:gravity="center"
         android:paddingBottom="10dp"

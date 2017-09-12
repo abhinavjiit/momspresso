@@ -5,46 +5,35 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/cardViewWidget"
+    <RelativeLayout
+        android:id="@+id/imvAuthorThumbContainer"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginBottom="2dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="2dp">
+        android:layout_gravity="center"
+        android:orientation="vertical">
 
-        <RelativeLayout
-            android:id="@+id/imvAuthorThumbContainer"
+        <ImageView
+            android:id="@+id/tagImageView"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:orientation="vertical">
+            android:layout_height="110dp"
+            android:scaleType="center"
+            android:src="@drawable/default_article" />
 
-            <ImageView
-                android:id="@+id/tagImageView"
-                android:layout_width="wrap_content"
-                android:layout_height="130dp"
-                android:scaleType="fitXY"
-                android:src="@drawable/default_article" />
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="110dp"
+            android:background="@color/publish_article.tag_images.selected_bg" />
 
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="130dp"
-                android:background="@color/publish_article.tag_images.selected_bg" />
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/topicsNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="TOPICS"
+            android:textColor="@color/explore_listing.explore_categories.category_name"
+            android:textSize="18sp"
+            app:fontName="oswald_regular.ttf" />
+    </RelativeLayout>
 
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/topicsNameTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="TOPICS"
-                android:gravity="center"
-                android:textColor="@color/explore_listing.explore_categories.category_name"
-                android:textSize="18sp"
-                app:fontName="oswald_regular.ttf" />
-        </RelativeLayout>
-
-
-    </android.support.v7.widget.CardView>
 </LinearLayout>

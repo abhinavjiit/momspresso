@@ -46,7 +46,7 @@ import retrofit2.Retrofit;
 public class ExploreArticleListingTypeFragment extends BaseFragment {
 
     private final static String MEET_CONTRIBUTOR_ID = "meetContributorId";
-    private String[] sections = {"TRENDING", "EDITOR'S PICK", "FOR YOU", "RECENT", "POPULAR", "LANGUAGES", "VIDEOS"};
+    private String[] sections = {"TRENDING", "EDITOR'S PICK", "FOR YOU", "LANGUAGES", "VIDEOS", "RECENT"};
     private ArrayList<ExploreTopicsModel> mainTopicsList;
     private String fragType = "";
 
