@@ -302,7 +302,7 @@ public class InformationFragmentBusiness extends BaseFragment implements OnClick
              * but now they are giving so above is comment & this is currently working
              */
             /*if(!StringUtils.isNullOrEmpty(mBusinessInfoModel.getDistance()) && !mBusinessInfoModel.getDistance().equals("0"))
-		{
+        {
 				double diff=Double.parseDouble(mBusinessInfoModel.getDistance());
 				DecimalFormat df = new DecimalFormat("####0.0");
 				String distanceAccuracy=df.format(diff);
@@ -572,45 +572,13 @@ public class InformationFragmentBusiness extends BaseFragment implements OnClick
                         _commonTxvDesc.setText(info.getInfo_value().trim());
                         additionalInfoLout.addView(lout);
                     }
-					/*if(getImgResourceId("info_"+info.getInfo_key())>0){
-					// Drawable dr = getResources().getDrawable(getImgResourceId("info_"+info.getInfo_key()));
-					_commonTxv.setCompoundDrawablesWithIntrinsicBounds(getImgResourceId("info_"+info.getInfo_key()),0,0,0);
-				}else{
-					_commonTxv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.default_icon,0,0,0);
-				}*/
-
                 }
-                /**
-                 * it's also gone
-                 */
-                //	txvAdditionalInfoDesc.setText(additionalInfoDesc);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         return view;
-    }
-
-    private int getImgResourceId(String iconName) {
-        if (iconName.contains("&")) {
-            //String iconName1=iconName.replace("\\s", "_");
-            iconName = iconName.trim().replaceAll("[\\s]", "");
-            iconName = iconName.replaceAll("[\\W]", "_");
-        } else if (iconName.contains(" ")) {
-            if (iconName.contains("-")) {
-                iconName = iconName.trim().replaceAll("[\\W]", "_");
-            }
-            iconName = iconName.trim().replaceAll("[\\s]", "_");
-        }
-        String icon = iconName.toLowerCase();
-        int resId = 0;
-        try {
-            resId = getActivity().getResources().getIdentifier(icon, "drawable", getActivity().getPackageName());
-        } catch (Exception e) {
-            return resId;
-        }
-        return resId;
     }
 
     private void saveCalendarEvent(BusinessDataListing mBusinessInfoModel) {

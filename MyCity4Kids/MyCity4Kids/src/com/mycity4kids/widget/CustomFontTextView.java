@@ -11,7 +11,7 @@ import com.mycity4kids.R;
 /**
  * Created by hemant on 17/3/16.
  */
-public class CustomFontTextView extends TextView {
+public class CustomFontTextView extends android.support.v7.widget.AppCompatTextView {
     public CustomFontTextView(Context context) {
         super(context);
         init(null);

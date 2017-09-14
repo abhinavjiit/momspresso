@@ -58,7 +58,6 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        getSupportActionBar().setIcon(R.drawable.app_logo);
 
         Bundle bundle = getIntent().getExtras();
         ArrayList<ArticleListingResult> articleList = bundle.getParcelableArrayList("pagerListData");
@@ -77,8 +76,6 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
             articleList = new ArrayList<>();
             articleList.add(articleListingResult);
         }
-//        ArticleDetailsFragment fragment = new ArticleDetailsFragment();
-//        replaceFragment(fragment, bundle, true);
         int pos = Integer.parseInt(bundle.getString(Constants.ARTICLE_INDEX));
         mViewPager = (ViewPager) findViewById(R.id.pager);
 

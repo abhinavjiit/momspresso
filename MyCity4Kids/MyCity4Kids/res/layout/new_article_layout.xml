@@ -33,13 +33,15 @@
             android:drawSelectorOnTop="true" />
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <TextView
+    <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/noBlogsTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="No blogs have been bookmarked yet."
-        android:visibility="gone" />
+        android:text="No blogs found."
+        android:textSize="20sp"
+        android:visibility="gone"
+        app:fontName="oswald_regular.ttf" />
 
     <RelativeLayout
         android:id="@+id/relativeLoadingView"

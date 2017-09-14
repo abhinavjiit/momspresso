@@ -77,6 +77,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.UserAttributeUpdateAPI;
 import com.mycity4kids.ui.activity.ActivityLogin;
 import com.mycity4kids.ui.activity.AppSettingsActivity;
 import com.mycity4kids.ui.activity.FollowersAndFollowingListActivity;
+import com.mycity4kids.ui.activity.IdTokenLoginActivity;
 import com.mycity4kids.ui.activity.MyFunnyVideosListingActivity;
 import com.mycity4kids.ui.activity.RankingActivity;
 import com.mycity4kids.ui.activity.UserActivitiesActivity;
@@ -144,11 +145,14 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
                 .requestEmail()
                 .build();
 
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                .enableAutoManage(getActivity(), this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
+        try {
+            mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                    .enableAutoManage(getActivity(), this)
+                    .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                    .build();
+        } catch (Exception e) {
 
+        }
         authorNameTextView = (TextView) rootView.findViewById(R.id.authorNameTextView);
         authorTypeTextView = (TextView) rootView.findViewById(R.id.authorTypeTextView);
         authorBioTextView = (TextView) rootView.findViewById(R.id.authorBioTextView);
@@ -423,7 +427,7 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
     }
 
     private void gPlusSignOut() {
-        if (mGoogleApiClient.isConnected()) {
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             Auth.GoogleSignInApi.signOut(mGoogleApiClient);
             mGoogleApiClient.disconnect();
             mGoogleApiClient.connect();
@@ -491,6 +495,11 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
             }
             break;
             case R.id.rankContainer:
+                if (AppConstants.DEBUGGING_USER_ID.equals(userId)) {
+                    Intent _intent = new Intent(getActivity(), IdTokenLoginActivity.class);
+                    startActivity(_intent);
+                    return;
+                }
                 if (rankingSectionTextView.getVisibility() == View.VISIBLE) {
                     Intent intent = new Intent(getActivity(), RankingActivity.class);
                     startActivity(intent);

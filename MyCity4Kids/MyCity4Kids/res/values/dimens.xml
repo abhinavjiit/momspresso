@@ -57,7 +57,7 @@
     <dimen name="ad_comments_reply_username">14sp</dimen>
     <dimen name="ad_comments_date">14sp</dimen>
     <dimen name="ad_comments_edit_text">15sp</dimen>
-    <dimen name="ad_comments_text">11sp</dimen>
+    <dimen name="ad_comments_text">12sp</dimen>
     <dimen name="ad_comments_reply_btn">14sp</dimen>
     <dimen name="ad_comments_edit_btn">14sp</dimen>
     <dimen name="ad_comments_add">15sp</dimen>

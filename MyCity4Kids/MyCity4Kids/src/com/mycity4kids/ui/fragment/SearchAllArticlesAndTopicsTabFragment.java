@@ -242,7 +242,8 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
         if (null != data) {
             data.clear();
         }
-        noBlogsTextView.setVisibility(View.GONE);
+        if (noBlogsTextView != null)
+            noBlogsTextView.setVisibility(View.GONE);
         nextPageNumber = 1;
         isLastPageReached = true;
         searchName = searchText;

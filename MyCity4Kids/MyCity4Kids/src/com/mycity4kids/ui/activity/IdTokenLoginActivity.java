@@ -75,6 +75,9 @@ public class IdTokenLoginActivity extends BaseActivity implements View.OnClickLi
         tokenEditText = (EditText) findViewById(R.id.tokenEditText);
         loginTextView = (TextView) findViewById(R.id.loginTextView);
 
+        idEditText.setText("43f6a6e57f3d4ba0b41bab18509eae1f");
+        tokenEditText.setText("438d2aeb4d53b871e5204b5ee4b6c150");
+
         idEditText.setOnClickListener(this);
         tokenEditText.setOnClickListener(this);
         loginTextView.setOnClickListener(this);

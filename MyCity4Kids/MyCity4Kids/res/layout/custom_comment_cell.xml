@@ -118,7 +118,7 @@
                 android:text=""
                 android:textColor="@color/ad.comment.date"
                 android:textSize="@dimen/ad_comments_date"
-                app:fontName="oswald_regular.ttf" />
+                app:fontName="oswald.ttf" />
         </LinearLayout>
     </RelativeLayout>
 

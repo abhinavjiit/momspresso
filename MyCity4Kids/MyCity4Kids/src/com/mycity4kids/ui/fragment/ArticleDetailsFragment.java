@@ -10,6 +10,7 @@ import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -100,6 +102,7 @@ import com.squareup.picasso.Target;
 import org.apmem.tools.layouts.FlowLayout;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.w3c.dom.Text;
 
 import java.io.FileInputStream;
 import java.net.SocketTimeoutException;
@@ -139,6 +142,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private boolean isLoading = false;
     private boolean isArticleDetailEndReached = false;
     private boolean isSwipeNextAvailable;
+    private boolean isFbCommentHeadingAdded = false;
     private String bookmarkFlag = "0";
     private String recommendationFlag = "0";
     private String commentURL = "";
@@ -190,6 +194,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private WebView videoWebView;
     private View fragmentView;
     private LinearLayout bottomToolbarLL;
+    private TextView commentHeading;
 
     @Nullable
     @Override
@@ -256,6 +261,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             swipeNextTextView = (TextView) fragmentView.findViewById(R.id.swipeNextTextView);
 
             commentLayout = ((LinearLayout) fragmentView.findViewById(R.id.commnetLout));
+            commentHeading = ((TextView) fragmentView.findViewById(R.id.commentsHeading));
             relatedArticles1.setOnClickListener(this);
             relatedArticles2.setOnClickListener(this);
             relatedArticles3.setOnClickListener(this);
@@ -1292,6 +1298,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         int permanentDiff = (tagsView.getBottom() - (mScrollView.getHeight() + mScrollView.getScrollY()));
         if (permanentDiff <= 0) {
             isArticleDetailEndReached = true;
+            if (bottomToolbarLL.getVisibility() == View.VISIBLE) {
+                hideBottomToolbar();
+            }
             if (isSwipeNextAvailable) {
                 swipeNextTextView.setVisibility(View.VISIBLE);
             }
@@ -1299,6 +1308,10 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 showFloatingActionButton();
             }
         } else {
+            if (bottomToolbarLL.getVisibility() != View.VISIBLE) {
+                showBottomToolbar();
+            }
+
             if (isSwipeNextAvailable) {
                 swipeNextTextView.setVisibility(View.GONE);
             }
@@ -1321,9 +1334,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             if (ab.isShowing()) {
                 ((ArticleDetailsContainerActivity) getActivity()).hideMainToolbar();
             }
-            if (bottomToolbarLL.getVisibility() == View.VISIBLE) {
-                hideToolbar();
-            }
+//            if (bottomToolbarLL.getVisibility() == View.VISIBLE) {
+//                hideBottomToolbar();
+//            }
             if (!isArticleDetailEndReached && commentFloatingActionButton.getVisibility() == View.VISIBLE) {
                 hideFloatingActionButton();
             }
@@ -1331,16 +1344,16 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             if (!ab.isShowing()) {
                 ((ArticleDetailsContainerActivity) getActivity()).showMainToolbar();
             }
-            if (bottomToolbarLL.getVisibility() != View.VISIBLE) {
-                showToolbar();
-            }
+//            if (bottomToolbarLL.getVisibility() != View.VISIBLE) {
+//                showBottomToolbar();
+//            }
             if (commentFloatingActionButton.getVisibility() == View.INVISIBLE) {
                 showFloatingActionButton();
             }
         }
     }
 
-    private void hideToolbar() {
+    private void hideBottomToolbar() {
         bottomToolbarLL.animate()
                 .translationY(bottomToolbarLL.getHeight())
                 .setInterpolator(new LinearInterpolator())
@@ -1348,13 +1361,12 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
-//                        getSupportActionBar().hide();
                         bottomToolbarLL.setVisibility(View.GONE);
                     }
                 });
     }
 
-    private void showToolbar() {
+    private void showBottomToolbar() {
         bottomToolbarLL.animate()
                 .translationY(0)
                 .setInterpolator(new LinearInterpolator())
@@ -1362,7 +1374,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationStart(Animator animation) {
-//                        getSupportActionBar().show();
                         bottomToolbarLL.setVisibility(View.VISIBLE);
                     }
 
@@ -1399,7 +1410,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         if (detailData == null || detailData.getBody() == null) {
             return "";
         }
-        return AppUtils.stripHtml(detailData.getBody().getText());
+        return AppUtils.stripHtml(detailData.getBody().getText()).substring(0, 3998);
     }
 
     private class ViewHolder {
@@ -2049,6 +2060,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 ArrayList<CommentsData> arrayList = new ArrayList<>();
                 JSONArray commentsJson = new JSONArray(resData);
                 commentURL = "";
+                if (commentsJson.length() > 0) {
+                    commentHeading.setVisibility(View.VISIBLE);
+                }
                 for (int i = 0; i < commentsJson.length(); i++) {
                     if (commentsJson.getJSONObject(i).has("next")) {
                         commentURL = commentsJson.getJSONObject(i).getString("next");
@@ -2108,6 +2122,19 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         pagination = AppConstants.PAGINATION_END_VALUE;
                     } else {
                         commentLayout = ((LinearLayout) fragmentView.findViewById(R.id.commnetLout));
+                        if (!isFbCommentHeadingAdded) {
+                            TextView textView = new TextView(getActivity());
+                            textView.setText(getString(R.string.ad_comments_fb_comment));
+                            textView.setTextColor(ContextCompat.getColor(getActivity(), R.color.ad_comment_title));
+                            Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/oswald_regular.ttf");
+                            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.ad_comments_heading));
+                            textView.setTypeface(face);
+                            int paddingVal = AppUtils.dpTopx(10);
+                            textView.setPadding(paddingVal, paddingVal, paddingVal, paddingVal);
+                            commentLayout.addView(textView);
+                            isFbCommentHeadingAdded = true;
+                        }
+
                         ViewHolder viewHolder = null;
                         viewHolder = new ViewHolder();
                         for (int i = 0; i < dataList.size(); i++) {

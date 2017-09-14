@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.mycity4kids.models.response.TrendingListingResult;
+import com.mycity4kids.ui.fragment.TrendingTopicsAllTabFragment;
 import com.mycity4kids.ui.fragment.TrendingTopicsTabFragment;
 
 import java.util.ArrayList;
@@ -25,15 +26,17 @@ public class TrendingTopicsPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-
         Bundle bundle = new Bundle();
-        bundle.putParcelable("trendingTopicsData", trendingListingResults.get(position));
-        bundle.putInt("position", position);
-        TrendingTopicsTabFragment tab1 = new TrendingTopicsTabFragment();
-
-        tab1.setArguments(bundle);
-        return tab1;
-
+        if (position == 0) {
+            TrendingTopicsAllTabFragment tab1 = new TrendingTopicsAllTabFragment();
+            tab1.setArguments(bundle);
+            return tab1;
+        } else {
+            bundle.putParcelable("trendingTopicsData", trendingListingResults.get(position - 1));
+            TrendingTopicsTabFragment tab1 = new TrendingTopicsTabFragment();
+            tab1.setArguments(bundle);
+            return tab1;
+        }
     }
 
     @Override

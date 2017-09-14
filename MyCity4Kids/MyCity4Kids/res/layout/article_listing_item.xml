@@ -33,7 +33,7 @@
                 android:singleLine="false"
                 android:text="@string/title"
                 android:textColor="@color/article_listing.title"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 card_view:fontName="oswald_regular.ttf" />
 
             <RelativeLayout
@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/txvArticleTitle"
                 android:gravity="center_vertical"
-                android:paddingBottom="4dp">
+                android:paddingBottom="10dp">
 
                 <ImageView
                     android:id="@+id/articleImageView"

@@ -412,6 +412,7 @@
     <string name="ad.follow_author">FOLLOW</string>
     <string name="ad.following_author">FOLLOWING</string>
     <string name="ad.comments.title">COMMENTS</string>
+    <string name="ad.comments.fb_comment">FACEBOOK COMMENT</string>
     <string name="ad.comments.reply_label">Reply</string>
     <string name="ad.comments.edit_label">Edit</string>
     <string name="ad.comments.save">SAVE</string>
@@ -838,13 +839,13 @@
 
     <string name="all_videos.toolbar.title">VIDEOS</string>
     <string name="all_videos.tabbar.momspresso_label">MOMSPRESSO</string>
-    <string name="all_videos.tabbar.funny_label">VIDEOS</string>
+    <string name="all_videos.tabbar.funny_label">MOM VLOGS</string>
     <string name="all_videos.funny_videos.no_videos">No funny videos added.</string>
 
     <string name="notification.read_all">Read All</string>
     <string name="notification.no_notification">No notifications</string>
 
-    <string name="user_funny_video.toolbar.title">FUNNY VIDEOS</string>
+    <string name="user_funny_video.toolbar.title">MOM VLOGS</string>
     <string name="user_funny_video.published_on">Published on: %1$s</string>
 
     <string name="article_listing.toolbar.title_recent">RECENT</string>

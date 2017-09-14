@@ -46,7 +46,7 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
     private ArrayList<TrendingListingResult> trendingArraylist;
     private String userId;
     private int lowerLimit = 1;
-    private int upperLimit = 10;
+    private int upperLimit = 3;
     private int articleCount = 15;
 
     @Nullable
@@ -108,6 +108,8 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
         trendingArraylist.addAll(responseData.getData().get(0).getResult());
 //        Collections.shuffle(trendingArraylist);
         tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
+
+        tabLayout.addTab(tabLayout.newTab().setText("All"));
         for (int i = 0; i < trendingArraylist.size(); i++) {
             tabLayout.addTab(tabLayout.newTab().setText(trendingArraylist.get(i).getDisplay_name()));
         }

@@ -63,7 +63,7 @@ public class ParentTopicsGridAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) view.getTag();
         }
-        holder.topicsNameTextView.setText(topicsList.get(position).getDisplay_name());
+        holder.topicsNameTextView.setText(topicsList.get(position).getDisplay_name().toUpperCase());
 
         //useless backend can't do shit. tired of checking null, empty, json object or json array.
         try {
