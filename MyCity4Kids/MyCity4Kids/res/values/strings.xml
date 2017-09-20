@@ -404,7 +404,7 @@
     <string name="videos.upload_option.cancel">CANCEL</string>
 
     <string name="ad.recommendation.tootip_text">Tap to like the blog</string>
-    <string name="ad.swipe_tootip_text">SWIPE RIGHT TO READ NEXT ARTICLE</string>
+    <string name="ad.swipe_tootip_text">SWIPE LEFT TO READ NEXT ARTICLE</string>
     <string name="ad.read_more.text">READ FULL STORY</string>
     <string name="ad.view_all_tags.text">VIEW ALL</string>
     <string name="ad.tags_title.text">This article was posted in the below categories</string>
@@ -538,6 +538,7 @@
     <string name="home_screen.profile.title">MY ACCOUNT</string>
     <string name="home_screen.select_an_option.title">SELECT AN OPTION</string>
     <string name="home_screen.trending.become_blogger">SHARE YOUR STORY</string>
+    <string name="home_screen.trending.first_video_upload">VIDEOS</string>
     <string name="home_screen.editor.title">EDITOR</string>
     <string name="home_screen.explore.title">EXPLORE</string>
     <string name="home_screen.upcoming_events.title">UPCOMING EVENTS</string>
@@ -771,7 +772,7 @@
     <string name="choose_article_image.upload_photo">CLICK TO UPLOAD PHOTO</string>
     <string name="choose_article_image.publish">PUBLISH</string>
 
-    <string name="add_article_or_video.upload_video">UPLOAD A VIDEO</string>
+    <string name="add_article_or_video.upload_video">UPLOAD MOMVLOG</string>
     <string name="add_article_or_video.write_article">WRITE AN ARTICLE</string>
     <string name="add_article_or_video.become_blogger">BECOME A BLOGGER</string>
 
@@ -788,6 +789,11 @@
         <item>mycity4kids does not pay each blogger on publishing their own posts. We do however offer paid writing assignments which are commissioned by brands. This is offered to bloggers based on the quality of content they produce.</item>
         <item>Whether your story is about parenthood, womenhood, relationships, struggles, joys or personal well-being, this is the platform to write about it. Join the 3500+ Mums in seeking &amp; sharing advice, opinions and recommendations.\n Do refrain from publishing copied or \'slightly modified\' content.</item>
     </string-array>
+
+    <string name="upload_video.title">SHARE A MomVlog\n THAT CAPTURES #MOMLIFE</string>
+    <string name="upload_video.desc">Parenting, Work, Relationships, Fitness, Recipes, Beauty&#8230; basically anything Inspiring from day to day life.</string>
+    <string name="upload_video.desc1">Shoot the video and upload it right away from your Mobile.</string>
+    <string name="upload_video.get_started">LET\'S START</string>
 
     <string name="moderation_or_share.way_to_go">WAY TO GO!</string>
     <string name="moderation_or_share.moderation_message">Your article is up for moderation. You\'ll receive an email within 24 hours regarding the status of the blog</string>

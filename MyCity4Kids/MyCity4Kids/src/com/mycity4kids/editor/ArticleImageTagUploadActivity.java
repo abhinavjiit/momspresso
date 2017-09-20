@@ -320,7 +320,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                 map.put(key, jsonArray.getJSONObject(i).getString(key));
                 tagsList.add(map);
             }
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

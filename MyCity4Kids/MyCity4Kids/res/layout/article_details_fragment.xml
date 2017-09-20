@@ -327,6 +327,7 @@
             </LinearLayout>
 
             <View
+                android:id="@+id/relatedTrendingSeparator"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_below="@+id/recentAuthorArticles"
@@ -526,12 +527,6 @@
                 android:orientation="horizontal"
                 android:paddingBottom="6dp"
                 android:paddingTop="6dp">
-
-                <!--<ImageView-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="30dp"-->
-                <!--android:layout_weight="1"-->
-                <!--android:src="@drawable/ic_facebook" />-->
 
                 <com.mycity4kids.widget.CustomFontTextView
                     android:id="@+id/facebookShareTextView"

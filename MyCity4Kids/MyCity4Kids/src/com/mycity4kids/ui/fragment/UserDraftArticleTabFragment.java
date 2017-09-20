@@ -78,9 +78,13 @@ public class UserDraftArticleTabFragment extends BaseFragment implements View.On
         draftList = new ArrayList<DraftListResult>();
 
         //only when first time fragment is created
-        getUserDraftArticles();
-
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        getUserDraftArticles();
+        super.onResume();
     }
 
     private void getUserDraftArticles() {

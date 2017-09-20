@@ -10,6 +10,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -45,6 +46,7 @@ import com.mycity4kids.models.response.VlogsListingResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
 import com.mycity4kids.ui.adapter.MyFunnyVideosListingAdapter;
+import com.mycity4kids.ui.fragment.ChooseVideoUploadOptionDialogFragment;
 import com.mycity4kids.utils.PermissionUtil;
 
 import java.util.ArrayList;
@@ -79,6 +81,8 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
     private FrameLayout frameLayout;
     private View rootLayout;
     private ImageView searchAllImageView;
+    private RelativeLayout firstUploadLayout;
+    private TextView getStartedTextView;
 
     private int sortType = 0;
     private int nextPageNumber;
@@ -107,6 +111,8 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
         popularSortFAB = (FloatingActionButton) findViewById(R.id.popularSortFAB);
         recentSortFAB = (FloatingActionButton) findViewById(R.id.recentSortFAB);
         fabSort = (FloatingActionButton) findViewById(R.id.fabSort);
+        firstUploadLayout = (RelativeLayout) findViewById(R.id.firstUploadLayout);
+        getStartedTextView = (TextView) findViewById(R.id.getStartedTextView);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -123,6 +129,7 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
         searchAllImageView.setOnClickListener(this);
         popularSortFAB.setOnClickListener(this);
         recentSortFAB.setOnClickListener(this);
+        getStartedTextView.setOnClickListener(this);
         fabSort.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -310,6 +317,7 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
                 articleDataModelsNew = dataList;
                 articlesListingAdapter.setNewListData(articleDataModelsNew);
                 articlesListingAdapter.notifyDataSetChanged();
+                firstUploadLayout.setVisibility(View.VISIBLE);
             }
         } else {
             noBlogsTextView.setVisibility(View.GONE);
@@ -378,6 +386,16 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
                 searchIntent.putExtra(Constants.FILTER_NAME, "");
                 searchIntent.putExtra(Constants.TAB_POSITION, 0);
                 startActivity(searchIntent);
+                break;
+            case R.id.getStartedTextView:
+                SharedPrefUtils.setFirstVideoUploadFlag(this, true);
+                ChooseVideoUploadOptionDialogFragment chooseVideoUploadOptionDialogFragment = new ChooseVideoUploadOptionDialogFragment();
+                FragmentManager fm = getSupportFragmentManager();
+                Bundle _args = new Bundle();
+                _args.putString("activity", "dashboard");
+                chooseVideoUploadOptionDialogFragment.setArguments(_args);
+                chooseVideoUploadOptionDialogFragment.setCancelable(true);
+                chooseVideoUploadOptionDialogFragment.show(fm, "Choose video option");
                 break;
         }
     }

@@ -57,16 +57,16 @@ public class AddArticleVideoFragment extends BaseFragment implements View.OnClic
         setUpBlogImageView.setOnClickListener(this);
         becomeBloggerTextView.setOnClickListener(this);
 
-        if (SharedPrefUtils.getBecomeBloggerFlag(getActivity())) {
-            writeArticleImageView.setVisibility(View.VISIBLE);
-            writeArticleTextView.setVisibility(View.VISIBLE);
-            setUpBlogImageView.setVisibility(View.INVISIBLE);
-            becomeBloggerTextView.setVisibility(View.INVISIBLE);
-        } else {
+        if ("0".equals(SharedPrefUtils.getUserDetailModel(getActivity()).getUserType()) && !SharedPrefUtils.getBecomeBloggerFlag(getActivity())) {
             writeArticleImageView.setVisibility(View.INVISIBLE);
             writeArticleTextView.setVisibility(View.INVISIBLE);
             setUpBlogImageView.setVisibility(View.VISIBLE);
             becomeBloggerTextView.setVisibility(View.VISIBLE);
+        } else {
+            writeArticleImageView.setVisibility(View.VISIBLE);
+            writeArticleTextView.setVisibility(View.VISIBLE);
+            setUpBlogImageView.setVisibility(View.INVISIBLE);
+            becomeBloggerTextView.setVisibility(View.INVISIBLE);
         }
 
         //checkBlogPageSetup();
@@ -151,7 +151,14 @@ public class AddArticleVideoFragment extends BaseFragment implements View.OnClic
             break;
             case R.id.uploadVideoTextView:
             case R.id.uploadVideoImageView: {
-                launchAddVideoOptions();
+                if (SharedPrefUtils.getFirstVideoUploadFlag(getActivity())) {
+                    launchAddVideoOptions();
+                } else {
+                    UploadVideoInfoFragment uploadVideoInfoFragment = new UploadVideoInfoFragment();
+                    Bundle searchBundle = new Bundle();
+                    uploadVideoInfoFragment.setArguments(searchBundle);
+                    ((DashboardActivity) getActivity()).addFragment(uploadVideoInfoFragment, searchBundle, true);
+                }
             }
             break;
         }

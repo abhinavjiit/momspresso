@@ -209,10 +209,12 @@ public class RankingInfoTabFragment extends BaseFragment implements View.OnClick
                     languageTextView.setText("");
                 } else if (responseData.getData().get(0).getResult().getRanks().size() < 2) {
                     myRankTextView.setText("" + responseData.getData().get(0).getResult().getRanks().get(0).getRank());
-                    if (AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(0).getLangKey())) {
-                        languageTextView.setText(getString(R.string.ranking_in) + " ENGLISH");
-                    } else {
-                        languageTextView.setText(getString(R.string.ranking_in) + " " + AppUtils.getLangModelForLanguage(getActivity(), responseData.getData().get(0).getResult().getRanks().get(0).getLangKey()).getDisplay_name());
+                    if (isAdded()) {
+                        if (AppConstants.LANG_KEY_ENGLISH.equals(responseData.getData().get(0).getResult().getRanks().get(0).getLangKey())) {
+                            languageTextView.setText(getString(R.string.ranking_in) + " ENGLISH");
+                        } else {
+                            languageTextView.setText(getString(R.string.ranking_in) + " " + AppUtils.getLangModelForLanguage(getActivity(), responseData.getData().get(0).getResult().getRanks().get(0).getLangKey()).getDisplay_name());
+                        }
                     }
                 } else {
                     for (int i = 0; i < responseData.getData().get(0).getResult().getRanks().size(); i++) {

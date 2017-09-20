@@ -22,7 +22,7 @@
         <View
             android:layout_width="wrap_content"
             android:layout_height="110dp"
-            android:background="@color/publish_article.tag_images.selected_bg" />
+            android:background="@color/explore_listing.topics.layer" />
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/topicsNameTextView"

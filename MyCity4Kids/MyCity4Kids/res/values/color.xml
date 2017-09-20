@@ -218,6 +218,7 @@
     <color name="select_option.toolbar.titlecolor">#545454</color>
     <color name="home.trending.tabbar_indicator">#507cbe</color>
 
+    <color name="explore_listing.topics.layer">#33000000</color>
     <color name="explore_listing.explore_categories.title">#515556</color>
     <color name="explore_listing.explore_categories.category_name">#FFFFFF</color>
     <color name="explore_listing.tabbar_text">#545454</color>
@@ -465,6 +466,9 @@
     <color name="become_blogger.get_started">#545454</color>
     <color name="become_blogger.title">#545454</color>
     <color name="become_blogger.message">#545454</color>
+
+    <color name="upload_video.title">#515556</color>
+    <color name="upload_video.desc">#9c9dac</color>
 
     <color name="moderation_or_share.way_to_go">#545454</color>
     <color name="moderation_or_share.moderation_message">#9c9dac</color>

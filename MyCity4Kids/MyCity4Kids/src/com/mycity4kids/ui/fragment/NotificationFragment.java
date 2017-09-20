@@ -9,31 +9,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
-import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
-import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.controller.NotificationController;
 import com.mycity4kids.gtmutils.Utils;
-import com.mycity4kids.models.parentingstop.ParentingRequest;
 import com.mycity4kids.models.request.NotificationReadRequest;
 import com.mycity4kids.models.response.NotificationCenterListResponse;
 import com.mycity4kids.models.response.NotificationCenterResult;
-import com.mycity4kids.newmodels.bloggermodel.ParentingBlogResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.NotificationsAPI;
-import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.adapter.NotificationCenterListAdapter;
 
 import java.util.ArrayList;
@@ -55,7 +46,6 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
     private boolean isReuqestRunning = false;
 
     private ProgressBar progressBar;
-    private RelativeLayout mLodingView;
     private TextView noBlogsTextView;
     private ListView notificationListView;
 
@@ -66,7 +56,6 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
         View view = inflater.inflate(R.layout.aa_notification, container, false);
 
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-        mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
 
         notificationCenterResultArrayList = new ArrayList<>();
@@ -85,7 +74,6 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
 
                 boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
                 if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && !isLastPageReached) {
-                    mLodingView.setVisibility(View.VISIBLE);
                     getNotificationFromAPI();
                     isReuqestRunning = true;
                 }
@@ -115,7 +103,6 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
         @Override
         public void onResponse(Call<NotificationCenterListResponse> call, retrofit2.Response<NotificationCenterListResponse> response) {
             progressBar.setVisibility(View.GONE);
-            mLodingView.setVisibility(View.GONE);
             isReuqestRunning = false;
             if (response == null || null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
@@ -142,7 +129,6 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
         @Override
         public void onFailure(Call<NotificationCenterListResponse> call, Throwable t) {
             progressBar.setVisibility(View.GONE);
-            mLodingView.setVisibility(View.GONE);
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
 //            showToast(getString(R.string.went_wrong));

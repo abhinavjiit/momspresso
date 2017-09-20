@@ -2,6 +2,7 @@ package com.mycity4kids.ui.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.StringUtils;
+import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -47,6 +49,9 @@ public class EmailLoginFragment extends BaseFragment implements View.OnClickList
         loginEmailTextView = (CustomFontTextView) view.findViewById(R.id.loginEmailTextView);
         signupTextView = (CustomFontTextView) view.findViewById(R.id.signupTextView);
 
+        if (BuildConfig.DEBUG) {
+            mEmailId.setText("bbb@mc4k.com");
+        }
         mEmailId.addTextChangedListener(mTextWatcher);
         mPassword.addTextChangedListener(mTextWatcher);
         mPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {

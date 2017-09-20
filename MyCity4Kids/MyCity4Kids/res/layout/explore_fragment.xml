@@ -31,83 +31,98 @@
             app:fontName="oswald_regular.ttf" />
     </RelativeLayout>
 
-
-    <ImageView
-        android:id="@+id/eventsImageView"
-        android:layout_width="wrap_content"
+    <ScrollView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/cityContainer"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="40dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/events_bg" />
+        android:layout_below="@+id/cityContainer">
 
-    <com.mycity4kids.widget.CustomFontTextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/eventsImageView"
-        android:layout_alignEnd="@+id/eventsImageView"
-        android:layout_alignLeft="@+id/eventsImageView"
-        android:layout_alignRight="@+id/eventsImageView"
-        android:layout_alignStart="@+id/eventsImageView"
-        android:layout_alignTop="@+id/eventsImageView"
-        android:gravity="center"
-        android:text="@string/explore.section.events"
-        android:textColor="@color/white"
-        android:textSize="16sp" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white">
 
-    <ImageView
-        android:id="@+id/thingToDoImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/eventsImageView"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/cityContainer"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="40dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/things_to_do_bg" />
+            <ImageView
+                android:id="@+id/eventsImageView"
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
 
-    <com.mycity4kids.widget.CustomFontTextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/thingToDoImageView"
-        android:layout_alignEnd="@+id/thingToDoImageView"
-        android:layout_alignLeft="@+id/thingToDoImageView"
-        android:layout_alignRight="@+id/thingToDoImageView"
-        android:layout_alignStart="@+id/thingToDoImageView"
-        android:layout_alignTop="@+id/thingToDoImageView"
-        android:gravity="center"
-        android:text="@string/explore.section.top_things"
-        android:textColor="@color/white"
-        android:textSize="16sp" />
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:layout_marginTop="40dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/events_bg" />
 
-    <ImageView
-        android:id="@+id/resImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/eventsImageView"
-        android:layout_alignRight="@+id/thingToDoImageView"
-        android:layout_below="@+id/thingToDoImageView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/resources_bg" />
+            <com.mycity4kids.widget.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/eventsImageView"
+                android:layout_alignEnd="@+id/eventsImageView"
+                android:layout_alignLeft="@+id/eventsImageView"
+                android:layout_alignRight="@+id/eventsImageView"
+                android:layout_alignStart="@+id/eventsImageView"
+                android:layout_alignTop="@+id/eventsImageView"
+                android:gravity="center"
+                android:text="@string/explore.section.events"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:fontName="oswald_regular.ttf" />
 
-    <com.mycity4kids.widget.CustomFontTextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/resImageView"
-        android:layout_alignEnd="@+id/resImageView"
-        android:layout_alignLeft="@+id/resImageView"
-        android:layout_alignRight="@+id/resImageView"
-        android:layout_alignStart="@+id/resImageView"
-        android:layout_alignTop="@+id/resImageView"
-        android:gravity="center"
-        android:text="@string/explore.section.resources"
-        android:textColor="@color/white"
-        android:textSize="16sp" />
+            <ImageView
+                android:id="@+id/thingToDoImageView"
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:layout_below="@+id/eventsImageView"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:layout_marginTop="40dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/things_to_do_bg" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/thingToDoImageView"
+                android:layout_alignEnd="@+id/thingToDoImageView"
+                android:layout_alignLeft="@+id/thingToDoImageView"
+                android:layout_alignRight="@+id/thingToDoImageView"
+                android:layout_alignStart="@+id/thingToDoImageView"
+                android:layout_alignTop="@+id/thingToDoImageView"
+                android:gravity="center"
+                android:text="@string/explore.section.top_things"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:fontName="oswald_regular.ttf" />
+
+            <ImageView
+                android:id="@+id/resImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="110dp"
+                android:layout_below="@+id/thingToDoImageView"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:layout_marginTop="40dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/resources_bg" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/resImageView"
+                android:layout_alignEnd="@+id/resImageView"
+                android:layout_alignLeft="@+id/resImageView"
+                android:layout_alignRight="@+id/resImageView"
+                android:layout_alignStart="@+id/resImageView"
+                android:layout_alignTop="@+id/resImageView"
+                android:gravity="center"
+                android:text="@string/explore.section.resources"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:fontName="oswald_regular.ttf" />
+
+        </RelativeLayout>
+    </ScrollView>
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/noResourcesTextView"

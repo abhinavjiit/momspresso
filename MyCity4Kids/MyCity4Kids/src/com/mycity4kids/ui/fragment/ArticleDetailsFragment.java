@@ -195,6 +195,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private View fragmentView;
     private LinearLayout bottomToolbarLL;
     private TextView commentHeading;
+    private View relatedTrendingSeparator;
 
     @Nullable
     @Override
@@ -245,6 +246,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             trendingRelatedArticles3 = (RelatedArticlesView) fragmentView.findViewById(R.id.trendingRelatedArticles3);
             trendingArticles = (LinearLayout) fragmentView.findViewById(R.id.trendingArticles);
             recentAuthorArticles = (LinearLayout) fragmentView.findViewById(R.id.recentAuthorArticles);
+            relatedTrendingSeparator = (View) fragmentView.findViewById(R.id.relatedTrendingSeparator);
 
             tagsLayout = (FlowLayout) fragmentView.findViewById(R.id.tagsLayout);
             articleViewCountTextView = (TextView) fragmentView.findViewById(R.id.articleViewCountTextView);
@@ -1410,7 +1412,11 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         if (detailData == null || detailData.getBody() == null) {
             return "";
         }
-        return AppUtils.stripHtml(detailData.getBody().getText()).substring(0, 3998);
+        if (AppUtils.stripHtml(detailData.getBody().getText()).length() > 3999) {
+            return AppUtils.stripHtml(detailData.getBody().getText()).substring(0, 3998);
+        } else {
+            return AppUtils.stripHtml(detailData.getBody().getText());
+        }
     }
 
     private class ViewHolder {
@@ -1726,17 +1732,17 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                             Picasso.with(getActivity()).load(dataList.get(0).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
                             relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
-                            relatedArticles1.setTag(dataList.subList(0, 2));
+                            relatedArticles1.setTag(new ArrayList<ArticleListingResult>(dataList.subList(0, 2)));
 
                             Picasso.with(getActivity()).load(dataList.get(1).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(relatedArticles2.getArticleImageView());
                             relatedArticles2.setArticleTitle(dataList.get(1).getTitle());
-                            relatedArticles2.setTag(dataList.subList(0, 2));
+                            relatedArticles2.setTag(new ArrayList<ArticleListingResult>(dataList.subList(0, 2)));
 
                             Picasso.with(getActivity()).load(dataList.get(2).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(relatedArticles3.getArticleImageView());
                             relatedArticles3.setArticleTitle(dataList.get(2).getTitle());
-                            relatedArticles3.setTag(dataList.subList(0, 2));
+                            relatedArticles3.setTag(new ArrayList<ArticleListingResult>(dataList.subList(0, 2)));
                         } else if (dataList.size() == 2) {
                             Picasso.with(getActivity()).load(dataList.get(0).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
@@ -1801,7 +1807,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         }
                     }
                     if (dataList.size() == 0) {
-
+                        relatedTrendingSeparator.setVisibility(View.GONE);
                     } else {
                         Collections.shuffle(dataList);
                         recentAuthorArticleHeading.setText(getString(R.string.ad_recent_logs_from_title));

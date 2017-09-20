@@ -217,8 +217,12 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
                     expandImageView.setVisibility(View.INVISIBLE);
                 }
             });
-            listView.addHeaderView(headerRL);
-            isHeaderVisible = true;
+            try {
+                listView.addHeaderView(headerRL);
+                isHeaderVisible = true;
+            } catch (Exception e) {
+
+            }
         }
 
         hitFilteredTopicsArticleListingApi(sortType);

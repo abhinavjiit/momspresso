@@ -203,18 +203,8 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
 
             getTopicLevelAndPrepareFilterData();
 
-//            if (AppConstants.TOPIC_LEVEL_SUB_SUB_CATEGORY.equals(topicLevel) ||
-//                    AppConstants.MOMSPRESSO_CATEGORYID.equals(selectedTopics) ||
-//                    isLanguageListing) {
             sortBgLayout.setVisibility(View.GONE);
             bottomOptionMenu.setVisibility(View.GONE);
-//            } else {
-//                frameLayout.setVisibility(View.GONE);
-//                fabMenu.setVisibility(View.GONE);
-//                fabSort.setVisibility(View.GONE);
-//                popularSortFAB.setVisibility(View.GONE);
-//                recentSortFAB.setVisibility(View.GONE);
-//            }
         } catch (FileNotFoundException e) {
             Crashlytics.logException(e);
             Log.d("FileNotFoundException", Log.getStackTraceString(e));
@@ -623,27 +613,13 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                         Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
 
                         try {
-//                            Topics t = new Topics();
-//                            t.setId("");
-//                            t.setDisplay_name("");
-//                            SharedPrefUtils.setMomspressoCategory(FilteredTopicsArticleListingActivity.this, t);
-
                             FileInputStream fileInputStream = openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                             String fileContent = convertStreamToString(fileInputStream);
                             TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
                             createTopicsData(res);
                             getTopicLevelAndPrepareFilterData();
-//                            if (AppConstants.TOPIC_LEVEL_SUB_SUB_CATEGORY.equals(topicLevel)) {
                             sortBgLayout.setVisibility(View.GONE);
                             bottomOptionMenu.setVisibility(View.GONE);
-//                            } else {
-//                                frameLayout.setVisibility(View.GONE);
-//                                fabMenu.setVisibility(View.GONE);
-//                                fabSort.setVisibility(View.GONE);
-//                                popularSortFAB.setVisibility(View.GONE);
-//                                recentSortFAB.setVisibility(View.GONE);
-//                            }
-//                            openFilterDialog();
                         } catch (FileNotFoundException e) {
                             Crashlytics.logException(e);
                             Log.d("FileNotFoundException", Log.getStackTraceString(e));

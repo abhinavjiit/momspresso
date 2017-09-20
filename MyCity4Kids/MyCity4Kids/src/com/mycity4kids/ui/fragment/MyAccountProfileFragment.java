@@ -574,9 +574,11 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
                         .setAction(R.string.ok, new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                ActivityCompat.requestPermissions(getActivity(),
-                                        new String[]{Manifest.permission.CAMERA},
-                                        REQUEST_CAMERA);
+                                if (isAdded()) {
+                                    ActivityCompat.requestPermissions(getActivity(),
+                                            new String[]{Manifest.permission.CAMERA},
+                                            REQUEST_CAMERA);
+                                }
                             }
                         })
                         .show();

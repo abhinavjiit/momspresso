@@ -60,6 +60,7 @@ import com.mycity4kids.ui.fragment.MyAccountProfileFragment;
 import com.mycity4kids.ui.fragment.NotificationFragment;
 import com.mycity4kids.ui.fragment.RateAppDialogFragment;
 import com.mycity4kids.ui.fragment.SendFeedbackFragment;
+import com.mycity4kids.ui.fragment.UploadVideoInfoFragment;
 import com.mycity4kids.utils.PermissionUtil;
 
 import java.util.ArrayList;
@@ -1015,6 +1016,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     coachmarksImageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.coachmark_categories));
                     coachmarksImageView.setVisibility(View.VISIBLE);
                     bottomNavigationView.setVisibility(View.GONE);
+                } else {
+                    bottomNavigationView.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -1026,6 +1029,16 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             toolbarUnderline.setVisibility(View.VISIBLE);
             toolbarTitleTextView.setOnClickListener(null);
             toolbarTitleTextView.setText(getString(R.string.home_screen_trending_become_blogger));
+            menu.findItem(R.id.action_write).setChecked(true);
+            toolbarRelativeLayout.setVisibility(View.VISIBLE);
+            setSupportActionBar(mToolbar);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        } else if (null != topFragment && topFragment instanceof UploadVideoInfoFragment) {
+            mToolbar.setVisibility(View.VISIBLE);
+            toolbarUnderline.setVisibility(View.VISIBLE);
+            toolbarTitleTextView.setOnClickListener(null);
+            toolbarTitleTextView.setText(getString(R.string.home_screen_trending_first_video_upload));
             menu.findItem(R.id.action_write).setChecked(true);
             toolbarRelativeLayout.setVisibility(View.VISIBLE);
             setSupportActionBar(mToolbar);

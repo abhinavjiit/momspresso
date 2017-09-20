@@ -178,4 +178,73 @@
         fab:fab_colorNormal="@color/fab.white"
         fab:fab_colorPressed="@color/fab.white"
         fab:fab_icon="@drawable/ic_flip" />
+
+    <RelativeLayout
+        android:id="@+id/firstUploadLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:background="@color/white"
+        android:clickable="true"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/headerImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="38dp"
+            android:src="@drawable/ic_first_video_upload" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/titleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/headerImageView"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp"
+            android:paddingTop="16dp"
+            android:text="@string/upload_video.title"
+            android:textColor="@color/upload_video.title"
+            android:textSize="15sp"
+            fab:fontName="oswald_regular.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/descTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/titleTextView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="11dp"
+            android:gravity="center"
+            android:paddingBottom="15dp"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp"
+            android:paddingTop="15dp"
+            android:text="@string/upload_video.desc"
+            android:textColor="@color/upload_video.desc"
+            android:textSize="14sp"
+            fab:fontName="oswald.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/getStartedTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/descTextView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/unfollow_topic_author_bg"
+            android:paddingBottom="15dp"
+            android:paddingLeft="35dp"
+            android:paddingRight="35dp"
+            android:paddingTop="15dp"
+            android:text="@string/upload_video.get_started"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            fab:fontName="oswald_regular.ttf" />
+
+    </RelativeLayout>
 </RelativeLayout>

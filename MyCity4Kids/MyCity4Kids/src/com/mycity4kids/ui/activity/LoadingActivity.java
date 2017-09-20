@@ -53,11 +53,15 @@ public class LoadingActivity extends BaseActivity {
             navigateToDashboard();
             return;
         }
-        cityIdFromLocation = Integer.parseInt(SharedPrefUtils.getUserDetailModel(LoadingActivity.this).getCityId());
+        try {
+            cityIdFromLocation = Integer.parseInt(SharedPrefUtils.getUserDetailModel(LoadingActivity.this).getCityId());
 //        SharedPrefUtils.getCurrentCityModel(LoadingActivity.this).getId();
-        if (SharedPrefUtils.getCurrentCityModel(LoadingActivity.this).getId() == AppConstants.OTHERS_CITY_ID) {
-            fetchingLocation();
-        } else {
+            if (SharedPrefUtils.getCurrentCityModel(LoadingActivity.this).getId() == AppConstants.OTHERS_CITY_ID) {
+                fetchingLocation();
+            } else {
+                navigateToDashboard();
+            }
+        } catch (NumberFormatException e) {
             navigateToDashboard();
         }
     }

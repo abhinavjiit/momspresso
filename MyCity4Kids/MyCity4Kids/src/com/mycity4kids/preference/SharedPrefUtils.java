@@ -122,6 +122,7 @@ public class SharedPrefUtils {
     private static final String FOLLOWED_TOPIC_COUNT = "followedTopicCount";
 
     private static final String BECOME_BLOGGER_FLAG = "becomeBloggerFlag";
+    private static final String FIRST_VIDEO_UPLOAD_FLAG = "firstVideoUploadFlag";
 
     /**
      * this shared preference save current versions for control city,locality,category APIs .
@@ -811,6 +812,19 @@ public class SharedPrefUtils {
     public static boolean getBecomeBloggerFlag(Context context) {
         SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         boolean flag = (_sharedPref.getBoolean(BECOME_BLOGGER_FLAG, false));
+        return flag;
+    }
+
+    public static void setFirstVideoUploadFlag(Context pContext, boolean flag) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        _editor.putBoolean(FIRST_VIDEO_UPLOAD_FLAG, flag);
+        _editor.commit();
+    }
+
+    public static boolean getFirstVideoUploadFlag(Context context) {
+        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        boolean flag = (_sharedPref.getBoolean(FIRST_VIDEO_UPLOAD_FLAG, false));
         return flag;
     }
 }
