@@ -12,14 +12,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.facebook.widget.FacebookDialog;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.plus.PlusShare;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
-import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -32,6 +32,8 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
+
+//import com.facebook.widget.FacebookDialog;
 
 /**
  * Created by hemant on 2/8/17.
@@ -85,15 +87,22 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.facebookImageView:
-                if (FacebookDialog.canPresentShareDialog(this, FacebookDialog.ShareDialogFeature.SHARE_DIALOG) && !StringUtils.isNullOrEmpty(shareUrl)) {
-                    FacebookDialog shareDialog = new FacebookDialog.ShareDialogBuilder(
-                            this).setName("mycity4kids")
-                            .setDescription("Check out this interesting blog post")
-                            .setLink(shareUrl).build();
-                    shareDialog.present();
-                } else {
-                    Toast.makeText(this, "Unable to share with facebook.", Toast.LENGTH_SHORT).show();
+                if (ShareDialog.canShow(ShareLinkContent.class)) {
+                    ShareLinkContent content = new ShareLinkContent.Builder()
+                            .setContentUrl(Uri.parse(shareUrl))
+                            .build();
+                    new ShareDialog(this).show(content);
                 }
+
+//                if (FacebookDialog.canPresentShareDialog(this, FacebookDialog.ShareDialogFeature.SHARE_DIALOG) && !StringUtils.isNullOrEmpty(shareUrl)) {
+//                    FacebookDialog shareDialog = new FacebookDialog.ShareDialogBuilder(
+//                            this).setName("mycity4kids")
+//                            .setDescription("Check out this interesting blog post")
+//                            .setLink(shareUrl).build();
+//                    shareDialog.present();
+//                } else {
+//                    Toast.makeText(this, "Unable to share with facebook.", Toast.LENGTH_SHORT).show();
+//                }
                 break;
             case R.id.googlePlusImageView:
                 if (StringUtils.isNullOrEmpty(shareUrl)) {

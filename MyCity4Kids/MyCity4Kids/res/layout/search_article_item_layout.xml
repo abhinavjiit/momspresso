@@ -10,9 +10,8 @@
         android:id="@+id/titleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-light"
         android:gravity="center_vertical"
-        android:text="dawdad  d awd da ad  d dada adaw daw d ad awda wdawwds"
+        android:text=""
         android:textColor="@color/black_color"
         android:textSize="18sp" />
 
@@ -23,9 +22,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/titleTextView"
         android:layout_marginTop="5dp"
-        android:fontFamily="sans-serif-light"
         android:gravity="center_vertical"
-        android:text=" dwa d  aw dad ad aw d wd adawd ad ad ad awd a aca cac adac cdawc ac awdaw d awd"
+        android:text=""
         android:textColor="@color/black_color"
         android:textSize="12sp" />
 

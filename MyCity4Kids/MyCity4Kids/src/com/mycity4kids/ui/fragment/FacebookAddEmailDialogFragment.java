@@ -58,7 +58,7 @@ public class FacebookAddEmailDialogFragment extends android.app.DialogFragment i
                     if (AppConstants.ACTIVITY_LOGIN.equals(fromActivity)) {
                         ((ActivityLogin) getActivity()).addEmail(emailEditText.getText().toString());
                     }else if(AppConstants.ACTIVITY_TUTORIAL.equals(fromActivity)){
-                        ((TutorialActivity) getActivity()).addEmail(emailEditText.getText().toString());
+//                        ((TutorialActivity) getActivity()).addEmail(emailEditText.getText().toString());
                     }
 //                    getDialog().dismiss();
                 }
@@ -67,7 +67,7 @@ public class FacebookAddEmailDialogFragment extends android.app.DialogFragment i
                 if (AppConstants.ACTIVITY_LOGIN.equals(fromActivity)) {
                     ((ActivityLogin) getActivity()).cancelAddEmail();
                 }else if(AppConstants.ACTIVITY_TUTORIAL.equals(fromActivity)){
-                    ((TutorialActivity) getActivity()).cancelAddEmail();
+//                    ((TutorialActivity) getActivity()).cancelAddEmail();
                 }
                 break;
         }

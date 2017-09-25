@@ -17,8 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.facebook.Session;
-import com.facebook.model.GraphUser;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.kelltontech.network.Response;
@@ -858,17 +856,12 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
     }
 
     @Override
-    public void getFacebookUser(GraphUser user) {
+    public void getFacebookUser(String user) {
         try {
             if (user != null) {
 
-                Session session = Session.getActiveSession();
-                if (session.isOpened()) {
-                    accessToken = session.getAccessToken();
-                }
-
                 SocialConnectRequest socialConnectRequest = new SocialConnectRequest();
-                socialConnectRequest.setToken(accessToken);
+                socialConnectRequest.setToken(user);
                 socialConnectRequest.setReferer("fb");
 
                 Retrofit retrofit = BaseApplication.getInstance().getRetrofit();

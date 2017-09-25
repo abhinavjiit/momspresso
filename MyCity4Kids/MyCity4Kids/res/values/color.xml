@@ -525,4 +525,9 @@
     <color name="city_picker.toolbar.title">#545454</color>
     <color name="city_picker.radio_button">#507cbe</color>
     <color name="city_picker.city_name">#545454</color>
+
+    <color name="rate_us.dialog.title">#e83c58</color>
+    <color name="rate_us.dialog.message">#545454</color>
+    <color name="rate_us.dialog.not_now">#545454</color>
+    <color name="rate_us.dialog.rate_now">#507cbe</color>
 </resources>

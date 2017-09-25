@@ -30,7 +30,6 @@ import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -38,7 +37,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.facebook.widget.FacebookDialog;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -65,13 +65,11 @@ import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.parentingdetails.CommentsData;
 import com.mycity4kids.models.request.ArticleDetailRequest;
 import com.mycity4kids.models.request.FollowUnfollowUserRequest;
-import com.mycity4kids.models.response.AddCommentResponse;
 import com.mycity4kids.models.response.ArticleDetailResponse;
 import com.mycity4kids.models.response.ArticleRecommendationStatusResponse;
 import com.mycity4kids.models.response.FBCommentResponse;
 import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
-import com.mycity4kids.models.response.ProfilePic;
 import com.mycity4kids.models.response.ViewCountResponse;
 import com.mycity4kids.models.response.VlogsDetailResponse;
 import com.mycity4kids.models.response.VlogsListingAndDetailResult;
@@ -1765,14 +1763,11 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
 
                 }
                 case R.id.facebookShareTextView: {
-                    if (FacebookDialog.canPresentShareDialog(VlogsDetailActivity.this, FacebookDialog.ShareDialogFeature.SHARE_DIALOG) && !StringUtils.isNullOrEmpty(shareUrl)) {
-                        FacebookDialog shareDialog = new FacebookDialog.ShareDialogBuilder(
-                                VlogsDetailActivity.this).setName("mycity4kids")
-                                .setDescription("Check out this interesting blog post")
-                                .setLink(shareUrl).build();
-                        shareDialog.present();
-                    } else {
-                        Toast.makeText(VlogsDetailActivity.this, "Unable to share with facebook.", Toast.LENGTH_SHORT).show();
+                    if (ShareDialog.canShow(ShareLinkContent.class)) {
+                        ShareLinkContent content = new ShareLinkContent.Builder()
+                                .setContentUrl(Uri.parse(shareUrl))
+                                .build();
+                        new ShareDialog(this).show(content);
                     }
                     break;
                 }

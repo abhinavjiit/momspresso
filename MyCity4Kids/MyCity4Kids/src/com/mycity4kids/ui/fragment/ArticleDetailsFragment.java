@@ -13,8 +13,8 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -37,7 +37,10 @@ import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.crashlytics.android.Crashlytics;
-import com.facebook.widget.FacebookDialog;
+import com.facebook.share.model.AppInviteContent;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.AppInviteDialog;
+import com.facebook.share.widget.ShareDialog;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -85,7 +88,6 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
-import com.mycity4kids.ui.CircleTransformation;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.BloggerProfileActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
@@ -102,7 +104,6 @@ import com.squareup.picasso.Target;
 import org.apmem.tools.layouts.FlowLayout;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.w3c.dom.Text;
 
 import java.io.FileInputStream;
 import java.net.SocketTimeoutException;
@@ -257,8 +258,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             density = getResources().getDisplayMetrics().density;
             width = getResources().getDisplayMetrics().widthPixels;
 
-            defaultBloggerBitmap = (new CircleTransformation()).transform(BitmapFactory.decodeResource(getResources(),
-                    R.drawable.default_blogger_profile_img));
+            defaultBloggerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.default_blogger_profile_img);
             floatingActionButton.setImageDrawable(new BitmapDrawable(getResources(), defaultBloggerBitmap));
             swipeNextTextView = (TextView) fragmentView.findViewById(R.id.swipeNextTextView);
 
@@ -644,7 +644,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
         floatingActionButton.setTag(target);
         if (!StringUtils.isNullOrEmpty(detailData.getProfilePic().getClientApp())) {
-            Picasso.with(getActivity()).load(detailData.getProfilePic().getClientApp()).transform(new CircleTransformation()).into(target);
+            Picasso.with(getActivity()).load(detailData.getProfilePic().getClientApp()).into(target);
         }
 
         if (!StringUtils.isNullOrEmpty(detailData.getImageUrl().getThumbMax())) {
@@ -1041,6 +1041,17 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 }
                 case R.id.commentFloatingActionButton:
                     openCommentDialog(null, "ADD");
+//                    String appLinkUrl, previewImageUrl;
+//
+//                    appLinkUrl = "https://www.mydomain.com/myapplink";
+//                    previewImageUrl = "https://www.mydomain.com/my_invite_image.jpg";
+//                    if (AppInviteDialog.canShow()) {
+//                        AppInviteContent content = new AppInviteContent.Builder()
+//                                .setApplinkUrl(appLinkUrl)
+//                                .setPreviewImageUrl(previewImageUrl)
+//                                .build();
+//                        AppInviteDialog.show(this, content);
+//                    }
                     break;
                 case R.id.likeTextView: {
                     if (recommendStatus == 0) {
@@ -1058,14 +1069,11 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     break;
                 }
                 case R.id.facebookShareTextView:
-                    if (FacebookDialog.canPresentShareDialog(getActivity(), FacebookDialog.ShareDialogFeature.SHARE_DIALOG) && !StringUtils.isNullOrEmpty(shareUrl)) {
-                        FacebookDialog shareDialog = new FacebookDialog.ShareDialogBuilder(
-                                getActivity()).setName("mycity4kids")
-                                .setDescription("Check out this interesting blog post")
-                                .setLink(shareUrl).build();
-                        shareDialog.present();
-                    } else {
-                        Toast.makeText(getActivity(), "Unable to share with facebook.", Toast.LENGTH_SHORT).show();
+                    if (ShareDialog.canShow(ShareLinkContent.class)) {
+                        ShareLinkContent content = new ShareLinkContent.Builder()
+                                .setContentUrl(Uri.parse(shareUrl))
+                                .build();
+                        new ShareDialog(this).show(content);
                     }
                     break;
                 case R.id.whatsappShareTextView:

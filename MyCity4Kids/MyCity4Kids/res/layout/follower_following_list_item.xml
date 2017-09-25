@@ -8,14 +8,14 @@
 
     <com.mikhaellopez.circularimageview.CircularImageView
         android:id="@+id/authorImageView"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
         android:layout_centerVertical="true"
         android:layout_margin="10dp"
         android:src="@drawable/default_commentor_img"
         app:civ_border="true"
         app:civ_border_color="@color/line_separator_color"
-        app:civ_border_width="1dp"
+        app:civ_border_width="1px"
         app:civ_shadow="false" />
 
     <com.mycity4kids.widget.CustomFontTextView
@@ -30,7 +30,6 @@
         android:layout_toRightOf="@+id/authorImageView"
         android:layout_toStartOf="@+id/followingTextView"
         android:background="@color/white_color"
-        android:fontFamily="sans-serif-light"
         android:gravity="center_vertical"
         android:text=""
         android:textColor="@color/follower_following_list.author_name"

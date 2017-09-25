@@ -438,7 +438,8 @@
                     android:gravity="center"
                     android:text="@string/ad.bottom_bar.facebook"
                     android:textColor="@color/ad.bottom_bar.items"
-                    android:textSize="11sp" />
+                    android:textSize="11sp"
+                    app:fontName="oswald.ttf" />
 
                 <com.mycity4kids.widget.CustomFontTextView
                     android:id="@+id/whatsappShareTextView"
@@ -449,7 +450,8 @@
                     android:gravity="center"
                     android:text="@string/ad.bottom_bar.whatsapp"
                     android:textColor="@color/ad.bottom_bar.items"
-                    android:textSize="11sp" />
+                    android:textSize="11sp"
+                    app:fontName="oswald.ttf" />
 
                 <com.mycity4kids.widget.CustomFontTextView
                     android:id="@+id/emailShareTextView"
@@ -460,7 +462,8 @@
                     android:gravity="center"
                     android:text="@string/ad.bottom_bar.email"
                     android:textColor="@color/ad.bottom_bar.items"
-                    android:textSize="11sp" />
+                    android:textSize="11sp"
+                    app:fontName="oswald.ttf" />
 
                 <com.mycity4kids.widget.CustomFontTextView
                     android:id="@+id/bookmarkTextView"
@@ -471,7 +474,8 @@
                     android:gravity="center"
                     android:text="@string/ad.bottom_bar.bookmark"
                     android:textColor="@color/ad.bottom_bar.items"
-                    android:textSize="11sp" />
+                    android:textSize="11sp"
+                    app:fontName="oswald.ttf" />
 
                 <com.mycity4kids.widget.CustomFontTextView
                     android:id="@+id/likeTextView"
@@ -482,7 +486,8 @@
                     android:gravity="center"
                     android:text="@string/ad.bottom_bar.like"
                     android:textColor="@color/ad.bottom_bar.items"
-                    android:textSize="11sp" />
+                    android:textSize="11sp"
+                    app:fontName="oswald.ttf" />
 
             </LinearLayout>
         </LinearLayout>

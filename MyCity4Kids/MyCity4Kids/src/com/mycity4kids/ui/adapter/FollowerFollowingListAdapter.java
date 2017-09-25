@@ -24,7 +24,6 @@ import com.mycity4kids.models.request.FollowUnfollowUserRequest;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
 import com.mycity4kids.models.response.FollowersFollowingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.ui.CircleTransformation;
 import com.squareup.picasso.Picasso;
 
 import java.io.BufferedReader;
@@ -109,10 +108,10 @@ public class FollowerFollowingListAdapter extends BaseAdapter {
         holder.authorNameTextView.setText(mDataList.get(position).getFirstName() + " " + mDataList.get(position).getLastName());
         holder.position = position;
         if (!StringUtils.isNullOrEmpty(mDataList.get(position).getProfilePicUrl().getClientApp())) {
-            Picasso.with(mContext).load(mDataList.get(position).getProfilePicUrl().getClientApp()).transform(new CircleTransformation())
+            Picasso.with(mContext).load(mDataList.get(position).getProfilePicUrl().getClientApp())
                     .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img).into(holder.authorImageView);
         } else {
-            Picasso.with(mContext).load(R.drawable.default_commentor_img).transform(new CircleTransformation()).into(holder.authorImageView);
+            Picasso.with(mContext).load(R.drawable.default_commentor_img).into(holder.authorImageView);
         }
 
         if (mDataList.get(position).getUserId().equals(currentUserId)) {

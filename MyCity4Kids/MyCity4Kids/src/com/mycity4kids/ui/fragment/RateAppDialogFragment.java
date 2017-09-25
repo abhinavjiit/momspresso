@@ -45,30 +45,6 @@ public class RateAppDialogFragment extends android.app.DialogFragment implements
         rateModel.setAppRateComplete(isCompleteRateProcess);
         rateModel.setAppRateVersion(currentRateVersion);
         switch (view.getId()) {
-
-            //                    case RATE_ME_OR_INSTALL:
-//                        rateModel.setAppRateComplete(true);
-//                        rateModel.setAppRateVersion(0);
-//                        SharedPrefUtils.setAppRateVersion(this, rateModel);
-//                        /**
-//                         * a try/catch block here because an Exception will be thrown if the Play Store is not installed on the target device.
-//                         */
-//                        String appPackage = getPackageName();
-//                        try {
-//                            Intent rateIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackage));
-//                            startActivity(rateIntent);
-//                        } catch (Exception e) {
-//                            Intent rateIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackage));
-//                            startActivity(rateIntent);
-//                        }
-//                        break;
-//
-//                    case LATER:
-//                        rateModel.setAppRateComplete(false);
-//                        rateModel.setAppRateVersion(0);
-//                        SharedPrefUtils.setAppRateVersion(this, rateModel);
-//                        break;
-
             case R.id.not_now:
                 rateModel.setAppRateComplete(false);
                 rateModel.setAppRateVersion(-7);

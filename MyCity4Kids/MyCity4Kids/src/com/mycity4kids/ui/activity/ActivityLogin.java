@@ -12,8 +12,8 @@ import android.util.Log;
 import android.view.View;
 
 import com.crashlytics.android.Crashlytics;
-import com.facebook.Session;
-import com.facebook.model.GraphUser;
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.auth.api.Auth;
@@ -72,13 +72,15 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
     private String googleEmailId, userId, currentPersonName, personPhotoUrl;
 
     private String accessToken = "";
+    private AccessToken fbAccessToken;
     private String googleToken = "";
     private int changeBaseURL = 0;
-    private GraphUser fbUser;
+    //    private GraphUser fbUser;
     FacebookAddEmailDialogFragment dialogFragment;
 
     private String loginMode = "";
     private View mLayout;
+    private CallbackManager callbackManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +96,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
+        callbackManager = CallbackManager.Factory.create();
 
         String fragmentToLaunch = getIntent().getStringExtra(AppConstants.LAUNCH_FRAGMENT);
         if (AppConstants.FRAGMENT_SIGNIN.equals(fragmentToLaunch)) {
@@ -109,13 +112,17 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
 
         mLayout = findViewById(R.id.rootLayout);
 
-//        mGooglePlusUtils = new GooglePlusUtils(this, this);
+
 
     }
 
     public void loginWithFacebook() {
         if (ConnectivityUtils.isNetworkEnabled(this)) {
             showProgressDialog(getString(R.string.please_wait));
+
+//            fbAccessToken = AccessToken.getCurrentAccessToken();
+            //  LoginManager.getInstance().logOut();
+//            LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "email"));
             FacebookUtils.facebookLogin(this, this);
         } else {
             showToast(getString(R.string.error_network));
@@ -158,26 +165,20 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         }
     }
 
-    /**
-     * this is a call back method which will give facebook user details
-     */
+//    /**
+//     * this is a call back method which will give facebook user details
+//     */
     @Override
-    public void getFacebookUser(GraphUser user) {
+    public void getFacebookUser(String user) {
         //showProgressDialog(getString(R.string.please_wait));
         try {
             if (user != null) {
-                fbUser = user;
                 loginMode = "fb";
-
-                Session session = Session.getActiveSession();
-                if (session.isOpened()) {
-                    accessToken = session.getAccessToken();
-                }
 
                 LoginRegistrationRequest lr = new LoginRegistrationRequest();
                 lr.setCityId("" + SharedPrefUtils.getCurrentCityModel(this).getId());
                 lr.setRequestMedium("fb");
-                lr.setSocialToken(accessToken);
+                lr.setSocialToken(user);
 
                 Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
                 LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
@@ -581,6 +582,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
             if (_resultCode == 0) {
                 removeProgressDialog();
             }
+            callbackManager.onActivityResult(_requestCode, _resultCode, _data);
             FacebookUtils.onActivityResult(this, _requestCode, _resultCode, _data);
         }
     }

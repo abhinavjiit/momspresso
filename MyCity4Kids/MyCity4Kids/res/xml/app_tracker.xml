@@ -41,9 +41,6 @@
 
 
 <screenName name="com.mycity4kids.ui.activity.DashboardActivity">DashBoard</screenName>
-    <screenName name="com.mycity4kids.ui.fragment.FragmentSetting">Settings</screenName>
-    <screenName name="com.mycity4kids.ui.fragment.FragmentFamilyDetail">Family</screenName>
-    <screenName name="com.mycity4kids.ui.activity.SplashActivity">Splash Screen</screenName>
     <screenName name="com.mycity4kids.ui.activity.ActivityLogin">Login Screen</screenName>
     <screenName name="com.mycity4kids.ui.activity.ArticleFilterDialogActivity">Blogs filter dialogue screen</screenName>
     <screenName name="com.mycity4kids.ui.activity.BlogFilterActivity">Blogger Filter Dialogue</screenName>
@@ -62,7 +59,6 @@
     <screenName name="com.mycity4kids.ui.activity.BusinessDetailsActivity">Resource/Event Details Screen</screenName>
     <screenName name="com.mycity4kids.ui.activity.BookOrPayWebActivity">Booking Payment Webpage</screenName>
     <screenName name="com.mycity4kids.ui.activity.AutoSuggestTransparentDialogActivity">Resource Search</screenName>
-    <screenName name="com.mycity4kids.ui.activity.LandingLoginActivity">Login Registration Dashboard</screenName>
     <screenName name="com.mycity4kids.ui.activity.YouTubeVideoActivity">Youtube Video</screenName>
     <screenName name="com.mycity4kids.ui.activity.KidsBirthdayActivity">Kid's Birthday</screenName>
     <screenName name="com.mycity4kids.ui.activity.PlanYourWeekActivity">Plan Your Week</screenName>

@@ -79,14 +79,6 @@ public class SearchAllArticlesTopicsListingAdapter extends RecyclerView.Adapter<
                 View v3 = mInflator.inflate(R.layout.search_all_topic_item, parent, false);
                 viewHolder = new SearchTopicViewHolder(v3, mListener);
                 break;
-//            case 4:
-//                View v4 = mInflator.inflate(R.layout.search_article_item_layout, parent, false);
-//                viewHolder = new ViewHolder2(v2);
-//                break;
-//            case 5:
-//                View v5 = mInflator.inflate(R.layout.search_article_item_layout, parent, false);
-//                viewHolder = new ViewHolder2(v2);
-//                break;
         }
         return viewHolder;
     }
@@ -112,14 +104,6 @@ public class SearchAllArticlesTopicsListingAdapter extends RecyclerView.Adapter<
                 SearchTopicViewHolder vh4 = (SearchTopicViewHolder) holder;
                 configureSearchTopicViewHolder(vh4, position);
                 break;
-//            case 4:
-//                View v4 = mInflator.inflate(R.layout.search_article_item_layout, parent, false);
-//                viewHolder = new ViewHolder2(v2);
-//                break;
-//            case 5:
-//                View v5 = mInflator.inflate(R.layout.search_article_item_layout, parent, false);
-//                viewHolder = new ViewHolder2(v2);
-//                break;
         }
     }
 
