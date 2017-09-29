@@ -58,6 +58,7 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.OnWebServiceCompleteListener;
+import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.parentingdetails.CommentsData;
 import com.mycity4kids.models.parentingdetails.ImageData;
 import com.mycity4kids.models.parentingdetails.VideoData;
@@ -191,7 +192,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private RelativeLayout mLodingView;
     private FlowLayout tagsLayout;
     private Rect scrollBounds;
-    private TrackArticleReadTime trackArticleReadTime;
+    //    private TrackArticleReadTime trackArticleReadTime;
     private WebView videoWebView;
     private View fragmentView;
     private LinearLayout bottomToolbarLL;
@@ -203,7 +204,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         fragmentView = inflater.inflate(R.layout.article_details_fragment, container, false);
         userDynamoId = SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId();
-        Utils.pushOpenScreenEvent(getActivity(), "Article Details", userDynamoId + "");
 
         deepLinkURL = "";// getIntent().getStringExtra(Constants.DEEPLINK_URL);
         try {
@@ -295,13 +295,13 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 }
 
                 if (bundle.getBoolean("fromNotification")) {
-                    Utils.pushEventNotificationClick(getActivity(), GTMEventType.NOTIFICATION_CLICK_EVENT, userDynamoId, "Notification Popup", "article_details");
-                    Utils.pushOpenArticleEvent(getActivity(), GTMEventType.ARTICLE_DETAILS_CLICK_EVENT, "Notification", userDynamoId + "", articleId, "-1" + "~Notification", "Notification");
+//                    Utils.pushEventNotificationClick(getActivity(), GTMEventType.NOTIFICATION_CLICK_EVENT, userDynamoId, "Notification Popup", "article_details");
+//                    Utils.pushOpenArticleEvent(getActivity(), GTMEventType.ARTICLE_DETAILS_CLICK_EVENT, "Notification", userDynamoId + "", articleId, "-1" + "~Notification", "Notification");
                 } else {
                     from = bundle.getString(Constants.ARTICLE_OPENED_FROM);
                     String index = bundle.getString(Constants.ARTICLE_INDEX);
                     String screen = bundle.getString(Constants.FROM_SCREEN);
-                    Utils.pushOpenArticleEvent(getActivity(), GTMEventType.ARTICLE_DETAILS_CLICK_EVENT, screen, userDynamoId + "", articleId, index + "~" + from, from);
+//                    Utils.pushOpenArticleEvent(getActivity(), GTMEventType.ARTICLE_DETAILS_CLICK_EVENT, screen, userDynamoId + "", articleId, index + "~" + from, from);
 //                    new Handler().postDelayed(new Runnable() {
 //                        @Override
 //                        public void run() {
@@ -335,9 +335,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     @Override
     public void onResume() {
         //coming back from another activity, restart the readtime
-        if (null != trackArticleReadTime && trackArticleReadTime.getActivityTimerStatus() == 1) {
-            trackArticleReadTime.startTimer();
-        }
+//        if (null != trackArticleReadTime && trackArticleReadTime.getActivityTimerStatus() == 1) {
+//            trackArticleReadTime.startTimer();
+//        }
         super.onResume();
         mWebView.onResume();
         videoWebView.onResume();
@@ -345,8 +345,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
     @Override
     public void onPause() {
-        if (null != trackArticleReadTime)
-            trackArticleReadTime.pauseTimer();
+//        if (null != trackArticleReadTime)
+//            trackArticleReadTime.pauseTimer();
         super.onPause();
         mWebView.onPause();
         videoWebView.onPause();
@@ -661,8 +661,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         Log.d("READ TIME", "total images = " + imageList.size() + " total words = " + wordsArray.length + " IMAGE_READ_TIME = " + imageReadTime + " words_read_time = " + wordReadTime);
         estimatedReadTime = wordReadTime + imageReadTime;
 
-        trackArticleReadTime = new TrackArticleReadTime(getActivity());
-        trackArticleReadTime.startTimer();
+//        trackArticleReadTime = new TrackArticleReadTime(getActivity());
+//        trackArticleReadTime.startTimer();
     }
 
     private void setArticleLanguageCategoryId() {
@@ -928,8 +928,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 case R.id.commentorImageView: {
                     CommentsData commentData = (CommentsData) ((View) v.getParent().getParent()).getTag();
                     if (!"fb".equals(commentData.getComment_type())) {
-                        trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
-                        trackArticleReadTime.resetTimer();
+//                        trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
+//                        trackArticleReadTime.resetTimer();
                         if (userDynamoId.equals(commentData.getUserId())) {
                             Intent profileIntent = new Intent(getActivity(), DashboardActivity.class);
                             profileIntent.putExtra("TabType", "profile");
@@ -949,8 +949,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 case R.id.replierImageView: {
                     CommentsData commentData = (CommentsData) ((View) v.getParent()).getTag();
                     if (!"fb".equals(commentData.getComment_type())) {
-                        trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
-                        trackArticleReadTime.resetTimer();
+//                        trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
+//                        trackArticleReadTime.resetTimer();
                         if (userDynamoId.equals(commentData.getUserId())) {
                             Intent profileIntent = new Intent(getActivity(), DashboardActivity.class);
                             profileIntent.putExtra("TabType", "profile");
@@ -971,10 +971,10 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
                 case R.id.user_image:
                 case R.id.user_name:
-                    if (null != trackArticleReadTime) {
-                        trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
-                        trackArticleReadTime.resetTimer();
-                    }
+//                    if (null != trackArticleReadTime) {
+//                        trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
+//                        trackArticleReadTime.resetTimer();
+//                    }
                     if (userDynamoId.equals(detailData.getUserId())) {
                         Intent profileIntent = new Intent(getActivity(), DashboardActivity.class);
                         profileIntent.putExtra("TabType", "profile");
@@ -1030,8 +1030,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     break;
                 }
                 case R.layout.related_tags_view: {
-                    trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
-                    trackArticleReadTime.resetTimer();
+//                    trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
+//                    trackArticleReadTime.resetTimer();
                     String categoryId = (String) v.getTag();
                     Intent intent = new Intent(getActivity(), FilteredTopicsArticleListingActivity.class);
                     intent.putExtra("selectedTopics", categoryId);
@@ -1281,8 +1281,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     }
 
     private void launchRelatedTrendingArticle(View v, String listingType, int index) {
-        trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
-        trackArticleReadTime.resetTimer();
+//        trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
+//        trackArticleReadTime.resetTimer();
         Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
         ArrayList<ArticleListingResult> parentingListData = (ArrayList<ArticleListingResult>) v.getTag();
         intent.putExtra(Constants.ARTICLE_ID, parentingListData.get(index - 1).getId());
@@ -1894,6 +1894,21 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     int relatedImageWidth = (int) getResources().getDimension(R.dimen.related_article_article_image_width);
                     viewAllTagsTextView.setVisibility(View.GONE);
                     width = width - ((RelativeLayout.LayoutParams) tagsLayout.getLayoutParams()).leftMargin - ((RelativeLayout.LayoutParams) tagsLayout.getLayoutParams()).rightMargin;
+
+                    ArrayList<String> sponsoredList = new ArrayList<>();
+                    FileInputStream fileInputStream = getActivity().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                    String fileContent = AppUtils.convertStreamToString(fileInputStream);
+                    TopicsResponse tRes = new Gson().fromJson(fileContent, TopicsResponse.class);
+                    for (int i = 0; i < tRes.getData().size(); i++) {
+                        if (AppConstants.SPONSORED_CATEGORYID.equals(tRes.getData().get(i).getId())) {
+                            for (int j = 0; j < tRes.getData().get(i).getChild().size(); j++) {
+                                for (int k = 0; k < tRes.getData().get(i).getChild().get(j).getChild().size(); k++) {
+                                    sponsoredList.add(tRes.getData().get(i).getChild().get(j).getChild().get(j).getId());
+                                }
+                                sponsoredList.add(tRes.getData().get(i).getChild().get(j).getId());
+                            }
+                        }
+                    }
                     for (int i = 0; i < tagsList.size(); i++) {
 
                         for (Map.Entry<String, String> entry : tagsList.get(i).entrySet()) {
@@ -1913,6 +1928,10 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                                     - relatedImageWidth - topicView.getPaddingLeft() - topicView.getPaddingRight();
                             if (width < 0) {
                                 viewAllTagsTextView.setVisibility(View.VISIBLE);
+                            }
+                            if (sponsoredList.contains(key)) {
+                                ((ImageView) topicView.getChildAt(2)).setVisibility(View.GONE);
+                                ((View) topicView.getChildAt(1)).setVisibility(View.GONE);
                             }
                             if (null != previouslyFollowedTopics && previouslyFollowedTopics.contains(key)) {
                                 ((ImageView) topicView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.tick));
@@ -1941,8 +1960,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                             topicView.getChildAt(0).setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
-                                    trackArticleReadTime.resetTimer();
+//                                    trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
+//                                    trackArticleReadTime.resetTimer();
                                     String categoryId = (String) v.getTag();
                                     Intent intent = new Intent(getActivity(), FilteredTopicsArticleListingActivity.class);
                                     intent.putExtra("selectedTopics", categoryId);

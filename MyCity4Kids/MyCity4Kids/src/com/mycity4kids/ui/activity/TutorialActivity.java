@@ -20,7 +20,7 @@ public class TutorialActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_pager);
-        Utils.pushOpenScreenEvent(TutorialActivity.this, "Tutorial Screen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+        Utils.pushOpenScreenEvent(TutorialActivity.this, "OnboardingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         mViewPager = (ViewPager) findViewById(R.id.pager);
 
         mViewPagerAdapter = new TutorialAdapter(getSupportFragmentManager(), this);

@@ -52,7 +52,6 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Utils.pushOpenScreenEvent(getActivity(), "Notification Settings", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
         View view = inflater.inflate(R.layout.aa_notification, container, false);
 
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);

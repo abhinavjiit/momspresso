@@ -70,7 +70,6 @@ public class LanguageSpecificArticlesTabFragment extends BaseFragment implements
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Utils.pushOpenScreenEvent(getActivity(), "LanguageSpecificArticlesTabFragment", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
 
         View view = inflater.inflate(R.layout.new_article_layout, container, false);
 
@@ -164,10 +163,11 @@ public class LanguageSpecificArticlesTabFragment extends BaseFragment implements
                     intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
                     intent.putExtra(Constants.BLOG_SLUG, parentingListData.getBlogPageSlug());
                     intent.putExtra(Constants.TITLE_SLUG, parentingListData.getTitleSlug());
-                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Trending");
-                    intent.putExtra(Constants.FROM_SCREEN, "Article Listing Screen");
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "" + trendingTopicData.getDisplay_name());
+                    intent.putExtra(Constants.FROM_SCREEN, "LanguageScreen");
                     intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
-//                    intent.putParcelableArrayListExtra("pagerListData", trendingTopicData.getArticleList());
+                    intent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
+                    intent.putExtra(Constants.AUTHOR, parentingListData.getUserId() + "~" + parentingListData.getUserName());
                     startActivity(intent);
                 }
 //                Intent intent = new Intent(getActivity(), ExampleActivity.class);

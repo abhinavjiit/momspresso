@@ -822,6 +822,7 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
                 showMoreFollowedTopicsTextView.setVisibility(View.GONE);
                 break;
             case R.id.addTopicsBtn:
+
                 Intent subscribeTopicIntent = new Intent(getActivity(), SubscribeTopicsActivity.class);
                 startActivityForResult(subscribeTopicIntent, 1111);
                 break;

@@ -97,8 +97,6 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vlogs_listing_activity);
 
-        Utils.pushOpenScreenEvent(this, "My Funny Videos Screen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
-
         rootLayout = findViewById(R.id.rootLayout);
         listView = (ListView) findViewById(R.id.vlogsListView);
         mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);

@@ -26,8 +26,10 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.ExploreTopicsModel;
 import com.mycity4kids.models.ExploreTopicsResponse;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.ParentTopicsGridAdapter;
 import com.mycity4kids.utils.AppUtils;
@@ -49,6 +51,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment {
     private String[] sections = {"TRENDING", "EDITOR'S PICK", "FOR YOU", "LANGUAGES", "VIDEOS", "RECENT"};
     private ArrayList<ExploreTopicsModel> mainTopicsList;
     private String fragType = "";
+    private String dynamoUserId;
 
     private TabLayout tabLayout;
     private GridView gridview;
@@ -65,6 +68,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment {
             fragType = getArguments().getString("fragType", "");
         }
 
+        dynamoUserId = SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId();
         tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
         gridview = (GridView) view.findViewById(R.id.gridview);
         exploreCategoriesLabel = (TextView) view.findViewById(R.id.exploreCategoriesLabel);
@@ -157,14 +161,18 @@ public class ExploreArticleListingTypeFragment extends BaseFragment {
             public void onTabSelected(TabLayout.Tab tab) {
                 Intent intent1 = new Intent(getActivity(), ArticleListingActivity.class);
                 if (Constants.TAB_FOR_YOU.equalsIgnoreCase(tab.getText().toString())) {
+                    Utils.pushOpenScreenEvent(getActivity(), "ForYouScreen", dynamoUserId + "");
                     intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_FOR_YOU);
                 } else if (Constants.TAB_POPULAR.equalsIgnoreCase(tab.getText().toString())) {
                     intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_POPULAR);
                 } else if (Constants.TAB_EDITOR_PICKS.equalsIgnoreCase(tab.getText().toString())) {
+                    Utils.pushOpenScreenEvent(getActivity(), "EditorsPickScreen", dynamoUserId + "");
                     intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_EDITOR_PICKS);
                 } else if (Constants.TAB_RECENT.equalsIgnoreCase(tab.getText().toString())) {
+                    Utils.pushOpenScreenEvent(getActivity(), "RecentScreen", dynamoUserId + "");
                     intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_RECENT);
                 } else if (Constants.TAB_IN_YOUR_CITY.equalsIgnoreCase(tab.getText().toString())) {
+                    Utils.pushOpenScreenEvent(getActivity(), "TopicScreen", dynamoUserId + "");
                     Intent cityIntent = new Intent(getActivity(), ArticleListingActivity.class);
                     cityIntent.putExtra(Constants.SORT_TYPE, Constants.KEY_IN_YOUR_CITY);
                     startActivity(cityIntent);
@@ -174,11 +182,12 @@ public class ExploreArticleListingTypeFragment extends BaseFragment {
                     fm.popBackStack();
                     return;
                 } else if (Constants.TAB_LANGUAGE.equalsIgnoreCase(tab.getText().toString())) {
+                    Utils.pushOpenScreenEvent(getActivity(), "LanguageScreen", dynamoUserId + "");
                     Intent cityIntent = new Intent(getActivity(), LanguageSpecificArticleListingActivity.class);
-                    cityIntent.putExtra(Constants.SORT_TYPE, Constants.KEY_IN_YOUR_CITY);
                     startActivity(cityIntent);
                     return;
                 } else if (Constants.TAB_VIDEOS.equalsIgnoreCase(tab.getText().toString())) {
+                    Utils.pushOpenScreenEvent(getActivity(), "VideosScreen", dynamoUserId + "");
                     Intent cityIntent = new Intent(getActivity(), AllVideosListingActivity.class);
                     startActivity(cityIntent);
                     return;
@@ -214,7 +223,6 @@ public class ExploreArticleListingTypeFragment extends BaseFragment {
                     return;
                 } else if (Constants.TAB_LANGUAGE.equalsIgnoreCase(tab.getText().toString())) {
                     Intent cityIntent = new Intent(getActivity(), LanguageSpecificArticleListingActivity.class);
-                    cityIntent.putExtra(Constants.SORT_TYPE, Constants.KEY_IN_YOUR_CITY);
                     startActivity(cityIntent);
                     return;
                 } else if (Constants.TAB_VIDEOS.equalsIgnoreCase(tab.getText().toString())) {

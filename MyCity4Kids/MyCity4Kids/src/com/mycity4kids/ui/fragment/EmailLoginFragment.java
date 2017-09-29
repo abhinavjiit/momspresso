@@ -40,7 +40,7 @@ public class EmailLoginFragment extends BaseFragment implements View.OnClickList
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.email_login_fragment, container, false);
-        Utils.pushOpenScreenEvent(getActivity(), "Dashboard Fragment", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
+        Utils.pushOpenScreenEvent(getActivity(), "EmailLoginScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
         mInflator = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         mEmailId = (CustomFontEditText) view.findViewById(R.id.emailEditText);

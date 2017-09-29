@@ -3,6 +3,7 @@ package com.mycity4kids.ui.activity;
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -143,19 +144,27 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
                 Intent intent = new Intent(ArticleListingActivity.this, ArticleDetailsContainerActivity.class);
                 if (adapterView.getAdapter() instanceof MainArticleListingAdapter) {
                     ArticleListingResult parentingListData = (ArticleListingResult) adapterView.getAdapter().getItem(i);
+                    if (Constants.KEY_FOR_YOU.equalsIgnoreCase(sortType)) {
+                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "ForYoucreen");
+                        intent.putExtra(Constants.FROM_SCREEN, "ForYouScreen");
+                    } else if (Constants.KEY_EDITOR_PICKS.equalsIgnoreCase(sortType)) {
+                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "EditorsPickScreen");
+                        intent.putExtra(Constants.FROM_SCREEN, "EditorsPickScreen");
+                    } else if (Constants.KEY_RECENT.equalsIgnoreCase(sortType)) {
+                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "RecentScreen");
+                        intent.putExtra(Constants.FROM_SCREEN, "RecentScreen");
+                    }
+
                     intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
                     intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
                     intent.putExtra(Constants.BLOG_SLUG, parentingListData.getBlogPageSlug());
                     intent.putExtra(Constants.TITLE_SLUG, parentingListData.getTitleSlug());
-                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, sortType);
-                    intent.putExtra(Constants.FROM_SCREEN, "Article Listing Screen");
                     intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
+                    intent.putExtra(Constants.AUTHOR, parentingListData.getUserId() + "~" + parentingListData.getUserName());
                     startActivity(intent);
-
                 }
             }
         });
@@ -163,12 +172,26 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
         downArrowImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (Constants.TAB_FOR_YOU.equalsIgnoreCase(sortType)) {
+                    Utils.pushTopMenuClickEvent(ArticleListingActivity.this, "ForYouScreen", SharedPrefUtils.getUserDetailModel(ArticleListingActivity.this).getDynamoId() + "");
+                } else if (Constants.TAB_EDITOR_PICKS.equalsIgnoreCase(sortType)) {
+                    Utils.pushTopMenuClickEvent(ArticleListingActivity.this, "EditorsPickScreen", SharedPrefUtils.getUserDetailModel(ArticleListingActivity.this).getDynamoId() + "");
+                } else if (Constants.TAB_RECENT.equalsIgnoreCase(sortType)) {
+                    Utils.pushTopMenuClickEvent(ArticleListingActivity.this, "RecentScreen", SharedPrefUtils.getUserDetailModel(ArticleListingActivity.this).getDynamoId() + "");
+                }
                 onBackPressed();
             }
         });
         toolbarTitleTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (Constants.TAB_FOR_YOU.equalsIgnoreCase(sortType)) {
+                    Utils.pushTopMenuClickEvent(ArticleListingActivity.this, "ForYouScreen", SharedPrefUtils.getUserDetailModel(ArticleListingActivity.this).getDynamoId() + "");
+                } else if (Constants.TAB_EDITOR_PICKS.equalsIgnoreCase(sortType)) {
+                    Utils.pushTopMenuClickEvent(ArticleListingActivity.this, "EditorsPickScreen", SharedPrefUtils.getUserDetailModel(ArticleListingActivity.this).getDynamoId() + "");
+                } else if (Constants.TAB_RECENT.equalsIgnoreCase(sortType)) {
+                    Utils.pushTopMenuClickEvent(ArticleListingActivity.this, "RecentScreen", SharedPrefUtils.getUserDetailModel(ArticleListingActivity.this).getDynamoId() + "");
+                }
                 onBackPressed();
             }
         });
@@ -189,15 +212,11 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
         Utils.pushOpenArticleListingEvent(this, GTMEventType.ARTICLE_LISTING_CLICK_EVENT, fromScreen, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), sortType, "" + pPageCount);
         String url = "";
         if (Constants.KEY_FOR_YOU.equals(sortKey)) {
-
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
             RecommendationAPI recommendationAPI = retrofit.create(RecommendationAPI.class);
             Call<ArticleListingResponse> call = recommendationAPI.getRecommendedArticlesList(SharedPrefUtils.getUserDetailModel(this).getDynamoId(), 10, chunks, SharedPrefUtils.getLanguageFilters(this));
             progressBar.setVisibility(View.VISIBLE);
             call.enqueue(recommendedArticlesResponseCallback);
-
-//            url = AppConstants.LIVE_URL + AppConstants.SERVICE_TYPE_FOR_YOU + SharedPrefUtils.getUserDetailModel(this).getDynamoId() +
-//                    AppConstants.SEPARATOR_BACKSLASH + from + AppConstants.SEPARATOR_BACKSLASH + to;
         } else if (Constants.KEY_EDITOR_PICKS.equals(sortKey)) {
             url = AppConstants.LIVE_URL + AppConstants.SERVICE_TYPE__EDITORS_PICKS + AppConstants.EDITOR_PICKS_CATEGORY_ID + "?sort=0&sponsored=0&start=" + from +
                     "&end=" + to + "&lang=" + SharedPrefUtils.getLanguageFilters(this);

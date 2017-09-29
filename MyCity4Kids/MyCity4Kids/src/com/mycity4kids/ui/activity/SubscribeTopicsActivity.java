@@ -66,7 +66,7 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
         setContentView(R.layout.subscribe_topics_activity);
 
         userId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
-        Utils.pushOpenScreenEvent(this, "Dashboard Fragment", userId + "");
+        Utils.pushOpenScreenEvent(this, "FollowTopicScreen", userId + "");
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);

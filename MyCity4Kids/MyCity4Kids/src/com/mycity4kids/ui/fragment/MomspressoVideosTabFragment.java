@@ -147,9 +147,10 @@ public class MomspressoVideosTabFragment extends BaseFragment implements View.On
                     intent.putExtra(Constants.BLOG_SLUG, parentingListData.getBlogPageSlug());
                     intent.putExtra(Constants.TITLE_SLUG, parentingListData.getTitleSlug());
                     intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Momspresso Videos" + "~" + AppConstants.MOMSPRESSO_CATEGORYID);
-                    intent.putExtra(Constants.FROM_SCREEN, "Topic Articles List");
+                    intent.putExtra(Constants.FROM_SCREEN, "VideosScreen");
                     intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
                     intent.putParcelableArrayListExtra("pagerListData", mDatalist);
+                    intent.putExtra(Constants.AUTHOR, parentingListData.getUserId() + "~" + parentingListData.getUserName());
                     startActivity(intent);
                 }
             }

@@ -65,7 +65,6 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Utils.pushOpenScreenEvent(getActivity(), "TrendingTopicsTabFragment", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
 
         View view = inflater.inflate(R.layout.new_article_layout, container, false);
 
@@ -129,8 +128,8 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
                     intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
                     intent.putExtra(Constants.BLOG_SLUG, parentingListData.getBlogPageSlug());
                     intent.putExtra(Constants.TITLE_SLUG, parentingListData.getTitleSlug());
-                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Trending");
-                    intent.putExtra(Constants.FROM_SCREEN, "Article Listing Screen");
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "AllTrending");
+                    intent.putExtra(Constants.FROM_SCREEN, "HomeScreen");
                     if (isHeaderVisible == true) {
                         intent.putExtra(Constants.ARTICLE_INDEX, "" + (i - 1));
                     } else {
@@ -138,6 +137,7 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
                     }
 
                     intent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
+                    intent.putExtra(Constants.AUTHOR, parentingListData.getUserId() + "~" + parentingListData.getUserName());
                     startActivity(intent);
                 }
 

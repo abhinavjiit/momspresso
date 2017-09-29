@@ -80,7 +80,7 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_video_details_activity);
-        Utils.pushOpenScreenEvent(this, "AddVideoDetailsActivity", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+        Utils.pushOpenScreenEvent(this, "CreateVideoScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         videoTitleEditText = (EditText) findViewById(R.id.videoTitleEditText);
         muteSwitch = (Switch) findViewById(R.id.muteVideoSwitch);
 //        videoView = (VideoView) findViewById(R.id.videoView1);

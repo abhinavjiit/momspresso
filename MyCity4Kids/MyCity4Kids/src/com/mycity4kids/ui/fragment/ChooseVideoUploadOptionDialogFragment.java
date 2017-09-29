@@ -26,7 +26,6 @@ import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.MyFunnyVideosListingActivity;
-import com.mycity4kids.ui.activity.VlogsListingActivity;
 import com.mycity4kids.utils.PermissionUtil;
 
 import java.util.ArrayList;
@@ -52,7 +51,7 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
         final View rootView = inflater.inflate(R.layout.choose_video_option_dialog, container,
                 false);
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        Utils.pushOpenScreenEvent(getActivity(), "Upload video Option Menu", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
+        Utils.pushOpenScreenEvent(getActivity(), "PickVideoScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
         Bundle extras = getArguments();
         if (extras != null) {
             activity = extras.getString("activity");
@@ -87,7 +86,6 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
                         } else if ("myfunnyvideos".equals(activity)) {
                             ((MyFunnyVideosListingActivity) getActivity()).requestPermissions("camera");
                         } else if ("vlogslisting".equals(activity)) {
-                            ((VlogsListingActivity) getActivity()).requestPermissions("camera");
                         } else if ("allvideosection".equals(activity)) {
                         }
                     } else {
@@ -112,7 +110,6 @@ public class ChooseVideoUploadOptionDialogFragment extends DialogFragment implem
                         } else if ("myfunnyvideos".equals(activity)) {
                             ((MyFunnyVideosListingActivity) getActivity()).requestPermissions("gallery");
                         } else if ("vlogslisting".equals(activity)) {
-                            ((VlogsListingActivity) getActivity()).requestPermissions("gallery");
                         } else if ("allvideosection".equals(activity)) {
                         }
                     } else {

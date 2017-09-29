@@ -42,7 +42,6 @@ public class ForYouInfoDialogFragment extends DialogFragment implements OnClickL
 
         final View rootView = inflater.inflate(R.layout.for_you_reason_fragment_dialog, container,
                 false);
-        Utils.pushOpenScreenEvent(getActivity(), "Upload video Option Menu", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
         TextView okayTextView = (TextView) rootView.findViewById(R.id.okayTextView);
         TextView foryouReasonTextView = (TextView) rootView.findViewById(R.id.forYouReasonTextView);
         TextView dontTextView = (TextView) rootView.findViewById(R.id.dontTextView);

@@ -114,7 +114,7 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Utils.pushOpenScreenEvent(SplashActivity.this, "Splash Screen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+        Utils.pushAppOpenEvent(this, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         onNewIntent(getIntent());
         extras = getIntent().getExtras();
         setUpGTM();

@@ -138,7 +138,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Topics");
-        Utils.pushOpenScreenEvent(FilteredTopicsArticleListingActivity.this, "Topic Articles List", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+        Utils.pushOpenScreenEvent(FilteredTopicsArticleListingActivity.this, "TopicArticlesListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         listView = (ListView) findViewById(R.id.scroll);
         mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
         sortingLayout = (LinearLayout) findViewById(R.id.sortingLayout);
@@ -318,9 +318,10 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                         categoryName = displayName;
                     }
                     intent.putExtra(Constants.ARTICLE_OPENED_FROM, categoryName + "~" + selectedTopics);
-                    intent.putExtra(Constants.FROM_SCREEN, "Topic Articles List");
+                    intent.putExtra(Constants.FROM_SCREEN, "TopicArticlesListingScreen");
                     intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
                     intent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
+                    intent.putExtra(Constants.AUTHOR, parentingListData.getUserId() + "~" + parentingListData.getUserName());
                     startActivity(intent);
                 }
             }

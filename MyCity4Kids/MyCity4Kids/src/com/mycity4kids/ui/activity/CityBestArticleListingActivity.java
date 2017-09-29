@@ -75,7 +75,6 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setCityNameAsTitle();
-        Utils.pushOpenScreenEvent(CityBestArticleListingActivity.this, "Best of City Listing", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
         fromScreen = getIntent().getStringExtra(Constants.FROM_SCREEN);
 
@@ -174,9 +173,10 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
                     intent.putExtra(Constants.BLOG_SLUG, parentingListData.getBlogPageSlug());
                     intent.putExtra(Constants.TITLE_SLUG, parentingListData.getTitleSlug());
                     intent.putExtra(Constants.ARTICLE_OPENED_FROM, Constants.KEY_IN_YOUR_CITY + "~" + SharedPrefUtils.getCurrentCityModel(CityBestArticleListingActivity.this).getName());
-                    intent.putExtra(Constants.FROM_SCREEN, "Best of City Listing");
+                    intent.putExtra(Constants.FROM_SCREEN, "BestOfCityScreen");
                     intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
                     intent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
+                    intent.putExtra(Constants.AUTHOR, parentingListData.getUserId() + "~" + parentingListData.getUserName());
                     startActivity(intent);
 
                 }

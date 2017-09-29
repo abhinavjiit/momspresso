@@ -11,6 +11,8 @@ import android.widget.TextView;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
+import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.fragment.ImproveRankPageViewsSocialFragment;
 import com.mycity4kids.ui.fragment.RankingHomeFragment;
 
@@ -26,7 +28,7 @@ public class RankingActivity extends BaseActivity implements FragmentManager.OnB
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ranking_activity);
-
+        Utils.pushOpenScreenEvent(this, "RankingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         String authorId = getIntent().getStringExtra("authorId");
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbarTitle = (TextView) findViewById(R.id.toolbarTitle);

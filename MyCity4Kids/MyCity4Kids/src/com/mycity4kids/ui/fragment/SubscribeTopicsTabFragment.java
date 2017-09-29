@@ -42,7 +42,6 @@ public class SubscribeTopicsTabFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.subscribe_topics_tab_fragment, container, false);
-        Utils.pushOpenScreenEvent(getActivity(), "Dashboard Fragment", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
         popularTopicsListView = (ListView) view.findViewById(R.id.popularTopicsListView);
         userId = SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId();
 

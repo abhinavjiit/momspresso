@@ -216,15 +216,10 @@ public class UsersBookmarkTabFragment extends BaseFragment implements UsersBookm
                 intent.putExtra(Constants.AUTHOR_ID, bookmarksList.get(position).getUserId());
                 intent.putExtra(Constants.BLOG_SLUG, bookmarksList.get(position).getBlogPageSlug());
                 intent.putExtra(Constants.TITLE_SLUG, bookmarksList.get(position).getTitleSlug());
-                intent.putExtra(Constants.FROM_SCREEN, "User Profile");
-                if (true) {
-                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Private Comments");
-                    intent.putExtra(Constants.FROM_SCREEN, "Private User Profile");
-                } else {
-                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Public Comments");
-                    intent.putExtra(Constants.FROM_SCREEN, "Public User Profile");
-                }
+                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "BookmarkList");
+                intent.putExtra(Constants.FROM_SCREEN, "PrivateActivityScreen");
                 intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
+                intent.putExtra(Constants.AUTHOR, bookmarksList.get(position).getUserId() + "~" + bookmarksList.get(position).getUserName());
                 startActivity(intent);
                 break;
         }

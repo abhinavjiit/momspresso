@@ -53,6 +53,7 @@ public class Constants {
     public static final String FROM_SCREEN = "fromScreen";
     public static final String ARTICLE_OPENED_FROM = "articleOpenedFrom";
     public static final String ARTICLE_INDEX = "index";
+    public static final String AUTHOR = "author";
 
     public static boolean IS_RESET = false;
 

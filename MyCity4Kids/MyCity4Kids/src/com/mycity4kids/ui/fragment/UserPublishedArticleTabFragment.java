@@ -21,7 +21,6 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.editor.EditorPostActivity;
-import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.parentingdetails.ImageData;
 import com.mycity4kids.models.response.ArticleDetailResult;
 import com.mycity4kids.models.response.ArticleListingResponse;
@@ -66,8 +65,6 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
                              Bundle savedInstanceState) {
         View view = null;
         view = getActivity().getLayoutInflater().inflate(R.layout.user_published_article_tab_fragment, container, false);
-
-        Utils.pushOpenScreenEvent(getActivity(), "Search Articles Fragment Listing", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
@@ -204,15 +201,16 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
                 intent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(position).getUserId());
                 intent.putExtra(Constants.BLOG_SLUG, articleDataModelsNew.get(position).getBlogPageSlug());
                 intent.putExtra(Constants.TITLE_SLUG, articleDataModelsNew.get(position).getTitleSlug());
-                intent.putExtra(Constants.FROM_SCREEN, "User Profile");
-                if (true) {
-                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Private Comments");
-                    intent.putExtra(Constants.FROM_SCREEN, "Private User Profile");
+                if (authorId.equals(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId())) {
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "PrivatePublishedArticles");
+                    intent.putExtra(Constants.FROM_SCREEN, "PrivateUserArticlesScreen");
                 } else {
-                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Public Comments");
-                    intent.putExtra(Constants.FROM_SCREEN, "Public User Profile");
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "PublicPublishedArticles");
+                    intent.putExtra(Constants.FROM_SCREEN, "PublicUserArticlesScreen");
                 }
                 intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
+                intent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
+                intent.putExtra(Constants.AUTHOR, articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position).getUserName());
                 startActivity(intent);
                 break;
             case R.id.editPublishedTextView:

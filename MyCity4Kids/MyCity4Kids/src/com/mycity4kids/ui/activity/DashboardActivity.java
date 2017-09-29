@@ -148,7 +148,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         bottomNavigationView.enableItemShiftingMode(false);
         bottomNavigationView.setTextVisibility(false);
 
-        Utils.pushOpenScreenEvent(DashboardActivity.this, "DashBoard", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+        Utils.pushOpenScreenEvent(this, "HomeScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
         downArrowImageView.setOnClickListener(this);
         toolbarTitleTextView.setOnClickListener(this);
@@ -277,6 +277,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 intent1.putExtra(Constants.ARTICLE_OPENED_FROM, "Notification Popup");
                 intent.putExtra(Constants.FROM_SCREEN, "Notification");
                 intent1.putExtra(Constants.ARTICLE_INDEX, "-1");
+                intent.putExtra(Constants.AUTHOR, authorId + "~");
                 startActivity(intent1);
             } else if (notificationExtras.getString("type").equalsIgnoreCase("video_details")) {
                 String articleId = notificationExtras.getString("id");
@@ -531,11 +532,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     public void onClick(View v) {
         Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
         switch (v.getId()) {
-            case R.id.feed_back:
-                Utils.pushEvent(DashboardActivity.this, GTMEventType.FEEDBACK_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Left Menu Screen");
-                setTitle("Send Feedback");
-                replaceFragment(new SendFeedbackFragment(), null, true);
-                break;
             case R.id.imgProfile:
                 Intent intent4 = new Intent(DashboardActivity.this, BloggerProfileActivity.class);
                 startActivity(intent4);
@@ -543,8 +539,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             case R.id.downArrowImageView:
             case R.id.toolbarTitle:
                 if (topFragment instanceof TopicsListingFragment) {
+                    Utils.pushTopMenuClickEvent(this, "TopicArticlesListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                     onBackPressed();
                 } else {
+                    Utils.pushTopMenuClickEvent(this, "HomeScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                     ExploreArticleListingTypeFragment fragment1 = new ExploreArticleListingTypeFragment();
                     Bundle mBundle1 = new Bundle();
                     fragment1.setArguments(mBundle1);
@@ -854,9 +852,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             intent.putExtra(Constants.AUTHOR_ID, data.getAuthor_id());
             intent.putExtra(Constants.ARTICLE_ID, data.getArticle_id());
             intent.putExtra(Constants.DEEPLINK_URL, deepLinkUrl);
-            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Deep Linking");
+            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "DeepLinking");
             intent.putExtra(Constants.ARTICLE_INDEX, "-1");
-            intent.putExtra(Constants.FROM_SCREEN, "Deep Linking");
+            intent.putExtra(Constants.FROM_SCREEN, "DeepLinking");
+            intent.putExtra(Constants.AUTHOR, data.getAuthor_id() + "~" + data.getAuthor_name());
             startActivity(intent);
         }
     }
@@ -1011,6 +1010,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             if (fragType.equals("search")) {
                 selectOptToolbarTitle.setText(getString(R.string.search_topics_toolbar_title));
             } else {
+                Utils.pushOpenScreenEvent(this, "TopicScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 selectOptToolbarTitle.setText(getString(R.string.home_screen_select_an_option_title));
                 if (!SharedPrefUtils.isCoachmarksShownFlag(this, "topics")) {
                     coachmarksImageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.coachmark_categories));
@@ -1049,6 +1049,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             toolbarUnderline.setVisibility(View.VISIBLE);
             toolbarTitleTextView.setOnClickListener(null);
             if (null != topFragment && topFragment instanceof MyAccountProfileFragment) {
+                Utils.pushOpenScreenEvent(this, "PrivateProfileScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 toolbarTitleTextView.setText(getString(R.string.home_screen_profile_title));
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.myprofile_toolbar_title));
                 menu.findItem(R.id.action_profile).setChecked(true);
@@ -1057,6 +1058,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 getSupportActionBar().setDisplayShowHomeEnabled(false);
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             } else if (null != topFragment && topFragment instanceof NotificationFragment) {
+                Utils.pushOpenScreenEvent(this, "NotificationsScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 toolbarTitleTextView.setText(getString(R.string.home_screen_notification_title));
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.notification_toolbar_title));
                 searchAllImageView.setVisibility(View.GONE);
@@ -1067,6 +1069,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 getSupportActionBar().setDisplayShowHomeEnabled(false);
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             } else if (null != topFragment && topFragment instanceof FragmentMC4KHomeNew) {
+                Utils.pushOpenScreenEvent(this, "HomeScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 if (!SharedPrefUtils.isCoachmarksShownFlag(this, "home")) {
                     coachmarksImageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.coachmark_home));
                     coachmarksImageView.setVisibility(View.VISIBLE);
@@ -1086,6 +1089,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 mToolbar.setVisibility(View.GONE);
                 toolbarUnderline.setVisibility(View.GONE);
             } else if (null != topFragment && topFragment instanceof TopicsListingFragment) {
+                Utils.pushOpenScreenEvent(this, "TopicArticlesListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 if (!SharedPrefUtils.isCoachmarksShownFlag(this, "topics_article")) {
                     coachmarksImageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.coachmark_article_list));
                     coachmarksImageView.setVisibility(View.VISIBLE);
@@ -1101,6 +1105,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 getSupportActionBar().setDisplayShowHomeEnabled(false);
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             } else if (null != topFragment && topFragment instanceof ExploreFragment) {
+                Utils.pushOpenScreenEvent(this, "ExploreScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 toolbarTitleTextView.setText(getString(R.string.home_screen_explore_title));
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.notification_toolbar_title));
                 menu.findItem(R.id.action_location).setChecked(true);
@@ -1109,6 +1114,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 getSupportActionBar().setDisplayShowHomeEnabled(false);
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             } else if (null != topFragment && topFragment instanceof FragmentBusinesslistEvents) {
+                Utils.pushOpenScreenEvent(this, "EventsListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 toolbarTitleTextView.setText(getString(R.string.home_screen_upcoming_events_title));
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.notification_toolbar_title));
                 menu.findItem(R.id.action_location).setChecked(true);
@@ -1118,6 +1124,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 getSupportActionBar().setDisplayShowHomeEnabled(false);
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             } else if (null != topFragment && topFragment instanceof FragmentHomeCategory) {
+                Utils.pushOpenScreenEvent(this, "ResourceListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 toolbarTitleTextView.setText(getString(R.string.home_screen_kids_res_title));
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.notification_toolbar_title));
                 menu.findItem(R.id.action_location).setChecked(true);

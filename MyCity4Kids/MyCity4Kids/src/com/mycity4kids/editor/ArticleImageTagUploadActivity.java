@@ -137,7 +137,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
 
         tags = getIntent().getStringExtra("tag");
         setTagsList();
-        Utils.pushOpenScreenEvent(ArticleImageTagUploadActivity.this, "Article Image Upload", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+        Utils.pushOpenScreenEvent(this, "AddImageScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         if ((getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList"))) {
             String thumbnailUrl = getIntent().getStringExtra("imageUrl");
             uploadImageCardView.setVisibility(View.GONE);

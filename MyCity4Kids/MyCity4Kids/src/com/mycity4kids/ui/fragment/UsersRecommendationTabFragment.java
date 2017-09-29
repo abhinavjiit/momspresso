@@ -162,15 +162,15 @@ public class UsersRecommendationTabFragment extends BaseFragment implements User
                 intent.putExtra(Constants.AUTHOR_ID, recommendationsList.get(position).getUserId());
                 intent.putExtra(Constants.BLOG_SLUG, recommendationsList.get(position).getBlogPageSlug());
                 intent.putExtra(Constants.TITLE_SLUG, recommendationsList.get(position).getTitleSlug());
-                intent.putExtra(Constants.FROM_SCREEN, "User Profile");
-                if (true) {
-                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Private Comments");
-                    intent.putExtra(Constants.FROM_SCREEN, "Private User Profile");
+                if (authorId.equals(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId())) {
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "UserPrivateLikes");
+                    intent.putExtra(Constants.FROM_SCREEN, "PrivateProfileScreen");
                 } else {
-                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Public Comments");
-                    intent.putExtra(Constants.FROM_SCREEN, "Public User Profile");
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "UserPublicLikes");
+                    intent.putExtra(Constants.FROM_SCREEN, "PublicProfileScreen");
                 }
                 intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
+                intent.putExtra(Constants.AUTHOR, recommendationsList.get(position).getUserId() + "~" + recommendationsList.get(position).getUserName());
                 startActivity(intent);
         }
     }

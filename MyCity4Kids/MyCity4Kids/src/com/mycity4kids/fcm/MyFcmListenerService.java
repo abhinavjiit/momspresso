@@ -17,21 +17,18 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
-import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.newmodels.PushNotificationModel;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.reminders.ShareArticleReceiver;
 import com.mycity4kids.ui.activity.AppSettingsActivity;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.BloggerProfileActivity;
 import com.mycity4kids.ui.activity.BusinessDetailsActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.LoadWebViewActivity;
-import com.mycity4kids.ui.activity.NewsLetterWebviewActivity;
 import com.mycity4kids.ui.activity.SplashActivity;
 import com.mycity4kids.ui.activity.VlogsDetailActivity;
 
@@ -73,40 +70,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
             if (pushNotificationModel != null) {
 
                 String type = pushNotificationModel.getType();
-                if (type.equalsIgnoreCase("Newsletter")) {
-                    // generate notifications
-//                    Utils.pushEvent(getApplicationContext(), GTMEventType.NEWSLETTER_NOTICATION_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId() + "", "");
-//                    Utils.pushEventNotificationClick(this, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Notification Popup", "Newsletter");
-                    Bitmap icon = BitmapFactory.decodeResource(getResources(),
-                            R.drawable.ic_launcher);
-
-                    int requestID = (int) System.currentTimeMillis();
-
-                    String message = pushNotificationModel.getMessage_id();
-                    String title = pushNotificationModel.getTitle();
-                    NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-
-
-                    Intent intent = new Intent(getApplicationContext(), NewsLetterWebviewActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra(AppConstants.NOTIFICATION_ID, requestID);
-                    intent.putExtra(Constants.URL, pushNotificationModel.getUrl());
-
-                    Intent shareIntent = new Intent(this, ShareArticleReceiver.class);
-                    shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    shareIntent.putExtra(AppConstants.NOTIFICATION_ID, requestID);
-                    shareIntent.putExtra(AppConstants.SHARE_CONTENT, pushNotificationModel.getShare_content());
-                    shareIntent.putExtra(AppConstants.SHARE_URL, pushNotificationModel.getUrl());
-                    PendingIntent sharePendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, shareIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                    PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                    NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setLargeIcon(icon).setSmallIcon(R.drawable.icon_notify).setContentTitle(title).setStyle(new NotificationCompat.BigTextStyle().bigText(message)).setContentText(message);
-                    mBuilder.setDefaults(NotificationCompat.DEFAULT_ALL);
-                    mBuilder.setAutoCancel(true);
-                    mBuilder.setContentIntent(contentIntent);
-                    mBuilder.addAction(R.drawable.share, "Share", sharePendingIntent);
-                    mNotificationManager.notify(requestID, mBuilder.build());
-                } else if (type.equalsIgnoreCase("upcoming_event_list")) {
+                if (type.equalsIgnoreCase("upcoming_event_list")) {
 //                    Utils.pushEvent(getApplicationContext(), GTMEventType.UPCOMING_EVENTS_NOTIFICATION_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId() + "", "");
 //                    Utils.pushEventNotificationClick(this, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Notification Popup", "upcoming_event_list");
                     Log.i(TAG, " INSIDE EVENTS LIST: " + msg);
@@ -170,6 +134,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         intent.putExtra(Constants.FROM_SCREEN, "Notification");
                         intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Notification Popup");
                         intent.putExtra(Constants.ARTICLE_INDEX, "-1");
+                        intent.putExtra(Constants.AUTHOR, pushNotificationModel.getUser_id() + "~");
 
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
                         // Adds the back stack

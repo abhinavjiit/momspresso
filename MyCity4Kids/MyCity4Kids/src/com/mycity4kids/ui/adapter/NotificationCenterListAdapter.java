@@ -135,9 +135,10 @@ public class NotificationCenterListAdapter extends BaseAdapter {
                     intent.putExtra(Constants.AUTHOR_ID, notificationList.get(position).getAuthorId());
                     intent.putExtra(Constants.BLOG_SLUG, notificationList.get(position).getBlogTitleSlug());
                     intent.putExtra(Constants.TITLE_SLUG, notificationList.get(position).getTitleSlug());
-                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Notification Center");
-                    intent.putExtra(Constants.FROM_SCREEN, "Notification Center List");
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "NotificationsScreen");
+                    intent.putExtra(Constants.FROM_SCREEN, "NotificationsScreen");
                     intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
+                    intent.putExtra(Constants.AUTHOR, notificationList.get(position).getUserId() + "~");
                     mContext.startActivity(intent);
                 }
             });
@@ -153,6 +154,7 @@ public class NotificationCenterListAdapter extends BaseAdapter {
                     Intent intent = new Intent(mContext, VlogsDetailActivity.class);
                     intent.putExtra(Constants.VIDEO_ID, notificationList.get(position).getId());
                     intent.putExtra(Constants.AUTHOR_ID, notificationList.get(position).getAuthorId());
+                    intent.putExtra(Constants.AUTHOR, notificationList.get(position).getAuthorId() + "~");
                     mContext.startActivity(intent);
                 }
             });

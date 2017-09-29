@@ -29,7 +29,6 @@ public class SpellCheckDialogFragment extends DialogFragment implements OnClickL
         final View rootView = inflater.inflate(R.layout.spell_check_custom_dialog, container,
                 false);
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        Utils.pushOpenScreenEvent(getActivity(), "Upload video Option Menu", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
 
         TextView continuePublishTextView = (TextView) rootView.findViewById(R.id.continuePublishTextView);
         TextView cancelTextView = (TextView) rootView.findViewById(R.id.cancelTextView);

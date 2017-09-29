@@ -49,7 +49,6 @@ public class AddArticleTopicsTabFragment extends BaseFragment implements AddArti
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.add_article_topics_tab_fragment, container, false);
-        Utils.pushOpenScreenEvent(getActivity(), "Dashboard Fragment", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
 //        popularTopicsRecyclerView = (RecyclerView) view.findViewById(R.id.popularTopicsRecyclerView);
         rootView = (FlowLayout) view.findViewById(R.id.rootView);
 

@@ -633,7 +633,7 @@
     <string name="myprofile.following_label">FOLLOWING</string>
     <string name="myprofile.followers_label">FOLLOWERS</string>
     <string name="myprofile.section.articles_label">ARTICLES</string>
-    <string name="myprofile.section.videos_label">VIDEOS</string>
+    <string name="myprofile.section.videos_label">MUM VLOGS</string>
     <string name="myprofile.section.activity_label">ACTIVITY</string>
     <string name="myprofile.section.myranking_label">MY RANKING</string>
     <string name="myprofile.section.settings_label">SETTINGS</string>
@@ -649,7 +649,7 @@
     <string name="blogger_profile.view_count_label">VIEWS</string>
     <string name="blogger_profile.article_count_label">POSTS</string>
     <string name="blogger_profile.section.articles_label">ARTICLES</string>
-    <string name="blogger_profile.section.videos_label">VIDEOS</string>
+    <string name="blogger_profile.section.videos_label">MUM VLOGS</string>
     <string name="blogger_profile.section.activity_label">ACTIVITY</string>
     <string name="blogger_profile.section.myranking_label">MY RANKING</string>
     <string name="blogger_profile.section.settings_label">SETTINGS</string>

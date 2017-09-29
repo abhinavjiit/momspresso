@@ -6,13 +6,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.newmodels.SelectTopic;
-import com.mycity4kids.ui.fragment.SearchAllArticlesAndTopicsTabFragment;
-import com.mycity4kids.ui.fragment.SubscribeTopicsTabFragment;
 import com.mycity4kids.ui.fragment.UserDraftArticleTabFragment;
 import com.mycity4kids.ui.fragment.UserPublishedArticleTabFragment;
-
-import java.util.ArrayList;
 
 /**
  * Created by hemant on 24/5/17.

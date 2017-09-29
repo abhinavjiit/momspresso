@@ -64,9 +64,6 @@ public class UserDraftArticleTabFragment extends BaseFragment implements View.On
         View view = null;
         view = getActivity().getLayoutInflater().inflate(R.layout.user_draft_article_tab_fragment, container, false);
 
-        Utils.pushOpenScreenEvent(getActivity(), "Search Articles Fragment Listing", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
-
-
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
 

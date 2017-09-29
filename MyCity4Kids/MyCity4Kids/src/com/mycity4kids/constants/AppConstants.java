@@ -445,7 +445,7 @@ public class AppConstants {
     public static final String HINDI_CATEGORYID = "category-1515d3c9adb249988a136bdbfc8f0017";
     public static final String BANGLA_CATEGORYID = "category-5ad20fb85f7c4a84b66b8d6993dbad9f";
     public static final String MARATHI_CATEGORYID = "category-bd1d0a1ab9c0436d97f78d90a115ee71";
-
+    public static final String SPONSORED_CATEGORYID = "category-51a2ea215c634753ac6a9aa377deae0b";
     public static final String DEEPLINK_EDITOR_URL = "mc4k://www.mycity4kids.com/editor";
     public static final String DEEPLINK_PROFILE_URL = "mc4k://www.mycity4kids.com/profile";
     public static final String DEEPLINK_ADD_FUNNY_VIDEO_URL = "mc4k://www.mycity4kids.com/addfunnyvideo";

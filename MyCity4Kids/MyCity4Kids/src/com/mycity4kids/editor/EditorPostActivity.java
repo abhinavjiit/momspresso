@@ -141,7 +141,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
         if (getIntent().getIntExtra(EDITOR_PARAM, USE_NEW_EDITOR) == USE_NEW_EDITOR) {
             // ToastUtils.showToast(this, R.string.starting_new_editor);
             setContentView(R.layout.activity_new_editor);
-            Utils.pushOpenScreenEvent(EditorPostActivity.this, "Text Editor", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+            Utils.pushOpenScreenEvent(EditorPostActivity.this, "CreateArticleScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         }
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         closeEditorImageView = (ImageView) findViewById(R.id.closeEditorImageView);
@@ -868,7 +868,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                 if (mEditorFragment.getTitle().toString().isEmpty()) {
                     showToast("Title can't be empty");
                 } else if (mEditorFragment.getTitle().toString().length() > 150) {
-                    showToast("Unable to save draft. Title should smaller than 150 characters");
+                    showToast("Unable to publish. Title should smaller than 150 characters");
                 } else if (mEditorFragment.getContent().toString().isEmpty()) {
                     showToast("Body can't be empty");
                 } else if (mEditorFragment.getContent().toString().replace("&nbsp;", " ").split("\\s+").length < 299 && !BuildConfig.DEBUG) {

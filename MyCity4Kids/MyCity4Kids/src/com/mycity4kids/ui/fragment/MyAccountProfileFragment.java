@@ -64,13 +64,13 @@ import com.mycity4kids.dbtable.TaskTableWhoToRemind;
 import com.mycity4kids.dbtable.UserTable;
 import com.mycity4kids.facebook.FacebookUtils;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.logout.LogoutResponse;
 import com.mycity4kids.models.request.UpdateUserDetailsRequest;
 import com.mycity4kids.models.response.ImageUploadResponse;
 import com.mycity4kids.models.response.LanguageRanksModel;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.reminders.AppointmentManager;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.UserAttributeUpdateAPI;
@@ -396,7 +396,6 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
             new ExternalCalendarTable(BaseApplication.getInstance()).deleteAll();
 
             // clear cachee
-            AppointmentManager.getInstance(getActivity()).clearList();
             BaseApplication.setBlogResponse(null);
             BaseApplication.setBusinessREsponse(null);
 
@@ -518,6 +517,7 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
                 logoutUser();
                 break;
             case R.id.followingContainer: {
+                Utils.pushOpenScreenEvent(getActivity(), "FollowingListingScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
                 Intent intent = new Intent(getActivity(), FollowersAndFollowingListActivity.class);
                 intent.putExtra(AppConstants.FOLLOW_LIST_TYPE, AppConstants.FOLLOWING_LIST);
                 intent.putExtra(AppConstants.USER_ID_FOR_FOLLOWING_FOLLOWERS, userId);
@@ -525,6 +525,7 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
             }
             break;
             case R.id.followerContainer: {
+                Utils.pushOpenScreenEvent(getActivity(), "FollowersListingScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
                 Intent intent = new Intent(getActivity(), FollowersAndFollowingListActivity.class);
                 intent.putExtra(AppConstants.FOLLOW_LIST_TYPE, AppConstants.FOLLOWER_LIST);
                 intent.putExtra(AppConstants.USER_ID_FOR_FOLLOWING_FOLLOWERS, userId);

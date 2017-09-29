@@ -212,14 +212,15 @@ public class UsersCommentTabFragment extends BaseFragment implements UsersCommen
                     intent.putExtra(Constants.BLOG_SLUG, commentsList.get(position).getBlogTitleSlug());
                     intent.putExtra(Constants.TITLE_SLUG, commentsList.get(position).getTitleSlug());
                     intent.putExtra(Constants.FROM_SCREEN, "User Comments");
-                    if (true) {
-                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Private Comments");
-                        intent.putExtra(Constants.FROM_SCREEN, "Private User Profile");
+                    if (authorId.equals(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId())) {
+                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "UserPrivateComment");
+                        intent.putExtra(Constants.FROM_SCREEN, "PrivateActivityScreen");
                     } else {
-                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Public Comments");
-                        intent.putExtra(Constants.FROM_SCREEN, "Public User Profile");
+                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "UserPublicComment");
+                        intent.putExtra(Constants.FROM_SCREEN, "PublicActivityScreen");
                     }
                     intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
+                    intent.putExtra(Constants.AUTHOR, commentsList.get(position).getUserId() + "~" + commentsList.get(position).getUserName());
                     startActivity(intent);
                 }
                 break;

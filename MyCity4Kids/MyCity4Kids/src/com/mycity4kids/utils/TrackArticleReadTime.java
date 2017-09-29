@@ -66,8 +66,8 @@ public class TrackArticleReadTime {
         try {
             timeSpent = timeSpent + System.currentTimeMillis() - startTime;
             Log.d("updateTimeBackendAndGA", " timeSpent = " + timeSpent + " initStartTime=" + initStartTime + " estimatedtime=" + estimatedTime);
-            Utils.pushArticleDetailsTimeSpent(mContext, GTMEventType.ARTICLE_TIME_SPENT_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(),
-                    "Blog Detail", articleURL, "" + timeSpent, "" + estimatedTime);
+//            Utils.pushArticleDetailsTimeSpent(mContext, GTMEventType.ARTICLE_TIME_SPENT_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(),
+//                    "Blog Detail", articleURL, "" + timeSpent, "" + estimatedTime);
 
             if (estimatedTime == 0) {
                 return;

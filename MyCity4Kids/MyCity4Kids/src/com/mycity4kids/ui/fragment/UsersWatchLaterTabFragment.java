@@ -218,15 +218,10 @@ public class UsersWatchLaterTabFragment extends BaseFragment implements UsersBoo
                 intent.putExtra(Constants.AUTHOR_ID, watchLaterList.get(position).getUserId());
                 intent.putExtra(Constants.BLOG_SLUG, watchLaterList.get(position).getBlogPageSlug());
                 intent.putExtra(Constants.TITLE_SLUG, watchLaterList.get(position).getTitleSlug());
-                intent.putExtra(Constants.FROM_SCREEN, "User Profile");
-                if (true) {
-                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Private Comments");
-                    intent.putExtra(Constants.FROM_SCREEN, "Private User Profile");
-                } else {
-                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Public Comments");
-                    intent.putExtra(Constants.FROM_SCREEN, "Public User Profile");
-                }
+                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "WatchLaterList");
+                intent.putExtra(Constants.FROM_SCREEN, "PrivateActivityScreen");
                 intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
+                intent.putExtra(Constants.AUTHOR, watchLaterList.get(position).getUserId() + "~" + watchLaterList.get(position).getUserName());
                 startActivity(intent);
                 break;
         }

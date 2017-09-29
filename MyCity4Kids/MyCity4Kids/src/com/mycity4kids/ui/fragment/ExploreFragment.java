@@ -71,7 +71,6 @@ public class ExploreFragment extends BaseFragment implements View.OnClickListene
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Utils.pushOpenScreenEvent(getActivity(), "Notification Settings", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
         View view = inflater.inflate(R.layout.explore_fragment, container, false);
 
         cityNameTextView = (TextView) view.findViewById(R.id.cityNameTextView);
@@ -204,6 +203,7 @@ public class ExploreFragment extends BaseFragment implements View.OnClickListene
                 ((DashboardActivity) getActivity()).addFragment(new FragmentHomeCategory(), null, true);
                 break;
             case R.id.thingToDoImageView:
+                Utils.pushOpenScreenEvent(getActivity(), "BestOfCityScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
                 Intent cityIntent = new Intent(getActivity(), CityBestArticleListingActivity.class);
                 startActivity(cityIntent);
                 break;

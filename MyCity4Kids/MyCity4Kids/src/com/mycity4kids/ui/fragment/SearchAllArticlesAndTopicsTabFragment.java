@@ -8,8 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -31,7 +29,6 @@ import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.FilteredTopicsArticleListingActivity;
 import com.mycity4kids.ui.activity.SearchAllActivity;
 import com.mycity4kids.ui.adapter.SearchAllArticlesTopicsListingAdapter;
-import com.mycity4kids.ui.adapter.SearchArticlesListingAdapter;
 
 import java.util.ArrayList;
 
@@ -44,7 +41,6 @@ import retrofit2.Retrofit;
  */
 public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implements View.OnClickListener, SearchAllArticlesTopicsListingAdapter.RecyclerViewClickListener {
 
-    SearchArticlesListingAdapter articlesListingAdapter;
     ArrayList<SearchArticleResult> articleDataModelsNew;
     RecyclerView recyclerView;
     TextView noBlogsTextView;
@@ -66,9 +62,6 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
                              Bundle savedInstanceState) {
         View view = null;
         view = getActivity().getLayoutInflater().inflate(R.layout.search_all_article_topic_tab_fragment, container, false);
-
-        Utils.pushOpenScreenEvent(getActivity(), "Search Articles Fragment Listing", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
-
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
@@ -286,9 +279,10 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
                 intent.putExtra(Constants.AUTHOR_ID, searchData.getUserId());
                 intent.putExtra(Constants.BLOG_SLUG, searchData.getBlogSlug());
                 intent.putExtra(Constants.TITLE_SLUG, searchData.getTitleSlug());
-                intent.putExtra(Constants.ARTICLE_OPENED_FROM, sortType);
-                intent.putExtra(Constants.FROM_SCREEN, "Search Screen");
+                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "SearchScreen");
+                intent.putExtra(Constants.FROM_SCREEN, "SearchScreen");
                 intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
+                intent.putExtra(Constants.AUTHOR, searchData.getUserId() + "~");
                 startActivity(intent);
             }
             break;

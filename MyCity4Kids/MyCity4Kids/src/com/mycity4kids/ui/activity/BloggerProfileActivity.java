@@ -451,12 +451,14 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
                             public void onClick(View v) {
                                 Intent intent = new Intent(BloggerProfileActivity.this, ArticleDetailsContainerActivity.class);
                                 intent.putExtra(Constants.ARTICLE_ID, dataList.get(0).getId());
-                                intent.putExtra(Constants.AUTHOR_ID, dataList.get(0).getUserName());
+                                intent.putExtra(Constants.AUTHOR_ID, dataList.get(0).getUserId());
                                 intent.putExtra(Constants.BLOG_SLUG, dataList.get(0).getBlogPageSlug());
                                 intent.putExtra(Constants.TITLE_SLUG, dataList.get(0).getTitleSlug());
-                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Notification Center");
-                                intent.putExtra(Constants.FROM_SCREEN, "Notification Center List");
+                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "BloggerTop3");
+                                intent.putExtra(Constants.FROM_SCREEN, "PublicProfileScreen");
                                 intent.putExtra(Constants.ARTICLE_INDEX, "" + 0);
+                                intent.putParcelableArrayListExtra("pagerListData", dataList);
+                                intent.putExtra(Constants.AUTHOR, dataList.get(0).getUserId() + "~" + dataList.get(0).getUserName());
                                 startActivity(intent);
                             }
                         });
@@ -483,12 +485,14 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
                             public void onClick(View v) {
                                 Intent intent = new Intent(BloggerProfileActivity.this, ArticleDetailsContainerActivity.class);
                                 intent.putExtra(Constants.ARTICLE_ID, dataList.get(0).getId());
-                                intent.putExtra(Constants.AUTHOR_ID, dataList.get(0).getUserName());
+                                intent.putExtra(Constants.AUTHOR_ID, dataList.get(0).getUserId());
                                 intent.putExtra(Constants.BLOG_SLUG, dataList.get(0).getBlogPageSlug());
                                 intent.putExtra(Constants.TITLE_SLUG, dataList.get(0).getTitleSlug());
-                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Notification Center");
-                                intent.putExtra(Constants.FROM_SCREEN, "Notification Center List");
+                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "BloggerTop3");
+                                intent.putExtra(Constants.FROM_SCREEN, "PublicProfileScreen");
                                 intent.putExtra(Constants.ARTICLE_INDEX, "" + 0);
+                                intent.putParcelableArrayListExtra("pagerListData", dataList);
+                                intent.putExtra(Constants.AUTHOR, dataList.get(0).getUserId() + "~" + dataList.get(0).getUserName());
                                 startActivity(intent);
                             }
                         });
@@ -497,12 +501,14 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
                             public void onClick(View v) {
                                 Intent intent = new Intent(BloggerProfileActivity.this, ArticleDetailsContainerActivity.class);
                                 intent.putExtra(Constants.ARTICLE_ID, dataList.get(1).getId());
-                                intent.putExtra(Constants.AUTHOR_ID, dataList.get(1).getUserName());
+                                intent.putExtra(Constants.AUTHOR_ID, dataList.get(1).getUserId());
                                 intent.putExtra(Constants.BLOG_SLUG, dataList.get(1).getBlogPageSlug());
                                 intent.putExtra(Constants.TITLE_SLUG, dataList.get(1).getTitleSlug());
-                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Notification Center");
-                                intent.putExtra(Constants.FROM_SCREEN, "Notification Center List");
+                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "BloggerTop3");
+                                intent.putExtra(Constants.FROM_SCREEN, "PublicProfileScreen");
                                 intent.putExtra(Constants.ARTICLE_INDEX, "" + 1);
+                                intent.putParcelableArrayListExtra("pagerListData", dataList);
+                                intent.putExtra(Constants.AUTHOR, dataList.get(1).getUserId() + "~" + dataList.get(1).getUserName());
                                 startActivity(intent);
                             }
                         });
@@ -538,9 +544,11 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
                                 intent.putExtra(Constants.AUTHOR_ID, dataList.get(0).getUserName());
                                 intent.putExtra(Constants.BLOG_SLUG, dataList.get(0).getBlogPageSlug());
                                 intent.putExtra(Constants.TITLE_SLUG, dataList.get(0).getTitleSlug());
-                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Notification Center");
-                                intent.putExtra(Constants.FROM_SCREEN, "Notification Center List");
+                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "BloggerTop3");
+                                intent.putExtra(Constants.FROM_SCREEN, "PublicProfileScreen");
                                 intent.putExtra(Constants.ARTICLE_INDEX, "" + 0);
+                                intent.putParcelableArrayListExtra("pagerListData", dataList);
+                                intent.putExtra(Constants.AUTHOR, dataList.get(0).getUserId() + "~" + dataList.get(0).getUserName());
                                 startActivity(intent);
                             }
                         });
@@ -552,9 +560,11 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
                                 intent.putExtra(Constants.AUTHOR_ID, dataList.get(1).getUserName());
                                 intent.putExtra(Constants.BLOG_SLUG, dataList.get(1).getBlogPageSlug());
                                 intent.putExtra(Constants.TITLE_SLUG, dataList.get(1).getTitleSlug());
-                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Notification Center");
-                                intent.putExtra(Constants.FROM_SCREEN, "Notification Center List");
+                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "BloggerTop3");
+                                intent.putExtra(Constants.FROM_SCREEN, "PublicProfileScreen");
                                 intent.putExtra(Constants.ARTICLE_INDEX, "" + 1);
+                                intent.putParcelableArrayListExtra("pagerListData", dataList);
+                                intent.putExtra(Constants.AUTHOR, dataList.get(1).getUserId() + "~" + dataList.get(1).getUserName());
                                 startActivity(intent);
                             }
                         });
@@ -566,9 +576,11 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
                                 intent.putExtra(Constants.AUTHOR_ID, dataList.get(2).getUserName());
                                 intent.putExtra(Constants.BLOG_SLUG, dataList.get(2).getBlogPageSlug());
                                 intent.putExtra(Constants.TITLE_SLUG, dataList.get(2).getTitleSlug());
-                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Notification Center");
-                                intent.putExtra(Constants.FROM_SCREEN, "Notification Center List");
+                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "BloggerTop3");
+                                intent.putExtra(Constants.FROM_SCREEN, "PublicProfileScreen");
                                 intent.putExtra(Constants.ARTICLE_INDEX, "" + 2);
+                                intent.putParcelableArrayListExtra("pagerListData", dataList);
+                                intent.putExtra(Constants.AUTHOR, dataList.get(2).getUserId() + "~" + dataList.get(2).getUserName());
                                 startActivity(intent);
                             }
                         });

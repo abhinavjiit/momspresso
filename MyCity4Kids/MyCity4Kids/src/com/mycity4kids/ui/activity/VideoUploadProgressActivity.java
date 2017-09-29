@@ -60,7 +60,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.video_upload_progress_activity);
-        Utils.pushOpenScreenEvent(this, "VideoUploadProgressActivity", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+        Utils.pushOpenScreenEvent(this, "VideoUploadScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         contentURI = getIntent().getParcelableExtra("uri");
         title = getIntent().getStringExtra("title");
 

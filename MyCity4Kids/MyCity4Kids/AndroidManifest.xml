@@ -126,15 +126,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".google.SignInActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-        </activity>
         <!-- Login Activity for facebook & app id -->
         <activity
             android:name="com.facebook.FacebookActivity"
@@ -290,16 +281,8 @@
             android:screenOrientation="portrait"
             android:theme="@style/EditorTheme" />
         <activity
-            android:name=".editor.SetupBlogPageActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".editor.ArticleImageTagUploadActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name="com.mycity4kids.reminders.AlarmDialogActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Dialog" />
         <activity
             android:name=".ui.activity.ContributorListActivity"
             android:screenOrientation="portrait" />
@@ -332,9 +315,6 @@
             android:name=".ui.activity.VlogsDetailActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".ui.activity.VlogsListingActivity"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.VideoTrimmerActivity"
             android:screenOrientation="portrait" />
@@ -413,14 +393,10 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
         <receiver android:name="com.mycity4kids.reminders.CancelNotificationReceiver" />
-        <receiver android:name="com.mycity4kids.reminders.ShareNotificationReceiver" />
-        <receiver android:name="com.mycity4kids.reminders.ShareArticleReceiver" />
 
         <!-- <service android:name="com.mycity4kids.gcm.GcmIntentService" />-->
         <service android:name="com.mycity4kids.sync.PushTokenService" />
-        <service android:name="com.mycity4kids.sync.RemainderEmailService" />
         <service android:name="com.mycity4kids.sync.SyncUserInfoService" />
-        <service android:name="com.mycity4kids.sync.CompletedTasksService" />
         <service android:name="com.mycity4kids.tts.ReadArticleService" />
 
         <receiver

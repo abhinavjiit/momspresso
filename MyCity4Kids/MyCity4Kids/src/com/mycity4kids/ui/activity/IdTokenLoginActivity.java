@@ -46,9 +46,7 @@ import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.models.user.KidsInfo;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.reminders.AppointmentManager;
 import com.mycity4kids.retrofitAPIsInterfaces.LoginRegistrationAPI;
-import com.mycity4kids.sync.PushTokenService;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -244,7 +242,6 @@ public class IdTokenLoginActivity extends BaseActivity implements View.OnClickLi
             new ExternalCalendarTable(BaseApplication.getInstance()).deleteAll();
 
             // clear cachee
-            AppointmentManager.getInstance(this).clearList();
             BaseApplication.setBlogResponse(null);
             BaseApplication.setBusinessREsponse(null);
 
