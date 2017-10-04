@@ -55,10 +55,10 @@ public class EmailSubscriptionAdapter extends RecyclerView.Adapter<EmailSubscrip
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     subscriptionSettingsList.get((int) holder.aSwitch.getTag()).setStatus("1");
-                    Utils.pushEnableSubscriptionEvent(mContext, "", userId, subscriptionSettingsList.get(position).getName());
+//                    Utils.pushEnableSubscriptionEvent(mContext, "", userId, subscriptionSettingsList.get(position).getName());
                 } else {
                     subscriptionSettingsList.get((int) holder.aSwitch.getTag()).setStatus("0");
-                    Utils.pushDisableSubscriptionEvent(mContext, "", userId, subscriptionSettingsList.get(position).getName());
+//                    Utils.pushDisableSubscriptionEvent(mContext, "", userId, subscriptionSettingsList.get(position).getName());
                 }
             }
         });

@@ -54,10 +54,10 @@ public class PreferredLanguagesAdapter extends RecyclerView.Adapter<PreferredLan
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     languageSettingsList.get((int) holder.languageStatus.getTag()).setStatus("1");
-                    Utils.pushEnableLanguageEvent(mContext, "", userId, languageSettingsList.get(position).getName());
+//                    Utils.pushEnableLanguageEvent(mContext, "", userId, languageSettingsList.get(position).getName());
                 } else {
                     languageSettingsList.get((int) holder.languageStatus.getTag()).setStatus("0");
-                    Utils.pushDisableLanguageEvent(mContext, "", userId, languageSettingsList.get(position).getName());
+//                    Utils.pushDisableLanguageEvent(mContext, "", userId, languageSettingsList.get(position).getName());
                 }
             }
         });

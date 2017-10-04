@@ -602,12 +602,14 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
             if (!subscriptionSettingsList.get(i).getStatus().equals(subscriptionSettingsList.get(i).getOriginalStatus())) {
                 if ("1".equals(subscriptionSettingsList.get(i).getStatus())) {
                     Log.d("GTM Subscription Added", ":" + subscriptionSettingsList.get(i).getDisplayName());
-                    Utils.pushEventSubscriptionSettings(getActivity(), GTMEventType.EMAIL_SUBSCRIBE_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(),
-                            "Subscription Settings", subscriptionSettingsList.get(i).getName());
+                    Utils.pushEnableSubscriptionEvent(getActivity(), "SettingScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), subscriptionSettingsList.get(i).getName());
+//                    Utils.pushEventSubscriptionSettings(getActivity(), GTMEventType.EMAIL_SUBSCRIBE_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(),
+//                            "Subscription Settings", subscriptionSettingsList.get(i).getName());
                 } else {
                     Log.d("GTM Subscription Remove", ":" + subscriptionSettingsList.get(i).getDisplayName());
-                    Utils.pushEventSubscriptionSettings(getActivity(), GTMEventType.EMAIL_UNSUBSCRIBE_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(),
-                            "Subscription Settings", subscriptionSettingsList.get(i).getName());
+                    Utils.pushDisableSubscriptionEvent(getActivity(), "SettingScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), subscriptionSettingsList.get(i).getName());
+//                    Utils.pushEventSubscriptionSettings(getActivity(), GTMEventType.EMAIL_UNSUBSCRIBE_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(),
+//                            "Subscription Settings", subscriptionSettingsList.get(i).getName());
                 }
             }
             subscriptionSettingsList.get(i).setOriginalStatus(subscriptionSettingsList.get(i).getStatus());
@@ -678,12 +680,14 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
             if (!languagesList.get(i).getStatus().equals(languagesList.get(i).getOriginalStatus())) {
                 if ("1".equals(languagesList.get(i).getStatus())) {
                     Log.d("GTM Launguage Added", ":" + languagesList.get(i).getName());
-                    Utils.pushEventFeedLanguage(getActivity(), GTMEventType.FEED_LANGUAGE_ADD_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(),
-                            "Launguage Settings", languagesList.get(i).getName());
+                    Utils.pushEnableLanguageEvent(getActivity(), "SettingScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), languagesList.get(i).getName());
+//                    Utils.pushEventFeedLanguage(getActivity(), GTMEventType.FEED_LANGUAGE_ADD_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(),
+//                            "Launguage Settings", languagesList.get(i).getName());
                 } else {
                     Log.d("GTM Launguage Remove", ":" + languagesList.get(i).getName());
-                    Utils.pushEventFeedLanguage(getActivity(), GTMEventType.FEED_LANGUAGE_REMOVE_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(),
-                            "Launguage Settings", languagesList.get(i).getName());
+                    Utils.pushDisableLanguageEvent(getActivity(), "SettingScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), languagesList.get(i).getName());
+//                    Utils.pushEventFeedLanguage(getActivity(), GTMEventType.FEED_LANGUAGE_REMOVE_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(),
+//                            "Launguage Settings", languagesList.get(i).getName());
                 }
             }
             languagesList.get(i).setOriginalStatus(languagesList.get(i).getStatus());

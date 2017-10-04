@@ -55,10 +55,10 @@ public class NotificationSubscriptionAdapter extends RecyclerView.Adapter<Notifi
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     notificationSettingsList.get((int) holder.aSwitch.getTag()).setStatus("1");
-                    Utils.pushEnableNotificationEvent(mContext, "", userId, notificationSettingsList.get(position).getId());
+                    Utils.pushEnableNotificationEvent(mContext, "SettingScreen", userId, notificationSettingsList.get(position).getId());
                 } else {
                     notificationSettingsList.get((int) holder.aSwitch.getTag()).setStatus("0");
-                    Utils.pushDisableNotificationEvent(mContext, "", userId, notificationSettingsList.get(position).getId());
+                    Utils.pushDisableNotificationEvent(mContext, "SettingScreen", userId, notificationSettingsList.get(position).getId());
                 }
             }
         });
