@@ -199,6 +199,8 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
                         subsubLL.setSelected(true);
                         selectedTopic = (Topics) subsubLL.getTag();
                         nextPageNumber = 1;
+                        Utils.pushFilterTopicArticlesEvent(getActivity(), "TopicArticlesListingScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "",
+                                selectedTopic.getId() + "~" + selectedTopic.getDisplay_name(), currentSubTopic.getId() + "~" + currentSubTopic.getDisplay_name());
                         hitFilteredTopicsArticleListingApi(sortType);
                     }
                 });

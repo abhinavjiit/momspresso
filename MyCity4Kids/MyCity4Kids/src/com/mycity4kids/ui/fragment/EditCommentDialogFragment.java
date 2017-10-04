@@ -27,6 +27,7 @@ import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.parentingdetails.CommentsData;
 import com.mycity4kids.models.request.AddCommentRequest;
 import com.mycity4kids.models.response.AddCommentResponse;
@@ -57,6 +58,7 @@ public class EditCommentDialogFragment extends DialogFragment implements OnClick
     private CommentsData commentsData;
     private String operation;
     private String openFrom;
+    private String author;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -72,6 +74,7 @@ public class EditCommentDialogFragment extends DialogFragment implements OnClick
         Bundle extras = getArguments();
         if (extras != null) {
             articleId = extras.getString(Constants.ARTICLE_ID);
+            author = extras.getString(Constants.AUTHOR);
             commentsData = extras.getParcelable("commentData");
             operation = extras.getString("opType");
             openFrom = extras.getString("type");
@@ -125,6 +128,11 @@ public class EditCommentDialogFragment extends DialogFragment implements OnClick
                         addCommentRequest.setUserComment(contentData);
                         if (commentsData != null) {
                             addCommentRequest.setParentId(commentsData.getId());
+                            Utils.pushReplyCommentArticleEvent(getActivity(), "DetailArticleScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "",
+                                    articleId, author);
+                        }else{
+                            Utils.pushCommentArticleEvent(getActivity(), "DetailArticleScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "",
+                                    articleId, author);
                         }
                         Call<AddCommentResponse> callBookmark = articleDetailsAPI.addComment(addCommentRequest);
                         callBookmark.enqueue(addCommentsResponseCallback);

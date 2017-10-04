@@ -15,10 +15,8 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
-import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.FollowUnfollowUserRequest;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
@@ -37,8 +35,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-import retrofit2.Retrofit;
-
 /**
  * Created by hemant on 1/8/16.
  */
@@ -47,14 +43,14 @@ public class FollowerFollowingListAdapter extends BaseAdapter {
     private LayoutInflater mInflator;
     private Context mContext;
     private ArrayList<FollowersFollowingResult> mDataList;
-    Retrofit retrofit;
     String currentUserId;
+    private String listType;
 
-    public FollowerFollowingListAdapter(Context mContext) {
+    public FollowerFollowingListAdapter(Context mContext, String listType) {
         mInflator = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.mContext = mContext;
-        retrofit = BaseApplication.getInstance().getRetrofit();
         currentUserId = SharedPrefUtils.getUserDetailModel(mContext).getDynamoId();
+        this.listType = listType;
     }
 
     public void setData(ArrayList<FollowersFollowingResult> mDataList) {
@@ -149,21 +145,27 @@ public class FollowerFollowingListAdapter extends BaseAdapter {
     private void followUserAPI(int position, ViewHolder holder) {
         FollowUnfollowUserRequest followUnfollowUserRequest = new FollowUnfollowUserRequest();
         followUnfollowUserRequest.setFollowerId(mDataList.get(position).getUserId());
+        String screenName = "";
+        if (AppConstants.FOLLOWER_LIST.equals(listType)) {
+            screenName = "FollowersListingScreen";
+        } else {
+            screenName = "FollowingListingScreen";
+        }
         if (mDataList.get(position).getIsFollowed() == 0) {
             holder.relativeLoadingView.setVisibility(View.VISIBLE);
             holder.followingTextView.setVisibility(View.INVISIBLE);
             holder.followTextView.setVisibility(View.INVISIBLE);
             String jsonString = new Gson().toJson(followUnfollowUserRequest);
-            Utils.pushAuthorFollowUnfollowEvent(mContext, GTMEventType.FOLLOW_AUTHOR_CLICK_EVENT, "Followers/Following List", SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(),
-                    "", mDataList.get(position).getFirstName() + " " + mDataList.get(position).getFirstName() + "-" + mDataList.get(position).getUserId());
+            Utils.pushFollowAuthorEvent(mContext, screenName, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(),
+                    mDataList.get(position).getUserId() + "~" + mDataList.get(position).getFirstName() + " " + mDataList.get(position).getLastName());
             new FollowUnfollowAsyncTask(holder, "follow", position).execute(jsonString, "follow");
         } else {
             holder.relativeLoadingView.setVisibility(View.VISIBLE);
             holder.followingTextView.setVisibility(View.INVISIBLE);
             holder.followTextView.setVisibility(View.INVISIBLE);
             String jsonString = new Gson().toJson(followUnfollowUserRequest);
-            Utils.pushAuthorFollowUnfollowEvent(mContext, GTMEventType.UNFOLLOW_AUTHOR_CLICK_EVENT, "Followers/Following List", SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(),
-                    "", mDataList.get(position).getFirstName() + " " + mDataList.get(position).getFirstName() + "-" + mDataList.get(position).getUserId());
+            Utils.pushUnfollowAuthorEvent(mContext, screenName, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(),
+                    mDataList.get(position).getUserId() + "~" + mDataList.get(position).getFirstName() + " " + mDataList.get(position).getLastName());
             new FollowUnfollowAsyncTask(holder, "unfollow", position).execute(jsonString, "unfollow");
         }
     }

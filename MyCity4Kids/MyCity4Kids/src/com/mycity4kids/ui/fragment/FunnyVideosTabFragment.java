@@ -161,6 +161,7 @@ public class FunnyVideosTabFragment extends BaseFragment implements View.OnClick
                     intent.putExtra(Constants.FROM_SCREEN, "Funny Videos Listing");
                     intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Funny Videos");
                     intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
+                    intent.putExtra(Constants.AUTHOR, parentingListData.getAuthor().getId() + "~" + parentingListData.getAuthor().getFirstName() + " " + parentingListData.getAuthor().getLastName());
                     startActivity(intent);
 
                 }

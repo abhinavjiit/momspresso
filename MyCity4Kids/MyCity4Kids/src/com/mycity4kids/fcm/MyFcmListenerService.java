@@ -179,6 +179,7 @@ public class MyFcmListenerService extends FirebaseMessagingService {
                         intent.putExtra(Constants.FROM_SCREEN, "Notification");
                         intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Notification Popup");
                         intent.putExtra(Constants.ARTICLE_INDEX, "-1");
+                        intent.putExtra(Constants.AUTHOR, pushNotificationModel.getUser_id() + "~");
 
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
                         // Adds the back stack

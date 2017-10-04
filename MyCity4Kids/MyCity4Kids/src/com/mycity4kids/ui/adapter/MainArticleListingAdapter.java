@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.ArticleDetailRequest;
 import com.mycity4kids.models.request.DeleteBookmarkRequest;
 import com.mycity4kids.models.response.AddBookmarkResponse;
@@ -244,8 +245,8 @@ public class MainArticleListingAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     addRemoveWatchLater(position, holder);
-//                    articleDataModelsNew.get(position).setListingWatchLaterStatus(1);
-//                    holder.watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch_added));
+                    Utils.pushWatchLaterArticleEvent(mContext, "ArticleListing", SharedPrefUtils.getUserDetailModel(mContext).getDynamoId() + "",
+                            articleDataModelsNew.get(position).getId(), articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position).getUserName());
                 }
             });
 
@@ -253,8 +254,8 @@ public class MainArticleListingAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     addRemoveBookmark(position, holder);
-//                    articleDataModelsNew.get(position).setListingBookmarkStatus(1);
-//                    holder.bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
+                    Utils.pushBookmarkArticleEvent(mContext, "ArticleListing", SharedPrefUtils.getUserDetailModel(mContext).getDynamoId() + "",
+                            articleDataModelsNew.get(position).getId(), articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position).getUserName());
                 }
             });
 

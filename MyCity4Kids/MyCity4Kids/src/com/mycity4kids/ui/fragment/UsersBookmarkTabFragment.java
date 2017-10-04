@@ -22,6 +22,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.DeleteBookmarkRequest;
 import com.mycity4kids.models.response.AddBookmarkResponse;
 import com.mycity4kids.models.response.ArticleListingResponse;
@@ -205,6 +206,8 @@ public class UsersBookmarkTabFragment extends BaseFragment implements UsersBookm
                 }
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
                 startActivity(Intent.createChooser(shareIntent, "mycity4kids"));
+                Utils.pushShareArticleEvent(getActivity(), "BookmarkedScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", bookmarksList.get(position).getId(),
+                        bookmarksList.get(position).getUserId() + "~" + bookmarksList.get(position).getUserName(), "");
                 break;
             case R.id.removeBookmarkTextView:
                 bookmarkDeletePos = position;

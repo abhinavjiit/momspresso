@@ -345,19 +345,15 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         if (StringUtils.isNullOrEmpty(filteredTopics)) {
             Call<ArticleListingResponse> filterCall;
             if (AppConstants.MOMSPRESSO_CATEGORYID.equals(selectedTopics)) {
-                Utils.pushOpenArticleListingEvent(this, GTMEventType.ARTICLE_LISTING_CLICK_EVENT, fromScreen, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), displayName + "~" + selectedTopics, "" + nextPageNumber);
                 filterCall = topicsAPI.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1, "");
             } else if (isLanguageListing) {
-                Utils.pushOpenArticleListingEvent(this, GTMEventType.ARTICLE_LISTING_CLICK_EVENT, fromScreen, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), categoryName + "~" + selectedTopics, "" + nextPageNumber);
                 filterCall = topicsAPI.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1, "");
             } else {
-                Utils.pushOpenArticleListingEvent(this, GTMEventType.ARTICLE_LISTING_CLICK_EVENT, fromScreen, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), displayName + "~" + selectedTopics, "" + nextPageNumber);
                 filterCall = topicsAPI.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(this));
             }
 //            Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(this));
             filterCall.enqueue(articleListingResponseCallback);
         } else {
-            Utils.pushOpenArticleListingEvent(this, GTMEventType.ARTICLE_LISTING_CLICK_EVENT, fromScreen, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), displayName + "~" + selectedTopics, "" + nextPageNumber);
             Call<ArticleListingResponse> filterCall = topicsAPI.getFilteredArticlesForCategories(filteredTopics, sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(this));
             filterCall.enqueue(articleListingResponseCallback);
         }

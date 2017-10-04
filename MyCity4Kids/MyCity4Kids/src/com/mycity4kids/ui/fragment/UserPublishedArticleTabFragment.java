@@ -21,6 +21,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.editor.EditorPostActivity;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.parentingdetails.ImageData;
 import com.mycity4kids.models.response.ArticleDetailResult;
 import com.mycity4kids.models.response.ArticleListingResponse;
@@ -222,6 +223,7 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
             case R.id.shareArticleImageView:
                 Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
+
                 String shareUrl = AppUtils.getShareUrl(articleDataModelsNew.get(position).getUserType(),
                         articleDataModelsNew.get(position).getBlogPageSlug(), articleDataModelsNew.get(position).getTitleSlug());
                 String shareMessage;
@@ -234,6 +236,13 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
                 }
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
                 startActivity(Intent.createChooser(shareIntent, "mycity4kids"));
+                if (isPrivateProfile) {
+                    Utils.pushShareArticleEvent(getActivity(), "PrivateUserArticlesScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", articleDataModelsNew.get(position).getId(),
+                            authorId + "~" + articleDataModelsNew.get(position).getUserName(), "");
+                } else {
+                    Utils.pushShareArticleEvent(getActivity(), "PublicUserArticlesScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", articleDataModelsNew.get(position).getId(),
+                            authorId + "~" + articleDataModelsNew.get(position).getUserName(), "");
+                }
                 break;
         }
     }

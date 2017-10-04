@@ -21,6 +21,7 @@ import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -155,6 +156,13 @@ public class UsersRecommendationTabFragment extends BaseFragment implements User
                 }
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
                 startActivity(Intent.createChooser(shareIntent, "mycity4kids"));
+                if (authorId.equals(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId())) {
+                    Utils.pushShareArticleEvent(getActivity(), "PrivateLikedScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", recommendationsList.get(position).getId(),
+                            recommendationsList.get(position).getUserId() + "~" + recommendationsList.get(position).getUserName(), "");
+                } else {
+                    Utils.pushShareArticleEvent(getActivity(), "PublicLikedScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", recommendationsList.get(position).getId(),
+                            recommendationsList.get(position).getUserId() + "~" + recommendationsList.get(position).getUserName(), "");
+                }
                 break;
             case R.id.rootView:
                 Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);

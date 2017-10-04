@@ -204,6 +204,7 @@ public class UsersCommentTabFragment extends BaseFragment implements UsersCommen
                     intent.putExtra(Constants.FROM_SCREEN, "Funny Videos Listing");
                     intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Funny Videos");
                     intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
+                    intent.putExtra(Constants.AUTHOR, commentsList.get(position).getUserId() + "~" + commentsList.get(position).getAuthorName());
                     startActivity(intent);
                 } else {
                     Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);

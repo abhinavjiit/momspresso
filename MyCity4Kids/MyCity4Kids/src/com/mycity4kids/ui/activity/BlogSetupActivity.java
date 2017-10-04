@@ -3,6 +3,7 @@ package com.mycity4kids.ui.activity;
 import android.Manifest;
 import android.accounts.NetworkErrorException;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -18,6 +19,7 @@ import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -38,6 +40,7 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.controller.ConfigurationController;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.VersionApiModel;
 import com.mycity4kids.models.city.City;
 import com.mycity4kids.models.city.MetroCity;
@@ -111,6 +114,8 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.blog_setup_activity);
+        Utils.pushOpenScreenEvent(this, "BlogSetupScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+
         mLayout = findViewById(R.id.rootLayout);
         introLinearLayout = (LinearLayout) findViewById(R.id.introLinearLayout);
         detailsRelativeLayout = (RelativeLayout) findViewById(R.id.detailsRelativeLayout);
@@ -123,8 +128,6 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
         profilePicImageView = (ImageView) findViewById(R.id.profilePicImageView);
         changeProfilePicImageView = (ImageView) findViewById(R.id.changeProfilePicImageView);
 
-//        introLinearLayout.setOnClickListener(this);
-//        detailsRelativeLayout.setOnClickListener(this);
         okayTextView.setOnClickListener(this);
         cityTextView.setOnClickListener(this);
         savePublishTextView.setOnClickListener(this);
@@ -135,7 +138,6 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
             Picasso.with(this).load(SharedPrefUtils.getProfileImgUrl(this)).placeholder(R.drawable.family_xxhdpi)
                     .error(R.drawable.family_xxhdpi).transform(new RoundedTransformation()).into(profilePicImageView);
         }
-
 
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         BloggerDashboardAPI bloggerDashboardAPI = retrofit.create(BloggerDashboardAPI.class);
@@ -218,17 +220,7 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                             mDatalist.get(i).setSelected(false);
                         }
                     }
-//                    CitySpinnerAdapter citySpinnerAdapter = new CitySpinnerAdapter(getActivity(), R.layout.text_current_locality, mDatalist);
-//                    citySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//                    // Apply the adapter to the spinner
-//                    citySpinner.setAdapter(citySpinnerAdapter);
-//                    int currentCityId = SharedPrefUtils.getCurrentCityModel(getActivity()).getId();
-//                    for (int i = 0; i < mDatalist.size(); i++) {
-//                        int cId = Integer.parseInt(mDatalist.get(i).getId().replace("city-", ""));
-//                        if (currentCityId == cId) {
-//                            citySpinner.setSelection(i, true);
-//                        }
-//                    }
+
                 } else {
                 }
             } catch (Exception e) {
@@ -242,7 +234,6 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
         public void onFailure(Call<CityConfigResponse> call, Throwable t) {
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
-//            gotToProfile();
         }
     };
 
@@ -257,6 +248,9 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
             case R.id.okayTextView:
                 introLinearLayout.setVisibility(View.GONE);
                 detailsRelativeLayout.setVisibility(View.VISIBLE);
+                blogTitleEditText.requestFocus();
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(blogTitleEditText, InputMethodManager.SHOW_IMPLICIT);
                 break;
             case R.id.cityTextView:
                 cityFragment = new CityListingDialogFragment();
@@ -528,6 +522,7 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
             }
             UserDetailResponse responseData = response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                Utils.pushBlogSetupEvent(BlogSetupActivity.this, "BlogSetupScreen", SharedPrefUtils.getUserDetailModel(BlogSetupActivity.this).getDynamoId());
                 saveCityData();
             } else {
                 showToast(responseData.getReason());

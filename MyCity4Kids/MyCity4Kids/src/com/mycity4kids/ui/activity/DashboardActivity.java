@@ -289,6 +289,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 intent1.putExtra(Constants.ARTICLE_OPENED_FROM, "Notification Popup");
                 intent.putExtra(Constants.FROM_SCREEN, "Notification");
                 intent1.putExtra(Constants.ARTICLE_INDEX, "-1");
+                intent.putExtra(Constants.AUTHOR, authorId + "~");
                 startActivity(intent1);
             } else if (notificationExtras.getString("type").equalsIgnoreCase("event_details")) {
                 String eventId = notificationExtras.getString("id");
@@ -869,6 +870,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Deep Linking");
             intent.putExtra(Constants.ARTICLE_INDEX, "-1");
             intent.putExtra(Constants.FROM_SCREEN, "Deep Linking");
+            intent.putExtra(Constants.AUTHOR, data.getAuthor_id() + "~" + data.getAuthor_name());
             startActivity(intent);
         }
     }

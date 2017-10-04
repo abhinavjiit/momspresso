@@ -58,6 +58,7 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.OnWebServiceCompleteListener;
+import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.parentingdetails.CommentsData;
 import com.mycity4kids.models.parentingdetails.ImageData;
@@ -162,6 +163,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private String userDynamoId;
     private String articleLanguageCategoryId;
     private String from;
+    private String gtmLanguage;
 
     private ObservableScrollView mScrollView;
     private LinearLayout commentLayout;
@@ -417,15 +419,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     }
 
     private void recommendUnrecommentArticleAPI(String status) {
-
-        if ("1".equals(status)) {
-            Utils.pushArticleLikeUnlikeEvent(getActivity(), GTMEventType.LIKE_ARTICLE_CLICK_EVENT, "Article Details", userDynamoId,
-                    articleId, author + "-" + authorId);
-        } else {
-            Utils.pushArticleLikeUnlikeEvent(getActivity(), GTMEventType.UNLIKE_ARTICLE_CLICK_EVENT, "Article Details", userDynamoId,
-                    articleId, author + "-" + authorId);
-        }
-
         RecommendUnrecommendArticleRequest recommendUnrecommendArticleRequest = new RecommendUnrecommendArticleRequest();
         recommendUnrecommendArticleRequest.setArticleId(articleId);
         recommendUnrecommendArticleRequest.setStatus(status);
@@ -674,11 +667,15 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     fileContent, new TypeToken<LinkedHashMap<String, LanguageConfigModel>>() {
                     }.getType()
             );
-//            ArrayList<LanguageConfigModel> languageConfigModelArrayList = new ArrayList<>();
+            gtmLanguage = "English";
             for (final Map.Entry<String, LanguageConfigModel> langEntry : retMap.entrySet()) {
                 for (int i = 0; i < tagsList.size(); i++) {
                     for (Map.Entry<String, String> tagEntry : tagsList.get(i).entrySet()) {
                         if (tagEntry.getKey().equals(langEntry.getValue().getId())) {
+
+//                            ((ArticleDetailsContainerActivity) getActivity()).gtmArticleLoadedEvent(articleId, authorId + "~" + author, tagEntry.getKey() + "~" + tagEntry.getValue(), fragPos);
+                            gtmLanguage = tagEntry.getKey() + "~" + tagEntry.getValue();
+                            Utils.pushArticleLoadedEvent(getActivity(), "DetailArticleScreen", userDynamoId + "", articleId, authorId + "~" + author, gtmLanguage);
                             //The current category is a language category. Display play button if hindi or bangla else hide button.
                             switch (tagEntry.getKey()) {
                                 case AppConstants.HINDI_CATEGORYID:
@@ -695,6 +692,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         }
                     }
                 }
+            }
+            if ("English".equals(gtmLanguage)) {
+                Utils.pushArticleLoadedEvent(getActivity(), "DetailArticleScreen", userDynamoId + "", articleId, authorId + "~" + author, gtmLanguage);
             }
             if (!"1".equals(isMomspresso))
                 ((ArticleDetailsContainerActivity) getActivity()).showPlayArticleAudioButton();
@@ -1059,12 +1059,13 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         Drawable top = ContextCompat.getDrawable(getActivity(), R.drawable.ic_recommended);
                         likeArticleTextView.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null);
                         recommendUnrecommentArticleAPI("1");
-
+                        Utils.pushLikeArticleEvent(getActivity(), "DetailArticleScreen", userDynamoId + "", articleId, authorId + "~" + author);
                     } else {
                         recommendStatus = 0;
                         Drawable top = ContextCompat.getDrawable(getActivity(), R.drawable.ic_recommend);
                         likeArticleTextView.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null);
                         recommendUnrecommentArticleAPI("0");
+                        Utils.pushUnlikeArticleEvent(getActivity(), "DetailArticleScreen", userDynamoId + "", articleId, authorId + "~" + author);
                     }
                     break;
                 }
@@ -1075,6 +1076,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                                 .build();
                         new ShareDialog(this).show(content);
                     }
+                    Utils.pushShareArticleEvent(getActivity(), "DetailArticleScreen", userDynamoId + "", articleId, authorId + "~" + author, "Facebook");
                     break;
                 case R.id.whatsappShareTextView:
                     if (StringUtils.isNullOrEmpty(shareUrl)) {
@@ -1089,6 +1091,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         } catch (android.content.ActivityNotFoundException ex) {
                             Toast.makeText(getActivity(), "Whatsapp have not been installed.", Toast.LENGTH_SHORT).show();
                         }
+                        Utils.pushShareArticleEvent(getActivity(), "DetailArticleScreen", userDynamoId + "", articleId, authorId + "~" + author, "Whatsapp");
                     }
                     break;
                 case R.id.emailShareTextView:
@@ -1111,6 +1114,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
                     try {
                         startActivity(intent);
+                        Utils.pushShareArticleEvent(getActivity(), "DetailArticleScreen", userDynamoId + "", articleId, authorId + "~" + author, "Email");
                     } catch (Exception e) {
                         Intent i = new Intent(Intent.ACTION_SEND);
                         i.setType("plain/text");
@@ -1119,6 +1123,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         i.putExtra(Intent.EXTRA_TEXT, "mycity4kids\n\nCheck out this interesting blog post\n " + shareUrl);
                         try {
                             startActivity(Intent.createChooser(i, "Send mail..."));
+                            Utils.pushShareArticleEvent(getActivity(), "DetailArticleScreen", userDynamoId + "", articleId, authorId + "~" + author, "Email");
                         } catch (android.content.ActivityNotFoundException ex) {
                             Toast.makeText(getActivity(), "There are no email clients installed.", Toast.LENGTH_SHORT).show();
                         }
@@ -1138,6 +1143,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             commentFrag.setTargetFragment(this, 0);
             Bundle _args = new Bundle();
             _args.putString(Constants.ARTICLE_ID, articleId);
+            _args.putString(Constants.AUTHOR, authorId + "~" + author);
             _args.putString("opType", opType);
             if (comData != null) {
                 _args.putParcelable("commentData", comData);
@@ -1427,6 +1433,19 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         }
     }
 
+    public String getGTMArticleId() {
+        return articleId;
+    }
+
+    public String getGTMAuthor() {
+        return authorId + "~" + author;
+    }
+
+    public String getGTMLanguage() {
+        return gtmLanguage;
+    }
+
+
     private class ViewHolder {
         private ImageView commentorsImage;
         private TextView commentName;
@@ -1450,15 +1469,13 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         if (isFollowing) {
             isFollowing = false;
             followClick.setText("FOLLOW");
-            Utils.pushAuthorFollowUnfollowEvent(getActivity(), GTMEventType.UNFOLLOW_AUTHOR_CLICK_EVENT, "Article Details", userDynamoId,
-                    articleId, author + "-" + authorId);
+            Utils.pushUnfollowAuthorEvent(getActivity(), "DetailArticleScreen", userDynamoId, authorId + "~" + author);
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.unfollowUser(request);
             followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback);
         } else {
             isFollowing = true;
             followClick.setText("FOLLOWING");
-            Utils.pushAuthorFollowUnfollowEvent(getActivity(), GTMEventType.FOLLOW_AUTHOR_CLICK_EVENT, "Article Details", userDynamoId,
-                    articleId, author + "-" + authorId);
+            Utils.pushFollowAuthorEvent(getActivity(), "DetailArticleScreen", userDynamoId, authorId + "~" + author);
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.followUser(request);
             followUnfollowUserResponseCall.enqueue(followUserResponseCallback);
         }
@@ -1471,16 +1488,16 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             ArticleDetailRequest articleDetailRequest = new ArticleDetailRequest();
             articleDetailRequest.setArticleId(articleId);
             bookmarkStatus = 1;
-            Utils.pushArticleBookmarkUnbookmarkEvent(getActivity(), GTMEventType.BOOKMARK_ARTICLE_CLICK_EVENT, "Article Details", userDynamoId,
-                    articleId, author + "-" + authorId);
             Drawable top = ContextCompat.getDrawable(getActivity(), R.drawable.ic_bookmarked);
             bookmarkArticleTextView.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null);
             if ("1".equals(isMomspresso)) {
                 Call<AddBookmarkResponse> call = articleDetailsAPI.addVideoWatchLater(articleDetailRequest);
                 call.enqueue(addBookmarkResponseCallback);
+                Utils.pushWatchLaterArticleEvent(getActivity(), "DetailArticleScreen", userDynamoId + "", articleId, authorId + "~" + author);
             } else {
                 Call<AddBookmarkResponse> call = articleDetailsAPI.addBookmark(articleDetailRequest);
                 call.enqueue(addBookmarkResponseCallback);
+                Utils.pushBookmarkArticleEvent(getActivity(), "DetailArticleScreen", userDynamoId + "", articleId, authorId + "~" + author);
             }
         } else {
             DeleteBookmarkRequest deleteBookmarkRequest = new DeleteBookmarkRequest();
@@ -1488,14 +1505,14 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             bookmarkStatus = 0;
             Drawable top = ContextCompat.getDrawable(getActivity(), R.drawable.ic_bookmark);
             bookmarkArticleTextView.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null);
-            Utils.pushArticleBookmarkUnbookmarkEvent(getActivity(), GTMEventType.UNBOOKMARK_ARTICLE_CLICK_EVENT, "Article Details", userDynamoId,
-                    articleId, author + "-" + authorId);
             if ("1".equals(isMomspresso)) {
                 Call<AddBookmarkResponse> call = articleDetailsAPI.deleteVideoWatchLater(deleteBookmarkRequest);
                 call.enqueue(addBookmarkResponseCallback);
+                Utils.pushRemoveWatchLaterArticleEvent(getActivity(), "DetailArticleScreen", userDynamoId + "", articleId, authorId + "~" + author);
             } else {
                 Call<AddBookmarkResponse> call = articleDetailsAPI.deleteBookmark(deleteBookmarkRequest);
                 call.enqueue(addBookmarkResponseCallback);
+                Utils.pushUnbookmarkArticleEvent(getActivity(), "DetailArticleScreen", userDynamoId + "", articleId, authorId + "~" + author);
             }
         }
 
@@ -1918,7 +1935,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                                 continue;
                             }
 
-                            RelativeLayout topicView = (RelativeLayout) mInflater.inflate(R.layout.related_tags_view, null, false);
+                            final RelativeLayout topicView = (RelativeLayout) mInflater.inflate(R.layout.related_tags_view, null, false);
                             topicView.setClickable(true);
                             topicView.getChildAt(0).setTag(key);
                             topicView.getChildAt(2).setTag(key);
@@ -1940,7 +1957,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                                 topicView.getChildAt(2).setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        Log.d("TOPICS ----- ", "UNFOLLOW");
                                         followUnfollowTopics((String) v.getTag(), (RelativeLayout) v.getParent(), 0);
                                     }
                                 });
@@ -1951,7 +1967,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                                 topicView.getChildAt(2).setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        Log.d("TOPICS ----- ", "FOLLOW");
                                         followUnfollowTopics((String) v.getTag(), (RelativeLayout) v.getParent(), 1);
                                     }
                                 });
@@ -1999,8 +2014,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         followUnfollowCategoriesRequest.setCategories(topicIdLList);
         if (action == 0) {
             Log.d("GTM FOLLOW", "displayName" + selectedTopic);
-//            Utils.pushEventFollowUnfollowTopic(this, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, userDynamoId, "Article Details", "follow", ((TextView) tagView.getChildAt(0)).getText().toString() + ":" + selectedTopic);
-            Utils.pushTopicFollowUnfollowEvent(getActivity(), GTMEventType.FOLLOW_TOPIC_CLICK_EVENT, userDynamoId, "Article Details", ((TextView) tagView.getChildAt(0)).getText().toString() + "~" + selectedTopic);
+            Utils.pushUnfollowTopicEvent(getActivity(), "DetailArticleScreen", userDynamoId, selectedTopic + "~" + ((TextView) tagView.getChildAt(0)).getText().toString());
             tagView.getChildAt(0).setTag(selectedTopic);
             tagView.getChildAt(2).setTag(selectedTopic);
             ((ImageView) tagView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.follow_plus));
@@ -2015,8 +2029,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             });
         } else {
             Log.d("GTM UNFOLLOW", "displayName" + selectedTopic);
-//            Utils.pushEventFollowUnfollowTopic(this, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, userDynamoId, "Article Details", "unfollow", ((TextView) tagView.getChildAt(0)).getText().toString() + ":" + selectedTopic);
-            Utils.pushTopicFollowUnfollowEvent(getActivity(), GTMEventType.UNFOLLOW_TOPIC_CLICK_EVENT, userDynamoId, "Article Details", ((TextView) tagView.getChildAt(0)).getText().toString() + "~" + selectedTopic);
+            Utils.pushFollowTopicEvent(getActivity(), "DetailArticleScreen", userDynamoId, selectedTopic + "~" + ((TextView) tagView.getChildAt(0)).getText().toString());
             tagView.getChildAt(0).setTag(selectedTopic);
             tagView.getChildAt(2).setTag(selectedTopic);
             ((ImageView) tagView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.tick));

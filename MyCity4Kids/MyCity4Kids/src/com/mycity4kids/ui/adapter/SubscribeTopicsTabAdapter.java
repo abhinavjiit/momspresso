@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mycity4kids.R;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.newmodels.SelectTopic;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -90,7 +91,6 @@ public class SubscribeTopicsTabAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) view.getTag();
         }
-//        holder.anim.setAnimationListener(animationListener);
         holder.parentCategoryTextView.setText(selectTopicArrayList.get(tabPosition).getDisplayName().toUpperCase());
 
         final List<Topics> top3Cat = selectTopicArrayList.get(tabPosition).getChildTopics();
@@ -101,43 +101,26 @@ public class SubscribeTopicsTabAdapter extends BaseAdapter {
             final TextView tv = (TextView) ll.getChildAt(0);
             tv.setText(top3Cat.get(i).getDisplay_name().toUpperCase());
             tv.setTag(top3Cat.get(i));
-
-//            final LinearLayout ll_main = (LinearLayout) ll.getChildAt(0);
             if (null == selectedTopicsMap.get(((Topics) tv.getTag()).getId())) {
                 tv.setSelected(false);
-//                ll_main.setBackgroundResource(R.drawable.search_topics_transparent_bg);
-//                tv.setTextColor(ContextCompat.getColor(mContext, R.color.splashtopics_search_topic_item_text));
             } else {
                 tv.setSelected(true);
-//                ll_main.setBackgroundResource(R.drawable.search_topics_filled_bg);
-//                tv.setTextColor(ContextCompat.getColor(mContext, R.color.white_color));
             }
 
             tv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int action = 0;
                     if (null == selectedTopicsMap.get(((Topics) tv.getTag()).getId())) {
-//                        Utils.pushEventFollowUnfollowTopic(mContext, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, userId, "SearchOrDetailsTopicList", "follow", ((Topics) tv.getTag()).getDisplay_name() + ":" + ((Topics) tv.getTag()).getId());
-//                        Utils.pushTopicFollowUnfollowEvent(mContext, GTMEventType.FOLLOW_TOPIC_CLICK_EVENT, userId, "SearchOrDetailsTopicList", ((Topics) tv.getTag()).getDisplay_name() + "~" + ((Topics) tv.getTag()).getId());
                         selectedTopicsMap.put(((Topics) tv.getTag()).getId(), (Topics) tv.getTag());
                         ((Topics) tv.getTag()).setIsSelected(true);
                         tv.setSelected(true);
-//                        ll_main.setBackgroundResource(R.drawable.search_topics_filled_bg);
-//                        tv.setTextColor(ContextCompat.getColor(mContext, R.color.white_color));
-                        action = 1;
+                        Utils.pushFollowTopicEvent(mContext, "FollowTopicScreen", SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), ((Topics) tv.getTag()).getId() + "~" + ((Topics) tv.getTag()).getDisplay_name());
                     } else {
-//                        Utils.pushEventFollowUnfollowTopic(mContext, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, userId, "SearchOrDetailsTopicList", "unfollow", ((Topics) tv.getTag()).getDisplay_name() + ":" + ((Topics) tv.getTag()).getId());
-//                        Utils.pushTopicFollowUnfollowEvent(mContext, GTMEventType.UNFOLLOW_TOPIC_CLICK_EVENT, userId, "SearchOrDetailsTopicList", ((Topics) tv.getTag()).getDisplay_name() + "~" + ((Topics) tv.getTag()).getId());
                         selectedTopicsMap.remove(((Topics) tv.getTag()).getId());
                         ((Topics) tv.getTag()).setIsSelected(false);
                         tv.setSelected(false);
-//                        ll_main.setBackgroundResource(R.drawable.search_topics_transparent_bg);
-//                        tv.setTextColor(ContextCompat.getColor(mContext, R.color.splashtopics_search_topic_item_text));
-                        action = 0;
+                        Utils.pushUnfollowTopicEvent(mContext, "FollowTopicScreen", SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), ((Topics) tv.getTag()).getId() + "~" + ((Topics) tv.getTag()).getDisplay_name());
                     }
-//                    iTopicSelectionEvent.onTopicSelectionChanged(selectedTopicsMap.size(), action);
-//                    ll_main.startAnimation(holder.anim);
                 }
             });
 

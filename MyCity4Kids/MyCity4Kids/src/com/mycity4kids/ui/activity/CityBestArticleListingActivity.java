@@ -243,7 +243,6 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
         }
 
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        Utils.pushOpenArticleListingEvent(this, GTMEventType.ARTICLE_LISTING_CLICK_EVENT, fromScreen, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), Constants.KEY_IN_YOUR_CITY + "~" + SharedPrefUtils.getCurrentCityModel(this).getName(), "" + nextPageNumber);
         TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
 
         int from = (nextPageNumber - 1) * limit + 1;

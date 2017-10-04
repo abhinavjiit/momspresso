@@ -200,8 +200,6 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
 
                 Intent intent = new Intent(MyFunnyVideosListingActivity.this, VlogsDetailActivity.class);
                 if (adapterView.getAdapter() instanceof MyFunnyVideosListingAdapter) {
-//                    Utils.pushEvent(VlogsListingActivity.this, GTMEventType.FOR_YOU_ARTICLE_CLICK_EVENT,
-//                            SharedPrefUtils.getUserDetailModel(VlogsListingActivity.this).getDynamoId(), "Video Listing Screen");
                     VlogsListingAndDetailResult parentingListData = (VlogsListingAndDetailResult) adapterView.getAdapter().getItem(i);
                     switch (parentingListData.getPublication_status()) {
                         case AppConstants.VIDEO_STATUS_DRAFT: {
@@ -223,6 +221,7 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
                             intent.putExtra(Constants.FROM_SCREEN, "My Funny Videos Screen");
                             intent.putExtra(Constants.ARTICLE_OPENED_FROM, "My Funny Videos");
                             intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
+                            intent.putExtra(Constants.AUTHOR, parentingListData.getAuthor().getId() + "~" + parentingListData.getAuthor().getFirstName() + " " + parentingListData.getAuthor().getLastName());
                             startActivity(intent);
                             break;
                         }
@@ -250,8 +249,6 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
             return;
         }
         int from = (nextPageNumber - 1) * limit;
-
-        Utils.pushOpenArticleListingEvent(this, GTMEventType.FUNNY_VIDEOS_LISTING_CLICK_EVENT, fromScreen, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "My Funny Videos", "" + nextPageNumber);
 
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         VlogsListingAndDetailsAPI vlogsListingAndDetailsAPI = retrofit.create(VlogsListingAndDetailsAPI.class);

@@ -286,7 +286,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                 String listingType = bundle.getString(Constants.ARTICLE_OPENED_FROM);
                 String index = bundle.getString(Constants.ARTICLE_INDEX);
                 String screen = bundle.getString(Constants.FROM_SCREEN);
-                Utils.pushOpenArticleEvent(this, GTMEventType.VIDEO_DETAILS_CLICK_EVENT, screen, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", videoId, index, listingType);
+                Utils.pushViewArticleEvent(this, screen, userDynamoId + "", videoId, listingType, index + "", author);
             }
 
             if (!ConnectivityUtils.isNetworkEnabled(this)) {
@@ -488,15 +488,13 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
         if (isFollowing) {
             isFollowing = false;
             followClick.setText("FOLLOW");
-            Utils.pushAuthorFollowUnfollowEvent(VlogsDetailActivity.this, GTMEventType.UNFOLLOW_AUTHOR_CLICK_EVENT, "Video Details", SharedPrefUtils.getUserDetailModel(VlogsDetailActivity.this).getDynamoId(),
-                    videoId, author + "-" + authorId);
+            Utils.pushFollowAuthorEvent(this, "DetailVideoScreen", userDynamoId, authorId + "~" + author);
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.unfollowUser(request);
             followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback);
         } else {
             isFollowing = true;
             followClick.setText("FOLLOWING");
-            Utils.pushAuthorFollowUnfollowEvent(VlogsDetailActivity.this, GTMEventType.FOLLOW_AUTHOR_CLICK_EVENT, "Video Details", SharedPrefUtils.getUserDetailModel(VlogsDetailActivity.this).getDynamoId(),
-                    videoId, author + "-" + authorId);
+            Utils.pushUnfollowAuthorEvent(this, "DetailVideoScreen", userDynamoId, authorId + "~" + author);
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.followUser(request);
             followUnfollowUserResponseCall.enqueue(followUserResponseCallback);
         }
@@ -1416,8 +1414,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
         followUnfollowCategoriesRequest.setCategories(topicIdLList);
         if (action == 0) {
             Log.d("GTM FOLLOW", "displayName" + selectedTopic);
-//            Utils.pushEventFollowUnfollowTopic(this, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Video Details", "follow", ((TextView) tagView.getChildAt(0)).getText() + ":" + selectedTopic);
-            Utils.pushTopicFollowUnfollowEvent(this, GTMEventType.FOLLOW_TOPIC_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Video Details", ((TextView) tagView.getChildAt(0)).getText() + "~" + selectedTopic);
+            Utils.pushFollowTopicEvent(this, "DetailVideoScreen", userDynamoId, selectedTopic + "~" + ((TextView) tagView.getChildAt(0)).getText().toString());
             tagView.getChildAt(0).setTag(selectedTopic);
             tagView.getChildAt(2).setTag(selectedTopic);
             ((ImageView) tagView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(VlogsDetailActivity.this, R.drawable.follow_plus));
@@ -1430,8 +1427,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
             });
         } else {
             Log.d("GTM UNFOLLOW", "displayName" + selectedTopic);
-//            Utils.pushEventFollowUnfollowTopic(this, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Video Details", "unfollow", ((TextView) tagView.getChildAt(0)) + ":" + selectedTopic);
-            Utils.pushTopicFollowUnfollowEvent(this, GTMEventType.UNFOLLOW_TOPIC_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Video Details", ((TextView) tagView.getChildAt(0)).getText() + "~" + selectedTopic);
+            Utils.pushUnfollowTopicEvent(this, "DetailVideoScreen", userDynamoId, selectedTopic + "~" + ((TextView) tagView.getChildAt(0)).getText().toString());
             tagView.getChildAt(0).setTag(selectedTopic);
             tagView.getChildAt(2).setTag(selectedTopic);
             ((ImageView) tagView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(VlogsDetailActivity.this, R.drawable.tick));
@@ -1763,6 +1759,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
 
                 }
                 case R.id.facebookShareTextView: {
+                    Utils.pushShareArticleEvent(this, "DetailVideoScreen", userDynamoId + "", videoId, authorId + "~" + author, "Facebook");
                     if (ShareDialog.canShow(ShareLinkContent.class)) {
                         ShareLinkContent content = new ShareLinkContent.Builder()
                                 .setContentUrl(Uri.parse(shareUrl))
@@ -1781,6 +1778,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                         whatsappIntent.putExtra(Intent.EXTRA_TEXT, "mycity4kids\n\nCheck out this interesting blog post\n " + shareUrl);
                         try {
                             startActivity(whatsappIntent);
+                            Utils.pushShareArticleEvent(this, "DetailVideoScreen", userDynamoId + "", videoId, authorId + "~" + author, "Whatsapp");
                         } catch (android.content.ActivityNotFoundException ex) {
                             Toast.makeText(VlogsDetailActivity.this, "Whatsapp have not been installed.", Toast.LENGTH_SHORT).show();
                         }
@@ -1807,6 +1805,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
 
                     try {
                         startActivity(intent);
+                        Utils.pushShareArticleEvent(this, "DetailVideoScreen", userDynamoId + "", videoId, authorId + "~" + author, "Email");
                     } catch (Exception e) {
                         Intent i = new Intent(Intent.ACTION_SEND);
                         i.setType("plain/text");
@@ -1815,6 +1814,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                         i.putExtra(Intent.EXTRA_TEXT, "mycity4kids\n\nCheck out this interesting blog post\n " + shareUrl);
                         try {
                             startActivity(Intent.createChooser(i, "Send mail..."));
+                            Utils.pushShareArticleEvent(this, "DetailVideoScreen", userDynamoId + "", videoId, authorId + "~" + author, "Email");
                         } catch (android.content.ActivityNotFoundException ex) {
                             Toast.makeText(VlogsDetailActivity.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
                         }
@@ -1834,6 +1834,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
             EditCommentDialogFragment commentFrag = new EditCommentDialogFragment();
             Bundle _args = new Bundle();
             _args.putString(Constants.VIDEO_ID, videoId);
+            _args.putString(Constants.AUTHOR, authorId + "~" + author);
             _args.putString("opType", opType);
             if (comData != null) {
                 _args.putParcelable("commentData", comData);
@@ -2003,8 +2004,6 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                     shareMessage = "mycity4kids\n\nCheck out this interesting blog post " + "\"" + detailData.getTitle() + "\" by " + author + ".\nRead Here: " + shareUrl;
                 }
 //                Utils.pushEventShareURL(VlogsDetailActivity.this, GTMEventType.SHARE_BLOG_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Video Detail", shareUrl);
-                Utils.pushArticleShareEvent(VlogsDetailActivity.this, GTMEventType.SHARE_FUNNY_VIDEO_CLICK_EVENT,
-                        SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Video Details", shareUrl, author + "-" + authorId, "default");
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
                 startActivity(Intent.createChooser(shareIntent, "mycity4kids"));
 

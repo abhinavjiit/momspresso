@@ -16,8 +16,10 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.TopicsPagerAdapter;
 import com.mycity4kids.utils.AppUtils;
@@ -193,6 +195,8 @@ public class TopicsListingFragment extends BaseFragment {
             if (parentTopicId.equals(allTopicsList.get(i).getId())) {
                 subTopicsList.addAll(allTopicsList.get(i).getChild());
                 ((DashboardActivity) getActivity()).setDynamicToolbarTitle(allTopicsList.get(i).getDisplay_name());
+                Utils.pushViewTopicArticlesEvent(getActivity(), "TopicArticlesListingScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "",
+                        allTopicsList.get(i).getId() + "~" + allTopicsList.get(i).getDisplay_name());
                 return;
             }
         }

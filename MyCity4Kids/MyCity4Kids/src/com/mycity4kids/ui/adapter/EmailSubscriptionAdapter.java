@@ -10,7 +10,9 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
 import com.mycity4kids.R;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.SubscriptionAndLanguageSettingsModel;
+import com.mycity4kids.preference.SharedPrefUtils;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -26,12 +28,14 @@ public class EmailSubscriptionAdapter extends RecyclerView.Adapter<EmailSubscrip
     private ArrayList<SubscriptionAndLanguageSettingsModel> subscriptionSettingsList;
     private final float density;
     private RecyclerViewClickListener mListener;
+    private String userId;
 
     public EmailSubscriptionAdapter(Context pContext, ArrayList<SubscriptionAndLanguageSettingsModel> subscriptionSettingsList) {
         this.subscriptionSettingsList = subscriptionSettingsList;
         density = pContext.getResources().getDisplayMetrics().density;
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = pContext;
+        userId = SharedPrefUtils.getUserDetailModel(mContext).getDynamoId();
     }
 
     @Override
@@ -43,7 +47,7 @@ public class EmailSubscriptionAdapter extends RecyclerView.Adapter<EmailSubscrip
     }
 
     @Override
-    public void onBindViewHolder(final EmailSubscriptionViewHolder holder, int position) {
+    public void onBindViewHolder(final EmailSubscriptionViewHolder holder, final int position) {
         holder.aSwitch.setText(StringUtils.capitalize(subscriptionSettingsList.get(position).getDisplayName()));
         holder.aSwitch.setTag(position);
         holder.aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -51,10 +55,10 @@ public class EmailSubscriptionAdapter extends RecyclerView.Adapter<EmailSubscrip
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     subscriptionSettingsList.get((int) holder.aSwitch.getTag()).setStatus("1");
-//                    tempList.add((String) holder.aSwitch.getTag());
+                    Utils.pushEnableSubscriptionEvent(mContext, "", userId, subscriptionSettingsList.get(position).getName());
                 } else {
-//                    tempList.remove((String) holder.aSwitch.getTag());
                     subscriptionSettingsList.get((int) holder.aSwitch.getTag()).setStatus("0");
+                    Utils.pushDisableSubscriptionEvent(mContext, "", userId, subscriptionSettingsList.get(position).getName());
                 }
             }
         });

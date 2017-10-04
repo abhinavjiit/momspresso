@@ -80,9 +80,6 @@ import retrofit2.Retrofit;
  */
 public class EditPreferencesTabFragment extends BaseFragment implements View.OnClickListener, IFacebookUser {
 
-    private boolean isSubsequentCall = false;
-    private String accessToken;
-
     private ArrayList<SubscriptionAndLanguageSettingsModel> subscriptionSettingsList;
     private ArrayList<NotificationSettingsModel> notificationSettingsList;
     private ArrayList<SubscriptionAndLanguageSettingsModel> languagesList;
@@ -466,7 +463,6 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
             catTextView.setText(followedSubSubTopicList.get(i).getDisplay_name());
             catTextView.setSelected(true);
             subsubLL.setTag(followedSubSubTopicList.get(i));
-
             flowLayout.addView(subsubLL);
             subsubLL.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -475,10 +471,13 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
                     if (top.isSelected()) {
                         top.setIsSelected(false);
                         catTextView.setSelected(false);
-//                        }
+                        Utils.pushUnfollowTopicEvent(getActivity(), "DetailArticleScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(),
+                                top.getId() + "~" + top.getDisplay_name());
                     } else {
                         top.setIsSelected(true);
                         catTextView.setSelected(true);
+                        Utils.pushFollowTopicEvent(getActivity(), "DetailArticleScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(),
+                                top.getId() + "~" + top.getDisplay_name());
                     }
                 }
             });
@@ -768,7 +767,6 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
             return;
         }
         final Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        isSubsequentCall = true;
         ConfigAPIs configAPIs = retrofit.create(ConfigAPIs.class);
         Call<ConfigResponse> call = configAPIs.getConfig();
         call.enqueue(configSettingResponseListener);

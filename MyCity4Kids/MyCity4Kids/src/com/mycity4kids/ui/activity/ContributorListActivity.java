@@ -20,7 +20,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -40,12 +39,11 @@ import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.ContributorListResponse;
 import com.mycity4kids.models.response.ContributorListResult;
 import com.mycity4kids.models.response.LanguageConfigModel;
-import com.mycity4kids.models.response.LanguageRanksModel;
 import com.mycity4kids.newmodels.bloggermodel.BlogItemModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ContributorListAPI;
 import com.mycity4kids.ui.adapter.CustomSpinnerAdapter;
-import com.mycity4kids.ui.adapter.ParentingBlogAdapter;
+import com.mycity4kids.ui.adapter.ContributorListAdapter;
 import com.mycity4kids.utils.AppUtils;
 
 import java.io.FileInputStream;
@@ -63,7 +61,7 @@ import retrofit2.Retrofit;
  */
 public class ContributorListActivity extends BaseActivity implements View.OnClickListener {
     ListView blogListing;
-    ParentingBlogAdapter parentingBlogAdapter;
+    ContributorListAdapter contributorListAdapter;
     private RelativeLayout mLodingView;
     private int totalPageCount = 2;
     private int nextPageNumber = 0;
@@ -163,8 +161,8 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
             }
         });
 
-        parentingBlogAdapter = new ParentingBlogAdapter(ContributorListActivity.this, contributorArrayList);
-        blogListing.setAdapter(parentingBlogAdapter);
+        contributorListAdapter = new ContributorListAdapter(ContributorListActivity.this, contributorArrayList);
+        blogListing.setAdapter(contributorListAdapter);
 
         fab_menu.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
             @Override
@@ -324,7 +322,7 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
                 // No results for search
                 contributorArrayList.clear();
                 contributorArrayList.addAll(dataList);
-                parentingBlogAdapter.notifyDataSetChanged();
+                contributorListAdapter.notifyDataSetChanged();
                 noBlogsTextView.setVisibility(View.VISIBLE);
                 noBlogsTextView.setText("No result found");
             }
@@ -340,7 +338,7 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
             if (AppConstants.PAGINATION_END_VALUE.equals(paginationValue)) {
                 isLastPageReached = true;
             }
-            parentingBlogAdapter.notifyDataSetChanged();
+            contributorListAdapter.notifyDataSetChanged();
 
         }
     }
@@ -388,7 +386,7 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
                 sortType = 2;
                 paginationValue = "0";
                 contributorArrayList.clear();
-                parentingBlogAdapter.notifyDataSetChanged();
+                contributorListAdapter.notifyDataSetChanged();
                 hitBloggerAPIrequest(sortType, type);
                 break;
             case R.id.nameSortFAB:
@@ -397,7 +395,7 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
                 sortType = 1;
                 paginationValue = "0";
                 contributorArrayList.clear();
-                parentingBlogAdapter.notifyDataSetChanged();
+                contributorListAdapter.notifyDataSetChanged();
                 hitBloggerAPIrequest(sortType, type);
                 break;
         }
@@ -409,7 +407,7 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
         isSortEnable = true;
         this.type = type;
         contributorArrayList.clear();
-        parentingBlogAdapter.notifyDataSetChanged();
+        contributorListAdapter.notifyDataSetChanged();
         sortType = 1;
         isReuqestRunning = true;
         if (!type.equals(AppConstants.USER_TYPE_BLOGGER)) {

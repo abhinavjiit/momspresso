@@ -22,6 +22,7 @@ import com.mycity4kids.animation.MyCityAnimationsUtil;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.ArticleDetailRequest;
 import com.mycity4kids.models.request.FollowUnfollowUserRequest;
 import com.mycity4kids.models.response.ArticleDetailResponse;
@@ -72,6 +73,7 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
     private LinearLayout topArticleContainer;
     private TextView topArticleLabel;
     private boolean isExpanded = false;
+    private String authorName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -194,16 +196,14 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
             isFollowing = false;
             followButton.setVisibility(View.VISIBLE);
             unfollowButton.setVisibility(View.INVISIBLE);
-//            Utils.pushAuthorFollowUnfollowEvent(BloggerProfileActivity.this, GTMEventType.UNFOLLOW_AUTHOR_CLICK_EVENT, "User Profile", SharedPrefUtils.getUserDetailModel(BloggerProfileActivity.this).getDynamoId(),
-//                    "", firstName + " " + lastName + "-" + userId);
+            Utils.pushUnfollowAuthorEvent(this, "PublicProfileScreen", userId, authorId + "~" + authorName);
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.unfollowUser(request);
             followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback);
         } else {
             isFollowing = true;
             followButton.setVisibility(View.INVISIBLE);
             unfollowButton.setVisibility(View.VISIBLE);
-//            Utils.pushAuthorFollowUnfollowEvent(BloggerProfileActivity.this, GTMEventType.FOLLOW_AUTHOR_CLICK_EVENT, "User Profile", SharedPrefUtils.getUserDetailModel(BloggerProfileActivity.this).getDynamoId(),
-//                    "", firstName + " " + lastName + "-" + userId);
+            Utils.pushFollowAuthorEvent(this, "PublicProfileScreen", userId, authorId + "~" + authorName);
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.followUser(request);
             followUnfollowUserResponseCall.enqueue(followUserResponseCallback);
         }
@@ -252,7 +252,7 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
 
                 int totalArticlesCount = Integer.parseInt(responseData.getData().get(0).getResult().getTotalArticles());
                 followingCountTextView.setText(AppUtils.withSuffix(totalArticlesCount));
-
+                authorName = responseData.getData().get(0).getResult().getFirstName() + " " + responseData.getData().get(0).getResult().getLastName();
                 authorNameTextView.setText(responseData.getData().get(0).getResult().getFirstName() + " " + responseData.getData().get(0).getResult().getLastName());
                 toolbarTitle.setText(responseData.getData().get(0).getResult().getFirstName() + " " + responseData.getData().get(0).getResult().getLastName());
 
@@ -273,22 +273,6 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
                         authorTypeTextView.setVisibility(View.GONE);
                         break;
                 }
-//                blogTitle.setText(responseData.getData().get(0).getResult().getBlogTitle());
-//                getSupportActionBar().setTitle(responseData.getData().get(0).getResult().getFirstName());
-//                Bio = responseData.getData().get(0).getResult().getUserBio();
-//                firstName = responseData.getData().get(0).getResult().getFirstName();
-//                lastName = responseData.getData().get(0).getResult().getLastName();
-//                if (isPrivateProfile && AppConstants.USER_TYPE_BLOGGER.equals(responseData.getData().get(0).getResult().getUserType())) {
-//                    analyticsTextView.setVisibility(View.VISIBLE);
-//                    analyticsTextView.setOnClickListener(MyAccountProfileFragment.this);
-//                } else if (null != analyticsTextView) {
-//                    analyticsTextView.setVisibility(View.GONE);
-//                }
-//                if (null == responseData.getData().get(0).getResult().getPhone()) {
-//                    phoneNumber = " ";
-//                } else {
-//                    phoneNumber = responseData.getData().get(0).getResult().getPhone().getMobile();
-//                }
 
                 if (!StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp())) {
                     Picasso.with(BloggerProfileActivity.this).load(responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp())
@@ -454,7 +438,7 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
                                 intent.putExtra(Constants.AUTHOR_ID, dataList.get(0).getUserId());
                                 intent.putExtra(Constants.BLOG_SLUG, dataList.get(0).getBlogPageSlug());
                                 intent.putExtra(Constants.TITLE_SLUG, dataList.get(0).getTitleSlug());
-                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "BloggerTop3");
+                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Top3Article");
                                 intent.putExtra(Constants.FROM_SCREEN, "PublicProfileScreen");
                                 intent.putExtra(Constants.ARTICLE_INDEX, "" + 0);
                                 intent.putParcelableArrayListExtra("pagerListData", dataList);
@@ -488,7 +472,7 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
                                 intent.putExtra(Constants.AUTHOR_ID, dataList.get(0).getUserId());
                                 intent.putExtra(Constants.BLOG_SLUG, dataList.get(0).getBlogPageSlug());
                                 intent.putExtra(Constants.TITLE_SLUG, dataList.get(0).getTitleSlug());
-                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "BloggerTop3");
+                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Top3Article");
                                 intent.putExtra(Constants.FROM_SCREEN, "PublicProfileScreen");
                                 intent.putExtra(Constants.ARTICLE_INDEX, "" + 0);
                                 intent.putParcelableArrayListExtra("pagerListData", dataList);
@@ -504,7 +488,7 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
                                 intent.putExtra(Constants.AUTHOR_ID, dataList.get(1).getUserId());
                                 intent.putExtra(Constants.BLOG_SLUG, dataList.get(1).getBlogPageSlug());
                                 intent.putExtra(Constants.TITLE_SLUG, dataList.get(1).getTitleSlug());
-                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "BloggerTop3");
+                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Top3Article");
                                 intent.putExtra(Constants.FROM_SCREEN, "PublicProfileScreen");
                                 intent.putExtra(Constants.ARTICLE_INDEX, "" + 1);
                                 intent.putParcelableArrayListExtra("pagerListData", dataList);
@@ -541,10 +525,10 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
                             public void onClick(View v) {
                                 Intent intent = new Intent(BloggerProfileActivity.this, ArticleDetailsContainerActivity.class);
                                 intent.putExtra(Constants.ARTICLE_ID, dataList.get(0).getId());
-                                intent.putExtra(Constants.AUTHOR_ID, dataList.get(0).getUserName());
+                                intent.putExtra(Constants.AUTHOR_ID, dataList.get(0).getUserId());
                                 intent.putExtra(Constants.BLOG_SLUG, dataList.get(0).getBlogPageSlug());
                                 intent.putExtra(Constants.TITLE_SLUG, dataList.get(0).getTitleSlug());
-                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "BloggerTop3");
+                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Top3Article");
                                 intent.putExtra(Constants.FROM_SCREEN, "PublicProfileScreen");
                                 intent.putExtra(Constants.ARTICLE_INDEX, "" + 0);
                                 intent.putParcelableArrayListExtra("pagerListData", dataList);
@@ -557,10 +541,10 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
                             public void onClick(View v) {
                                 Intent intent = new Intent(BloggerProfileActivity.this, ArticleDetailsContainerActivity.class);
                                 intent.putExtra(Constants.ARTICLE_ID, dataList.get(1).getId());
-                                intent.putExtra(Constants.AUTHOR_ID, dataList.get(1).getUserName());
+                                intent.putExtra(Constants.AUTHOR_ID, dataList.get(1).getUserId());
                                 intent.putExtra(Constants.BLOG_SLUG, dataList.get(1).getBlogPageSlug());
                                 intent.putExtra(Constants.TITLE_SLUG, dataList.get(1).getTitleSlug());
-                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "BloggerTop3");
+                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Top3Article");
                                 intent.putExtra(Constants.FROM_SCREEN, "PublicProfileScreen");
                                 intent.putExtra(Constants.ARTICLE_INDEX, "" + 1);
                                 intent.putParcelableArrayListExtra("pagerListData", dataList);
@@ -573,10 +557,10 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
                             public void onClick(View v) {
                                 Intent intent = new Intent(BloggerProfileActivity.this, ArticleDetailsContainerActivity.class);
                                 intent.putExtra(Constants.ARTICLE_ID, dataList.get(2).getId());
-                                intent.putExtra(Constants.AUTHOR_ID, dataList.get(2).getUserName());
+                                intent.putExtra(Constants.AUTHOR_ID, dataList.get(2).getUserId());
                                 intent.putExtra(Constants.BLOG_SLUG, dataList.get(2).getBlogPageSlug());
                                 intent.putExtra(Constants.TITLE_SLUG, dataList.get(2).getTitleSlug());
-                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "BloggerTop3");
+                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Top3Article");
                                 intent.putExtra(Constants.FROM_SCREEN, "PublicProfileScreen");
                                 intent.putExtra(Constants.ARTICLE_INDEX, "" + 2);
                                 intent.putParcelableArrayListExtra("pagerListData", dataList);

@@ -11,7 +11,9 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.mycity4kids.R;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.SubscriptionAndLanguageSettingsModel;
+import com.mycity4kids.preference.SharedPrefUtils;
 
 import java.util.ArrayList;
 
@@ -25,12 +27,14 @@ public class PreferredLanguagesAdapter extends RecyclerView.Adapter<PreferredLan
     private ArrayList<SubscriptionAndLanguageSettingsModel> languageSettingsList;
     private final float density;
     private RecyclerViewClickListener mListener;
+    private String userId;
 
     public PreferredLanguagesAdapter(Context pContext, ArrayList<SubscriptionAndLanguageSettingsModel> languageSettingsList) {
         this.languageSettingsList = languageSettingsList;
         density = pContext.getResources().getDisplayMetrics().density;
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = pContext;
+        userId = SharedPrefUtils.getUserDetailModel(mContext).getDynamoId();
     }
 
     @Override
@@ -42,7 +46,7 @@ public class PreferredLanguagesAdapter extends RecyclerView.Adapter<PreferredLan
     }
 
     @Override
-    public void onBindViewHolder(final PrefLanguagesViewHolder holder, int position) {
+    public void onBindViewHolder(final PrefLanguagesViewHolder holder, final int position) {
         holder.languageStatus.setText(languageSettingsList.get(position).getName());
         holder.languageStatus.setTag(position);
         holder.languageStatus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -50,23 +54,14 @@ public class PreferredLanguagesAdapter extends RecyclerView.Adapter<PreferredLan
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     languageSettingsList.get((int) holder.languageStatus.getTag()).setStatus("1");
+                    Utils.pushEnableLanguageEvent(mContext, "", userId, languageSettingsList.get(position).getName());
                 } else {
                     languageSettingsList.get((int) holder.languageStatus.getTag()).setStatus("0");
+                    Utils.pushDisableLanguageEvent(mContext, "", userId, languageSettingsList.get(position).getName());
                 }
             }
         });
-//        holder.languageNameTextView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                holder.languageStatus.performClick();
-//            }
-//        });
-//        holder.storyCountTextView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                holder.languageStatus.performClick();
-//            }
-//        });
+
         if ("1".equals(languageSettingsList.get(position).getStatus())) {
             holder.languageStatus.setChecked(true);
         } else {

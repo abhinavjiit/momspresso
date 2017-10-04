@@ -10,13 +10,14 @@ public class GTMTags {
     public static final String TagScreen = "ScreenName";
     public static final String TagTopic = "Topic";
     public static final String TagParentTopic = "ParentTopic";
-    public static final String TagLinkType = "LinkType";
     public static final String TagLanguage = "Language";
     public static final String TagIndex = "Index";
     public static final String TagFromIndex = "FromIndex";
     public static final String TagDuration = "Duration";
     public static final String TagShareMedium = "SharePlatform";
     public static final String TagListingType = "ListingType";
+    public static final String TagNotificationType = "Notification";
+    public static final String TagSubscriptionType = "Subscription";
 
 
     public static final String ScreenName = "screenName";

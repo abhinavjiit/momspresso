@@ -23,6 +23,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.editor.ArticleImageTagUploadActivity;
 import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.editor.ArticleDraftRequest;
@@ -211,6 +212,7 @@ public class UserDraftArticleTabFragment extends BaseFragment implements View.On
         switch (view.getId()) {
             case R.id.editDraftTextView:
                 if (Build.VERSION.SDK_INT > 15) {
+                    Utils.pushEditDraftEvent(getActivity(), "DraftList", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), draftList.get(position).getId());
                     Intent intent = new Intent(getActivity(), EditorPostActivity.class);
                     intent.putExtra("draftItem", draftList.get(position));
                     intent.putExtra("from", "draftList");
@@ -223,6 +225,7 @@ public class UserDraftArticleTabFragment extends BaseFragment implements View.On
                 }
                 break;
             case R.id.deleteDraftImageView:
+                Utils.pushRemoveDraftEvent(getActivity(), "DraftList", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), draftList.get(position).getId());
                 deleteDraftAPI(draftList.get(position), position);
                 break;
         }

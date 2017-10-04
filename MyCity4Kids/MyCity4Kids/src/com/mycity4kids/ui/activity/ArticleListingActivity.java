@@ -209,7 +209,6 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
             showToast(getString(R.string.error_network));
             return;
         }
-        Utils.pushOpenArticleListingEvent(this, GTMEventType.ARTICLE_LISTING_CLICK_EVENT, fromScreen, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), sortType, "" + pPageCount);
         String url = "";
         if (Constants.KEY_FOR_YOU.equals(sortKey)) {
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();

@@ -68,7 +68,7 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
         mDatalist = new ArrayList<>();
 
 
-        followerFollowingListAdapter = new FollowerFollowingListAdapter(this);
+        followerFollowingListAdapter = new FollowerFollowingListAdapter(this, followListType);
         followerFollowingListAdapter.setData(mDatalist);
         followerFollowingListView.setAdapter(followerFollowingListAdapter);
 

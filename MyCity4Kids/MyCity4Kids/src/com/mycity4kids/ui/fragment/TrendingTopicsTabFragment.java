@@ -103,6 +103,7 @@ public class TrendingTopicsTabFragment extends BaseFragment implements View.OnCl
                 ArticleListingResult parentingListData = (ArticleListingResult) adapterView.getItemAtPosition(i);
 
                 if (null == parentingListData) {
+                    Utils.pushOpenFollowTopicEvent(getActivity(), "HomeScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
                     ExploreArticleListingTypeFragment searchTopicFrag = new ExploreArticleListingTypeFragment();
                     Bundle searchBundle = new Bundle();
                     searchBundle.putString("fragType", "search");

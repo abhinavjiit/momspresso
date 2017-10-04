@@ -59,12 +59,15 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
     private String authorId;
     private String articleId;
     private ArrayList<ArticleListingResult> articleList;
+    private int currPos;
+    private String userDynamoId;
+    private long audioStartTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.article_details_container);
-        String userDynamoId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
+        userDynamoId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
         Utils.pushOpenScreenEvent(this, "DetailArticleScreen", userDynamoId + "");
 
         mToolbar = (Toolbar) findViewById(R.id.anim_toolbar);
@@ -79,10 +82,11 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
         Bundle bundle = getIntent().getExtras();
         articleList = bundle.getParcelableArrayList("pagerListData");
         String fromScreen = bundle.getString(Constants.FROM_SCREEN);
-        String author = bundle.getString(Constants.AUTHOR);
+        final String author = bundle.getString(Constants.AUTHOR);
 
         if (bundle.getBoolean("fromNotification")) {
             Utils.pushEventNotificationClick(this, GTMEventType.NOTIFICATION_CLICK_EVENT, userDynamoId, "Notification Popup", "article_details");
+            Utils.pushViewArticleEvent(this, "Notification", userDynamoId + "", articleId, "Notification Popup", "-1" + "", author);
         } else {
             String listingType = bundle.getString(Constants.ARTICLE_OPENED_FROM);
             String index = bundle.getString(Constants.ARTICLE_INDEX);
@@ -107,24 +111,34 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
             hitRelatedArticleAPI();
 
         } else {
-            int pos = Integer.parseInt(bundle.getString(Constants.ARTICLE_INDEX));
+            final int pos = Integer.parseInt(bundle.getString(Constants.ARTICLE_INDEX));
 
             mViewPagerAdapter = new ArticleDetailsPagerAdapter(getSupportFragmentManager(), articleList.size(), articleList, fromScreen);
             mViewPager.setAdapter(mViewPagerAdapter);
             mViewPager.setCurrentItem(pos);
-
             mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                     Intent readArticleIntent = new Intent(ArticleDetailsContainerActivity.this, ReadArticleService.class);
                     stopService(readArticleIntent);
                     playTtsTextView.setImageDrawable(ContextCompat.getDrawable(ArticleDetailsContainerActivity.this, R.drawable.ic_play_tts));
+                    if (isAudioPlaying) {
+                        ArticleDetailsFragment articleDetailsFragment = ((ArticleDetailsFragment) mViewPagerAdapter.instantiateItem(mViewPager, mViewPager.getCurrentItem()));
+                        long duration = (System.currentTimeMillis() - audioStartTime) / 1000;
+                        Utils.pushStopArticleAudioEvent(ArticleDetailsContainerActivity.this, "DetailArticleScreen", userDynamoId + "", articleDetailsFragment.getGTMArticleId(), articleDetailsFragment.getGTMAuthor(),
+                                articleDetailsFragment.getGTMLanguage(), "" + duration);
+                    }
                     isAudioPlaying = false;
+                    currPos = position;
                 }
 
                 @Override
                 public void onPageSelected(int position) {
-
+                    if (currPos == position) {
+                        Utils.pushArticleSwipeEvent(ArticleDetailsContainerActivity.this, "DetailArticleScreen", userDynamoId + "", articleId, "" + (currPos + 1), "" + position);
+                    } else {
+                        Utils.pushArticleSwipeEvent(ArticleDetailsContainerActivity.this, "DetailArticleScreen", userDynamoId + "", articleId, "" + currPos, "" + position);
+                    }
                 }
 
                 @Override
@@ -220,6 +234,17 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
     protected void onDestroy() {
         Intent readArticleIntent = new Intent(this, ReadArticleService.class);
         stopService(readArticleIntent);
+        try {
+            if (isAudioPlaying) {
+                ArticleDetailsFragment articleDetailsFragment = ((ArticleDetailsFragment) mViewPagerAdapter.instantiateItem(mViewPager, mViewPager.getCurrentItem()));
+                long duration = (System.currentTimeMillis() - audioStartTime) / 1000;
+                Utils.pushStopArticleAudioEvent(ArticleDetailsContainerActivity.this, "DetailArticleScreen", userDynamoId + "", articleDetailsFragment.getGTMArticleId(), articleDetailsFragment.getGTMAuthor(),
+                        articleDetailsFragment.getGTMLanguage(), "" + duration);
+            }
+        } catch (Exception e) {
+
+        }
+
         super.onDestroy();
     }
 
@@ -232,21 +257,30 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
             case R.id.playTtsTextView:
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1 && !isAudioPlaying) {
                     Intent readArticleIntent = new Intent(this, ReadArticleService.class);
-                    String playContent = ((ArticleDetailsFragment) mViewPagerAdapter.instantiateItem(mViewPager, mViewPager.getCurrentItem())).getArticleContent();
+                    ArticleDetailsFragment articleDetailsFragment = ((ArticleDetailsFragment) mViewPagerAdapter.instantiateItem(mViewPager, mViewPager.getCurrentItem()));
+                    String playContent = articleDetailsFragment.getArticleContent();
                     if (StringUtils.isNullOrEmpty(playContent)) {
                         showToast(getString(R.string.ad_tts_toast_unplayable_article));
                         return;
                     }
                     readArticleIntent.putExtra("content", playContent);
-                    readArticleIntent.putExtra("langCategoryId", "" + ((ArticleDetailsFragment) mViewPagerAdapter.instantiateItem(mViewPager, mViewPager.getCurrentItem())).getArticleLanguageCategoryId());
+                    readArticleIntent.putExtra("langCategoryId", "" + articleDetailsFragment.getArticleLanguageCategoryId());
                     startService(readArticleIntent);
                     playTtsTextView.setImageDrawable(ContextCompat.getDrawable(ArticleDetailsContainerActivity.this, R.drawable.ic_stop_tts));
+                    Utils.pushPlayArticleAudioEvent(this, "DetailArticleScreen", userDynamoId + "", articleDetailsFragment.getGTMArticleId(), articleDetailsFragment.getGTMAuthor(),
+                            articleDetailsFragment.getGTMLanguage());
+                    audioStartTime = System.currentTimeMillis();
                     isAudioPlaying = true;
                 } else {
                     Intent readArticleIntent = new Intent(ArticleDetailsContainerActivity.this, ReadArticleService.class);
                     stopService(readArticleIntent);
                     playTtsTextView.setImageDrawable(ContextCompat.getDrawable(ArticleDetailsContainerActivity.this, R.drawable.ic_play_tts));
                     isAudioPlaying = false;
+
+                    ArticleDetailsFragment articleDetailsFragment = ((ArticleDetailsFragment) mViewPagerAdapter.instantiateItem(mViewPager, mViewPager.getCurrentItem()));
+                    long duration = (System.currentTimeMillis() - audioStartTime) / 1000;
+                    Utils.pushStopArticleAudioEvent(this, "DetailArticleScreen", userDynamoId + "", articleDetailsFragment.getGTMArticleId(), articleDetailsFragment.getGTMAuthor(),
+                            articleDetailsFragment.getGTMLanguage(), "" + duration);
                 }
                 break;
             case R.id.coachmarksImageView:
@@ -431,6 +465,12 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
                 Intent readArticleIntent = new Intent(ArticleDetailsContainerActivity.this, ReadArticleService.class);
                 stopService(readArticleIntent);
                 playTtsTextView.setImageDrawable(ContextCompat.getDrawable(ArticleDetailsContainerActivity.this, R.drawable.ic_play_tts));
+                if (isAudioPlaying) {
+                    ArticleDetailsFragment articleDetailsFragment = ((ArticleDetailsFragment) mViewPagerAdapter.instantiateItem(mViewPager, mViewPager.getCurrentItem()));
+                    long duration = (System.currentTimeMillis() - audioStartTime) / 1000;
+                    Utils.pushStopArticleAudioEvent(ArticleDetailsContainerActivity.this, "DetailArticleScreen", userDynamoId + "", articleDetailsFragment.getGTMArticleId(), articleDetailsFragment.getGTMAuthor(),
+                            articleDetailsFragment.getGTMLanguage(), "" + duration);
+                }
                 isAudioPlaying = false;
             }
 

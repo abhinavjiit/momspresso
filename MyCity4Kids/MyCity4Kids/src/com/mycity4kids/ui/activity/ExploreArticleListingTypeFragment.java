@@ -162,14 +162,17 @@ public class ExploreArticleListingTypeFragment extends BaseFragment {
                 Intent intent1 = new Intent(getActivity(), ArticleListingActivity.class);
                 if (Constants.TAB_FOR_YOU.equalsIgnoreCase(tab.getText().toString())) {
                     Utils.pushOpenScreenEvent(getActivity(), "ForYouScreen", dynamoUserId + "");
+                    Utils.pushViewQuickLinkArticlesEvent(getActivity(), "TopicScreen", dynamoUserId + "", "ForYouScreen");
                     intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_FOR_YOU);
                 } else if (Constants.TAB_POPULAR.equalsIgnoreCase(tab.getText().toString())) {
                     intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_POPULAR);
                 } else if (Constants.TAB_EDITOR_PICKS.equalsIgnoreCase(tab.getText().toString())) {
                     Utils.pushOpenScreenEvent(getActivity(), "EditorsPickScreen", dynamoUserId + "");
+                    Utils.pushViewQuickLinkArticlesEvent(getActivity(), "TopicScreen", dynamoUserId + "", "EditorsPickScreen");
                     intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_EDITOR_PICKS);
                 } else if (Constants.TAB_RECENT.equalsIgnoreCase(tab.getText().toString())) {
                     Utils.pushOpenScreenEvent(getActivity(), "RecentScreen", dynamoUserId + "");
+                    Utils.pushViewQuickLinkArticlesEvent(getActivity(), "TopicScreen", dynamoUserId + "", "RecentScreen");
                     intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_RECENT);
                 } else if (Constants.TAB_IN_YOUR_CITY.equalsIgnoreCase(tab.getText().toString())) {
                     Utils.pushOpenScreenEvent(getActivity(), "TopicScreen", dynamoUserId + "");
@@ -183,11 +186,13 @@ public class ExploreArticleListingTypeFragment extends BaseFragment {
                     return;
                 } else if (Constants.TAB_LANGUAGE.equalsIgnoreCase(tab.getText().toString())) {
                     Utils.pushOpenScreenEvent(getActivity(), "LanguageScreen", dynamoUserId + "");
+                    Utils.pushViewQuickLinkArticlesEvent(getActivity(), "TopicScreen", dynamoUserId + "", "LanguageScreen");
                     Intent cityIntent = new Intent(getActivity(), LanguageSpecificArticleListingActivity.class);
                     startActivity(cityIntent);
                     return;
                 } else if (Constants.TAB_VIDEOS.equalsIgnoreCase(tab.getText().toString())) {
                     Utils.pushOpenScreenEvent(getActivity(), "VideosScreen", dynamoUserId + "");
+                    Utils.pushViewQuickLinkArticlesEvent(getActivity(), "TopicScreen", dynamoUserId + "", "VideosScreen");
                     Intent cityIntent = new Intent(getActivity(), AllVideosListingActivity.class);
                     startActivity(cityIntent);
                     return;

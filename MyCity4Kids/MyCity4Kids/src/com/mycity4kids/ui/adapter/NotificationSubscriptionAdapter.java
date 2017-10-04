@@ -10,7 +10,9 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
 import com.mycity4kids.R;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.NotificationSettingsModel;
+import com.mycity4kids.preference.SharedPrefUtils;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -26,12 +28,14 @@ public class NotificationSubscriptionAdapter extends RecyclerView.Adapter<Notifi
     private ArrayList<NotificationSettingsModel> notificationSettingsList;
     private final float density;
     private RecyclerViewClickListener mListener;
+    private String userId;
 
     public NotificationSubscriptionAdapter(Context pContext, ArrayList<NotificationSettingsModel> notificationSettingsList) {
         this.notificationSettingsList = notificationSettingsList;
         density = pContext.getResources().getDisplayMetrics().density;
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = pContext;
+        userId = SharedPrefUtils.getUserDetailModel(mContext).getDynamoId();
     }
 
     @Override
@@ -43,7 +47,7 @@ public class NotificationSubscriptionAdapter extends RecyclerView.Adapter<Notifi
     }
 
     @Override
-    public void onBindViewHolder(final NotificationViewHolder holder, int position) {
+    public void onBindViewHolder(final NotificationViewHolder holder, final int position) {
         holder.aSwitch.setText(StringUtils.capitalize(notificationSettingsList.get(position).getName()));
         holder.aSwitch.setTag(position);
         holder.aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -51,8 +55,10 @@ public class NotificationSubscriptionAdapter extends RecyclerView.Adapter<Notifi
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     notificationSettingsList.get((int) holder.aSwitch.getTag()).setStatus("1");
+                    Utils.pushEnableNotificationEvent(mContext, "", userId, notificationSettingsList.get(position).getId());
                 } else {
                     notificationSettingsList.get((int) holder.aSwitch.getTag()).setStatus("0");
+                    Utils.pushDisableNotificationEvent(mContext, "", userId, notificationSettingsList.get(position).getId());
                 }
             }
         });
