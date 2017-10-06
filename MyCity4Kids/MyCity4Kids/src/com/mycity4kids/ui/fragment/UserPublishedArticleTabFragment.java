@@ -238,10 +238,10 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
                 startActivity(Intent.createChooser(shareIntent, "mycity4kids"));
                 if (isPrivateProfile) {
                     Utils.pushShareArticleEvent(getActivity(), "PrivateUserArticlesScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", articleDataModelsNew.get(position).getId(),
-                            authorId + "~" + articleDataModelsNew.get(position).getUserName(), "");
+                            authorId + "~" + articleDataModelsNew.get(position).getUserName(), "-");
                 } else {
                     Utils.pushShareArticleEvent(getActivity(), "PublicUserArticlesScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", articleDataModelsNew.get(position).getId(),
-                            authorId + "~" + articleDataModelsNew.get(position).getUserName(), "");
+                            authorId + "~" + articleDataModelsNew.get(position).getUserName(), "-");
                 }
                 break;
         }

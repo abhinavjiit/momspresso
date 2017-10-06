@@ -158,10 +158,10 @@ public class UsersRecommendationTabFragment extends BaseFragment implements User
                 startActivity(Intent.createChooser(shareIntent, "mycity4kids"));
                 if (authorId.equals(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId())) {
                     Utils.pushShareArticleEvent(getActivity(), "PrivateLikedScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", recommendationsList.get(position).getId(),
-                            recommendationsList.get(position).getUserId() + "~" + recommendationsList.get(position).getUserName(), "");
+                            recommendationsList.get(position).getUserId() + "~" + recommendationsList.get(position).getUserName(), "-");
                 } else {
                     Utils.pushShareArticleEvent(getActivity(), "PublicLikedScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", recommendationsList.get(position).getId(),
-                            recommendationsList.get(position).getUserId() + "~" + recommendationsList.get(position).getUserName(), "");
+                            recommendationsList.get(position).getUserId() + "~" + recommendationsList.get(position).getUserName(), "-");
                 }
                 break;
             case R.id.rootView:

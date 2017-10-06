@@ -54,10 +54,8 @@ public class PreferredLanguagesAdapter extends RecyclerView.Adapter<PreferredLan
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     languageSettingsList.get((int) holder.languageStatus.getTag()).setStatus("1");
-//                    Utils.pushEnableLanguageEvent(mContext, "", userId, languageSettingsList.get(position).getName());
                 } else {
                     languageSettingsList.get((int) holder.languageStatus.getTag()).setStatus("0");
-//                    Utils.pushDisableLanguageEvent(mContext, "", userId, languageSettingsList.get(position).getName());
                 }
             }
         });
@@ -75,14 +73,10 @@ public class PreferredLanguagesAdapter extends RecyclerView.Adapter<PreferredLan
     }
 
     public class PrefLanguagesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView languageNameTextView;
-        TextView storyCountTextView;
         CheckBox languageStatus;
 
         public PrefLanguagesViewHolder(View itemView, RecyclerViewClickListener listener) {
             super(itemView);
-//            languageNameTextView = (TextView) itemView.findViewById(R.id.languageTextView);
-//            storyCountTextView = (TextView) itemView.findViewById(R.id.storiesCountTextView);
             languageStatus = (CheckBox) itemView.findViewById(R.id.languageStatus);
             Typeface font = Typeface.createFromAsset(mContext.getAssets(), "fonts/oswald.ttf");
             languageStatus.setTypeface(font);

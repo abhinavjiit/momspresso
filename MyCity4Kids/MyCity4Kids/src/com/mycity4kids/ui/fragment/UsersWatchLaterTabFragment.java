@@ -208,7 +208,7 @@ public class UsersWatchLaterTabFragment extends BaseFragment implements UsersBoo
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
                 startActivity(Intent.createChooser(shareIntent, "mycity4kids"));
                 Utils.pushShareArticleEvent(getActivity(), "WatchLaterScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", watchLaterList.get(position).getId(),
-                        watchLaterList.get(position).getUserId() + "~" + watchLaterList.get(position).getUserName(), "");
+                        watchLaterList.get(position).getUserId() + "~" + watchLaterList.get(position).getUserName(), "-");
                 break;
             case R.id.removeBookmarkTextView:
                 bookmarkDeletePos = position;

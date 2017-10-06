@@ -690,6 +690,7 @@
     <string name="app_settings.edit_profile.update_success">User profile updated successfully</string>
     <string name="app_settings.edit_profile.toast_fn_empty">First Name cannot be empty</string>
     <string name="app_settings.edit_profile.toast_blog_title_empty">Blog Title cannot be empty</string>
+    <string name="app_settings.edit_profile.toast_blog_title_special_char">Blog Title should not contain any special characters</string>
     <string name="app_settings.edit_profile.toast_special_not_allowed">Special characters are not allowed</string>
     <string name="app_settings.edit_profile.toast_user_bio_empty">User bio cannot be empty</string>
     <string name="app_settings.edit_profile.toast_user_bio_max">Maximum limit for bio is</string>
