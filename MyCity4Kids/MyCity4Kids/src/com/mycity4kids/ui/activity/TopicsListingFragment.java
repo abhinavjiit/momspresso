@@ -81,6 +81,23 @@ public class TopicsListingFragment extends BaseFragment {
             Call<ResponseBody> call = topicsAPI.downloadCategoriesJSON();
             call.enqueue(downloadCategoriesJSONCallback);
         }
+        if (subTopicsList.size() == 0) {
+            Topics mainTopic = new Topics();
+            mainTopic.setId(parentTopicId);
+            mainTopic.setDisplay_name("ALL");
+            mainTopic.setTitle("ALL");
+
+            Topics childTopic = new Topics();
+            childTopic.setId(parentTopicId);
+            childTopic.setDisplay_name("ALL");
+            childTopic.setTitle("ALL");
+
+            ArrayList<Topics> aa = new ArrayList<Topics>();
+            aa.add(childTopic);
+
+            mainTopic.setChild(aa);
+            subTopicsList.add(mainTopic);
+        }
         for (int i = 0; i < subTopicsList.size(); i++) {
             tabLayout.addTab(tabLayout.newTab().setText(subTopicsList.get(i).getDisplay_name()));
         }

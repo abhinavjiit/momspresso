@@ -46,7 +46,7 @@ import retrofit2.Retrofit;
 public class TrendingTopicsTabFragment extends BaseFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     private int nextPageNumber = 2;
-    private int limit = 15;
+    private int limit = 10;
     private boolean isReuqestRunning = false;
     private boolean isLastPageReached = false;
     private TrendingListingResult trendingTopicData;
@@ -144,7 +144,7 @@ public class TrendingTopicsTabFragment extends BaseFragment implements View.OnCl
         int from = (nextPageNumber - 1) * limit + 1;
 
 //        Utils.pushOpenArticleListingEvent(this, GTMEventType.ARTICLE_LISTING_CLICK_EVENT, "fromScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), displayName + "~" + selectedTopics, "" + nextPageNumber);
-        Call<ArticleListingResponse> filterCall = topicsAPI.getFilteredArticlesForCategories(trendingTopicData.getId(), sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(getActivity()));
+        Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(trendingTopicData.getId(), sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(getActivity()));
         filterCall.enqueue(articleListingResponseCallback);
     }
 

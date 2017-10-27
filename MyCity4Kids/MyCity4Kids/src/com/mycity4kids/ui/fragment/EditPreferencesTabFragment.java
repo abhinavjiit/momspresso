@@ -785,9 +785,6 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
             try {
                 ConfigResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    for (Map.Entry<String, String> entry : responseData.getData().getResult().getLanguage().entrySet()) {
-                        SharedPrefUtils.setLanguageConfig(getActivity(), entry.getKey(), entry.getValue());
-                    }
                     updateLanguageSubscription();
                 } else {
                     Toast.makeText(getActivity(), "Error while updating subscription settings", Toast.LENGTH_SHORT).show();

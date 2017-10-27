@@ -22,6 +22,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
@@ -79,7 +80,7 @@ public class SplashActivity extends BaseActivity {
     private static final int REQUEST_INIT_PERMISSION = 1;
 
     private static String[] PERMISSIONS_INIT = {Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
+            Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_PHONE_STATE};
 
 //    private static String[] PERMISSIONS_STORAGE = {Manifest.permission.READ_EXTERNAL_STORAGE,
 //            Manifest.permission.WRITE_EXTERNAL_STORAGE};
@@ -118,6 +119,7 @@ public class SplashActivity extends BaseActivity {
         onNewIntent(getIntent());
         extras = getIntent().getExtras();
         setUpGTM();
+        MobileAds.initialize(this, getString(R.string.admob_id));
 
         if (getIntent().getBooleanExtra("fromNotification", false)) {
             Utils.pushEventNotificationClick(this, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Notification Popup", "default");
@@ -161,8 +163,8 @@ public class SplashActivity extends BaseActivity {
                         != PackageManager.PERMISSION_GRANTED
                         || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                         != PackageManager.PERMISSION_GRANTED
-//                        || ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
-//                        != PackageManager.PERMISSION_GRANTED
+                        || ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
+                        != PackageManager.PERMISSION_GRANTED
                         ) {
                     Log.i("PERMISSIONS", "storage permissions has NOT been granted. Requesting permissions.");
                     requestLocationAndStoragePermissions();
@@ -419,19 +421,19 @@ public class SplashActivity extends BaseActivity {
                         }
                     })
                     .show();
-//        } else if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-//                Manifest.permission.READ_PHONE_STATE)) {
-//
-//            // Display a SnackBar with an explanation and a button to trigger the request.
-//            Snackbar.make(mLayout, R.string.permission_phone_state_rationale,
-//                    Snackbar.LENGTH_INDEFINITE)
-//                    .setAction(R.string.ok, new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View view) {
-//                            requestUngrantedPermissions();
-//                        }
-//                    })
-//                    .show();
+        } else if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.READ_PHONE_STATE)) {
+
+            // Display a SnackBar with an explanation and a button to trigger the request.
+            Snackbar.make(mLayout, R.string.permission_phone_state_rationale,
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.ok, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            requestUngrantedPermissions();
+                        }
+                    })
+                    .show();
         } else {
             requestUngrantedPermissions();
         }

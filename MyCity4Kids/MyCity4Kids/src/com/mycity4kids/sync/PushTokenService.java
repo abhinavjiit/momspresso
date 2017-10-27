@@ -61,9 +61,7 @@ public class PushTokenService extends IntentService implements UpdateListener {
                 try {
                     CommonResponse responseData = new Gson().fromJson(jsonString, CommonResponse.class);
                     if (null != responseData && responseData.getResponseCode() == 200) {
-                        SharedPrefUtils.setPushTokenUpdateToServer(this, true);
                         Log.e("push", "token updated");
-
                     } else {
                         Log.e("push", "token failed");
                     }

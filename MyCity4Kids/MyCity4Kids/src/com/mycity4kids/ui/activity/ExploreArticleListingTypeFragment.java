@@ -307,7 +307,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment {
 
                 //Prepare structure for multi-expandable listview.
                 for (int i = 0; i < responseData.getData().size(); i++) {
-                    if ("1".equals(responseData.getData().get(i).getPublicVisibility())) {
+                    if ("1".equals(responseData.getData().get(i).getShowInMenu())) {
                         mainTopicsList.add(responseData.getData().get(i));
                     }
                 }

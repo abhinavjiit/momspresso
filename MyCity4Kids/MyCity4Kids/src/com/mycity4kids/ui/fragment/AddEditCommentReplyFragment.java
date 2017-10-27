@@ -4,7 +4,6 @@ import android.accounts.NetworkErrorException;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -44,7 +43,6 @@ import retrofit2.Retrofit;
  */
 public class AddEditCommentReplyFragment extends BaseFragment implements OnClickListener {
 
-    Toolbar mToolbar;
     String articleId;
     private ProgressDialog mProgressDialog;
 

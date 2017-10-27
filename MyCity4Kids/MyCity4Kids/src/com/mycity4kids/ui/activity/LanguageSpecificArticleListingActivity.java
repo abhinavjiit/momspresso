@@ -114,23 +114,6 @@ public class LanguageSpecificArticleListingActivity extends BaseActivity {
         }
     }
 
-    private void changeTabsFont() {
-        //Typeface font = Typeface.createFromAsset(getAssets(), "fonts/androidnation.ttf");
-        Typeface myTypeface = Typeface.createFromAsset(getAssets(), "fonts/" + "oswald_regular.ttf");
-        ViewGroup vg = (ViewGroup) languagesTabLayout.getChildAt(0);
-        int tabsCount = vg.getChildCount();
-        for (int j = 0; j < tabsCount; j++) {
-            ViewGroup vgTab = (ViewGroup) vg.getChildAt(j);
-            int tabChildsCount = vgTab.getChildCount();
-            for (int i = 0; i < tabChildsCount; i++) {
-                View tabViewChild = vgTab.getChildAt(i);
-                if (tabViewChild instanceof TextView) {
-                    ((TextView) tabViewChild).setTypeface(myTypeface, Typeface.NORMAL);
-                }
-            }
-        }
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

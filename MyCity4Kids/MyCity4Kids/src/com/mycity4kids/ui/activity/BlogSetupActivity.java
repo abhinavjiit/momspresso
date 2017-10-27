@@ -476,10 +476,6 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
         } else if (StringUtils.isNullOrEmpty(blogTitleEditText.getText().toString().trim())) {
             Toast.makeText(this, getString(R.string.app_settings_edit_profile_toast_blog_title_empty), Toast.LENGTH_SHORT).show();
             return false;
-        } else if (!blogTitleEditText.getText().toString().matches("[a-zA-Z0-9 ]+")) {
-            Toast.makeText(this, getString(R.string.app_settings_edit_profile_toast_blog_title_special_char), Toast.LENGTH_SHORT).show();
-            blogTitleEditText.requestFocus();
-            return false;
         } else if (countWords(aboutSelfEditText.getText().toString()) > MAX_WORDS) {
             Toast.makeText(this, getString(R.string.app_settings_edit_profile_toast_user_bio_max)
                     + " " + MAX_WORDS + " " + getString(R.string.app_settings_edit_profile_toast_user_bio_words), Toast.LENGTH_SHORT).show();

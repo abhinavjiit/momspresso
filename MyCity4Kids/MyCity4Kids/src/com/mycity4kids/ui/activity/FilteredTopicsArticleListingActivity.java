@@ -354,7 +354,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
 //            Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(selectedTopics, sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(this));
             filterCall.enqueue(articleListingResponseCallback);
         } else {
-            Call<ArticleListingResponse> filterCall = topicsAPI.getFilteredArticlesForCategories(filteredTopics, sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(this));
+            Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(filteredTopics, sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(this));
             filterCall.enqueue(articleListingResponseCallback);
         }
     }

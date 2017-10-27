@@ -183,15 +183,12 @@ public class LanguageSpecificArticlesTabFragment extends BaseFragment implements
             ToastUtils.showToast(getActivity(), getString(R.string.error_network));
             return;
         }
-        if (nextPageNumber == 1) {
-//            progressBar.setVisibility(View.VISIBLE);
-        }
 
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
 
         int from = (nextPageNumber - 1) * limit + 1;
-        Call<ArticleListingResponse> filterCall = topicsAPI.getFilteredArticlesForCategories(trendingTopicData.getId(), sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(getActivity()));
+        Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(trendingTopicData.getId(), sortType, from, from + limit - 1, "");
         filterCall.enqueue(articleListingResponseCallback);
     }
 

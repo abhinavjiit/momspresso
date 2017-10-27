@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -52,7 +53,7 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant.parmar on 21-04-2016.
  */
-public class UserDraftArticleTabFragment extends BaseFragment implements View.OnClickListener, UserDraftArticleAdapter.RecyclerViewClickListener {
+public class UserDraftArticleTabFragment extends BaseFragment implements View.OnClickListener, UserDraftArticleAdapter.RecyclerViewClickListener, ConfirmationDialogFragment.IConfirmationResult {
 
     ArrayList<DraftListResult> draftList;
     RecyclerView recyclerView;
@@ -225,8 +226,14 @@ public class UserDraftArticleTabFragment extends BaseFragment implements View.On
                 }
                 break;
             case R.id.deleteDraftImageView:
-                Utils.pushRemoveDraftEvent(getActivity(), "DraftList", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), draftList.get(position).getId());
-                deleteDraftAPI(draftList.get(position), position);
+                ConfirmationDialogFragment confirmationDialogFragment = new ConfirmationDialogFragment();
+                FragmentManager fm = getChildFragmentManager();
+                confirmationDialogFragment.setTargetFragment(this, 0);
+                Bundle _args = new Bundle();
+                _args.putInt("position", position);
+                confirmationDialogFragment.setArguments(_args);
+                confirmationDialogFragment.setCancelable(true);
+                confirmationDialogFragment.show(fm, "Delete Draft");
                 break;
         }
     }
@@ -272,4 +279,9 @@ public class UserDraftArticleTabFragment extends BaseFragment implements View.On
     }
 
 
+    @Override
+    public void onContinue(int position) {
+        Utils.pushRemoveDraftEvent(getActivity(), "DraftList", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), draftList.get(position).getId());
+        deleteDraftAPI(draftList.get(position), position);
+    }
 }

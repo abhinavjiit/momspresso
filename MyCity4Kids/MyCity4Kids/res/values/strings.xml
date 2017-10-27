@@ -30,6 +30,8 @@
     <string name="facebook_app_id">206155642763202</string>
     <string name="debug_facebook_app_id">216826955045896</string>
     <string name="fb_login_protocol_scheme">fb206155642763202</string>
+    <string name="admob_id">ca-app-pub-9305149859515387~7341831189</string>
+    <string name="ad.adunit_id">ca-app-pub-9305149859515387/3169462510</string>
 
     <string name="write_review_prompt">What would you like to review?</string>
 
@@ -411,16 +413,19 @@
     <string name="ad.follow_author">FOLLOW</string>
     <string name="ad.following_author">FOLLOWING</string>
     <string name="ad.comments.title">COMMENTS</string>
+    <string name="ad.comments.no_comments">NO COMMENTS ADDED YET</string>
+    <string name="ad.comments.view_comment">VIEW COMMENTS</string>
     <string name="ad.comments.fb_comment">FACEBOOK COMMENT</string>
     <string name="ad.comments.reply_label">Reply</string>
     <string name="ad.comments.edit_label">Edit</string>
     <string name="ad.comments.save">SAVE</string>
     <string name="ad.comments.toast_empty_comment">Please enter some valid text.</string>
-    <string name="ad.comments.toolbar.title">Comments</string>
+    <string name="ad.comments.toolbar.title">COMMENTS</string>
     <string name="ad.comments.replying_to">You are replying to %1$s</string>
     <string name="ad.bottom_bar.facebook">FACEBOOK</string>
     <string name="ad.bottom_bar.whatsapp">WHATSAPP</string>
     <string name="ad.bottom_bar.email">EMAIL</string>
+    <string name="ad.bottom_bar.generic_share">SHARE</string>
     <string name="ad.bottom_bar.bookmark">BOOKMARK</string>
     <string name="ad.bottom_bar.like">LIKE</string>
     <string name="ad.bottom_bar.unbookmark">UNBOOKMARK</string>
@@ -464,6 +469,10 @@
         <item>Ask readers who frequently engage with your blog through comments, to follow you</item>
         <item>Share your blog across all networks you are a part of, such as Facebook, Whatsapp and so on</item>
     </string-array>
+
+    <string name="confirmation_dialog.delete_draft.message">Are you sure you want to delete your draft?</string>
+    <string name="confirmation_dialog.no">NO</string>
+    <string name="confirmation_dialog.yes">YES</string>
 
     <string name="editor.spell_check.title">Spellcheck</string>
     <string name="editor.spell_check.message">Are you sure you have completed the spellcheck?</string>

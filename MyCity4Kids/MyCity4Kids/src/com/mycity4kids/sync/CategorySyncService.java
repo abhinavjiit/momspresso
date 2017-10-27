@@ -92,9 +92,6 @@ public class CategorySyncService extends IntentService {
                                              SharedPrefUtils.setNotificationType(CategorySyncService.this, "" + i, responseModel.getData().getResult().getNotificationType().get(i));
                                          }
 
-                                         for (Map.Entry<String, String> entry : responseModel.getData().getResult().getLanguage().entrySet()) {
-                                             SharedPrefUtils.setLanguageConfig(CategorySyncService.this, entry.getKey(), entry.getValue());
-                                         }
                                          boolean status = AppUtils.writeJsonStringToFile(CategorySyncService.this, new Gson().toJson(responseModel.getData().getResult().getLanguages()), AppConstants.LANGUAGES_JSON_FILE);
 
                                          version = SharedPrefUtils.getConfigCategoryVersion(CategorySyncService.this);
@@ -162,10 +159,6 @@ public class CategorySyncService extends IntentService {
                                              });
                                          }
 
-                                         userTypeVersion = SharedPrefUtils.getUserTypeVersion(CategorySyncService.this);
-                                         if (userTypeVersion == 0 || userTypeVersion != responseModel.getData().getResult().getCategory().getUserTypeVersion()) {
-//                                             updateUserTypeMap();
-                                         }
                                      }
                                  }
                              } catch (Exception e) {
@@ -183,44 +176,6 @@ public class CategorySyncService extends IntentService {
         );
 
     }
-
-    private void updateUserTypeMap() {
-        final Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        // prepare call in Retrofit 2.0
-        ConfigAPIs configAPIs = retrofit.create(ConfigAPIs.class);
-        Call<UserTypeResponse> userTypeCall = configAPIs.getAllUserType();
-        userTypeCall.enqueue(userTypeResponseCallback);
-    }
-
-    private Callback<UserTypeResponse> userTypeResponseCallback = new Callback<UserTypeResponse>() {
-        @Override
-        public void onResponse(Call<UserTypeResponse> call, Response<UserTypeResponse> response) {
-            if (response == null || null == response.body()) {
-                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
-                return;
-            }
-            try {
-                UserTypeResponse responseData = response.body();
-                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    for (Map.Entry<String, String> entry : responseData.getData().getResult().entrySet()) {
-                        SharedPrefUtils.setConfigUserType(CategorySyncService.this, entry.getValue(), entry.getKey());
-                    }
-                } else {
-//                    showToast(responseData.getReason());
-                }
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<UserTypeResponse> call, Throwable t) {
-            Crashlytics.logException(t);
-            Log.d("MC4kException", Log.getStackTraceString(t));
-        }
-    };
 
     private boolean writeResponseBodyToDisk(ResponseBody body, String filename) {
         try {

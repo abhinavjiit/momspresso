@@ -37,7 +37,8 @@
                 android:layout_toRightOf="@+id/closeImageView"
                 android:text="@string/ad.comments.toolbar.title"
                 android:textColor="@color/ad.comments.toolbar.title"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                app:fontName="oswald_regular.ttf" />
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
@@ -68,6 +69,7 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/addCommentTextView"
         android:layout_below="@+id/separator"
+        android:background="@null"
         android:gravity="top|start"
         android:hint="@string/add_reply"
         android:inputType="textCapSentences|textMultiLine"

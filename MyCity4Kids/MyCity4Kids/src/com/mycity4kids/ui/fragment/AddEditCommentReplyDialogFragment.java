@@ -8,8 +8,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -46,19 +44,21 @@ import retrofit2.Retrofit;
 /**
  * Created by user on 08-06-2015.
  */
-public class EditCommentDialogFragment extends DialogFragment implements OnClickListener {
+public class AddEditCommentReplyDialogFragment extends DialogFragment implements OnClickListener {
 
-    Toolbar mToolbar;
-    String articleId;
     private ProgressDialog mProgressDialog;
-
     private ImageView closeImageView;
     private TextView addCommentTextView;
     private EditText commentReplyEditText;
+    private TextView replyToTextView;
+    private View separator;
+
     private CommentsData commentsData;
+    private String articleId;
     private String operation;
     private String openFrom;
     private String author;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -70,6 +70,8 @@ public class EditCommentDialogFragment extends DialogFragment implements OnClick
         closeImageView = (ImageView) rootView.findViewById(R.id.closeImageView);
         addCommentTextView = (TextView) rootView.findViewById(R.id.addCommentTextView);
         commentReplyEditText = (EditText) rootView.findViewById(R.id.commentReplyEditText);
+        replyToTextView = (TextView) rootView.findViewById(R.id.replyToTextView);
+        separator = rootView.findViewById(R.id.separator);
 
         Bundle extras = getArguments();
         if (extras != null) {
@@ -79,9 +81,20 @@ public class EditCommentDialogFragment extends DialogFragment implements OnClick
             operation = extras.getString("opType");
             openFrom = extras.getString("type");
         }
-        if (commentsData != null) {
+        if (commentsData != null && "EDIT".equals(operation)) {
             commentReplyEditText.setText("" + commentsData.getBody());
+            replyToTextView.setVisibility(View.GONE);
+            separator.setVisibility(View.GONE);
         }
+        if ("ADD".equals(operation) && commentsData != null) {
+            replyToTextView.setVisibility(View.VISIBLE);
+            separator.setVisibility(View.VISIBLE);
+            replyToTextView.setText(getString(R.string.ad_comments_replying_to, commentsData.getName()));
+        }
+
+//        if (commentsData != null) {
+//            commentReplyEditText.setText("" + commentsData.getBody());
+//        }
         addCommentTextView.setOnClickListener(this);
         closeImageView.setOnClickListener(this);
 
@@ -130,7 +143,7 @@ public class EditCommentDialogFragment extends DialogFragment implements OnClick
                             addCommentRequest.setParentId(commentsData.getId());
                             Utils.pushReplyCommentArticleEvent(getActivity(), "DetailArticleScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "",
                                     articleId, author);
-                        }else{
+                        } else {
                             Utils.pushCommentArticleEvent(getActivity(), "DetailArticleScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "",
                                     articleId, author);
                         }
@@ -185,19 +198,15 @@ public class EditCommentDialogFragment extends DialogFragment implements OnClick
                 profilePic.setClientAppMin(SharedPrefUtils.getProfileImgUrl(getActivity()));
                 cd.setProfile_image(profilePic);
                 cd.setCreate("" + System.currentTimeMillis() / 1000);
-                if ("video".equals(openFrom)) {
-                    if (commentsData == null) {
-                        ((VlogsDetailActivity) getActivity()).onCommentAddition(cd);
-                    } else {
-                        ((VlogsDetailActivity) getActivity()).onReplyAddition(cd);
-                    }
-                } else {
+                try {
                     IAddCommentReply addCommentReply = (IAddCommentReply) getTargetFragment();
                     if (commentsData == null) {
                         addCommentReply.onCommentAddition(cd);
                     } else {
                         addCommentReply.onReplyAddition(cd);
                     }
+                } catch (Exception e) {
+
                 }
                 dismiss();
             } else {
@@ -234,11 +243,11 @@ public class EditCommentDialogFragment extends DialogFragment implements OnClick
                 commentsData.setBody(commentReplyEditText.getText().toString());
 //                }
                 commentReplyEditText.setText("");
-                if ("video".equals(openFrom)) {
-                    ((VlogsDetailActivity) getActivity()).onCommentReplyEditSuccess(commentsData);
-                } else {
+                try {
                     IAddCommentReply addCommentReply = (IAddCommentReply) getTargetFragment();
                     addCommentReply.onCommentReplyEditSuccess(commentsData);
+                } catch (Exception e) {
+
                 }
                 dismiss();
 //                if ("article".equals(type)) {

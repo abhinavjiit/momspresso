@@ -5,12 +5,9 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
-import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -19,11 +16,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -37,11 +32,11 @@ import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.crashlytics.android.Crashlytics;
-import com.facebook.share.model.AppInviteContent;
 import com.facebook.share.model.ShareLinkContent;
-import com.facebook.share.widget.AppInviteDialog;
 import com.facebook.share.widget.ShareDialog;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
@@ -55,10 +50,8 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.OnWebServiceCompleteListener;
-import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.parentingdetails.CommentsData;
 import com.mycity4kids.models.parentingdetails.ImageData;
@@ -75,7 +68,6 @@ import com.mycity4kids.models.response.ArticleDetailWebserviceResponse;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.ArticleRecommendationStatusResponse;
-import com.mycity4kids.models.response.FBCommentResponse;
 import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
 import com.mycity4kids.models.response.LanguageConfigModel;
@@ -96,7 +88,6 @@ import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.FilteredTopicsArticleListingActivity;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
-import com.mycity4kids.utils.TrackArticleReadTime;
 import com.mycity4kids.volley.HttpVolleyRequest;
 import com.mycity4kids.widget.CustomFontTextView;
 import com.mycity4kids.widget.RelatedArticlesView;
@@ -104,8 +95,6 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import org.apmem.tools.layouts.FlowLayout;
-import org.json.JSONArray;
-import org.json.JSONException;
 
 import java.io.FileInputStream;
 import java.net.SocketTimeoutException;
@@ -113,7 +102,6 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import okhttp3.ResponseBody;
@@ -158,6 +146,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private String blogSlug;
     private String titleSlug;
     private String commentType = "db";
+    private String commentMainUrl;
     private String pagination = "";
     private String isMomspresso;
     private String userDynamoId;
@@ -200,6 +189,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private LinearLayout bottomToolbarLL;
     private TextView commentHeading;
     private View relatedTrendingSeparator;
+    private AdView mAdView;
+    private TextView viewCommentsTextView;
 
     @Nullable
     @Override
@@ -266,6 +257,15 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
             commentLayout = ((LinearLayout) fragmentView.findViewById(R.id.commnetLout));
             commentHeading = ((TextView) fragmentView.findViewById(R.id.commentsHeading));
+            viewCommentsTextView = ((TextView) fragmentView.findViewById(R.id.viewCommentsTextView));
+
+            mAdView = (AdView) fragmentView.findViewById(R.id.adView);
+            AdRequest adRequest = new AdRequest.Builder()
+                    .build();
+
+            mAdView.loadAd(adRequest);
+            mAdView.setVisibility(View.GONE);
+
             relatedArticles1.setOnClickListener(this);
             relatedArticles2.setOnClickListener(this);
             relatedArticles3.setOnClickListener(this);
@@ -278,9 +278,10 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             emailShareTextView.setOnClickListener(this);
             likeArticleTextView.setOnClickListener(this);
             bookmarkArticleTextView.setOnClickListener(this);
+            viewCommentsTextView.setOnClickListener(this);
 
             mLodingView = (RelativeLayout) fragmentView.findViewById(R.id.relativeLoadingView);
-            fragmentView.findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_indefinitely));
+//            fragmentView.findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_indefinitely));
 
             mScrollView = (ObservableScrollView) fragmentView.findViewById(R.id.scroll_view);
             mScrollView.setScrollViewCallbacks(this);
@@ -341,6 +342,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 //            trackArticleReadTime.startTimer();
 //        }
         super.onResume();
+        if (mAdView != null) {
+            mAdView.resume();
+        }
         mWebView.onResume();
         videoWebView.onResume();
     }
@@ -349,14 +353,25 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     public void onPause() {
 //        if (null != trackArticleReadTime)
 //            trackArticleReadTime.pauseTimer();
+        if (mAdView != null) {
+            mAdView.resume();
+        }
         super.onPause();
         mWebView.onPause();
         videoWebView.onPause();
     }
 
+    @Override
+    public void onDestroy() {
+        if (mAdView != null) {
+            mAdView.destroy();
+        }
+        super.onDestroy();
+    }
+
     private void hitArticleDetailsRedisAPI() {
         Call<ArticleDetailResult> call = articleDetailsAPI.getArticleDetailsFromRedis(articleId, "articleId");
-        call.enqueue(articleDetailResponseCallbackS3);
+        call.enqueue(articleDetailResponseCallbackRedis);
     }
 
     private void hitArticleDetailsS3API() {
@@ -427,22 +442,22 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     }
 
     private void getMoreComments() {
-        isLoading = true;
-        if (isAdded() && !ConnectivityUtils.isNetworkEnabled(getActivity())) {
-            ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.error_network));
-            return;
-        }
-        mLodingView.setVisibility(View.VISIBLE);
-        Retrofit retro = BaseApplication.getInstance().getRetrofit();
-        if ("db".equals(commentType)) {
-            ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
-            Call<ResponseBody> call = articleDetailsAPI.getComments(commentURL);
-            call.enqueue(commentsCallback);
-        } else {
-            ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
-            Call<FBCommentResponse> call = articleDetailsAPI.getFBComments(articleId, pagination);
-            call.enqueue(fbCommentsCallback);
-        }
+//        isLoading = true;
+//        if (isAdded() && !ConnectivityUtils.isNetworkEnabled(getActivity())) {
+//            ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.error_network));
+//            return;
+//        }
+//        mLodingView.setVisibility(View.VISIBLE);
+//        Retrofit retro = BaseApplication.getInstance().getRetrofit();
+//        if ("db".equals(commentType)) {
+//            ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
+//            Call<ResponseBody> call = articleDetailsAPI.getComments(commentURL);
+//            call.enqueue(commentsCallback);
+//        } else {
+//            ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
+//            Call<FBCommentResponse> call = articleDetailsAPI.getFBComments(articleId, pagination);
+//            call.enqueue(fbCommentsCallback);
+//        }
 
     }
 
@@ -695,6 +710,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             }
             if ("English".equals(gtmLanguage)) {
                 Utils.pushArticleLoadedEvent(getActivity(), "DetailArticleScreen", userDynamoId + "", articleId, authorId + "~" + author, gtmLanguage);
+                mAdView.setVisibility(View.VISIBLE);
             }
             if (!"1".equals(isMomspresso))
                 ((ArticleDetailsContainerActivity) getActivity()).showPlayArticleAudioButton();
@@ -723,176 +739,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         TopicsCategoryAPI topicsCategoryAPI = retrofit.create(TopicsCategoryAPI.class);
         Call<FollowUnfollowCategoriesResponse> call = topicsCategoryAPI.getFollowedCategories(userDynamoId);
         call.enqueue(getFollowedTopicsResponseCallback);
-    }
-
-    private void displayComments(ViewHolder holder, CommentsData commentList,
-                                 boolean isNewComment) {
-        if (holder != null) {
-            LayoutInflater inflater = LayoutInflater.from(getActivity());
-            View view = inflater.inflate(R.layout.custom_comment_cell, null);
-            holder.commentorsImage = (ImageView) view.findViewById(R.id.commentorImageView);
-            holder.commentName = (TextView) view.findViewById(R.id.txvCommentTitle);
-            holder.commentDescription = (TextView) view.findViewById(R.id.txvCommentDescription);
-            holder.dateTxt = (TextView) view.findViewById(R.id.txvDate);
-            holder.commentCellReplyTxt = (TextView) view.findViewById(R.id.txvCommentCellReply);
-            holder.separatorView = view.findViewById(R.id.separatorView);
-            holder.commentCellEditTxt = (TextView) view.findViewById(R.id.txvCommentCellEdit);
-            holder.replyCommentView = (LinearLayout) view.findViewById(R.id.replyRelativeLayout);
-
-            holder.commentorsImage.setOnClickListener(this);
-            holder.commentName.setOnClickListener(this);
-            holder.replyCommentView.setOnClickListener(this);
-            holder.replyCommentView.setTag(commentList);
-
-            holder.commentCellReplyTxt.setOnClickListener(this);
-            holder.commentCellEditTxt.setOnClickListener(this);
-
-            view.setTag(commentList);
-
-            if (!"fb".equals(commentList.getComment_type()) && userDynamoId.equals(commentList.getUserId())) {
-                holder.commentCellEditTxt.setVisibility(View.VISIBLE);
-                holder.commentCellReplyTxt.setVisibility(View.GONE);
-            } else {
-                holder.commentCellEditTxt.setVisibility(View.GONE);
-                if ("fb".equals(commentList.getComment_type())) {
-                    holder.commentCellReplyTxt.setVisibility(View.GONE);
-                    holder.separatorView.setVisibility(View.GONE);
-                } else {
-                    holder.commentCellReplyTxt.setVisibility(View.VISIBLE);
-                }
-            }
-
-            if (!StringUtils.isNullOrEmpty(commentList.getName())) {
-                holder.commentName.setText(commentList.getName());
-            } else {
-                holder.commentName.setText("User");
-            }
-            if (!StringUtils.isNullOrEmpty(commentList.getBody())) {
-                holder.commentDescription.setText(commentList.getBody());
-            }
-            if (!StringUtils.isNullOrEmpty(commentList.getCreate())) {
-                holder.dateTxt.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(Long.parseLong(commentList.getCreate())));
-            } else {
-                holder.dateTxt.setText("NA");
-            }
-
-            if (commentList.getProfile_image() != null && !StringUtils.isNullOrEmpty(commentList.getProfile_image().getClientAppMin())) {
-                try {
-                    Picasso.with(getActivity()).load(commentList.getProfile_image().getClientAppMin()).placeholder(R.drawable.default_commentor_img).into(holder.commentorsImage);
-                } catch (Exception e) {
-                    Crashlytics.logException(e);
-                    Log.d("MC4kException", Log.getStackTraceString(e));
-                    Picasso.with(getActivity()).load(R.drawable.default_commentor_img).into(holder.commentorsImage);
-                }
-            } else {
-                Picasso.with(getActivity()).load(R.drawable.default_commentor_img).into(holder.commentorsImage);
-            }
-
-            if (isNewComment) {
-                commentLayout.addView(view, 0);
-            } else {
-                commentLayout.addView(view);
-            }
-            if (commentList.getReplies() != null && commentList.getReplies().size() > 0) {
-                holder.replyCommentView.setVisibility(View.VISIBLE);
-                ViewHolder replyViewholder = new ViewHolder();
-                for (int j = 0; j < commentList.getReplies().size(); j++) {
-                    if ("fb".equals(commentList.getComment_type())) {
-                        commentList.getReplies().get(j).setComment_type("fb");
-                    }
-                    displayReplies(replyViewholder, commentList.getReplies().get(j), holder.replyCommentView, REPLY_LEVEL_PARENT, j);
-                }
-            } else {
-                holder.replyCommentView.setVisibility(View.GONE);
-            }
-        }
-    }
-
-    private void displayReplies(ViewHolder replyViewholder, CommentsData replies, LinearLayout parentView, int replyLevel, int replyPos) {
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-        View view = inflater.inflate(R.layout.custom_reply_cell, null);
-        replyViewholder.replyIndicatorImageView = (ImageView) view.findViewById(R.id.replyIndicatorImageView);
-        replyViewholder.commentorsImage = (ImageView) view.findViewById(R.id.replierImageView);
-        replyViewholder.commentName = (TextView) view.findViewById(R.id.txvReplyTitle);
-        replyViewholder.commentDescription = (TextView) view.findViewById(R.id.txvCommentDescription);
-        replyViewholder.dateTxt = (TextView) view.findViewById(R.id.txvDate);
-        replyViewholder.replyCellReplyTxt = (TextView) view.findViewById(R.id.txvReplyCellReply);
-        replyViewholder.separatorView = view.findViewById(R.id.separatorView);
-        replyViewholder.replyCellEditTxt = (TextView) view.findViewById(R.id.txvReplyCellEdit);
-        replyViewholder.replyCommentView = (LinearLayout) view.findViewById(R.id.replyRelativeLayout);
-
-        replyViewholder.commentorsImage.setOnClickListener(this);
-        replyViewholder.commentName.setOnClickListener(this);
-
-        replyViewholder.replyCellReplyTxt.setOnClickListener(this);
-        replyViewholder.replyCellEditTxt.setOnClickListener(this);
-
-        if (!"fb".equals(replies.getComment_type()) && userDynamoId.equals(replies.getUserId())) {
-            replyViewholder.replyCellEditTxt.setVisibility(View.VISIBLE);
-            replyViewholder.replyCellReplyTxt.setVisibility(View.GONE);
-        } else {
-            replyViewholder.replyCellEditTxt.setVisibility(View.GONE);
-            if ("fb".equals(replies.getComment_type())) {
-                replyViewholder.replyCellReplyTxt.setVisibility(View.GONE);
-                replyViewholder.separatorView.setVisibility(View.GONE);
-            } else {
-                if (replyLevel == REPLY_LEVEL_CHILD) {
-                    replyViewholder.replyCellReplyTxt.setVisibility(View.GONE);
-                    replyViewholder.separatorView.setVisibility(View.GONE);
-                } else {
-                    replyViewholder.replyCellReplyTxt.setVisibility(View.VISIBLE);
-                }
-            }
-        }
-
-        if (replyLevel == REPLY_LEVEL_PARENT && replyPos == 0) {
-            replyViewholder.replyIndicatorImageView.setVisibility(View.VISIBLE);
-        } else {
-            replyViewholder.replyIndicatorImageView.setVisibility(View.INVISIBLE);
-        }
-
-
-        view.setTag(replies);
-
-        if (!StringUtils.isNullOrEmpty(replies.getName())) {
-            replyViewholder.commentName.setText(replies.getName());
-        } else {
-            replyViewholder.commentName.setText("User");
-        }
-        if (!StringUtils.isNullOrEmpty(replies.getBody())) {
-            replyViewholder.commentDescription.setText(replies.getBody());
-        }
-        if (!StringUtils.isNullOrEmpty(replies.getCreate())) {
-            replyViewholder.dateTxt.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(Long.parseLong(replies.getCreate())));
-        } else {
-            replyViewholder.dateTxt.setText("NA");
-        }
-
-        if (replies.getProfile_image() != null && !StringUtils.isNullOrEmpty(replies.getProfile_image().getClientAppMin())) {
-            try {
-                Picasso.with(getActivity()).load(replies.getProfile_image().getClientAppMin()).placeholder(R.drawable.default_commentor_img).into(replyViewholder.commentorsImage);
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-                Picasso.with(getActivity()).load(R.drawable.default_commentor_img).into(replyViewholder.commentorsImage);
-            }
-        } else {
-            Picasso.with(getActivity()).load(R.drawable.default_commentor_img).into(replyViewholder.commentorsImage);
-        }
-        parentView.addView(view);
-
-        if (replies.getReplies() != null && replies.getReplies().size() > 0) {
-            replyViewholder.replyCommentView.setVisibility(View.VISIBLE);
-            ViewHolder replyReplyViewholder = new ViewHolder();
-            for (int j = 0; j < replies.getReplies().size(); j++) {
-                if ("fb".equals(replies.getComment_type())) {
-                    replies.getReplies().get(j).setComment_type("fb");
-                }
-                displayReplies(replyReplyViewholder, replies.getReplies().get(j), parentView, REPLY_LEVEL_CHILD, j);
-            }
-        } else {
-            replyViewholder.replyCommentView.setVisibility(View.GONE);
-        }
     }
 
     @Override
@@ -1039,19 +885,11 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     startActivity(intent);
                     break;
                 }
+                case R.id.viewCommentsTextView:
+                    openViewCommentDialog();
+                    break;
                 case R.id.commentFloatingActionButton:
                     openCommentDialog(null, "ADD");
-//                    String appLinkUrl, previewImageUrl;
-//
-//                    appLinkUrl = "https://www.mydomain.com/myapplink";
-//                    previewImageUrl = "https://www.mydomain.com/my_invite_image.jpg";
-//                    if (AppInviteDialog.canShow()) {
-//                        AppInviteContent content = new AppInviteContent.Builder()
-//                                .setApplinkUrl(appLinkUrl)
-//                                .setPreviewImageUrl(previewImageUrl)
-//                                .build();
-//                        AppInviteDialog.show(this, content);
-//                    }
                     break;
                 case R.id.likeTextView: {
                     if (recommendStatus == 0) {
@@ -1085,7 +923,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
                         whatsappIntent.setType("text/plain");
                         whatsappIntent.setPackage("com.whatsapp");
-                        whatsappIntent.putExtra(Intent.EXTRA_TEXT, "mycity4kids\n\nCheck out this interesting blog post\n " + shareUrl);
+                        whatsappIntent.putExtra(Intent.EXTRA_TEXT, detailData.getExcerpt() + "\n " + shareUrl);
                         try {
                             startActivity(whatsappIntent);
                         } catch (android.content.ActivityNotFoundException ex) {
@@ -1095,40 +933,13 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     }
                     break;
                 case R.id.emailShareTextView:
-                    Intent intent = new Intent(android.content.Intent.ACTION_SEND);
-                    intent.setType("text/html");
-                    final PackageManager pm = getActivity().getPackageManager();
-                    final List<ResolveInfo> matches = pm.queryIntentActivities(intent, 0);
-                    ResolveInfo best = null;
-                    for (final ResolveInfo info : matches) {
-                        if (info.activityInfo.packageName.endsWith(".gm") || info.activityInfo.name.toLowerCase().contains("gmail")) {
-                            best = info;
-                            break;
-                        }
+                    if (!StringUtils.isNullOrEmpty(shareUrl)) {
+                        String shareMessage = detailData.getExcerpt() + "\n " + shareUrl;
+                        Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+                        shareIntent.setType("text/plain");
+                        shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
+                        startActivity(Intent.createChooser(shareIntent, "mycity4kids"));
                     }
-                    if (best != null) {
-                        intent.setClassName(best.activityInfo.packageName, best.activityInfo.name);
-                    }
-                    intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "mycity4kids");
-                    intent.putExtra(android.content.Intent.EXTRA_TEXT, AppUtils.fromHtml("mycity4kids\n\nCheck out this interesting blog post\n " + shareUrl));
-
-                    try {
-                        startActivity(intent);
-                        Utils.pushShareArticleEvent(getActivity(), "DetailArticleScreen", userDynamoId + "", articleId, authorId + "~" + author, "Email");
-                    } catch (Exception e) {
-                        Intent i = new Intent(Intent.ACTION_SEND);
-                        i.setType("plain/text");
-                        i.putExtra(Intent.EXTRA_EMAIL, new String[]{});
-                        i.putExtra(Intent.EXTRA_SUBJECT, "");
-                        i.putExtra(Intent.EXTRA_TEXT, "mycity4kids\n\nCheck out this interesting blog post\n " + shareUrl);
-                        try {
-                            startActivity(Intent.createChooser(i, "Send mail..."));
-                            Utils.pushShareArticleEvent(getActivity(), "DetailArticleScreen", userDynamoId + "", articleId, authorId + "~" + author, "Email");
-                        } catch (android.content.ActivityNotFoundException ex) {
-                            Toast.makeText(getActivity(), "There are no email clients installed.", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
                     break;
             }
         } catch (Exception e) {
@@ -1157,132 +968,21 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         }
     }
 
-    @Override
-    public void onCommentAddition(CommentsData cd) {
-        displayComments(new ViewHolder(), cd, false);
-    }
-
-    @Override
-    public void onReplyAddition(CommentsData updatedComment) {
-        for (int i = 0; i < commentLayout.getChildCount(); i++) {
-            CommentsData cdata = (CommentsData) commentLayout.getChildAt(i).getTag();
-            CommentsData searchedData = recursiveSearch(cdata, updatedComment);
-            if (searchedData != null) {
-                searchedData.getReplies().add(updatedComment);
-                ViewHolder viewHolder = new ViewHolder();
-                displayCommentsAtPosition(viewHolder, cdata, false, i);
-                break;
-            } else {
-                Log.d("Nothing in comment ", cdata.getBody());
-            }
-        }
-    }
-
-    @Override
-    public void onCommentReplyEditSuccess(CommentsData cd) {
-        for (int i = 0; i < commentLayout.getChildCount(); i++) {
-            CommentsData cdata = (CommentsData) commentLayout.getChildAt(i).getTag();
-            CommentsData searchedData = recursiveSearch(cdata, cd);
-            if (searchedData != null) {
-                ViewHolder viewHolder = new ViewHolder();
-                displayCommentsAtPosition(viewHolder, cdata, false, i);
-                break;
-            } else {
-                Log.d("Nothing in comment ", cdata.getBody());
-            }
-        }
-    }
-
-    private CommentsData recursiveSearch(CommentsData cd1, CommentsData upComment) {
-        if (cd1.getId().equals(upComment.getId()) || cd1.getId().equals(upComment.getParent_id())) {
-            return cd1;
-        }
-        ArrayList<CommentsData> children = cd1.getReplies();
-        CommentsData res = null;
-        for (int i = 0; res == null && i < children.size(); i++) {
-            res = recursiveSearch(children.get(i), upComment);
-        }
-        return res;
-    }
-
-    private void displayCommentsAtPosition(ViewHolder holder, CommentsData commentList,
-                                           boolean isNewComment, int position) {
-        if (holder != null) {
-            LayoutInflater inflater = LayoutInflater.from(getActivity());
-            View view = inflater.inflate(R.layout.custom_comment_cell, null);
-            holder.commentorsImage = (ImageView) view.findViewById(R.id.commentorImageView);
-            holder.commentName = (TextView) view.findViewById(R.id.txvCommentTitle);
-            holder.commentDescription = (TextView) view.findViewById(R.id.txvCommentDescription);
-            holder.dateTxt = (TextView) view.findViewById(R.id.txvDate);
-            holder.commentCellReplyTxt = (TextView) view.findViewById(R.id.txvCommentCellReply);
-            holder.commentCellEditTxt = (TextView) view.findViewById(R.id.txvCommentCellEdit);
-            holder.replyCommentView = (LinearLayout) view.findViewById(R.id.replyRelativeLayout);
-
-            holder.commentorsImage.setOnClickListener(this);
-            holder.commentName.setOnClickListener(this);
-            holder.replyCommentView.setOnClickListener(this);
-            holder.replyCommentView.setTag(commentList);
-
-            holder.commentCellReplyTxt.setOnClickListener(this);
-            holder.commentCellEditTxt.setOnClickListener(this);
-
-            view.setTag(commentList);
-
-            if (!"fb".equals(commentList.getComment_type()) && userDynamoId.equals(commentList.getUserId())) {
-                holder.commentCellEditTxt.setVisibility(View.VISIBLE);
-            } else {
-                holder.commentCellEditTxt.setVisibility(View.INVISIBLE);
-            }
-
-            if ("fb".equals(commentList.getComment_type())) {
-                holder.commentCellReplyTxt.setVisibility(View.INVISIBLE);
-            } else {
-                holder.commentCellReplyTxt.setVisibility(View.VISIBLE);
-            }
-
-            if (holder.commentCellEditTxt.getVisibility() == View.VISIBLE) {
-                holder.commentCellReplyTxt.setVisibility(View.INVISIBLE);
-            } else {
-                holder.commentCellReplyTxt.setVisibility(View.VISIBLE);
-            }
-
-            if (!StringUtils.isNullOrEmpty(commentList.getName())) {
-                holder.commentName.setText(commentList.getName());
-            } else {
-                holder.commentName.setText("User");
-            }
-            if (!StringUtils.isNullOrEmpty(commentList.getBody())) {
-                holder.commentDescription.setText(commentList.getBody());
-            }
-            if (!StringUtils.isNullOrEmpty(commentList.getCreate())) {
-                holder.dateTxt.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(Long.parseLong(commentList.getCreate())));
-            } else {
-                holder.dateTxt.setText("NA");
-            }
-
-            if (commentList.getProfile_image() != null && !StringUtils.isNullOrEmpty(commentList.getProfile_image().getClientAppMin())) {
-                try {
-                    Picasso.with(getActivity()).load(commentList.getProfile_image().getClientAppMin()).placeholder(R.drawable.default_commentor_img).into(holder.commentorsImage);
-                } catch (Exception e) {
-                    Crashlytics.logException(e);
-                    Log.d("MC4kException", Log.getStackTraceString(e));
-                    Picasso.with(getActivity()).load(R.drawable.default_commentor_img).into(holder.commentorsImage);
-                }
-            } else {
-                Picasso.with(getActivity()).load(R.drawable.default_commentor_img).into(holder.commentorsImage);
-            }
-
-            commentLayout.removeViewAt(position);
-            commentLayout.addView(view, position);
-            if (commentList.getReplies() != null && commentList.getReplies().size() > 0) {
-                holder.replyCommentView.setVisibility(View.VISIBLE);
-                ViewHolder replyViewholder = new ViewHolder();
-                for (int j = 0; j < commentList.getReplies().size(); j++) {
-                    displayReplies(replyViewholder, commentList.getReplies().get(j), holder.replyCommentView, REPLY_LEVEL_PARENT, j);
-                }
-            } else {
-                holder.replyCommentView.setVisibility(View.GONE);
-            }
+    private void openViewCommentDialog() {
+        try {
+            ViewAllCommentsFragment commentFrag = new ViewAllCommentsFragment();
+            commentFrag.setTargetFragment(this, 0);
+            Bundle _args = new Bundle();
+            _args.putString("mycityCommentURL", commentMainUrl);
+            _args.putString("fbCommentURL", shareUrl);
+            _args.putString(Constants.ARTICLE_ID, articleId);
+            _args.putString(Constants.AUTHOR, authorId + "~" + author);
+            commentFrag.setArguments(_args);
+            ((ArticleDetailsContainerActivity) getActivity()).hideToolbarPerm();
+            ((ArticleDetailsContainerActivity) getActivity()).addFragment(commentFrag, null, true, "topToBottom");
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
         }
     }
 
@@ -1308,7 +1008,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         mScrollView.getHitRect(scrollBounds);
         int diff = (view.getBottom() - (mScrollView.getHeight() + mScrollView.getScrollY()));
         if (diff <= 10 && !isLoading && !StringUtils.isNullOrEmpty(commentURL) && commentURL.contains("http") && !AppConstants.PAGINATION_END_VALUE.equals(pagination)) {
-            getMoreComments();
+//            getMoreComments();
         }
 
         int permanentDiff = (tagsView.getBottom() - (mScrollView.getHeight() + mScrollView.getScrollY()));
@@ -1445,6 +1145,21 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         return gtmLanguage;
     }
 
+    @Override
+    public void onCommentAddition(CommentsData cd) {
+
+    }
+
+    @Override
+    public void onCommentReplyEditSuccess(CommentsData cd) {
+
+    }
+
+    @Override
+    public void onReplyAddition(CommentsData cd) {
+
+    }
+
 
     private class ViewHolder {
         private ImageView commentorsImage;
@@ -1518,6 +1233,50 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
     }
 
+    Callback<ArticleDetailResult> articleDetailResponseCallbackRedis = new Callback<ArticleDetailResult>() {
+        @Override
+        public void onResponse(Call<ArticleDetailResult> call, retrofit2.Response<ArticleDetailResult> response) {
+            removeProgressDialog();
+            if (response == null || response.body() == null) {
+                hitArticleDetailsS3API();
+                return;
+            }
+            try {
+                ArticleDetailResult responseData = response.body();
+                getResponseUpdateUi(responseData);
+                authorId = detailData.getUserId();
+                hitBookmarkFollowingStatusAPI();
+                if ("1".equals(isMomspresso)) {
+                    hitBookmarkVideoStatusAPI();
+                }
+                hitRelatedArticleAPI();
+                commentURL = responseData.getCommentsUri();
+                commentMainUrl = responseData.getCommentsUri();
+
+                if (!StringUtils.isNullOrEmpty(commentURL) && commentURL.contains("http")) {
+//                    getMoreComments();
+                } else {
+                    commentType = "fb";
+                    commentURL = "http";
+//                    getMoreComments();
+                }
+            } catch (Exception e) {
+                removeProgressDialog();
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+                hitArticleDetailsS3API();
+            }
+
+        }
+
+        @Override
+        public void onFailure(Call<ArticleDetailResult> call, Throwable t) {
+            removeProgressDialog();
+            handleExceptions(t);
+            hitArticleDetailsS3API();
+        }
+    };
+
     Callback<ArticleDetailResult> articleDetailResponseCallbackS3 = new Callback<ArticleDetailResult>() {
         @Override
         public void onResponse(Call<ArticleDetailResult> call, retrofit2.Response<ArticleDetailResult> response) {
@@ -1536,13 +1295,14 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 }
                 hitRelatedArticleAPI();
                 commentURL = responseData.getCommentsUri();
+                commentMainUrl = responseData.getCommentsUri();
 
                 if (!StringUtils.isNullOrEmpty(commentURL) && commentURL.contains("http")) {
-                    getMoreComments();
+//                    getMoreComments();
                 } else {
                     commentType = "fb";
                     commentURL = "http";
-                    getMoreComments();
+//                    getMoreComments();
                 }
             } catch (Exception e) {
                 removeProgressDialog();
@@ -1620,7 +1380,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     commentURL = responseData.getData().getCommentsUri();
 
                     if (!StringUtils.isNullOrEmpty(commentURL) && commentURL.contains("http")) {
-                        getMoreComments();
+//                        getMoreComments();
                     }
                 } else {
 
@@ -1757,17 +1517,17 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                             Picasso.with(getActivity()).load(dataList.get(0).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
                             relatedArticles1.setArticleTitle(dataList.get(0).getTitle());
-                            relatedArticles1.setTag(new ArrayList<ArticleListingResult>(dataList.subList(0, 2)));
+                            relatedArticles1.setTag(new ArrayList<ArticleListingResult>(dataList.subList(0, 3)));
 
                             Picasso.with(getActivity()).load(dataList.get(1).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(relatedArticles2.getArticleImageView());
                             relatedArticles2.setArticleTitle(dataList.get(1).getTitle());
-                            relatedArticles2.setTag(new ArrayList<ArticleListingResult>(dataList.subList(0, 2)));
+                            relatedArticles2.setTag(new ArrayList<ArticleListingResult>(dataList.subList(0, 3)));
 
                             Picasso.with(getActivity()).load(dataList.get(2).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(relatedArticles3.getArticleImageView());
                             relatedArticles3.setArticleTitle(dataList.get(2).getTitle());
-                            relatedArticles3.setTag(new ArrayList<ArticleListingResult>(dataList.subList(0, 2)));
+                            relatedArticles3.setTag(new ArrayList<ArticleListingResult>(dataList.subList(0, 3)));
                         } else if (dataList.size() == 2) {
                             Picasso.with(getActivity()).load(dataList.get(0).getImageUrl().getThumbMin()).
                                     placeholder(R.drawable.default_article).fit().into(relatedArticles1.getArticleImageView());
@@ -2085,130 +1845,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         }
     };
 
-    Callback<ResponseBody> commentsCallback = new Callback<ResponseBody>() {
-        @Override
-        public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-            removeProgressDialog();
-            mLodingView.setVisibility(View.GONE);
-            if (response == null || null == response.body()) {
-                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
-                if (isAdded())
-                    ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
-                isLoading = false;
-                commentType = "fb";
-                commentURL = "http";
-                return;
-            }
-            try {
-                isLoading = false;
-                String resData = new String(response.body().bytes());
-                ArrayList<CommentsData> arrayList = new ArrayList<>();
-                JSONArray commentsJson = new JSONArray(resData);
-                commentURL = "";
-                if (commentsJson.length() > 0) {
-                    commentHeading.setVisibility(View.VISIBLE);
-                }
-                for (int i = 0; i < commentsJson.length(); i++) {
-                    if (commentsJson.getJSONObject(i).has("next")) {
-                        commentURL = commentsJson.getJSONObject(i).getString("next");
-                    } else {
-                        CommentsData cData = new Gson().fromJson(commentsJson.get(i).toString(), CommentsData.class);
-                        arrayList.add(cData);
-                    }
-                }
-                if (StringUtils.isNullOrEmpty(commentURL)) {
-                    commentType = "fb";
-                    commentURL = "http";
-                }
-                commentLayout = ((LinearLayout) fragmentView.findViewById(R.id.commnetLout));
-                ViewHolder viewHolder = new ViewHolder();
-                for (int i = 0; i < arrayList.size(); i++) {
-                    displayComments(viewHolder, arrayList.get(i), false);
-                }
-            } catch (JSONException jsonexception) {
-                Crashlytics.logException(jsonexception);
-                Log.d("JSONException", Log.getStackTraceString(jsonexception));
-                if (isAdded())
-                    ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong while parsing response from server");
-            } catch (Exception ex) {
-                Crashlytics.logException(ex);
-                Log.d("MC4kException", Log.getStackTraceString(ex));
-                if (isAdded()) {
-                    ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
-                }
-            }
-        }
-
-        @Override
-        public void onFailure(Call<ResponseBody> call, Throwable t) {
-            mLodingView.setVisibility(View.GONE);
-            handleExceptions(t);
-        }
-    };
-
-    Callback<FBCommentResponse> fbCommentsCallback = new Callback<FBCommentResponse>() {
-        @Override
-        public void onResponse(Call<FBCommentResponse> call, retrofit2.Response<FBCommentResponse> response) {
-            removeProgressDialog();
-            mLodingView.setVisibility(View.GONE);
-            if (response == null || null == response.body()) {
-                if (isAdded())
-                    ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
-                return;
-            }
-
-            try {
-                isLoading = false;
-                FBCommentResponse responseData = response.body();
-                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    ArrayList<CommentsData> dataList = responseData.getData().getResult();
-                    pagination = responseData.getData().getPagination();
-                    if (dataList.size() == 0) {
-                        pagination = AppConstants.PAGINATION_END_VALUE;
-                    } else {
-                        commentLayout = ((LinearLayout) fragmentView.findViewById(R.id.commnetLout));
-                        if (!isFbCommentHeadingAdded) {
-                            TextView textView = new TextView(getActivity());
-                            textView.setText(getString(R.string.ad_comments_fb_comment));
-                            textView.setTextColor(ContextCompat.getColor(getActivity(), R.color.ad_comment_title));
-                            Typeface face = Typeface.createFromAsset(getActivity().getAssets(), "fonts/oswald_regular.ttf");
-                            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.ad_comments_heading));
-                            textView.setTypeface(face);
-                            int paddingVal = AppUtils.dpTopx(10);
-                            textView.setPadding(paddingVal, paddingVal, paddingVal, paddingVal);
-                            commentLayout.addView(textView);
-                            isFbCommentHeadingAdded = true;
-                        }
-
-                        ViewHolder viewHolder = null;
-                        viewHolder = new ViewHolder();
-                        for (int i = 0; i < dataList.size(); i++) {
-                            CommentsData fbCommentData = dataList.get(i);
-                            fbCommentData.setComment_type("fb");
-                            displayComments(viewHolder, fbCommentData, false);
-                        }
-                    }
-                } else {
-                    if (isAdded())
-                        ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
-                }
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-                if (isAdded())
-                    ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.went_wrong));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<FBCommentResponse> call, Throwable t) {
-            mLodingView.setVisibility(View.GONE);
-            handleExceptions(t);
-        }
-    };
-
-
     private Callback<ArticleDetailResponse> isBookmarkedFollowedResponseCallback = new Callback<ArticleDetailResponse>() {
         @Override
         public void onResponse(Call<ArticleDetailResponse> call, retrofit2.Response<ArticleDetailResponse> response) {
@@ -2425,7 +2061,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             } else if (t instanceof SocketTimeoutException) {
                 ((ArticleDetailsContainerActivity) getActivity()).showToast("connection timed out");
             } else {
-                ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+//                ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
             }
         }
         Crashlytics.logException(t);

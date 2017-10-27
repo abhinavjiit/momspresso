@@ -95,7 +95,6 @@ public class LoadingActivity extends BaseActivity {
                             model.setNewCityId(cii.getId());
 
                             SharedPrefUtils.setCurrentCityModel(LoadingActivity.this, model);
-                            SharedPrefUtils.setCityFetched(LoadingActivity.this, true);
                             sendConfigurationRequest();
                         }
                     }
@@ -118,7 +117,6 @@ public class LoadingActivity extends BaseActivity {
     @Override
     protected void updateUi(Response response) {
         if (response == null) {
-            SharedPrefUtils.setCityFetched(this, false);
             return;
         }
         switch (response.getDataType()) {

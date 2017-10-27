@@ -25,11 +25,9 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.parentingdetails.CommentsData;
 import com.mycity4kids.models.response.UserCommentsResponse;
 import com.mycity4kids.models.response.UserCommentsResult;
-import com.mycity4kids.models.response.VlogsListingAndDetailResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
-import com.mycity4kids.ui.activity.UserActivitiesActivity;
 import com.mycity4kids.ui.activity.VlogsDetailActivity;
 import com.mycity4kids.ui.adapter.UsersCommentsRecycleAdapter;
 
@@ -42,7 +40,7 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 3/8/17.
  */
-public class UsersCommentTabFragment extends BaseFragment implements UsersCommentsRecycleAdapter.RecyclerViewClickListener, EditCommentDialogFragment.IAddCommentReply {
+public class UsersCommentTabFragment extends BaseFragment implements UsersCommentsRecycleAdapter.RecyclerViewClickListener, AddEditCommentReplyDialogFragment.IAddCommentReply {
 
     private ArrayList<UserCommentsResult> commentsList;
     private String authorId;
@@ -238,7 +236,7 @@ public class UsersCommentTabFragment extends BaseFragment implements UsersCommen
             commentsData.setUpdatedTime("" + comData.getUpdatedTime());
             commentsData.setName(comData.getUserName());
 
-            EditCommentDialogFragment commentFrag = new EditCommentDialogFragment();
+            AddEditCommentReplyDialogFragment commentFrag = new AddEditCommentReplyDialogFragment();
             commentFrag.setTargetFragment(UsersCommentTabFragment.this, 0);
             Bundle _args = new Bundle();
             _args.putString(Constants.ARTICLE_ID, comData.getArticleId());

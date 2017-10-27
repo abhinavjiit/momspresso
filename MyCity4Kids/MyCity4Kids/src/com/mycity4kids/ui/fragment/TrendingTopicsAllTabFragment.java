@@ -49,7 +49,7 @@ import retrofit2.Retrofit;
 public class TrendingTopicsAllTabFragment extends BaseFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     private int nextPageNumber = 1;
-    private int limit = 15;
+    private int limit = 10;
     private boolean isReuqestRunning = false;
     private boolean isLastPageReached = false;
     private ArrayList<ArticleListingResult> articleDataModelsNew;

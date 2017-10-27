@@ -50,12 +50,10 @@ import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerFragment;
 import com.google.android.youtube.player.YouTubePlayerView;
-import com.google.gson.Gson;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
-import com.mikhaellopez.circularimageview.CircularImageView;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -67,7 +65,6 @@ import com.mycity4kids.models.request.ArticleDetailRequest;
 import com.mycity4kids.models.request.FollowUnfollowUserRequest;
 import com.mycity4kids.models.response.ArticleDetailResponse;
 import com.mycity4kids.models.response.ArticleRecommendationStatusResponse;
-import com.mycity4kids.models.response.FBCommentResponse;
 import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse;
 import com.mycity4kids.models.response.FollowUnfollowUserResponse;
 import com.mycity4kids.models.response.ViewCountResponse;
@@ -79,12 +76,12 @@ import com.mycity4kids.observablescrollview.ObservableScrollView;
 import com.mycity4kids.observablescrollview.ObservableScrollViewCallbacks;
 import com.mycity4kids.observablescrollview.ScrollState;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.FollowAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.VlogsListingAndDetailsAPI;
+import com.mycity4kids.ui.fragment.AddEditCommentReplyDialogFragment;
 import com.mycity4kids.ui.fragment.AddEditCommentReplyFragment;
-import com.mycity4kids.ui.fragment.EditCommentDialogFragment;
+import com.mycity4kids.ui.fragment.ViewAllCommentsDialogFragment;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.widget.CustomFontTextView;
 import com.mycity4kids.widget.RelatedArticlesView;
@@ -92,8 +89,6 @@ import com.mycity4kids.youtube.DeveloperKey;
 import com.squareup.picasso.Picasso;
 
 import org.apmem.tools.layouts.FlowLayout;
-import org.json.JSONArray;
-import org.json.JSONException;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
@@ -155,6 +150,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
     private boolean isLoading = false;
     private String commentType = "db";
     private String commentURL = "";
+    private String commentMainUrl;
     private String pagination = "";
     boolean isArticleDetailEndReached = false;
     private boolean hasRecommendSuggestionAppeared = true;
@@ -182,6 +178,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
     private String userDynamoId;
     private ImageView backNavigationImageView;
     private LinearLayout bottomToolbarLL;
+    private TextView viewCommentsTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -258,6 +255,8 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
 
         commLayout = ((LinearLayout) findViewById(R.id.commnetLout));
         commentLayout = ((LinearLayout) findViewById(R.id.commnetLout));
+        viewCommentsTextView = ((TextView) findViewById(R.id.viewCommentsTextView));
+        viewCommentsTextView.setOnClickListener(this);
 
         likeArticleTextView.setEnabled(false);
         bookmarkArticleTextView.setEnabled(false);
@@ -423,24 +422,24 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
         checkArticleRecommendStaus.enqueue(recommendStatusResponseCallback);
     }
 
-    private void getMoreComments() {
-        isLoading = true;
-        if (!ConnectivityUtils.isNetworkEnabled(this)) {
-            showToast(getString(R.string.error_network));
-            return;
-        }
-        mLodingView.setVisibility(View.VISIBLE);
-        Retrofit retro = BaseApplication.getInstance().getRetrofit();
-        if ("db".equals(commentType)) {
-            ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
-            Call<ResponseBody> call = articleDetailsAPI.getComments(commentURL);
-            call.enqueue(commentsCallback);
-        } else {
-            ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
-            Call<FBCommentResponse> call = articleDetailsAPI.getFBComments(videoId, pagination);
-            call.enqueue(fbCommentsCallback);
-        }
-    }
+//    private void getMoreComments() {
+//        isLoading = true;
+//        if (!ConnectivityUtils.isNetworkEnabled(this)) {
+//            showToast(getString(R.string.error_network));
+//            return;
+//        }
+//        mLodingView.setVisibility(View.VISIBLE);
+//        Retrofit retro = BaseApplication.getInstance().getRetrofit();
+//        if ("db".equals(commentType)) {
+//            ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
+//            Call<ResponseBody> call = articleDetailsAPI.getComments(commentURL);
+//            call.enqueue(commentsCallback);
+//        } else {
+//            ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
+//            Call<FBCommentResponse> call = articleDetailsAPI.getFBComments(videoId, pagination);
+//            call.enqueue(fbCommentsCallback);
+//        }
+//    }
 
     private void hitBookmarkFollowingStatusAPI() {
         ArticleDetailRequest articleDetailRequest = new ArticleDetailRequest();
@@ -533,13 +532,13 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                 }
                 hitRelatedArticleAPI();
                 commentURL = responseData.getData().getResult().getCommentUri();
-
+                commentMainUrl = responseData.getData().getResult().getCommentUri();
                 if (!StringUtils.isNullOrEmpty(commentURL) && commentURL.contains("http")) {
-                    getMoreComments();
+//                    getMoreComments();
                 } else {
                     commentType = "fb";
                     commentURL = "http";
-                    getMoreComments();
+//                    getMoreComments();
                 }
             } catch (Exception e) {
                 removeProgressDialog();
@@ -713,345 +712,6 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
             handleExceptions(t);
         }
     };
-
-    Callback<ResponseBody> commentsCallback = new Callback<ResponseBody>() {
-        @Override
-        public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-            removeProgressDialog();
-            mLodingView.setVisibility(View.GONE);
-            if (response == null || null == response.body()) {
-                NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                Crashlytics.logException(nee);
-                showToast("Something went wrong from server");
-                isLoading = false;
-                commentType = "fb";
-                commentURL = "http";
-                return;
-            }
-            try {
-                isLoading = false;
-                String resData = new String(response.body().bytes());
-                ArrayList<CommentsData> arrayList = new ArrayList<>();
-                JSONArray commentsJson = new JSONArray(resData);
-                commentURL = "";
-                for (int i = 0; i < commentsJson.length(); i++) {
-                    if (commentsJson.getJSONObject(i).has("next")) {
-                        commentURL = commentsJson.getJSONObject(i).getString("next");
-                    } else {
-                        CommentsData cData = new Gson().fromJson(commentsJson.get(i).toString(), CommentsData.class);
-                        arrayList.add(cData);
-                    }
-                }
-                if (StringUtils.isNullOrEmpty(commentURL)) {
-                    commentType = "fb";
-                    commentURL = "http";
-                }
-                commentLayout = ((LinearLayout) findViewById(R.id.commnetLout));
-                ViewHolder viewHolder = null;
-                viewHolder = new ViewHolder();
-                for (int i = 0; i < arrayList.size(); i++) {
-                    displayComments(viewHolder, arrayList.get(i), false);
-                }
-            } catch (JSONException jsonexception) {
-                Crashlytics.logException(jsonexception);
-                Log.d("JSONException", Log.getStackTraceString(jsonexception));
-                showToast("Something went wrong while parsing response from server");
-            } catch (Exception ex) {
-                Crashlytics.logException(ex);
-                Log.d("MC4kException", Log.getStackTraceString(ex));
-                showToast("Something went wrong from server");
-            }
-        }
-
-        @Override
-        public void onFailure(Call<ResponseBody> call, Throwable t) {
-            mLodingView.setVisibility(View.GONE);
-            handleExceptions(t);
-        }
-    };
-
-    Callback<FBCommentResponse> fbCommentsCallback = new Callback<FBCommentResponse>() {
-        @Override
-        public void onResponse(Call<FBCommentResponse> call, retrofit2.Response<FBCommentResponse> response) {
-            removeProgressDialog();
-            mLodingView.setVisibility(View.GONE);
-            if (response == null || null == response.body()) {
-                showToast("Something went wrong from server");
-                return;
-            }
-
-            try {
-                isLoading = false;
-                FBCommentResponse responseData = response.body();
-                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    ArrayList<CommentsData> dataList = responseData.getData().getResult();
-                    pagination = responseData.getData().getPagination();
-                    if (dataList.size() == 0) {
-                        pagination = AppConstants.PAGINATION_END_VALUE;
-                    } else {
-                        commentLayout = ((LinearLayout) findViewById(R.id.commnetLout));
-                        ViewHolder viewHolder = null;
-                        viewHolder = new ViewHolder();
-                        for (int i = 0; i < dataList.size(); i++) {
-                            CommentsData fbCommentData = dataList.get(i);
-                            fbCommentData.setComment_type("fb");
-                            displayComments(viewHolder, fbCommentData, false);
-                        }
-                    }
-                } else {
-                    showToast(getString(R.string.server_went_wrong));
-                }
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-                showToast(getString(R.string.went_wrong));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<FBCommentResponse> call, Throwable t) {
-            mLodingView.setVisibility(View.GONE);
-            handleExceptions(t);
-        }
-    };
-
-    private void displayComments(ViewHolder holder, CommentsData commentList,
-                                 boolean isNewComment) {
-        if (holder != null) {
-            LayoutInflater inflater = LayoutInflater.from(this);
-            View view = inflater.inflate(R.layout.custom_comment_cell, null);
-            holder.commentorsImage = (ImageView) view.findViewById(R.id.commentorImageView);
-            holder.commentName = (TextView) view.findViewById(R.id.txvCommentTitle);
-            holder.commentDescription = (TextView) view.findViewById(R.id.txvCommentDescription);
-            holder.dateTxt = (TextView) view.findViewById(R.id.txvDate);
-            holder.commentCellReplyTxt = (TextView) view.findViewById(R.id.txvCommentCellReply);
-            holder.commentCellEditTxt = (TextView) view.findViewById(R.id.txvCommentCellEdit);
-            holder.replyCommentView = (LinearLayout) view.findViewById(R.id.replyRelativeLayout);
-
-            holder.commentorsImage.setOnClickListener(this);
-            holder.commentName.setOnClickListener(this);
-            holder.replyCommentView.setOnClickListener(this);
-            holder.replyCommentView.setTag(commentList);
-
-            holder.commentCellReplyTxt.setOnClickListener(this);
-            holder.commentCellEditTxt.setOnClickListener(this);
-
-            view.setTag(commentList);
-
-            if (!"fb".equals(commentList.getComment_type()) && userDynamoId.equals(commentList.getUserId())) {
-                holder.commentCellEditTxt.setVisibility(View.VISIBLE);
-            } else {
-                holder.commentCellEditTxt.setVisibility(View.INVISIBLE);
-            }
-
-            if ("fb".equals(commentList.getComment_type())) {
-                holder.commentCellReplyTxt.setVisibility(View.INVISIBLE);
-            } else {
-                holder.commentCellReplyTxt.setVisibility(View.VISIBLE);
-            }
-
-            if (holder.commentCellEditTxt.getVisibility() == View.VISIBLE) {
-                holder.commentCellReplyTxt.setVisibility(View.INVISIBLE);
-            } else {
-                holder.commentCellReplyTxt.setVisibility(View.VISIBLE);
-            }
-
-            if (!StringUtils.isNullOrEmpty(commentList.getName())) {
-                holder.commentName.setText(commentList.getName());
-            } else {
-                holder.commentName.setText("User");
-            }
-            if (!StringUtils.isNullOrEmpty(commentList.getBody())) {
-                holder.commentDescription.setText(commentList.getBody());
-            }
-            if (!StringUtils.isNullOrEmpty(commentList.getCreate())) {
-                holder.dateTxt.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(Long.parseLong(commentList.getCreate())));
-            } else {
-                holder.dateTxt.setText("NA");
-            }
-
-            if (commentList.getProfile_image() != null && !StringUtils.isNullOrEmpty(commentList.getProfile_image().getClientAppMin())) {
-                try {
-                    Picasso.with(this).load(commentList.getProfile_image().getClientAppMin()).placeholder(R.drawable.default_commentor_img).into(holder.commentorsImage);
-                } catch (Exception e) {
-                    Crashlytics.logException(e);
-                    Log.d("MC4kException", Log.getStackTraceString(e));
-                    Picasso.with(this).load(R.drawable.default_commentor_img).into(holder.commentorsImage);
-                }
-            } else {
-                Picasso.with(this).load(R.drawable.default_commentor_img).into(holder.commentorsImage);
-            }
-
-            if (isNewComment) {
-                commentLayout.addView(view, 0);
-            } else {
-                commentLayout.addView(view);
-            }
-            if (commentList.getReplies() != null && commentList.getReplies().size() > 0) {
-                holder.replyCommentView.setVisibility(View.VISIBLE);
-                ViewHolder replyViewholder = new ViewHolder();
-                for (int j = 0; j < commentList.getReplies().size(); j++) {
-                    displayReplies(replyViewholder, commentList.getReplies().get(j), holder.replyCommentView, REPLY_LEVEL_PARENT, j);
-                }
-            } else {
-                holder.replyCommentView.setVisibility(View.GONE);
-            }
-        }
-    }
-
-    private void displayReplies(ViewHolder replyViewholder, CommentsData replies, LinearLayout parentView, int replyLevel, int replyPos) {
-        LayoutInflater inflater = LayoutInflater.from(this);
-        View view = inflater.inflate(R.layout.custom_reply_cell, null);
-        replyViewholder.replyIndicatorImageView = (ImageView) view.findViewById(R.id.replyIndicatorImageView);
-        replyViewholder.commentorsImage = (ImageView) view.findViewById(R.id.replierImageView);
-        replyViewholder.commentName = (TextView) view.findViewById(R.id.txvCommentTitle);
-        replyViewholder.commentDescription = (TextView) view.findViewById(R.id.txvCommentDescription);
-        replyViewholder.dateTxt = (TextView) view.findViewById(R.id.txvDate);
-        replyViewholder.replyCellReplyTxt = (TextView) view.findViewById(R.id.txvReplyCellReply);
-        replyViewholder.replyCellEditTxt = (TextView) view.findViewById(R.id.txvReplyCellEdit);
-        replyViewholder.replyCommentView = (LinearLayout) view.findViewById(R.id.replyRelativeLayout);
-
-        replyViewholder.commentorsImage.setOnClickListener(this);
-        replyViewholder.commentName.setOnClickListener(this);
-
-        replyViewholder.replyCellReplyTxt.setOnClickListener(this);
-        replyViewholder.replyCellEditTxt.setOnClickListener(this);
-
-        if (!"fb".equals(replies.getComment_type()) && userDynamoId.equals(replies.getUserId())) {
-            replyViewholder.replyCellEditTxt.setVisibility(View.VISIBLE);
-            replyViewholder.replyCellReplyTxt.setVisibility(View.INVISIBLE);
-        } else {
-            replyViewholder.replyCellEditTxt.setVisibility(View.INVISIBLE);
-            replyViewholder.replyCellReplyTxt.setVisibility(View.VISIBLE);
-        }
-
-        if (replyLevel == REPLY_LEVEL_PARENT && replyPos == 0) {
-            replyViewholder.replyIndicatorImageView.setVisibility(View.VISIBLE);
-        } else {
-            replyViewholder.replyIndicatorImageView.setVisibility(View.INVISIBLE);
-        }
-
-        view.setTag(replies);
-
-        if (!StringUtils.isNullOrEmpty(replies.getName())) {
-            replyViewholder.commentName.setText(replies.getName());
-        } else {
-            replyViewholder.commentName.setText("User");
-        }
-        if (!StringUtils.isNullOrEmpty(replies.getBody())) {
-            replyViewholder.commentDescription.setText(replies.getBody());
-        }
-        if (!StringUtils.isNullOrEmpty(replies.getCreate())) {
-            replyViewholder.dateTxt.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(Long.parseLong(replies.getCreate())));
-        } else {
-            replyViewholder.dateTxt.setText("NA");
-        }
-
-        if (replies.getProfile_image() != null && !StringUtils.isNullOrEmpty(replies.getProfile_image().getClientAppMin())) {
-            try {
-                Picasso.with(this).load(replies.getProfile_image().getClientAppMin()).placeholder(R.drawable.default_commentor_img).into(replyViewholder.commentorsImage);
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-                Picasso.with(this).load(R.drawable.default_commentor_img).into(replyViewholder.commentorsImage);
-            }
-        } else {
-            Picasso.with(this).load(R.drawable.default_commentor_img).into(replyViewholder.commentorsImage);
-        }
-        parentView.addView(view);
-
-        if (replies.getReplies() != null && replies.getReplies().size() > 0) {
-            replyViewholder.replyCommentView.setVisibility(View.VISIBLE);
-            ViewHolder replyReplyViewholder = new ViewHolder();
-            for (int j = 0; j < replies.getReplies().size(); j++) {
-                displayReplies(replyReplyViewholder, replies.getReplies().get(j), parentView, REPLY_LEVEL_CHILD, j);
-            }
-        } else {
-            replyViewholder.replyCommentView.setVisibility(View.GONE);
-        }
-    }
-
-    private void displayCommentsAtPosition(ViewHolder holder, CommentsData commentList,
-                                           boolean isNewComment, int position) {
-        if (holder != null) {
-            LayoutInflater inflater = LayoutInflater.from(this);
-            View view = inflater.inflate(R.layout.custom_comment_cell, null);
-            holder.commentorsImage = (ImageView) view.findViewById(R.id.commentorImageView);
-            holder.commentName = (TextView) view.findViewById(R.id.txvCommentTitle);
-            holder.commentDescription = (TextView) view.findViewById(R.id.txvCommentDescription);
-            holder.dateTxt = (TextView) view.findViewById(R.id.txvDate);
-            holder.commentCellReplyTxt = (TextView) view.findViewById(R.id.txvCommentCellReply);
-            holder.commentCellEditTxt = (TextView) view.findViewById(R.id.txvCommentCellEdit);
-            holder.replyCommentView = (LinearLayout) view.findViewById(R.id.replyRelativeLayout);
-
-            holder.commentorsImage.setOnClickListener(this);
-            holder.commentName.setOnClickListener(this);
-            holder.replyCommentView.setOnClickListener(this);
-            holder.replyCommentView.setTag(commentList);
-
-            holder.commentCellReplyTxt.setOnClickListener(this);
-            holder.commentCellEditTxt.setOnClickListener(this);
-
-            view.setTag(commentList);
-
-            if (!"fb".equals(commentList.getComment_type()) && userDynamoId.equals(commentList.getUserId())) {
-                holder.commentCellEditTxt.setVisibility(View.VISIBLE);
-            } else {
-                holder.commentCellEditTxt.setVisibility(View.INVISIBLE);
-            }
-
-            if ("fb".equals(commentList.getComment_type())) {
-                holder.commentCellReplyTxt.setVisibility(View.INVISIBLE);
-            } else {
-                holder.commentCellReplyTxt.setVisibility(View.VISIBLE);
-            }
-
-            if (holder.commentCellEditTxt.getVisibility() == View.VISIBLE) {
-                holder.commentCellReplyTxt.setVisibility(View.INVISIBLE);
-            } else {
-                holder.commentCellReplyTxt.setVisibility(View.VISIBLE);
-            }
-
-            if (!StringUtils.isNullOrEmpty(commentList.getName())) {
-                holder.commentName.setText(commentList.getName());
-            } else {
-                holder.commentName.setText("User");
-            }
-            if (!StringUtils.isNullOrEmpty(commentList.getBody())) {
-                holder.commentDescription.setText(commentList.getBody());
-            }
-            if (!StringUtils.isNullOrEmpty(commentList.getCreate())) {
-                holder.dateTxt.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(Long.parseLong(commentList.getCreate())));
-            } else {
-                holder.dateTxt.setText("NA");
-            }
-
-            if (commentList.getProfile_image() != null && !StringUtils.isNullOrEmpty(commentList.getProfile_image().getClientAppMin())) {
-                try {
-                    Picasso.with(this).load(commentList.getProfile_image().getClientAppMin()).placeholder(R.drawable.default_commentor_img).into(holder.commentorsImage);
-                } catch (Exception e) {
-                    Crashlytics.logException(e);
-                    Log.d("MC4kException", Log.getStackTraceString(e));
-                    Picasso.with(this).load(R.drawable.default_commentor_img).into(holder.commentorsImage);
-                }
-            } else {
-                Picasso.with(this).load(R.drawable.default_commentor_img).into(holder.commentorsImage);
-            }
-
-            commentLayout.removeViewAt(position);
-            commentLayout.addView(view, position);
-            if (commentList.getReplies() != null && commentList.getReplies().size() > 0) {
-                holder.replyCommentView.setVisibility(View.VISIBLE);
-                ViewHolder replyViewholder = new ViewHolder();
-                for (int j = 0; j < commentList.getReplies().size(); j++) {
-                    displayReplies(replyViewholder, commentList.getReplies().get(j), holder.replyCommentView, REPLY_LEVEL_PARENT, j);
-                }
-            } else {
-                holder.replyCommentView.setVisibility(View.GONE);
-            }
-        }
-    }
-
 
     Callback<FollowUnfollowUserResponse> followUserResponseCallback = new Callback<FollowUnfollowUserResponse>() {
         @Override
@@ -1572,9 +1232,6 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
         private TextView replyCellReplyTxt;
         private TextView commentCellEditTxt;
         private TextView replyCellEditTxt;
-        private CircularImageView replierImageView;
-        private TextView replierUsernameTextView;
-        private TextView replyCountTextView;
         private LinearLayout replyCommentView;
         public ImageView replyIndicatorImageView;
     }
@@ -1602,9 +1259,6 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
         }
     }
 
-    /**
-     *
-     */
     public void removeProgressDialog() {
         try {
             if (mProgressDialog != null && mProgressDialog.isShowing()) {
@@ -1613,7 +1267,6 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     public void showToast(String message) {
@@ -1758,6 +1411,9 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                 case R.id.likeTextView: {
 
                 }
+                case R.id.viewCommentsTextView:
+                    openViewCommentDialog();
+                    break;
                 case R.id.facebookShareTextView: {
                     Utils.pushShareArticleEvent(this, "DetailVideoScreen", userDynamoId + "", videoId, authorId + "~" + author, "Facebook");
                     if (ShareDialog.canShow(ShareLinkContent.class)) {
@@ -1829,11 +1485,30 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
         }
     }
 
+    private void openViewCommentDialog() {
+        try {
+            ViewAllCommentsDialogFragment commentFrag = new ViewAllCommentsDialogFragment();
+//            commentFrag.setTargetFragment(this, 0);
+            Bundle _args = new Bundle();
+            _args.putString("mycityCommentURL", commentMainUrl);
+            _args.putString("fbCommentURL", shareUrl);
+            _args.putString(Constants.ARTICLE_ID, videoId);
+            _args.putString(Constants.AUTHOR, authorId + "~" + author);
+            commentFrag.setArguments(_args);
+            hideToolbarPerm();
+            FragmentManager fm = getSupportFragmentManager();
+            commentFrag.show(fm, "ViewAllComments");
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
+    }
+
     private void openCommentDialog(CommentsData comData, String opType) {
         try {
-            EditCommentDialogFragment commentFrag = new EditCommentDialogFragment();
+            AddEditCommentReplyDialogFragment commentFrag = new AddEditCommentReplyDialogFragment();
             Bundle _args = new Bundle();
-            _args.putString(Constants.VIDEO_ID, videoId);
+            _args.putString(Constants.ARTICLE_ID, videoId);
             _args.putString(Constants.AUTHOR, authorId + "~" + author);
             _args.putString("opType", opType);
             if (comData != null) {
@@ -1866,22 +1541,6 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
         startActivity(intent);
     }
 
-    public void updateCommentReplyNestedReply(CommentsData updatedComment, int editType) {
-        for (int i = 0; i < commentLayout.getChildCount(); i++) {
-            CommentsData cdata = (CommentsData) commentLayout.getChildAt(i).getTag();
-            if (editType == AppConstants.EDIT_COMMENT) {
-                if (updatedComment.getId().equals(cdata.getId())) {
-                    TextView bodyTextView = (TextView) commentLayout.getChildAt(i).findViewById(R.id.txvCommentDescription);
-                    Log.d("Comment ", "comment mil gaya");
-                    cdata = updatedComment;
-                    bodyTextView.setText(cdata.getBody());
-                }
-            } else {
-            }
-
-        }
-    }
-
     /*
     * Called to update the article details screen with number of replies to a comment.
     * Reply of reply does not change anything on the article details screen hence no
@@ -1900,37 +1559,6 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
 
                 } else {
                     cdata.getReplies().add(updatedComment);
-
-//                    RelativeLayout replyCommentView = (RelativeLayout) commentLayout.getChildAt(i).findViewById(R.id.replyRelativeLayout);
-//                    ImageView replierImageView = (ImageView) replyCommentView.findViewById(R.id.replyUserImageView);
-//                    TextView replyCountTextView = (TextView) replyCommentView.findViewById(R.id.replyCountTextView);
-//                    TextView replierUsernameTextView = (TextView) replyCommentView.findViewById(R.id.replyUserNameTextView);
-//
-//                    if (cdata.getReplies() != null && cdata.getReplies().size() > 0) {
-//
-//                        replyCommentView.setVisibility(View.VISIBLE);
-//                        if (cdata.getReplies().size() > 1) {
-//                            replyCountTextView.setText(cdata.getReplies().size() + " replies");
-//                        } else {
-//                            replyCountTextView.setText(cdata.getReplies().size() + " reply");
-//                        }
-//                        replierUsernameTextView.setText("" + cdata.getReplies().get(0).getName());
-//
-//                        if (cdata.getProfile_image() != null && !StringUtils.isNullOrEmpty(cdata.getProfile_image().getClientAppMin())) {
-//                            try {
-//                                Picasso.with(this).load(cdata.getReplies().get(0).getProfile_image().getClientAppMin())
-//                                        .placeholder(R.drawable.default_commentor_img).into(replierImageView);
-//                            } catch (Exception e) {
-//                                Crashlytics.logException(e);
-//                                Log.d("MC4kException", Log.getStackTraceString(e));
-//                                Picasso.with(this).load(R.drawable.default_commentor_img).into(replierImageView);
-//                            }
-//                        } else {
-//                            Picasso.with(this).load(R.drawable.default_commentor_img).into(replierImageView);
-//                        }
-//                    } else {
-//                        replyCommentView.setVisibility(View.GONE);
-//                    }
                 }
             }
         }
@@ -2015,38 +1643,38 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
 
     @Override
     public void onCommentAddition(CommentsData cd) {
-        displayComments(new ViewHolder(), cd, false);
+//        displayComments(new ViewHolder(), cd, false);
     }
 
     @Override
     public void onCommentReplyEditSuccess(CommentsData cd) {
-        for (int i = 0; i < commentLayout.getChildCount(); i++) {
-            CommentsData cdata = (CommentsData) commentLayout.getChildAt(i).getTag();
-            CommentsData searchedData = recursiveSearch(cdata, cd);
-            if (searchedData != null) {
-                ViewHolder viewHolder = new ViewHolder();
-                displayCommentsAtPosition(viewHolder, cdata, false, i);
-                break;
-            } else {
-                Log.d("Nothing in comment ", cdata.getBody());
-            }
-        }
+//        for (int i = 0; i < commentLayout.getChildCount(); i++) {
+//            CommentsData cdata = (CommentsData) commentLayout.getChildAt(i).getTag();
+//            CommentsData searchedData = recursiveSearch(cdata, cd);
+//            if (searchedData != null) {
+//                ViewHolder viewHolder = new ViewHolder();
+//                displayCommentsAtPosition(viewHolder, cdata, false, i);
+//                break;
+//            } else {
+//                Log.d("Nothing in comment ", cdata.getBody());
+//            }
+//        }
     }
 
     @Override
     public void onReplyAddition(CommentsData updatedComment) {
-        for (int i = 0; i < commentLayout.getChildCount(); i++) {
-            CommentsData cdata = (CommentsData) commentLayout.getChildAt(i).getTag();
-            CommentsData searchedData = recursiveSearch(cdata, updatedComment);
-            if (searchedData != null) {
-                searchedData.getReplies().add(updatedComment);
-                ViewHolder viewHolder = new ViewHolder();
-                displayCommentsAtPosition(viewHolder, cdata, false, i);
-                break;
-            } else {
-                Log.d("Nothing in comment ", cdata.getBody());
-            }
-        }
+//        for (int i = 0; i < commentLayout.getChildCount(); i++) {
+//            CommentsData cdata = (CommentsData) commentLayout.getChildAt(i).getTag();
+//            CommentsData searchedData = recursiveSearch(cdata, updatedComment);
+//            if (searchedData != null) {
+//                searchedData.getReplies().add(updatedComment);
+//                ViewHolder viewHolder = new ViewHolder();
+//                displayCommentsAtPosition(viewHolder, cdata, false, i);
+//                break;
+//            } else {
+//                Log.d("Nothing in comment ", cdata.getBody());
+//            }
+//        }
     }
 
     private CommentsData recursiveSearch(CommentsData cd1, CommentsData upComment) {
@@ -2076,9 +1704,9 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
         Rect scrollBounds = new Rect();
         mScrollView.getHitRect(scrollBounds);
         int diff = (view.getBottom() - (mScrollView.getHeight() + mScrollView.getScrollY()));
-        if (diff <= 10 && !isLoading && !StringUtils.isNullOrEmpty(commentURL) && commentURL.contains("http") && !AppConstants.PAGINATION_END_VALUE.equals(pagination)) {
-            getMoreComments();
-        }
+//        if (diff <= 10 && !isLoading && !StringUtils.isNullOrEmpty(commentURL) && commentURL.contains("http") && !AppConstants.PAGINATION_END_VALUE.equals(pagination)) {
+//            getMoreComments();
+//        }
 
         int permanentDiff = (tagsView.getBottom() - (mScrollView.getHeight() + mScrollView.getScrollY()));
         if (permanentDiff <= 0) {
