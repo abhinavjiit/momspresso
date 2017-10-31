@@ -261,6 +261,7 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                 cityFragment.show(fm, "Replies");
                 break;
             case R.id.savePublishTextView:
+                Utils.pushBlogSetupSubmitEvent(BlogSetupActivity.this, "BlogSetupScreen", SharedPrefUtils.getUserDetailModel(BlogSetupActivity.this).getDynamoId());
                 if (validateFields()) {
                     saveCityData();
                     saveUserDetails();
@@ -519,7 +520,7 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
             }
             UserDetailResponse responseData = response.body();
             if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                Utils.pushBlogSetupEvent(BlogSetupActivity.this, "BlogSetupScreen", SharedPrefUtils.getUserDetailModel(BlogSetupActivity.this).getDynamoId());
+                Utils.pushBlogSetupSuccessEvent(BlogSetupActivity.this, "BlogSetupScreen", SharedPrefUtils.getUserDetailModel(BlogSetupActivity.this).getDynamoId());
                 saveCityData();
             } else {
                 showToast(responseData.getReason());

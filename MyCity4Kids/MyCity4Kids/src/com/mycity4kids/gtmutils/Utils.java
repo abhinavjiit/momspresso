@@ -220,10 +220,17 @@ public class Utils {
                 GTMTags.TagScreen, screenName, GTMTags.USER_ID, user, GTMTags.TagLanguage, language));
     }
 
-    public static void pushBlogSetupEvent(Context context, String screenName, String user) {
+    public static void pushBlogSetupSubmitEvent(Context context, String screenName, String user) {
         Log.d("pushBlogSetupEvent", "" + screenName + " --- ");
         DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
-        dataLayer.push(DataLayer.mapOf(GTMTags.TagEvent, "BlogSetup",
+        dataLayer.push(DataLayer.mapOf(GTMTags.TagEvent, "BlogSetupSubmit",
+                GTMTags.TagScreen, screenName, GTMTags.USER_ID, user));
+    }
+
+    public static void pushBlogSetupSuccessEvent(Context context, String screenName, String user) {
+        Log.d("pushBlogSetupEvent", "" + screenName + " --- ");
+        DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
+        dataLayer.push(DataLayer.mapOf(GTMTags.TagEvent, "BlogSetupSuccess",
                 GTMTags.TagScreen, screenName, GTMTags.USER_ID, user));
     }
 
