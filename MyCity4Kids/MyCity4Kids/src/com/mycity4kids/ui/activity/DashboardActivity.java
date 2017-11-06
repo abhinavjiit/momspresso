@@ -60,6 +60,7 @@ import com.mycity4kids.ui.fragment.MyAccountProfileFragment;
 import com.mycity4kids.ui.fragment.NotificationFragment;
 import com.mycity4kids.ui.fragment.RateAppDialogFragment;
 import com.mycity4kids.ui.fragment.SendFeedbackFragment;
+import com.mycity4kids.ui.fragment.SuggestedTopicsFragment;
 import com.mycity4kids.ui.fragment.UploadVideoInfoFragment;
 import com.mycity4kids.utils.PermissionUtil;
 
@@ -1070,7 +1071,16 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 setSupportActionBar(mToolbar);
                 getSupportActionBar().setDisplayShowHomeEnabled(false);
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-            } else if (null != topFragment && topFragment instanceof FragmentMC4KHomeNew) {
+            }  else if (null != topFragment && topFragment instanceof SuggestedTopicsFragment) {
+                Utils.pushOpenScreenEvent(this, "SuggestedTopicScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+                toolbarTitleTextView.setText(getString(R.string.home_screen_suggested_topic_title));
+                toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.notification_toolbar_title));
+                menu.findItem(R.id.action_write).setChecked(true);
+                toolbarRelativeLayout.setVisibility(View.VISIBLE);
+                setSupportActionBar(mToolbar);
+                getSupportActionBar().setDisplayShowHomeEnabled(false);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            }else if (null != topFragment && topFragment instanceof FragmentMC4KHomeNew) {
                 Utils.pushOpenScreenEvent(this, "HomeScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 if (!SharedPrefUtils.isCoachmarksShownFlag(this, "home")) {
                     coachmarksImageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.coachmark_home));

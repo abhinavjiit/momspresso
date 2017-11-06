@@ -74,19 +74,19 @@
         android:layout_below="@+id/txvCommentDescription"
         android:orientation="horizontal">
 
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/txvReplyCellReply"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="2dp"
-            android:layout_marginRight="2dp"
-            android:layout_marginTop="5dp"
-            android:padding="5dp"
-            android:text="@string/ad.comments.reply_label"
-            android:textColor="@color/ad.comment.reply_label"
-            android:textSize="@dimen/ad_comments_reply_btn"
-            android:visibility="visible"
-            app:fontName="oswald_regular.ttf" />
+        <!--<com.mycity4kids.widget.CustomFontTextView-->
+            <!--android:id="@+id/txvReplyCellReply"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginEnd="2dp"-->
+            <!--android:layout_marginRight="2dp"-->
+            <!--android:layout_marginTop="5dp"-->
+            <!--android:padding="5dp"-->
+            <!--android:text="@string/ad.comments.reply_label"-->
+            <!--android:textColor="@color/ad.comment.reply_label"-->
+            <!--android:textSize="@dimen/ad_comments_reply_btn"-->
+            <!--android:visibility="visible"-->
+            <!--app:fontName="oswald_regular.ttf" />-->
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/txvReplyCellEdit"
@@ -102,15 +102,15 @@
             android:visibility="gone"
             app:fontName="oswald_regular.ttf" />
 
-        <View
-            android:id="@+id/separatorView"
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="6dp"
-            android:layout_marginEnd="2dp"
-            android:layout_marginRight="2dp"
-            android:layout_marginTop="12dp"
-            android:background="@color/common_underline" />
+        <!--<View-->
+            <!--android:id="@+id/separatorView"-->
+            <!--android:layout_width="1dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_marginBottom="6dp"-->
+            <!--android:layout_marginEnd="2dp"-->
+            <!--android:layout_marginRight="2dp"-->
+            <!--android:layout_marginTop="12dp"-->
+            <!--android:background="@color/common_underline" />-->
 
         <com.mycity4kids.widget.CustomFontTextView
             android:id="@+id/txvDate"

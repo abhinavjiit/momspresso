@@ -130,7 +130,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
     private FlowLayout tagsLayout;
     private TextView articleViewCountTextView;
     private Toolbar mToolbar;
-    private FloatingActionButton commentFloatingActionButton;
+//    private FloatingActionButton commentFloatingActionButton;
     private ImageView authorImageView;
     private TextView followClick;
     private LinearLayout commLayout;
@@ -238,8 +238,8 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
 
         authorImageView = (ImageView) findViewById(R.id.user_image);
         authorImageView.setOnClickListener(this);
-        commentFloatingActionButton = (FloatingActionButton) findViewById(R.id.commentFloatingActionButton);
-        commentFloatingActionButton.setOnClickListener(this);
+//        commentFloatingActionButton = (FloatingActionButton) findViewById(R.id.commentFloatingActionButton);
+//        commentFloatingActionButton.setOnClickListener(this);
 
         article_title = (TextView) findViewById(R.id.article_title);
         authorTypeTextView = (TextView) findViewById(R.id.blogger_type);
@@ -1389,15 +1389,15 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                     startActivity(intent);
                     break;
                 }
-                case R.id.commentFloatingActionButton:
-                    openCommentDialog(null, "ADD");
-                    break;
-                case R.id.txvCommentCellReply:
-                    openCommentDialog((CommentsData) ((View) v.getParent().getParent().getParent()).getTag(), "ADD");
-                    break;
-                case R.id.txvReplyCellReply:
-                    openCommentDialog((CommentsData) ((View) v.getParent().getParent()).getTag(), "ADD");
-                    break;
+//                case R.id.commentFloatingActionButton:
+//                    openCommentDialog(null, "ADD");
+//                    break;
+//                case R.id.txvCommentCellReply:
+//                    openCommentDialog((CommentsData) ((View) v.getParent().getParent().getParent()).getTag(), "ADD");
+//                    break;
+//                case R.id.txvReplyCellReply:
+//                    openCommentDialog((CommentsData) ((View) v.getParent().getParent()).getTag(), "ADD");
+//                    break;
                 case R.id.txvCommentCellEdit: {
                     CommentsData cData = (CommentsData) ((View) v.getParent().getParent().getParent()).getTag();
                     openCommentDialog(cData, "EDIT");
@@ -1564,31 +1564,31 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
         }
     }
 
-    public void hideFloatingActionButton() {
-        commentFloatingActionButton.animate()
-                .alpha(0)
-                .setInterpolator(new LinearInterpolator())
-                .setDuration(180)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        commentFloatingActionButton.setVisibility(View.INVISIBLE);
-                    }
-                });
-    }
-
-    public void showFloatingActionButton() {
-        commentFloatingActionButton.animate()
-                .alpha(1)
-                .setInterpolator(new LinearInterpolator())
-                .setDuration(180)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        commentFloatingActionButton.setVisibility(View.VISIBLE);
-                    }
-                });
-    }
+//    public void hideFloatingActionButton() {
+//        commentFloatingActionButton.animate()
+//                .alpha(0)
+//                .setInterpolator(new LinearInterpolator())
+//                .setDuration(180)
+//                .setListener(new AnimatorListenerAdapter() {
+//                    @Override
+//                    public void onAnimationEnd(Animator animation) {
+//                        commentFloatingActionButton.setVisibility(View.INVISIBLE);
+//                    }
+//                });
+//    }
+//
+//    public void showFloatingActionButton() {
+//        commentFloatingActionButton.animate()
+//                .alpha(1)
+//                .setInterpolator(new LinearInterpolator())
+//                .setDuration(180)
+//                .setListener(new AnimatorListenerAdapter() {
+//                    @Override
+//                    public void onAnimationEnd(Animator animation) {
+//                        commentFloatingActionButton.setVisibility(View.VISIBLE);
+//                    }
+//                });
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -1712,9 +1712,9 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
         if (permanentDiff <= 0) {
             isArticleDetailEndReached = true;
 
-            if (commentFloatingActionButton.getVisibility() == View.INVISIBLE) {
-                showFloatingActionButton();
-            }
+//            if (commentFloatingActionButton.getVisibility() == View.INVISIBLE) {
+//                showFloatingActionButton();
+//            }
         } else {
             isArticleDetailEndReached = false;
         }
@@ -1738,9 +1738,9 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
             if (bottomToolbarLL.getVisibility() == View.VISIBLE) {
                 hideToolbar();
             }
-            if (!isArticleDetailEndReached && commentFloatingActionButton.getVisibility() == View.VISIBLE) {
-                hideFloatingActionButton();
-            }
+//            if (!isArticleDetailEndReached && commentFloatingActionButton.getVisibility() == View.VISIBLE) {
+//                hideFloatingActionButton();
+//            }
         } else if (scrollState == ScrollState.DOWN) {
             if (!ab.isShowing()) {
                 showMainToolbar();
@@ -1748,9 +1748,9 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
             if (bottomToolbarLL.getVisibility() != View.VISIBLE) {
                 showToolbar();
             }
-            if (commentFloatingActionButton.getVisibility() == View.INVISIBLE) {
-                showFloatingActionButton();
-            }
+//            if (commentFloatingActionButton.getVisibility() == View.INVISIBLE) {
+//                showFloatingActionButton();
+//            }
         }
     }
 

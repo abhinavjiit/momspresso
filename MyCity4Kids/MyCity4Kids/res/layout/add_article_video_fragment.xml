@@ -22,7 +22,7 @@
         android:id="@+id/uploadVideoTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/writeArticleImageView"
+        android:layout_above="@+id/suggestedTopicImageView"
         android:layout_alignEnd="@+id/becomeBloggerTextView"
         android:layout_alignLeft="@+id/becomeBloggerTextView"
         android:layout_alignRight="@+id/becomeBloggerTextView"
@@ -31,6 +31,36 @@
         android:gravity="center"
         android:text="@string/add_article_or_video.upload_video"
         android:textColor="@color/white"
+        app:fontName="oswald.ttf" />
+
+    <ImageView
+        android:id="@+id/suggestedTopicImageView"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginBottom="10dp"
+        android:layout_above="@+id/suggestedTopicTextView"
+        android:layout_alignEnd="@+id/becomeBloggerTextView"
+        android:layout_alignRight="@+id/becomeBloggerTextView"
+        android:layout_marginEnd="4dp"
+        android:layout_marginRight="4dp"
+        android:background="@drawable/circular_image_bg"
+        android:scaleType="center"
+        android:src="@drawable/ic_suggested_topics"
+        android:visibility="visible" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/suggestedTopicTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_above="@+id/writeArticleImageView"
+        android:layout_marginBottom="25dp"
+        android:layout_marginEnd="48dp"
+        android:layout_marginRight="48dp"
+        android:text="@string/add_article_or_video.suggested_topic"
+        android:textColor="@color/white"
+        android:visibility="visible"
         app:fontName="oswald.ttf" />
 
     <ImageView

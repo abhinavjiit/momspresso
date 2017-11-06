@@ -162,7 +162,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private WebView mWebView;
     private RelatedArticlesView relatedArticles1, relatedArticles2, relatedArticles3;
     private RelatedArticlesView trendingRelatedArticles1, trendingRelatedArticles2, trendingRelatedArticles3;
-    private FloatingActionButton commentFloatingActionButton;
+//    private FloatingActionButton commentFloatingActionButton;
 
     private MyWebChromeClient mWebChromeClient = null;
     private View mCustomView;
@@ -205,8 +205,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
             floatingActionButton = (ImageView) fragmentView.findViewById(R.id.user_image);
             floatingActionButton.setOnClickListener(this);
-            commentFloatingActionButton = (FloatingActionButton) fragmentView.findViewById(R.id.commentFloatingActionButton);
-            commentFloatingActionButton.setOnClickListener(this);
+//            commentFloatingActionButton = (FloatingActionButton) fragmentView.findViewById(R.id.commentFloatingActionButton);
+//            commentFloatingActionButton.setOnClickListener(this);
 
             mWebView = (WebView) fragmentView.findViewById(R.id.articleWebView);
             videoWebView = (WebView) fragmentView.findViewById(R.id.videoWebView);
@@ -751,12 +751,12 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     tagsLayout.setLayoutParams(params);
                     viewAllTagsTextView.setVisibility(View.GONE);
                     break;
-                case R.id.txvCommentCellReply:
-                    openCommentDialog((CommentsData) ((View) v.getParent().getParent().getParent()).getTag(), "ADD");
-                    break;
-                case R.id.txvReplyCellReply:
-                    openCommentDialog((CommentsData) ((View) v.getParent().getParent()).getTag(), "ADD");
-                    break;
+//                case R.id.txvCommentCellReply:
+//                    openCommentDialog((CommentsData) ((View) v.getParent().getParent().getParent()).getTag(), "ADD");
+//                    break;
+//                case R.id.txvReplyCellReply:
+//                    openCommentDialog((CommentsData) ((View) v.getParent().getParent()).getTag(), "ADD");
+//                    break;
                 case R.id.txvCommentCellEdit: {
                     CommentsData cData = (CommentsData) ((View) v.getParent().getParent().getParent()).getTag();
                     openCommentDialog(cData, "EDIT");
@@ -888,9 +888,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 case R.id.viewCommentsTextView:
                     openViewCommentDialog();
                     break;
-                case R.id.commentFloatingActionButton:
-                    openCommentDialog(null, "ADD");
-                    break;
+//                case R.id.commentFloatingActionButton:
+//                    openCommentDialog(null, "ADD");
+//                    break;
                 case R.id.likeTextView: {
                     if (recommendStatus == 0) {
                         recommendStatus = 1;
@@ -1020,9 +1020,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             if (isSwipeNextAvailable) {
                 swipeNextTextView.setVisibility(View.VISIBLE);
             }
-            if (commentFloatingActionButton.getVisibility() == View.INVISIBLE) {
-                showFloatingActionButton();
-            }
+//            if (commentFloatingActionButton.getVisibility() == View.INVISIBLE) {
+//                showFloatingActionButton();
+//            }
         } else {
             if (bottomToolbarLL.getVisibility() != View.VISIBLE) {
                 showBottomToolbar();
@@ -1053,9 +1053,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 //            if (bottomToolbarLL.getVisibility() == View.VISIBLE) {
 //                hideBottomToolbar();
 //            }
-            if (!isArticleDetailEndReached && commentFloatingActionButton.getVisibility() == View.VISIBLE) {
-                hideFloatingActionButton();
-            }
+//            if (!isArticleDetailEndReached && commentFloatingActionButton.getVisibility() == View.VISIBLE) {
+//                hideFloatingActionButton();
+//            }
         } else if (scrollState == ScrollState.DOWN) {
             if (!ab.isShowing()) {
                 ((ArticleDetailsContainerActivity) getActivity()).showMainToolbar();
@@ -1063,9 +1063,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 //            if (bottomToolbarLL.getVisibility() != View.VISIBLE) {
 //                showBottomToolbar();
 //            }
-            if (commentFloatingActionButton.getVisibility() == View.INVISIBLE) {
-                showFloatingActionButton();
-            }
+//            if (commentFloatingActionButton.getVisibility() == View.INVISIBLE) {
+//                showFloatingActionButton();
+//            }
         }
     }
 
@@ -1096,31 +1096,31 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 });
     }
 
-    public void hideFloatingActionButton() {
-        commentFloatingActionButton.animate()
-                .translationY(commentFloatingActionButton.getHeight())
-                .setInterpolator(new LinearInterpolator())
-                .setDuration(180)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        commentFloatingActionButton.setVisibility(View.INVISIBLE);
-                    }
-                });
-    }
-
-    public void showFloatingActionButton() {
-        commentFloatingActionButton.animate()
-                .translationY(0)
-                .setInterpolator(new LinearInterpolator())
-                .setDuration(180)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        commentFloatingActionButton.setVisibility(View.VISIBLE);
-                    }
-                });
-    }
+//    public void hideFloatingActionButton() {
+//        commentFloatingActionButton.animate()
+//                .translationY(commentFloatingActionButton.getHeight())
+//                .setInterpolator(new LinearInterpolator())
+//                .setDuration(180)
+//                .setListener(new AnimatorListenerAdapter() {
+//                    @Override
+//                    public void onAnimationEnd(Animator animation) {
+//                        commentFloatingActionButton.setVisibility(View.INVISIBLE);
+//                    }
+//                });
+//    }
+//
+//    public void showFloatingActionButton() {
+//        commentFloatingActionButton.animate()
+//                .translationY(0)
+//                .setInterpolator(new LinearInterpolator())
+//                .setDuration(180)
+//                .setListener(new AnimatorListenerAdapter() {
+//                    @Override
+//                    public void onAnimationEnd(Animator animation) {
+//                        commentFloatingActionButton.setVisibility(View.VISIBLE);
+//                    }
+//                });
+//    }
 
     public String getArticleContent() {
         if (detailData == null || detailData.getBody() == null) {

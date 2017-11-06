@@ -530,4 +530,9 @@
     <color name="rate_us.dialog.message">#545454</color>
     <color name="rate_us.dialog.not_now">#545454</color>
     <color name="rate_us.dialog.rate_now">#507cbe</color>
+
+    <color name="suggested_topic.index.bg">#e3e3e8</color>
+    <color name="suggested_topic.index.text">#545454</color>
+    <color name="suggested_topic.topic_text">#9c9dac</color>
+    <color name="suggested_topic.start_writing_label">#507cbe</color>
 </resources>

@@ -37,13 +37,13 @@ public class AllCommentsPagerAdapter extends FragmentStatePagerAdapter {
         bundle.putString(Constants.ARTICLE_ID, articleId);
         bundle.putString(Constants.AUTHOR, author);
         if (position == 0) {
-            MyCityCommentsFragment tab1 = new MyCityCommentsFragment();
-            bundle.putString("commentURL", mycityCommentURL);
+            FacebookCommentsFragment tab1 = new FacebookCommentsFragment();
+            bundle.putString("commentURL", fbCommentURL);
             tab1.setArguments(bundle);
             return tab1;
         } else {
-            FacebookCommentsFragment tab1 = new FacebookCommentsFragment();
-            bundle.putString("commentURL", fbCommentURL);
+            MyCityCommentsFragment tab1 = new MyCityCommentsFragment();
+            bundle.putString("commentURL", mycityCommentURL);
             tab1.setArguments(bundle);
             return tab1;
         }

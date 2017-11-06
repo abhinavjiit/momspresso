@@ -413,7 +413,7 @@
     <string name="ad.follow_author">FOLLOW</string>
     <string name="ad.following_author">FOLLOWING</string>
     <string name="ad.comments.title">COMMENTS</string>
-    <string name="ad.comments.no_comments">NO COMMENTS ADDED YET</string>
+    <string name="ad.comments.no_comments">NO COMMENTS ADDED</string>
     <string name="ad.comments.view_comment">VIEW COMMENTS</string>
     <string name="ad.comments.fb_comment">FACEBOOK COMMENT</string>
     <string name="ad.comments.reply_label">Reply</string>
@@ -543,6 +543,7 @@
 
     <string name="home_screen.trending.title">TRENDING</string>
     <string name="home_screen.notification.title">NOTIFICATION</string>
+    <string name="home_screen.suggested_topic.title">SUGGESTED TOPICS</string>
     <string name="home_screen.profile.title">MY ACCOUNT</string>
     <string name="home_screen.select_an_option.title">SELECT AN OPTION</string>
     <string name="home_screen.trending.become_blogger">SHARE YOUR STORY</string>
@@ -783,6 +784,7 @@
 
     <string name="add_article_or_video.upload_video">UPLOAD MOMVLOG</string>
     <string name="add_article_or_video.write_article">WRITE AN ARTICLE</string>
+    <string name="add_article_or_video.suggested_topic">SUGGESTED TOPICS</string>
     <string name="add_article_or_video.become_blogger">BECOME A BLOGGER</string>
 
     <string name="become_blogger.get_started">LET\'S GET STARTED</string>
@@ -879,4 +881,6 @@
     <string name="rate_us.dialog.rate_now">RATE NOW</string>
     <string name="rate_us.dialog.message1">If you enjoy using the mycity4kids Parenting app, please take a moment to rate it.</string>
     <string name="rate_us.dialog.message2">Thank you for your support !!!</string>
+
+    <string name="suggested_topic.start_writing">START WRITING</string>
 </resources>

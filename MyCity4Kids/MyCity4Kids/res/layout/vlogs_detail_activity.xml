@@ -374,19 +374,19 @@
         </RelativeLayout>
     </com.mycity4kids.observablescrollview.ObservableScrollView>
 
-    <com.getbase.floatingactionbutton.FloatingActionButton
-        android:id="@+id/commentFloatingActionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/bottom_Lout"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="12dp"
-        android:layout_marginRight="17dp"
-        app:fab_colorNormal="@color/ad.fab.bg"
-        app:fab_colorPressed="@color/ad.fab.bg"
-        app:fab_icon="@drawable/ic_add_comments"
-        app:fab_plusIconColor="@color/white_color"
-        app:fab_size="normal" />
+    <!--<com.getbase.floatingactionbutton.FloatingActionButton-->
+        <!--android:id="@+id/commentFloatingActionButton"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_above="@+id/bottom_Lout"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_marginBottom="12dp"-->
+        <!--android:layout_marginRight="17dp"-->
+        <!--app:fab_colorNormal="@color/ad.fab.bg"-->
+        <!--app:fab_colorPressed="@color/ad.fab.bg"-->
+        <!--app:fab_icon="@drawable/ic_add_comments"-->
+        <!--app:fab_plusIconColor="@color/white_color"-->
+        <!--app:fab_size="normal" />-->
 
     <LinearLayout
         android:id="@+id/bottom_Lout"

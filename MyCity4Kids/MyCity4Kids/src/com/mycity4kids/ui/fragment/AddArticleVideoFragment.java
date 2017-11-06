@@ -34,8 +34,8 @@ import retrofit2.Retrofit;
  */
 public class AddArticleVideoFragment extends BaseFragment implements View.OnClickListener {
 
-    private ImageView setUpBlogImageView, writeArticleImageView, uploadVideoImageView;
-    private TextView writeArticleTextView, uploadVideoTextView, becomeBloggerTextView;
+    private ImageView setUpBlogImageView, writeArticleImageView, uploadVideoImageView, suggestedTopicImageView;
+    private TextView writeArticleTextView, uploadVideoTextView, becomeBloggerTextView, suggestedTopicTextView;
 
     @Nullable
     @Override
@@ -45,9 +45,11 @@ public class AddArticleVideoFragment extends BaseFragment implements View.OnClic
         writeArticleImageView = (ImageView) view.findViewById(R.id.writeArticleImageView);
         uploadVideoImageView = (ImageView) view.findViewById(R.id.uploadVideoImageView);
         setUpBlogImageView = (ImageView) view.findViewById(R.id.setUpBlogImageView);
+        suggestedTopicImageView = (ImageView) view.findViewById(R.id.suggestedTopicImageView);
         writeArticleTextView = (TextView) view.findViewById(R.id.writeArticleTextView);
         uploadVideoTextView = (TextView) view.findViewById(R.id.uploadVideoTextView);
         becomeBloggerTextView = (TextView) view.findViewById(R.id.becomeBloggerTextView);
+        suggestedTopicTextView = (TextView) view.findViewById(R.id.suggestedTopicTextView);
 
         writeArticleImageView.setOnClickListener(this);
         writeArticleTextView.setOnClickListener(this);
@@ -55,6 +57,8 @@ public class AddArticleVideoFragment extends BaseFragment implements View.OnClic
         uploadVideoTextView.setOnClickListener(this);
         setUpBlogImageView.setOnClickListener(this);
         becomeBloggerTextView.setOnClickListener(this);
+        suggestedTopicImageView.setOnClickListener(this);
+        suggestedTopicTextView.setOnClickListener(this);
 
         if ("0".equals(SharedPrefUtils.getUserDetailModel(getActivity()).getUserType()) && !SharedPrefUtils.getBecomeBloggerFlag(getActivity())) {
             writeArticleImageView.setVisibility(View.INVISIBLE);
@@ -158,6 +162,12 @@ public class AddArticleVideoFragment extends BaseFragment implements View.OnClic
                     uploadVideoInfoFragment.setArguments(searchBundle);
                     ((DashboardActivity) getActivity()).addFragment(uploadVideoInfoFragment, searchBundle, true);
                 }
+            }
+            break;
+            case R.id.suggestedTopicImageView:
+            case R.id.suggestedTopicTextView: {
+                SuggestedTopicsFragment suggestedTopicsFragment = new SuggestedTopicsFragment();
+                ((DashboardActivity) getActivity()).addFragment(suggestedTopicsFragment, null, true);
             }
             break;
         }

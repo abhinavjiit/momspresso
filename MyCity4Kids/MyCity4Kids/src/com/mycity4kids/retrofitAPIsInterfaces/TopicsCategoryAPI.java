@@ -6,6 +6,7 @@ import com.mycity4kids.models.parentingstop.CommonParentingResponse;
 import com.mycity4kids.models.response.ArticleDraftResponse;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.FollowUnfollowCategoriesResponse;
+import com.mycity4kids.models.response.SuggestedTopicsResponse;
 import com.mycity4kids.models.response.TopicsFollowingStatusData;
 import com.mycity4kids.models.response.TopicsFollowingStatusResponse;
 import com.mycity4kids.models.response.TrendingListingResponse;
@@ -90,4 +91,6 @@ public interface TopicsCategoryAPI {
                                                               @Path("articleCount") String articleCount,
                                                               @Query("lang") String lang);
 
+    @GET("v1/categories/topic/")
+    Call<SuggestedTopicsResponse> getSuggestedTopics(@Query("langCode") String lang);
 }
