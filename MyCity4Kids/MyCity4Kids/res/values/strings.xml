@@ -63,7 +63,7 @@
     <string name="logout_txt">Logout</string>
     <string name="subcategoryName">subCagegory</string>
     <string name="categoryName">subCagegory</string>
-    <string name="location_info">To get a personalized recommendation and results, Please select your preferred location</string>
+    <string name="location_info">To get personalized recommendations, Please select your preferred location</string>
     <string name="email_already_registered">Please use Login instead of Sign-Up as your email id is already registered with us</string>
     <string name="registration_successful">Your registration has been completed successfully</string>
     <!-- HomeCategoryActivity -->
@@ -73,7 +73,7 @@
     <string name="please_wait">Please Wait...</string>
     <string name="no_result_txt">No result found.</string>
     <string name="went_wrong">Something went wrong.</string>
-    <string name="server_went_wrong">Something went wrong from server.</string>
+    <string name="server_went_wrong">Something went wrong at the server.</string>
     <string name="no_data">Data not found.</string>
     <string name="toast_network_error">Device is out of network coverage.</string>
     <string name="toast_response_error">Some error occurred, please try again later!</string>
@@ -110,7 +110,7 @@
     <!-- Add Listing Screen -->
 
     <string name="write_review_success">Your review has been submitted successfully.</string>
-    <string name="write_review_success_new">Review has been sent for moderation once done it will be published in 48 hrs.</string>
+    <string name="write_review_success_new">Review has been sent for moderation. Once done, it will be published in 48 hrs.</string>
 
     <!-- Details Screen -->
 
@@ -200,13 +200,13 @@
     <string name="update_desctiption">A new, Enhanced version of the mycity4Kids app is ready for installation.</string>
     <string-array name="location_array">
         <item name="delhi/ncr">Delhi/NCR </item>
-        <item name="banglore"> Balglore</item>
+        <item name="banglore"> Bangalore</item>
     </string-array>
 
-    <string name="netwrok_error">Netwrok error</string>
+    <string name="netwrok_error">Network error</string>
     <string name="search_locality">Search locality</string>
     <string name="add_business">Add a Listing</string>
-    <string name="add_business_description">Please enter the following detail to add a business or an event</string>
+    <string name="add_business_description">Please enter the following details to add a business or an event</string>
     <string name="add_business_hint">Business or Event Name</string>
     <string name="add_business_contact">Contact Number</string>
     <string name="transit">TRANSIT</string>
@@ -229,8 +229,8 @@
     <string name="pick_seattle_place">Pick a Seattle Place</string>
     <!-- <string name="app_id">1497460137141503</string> -->
     <string name="exception">Exception: %1$s</string>
-    <string name="description_article">I just have found an amazing article about parenting and kids at mycity4kids. To know more, please visit.</string>
-    <string name="description_blog">I just have found an amazing blog about parenting and kids at mycity4kids. To know more, please visit.</string>
+    <string name="description_article">I just found an amazing article about parenting and kids at mycity4kids. To know more, please visit.</string>
+    <string name="description_blog">I just found an amazing blog about parenting and kids at mycity4kids. To know more, please visit.</string>
     <string name="description_common">I just discovered something interesting - Check it out here</string>
     <string name="post_title">mycity4kids</string>
     <string name="loading_">Loading...</string>
@@ -255,7 +255,7 @@
     <string name="notifications">NOTIFICATIONS</string>
 
     <string name="mycity_forkids">Welcome to mycity4kids!</string>
-    <string name="organise_urkids">Organize your kids  daily schedule with a family</string>
+    <string name="organise_urkids">Organize your kids daily schedule with a family</string>
     <string name="organise_todos">Organize your familys to do list.</string>
     <string name="existing_email">EXISTING EMAIL ACCOUNT?SIGNIN HERE</string>
     <string name="title_activity_dashboard">DashboardActivity</string>
@@ -333,7 +333,7 @@
     <string name="upload_iamge_successfully">You have successfully uploaded an image.</string>
     <string name="upload_file_successfully">You have successfully uploaded a file.</string>
     <string name="logout_msg">Are you sure you want to logout?</string>
-    <string name="reminder_selected">You cant select this</string>
+    <string name="reminder_selected">You cannot select this</string>
     <string name="activities_txt">Activities</string>
     <string name="duration_txt">duration</string>
     <string name="cost_txt">Cost</string>
@@ -414,7 +414,7 @@
     <string name="ad.following_author">FOLLOWING</string>
     <string name="ad.comments.title">COMMENTS</string>
     <string name="ad.comments.no_comments">NO COMMENTS ADDED</string>
-    <string name="ad.comments.view_comment">VIEW COMMENTS</string>
+    <string name="ad.comments.view_comment">COMMENTS</string>
     <string name="ad.comments.fb_comment">FACEBOOK COMMENT</string>
     <string name="ad.comments.reply_label">Reply</string>
     <string name="ad.comments.edit_label">Edit</string>
@@ -431,6 +431,7 @@
     <string name="ad.bottom_bar.unbookmark">UNBOOKMARK</string>
     <string name="ad.bottom_bar.unlike">UNLIKE</string>
     <string name="ad.recent_logs_from.title">MORE FROM AUTHOR</string>
+    <string name="ad.share.follow_author">FOLLOW %1$s</string>
     <string name="ad.trending.title">TRENDING BLOGS</string>
     <string name="ad.tts.toast_unplayable_article">Unable to play this article</string>
 
@@ -454,7 +455,7 @@
     <string-array name="improve_rank_array">
         <item>Be consistent in your blogging - post a blog weekly</item>
         <item>Promote your blog post on all the Facebook groups that you are part of</item>
-        <item>Seek an opinion for peers and edit the blog post accordingly</item>
+        <item>Seek an opinion from peers and edit the blog post accordingly</item>
     </string-array>
 
     <string-array name="improve_social_share_array">
@@ -552,13 +553,13 @@
     <string name="home_screen.explore.title">EXPLORE</string>
     <string name="home_screen.upcoming_events.title">UPCOMING EVENTS</string>
     <string name="home_screen.kids_res.title">KIDS RESOURCES</string>
-    <string name="home_screen.trending_list_header.title">Choose The Topic That You Are Interested To Read About\' Like</string>
+    <string name="home_screen.trending_list_header.title">\'Choose The Topic That You Are Interested To Read About\' Like</string>
     <string name="home_screen.trending_list_header.topics_label">GETTING PREGNANT, POST PARTUM DEPRESSION ETC.</string>
     <string name="home_screen.trending_list_header.take_me_there">OKAY GOT IT! TAKE ME THERE</string>
 
     <string-array name="onboarding_title_array">
         <item>HARNESSING THE WISDOM OF MUMS</item>
-        <item>BLOG IN ANY ONE OF 6 LANGUAGE</item>
+        <item>BLOG IN ANY ONE OF 6 LANGUAGES</item>
         <item>WATCH VIDEOS</item>
         <item>DISCOVER YOUR CITY\'S BEST</item>
     </string-array>
@@ -566,7 +567,7 @@
     <string-array name="onboarding_desc_array">
         <item>BLOGS <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> VIDEOS <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> EXPERTS </item>
         <item>EDITORIAL LIST <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> EVENTS <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> RESOURCES</item>
-        <item>ENGLISH <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> HINDI <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> MARATHI <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> TAMIL <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> TELEGU</item>
+        <item>ENGLISH <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> HINDI <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> MARATHI <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> TAMIL <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> TELUGU</item>
         <item>PARENTING ADVICE <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> RECIPES <![CDATA[<font color=#F0BBC2>&#9679;</font>]]> MOMSPRESSO </item>
     </string-array>
     <string name="onboarding_desc_array.tutorial_1.blogs">BLOGS</string>
@@ -594,7 +595,7 @@
     <string name="sign_in.sign_up_btn">SIGNUP</string>
 
     <string name="sign_up.welcome_back">WELCOME BACK</string>
-    <string name="sign_up.desc">Discover the joy of motherhood.\n Join our Mum communityto find inspiration &amp; hope.</string>
+    <string name="sign_up.desc">Discover the joy of motherhood.\n Join our Mum community to find inspiration &amp; hope.</string>
     <string name="sign_up.already_account">Already have an account?\u0020</string>
     <string name="sign_up.sign_in_btn">SIGNIN</string>
 
@@ -637,13 +638,13 @@
     <string name="subscribe_topics.toolbar.title">SELECT CATEGORIES</string>
     <string name="subscribe_topics.cancel">CANCEL</string>
     <string name="subscribe_topics.save">SAVE</string>
-    <string name="subscribe_topics.toast_topic_updated">Updated followed topics list successfully.</string>
+    <string name="subscribe_topics.toast_topic_updated">Successfully updated the list of followed topics.</string>
 
     <string name="myprofile.toolbar.title">MY ACCOUNT</string>
     <string name="myprofile.following_label">FOLLOWING</string>
     <string name="myprofile.followers_label">FOLLOWERS</string>
     <string name="myprofile.section.articles_label">ARTICLES</string>
-    <string name="myprofile.section.videos_label">MUM VLOGS</string>
+    <string name="myprofile.section.videos_label">MOM VLOGS</string>
     <string name="myprofile.section.activity_label">ACTIVITY</string>
     <string name="myprofile.section.myranking_label">MY RANKING</string>
     <string name="myprofile.section.settings_label">SETTINGS</string>
@@ -659,7 +660,7 @@
     <string name="blogger_profile.view_count_label">VIEWS</string>
     <string name="blogger_profile.article_count_label">POSTS</string>
     <string name="blogger_profile.section.articles_label">ARTICLES</string>
-    <string name="blogger_profile.section.videos_label">MUM VLOGS</string>
+    <string name="blogger_profile.section.videos_label">MOM VLOGS</string>
     <string name="blogger_profile.section.activity_label">ACTIVITY</string>
     <string name="blogger_profile.section.myranking_label">MY RANKING</string>
     <string name="blogger_profile.section.settings_label">SETTINGS</string>
@@ -690,7 +691,7 @@
     <string name="app_settings.edit_profile.blog_title_label">Blog Heading</string>
     <string name="app_settings.edit_profile.family_detail_label">Family Details</string>
     <string name="app_settings.edit_profile.family_detail_desc">This is just to serve you better and provide you what really suits you. This info would just remain in our records.</string>
-    <string name="app_settings.edit_profile.how_many_child">How many children you have?</string>
+    <string name="app_settings.edit_profile.how_many_child">How many children do you have?</string>
     <string name="app_settings.edit_profile.gender">Gender</string>
     <string name="app_settings.edit_profile.child">Child</string>
     <string name="app_settings.edit_profile.male">Male</string>
@@ -743,7 +744,7 @@
     <string name="blog_setup.profile_pic_label">PROFILE PICTURE</string>
     <string name="blog_setup.profile_pic_desc">This is visible to your readers and helps them associate with your writing.</string>
     <string name="blog_setup.your_details">YOUR DETAILS</string>
-    <string name="blog_setup.your_detail_desc">These details will not show on your public profile but will be used.</string>
+    <string name="blog_setup.your_detail_desc">These details will not show on your public profile.</string>
     <string name="blog_setup.hint_phone">Phone Number</string>
     <string name="blog_setup.save_publish">SAVE &amp; PUBLISH</string>
 
@@ -774,8 +775,8 @@
 
     <string name="add_article_topics.toolbar.title">CHOOSE TOPICS</string>
     <string name="add_article_topics.clear_all">CLEAR ALL</string>
-    <string name="add_article_topics.min_topics">Please select atleast one topics to continue</string>
-    <string name="add_article_topics.max_topics">You can choose maximum 8 topics</string>
+    <string name="add_article_topics.min_topics">Please select atleast one topic to continue</string>
+    <string name="add_article_topics.max_topics">You can choose a maximum of 8 topics</string>
     <string name="add_article_topics.apply">APPLY</string>
 
     <string name="choose_article_image.toolbar.title">CHOOSE IMAGE</string>
@@ -795,10 +796,10 @@
         <item>WHO CAN CONTRIBUTE?</item>
     </string-array>
     <string-array name="become_blogger_desc_array">
-        <item>You are one click away from sharing your thoughts, opinions, and stories with India\'s largest parenting community, in the language of your choice. With a reach of over 8 million Mums per month, your voice can be the source of hope, inspiration, comfort and knowledge.</item>
-        <item>You can share your parenting stories via the website or our IOS and Android app. Express yourself in the language of your choice - English, Hindi, Bengali, Marathi, Telugu or Tamil.</item>
+        <item>You are one click away from sharing your thoughts, opinions, and stories on India\'s largest parenting community, in the language of your choice. With a reach of over 8 million Mums per month, your voice can be the source of hope, inspiration, comfort and knowledge.</item>
+        <item>You can share your parenting stories via the website or our iOS and Android app. Express yourself in the language of your choice - English, Hindi, Bengali, Marathi, Telugu or Tamil.</item>
         <item>mycity4kids does not pay each blogger on publishing their own posts. We do however offer paid writing assignments which are commissioned by brands. This is offered to bloggers based on the quality of content they produce.</item>
-        <item>Whether your story is about parenthood, womenhood, relationships, struggles, joys or personal well-being, this is the platform to write about it. Join the 3500+ Mums in seeking &amp; sharing advice, opinions and recommendations.\n Do refrain from publishing copied or \'slightly modified\' content.</item>
+        <item>Whether your story is about parenthood, womanhood, relationships, struggles, joys or personal well-being, this is the platform to write about it. Join the 5000+ Mums in seeking &amp; sharing advice, opinions and recommendations.\n Do refrain from publishing copied or \'slightly modified\' content.</item>
     </string-array>
 
     <string name="upload_video.title">SHARE A MomVlog\n THAT CAPTURES #MOMLIFE</string>
@@ -844,20 +845,20 @@
     <string name="user_activities.bookmarks.by">By</string>
     <string name="user_activities.comments.saved_on">Saved on:</string>
     <string name="user_activities.comments.edit">EDIT</string>
-    <string name="user_activities.comments.no_comments">You have not commented on any articles yet.</string>
-    <string name="user_activities.recommended.no_recommendations">You have not recommended any articles yet.</string>
-    <string name="user_activities.bookmarks.no_bookmarks">No articles have been bookmarked yet.</string>
+    <string name="user_activities.comments.no_comments">You have not commented on any article yet.</string>
+    <string name="user_activities.recommended.no_recommendations">You have not recommended any article yet.</string>
+    <string name="user_activities.bookmarks.no_bookmarks">No article has been bookmarked yet.</string>
     <string name="user_activities.watch_later.no_watch_later">You have not saved any videos yet.</string>
 
     <string name="explore.section.events">EVENTS</string>
     <string name="explore.section.resources">RESOURCES</string>
-    <string name="explore.section.top_things">TOP THING TO DO</string>
+    <string name="explore.section.top_things">TOP THINGS TO DO</string>
     <string name="explore.section.no_resources">We do not have any events or resources for your city at present.</string>
 
     <string name="all_videos.toolbar.title">VIDEOS</string>
     <string name="all_videos.tabbar.momspresso_label">MOMSPRESSO</string>
     <string name="all_videos.tabbar.funny_label">MOM VLOGS</string>
-    <string name="all_videos.funny_videos.no_videos">No funny videos added.</string>
+    <string name="all_videos.funny_videos.no_videos">No mom vlogs added.</string>
 
     <string name="notification.read_all">Read All</string>
     <string name="notification.no_notification">No notifications</string>

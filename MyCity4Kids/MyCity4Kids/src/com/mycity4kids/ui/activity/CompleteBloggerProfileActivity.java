@@ -3,6 +3,7 @@ package com.mycity4kids.ui.activity;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -32,7 +33,6 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.rangebar.RangeBar;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.UserAttributeUpdateAPI;
-import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.widget.KidsInfoCustomView;
 
 import java.text.DateFormat;
@@ -246,13 +246,25 @@ public class CompleteBloggerProfileActivity extends BaseActivity implements View
             try {
                 UserDetailResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    Intent intent = new Intent(CompleteBloggerProfileActivity.this, DashboardActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    finish();
                 } else {
                     showToast("" + responseData.getReason());
+                    Intent intent = new Intent(CompleteBloggerProfileActivity.this, DashboardActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    finish();
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4KException", Log.getStackTraceString(e));
                 showToast(getString(R.string.went_wrong));
+                Intent intent = new Intent(CompleteBloggerProfileActivity.this, DashboardActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
             }
         }
 
@@ -262,6 +274,10 @@ public class CompleteBloggerProfileActivity extends BaseActivity implements View
             Log.d("MC4kException", Log.getStackTraceString(t));
             Crashlytics.logException(t);
             showToast(getString(R.string.went_wrong));
+            Intent intent = new Intent(CompleteBloggerProfileActivity.this, DashboardActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
         }
     };
 

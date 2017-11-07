@@ -923,7 +923,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
                         whatsappIntent.setType("text/plain");
                         whatsappIntent.setPackage("com.whatsapp");
-                        whatsappIntent.putExtra(Intent.EXTRA_TEXT, detailData.getExcerpt() + "\n " + shareUrl);
+                        whatsappIntent.putExtra(Intent.EXTRA_TEXT, AppUtils.stripHtml("" + detailData.getExcerpt()) + "\n\n" + getString(R.string.ad_share_follow_author, author) + "\n" + shareUrl);
                         try {
                             startActivity(whatsappIntent);
                         } catch (android.content.ActivityNotFoundException ex) {
@@ -934,7 +934,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     break;
                 case R.id.emailShareTextView:
                     if (!StringUtils.isNullOrEmpty(shareUrl)) {
-                        String shareMessage = detailData.getExcerpt() + "\n " + shareUrl;
+                        String shareMessage = detailData.getExcerpt() + "\n\n" + getString(R.string.ad_share_follow_author, author) + "\n" + shareUrl;
                         Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
                         shareIntent.setType("text/plain");
                         shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);

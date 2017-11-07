@@ -668,7 +668,7 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
 
         HashMap<String, String> map = new HashMap<>();
         for (int i = 0; i < languagesList.size(); i++) {
-            map.put(languagesList.get(i).getName(), languagesList.get(i).getStatus());
+            map.put(languagesList.get(i).getName().toLowerCase(), languagesList.get(i).getStatus());
         }
 
         languageUpdateRequest.setLangSubscription(map);
@@ -725,7 +725,7 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
                             if ("1".equals(entry.getValue())) {
 
                                 for (Map.Entry<String, LanguageConfigModel> langEntry : retMap.entrySet()) {
-                                    if (entry.getKey().equalsIgnoreCase(langEntry.getValue().getName())) {
+                                    if (entry.getKey().equals(langEntry.getValue().getName().toLowerCase())) {
                                         filter = filter + "," + langEntry.getKey();
                                     }
                                 }

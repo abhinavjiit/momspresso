@@ -155,17 +155,66 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
             flowLayout = (FlowLayout) headerRL.findViewById(R.id.flowLayout);
             expandImageView = (ImageView) headerRL.findViewById(R.id.expandImageView);
 
+            final LinearLayout allSubsubLL = (LinearLayout) inflater.inflate(R.layout.sub_sub_topic_item, null);
+            TextView allCatTextView = ((TextView) allSubsubLL.getChildAt(0));
+            allCatTextView.setText("ALL");
+            allCatTextView.measure(0, 0);
+            allSubsubLL.setTag(currentSubTopic);
+//                Log.d("dimensions", " *************** " + width + " ##### " + (catTextView.getMeasuredWidth() + subsubLL.getPaddingLeft() + subsubLL.getPaddingRight()) + " ----- " + catTextView.getText());
+            width = width - allCatTextView.getMeasuredWidth() - allSubsubLL.getPaddingLeft() - allSubsubLL.getPaddingRight();
+            if (width < 0) {
+                lineCount++;
+//                    Log.d("Its a new line", " *************** linecount =  " + lineCount);
+                width = displayMetrics.widthPixels - allCatTextView.getMeasuredWidth() - allSubsubLL.getPaddingLeft() - allSubsubLL.getPaddingRight();
+                if (lineCount == 1) {
+                    width = width - AppUtils.dpTopx(50) - expandImageView.getPaddingLeft() - expandImageView.getPaddingRight();
+                }
+            }
+
+            if (lineCount == 2) {
+                lineCount++;
+                FlowLayout.LayoutParams layoutParams
+                        = new FlowLayout.LayoutParams
+                        (FlowLayout.LayoutParams.WRAP_CONTENT, FlowLayout.LayoutParams.WRAP_CONTENT);
+                layoutParams.setNewLine(true);
+                allSubsubLL.setLayoutParams(layoutParams);
+                expandImageView.setVisibility(View.VISIBLE);
+            } else {
+                FlowLayout.LayoutParams layoutParams
+                        = new FlowLayout.LayoutParams
+                        (FlowLayout.LayoutParams.WRAP_CONTENT, FlowLayout.LayoutParams.WRAP_CONTENT);
+                layoutParams.setNewLine(false);
+                allSubsubLL.setLayoutParams(layoutParams);
+//                expandImageView.setVisibility(View.VISIBLE);
+            }
+
+            flowLayout.addView(allSubsubLL);
+            allSubsubLL.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    for (int i = 0; i < flowLayout.getChildCount(); i++) {
+                        flowLayout.getChildAt(i).setSelected(false);
+                    }
+                    allSubsubLL.setSelected(true);
+                    selectedTopic = (Topics) allSubsubLL.getTag();
+                    nextPageNumber = 1;
+                    Utils.pushFilterTopicArticlesEvent(getActivity(), "TopicArticlesListingScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "",
+                            selectedTopic.getId() + "~" + selectedTopic.getDisplay_name(), currentSubTopic.getId() + "~" + currentSubTopic.getDisplay_name());
+                    hitFilteredTopicsArticleListingApi(sortType);
+                }
+            });
+
             for (int i = 0; i < currentSubTopic.getChild().size(); i++) {
                 final LinearLayout subsubLL = (LinearLayout) inflater.inflate(R.layout.sub_sub_topic_item, null);
                 TextView catTextView = ((TextView) subsubLL.getChildAt(0));
-                catTextView.setText(currentSubTopic.getChild().get(i).getDisplay_name());
+                catTextView.setText(currentSubTopic.getChild().get(i).getDisplay_name().toUpperCase());
                 catTextView.measure(0, 0);
                 subsubLL.setTag(currentSubTopic.getChild().get(i));
-                Log.d("dimensions", " *************** " + width + " ##### " + (catTextView.getMeasuredWidth() + subsubLL.getPaddingLeft() + subsubLL.getPaddingRight()) + " ----- " + catTextView.getText());
+//                Log.d("dimensions", " *************** " + width + " ##### " + (catTextView.getMeasuredWidth() + subsubLL.getPaddingLeft() + subsubLL.getPaddingRight()) + " ----- " + catTextView.getText());
                 width = width - catTextView.getMeasuredWidth() - subsubLL.getPaddingLeft() - subsubLL.getPaddingRight();
                 if (width < 0) {
                     lineCount++;
-                    Log.d("Its a new line", " *************** linecount =  " + lineCount);
+//                    Log.d("Its a new line", " *************** linecount =  " + lineCount);
                     width = displayMetrics.widthPixels - catTextView.getMeasuredWidth() - subsubLL.getPaddingLeft() - subsubLL.getPaddingRight();
                     if (lineCount == 1) {
                         width = width - AppUtils.dpTopx(50) - expandImageView.getPaddingLeft() - expandImageView.getPaddingRight();

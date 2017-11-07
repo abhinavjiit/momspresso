@@ -107,7 +107,7 @@ public class SyncUserInfoService extends IntentService implements UpdateListener
                     for (Map.Entry<String, String> entry : subscribedContentLanguages.entrySet()) {
                         if ("1".equals(entry.getValue())) {
                             for (Map.Entry<String, LanguageConfigModel> langEntry : retMap.entrySet()) {
-                                if (entry.getKey().equalsIgnoreCase(langEntry.getValue().getName())) {
+                                if (entry.getKey().equals(langEntry.getValue().getName().toLowerCase())) {
                                     filter = filter + "," + langEntry.getKey();
                                 }
                             }

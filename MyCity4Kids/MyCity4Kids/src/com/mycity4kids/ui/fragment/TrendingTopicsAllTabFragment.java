@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.crashlytics.android.Crashlytics;
+import com.facebook.share.Share;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -164,7 +165,7 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
 //                AppConstants.SEPARATOR_BACKSLASH + "1" + AppConstants.SEPARATOR_BACKSLASH + "3" + "?lang=" + SharedPrefUtils.getLanguageFilters(getActivity());
 //        HttpVolleyRequest.getStringResponse(getActivity(), url, null, mGetArticleListingListener, Request.Method.GET, true);
 //        Utils.pushOpenArticleListingEvent(this, GTMEventType.ARTICLE_LISTING_CLICK_EVENT, "fromScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), displayName + "~" + selectedTopics, "" + nextPageNumber);
-        Call<ArticleListingResponse> filterCall = topicsAPI.getTrendingArticles(from, from + limit - 1);
+        Call<ArticleListingResponse> filterCall = topicsAPI.getTrendingArticles(from, from + limit - 1, SharedPrefUtils.getLanguageFilters(getActivity()));
         filterCall.enqueue(articleListingResponseCallback);
     }
 

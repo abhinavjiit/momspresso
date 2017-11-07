@@ -50,7 +50,8 @@ public interface TopicsCategoryAPI {
 
     @GET("/v1/articles/trending/{start}/{end}")
     Call<ArticleListingResponse> getTrendingArticles(@Path("start") int start,
-                                                     @Path("end") int end);
+                                                     @Path("end") int end,
+                                                     @Query("lang") String lang);
 
     @GET("/v1/articles/topics")
     Call<ArticleListingResponse> getFilteredArticlesForCategories(@Query("ids") String categoryIds,
