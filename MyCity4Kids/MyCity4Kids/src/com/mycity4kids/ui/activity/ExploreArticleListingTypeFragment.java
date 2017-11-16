@@ -78,24 +78,42 @@ public class ExploreArticleListingTypeFragment extends BaseFragment {
             tabLayout.setVisibility(View.GONE);
             searchTopicsEditText.setVisibility(View.VISIBLE);
             exploreCategoriesLabel.setText(getString(R.string.search_topics_title));
+            try {
+                FileInputStream fileInputStream = getActivity().openFileInput(AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
+                String fileContent = AppUtils.convertStreamToString(fileInputStream);
+                Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                ExploreTopicsModel[] res = gson.fromJson(fileContent, ExploreTopicsModel[].class);
+                createTopicsDataForFollow(res);
+            } catch (FileNotFoundException e) {
+                Crashlytics.logException(e);
+                Log.d("FileNotFoundException", Log.getStackTraceString(e));
+            }
         } else {
             searchTopicsEditText.setVisibility(View.GONE);
             exploreCategoriesLabel.setText(getString(R.string.explore_listing_explore_categories_title));
             setUpTabLayout();
-        }
-        try {
-            FileInputStream fileInputStream = getActivity().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
-            String fileContent = AppUtils.convertStreamToString(fileInputStream);
-            Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
-            ExploreTopicsResponse res = gson.fromJson(fileContent, ExploreTopicsResponse.class);
-            createTopicsData(res);
-        } catch (FileNotFoundException e) {
-            Crashlytics.logException(e);
-            Log.d("FileNotFoundException", Log.getStackTraceString(e));
-            Retrofit retro = BaseApplication.getInstance().getRetrofit();
-            final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
 
+            try {
+                FileInputStream fileInputStream = getActivity().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                String fileContent = AppUtils.convertStreamToString(fileInputStream);
+                Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+                ExploreTopicsResponse res = gson.fromJson(fileContent, ExploreTopicsResponse.class);
+                createTopicsData(res);
+            } catch (FileNotFoundException e) {
+                Crashlytics.logException(e);
+                Log.d("FileNotFoundException", Log.getStackTraceString(e));
+            }
         }
+//        try {
+//            FileInputStream fileInputStream = getActivity().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+//            String fileContent = AppUtils.convertStreamToString(fileInputStream);
+//            Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
+//            ExploreTopicsResponse res = gson.fromJson(fileContent, ExploreTopicsResponse.class);
+//            createTopicsData(res);
+//        } catch (FileNotFoundException e) {
+//            Crashlytics.logException(e);
+//            Log.d("FileNotFoundException", Log.getStackTraceString(e));
+//        }
 
         adapter = new ParentTopicsGridAdapter(getActivity());
         gridview.setAdapter(adapter);
@@ -299,6 +317,30 @@ public class ExploreArticleListingTypeFragment extends BaseFragment {
         }
     }
 
+    private void createTopicsDataForFollow(ExploreTopicsModel[] responseData) {
+        try {
+            mainTopicsList = new ArrayList<>();
+
+            //Prepare structure for multi-expandable listview.
+            for (int i = 0; i < responseData.length; i++) {
+                if ("1".equals(responseData[i].getShowInMenu())) {
+                    mainTopicsList.add(responseData[i]);
+                }
+            }
+            if (!fragType.equals("search")) {
+                ExploreTopicsModel contributorListModel = new ExploreTopicsModel();
+                contributorListModel.setDisplay_name(getString(R.string.explore_listing_explore_categories_meet_contributor));
+                contributorListModel.setId(MEET_CONTRIBUTOR_ID);
+                mainTopicsList.add(contributorListModel);
+            }
+        } catch (Exception e) {
+//            progressBar.setVisibility(View.GONE);
+            Crashlytics.logException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+//            showToast(getString(R.string.went_wrong));
+        }
+    }
+
     private void createTopicsData(ExploreTopicsResponse responseData) {
         try {
             mainTopicsList = new ArrayList<>();
@@ -322,7 +364,6 @@ public class ExploreArticleListingTypeFragment extends BaseFragment {
 //            showToast(getString(R.string.went_wrong));
         }
     }
-
 
     @Override
     protected void updateUi(Response response) {
