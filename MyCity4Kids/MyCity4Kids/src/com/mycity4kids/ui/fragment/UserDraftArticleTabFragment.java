@@ -91,6 +91,9 @@ public class UserDraftArticleTabFragment extends BaseFragment implements View.On
             ((UserPublishedAndDraftsActivity) getActivity()).showToast("No connectivity available");
             return;
         }
+        if (isAdded()) {
+            showProgressDialog(getString(R.string.please_wait));
+        }
 
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
         ArticleDraftAPI userDraftArticleAPI = retro.create(ArticleDraftAPI.class);

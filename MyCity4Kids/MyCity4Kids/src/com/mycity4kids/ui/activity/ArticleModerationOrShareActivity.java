@@ -158,20 +158,7 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
                 Call<UserDetailResponse> call = bloggerDashboardAPI.getBloggerData(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
                 call.enqueue(getUserDetailsResponseCallback);
             }
-//                TableKids tableKids = new TableKids(BaseApplication.getInstance());
-//                ArrayList<KidsInfo> kidsInformations = (ArrayList<KidsInfo>) tableKids.getAllKids();
-//                if (kidsInformations != null && !kidsInformations.isEmpty()) {
-//                    Intent intent = new Intent(this, BloggerDashboardActivity.class);
-//                    intent.putExtra(AppConstants.STACK_CLEAR_REQUIRED, true);
-//                    startActivity(intent);
-//                    this.finish();
-//                } else {
-//                    CompleteProfileDialogFragment completeProfileDialogFragment = new CompleteProfileDialogFragment();
-//                    FragmentManager fm = this.getSupportFragmentManager();
-//                    completeProfileDialogFragment.setCancelable(false);
-//                    completeProfileDialogFragment.show(fm, "Complete blogger profile");
-////                    dismiss();
-//                }
+
             break;
             case R.id.okayTextView: {
                 Retrofit retrofit = BaseApplication.getInstance().getRetrofit();

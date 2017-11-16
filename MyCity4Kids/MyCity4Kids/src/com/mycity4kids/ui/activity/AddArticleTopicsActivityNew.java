@@ -211,61 +211,56 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
     private void createTopicsData(TopicsResponse responseData) {
         try {
             progressBar.setVisibility(View.GONE);
-            if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+            topicsMap = new HashMap<Topics, List<Topics>>();
+            topicList = new ArrayList<>();
 
-                topicsMap = new HashMap<Topics, List<Topics>>();
-                topicList = new ArrayList<>();
-
-                //Prepare structure for multi-expandable listview.
-                for (int i = 0; i < responseData.getData().size(); i++) {
-                    ArrayList<Topics> tempUpList = new ArrayList<>();
+            //Prepare structure for multi-expandable listview.
+            for (int i = 0; i < responseData.getData().size(); i++) {
+                ArrayList<Topics> tempUpList = new ArrayList<>();
 
 
-                    for (int j = 0; j < responseData.getData().get(i).getChild().size(); j++) {
-                        ArrayList<Topics> tempList = new ArrayList<>();
+                for (int j = 0; j < responseData.getData().get(i).getChild().size(); j++) {
+                    ArrayList<Topics> tempList = new ArrayList<>();
 
-                        for (int k = 0; k < responseData.getData().get(i).getChild().get(j).getChild().size(); k++) {
+                    for (int k = 0; k < responseData.getData().get(i).getChild().get(j).getChild().size(); k++) {
 
-                            if ("1".equals(responseData.getData().get(i).getChild().get(j).getChild().get(k).getPublicVisibility())) {
-                                //Adding All sub-subcategories
-                                responseData.getData().get(i).getChild().get(j).getChild().get(k)
-                                        .setParentId(responseData.getData().get(i).getId());
-                                responseData.getData().get(i).getChild().get(j).getChild().get(k)
-                                        .setParentName(responseData.getData().get(i).getTitle());
-                                tempList.add(responseData.getData().get(i).getChild().get(j).getChild().get(k));
-                            }
-                        }
-
-                        responseData.getData().get(i).getChild().get(j).setChild(tempList);
-                    }
-
-                    for (int k = 0; k < responseData.getData().get(i).getChild().size(); k++) {
-                        if ("1".equals(responseData.getData().get(i).getChild().get(k).getPublicVisibility())) {
-                            //Adding All subcategories
-                            responseData.getData().get(i).getChild().get(k)
+                        if ("1".equals(responseData.getData().get(i).getChild().get(j).getChild().get(k).getPublicVisibility())) {
+                            //Adding All sub-subcategories
+                            responseData.getData().get(i).getChild().get(j).getChild().get(k)
                                     .setParentId(responseData.getData().get(i).getId());
-                            responseData.getData().get(i).getChild().get(k)
+                            responseData.getData().get(i).getChild().get(j).getChild().get(k)
                                     .setParentName(responseData.getData().get(i).getTitle());
-                            tempUpList.add(responseData.getData().get(i).getChild().get(k));
+                            tempList.add(responseData.getData().get(i).getChild().get(j).getChild().get(k));
                         }
                     }
 
-                    if ("1".equals(responseData.getData().get(i).getPublicVisibility())) {
-                        responseData.getData().get(i).setChild(tempUpList);
-                        topicList.add(responseData.getData().get(i));
-                        topicsMap.put(responseData.getData().get(i), tempUpList);
+                    responseData.getData().get(i).getChild().get(j).setChild(tempList);
+                }
+
+                for (int k = 0; k < responseData.getData().get(i).getChild().size(); k++) {
+                    if ("1".equals(responseData.getData().get(i).getChild().get(k).getPublicVisibility())) {
+                        //Adding All subcategories
+                        responseData.getData().get(i).getChild().get(k)
+                                .setParentId(responseData.getData().get(i).getId());
+                        responseData.getData().get(i).getChild().get(k)
+                                .setParentName(responseData.getData().get(i).getTitle());
+                        tempUpList.add(responseData.getData().get(i).getChild().get(k));
                     }
-
                 }
 
-                int totalSelectedItems = 0;
-                if (null != selectedTopicsIdList && !selectedTopicsIdList.isEmpty()) {
-                    totalSelectedItems = retainItemsFromReminaingList(selectedTopicsIdList);
+                if ("1".equals(responseData.getData().get(i).getPublicVisibility())) {
+                    responseData.getData().get(i).setChild(tempUpList);
+                    topicList.add(responseData.getData().get(i));
+                    topicsMap.put(responseData.getData().get(i), tempUpList);
                 }
-                createTopicsTabPages();
-            } else {
-                showToast(getString(R.string.server_error));
+
             }
+
+            int totalSelectedItems = 0;
+            if (null != selectedTopicsIdList && !selectedTopicsIdList.isEmpty()) {
+                totalSelectedItems = retainItemsFromReminaingList(selectedTopicsIdList);
+            }
+            createTopicsTabPages();
         } catch (Exception e) {
             progressBar.setVisibility(View.GONE);
             Crashlytics.logException(e);

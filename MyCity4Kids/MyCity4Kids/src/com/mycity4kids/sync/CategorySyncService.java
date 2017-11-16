@@ -66,13 +66,10 @@ public class CategorySyncService extends IntentService {
         // prepare call in Retrofit 2.0
         ConfigAPIs configAPIs = retrofit.create(ConfigAPIs.class);
         if (!ConnectivityUtils.isNetworkEnabled(this)) {
-            //showToast(getString(R.string.error_network));
             return;
         }
 
         Call<ConfigResponse> call = configAPIs.getConfig();
-
-
         //asynchronous call
         call.enqueue(new Callback<ConfigResponse>() {
                          @Override
@@ -99,30 +96,21 @@ public class CategorySyncService extends IntentService {
                                              location = responseModel.getData().getResult().getCategory().getLocation();
                                              TopicsCategoryAPI categoryAPI = retrofit.create(TopicsCategoryAPI.class);
                                              if (!ConnectivityUtils.isNetworkEnabled(CategorySyncService.this)) {
-                                                 //showToast(getString(R.string.error_network));
                                                  return;
                                              }
 
-                                             Call<ResponseBody> caller = categoryAPI.downloadFileWithDynamicUrlSync(location);
+                                             Call<ResponseBody> caller = categoryAPI.downloadTopicsJSON();
 
                                              caller.enqueue(new Callback<ResponseBody>() {
                                                  @Override
                                                  public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                                                     Log.d("TAGA", "server contacted and has file");
                                                      boolean writtenToDisk = writeResponseBodyToDisk(response.body(), AppConstants.CATEGORIES_JSON_FILE);
-
-//                                                     Topics t = new Topics();
-//                                                     t.setId("");
-//                                                     t.setDisplay_name("");
-//                                                     SharedPrefUtils.setMomspressoCategory(CategorySyncService.this, t);
-
                                                      SharedPrefUtils.setConfigCategoryVersion(CategorySyncService.this, responseModel.getData().getResult().getCategory().getVersion());
                                                      Log.d("TAGA", "file download was a success? " + writtenToDisk);
                                                  }
 
                                                  @Override
                                                  public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                                     Log.e("TAGA", "error");
                                                      Crashlytics.logException(t);
                                                      Log.d("MC4kException", Log.getStackTraceString(t));
                                                  }
@@ -134,7 +122,6 @@ public class CategorySyncService extends IntentService {
                                              popularLocation = responseModel.getData().getResult().getCategory().getPopularLocation();
                                              TopicsCategoryAPI categoryAPI = retrofit.create(TopicsCategoryAPI.class);
                                              if (!ConnectivityUtils.isNetworkEnabled(CategorySyncService.this)) {
-                                                 //showToast(getString(R.string.error_network));
                                                  return;
                                              }
 
@@ -143,7 +130,6 @@ public class CategorySyncService extends IntentService {
                                              caller.enqueue(new Callback<ResponseBody>() {
                                                  @Override
                                                  public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                                                     Log.d("TAGA", "server contacted and has file");
                                                      boolean writtenToDisk = writeResponseBodyToDisk(response.body(), AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
                                                      SharedPrefUtils.setConfigPopularCategoryVersion(CategorySyncService.this,
                                                              responseModel.getData().getResult().getCategory().getPopularVersion());

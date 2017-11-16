@@ -64,6 +64,9 @@ public class IdTokenLoginActivity extends BaseActivity implements View.OnClickLi
 
     private EditText idEditText, tokenEditText;
     private TextView loginTextView;
+    private TextView shavetLogin, monikaLogin, priyankaLogin;
+    private String loginUser;
+    UserInfo uInfo = new UserInfo();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,11 +74,17 @@ public class IdTokenLoginActivity extends BaseActivity implements View.OnClickLi
         setContentView(R.layout.id_token_login_activity);
         idEditText = (EditText) findViewById(R.id.idEditText);
         tokenEditText = (EditText) findViewById(R.id.tokenEditText);
+        shavetLogin = (TextView) findViewById(R.id.shavetLogin);
+        monikaLogin = (TextView) findViewById(R.id.monikaLogin);
+        priyankaLogin = (TextView) findViewById(R.id.priyankaLogin);
         loginTextView = (TextView) findViewById(R.id.loginTextView);
 
         idEditText.setText("43f6a6e57f3d4ba0b41bab18509eae1f");
         tokenEditText.setText("438d2aeb4d53b871e5204b5ee4b6c150");
 
+        shavetLogin.setOnClickListener(this);
+        monikaLogin.setOnClickListener(this);
+        priyankaLogin.setOnClickListener(this);
         idEditText.setOnClickListener(this);
         tokenEditText.setOnClickListener(this);
         loginTextView.setOnClickListener(this);
@@ -85,7 +94,20 @@ public class IdTokenLoginActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.shavetLogin:
+                loginUser = "shavet";
+                logoutCurrentUser();
+                break;
+            case R.id.monikaLogin:
+                loginUser = "monika";
+                logoutCurrentUser();
+                break;
+            case R.id.priyankaLogin:
+                loginUser = "monika";
+                logoutCurrentUser();
+                break;
             case R.id.loginTextView:
+                loginUser = "";
                 logoutCurrentUser();
                 break;
         }
@@ -108,10 +130,11 @@ public class IdTokenLoginActivity extends BaseActivity implements View.OnClickLi
                     model.setId(responseData.getData().get(0).getResult().getId());
                     model.setDynamoId(responseData.getData().get(0).getResult().getDynamoId());
                     model.setEmail(responseData.getData().get(0).getResult().getEmail());
-                    model.setMc4kToken(tokenEditText.getText().toString());
+                    model.setMc4kToken(uInfo.getMc4kToken());
                     model.setIsValidated(responseData.getData().get(0).getResult().getIsValidated());
                     model.setFirst_name(responseData.getData().get(0).getResult().getFirstName());
                     model.setLast_name(responseData.getData().get(0).getResult().getLastName());
+                    model.setUserType(responseData.getData().get(0).getResult().getUserType());
                     model.setProfilePicUrl(responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp());
                     model.setSessionId(responseData.getData().get(0).getResult().getSessionId());
 //                    model.setLoginMode(loginMode);
@@ -255,7 +278,7 @@ public class IdTokenLoginActivity extends BaseActivity implements View.OnClickLi
             }
             // set logout flag
             SharedPrefUtils.setLogoutFlag(this, true);
-            loginWithIdToken();
+            loginWithIdToken(loginUser);
 
 //            Intent intent = new Intent(this, ActivityLogin.class);
 //            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -273,17 +296,27 @@ public class IdTokenLoginActivity extends BaseActivity implements View.OnClickLi
 
     }
 
-    private void loginWithIdToken() {
+    private void loginWithIdToken(String loggedInUser) {
         BaseApplication.getInstance().destroyRetrofitInstance();
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        if ("shavet".equals(loggedInUser)) {
+            uInfo.setDynamoId("43f6a6e57f3d4ba0b41bab18509eae1f");
+            uInfo.setMc4kToken("438d2aeb4d53b871e5204b5ee4b6c150");
+        } else if ("monika".equals(loggedInUser)) {
+            uInfo.setDynamoId("9b5032cd504b4c20a9f543059f18e2e6");
+            uInfo.setMc4kToken("ya29.Ci9rAwTDTDT7jAe0CfLZW5kgceRtPIPdOH0sirQpl0jKxRKSmsUvO4Py_P3kkcPnIQ");
+        } else if ("priyanka".equals(loggedInUser)) {
+            uInfo.setDynamoId("b1b10f47e32e4fdaa182e850f715414b");
+            uInfo.setMc4kToken("f0eb6d95a80583fc4b98aabd820aa037");
+        } else {
+            uInfo.setDynamoId(idEditText.getText().toString());
+            uInfo.setMc4kToken(tokenEditText.getText().toString());
+        }
 
-        UserInfo uInfo = new UserInfo();
-        uInfo.setDynamoId(idEditText.getText().toString());
-        uInfo.setMc4kToken(tokenEditText.getText().toString());
         SharedPrefUtils.setUserDetailModel(this, uInfo);
 
         LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
-        Call<UserDetailResponse> call = loginRegistrationAPI.getUserDetails(idEditText.getText().toString());
+        Call<UserDetailResponse> call = loginRegistrationAPI.getUserDetails(uInfo.getDynamoId());
         call.enqueue(onLoginResponseReceivedListener);
     }
 
@@ -297,7 +330,7 @@ public class IdTokenLoginActivity extends BaseActivity implements View.OnClickLi
         for (KidsModel kid : kidsList) {
             KidsInfo kidsInfo = new KidsInfo();
             kidsInfo.setName(kid.getName());
-            kidsInfo.setDate_of_birth(convertTime(""+kid.getBirthDay()));
+            kidsInfo.setDate_of_birth(convertTime("" + kid.getBirthDay()));
             kidsInfo.setColor_code(kid.getColorCode());
             kidsInfoArrayList.add(kidsInfo);
         }

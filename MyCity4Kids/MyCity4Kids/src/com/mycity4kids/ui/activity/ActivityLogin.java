@@ -321,6 +321,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                     model.setProfilePicUrl(responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp());
                     model.setSessionId(responseData.getData().get(0).getResult().getSessionId());
                     model.setIsLangSelection(responseData.getData().get(0).getResult().getIsLangSelection());
+                    model.setUserType(responseData.getData().get(0).getResult().getUserType());
                     int cityIdFromLocation = SharedPrefUtils.getCurrentCityModel(ActivityLogin.this).getId();
                     if (cityIdFromLocation == AppConstants.OTHERS_CITY_ID) {
                         model.setCityId(responseData.getData().get(0).getResult().getCityId());

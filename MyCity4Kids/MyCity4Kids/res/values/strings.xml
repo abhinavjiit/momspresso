@@ -783,7 +783,7 @@
     <string name="choose_article_image.upload_photo">CLICK TO UPLOAD PHOTO</string>
     <string name="choose_article_image.publish">PUBLISH</string>
 
-    <string name="add_article_or_video.upload_video">UPLOAD MOMVLOG</string>
+    <string name="add_article_or_video.upload_video">ADD VIDEO</string>
     <string name="add_article_or_video.write_article">WRITE AN ARTICLE</string>
     <string name="add_article_or_video.suggested_topic">SUGGESTED TOPICS</string>
     <string name="add_article_or_video.become_blogger">BECOME A BLOGGER</string>

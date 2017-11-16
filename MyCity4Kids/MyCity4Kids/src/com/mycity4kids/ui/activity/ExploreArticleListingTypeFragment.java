@@ -301,25 +301,19 @@ public class ExploreArticleListingTypeFragment extends BaseFragment {
 
     private void createTopicsData(ExploreTopicsResponse responseData) {
         try {
-            if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+            mainTopicsList = new ArrayList<>();
 
-                mainTopicsList = new ArrayList<>();
-
-                //Prepare structure for multi-expandable listview.
-                for (int i = 0; i < responseData.getData().size(); i++) {
-                    if ("1".equals(responseData.getData().get(i).getShowInMenu())) {
-                        mainTopicsList.add(responseData.getData().get(i));
-                    }
+            //Prepare structure for multi-expandable listview.
+            for (int i = 0; i < responseData.getData().size(); i++) {
+                if ("1".equals(responseData.getData().get(i).getShowInMenu())) {
+                    mainTopicsList.add(responseData.getData().get(i));
                 }
-                if (!fragType.equals("search")) {
-                    ExploreTopicsModel contributorListModel = new ExploreTopicsModel();
-                    contributorListModel.setDisplay_name(getString(R.string.explore_listing_explore_categories_meet_contributor));
-                    contributorListModel.setId(MEET_CONTRIBUTOR_ID);
-                    mainTopicsList.add(contributorListModel);
-                }
-
-            } else {
-//                showToast(getString(R.string.server_error));
+            }
+            if (!fragType.equals("search")) {
+                ExploreTopicsModel contributorListModel = new ExploreTopicsModel();
+                contributorListModel.setDisplay_name(getString(R.string.explore_listing_explore_categories_meet_contributor));
+                contributorListModel.setId(MEET_CONTRIBUTOR_ID);
+                mainTopicsList.add(contributorListModel);
             }
         } catch (Exception e) {
 //            progressBar.setVisibility(View.GONE);

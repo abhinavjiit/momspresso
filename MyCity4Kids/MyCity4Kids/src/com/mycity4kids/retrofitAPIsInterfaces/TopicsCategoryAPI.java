@@ -41,6 +41,9 @@ public interface TopicsCategoryAPI {
     @GET
     Call<ResponseBody> downloadFileWithDynamicUrlSync(@Url String fileUrl);
 
+    @GET("/v1/categories/")
+    Call<ResponseBody> downloadTopicsJSON();
+
     @GET("/v1/articles/topics/{categoryId}")
     Call<ArticleListingResponse> getArticlesForCategory(@Path("categoryId") String categoryId,
                                                         @Query("sort") int sort,

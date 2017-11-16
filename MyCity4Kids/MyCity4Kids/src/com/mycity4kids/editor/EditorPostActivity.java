@@ -98,7 +98,6 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
     MediaFile mediaFile;
     String mediaId;
     String response;
-    Boolean fromBackpress = false;
     String draftId = "";
 
     public static final String EDITOR_PARAM = "EDITOR_PARAM";
@@ -201,7 +200,6 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                     showToast(getString(R.string.error_network));
                     return;
                 }
-                fromBackpress = true;
                 saveDraftRequest(titleFormatting(mEditorFragment.getTitle().toString().trim()), mEditorFragment.getContent().toString(), draftId);
             }
         }
@@ -569,54 +567,35 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
 
     public void saveDraftRequest(String title, String body, String draftId1) {
         showProgressDialog(getResources().getString(R.string.please_wait));
-
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        // prepare call in Retrofit 2.0
         ArticleDraftAPI articleDraftAPI = retrofit.create(ArticleDraftAPI.class);
-        if (!ConnectivityUtils.isNetworkEnabled(this)) {
-            removeProgressDialog();
-            showToast(getString(R.string.error_network));
-            return;
-        }
         if (StringUtils.isNullOrEmpty(body)) {
             //dynamoDB can't handle empty spaces
             body = " ";
         }
         if (draftId1.isEmpty()) {
-            Call<ArticleDraftResponse> call = articleDraftAPI.saveDraft(
-                    title,
-                    body,
-                    "0"
-            );
-
-            //asynchronous call
+            Call<ArticleDraftResponse> call = articleDraftAPI.saveDraft(title, body, "0");
             call.enqueue(new Callback<ArticleDraftResponse>() {
                 @Override
                 public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
-
+                    removeProgressDialog();
+                    if (response == null || response.body() == null) {
+                        showToast("Something went wrong from server");
+                        showAlertDialog("Oops!", "Draft could not be saved, your current changes will be lost if you exit now. Would you like to exit?", new OnButtonClicked() {
+                            @Override
+                            public void onButtonCLick(int buttonId) {
+                                finish();
+                            }
+                        });
+                        return;
+                    }
                     try {
                         ArticleDraftResponse responseModel = response.body();
-                        // Result<ArticleDraftResult> result=responseModel.getData().getResult();
-                        removeProgressDialog();
-                        if (response == null || response.body() == null) {
-                            showToast("Something went wrong from server");
-                            if (fromBackpress) {
-                                showAlertDialog("Oops!", "Draft could not be saved, your current changes will be lost if you exit now. Would you like to exit?", new OnButtonClicked() {
-                                    @Override
-                                    public void onButtonCLick(int buttonId) {
-                                        finish();
-                                    }
-                                });
-                            }
-                            return;
-                        }
                         if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
                             draftId = responseModel.getData().get(0).getResult().getId() + "";
                             showToast("Draft Successfully saved");
-                            if (fromBackpress) {
-                                //onBackPressed();
-                                finish();
-                            }
+                            //onBackPressed();
+                            finish();
                         } else {
                             if (StringUtils.isNullOrEmpty(responseModel.getReason())) {
                                 showToast(getString(R.string.toast_response_error));
@@ -640,30 +619,21 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
             });
         } else {
 
-            Call<ArticleDraftResponse> call = articleDraftAPI.updateDraft(
-                    AppConstants.LIVE_URL + "v1/articles/" + draftId1,
-                    title,
-                    body,
-                    "0"
-            );
+            Call<ArticleDraftResponse> call = articleDraftAPI.updateDraft(AppConstants.LIVE_URL + "v1/articles/" + draftId1, title, body, "0");
             call.enqueue(new Callback<ArticleDraftResponse>() {
                 @Override
                 public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
-
+                    removeProgressDialog();
+                    if (response == null || response.body() == null) {
+                        showToast(getString(R.string.went_wrong));
+                        return;
+                    }
                     try {
                         ArticleDraftResponse responseModel = response.body();
-                        removeProgressDialog();
-                        if (response == null || response.body() == null) {
-                            showToast(getString(R.string.went_wrong));
-                            return;
-                        }
-
                         if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
                             draftId = responseModel.getData().get(0).getResult().getId() + "";
                             showToast("Draft Successfully saved");
-                            if (fromBackpress) {
-                                finish();
-                            }
+                            finish();
                         } else {
                             if (StringUtils.isNullOrEmpty(responseModel.getReason())) {
                                 showToast(getString(R.string.toast_response_error));
@@ -783,7 +753,6 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
 
 
     public String contentFormatting(String content) {
-
         String pTag = "<p>";
         String newString = pTag.concat(content);
         String formattedString = newString.replace("\n\n", "</p><p>");
@@ -877,11 +846,71 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                     Log.e("imageuploading", EditorFragmentAbstract.imageUploading + "");
                     showToast("Please wait while image is being uploaded");
                 } else {
-                    launchSpellCheckDialog();
+                    if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) {
+                        launchSpellCheckDialog();
+                    } else {
+                        saveDraftBeforePublishRequest(titleFormatting(mEditorFragment.getTitle().toString().trim()), mEditorFragment.getContent().toString(), draftId);
+                    }
                 }
                 break;
         }
     }
+
+    private void saveDraftBeforePublishRequest(String title, String body, String draftId1) {
+        showProgressDialog(getResources().getString(R.string.please_wait));
+
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        // prepare call in Retrofit 2.0
+        ArticleDraftAPI articleDraftAPI = retrofit.create(ArticleDraftAPI.class);
+        if (!ConnectivityUtils.isNetworkEnabled(this)) {
+            removeProgressDialog();
+            showToast(getString(R.string.error_network));
+            return;
+        }
+        if (draftId1.isEmpty()) {
+            Call<ArticleDraftResponse> call = articleDraftAPI.saveDraft(title, body, "0");
+            call.enqueue(saveDraftBeforePublishResponseListener);
+        } else {
+            Call<ArticleDraftResponse> call = articleDraftAPI.updateDraft(AppConstants.LIVE_URL + "v1/articles/" + draftId1, title, body, "0");
+            call.enqueue(saveDraftBeforePublishResponseListener);
+        }
+
+    }
+
+    private Callback<ArticleDraftResponse> saveDraftBeforePublishResponseListener = new Callback<ArticleDraftResponse>() {
+        @Override
+        public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
+            removeProgressDialog();
+            if (response == null || response.body() == null) {
+                showToast("Something went wrong from server");
+                return;
+            }
+            try {
+                ArticleDraftResponse responseModel = response.body();
+                if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
+                    draftId = responseModel.getData().get(0).getResult().getId() + "";
+                    launchSpellCheckDialog();
+                } else {
+                    if (StringUtils.isNullOrEmpty(responseModel.getReason())) {
+                        showToast(getString(R.string.toast_response_error));
+                    } else {
+                        showToast(responseModel.getReason());
+                    }
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+                showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<ArticleDraftResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+            showToast(getString(R.string.went_wrong));
+        }
+    };
 
     public void launchSpellCheckDialog() {
         SpellCheckDialogFragment spellCheckDialogFragment = new SpellCheckDialogFragment();

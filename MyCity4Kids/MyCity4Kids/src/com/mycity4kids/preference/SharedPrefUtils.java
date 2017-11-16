@@ -71,6 +71,7 @@ public class SharedPrefUtils {
     public static final String IS_USER_VALIDATED = "isValidated";
     private static final String USER_LANG_SELECTION = "userLangSelection";
     private static final String SUBSCRIPTION_EMAIL = "subscriptionEmail";
+    private static final String USER_TYPE = "userType";
 
     public static final String APPOINTMENT_TIMESTAMP = "appointment_timestamp";
     private static final String DEVICE_TOKEN = "device_token";
@@ -210,6 +211,7 @@ public class SharedPrefUtils {
         _editor.putString(USER_CITY_ID, pModel.getCityId());
         _editor.putString(USER_LANG_SELECTION, pModel.getIsLangSelection());
         _editor.putString(SUBSCRIPTION_EMAIL, pModel.getSubscriptionEmail());
+        _editor.putString(USER_TYPE, pModel.getUserType());
         _editor.commit();
     }
 
@@ -236,6 +238,7 @@ public class SharedPrefUtils {
         user.setCityId(_sharedPref.getString(USER_CITY_ID, "11"));
         user.setIsLangSelection(_sharedPref.getString(USER_LANG_SELECTION, "0"));
         user.setSubscriptionEmail(_sharedPref.getString(SUBSCRIPTION_EMAIL, _sharedPref.getString(EMAIL, "")));
+        user.setUserType(_sharedPref.getString(USER_TYPE, "0"));
         return user;
     }
 
