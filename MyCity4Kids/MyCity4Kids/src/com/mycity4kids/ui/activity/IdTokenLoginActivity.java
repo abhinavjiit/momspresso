@@ -103,7 +103,7 @@ public class IdTokenLoginActivity extends BaseActivity implements View.OnClickLi
                 logoutCurrentUser();
                 break;
             case R.id.priyankaLogin:
-                loginUser = "monika";
+                loginUser = "priyanka";
                 logoutCurrentUser();
                 break;
             case R.id.loginTextView:

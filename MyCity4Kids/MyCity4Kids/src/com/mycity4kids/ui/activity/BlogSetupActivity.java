@@ -163,8 +163,8 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                 blogTitleEditText.setText(responseData.getData().get(0).getResult().getBlogTitle());
                 aboutSelfEditText.setText(responseData.getData().get(0).getResult().getUserBio());
 
-                if (null == responseData.getData().get(0).getResult().getPhone()) {
-                    phoneEditText.setText(" ");
+                if (null == responseData.getData().get(0).getResult().getPhone() || StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getPhone().getMobile())) {
+//                    phoneEditText.setText(" ");
                 } else {
                     phoneEditText.setText(responseData.getData().get(0).getResult().getPhone().getMobile());
                 }
@@ -497,7 +497,7 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
         updateUserDetail.setUserBio(aboutSelfEditText.getText().toString().trim() + "");
         updateUserDetail.setBlogTitle(blogTitleEditText.getText().toString().trim() + "");
 
-        if (StringUtils.isNullOrEmpty(phoneEditText.getText().toString().trim())) {
+        if (null == phoneEditText.getText() || StringUtils.isNullOrEmpty(phoneEditText.getText().toString().trim())) {
             updateUserDetail.setMobile(" ");
         } else {
             updateUserDetail.setMobile(phoneEditText.getText().toString().trim() + "");

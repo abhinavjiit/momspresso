@@ -376,10 +376,11 @@
                     android:layout_marginTop="10dp"
                     android:backgroundTint="@color/light_underline"
                     android:drawablePadding="10dp"
+                    android:hint="@string/blog_setup.hint_phone"
                     android:paddingBottom="20dp"
                     android:paddingTop="20dp"
-                    android:text="New Delhi"
                     android:textColor="@color/blog_setup.text_city"
+                    android:textColorHint="@color/blog_setup.hint_blog_title"
                     android:textSize="15sp"
                     app:fontName="oswald.ttf" />
             </RelativeLayout>
