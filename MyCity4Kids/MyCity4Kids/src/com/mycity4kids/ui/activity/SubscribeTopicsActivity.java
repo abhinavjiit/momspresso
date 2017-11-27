@@ -183,26 +183,18 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
                         removeProgressDialog();
                         Crashlytics.logException(t);
                         Log.d("MC4KException", Log.getStackTraceString(t));
-//                        showToast("Something went wrong while downloading topics");
-
-//                        Intent intent = new Intent(TopicsSplashActivity.this, DashboardActivity.class);
-//                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//                        startActivity(intent);
-//                        finish();
                     }
                 });
             } catch (Exception e) {
                 removeProgressDialog();
                 Crashlytics.logException(e);
                 Log.d("MC4KException", Log.getStackTraceString(e));
-//                showToast(getString(R.string.went_wrong));
             }
         }
 
         @Override
         public void onFailure(Call<ResponseBody> call, Throwable t) {
             removeProgressDialog();
-//            showToast(getString(R.string.went_wrong));
             Crashlytics.logException(t);
             Log.d("MC4KException", Log.getStackTraceString(t));
         }
@@ -249,14 +241,10 @@ public class SubscribeTopicsActivity extends BaseActivity implements View.OnClic
     }
 
     private void processTrendingResponse() {
-//        trendingArraylist.addAll(responseData.getData().get(0).getResult());
-//        Collections.shuffle(trendingArraylist);
         tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
         for (int i = 0; i < selectTopic.size(); i++) {
             tabLayout.addTab(tabLayout.newTab().setText(selectTopic.get(i).getDisplayName()));
         }
-//        changeTabsFont();
-//        wrapTabIndicatorToTitle(tabLayout, 25, 25);
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
         final SubscribeTopicsPagerAdapter adapter = new SubscribeTopicsPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), selectTopic, previouslyFollowedTopics);
         viewPager.setAdapter(adapter);

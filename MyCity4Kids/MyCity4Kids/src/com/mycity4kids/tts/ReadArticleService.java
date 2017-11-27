@@ -19,8 +19,8 @@ import java.util.Locale;
  * Created by hemant on 28/6/17.
  */
 public class ReadArticleService extends Service implements TextToSpeech.OnInitListener {
-    TextToSpeech mTTS;
-    int ready = 999;
+    private TextToSpeech mTTS;
+    private int ready = 999;
     private String content;
     private String langCode;
 
@@ -34,8 +34,13 @@ public class ReadArticleService extends Service implements TextToSpeech.OnInitLi
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d("", "TTSService Created!");
-        content = intent.getStringExtra("content");
-        langCode = intent.getStringExtra("langCategoryId");
+        if (null != intent) {
+            content = intent.getStringExtra("content");
+            langCode = intent.getStringExtra("langCategoryId");
+        } else {
+
+        }
+
         return super.onStartCommand(intent, flags, startId);
 
     }

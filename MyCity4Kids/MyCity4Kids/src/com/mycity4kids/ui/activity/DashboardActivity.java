@@ -233,6 +233,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             Bundle mBundle0 = new Bundle();
             fragment0.setArguments(mBundle0);
             addFragment(fragment0, mBundle0, true);
+        } else if (Constants.SUGGESTED_TOPICS_FRAGMENT.equals(fragmentToLoad)) {
+            SuggestedTopicsFragment fragment0 = new SuggestedTopicsFragment();
+            Bundle mBundle0 = new Bundle();
+            fragment0.setArguments(mBundle0);
+            addFragment(fragment0, mBundle0, true);
         } else {
             replaceFragment(new FragmentMC4KHomeNew(), null, false);
             String tabType = getIntent().getStringExtra("TabType");
@@ -308,6 +313,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 intent1.putExtra("fromNotification", true);
                 intent1.putExtra(Constants.WEB_VIEW_URL, url);
                 startActivity(intent1);
+            } else if (notificationExtras.getString("type").equalsIgnoreCase("write_blog")) {
+                launchEditor();
             } else if (notificationExtras.getString("type").equalsIgnoreCase("profile")) {
                 String u_id = notificationExtras.getString("userId");
                 if (!SharedPrefUtils.getUserDetailModel(this).getDynamoId().equals(u_id)) {
@@ -321,8 +328,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     fragmentToLoad = Constants.PROFILE_FRAGMENT;
                 }
             } else if (notificationExtras.getString("type").equalsIgnoreCase("upcoming_event_list")) {
-
                 fragmentToLoad = Constants.BUSINESS_EVENTLIST_FRAGMENT;
+            } else if (notificationExtras.getString("type").equalsIgnoreCase("suggested_topics")) {
+                fragmentToLoad = Constants.SUGGESTED_TOPICS_FRAGMENT;
             } else if (notificationExtras.getString("type").equalsIgnoreCase(AppConstants.APP_SETTINGS_DEEPLINK)) {
                 Intent intent1 = new Intent(this, AppSettingsActivity.class);
                 intent1.putExtra("fromNotification", true);
@@ -374,17 +382,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                         showAlertDialog("Message", "Logged in as " + SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name(), new OnButtonClicked() {
                             @Override
                             public void onButtonCLick(int buttonId) {
-                                Intent profileIntent = new Intent(DashboardActivity.this, BloggerProfileActivity.class);
-                                profileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, SharedPrefUtils.getUserDetailModel(DashboardActivity.this).getDynamoId());
-                                startActivity(profileIntent);
+                                fragmentToLoad = Constants.PROFILE_FRAGMENT;
                             }
                         });
                     } else {
-                        Intent profileIntent = new Intent(DashboardActivity.this, BloggerProfileActivity.class);
-                        profileIntent.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, bloggerId);
-                        profileIntent.putExtra(AppConstants.AUTHOR_NAME, "");
-                        profileIntent.putExtra(Constants.FROM_SCREEN, "Deep Linking");
-                        startActivity(profileIntent);
+                        fragmentToLoad = Constants.PROFILE_FRAGMENT;
                     }
                 } else {
                     getDeepLinkData(tempDeepLinkURL);
@@ -1071,7 +1073,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 setSupportActionBar(mToolbar);
                 getSupportActionBar().setDisplayShowHomeEnabled(false);
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-            }  else if (null != topFragment && topFragment instanceof SuggestedTopicsFragment) {
+            } else if (null != topFragment && topFragment instanceof SuggestedTopicsFragment) {
                 Utils.pushOpenScreenEvent(this, "SuggestedTopicScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 toolbarTitleTextView.setText(getString(R.string.home_screen_suggested_topic_title));
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.notification_toolbar_title));
@@ -1080,7 +1082,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 setSupportActionBar(mToolbar);
                 getSupportActionBar().setDisplayShowHomeEnabled(false);
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-            }else if (null != topFragment && topFragment instanceof FragmentMC4KHomeNew) {
+            } else if (null != topFragment && topFragment instanceof FragmentMC4KHomeNew) {
                 Utils.pushOpenScreenEvent(this, "HomeScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 if (!SharedPrefUtils.isCoachmarksShownFlag(this, "home")) {
                     coachmarksImageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.coachmark_home));

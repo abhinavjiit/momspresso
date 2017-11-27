@@ -20,6 +20,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.NotificationReadRequest;
@@ -35,6 +36,7 @@ import com.mycity4kids.ui.activity.LoadWebViewActivity;
 import com.mycity4kids.ui.activity.VlogsDetailActivity;
 import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
 import com.mycity4kids.ui.fragment.MyAccountProfileFragment;
+import com.mycity4kids.ui.fragment.SuggestedTopicsFragment;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -174,11 +176,6 @@ public class NotificationCenterListAdapter extends BaseAdapter {
                     bundle.putString(Constants.CATEGOTY_NAME, "Events & workshop");
                     fragment.setArguments(bundle);
                     ((DashboardActivity) mContext).addFragment(fragment, bundle, true);
-//                    Intent intent1 = new Intent(mContext, DashboardActivity.class);
-//                    Bundle bundle = new Bundle();
-//                    bundle.putString("type", "upcoming_event_list");
-//                    intent1.putExtra("notificationExtras", bundle);
-//                    mContext.startActivity(intent1);
                 }
             });
         } else if ((StringUtils.isNullOrEmpty(nType) && "2".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_PROFILE.equals(nType)) {
@@ -210,19 +207,61 @@ public class NotificationCenterListAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
 
+//                    notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
+//                    hitNotificationReadAPI(notificationList.get(position).getId());
+//                    notifyDataSetChanged();
+//                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "app_settings");
+//                    Intent intent1 = new Intent(mContext, AppSettingsActivity.class);
+//                    intent1.putExtra("fromNotification", true);
+//                    intent1.putExtra("load_fragment", Constants.SETTINGS_FRAGMENT);
+//                    mContext.startActivity(intent1);
+                }
+            });
+        } else if ((StringUtils.isNullOrEmpty(nType) && "5".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_EDITOR.equals(nType)) {
+            holder.rootView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
                     notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
                     hitNotificationReadAPI(notificationList.get(position).getId());
                     notifyDataSetChanged();
-                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "app_settings");
-                    Intent intent1 = new Intent(mContext, AppSettingsActivity.class);
-                    intent1.putExtra("fromNotification", true);
-                    intent1.putExtra("load_fragment", Constants.SETTINGS_FRAGMENT);
-                    mContext.startActivity(intent1);
+                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "write_blog");
+                    launchEditor();
+                }
+            });
+        } else if ((StringUtils.isNullOrEmpty(nType) && "6".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_SUGGESTED_TOPICS.equals(nType)) {
+            holder.rootView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
+                    hitNotificationReadAPI(notificationList.get(position).getId());
+                    notifyDataSetChanged();
+                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "suggested_topics");
+                    SuggestedTopicsFragment fragment0 = new SuggestedTopicsFragment();
+                    Bundle mBundle0 = new Bundle();
+                    fragment0.setArguments(mBundle0);
+                    ((DashboardActivity) mContext).addFragment(fragment0, mBundle0, true);
                 }
             });
         }
 
         return view;
+    }
+
+    private void launchEditor() {
+        Intent intent1 = new Intent(mContext, EditorPostActivity.class);
+        Bundle bundle5 = new Bundle();
+        bundle5.putString(EditorPostActivity.TITLE_PARAM, "");
+        bundle5.putString(EditorPostActivity.CONTENT_PARAM, "");
+        bundle5.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
+                mContext.getString(R.string.example_post_title_placeholder));
+        bundle5.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
+                mContext.getString(R.string.example_post_content_placeholder));
+        bundle5.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
+        bundle5.putString("from", "dashboard");
+        intent1.putExtras(bundle5);
+        mContext.startActivity(intent1);
     }
 
     class ViewHolder {

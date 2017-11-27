@@ -174,8 +174,8 @@ public class CompleteBloggerProfileActivity extends BaseActivity implements View
             if (bdaytimestamp != 0) {
                 kmodel.setBirthDay(bdaytimestamp * 1000);
             } else {
-                //Toast.makeText(getActivity(), "incorrect kids bday", Toast.LENGTH_SHORT).show();
                 showToast(getString(R.string.complete_blogger_profile_incorrect_date));
+                progressBar.setVisibility(View.GONE);
                 return;
             }
             kmodel.setGender(ki.getGender());

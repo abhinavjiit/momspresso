@@ -284,6 +284,7 @@ public class Constants {
     /*Fragments Mapping Constants*/
     public static String LOAD_FRAGMENT = "load_fragment";
     public static String BUSINESS_EVENTLIST_FRAGMENT = "fragment_eventlist";
+    public static String SUGGESTED_TOPICS_FRAGMENT = "suggested_topics";
     public static String TODOLIST_FRAGMENT = "fragment_todo";
     public static String CALENDARLIST_FRAGMENT = "fragment_calendar";
     public static String SETTINGS_FRAGMENT = "fragment_settings";

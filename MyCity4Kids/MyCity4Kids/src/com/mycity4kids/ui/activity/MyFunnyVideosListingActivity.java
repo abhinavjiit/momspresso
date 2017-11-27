@@ -387,7 +387,7 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
                 ChooseVideoUploadOptionDialogFragment chooseVideoUploadOptionDialogFragment = new ChooseVideoUploadOptionDialogFragment();
                 FragmentManager fm = getSupportFragmentManager();
                 Bundle _args = new Bundle();
-                _args.putString("activity", "dashboard");
+                _args.putString("activity", "myfunnyvideos");
                 chooseVideoUploadOptionDialogFragment.setArguments(_args);
                 chooseVideoUploadOptionDialogFragment.setCancelable(true);
                 chooseVideoUploadOptionDialogFragment.show(fm, "Choose video option");

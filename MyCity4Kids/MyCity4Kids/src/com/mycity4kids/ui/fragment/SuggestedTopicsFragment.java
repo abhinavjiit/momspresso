@@ -14,16 +14,21 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
+import com.kelltontech.utils.ConnectivityUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.models.response.ArticleListingResponse;
+import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.LanguageConfigModel;
 import com.mycity4kids.models.response.SuggestedTopicsResponse;
 import com.mycity4kids.models.response.TrendingListingResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.activity.DashboardActivity;
+import com.mycity4kids.ui.activity.UserPublishedAndDraftsActivity;
 import com.mycity4kids.ui.adapter.LanguageSpecificArticlePagerAdapter;
 import com.mycity4kids.ui.adapter.SuggestedTopicsPagerAdapter;
 import com.mycity4kids.utils.AppUtils;
@@ -46,6 +51,7 @@ public class SuggestedTopicsFragment extends BaseFragment {
 
     private TabLayout languagesTabLayout;
     private ViewPager languagesViewPager;
+    private ArrayList<String> languageKeyList;
 
     @Nullable
     @Override
@@ -78,6 +84,7 @@ public class SuggestedTopicsFragment extends BaseFragment {
                 SuggestedTopicsResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     populateLanguagesTabs(responseData);
+                    getUserPublishedArticles();
                 } else {
                     ((DashboardActivity) getActivity()).showToast(getString(R.string.went_wrong));
                 }
@@ -97,6 +104,61 @@ public class SuggestedTopicsFragment extends BaseFragment {
         }
     };
 
+    private void getUserPublishedArticles() {
+        if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
+            ((UserPublishedAndDraftsActivity) getActivity()).showToast("No connectivity available");
+            return;
+        }
+
+        Retrofit retro = BaseApplication.getInstance().getRetrofit();
+        BloggerDashboardAPI userpublishedArticlesAPI = retro.create(BloggerDashboardAPI.class);
+        final Call<ArticleListingResponse> call = userpublishedArticlesAPI.getAuthorsPublishedArticles(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), 0, 1, 1);
+        call.enqueue(userPublishedArticleResponseListener);
+    }
+
+    private Callback<ArticleListingResponse> userPublishedArticleResponseListener = new Callback<ArticleListingResponse>() {
+        @Override
+        public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
+            removeProgressDialog();
+            if (response == null || response.body() == null) {
+                return;
+            }
+            try {
+                ArticleListingResponse responseData = response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    processPublisedArticlesResponse(responseData);
+                } else {
+
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
+    private void processPublisedArticlesResponse(ArticleListingResponse responseData) {
+        ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
+
+        if (dataList.size() == 0) {
+
+        } else {
+            for (int i = 0; i < languageKeyList.size(); i++) {
+                if (languageKeyList.get(i).equals(dataList.get(0).getLang())) {
+                    languagesViewPager.setCurrentItem(i);
+                    break;
+                }
+            }
+        }
+
+    }
+
     private void populateLanguagesTabs(SuggestedTopicsResponse response) {
         try {
             FileInputStream fileInputStream = getActivity().openFileInput(AppConstants.LANGUAGES_JSON_FILE);
@@ -108,15 +170,17 @@ public class SuggestedTopicsFragment extends BaseFragment {
             );
             Log.d("Map", "" + retMap.toString());
             ArrayList<ArrayList<String>> languageConfigModelArrayList = new ArrayList<>();
+            languageKeyList = new ArrayList<>();
             if (response.getData().get(0).getResult().get("0") != null && !response.getData().get(0).getResult().get("0").isEmpty()) {
                 languagesTabLayout.addTab(languagesTabLayout.newTab().setText("ENGLISH"));
                 languageConfigModelArrayList.add(response.getData().get(0).getResult().get("0"));
+                languageKeyList.add("0");
             }
-
             for (final Map.Entry<String, LanguageConfigModel> entry : retMap.entrySet()) {
                 if (response.getData().get(0).getResult().get(entry.getKey()) != null && !response.getData().get(0).getResult().get(entry.getKey()).isEmpty()) {
                     languagesTabLayout.addTab(languagesTabLayout.newTab().setText(entry.getValue().getDisplay_name().toUpperCase()));
                     languageConfigModelArrayList.add(response.getData().get(0).getResult().get(entry.getKey()));
+                    languageKeyList.add(entry.getKey());
                 }
             }
 

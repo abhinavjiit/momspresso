@@ -476,6 +476,8 @@ public class AppConstants {
     public static final String NOTIFICATION_TYPE_APP_SETTINGS = "app_settings";
     public static final String NOTIFICATION_TYPE_ARTICLE_DETAILS = "article_details";
     public static final String NOTIFICATION_TYPE_VIDEO_DETAILS = "video_details";
+    public static final String NOTIFICATION_TYPE_EDITOR = "editor";
+    public static final String NOTIFICATION_TYPE_SUGGESTED_TOPICS = "suggested_topics";
 
     public static final String FOLLOWING_STATUS_ACTIVITY_RESULT = "followingStatusActivityResult";
     public static final String VIDEO_STATUS_DRAFT = "0";

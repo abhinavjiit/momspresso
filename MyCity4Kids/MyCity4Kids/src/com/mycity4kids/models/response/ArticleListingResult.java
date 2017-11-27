@@ -35,6 +35,7 @@ public class ArticleListingResult implements Parcelable {
     private int listingBookmarkStatus = 0;
     private String isMomspresso;
     private int listingWatchLaterStatus = 0;
+    private String lang;
 
     public ArticleListingResult() {
     }
@@ -60,6 +61,7 @@ public class ArticleListingResult implements Parcelable {
         reason = in.readString();
         bookmarkId = in.readString();
         isMomspresso = in.readString();
+        lang = in.readString();
     }
 
     public static final Creator<ArticleListingResult> CREATOR = new Creator<ArticleListingResult>() {
@@ -267,6 +269,14 @@ public class ArticleListingResult implements Parcelable {
         this.listingWatchLaterStatus = listingWatchLaterStatus;
     }
 
+    public String getLang() {
+        return lang;
+    }
+
+    public void setLang(String lang) {
+        this.lang = lang;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -293,6 +303,7 @@ public class ArticleListingResult implements Parcelable {
         dest.writeString(reason);
         dest.writeString(bookmarkId);
         dest.writeString(isMomspresso);
+        dest.writeString(lang);
     }
 
 

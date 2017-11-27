@@ -16,6 +16,7 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.newmodels.PushNotificationModel;
 import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.utils.AppUtils;
 
 /**
  * Created by kapil.vij on 17-07-2015.
@@ -77,11 +78,11 @@ public class PushTokenService extends IntentService implements UpdateListener {
         StringBuilder builder = new StringBuilder();
         switch (requestType) {
             case AppConstants.PUSH_TOKEN_REQUEST:
-                builder.append(AppConstants.UPDATE_PUSH_TOKEN_URL);
 
+                builder.append(AppConstants.UPDATE_PUSH_TOKEN_URL);
                 builder.append("userId=").append(SharedPrefUtils.getUserDetailModel(this).getId());
                 builder.append("&dynamoId=").append(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
-                builder.append("&pushToken=").append(SharedPrefUtils.getDeviceToken(this));
+                builder.append("&app_version=").append(AppUtils.getAppVersion(this));
                 String deviceId = " ";
                 try {
                     TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
@@ -89,10 +90,10 @@ public class PushTokenService extends IntentService implements UpdateListener {
                 } catch (SecurityException se) {
 
                 }
-
                 builder.append("&deviceId=").append(deviceId);
                 builder.append("&deviceType=").append("android");
                 builder.append("&cityId=").append(SharedPrefUtils.getCurrentCityModel(this).getId());
+                builder.append("&pushToken=").append(SharedPrefUtils.getDeviceToken(this));
                 builder.append("&fcmToken=").append(SharedPrefUtils.getDeviceToken(this));
 
 //                Log.i("Push Token to Server ", builder.toString());

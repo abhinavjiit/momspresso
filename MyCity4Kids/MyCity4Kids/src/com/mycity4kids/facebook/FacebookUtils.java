@@ -220,7 +220,8 @@ public final class FacebookUtils {
 //        if (session != null) {
 //            Session.getActiveSession().onActivityResult(_activity, _requestCode, _resultCode, _data);
 //        }
-        callbackManager.onActivityResult(_requestCode, _resultCode, _data);
+        if (callbackManager != null)
+            callbackManager.onActivityResult(_requestCode, _resultCode, _data);
     }
 
 }
