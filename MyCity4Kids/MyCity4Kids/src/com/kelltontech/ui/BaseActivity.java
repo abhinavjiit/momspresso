@@ -312,7 +312,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen 
     }
 
     public void showUpgradeAppAlertDialog(String title, String message, final OnButtonClicked onButtonClicked) {
-        new AlertDialog.Builder(this)
+        new AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
                 .setTitle(title)
                 .setCancelable(false)
                 .setMessage(message)

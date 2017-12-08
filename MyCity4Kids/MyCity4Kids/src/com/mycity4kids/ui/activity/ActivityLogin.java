@@ -20,7 +20,9 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Scope;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -88,7 +90,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         setContentView(R.layout.aa_loginform);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
+                .requestEmail().requestScopes(new Scope(Scopes.PLUS_ME))
                 .build();
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -112,7 +114,6 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         mLayout = findViewById(R.id.rootLayout);
 
 
-
     }
 
     public void loginWithFacebook() {
@@ -129,12 +130,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
     }
 
     public void loginWithGplus() {
-        /*if (ConnectivityUtils.isNetworkEnabled(this)) {
-            showProgressDialog("Please Wait");
-            mGooglePlusUtils.googlePlusLogin();
-        } else {
-            showToast(getString(R.string.error_network));
-        }*/
+
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -164,7 +160,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         }
     }
 
-//    /**
+    //    /**
 //     * this is a call back method which will give facebook user details
 //     */
     @Override
@@ -578,6 +574,25 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         if (_requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(_data);
             getGooglePlusInfo(result);
+        } else if (_requestCode == RECOVERABLE_REQUEST_CODE) {
+            removeProgressDialog();
+
+            Bundle extra = _data.getExtras();
+            googleToken = extra.getString("authtoken");
+
+            if (StringUtils.isNullOrEmpty(googleToken))
+                return;
+
+            LoginRegistrationRequest lr = new LoginRegistrationRequest();
+            lr.setCityId("" + SharedPrefUtils.getCurrentCityModel(this).getId());
+            lr.setRequestMedium("gp");
+            lr.setSocialToken(googleToken);
+
+            Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+            LoginRegistrationAPI loginRegistrationAPI = retrofit.create(LoginRegistrationAPI.class);
+            Call<UserDetailResponse> call = loginRegistrationAPI.login(lr);
+            call.enqueue(onLoginResponseReceivedListener);
+
         } else {
             if (_resultCode == 0) {
                 removeProgressDialog();
