@@ -524,4 +524,8 @@ public class AppConstants {
     public static final int MAX_ALLOWED_CHILD_COUNT = 8;
 
     public static final String DEBUGGING_USER_ID = "6f57d7cb01fa46c89bf85e3d2ade7de3";
+
+    public static final String FB_AD_PLACEMENT_ARTICLE_LISTING = "206155642763202_1712332575478827";
+    public static final String FB_AD_PLACEMENT_USER_ARTICLE = "206155642763202_1712333168812101";
+    public static final String FB_AD_PLACEMENT_ARTICLE_DETAILS = "206155642763202_1699568463421905";
 }

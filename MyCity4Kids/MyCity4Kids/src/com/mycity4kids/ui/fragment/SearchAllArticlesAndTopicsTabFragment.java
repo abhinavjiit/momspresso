@@ -141,7 +141,8 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
                     ((SearchAllActivity) getActivity()).showToast(responseData.getReason());
                 }
             } catch (Exception e) {
-                ((SearchAllActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                if (isAdded())
+                    ((SearchAllActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
             }

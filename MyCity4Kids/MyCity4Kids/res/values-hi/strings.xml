@@ -89,7 +89,6 @@
     <string name="no_query">Please enter a search query.</string>
     <string name="feedback_txt">Send Feedback</string>
     <string name="invite_txt">Invite Friends</string>
-    <string name="rate_txt">Rate the App</string>
 
     <!-- Filter/sort Screen -->
     <string name="apply">APPLY</string>
@@ -187,7 +186,6 @@
 ]]>
 </string>
 
-    <string name="rate_description">If you enjoy using the mycity4kids Parenting app, please take a moment to rate it. Thank you for your support !!!</string>
     <string name="update_title">Upgrade ?</string>
     <string name="install_now">INSTALL NOW</string>
     <string name="rate_now">RATE NOW</string>

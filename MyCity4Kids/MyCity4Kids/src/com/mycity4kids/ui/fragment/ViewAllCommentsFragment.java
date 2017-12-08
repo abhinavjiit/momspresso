@@ -14,13 +14,9 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.models.response.TrendingListingResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.adapter.AllCommentsPagerAdapter;
-import com.mycity4kids.ui.adapter.TrendingTopicsPagerAdapter;
 import com.mycity4kids.utils.AppUtils;
-
-import java.util.ArrayList;
 
 /**
  * Created by hemant on 13/10/17.

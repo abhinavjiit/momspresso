@@ -4,20 +4,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.Request;
 import com.crashlytics.android.Crashlytics;
-import com.facebook.share.Share;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -26,17 +23,15 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
-import com.mycity4kids.models.response.TrendingListingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.ExploreArticleListingTypeFragment;
-import com.mycity4kids.ui.adapter.MainArticleListingAdapter;
-import com.mycity4kids.volley.HttpVolleyRequest;
+import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
+import com.mycity4kids.widget.FeedNativeAd;
 
 import java.util.ArrayList;
 
@@ -47,21 +42,25 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 29/5/17.
  */
-public class TrendingTopicsAllTabFragment extends BaseFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class TrendingTopicsAllTabFragment extends BaseFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, FeedNativeAd.AdLoadingListener, MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
 
     private int nextPageNumber = 1;
     private int limit = 10;
     private boolean isReuqestRunning = false;
     private boolean isLastPageReached = false;
     private ArrayList<ArticleListingResult> articleDataModelsNew;
+    private int pastVisiblesItems, visibleItemCount, totalItemCount;
 
-    private MainArticleListingAdapter adapter;
+    //    private MainArticleListingAdapter adapter;
+    private MainArticleRecyclerViewAdapter recyclerAdapter;
 
     private ProgressBar progressBar;
     private RelativeLayout mLodingView;
     private TextView noBlogsTextView;
-    private SwipeRefreshLayout swipeRefreshLayout;
+//    private SwipeRefreshLayout swipeRefreshLayout;
     private boolean isHeaderVisible = false;
+    private RecyclerView recyclerView;
+    private FeedNativeAd feedNativeAd;
 
     @Nullable
     @Override
@@ -69,81 +68,115 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
 
         View view = inflater.inflate(R.layout.new_article_layout, container, false);
 
-        final ListView listView = (ListView) view.findViewById(R.id.scroll);
+//        final ListView listView = (ListView) view.findViewById(R.id.scroll);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
+//        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
 
         progressBar.setVisibility(View.VISIBLE);
 
-        swipeRefreshLayout.setOnRefreshListener(this);
+//        swipeRefreshLayout.setOnRefreshListener(this);
         articleDataModelsNew = new ArrayList<ArticleListingResult>();
 
-        adapter = new MainArticleListingAdapter(getActivity());
-        adapter.setNewListData(articleDataModelsNew);
+//        adapter = new MainArticleListingAdapter(getActivity());
+//        adapter.setNewListData(articleDataModelsNew);
+//
+//        listView.setVisibility(View.GONE);
 
         if (SharedPrefUtils.getFollowedTopicsCount(getActivity()) < AppConstants.MINIMUM_TOPICS_FOLLOW_REQUIREMENT) {
-            View headerView = inflater.inflate(R.layout.trending_list_header_item, null, false);
-            listView.addHeaderView(headerView);
+//            View headerView = inflater.inflate(R.layout.trending_list_header_item, null, false);
+//            listView.addHeaderView(headerView);
             isHeaderVisible = true;
         } else {
             isHeaderVisible = false;
         }
-        listView.setAdapter(adapter);
+
+        feedNativeAd = new FeedNativeAd(getActivity(), this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
+        feedNativeAd.loadAds();
+        recyclerAdapter = new MainArticleRecyclerViewAdapter(getActivity(), feedNativeAd, this, isHeaderVisible);
+        final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(llm);
+        recyclerAdapter.setNewListData(articleDataModelsNew);
+        recyclerView.setAdapter(recyclerAdapter);
+
+//        listView.setAdapter(adapter);
 
         hitFilteredTopicsArticleListingApi(0);
 
-        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+//        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(AbsListView view, int scrollState) {
+//
+//            }
+//
+//            @Override
+//            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+//
+//                boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
+//                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && !isLastPageReached) {
+//                    mLodingView.setVisibility(View.VISIBLE);
+//                    hitFilteredTopicsArticleListingApi(0);
+//                    isReuqestRunning = true;
+//                }
+//            }
+//        });
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0) //check for scroll down
+                {
+                    visibleItemCount = llm.getChildCount();
+                    totalItemCount = llm.getItemCount();
+                    pastVisiblesItems = llm.findFirstVisibleItemPosition();
 
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-                boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
-                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && !isLastPageReached) {
-                    mLodingView.setVisibility(View.VISIBLE);
-                    hitFilteredTopicsArticleListingApi(0);
-                    isReuqestRunning = true;
-                }
-            }
-        });
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                ArticleListingResult parentingListData = (ArticleListingResult) adapterView.getItemAtPosition(i);
-
-                if (null == parentingListData) {
-                    ExploreArticleListingTypeFragment searchTopicFrag = new ExploreArticleListingTypeFragment();
-                    Bundle searchBundle = new Bundle();
-                    searchBundle.putString("fragType", "search");
-                    searchTopicFrag.setArguments(searchBundle);
-                    ((DashboardActivity) getActivity()).addFragment(searchTopicFrag, searchBundle, true);
-                } else {
-                    Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
-                    intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
-                    intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
-                    intent.putExtra(Constants.BLOG_SLUG, parentingListData.getBlogPageSlug());
-                    intent.putExtra(Constants.TITLE_SLUG, parentingListData.getTitleSlug());
-                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "AllTrending");
-                    intent.putExtra(Constants.FROM_SCREEN, "HomeScreen");
-                    if (isHeaderVisible == true) {
-                        intent.putExtra(Constants.ARTICLE_INDEX, "" + (i - 1));
-                    } else {
-                        intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
+                    if (!isReuqestRunning && !isLastPageReached) {
+                        if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                            isReuqestRunning = true;
+                            mLodingView.setVisibility(View.VISIBLE);
+                            hitFilteredTopicsArticleListingApi(0);
+                        }
                     }
-
-                    intent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
-                    intent.putExtra(Constants.AUTHOR, parentingListData.getUserId() + "~" + parentingListData.getUserName());
-                    startActivity(intent);
                 }
-
             }
         });
+
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                ArticleListingResult parentingListData = (ArticleListingResult) adapterView.getItemAtPosition(i);
+//
+//                if (null == parentingListData) {
+//                    ExploreArticleListingTypeFragment searchTopicFrag = new ExploreArticleListingTypeFragment();
+//                    Bundle searchBundle = new Bundle();
+//                    searchBundle.putString("fragType", "search");
+//                    searchTopicFrag.setArguments(searchBundle);
+//                    ((DashboardActivity) getActivity()).addFragment(searchTopicFrag, searchBundle, true);
+//                } else {
+//                    Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
+//                    intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
+//                    intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
+//                    intent.putExtra(Constants.BLOG_SLUG, parentingListData.getBlogPageSlug());
+//                    intent.putExtra(Constants.TITLE_SLUG, parentingListData.getTitleSlug());
+//                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "AllTrending");
+//                    intent.putExtra(Constants.FROM_SCREEN, "HomeScreen");
+//                    if (isHeaderVisible == true) {
+//                        intent.putExtra(Constants.ARTICLE_INDEX, "" + (i - 1));
+//                    } else {
+//                        intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
+//                    }
+//
+//                    intent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
+//                    intent.putExtra(Constants.AUTHOR, parentingListData.getUserId() + "~" + parentingListData.getUserName());
+//                    startActivity(intent);
+//                }
+//
+//            }
+//        });
 
         return view;
     }
@@ -173,7 +206,7 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
         @Override
         public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
             isReuqestRunning = false;
-            swipeRefreshLayout.setRefreshing(false);
+//            swipeRefreshLayout.setRefreshing(false);
             progressBar.setVisibility(View.INVISIBLE);
             if (mLodingView.getVisibility() == View.VISIBLE) {
                 mLodingView.setVisibility(View.GONE);
@@ -219,8 +252,10 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
                 noBlogsTextView.setVisibility(View.VISIBLE);
                 noBlogsTextView.setText("No articles found");
                 articleDataModelsNew = dataList;
-                adapter.setNewListData(articleDataModelsNew);
-                adapter.notifyDataSetChanged();
+//                adapter.setNewListData(articleDataModelsNew);
+                recyclerAdapter.setNewListData(articleDataModelsNew);
+//                adapter.notifyDataSetChanged();
+                recyclerAdapter.notifyDataSetChanged();
             }
         } else {
             noBlogsTextView.setVisibility(View.GONE);
@@ -229,9 +264,10 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
             } else {
                 articleDataModelsNew.addAll(dataList);
             }
-            adapter.setNewListData(articleDataModelsNew);
+            recyclerAdapter.setNewListData(articleDataModelsNew);
+            recyclerAdapter.notifyDataSetChanged();
             nextPageNumber = nextPageNumber + 1;
-            adapter.notifyDataSetChanged();
+//            adapter.notifyDataSetChanged();
         }
     }
 
@@ -250,12 +286,56 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
     @Override
     public void onRefresh() {
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
-            swipeRefreshLayout.setRefreshing(false);
+//            swipeRefreshLayout.setRefreshing(false);
             removeProgressDialog();
             return;
         }
         isLastPageReached = false;
         nextPageNumber = 1;
         hitFilteredTopicsArticleListingApi(0);
+    }
+
+    @Override
+    public void onFinishToLoadAds() {
+
+    }
+
+    @Override
+    public void onErrorToLoadAd() {
+
+    }
+
+    @Override
+    public void onRecyclerItemClick(View view, int position) {
+        switch (view.getId()) {
+            case R.id.headerView:
+                ExploreArticleListingTypeFragment searchTopicFrag = new ExploreArticleListingTypeFragment();
+                Bundle searchBundle = new Bundle();
+                searchBundle.putString("fragType", "search");
+                searchTopicFrag.setArguments(searchBundle);
+                ((DashboardActivity) getActivity()).addFragment(searchTopicFrag, searchBundle, true);
+                break;
+            case R.id.headerArticleView:
+            case R.id.fbAdArticleView:
+            default:
+                Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
+                intent.putExtra(Constants.ARTICLE_ID, articleDataModelsNew.get(position).getId());
+                intent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(position).getUserId());
+                intent.putExtra(Constants.BLOG_SLUG, articleDataModelsNew.get(position).getBlogPageSlug());
+                intent.putExtra(Constants.TITLE_SLUG, articleDataModelsNew.get(position).getTitleSlug());
+                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "AllTrending");
+                intent.putExtra(Constants.FROM_SCREEN, "HomeScreen");
+//            if (isHeaderVisible == true) {
+//                intent.putExtra(Constants.ARTICLE_INDEX, "" + (i - 1));
+//            } else {
+                intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
+//            }
+
+                intent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
+                intent.putExtra(Constants.AUTHOR, articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position).getUserName());
+                startActivity(intent);
+                break;
+        }
+
     }
 }

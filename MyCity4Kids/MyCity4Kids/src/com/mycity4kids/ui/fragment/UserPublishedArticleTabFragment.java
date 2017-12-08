@@ -19,6 +19,7 @@ import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.gtmutils.Utils;
@@ -33,6 +34,7 @@ import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.UserPublishedAndDraftsActivity;
 import com.mycity4kids.ui.adapter.UserPublishedArticleAdapter;
 import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.widget.FeedNativeAd;
 
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
@@ -45,7 +47,7 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant.parmar on 21-04-2016.
  */
-public class UserPublishedArticleTabFragment extends BaseFragment implements View.OnClickListener, UserPublishedArticleAdapter.RecyclerViewClickListener {
+public class UserPublishedArticleTabFragment extends BaseFragment implements View.OnClickListener, UserPublishedArticleAdapter.RecyclerViewClickListener, FeedNativeAd.AdLoadingListener {
 
     private ArrayList<ArticleListingResult> articleDataModelsNew;
     private RecyclerView recyclerView;
@@ -60,6 +62,8 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
     private boolean isPrivateProfile;
     private String authorId;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
+
+    private FeedNativeAd feedNativeAd;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -76,7 +80,9 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
             isPrivateProfile = getArguments().getBoolean("isPrivateProfile", false);
         }
 
-        adapter = new UserPublishedArticleAdapter(getActivity(), this, isPrivateProfile);
+        feedNativeAd = new FeedNativeAd(getActivity(), this, AppConstants.FB_AD_PLACEMENT_USER_ARTICLE);
+        feedNativeAd.loadAds();
+        adapter = new UserPublishedArticleAdapter(getActivity(), this, isPrivateProfile, feedNativeAd);
         final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
@@ -311,5 +317,15 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
         intent.putExtra("tag", new Gson().toJson(detailData.getTags()));
         intent.putExtra("cities", new Gson().toJson(detailData.getCities()));
         startActivity(intent);
+    }
+
+    @Override
+    public void onFinishToLoadAds() {
+
+    }
+
+    @Override
+    public void onErrorToLoadAd() {
+
     }
 }

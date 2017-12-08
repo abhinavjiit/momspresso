@@ -305,6 +305,4 @@ public class ArticleListingResult implements Parcelable {
         dest.writeString(isMomspresso);
         dest.writeString(lang);
     }
-
-
 }

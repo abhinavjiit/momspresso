@@ -5,14 +5,58 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.mycity4kids.observablescrollview.ObservableListView
-        android:id="@+id/scroll"
+    <RelativeLayout
+        android:id="@+id/headerRL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="2dp"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/flContainerLL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true">
+
+            <org.apmem.tools.layouts.FlowLayout
+                android:id="@+id/flowLayout"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:animateLayoutChanges="true">
+
+            </org.apmem.tools.layouts.FlowLayout>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/expandImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:layout_alignBottom="@+id/flContainerLL"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/topic_selector_bg"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:src="@drawable/ic_more"
+            android:tint="#507cbe"
+            android:visibility="invisible" />
+    </RelativeLayout>
+
+    <!--<com.mycity4kids.observablescrollview.ObservableListView-->
+        <!--android:id="@+id/scroll"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_below="@+id/headerRL"-->
+        <!--android:background="@color/grey_light"-->
+        <!--android:divider="@color/transparent"-->
+        <!--android:drawSelectorOnTop="true" />-->
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
-        android:background="@color/grey_light"
-        android:divider="@color/transparent"
-        android:drawSelectorOnTop="true" />
+        android:layout_below="@+id/headerRL" />
 
     <TextView
         android:id="@+id/noBlogsTextView"

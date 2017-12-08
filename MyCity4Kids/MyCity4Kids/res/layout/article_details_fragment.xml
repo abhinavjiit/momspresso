@@ -190,19 +190,11 @@
                 android:ellipsize="end"
                 android:minHeight="1000dp" />
 
-            <com.google.android.gms.ads.AdView
-                android:id="@+id/adView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/articleWebView"
-                app:adSize="BANNER"
-                app:adUnitId="@string/ad.adunit_id" />
-
             <RelativeLayout
                 android:id="@+id/tagsLayoutContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/adView"
+                android:layout_below="@+id/articleWebView"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="4dp"
                 android:visibility="visible">
@@ -268,16 +260,30 @@
             </RelativeLayout>
 
             <View
+                android:id="@+id/adViewSeparator"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_below="@+id/tagsLayoutContainer"
+                android:background="@color/light_underline" />
+
+            <LinearLayout
+                android:id="@+id/native_ad_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/adViewSeparator"
+                android:orientation="vertical" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/native_ad_container"
                 android:background="#f2f2f2" />
 
             <LinearLayout
                 android:id="@+id/recentAuthorArticles"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/tagsLayoutContainer"
+                android:layout_below="@+id/native_ad_container"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
@@ -465,19 +471,19 @@
     </com.mycity4kids.observablescrollview.ObservableScrollView>
 
     <!--<com.getbase.floatingactionbutton.FloatingActionButton-->
-        <!--android:id="@+id/commentFloatingActionButton"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_above="@+id/bottom_Lout"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:layout_marginBottom="12dp"-->
-        <!--android:layout_marginRight="17dp"-->
-        <!--android:visibility="gone"-->
-        <!--app:fab_colorNormal="@color/ad.fab.bg"-->
-        <!--app:fab_colorPressed="@color/ad.fab.bg"-->
-        <!--app:fab_icon="@drawable/ic_add_comments"-->
-        <!--app:fab_plusIconColor="@color/white_color"-->
-        <!--app:fab_size="normal" />-->
+    <!--android:id="@+id/commentFloatingActionButton"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_above="@+id/bottom_Lout"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:layout_marginBottom="12dp"-->
+    <!--android:layout_marginRight="17dp"-->
+    <!--android:visibility="gone"-->
+    <!--app:fab_colorNormal="@color/ad.fab.bg"-->
+    <!--app:fab_colorPressed="@color/ad.fab.bg"-->
+    <!--app:fab_icon="@drawable/ic_add_comments"-->
+    <!--app:fab_plusIconColor="@color/white_color"-->
+    <!--app:fab_size="normal" />-->
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/swipeNextTextView"

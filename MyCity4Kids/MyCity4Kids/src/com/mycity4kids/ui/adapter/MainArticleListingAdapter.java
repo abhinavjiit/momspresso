@@ -10,11 +10,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.facebook.ads.Ad;
+import com.facebook.ads.AdChoicesView;
+import com.facebook.ads.AdError;
+import com.facebook.ads.AdListener;
+import com.facebook.ads.MediaView;
+import com.facebook.ads.NativeAd;
+import com.facebook.ads.NativeAdsManager;
 import com.google.gson.Gson;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
@@ -41,6 +49,7 @@ import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by hemant on 25/5/17.
@@ -56,6 +65,8 @@ public class MainArticleListingAdapter extends BaseAdapter {
     private String listingType = "";
     private int languageFeedChosen;
     private ArticleDetailsAPI articleDetailsAPI;
+    private NativeAdsManager mAds;
+    private NativeAd nativeAd;
 
     public MainArticleListingAdapter(Context pContext) {
 
@@ -76,6 +87,10 @@ public class MainArticleListingAdapter extends BaseAdapter {
 
     public void addNewListData(ArrayList<ArticleListingResult> mParentingLists_new) {
         articleDataModelsNew.addAll(mParentingLists_new);
+    }
+
+    public void adNativeAds(NativeAdsManager ads) {
+        mAds = ads;
     }
 
     public void setListingType(String listingType) {
@@ -115,149 +130,171 @@ public class MainArticleListingAdapter extends BaseAdapter {
 
     @Override
     public int getViewTypeCount() {
-        return 1;
+        return 2;
     }
+
 
     @Override
     public View getView(final int position, View view, ViewGroup parent) {
-
+//        if (position % 8 == 0) {
+//            //return ad view
+//            View adView = mInflator.inflate(R.layout.facebook_ad_unit, null);
+//            showNativeAd(adView);
+//            return adView;
+//        } else {
         try {
             final ViewHolder holder;
-            int type = getItemViewType(position);
+            int type = position % 8;//getItemViewType(position);
 
             if (view == null) {
                 holder = new ViewHolder();
-                view = mInflator.inflate(R.layout.article_listing_item, null);
 
-                holder.txvArticleTitle = (TextView) view.findViewById(R.id.txvArticleTitle);
-                holder.txvAuthorName = (TextView) view.findViewById(R.id.txvAuthorName);
-                holder.articleImageView = (ImageView) view.findViewById(R.id.articleImageView);
-                holder.videoIndicatorImageView = (ImageView) view.findViewById(R.id.videoIndicatorImageView);
-                holder.forYouInfoLL = (LinearLayout) view.findViewById(R.id.forYouInfoLL);
+                if (type == 0) {
+                    view = mInflator.inflate(R.layout.facebook_ad_unit, null);
+//                        holder.nativeAdIcon = (ImageView) view.findViewById(R.id.native_ad_icon);
+//                        holder.nativeAdTitle = (TextView) view.findViewById(R.id.native_ad_title);
+//                        holder.nativeAdMedia = (MediaView) view.findViewById(R.id.native_ad_media);
+//                        holder.nativeAdSocialContext = (TextView) view.findViewById(R.id.native_ad_social_context);
+//                        holder.nativeAdBody = (TextView) view.findViewById(R.id.native_ad_body);
+//                        holder.nativeAdCallToAction = (Button) view.findViewById(R.id.native_ad_call_to_action);
+                } else {
+                    view = mInflator.inflate(R.layout.article_listing_item, null);
 
-                holder.viewCountTextView = (TextView) view.findViewById(R.id.viewCountTextView);
-                holder.commentCountTextView = (TextView) view.findViewById(R.id.commentCountTextView);
-                holder.recommendCountTextView = (TextView) view.findViewById(R.id.recommendCountTextView);
+                    holder.txvArticleTitle = (TextView) view.findViewById(R.id.txvArticleTitle);
+                    holder.txvAuthorName = (TextView) view.findViewById(R.id.txvAuthorName);
+                    holder.articleImageView = (ImageView) view.findViewById(R.id.articleImageView);
+                    holder.videoIndicatorImageView = (ImageView) view.findViewById(R.id.videoIndicatorImageView);
+                    holder.forYouInfoLL = (LinearLayout) view.findViewById(R.id.forYouInfoLL);
 
-                holder.authorTypeTextView = (TextView) view.findViewById(R.id.authorTypeTextView);
-                holder.bookmarkArticleImageView = (ImageView) view.findViewById(R.id.bookmarkArticleImageView);
-                holder.watchLaterImageView = (ImageView) view.findViewById(R.id.watchLaterImageView);
+                    holder.viewCountTextView = (TextView) view.findViewById(R.id.viewCountTextView);
+                    holder.commentCountTextView = (TextView) view.findViewById(R.id.commentCountTextView);
+                    holder.recommendCountTextView = (TextView) view.findViewById(R.id.recommendCountTextView);
+
+                    holder.authorTypeTextView = (TextView) view.findViewById(R.id.authorTypeTextView);
+                    holder.bookmarkArticleImageView = (ImageView) view.findViewById(R.id.bookmarkArticleImageView);
+                    holder.watchLaterImageView = (ImageView) view.findViewById(R.id.watchLaterImageView);
+                }
                 view.setTag(holder);
             } else {
                 holder = (ViewHolder) view.getTag();
             }
 
-            holder.txvArticleTitle.setText(articleDataModelsNew.get(position).getTitle());
-
-            if (StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getReason())) {
-                holder.forYouInfoLL.setVisibility(View.GONE);
+            if (type == 0) {
+                view = mInflator.inflate(R.layout.facebook_ad_unit, null);
+                showNativeAd(view, holder);
             } else {
-                holder.forYouInfoLL.setVisibility(View.VISIBLE);
-                holder.forYouInfoLL.setOnClickListener(new View.OnClickListener() {
+                holder.txvArticleTitle.setText(articleDataModelsNew.get(position).getTitle());
+
+                if (StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getReason())) {
+                    holder.forYouInfoLL.setVisibility(View.GONE);
+                } else {
+                    holder.forYouInfoLL.setVisibility(View.VISIBLE);
+                    holder.forYouInfoLL.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Log.d("For You", "for you article -- " + articleDataModelsNew.get(position).getTitle());
+                            ForYouInfoDialogFragment forYouInfoDialogFragment = new ForYouInfoDialogFragment();
+                            FragmentManager fm = ((ArticleListingActivity) mContext).getSupportFragmentManager();
+                            Bundle _args = new Bundle();
+                            _args.putString("reason", articleDataModelsNew.get(position).getReason());
+                            _args.putString("articleId", articleDataModelsNew.get(position).getId());
+                            _args.putInt("position", position);
+                            forYouInfoDialogFragment.setArguments(_args);
+                            forYouInfoDialogFragment.setCancelable(true);
+                            forYouInfoDialogFragment.setListener((ForYouInfoDialogFragment.IForYourArticleRemove) mContext);
+                            forYouInfoDialogFragment.show(fm, "For You");
+                        }
+                    });
+                }
+
+                if (null == articleDataModelsNew.get(position).getArticleCount() || "0".equals(articleDataModelsNew.get(position).getArticleCount())) {
+                    holder.viewCountTextView.setVisibility(View.GONE);
+                } else {
+                    holder.viewCountTextView.setVisibility(View.VISIBLE);
+                    holder.viewCountTextView.setText(articleDataModelsNew.get(position).getArticleCount());
+                }
+
+                if (null == articleDataModelsNew.get(position).getCommentsCount() || "0".equals(articleDataModelsNew.get(position).getCommentsCount())) {
+                    holder.commentCountTextView.setVisibility(View.GONE);
+                } else {
+                    holder.commentCountTextView.setVisibility(View.VISIBLE);
+                    holder.commentCountTextView.setText(articleDataModelsNew.get(position).getCommentsCount());
+                }
+
+                if (null == articleDataModelsNew.get(position).getLikesCount() || "0".equals(articleDataModelsNew.get(position).getLikesCount())) {
+                    holder.recommendCountTextView.setVisibility(View.GONE);
+                } else {
+                    holder.recommendCountTextView.setVisibility(View.VISIBLE);
+                    holder.recommendCountTextView.setText(articleDataModelsNew.get(position).getLikesCount());
+                }
+
+                if (StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getUserName()) || articleDataModelsNew.get(position).getUserName().toString().trim().equalsIgnoreCase("")) {
+                    holder.txvAuthorName.setText("NA");
+                } else {
+                    holder.txvAuthorName.setText(articleDataModelsNew.get(position).getUserName());
+                }
+
+                try {
+                    if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getVideoUrl())
+                            && (articleDataModelsNew.get(position).getImageUrl().getThumbMax() == null || articleDataModelsNew.get(position).getImageUrl().getThumbMax().contains("default.jp"))) {
+                        Picasso.with(mContext).load(AppUtils.getYoutubeThumbnailURLMomspresso(articleDataModelsNew.get(position).getVideoUrl())).placeholder(R.drawable.default_article).into(holder.articleImageView);
+                    } else {
+                        if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getImageUrl().getThumbMax())) {
+                            Picasso.with(mContext).load(articleDataModelsNew.get(position).getImageUrl().getThumbMax())
+                                    .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
+                        } else {
+                            holder.articleImageView.setBackgroundResource(R.drawable.default_article);
+                        }
+                    }
+                } catch (Exception e) {
+                    holder.articleImageView.setBackgroundResource(R.drawable.default_article);
+                }
+
+
+                if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getVideoUrl())) {
+                    holder.videoIndicatorImageView.setVisibility(View.VISIBLE);
+                } else {
+                    holder.videoIndicatorImageView.setVisibility(View.INVISIBLE);
+                }
+
+                if ("1".equals(articleDataModelsNew.get(position).getIsMomspresso())) {
+                    holder.bookmarkArticleImageView.setVisibility(View.INVISIBLE);
+                    holder.watchLaterImageView.setVisibility(View.VISIBLE);
+
+                    if (articleDataModelsNew.get(position).getListingWatchLaterStatus() == 0) {
+                        holder.watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch));
+                    } else {
+                        holder.watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch_added));
+                    }
+                } else {
+                    holder.bookmarkArticleImageView.setVisibility(View.VISIBLE);
+                    holder.watchLaterImageView.setVisibility(View.INVISIBLE);
+
+                    if (articleDataModelsNew.get(position).getListingBookmarkStatus() == 0) {
+                        holder.bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
+                    } else {
+                        holder.bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
+                    }
+                }
+
+                holder.watchLaterImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.d("For You", "for you article -- " + articleDataModelsNew.get(position).getTitle());
-                        ForYouInfoDialogFragment forYouInfoDialogFragment = new ForYouInfoDialogFragment();
-                        FragmentManager fm = ((ArticleListingActivity) mContext).getSupportFragmentManager();
-                        Bundle _args = new Bundle();
-                        _args.putString("reason", articleDataModelsNew.get(position).getReason());
-                        _args.putString("articleId", articleDataModelsNew.get(position).getId());
-                        _args.putInt("position", position);
-                        forYouInfoDialogFragment.setArguments(_args);
-                        forYouInfoDialogFragment.setCancelable(true);
-                        forYouInfoDialogFragment.setListener((ForYouInfoDialogFragment.IForYourArticleRemove) mContext);
-                        forYouInfoDialogFragment.show(fm, "For You");
+                        addRemoveWatchLater(position, holder);
+                        Utils.pushWatchLaterArticleEvent(mContext, "ArticleListing", SharedPrefUtils.getUserDetailModel(mContext).getDynamoId() + "",
+                                articleDataModelsNew.get(position).getId(), articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position).getUserName());
+                    }
+                });
+
+                holder.bookmarkArticleImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        addRemoveBookmark(position, holder);
+                        Utils.pushBookmarkArticleEvent(mContext, "ArticleListing", SharedPrefUtils.getUserDetailModel(mContext).getDynamoId() + "",
+                                articleDataModelsNew.get(position).getId(), articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position).getUserName());
                     }
                 });
             }
-
-            if (null == articleDataModelsNew.get(position).getArticleCount() || "0".equals(articleDataModelsNew.get(position).getArticleCount())) {
-                holder.viewCountTextView.setVisibility(View.GONE);
-            } else {
-                holder.viewCountTextView.setVisibility(View.VISIBLE);
-                holder.viewCountTextView.setText(articleDataModelsNew.get(position).getArticleCount());
-            }
-
-            if (null == articleDataModelsNew.get(position).getCommentsCount() || "0".equals(articleDataModelsNew.get(position).getCommentsCount())) {
-                holder.commentCountTextView.setVisibility(View.GONE);
-            } else {
-                holder.commentCountTextView.setVisibility(View.VISIBLE);
-                holder.commentCountTextView.setText(articleDataModelsNew.get(position).getCommentsCount());
-            }
-
-            if (null == articleDataModelsNew.get(position).getLikesCount() || "0".equals(articleDataModelsNew.get(position).getLikesCount())) {
-                holder.recommendCountTextView.setVisibility(View.GONE);
-            } else {
-                holder.recommendCountTextView.setVisibility(View.VISIBLE);
-                holder.recommendCountTextView.setText(articleDataModelsNew.get(position).getLikesCount());
-            }
-
-            if (StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getUserName()) || articleDataModelsNew.get(position).getUserName().toString().trim().equalsIgnoreCase("")) {
-                holder.txvAuthorName.setText("NA");
-            } else {
-                holder.txvAuthorName.setText(articleDataModelsNew.get(position).getUserName());
-            }
-
-            try {
-                if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getVideoUrl())
-                        && (articleDataModelsNew.get(position).getImageUrl().getThumbMax() == null || articleDataModelsNew.get(position).getImageUrl().getThumbMax().contains("default.jp"))) {
-                    Picasso.with(mContext).load(AppUtils.getYoutubeThumbnailURLMomspresso(articleDataModelsNew.get(position).getVideoUrl())).placeholder(R.drawable.default_article).into(holder.articleImageView);
-                } else {
-                    if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getImageUrl().getThumbMax())) {
-                        Picasso.with(mContext).load(articleDataModelsNew.get(position).getImageUrl().getThumbMax())
-                                .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
-                    } else {
-                        holder.articleImageView.setBackgroundResource(R.drawable.default_article);
-                    }
-                }
-            } catch (Exception e) {
-                holder.articleImageView.setBackgroundResource(R.drawable.default_article);
-            }
-
-
-            if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getVideoUrl())) {
-                holder.videoIndicatorImageView.setVisibility(View.VISIBLE);
-            } else {
-                holder.videoIndicatorImageView.setVisibility(View.INVISIBLE);
-            }
-
-            if ("1".equals(articleDataModelsNew.get(position).getIsMomspresso())) {
-                holder.bookmarkArticleImageView.setVisibility(View.INVISIBLE);
-                holder.watchLaterImageView.setVisibility(View.VISIBLE);
-
-                if (articleDataModelsNew.get(position).getListingWatchLaterStatus() == 0) {
-                    holder.watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch));
-                } else {
-                    holder.watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch_added));
-                }
-            } else {
-                holder.bookmarkArticleImageView.setVisibility(View.VISIBLE);
-                holder.watchLaterImageView.setVisibility(View.INVISIBLE);
-
-                if (articleDataModelsNew.get(position).getListingBookmarkStatus() == 0) {
-                    holder.bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
-                } else {
-                    holder.bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
-                }
-            }
-
-            holder.watchLaterImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    addRemoveWatchLater(position, holder);
-                    Utils.pushWatchLaterArticleEvent(mContext, "ArticleListing", SharedPrefUtils.getUserDetailModel(mContext).getDynamoId() + "",
-                            articleDataModelsNew.get(position).getId(), articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position).getUserName());
-                }
-            });
-
-            holder.bookmarkArticleImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    addRemoveBookmark(position, holder);
-                    Utils.pushBookmarkArticleEvent(mContext, "ArticleListing", SharedPrefUtils.getUserDetailModel(mContext).getDynamoId() + "",
-                            articleDataModelsNew.get(position).getId(), articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position).getUserName());
-                }
-            });
 
         } catch (Exception ex) {
             Crashlytics.logException(ex);
@@ -265,7 +302,238 @@ public class MainArticleListingAdapter extends BaseAdapter {
         }
 
         return view;
+//        }
     }
+
+//
+//    @Override
+//    public View getView(final int position, View view, ViewGroup parent) {
+//        if (position % 8 == 0) {
+//            //return ad view
+//            View adView = mInflator.inflate(R.layout.facebook_ad_unit, null);
+//            showNativeAd(adView);
+//            return adView;
+//        } else {
+//            try {
+//                final ViewHolder holder;
+//                int type = getItemViewType(position);
+//
+//                if (view == null) {
+//                    holder = new ViewHolder();
+//                    view = mInflator.inflate(R.layout.article_listing_item, null);
+//
+//                    holder.txvArticleTitle = (TextView) view.findViewById(R.id.txvArticleTitle);
+//                    holder.txvAuthorName = (TextView) view.findViewById(R.id.txvAuthorName);
+//                    holder.articleImageView = (ImageView) view.findViewById(R.id.articleImageView);
+//                    holder.videoIndicatorImageView = (ImageView) view.findViewById(R.id.videoIndicatorImageView);
+//                    holder.forYouInfoLL = (LinearLayout) view.findViewById(R.id.forYouInfoLL);
+//
+//                    holder.viewCountTextView = (TextView) view.findViewById(R.id.viewCountTextView);
+//                    holder.commentCountTextView = (TextView) view.findViewById(R.id.commentCountTextView);
+//                    holder.recommendCountTextView = (TextView) view.findViewById(R.id.recommendCountTextView);
+//
+//                    holder.authorTypeTextView = (TextView) view.findViewById(R.id.authorTypeTextView);
+//                    holder.bookmarkArticleImageView = (ImageView) view.findViewById(R.id.bookmarkArticleImageView);
+//                    holder.watchLaterImageView = (ImageView) view.findViewById(R.id.watchLaterImageView);
+//                    view.setTag(holder);
+//                } else {
+//                    holder = (ViewHolder) view.getTag();
+//                }
+//
+//                holder.txvArticleTitle.setText(articleDataModelsNew.get(position).getTitle());
+//
+//                if (StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getReason())) {
+//                    holder.forYouInfoLL.setVisibility(View.GONE);
+//                } else {
+//                    holder.forYouInfoLL.setVisibility(View.VISIBLE);
+//                    holder.forYouInfoLL.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            Log.d("For You", "for you article -- " + articleDataModelsNew.get(position).getTitle());
+//                            ForYouInfoDialogFragment forYouInfoDialogFragment = new ForYouInfoDialogFragment();
+//                            FragmentManager fm = ((ArticleListingActivity) mContext).getSupportFragmentManager();
+//                            Bundle _args = new Bundle();
+//                            _args.putString("reason", articleDataModelsNew.get(position).getReason());
+//                            _args.putString("articleId", articleDataModelsNew.get(position).getId());
+//                            _args.putInt("position", position);
+//                            forYouInfoDialogFragment.setArguments(_args);
+//                            forYouInfoDialogFragment.setCancelable(true);
+//                            forYouInfoDialogFragment.setListener((ForYouInfoDialogFragment.IForYourArticleRemove) mContext);
+//                            forYouInfoDialogFragment.show(fm, "For You");
+//                        }
+//                    });
+//                }
+//
+//                if (null == articleDataModelsNew.get(position).getArticleCount() || "0".equals(articleDataModelsNew.get(position).getArticleCount())) {
+//                    holder.viewCountTextView.setVisibility(View.GONE);
+//                } else {
+//                    holder.viewCountTextView.setVisibility(View.VISIBLE);
+//                    holder.viewCountTextView.setText(articleDataModelsNew.get(position).getArticleCount());
+//                }
+//
+//                if (null == articleDataModelsNew.get(position).getCommentsCount() || "0".equals(articleDataModelsNew.get(position).getCommentsCount())) {
+//                    holder.commentCountTextView.setVisibility(View.GONE);
+//                } else {
+//                    holder.commentCountTextView.setVisibility(View.VISIBLE);
+//                    holder.commentCountTextView.setText(articleDataModelsNew.get(position).getCommentsCount());
+//                }
+//
+//                if (null == articleDataModelsNew.get(position).getLikesCount() || "0".equals(articleDataModelsNew.get(position).getLikesCount())) {
+//                    holder.recommendCountTextView.setVisibility(View.GONE);
+//                } else {
+//                    holder.recommendCountTextView.setVisibility(View.VISIBLE);
+//                    holder.recommendCountTextView.setText(articleDataModelsNew.get(position).getLikesCount());
+//                }
+//
+//                if (StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getUserName()) || articleDataModelsNew.get(position).getUserName().toString().trim().equalsIgnoreCase("")) {
+//                    holder.txvAuthorName.setText("NA");
+//                } else {
+//                    holder.txvAuthorName.setText(articleDataModelsNew.get(position).getUserName());
+//                }
+//
+//                try {
+//                    if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getVideoUrl())
+//                            && (articleDataModelsNew.get(position).getImageUrl().getThumbMax() == null || articleDataModelsNew.get(position).getImageUrl().getThumbMax().contains("default.jp"))) {
+//                        Picasso.with(mContext).load(AppUtils.getYoutubeThumbnailURLMomspresso(articleDataModelsNew.get(position).getVideoUrl())).placeholder(R.drawable.default_article).into(holder.articleImageView);
+//                    } else {
+//                        if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getImageUrl().getThumbMax())) {
+//                            Picasso.with(mContext).load(articleDataModelsNew.get(position).getImageUrl().getThumbMax())
+//                                    .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(holder.articleImageView);
+//                        } else {
+//                            holder.articleImageView.setBackgroundResource(R.drawable.default_article);
+//                        }
+//                    }
+//                } catch (Exception e) {
+//                    holder.articleImageView.setBackgroundResource(R.drawable.default_article);
+//                }
+//
+//
+//                if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getVideoUrl())) {
+//                    holder.videoIndicatorImageView.setVisibility(View.VISIBLE);
+//                } else {
+//                    holder.videoIndicatorImageView.setVisibility(View.INVISIBLE);
+//                }
+//
+//                if ("1".equals(articleDataModelsNew.get(position).getIsMomspresso())) {
+//                    holder.bookmarkArticleImageView.setVisibility(View.INVISIBLE);
+//                    holder.watchLaterImageView.setVisibility(View.VISIBLE);
+//
+//                    if (articleDataModelsNew.get(position).getListingWatchLaterStatus() == 0) {
+//                        holder.watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch));
+//                    } else {
+//                        holder.watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch_added));
+//                    }
+//                } else {
+//                    holder.bookmarkArticleImageView.setVisibility(View.VISIBLE);
+//                    holder.watchLaterImageView.setVisibility(View.INVISIBLE);
+//
+//                    if (articleDataModelsNew.get(position).getListingBookmarkStatus() == 0) {
+//                        holder.bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
+//                    } else {
+//                        holder.bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
+//                    }
+//                }
+//
+//                holder.watchLaterImageView.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        addRemoveWatchLater(position, holder);
+//                        Utils.pushWatchLaterArticleEvent(mContext, "ArticleListing", SharedPrefUtils.getUserDetailModel(mContext).getDynamoId() + "",
+//                                articleDataModelsNew.get(position).getId(), articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position).getUserName());
+//                    }
+//                });
+//
+//                holder.bookmarkArticleImageView.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        addRemoveBookmark(position, holder);
+//                        Utils.pushBookmarkArticleEvent(mContext, "ArticleListing", SharedPrefUtils.getUserDetailModel(mContext).getDynamoId() + "",
+//                                articleDataModelsNew.get(position).getId(), articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position).getUserName());
+//                    }
+//                });
+//
+//            } catch (Exception ex) {
+//                Crashlytics.logException(ex);
+//                Log.d("MC4kException", Log.getStackTraceString(ex));
+//            }
+//
+//            return view;
+//        }
+//    }
+
+    private void showNativeAd(final View adView, final ViewHolder viewHolder) {
+        nativeAd = new NativeAd(mContext, "206155642763202_1699568463421905");
+        nativeAd.setAdListener(new AdListener() {
+
+            @Override
+            public void onError(Ad ad, AdError error) {
+                // Ad error callback
+                Log.d("FacebookAd", "onError");
+            }
+
+            @Override
+            public void onAdLoaded(Ad ad) {
+                if (nativeAd != null) {
+                    nativeAd.unregisterView();
+                }
+
+                // Add the Ad view into the ad container.
+//                nativeAdContainer = (LinearLayout) fragmentView.findViewById(R.id.native_ad_container);
+//                LayoutInflater inflater = LayoutInflater.from(getActivity());
+//                // Inflate the Ad view.  The layout referenced should be the one you created in the last step.
+//                adView = (LinearLayout) inflater.inflate(R.layout.facebook_ad_unit, nativeAdContainer, false);
+//                nativeAdContainer.addView(adView);
+
+                // Create native UI using the ad metadata.
+                ImageView nativeAdIcon = (ImageView) adView.findViewById(R.id.native_ad_icon);
+                TextView nativeAdTitle = (TextView) adView.findViewById(R.id.native_ad_title);
+                MediaView nativeAdMedia = (MediaView) adView.findViewById(R.id.native_ad_media);
+                TextView nativeAdSocialContext = (TextView) adView.findViewById(R.id.native_ad_social_context);
+                TextView nativeAdBody = (TextView) adView.findViewById(R.id.native_ad_body);
+                Button nativeAdCallToAction = (Button) adView.findViewById(R.id.native_ad_call_to_action);
+
+                // Set the Text.
+                nativeAdTitle.setText(nativeAd.getAdTitle());
+                nativeAdSocialContext.setText(nativeAd.getAdSocialContext());
+                nativeAdBody.setText(nativeAd.getAdBody());
+                nativeAdCallToAction.setText(nativeAd.getAdCallToAction());
+
+                // Download and display the ad icon.
+                NativeAd.Image adIcon = nativeAd.getAdIcon();
+                NativeAd.downloadAndDisplayImage(adIcon, nativeAdIcon);
+
+                // Download and display the cover image.
+                nativeAdMedia.setNativeAd(nativeAd);
+
+                // Add the AdChoices icon
+                LinearLayout adChoicesContainer = (LinearLayout) adView.findViewById(R.id.ad_choices_container);
+                AdChoicesView adChoicesView = new AdChoicesView(mContext, nativeAd, true);
+                adChoicesContainer.addView(adChoicesView);
+
+                // Register the Title and CTA button to listen for clicks.
+                List<View> clickableViews = new ArrayList<>();
+                clickableViews.add(nativeAdTitle);
+                clickableViews.add(nativeAdCallToAction);
+//                nativeAd.registerViewForInteraction(nativeAdContainer, clickableViews);
+            }
+
+            @Override
+            public void onAdClicked(Ad ad) {
+                // Ad clicked callback
+                Log.d("FacebookAd", "onAdClicked");
+            }
+
+            @Override
+            public void onLoggingImpression(Ad ad) {
+                // Ad impression logged callback
+                Log.d("FacebookAd", "onLoggingImpression");
+            }
+        });
+
+        // Request an ad
+        nativeAd.loadAd();
+    }
+
 
     private void addRemoveBookmark(int position, ViewHolder holder) {
         if (articleDataModelsNew.get(position).getListingBookmarkStatus() == 0) {
@@ -293,17 +561,6 @@ public class MainArticleListingAdapter extends BaseAdapter {
             String jsonString = new Gson().toJson(deleteBookmarkRequest);
             new AddRemoveBookmarkAsyncTask(holder, "unbookmarkVideo", position).execute(jsonString, "unbookmarkVideo");
         }
-//        if (bookmarkStatus == 0) {
-//            ArticleDetailRequest articleDetailRequest = new ArticleDetailRequest();
-//            articleDetailRequest.setArticleId(articleId);
-//            Retrofit retro = BaseApplication.getInstance().getRetrofit();
-//            articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
-//            Call<AddBookmarkResponse> call = articleDetailsAPI.addVideoWatchLater(articleDetailRequest);
-//            call.enqueue(addBookmarkResponseCallback);
-//        } else {
-//            DeleteBookmarkRequest deleteBookmarkRequest = new DeleteBookmarkRequest();
-//            deleteBookmarkRequest.setId(bookmarkId);
-//        }
 
     }
 

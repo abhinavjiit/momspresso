@@ -281,12 +281,12 @@ public class TopicsListingFragment extends BaseFragment {
     @Override
     public void onStop() {
         super.onStop();
-        Log.d("ExploreArticle", "onStop");
+        Log.d("TopicListingFragment", "onStop");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d("ExploreArticle", "onDestroy");
+        Log.d("TopicListingFragment", "onDestroy");
     }
 }

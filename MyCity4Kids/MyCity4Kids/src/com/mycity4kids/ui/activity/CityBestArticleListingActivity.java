@@ -3,6 +3,8 @@ package com.mycity4kids.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -10,10 +12,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.FrameLayout;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -27,6 +26,7 @@ import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.ToastUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.GTMEventType;
 import com.mycity4kids.gtmutils.Utils;
@@ -34,7 +34,8 @@ import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
-import com.mycity4kids.ui.adapter.MainArticleListingAdapter;
+import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
+import com.mycity4kids.widget.FeedNativeAd;
 
 import java.util.ArrayList;
 
@@ -45,27 +46,33 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 4/8/16.
  */
-public class CityBestArticleListingActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
+public class CityBestArticleListingActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener, FeedNativeAd.AdLoadingListener, MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
 
-    MainArticleListingAdapter articlesListingAdapter;
-    ArrayList<ArticleListingResult> articleDataModelsNew;
-    ListView listView;
-    private Toolbar mToolbar;
-    TextView noBlogsTextView;
-    int sortType = 0;
-    private RelativeLayout mLodingView;
+    //    MainArticleListingAdapter articlesListingAdapter;
+    private MainArticleRecyclerViewAdapter recyclerAdapter;
+    private ArrayList<ArticleListingResult> articleDataModelsNew;
+//    ListView listView;
+
+    private int sortType = 0;
     private int nextPageNumber;
     private boolean isLastPageReached = false;
     private boolean isReuqestRunning = false;
-    private ProgressBar progressBar;
     private int limit = 15;
+    private String fromScreen;
+    private int pastVisiblesItems, visibleItemCount, totalItemCount;
+
+    private Toolbar mToolbar;
+    private RelativeLayout mLodingView;
+    private TextView noBlogsTextView;
+    private ProgressBar progressBar;
     private FrameLayout frameLayout;
-    private SwipeRefreshLayout swipeRefreshLayout;
+//    private SwipeRefreshLayout swipeRefreshLayout;
     private FrameLayout sortBgLayout;
     private RelativeLayout bottomOptionMenu;
     private FloatingActionsMenu fabMenu;
     private FloatingActionButton popularSortFAB, recentSortFAB, fabSort;
-    private String fromScreen;
+    private RecyclerView recyclerView;
+    private FeedNativeAd feedNativeAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,12 +85,13 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
 
         fromScreen = getIntent().getStringExtra(Constants.FROM_SCREEN);
 
-        listView = (ListView) findViewById(R.id.scroll);
+//        listView = (ListView) findViewById(R.id.scroll);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
         noBlogsTextView = (TextView) findViewById(R.id.noBlogsTextView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate_indefinitely));
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+//        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         sortBgLayout = (FrameLayout) findViewById(R.id.sortBgLayout);
         bottomOptionMenu = (RelativeLayout) findViewById(R.id.bottomOptionMenu);
 
@@ -129,59 +137,89 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
             }
         });
 
-        swipeRefreshLayout.setOnRefreshListener(CityBestArticleListingActivity.this);
+//        swipeRefreshLayout.setOnRefreshListener(CityBestArticleListingActivity.this);
         progressBar.setVisibility(View.VISIBLE);
 
         articleDataModelsNew = new ArrayList<ArticleListingResult>();
         nextPageNumber = 1;
         hitBestofCityArticleListingApi(sortType);
 
-        articlesListingAdapter = new MainArticleListingAdapter(this);
-        articlesListingAdapter.setListingType("Best of City Listing");
-        articlesListingAdapter.setNewListData(articleDataModelsNew);
-        listView.setAdapter(articlesListingAdapter);
-        articlesListingAdapter.notifyDataSetChanged();
+//        articlesListingAdapter = new MainArticleListingAdapter(this);
+//        articlesListingAdapter.setListingType("Best of City Listing");
+//        articlesListingAdapter.setNewListData(articleDataModelsNew);
+//        listView.setAdapter(articlesListingAdapter);
+//        articlesListingAdapter.notifyDataSetChanged();
 
-        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+        feedNativeAd = new FeedNativeAd(this, this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
+        feedNativeAd.loadAds();
+        recyclerAdapter = new MainArticleRecyclerViewAdapter(this, feedNativeAd, this, false);
+        final LinearLayoutManager llm = new LinearLayoutManager(this);
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(llm);
+        recyclerAdapter.setNewListData(articleDataModelsNew);
+        recyclerView.setAdapter(recyclerAdapter);
+
+
+//        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(AbsListView absListView, int i) {
+//            }
+//
+//            @Override
+//            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+//
+//                boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
+//                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && !isLastPageReached) {
+//                    mLodingView.setVisibility(View.VISIBLE);
+//                    hitBestofCityArticleListingApi(sortType);
+//                    isReuqestRunning = true;
+//                }
+//            }
+//        });
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(AbsListView absListView, int i) {
-            }
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0) //check for scroll down
+                {
+                    visibleItemCount = llm.getChildCount();
+                    totalItemCount = llm.getItemCount();
+                    pastVisiblesItems = llm.findFirstVisibleItemPosition();
 
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-                boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
-                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && !isLastPageReached) {
-                    mLodingView.setVisibility(View.VISIBLE);
-                    hitBestofCityArticleListingApi(sortType);
-                    isReuqestRunning = true;
+                    if (!isReuqestRunning && !isLastPageReached) {
+                        if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                            isReuqestRunning = true;
+                            mLodingView.setVisibility(View.VISIBLE);
+                            hitBestofCityArticleListingApi(sortType);
+                        }
+                    }
                 }
             }
         });
 
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                Intent intent = new Intent(CityBestArticleListingActivity.this, ArticleDetailsContainerActivity.class);
-                if (adapterView.getAdapter() instanceof MainArticleListingAdapter) {
-                    ArticleListingResult parentingListData = (ArticleListingResult) adapterView.getAdapter().getItem(i);
-                    intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
-                    intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
-                    intent.putExtra(Constants.ARTICLE_COVER_IMAGE, parentingListData.getImageUrl());
-                    intent.putExtra(Constants.BLOG_SLUG, parentingListData.getBlogPageSlug());
-                    intent.putExtra(Constants.TITLE_SLUG, parentingListData.getTitleSlug());
-                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, Constants.KEY_IN_YOUR_CITY + "~" + SharedPrefUtils.getCurrentCityModel(CityBestArticleListingActivity.this).getName());
-                    intent.putExtra(Constants.FROM_SCREEN, "BestOfCityScreen");
-                    intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
-                    intent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
-                    intent.putExtra(Constants.AUTHOR, parentingListData.getUserId() + "~" + parentingListData.getUserName());
-                    startActivity(intent);
-
-                }
-            }
-        });
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//
+//                Intent intent = new Intent(CityBestArticleListingActivity.this, ArticleDetailsContainerActivity.class);
+//                if (adapterView.getAdapter() instanceof MainArticleListingAdapter) {
+//                    ArticleListingResult parentingListData = (ArticleListingResult) adapterView.getAdapter().getItem(i);
+//                    intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
+//                    intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
+//                    intent.putExtra(Constants.ARTICLE_COVER_IMAGE, parentingListData.getImageUrl());
+//                    intent.putExtra(Constants.BLOG_SLUG, parentingListData.getBlogPageSlug());
+//                    intent.putExtra(Constants.TITLE_SLUG, parentingListData.getTitleSlug());
+//                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, Constants.KEY_IN_YOUR_CITY + "~" + SharedPrefUtils.getCurrentCityModel(CityBestArticleListingActivity.this).getName());
+//                    intent.putExtra(Constants.FROM_SCREEN, "BestOfCityScreen");
+//                    intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
+//                    intent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
+//                    intent.putExtra(Constants.AUTHOR, parentingListData.getUserId() + "~" + parentingListData.getUserName());
+//                    startActivity(intent);
+//
+//                }
+//            }
+//        });
     }
 
     private void setCityNameAsTitle() {
@@ -263,7 +301,7 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
                 showToast("Something went wrong from server");
                 return;
             }
-            swipeRefreshLayout.setRefreshing(false);
+//            swipeRefreshLayout.setRefreshing(false);
 
             try {
                 ArticleListingResponse responseData = response.body();
@@ -300,8 +338,8 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
                 noBlogsTextView.setVisibility(View.VISIBLE);
                 noBlogsTextView.setText("No articles found");
                 articleDataModelsNew = dataList;
-                articlesListingAdapter.setNewListData(articleDataModelsNew);
-                articlesListingAdapter.notifyDataSetChanged();
+                recyclerAdapter.setNewListData(articleDataModelsNew);
+                recyclerAdapter.notifyDataSetChanged();
             }
         } else {
             noBlogsTextView.setVisibility(View.GONE);
@@ -310,9 +348,9 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
             } else {
                 articleDataModelsNew.addAll(dataList);
             }
-            articlesListingAdapter.setNewListData(articleDataModelsNew);
+            recyclerAdapter.setNewListData(articleDataModelsNew);
             nextPageNumber = nextPageNumber + 1;
-            articlesListingAdapter.notifyDataSetChanged();
+            recyclerAdapter.notifyDataSetChanged();
         }
 
     }
@@ -344,7 +382,7 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
     @Override
     public void onRefresh() {
         if (!ConnectivityUtils.isNetworkEnabled(this)) {
-            swipeRefreshLayout.setRefreshing(false);
+//            swipeRefreshLayout.setRefreshing(false);
             removeProgressDialog();
             showToast(getString(R.string.error_network));
             return;
@@ -362,7 +400,7 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
                 sortBgLayout.setVisibility(View.GONE);
                 fabMenu.collapse();
                 articleDataModelsNew.clear();
-                articlesListingAdapter.notifyDataSetChanged();
+                recyclerAdapter.notifyDataSetChanged();
                 sortType = 0;
                 nextPageNumber = 1;
                 hitBestofCityArticleListingApi(0);
@@ -373,11 +411,37 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
                 sortBgLayout.setVisibility(View.GONE);
                 fabMenu.collapse();
                 articleDataModelsNew.clear();
-                articlesListingAdapter.notifyDataSetChanged();
+                recyclerAdapter.notifyDataSetChanged();
                 sortType = 1;
                 nextPageNumber = 1;
                 hitBestofCityArticleListingApi(1);
                 break;
         }
+    }
+
+    @Override
+    public void onFinishToLoadAds() {
+
+    }
+
+    @Override
+    public void onErrorToLoadAd() {
+
+    }
+
+    @Override
+    public void onRecyclerItemClick(View view, int position) {
+        Intent intent = new Intent(CityBestArticleListingActivity.this, ArticleDetailsContainerActivity.class);
+        intent.putExtra(Constants.ARTICLE_ID, articleDataModelsNew.get(position).getId());
+        intent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(position).getUserId());
+        intent.putExtra(Constants.ARTICLE_COVER_IMAGE, articleDataModelsNew.get(position).getImageUrl());
+        intent.putExtra(Constants.BLOG_SLUG, articleDataModelsNew.get(position).getBlogPageSlug());
+        intent.putExtra(Constants.TITLE_SLUG, articleDataModelsNew.get(position).getTitleSlug());
+        intent.putExtra(Constants.ARTICLE_OPENED_FROM, Constants.KEY_IN_YOUR_CITY + "~" + SharedPrefUtils.getCurrentCityModel(CityBestArticleListingActivity.this).getName());
+        intent.putExtra(Constants.FROM_SCREEN, "BestOfCityScreen");
+        intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
+        intent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
+        intent.putExtra(Constants.AUTHOR, articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position).getUserName());
+        startActivity(intent);
     }
 }
