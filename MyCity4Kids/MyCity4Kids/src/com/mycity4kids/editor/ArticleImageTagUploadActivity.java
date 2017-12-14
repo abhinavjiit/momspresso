@@ -429,6 +429,11 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                     ArticleDraftResponse responseModel = response.body();
                     if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
                         id = responseModel.getData().get(0).getResult().getId() + "";
+                        if (StringUtils.isNullOrEmpty(responseModel.getData().get(0).getResult().getUrl())) {
+                            Utils.pushPublishArticleEvent(ArticleImageTagUploadActivity.this, "AddImageScreen", SharedPrefUtils.getUserDetailModel(ArticleImageTagUploadActivity.this).getDynamoId(), "moderation");
+                        } else {
+                            Utils.pushPublishArticleEvent(ArticleImageTagUploadActivity.this, "AddImageScreen", SharedPrefUtils.getUserDetailModel(ArticleImageTagUploadActivity.this).getDynamoId(), "published");
+                        }
                         Intent intent = new Intent(ArticleImageTagUploadActivity.this, ArticleModerationOrShareActivity.class);
                         intent.putExtra("shareUrl", "" + responseModel.getData().get(0).getResult().getUrl());
                         startActivity(intent);

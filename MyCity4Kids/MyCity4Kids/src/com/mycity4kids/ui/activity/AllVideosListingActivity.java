@@ -24,7 +24,7 @@ public class AllVideosListingActivity extends BaseActivity {
     private TabLayout videosTabLayout;
     private ViewPager videosViewPager;
     private TextView toolbarTitleTextView;
-    private ImageView downArrowImageView;
+    private ImageView menuImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,12 +34,12 @@ public class AllVideosListingActivity extends BaseActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         videosTabLayout = (TabLayout) findViewById(R.id.videosTabLayout);
         videosViewPager = (ViewPager) findViewById(R.id.videosViewPager);
-        downArrowImageView = (ImageView) toolbar.findViewById(R.id.downArrowImageView);
+        menuImageView = (ImageView) toolbar.findViewById(R.id.menuImageView);
         toolbarTitleTextView = (TextView) toolbar.findViewById(R.id.toolbarTitle);
 
         setSupportActionBar(toolbar);
 
-        downArrowImageView.setOnClickListener(new View.OnClickListener() {
+        menuImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();

@@ -19,6 +19,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.LanguageConfigModel;
@@ -50,6 +51,7 @@ import retrofit2.Retrofit;
 public class SuggestedTopicsFragment extends BaseFragment {
 
     private TabLayout languagesTabLayout;
+    private ArrayList<String> languageNameList = new ArrayList<>();
     private ViewPager languagesViewPager;
     private ArrayList<String> languageKeyList;
 
@@ -57,6 +59,7 @@ public class SuggestedTopicsFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.suggested_topics_fragment, container, false);
+        Utils.pushOpenScreenEvent(getActivity(), "SuggestedTopicScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "");
         languagesTabLayout = (TabLayout) view.findViewById(R.id.languagesTabLayout);
         languagesViewPager = (ViewPager) view.findViewById(R.id.languagesViewPager);
 
@@ -173,19 +176,21 @@ public class SuggestedTopicsFragment extends BaseFragment {
             languageKeyList = new ArrayList<>();
             if (response.getData().get(0).getResult().get("0") != null && !response.getData().get(0).getResult().get("0").isEmpty()) {
                 languagesTabLayout.addTab(languagesTabLayout.newTab().setText("ENGLISH"));
+                languageNameList.add("ENGLISH");
                 languageConfigModelArrayList.add(response.getData().get(0).getResult().get("0"));
                 languageKeyList.add("0");
             }
             for (final Map.Entry<String, LanguageConfigModel> entry : retMap.entrySet()) {
                 if (response.getData().get(0).getResult().get(entry.getKey()) != null && !response.getData().get(0).getResult().get(entry.getKey()).isEmpty()) {
                     languagesTabLayout.addTab(languagesTabLayout.newTab().setText(entry.getValue().getDisplay_name().toUpperCase()));
+                    languageNameList.add(entry.getValue().getDisplay_name().toUpperCase());
                     languageConfigModelArrayList.add(response.getData().get(0).getResult().get(entry.getKey()));
                     languageKeyList.add(entry.getKey());
                 }
             }
 
             AppUtils.changeTabsFont(getActivity(), languagesTabLayout);
-            final SuggestedTopicsPagerAdapter adapter = new SuggestedTopicsPagerAdapter(getChildFragmentManager(), languagesTabLayout.getTabCount(), languageConfigModelArrayList);
+            final SuggestedTopicsPagerAdapter adapter = new SuggestedTopicsPagerAdapter(getChildFragmentManager(), languagesTabLayout.getTabCount(), languageConfigModelArrayList, languageNameList);
             languagesViewPager.setAdapter(adapter);
             languagesViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(languagesTabLayout));
             languagesTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

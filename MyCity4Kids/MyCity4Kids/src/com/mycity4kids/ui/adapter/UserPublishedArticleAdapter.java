@@ -23,7 +23,10 @@ import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -41,6 +44,7 @@ public class UserPublishedArticleAdapter extends RecyclerView.Adapter<RecyclerVi
     private boolean isPrivateProfile;
     private final FeedNativeAd feedNativeAd;
     private boolean isAdChoiceAdded = false;
+    private List<NativeAd> adList = new ArrayList<>(10);
 
     public UserPublishedArticleAdapter(Context pContext, RecyclerViewClickListener listener, boolean isPrivateProfile, FeedNativeAd feedNativeAd) {
 
@@ -49,6 +53,9 @@ public class UserPublishedArticleAdapter extends RecyclerView.Adapter<RecyclerVi
         this.mListener = listener;
         this.isPrivateProfile = isPrivateProfile;
         this.feedNativeAd = feedNativeAd;
+        for (int i = 0; i < 10; i++) {
+            adList.add(null);
+        }
     }
 
     public void setListData(ArrayList<ArticleListingResult> mParentingLists) {
@@ -83,7 +90,16 @@ public class UserPublishedArticleAdapter extends RecyclerView.Adapter<RecyclerVi
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof AdViewHolder) {
             addArticleItem((AdViewHolder) holder, position);
-            NativeAd fbAd = feedNativeAd.getAd();
+            if (position <= 80 && adList.get((position / 8) - 1) == null) {
+                NativeAd fbAd = feedNativeAd.getAd();
+                adList.set((position / 8) - 1, fbAd);
+            }
+            NativeAd fbAd;
+            if (position < 80) {
+                fbAd = adList.get(((position / 8) % 10) - 1);
+            } else {
+                fbAd = adList.get(((position / 8) % 10));
+            }
             if (fbAd == null) {
                 ((AdViewHolder) holder).adContainerView.setVisibility(View.GONE);
                 return;

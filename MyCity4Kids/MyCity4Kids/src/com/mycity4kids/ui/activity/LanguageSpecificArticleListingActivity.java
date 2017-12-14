@@ -38,7 +38,7 @@ public class LanguageSpecificArticleListingActivity extends BaseActivity {
     private Toolbar toolbar;
     private TabLayout languagesTabLayout;
     private ViewPager languagesViewPager;
-    private ImageView downArrowImageView;
+    private ImageView menuImageView;
     private TextView toolbarTitleTextView;
 
     @Override
@@ -49,10 +49,10 @@ public class LanguageSpecificArticleListingActivity extends BaseActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         languagesTabLayout = (TabLayout) findViewById(R.id.languagesTabLayout);
         languagesViewPager = (ViewPager) findViewById(R.id.languagesViewPager);
-        downArrowImageView = (ImageView) toolbar.findViewById(R.id.downArrowImageView);
+        menuImageView = (ImageView) toolbar.findViewById(R.id.menuImageView);
         toolbarTitleTextView = (TextView) toolbar.findViewById(R.id.toolbarTitle);
 
-        downArrowImageView.setOnClickListener(new View.OnClickListener() {
+        menuImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();

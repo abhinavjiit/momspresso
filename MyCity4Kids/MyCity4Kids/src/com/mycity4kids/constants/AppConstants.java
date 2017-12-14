@@ -448,6 +448,7 @@ public class AppConstants {
     public static final String SPONSORED_CATEGORYID = "category-51a2ea215c634753ac6a9aa377deae0b";
     public static final String DEEPLINK_EDITOR_URL = "mc4k://www.mycity4kids.com/editor";
     public static final String DEEPLINK_PROFILE_URL = "mc4k://www.mycity4kids.com/profile";
+    public static final String DEEPLINK_SUGGESTED_TOPIC_URL = "mc4k://www.mycity4kids.com/suggested_topics";
     public static final String DEEPLINK_ADD_FUNNY_VIDEO_URL = "mc4k://www.mycity4kids.com/addfunnyvideo";
 
     public static final String IGNORE_TAG = "ignore";

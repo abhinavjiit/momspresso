@@ -52,11 +52,11 @@ import com.mycity4kids.retrofitAPIsInterfaces.DeepLinkingAPI;
 import com.mycity4kids.ui.fragment.AddArticleVideoFragment;
 import com.mycity4kids.ui.fragment.BecomeBloggerFragment;
 import com.mycity4kids.ui.fragment.ChooseVideoUploadOptionDialogFragment;
-import com.mycity4kids.ui.fragment.ExploreFragment;
 import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
 import com.mycity4kids.ui.fragment.FragmentHomeCategory;
 import com.mycity4kids.ui.fragment.FragmentMC4KHomeNew;
 import com.mycity4kids.ui.fragment.MyAccountProfileFragment;
+import com.mycity4kids.ui.fragment.ExploreFragment;
 import com.mycity4kids.ui.fragment.NotificationFragment;
 import com.mycity4kids.ui.fragment.RateAppDialogFragment;
 import com.mycity4kids.ui.fragment.SendFeedbackFragment;
@@ -100,6 +100,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private TextView readAllNotificationTextView;
     private Badge badge;
     private View toolbarUnderline;
+    private ImageView menuImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,6 +136,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         rootLayout = (RelativeLayout) findViewById(R.id.rootLayout);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         downArrowImageView = (ImageView) findViewById(R.id.downArrowImageView);
+        menuImageView = (ImageView) findViewById(R.id.menuImageView);
         toolbarUnderline = findViewById(R.id.toolbarUnderline);
         bottomNavigationView = (BottomNavigationViewEx) findViewById(R.id.navigation);
         toolbarRelativeLayout = (RelativeLayout) mToolbar.findViewById(R.id.toolbarRelativeLayout);
@@ -152,6 +154,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         Utils.pushOpenScreenEvent(this, "HomeScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
         downArrowImageView.setOnClickListener(this);
+        menuImageView.setOnClickListener(this);
         toolbarTitleTextView.setOnClickListener(this);
         searchAllImageView.setOnClickListener(this);
         readAllNotificationTextView.setOnClickListener(this);
@@ -388,6 +391,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     } else {
                         fragmentToLoad = Constants.PROFILE_FRAGMENT;
                     }
+                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_SUGGESTED_TOPIC_URL)) {
+                    fragmentToLoad = Constants.SUGGESTED_TOPICS_FRAGMENT;
                 } else {
                     getDeepLinkData(tempDeepLinkURL);
                 }
@@ -541,6 +546,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 startActivity(intent4);
                 break;
             case R.id.downArrowImageView:
+            case R.id.menuImageView:
             case R.id.toolbarTitle:
                 if (topFragment instanceof TopicsListingFragment) {
                     Utils.pushTopMenuClickEvent(this, "TopicArticlesListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
@@ -997,6 +1003,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         selectOptToolbarTitle.setVisibility(View.GONE);
         toolbarTitleTextView.setVisibility(View.VISIBLE);
         downArrowImageView.setVisibility(View.INVISIBLE);
+        menuImageView.setVisibility(View.GONE);
         coachmarksImageView.setVisibility(View.GONE);
         readAllNotificationTextView.setVisibility(View.GONE);
         if (null != topFragment && topFragment instanceof ExploreArticleListingTypeFragment) {
@@ -1094,7 +1101,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.home_toolbar_titlecolor));
                 menu.findItem(R.id.action_home).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
-                downArrowImageView.setVisibility(View.VISIBLE);
+//                downArrowImageView.setVisibility(View.VISIBLE);
+                menuImageView.setVisibility(View.VISIBLE);
                 setSupportActionBar(mToolbar);
                 getSupportActionBar().setDisplayShowHomeEnabled(false);
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
@@ -1114,7 +1122,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.home_toolbar_titlecolor));
                 menu.findItem(R.id.action_home).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
-                downArrowImageView.setVisibility(View.VISIBLE);
+//                downArrowImageView.setVisibility(View.VISIBLE);
+                menuImageView.setVisibility(View.VISIBLE);
                 setSupportActionBar(mToolbar);
                 getSupportActionBar().setDisplayShowHomeEnabled(false);
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);

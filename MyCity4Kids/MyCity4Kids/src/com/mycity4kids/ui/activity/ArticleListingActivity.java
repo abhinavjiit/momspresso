@@ -61,7 +61,7 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
     private int nextPageNumber;
     private boolean isLastPageReached = false;
     private boolean isReuqestRunning = false;
-//    private SwipeRefreshLayout swipeRefreshLayout;
+    //    private SwipeRefreshLayout swipeRefreshLayout;
     private ProgressBar progressBar;
     private int from = 1;
     private int to = 15;
@@ -74,7 +74,7 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
     private TextView noBlogsTextView;
     private Toolbar mToolbar;
     private TextView toolbarTitleTextView;
-    private ImageView downArrowImageView;
+    private ImageView menuImageView;
     private RecyclerView recyclerView;
     private FeedNativeAd feedNativeAd;
 
@@ -82,15 +82,13 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.article_listing_activity);
-//        listView = (ListView) findViewById(R.id.scroll);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
         mLodingView = (RelativeLayout) findViewById(R.id.relativeLoadingView);
         noBlogsTextView = (TextView) findViewById(R.id.noBlogsTextView);
-//        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        downArrowImageView = (ImageView) mToolbar.findViewById(R.id.downArrowImageView);
+        menuImageView = (ImageView) mToolbar.findViewById(R.id.menuImageView);
         toolbarTitleTextView = (TextView) mToolbar.findViewById(R.id.toolbarTitle);
 
         mToolbar.setVisibility(View.VISIBLE);
@@ -119,8 +117,6 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
         nextPageNumber = 1;
         hitArticleListingApi(nextPageNumber, sortType, false);
 
-//        swipeRefreshLayout.setOnRefreshListener(this);
-
         feedNativeAd = new FeedNativeAd(this, this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
         feedNativeAd.loadAds();
         recyclerAdapter = new MainArticleRecyclerViewAdapter(this, feedNativeAd, this, false);
@@ -130,29 +126,6 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
         recyclerAdapter.setNewListData(articleDataModelsNew);
         recyclerView.setAdapter(recyclerAdapter);
 
-//        articlesListingAdapter = new MainArticleListingAdapter(this);
-//        articlesListingAdapter.setListingType(sortType);
-//        articlesListingAdapter.setNewListData(articleDataModelsNew);
-//        listView.setAdapter(articlesListingAdapter);
-//        articlesListingAdapter.notifyDataSetChanged();
-
-//        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(AbsListView absListView, int i) {
-//            }
-//
-//            @Override
-//            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-//
-//                boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
-//                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && !isLastPageReached) {
-//                    mLodingView.setVisibility(View.VISIBLE);
-//                    //caching enabled only for page 1. so disabling it here for all other pages by passing false.
-//                    hitArticleListingApi(nextPageNumber, sortType, false);
-//                    isReuqestRunning = true;
-//                }
-//            }
-//        });
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -173,36 +146,7 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
             }
         });
 
-
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                Intent intent = new Intent(ArticleListingActivity.this, ArticleDetailsContainerActivity.class);
-//                if (adapterView.getAdapter() instanceof MainArticleListingAdapter) {
-//                    ArticleListingResult parentingListData = (ArticleListingResult) adapterView.getAdapter().getItem(i);
-//                    if (Constants.KEY_FOR_YOU.equalsIgnoreCase(sortType)) {
-//                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "ForYoucreen");
-//                        intent.putExtra(Constants.FROM_SCREEN, "ForYouScreen");
-//                    } else if (Constants.KEY_EDITOR_PICKS.equalsIgnoreCase(sortType)) {
-//                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "EditorsPickScreen");
-//                        intent.putExtra(Constants.FROM_SCREEN, "EditorsPickScreen");
-//                    } else if (Constants.KEY_RECENT.equalsIgnoreCase(sortType)) {
-//                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "RecentScreen");
-//                        intent.putExtra(Constants.FROM_SCREEN, "RecentScreen");
-//                    }
-//
-//                    intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
-//                    intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
-//                    intent.putExtra(Constants.BLOG_SLUG, parentingListData.getBlogPageSlug());
-//                    intent.putExtra(Constants.TITLE_SLUG, parentingListData.getTitleSlug());
-//                    intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
-//                    intent.putExtra(Constants.AUTHOR, parentingListData.getUserId() + "~" + parentingListData.getUserName());
-//                    startActivity(intent);
-//                }
-//            }
-//        });
-
-        downArrowImageView.setOnClickListener(new View.OnClickListener() {
+        menuImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (Constants.TAB_FOR_YOU.equalsIgnoreCase(sortType)) {

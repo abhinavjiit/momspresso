@@ -14,6 +14,8 @@ import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
 import com.mycity4kids.editor.EditorPostActivity;
+import com.mycity4kids.gtmutils.Utils;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.adapter.SuggestedTopicsAdapter;
 
 import java.util.ArrayList;
@@ -23,6 +25,7 @@ import java.util.ArrayList;
  */
 
 public class SuggestedTopicsTabFragment extends BaseFragment implements SuggestedTopicsAdapter.RecyclerViewClickListener, View.OnClickListener {
+    private String languageName;
 
     private RecyclerView recyclerView;
     private SuggestedTopicsAdapter adapter;
@@ -40,6 +43,7 @@ public class SuggestedTopicsTabFragment extends BaseFragment implements Suggeste
         startWritingTextView.setOnClickListener(this);
 
         ArrayList<String> list = getArguments().getStringArrayList("languageData");
+        languageName = getArguments().getString("languageName");
 
         adapter = new SuggestedTopicsAdapter(getActivity(), this);
         adapter.setListData(list);
@@ -65,6 +69,8 @@ public class SuggestedTopicsTabFragment extends BaseFragment implements Suggeste
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.startWritingTextView:
+
+                Utils.pushSuggestedTopicClickEvent(getActivity(), "SuggestedTopicScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), languageName);
                 Intent intent = new Intent(getActivity(), EditorPostActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString(EditorPostActivity.TITLE_PARAM, "");

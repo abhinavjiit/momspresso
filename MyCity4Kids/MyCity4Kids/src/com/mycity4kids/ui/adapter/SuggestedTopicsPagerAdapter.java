@@ -18,11 +18,13 @@ import java.util.ArrayList;
 public class SuggestedTopicsPagerAdapter extends FragmentStatePagerAdapter {
     private int mNumOfTabs;
     private ArrayList<ArrayList<String>> trendingListingResults;
+    private ArrayList<String> languageNameList;
 
-    public SuggestedTopicsPagerAdapter(FragmentManager fm, int NumOfTabs, ArrayList<ArrayList<String>> trendingListingResults) {
+    public SuggestedTopicsPagerAdapter(FragmentManager fm, int NumOfTabs, ArrayList<ArrayList<String>> trendingListingResults, ArrayList<String> languageNameList) {
         super(fm);
         this.mNumOfTabs = NumOfTabs;
         this.trendingListingResults = trendingListingResults;
+        this.languageNameList = languageNameList;
     }
 
     @Override
@@ -30,6 +32,7 @@ public class SuggestedTopicsPagerAdapter extends FragmentStatePagerAdapter {
 
         Bundle bundle = new Bundle();
         bundle.putStringArrayList("languageData", trendingListingResults.get(position));
+        bundle.putString("languageName", languageNameList.get(position));
         SuggestedTopicsTabFragment tab1 = new SuggestedTopicsTabFragment();
         tab1.setArguments(bundle);
         return tab1;

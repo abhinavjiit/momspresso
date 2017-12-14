@@ -255,6 +255,12 @@ public class Utils {
                 GTMTags.TagScreen, screenName, GTMTags.USER_ID, user, GTMTags.ArticleId, draftId));
     }
 
+    public static void pushSuggestedTopicClickEvent(Context context, String screenName, String user, String language) {
+        Log.d("pushSuggestedTopicClickEvent", "" + screenName + " --- " + language);
+        DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
+        dataLayer.push(DataLayer.mapOf(GTMTags.TagEvent, "SuggestedTopicEditorLaunch",
+                GTMTags.TagScreen, screenName, GTMTags.USER_ID, user, GTMTags.TagLanguage, language));
+    }
 
     public static void pushEvent(Context context, GTMEventType event, String user, String eventValue) {
         Log.d("GTMTopic", "" + event + "---" + user + "---" + eventValue);

@@ -63,6 +63,7 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
     private RecyclerViewClickListener mListener;
     private boolean isAdChoiceAdded = false;
     private boolean topicHeaderVisibilityFlag;
+    private List<NativeAd> adList = new ArrayList<>(10);
 
     public MainArticleRecyclerViewAdapter(Context pContext, FeedNativeAd feedNativeAd, RecyclerViewClickListener listener, boolean topicHeaderVisibilityFlag) {
         mContext = pContext;
@@ -70,6 +71,9 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         this.feedNativeAd = feedNativeAd;
         mListener = listener;
         this.topicHeaderVisibilityFlag = topicHeaderVisibilityFlag;
+        for (int i = 0; i < 10; i++) {
+            adList.add(null);
+        }
     }
 
     public void setNewListData(ArrayList<ArticleListingResult> mParentingLists_new) {
@@ -110,7 +114,17 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof AdViewHolder) {
             addArticleItem((AdViewHolder) holder, position);
-            NativeAd fbAd = feedNativeAd.getAd();
+            if (position <= 80 && adList.get((position / 8) - 1) == null) {
+                NativeAd fbAd = feedNativeAd.getAd();
+                adList.set((position / 8) - 1, fbAd);
+            }
+            NativeAd fbAd;
+            if (position < 80) {
+                fbAd = adList.get(((position / 8) % 10) - 1);
+            } else {
+                fbAd = adList.get(((position / 8) % 10));
+            }
+
             if (fbAd == null) {
                 ((AdViewHolder) holder).adContainerView.setVisibility(View.GONE);
                 return;
