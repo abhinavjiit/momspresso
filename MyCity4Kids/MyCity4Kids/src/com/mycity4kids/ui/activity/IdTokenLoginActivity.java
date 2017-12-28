@@ -6,8 +6,10 @@ import android.content.pm.PackageInfo;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,23 +70,29 @@ public class IdTokenLoginActivity extends BaseActivity implements View.OnClickLi
     private String loginUser;
     UserInfo uInfo = new UserInfo();
 
+    private String[] userNameArray = {"bbb", "Shavet", "Monika", "Priyanka", "Rakhi"};
+    private String[] userIdArray = {"6f57d7cb01fa46c89bf85e3d2ade7de3", "43f6a6e57f3d4ba0b41bab18509eae1f", "9b5032cd504b4c20a9f543059f18e2e6", "b1b10f47e32e4fdaa182e850f715414b", "61de7db0a6114272a906662f47af78b1"};
+    private String[] mc4kArray = {"acf825688fc4a97f3ddc046ec7ba9af6", "438d2aeb4d53b871e5204b5ee4b6c150", "ya29.Ci9rAwTDTDT7jAe0CfLZW5kgceRtPIPdOH0sirQpl0jKxRKSmsUvO4Py_P3kkcPnIQ", "f0eb6d95a80583fc4b98aabd820aa037", "c2cdb6540e8b3b694717ee0ca0f1047d"};
+    private LinearLayout userContainer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.id_token_login_activity);
         idEditText = (EditText) findViewById(R.id.idEditText);
         tokenEditText = (EditText) findViewById(R.id.tokenEditText);
-        shavetLogin = (TextView) findViewById(R.id.shavetLogin);
-        monikaLogin = (TextView) findViewById(R.id.monikaLogin);
-        priyankaLogin = (TextView) findViewById(R.id.priyankaLogin);
+        userContainer = (LinearLayout) findViewById(R.id.userContainer);
         loginTextView = (TextView) findViewById(R.id.loginTextView);
 
-        idEditText.setText("43f6a6e57f3d4ba0b41bab18509eae1f");
-        tokenEditText.setText("438d2aeb4d53b871e5204b5ee4b6c150");
+        for (int i = 0; i < userNameArray.length; i++) {
+            LinearLayout view = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.id_token_item_layout, null);
+            ((TextView) view.getChildAt(0)).setText("Login with " + userNameArray[i]);
 
-        shavetLogin.setOnClickListener(this);
-        monikaLogin.setOnClickListener(this);
-        priyankaLogin.setOnClickListener(this);
+            userContainer.addView(view);
+            view.setTag(userNameArray[i]);
+            view.setOnClickListener(this);
+        }
+
         idEditText.setOnClickListener(this);
         tokenEditText.setOnClickListener(this);
         loginTextView.setOnClickListener(this);
@@ -94,20 +102,29 @@ public class IdTokenLoginActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.shavetLogin:
-                loginUser = "shavet";
+            case R.id.userItem:
+                for (int i = 0; i < userNameArray.length; i++) {
+                    if (((String) v.getTag()).equals(userNameArray[i])) {
+                        uInfo.setDynamoId(userIdArray[i]);
+                        uInfo.setMc4kToken(mc4kArray[i]);
+                        break;
+                    }
+                }
                 logoutCurrentUser();
                 break;
-            case R.id.monikaLogin:
-                loginUser = "monika";
-                logoutCurrentUser();
-                break;
-            case R.id.priyankaLogin:
-                loginUser = "priyanka";
-                logoutCurrentUser();
-                break;
+
+//            case R.id.monikaLogin:
+//                loginUser = "monika";
+//                logoutCurrentUser();
+//                break;
+//            case R.id.priyankaLogin:
+//                loginUser = "priyanka";
+//                logoutCurrentUser();
+//                break;
             case R.id.loginTextView:
                 loginUser = "";
+                uInfo.setDynamoId(idEditText.getText().toString());
+                uInfo.setMc4kToken(tokenEditText.getText().toString());
                 logoutCurrentUser();
                 break;
         }
@@ -299,19 +316,23 @@ public class IdTokenLoginActivity extends BaseActivity implements View.OnClickLi
     private void loginWithIdToken(String loggedInUser) {
         BaseApplication.getInstance().destroyRetrofitInstance();
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        if ("shavet".equals(loggedInUser)) {
-            uInfo.setDynamoId("43f6a6e57f3d4ba0b41bab18509eae1f");
-            uInfo.setMc4kToken("438d2aeb4d53b871e5204b5ee4b6c150");
-        } else if ("monika".equals(loggedInUser)) {
-            uInfo.setDynamoId("9b5032cd504b4c20a9f543059f18e2e6");
-            uInfo.setMc4kToken("ya29.Ci9rAwTDTDT7jAe0CfLZW5kgceRtPIPdOH0sirQpl0jKxRKSmsUvO4Py_P3kkcPnIQ");
-        } else if ("priyanka".equals(loggedInUser)) {
-            uInfo.setDynamoId("b1b10f47e32e4fdaa182e850f715414b");
-            uInfo.setMc4kToken("f0eb6d95a80583fc4b98aabd820aa037");
-        } else {
-            uInfo.setDynamoId(idEditText.getText().toString());
-            uInfo.setMc4kToken(tokenEditText.getText().toString());
-        }
+//        if ("shavet".equals(loggedInUser)) {
+//            uInfo.setDynamoId("43f6a6e57f3d4ba0b41bab18509eae1f");
+//            uInfo.setMc4kToken("438d2aeb4d53b871e5204b5ee4b6c150");
+//        } else if ("monika".equals(loggedInUser)) {
+//            uInfo.setDynamoId("9b5032cd504b4c20a9f543059f18e2e6");
+//            uInfo.setMc4kToken("ya29.Ci9rAwTDTDT7jAe0CfLZW5kgceRtPIPdOH0sirQpl0jKxRKSmsUvO4Py_P3kkcPnIQ");
+//        } else if ("priyanka".equals(loggedInUser)) {
+//            uInfo.setDynamoId("b1b10f47e32e4fdaa182e850f715414b");
+//            uInfo.setMc4kToken("f0eb6d95a80583fc4b98aabd820aa037");
+//        } else if ("rakhi".equals(loggedInUser)) {
+//            uInfo.setDynamoId("61de7db0a6114272a906662f47af78b1");
+//            uInfo.setMc4kToken("c2cdb6540e8b3b694717ee0ca0f1047d");
+//        } else {
+//            uInfo.setDynamoId(idEditText.getText().toString());
+//            uInfo.setMc4kToken(tokenEditText.getText().toString());
+//        }
+
 
         SharedPrefUtils.setUserDetailModel(this, uInfo);
 
