@@ -357,7 +357,7 @@ public class AppUtils {
                     }
                     outputStream.write(fileReader, 0, read);
                     fileSizeDownloaded += read;
-                    Log.d("TopicsFilterActivity", "file download: " + fileSizeDownloaded + " of " + fileSize);
+                    Log.d("AppUtils", "file download: " + fileSizeDownloaded + " of " + fileSize);
                 }
 
                 outputStream.flush();

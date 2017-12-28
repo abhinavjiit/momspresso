@@ -1,6 +1,5 @@
 package com.mycity4kids.ui.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -10,7 +9,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -21,7 +19,6 @@ import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
-import com.mycity4kids.constants.Constants;
 import com.mycity4kids.editor.ArticleImageTagUploadActivity;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
@@ -42,7 +39,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -134,8 +130,33 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
             Retrofit retro = BaseApplication.getInstance().getRetrofit();
             final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
 
-            Call<ResponseBody> call = topicsAPI.downloadCategoriesJSON();
-            call.enqueue(downloadCategoriesJSONCallback);
+//            Call<ResponseBody> call = topicsAPI.downloadCategoriesJSON();
+//            call.enqueue(downloadCategoriesJSONCallback);
+            Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
+
+            caller.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                    boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(AddArticleTopicsActivityNew.this, AppConstants.CATEGORIES_JSON_FILE, response.body());
+                    Log.d("AddArticleTopicsActivityNew", "file download was a success? " + writtenToDisk);
+
+                    try {
+                        FileInputStream fileInputStream = openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                        String fileContent = convertStreamToString(fileInputStream);
+                        TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
+                        createTopicsData(res);
+                    } catch (FileNotFoundException e) {
+                        Crashlytics.logException(e);
+                        Log.d("FileNotFoundException", Log.getStackTraceString(e));
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    Crashlytics.logException(t);
+                    Log.d("MC4KException", Log.getStackTraceString(t));
+                }
+            });
         }
 
 
@@ -313,13 +334,13 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
                 Retrofit retro = BaseApplication.getInstance().getRetrofit();
                 final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
 
-                Call<ResponseBody> caller = topicsAPI.downloadFileWithDynamicUrlSync(jsonObject.getJSONObject("data").getJSONObject("result").getJSONObject("category").getString("location"));
+                Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
 
                 caller.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                        boolean writtenToDisk = writeResponseBodyToDisk(response.body());
-                        Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
+                        boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(AddArticleTopicsActivityNew.this, AppConstants.CATEGORIES_JSON_FILE, response.body());
+                        Log.d("AddArticleTopicsActivityNew", "file download was a success? " + writtenToDisk);
 
                         try {
                             FileInputStream fileInputStream = openFileInput(AppConstants.CATEGORIES_JSON_FILE);
@@ -354,46 +375,6 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
             Log.d("MC4KException", Log.getStackTraceString(t));
         }
     };
-
-    private boolean writeResponseBodyToDisk(ResponseBody body) {
-        try {
-            InputStream inputStream = null;
-            OutputStream outputStream = null;
-            try {
-                byte[] fileReader = new byte[4096];
-                long fileSize = body.contentLength();
-                long fileSizeDownloaded = 0;
-
-                inputStream = body.byteStream();
-                outputStream = openFileOutput(AppConstants.CATEGORIES_JSON_FILE, Context.MODE_PRIVATE);
-
-                while (true) {
-                    int read = inputStream.read(fileReader);
-                    if (read == -1) {
-                        break;
-                    }
-                    outputStream.write(fileReader, 0, read);
-                    fileSizeDownloaded += read;
-                    Log.d("TopicsFilterActivity", "file download: " + fileSizeDownloaded + " of " + fileSize);
-                }
-
-                outputStream.flush();
-                return true;
-            } catch (IOException e) {
-                return false;
-            } finally {
-                if (inputStream != null) {
-                    inputStream.close();
-                }
-
-                if (outputStream != null) {
-                    outputStream.close();
-                }
-            }
-        } catch (IOException e) {
-            return false;
-        }
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

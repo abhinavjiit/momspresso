@@ -78,8 +78,34 @@ public class TopicsListingFragment extends BaseFragment {
             Retrofit retro = BaseApplication.getInstance().getRetrofit();
             final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
 
-            Call<ResponseBody> call = topicsAPI.downloadCategoriesJSON();
-            call.enqueue(downloadCategoriesJSONCallback);
+//            Call<ResponseBody> call = topicsAPI.downloadCategoriesJSON();
+//            call.enqueue(downloadCategoriesJSONCallback);
+            Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
+            caller.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                    boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(getActivity(), AppConstants.CATEGORIES_JSON_FILE, response.body());
+                    Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
+
+                    try {
+
+                        FileInputStream fileInputStream = getActivity().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                        String fileContent = AppUtils.convertStreamToString(fileInputStream);
+                        TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
+                        createTopicsData(res);
+                        getCurrentParentTopicCategoriesAndSubCategories();
+                    } catch (FileNotFoundException e) {
+                        Crashlytics.logException(e);
+                        Log.d("FileNotFoundException", Log.getStackTraceString(e));
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    Crashlytics.logException(t);
+                    Log.d("MC4KException", Log.getStackTraceString(t));
+                }
+            });
         }
         if (subTopicsList.size() == 0) {
             Topics mainTopic = new Topics();
@@ -229,8 +255,7 @@ public class TopicsListingFragment extends BaseFragment {
                 Retrofit retro = BaseApplication.getInstance().getRetrofit();
                 final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
 
-                Call<ResponseBody> caller = topicsAPI.downloadFileWithDynamicUrlSync(jsonObject.getJSONObject("data").getJSONObject("result").getJSONObject("category").getString("location"));
-
+                Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
                 caller.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {

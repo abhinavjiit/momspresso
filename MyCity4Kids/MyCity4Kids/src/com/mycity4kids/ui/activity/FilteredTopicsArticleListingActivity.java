@@ -3,7 +3,6 @@ package com.mycity4kids.ui.activity;
 import android.accounts.NetworkErrorException;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -55,6 +54,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
 import com.mycity4kids.ui.fragment.FilterTopicsDialogFragment;
+import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.widget.FeedNativeAd;
 
 import org.json.JSONObject;
@@ -65,7 +65,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -95,7 +94,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
     private RelativeLayout mLodingView;
     private FrameLayout frameLayout;
     private FloatingActionsMenu fabMenu;
-//    private SwipeRefreshLayout swipeRefreshLayout;
+    //    private SwipeRefreshLayout swipeRefreshLayout;
     private int nextPageNumber;
     private boolean isReuqestRunning = false;
     private ProgressBar progressBar;
@@ -218,8 +217,36 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             Retrofit retro = BaseApplication.getInstance().getRetrofit();
             final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
 
-            Call<ResponseBody> call = topicsAPI.downloadCategoriesJSON();
-            call.enqueue(downloadCategoriesJSONCallback);
+//            Call<ResponseBody> call = topicsAPI.downloadCategoriesJSON();
+//            call.enqueue(downloadCategoriesJSONCallback);
+            Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
+
+            caller.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                    boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(FilteredTopicsArticleListingActivity.this, AppConstants.CATEGORIES_JSON_FILE, response.body());
+                    Log.d("FilteredTopicsArticleListingActivity", "file download was a success? " + writtenToDisk);
+
+                    try {
+                        FileInputStream fileInputStream = openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                        String fileContent = convertStreamToString(fileInputStream);
+                        TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
+                        createTopicsData(res);
+                        getTopicLevelAndPrepareFilterData();
+                        sortBgLayout.setVisibility(View.GONE);
+                        bottomOptionMenu.setVisibility(View.GONE);
+                    } catch (FileNotFoundException e) {
+                        Crashlytics.logException(e);
+                        Log.d("FileNotFoundException", Log.getStackTraceString(e));
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    Crashlytics.logException(t);
+                    Log.d("MC4KException", Log.getStackTraceString(t));
+                }
+            });
         }
 
         if (AppConstants.MOMSPRESSO_CATEGORYID.equals(selectedTopics)) {
@@ -281,42 +308,6 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             }
         });
 
-//        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
-//            private int mLastFirstVisibleItem;
-//            private boolean mIsScrollingUp;
-//
-//            @Override
-//            public void onScrollStateChanged(AbsListView view, int scrollState) {
-//                final ListView lw = listView;
-//
-//                if (view.getId() == lw.getId()) {
-//                    final int currentFirstVisibleItem = lw.getFirstVisiblePosition();
-//
-//                    if (currentFirstVisibleItem > mLastFirstVisibleItem) {
-//                        mIsScrollingUp = false;
-//                        showBottomMenu();
-//                    } else if (currentFirstVisibleItem < mLastFirstVisibleItem) {
-//                        hideBottomMenu();
-//                        mIsScrollingUp = true;
-//                    }
-//
-//                    mLastFirstVisibleItem = currentFirstVisibleItem;
-//                }
-//            }
-//
-//
-//            @Override
-//            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-//
-//                boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
-//                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && !isLastPageReached) {
-//                    mLodingView.setVisibility(View.VISIBLE);
-//                    hitFilteredTopicsArticleListingApi(sortType);
-//                    isReuqestRunning = true;
-//                }
-//            }
-//        });
-
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -337,31 +328,6 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             }
         });
 
-
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//
-//                Intent intent = new Intent(FilteredTopicsArticleListingActivity.this, ArticleDetailsContainerActivity.class);
-//                if (adapterView.getAdapter() instanceof MainArticleListingAdapter) {
-//                    ArticleListingResult parentingListData = (ArticleListingResult) adapterView.getAdapter().getItem(i);
-//                    intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
-//                    intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
-//                    intent.putExtra(Constants.ARTICLE_COVER_IMAGE, parentingListData.getImageUrl());
-//                    intent.putExtra(Constants.BLOG_SLUG, parentingListData.getBlogPageSlug());
-//                    intent.putExtra(Constants.TITLE_SLUG, parentingListData.getTitleSlug());
-//                    if (StringUtils.isNullOrEmpty(categoryName)) {
-//                        categoryName = displayName;
-//                    }
-//                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, categoryName + "~" + selectedTopics);
-//                    intent.putExtra(Constants.FROM_SCREEN, "TopicArticlesListingScreen");
-//                    intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
-//                    intent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
-//                    intent.putExtra(Constants.AUTHOR, parentingListData.getUserId() + "~" + parentingListData.getUserName());
-//                    startActivity(intent);
-//                }
-//            }
-//        });
     }
 
     private void hitFilteredTopicsArticleListingApi(int sortType) {
@@ -637,13 +603,13 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                 Retrofit retro = BaseApplication.getInstance().getRetrofit();
                 final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
 
-                Call<ResponseBody> caller = topicsAPI.downloadFileWithDynamicUrlSync(jsonObject.getJSONObject("data").getJSONObject("result").getJSONObject("category").getString("location"));
+                Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
 
                 caller.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                        boolean writtenToDisk = writeResponseBodyToDisk(response.body());
-                        Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
+                        boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(FilteredTopicsArticleListingActivity.this, AppConstants.CATEGORIES_JSON_FILE, response.body());
+                        Log.d("FilteredTopicsArticleListingActivity", "file download was a success? " + writtenToDisk);
 
                         try {
                             FileInputStream fileInputStream = openFileInput(AppConstants.CATEGORIES_JSON_FILE);
@@ -738,7 +704,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                 caller.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                        boolean writtenToDisk = writeResponseBodyToDisk(response.body());
+                        boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(FilteredTopicsArticleListingActivity.this, AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE, response.body());
                         Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
 
                         try {
@@ -774,46 +740,6 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             Log.d("MC4KException", Log.getStackTraceString(t));
         }
     };
-
-    private boolean writeResponseBodyToDisk(ResponseBody body) {
-        try {
-            InputStream inputStream = null;
-            OutputStream outputStream = null;
-            try {
-                byte[] fileReader = new byte[4096];
-                long fileSize = body.contentLength();
-                long fileSizeDownloaded = 0;
-
-                inputStream = body.byteStream();
-                outputStream = openFileOutput(AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE, Context.MODE_PRIVATE);
-
-                while (true) {
-                    int read = inputStream.read(fileReader);
-                    if (read == -1) {
-                        break;
-                    }
-                    outputStream.write(fileReader, 0, read);
-                    fileSizeDownloaded += read;
-                    Log.d("TopicsFilterActivity", "file download: " + fileSizeDownloaded + " of " + fileSize);
-                }
-
-                outputStream.flush();
-                return true;
-            } catch (IOException e) {
-                return false;
-            } finally {
-                if (inputStream != null) {
-                    inputStream.close();
-                }
-
-                if (outputStream != null) {
-                    outputStream.close();
-                }
-            }
-        } catch (IOException e) {
-            return false;
-        }
-    }
 
     private Callback<TopicsFollowingStatusResponse> isTopicFollowedResponseCallback = new Callback<TopicsFollowingStatusResponse>() {
         @Override

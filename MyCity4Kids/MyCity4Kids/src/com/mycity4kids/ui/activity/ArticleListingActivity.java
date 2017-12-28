@@ -53,7 +53,6 @@ import retrofit2.Retrofit;
  */
 public class ArticleListingActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, ForYouInfoDialogFragment.IForYourArticleRemove, FeedNativeAd.AdLoadingListener, MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
 
-    //    private MainArticleListingAdapter articlesListingAdapter;
     private MainArticleRecyclerViewAdapter recyclerAdapter;
     private ArrayList<ArticleListingResult> articleDataModelsNew;
 
@@ -61,7 +60,6 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
     private int nextPageNumber;
     private boolean isLastPageReached = false;
     private boolean isReuqestRunning = false;
-    //    private SwipeRefreshLayout swipeRefreshLayout;
     private ProgressBar progressBar;
     private int from = 1;
     private int to = 15;
@@ -69,7 +67,6 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
     private String fromScreen;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
 
-    //    private ListView listView;
     private RelativeLayout mLodingView;
     private TextView noBlogsTextView;
     private Toolbar mToolbar;
@@ -181,7 +178,6 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
 
     private void hitArticleListingApi(int pPageCount, String sortKey, boolean isCacheRequired) {
         if (!ConnectivityUtils.isNetworkEnabled(this)) {
-            //   swipeRefreshLayout.setRefreshing(false);
             removeProgressDialog();
             showToast(getString(R.string.error_network));
             return;
@@ -209,7 +205,6 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
         public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
             progressBar.setVisibility(View.GONE);
             mLodingView.setVisibility(View.GONE);
-//            swipeRefreshLayout.setRefreshing(false);
             isReuqestRunning = false;
             if (response == null || null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
@@ -221,8 +216,6 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
                 ArticleListingResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     processForYouResponse(responseData);
-//                    notificationCenterResultArrayList.addAll(responseData.getData().getResult());
-//                    notificationCenterListAdapter.notifyDataSetChanged();
                 } else {
                     showToast(responseData.getReason());
                 }
@@ -237,7 +230,6 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
         public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
             progressBar.setVisibility(View.GONE);
             mLodingView.setVisibility(View.GONE);
-//            swipeRefreshLayout.setRefreshing(false);
             isReuqestRunning = false;
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
@@ -323,7 +315,6 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
                     return;
                 }
 
-//                swipeRefreshLayout.setRefreshing(false);
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     processResponse(responseData);
                 } else if (responseData.getCode() == 400) {
@@ -402,7 +393,6 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
     @Override
     public void onRefresh() {
         if (!ConnectivityUtils.isNetworkEnabled(this)) {
-//            swipeRefreshLayout.setRefreshing(false);
             removeProgressDialog();
             showToast(getString(R.string.error_network));
             return;
