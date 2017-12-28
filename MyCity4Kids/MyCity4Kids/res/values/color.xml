@@ -506,6 +506,14 @@
     <color name="user_activities.comments.edit">#507cbe</color>
 
     <color name="explore.city">#507cbe</color>
+    <color name="explore.section.tabs_text">#545454</color>
+    <color name="explore.events.trending_lbl">#545454</color>
+    <color name="explore.events.featured_lbl">#545454</color>
+    <color name="explore.events.upcoming_lbl">#545454</color>
+    <color name="explore.events.selected_subcategory">#9c9dac</color>
+    <color name="explore.events.search_hint">#9c9dac</color>
+    <color name="explore.events.search_text">#9c9dac</color>
+    <color name="explore.events.categories_text">#507cbe</color>
     <color name="explore.section.no_resources">#545454</color>
 
     <color name="user_funny_video.toolbar.title">#545454</color>

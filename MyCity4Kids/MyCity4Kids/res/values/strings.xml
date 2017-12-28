@@ -854,6 +854,11 @@
     <string name="explore.section.resources">RESOURCES</string>
     <string name="explore.section.top_things">TOP THINGS TO DO</string>
     <string name="explore.section.no_resources">We do not have any events or resources for your city at present.</string>
+    <string name="explore.events.trending_lbl">TRENDING EVENTS</string>
+    <string name="explore.events.featured_lbl">FEATURED EVENTS</string>
+    <string name="explore.events.upcoming_lbl">UPCOMING EVENTS</string>
+    <string name="explore.events.other_city_events_lbl">EVENTS IN OTHER CITIES</string>
+    <string name="explore.events.search_hint">Search for activities, events</string>
 
     <string name="all_videos.toolbar.title">VIDEOS</string>
     <string name="all_videos.tabbar.momspresso_label">MOMSPRESSO</string>
