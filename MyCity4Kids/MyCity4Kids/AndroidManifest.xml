@@ -110,14 +110,27 @@
                 <data android:scheme="mc4k" />
                 <data android:scheme="mck" />
                 <data android:scheme="mycity4kids" />
+                <data android:scheme="momspresso" />
                 <data
                     android:host="www.mycity4kids.com"
+                    android:scheme="http" />
+                <data
+                    android:host="www.momspresso.com"
                     android:scheme="http" />
                 <data
                     android:host="mycity4kids.com"
                     android:scheme="http" />
                 <data
+                    android:host="momspresso.com"
+                    android:scheme="http" />
+                <data
+                    android:host="momspresso.com"
+                    android:scheme="https" />
+                <data
                     android:host="www.mycity4kids.com"
+                    android:scheme="https" />
+                <data
+                    android:host="www.momspresso.com"
                     android:scheme="https" />
 
                 <action android:name="android.intent.action.VIEW" />

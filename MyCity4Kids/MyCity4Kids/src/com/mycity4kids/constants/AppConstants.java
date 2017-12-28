@@ -11,7 +11,7 @@ public class AppConstants {
     public static final String DEV_URL = "http://54.169.17.138/";
     public static final String STAGING_URL = "http://52.220.87.141/";
 
-//            public static final String LIVE_URL = "http://52.220.87.141/";
+    //            public static final String LIVE_URL = "http://52.220.87.141/";
     public static final String LIVE_URL = "https://api.mycity4kids.com/";
 
     public static final String PHOENIX_STAGING_URL = "http://52.77.116.39";
@@ -447,9 +447,14 @@ public class AppConstants {
     public static final String MARATHI_CATEGORYID = "category-bd1d0a1ab9c0436d97f78d90a115ee71";
     public static final String SPONSORED_CATEGORYID = "category-51a2ea215c634753ac6a9aa377deae0b";
     public static final String DEEPLINK_EDITOR_URL = "mc4k://www.mycity4kids.com/editor";
+    public static final String DEEPLINK_MOMSPRESSO_EDITOR_URL = "mc4k://www.momspresso.com/editor";
     public static final String DEEPLINK_PROFILE_URL = "mc4k://www.mycity4kids.com/profile";
+    public static final String DEEPLINK_MOMSPRESSO_PROFILE_URL = "mc4k://www.momspresso.com/profile";
     public static final String DEEPLINK_SUGGESTED_TOPIC_URL = "mc4k://www.mycity4kids.com/suggested_topics";
+    public static final String DEEPLINK_MOMSPRESSO_SUGGESTED_TOPIC_URL = "mc4k://www.momspresso.com/suggested_topics";
     public static final String DEEPLINK_ADD_FUNNY_VIDEO_URL = "mc4k://www.mycity4kids.com/addfunnyvideo";
+    public static final String DEEPLINK_MOMSPRESSO_ADD_FUNNY_VIDEO_URL = "mc4k://www.momspresso.com/addfunnyvideo";
+    public static final String DEEPLINK_UPCOMING_EVENTS = "/Events_el";
 
     public static final String IGNORE_TAG = "ignore";
     public static final String EDITOR_PICKS_CATEGORY_ID = "category-66b6883fd0434683b053f18aa4d52b59";

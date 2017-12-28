@@ -343,7 +343,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         } else {
             String tempDeepLinkURL = intent.getStringExtra(AppConstants.DEEP_LINK_URL);
             if (!StringUtils.isNullOrEmpty(tempDeepLinkURL)) {
-                if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_EDITOR_URL)) {
+                if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_EDITOR_URL) || tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_EDITOR_URL)) {
                     final String bloggerId = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("/") + 1, tempDeepLinkURL.length());
                     if (!StringUtils.isNullOrEmpty(bloggerId) && !bloggerId.equals(SharedPrefUtils.getUserDetailModel(this).getDynamoId())) {
                         showAlertDialog("Message", "Logged in as " + SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name(), new OnButtonClicked() {
@@ -367,7 +367,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                             showToast("This version of android is no more supported.");
                         }
                     }
-                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_ADD_FUNNY_VIDEO_URL)) {
+                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_ADD_FUNNY_VIDEO_URL) || tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_ADD_FUNNY_VIDEO_URL)) {
                     final String bloggerId = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("/") + 1, tempDeepLinkURL.length());
                     if (!StringUtils.isNullOrEmpty(bloggerId) && !bloggerId.equals(SharedPrefUtils.getUserDetailModel(this).getDynamoId())) {
                         showAlertDialog("Message", "Logged in as " + SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name(), new OnButtonClicked() {
@@ -379,7 +379,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     } else {
                         launchAddVideoOptions();
                     }
-                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_PROFILE_URL)) {
+                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_PROFILE_URL) || tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_PROFILE_URL)) {
                     final String bloggerId = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("/") + 1, tempDeepLinkURL.length());
                     if (!StringUtils.isNullOrEmpty(bloggerId) && !bloggerId.equals(SharedPrefUtils.getUserDetailModel(this).getDynamoId())) {
                         showAlertDialog("Message", "Logged in as " + SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name(), new OnButtonClicked() {
@@ -391,8 +391,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     } else {
                         fragmentToLoad = Constants.PROFILE_FRAGMENT;
                     }
-                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_SUGGESTED_TOPIC_URL)) {
+                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_SUGGESTED_TOPIC_URL) || tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_SUGGESTED_TOPIC_URL)) {
                     fragmentToLoad = Constants.SUGGESTED_TOPICS_FRAGMENT;
+                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_UPCOMING_EVENTS)) {
+                    fragmentToLoad = Constants.BUSINESS_EVENTLIST_FRAGMENT;
                 } else {
                     getDeepLinkData(tempDeepLinkURL);
                 }
@@ -1101,7 +1103,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.home_toolbar_titlecolor));
                 menu.findItem(R.id.action_home).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
-//                downArrowImageView.setVisibility(View.VISIBLE);
                 menuImageView.setVisibility(View.VISIBLE);
                 setSupportActionBar(mToolbar);
                 getSupportActionBar().setDisplayShowHomeEnabled(false);
@@ -1122,7 +1123,6 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.home_toolbar_titlecolor));
                 menu.findItem(R.id.action_home).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);
-//                downArrowImageView.setVisibility(View.VISIBLE);
                 menuImageView.setVisibility(View.VISIBLE);
                 setSupportActionBar(mToolbar);
                 getSupportActionBar().setDisplayShowHomeEnabled(false);
