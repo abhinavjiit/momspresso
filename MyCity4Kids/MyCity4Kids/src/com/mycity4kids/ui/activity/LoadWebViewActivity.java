@@ -30,7 +30,7 @@ public class LoadWebViewActivity extends BaseActivity {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("mycity4kids");
+        getSupportActionBar().setTitle("Momspresso");
         Utils.pushOpenScreenEvent(LoadWebViewActivity.this, "Notification WebView", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
 
         String url = getIntent().getStringExtra(Constants.WEB_VIEW_URL);

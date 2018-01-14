@@ -12,6 +12,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Path;
 import retrofit2.http.Url;
 
 /**
@@ -27,4 +28,7 @@ public interface BlogPageAPI {
             @Field("blogTitle") String title,
             @Field("userBio") String userBio
     );
+
+    @GET("/v1/users/blogPage/{userId}")
+    Call<BlogPageResponse> getUserBlogPage(@Path("userId") String userId);
 }

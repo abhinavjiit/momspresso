@@ -307,7 +307,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
     @Override
     protected void onStart() {
         super.onStart();
-        if (!StringUtils.isNullOrEmpty(deepLinkURL) && AppConstants.BASE_URL.equalsIgnoreCase("https://api.mycity4kids.com/")) {
+        if (!StringUtils.isNullOrEmpty(deepLinkURL) && AppConstants.BASE_URL.equalsIgnoreCase("https://api.momspresso.com/")) {
             // Connect client
             mClient.connect();
             final String TITLE = screenTitle;
@@ -333,7 +333,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
 
     @Override
     protected void onStop() {
-        if (!StringUtils.isNullOrEmpty(deepLinkURL) && AppConstants.BASE_URL.equalsIgnoreCase("https://api.mycity4kids.com/")) {
+        if (!StringUtils.isNullOrEmpty(deepLinkURL) && AppConstants.BASE_URL.equalsIgnoreCase("https://api.momspresso.com/")) {
             final String TITLE = screenTitle;
             final Uri APP_URI = AppConstants.APP_BASE_URI.buildUpon().appendPath(deepLinkURL).build();
             final Uri WEB_URL = AppConstants.WEB_BASE_URL.buildUpon().appendPath(deepLinkURL).build();
@@ -1431,7 +1431,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                         Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
                         whatsappIntent.setType("text/plain");
                         whatsappIntent.setPackage("com.whatsapp");
-                        whatsappIntent.putExtra(Intent.EXTRA_TEXT, "mycity4kids\n\nCheck out this interesting blog post\n " + shareUrl);
+                        whatsappIntent.putExtra(Intent.EXTRA_TEXT, "Momspresso\n\nCheck out this interesting blog post\n " + shareUrl);
                         try {
                             startActivity(whatsappIntent);
                             Utils.pushShareArticleEvent(this, "DetailVideoScreen", userDynamoId + "", videoId, authorId + "~" + author, "Whatsapp");
@@ -1456,8 +1456,8 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                     if (best != null) {
                         intent.setClassName(best.activityInfo.packageName, best.activityInfo.name);
                     }
-                    intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "mycity4kids");
-                    intent.putExtra(android.content.Intent.EXTRA_TEXT, AppUtils.fromHtml("mycity4kids\n\nCheck out this interesting blog post\n " + shareUrl));
+                    intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Momspresso");
+                    intent.putExtra(android.content.Intent.EXTRA_TEXT, AppUtils.fromHtml("Momspresso\n\nCheck out this interesting blog post\n " + shareUrl));
 
                     try {
                         startActivity(intent);
@@ -1467,7 +1467,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                         i.setType("plain/text");
                         i.putExtra(Intent.EXTRA_EMAIL, new String[]{});
                         i.putExtra(Intent.EXTRA_SUBJECT, "");
-                        i.putExtra(Intent.EXTRA_TEXT, "mycity4kids\n\nCheck out this interesting blog post\n " + shareUrl);
+                        i.putExtra(Intent.EXTRA_TEXT, "Momspresso\n\nCheck out this interesting blog post\n " + shareUrl);
                         try {
                             startActivity(Intent.createChooser(i, "Send mail..."));
                             Utils.pushShareArticleEvent(this, "DetailVideoScreen", userDynamoId + "", videoId, authorId + "~" + author, "Email");
@@ -1627,13 +1627,13 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                 String author = authorNameTextView.getText().toString();
                 String shareMessage;
                 if (StringUtils.isNullOrEmpty(shareUrl)) {
-                    shareMessage = "mycity4kids\n\nCheck out this interesting blog post " + "\"" + detailData.getTitle() + "\" by " + author + ".";
+                    shareMessage = "Momspresso\n\nCheck out this interesting blog post " + "\"" + detailData.getTitle() + "\" by " + author + ".";
                 } else {
-                    shareMessage = "mycity4kids\n\nCheck out this interesting blog post " + "\"" + detailData.getTitle() + "\" by " + author + ".\nRead Here: " + shareUrl;
+                    shareMessage = "Momspresso\n\nCheck out this interesting blog post " + "\"" + detailData.getTitle() + "\" by " + author + ".\nRead Here: " + shareUrl;
                 }
 //                Utils.pushEventShareURL(VlogsDetailActivity.this, GTMEventType.SHARE_BLOG_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Video Detail", shareUrl);
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
-                startActivity(Intent.createChooser(shareIntent, "mycity4kids"));
+                startActivity(Intent.createChooser(shareIntent, "Momspresso"));
 
                 return true;
             default:

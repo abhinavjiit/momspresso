@@ -212,7 +212,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
     }
 
     public void cancelUpload() {
-        showAlertDialog("mycity4kids", "Your upload progress will be lost. Are you sure you want to exit?", new OnButtonClicked() {
+        showAlertDialog("Momspresso", "Your upload progress will be lost. Are you sure you want to exit?", new OnButtonClicked() {
             @Override
             public void onButtonCLick(int buttonId) {
                 if (uploadTask != null) {
@@ -278,7 +278,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
     @Override
     public void onBackPressed() {
         if (null != uploadTask && uploadTask.getStatus() == AsyncTask.Status.RUNNING) {
-            showAlertDialog("mycity4kids", getString(R.string.video_progress_progress_lost_msg), new OnButtonClicked() {
+            showAlertDialog("Momspresso", getString(R.string.video_progress_progress_lost_msg), new OnButtonClicked() {
                 @Override
                 public void onButtonCLick(int buttonId) {
                     uploadTask.cancel(true);

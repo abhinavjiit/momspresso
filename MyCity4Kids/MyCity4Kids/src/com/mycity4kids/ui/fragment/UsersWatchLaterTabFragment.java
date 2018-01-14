@@ -199,14 +199,14 @@ public class UsersWatchLaterTabFragment extends BaseFragment implements UsersBoo
                         watchLaterList.get(position).getBlogPageSlug(), watchLaterList.get(position).getTitleSlug());
                 String shareMessage;
                 if (StringUtils.isNullOrEmpty(shareUrl)) {
-                    shareMessage = "mycity4kids\n\nCheck out this interesting blog post " + "\"" +
+                    shareMessage = "Momspresso\n\nCheck out this interesting blog post " + "\"" +
                             watchLaterList.get(position).getTitle() + "\" by " + watchLaterList.get(position).getUserName() + ".";
                 } else {
-                    shareMessage = "mycity4kids\n\nCheck out this interesting blog post " + "\"" +
+                    shareMessage = "Momspresso\n\nCheck out this interesting blog post " + "\"" +
                             watchLaterList.get(position).getTitle() + "\" by " + watchLaterList.get(position).getUserName() + ".\nRead Here: " + shareUrl;
                 }
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
-                startActivity(Intent.createChooser(shareIntent, "mycity4kids"));
+                startActivity(Intent.createChooser(shareIntent, "Momspresso"));
                 Utils.pushShareArticleEvent(getActivity(), "WatchLaterScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", watchLaterList.get(position).getId(),
                         watchLaterList.get(position).getUserId() + "~" + watchLaterList.get(position).getUserName(), "-");
                 break;

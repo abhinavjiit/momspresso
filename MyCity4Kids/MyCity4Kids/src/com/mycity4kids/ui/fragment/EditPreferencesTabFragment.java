@@ -205,16 +205,16 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
                             subscriptionAndLanguageSettingsModel.setName(entry.getKey());
                             switch (entry.getKey()) {
                                 case "newsletters":
-                                    subscriptionAndLanguageSettingsModel.setDisplayName("Subscribe to the Top Reads Of The Month");
+                                    subscriptionAndLanguageSettingsModel.setDisplayName(getString(R.string.app_settings_edit_prefs_subscribe_top_reads));
                                     break;
                                 case "trending":
-                                    subscriptionAndLanguageSettingsModel.setDisplayName("Subscribe to the Trending Blog Of The Day");
+                                    subscriptionAndLanguageSettingsModel.setDisplayName(getString(R.string.app_settings_edit_prefs_subscribe_trending_blog));
                                     break;
                                 case "momspresso":
-                                    subscriptionAndLanguageSettingsModel.setDisplayName("Subscribe to the Momspresso Videos");
+                                    subscriptionAndLanguageSettingsModel.setDisplayName(getString(R.string.app_settings_edit_prefs_subscribe_momspresso));
                                     break;
                                 case "editorial":
-                                    subscriptionAndLanguageSettingsModel.setDisplayName("Subscribe to the Best In Your City");
+                                    subscriptionAndLanguageSettingsModel.setDisplayName(getString(R.string.app_settings_edit_prefs_subscribe_city_best));
                                     break;
                                 default:
                                     subscriptionAndLanguageSettingsModel.setDisplayName(entry.getKey());

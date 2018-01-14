@@ -24,7 +24,6 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.editor.ArticleImageTagUploadActivity;
 import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.editor.ArticleDraftRequest;
@@ -224,7 +223,7 @@ public class UserDraftArticleTabFragment extends BaseFragment implements View.On
                 } else {
                     Intent viewIntent =
                             new Intent("android.intent.action.VIEW",
-                                    Uri.parse("http://www.mycity4kids.com/parenting/admin/setupablog"));
+                                    Uri.parse("http://www.momspresso.com/parenting/admin/setupablog"));
                     startActivity(viewIntent);
                 }
                 break;

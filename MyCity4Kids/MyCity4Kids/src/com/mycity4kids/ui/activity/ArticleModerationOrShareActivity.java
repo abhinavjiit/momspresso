@@ -110,7 +110,7 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
                 } else {
                     Intent shareIntent = new PlusShare.Builder(this)
                             .setType("text/plain")
-                            .setText("mycity4kids\n" +
+                            .setText("Momspresso\n" +
                                     "\n" +
                                     "Check out this interesting blog post ")
                             .setContentUrl(Uri.parse(shareUrl))
@@ -125,7 +125,7 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
                     Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
                     whatsappIntent.setType("text/plain");
                     whatsappIntent.setPackage("com.whatsapp");
-                    whatsappIntent.putExtra(Intent.EXTRA_TEXT, "mycity4kids\n\nCheck out this interesting blog post\n " + shareUrl);
+                    whatsappIntent.putExtra(Intent.EXTRA_TEXT, "Momspresso\n\nCheck out this interesting blog post\n " + shareUrl);
                     try {
                         startActivity(whatsappIntent);
                     } catch (android.content.ActivityNotFoundException ex) {
@@ -139,7 +139,7 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
                 } else {
                     // Create intent using ACTION_VIEW and a normal Twitter url:
                     String tweetUrl = String.format("https://twitter.com/intent/tweet?text=%s&url=%s",
-                            urlEncode("mycity4kids\n\nCheck out this interesting blog post\n "),
+                            urlEncode("Momspresso\n\nCheck out this interesting blog post\n "),
                             urlEncode(shareUrl));
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(tweetUrl));
                     // Narrow down to official Twitter app, if available:

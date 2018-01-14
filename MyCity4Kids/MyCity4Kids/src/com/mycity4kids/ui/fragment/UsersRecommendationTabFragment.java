@@ -148,14 +148,14 @@ public class UsersRecommendationTabFragment extends BaseFragment implements User
                         recommendationsList.get(position).getBlogPageSlug(), recommendationsList.get(position).getTitleSlug());
                 String shareMessage;
                 if (StringUtils.isNullOrEmpty(shareUrl)) {
-                    shareMessage = "mycity4kids\n\nCheck out this interesting blog post " + "\"" +
+                    shareMessage = "Momspresso\n\nCheck out this interesting blog post " + "\"" +
                             recommendationsList.get(position).getTitle() + "\" by " + recommendationsList.get(position).getUserName() + ".";
                 } else {
-                    shareMessage = "mycity4kids\n\nCheck out this interesting blog post " + "\"" +
+                    shareMessage = "Momspresso\n\nCheck out this interesting blog post " + "\"" +
                             recommendationsList.get(position).getTitle() + "\" by " + recommendationsList.get(position).getUserName() + ".\nRead Here: " + shareUrl;
                 }
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
-                startActivity(Intent.createChooser(shareIntent, "mycity4kids"));
+                startActivity(Intent.createChooser(shareIntent, "Momspresso"));
                 if (authorId.equals(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId())) {
                     Utils.pushShareArticleEvent(getActivity(), "PrivateLikedScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", recommendationsList.get(position).getId(),
                             recommendationsList.get(position).getUserId() + "~" + recommendationsList.get(position).getUserName(), "-");

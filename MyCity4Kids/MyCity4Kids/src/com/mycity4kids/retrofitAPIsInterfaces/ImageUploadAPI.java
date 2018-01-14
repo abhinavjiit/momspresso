@@ -3,6 +3,7 @@ package com.mycity4kids.retrofitAPIsInterfaces;
 import com.mycity4kids.models.forgot.CommonResponse;
 import com.mycity4kids.models.response.ImageUploadResponse;
 
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -15,10 +16,17 @@ import retrofit2.http.Part;
  */
 public interface ImageUploadAPI {
     @Multipart
-  //  @POST("apiblogs/uploadImage")
+    //  @POST("apiblogs/uploadImage")
     @POST("v1/uploadImage/")
     Call<ImageUploadResponse> uploadImage(
-          //  @Part("user_id") RequestBody user_id,
+            //  @Part("user_id") RequestBody user_id,
             @Part("type") RequestBody imageType,
             @Part("file\";filename=\"pp.png\" ") RequestBody image);
+
+    @Multipart
+    @POST("v1/uploadImage/")
+    Call<ResponseBody> upload(
+            @Part("description") RequestBody description,
+            @Part MultipartBody.Part file
+    );
 }

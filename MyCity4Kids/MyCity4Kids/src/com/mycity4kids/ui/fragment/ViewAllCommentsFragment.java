@@ -57,7 +57,7 @@ public class ViewAllCommentsFragment extends BaseFragment implements View.OnClic
         tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
 
         tabLayout.addTab(tabLayout.newTab().setText("Facebook"));
-        tabLayout.addTab(tabLayout.newTab().setText("Mycity4kids"));
+        tabLayout.addTab(tabLayout.newTab().setText("Momspresso"));
 
         AppUtils.changeTabsFont(getActivity(), tabLayout);
 //        wrapTabIndicatorToTitle(tabLayout, 25, 25);

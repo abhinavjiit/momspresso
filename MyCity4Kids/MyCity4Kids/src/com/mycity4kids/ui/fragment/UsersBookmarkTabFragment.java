@@ -198,14 +198,14 @@ public class UsersBookmarkTabFragment extends BaseFragment implements UsersBookm
                         bookmarksList.get(position).getBlogPageSlug(), bookmarksList.get(position).getTitleSlug());
                 String shareMessage;
                 if (StringUtils.isNullOrEmpty(shareUrl)) {
-                    shareMessage = "mycity4kids\n\nCheck out this interesting blog post " + "\"" +
+                    shareMessage = "Momspresso\n\nCheck out this interesting blog post " + "\"" +
                             bookmarksList.get(position).getTitle() + "\" by " + bookmarksList.get(position).getUserName() + ".";
                 } else {
-                    shareMessage = "mycity4kids\n\nCheck out this interesting blog post " + "\"" +
+                    shareMessage = "Momspresso\n\nCheck out this interesting blog post " + "\"" +
                             bookmarksList.get(position).getTitle() + "\" by " + bookmarksList.get(position).getUserName() + ".\nRead Here: " + shareUrl;
                 }
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
-                startActivity(Intent.createChooser(shareIntent, "mycity4kids"));
+                startActivity(Intent.createChooser(shareIntent, "Momspresso"));
                 Utils.pushShareArticleEvent(getActivity(), "BookmarkedScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", bookmarksList.get(position).getId(),
                         bookmarksList.get(position).getUserId() + "~" + bookmarksList.get(position).getUserName(), "-");
                 break;

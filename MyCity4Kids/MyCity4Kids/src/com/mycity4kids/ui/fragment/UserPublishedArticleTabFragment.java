@@ -234,14 +234,14 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
                         articleDataModelsNew.get(position).getBlogPageSlug(), articleDataModelsNew.get(position).getTitleSlug());
                 String shareMessage;
                 if (StringUtils.isNullOrEmpty(shareUrl)) {
-                    shareMessage = "mycity4kids\n\nCheck out this interesting blog post " + "\"" +
+                    shareMessage = "Momspresso\n\nCheck out this interesting blog post " + "\"" +
                             articleDataModelsNew.get(position).getTitle() + "\" by " + articleDataModelsNew.get(position).getUserName() + ".";
                 } else {
-                    shareMessage = "mycity4kids\n\nCheck out this interesting blog post " + "\"" +
+                    shareMessage = "Momspresso\n\nCheck out this interesting blog post " + "\"" +
                             articleDataModelsNew.get(position).getTitle() + "\" by " + articleDataModelsNew.get(position).getUserName() + ".\nRead Here: " + shareUrl;
                 }
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
-                startActivity(Intent.createChooser(shareIntent, "mycity4kids"));
+                startActivity(Intent.createChooser(shareIntent, "Momspresso"));
                 if (isPrivateProfile) {
                     Utils.pushShareArticleEvent(getActivity(), "PrivateUserArticlesScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", articleDataModelsNew.get(position).getId(),
                             authorId + "~" + articleDataModelsNew.get(position).getUserName(), "-");

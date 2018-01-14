@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">mycity4kids</string>
+    <string name="app_name">Momspresso</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="plus_generic_error">Sign in with Google is not available.</string>
@@ -180,7 +180,7 @@
 <html>
  <head></head>
  <body style="text-align:justify;">
- If you enjoy using the mycity4kids Family Organizer, please take a moment to rate it. Thank you for your support !!!
+ If you enjoy using the Momspresso Family Organizer, please take a moment to rate it. Thank you for your support !!!
  </body>
 </html>
 ]]>
@@ -192,7 +192,7 @@
     <string name="later">LATER</string>
     <string name="exit_appointment">Your appointment details won\'t be saved. Are you sure you want to exit?</string>
 
-    <string name="update_desctiption">A new, Enhanced version of the mycity4Kids app is ready for installation.</string>
+    <string name="update_desctiption">A new, Enhanced version of the Momspresso app is ready for installation.</string>
     <string-array name="location_array">
         <item name="delhi/ncr">Delhi/NCR </item>
         <item name="banglore"> Balglore</item>
@@ -224,10 +224,10 @@
     <string name="pick_seattle_place">Pick a Seattle Place</string>
     <!-- <string name="app_id">1497460137141503</string> -->
     <string name="exception">Exception: %1$s</string>
-    <string name="description_article">I just have found an amazing article about parenting and kids at mycity4kids. To know more, please visit.</string>
-    <string name="description_blog">I just have found an amazing blog about parenting and kids at mycity4kids. To know more, please visit.</string>
+    <string name="description_article">I just have found an amazing article about parenting and kids at Momspresso. To know more, please visit.</string>
+    <string name="description_blog">I just have found an amazing blog about parenting and kids at Momspresso. To know more, please visit.</string>
     <string name="description_common">I just discovered something interesting - Check it out here</string>
-    <string name="post_title">mycity4kids</string>
+    <string name="post_title">Momspresso</string>
     <string name="loading_">Loading...</string>
 
     <string name="family_name">Family Name</string>
@@ -249,7 +249,7 @@
     <string name="device_setting">DEVICE SETTINGS</string>
     <string name="notifications">NOTIFICATIONS</string>
 
-    <string name="mycity_forkids">Welcome to mycity4kids!</string>
+    <string name="mycity_forkids">Welcome to Momspresso!</string>
     <string name="organise_urkids">Organize your kids  daily schedule with a family</string>
     <string name="organise_todos">Organize your familys to do list.</string>
     <string name="existing_email">EXISTING EMAIL ACCOUNT?SIGNIN HERE</string>
@@ -392,7 +392,7 @@
     <string name="analytics.rank.label">Your Rank</string>
     <string name="analytics.followers.label">Followers</string>
     <string name="analytics.engagement.label">Engagement</string>
-    <string name="analytics.engagement.comments_disclaimer">*No. of comments include Facebook and mycity4kids.</string>
+    <string name="analytics.engagement.comments_disclaimer">*No. of comments include Facebook and Momspresso.</string>
 
     <string name="videos.dialog.title">Choose a video to upload</string>
     <string name="videos.upload_option.camera">Take video</string>
@@ -482,7 +482,7 @@
     <string name="video_saved_at">Video saves at : $%1s</string>
 
     <string name="upload_video.tutorial.title">FUNNY HOME VIDEOS</string>
-    <string name="upload_video.tutorial.description">mycity4kids is happy to introducing a new feature which lets you share your homemade videos with our vast parenting community.\nAll you need to do is pull out all your funny and original home videos and upload them in quick, easy steps guided by our extremely user-friendly interface. Do make sure that these are less than a minute in length.</string>
+    <string name="upload_video.tutorial.description">Momspresso is happy to introducing a new feature which lets you share your homemade videos with our vast parenting community.\nAll you need to do is pull out all your funny and original home videos and upload them in quick, easy steps guided by our extremely user-friendly interface. Do make sure that these are less than a minute in length.</string>
     <string name="upload_video.tutorial.learn_more">Learn more</string>
     <string name="upload_video.tutorial.instruction">You can simply add videos by going to the 3 bar menu and pressing on \'Add Videos\'.</string>
     <string name="upload_video.tutorial.see_what_people_are_sharing">See what people are sharing</string>
@@ -491,7 +491,7 @@
     <string name="publish_article.upload_image.click_to_upload_picture">Click to upload picture</string>
     <string name="publish_article.upload_image.change_photo">Change Image</string>
     <string name="publish_article.upload_image.please_upload_or_choose_image">Please upload a picture or choose from the images shown below to continue</string>
-    <string name="copyright_mycity4kids_2016">Copyright &#169; mycity4kids 2017</string>
+    <string name="copyright_momspresso_2016">Copyright &#169; Momspresso 2017</string>
     <string name="publish_article.complete_profile.title">Complete Your Profile</string>
     <string name="publish_article.complete_profile.paid_assignment">Be eligible for paid writing assignments</string>
     <string name="publish_article.complete_profile.hint_city_name">City Name</string>
@@ -758,7 +758,7 @@
     <string-array name="become_blogger_desc_array">
         <item>You are one click away from sharing your thoughts, opinions, and stories with India\'s largest parenting community, in the language of your choice. With a reach of over 8 million Mums per month, your voice can be the source of hope, inspiration, comfort and knowledge.</item>
         <item>You can share your parenting stories via the website or our IOS and Android app. Express yourself in the language of your choice - English, Hindi, Bengali, Marathi, Telugu or Tamil.</item>
-        <item>mycity4kids does not pay each blogger on publishing their own posts. We do however offer paid writing assignments which are commissioned by brands. This is offered to bloggers based on the quality of content they produce.</item>
+        <item>Momspresso does not pay each blogger on publishing their own posts. We do however offer paid writing assignments which are commissioned by brands. This is offered to bloggers based on the quality of content they produce.</item>
         <item>Whether your story is about parenthood, womenhood, relationships, struggles, joys or personal well-being, this is the platform to write about it. Join the 3500+ Mums in seeking &amp; sharing advice, opinions and recommendations.\n Do refrain from publishing copied or \'slightly modified\' content.</item>
     </string-array>
 

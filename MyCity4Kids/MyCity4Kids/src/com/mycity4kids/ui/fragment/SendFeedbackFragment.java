@@ -62,9 +62,9 @@ public class SendFeedbackFragment extends BaseFragment implements View.OnClickLi
             case R.id.feed_back:
 
                 Intent intentEmail = new Intent(Intent.ACTION_SEND);
-                String[] recipients = {"feedback@mycity4kids.com"};
+                String[] recipients = {"feedback@momspresso.com"};
                 intentEmail.putExtra(Intent.EXTRA_EMAIL, recipients);
-                intentEmail.putExtra(Intent.EXTRA_SUBJECT, "mycity4kids mobile app");
+                intentEmail.putExtra(Intent.EXTRA_SUBJECT, "Momspresso mobile app");
                 //intentEmail.putExtra(Intent.EXTRA_TEXT,"I just downloaded the amazing mycity4kids mobile app. Check it out @: http://www.mycity4kids.com/mobile ");
                 //intentEmail.putExtra(Intent.EXTRA_CC,"ghi");
                 intentEmail.setType("text/html");

@@ -6,6 +6,7 @@ import com.mycity4kids.models.request.UpdateUserDetailsRequest;
 import com.mycity4kids.models.response.UserDetailResponse;
 
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
@@ -23,6 +24,9 @@ public interface UserAttributeUpdateAPI {
 
     @PUT("v1/users/")
     Call<UserDetailResponse> updateProfile(@Body UpdateUserDetailsRequest body);
+
+    @PUT("v1/users/")
+    Call<ResponseBody> updateBlogProfile(@Body UpdateUserDetailsRequest body);
 
     @PUT("v1/users/cityId/")
     Call<UserDetailResponse> updateCity(@Body UpdateUserDetailsRequest body);

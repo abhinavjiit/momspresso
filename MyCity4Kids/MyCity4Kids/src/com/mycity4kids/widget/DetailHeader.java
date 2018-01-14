@@ -183,10 +183,10 @@ public class DetailHeader extends RelativeLayout implements OnClickListener {
                     }
 
 
-                    String shareMessage = "mycity4kids\n\nCheck out this interesting place I came across - " + titleName + ".\n" + webUrl;
+                    String shareMessage = "Momspresso\n\nCheck out this interesting place I came across - " + titleName + ".\n" + webUrl;
                     shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
 
-                    getContext().startActivity(Intent.createChooser(shareIntent, "mycity4kids"));
+                    getContext().startActivity(Intent.createChooser(shareIntent, "Momspresso"));
 
 
                     break;
@@ -268,10 +268,10 @@ public class DetailHeader extends RelativeLayout implements OnClickListener {
                     //  shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, titleName);
 
 
-                    String shareMessage = "I have just discovered " + titleName + " in mycity4kids app. Check it out " + webUrl;
+                    String shareMessage = "I have just discovered " + titleName + " in Momspresso app. Check it out " + webUrl;
                     shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
 
-                    getContext().startActivity(Intent.createChooser(shareIntent, "mycity4kids"));
+                    getContext().startActivity(Intent.createChooser(shareIntent, "Momspresso"));
 
 
                     break;

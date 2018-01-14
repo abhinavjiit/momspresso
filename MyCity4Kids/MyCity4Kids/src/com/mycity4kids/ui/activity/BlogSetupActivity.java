@@ -64,6 +64,9 @@ import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.yalantis.ucrop.UCrop;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -73,6 +76,7 @@ import java.util.Date;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -263,7 +267,7 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
             case R.id.savePublishTextView:
                 Utils.pushBlogSetupSubmitEvent(BlogSetupActivity.this, "BlogSetupScreen", SharedPrefUtils.getUserDetailModel(BlogSetupActivity.this).getDynamoId());
                 if (validateFields()) {
-                    saveCityData();
+//                    saveCityData();
                     saveUserDetails();
                 }
                 break;
@@ -506,29 +510,56 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         showProgressDialog(getResources().getString(R.string.please_wait));
         UserAttributeUpdateAPI userAttributeUpdateAPI = retrofit.create(UserAttributeUpdateAPI.class);
-        Call<UserDetailResponse> call = userAttributeUpdateAPI.updateProfile(updateUserDetail);
+//        Call<UserDetailResponse> call = userAttributeUpdateAPI.updateProfile(updateUserDetail);
+//        call.enqueue(userDetailsUpdateResponseListener);
+
+        Call<ResponseBody> call = userAttributeUpdateAPI.updateBlogProfile(updateUserDetail);
         call.enqueue(userDetailsUpdateResponseListener);
     }
 
-    private Callback<UserDetailResponse> userDetailsUpdateResponseListener = new Callback<UserDetailResponse>() {
+    private Callback<ResponseBody> userDetailsUpdateResponseListener = new Callback<ResponseBody>() {
         @Override
-        public void onResponse(Call<UserDetailResponse> call, retrofit2.Response<UserDetailResponse> response) {
+        public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
             removeProgressDialog();
             if (response == null || response.body() == null) {
                 showToast(getString(R.string.went_wrong));
                 return;
             }
-            UserDetailResponse responseData = response.body();
-            if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                Utils.pushBlogSetupSuccessEvent(BlogSetupActivity.this, "BlogSetupScreen", SharedPrefUtils.getUserDetailModel(BlogSetupActivity.this).getDynamoId());
-                saveCityData();
-            } else {
-                showToast(responseData.getReason());
+
+            try {
+                String resData = new String(response.body().bytes());
+                JSONObject blogUpdateJson = new JSONObject(resData);
+                int code = blogUpdateJson.getInt("code");
+                String status = blogUpdateJson.getString("status");
+                if (code == 200 && Constants.SUCCESS.equals(status)) {
+                    Utils.pushBlogSetupSuccessEvent(BlogSetupActivity.this, "BlogSetupScreen", SharedPrefUtils.getUserDetailModel(BlogSetupActivity.this).getDynamoId());
+                    saveCityData();
+                } else {
+                    showToast("" + blogUpdateJson.getString("reason"));
+                }
+            } catch (IOException e) {
+                showToast(getString(R.string.went_wrong));
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+
+            } catch (JSONException e) {
+                showToast(getString(R.string.went_wrong));
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
             }
+
+//            ResponseBody responseData = response.body();
+//
+//            if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+//                Utils.pushBlogSetupSuccessEvent(BlogSetupActivity.this, "BlogSetupScreen", SharedPrefUtils.getUserDetailModel(BlogSetupActivity.this).getDynamoId());
+//                saveCityData();
+//            } else {
+//                showToast(responseData.getReason());
+//            }
         }
 
         @Override
-        public void onFailure(Call<UserDetailResponse> call, Throwable t) {
+        public void onFailure(Call<ResponseBody> call, Throwable t) {
             removeProgressDialog();
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));

@@ -435,7 +435,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
     @Override
     protected void onStart() {
         super.onStart();
-        if (!StringUtils.isNullOrEmpty(deepLinkURL) && AppConstants.BASE_URL.equalsIgnoreCase("https://api.mycity4kids.com/")) {
+        if (!StringUtils.isNullOrEmpty(deepLinkURL) && AppConstants.BASE_URL.equalsIgnoreCase("https://api.momspresso.com/")) {
             // Connect client
             mClient.connect();
             final String TITLE = mEventOrBusiness == Constants.BUSINESS_PAGE_TYPE ? "Resource Detail" : "Event Detail";
@@ -461,7 +461,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
 
     @Override
     protected void onStop() {
-        if (!StringUtils.isNullOrEmpty(deepLinkURL) && AppConstants.BASE_URL.equalsIgnoreCase("https://api.mycity4kids.com/")) {
+        if (!StringUtils.isNullOrEmpty(deepLinkURL) && AppConstants.BASE_URL.equalsIgnoreCase("https://api.momspresso.com/")) {
             final String TITLE = mEventOrBusiness == Constants.BUSINESS_PAGE_TYPE ? "Resource Detail" : "Event Detail";
             final Uri APP_URI = AppConstants.APP_BASE_URI.buildUpon().appendPath(deepLinkURL).build();
             final Uri WEB_URL = AppConstants.WEB_BASE_URL.buildUpon().appendPath(deepLinkURL).build();
@@ -985,7 +985,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
                         webUrl = "";
                     }
 
-                    String shareMessage = "mycity4kids\n\nCheck out this interesting event " + "\"" + titleName + "\" on " + shareDate + " at " + shareTime + ".\n" + webUrl;
+                    String shareMessage = "Momspresso\n\nCheck out this interesting event " + "\"" + titleName + "\" on " + shareDate + " at " + shareTime + ".\n" + webUrl;
                     shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
                     Utils.pushEvent(BusinessDetailsActivity.this, GTMEventType.SHARE_EVENT_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", "Resource/Event Details");
                     startActivity(Intent.createChooser(shareIntent, "mycity4kids"));

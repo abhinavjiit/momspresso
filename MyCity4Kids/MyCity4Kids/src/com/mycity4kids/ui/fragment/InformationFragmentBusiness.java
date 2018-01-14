@@ -922,9 +922,9 @@ public class InformationFragmentBusiness extends BaseFragment implements OnClick
 
                 shareIntent.putExtra(Intent.EXTRA_SUBJECT, titleName);
 
-                String shareMessage = "I have just discovered " + titleName + " in mycity4kids app. Check it out " + webUrl;
+                String shareMessage = "I have just discovered " + titleName + " in Momspresso app. Check it out " + webUrl;
                 shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
-                getActivity().startActivity(Intent.createChooser(shareIntent, "mycity4kids"));
+                getActivity().startActivity(Intent.createChooser(shareIntent, "Momspresso"));
                 break;
             }
             case R.id.group_lout: {

@@ -199,7 +199,6 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
             progressBar.setVisibility(View.GONE);
             mLodingView.setVisibility(View.GONE);
             isReuqestRunning = false;
-            ArticleTagsImagesResponse responseModel = response.body();
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
@@ -207,6 +206,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                 }
                 return;
             }
+            ArticleTagsImagesResponse responseModel = response.body();
             if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
                 if (responseModel.getData() != null && !responseModel.getData().isEmpty() && responseModel.getData().get(0) != null) {
                     processResponse(responseModel.getData());

@@ -68,7 +68,7 @@ public interface ArticleDetailsAPI {
     @GET("v1/articles/views/{articleId}")
     Call<ViewCountResponse> getViewCount(@Path("articleId") String articleId);
 
-    @GET("v3/comments/fb/{articleId}")
+    @GET("v1/comments/fb/{articleId}")
     Call<FBCommentResponse> getFBComments(@Path("articleId") String articleId,
                                           @Query("pagination") String pagination);
 

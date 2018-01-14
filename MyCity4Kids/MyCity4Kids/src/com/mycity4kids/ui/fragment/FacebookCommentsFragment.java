@@ -94,7 +94,7 @@ public class FacebookCommentsFragment extends BaseFragment {
                 "data-numposts=\"" + NUMBER_OF_COMMENTS + "\" data-order-by=\"reverse_time\">" +
                 "</div> </body> </html>";
 
-        mWebViewComments.loadDataWithBaseURL("http://www.mycity4kids.com", html, "text/html", "UTF-8", null);
+        mWebViewComments.loadDataWithBaseURL("http://www.momspresso.com", html, "text/html", "UTF-8", null);
         mWebViewComments.setMinimumHeight(200);
     }
 

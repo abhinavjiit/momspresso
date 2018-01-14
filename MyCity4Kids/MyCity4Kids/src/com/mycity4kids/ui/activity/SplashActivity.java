@@ -1,4 +1,4 @@
-package com.mycity4kids.ui.activity;
+ package com.mycity4kids.ui.activity;
 
 import android.Manifest;
 import android.accounts.NetworkErrorException;
@@ -129,8 +129,8 @@ public class SplashActivity extends BaseActivity {
        /* mFirebaseAnalytics.setUserProperty("CityId","1");*/
         mClient = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
         // mUrl = Uri.parse("http://www.mycity4kids.com/parenting/kalpana---without-boundaries/article/From-the-Bicycle-to-the-Recycle-days...");
-        mUrl = Uri.parse("android-app://com.mycity4kids/http/mycity4kids.com");
-        mTitle = "mycity4kids";
+        mUrl = Uri.parse("android-app://com.mycity4kids/http/momspresso.com");
+        mTitle = "Momspresso";
         mDescription = "Parenting made easy with Mommy Blogs, Kids Activities and Family Organizer";
         try {
 
@@ -298,7 +298,7 @@ public class SplashActivity extends BaseActivity {
             } else {
                 if (SharedPrefUtils.getAppUpgrade(SplashActivity.this)) {
                     String message = SharedPrefUtils.getAppUgradeMessage(SplashActivity.this);
-                    showUpgradeAppAlertDialog("mycity4kids", message, new OnButtonClicked() {
+                    showUpgradeAppAlertDialog("Momspresso", message, new OnButtonClicked() {
                         @Override
                         public void onButtonCLick(int buttonId) {
                         }
@@ -694,7 +694,7 @@ public class SplashActivity extends BaseActivity {
                         SharedPrefUtils.setAppUgrade(SplashActivity.this, true);
                         String message = responseData.getResult().getData().getMessage();
                         SharedPrefUtils.setAppUgradeMessage(SplashActivity.this, message);
-                        showUpgradeAppAlertDialog("mycity4kids", SharedPrefUtils.getAppUgradeMessage(SplashActivity.this), new OnButtonClicked() {
+                        showUpgradeAppAlertDialog("Momspresso", SharedPrefUtils.getAppUgradeMessage(SplashActivity.this), new OnButtonClicked() {
                             @Override
                             public void onButtonCLick(int buttonId) {
                             }

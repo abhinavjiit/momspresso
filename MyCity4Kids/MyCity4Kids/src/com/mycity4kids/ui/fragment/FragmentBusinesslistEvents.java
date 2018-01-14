@@ -278,7 +278,7 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
     @Override
     public void onStart() {
         super.onStart();
-        if (!StringUtils.isNullOrEmpty(deepLinkURL) && AppConstants.BASE_URL.equalsIgnoreCase("https://api.mycity4kids.com/")) {
+        if (!StringUtils.isNullOrEmpty(deepLinkURL) && AppConstants.BASE_URL.equalsIgnoreCase("https://api.momspresso.com/")) {
             // Connect client
             mClient.connect();
             final String TITLE = screenTitle;
@@ -304,7 +304,7 @@ public class FragmentBusinesslistEvents extends BaseFragment implements View.OnC
 
     @Override
     public void onStop() {
-        if (!StringUtils.isNullOrEmpty(deepLinkURL) && AppConstants.BASE_URL.equalsIgnoreCase("https://api.mycity4kids.com/")) {
+        if (!StringUtils.isNullOrEmpty(deepLinkURL) && AppConstants.BASE_URL.equalsIgnoreCase("https://api.momspresso.com/")) {
             final String TITLE = screenTitle;
             final Uri APP_URI = AppConstants.APP_BASE_URI.buildUpon().appendPath(deepLinkURL).build();
             final Uri WEB_URL = AppConstants.WEB_BASE_URL.buildUpon().appendPath(deepLinkURL).build();

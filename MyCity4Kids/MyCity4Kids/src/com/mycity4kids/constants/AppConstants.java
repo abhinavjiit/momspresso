@@ -12,7 +12,7 @@ public class AppConstants {
     public static final String STAGING_URL = "http://52.220.87.141/";
 
     //            public static final String LIVE_URL = "http://52.220.87.141/";
-    public static final String LIVE_URL = "https://api.mycity4kids.com/";
+    public static final String LIVE_URL = "https://api.momspresso.com/";
 
     public static final String PHOENIX_STAGING_URL = "http://52.77.116.39";
 
@@ -148,11 +148,11 @@ public class AppConstants {
 
     public static final String DEEP_LINKING_URL = BASE_URL + "apicommon/get_url_data?";
 
-    public static final Uri APP_BASE_URI = Uri.parse("android-app://com.mycity4kids/https/www.mycity4kids.com/");
-    public static final Uri WEB_BASE_URL = Uri.parse("https://www.mycity4kids.com/");
+    public static final Uri APP_BASE_URI = Uri.parse("android-app://com.mycity4kids/https/www.momspresso.com/");
+    public static final Uri WEB_BASE_URL = Uri.parse("https://www.momspresso.com/");
 
-    public static final String ARTICLE_SHARE_URL = "https://www.mycity4kids.com/" + "parenting/";
-    public static final String VIDEO_ARTICLE_SHARE_URL = "https://www.mycity4kids.com/" + "parenting/";
+    public static final String ARTICLE_SHARE_URL = "https://www.momspresso.com/" + "parenting/";
+    public static final String VIDEO_ARTICLE_SHARE_URL = "https://www.momspresso.com/" + "parenting/";
     public static final String VIDEO_UPLOAD_URL = LIVE_URL + "v1/media/videos/";
 //    public static final String ARTICLE_SHARE_URL = BASE_URL + "newparenting/";
 
@@ -455,6 +455,7 @@ public class AppConstants {
     public static final String DEEPLINK_ADD_FUNNY_VIDEO_URL = "mc4k://www.mycity4kids.com/addfunnyvideo";
     public static final String DEEPLINK_MOMSPRESSO_ADD_FUNNY_VIDEO_URL = "mc4k://www.momspresso.com/addfunnyvideo";
     public static final String DEEPLINK_UPCOMING_EVENTS = "/Events_el";
+    public static final String DEEPLINK_SETUP_BLOG = "setupablog";
 
     public static final String IGNORE_TAG = "ignore";
     public static final String EDITOR_PICKS_CATEGORY_ID = "category-66b6883fd0434683b053f18aa4d52b59";

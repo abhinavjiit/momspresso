@@ -1068,9 +1068,9 @@ public class InformationFragment extends BaseFragment implements OnClickListener
 
                 shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, titleName);
 
-                String shareMessage = "I have just discovered " + titleName + " in mycity4kids app. Check it out " + webUrl;
+                String shareMessage = "I have just discovered " + titleName + " in Momspresso app. Check it out " + webUrl;
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
-                getActivity().startActivity(Intent.createChooser(shareIntent, "mycity4kids"));
+                getActivity().startActivity(Intent.createChooser(shareIntent, "Momspresso"));
                 break;
             }
             case R.id.group_lout: {
