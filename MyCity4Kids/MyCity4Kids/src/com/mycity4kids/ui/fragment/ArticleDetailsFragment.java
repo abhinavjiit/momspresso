@@ -1039,11 +1039,16 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
     private void openViewCommentDialog() {
         try {
+            long createdTime = Long.parseLong(detailData.getCreated());
             ViewAllCommentsFragment commentFrag = new ViewAllCommentsFragment();
             commentFrag.setTargetFragment(this, 0);
             Bundle _args = new Bundle();
             _args.putString("mycityCommentURL", commentMainUrl);
-            _args.putString("fbCommentURL", shareUrl);
+            if (createdTime < AppConstants.MYCITY_TO_MOMSPRESSO_SWITCH_TIME) {
+                _args.putString("fbCommentURL", shareUrl.replace("www.momspresso.com", "www.mycity4kids.com"));
+            } else {
+                _args.putString("fbCommentURL", shareUrl);
+            }
             _args.putString(Constants.ARTICLE_ID, articleId);
             _args.putString(Constants.AUTHOR, authorId + "~" + author);
             commentFrag.setArguments(_args);
@@ -1052,6 +1057,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         } catch (Exception e) {
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
+            if (isAdded())
+                ((ArticleDetailsContainerActivity) getActivity()).showToast("Unable to load comments");
         }
     }
 
@@ -1307,7 +1314,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         public void onResponse(Call<ArticleDetailResult> call, retrofit2.Response<ArticleDetailResult> response) {
             removeProgressDialog();
             if (response == null || response.body() == null) {
-                hitArticleDetailsS3API();
+                getArticleDetailsWebserviceAPI();
                 return;
             }
             try {
@@ -1333,7 +1340,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 removeProgressDialog();
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-                hitArticleDetailsS3API();
+                getArticleDetailsWebserviceAPI();
             }
 
         }
@@ -1342,7 +1349,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         public void onFailure(Call<ArticleDetailResult> call, Throwable t) {
             removeProgressDialog();
             handleExceptions(t);
-            hitArticleDetailsS3API();
+            getArticleDetailsWebserviceAPI();
         }
     };
 

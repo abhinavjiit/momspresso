@@ -66,19 +66,23 @@ public class IdTokenLoginActivity extends BaseActivity implements View.OnClickLi
 
     private EditText idEditText, tokenEditText;
     private TextView loginTextView;
-    private TextView shavetLogin, monikaLogin, priyankaLogin;
     private String loginUser;
-    UserInfo uInfo = new UserInfo();
+    private UserInfo uInfo = new UserInfo();
 
-    private String[] userNameArray = {"bbb", "Shavet", "Monika", "Priyanka", "Rakhi", "A.K Talwar", "Vinod Passi", "Pretty Arun", "Tina Sequeira", "Chiragi"};
+    private String[] userNameArray = {"bbb", "Shavet", "Monika", "Priyanka", "Rakhi", "A.K Talwar", "Vinod Passi", "Pretty Arun", "Tina Sequeira", "Chiragi", "Monika Mahecha", "Prachi Mendiratta",
+            "shweta shrivastva"};
     private String[] userIdArray = {"6f57d7cb01fa46c89bf85e3d2ade7de3", "43f6a6e57f3d4ba0b41bab18509eae1f", "9b5032cd504b4c20a9f543059f18e2e6", "b1b10f47e32e4fdaa182e850f715414b", "61de7db0a6114272a906662f47af78b1",
-            "92bf1a5a7dc2436dbca03c4f00e057a9", "e0e2fefd0eaf4f1996411c79454839f7", "382b2fe057d749ae8b1599b1dbbfba5f", "e9e055218682433faf10377c0266e412", "5cc5d90c19ab4d858a47d5ecf04a95c1"};
+            "92bf1a5a7dc2436dbca03c4f00e057a9", "e0e2fefd0eaf4f1996411c79454839f7", "382b2fe057d749ae8b1599b1dbbfba5f", "e9e055218682433faf10377c0266e412", "5cc5d90c19ab4d858a47d5ecf04a95c1",
+            "f76d7bc8f996409696ed552a4e102c1b", "1676bec922db473fb0c708c984730f4a", "e576fb0752464a1898dc3673cf6584b4"};
     private String[] mc4kArray = {"acf825688fc4a97f3ddc046ec7ba9af6", "438d2aeb4d53b871e5204b5ee4b6c150", "ya29.Ci9rAwTDTDT7jAe0CfLZW5kgceRtPIPdOH0sirQpl0jKxRKSmsUvO4Py_P3kkcPnIQ", "f0eb6d95a80583fc4b98aabd820aa037",
             "c2cdb6540e8b3b694717ee0ca0f1047d", "ya29.GlvVBH8EGj-G3yQKgUuVZFy944ILJQLXEULCczUO6NCqrdQfoVKU-R9ezAD2z3PzniXzlojsxx8I51kOnD7KDM5W_eUFSxKpqWYNDTSPwbs01N34pirUz5bdmM0n",
             "EAAC7f1na98IBAEQabXwsYkXeCwx0ZApOZA4v0Bq2RSDqejXffIrg5HM5QvsTQqowzCVNKG6CjXev4Uc9a6WqPwxTT3abYqLMdEKQxkZBZCeEZCqttgGiGZCZC4b1HDNbODezV40RYuzhN81UZBG2yHh6yQ9P7mOs4b69hrvZAWZAJIj7kzPwhKTQJNTGWQoZCDY1hc4T7BqCOBuU7e3Fsi6l5K5F2kioPH0Q1bvd2qGZAhbGmWYVyFxxZCsN7",
             "ya29.Gls8BYKEi2wvLR-Zet7XKYc1zLAWdpVyO5hd371G6qbWY7K5qHqRr9uO9DzR2i3iAaPBfiLgoNFiDOssLpMsFkJhbGm0V_Ml676CsBKdoQrto_Iqqjv2ZlXAD7wZ",
             "ya29.Ci-lA5I6Px77LW78L-IOfRj6fF6OqCE8rfCnwqhvywZfsVK_ASLAp_B6_PZBCIwoKA",
-            "EAAC7f1na98IBAMmZBIKXBiWBvVgVtrN6004aNpmZA4GJ1Fr9FdhVpZCZAmSkSdsZAEq6OTDuInnINxbc3s5LfWHHyA54rY32VusGg3HFBfQsD1k8V7QGZBZClMZCxeFIkey7AhcigEJJL0TiDCuDKjTulzmcBGkjuIVz6WQ84QRNuDcx2y1ffJaKhtXzzdqzlR3NssoPfIzhZB5NLsDjS2xITnP12fdDZBUoinA5qeTv26wAZDZD"};
+            "EAAC7f1na98IBAMmZBIKXBiWBvVgVtrN6004aNpmZA4GJ1Fr9FdhVpZCZAmSkSdsZAEq6OTDuInnINxbc3s5LfWHHyA54rY32VusGg3HFBfQsD1k8V7QGZBZClMZCxeFIkey7AhcigEJJL0TiDCuDKjTulzmcBGkjuIVz6WQ84QRNuDcx2y1ffJaKhtXzzdqzlR3NssoPfIzhZB5NLsDjS2xITnP12fdDZBUoinA5qeTv26wAZDZD",
+            "619ac30df4af5681a3d579ba9f07e65a78d1539b", "9eb5452942e9eb183cbe8c908bc3699b",
+            "EAAC7f1na98IBAF9QLv1JrmkOkAcg1zReZA7VYHMmfqeFcp7eaZBMnCN6miZCt2YQwf6S2hXyXMrWsBJw6x8XI2at336lovzDtuxLWpVRjYjz0AFiW2z8vO0eWSIYK2LOYkmLtiKXhTbjnN4NpdclpZA9TGkdkhqIJU3rpCnidgHm6eqEdLcJOFC6tVzUSWNbdQP2BzJQpngawsTYiU7XDWPt7ZCZB06CJkhGyzxjZAzVPbdIOPayupZC"
+    };
     private LinearLayout userContainer;
 
     @Override
@@ -118,15 +122,6 @@ public class IdTokenLoginActivity extends BaseActivity implements View.OnClickLi
                 }
                 logoutCurrentUser();
                 break;
-
-//            case R.id.monikaLogin:
-//                loginUser = "monika";
-//                logoutCurrentUser();
-//                break;
-//            case R.id.priyankaLogin:
-//                loginUser = "priyanka";
-//                logoutCurrentUser();
-//                break;
             case R.id.loginTextView:
                 loginUser = "";
                 uInfo.setDynamoId(idEditText.getText().toString());

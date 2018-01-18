@@ -223,7 +223,7 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
             case R.id.editPublishedTextView:
                 Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
                 ArticleDetailsAPI articleDetailsAPI = retrofit.create(ArticleDetailsAPI.class);
-                Call<ArticleDetailResult> call = articleDetailsAPI.getArticleDetailsFromS3(articleDataModelsNew.get(position).getId());
+                Call<ArticleDetailResult> call = articleDetailsAPI.getArticleDetailsFromRedis(articleDataModelsNew.get(position).getId(), "articleId");
                 call.enqueue(articleDetailResponseCallback);
                 break;
             case R.id.shareArticleImageView:
