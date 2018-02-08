@@ -1,4 +1,4 @@
- package com.mycity4kids.ui.activity;
+package com.mycity4kids.ui.activity;
 
 import android.Manifest;
 import android.accounts.NetworkErrorException;
@@ -356,7 +356,7 @@ public class SplashActivity extends BaseActivity {
         } else {
             Log.e("MYCITY4KIDS", "USER logged Out");
             if (!isConfigurationAvailable) {
-                showAlertDialog("Error", "Something went wrong from server side!", new OnButtonClicked() {
+                showAlertDialog(getString(R.string.error), getString(R.string.server_went_wrong), new OnButtonClicked() {
                     @Override
                     public void onButtonCLick(int buttonId) {
                         finish();
@@ -486,7 +486,7 @@ public class SplashActivity extends BaseActivity {
             if (response == null || null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                 Crashlytics.logException(nee);
-                showToast("Something went wrong from server");
+                showToast(getString(R.string.server_went_wrong));
                 gotoDashboard();
                 return;
             }
@@ -684,7 +684,7 @@ public class SplashActivity extends BaseActivity {
         @Override
         public void onResponse(Call<ForceUpdateModel> call, retrofit2.Response<ForceUpdateModel> response) {
             if (response == null) {
-                showToast("Something went wrong from server");
+                showToast(getString(R.string.server_went_wrong));
                 return;
             }
             try {

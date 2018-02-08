@@ -35,6 +35,7 @@ import com.mycity4kids.listener.OnButtonClicked;
 import com.mycity4kids.models.parentingstop.ArticleBlogFollowRequest;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.sync.SyncUserInfoService;
+import com.mycity4kids.utils.LocaleManager;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -62,6 +63,10 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen 
 
     }
 
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleManager.setLocale(base));
+    }
 
     public void replaceFragment(final Fragment fragment, Bundle bundle, boolean isAddToBackStack) {
         if (bundle != null) {

@@ -118,7 +118,7 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
 
     private void getUserPublishedArticles() {
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
-            ((UserPublishedAndDraftsActivity) getActivity()).showToast("No connectivity available");
+            ((UserPublishedAndDraftsActivity) getActivity()).showToast(getString(R.string.connectivity_unavailable));
             return;
         }
 
@@ -234,10 +234,10 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
                         articleDataModelsNew.get(position).getBlogPageSlug(), articleDataModelsNew.get(position).getTitleSlug());
                 String shareMessage;
                 if (StringUtils.isNullOrEmpty(shareUrl)) {
-                    shareMessage = "Momspresso\n\nCheck out this interesting blog post " + "\"" +
+                    shareMessage = getString(R.string.check_out_blog) + "\"" +
                             articleDataModelsNew.get(position).getTitle() + "\" by " + articleDataModelsNew.get(position).getUserName() + ".";
                 } else {
-                    shareMessage = "Momspresso\n\nCheck out this interesting blog post " + "\"" +
+                    shareMessage = getString(R.string.check_out_blog) + "\"" +
                             articleDataModelsNew.get(position).getTitle() + "\" by " + articleDataModelsNew.get(position).getUserName() + ".\nRead Here: " + shareUrl;
                 }
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);

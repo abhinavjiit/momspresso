@@ -1058,7 +1058,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
             if (isAdded())
-                ((ArticleDetailsContainerActivity) getActivity()).showToast("Unable to load comments");
+                ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.unable_to_load_comment));
         }
     }
 
@@ -1259,13 +1259,13 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
         if (isFollowing) {
             isFollowing = false;
-            followClick.setText("FOLLOW");
+            followClick.setText(getString(R.string.ad_follow_author));
             Utils.pushUnfollowAuthorEvent(getActivity(), "DetailArticleScreen", userDynamoId, authorId + "~" + author);
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.unfollowUser(request);
             followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback);
         } else {
             isFollowing = true;
-            followClick.setText("FOLLOWING");
+            followClick.setText(getString(R.string.ad_following_author));
             Utils.pushFollowAuthorEvent(getActivity(), "DetailArticleScreen", userDynamoId, authorId + "~" + author);
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.followUser(request);
             followUnfollowUserResponseCall.enqueue(followUserResponseCallback);
@@ -1443,7 +1443,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             removeProgressDialog();
             if (response == null || response.body() == null) {
                 if (isAdded())
-                    ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
+                    ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                ;
                 return;
             }
             try {
@@ -1484,10 +1485,12 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             }
             if (isError) {
                 if (null != response && response.getResponseCode() != 999)
-                    ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
+                    ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                ;
             } else {
                 if (response == null) {
-                    ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
+                    ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                    ;
                     removeProgressDialog();
                     return;
                 }
@@ -1500,7 +1503,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     Crashlytics.logException(jse);
                     Log.d("JsonSyntaxException", Log.getStackTraceString(jse));
                     if (isAdded())
-                        ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
+                        ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                    ;
                     removeProgressDialog();
                     return;
                 }
@@ -1585,7 +1589,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         Call<ArticleListingResponse> callAuthorRecentcall = articleDetailsAPI.getPublishedArticles(authorId, 0, 1, 4);
                         callAuthorRecentcall.enqueue(bloggersArticleResponseCallback);
                     } else {
-                        recentAuthorArticleHeading.setText("RELATED ARTICLES");
+                        recentAuthorArticleHeading.setText(getString(R.string.recent_article));
                         recentAuthorArticles.setVisibility(View.VISIBLE);
                         Collections.shuffle(dataList);
                         iSwipeRelated.onRelatedSwipe(dataList);
@@ -1653,7 +1657,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             }
             if (response == null || response.body() == null) {
                 if (isAdded())
-                    ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
+                    ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                ;
                 return;
             }
 
@@ -1734,7 +1739,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                 Crashlytics.logException(nee);
                 if (isAdded())
-                    ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
+                    ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                ;
                 return;
             }
             try {
@@ -1890,7 +1896,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                 Crashlytics.logException(nee);
                 if (isAdded())
-                    ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
+                    ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                ;
                 return;
             }
             try {
@@ -1927,7 +1934,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 if (!isAdded()) {
                     return;
                 }
-                ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
+                ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                ;
                 return;
             }
 
@@ -1954,11 +1962,11 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 } else {
                     if ("0".equals(responseData.getData().getResult().getIsFollowed())) {
                         followClick.setEnabled(true);
-                        followClick.setText("FOLLOW");
+                        followClick.setText(getString(R.string.ad_follow_author));
                         isFollowing = false;
                     } else {
                         followClick.setEnabled(true);
-                        followClick.setText("FOLLOWING");
+                        followClick.setText(getString(R.string.ad_following_author));
                         isFollowing = true;
                     }
                 }
@@ -1981,7 +1989,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 if (!isAdded()) {
                     return;
                 }
-                ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
+                ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                ;
                 return;
             }
 
@@ -2030,7 +2039,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         public void onResponse(Call<AddBookmarkResponse> call, retrofit2.Response<AddBookmarkResponse> response) {
             if (response == null || null == response.body()) {
                 if (isAdded())
-                    ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
+                    ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                ;
                 return;
             }
             AddBookmarkResponse responseData = response.body();
@@ -2048,7 +2058,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         public void onResponse(Call<ArticleRecommendationStatusResponse> call, retrofit2.Response<ArticleRecommendationStatusResponse> response) {
             if (response == null || null == response.body()) {
                 if (isAdded())
-                    ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
+                    ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                ;
                 return;
             }
             ArticleRecommendationStatusResponse responseData = response.body();
@@ -2080,7 +2091,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 if (!isAdded()) {
                     return;
                 }
-                ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
+                ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                ;
                 return;
             }
 
@@ -2134,7 +2146,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             if (t instanceof UnknownHostException) {
                 ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.error_network));
             } else if (t instanceof SocketTimeoutException) {
-                ((ArticleDetailsContainerActivity) getActivity()).showToast("connection timed out");
+                ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.connection_timeout));
             } else {
 //                ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
             }
@@ -2156,7 +2168,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
                 } else {
-                    followClick.setText("FOLLOW");
+                    followClick.setText(getString(R.string.ad_follow_author));
                     isFollowing = false;
                 }
             } catch (Exception e) {
@@ -2189,7 +2201,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
                 } else {
-                    followClick.setText("FOLLOWING");
+                    followClick.setText(getString(R.string.ad_following_author));
                     isFollowing = true;
                 }
             } catch (Exception e) {

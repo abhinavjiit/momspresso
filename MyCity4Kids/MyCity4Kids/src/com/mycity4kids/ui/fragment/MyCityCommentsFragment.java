@@ -332,7 +332,7 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                 Crashlytics.logException(nee);
                 if (isAdded())
-                    ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
+                    ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));;
                 isLoading = false;
                 commentType = "fb";
                 commentURL = "http";
@@ -372,12 +372,12 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
                 Crashlytics.logException(jsonexception);
                 Log.d("JSONException", Log.getStackTraceString(jsonexception));
                 if (isAdded())
-                    ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong while parsing response from server");
+                    ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));;
             } catch (Exception ex) {
                 Crashlytics.logException(ex);
                 Log.d("MC4kException", Log.getStackTraceString(ex));
                 if (isAdded()) {
-                    ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
+                    ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));;
                 }
             }
         }
@@ -395,7 +395,7 @@ public class MyCityCommentsFragment extends BaseFragment implements OnClickListe
             removeProgressDialog();
             if (response == null || null == response.body()) {
                 if (isAdded())
-                    ((ArticleDetailsContainerActivity) getActivity()).showToast("Something went wrong from server");
+                    ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));;
                 return;
             }
 

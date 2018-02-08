@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
@@ -15,6 +16,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.ui.adapter.AppSettingsPagerAdapter;
 import com.mycity4kids.utils.AppUtils;
+import com.mycity4kids.utils.LocaleManager;
 
 /**
  * Created by hemant on 19/7/17.
@@ -94,11 +96,22 @@ public class AppSettingsActivity extends BaseActivity implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.searchAllImageView:
-                Intent searchIntent = new Intent(this, SearchAllActivity.class);
-                searchIntent.putExtra(Constants.FILTER_NAME, "");
-                searchIntent.putExtra(Constants.TAB_POSITION, 0);
-                startActivity(searchIntent);
+                setNewLocale("hi", false);
                 break;
         }
+    }
+
+    private boolean setNewLocale(String language, boolean restartProcess) {
+        LocaleManager.setNewLocale(this, language);
+
+        Intent i = new Intent(this, SplashActivity.class);
+        startActivity(i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
+
+        if (restartProcess) {
+            System.exit(0);
+        } else {
+            Toast.makeText(this, "Activity restarted", Toast.LENGTH_SHORT).show();
+        }
+        return true;
     }
 }

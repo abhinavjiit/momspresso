@@ -79,7 +79,7 @@ public class UsersRecommendationTabFragment extends BaseFragment implements User
 
     private void getUsersRecommendations() {
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
-            ((UserPublishedAndDraftsActivity) getActivity()).showToast("No connectivity available");
+            ((UserPublishedAndDraftsActivity) getActivity()).showToast(getString(R.string.connectivity_unavailable));
             return;
         }
 
@@ -148,10 +148,10 @@ public class UsersRecommendationTabFragment extends BaseFragment implements User
                         recommendationsList.get(position).getBlogPageSlug(), recommendationsList.get(position).getTitleSlug());
                 String shareMessage;
                 if (StringUtils.isNullOrEmpty(shareUrl)) {
-                    shareMessage = "Momspresso\n\nCheck out this interesting blog post " + "\"" +
+                    shareMessage = getString(R.string.check_out_blog) + "\"" +
                             recommendationsList.get(position).getTitle() + "\" by " + recommendationsList.get(position).getUserName() + ".";
                 } else {
-                    shareMessage = "Momspresso\n\nCheck out this interesting blog post " + "\"" +
+                    shareMessage = getString(R.string.check_out_blog) + "\"" +
                             recommendationsList.get(position).getTitle() + "\" by " + recommendationsList.get(position).getUserName() + ".\nRead Here: " + shareUrl;
                 }
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);

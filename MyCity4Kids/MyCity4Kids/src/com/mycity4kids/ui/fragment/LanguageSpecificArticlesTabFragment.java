@@ -269,7 +269,7 @@ public class LanguageSpecificArticlesTabFragment extends BaseFragment implements
                     recyclerAdapter.setNewListData(dataList);
                     recyclerAdapter.notifyDataSetChanged();
                     noBlogsTextView.setVisibility(View.VISIBLE);
-                    noBlogsTextView.setText("No articles found");
+                    noBlogsTextView.setText(getString(R.string.no_articles_found));
                 }
             } else {
                 noBlogsTextView.setVisibility(View.GONE);

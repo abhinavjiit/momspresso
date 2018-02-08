@@ -66,7 +66,6 @@
                     app:fontName="oswald.ttf" />
 
                 <com.mycity4kids.widget.CustomFontTextView
-                    android:id="@+id/takeMeThereTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/trendingHeaderTopics"
@@ -102,7 +101,6 @@
             app:cardElevation="0dp">
 
             <RelativeLayout
-                android:id="@+id/titleContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/topics_border_bg"
@@ -123,7 +121,6 @@
                     app:fontName="oswald_regular.ttf" />
 
                 <RelativeLayout
-                    android:id="@+id/articleImageViewContainer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/txvArticleTitle"

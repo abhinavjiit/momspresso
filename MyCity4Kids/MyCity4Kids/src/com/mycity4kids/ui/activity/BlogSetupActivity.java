@@ -782,14 +782,14 @@ public class BlogSetupActivity extends BaseActivity implements View.OnClickListe
                                          .error(R.drawable.family_xxhdpi).transform(new RoundedTransformation()).into(profilePicImageView);
                                  SharedPrefUtils.setProfileImgUrl(BlogSetupActivity.this, responseModel.getData().getResult().getUrl());
 
-                                 showToast("Image successfully uploaded!");
+                                 showToast(getString(R.string.image_upload_success));
                                  // ((BaseActivity) this()).showSnackbar(getView().findViewById(R.id.root), "You have successfully uploaded an image.");
                              }
                          }
 
                          @Override
                          public void onFailure(Call<ImageUploadResponse> call, Throwable t) {
-                             showToast("unable to upload image, please try again later");
+                             showToast(getString(R.string.image_upload_fail));
                              Crashlytics.logException(t);
                              Log.d("MC4kException", Log.getStackTraceString(t));
                          }

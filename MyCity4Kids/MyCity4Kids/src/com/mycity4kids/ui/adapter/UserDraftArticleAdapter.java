@@ -58,7 +58,7 @@ public class UserDraftArticleAdapter extends RecyclerView.Adapter<UserDraftArtic
         if (!StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getTitle())) {
             holder.txvArticleTitle.setText(articleDataModelsNew.get(position).getTitle());
         } else {
-            holder.txvArticleTitle.setText("Untitled Draft");
+            holder.txvArticleTitle.setText(mContext.getString(R.string.user_article_draft_untitled_draft));
         }
 
         if (articleDataModelsNew.get(position).getArticleType() == null) {

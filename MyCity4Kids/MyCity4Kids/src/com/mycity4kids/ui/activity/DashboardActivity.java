@@ -359,7 +359,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                             SharedPrefUtils.getUserDetailModel(DashboardActivity.this).getDynamoId() + "", "Mobile Deep Link");
                                     launchEditor();
                                 } else {
-                                    showToast("This version of android is no more supported.");
+                                    showToast(getString(R.string.android_version_unsupported));
                                 }
                             }
                         });
@@ -369,7 +369,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                     SharedPrefUtils.getUserDetailModel(DashboardActivity.this).getDynamoId() + "", "Mobile Deep Link");
                             launchEditor();
                         } else {
-                            showToast("This version of android is no more supported.");
+                            showToast(getString(R.string.android_version_unsupported));
                         }
                     }
                 } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_ADD_FUNNY_VIDEO_URL) || tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_ADD_FUNNY_VIDEO_URL)) {
@@ -725,11 +725,11 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private void startTrimActivity(@NonNull Uri uri) {
         Intent intent = new Intent(this, VideoTrimmerActivity.class);
         String filepath = FileUtils.getPath(this, uri);
-        if (null != filepath && filepath.endsWith(".mp4")) {
+        if (null != filepath && (filepath.endsWith(".mp4") || filepath.endsWith(".MP4"))) {
             intent.putExtra("EXTRA_VIDEO_PATH", FileUtils.getPath(this, uri));
             startActivity(intent);
         } else {
-            showToast("please choose a .mp4 format file");
+            showToast(getString(R.string.choose_mp4_file));
         }
     }
 

@@ -8,7 +8,6 @@
     android:orientation="vertical">
 
     <RelativeLayout
-        android:id="@+id/rltBottomView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -55,7 +54,6 @@
             android:orientation="horizontal">
 
             <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/t1_DescLabel_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -66,14 +64,12 @@
                 app:fontName="oswald_regular.ttf" />
 
             <ImageView
-                android:id="@+id/t1_bullet1"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_bullet" />
 
             <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/t1_DescLabel_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -96,7 +92,6 @@
             android:visibility="gone">
 
             <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/t2_DescLabel_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -107,14 +102,12 @@
                 app:fontName="oswald_regular.ttf" />
 
             <ImageView
-                android:id="@+id/t2_bullet1"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_bullet" />
 
             <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/t2_DescLabel_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -125,13 +118,11 @@
                 app:fontName="oswald_regular.ttf" />
 
             <ImageView
-                android:id="@+id/t2_bullet2"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:src="@drawable/ic_bullet" />
 
             <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/t2_DescLabel_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -142,13 +133,11 @@
                 app:fontName="oswald_regular.ttf" />
 
             <ImageView
-                android:id="@+id/t2_bullet3"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:src="@drawable/ic_bullet" />
 
             <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/t2_DescLabel_4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -159,13 +148,11 @@
                 app:fontName="oswald_regular.ttf" />
 
             <ImageView
-                android:id="@+id/t2_bullet4"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:src="@drawable/ic_bullet" />
 
             <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/t2_DescLabel_5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -176,13 +163,11 @@
                 app:fontName="oswald_regular.ttf" />
 
             <ImageView
-                android:id="@+id/t2_bullet5"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:src="@drawable/ic_bullet" />
 
             <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/t2_DescLabel_6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -204,7 +189,6 @@
             android:visibility="gone">
 
             <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/t3_DescLabel_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -215,14 +199,12 @@
                 app:fontName="oswald_regular.ttf" />
 
             <ImageView
-                android:id="@+id/t3_bullet1"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_bullet" />
 
             <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/t3_DescLabel_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -233,13 +215,11 @@
                 app:fontName="oswald_regular.ttf" />
 
             <ImageView
-                android:id="@+id/t3_bullet2"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:src="@drawable/ic_bullet" />
 
             <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/t3_DescLabel_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -261,7 +241,6 @@
             android:visibility="gone">
 
             <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/t4_DescLabel_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -272,14 +251,12 @@
                 app:fontName="oswald_regular.ttf" />
 
             <ImageView
-                android:id="@+id/t4_bullet1"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_bullet" />
 
             <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/t4_DescLabel_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -290,13 +267,11 @@
                 app:fontName="oswald_regular.ttf" />
 
             <ImageView
-                android:id="@+id/t4_bullet2"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:src="@drawable/ic_bullet" />
 
             <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/t4_DescLabel_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

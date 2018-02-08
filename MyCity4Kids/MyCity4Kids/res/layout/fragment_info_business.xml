@@ -9,7 +9,6 @@
 
 
     <RelativeLayout
-        android:id="@+id/relativeLout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="4dp"
@@ -79,7 +78,6 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/leftElementsContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="80dp"
                 android:layout_alignBaseline="@id/rightElementsContainer"

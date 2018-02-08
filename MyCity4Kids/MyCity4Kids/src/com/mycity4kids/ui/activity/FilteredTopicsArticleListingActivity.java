@@ -370,7 +370,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                 mLodingView.setVisibility(View.GONE);
             }
             if (response == null || response.body() == null) {
-                showToast("Something went wrong from server");
+                showToast(getString(R.string.server_went_wrong));
                 return;
             }
 //            swipeRefreshLayout.setRefreshing(false);
@@ -412,7 +412,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             } else {
                 // No results for search
                 noBlogsTextView.setVisibility(View.VISIBLE);
-                noBlogsTextView.setText("No articles found");
+                noBlogsTextView.setText(getString(R.string.no_articles_found));
                 articleDataModelsNew = dataList;
                 recyclerAdapter.setNewListData(articleDataModelsNew);
                 recyclerAdapter.notifyDataSetChanged();
@@ -593,7 +593,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
             progressBar.setVisibility(View.GONE);
             if (response == null || response.body() == null) {
-                showToast("Something went wrong from server");
+                showToast(getString(R.string.server_went_wrong));
                 return;
             }
             try {
@@ -689,7 +689,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
             progressBar.setVisibility(View.GONE);
             if (response == null || response.body() == null) {
-                showToast("Something went wrong from server");
+                showToast(getString(R.string.server_went_wrong));
                 return;
             }
             try {
@@ -745,7 +745,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
         @Override
         public void onResponse(Call<TopicsFollowingStatusResponse> call, retrofit2.Response<TopicsFollowingStatusResponse> response) {
             if (response == null || null == response.body()) {
-                showToast("Something went wrong from server");
+                showToast(getString(R.string.server_went_wrong));
                 return;
             }
 
@@ -755,12 +755,12 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                 if ("0".equals(followingTopicStatus)) {
 //                    menu.getItem(0).setEnabled(true);
 //                    menu.getItem(0).setTitle("FOLLOW");
-                    followUnfollowTextView.setText("FOLLOW");
+                    followUnfollowTextView.setText(getString(R.string.ad_follow_author));
                     isTopicFollowed = 0;
                 } else {
 //                    menu.getItem(0).setEnabled(true);
 //                    menu.getItem(0).setTitle("FOLLOWING");
-                    followUnfollowTextView.setText("FOLLOWING");
+                    followUnfollowTextView.setText(getString(R.string.ad_following_author));
                     isTopicFollowed = 1;
                 }
             } else {
@@ -810,14 +810,14 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
 //            Utils.pushEventFollowUnfollowTopic(this, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "CategoriesArticleList", "follow", displayName + ":" + selectedTopics);
             Utils.pushTopicFollowUnfollowEvent(this, GTMEventType.FOLLOW_TOPIC_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Topic Articles List", displayName + "~" + selectedTopics);
 //            menu.getItem(0).setTitle("FOLLOWING");
-            followUnfollowTextView.setText("FOLLOWING");
+            followUnfollowTextView.setText(getString(R.string.ad_following_author));
             isTopicFollowed = 1;
         } else {
             Log.d("GTM UNFOLLOW", displayName + ":" + selectedTopics);
 //            Utils.pushEventFollowUnfollowTopic(this, GTMEventType.TOPIC_FOLLOWED_UNFOLLOWED_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "CategoriesArticleList", "follow", displayName + ":" + selectedTopics);
             Utils.pushTopicFollowUnfollowEvent(this, GTMEventType.UNFOLLOW_TOPIC_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Topic Articles List", displayName + "~" + selectedTopics);
 //            menu.getItem(0).setTitle("FOLLOW");
-            followUnfollowTextView.setText("FOLLOW");
+            followUnfollowTextView.setText(getString(R.string.ad_follow_author));
             isTopicFollowed = 0;
         }
         Call<FollowUnfollowCategoriesResponse> call = topicsCategoryAPI.followCategories(SharedPrefUtils.getUserDetailModel(this).getDynamoId(), followUnfollowCategoriesRequest);
@@ -831,7 +831,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
             if (response == null || null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                 Crashlytics.logException(nee);
-                showToast("Something went wrong from server");
+                showToast(getString(R.string.went_wrong));
                 return;
             }
             try {

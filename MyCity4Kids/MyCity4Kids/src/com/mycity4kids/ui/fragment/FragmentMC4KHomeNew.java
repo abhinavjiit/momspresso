@@ -73,7 +73,7 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
         @Override
         public void onResponse(Call<TrendingListingResponse> call, retrofit2.Response<TrendingListingResponse> response) {
             if (response == null || response.body() == null) {
-                ((DashboardActivity) getActivity()).showToast("Something went wrong from server");
+                ((DashboardActivity) getActivity()).showToast(getString(R.string.server_went_wrong));;
                 return;
             }
 
@@ -166,7 +166,7 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
         @Override
         public void onResponse(Call<NotificationCenterListResponse> call, retrofit2.Response<NotificationCenterListResponse> response) {
             if (response == null || response.body() == null) {
-                ((DashboardActivity) getActivity()).showToast("Something went wrong from server");
+                ((DashboardActivity) getActivity()).showToast(getString(R.string.server_went_wrong));;
                 return;
             }
 

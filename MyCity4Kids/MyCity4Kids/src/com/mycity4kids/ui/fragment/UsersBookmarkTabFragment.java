@@ -108,7 +108,7 @@ public class UsersBookmarkTabFragment extends BaseFragment implements UsersBookm
 
     private void getUsersBookmarks() {
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
-            ((UserPublishedAndDraftsActivity) getActivity()).showToast("No connectivity available");
+            ((UserPublishedAndDraftsActivity) getActivity()).showToast(getString(R.string.connectivity_unavailable));
             return;
         }
 
@@ -198,10 +198,10 @@ public class UsersBookmarkTabFragment extends BaseFragment implements UsersBookm
                         bookmarksList.get(position).getBlogPageSlug(), bookmarksList.get(position).getTitleSlug());
                 String shareMessage;
                 if (StringUtils.isNullOrEmpty(shareUrl)) {
-                    shareMessage = "Momspresso\n\nCheck out this interesting blog post " + "\"" +
+                    shareMessage = getString(R.string.check_out_blog) + "\"" +
                             bookmarksList.get(position).getTitle() + "\" by " + bookmarksList.get(position).getUserName() + ".";
                 } else {
-                    shareMessage = "Momspresso\n\nCheck out this interesting blog post " + "\"" +
+                    shareMessage = getString(R.string.check_out_blog) + "\"" +
                             bookmarksList.get(position).getTitle() + "\" by " + bookmarksList.get(position).getUserName() + ".\nRead Here: " + shareUrl;
                 }
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);

@@ -194,7 +194,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                 finish();
             } else if (EditorFragmentAbstract.imageUploading == 0) {
                 Log.e("imageuploading", EditorFragmentAbstract.imageUploading + "");
-                showToast("Please wait while image is being uploaded");
+                showToast(getString(R.string.image_upload_wait));
             } else {
                 if (!ConnectivityUtils.isNetworkEnabled(this)) {
                     showToast(getString(R.string.error_network));
@@ -427,7 +427,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                         float actualHeight = imageBitmap.getHeight();
                         float actualWidth = imageBitmap.getWidth();
                         if (actualWidth < 720) {
-                            showToast("Please upload image with minimum width of 720 pixels");
+                            showToast(getString(R.string.upload_min_width));
                             return;
                         }
                         float maxHeight = 1300;
@@ -506,7 +506,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                         float maxRatio = maxWidth / maxHeight;
                         // float compressionQuality = 0.5;//50 percent compression
                         if (actualWidth < 720) {
-                            showToast("Please upload image with minimum width of 720 pixels");
+                            showToast(getString(R.string.upload_min_width));
                             return;
                         }
                         if (actualHeight > maxHeight || actualWidth > maxWidth) {
@@ -580,8 +580,8 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                 public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
                     removeProgressDialog();
                     if (response == null || response.body() == null) {
-                        showToast("Something went wrong from server");
-                        showAlertDialog("Oops!", "Draft could not be saved, your current changes will be lost if you exit now. Would you like to exit?", new OnButtonClicked() {
+                        showToast(getString(R.string.server_went_wrong));
+                        showAlertDialog(getString(R.string.draft_oops), getString(R.string.draft_not_saved), new OnButtonClicked() {
                             @Override
                             public void onButtonCLick(int buttonId) {
                                 finish();
@@ -593,7 +593,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                         ArticleDraftResponse responseModel = response.body();
                         if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
                             draftId = responseModel.getData().get(0).getResult().getId() + "";
-                            showToast("Draft Successfully saved");
+                            showToast(getString(R.string.draft_save_success));
                             //onBackPressed();
                             finish();
                         } else {
@@ -632,7 +632,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                         ArticleDraftResponse responseModel = response.body();
                         if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
                             draftId = responseModel.getData().get(0).getResult().getId() + "";
-                            showToast("Draft Successfully saved");
+                            showToast(getString(R.string.draft_save_success));
                             finish();
                         } else {
                             if (StringUtils.isNullOrEmpty(responseModel.getReason())) {
@@ -835,16 +835,16 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                 break;
             case R.id.publishTextView:
                 if (mEditorFragment.getTitle().toString().isEmpty()) {
-                    showToast("Title can't be empty");
+                    showToast(getString(R.string.editor_title_empty));
                 } else if (mEditorFragment.getTitle().toString().length() > 150) {
-                    showToast("Unable to publish. Title should smaller than 150 characters");
+                    showToast(getString(R.string.editor_title_char_limit));
                 } else if (mEditorFragment.getContent().toString().isEmpty()) {
-                    showToast("Body can't be empty");
+                    showToast(getString(R.string.editor_body_empty));
                 } else if (mEditorFragment.getContent().toString().replace("&nbsp;", " ").split("\\s+").length < 299 && !BuildConfig.DEBUG) {
-                    showToast("Please write atleast 300 words to publish");
+                    showToast(getString(R.string.editor_body_min_words));
                 } else if (EditorFragmentAbstract.imageUploading == 0) {
                     Log.e("imageuploading", EditorFragmentAbstract.imageUploading + "");
-                    showToast("Please wait while image is being uploaded");
+                    showToast(getString(R.string.image_upload_wait));
                 } else {
                     if (getIntent().getStringExtra("from") != null && getIntent().getStringExtra("from").equals("publishedList")) {
                         launchSpellCheckDialog();
@@ -882,7 +882,7 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
         public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
             removeProgressDialog();
             if (response == null || response.body() == null) {
-                showToast("Something went wrong from server");
+                showToast(getString(R.string.server_went_wrong));
                 return;
             }
             try {

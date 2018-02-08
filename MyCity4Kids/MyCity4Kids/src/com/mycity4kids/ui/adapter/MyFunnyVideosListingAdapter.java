@@ -111,10 +111,10 @@ public class MyFunnyVideosListingAdapter extends BaseAdapter {
                     String shareUrl = articleDataModelsNew.get(position).getUrl();
                     String shareMessage;
                     if (StringUtils.isNullOrEmpty(shareUrl)) {
-                        shareMessage = "Momspresso\n\nCheck out this interesting blog post " + "\"" +
+                        shareMessage = mContext.getString(R.string.check_out_blog) + "\"" +
                                 articleDataModelsNew.get(position).getTitle() + "\" by " + articleDataModelsNew.get(position).getAuthor().getFirstName() + ".";
                     } else {
-                        shareMessage = "Momspresso\n\nCheck out this interesting blog post " + "\"" +
+                        shareMessage = mContext.getString(R.string.check_out_blog) + "\"" +
                                 articleDataModelsNew.get(position).getTitle() + "\" by " + articleDataModelsNew.get(position).getAuthor().getFirstName() + ".\nRead Here: " + shareUrl;
                     }
                     shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);

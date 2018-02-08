@@ -277,10 +277,6 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
 
             }
 
-            int totalSelectedItems = 0;
-            if (null != selectedTopicsIdList && !selectedTopicsIdList.isEmpty()) {
-                totalSelectedItems = retainItemsFromReminaingList(selectedTopicsIdList);
-            }
             createTopicsTabPages();
         } catch (Exception e) {
             progressBar.setVisibility(View.GONE);
@@ -318,63 +314,6 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
         });
 
     }
-
-    Callback<ResponseBody> downloadCategoriesJSONCallback = new Callback<ResponseBody>() {
-        @Override
-        public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-            progressBar.setVisibility(View.GONE);
-            if (response == null || response.body() == null) {
-                showToast("Something went wrong from server");
-                return;
-            }
-            try {
-                String resData = new String(response.body().bytes());
-                JSONObject jsonObject = new JSONObject(resData);
-
-                Retrofit retro = BaseApplication.getInstance().getRetrofit();
-                final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
-
-                Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
-
-                caller.enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                        boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(AddArticleTopicsActivityNew.this, AppConstants.CATEGORIES_JSON_FILE, response.body());
-                        Log.d("AddArticleTopicsActivityNew", "file download was a success? " + writtenToDisk);
-
-                        try {
-                            FileInputStream fileInputStream = openFileInput(AppConstants.CATEGORIES_JSON_FILE);
-                            String fileContent = convertStreamToString(fileInputStream);
-                            TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
-                            createTopicsData(res);
-                        } catch (FileNotFoundException e) {
-                            Crashlytics.logException(e);
-                            Log.d("FileNotFoundException", Log.getStackTraceString(e));
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        Crashlytics.logException(t);
-                        Log.d("MC4KException", Log.getStackTraceString(t));
-                    }
-                });
-            } catch (Exception e) {
-                progressBar.setVisibility(View.GONE);
-                Crashlytics.logException(e);
-                Log.d("MC4KException", Log.getStackTraceString(e));
-                showToast(getString(R.string.went_wrong));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<ResponseBody> call, Throwable t) {
-            progressBar.setVisibility(View.GONE);
-            showToast(getString(R.string.went_wrong));
-            Crashlytics.logException(t);
-            Log.d("MC4KException", Log.getStackTraceString(t));
-        }
-    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

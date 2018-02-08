@@ -324,7 +324,7 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
                 contributorArrayList.addAll(dataList);
                 contributorListAdapter.notifyDataSetChanged();
                 noBlogsTextView.setVisibility(View.VISIBLE);
-                noBlogsTextView.setText("No result found");
+                noBlogsTextView.setText(getString(R.string.no_result_txt));
             }
         } else {
             noBlogsTextView.setVisibility(View.GONE);
@@ -413,12 +413,12 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
         if (!type.equals(AppConstants.USER_TYPE_BLOGGER)) {
             fab_menu.setVisibility(View.GONE);
             spinner_nav.setVisibility(View.GONE);
-            contributorTitleTextView.setText("Contributors");
+            contributorTitleTextView.setText(getString(R.string.contributors));
             hitBloggerAPIrequest(sortType, type);
         } else {
             fab_menu.setVisibility(View.VISIBLE);
             spinner_nav.setVisibility(View.VISIBLE);
-            contributorTitleTextView.setText("Contributor in");
+            contributorTitleTextView.setText(getString(R.string.contributor_in));
             if (spinner_nav.getSelectedItemPosition() == 0) {
                 sortType = 2;
                 hitBloggerAPIrequest(sortType, type);

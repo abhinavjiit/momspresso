@@ -30,9 +30,9 @@ public class NewExploreFragment extends BaseFragment implements View.OnClickList
         tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
         viewPager = (ViewPager) view.findViewById(R.id.pager);
 
-        tabLayout.addTab(tabLayout.newTab().setText("EVENTS"));
-        tabLayout.addTab(tabLayout.newTab().setText("RESOURCES"));
-        tabLayout.addTab(tabLayout.newTab().setText("TOP THINGS"));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.explore_section_events)));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.explore_section_resources)));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.explore_section_top_things)));
 
         final ExplorePagerAdapter adapter = new ExplorePagerAdapter(getChildFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(adapter);

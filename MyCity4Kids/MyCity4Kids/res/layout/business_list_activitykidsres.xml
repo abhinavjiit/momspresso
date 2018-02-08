@@ -80,7 +80,6 @@
             android:textCursorDrawable="@null" />
 
         <ImageView
-            android:id="@+id/locality_img"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="center_vertical"
@@ -150,7 +149,6 @@
                             android:background="#5997fc">
 
                             <ImageView
-                                android:id="@+id/filter_icon"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:padding="8dp"
@@ -187,7 +185,6 @@
                             android:visibility="gone" />
 
                         <View
-                            android:id="@+id/bottomSeperator"
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:layout_below="@+id/viewpager"
@@ -218,14 +215,12 @@
         app:titleTextAppearance="@style/ToolbarTheme.Title" />
 
     <RelativeLayout
-        android:id="@+id/rltHeadertmp"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/header_color"
         android:visibility="gone">
 
         <ImageView
-            android:id="@+id/imgBacktt"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_centerVertical="true"
@@ -233,7 +228,6 @@
             android:src="@drawable/back_arroow" />
 
         <TextView
-            android:id="@+id/txvHeaderTexttt"
             android:layout_width="250dp"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"

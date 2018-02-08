@@ -227,7 +227,7 @@ public class VideoUploadProgressActivity extends BaseActivity implements View.On
         @Override
         public void onResponse(Call<UpdateVideoDetailsResponse> call, retrofit2.Response<UpdateVideoDetailsResponse> response) {
             if (response == null || response.body() == null) {
-                showToast("Something went wrong from server");
+                showToast(getString(R.string.server_went_wrong));
                 return;
             }
             try {

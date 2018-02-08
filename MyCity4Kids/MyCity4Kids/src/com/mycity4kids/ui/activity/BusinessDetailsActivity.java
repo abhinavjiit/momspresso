@@ -1630,7 +1630,7 @@ public class BusinessDetailsActivity extends BaseActivity implements OnClickList
         public void onResponse(Call<DetailsResponse> call, retrofit2.Response<DetailsResponse> response) {
             removeProgressDialog();
             if (response == null || response.body() == null) {
-                showToast("Something went wrong from server");
+                showToast(getString(R.string.server_went_wrong));
                 return;
             }
             try {

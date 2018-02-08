@@ -101,6 +101,8 @@ public class SharedPrefUtils {
     private static final String BECOME_BLOGGER_FLAG = "becomeBloggerFlag";
     private static final String FIRST_VIDEO_UPLOAD_FLAG = "firstVideoUploadFlag";
 
+    private static final String LOCALE_LANGUAGE_KEY = "language_key";
+
     /**
      * this shared preference save current versions for control city,locality,category APIs .
      *
@@ -564,5 +566,18 @@ public class SharedPrefUtils {
         SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         boolean flag = (_sharedPref.getBoolean(FIRST_VIDEO_UPLOAD_FLAG, false));
         return flag;
+    }
+
+    public static void setAppLocale(Context pContext, String language) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        _editor.putString(LOCALE_LANGUAGE_KEY, language);
+        _editor.commit();
+    }
+
+    public static String getAppLocale(Context context) {
+        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        String language = (_sharedPref.getString(LOCALE_LANGUAGE_KEY, "en"));
+        return language;
     }
 }

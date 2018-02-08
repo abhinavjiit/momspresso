@@ -181,7 +181,7 @@ public class SearchAllAuthorsTabFragment extends BaseFragment {
         }
 
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
-            ((SearchAllActivity) getActivity()).showToast("No connectivity available");
+            ((SearchAllActivity) getActivity()).showToast(getString(R.string.connectivity_unavailable));
             return;
         }
 
@@ -222,7 +222,7 @@ public class SearchAllAuthorsTabFragment extends BaseFragment {
                 mLodingView.setVisibility(View.GONE);
             }
             if (response == null || response.body() == null) {
-                ((SearchAllActivity) getActivity()).showToast("Something went wrong from server");
+                ((SearchAllActivity) getActivity()).showToast(getString(R.string.server_went_wrong));;
                 return;
             }
             try {

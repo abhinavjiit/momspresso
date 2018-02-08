@@ -298,7 +298,7 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
                 mLodingView.setVisibility(View.GONE);
             }
             if (response == null || response.body() == null) {
-                showToast("Something went wrong from server");
+                showToast(getString(R.string.server_went_wrong));
                 return;
             }
 //            swipeRefreshLayout.setRefreshing(false);
@@ -336,7 +336,7 @@ public class CityBestArticleListingActivity extends BaseActivity implements Swip
             } else {
                 // No results for search
                 noBlogsTextView.setVisibility(View.VISIBLE);
-                noBlogsTextView.setText("No articles found");
+                noBlogsTextView.setText(getString(R.string.no_articles_found));
                 articleDataModelsNew = dataList;
                 recyclerAdapter.setNewListData(articleDataModelsNew);
                 recyclerAdapter.notifyDataSetChanged();

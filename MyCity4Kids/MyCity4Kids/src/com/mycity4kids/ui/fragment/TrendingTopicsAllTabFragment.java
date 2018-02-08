@@ -178,7 +178,7 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
             } else {
                 // No results for search
                 noBlogsTextView.setVisibility(View.VISIBLE);
-                noBlogsTextView.setText("No articles found");
+                noBlogsTextView.setText(getString(R.string.no_articles_found));
                 articleDataModelsNew = dataList;
                 recyclerAdapter.setNewListData(articleDataModelsNew);
                 recyclerAdapter.notifyDataSetChanged();

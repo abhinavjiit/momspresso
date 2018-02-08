@@ -278,7 +278,6 @@
                     android:src="@drawable/default_article" />
 
                 <View
-                    android:id="@+id/tranparency_1"
                     android:layout_width="100dp"
                     android:layout_height="66dp"
                     android:layout_centerInParent="true"
@@ -314,7 +313,6 @@
                     android:src="@drawable/default_article" />
 
                 <View
-                    android:id="@+id/tranparency_2"
                     android:layout_width="100dp"
                     android:layout_height="66dp"
                     android:layout_centerInParent="true"
@@ -350,7 +348,6 @@
                     android:src="@drawable/default_article" />
 
                 <View
-                    android:id="@+id/tranparency_3"
                     android:layout_width="100dp"
                     android:layout_height="66dp"
                     android:layout_centerInParent="true"

@@ -273,7 +273,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                         float actualHeight = imageBitmap.getHeight();
                         float actualWidth = imageBitmap.getWidth();
                         if (actualHeight < 405 || actualWidth < 720) {
-                            showToast("Please upload bigger image");
+                            showToast(getString(R.string.upload_bigger_image));
                             return;
                         }
                         startCropActivity(imageUri);
@@ -423,7 +423,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                 public void onResponse(Call<ArticleDraftResponse> call, retrofit2.Response<ArticleDraftResponse> response) {
                     removeProgressDialog();
                     if (response == null || response.body() == null) {
-                        showToast("Something went wrong from server");
+                        showToast(getString(R.string.server_went_wrong));
                         return;
                     }
                     ArticleDraftResponse responseModel = response.body();
@@ -529,7 +529,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                          public void onResponse(Call<ImageUploadResponse> call, retrofit2.Response<ImageUploadResponse> response) {
                              removeProgressDialog();
                              if (response == null || response.body() == null) {
-                                 showToast("Something went wrong from server");
+                                 showToast(getString(R.string.server_went_wrong));
                                  return;
                              }
                              ImageUploadResponse responseModel = response.body();
@@ -551,7 +551,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                                  }
                                  adapter.notifyDataSetChanged();
                                  Picasso.with(ArticleImageTagUploadActivity.this).load(responseModel.getData().getResult().getUrl()).error(R.drawable.default_article).into(articleImage);
-                                 showToast("Image successfully uploaded!");
+                                 showToast(getString(R.string.image_upload_success));
                              }
                          }
 

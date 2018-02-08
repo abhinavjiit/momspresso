@@ -8,21 +8,13 @@
     <!--Article Details dimensions-->
     <dimen name="article_details_app_bar_height">400dp</dimen>
     <dimen name="article_details_text_size">20px</dimen>
-    <dimen name="ad_recent_trending_heading">17sp</dimen>
     <dimen name="ad_recent">15sp</dimen>
     <dimen name="ad_trending">15sp</dimen>
     <dimen name="ad_comments_heading">17sp</dimen>
     <dimen name="ad_comments_username">16sp</dimen>
-    <dimen name="ad_comments_reply_username">16sp</dimen>
     <dimen name="ad_comments_date">16sp</dimen>
-    <dimen name="ad_comments_edit_text">17sp</dimen>
     <dimen name="ad_comments_text">14sp</dimen>
-    <dimen name="ad_comments_reply_btn">16sp</dimen>
     <dimen name="ad_comments_edit_btn">16sp</dimen>
-    <dimen name="ad_comments_add">17sp</dimen>
-    <dimen name="ad_comments_replied">14sp</dimen>
-    <dimen name="ad_comments_replied_count">14sp</dimen>
-    <dimen name="ad_comments_profile_pic_height">42dp</dimen>
     <dimen name="ad_comments_profile_pic_width">56dp</dimen>
     <dimen name="ad_related_article_image_height">62dp</dimen>
     <dimen name="ad_related_article_image_width">94dp</dimen>

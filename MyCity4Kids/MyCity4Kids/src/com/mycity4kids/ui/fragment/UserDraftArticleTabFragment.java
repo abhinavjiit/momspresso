@@ -87,7 +87,7 @@ public class UserDraftArticleTabFragment extends BaseFragment implements View.On
 
     private void getUserDraftArticles() {
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
-            ((UserPublishedAndDraftsActivity) getActivity()).showToast("No connectivity available");
+            ((UserPublishedAndDraftsActivity) getActivity()).showToast(getString(R.string.connectivity_unavailable));
             return;
         }
         if (isAdded()) {

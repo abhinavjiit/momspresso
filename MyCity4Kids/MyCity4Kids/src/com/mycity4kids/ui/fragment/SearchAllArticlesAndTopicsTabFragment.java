@@ -94,7 +94,7 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
 
     private void newSearchTopicArticleListingApi(String searchName, String type) {
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
-            ((SearchAllActivity) getActivity()).showToast("No connectivity available");
+            ((SearchAllActivity) getActivity()).showToast(getString(R.string.connectivity_unavailable));
             return;
         }
 
@@ -124,7 +124,7 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
         public void onResponse(Call<SearchResponse> call, retrofit2.Response<SearchResponse> response) {
             isReuqestRunning = false;
             if (response == null || response.body() == null) {
-                ((SearchAllActivity) getActivity()).showToast("Something went wrong from server");
+                ((SearchAllActivity) getActivity()).showToast(getString(R.string.server_went_wrong));;
                 return;
             }
             try {

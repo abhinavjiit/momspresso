@@ -7,7 +7,6 @@
     tools:context=".editor.EditorPostActivity">
 
     <RelativeLayout
-        android:id="@+id/suggestionOverlaySlider"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="6dp"
@@ -33,7 +32,6 @@
             android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/languagesTextView"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"

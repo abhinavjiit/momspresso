@@ -184,7 +184,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
         } catch (Exception e) {
             // e.printStackTrace();
             removeProgressDialog();
-            showToast("Try again later.");
+            showToast(getString(R.string.toast_response_error));
         }
     }
 
@@ -213,7 +213,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
             new GetGoogleToken().execute();
         } catch (Exception e) {
             removeProgressDialog();
-            showToast("Try again later.");
+            showToast(getString(R.string.toast_response_error));
             e.printStackTrace();
         }
 
@@ -544,7 +544,7 @@ public class ActivityLogin extends BaseActivity implements View.OnClickListener,
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
                     dialogFragment.dismiss();
-                    showToast("Mail sent to email address Please click and verify");
+                    showToast(getString(R.string.verify_email));
 
                     Intent intent = new Intent(ActivityLogin.this, PushTokenService.class);
                     startService(intent);

@@ -236,7 +236,7 @@ public class SelectLocationActivity extends BaseActivity implements FetchCity{
 
 		if( response==null){
 			removeProgressDialog();
-			showToast("Something went wrong from server");
+			showToast(getString(R.string.server_went_wrong));
 		}
 		switch (response.getDataType()) {
 		/**

@@ -136,7 +136,7 @@ public class TopPicksActivity extends BaseActivity implements OnClickListener {
 		rltLoadingView.setVisibility(View.GONE);
 		removeProgressDialog();
 		if (response == null) {
-			showToast("Something went wrong from server");
+			showToast(getString(R.string.server_went_wrong));
 		}
 		//ParentingResponse responseData = (ParentingResponse) response.getResponseObject();
 

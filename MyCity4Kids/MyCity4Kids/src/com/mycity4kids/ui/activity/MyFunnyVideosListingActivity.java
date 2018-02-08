@@ -268,7 +268,7 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
             if (response == null || null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                 Crashlytics.logException(nee);
-                showToast("Something went wrong from server");
+                showToast(getString(R.string.server_went_wrong));
                 return;
             }
             try {
@@ -414,11 +414,11 @@ public class MyFunnyVideosListingActivity extends BaseActivity implements View.O
     private void startTrimActivity(@NonNull Uri uri) {
         Intent intent = new Intent(this, VideoTrimmerActivity.class);
         String filepath = FileUtils.getPath(this, uri);
-        if (null != filepath && filepath.endsWith(".mp4")) {
+        if (null != filepath && (filepath.endsWith(".mp4") || filepath.endsWith(".MP4"))) {
             intent.putExtra("EXTRA_VIDEO_PATH", FileUtils.getPath(this, uri));
             startActivity(intent);
         } else {
-            showToast("please choose a .mp4 format file");
+            showToast(getString(R.string.choose_mp4_file));
         }
     }
 

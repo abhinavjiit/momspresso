@@ -106,13 +106,11 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
                 break;
             case R.id.googlePlusImageView:
                 if (StringUtils.isNullOrEmpty(shareUrl)) {
-                    Toast.makeText(this, "Unable to share with google plus.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.moderation_or_share_gplus_fail), Toast.LENGTH_SHORT).show();
                 } else {
                     Intent shareIntent = new PlusShare.Builder(this)
                             .setType("text/plain")
-                            .setText("Momspresso\n" +
-                                    "\n" +
-                                    "Check out this interesting blog post ")
+                            .setText(getString(R.string.check_out_blog))
                             .setContentUrl(Uri.parse(shareUrl))
                             .getIntent();
                     startActivityForResult(shareIntent, 0);
@@ -120,26 +118,26 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
                 break;
             case R.id.whatsappImageView:
                 if (StringUtils.isNullOrEmpty(shareUrl)) {
-                    Toast.makeText(this, "Unable to share with whatsapp.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.moderation_or_share_whatsapp_fail), Toast.LENGTH_SHORT).show();
                 } else {
                     Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
                     whatsappIntent.setType("text/plain");
                     whatsappIntent.setPackage("com.whatsapp");
-                    whatsappIntent.putExtra(Intent.EXTRA_TEXT, "Momspresso\n\nCheck out this interesting blog post\n " + shareUrl);
+                    whatsappIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.check_out_blog) + shareUrl);
                     try {
                         startActivity(whatsappIntent);
                     } catch (android.content.ActivityNotFoundException ex) {
-                        Toast.makeText(this, "Whatsapp have not been installed.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, getString(R.string.moderation_or_share_whatsapp_not_installed), Toast.LENGTH_SHORT).show();
                     }
                 }
                 break;
             case R.id.twitterImageView:
                 if (StringUtils.isNullOrEmpty(shareUrl)) {
-                    Toast.makeText(this, "Unable to share with twitter.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.moderation_or_share_twitter_fail), Toast.LENGTH_SHORT).show();
                 } else {
                     // Create intent using ACTION_VIEW and a normal Twitter url:
                     String tweetUrl = String.format("https://twitter.com/intent/tweet?text=%s&url=%s",
-                            urlEncode("Momspresso\n\nCheck out this interesting blog post\n "),
+                            urlEncode(getString(R.string.check_out_blog)),
                             urlEncode(shareUrl));
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(tweetUrl));
                     // Narrow down to official Twitter app, if available:

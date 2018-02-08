@@ -278,7 +278,7 @@ public class AddVideoDetailsActivity extends BaseActivity implements View.OnClic
 
             muteVideo();
             if (null == mutedUri) {
-                showToast("Unable to upload the video. Please try again later.");
+                showToast(getString(R.string.video_upload_fail));
             } else {
                 contentURI = AppUtils.exportToGallery(mutedUri.getPath(), getContentResolver(), this);
                 contentURI = AppUtils.getVideoUriFromMediaProvider(mutedUri.getPath(), getContentResolver());

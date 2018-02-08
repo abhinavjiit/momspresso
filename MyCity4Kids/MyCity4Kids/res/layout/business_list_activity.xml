@@ -96,7 +96,6 @@
             android:textCursorDrawable="@null" />
 
         <ImageView
-            android:id="@+id/locality_img"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="center_vertical"
@@ -209,7 +208,6 @@
                             android:visibility="gone" />
 
                         <View
-                            android:id="@+id/bottomSeperator"
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:layout_below="@+id/viewpager"

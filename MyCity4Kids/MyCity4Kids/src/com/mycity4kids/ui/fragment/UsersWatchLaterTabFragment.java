@@ -109,7 +109,7 @@ public class UsersWatchLaterTabFragment extends BaseFragment implements UsersBoo
 
     private void getUsersBookmarks() {
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
-            ((UserPublishedAndDraftsActivity) getActivity()).showToast("No connectivity available");
+            ((UserPublishedAndDraftsActivity) getActivity()).showToast(getString(R.string.connectivity_unavailable));
             return;
         }
 
@@ -199,10 +199,10 @@ public class UsersWatchLaterTabFragment extends BaseFragment implements UsersBoo
                         watchLaterList.get(position).getBlogPageSlug(), watchLaterList.get(position).getTitleSlug());
                 String shareMessage;
                 if (StringUtils.isNullOrEmpty(shareUrl)) {
-                    shareMessage = "Momspresso\n\nCheck out this interesting blog post " + "\"" +
+                    shareMessage = getString(R.string.check_out_blog) + "\"" +
                             watchLaterList.get(position).getTitle() + "\" by " + watchLaterList.get(position).getUserName() + ".";
                 } else {
-                    shareMessage = "Momspresso\n\nCheck out this interesting blog post " + "\"" +
+                    shareMessage = getString(R.string.check_out_blog) + "\"" +
                             watchLaterList.get(position).getTitle() + "\" by " + watchLaterList.get(position).getUserName() + ".\nRead Here: " + shareUrl;
                 }
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);

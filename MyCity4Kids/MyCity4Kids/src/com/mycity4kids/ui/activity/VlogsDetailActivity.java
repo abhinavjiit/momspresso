@@ -130,7 +130,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
     private FlowLayout tagsLayout;
     private TextView articleViewCountTextView;
     private Toolbar mToolbar;
-//    private FloatingActionButton commentFloatingActionButton;
+    //    private FloatingActionButton commentFloatingActionButton;
     private ImageView authorImageView;
     private TextView followClick;
     private LinearLayout commLayout;
@@ -486,13 +486,13 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
 
         if (isFollowing) {
             isFollowing = false;
-            followClick.setText("FOLLOW");
+            followClick.setText(getString(R.string.ad_follow_author));
             Utils.pushFollowAuthorEvent(this, "DetailVideoScreen", userDynamoId, authorId + "~" + author);
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.unfollowUser(request);
             followUnfollowUserResponseCall.enqueue(unfollowUserResponseCallback);
         } else {
             isFollowing = true;
-            followClick.setText("FOLLOWING");
+            followClick.setText(getString(R.string.ad_following_author));
             Utils.pushUnfollowAuthorEvent(this, "DetailVideoScreen", userDynamoId, authorId + "~" + author);
             Call<FollowUnfollowUserResponse> followUnfollowUserResponseCall = followAPI.followUser(request);
             followUnfollowUserResponseCall.enqueue(followUserResponseCallback);
@@ -725,7 +725,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
                 } else {
-                    followClick.setText("FOLLOW");
+                    followClick.setText(getString(R.string.ad_follow_author));
                     isFollowing = false;
                 }
             } catch (Exception e) {
@@ -755,7 +755,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
                 } else {
-                    followClick.setText("FOLLOWING");
+                    followClick.setText(getString(R.string.ad_following_author));
                     isFollowing = true;
                 }
             } catch (Exception e) {
@@ -777,7 +777,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
         @Override
         public void onResponse(Call<ArticleDetailResponse> call, retrofit2.Response<ArticleDetailResponse> response) {
             if (response == null || null == response.body()) {
-                showToast("Something went wrong from server");
+                showToast(getString(R.string.server_went_wrong));
                 return;
             }
 
@@ -799,11 +799,11 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                 } else {
                     if ("0".equals(responseData.getData().getResult().getIsFollowed())) {
                         followClick.setEnabled(true);
-                        followClick.setText("FOLLOW");
+                        followClick.setText(getString(R.string.ad_follow_author));
                         isFollowing = false;
                     } else {
                         followClick.setEnabled(true);
-                        followClick.setText("FOLLOWING");
+                        followClick.setText(getString(R.string.ad_following_author));
                         isFollowing = true;
                     }
                 }
@@ -826,7 +826,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                 mLodingView.setVisibility(View.GONE);
             }
             if (response == null || response.body() == null) {
-                showToast("Something went wrong from server");
+                showToast(getString(R.string.server_went_wrong));
                 return;
             }
 
@@ -846,7 +846,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                     if (dataList.size() == 0) {
 
                     } else {
-                        recentAuthorArticleHeading.setText("RECENT BLOGS FROM " + author);
+                        recentAuthorArticleHeading.setText(getString(R.string.vd_recent_videos_from_title) + " " + author);
                         recentAuthorArticles.setVisibility(View.VISIBLE);
 
                         if (dataList.size() >= 3) {
@@ -908,7 +908,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                 mLodingView.setVisibility(View.GONE);
             }
             if (response == null || response.body() == null) {
-                showToast("Something went wrong from server");
+                showToast(getString(R.string.server_went_wrong));
                 return;
             }
 
@@ -988,7 +988,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
             if (response == null || null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                 Crashlytics.logException(nee);
-                showToast("Something went wrong from server");
+                showToast(getString(R.string.server_went_wrong));
                 return;
             }
             try {
@@ -1110,7 +1110,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
             if (response == null || null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                 Crashlytics.logException(nee);
-                showToast("Something went wrong from server");
+                showToast(getString(R.string.server_went_wrong));
                 return;
             }
             try {
@@ -1164,7 +1164,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
         if (t instanceof UnknownHostException) {
             showToast(getString(R.string.error_network));
         } else if (t instanceof SocketTimeoutException) {
-            showToast("connection timed out");
+            showToast(getString(R.string.connection_timeout));
         } else {
             showToast(getString(R.string.server_went_wrong));
         }
@@ -1205,10 +1205,10 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
             }
             if (requestCode == Constants.BLOG_FOLLOW_STATUS) {
                 if (data.getStringExtra(Constants.BLOG_ISFOLLOWING).equalsIgnoreCase("0")) {
-                    followClick.setText("FOLLOW");
+                    followClick.setText(getString(R.string.ad_follow_author));
                     isFollowing = false;
                 } else {
-                    followClick.setText("FOLLOWING");
+                    followClick.setText(getString(R.string.ad_following_author));
                     isFollowing = true;
                 }
             }
@@ -1426,17 +1426,17 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                 }
                 case R.id.whatsappShareTextView: {
                     if (StringUtils.isNullOrEmpty(shareUrl)) {
-                        Toast.makeText(VlogsDetailActivity.this, "Unable to share with whatsapp.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(VlogsDetailActivity.this, getString(R.string.moderation_or_share_whatsapp_fail), Toast.LENGTH_SHORT).show();
                     } else {
                         Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
                         whatsappIntent.setType("text/plain");
                         whatsappIntent.setPackage("com.whatsapp");
-                        whatsappIntent.putExtra(Intent.EXTRA_TEXT, "Momspresso\n\nCheck out this interesting blog post\n " + shareUrl);
+                        whatsappIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.check_out_blog) + shareUrl);
                         try {
                             startActivity(whatsappIntent);
                             Utils.pushShareArticleEvent(this, "DetailVideoScreen", userDynamoId + "", videoId, authorId + "~" + author, "Whatsapp");
                         } catch (android.content.ActivityNotFoundException ex) {
-                            Toast.makeText(VlogsDetailActivity.this, "Whatsapp have not been installed.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(VlogsDetailActivity.this, getString(R.string.moderation_or_share_whatsapp_not_installed), Toast.LENGTH_SHORT).show();
                         }
                     }
                     break;
@@ -1457,7 +1457,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                         intent.setClassName(best.activityInfo.packageName, best.activityInfo.name);
                     }
                     intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Momspresso");
-                    intent.putExtra(android.content.Intent.EXTRA_TEXT, AppUtils.fromHtml("Momspresso\n\nCheck out this interesting blog post\n " + shareUrl));
+                    intent.putExtra(android.content.Intent.EXTRA_TEXT, AppUtils.fromHtml(getString(R.string.check_out_blog) + shareUrl));
 
                     try {
                         startActivity(intent);
@@ -1467,7 +1467,7 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                         i.setType("plain/text");
                         i.putExtra(Intent.EXTRA_EMAIL, new String[]{});
                         i.putExtra(Intent.EXTRA_SUBJECT, "");
-                        i.putExtra(Intent.EXTRA_TEXT, "Momspresso\n\nCheck out this interesting blog post\n " + shareUrl);
+                        i.putExtra(Intent.EXTRA_TEXT, getString(R.string.check_out_blog) + shareUrl);
                         try {
                             startActivity(Intent.createChooser(i, "Send mail..."));
                             Utils.pushShareArticleEvent(this, "DetailVideoScreen", userDynamoId + "", videoId, authorId + "~" + author, "Email");
@@ -1627,9 +1627,9 @@ public class VlogsDetailActivity extends BaseActivity implements YouTubePlayer.O
                 String author = authorNameTextView.getText().toString();
                 String shareMessage;
                 if (StringUtils.isNullOrEmpty(shareUrl)) {
-                    shareMessage = "Momspresso\n\nCheck out this interesting blog post " + "\"" + detailData.getTitle() + "\" by " + author + ".";
+                    shareMessage = getString(R.string.check_out_blog) + " " + "\"" + detailData.getTitle() + "\" by " + author + ".";
                 } else {
-                    shareMessage = "Momspresso\n\nCheck out this interesting blog post " + "\"" + detailData.getTitle() + "\" by " + author + ".\nRead Here: " + shareUrl;
+                    shareMessage = getString(R.string.check_out_blog) + " " + "\"" + detailData.getTitle() + "\" by " + author + ".\nRead Here: " + shareUrl;
                 }
 //                Utils.pushEventShareURL(VlogsDetailActivity.this, GTMEventType.SHARE_BLOG_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(this).getId() + "", "Video Detail", shareUrl);
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);

@@ -79,7 +79,7 @@ public class SuggestedTopicsFragment extends BaseFragment {
         @Override
         public void onResponse(Call<SuggestedTopicsResponse> call, retrofit2.Response<SuggestedTopicsResponse> response) {
             if (response == null || response.body() == null) {
-                ((DashboardActivity) getActivity()).showToast("Something went wrong from server");
+                ((DashboardActivity) getActivity()).showToast(getString(R.string.server_went_wrong));;
                 return;
             }
 
@@ -109,7 +109,7 @@ public class SuggestedTopicsFragment extends BaseFragment {
 
     private void getUserPublishedArticles() {
         if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
-            ((UserPublishedAndDraftsActivity) getActivity()).showToast("No connectivity available");
+            ((UserPublishedAndDraftsActivity) getActivity()).showToast(getString(R.string.connectivity_unavailable));
             return;
         }
 

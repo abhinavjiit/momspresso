@@ -6,7 +6,6 @@
         android:title="Take picture from camera" />
 
     <item
-        android:id="@+id/album"
         android:actionMenuTextColor="@color/black_color"
         android:title="Select an image" />
 </menu>

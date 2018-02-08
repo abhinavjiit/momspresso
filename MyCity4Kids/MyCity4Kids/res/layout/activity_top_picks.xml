@@ -46,7 +46,6 @@
             android:background="#5997fc" >
 
             <ImageView
-                android:id="@+id/sort_icon"
                 android:layout_width="40dp"
                 android:layout_height="38dp"
                 android:padding="5dp"

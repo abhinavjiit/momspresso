@@ -472,7 +472,7 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
             } else {
                 // No results for search
                 noBlogsTextView.setVisibility(View.VISIBLE);
-                noBlogsTextView.setText("No articles found");
+                noBlogsTextView.setText(getString(R.string.no_articles_found));
                 mDatalist = dataList;
 //                trendingTopicData.setArticleList(dataList);
                 recyclerAdapter.setNewListData(mDatalist);

@@ -50,7 +50,6 @@
             android:visibility="gone">
 
             <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/moderationMsgTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -89,7 +88,6 @@
             android:orientation="vertical">
 
             <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/publishMsgTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"

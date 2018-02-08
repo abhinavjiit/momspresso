@@ -158,7 +158,7 @@ public class NotificationFragment extends BaseFragment implements View.OnClickLi
 //                    notificationCenterListAdapter.setNewListData(dataList);
                     notificationCenterListAdapter.notifyDataSetChanged();
                     noBlogsTextView.setVisibility(View.VISIBLE);
-                    noBlogsTextView.setText("No Notifications");
+                    noBlogsTextView.setText(getString(R.string.notification_no_notification));
                 }
             } else {
                 noBlogsTextView.setVisibility(View.GONE);

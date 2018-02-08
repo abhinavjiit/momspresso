@@ -209,7 +209,7 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
             if (response == null || null == response.body()) {
                 NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                 Crashlytics.logException(nee);
-                showToast("Something went wrong from server");
+                showToast(getString(R.string.server_went_wrong));
                 return;
             }
             try {
@@ -250,7 +250,7 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
                     recyclerAdapter.setNewListData(dataList);
                     recyclerAdapter.notifyDataSetChanged();
                     noBlogsTextView.setVisibility(View.VISIBLE);
-                    noBlogsTextView.setText("No articles found");
+                    noBlogsTextView.setText(getString(R.string.no_articles_found));
                 }
             } else {
                 noBlogsTextView.setVisibility(View.GONE);
@@ -294,11 +294,11 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
             progressBar.setVisibility(View.GONE);
             if (isError) {
                 if (response.getResponseCode() != 999)
-                    showToast("Something went wrong from server");
+                    showToast(getString(R.string.server_went_wrong));
             } else {
 
                 if (response == null) {
-                    showToast("Something went wrong from server");
+                    showToast(getString(R.string.server_went_wrong));
                     isReuqestRunning = false;
                     mLodingView.setVisibility(View.GONE);
                     return;
@@ -349,7 +349,7 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
                     recyclerAdapter.setNewListData(dataList);
                     recyclerAdapter.notifyDataSetChanged();
                     noBlogsTextView.setVisibility(View.VISIBLE);
-                    noBlogsTextView.setText("No articles found");
+                    noBlogsTextView.setText(getString(R.string.no_articles_found));
                 }
 
             } else {

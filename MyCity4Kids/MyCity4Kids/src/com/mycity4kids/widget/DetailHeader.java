@@ -97,7 +97,7 @@ public class DetailHeader extends RelativeLayout implements OnClickListener {
 
         if (mEventOrBusiness == Constants.EVENT_PAGE_TYPE) {
             //anupama
-			/*((TextView) view.findViewById(R.id.add_to_calendar)).setVisibility(View.VISIBLE);
+            /*((TextView) view.findViewById(R.id.add_to_calendar)).setVisibility(View.VISIBLE);
 			((TextView) view.findViewById(R.id.add_to_calendar)).setOnClickListener(this);*/
 
         }
@@ -207,29 +207,6 @@ public class DetailHeader extends RelativeLayout implements OnClickListener {
             }
         } else if (mEventOrBusiness == Constants.EVENT_PAGE_TYPE) {
             switch (v.getId()) {
-                case R.id.favorite:
-                    if (count <= 0) {
-                        goToLoginDialog();
-                        return;
-                    }
-                    if (requestData == null) {
-                        Toast.makeText(_activity, "Something went wrong..", Toast.LENGTH_LONG)
-                                .show();
-                        return;
-                    }
-                    _activity.showProgressDialog("Please Wait...");
-                    _controller.getData(AppConstants.FAVORITE_REQUEST, requestData);
-                    break;
-                case R.id.been_there:
-
-                    if (requestData == null) {
-                        Toast.makeText(_activity, "Something went wrong..", Toast.LENGTH_LONG)
-                                .show();
-                        return;
-                    }
-                    _activity.showProgressDialog("Please Wait...");
-                    _controller.getData(AppConstants.BEEN_THERE_REQUEST, requestData);
-                    break;
                 case R.id.write_a_review:
 
                     ((BusinessDetailsActivity) getContext()).writeReviewFromHeader(AddReviewOrPhoto.WriteAReview);
@@ -247,31 +224,6 @@ public class DetailHeader extends RelativeLayout implements OnClickListener {
                     fragmentDialog.show(((FragmentActivity) getContext()).getSupportFragmentManager(), "");
                     ((BusinessDetailsActivity) getContext()).writeReviewFromHeader(AddReviewOrPhoto.AddPhoto);
                     Utils.pushEvent(getContext(), GTMEventType.ADDPHOTOS_EVENT_CLICKED_EVENT, SharedPrefUtils.getUserDetailModel(getContext()).getDynamoId() + "", "");
-
-
-                    break;
-                case R.id.share_with_frnd:
-                    Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
-                    shareIntent.setType("text/plain");
-
-
-                    String titleName = detailsResponse.getName();
-                    if (StringUtils.isNullOrEmpty(titleName)) {
-                        titleName = "";
-                    }
-
-                    String webUrl = detailsResponse.getWeb_url();
-                    if (StringUtils.isNullOrEmpty(webUrl)) {
-                        webUrl = "";
-                    }
-
-                    //  shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, titleName);
-
-
-                    String shareMessage = "I have just discovered " + titleName + " in Momspresso app. Check it out " + webUrl;
-                    shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
-
-                    getContext().startActivity(Intent.createChooser(shareIntent, "Momspresso"));
 
 
                     break;

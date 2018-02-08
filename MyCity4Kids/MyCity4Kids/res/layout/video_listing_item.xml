@@ -15,7 +15,6 @@
         card_view:cardElevation="0dp">
 
         <RelativeLayout
-            android:id="@+id/titleContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -35,7 +34,6 @@
                 card_view:fontName="oswald_regular.ttf" />
 
             <RelativeLayout
-                android:id="@+id/articleImageViewContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/txvArticleTitle"

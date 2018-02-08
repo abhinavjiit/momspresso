@@ -306,7 +306,7 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
         @Override
         public void onResponse(Call<ArticleDetailResponse> call, retrofit2.Response<ArticleDetailResponse> response) {
             if (response == null || null == response.body()) {
-                showToast("Something went wrong from server");
+                showToast(getString(R.string.server_went_wrong));
                 return;
             }
 
@@ -334,7 +334,7 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
             if (t instanceof UnknownHostException) {
                 showToast(getString(R.string.error_network));
             } else if (t instanceof SocketTimeoutException) {
-                showToast("connection timed out");
+                showToast(getString(R.string.connection_timeout));
             } else {
                 showToast(getString(R.string.server_went_wrong));
             }

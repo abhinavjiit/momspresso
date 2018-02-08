@@ -176,9 +176,9 @@ public class ContributorListAdapter extends BaseAdapter {
         holder.followersCount.setText(datalist.get(position).getFollowersCount() + "");
 
         if (datalist.get(position).getIsFollowed() == 0) {
-            holder.bloggerFollow.setText("FOLLOW");
+            holder.bloggerFollow.setText(context.getString(R.string.ad_follow_author));
         } else {
-            holder.bloggerFollow.setText("FOLLOWING");
+            holder.bloggerFollow.setText(context.getString(R.string.ad_following_author));
         }
         holder.bloggerFollow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -329,7 +329,7 @@ public class ContributorListAdapter extends BaseAdapter {
                                 datalist.get(i).setIsFollowed(1);
                                 viewHolder.relativeLoadingView.setVisibility(View.GONE);
                                 viewHolder.bloggerFollow.setVisibility(View.VISIBLE);
-                                viewHolder.bloggerFollow.setText("FOLLOWING");
+                                viewHolder.bloggerFollow.setText(context.getString(R.string.ad_following_author));
                                 long followersCount = datalist.get(i).getFollowersCount() + 1;
                                 datalist.get(i).setFollowersCount(followersCount);
                                 viewHolder.followersCount.setText(followersCount + "");
@@ -341,7 +341,7 @@ public class ContributorListAdapter extends BaseAdapter {
                                 long followersCount = datalist.get(i).getFollowersCount() - 1;
                                 datalist.get(i).setFollowersCount(followersCount);
                                 viewHolder.followersCount.setText(followersCount + "");
-                                viewHolder.bloggerFollow.setText("FOLLOW");
+                                viewHolder.bloggerFollow.setText(context.getString(R.string.ad_follow_author));
                             }
 //                            notifyDataSetChanged();
                         }
@@ -359,13 +359,13 @@ public class ContributorListAdapter extends BaseAdapter {
             if (type.equals("follow")) {
                 //   viewHolder.followingTextView.setVisibility(View.INVISIBLE);
                 viewHolder.bloggerFollow.setVisibility(View.VISIBLE);
-                viewHolder.bloggerFollow.setText("FOLLOW");
+                viewHolder.bloggerFollow.setText(context.getString(R.string.ad_follow_author));
                 viewHolder.followersCount.setText(datalist.get(position).getFollowersCount() - 1 + "");
                 datalist.get(position).setFollowersCount(datalist.get(position).getFollowersCount() - 1);
 
             } else {
                 viewHolder.bloggerFollow.setVisibility(View.VISIBLE);
-                viewHolder.bloggerFollow.setText("FOLLOWING");
+                viewHolder.bloggerFollow.setText(context.getString(R.string.ad_following_author));
                 viewHolder.followersCount.setText(datalist.get(position).getFollowersCount() + 1 + "");
                 datalist.get(position).setFollowersCount(datalist.get(position).getFollowersCount() + 1);
             }

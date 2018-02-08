@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/native_ad_unit"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:color/white"
@@ -15,7 +14,6 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/ll_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -44,7 +42,6 @@
                     android:textSize="15sp" />
 
                 <TextView
-                    android:id="@+id/sponsored_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
@@ -134,7 +131,6 @@
             card_view:cardElevation="0dp">
 
             <RelativeLayout
-                android:id="@+id/titleContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/topics_border_bg"
@@ -155,7 +151,6 @@
                     card_view:fontName="oswald_regular.ttf" />
 
                 <RelativeLayout
-                    android:id="@+id/articleImageViewContainer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/txvArticleTitle"
