@@ -54,6 +54,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.OnWebServiceCompleteListener;
 import com.mycity4kids.models.TopicsResponse;
@@ -129,6 +130,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private ArticleDetailsAPI articleDetailsAPI;
     private ArrayList<ImageData> imageList;
     private ArrayList<VideoData> videoList;
+    private ArrayList<ArticleListingResult> impressionList;
     private int width;
     private int bookmarkStatus;
     private int recommendStatus;
@@ -137,6 +139,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private boolean isFollowing = false;
     private boolean isLoading = false;
     private boolean isArticleDetailEndReached = false;
+    private boolean isArticleDetailLoaded = false;
     private boolean isSwipeNextAvailable;
     private boolean isFbCommentHeadingAdded = false;
     private String bookmarkFlag = "0";
@@ -183,8 +186,10 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private TextView articleRecommendationCountTextView;
     private TextView viewAllTagsTextView;
     private TextView swipeNextTextView;
+    private TextView writeArticleTextView;
     private ImageView cover_image;
     private ImageView floatingActionButton;
+    private ImageView writeArticleImageView;
     private RelativeLayout mLodingView;
     private FlowLayout tagsLayout;
     private Rect scrollBounds;
@@ -269,6 +274,8 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             commentHeading = ((TextView) fragmentView.findViewById(R.id.commentsHeading));
             viewCommentsTextView = ((TextView) fragmentView.findViewById(R.id.viewCommentsTextView));
 
+            writeArticleTextView = ((TextView) fragmentView.findViewById(R.id.writeArticleTextView));
+            writeArticleImageView = ((ImageView) fragmentView.findViewById(R.id.writeArticleImageView));
 //            mAdView = (AdView) fragmentView.findViewById(R.id.adView);
 //            AdRequest adRequest = new AdRequest.Builder()
 //                    .build();
@@ -289,12 +296,15 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             likeArticleTextView.setOnClickListener(this);
             bookmarkArticleTextView.setOnClickListener(this);
             viewCommentsTextView.setOnClickListener(this);
+            writeArticleImageView.setOnClickListener(this);
+            writeArticleTextView.setOnClickListener(this);
 
             mLodingView = (RelativeLayout) fragmentView.findViewById(R.id.relativeLoadingView);
 //            fragmentView.findViewById(R.id.imgLoader).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_indefinitely));
 
             mScrollView = (ObservableScrollView) fragmentView.findViewById(R.id.scroll_view);
             mScrollView.setScrollViewCallbacks(this);
+            impressionList = new ArrayList<>();
 
             Bundle bundle = getArguments();
             if (bundle != null) {
@@ -810,10 +820,31 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         call.enqueue(getFollowedTopicsResponseCallback);
     }
 
+    private void launchEditor() {
+        if (isAdded()) {
+            Intent intent1 = new Intent(getActivity(), EditorPostActivity.class);
+            Bundle bundle5 = new Bundle();
+            bundle5.putString(EditorPostActivity.TITLE_PARAM, "");
+            bundle5.putString(EditorPostActivity.CONTENT_PARAM, "");
+            bundle5.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
+                    getString(R.string.example_post_title_placeholder));
+            bundle5.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
+                    getString(R.string.example_post_content_placeholder));
+            bundle5.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
+            bundle5.putString("from", "dashboard");
+            intent1.putExtras(bundle5);
+            startActivity(intent1);
+        }
+    }
+
     @Override
     public void onClick(View v) {
         try {
             switch (v.getId()) {
+                case R.id.writeArticleTextView:
+                case R.id.writeArticleImageView:
+                    launchEditor();
+                    break;
                 case R.id.viewAllTagsTextView:
                     RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     params.setMargins(AppUtils.dpTopx(10), 0, AppUtils.dpTopx(10), 0);
@@ -1096,6 +1127,15 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             if (isSwipeNextAvailable) {
                 swipeNextTextView.setVisibility(View.VISIBLE);
             }
+            if (isArticleDetailLoaded) {
+                ((ArticleDetailsContainerActivity) getActivity()).addArticleForImpression(articleId);
+            }
+            if (impressionList != null && !impressionList.isEmpty()) {
+                for (ArticleListingResult result : impressionList) {
+                    ((ArticleDetailsContainerActivity) getActivity()).addArticleForImpression(result.getTitle());
+                }
+            }
+
 //            if (commentFloatingActionButton.getVisibility() == View.INVISIBLE) {
 //                showFloatingActionButton();
 //            }
@@ -1109,6 +1149,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             }
             isArticleDetailEndReached = false;
         }
+
     }
 
     @Override
@@ -1321,6 +1362,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 ArticleDetailResult responseData = response.body();
                 getResponseUpdateUi(responseData);
                 authorId = detailData.getUserId();
+                isArticleDetailLoaded = true;
                 hitBookmarkFollowingStatusAPI();
                 if ("1".equals(isMomspresso)) {
                     hitBookmarkVideoStatusAPI();
@@ -1515,6 +1557,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
                     } else {
                         trendingArticles.setVisibility(View.VISIBLE);
+                        impressionList.addAll(dataList);
                         Collections.shuffle(dataList);
                         if (dataList.size() >= 3) {
                             Picasso.with(getActivity()).load(dataList.get(0).getImageUrl().getThumbMin()).
@@ -1591,7 +1634,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     } else {
                         recentAuthorArticleHeading.setText(getString(R.string.recent_article));
                         recentAuthorArticles.setVisibility(View.VISIBLE);
+
                         Collections.shuffle(dataList);
+                        impressionList.addAll(dataList);
                         iSwipeRelated.onRelatedSwipe(dataList);
                         if (dataList.size() >= 3) {
                             Picasso.with(getActivity()).load(dataList.get(0).getImageUrl().getThumbMin()).
@@ -1675,6 +1720,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     if (dataList.size() == 0) {
                         relatedTrendingSeparator.setVisibility(View.GONE);
                     } else {
+                        impressionList.addAll(dataList);
                         Collections.shuffle(dataList);
                         recentAuthorArticleHeading.setText(getString(R.string.ad_recent_logs_from_title));
                         recentAuthorArticles.setVisibility(View.VISIBLE);

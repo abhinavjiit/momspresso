@@ -34,6 +34,7 @@ import com.mycity4kids.ui.adapter.ArticleDetailsPagerAdapter;
 import com.mycity4kids.ui.fragment.ArticleDetailsFragment;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -59,6 +60,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
     private String authorId;
     private String articleId;
     private ArrayList<ArticleListingResult> articleList;
+    private HashSet<String> impressionArticleList;
     private int currPos;
     private String userDynamoId;
     private String preferredLang;
@@ -80,6 +82,8 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        impressionArticleList = new HashSet<>();
 
         Bundle bundle = getIntent().getExtras();
         articleList = bundle.getParcelableArrayList("pagerListData");
@@ -301,6 +305,10 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
         playTtsTextView.setVisibility(View.VISIBLE);
     }
 
+    public void addArticleForImpression(String a_id) {
+        impressionArticleList.add(a_id);
+    }
+
     @Override
     public void onRelatedSwipe(ArrayList<ArticleListingResult> articleList) {
 //        mViewPagerAdapter = new ArticleDetailsPagerAdapter(getSupportFragmentManager(), articleList.size(), articleList);
@@ -486,5 +494,14 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
                 BaseApplication.setFirstSwipe(false);
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        for (String result : impressionArticleList) {
+            Log.d("bdfbdbfdbfbdfbdbfbfbf", result);
+        }
+
     }
 }

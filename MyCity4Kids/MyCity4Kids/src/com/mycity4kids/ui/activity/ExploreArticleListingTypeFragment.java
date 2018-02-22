@@ -48,7 +48,7 @@ import retrofit2.Retrofit;
 public class ExploreArticleListingTypeFragment extends BaseFragment {
 
     private final static String MEET_CONTRIBUTOR_ID = "meetContributorId";
-    private String[] sections = {"TRENDING", "EDITOR'S PICK", "FOR YOU", "LANGUAGES", "VIDEOS", "RECENT"};
+
     private ArrayList<ExploreTopicsModel> mainTopicsList;
     private String fragType = "";
     private String dynamoUserId;
@@ -67,6 +67,10 @@ public class ExploreArticleListingTypeFragment extends BaseFragment {
         if (getArguments() != null) {
             fragType = getArguments().getString("fragType", "");
         }
+        String[] sections = {
+                getString(R.string.article_listing_type_trending_label), getString(R.string.article_listing_type_editor_label), getString(R.string.article_listing_type_for_you_label),
+                getString(R.string.article_listing_type_languages_label), getString(R.string.article_listing_type_videos_label), getString(R.string.article_listing_type_recent_label)
+        };
 
         dynamoUserId = SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId();
         tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
@@ -91,7 +95,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment {
         } else {
             searchTopicsEditText.setVisibility(View.GONE);
             exploreCategoriesLabel.setText(getString(R.string.explore_listing_explore_categories_title));
-            setUpTabLayout();
+            setUpTabLayout(sections);
 
             try {
                 FileInputStream fileInputStream = getActivity().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
@@ -166,7 +170,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment {
         return view;
     }
 
-    private void setUpTabLayout() {
+    private void setUpTabLayout(String[] sections) {
         for (int i = 0; i < sections.length; i++) {
             tabLayout.addTab(tabLayout.newTab().setText(sections[i]));
         }

@@ -296,7 +296,7 @@
     <string name="sign_in.no_account">Don\'t have an account?\u0020</string>
     <string name="sign_in.sign_up_btn">SIGNUP</string>
 
-    <string name="sign_up.welcome_back">WELCOME BACK</string>
+    <string name="sign_up.welcome_back">SIGN UP</string>
     <string name="sign_up.desc">Discover the joy of motherhood.\n Join our Mum community to find inspiration &amp; hope.</string>
     <string name="sign_up.already_account">Already have an account?\u0020</string>
     <string name="sign_up.sign_in_btn">SIGNIN</string>
@@ -604,5 +604,13 @@
     <string name="image_upload_fail">unable to upload image, please try again later</string>
     <string name="android_version_unsupported">This version of android is no more supported.</string>
     <string name="choose_mp4_file">please choose a .mp4 format file</string>
+
+    <string name="article_listing.type.trending_label">TRENDING</string>
+    <string name="article_listing.type.editor_label">EDITOR\'S PICK</string>
+    <string name="article_listing.type.for_you_label">FOR YOU</string>
+    <string name="article_listing.type.languages_label">LANGUAGES</string>
+    <string name="article_listing.type.videos_label">VIDEOS</string>
+    <string name="article_listing.type.recent_label">RECENT</string>
+
 
 </resources>

@@ -189,11 +189,30 @@
                 android:ellipsize="end"
                 android:minHeight="1000dp" />
 
+            <ImageView
+                android:id="@+id/writeArticleImageView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/articleWebView"
+                android:scaleType="fitXY"
+                android:src="@drawable/write_article" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/writeArticleTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/writeArticleImageView"
+                android:layout_alignTop="@+id/writeArticleImageView"
+                android:gravity="center"
+                android:text="WRITE A BLOG"
+                android:textColor="#507cbe"
+                android:textSize="24sp" />
+
             <RelativeLayout
                 android:id="@+id/tagsLayoutContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/articleWebView"
+                android:layout_below="@+id/writeArticleImageView"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="4dp"
                 android:visibility="visible">

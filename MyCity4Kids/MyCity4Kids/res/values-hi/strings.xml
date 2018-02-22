@@ -295,7 +295,7 @@
     <string name="sign_in.no_account">क्या आपका अकाउंट नहीं बना है?\u0020</string>
     <string name="sign_in.sign_up_btn">साइन अप</string>
 
-    <string name="sign_up.welcome_back">आपका दुबारा से स्वागत है</string>
+    <string name="sign_up.welcome_back">साइन अप</string>
     <string name="sign_up.desc">मातृत्व की ख़ुशी का अनुभव करें। \nप्रेरणा और उम्मीद के लिए हमारी ममज़ कम्युनिटी से जुड़े</string>
     <string name="sign_up.already_account">क्या आपका अकाउंट पहले से बना हुआ है?\u0020</string>
     <string name="sign_up.sign_in_btn">साइन इन</string>
@@ -561,20 +561,20 @@
     <string name="user_funny_video.toolbar.title">मॉम वीलॉग्स </string>
     <string name="user_funny_video.published_on">पर प्रकाशित: %1$s</string>
 
-    <string name="article_listing.toolbar.title_recent">ताजातरीन </string>
+    <string name="article_listing.toolbar.title_recent">ताजातरीन</string>
     <string name="article_listing.toolbar.title_popular">प्रचलित</string>
-    <string name="article_listing.toolbar.title_trending">ट्रेंडिंग </string>
+    <string name="article_listing.toolbar.title_trending">ट्रेंडिंग</string>
     <string name="article_listing.toolbar.title_for_you">खास आपके लिए </string>
     <string name="article_listing.toolbar.title_editor_picks">संपादक की पसंद</string>
 
-    <string name="sort.recent">ताजातरीन </string>
+    <string name="sort.recent">ताजातरीन</string>
     <string name="sort.popular">प्रचलित</string>
 
     <string name="city_picker.toolbar.title">शहर का चुनाव करें</string>
 
     <string name="rate_us.dialog.title">हमारे एप्प को रेट करें ?</string>
     <string name="rate_us.dialog.not_now">अभी नहीं</string>
-    <string name="rate_us.dialog.message1">यदि आप मॉम्सप्रेस्सो  ऐप का आनंद लेते हैं, तो कृपया इसे रेट करने के लिए कुछ समय दें।</string>
+    <string name="rate_us.dialog.message1">यदि आप मॉम्सप्रेस्सो ऐप का आनंद लेते हैं, तो कृपया इसे रेट करने के लिए कुछ समय दें।</string>
     <string name="rate_us.dialog.message2">आपके सहयोग के लिए धन्यवाद !!!</string>
 
     <string name="suggested_topic.start_writing">लिखने की शुरुआत करें</string>
@@ -585,12 +585,12 @@
     <string name="contributor_in">शामिल  योगदानकर्ता</string>
     <string name="recent_article">सम्बन्धित लेख</string>
     <string name="upload_bigger_image">बड़े साइज़ की इमेज अपलोड करें </string>
-    <string name="upload_min_width">कृपया कम से कम 720 पिक्सल की  चौड़ाई वाली इमेज  अपलोड करें</string>
+    <string name="upload_min_width">कृपया कम से कम 720 पिक्सल की चौड़ाई वाली इमेज अपलोड करें</string>
     <string name="image_upload_wait">कृपया इमेज अपलोड होने तक प्रतीक्षा करें</string>
     <string name="editor_title_empty">टाइटल खाली नहीं छोड़ा जा सकता</string>
     <string name="editor_body_empty">मुख्य भाग खाली नहीं छोड़ा सकता </string>
     <string name="editor_title_char_limit">प्रकाशित करने में असमर्थ. टाइटल 150 वर्णों से छोटा होना चाहिए</string>
-    <string name="editor_body_min_words">कृपया कम से कम 300शब्द लिखें</string>
+    <string name="editor_body_min_words">कृपया कम से कम 300 शब्द लिखें</string>
     <string name="draft_oops">क्षमा करें!</string>
     <string name="draft_not_saved">ड्राफ्ट को सेव  नहीं किया जा सका, यदि आप अब  बाहर निकलते हैं, तो आपके मौजूदा परिवर्तन खो जाएंगे। क्या आप बाहर निकलना चाहते हैं??</string>
     <string name="draft_save_success">ड्राफ्ट सफलता पूर्वक सेव हो गया है</string>
@@ -602,6 +602,13 @@
     <string name="image_upload_success">इमेज सफलता पूर्वक अपलोड हो गयी है !</string>
     <string name="image_upload_fail">unable to upload image, please try again later</string>
     <string name="android_version_unsupported">एंड्रॉइड का यह वर्जन अब उपलब्ध नहीं है</string>
-    <string name="choose_mp4_file">कृपया एम पी 4 फ़ाइल फॉर्मेट का चुनाव करें</string>
+    <string name="choose_mp4_file">कृपया mp4 फ़ाइल फॉर्मेट का चुनाव करें</string>
+
+    <string name="article_listing.type.trending_label">ट्रेंडिंग</string>
+    <string name="article_listing.type.editor_label">संपादक की पसंद</string>
+    <string name="article_listing.type.for_you_label">खास आपके लिए</string>
+    <string name="article_listing.type.languages_label">भाषाएँ</string>
+    <string name="article_listing.type.videos_label">ताजातरीन</string>
+    <string name="article_listing.type.recent_label">ताजातरीन</string>
 
 </resources>
