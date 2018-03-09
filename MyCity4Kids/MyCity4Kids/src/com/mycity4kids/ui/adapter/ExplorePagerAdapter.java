@@ -5,14 +5,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.mycity4kids.models.response.TrendingListingResult;
 import com.mycity4kids.ui.fragment.EventsTabFragment;
 import com.mycity4kids.ui.fragment.ResourcesTabFragment;
 import com.mycity4kids.ui.fragment.TopThingsTabFragment;
-import com.mycity4kids.ui.fragment.TrendingTopicsAllTabFragment;
-import com.mycity4kids.ui.fragment.TrendingTopicsTabFragment;
-
-import java.util.ArrayList;
 
 /**
  * Created by hemant on 24/5/17.

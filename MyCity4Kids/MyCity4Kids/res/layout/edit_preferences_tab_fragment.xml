@@ -6,8 +6,8 @@
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_above="@+id/saveTextView"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_above="@+id/saveTextView">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -126,10 +126,10 @@
                 android:paddingBottom="10dp"
                 android:paddingLeft="20dp"
                 android:paddingTop="10dp"
-                android:visibility="gone"
                 android:text="@string/app_settings.edit_prefs.twitter"
                 android:textColor="@color/app_settings.edit_prefs.twitter"
                 android:textSize="16sp"
+                android:visibility="gone"
                 app:fontName="oswald.ttf" />
 
             <com.mycity4kids.widget.CustomFontTextView
@@ -141,12 +141,12 @@
                 android:layout_below="@+id/fbConnectLabel"
                 android:paddingBottom="10dp"
                 android:paddingLeft="20dp"
-                android:visibility="gone"
                 android:paddingRight="20dp"
                 android:paddingTop="10dp"
                 android:text="@string/app_settings.edit_prefs.add"
                 android:textColor="@color/app_settings.edit_prefs.add"
                 android:textSize="16sp"
+                android:visibility="gone"
                 app:fontName="oswald.ttf" />
 
             <com.mycity4kids.widget.CustomFontTextView
@@ -158,9 +158,9 @@
                 android:paddingLeft="20dp"
                 android:paddingTop="10dp"
                 android:text="@string/app_settings.edit_prefs.google"
-                android:visibility="gone"
                 android:textColor="@color/app_settings.edit_prefs.google"
                 android:textSize="16sp"
+                android:visibility="gone"
                 app:fontName="oswald.ttf" />
 
             <com.mycity4kids.widget.CustomFontTextView
@@ -175,9 +175,9 @@
                 android:paddingRight="20dp"
                 android:paddingTop="10dp"
                 android:text="@string/app_settings.edit_prefs.add"
-                android:visibility="gone"
                 android:textColor="@color/app_settings.edit_prefs.add"
                 android:textSize="16sp"
+                android:visibility="gone"
                 app:fontName="oswald.ttf" />
 
             <View
@@ -250,36 +250,6 @@
                 android:textSize="16sp"
                 app:fontName="oswald.ttf" />
 
-            <View
-                android:id="@+id/underline4"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@+id/showMoreFollowedTopicsTextView"
-                android:background="@color/light_grey1" />
-
-            <com.mycity4kids.widget.CustomFontTextView
-                android:id="@+id/preferredLangLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/underline4"
-                android:paddingBottom="10dp"
-                android:paddingLeft="20dp"
-                android:paddingTop="10dp"
-                android:text="@string/app_settings.edit_prefs.pref_lang"
-                android:textColor="@color/app_settings.edit_prefs.pref_lang_label"
-                android:textSize="14sp"
-                app:fontName="oswald_regular.ttf" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/prefLanguagesRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/preferredLangLabel"
-                android:nestedScrollingEnabled="false"
-                android:paddingBottom="10dp"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:paddingTop="10dp" />
         </RelativeLayout>
     </android.support.v4.widget.NestedScrollView>
 

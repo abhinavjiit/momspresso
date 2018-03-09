@@ -23,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -55,6 +56,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.DeepLinkingAPI;
 import com.mycity4kids.ui.fragment.AddArticleVideoFragment;
 import com.mycity4kids.ui.fragment.BecomeBloggerFragment;
+import com.mycity4kids.ui.fragment.ChangePreferredLanguageDialogFragment;
 import com.mycity4kids.ui.fragment.ChooseVideoUploadOptionDialogFragment;
 import com.mycity4kids.ui.fragment.ExploreFragment;
 import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
@@ -100,12 +102,16 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     private RelativeLayout toolbarRelativeLayout;
     private RelativeLayout rootLayout;
     private ImageView downArrowImageView;
-    private ImageView coachmarksImageView;
     private TextView selectOptToolbarTitle;
     private TextView readAllNotificationTextView;
     private Badge badge;
     private View toolbarUnderline;
     private ImageView menuImageView;
+    private TextView langTextView;
+    private FrameLayout transparentLayerToolbar;
+    private FrameLayout transparentLayerNavigation;
+    private RelativeLayout firstCoachmark, secondCoachmark;
+    private TextView selectedlangGuideTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,7 +155,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         searchAllImageView = (ImageView) mToolbar.findViewById(R.id.searchAllImageView);
         selectOptToolbarTitle = (TextView) findViewById(R.id.selectOptToolbarTitle);
         readAllNotificationTextView = (TextView) findViewById(R.id.readAllTextView);
-        coachmarksImageView = (ImageView) findViewById(R.id.coachmarksImageView);
+        langTextView = (TextView) findViewById(R.id.langTextView);
+        selectedlangGuideTextView = (TextView) findViewById(R.id.selectedlangGuideTextView);
+        firstCoachmark = (RelativeLayout) findViewById(R.id.firstCoachmark);
+        secondCoachmark = (RelativeLayout) findViewById(R.id.secondCoachmark);
+        transparentLayerToolbar = (FrameLayout) findViewById(R.id.transparentLayerToolbar);
+        transparentLayerNavigation = (FrameLayout) findViewById(R.id.transparentLayerNavigation);
 
         bottomNavigationView.enableAnimation(false);
         bottomNavigationView.enableShiftingMode(false);
@@ -163,8 +174,26 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         toolbarTitleTextView.setOnClickListener(this);
         searchAllImageView.setOnClickListener(this);
         readAllNotificationTextView.setOnClickListener(this);
-        coachmarksImageView.setOnClickListener(this);
+        langTextView.setOnClickListener(this);
+        firstCoachmark.setOnClickListener(this);
+        secondCoachmark.setOnClickListener(this);
 
+        if (AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils.getAppLocale(this))) {
+            langTextView.setText(getString(R.string.language_label_english));
+            selectedlangGuideTextView.setText(getString(R.string.language_label_english));
+        } else if (AppConstants.LOCALE_HINDI.equals(SharedPrefUtils.getAppLocale(this))) {
+            langTextView.setText(getString(R.string.language_label_hindi));
+            selectedlangGuideTextView.setText(getString(R.string.language_label_hindi));
+        } else if (AppConstants.LOCALE_MARATHI.equals(SharedPrefUtils.getAppLocale(this))) {
+            langTextView.setText(getString(R.string.language_label_marathi));
+            selectedlangGuideTextView.setText(getString(R.string.language_label_marathi));
+        } else if (AppConstants.LOCALE_BENGALI.equals(SharedPrefUtils.getAppLocale(this))) {
+            langTextView.setText(getString(R.string.language_label_bengali));
+            selectedlangGuideTextView.setText(getString(R.string.language_label_bengali));
+        } else {
+            langTextView.setText(getString(R.string.language_label_english));
+            selectedlangGuideTextView.setText(getString(R.string.language_label_english));
+        }
         setSupportActionBar(mToolbar);
 
         bottomNavigationView.setItemIconTintList(null);
@@ -597,6 +626,16 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     public void onClick(View v) {
         Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
         switch (v.getId()) {
+            case R.id.langTextView: {
+                ChangePreferredLanguageDialogFragment changePreferredLanguageDialogFragment = new ChangePreferredLanguageDialogFragment();
+                FragmentManager fm = getSupportFragmentManager();
+                Bundle _args = new Bundle();
+                _args.putString("activity", "dashboard");
+                changePreferredLanguageDialogFragment.setArguments(_args);
+                changePreferredLanguageDialogFragment.setCancelable(true);
+                changePreferredLanguageDialogFragment.show(fm, "Choose video option");
+            }
+            break;
             case R.id.imgProfile:
                 Intent intent4 = new Intent(DashboardActivity.this, BloggerProfileActivity.class);
                 startActivity(intent4);
@@ -628,17 +667,13 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     updateUnreadNotificationCount("0");
                 }
                 break;
-            case R.id.coachmarksImageView:
-                coachmarksImageView.setVisibility(View.GONE);
-                bottomNavigationView.setVisibility(View.VISIBLE);
-                if (topFragment instanceof FragmentMC4KHomeNew) {
-                    SharedPrefUtils.setCoachmarksShownFlag(this, "home", true);
-                } else if (topFragment instanceof ExploreArticleListingTypeFragment) {
-                    SharedPrefUtils.setCoachmarksShownFlag(this, "topics", true);
-                } else if (topFragment instanceof TopicsListingFragment) {
-                    SharedPrefUtils.setCoachmarksShownFlag(this, "topics_article", true);
-                }
-
+            case R.id.firstCoachmark:
+                firstCoachmark.setVisibility(View.GONE);
+                secondCoachmark.setVisibility(View.VISIBLE);
+                break;
+            case R.id.secondCoachmark:
+                secondCoachmark.setVisibility(View.GONE);
+                SharedPrefUtils.setCoachmarksShownFlag(this, "home", true);
                 break;
             default:
                 break;
@@ -1055,13 +1090,15 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
     public void onBackStackChanged() {
         final Fragment topFragment = getSupportFragmentManager().findFragmentById(R.id.content_frame);
         Menu menu = bottomNavigationView.getMenu();
+        transparentLayerToolbar.setVisibility(View.GONE);
+        transparentLayerNavigation.setVisibility(View.GONE);
         searchAllImageView.setVisibility(View.VISIBLE);
         selectOptToolbarTitle.setVisibility(View.GONE);
         toolbarTitleTextView.setVisibility(View.VISIBLE);
         downArrowImageView.setVisibility(View.INVISIBLE);
         menuImageView.setVisibility(View.GONE);
-        coachmarksImageView.setVisibility(View.GONE);
         readAllNotificationTextView.setVisibility(View.GONE);
+        langTextView.setVisibility(View.GONE);
         if (null != topFragment && topFragment instanceof ExploreArticleListingTypeFragment) {
             String fragType = "";
             if (topFragment.getArguments() != null) {
@@ -1081,9 +1118,8 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 Utils.pushOpenScreenEvent(this, "TopicScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 selectOptToolbarTitle.setText(getString(R.string.home_screen_select_an_option_title));
                 if (!SharedPrefUtils.isCoachmarksShownFlag(this, "topics")) {
-                    coachmarksImageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.coachmark_categories));
-                    coachmarksImageView.setVisibility(View.VISIBLE);
-                    bottomNavigationView.setVisibility(View.GONE);
+                    showToolbarAndNavigationLayer();
+                    ((ExploreArticleListingTypeFragment) topFragment).showGuideView();
                 } else {
                     bottomNavigationView.setVisibility(View.VISIBLE);
                 }
@@ -1148,10 +1184,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             } else if (null != topFragment && topFragment instanceof FragmentMC4KHomeNew) {
                 Utils.pushOpenScreenEvent(this, "HomeScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 if (!SharedPrefUtils.isCoachmarksShownFlag(this, "home")) {
-                    coachmarksImageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.coachmark_home));
-                    coachmarksImageView.setVisibility(View.VISIBLE);
-                    bottomNavigationView.setVisibility(View.GONE);
+                    firstCoachmark.setVisibility(View.VISIBLE);
                 }
+                langTextView.setVisibility(View.VISIBLE);
                 toolbarTitleTextView.setOnClickListener(this);
                 toolbarTitleTextView.setText(getString(R.string.home_screen_trending_title));
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.home_toolbar_titlecolor));
@@ -1168,9 +1203,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             } else if (null != topFragment && topFragment instanceof TopicsListingFragment) {
                 Utils.pushOpenScreenEvent(this, "TopicArticlesListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 if (!SharedPrefUtils.isCoachmarksShownFlag(this, "topics_article")) {
-                    coachmarksImageView.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.coachmark_article_list));
-                    coachmarksImageView.setVisibility(View.VISIBLE);
-                    bottomNavigationView.setVisibility(View.GONE);
+                    ((TopicsListingFragment) topFragment).showGuideView();
                 }
                 toolbarTitleTextView.setOnClickListener(this);
                 toolbarTitleTextView.setText(mToolbarTitle);
@@ -1213,6 +1246,16 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             }
         }
 
+    }
+
+    public void showToolbarAndNavigationLayer() {
+        transparentLayerToolbar.setVisibility(View.VISIBLE);
+        transparentLayerNavigation.setVisibility(View.VISIBLE);
+    }
+
+    public void hideToolbarAndNavigationLayer() {
+        transparentLayerToolbar.setVisibility(View.GONE);
+        transparentLayerNavigation.setVisibility(View.GONE);
     }
 
     private Badge addBadgeAt(int position, String number) {

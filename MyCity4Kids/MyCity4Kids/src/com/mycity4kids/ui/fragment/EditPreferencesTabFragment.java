@@ -82,7 +82,6 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
 
     private ArrayList<SubscriptionAndLanguageSettingsModel> subscriptionSettingsList;
     private ArrayList<NotificationSettingsModel> notificationSettingsList;
-    private ArrayList<SubscriptionAndLanguageSettingsModel> languagesList;
     private ArrayList<String> mDatalist;
     private ArrayList<Topics> followedSubSubTopicList = new ArrayList<>();
 
@@ -94,10 +93,8 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
     private ViewGroup flowLayout;
     private RecyclerView notificationSettingRecyclerView;
     private RecyclerView subscriptionSettingRecyclerView;
-    private RecyclerView preferredLanguageRecyclerView;
     private EmailSubscriptionAdapter subscriptionSettingsListAdapter;
     private NotificationSubscriptionAdapter notificationSettingsListAdapter;
-    private PreferredLanguagesAdapter preferredLanguagesAdapter;
 
     @Nullable
     @Override
@@ -106,7 +103,6 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
 
         subscriptionSettingsList = new ArrayList<>();
         notificationSettingsList = new ArrayList<>();
-        languagesList = new ArrayList<>();
 
         showMoreFollowedTopicsTextView = (TextView) view.findViewById(R.id.showMoreFollowedTopicsTextView);
         addTopicsBtn = (TextView) view.findViewById(R.id.addTopicsBtn);
@@ -114,7 +110,6 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
         flowLayout = (FlowLayout) view.findViewById(R.id.flowLayout);
         subscriptionSettingRecyclerView = (RecyclerView) view.findViewById(R.id.subscriptionSettingRecyclerView);
         notificationSettingRecyclerView = (RecyclerView) view.findViewById(R.id.notificationSettingRecyclerView);
-        preferredLanguageRecyclerView = (RecyclerView) view.findViewById(R.id.prefLanguagesRecyclerView);
         facebookConnectTextView = (TextView) view.findViewById(R.id.fbConnectBtn);
 
         addTopicsBtn.setOnClickListener(this);
@@ -139,15 +134,9 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
         notificationSettingRecyclerView.setLayoutManager(notificationLayoutManager);
         notificationSettingRecyclerView.setAdapter(notificationSettingsListAdapter);
 
-        final LinearLayoutManager languageLayoutManager = new LinearLayoutManager(getActivity());
-        languageLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        preferredLanguagesAdapter = new PreferredLanguagesAdapter(getActivity(), languagesList);
-        preferredLanguageRecyclerView.setLayoutManager(languageLayoutManager);
-        preferredLanguageRecyclerView.setAdapter(preferredLanguagesAdapter);
 
         checkNotificationsStatus();
         checkSubscriptionStatus();
-        checkLanguageSubscriptionStatus();
         getFollowedTopics();
         return view;
     }
@@ -166,14 +155,6 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
         SubscriptionsAPI subscriptionsAPI = retrofit.create(SubscriptionsAPI.class);
         Call<SubscriptionSettingsResponse> call = subscriptionsAPI.getSubscriptionList(SharedPrefUtils.getUserDetailModel(getActivity()).getEmail());
         call.enqueue(subscriptionSettingsResponseCallback);
-    }
-
-    private void checkLanguageSubscriptionStatus() {
-        showProgressDialog("Please wait ...");
-        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        LanguageSettingsAPI languageSettingsAPI = retrofit.create(LanguageSettingsAPI.class);
-        Call<LanguageSettingsResponse> call = languageSettingsAPI.getLanguagesList();
-        call.enqueue(languageSettingsResponseCallback);
     }
 
     private void getFollowedTopics() {
@@ -290,51 +271,6 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
-
-    private Callback<LanguageSettingsResponse> languageSettingsResponseCallback = new Callback<LanguageSettingsResponse>() {
-        @Override
-        public void onResponse(Call<LanguageSettingsResponse> call, retrofit2.Response<LanguageSettingsResponse> response) {
-            removeProgressDialog();
-            if (response == null || response.body() == null) {
-                return;
-            }
-            try {
-                LanguageSettingsResponse responseData = response.body();
-                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    for (Map<String, String> map : responseData.getData().getResult()) {
-                        Log.d("MAP", map.toString());
-                        SubscriptionAndLanguageSettingsModel subscriptionAndLanguageSettingsModel = new SubscriptionAndLanguageSettingsModel();
-                        for (Map.Entry<String, String> entry : map.entrySet()) {
-                            if ("stories".equals(entry.getKey())) {
-                                subscriptionAndLanguageSettingsModel.setStories(Integer.parseInt(entry.getValue()));
-                            } else {
-                                subscriptionAndLanguageSettingsModel.setName(entry.getKey());
-                                subscriptionAndLanguageSettingsModel.setOriginalStatus(entry.getValue());
-                                subscriptionAndLanguageSettingsModel.setStatus(entry.getValue());
-                            }
-                        }
-                        languagesList.add(subscriptionAndLanguageSettingsModel);
-                    }
-                    preferredLanguagesAdapter.notifyDataSetChanged();
-                    Log.d("dwaddawad", "" + languagesList);
-                } else {
-
-                }
-            } catch (Exception e) {
-                removeProgressDialog();
-                Crashlytics.logException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<LanguageSettingsResponse> call, Throwable t) {
-            removeProgressDialog();
-            Crashlytics.logException(t);
-            Log.d("MC4kException", Log.getStackTraceString(t));
-        }
-    };
-
 
     private Callback<FollowUnfollowCategoriesResponse> getFollowedTopicsResponseCallback = new Callback<FollowUnfollowCategoriesResponse>() {
         @Override
@@ -601,15 +537,9 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
         for (int i = 0; i < subscriptionSettingsList.size(); i++) {
             if (!subscriptionSettingsList.get(i).getStatus().equals(subscriptionSettingsList.get(i).getOriginalStatus())) {
                 if ("1".equals(subscriptionSettingsList.get(i).getStatus())) {
-                    Log.d("GTM Subscription Added", ":" + subscriptionSettingsList.get(i).getDisplayName());
                     Utils.pushEnableSubscriptionEvent(getActivity(), "SettingScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), subscriptionSettingsList.get(i).getName());
-//                    Utils.pushEventSubscriptionSettings(getActivity(), GTMEventType.EMAIL_SUBSCRIBE_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(),
-//                            "Subscription Settings", subscriptionSettingsList.get(i).getName());
                 } else {
-                    Log.d("GTM Subscription Remove", ":" + subscriptionSettingsList.get(i).getDisplayName());
                     Utils.pushDisableSubscriptionEvent(getActivity(), "SettingScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), subscriptionSettingsList.get(i).getName());
-//                    Utils.pushEventSubscriptionSettings(getActivity(), GTMEventType.EMAIL_UNSUBSCRIBE_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(),
-//                            "Subscription Settings", subscriptionSettingsList.get(i).getName());
                 }
             }
             subscriptionSettingsList.get(i).setOriginalStatus(subscriptionSettingsList.get(i).getStatus());
@@ -621,7 +551,6 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
         @Override
         public void onResponse(Call<SubscriptionSettingsResponse> call, retrofit2.Response<SubscriptionSettingsResponse> response) {
             if (response == null || response.body() == null) {
-//                showToast("Something went wrong from server");
                 return;
             }
             try {
@@ -655,159 +584,6 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
         }
     };
 
-    public void updateLanguageSubscription() {
-
-        if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
-            Toast.makeText(getActivity(), R.string.error_network, Toast.LENGTH_SHORT).show();
-            return;
-        }
-        final Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-
-        LanguageSettingsAPI languageSettingsAPI = retrofit.create(LanguageSettingsAPI.class);
-        PreferredLanguageUpdateRequest languageUpdateRequest = new PreferredLanguageUpdateRequest();
-
-        HashMap<String, String> map = new HashMap<>();
-        for (int i = 0; i < languagesList.size(); i++) {
-            map.put(languagesList.get(i).getName().toLowerCase(), languagesList.get(i).getStatus());
-        }
-
-        languageUpdateRequest.setLangSubscription(map);
-
-        Call<UpdateLanguageSettingsResponse> call = languageSettingsAPI.updatePreferredLanguages(languageUpdateRequest);
-        call.enqueue(updateLanguageSettingsCallback);
-
-        for (int i = 0; i < languagesList.size(); i++) {
-            if (!languagesList.get(i).getStatus().equals(languagesList.get(i).getOriginalStatus())) {
-                if ("1".equals(languagesList.get(i).getStatus())) {
-                    Log.d("GTM Launguage Added", ":" + languagesList.get(i).getName());
-                    Utils.pushEnableLanguageEvent(getActivity(), "SettingScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), languagesList.get(i).getName());
-//                    Utils.pushEventFeedLanguage(getActivity(), GTMEventType.FEED_LANGUAGE_ADD_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(),
-//                            "Launguage Settings", languagesList.get(i).getName());
-                } else {
-                    Log.d("GTM Launguage Remove", ":" + languagesList.get(i).getName());
-                    Utils.pushDisableLanguageEvent(getActivity(), "SettingScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), languagesList.get(i).getName());
-//                    Utils.pushEventFeedLanguage(getActivity(), GTMEventType.FEED_LANGUAGE_REMOVE_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(),
-//                            "Launguage Settings", languagesList.get(i).getName());
-                }
-            }
-            languagesList.get(i).setOriginalStatus(languagesList.get(i).getStatus());
-        }
-    }
-
-    Callback<UpdateLanguageSettingsResponse> updateLanguageSettingsCallback = new Callback<UpdateLanguageSettingsResponse>() {
-        @Override
-        public void onResponse(Call<UpdateLanguageSettingsResponse> call, retrofit2.Response<UpdateLanguageSettingsResponse> response) {
-            if (response == null || response.body() == null) {
-//                showToast("Something went wrong from server");
-                return;
-            }
-            try {
-                UpdateLanguageSettingsResponse responseData = response.body();
-                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    if (null != getActivity()) {
-//                        Toast.makeText(getActivity(), "Language content settings updated successfully", Toast.LENGTH_SHORT).show();
-                        UserInfo userInfo = SharedPrefUtils.getUserDetailModel(getActivity());
-                        userInfo.setIsLangSelection("1");
-                        SharedPrefUtils.setUserDetailModel(getActivity(), userInfo);
-
-                        Map<String, String> subscribedContentLanguages = responseData.getData();
-                        String filter = "0";
-
-
-                        FileInputStream fileInputStream = getActivity().openFileInput(AppConstants.LANGUAGES_JSON_FILE);
-                        String fileContent = AppUtils.convertStreamToString(fileInputStream);
-                        LinkedHashMap<String, LanguageConfigModel> retMap = new Gson().fromJson(
-                                fileContent, new TypeToken<LinkedHashMap<String, LanguageConfigModel>>() {
-                                }.getType()
-                        );
-
-                        for (Map.Entry<String, String> entry : subscribedContentLanguages.entrySet()) {
-                            if ("1".equals(entry.getValue())) {
-
-                                for (Map.Entry<String, LanguageConfigModel> langEntry : retMap.entrySet()) {
-                                    if (entry.getKey().equals(langEntry.getValue().getName().toLowerCase())) {
-                                        filter = filter + "," + langEntry.getKey();
-                                    }
-                                }
-                            }
-                        }
-                        SharedPrefUtils.setLanguageFilters(getActivity(), filter);
-                        BaseApplication.setHasLanguagePreferrenceChanged(true);
-                        FragmentManager fm = getActivity().getSupportFragmentManager();
-                        fm.popBackStack();
-                    }
-                } else {
-                    if (null != getActivity()) {
-                        Toast.makeText(getActivity(), "Error while updating subscription settings", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            } catch (FileNotFoundException fnfe) {
-                Crashlytics.logException(fnfe);
-                Log.d("MC4kException", Log.getStackTraceString(fnfe));
-                updateConfigSettings();
-            } catch (Exception e) {
-                if (null != getActivity()) {
-                    Toast.makeText(getActivity(), "Error while updating subscription settings", Toast.LENGTH_SHORT).show();
-                }
-                removeProgressDialog();
-                Crashlytics.logException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<UpdateLanguageSettingsResponse> call, Throwable t) {
-            if (null != getActivity()) {
-                Toast.makeText(getActivity(), "Error while updating subscription settings", Toast.LENGTH_SHORT).show();
-            }
-            Crashlytics.logException(t);
-            Log.d("MC4kException", Log.getStackTraceString(t));
-        }
-    };
-
-    private void updateConfigSettings() {
-        if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
-            Toast.makeText(getActivity(), R.string.error_network, Toast.LENGTH_SHORT).show();
-            return;
-        }
-        final Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
-        ConfigAPIs configAPIs = retrofit.create(ConfigAPIs.class);
-        Call<ConfigResponse> call = configAPIs.getConfig();
-        call.enqueue(configSettingResponseListener);
-    }
-
-    private Callback<ConfigResponse> configSettingResponseListener = new Callback<ConfigResponse>() {
-        @Override
-        public void onResponse(Call<ConfigResponse> call, retrofit2.Response<ConfigResponse> response) {
-            if (response == null || response.body() == null) {
-                return;
-            }
-            try {
-                ConfigResponse responseData = response.body();
-                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    updateLanguageSubscription();
-                } else {
-                    Toast.makeText(getActivity(), "Error while updating subscription settings", Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-                Toast.makeText(getActivity(), "Error while updating subscription settings", Toast.LENGTH_SHORT).show();
-                removeProgressDialog();
-                Crashlytics.logException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
-
-
-        }
-
-        @Override
-        public void onFailure(Call<ConfigResponse> call, Throwable t) {
-            Toast.makeText(getActivity(), "Error while updating subscription settings", Toast.LENGTH_SHORT).show();
-            removeProgressDialog();
-            Crashlytics.logException(t);
-            Log.d("MC4kException", Log.getStackTraceString(t));
-        }
-    };
-
     @Override
     protected void updateUi(Response response) {
 
@@ -828,12 +604,10 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
             case R.id.saveTextView:
                 updateNotificationSettings();
                 updateSubscriptions();
-                updateLanguageSubscription();
                 updateFollowedUnfollowedTopics();
                 break;
             case R.id.fbConnectBtn:
                 if (getString(R.string.app_settings_edit_prefs_add).equals(facebookConnectTextView.getText().toString())) {
-//                    Utils.pushEvent(getActivity(), GTMEventType.FACEBOOK_CONNECT_EVENT, SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), "settings");
                     FacebookUtils.facebookLogin(getActivity(), this);
                 }
                 break;
@@ -859,7 +633,6 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
     public void getFacebookUser(String user) {
         try {
             if (user != null) {
-
                 SocialConnectRequest socialConnectRequest = new SocialConnectRequest();
                 socialConnectRequest.setToken(user);
                 socialConnectRequest.setReferer("fb");
@@ -871,9 +644,7 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
 
             }
         } catch (Exception e) {
-            // e.printStackTrace();
             removeProgressDialog();
-//            showToast("Try again later.");
         }
     }
 
@@ -881,7 +652,6 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
         @Override
         public void onResponse(Call<BaseResponse> call, retrofit2.Response<BaseResponse> response) {
             if (response == null || response.body() == null) {
-//                showToast("Something went wrong from server");
                 return;
             }
             try {

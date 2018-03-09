@@ -20,9 +20,6 @@
     <dimen name="tab_height">48dp</dimen>
 
 
-
-
-
     <!--Article Details dimensions-->
     <dimen name="article_details_app_bar_height">200dp</dimen>
     <dimen name="article_details_text_size">18px</dimen>

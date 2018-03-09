@@ -14,6 +14,7 @@ public class LanguageConfigModel implements Parcelable {
     private String id;
     private String tag;
     private String display_name;
+    private boolean isSelected;
 
     public LanguageConfigModel() {
 
@@ -25,6 +26,7 @@ public class LanguageConfigModel implements Parcelable {
         id = in.readString();
         tag = in.readString();
         display_name = in.readString();
+        isSelected = in.readByte() != 0;
     }
 
     public static final Creator<LanguageConfigModel> CREATOR = new Creator<LanguageConfigModel>() {
@@ -79,6 +81,14 @@ public class LanguageConfigModel implements Parcelable {
         this.display_name = display_name;
     }
 
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -91,5 +101,6 @@ public class LanguageConfigModel implements Parcelable {
         dest.writeString(id);
         dest.writeString(tag);
         dest.writeString(display_name);
+        dest.writeByte((byte) (isSelected ? 1 : 0));
     }
 }

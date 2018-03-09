@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -36,11 +37,17 @@ public class AddArticleVideoFragment extends BaseFragment implements View.OnClic
 
     private ImageView setUpBlogImageView, writeArticleImageView, uploadVideoImageView, suggestedTopicImageView;
     private TextView writeArticleTextView, uploadVideoTextView, becomeBloggerTextView, suggestedTopicTextView;
+    private LinearLayout blogSetUpLL, writeArticleLL, addVideoLL, suggestedTopicsLL;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.add_article_video_fragment, container, false);
+
+        blogSetUpLL = (LinearLayout) view.findViewById(R.id.blogSetUpLL);
+        writeArticleLL = (LinearLayout) view.findViewById(R.id.writeArticleLL);
+        addVideoLL = (LinearLayout) view.findViewById(R.id.addVideoLL);
+        suggestedTopicsLL = (LinearLayout) view.findViewById(R.id.suggestedTopicsLL);
 
         writeArticleImageView = (ImageView) view.findViewById(R.id.writeArticleImageView);
         uploadVideoImageView = (ImageView) view.findViewById(R.id.uploadVideoImageView);
@@ -51,25 +58,17 @@ public class AddArticleVideoFragment extends BaseFragment implements View.OnClic
         becomeBloggerTextView = (TextView) view.findViewById(R.id.becomeBloggerTextView);
         suggestedTopicTextView = (TextView) view.findViewById(R.id.suggestedTopicTextView);
 
-        writeArticleImageView.setOnClickListener(this);
-        writeArticleTextView.setOnClickListener(this);
-        uploadVideoImageView.setOnClickListener(this);
-        uploadVideoTextView.setOnClickListener(this);
-        setUpBlogImageView.setOnClickListener(this);
-        becomeBloggerTextView.setOnClickListener(this);
-        suggestedTopicImageView.setOnClickListener(this);
-        suggestedTopicTextView.setOnClickListener(this);
+        suggestedTopicsLL.setOnClickListener(this);
+        blogSetUpLL.setOnClickListener(this);
+        writeArticleLL.setOnClickListener(this);
+        addVideoLL.setOnClickListener(this);
 
         if ("0".equals(SharedPrefUtils.getUserDetailModel(getActivity()).getUserType()) && !SharedPrefUtils.getBecomeBloggerFlag(getActivity())) {
-            writeArticleImageView.setVisibility(View.INVISIBLE);
-            writeArticleTextView.setVisibility(View.INVISIBLE);
-            setUpBlogImageView.setVisibility(View.VISIBLE);
-            becomeBloggerTextView.setVisibility(View.VISIBLE);
+            writeArticleLL.setVisibility(View.INVISIBLE);
+            blogSetUpLL.setVisibility(View.VISIBLE);
         } else {
-            writeArticleImageView.setVisibility(View.VISIBLE);
-            writeArticleTextView.setVisibility(View.VISIBLE);
-            setUpBlogImageView.setVisibility(View.INVISIBLE);
-            becomeBloggerTextView.setVisibility(View.INVISIBLE);
+            writeArticleLL.setVisibility(View.VISIBLE);
+            blogSetUpLL.setVisibility(View.INVISIBLE);
         }
 
         //checkBlogPageSetup();
@@ -128,16 +127,14 @@ public class AddArticleVideoFragment extends BaseFragment implements View.OnClic
     public void onClick(View view) {
 
         switch (view.getId()) {
-            case R.id.becomeBloggerTextView:
-            case R.id.setUpBlogImageView: {
+            case R.id.blogSetUpLL: {
                 BecomeBloggerFragment becomeBloggerFragment = new BecomeBloggerFragment();
                 Bundle searchBundle = new Bundle();
                 becomeBloggerFragment.setArguments(searchBundle);
                 ((DashboardActivity) getActivity()).addFragment(becomeBloggerFragment, searchBundle, true);
             }
             break;
-            case R.id.writeArticleTextView:
-            case R.id.writeArticleImageView: {
+            case R.id.writeArticleLL: {
                 Intent intent = new Intent(getActivity(), EditorPostActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString(EditorPostActivity.TITLE_PARAM, "");
@@ -152,8 +149,7 @@ public class AddArticleVideoFragment extends BaseFragment implements View.OnClic
                 startActivity(intent);
             }
             break;
-            case R.id.uploadVideoTextView:
-            case R.id.uploadVideoImageView: {
+            case R.id.addVideoLL: {
                 if (SharedPrefUtils.getFirstVideoUploadFlag(getActivity())) {
                     launchAddVideoOptions();
                 } else {
@@ -164,8 +160,7 @@ public class AddArticleVideoFragment extends BaseFragment implements View.OnClic
                 }
             }
             break;
-            case R.id.suggestedTopicImageView:
-            case R.id.suggestedTopicTextView: {
+            case R.id.suggestedTopicsLL: {
                 SuggestedTopicsFragment suggestedTopicsFragment = new SuggestedTopicsFragment();
                 ((DashboardActivity) getActivity()).addFragment(suggestedTopicsFragment, null, true);
             }

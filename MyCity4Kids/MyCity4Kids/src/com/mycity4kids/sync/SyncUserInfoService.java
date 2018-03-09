@@ -103,12 +103,26 @@ public class SyncUserInfoService extends IntentService implements UpdateListener
                     );
                     new SaveUserInfoinDB().execute(responseData);
                     Map<String, String> subscribedContentLanguages = responseData.getData().get(0).getResult().getLangSubscription();
-                    String filter = "0";
+                    String filter = "";
                     for (Map.Entry<String, String> entry : subscribedContentLanguages.entrySet()) {
                         if ("1".equals(entry.getValue())) {
                             for (Map.Entry<String, LanguageConfigModel> langEntry : retMap.entrySet()) {
-                                if (entry.getKey().equals(langEntry.getValue().getName().toLowerCase())) {
-                                    filter = filter + "," + langEntry.getKey();
+                                if (entry.getKey().equals("english")) {
+                                    if (StringUtils.isNullOrEmpty(filter)) {
+                                        filter = "0";
+                                        break;
+                                    } else {
+                                        filter = filter + "," + "0";
+                                        break;
+                                    }
+                                } else {
+                                    if (entry.getKey().equals(langEntry.getValue().getName().toLowerCase())) {
+                                        if (StringUtils.isNullOrEmpty(filter)) {
+                                            filter = langEntry.getKey();
+                                        } else {
+                                            filter = filter + "," + langEntry.getKey();
+                                        }
+                                    }
                                 }
                             }
                         }

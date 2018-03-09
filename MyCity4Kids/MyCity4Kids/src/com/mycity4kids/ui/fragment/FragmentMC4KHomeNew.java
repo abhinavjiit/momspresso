@@ -73,7 +73,8 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
         @Override
         public void onResponse(Call<TrendingListingResponse> call, retrofit2.Response<TrendingListingResponse> response) {
             if (response == null || response.body() == null) {
-                ((DashboardActivity) getActivity()).showToast(getString(R.string.server_went_wrong));;
+                ((DashboardActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                ;
                 return;
             }
 
@@ -107,8 +108,13 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
         trendingArraylist.addAll(responseData.getData().get(0).getResult());
 //        Collections.shuffle(trendingArraylist);
         tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
-
-        tabLayout.addTab(tabLayout.newTab().setText("All"));
+        String allCategoryLabel = "";
+        if (isAdded()) {
+            allCategoryLabel = getString(R.string.all_categories_label);
+        } else {
+            allCategoryLabel = "All";
+        }
+        tabLayout.addTab(tabLayout.newTab().setText(allCategoryLabel));
         for (int i = 0; i < trendingArraylist.size(); i++) {
             tabLayout.addTab(tabLayout.newTab().setText(trendingArraylist.get(i).getDisplay_name()));
         }
@@ -166,7 +172,8 @@ public class FragmentMC4KHomeNew extends BaseFragment implements View.OnClickLis
         @Override
         public void onResponse(Call<NotificationCenterListResponse> call, retrofit2.Response<NotificationCenterListResponse> response) {
             if (response == null || response.body() == null) {
-                ((DashboardActivity) getActivity()).showToast(getString(R.string.server_went_wrong));;
+                ((DashboardActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                ;
                 return;
             }
 

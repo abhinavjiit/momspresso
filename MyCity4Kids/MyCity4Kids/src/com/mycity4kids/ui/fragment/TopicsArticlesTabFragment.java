@@ -36,6 +36,8 @@ import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
+import com.mycity4kids.ui.activity.DashboardActivity;
+import com.mycity4kids.ui.activity.TopicsListingFragment;
 import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.widget.FeedNativeAd;
@@ -79,6 +81,8 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
     private FloatingActionButton fabSort;
     private RecyclerView recyclerView;
     private FeedNativeAd feedNativeAd;
+    private RelativeLayout guideOverlay;
+    private boolean showGuide = false;
 
     @Nullable
     @Override
@@ -86,10 +90,10 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
 
         View view = inflater.inflate(R.layout.topics_articles_tab_fragment, container, false);
 
-//        final ListView listView = (ListView) view.findViewById(R.id.scroll);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
+        guideOverlay = (RelativeLayout) view.findViewById(R.id.guideOverlay);
 
         frameLayout = (FrameLayout) view.findViewById(R.id.frame_layout);
         frameLayout.getBackground().setAlpha(0);
@@ -97,6 +101,8 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
         popularSortFAB = (FloatingActionButton) view.findViewById(R.id.popularSortFAB);
         recentSortFAB = (FloatingActionButton) view.findViewById(R.id.recentSortFAB);
         fabSort = (FloatingActionButton) view.findViewById(R.id.fabSort);
+
+        guideOverlay.setOnClickListener(this);
         frameLayout.setVisibility(View.VISIBLE);
         fabSort.setVisibility(View.VISIBLE);
         popularSortFAB.setOnClickListener(this);
@@ -133,9 +139,6 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
         });
 
         mDatalist = new ArrayList<>();
-//        adapter = new MainArticleListingAdapter(getActivity());
-//        adapter.setNewListData(mDatalist);
-//        listView.setAdapter(adapter);
         feedNativeAd = new FeedNativeAd(getActivity(), this, AppConstants.FB_AD_PLACEMENT_ARTICLE_LISTING);
         feedNativeAd.loadAds();
         recyclerAdapter = new MainArticleRecyclerViewAdapter(getActivity(), feedNativeAd, this, false);
@@ -165,21 +168,26 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
             isHeaderVisible = false;
             headerRL.setVisibility(View.GONE);
         } else {
-//            headerRL = (RelativeLayout) inflater.inflate(R.layout.topics_articles_list_header, null);
             headerRL.setVisibility(View.VISIBLE);
             flowLayout = (FlowLayout) headerRL.findViewById(R.id.flowLayout);
             expandImageView = (ImageView) headerRL.findViewById(R.id.expandImageView);
 
             final LinearLayout allSubsubLL = (LinearLayout) inflater.inflate(R.layout.sub_sub_topic_item, null);
             TextView allCatTextView = ((TextView) allSubsubLL.getChildAt(0));
-            allCatTextView.setText("ALL");
+
+            String allCategoryLabel = "";
+            if (isAdded()) {
+                allCategoryLabel = getString(R.string.all_categories_label);
+            } else {
+                allCategoryLabel = "ALL";
+            }
+
+            allCatTextView.setText(allCategoryLabel);
             allCatTextView.measure(0, 0);
             allSubsubLL.setTag(currentSubTopic);
-//                Log.d("dimensions", " *************** " + width + " ##### " + (catTextView.getMeasuredWidth() + subsubLL.getPaddingLeft() + subsubLL.getPaddingRight()) + " ----- " + catTextView.getText());
             width = width - allCatTextView.getMeasuredWidth() - allSubsubLL.getPaddingLeft() - allSubsubLL.getPaddingRight();
             if (width < 0) {
                 lineCount++;
-//                    Log.d("Its a new line", " *************** linecount =  " + lineCount);
                 width = displayMetrics.widthPixels - allCatTextView.getMeasuredWidth() - allSubsubLL.getPaddingLeft() - allSubsubLL.getPaddingRight();
                 if (lineCount == 1) {
                     width = width - AppUtils.dpTopx(50) - expandImageView.getPaddingLeft() - expandImageView.getPaddingRight();
@@ -194,13 +202,20 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
                 layoutParams.setNewLine(true);
                 allSubsubLL.setLayoutParams(layoutParams);
                 expandImageView.setVisibility(View.VISIBLE);
+                if (showGuide) {
+                    guideOverlay.setVisibility(View.VISIBLE);
+                    if (isAdded()) {
+                        ((DashboardActivity) getActivity()).showToolbarAndNavigationLayer();
+                    }
+                    TopicsListingFragment frag = ((TopicsListingFragment) this.getParentFragment());
+                    frag.showTabLayer();
+                }
             } else {
                 FlowLayout.LayoutParams layoutParams
                         = new FlowLayout.LayoutParams
                         (FlowLayout.LayoutParams.WRAP_CONTENT, FlowLayout.LayoutParams.WRAP_CONTENT);
                 layoutParams.setNewLine(false);
                 allSubsubLL.setLayoutParams(layoutParams);
-//                expandImageView.setVisibility(View.VISIBLE);
             }
 
             flowLayout.addView(allSubsubLL);
@@ -225,11 +240,9 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
                 catTextView.setText(currentSubTopic.getChild().get(i).getDisplay_name().toUpperCase());
                 catTextView.measure(0, 0);
                 subsubLL.setTag(currentSubTopic.getChild().get(i));
-//                Log.d("dimensions", " *************** " + width + " ##### " + (catTextView.getMeasuredWidth() + subsubLL.getPaddingLeft() + subsubLL.getPaddingRight()) + " ----- " + catTextView.getText());
                 width = width - catTextView.getMeasuredWidth() - subsubLL.getPaddingLeft() - subsubLL.getPaddingRight();
                 if (width < 0) {
                     lineCount++;
-//                    Log.d("Its a new line", " *************** linecount =  " + lineCount);
                     width = displayMetrics.widthPixels - catTextView.getMeasuredWidth() - subsubLL.getPaddingLeft() - subsubLL.getPaddingRight();
                     if (lineCount == 1) {
                         width = width - AppUtils.dpTopx(50) - expandImageView.getPaddingLeft() - expandImageView.getPaddingRight();
@@ -244,13 +257,20 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
                     layoutParams.setNewLine(true);
                     subsubLL.setLayoutParams(layoutParams);
                     expandImageView.setVisibility(View.VISIBLE);
+                    if (showGuide) {
+                        guideOverlay.setVisibility(View.VISIBLE);
+                        if (isAdded()) {
+                            ((DashboardActivity) getActivity()).showToolbarAndNavigationLayer();
+                        }
+                        TopicsListingFragment frag = ((TopicsListingFragment) this.getParentFragment());
+                        frag.showTabLayer();
+                    }
                 } else {
                     FlowLayout.LayoutParams layoutParams
                             = new FlowLayout.LayoutParams
                             (FlowLayout.LayoutParams.WRAP_CONTENT, FlowLayout.LayoutParams.WRAP_CONTENT);
                     layoutParams.setNewLine(false);
                     subsubLL.setLayoutParams(layoutParams);
-//                expandImageView.setVisibility(View.VISIBLE);
                 }
 
                 flowLayout.addView(subsubLL);
@@ -283,7 +303,6 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
                 }
             });
             try {
-//                listView.addHeaderView(headerRL);
                 isHeaderVisible = true;
             } catch (Exception e) {
 
@@ -291,56 +310,10 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
         }
 
         hitFilteredTopicsArticleListingApi(sortType);
-//        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(AbsListView view, int scrollState) {
-//
-//            }
-//
-//            @Override
-//            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-//
-//                boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
-//                if (visibleItemCount != 0 && loadMore && firstVisibleItem != 0 && !isReuqestRunning && !isLastPageReached) {
-//                    mLodingView.setVisibility(View.VISIBLE);
-//                    hitFilteredTopicsArticleListingApi(sortType);
-//                    isReuqestRunning = true;
-//                }
-//
-//                if (isHeaderVisible) {
-//                    if (firstVisibleItem == 0) {
-//                        // check if we reached the top or bottom of the list
-//                        View v = listView.getChildAt(0);
-//                        int offset = (v == null) ? 0 : v.getTop();
-//                        if (offset == 0) {
-//                            // reached the top: visible header and footer
-//                            headerRL.setVisibility(View.VISIBLE);
-//                        }
-//                    } else if (totalItemCount - visibleItemCount == firstVisibleItem) {
-//                        View v = listView.getChildAt(totalItemCount - 1);
-//                        int offset = (v == null) ? 0 : v.getTop();
-//                        if (offset == 0 && !isReuqestRunning) {
-//                            // reached the bottom: visible header and footer
-//                            headerRL.setVisibility(View.VISIBLE);
-//                        }
-//                    } else if (totalItemCount - visibleItemCount > firstVisibleItem) {
-//                        // on scrolling
-//                        headerRL.setVisibility(View.GONE);
-//                    }
-//                }
-//            }
-//        });
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                if (llm.findFirstCompletelyVisibleItemPosition() == 0) {
-//                    //this is the top of the RecyclerView
-//                    if (isHeaderVisible)
-//                        headerRL.setVisibility(View.VISIBLE);
-//                } else {
-//                    headerRL.setVisibility(View.GONE);
-//                }
                 int pos = llm.findFirstVisibleItemPosition();
                 if (llm.findViewByPosition(pos) != null) {
                     if (llm.findViewByPosition(pos).getTop() == 0 && pos == 0) {
@@ -368,31 +341,6 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
             }
         });
 
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                ArticleListingResult parentingListData = (ArticleListingResult) adapterView.getItemAtPosition(i);
-//                if (parentingListData == null) {
-//                    return;
-//                }
-//                Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
-//                intent.putExtra(Constants.ARTICLE_ID, parentingListData.getId());
-//                intent.putExtra(Constants.AUTHOR_ID, parentingListData.getUserId());
-//                intent.putExtra(Constants.BLOG_SLUG, parentingListData.getBlogPageSlug());
-//                intent.putExtra(Constants.TITLE_SLUG, parentingListData.getTitleSlug());
-//                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "" + currentSubTopic.getParentName());
-//                intent.putExtra(Constants.FROM_SCREEN, "TopicArticlesListingScreen");
-//                if (isHeaderVisible == true) {
-//                    intent.putExtra(Constants.ARTICLE_INDEX, "" + (i - 1));
-//                } else {
-//                    intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
-//                }
-//                intent.putParcelableArrayListExtra("pagerListData", mDatalist);
-//                intent.putExtra(Constants.AUTHOR, parentingListData.getUserId() + "~" + parentingListData.getUserName());
-//                startActivity(intent);
-//            }
-//        });
-
         return view;
     }
 
@@ -406,17 +354,11 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
             ToastUtils.showToast(getActivity(), getString(R.string.error_network));
             return;
         }
-        if (nextPageNumber == 1) {
-//            progressBar.setVisibility(View.VISIBLE);
-        }
 
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
 
         int from = (nextPageNumber - 1) * limit + 1;
-//                Utils.pushOpenArticleListingEvent(this, GTMEventType.ARTICLE_LISTING_CLICK_EVENT, fromScreen, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), displayName + "~" + selectedTopics, "" + nextPageNumber);
-
-//        Utils.pushOpenArticleListingEvent(this, GTMEventType.ARTICLE_LISTING_CLICK_EVENT, "fromScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), displayName + "~" + selectedTopics, "" + nextPageNumber);
         Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(selectedTopic.getId(), sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(getActivity()));
         filterCall.enqueue(articleListingResponseCallback);
     }
@@ -425,26 +367,21 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
         @Override
         public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
             isReuqestRunning = false;
-//            progressBar.setVisibility(View.INVISIBLE);
             if (mLodingView.getVisibility() == View.VISIBLE) {
                 mLodingView.setVisibility(View.GONE);
             }
             if (response == null || response.body() == null) {
-//                showToast("Something went wrong from server");
                 return;
             }
-//            swipeRefreshLayout.setRefreshing(false);
             try {
                 ArticleListingResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     processArticleListingResponse(responseData);
                 } else {
-//                    showToast(getString(R.string.went_wrong));
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4KException", Log.getStackTraceString(e));
-//                showToast(getString(R.string.went_wrong));
             }
         }
 
@@ -453,10 +390,8 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
             if (mLodingView.getVisibility() == View.VISIBLE) {
                 mLodingView.setVisibility(View.GONE);
             }
-//            progressBar.setVisibility(View.INVISIBLE);
             Crashlytics.logException(t);
             Log.d("MC4KException", Log.getStackTraceString(t));
-//            showToast(getString(R.string.went_wrong));
         }
     };
 
@@ -474,7 +409,6 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
                 noBlogsTextView.setVisibility(View.VISIBLE);
                 noBlogsTextView.setText(getString(R.string.no_articles_found));
                 mDatalist = dataList;
-//                trendingTopicData.setArticleList(dataList);
                 recyclerAdapter.setNewListData(mDatalist);
                 recyclerAdapter.notifyDataSetChanged();
             }
@@ -482,10 +416,8 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
             noBlogsTextView.setVisibility(View.GONE);
             if (nextPageNumber == 1) {
                 mDatalist = dataList;
-//                trendingTopicData.setArticleList(dataList);
             } else {
                 mDatalist.addAll(dataList);
-//                trendingTopicData.getArticleList().addAll(dataList);
             }
             recyclerAdapter.setNewListData(mDatalist);
             nextPageNumber = nextPageNumber + 1;
@@ -499,12 +431,32 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
 
     }
 
+    public void showGuideView() {
+        showGuide = true;
+        if (expandImageView != null && expandImageView.getVisibility() == View.VISIBLE) {
+            guideOverlay.setVisibility(View.VISIBLE);
+            TopicsListingFragment frag = ((TopicsListingFragment) this.getParentFragment());
+            frag.showTabLayer();
+            if (isAdded()) {
+                ((DashboardActivity) getActivity()).showToolbarAndNavigationLayer();
+            }
+        }
+
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.guideOverlay:
+                guideOverlay.setVisibility(View.GONE);
+                TopicsListingFragment frag = ((TopicsListingFragment) this.getParentFragment());
+                frag.hideTabLayer();
+                if (isAdded()) {
+                    ((DashboardActivity) getActivity()).hideToolbarAndNavigationLayer();
+                    SharedPrefUtils.setCoachmarksShownFlag(getActivity(), "topics_article", true);
+                }
+                break;
             case R.id.recentSortFAB:
-//                Utils.pushSortListingEvent(FilteredTopicsArticleListingActivity.this, GTMEventType.SORT_LISTING_EVENT, SharedPrefUtils.getUserDetailModel(FilteredTopicsArticleListingActivity.this).getDynamoId(),
-//                        listingType, "recent");
                 fabMenu.collapse();
                 mDatalist.clear();
                 recyclerAdapter.notifyDataSetChanged();
@@ -513,8 +465,6 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
                 hitFilteredTopicsArticleListingApi(0);
                 break;
             case R.id.popularSortFAB:
-//                Utils.pushSortListingEvent(FilteredTopicsArticleListingActivity.this, GTMEventType.SORT_LISTING_EVENT, SharedPrefUtils.getUserDetailModel(FilteredTopicsArticleListingActivity.this).getDynamoId(),
-//                        listingType, "popular");
                 fabMenu.collapse();
                 mDatalist.clear();
                 recyclerAdapter.notifyDataSetChanged();

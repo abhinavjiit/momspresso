@@ -1,0 +1,646 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">মম্স্প্রেস্সো</string>
+    <string name="unknown_person">অজানা</string>
+    <string name="resend_email">ইমেল পুনরায় পাঠান</string>
+
+    <!-- <string name="facebook_app_id">1437325266589625</string>-->
+
+    <!--but now we are using client APP ID -->
+    <string name="facebook_app_id">206155642763202</string>
+    <string name="fb_login_protocol_scheme">fb206155642763202</string>
+    <string name="admob_id">ca-app-pub-9305149859515387~7341831189</string>
+
+    <string name="write_review_prompt">আপনি কি পর্যালোচনা করতে চান ?</string>
+
+    <!-- splash screen -->
+
+    <string name="loading_txt">লোডিং &#8230;</string>
+
+    <!-- Login Screen -->
+    <!-- Registration Screen -->
+    <string name="subcategoryName">subCagegory</string>
+    <string name="location_info">ব্যক্তিগত সুপারিশের জন্য, আপনার পছন্দের স্থান নির্বাচন করুন</string>
+    <!-- HomeCategoryActivity -->
+    <string name="hint_text">আপনি কি খুজছেন ?</string>
+    <string name="locality_txt">কোন স্থান?</string>
+    <string name="error_network">ডিভাইসটি নেটওয়ার্ক কভারেজের বাইরে।</string>
+    <string name="please_wait">অপেক্ষা করুন...</string>
+    <string name="no_result_txt">কোন ফলাফল পাওয়া যায়নি.</string>
+    <string name="went_wrong">কিছু ভুল হয়েছে.</string>
+    <string name="server_went_wrong">সার্ভারে কিছু ভুল হয়েছে</string>
+    <string name="no_data">তথ্য পাওয়া যায়নি.</string>
+    <string name="toast_network_error">ডিভাইসটি নেটওয়ার্ক কভারেজের বাইরে।</string>
+    <string name="toast_response_error">কিছু ভুল হয়েছে, দয়া করে পরে আবার চেষ্টা করুন !</string>
+    <string name="toast_server_error">সার্ভার সমস্যা</string>
+    <string name="fetching_data">তথ্য আনয়ন&#8230;</string>
+    <string name="please_select">অন্তত একটি মান নির্বাচন করুন দয়া করে</string>
+    <!-- slidingDrawer -->
+    <string name="no_query">একটি অনুসন্ধান ক্যোয়ারী লিখুন দয়া করে।</string>
+
+    <!-- Filter/sort Screen -->
+    <string name="no_age_group">ফিল্টার কোন বয়স গ্রুপ নেই</string>
+    <string name="no_category_group">ফিল্টারের জন্য কোনো বিভাগ গ্রুপ নেই</string>
+    <string name="ageGroup">বয়স গ্রুপ</string>
+
+    <!-- Add Listing Screen -->
+
+    <!-- Add Listing Screen -->
+
+    <!-- Details Screen -->
+
+    <string name="age_grout_txt">বয়স গ্রুপ</string>
+    <string name="event_dates_txt">ইভেন্ট তারিখগুলি</string>
+    <string name="description_txt">বিবরণ</string>
+    <string name="contact_txt">যোগাযোগ</string>
+    <string name="about_txt">সম্পর্কিত</string>
+    <string name="event_list">কোন তালিকা খুঁজে পাওয়া যায় নি।</string>
+    <string name="additional_info">অতিরিক্ত তথ্য</string>
+    <string name="address_txt">ঠিকানা</string>
+    <string name="sub_address_txt">ঠিকানা</string>
+    <string name="address_locality_txt">ঠিকানা</string>
+
+    <!-- Top Picks Screen -->
+    <string name="top_picks">শীর্ষ পিক</string>
+    <string name="author_img">লেখক ইমেজ</string>
+    <string name="title">প্রবন্ধের শিরোনাম</string>
+    <string name="author_name">লেখকের নাম</string>
+    <string name="article_publish_date">প্রবন্ধ প্রকাশ তারিখ</string>
+    <string name="progress_spinner">উন্নতির স্পিনার</string>
+
+    <!-- article details -->
+    <string name="submit">জমা</string>
+    <string name="add_reply">এখানে লিখুন</string>
+
+    <!-- Top Picks Detail Screen -->
+    <string name="organised_by">-দ্বারা সংগঠিত</string>
+
+    <!-- Report An Error Screen -->
+    <string name="please_select_an_error">অন্তত একটি বিকল্প নির্বাচন করুন</string>
+
+    <!-- View Edit Profile Screen -->
+
+    <!-- alert text for first time if gps off -->
+
+    <string name="gps_enabled_alert">মনে হয় আপনার ফোনে অবস্থান সনাক্তকরণ উপায়টি অক্ষম করা আছে। অবস্থান সনাক্তকরণ সেটিংসে যাওয়ার জন্য ওকে ক্লিক করুন |</string>
+
+    <string name="rate_now">মান নির্নয় করুন</string>
+
+    <string name="netwrok_error">নেটওয়ার্ক ত্রুটি</string>
+    <string name="transit">পরিবহন</string>
+    <string name="write_review"> পর্যালোচনাটি লিখুন</string>
+    <string name="direction">পথনির্দেশ</string>
+    <string name="error_player">ইউটিউব প্লেয়ার আরম্ভের সময় ত্রুটি ছিল (%1$s)</string>
+
+    <!-- Facebook Comments -->
+    <string name="ok">ঠিক আছে</string>
+    <string name="error">ভুল</string>
+    <!-- <string name="app_id">1497460137141503</string> -->
+    <string name="post_title">মম্স্প্রেস্সো</string>
+
+    <!--temp data-->
+
+
+    <!-- TODO: Remove or change this placeholder text -->
+
+    <!--// string color codess-->
+
+    <string name="empty_directory">ফাঁকা তথ্যপঞ্জি</string>
+    <string name="storage_removed">সংগ্রহস্থল সরানো বা আনমাউন্ট করা হয়েছে</string>
+    <string name="choose_file">একটি ফাইল নির্বাচন করুন</string>
+    <string name="error_selecting_file">ফাইল নির্বাচনে ত্রুটি</string>
+    <string name="internal_storage">অভ্যন্তরীণ সংগ্রহস্থল</string>
+
+    <string name="saving_image"> সংরক্ষণ করা হচ্ছে</string>
+    <string name="preparing_card">কার্ড প্রস্তুত</string>
+    <string name="no_storage_card">কোনো সংরক্ষিত কার্ড নেই</string>
+    <string name="not_enough_space">যথেষ্ট জায়গা নেই</string>
+    <string name="server_error">কিছু ত্রুটি ঘটেছে, দয়া করে পরে আবার চেষ্টা করুন!</string>
+
+
+    <string name="logout_msg">আপনি নিশ্চিতভাবে প্রস্থান করতে চান?</string>
+    <string name="reminder_selected">আপনি এটি নির্বাচন করতে পারবেন না</string>
+    <string name="activities_txt">ক্রিয়াকলাপ</string>
+    <string name="duration_txt">স্থিতিকাল</string>
+    <string name="cost_txt">মূল্য</string>
+
+    <string name="event_added">ইভেন্ট যোগ করা হয়েছে</string>
+
+
+    <string name="new_yes">হ্যাঁ</string>
+    <string name="new_cancel">বাতিল</string>
+    <string name="load_error">কন্টেনারটি লোড করতে ব্যর্থ হয়েছে</string>
+    <string name="example_post_title_placeholder">নিবন্ধ শিরোনাম</string>
+    <string name="example_post_content_placeholder">আপনার গল্প এখানে শেয়ার করুন ...</string>
+
+    <string name="select_image">একটি ছবি নির্বাচন করুন</string>
+    <string name="select_image_fail">একটি ছবি নির্বাচন করুন (ব্যর্থতা ডেমো)</string>
+    <string name="select_video">একটি ভিডিও নির্বাচন করুন</string>
+    <string name="select_video_fail">একটি ভিডিও নির্বাচন করুন (ব্যর্থতা ডেমো)</string>
+    <string name="camera_pick">ক্যামেরা থেকে ছবি তুলুন</string>
+
+    <string name="analytics.popup.last30days">শেষ 30 দিন</string>
+    <string name="analytics.popup.customdates">প্রথা</string>
+    <string name="analytics.popup.improve_page_views">কিভাবে আমি আমার পৃষ্ঠা মতামত উন্নত করতে পারি?</string>
+    <string name="analytics.popup.increase_followers">কিভাবে আমি আমার অনুগামীদের বৃদ্ধি করতে পারি?</string>
+    <string name="analytics.popup.rank_calculation">কিভাবে এই গণনা করা হয়?</string>
+    <string name="analytics.popup.improve_rank">কিভাবে আমি আমার পদমর্যাদা উন্নত করতে পারি?</string>
+    <string name="analytics.popup.improve_social">আমি কিভাবে আমার সামাজিক ভাগ উন্নত করতে পারেন?</string>
+
+    <string name="videos.dialog.title">আপলোড করার জন্য একটি ভিডিও চয়ন করুন</string>
+    <string name="videos.upload_option.camera">ভিডিওটি নিন</string>
+    <string name="videos.upload_option.gallery">গ্যালারি থেকে চয়ন করুন</string>
+    <string name="videos.upload_option.cancel">বাতিল</string>
+
+    <string name="ad.swipe_tootip_text">পরবর্তী অনুচ্ছেদটি পড়তে সাঁতার শেখ</string>
+    <string name="ad.view_all_tags.text">সব দেখ</string>
+    <string name="ad.tags_title.text">এই নিবন্ধটি নীচের বিভাগে পোস্ট করা হয়েছে</string>
+    <string name="ad.tags_subtitle.text">অনুরূপ পোস্ট পড়তে তাদের অনুসরণ করুন</string>
+    <string name="ad.follow_author">অনুসরণ</string>
+    <string name="ad.following_author">FOLLOWING</string>
+    <string name="ad.comments.title">মন্তব্য</string>
+    <string name="ad.comments.no_comments">কোন মন্তব্য নেই</string>
+    <string name="ad.comments.view_comment">মন্তব্য</string>
+    <string name="ad.comments.fb_comment">ফেসবুক মন্তব্য</string>
+    <string name="ad.comments.edit_label">সম্পাদন করা</string>
+    <string name="ad.comments.save">সংরক্ষণ করুন</string>
+    <string name="ad.comments.toast_empty_comment">দয়া করে কিছু বৈধ পাঠ্য লিখুন।</string>
+    <string name="ad.comments.toolbar.title">মন্তব্য</string>
+    <string name="ad.comments.replying_to">আপনি উত্তর দিচ্ছেন %1$s</string>
+    <string name="ad.bottom_bar.facebook">ফেসবুক</string>
+    <string name="ad.bottom_bar.whatsapp">হোয়াটসঅ্যাপ</string>
+    <string name="ad.bottom_bar.email">এর</string>
+    <string name="ad.bottom_bar.generic_share">শেয়ার</string>
+    <string name="ad.bottom_bar.bookmark">বুকমার্ক</string>
+    <string name="ad.bottom_bar.like">মত</string>
+    <string name="ad.recent_logs_from.title">অডিও থেকে আরও</string>
+    <string name="ad.share.follow_author">অনুসরণ %1$s</string>
+    <string name="ad.trending.title">ট্রেন্ডিং ব্লগ</string>
+    <string name="ad.write_blog">WRITE A BLOG</string>
+    <string name="ad.tts.toast_unplayable_article">এই নিবন্ধটি খেলা করতে অক্ষম</string>
+
+    <string name="vd.recent_videos_from.title">সাম্প্রতিক ভিডিওগুলি থেকে</string>
+    <string name="vd.trending.title">ট্রেন্ডিং ব্লগ</string>
+
+    <string-array name="improve_page_views_array">
+        <item>আপনার ব্লগের অন্যান্য ব্লগে পোস্টে লিঙ্ক করুন</item>
+        <item>সামঞ্জস্যপূর্ণ এবং সাপ্তাহিক লিখুন</item>
+        <item>আপনি প্রকাশ যে প্রতিটি ব্লগ পোস্টে একটি পয়েন্ট করুন</item>
+        <item>আকর্ষণীয় শিরোনাম ব্যবহার করুন</item>
+        <item>বানান পরীক্ষা করুন এবং যেকোনো ত্রুটির জন্য আপনার ব্লগ পোস্টগুলিকে ডবল পরীক্ষা করুন</item>
+        <item>আপনার ব্যবহার করা শব্দ এবং শব্দগুলির উপর ফোকাস করুন</item>
+        <item>ব্লগ মন্তব্য প্রতিক্রিয়া</item>
+    </string-array>
+
+    <string-array name="rank_calculation_array">
+        <item>আপনার র্যাঙ্ক একটি বিশৃঙ্খল অ্যালগরিদম দ্বারা গণনা করা হয় যা আপনার নিবন্ধটি পেয়েছেন সংখ্যাগুলির সংখ্যা, সোশাল মিডিয়াগুলিতে কতবার কতবার ভাগ করা হয়েছে, বিভিন্ন প্ল্যাটফর্মে এটির সংখ্যা এবং সংখ্যা আপনি গত সপ্তাহে লিখিত নিবন্ধগুলির</item>
+    </string-array>
+
+    <string-array name="improve_rank_array">
+        <item>আপনার ব্লগে সামঞ্জস্যপূর্ণ হতে - একটি ব্লগ সাপ্তাহিক পোস্ট</item>
+        <item>আপনার ব্লগে পোস্ট করুন যে সমস্ত ফেসবুক গ্রুপের আপনি অংশ</item>
+        <item>সহকর্মীদের মতামত নিন এবং সেই অনুযায়ী ব্লগটি সম্পাদন করুন</item>
+    </string-array>
+
+    <string-array name="improve_social_share_array">
+        <item>আপনার ব্লগটিকে সামাজিক প্রচার মাধ্যমগুলিতে ভাগ করে নিতে শেয়ার বোতামে ক্লিক করুন</item>
+        <item>আপনার প্রোফাইলে সামাজিক প্লাগইনগুলি যুক্ত করুন। যেমন - www.twitter.com/bloggername</item>
+        <item>আপনার ব্লগটিকে বিভিন্ন মাধ্যমে ভাগ করার সময় ব্লগের বিষয়বস্তুর দিকে খেয়াল রাখবেন</item>
+        <item>উপযুক্ত হ্যাশট্যাগ ব্যবহার করুন</item>
+    </string-array>
+
+    <string-array name="increase_followers_array">
+        <item>যদি পাঠকেরা আপনার প্রতিটি ব্লগ পড়ে আনন্দ পেয়ে থাকেন তাহলে আপনাকে অনুসরণ করার অনুরোধের জন্য তাদের প্রতি একটি লাইন লিখুন</item>
+        <item>যে সকল পাঠকরা আপনার ব্লগে নিয়মিত মন্তব্য করেন, আপনাকে অনুসরণ করতে তাদেরকে অনুরোধ জানান</item>
+        <item>আপনি যে সমস্ত সামাজিক মাধ্যমগুলির অংশীদার সেখানে গিয়ে আপনার ব্লগ পোস্ট করুন, যেমন ফেসবুক, হোয়াটসঅ্যাপ ইত্যাদি</item>
+    </string-array>
+
+    <string name="confirmation_dialog.delete_draft.message">আপনি কি আপনার ড্রাফটটি মুছে ফেলতে চান?</string>
+    <string name="confirmation_dialog.no">না</string>
+    <string name="confirmation_dialog.yes">হ্যাঁ</string>
+
+    <string name="editor.spell_check.title">বানান যাচাই</string>
+    <string name="editor.spell_check.message">আপনি কি নিশ্চিতভাবে বানানটি যাচাই করেছেন?</string>
+    <string name="editor.spell_check.no">না</string>
+    <string name="editor.spell_check.continue">হ্যাঁ প্রচার বজায় রাখুন</string>
+    <string name="editor.banner.message">আপনার পছন্দের ভাষায় ব্লগ</string>
+    <string name="editor.last_saved_at">সর্বশেষ মুহূর্তে সংরক্ষণ %1$s</string>
+    <string name="editor.last_saved_on">সর্বশেষ সংরক্ষিত %1$s</string>
+
+    <string name="dob">জন্ম তারিখ</string>
+
+    <string name="label_select_video">ভিডিও নির্বাচন করুন</string>
+    <string name="toast_cannot_retrieve_selected_video">নির্বাচিত ভিডিওটি মেরামত করতে পারবেননা</string>
+    <string name="trimming_progress">আপনার ভিডিওটি সংক্ষিপ্ত করা হচ্ছে ...</string>
+
+    <string name="publish_article.upload_image.change_photo">ছবি পরিবর্তন করুন</string>
+    <string name="publish_article.upload_image.please_upload_or_choose_image">দয়া করে একটি ছবি আপলোড করুন অথবা নীচের ছবিগুলি থেকে নির্বাচন করুন</string>
+
+    <string name="change_city.fetch_available_cities">উপলব্ধ শহরগুলির তালিকা পেতে অনুগ্রহ করে অপেক্ষা করুন </string>
+
+    <string name="permision_available_storage">সংরক্ষণের অনুমতি দেওয়া হল</string>
+    <string name="permision_available_camera">ক্যামেরার অনুমতি দেওয়া হল । পূর্বরূপেও এখন খোলা যাবে।</string>
+    <string name="permissions_not_granted">আবশ্যিক অনুমতি দেওয়া হয়নি</string>
+    <string name="permission_camera_rationale">ক্যামেরার পূর্বরুপ দেখতে অনুমতির প্রয়োজন।</string>
+    <string name="permission_storage_rationale">ফাইল বাছাই করতে সংগ্রহস্থলের অনুমতি প্রয়োজন।</string>
+    <string name="permission_location_rationale">আনুষঙ্গিক অনুষ্ঠান ও প্রবন্ধগুলি দেখানোর জন্য অবস্থানের অনুমতি প্রয়োজন</string>
+    <string name="permission_phone_state_rationale">আপনাকে সর্বশেষ বিষয়্গুলি সমন্ধে বিজ্ঞপ্তি জানাতে ফোনের অনুমতির প্রয়োজন</string>
+    <string name="permision_available_init">সমস্ত প্রয়োজনীয় অনুমতি দেওয়া হল</string>
+    <string name="permission_calendar_rationale">মনে রাখতে ক্যালেন্ডারের অনুমতি নিন</string>
+
+    <string name="home.toolbar.title">গতিবিধি</string>
+    <string name="explore_listing.explore_categories.title">আপনিও ক্যাটাগরি এক্সপ্লোর করতে পারেন</string>
+    <string name="explore_listing.explore_categories.meet_contributor">আমাদের অবদানকারীদের দেখা</string>
+
+    <string name="home_screen.trending.title">গতিবিধি</string>
+    <string name="home_screen.notification.title">বিজ্ঞপ্তি</string>
+    <string name="home_screen.suggested_topic.title">প্রস্তাবিত বিষয়গুলি</string>
+    <string name="home_screen.profile.title">আমার অ্যাকাউন্ট</string>
+    <string name="home_screen.select_an_option.title">যেকোনো একটি নির্বাচন করুন</string>
+    <string name="home_screen.trending.become_blogger">আপনার গল্প শেয়ার করুন</string>
+    <string name="home_screen.trending.first_video_upload">ভিডিও</string>
+    <string name="home_screen.explore.title">অন্বেষণ</string>
+    <string name="home_screen.upcoming_events.title">আসন্ন ঘটনাবলী</string>
+    <string name="home_screen.kids_res.title">বাচ্চাদের রিসোর্স</string>
+    <string name="home_screen.trending_list_header.title">আপনি যে মতামত পছন্দ করেন তা পছন্দ করুন</string>
+    <string name="home_screen.trending_list_header.topics_label">গর্ভবতী, পেস্টাম ডিপ্রেসন পোস্ট করুন</string>
+    <string name="home_screen.trending_list_header.take_me_there">আচ্ছা আমি বুঝে গেছি! সেখানে আমাকে নিতে</string>
+
+    <string-array name="onboarding_title_array">
+        <item>ময়মনসিংহের হিংসা</item>
+        <item>6 টি ভাষার মধ্যে একটিতে ব্লগ</item>
+        <item>ভিডিও দেখ</item>
+        <item>আপনার শহর \'এর BEST দেখান</item>
+    </string-array>
+
+    <string name="onboarding_desc_array.tutorial_1.blogs">ব্লগ</string>
+    <string name="onboarding_desc_array.tutorial_1.videos">MOMVLOGS</string>
+    <string name="onboarding_desc_array.tutorial_2.english">ইংরেজি</string>
+    <string name="onboarding_desc_array.tutorial_2.hindi">হিন্দি</string>
+    <string name="onboarding_desc_array.tutorial_2.bengali">বাংলা</string>
+    <string name="onboarding_desc_array.tutorial_2.marathi">মারাঠি</string>
+    <string name="onboarding_desc_array.tutorial_2.tamil">তামিল</string>
+    <string name="onboarding_desc_array.tutorial_2.telugu">তেলুগু</string>
+    <string name="onboarding_desc_array.tutorial_3.parenting">ম্যামস লাইফ</string>
+    <string name="onboarding_desc_array.tutorial_3.recipe">RECIPES</string>
+    <string name="onboarding_desc_array.tutorial_3.expert_advice">EXPERT ADVICE</string>
+    <string name="onboarding_desc_array.tutorial_4.editorial">CURATED LISTS</string>
+    <string name="onboarding_desc_array.tutorial_4.events">EVENTS</string>
+    <string name="onboarding_desc_array.tutorial_4.resources">RESOURCES</string>
+
+    <string name="onboarding.signin">SIGN IN</string>
+    <string name="onboarding.already_member">Already a member?</string>
+    <string name="onboarding.get_started">GET STARTED</string>
+    <string name="sign_in.welcome_back">WELCOME BACK</string>
+    <string name="sign_in.desc">Discover the joy of motherhood.\n Join our Mum community to find inspiration &amp; hope.</string>
+    <string name="sign_in.no_account">Don\'t have an account?\u0020</string>
+    <string name="sign_in.sign_up_btn">SIGNUP</string>
+
+    <string name="sign_up.welcome_back">SIGN UP</string>
+    <string name="sign_up.desc">Discover the joy of motherhood.\n Join our Mum community to find inspiration &amp; hope.</string>
+    <string name="sign_up.already_account">Already have an account?\u0020</string>
+    <string name="sign_up.sign_in_btn">SIGNIN</string>
+
+    <string name="login_email.login">LOGIN</string>
+    <string name="login_email.forgot_password">Forgot Password?</string>
+    <string name="login_email.username_hint">Email</string>
+    <string name="login_email.password_hint">Password</string>
+
+
+    <string name="signin.login_via_facebook">LOGIN USING FACEBOOK</string>
+    <string name="signin.login_via_google">LOGIN USING GOOGLE</string>
+    <string name="signin.login_via_email">LOGIN USING EMAIL</string>
+
+    <string name="signup.connect_via_facebook">CONNECT USING FACEBOOK</string>
+    <string name="signup.connect_via_google">CONNECT USING GOOGLE</string>
+
+    <string name="for_you.reason.why_label">Why am I seeing this?</string>
+    <string name="for_you.reason.dont_want_to_see">Don\'t want to see this</string>
+    <string name="for_you.reason.okay">OKAY</string>
+
+    <string name="lang_specific.toolbar.title">LANGUAGES</string>
+
+    <string name="lang_setting.stories_label">Stories</string>
+
+    <string name="search.article_label">ARTICLE</string>
+    <string name="search.author_label">AUTHOR</string>
+    <string name="search.topic_label">TOPIC</string>
+    <string name="search.show_more">SHOW MORE</string>
+    <string name="search.article_topic_tab_label">ARTICLES &amp; TOPICS</string>
+    <string name="search.author_tab_label">AUTHORS</string>
+    <string name="search.article_no_result">No articles or topics found.</string>
+    <string name="search.author_no_result">No authors found.</string>
+
+    <string name="search_topics.toolbar_title">SELECT CATEGORIES</string>
+    <string name="search_topics.hint">Search with Topics</string>
+    <string name="search_topics.title">CATEGORIES</string>
+
+    <string name="subscribe_topics.toolbar.title">SELECT CATEGORIES</string>
+    <string name="subscribe_topics.cancel">CANCEL</string>
+    <string name="subscribe_topics.save">SAVE</string>
+    <string name="subscribe_topics.toast_topic_updated">Successfully updated the list of followed topics.</string>
+
+    <string name="myprofile.following_label">FOLLOWING</string>
+    <string name="myprofile.followers_label">FOLLOWERS</string>
+    <string name="myprofile.section.articles_label">ARTICLES</string>
+    <string name="myprofile.section.videos_label">MOM VLOGS</string>
+    <string name="myprofile.section.activity_label">ACTIVITY</string>
+    <string name="myprofile.section.myranking_label">MY RANKING</string>
+    <string name="myprofile.section.settings_label">SETTINGS</string>
+    <string name="myprofile.section.signout_label">SIGNOUT</string>
+    <string name="myprofile.rank_label">RANK</string>
+
+    <string name="blogger_profile.follow_button">FOLLOW</string>
+    <string name="blogger_profile.rank_in">RANK IN</string>
+    <string name="blogger_profile.unfollow_button">FOLLOWING</string>
+    <string name="blogger_profile.view_count_label">VIEWS</string>
+    <string name="blogger_profile.article_count_label">POSTS</string>
+    <string name="blogger_profile.section.articles_label">ARTICLES</string>
+    <string name="blogger_profile.section.videos_label">MOM VLOGS</string>
+    <string name="blogger_profile.section.activity_label">ACTIVITY</string>
+    <string name="blogger_profile.section.myranking_label">MY RANKING</string>
+    <string name="blogger_profile.top_3_article">TOP 3 ARTICLES</string>
+    <string name="blogger_profile.rank_label">RANK</string>
+
+    <string name="user_article.toolbar.title">ARTICLES</string>
+    <string name="user_article.tabbar.published_label">PUBLISHED</string>
+    <string name="user_article.tabbar.draft_label">DRAFTS</string>
+    <string name="user_article.draft.saved_on">Saved on</string>
+    <string name="user_article.draft.edit">EDIT DRAFT</string>
+    <string name="user_article.draft.untitled_draft">Untitled Draft</string>
+    <string name="user_article.published.edit">EDIT</string>
+    <string name="user_article.published.no_published_article">You have not published any article yet.</string>
+    <string name="user_article.draft.status_pending_approval">PENDING FOR APPROVAL</string>
+    <string name="user_article.draft.status_unapproved">UNAPPROVED</string>
+    <string name="user_article.draft.status_unpublished">UNPUBLISHED</string>
+
+    <string name="app_settings.toolbar.title">SETTINGS</string>
+    <string name="app_settings.tabbar.edit_prefs">EDIT PREFERENCES</string>
+    <string name="app_settings.tabbar.lang_prefs">LANGUAGE PREFERENCES</string>
+    <string name="app_settings.tabbar.change_password">CHANGE PASSWORD</string>
+    <string name="app_settings.tabbar.edit_profile">EDIT PROFILE</string>
+
+    <string name="app_settings.edit_profile.hint_fn">First Name</string>
+    <string name="app_settings.edit_profile.hint_ln">Last Name</string>
+    <string name="app_settings.edit_profile.hint_phone">Phone</string>
+    <string name="app_settings.edit_profile.describe_label">Describe yourself</string>
+    <string name="app_settings.edit_profile.blog_title_label">Blog Heading</string>
+    <string name="app_settings.edit_profile.family_detail_label">Family Details</string>
+    <string name="app_settings.edit_profile.family_detail_desc">This is just to serve you better and provide you what really suits you. This info would just remain in our records.</string>
+    <string name="app_settings.edit_profile.how_many_child">How many children do you have?</string>
+    <string name="app_settings.edit_profile.gender">Gender</string>
+    <string name="app_settings.edit_profile.dob">Date of Birth</string>
+    <string name="app_settings.edit_profile.save">SAVE</string>
+    <string name="app_settings.edit_profile.update_success">User profile updated successfully</string>
+    <string name="app_settings.edit_profile.toast_fn_empty">First Name cannot be empty</string>
+    <string name="app_settings.edit_profile.toast_blog_title_empty">Blog Title cannot be empty</string>
+    <string name="app_settings.edit_profile.toast_user_bio_empty">Tell us ABOUT YOURSELF</string>
+    <string name="app_settings.edit_profile.toast_user_bio_max">Maximum limit for bio is</string>
+    <string name="app_settings.edit_profile.toast_user_bio_words">words</string>
+    <string name="app_settings.edit_profile.toast_incorrect_date">Please enter a valid date for kids birthday</string>
+
+    <string name="app_settings.edit_prefs.notifications">NOTIFICATIONS</string>
+    <string name="app_settings.edit_prefs.subscriptions">SUBSCRIPTIONS</string>
+    <string name="app_settings.edit_prefs.add_account">ADD ACCOUNTS</string>
+    <string name="app_settings.edit_prefs.facebook">FACEBOOK</string>
+    <string name="app_settings.edit_prefs.twitter">TWITTER</string>
+    <string name="app_settings.edit_prefs.google">GOOGLE</string>
+    <string name="app_settings.edit_prefs.add">ADD</string>
+    <string name="app_settings.edit_prefs.connected">CONNECTED</string>
+    <string name="app_settings.edit_prefs.topics_interested">TOPICS OF INTEREST</string>
+    <string name="app_settings.edit_prefs.add_topics">ADD TOPICS</string>
+    <string name="app_settings.edit_prefs.more_topics">MORE...</string>
+    <string name="app_settings.edit_prefs.pref_lang">PREFERRED LANGUAGES</string>
+    <string name="app_settings.edit_prefs.subscribe_top_reads">Subscribe to the Top Reads Of The Month</string>
+    <string name="app_settings.edit_prefs.subscribe_trending_blog">Subscribe to the Trending Blog Of The Day</string>
+    <string name="app_settings.edit_prefs.subscribe_momspresso">Subscribe to the Momspresso TV</string>
+    <string name="app_settings.edit_prefs.subscribe_city_best">Subscribe to the Best In Your City</string>
+
+    <string name="app_settings.change_pass.hint_current_pass">Current Password</string>
+    <string name="app_settings.change_pass.hint_new_pass">New Password</string>
+    <string name="app_settings.change_pass.hint_confirm_pass">Confirm Password</string>
+    <string name="app_settings.change_pass.save">SAVE</string>
+    <string name="app_settings.change_pass.toast_current_pass_empty">Current password cannot be empty</string>
+    <string name="app_settings.change_pass.toast_new_pass_empty">New password cannot be empty</string>
+    <string name="app_settings.change_pass.toast_confirm_pass_match">New passwords do not match</string>
+    <string name="app_settings.change_pass.pass_update_fail">Current password is incorrect</string>
+    <string name="app_settings.change_pass.pass_update_success">Password updated successfully</string>
+
+    <string name="blog_setup.toolbar.title">SETUP A BLOG</string>
+    <string name="blog_setup.get_started_label">LET\'S GET YOU STARTED FOR YOUR FIRST BLOG</string>
+    <string name="blog_setup.one_time_label">Setup a blog is a one time process.</string>
+    <string name="blog_setup.okay">OKAY</string>
+    <string name="blog_setup.blog_title_label">BLOG TITLE</string>
+    <string name="blog_setup.blog_title_desc">This is like a title of your digital book and encompasses a description of all your blog posts that you\'ll be publishing here. Eg: Mums diary, My monologue.</string>
+    <string name="blog_setup.hint_blog_title">Type here </string>
+    <string name="blog_setup.about_yourself_label">ABOUT YOURSELF</string>
+    <string name="blog_setup.about_desc">Tell the readers about yourself.</string>
+    <string name="blog_setup.profile_pic_label">PROFILE PICTURE</string>
+    <string name="blog_setup.profile_pic_desc">This is visible to your readers and helps them associate with your writing.</string>
+    <string name="blog_setup.your_details">YOUR DETAILS</string>
+    <string name="blog_setup.hint_phone">Phone Number</string>
+    <string name="blog_setup.save_publish">SAVE &amp; PUBLISH</string>
+
+    <string name="ranking.toolbar.title">MY RANKING</string>
+    <string name="ranking.improve_view.title">ABOUT</string>
+    <string name="ranking.tabs_your_rank_label">YOUR RANK</string>
+    <string name="ranking.tabs_page_views_label">YOUR PAGE VIEWS</string>
+    <string name="ranking.views_label">BLOG PAGE VIEWS</string>
+    <string name="ranking.menu_30_days_label">30 DAYS VIEW</string>
+    <string name="ranking.menu_custom_label">CUSTOM</string>
+    <string name="ranking.improve_views_label">How can I improve my Page views?</string>
+    <string name="ranking.improve_social_share">How can I improve my Social Share?</string>
+    <string name="ranking.page_views_label">PAGE VIEWS: </string>
+    <string name="ranking.engagement">ENGAGEMENTS</string>
+    <string name="ranking.stats_like">LIKES</string>
+    <string name="ranking.stats_shares">SHARES</string>
+    <string name="ranking.stats_comments">COMMENTS</string>
+    <string name="ranking.how_calculated">How is this calculated?</string>
+    <string name="ranking.top_bloggers">TOP BLOGGERS IN</string>
+    <string name="ranking.followers_label">FOLLOWERS</string>
+    <string name="ranking.in">IN</string>
+    <string name="ranking.toast_start_end_date">Start date must be less than end date</string>
+
+    <string name="editor.publish">PUBLISH</string>
+
+    <string name="add_article_topics.toolbar.title">CHOOSE TOPICS</string>
+    <string name="add_article_topics.clear_all">CLEAR ALL</string>
+    <string name="add_article_topics.min_topics">Please select atleast one topic to continue</string>
+    <string name="add_article_topics.max_topics">You can choose a maximum of 8 topics</string>
+    <string name="add_article_topics.apply">APPLY</string>
+
+    <string name="choose_article_image.toolbar.title">CHOOSE IMAGE</string>
+    <string name="choose_article_image.upload_photo">CLICK TO UPLOAD PHOTO</string>
+    <string name="choose_article_image.publish">PUBLISH</string>
+
+    <string name="add_article_or_video.upload_video">ADD VIDEO</string>
+    <string name="add_article_or_video.write_article">WRITE AN ARTICLE</string>
+    <string name="add_article_or_video.suggested_topic">SUGGESTED TOPICS</string>
+    <string name="add_article_or_video.become_blogger">BECOME A BLOGGER</string>
+
+    <string name="become_blogger.get_started">LET\'S GET STARTED</string>
+    <string-array name="become_blogger_title_array">
+        <item>BECOME A BLOGGER</item>
+        <item>HOW CAN YOU CONTRIBUTE?</item>
+        <item>DO YOU GET PAID FOR YOUR CONTRIBUTION?</item>
+        <item>WHO CAN CONTRIBUTE?</item>
+    </string-array>
+    <string-array name="become_blogger_desc_array">
+        <item>You are one click away from sharing your thoughts, opinions, and stories on India\'s largest parenting community, in the language of your choice. With a reach of over 8 million Mums per month, your voice can be the source of hope, inspiration, comfort and knowledge.</item>
+        <item>You can share your parenting stories via the website or our iOS and Android app. Express yourself in the language of your choice - English, Hindi, Bengali, Marathi, Telugu or Tamil.</item>
+        <item>Momspresso does not pay each blogger on publishing their own posts. We do however offer paid writing assignments which are commissioned by brands. This is offered to bloggers based on the quality of content they produce.</item>
+        <item>Whether your story is about parenthood, womanhood, relationships, struggles, joys or personal well-being, this is the platform to write about it. Join the 5000+ Mums in seeking &amp; sharing advice, opinions and recommendations.\n Do refrain from publishing copied or \'slightly modified\' content.</item>
+    </string-array>
+
+    <string name="upload_video.title">SHARE A MomVlog\n THAT CAPTURES #MOMLIFE</string>
+    <string name="upload_video.desc">Parenting, Work, Relationships, Fitness, Recipes, Beauty&#8230; basically anything Inspiring from day to day life.</string>
+    <string name="upload_video.desc1">Shoot the video and upload it right away from your Mobile.</string>
+    <string name="upload_video.get_started">LET\'S START</string>
+
+    <string name="moderation_or_share.way_to_go">WAY TO GO!</string>
+    <string name="moderation_or_share.moderation_message">Your article is up for moderation. You\'ll receive an email within 24 hours regarding the status of the blog</string>
+    <string name="moderation_or_share.publish_message">Congrats! Your blog has been published.\n Share it with your friends and family.</string>
+    <string name="moderation_or_share.later">MAYBE LATER</string>
+    <string name="moderation_or_share.okay">OKAY</string>
+    <string name="moderation_or_share.gplus_fail">Unable to share with google plus.</string>
+    <string name="moderation_or_share.whatsapp_fail">Unable to share with whatsapp.</string>
+    <string name="moderation_or_share.whatsapp_not_installed">Whatsapp has not been installed.</string>
+    <string name="moderation_or_share.twitter_fail">Unable to share with twitter.</string>
+
+    <string name="complete_blogger_profile.complete_label">COMPLETE YOUR BLOGGERS PROFILE</string>
+    <string name="complete_blogger_profile.paid_eligibility">Be eligible for paid writing assignments.\n All this information is safe with us.</string>
+    <string name="complete_blogger_profile.save">SAVE</string>
+    <string name="complete_blogger_profile.incorrect_date">Please choose correct date for date of birth.</string>
+
+    <string name="add_video_details.title_hint">ENTER A TITLE FOR THE VIDEO</string>
+    <string name="add_video_details.mute_label">MUTE SOUND</string>
+    <string name="add_video_details.add_music">ADD MUSIC</string>
+    <string name="add_video_details.remove">REMOVE</string>
+    <string name="add_video_details.error_empty_title">Please enter the title of the video</string>
+    <string name="add_video_details.save_upload">SAVE &amp; UPLOAD</string>
+    <string name="add_video_details.toolbar.title">UPLOAD A VIDEO</string>
+    <string name="add_video_details.audio_picker.title">ADD MUSIC</string>
+
+    <string name="video_progress.uploading_label">UPLOADING ...</string>
+    <string name="video_progress.uploading_msg">Please do not exit or kill the app, it will cancel the upload automatically. You can use the app while uploading.</string>
+    <string name="video_progress.way_to_go">WAY TO GO!</string>
+    <string name="video_progress.success_msg">Video has been successfully uploaded and sent for moderation. We will notify you once moderated.</string>
+    <string name="video_progress.okay">OKAY</string>
+    <string name="video_progress.uploading_failed">Uploading Failed.</string>
+    <string name="video_progress.uploading_error">Error occurred while uploading your video. Please try again.</string>
+    <string name="video_progress.progress_lost_msg">Your upload progress will be lost. Are you sure you want to exit?</string>
+
+    <string name="user_activities.toolbar.title">ACTIVITY</string>
+    <string name="user_activities.tabs.recommended">LIKED</string>
+    <string name="user_activities.tabs.bookmark">BOOKMARKS</string>
+    <string name="user_activities.tabs.watch_later">WATCH LATER</string>
+    <string name="user_activities.tabs.comment">COMMENTS</string>
+    <string name="user_activities.bookmarks.remove">REMOVE</string>
+    <string name="user_activities.bookmarks.by">By</string>
+    <string name="user_activities.comments.saved_on">Saved on:</string>
+    <string name="user_activities.comments.edit">EDIT</string>
+    <string name="user_activities.comments.no_comments">You have not commented on any article yet.</string>
+    <string name="user_activities.recommended.no_recommendations">You have not recommended any article yet.</string>
+    <string name="user_activities.bookmarks.no_bookmarks">No article has been bookmarked yet.</string>
+    <string name="user_activities.watch_later.no_watch_later">You have not saved any videos yet.</string>
+
+    <string name="explore.section.events">EVENTS</string>
+    <string name="explore.section.resources">RESOURCES</string>
+    <string name="explore.section.top_things">TOP THINGS TO DO</string>
+    <string name="explore.section.no_resources">We do not have any events or resources for your city at present.</string>
+    <string name="explore.events.trending_lbl">TRENDING EVENTS</string>
+    <string name="explore.events.featured_lbl">FEATURED EVENTS</string>
+    <string name="explore.events.upcoming_lbl">UPCOMING EVENTS</string>
+
+    <string name="all_videos.toolbar.title">VIDEOS</string>
+    <string name="all_videos.tabbar.momspresso_label">MOMSPRESSO TV</string>
+    <string name="all_videos.tabbar.funny_label">MOM VLOGS</string>
+    <string name="all_videos.funny_videos.no_videos">No mom vlogs added.</string>
+
+    <string name="notification.read_all">Read All</string>
+    <string name="notification.no_notification">No notifications</string>
+
+    <string name="user_funny_video.toolbar.title">MOM VLOGS</string>
+    <string name="user_funny_video.published_on">Published on: %1$s</string>
+
+    <string name="article_listing.toolbar.title_recent">RECENT</string>
+    <string name="article_listing.toolbar.title_popular">POPULAR</string>
+    <string name="article_listing.toolbar.title_trending">TRENDING</string>
+    <string name="article_listing.toolbar.title_for_you">FOR YOU</string>
+    <string name="article_listing.toolbar.title_editor_picks">EDITOR\'S PICKS</string>
+
+    <string name="sort.recent">RECENT</string>
+    <string name="sort.popular">POPULAR</string>
+
+    <string name="city_picker.toolbar.title">Choose City</string>
+
+    <string name="rate_us.dialog.title">RATE OUR APP?</string>
+    <string name="rate_us.dialog.not_now">NOT NOW</string>
+    <string name="rate_us.dialog.message1">If you enjoy using the Momspresso app, please take a moment to rate it.</string>
+    <string name="rate_us.dialog.message2">Thank you for your support !!!</string>
+
+    <string name="suggested_topic.start_writing">START WRITING</string>
+
+    <string name="no_articles_found">No articles found</string>
+    <string name="check_out_blog">Momspresso\n\nCheck out this interesting blog post\n</string>
+    <string name="contributors">Contributors</string>
+    <string name="contributor_in">Contributors in</string>
+    <string name="recent_article">RELATED ARTICLES</string>
+    <string name="upload_bigger_image">Please upload bigger image</string>
+    <string name="upload_min_width">Please upload image with minimum width of 720 pixels</string>
+    <string name="image_upload_wait">Please wait while image is being uploaded</string>
+    <string name="editor_title_empty">Title can\'t be empty</string>
+    <string name="editor_body_empty">Body can\'t be empty</string>
+    <string name="editor_title_char_limit">Unable to publish. Title should smaller than 150 characters</string>
+    <string name="editor_body_min_words">Please write atleast 300 words to publish</string>
+    <string name="draft_oops">Oops!</string>
+    <string name="draft_not_saved">Draft could not be saved, your current changes will be lost if you exit now. Would you like to exit?</string>
+    <string name="draft_save_success">Draft Successfully saved</string>
+    <string name="verify_email">Mail sent to email address. Please click and verify</string>
+    <string name="video_upload_fail">Unable to upload the video. Please try again later.</string>
+    <string name="connectivity_unavailable">No connectivity available</string>
+    <string name="unable_to_load_comment">Unable to load comments</string>
+    <string name="connection_timeout">connection timed out</string>
+    <string name="image_upload_success">Image successfully uploaded!</string>
+    <string name="image_upload_fail">unable to upload image, please try again later</string>
+    <string name="android_version_unsupported">This version of android is no more supported.</string>
+    <string name="choose_mp4_file">please choose a .mp4 format file</string>
+
+    <string name="article_listing.type.trending_label">TRENDING</string>
+    <string name="article_listing.type.editor_label">EDITOR\'S PICK</string>
+    <string name="article_listing.type.for_you_label">FOR YOU</string>
+    <string name="article_listing.type.languages_label">LANGUAGES</string>
+    <string name="article_listing.type.videos_label">VIDEOS</string>
+    <string name="article_listing.type.recent_label">RECENT</string>
+
+    <string name="lang_sel.welcome_msg">WELCOME TO MOMSPRESSO</string>
+    <string name="lang_sel.sel_lang">SELECT A LANGUAGE TO VIEW YOUR APP</string>
+    <string name="lang_sel.curr_lang">Current Language</string>
+    <string name="lang_sel.app_lang_desc">You are using %1$s as current language. Would you like to view this application in the same language?</string>
+    <string name="lang_sel.yes">YES</string>
+    <string name="lang_sel.select_more">SELECT MORE</string>
+    <string name="lang_sel.continue">CONTINUE</string>
+    <string name="lang_sel.choose_lang_toast">Please choose a language to continue</string>
+
+    <string name="all_categories_label">ALL</string>
+
+    <string name="language_label.english">English</string>
+    <string name="language_label.hindi">हिंदी</string>
+    <string name="language_label.marathi">मराठी</string>
+    <string name="language_label.bengali">বাংলা</string>
+
+    <string name="choose_pref_lang">Choose your preferred language</string>
+    <string name="choose_pref_lang.cancel">CANCEL</string>
+
+    <string name="guide.language_tour">You can view this app in any \nlanguage of your choice</string>
+    <string name="guide.settings_tour">Manage the languages you want to read the \narticles in</string>
+    <string name="guide.trending_tour">Tap here to access the menu</string>
+    <string name="guide.quick_link_tour">With our new quick links, you can discover content easier and faster!</string>
+    <string name="guide.topics_tour">These topics allow you to read\n and explore all facets of parenting</string>
+    <string name="guide.sub_topics_list_tour">Click here to look at more categories</string>
+    <string name="guide.share_like_bookmark_tour">Share, Bookmark and Love this post</string>
+    <string name="guide.comment_tour">Share your thoughts</string>
+    <string name="guide.listen_tour">Click here to listen to this blog</string>
+
+</resources>

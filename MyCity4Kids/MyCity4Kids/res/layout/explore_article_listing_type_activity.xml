@@ -64,4 +64,139 @@
         android:stretchMode="columnWidth"
         android:verticalSpacing="15dp"
         android:visibility="visible" />
+
+    <RelativeLayout
+        android:id="@+id/guideOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/dark_transparent"
+        android:elevation="4dp"
+        android:visibility="gone">
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/guide_tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:minHeight="?attr/actionBarSize"
+            android:paddingLeft="10dp"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:tabIndicatorColor="@color/explore_listing.tabbar_indicator"
+            app:tabIndicatorHeight="0dp"
+            app:tabMode="scrollable"
+            app:tabSelectedTextColor="@color/white"
+            app:tabTextAppearance="@style/CustomTabText"
+            app:tabTextColor="@color/white" />
+
+        <View
+            android:layout_width="200dp"
+            android:layout_height="2dp"
+            android:layout_below="@id/guide_tab_layout"
+            android:layout_centerHorizontal="true"
+            android:background="@color/white" />
+
+        <View
+            android:id="@+id/verticalLine_1"
+            android:layout_width="2dp"
+            android:layout_height="20dp"
+            android:layout_below="@id/guide_tab_layout"
+            android:layout_centerHorizontal="true"
+            android:background="@color/white" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/tabGuideTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/verticalLine_1"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@color/white"
+            android:elevation="2dp"
+            android:paddingBottom="7dp"
+            android:paddingLeft="9dp"
+            android:paddingRight="9dp"
+            android:paddingTop="7dp"
+            android:text="@string/guide.quick_link_tour"
+            android:textColor="@color/black"
+            app:fontName="oswald.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/guide_exploreCategoriesLabel"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_below="@+id/guide_tab_layout"
+            android:gravity="center"
+            android:text="@string/explore_listing.explore_categories.title"
+            android:textColor="@color/explore_listing.explore_categories.title"
+            android:textSize="16sp"
+            app:fontName="oswald.ttf" />
+
+        <LinearLayout
+            android:id="@+id/topicGuideLL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/guide_exploreCategoriesLabel"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/guideTopicTextView1"
+                android:layout_width="0dp"
+                android:layout_height="110dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="7dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/explore_listing.explore_categories.category_name"
+                android:textSize="18sp"
+                app:fontName="oswald_regular.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/guideTopicTextView2"
+                android:layout_width="0dp"
+                android:layout_height="110dp"
+                android:layout_marginLeft="7dp"
+                android:layout_marginRight="15dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/explore_listing.explore_categories.category_name"
+                android:textSize="18sp"
+                app:fontName="oswald_regular.ttf" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="50dp"
+            android:layout_height="2dp"
+            android:layout_below="@id/topicGuideLL"
+            android:layout_centerHorizontal="true"
+            android:background="@color/white" />
+
+        <View
+            android:id="@+id/verticalLine_2"
+            android:layout_width="2dp"
+            android:layout_height="20dp"
+            android:layout_below="@id/topicGuideLL"
+            android:layout_centerHorizontal="true"
+            android:background="@color/white" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/topicGuideTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/verticalLine_2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@color/white"
+            android:elevation="2dp"
+            android:paddingBottom="7dp"
+            android:paddingLeft="9dp"
+            android:paddingRight="9dp"
+            android:paddingTop="7dp"
+            android:text="@string/guide.topics_tour"
+            android:textColor="@color/black"
+            app:fontName="oswald.ttf" />
+
+    </RelativeLayout>
 </RelativeLayout>

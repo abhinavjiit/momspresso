@@ -1292,7 +1292,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
         public ImageView replyIndicatorImageView;
     }
 
-    public void followAPICall(String id) {
+    private void followAPICall(String id) {
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         FollowAPI followAPI = retrofit.create(FollowAPI.class);
         FollowUnfollowUserRequest request = new FollowUnfollowUserRequest();
@@ -2138,7 +2138,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     return;
                 }
                 ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
-                ;
                 return;
             }
 
@@ -2331,6 +2330,10 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
     public interface ISwipeRelated {
         void onRelatedSwipe(ArrayList<ArticleListingResult> articleList);
+    }
+
+    public void showShareLikeGuide() {
+//        shareLikeOverlay.setVisibility(View.VISIBLE);
     }
 
 }

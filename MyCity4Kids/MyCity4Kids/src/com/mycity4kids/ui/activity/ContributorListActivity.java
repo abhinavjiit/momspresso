@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -233,8 +234,6 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
                 paginationValue = "";
                 langKey = languageConfigModelArrayList.get(position).getLangKey();
                 hitBloggerAPIrequest(2, AppConstants.USER_TYPE_BLOGGER);
-//                Toast.makeText(getApplicationContext(), "Selected  : " + item,
-//                        Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -242,6 +241,23 @@ public class ContributorListActivity extends BaseActivity implements View.OnClic
                 // TODO Auto-generated method stub
             }
         });
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (AppConstants.LOCALE_ENGLISH.equals(SharedPrefUtils.getAppLocale(ContributorListActivity.this))) {
+                    spinner_nav.setSelection(0);
+                } else if (AppConstants.LOCALE_HINDI.equals(SharedPrefUtils.getAppLocale(ContributorListActivity.this))) {
+                    spinner_nav.setSelection(1);
+                } else if (AppConstants.LOCALE_MARATHI.equals(SharedPrefUtils.getAppLocale(ContributorListActivity.this))) {
+                    spinner_nav.setSelection(2);
+                } else if (AppConstants.LOCALE_BENGALI.equals(SharedPrefUtils.getAppLocale(ContributorListActivity.this))) {
+                    spinner_nav.setSelection(3);
+                } else {
+                    spinner_nav.setSelection(0);
+                }
+            }
+        }, 1000);
 
     }
 

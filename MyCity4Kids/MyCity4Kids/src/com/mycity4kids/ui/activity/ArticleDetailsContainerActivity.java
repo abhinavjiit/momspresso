@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.network.Response;
@@ -48,13 +49,11 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
     private ArticleDetailsAPI articleDetailsAPI;
     private TopicsCategoryAPI topicsAPI;
 
-    //    String sample = "Mrs. Sudha Murthy needs no introduction. She launched her latest book The Serpent’s Revenge Unusual Tales from the Mahabharata today in Mumbai amidst a very excited and enthusiastic bunch of children making sure to write every child’s name on the book while signing it. She was in conversation with RJ Anita from Radio One. Mrs Murthy started the conversation by emphasizing the importance of reading amongst young children. She says If you read more, you will learn more, you will discover new aspects, you will develop a viewpoint and you will tell unusual or your own interpretation of the tale. She has been an avid reader from a very young age and she reads about 100-150 pages every single day. She reads a variety of books from Shashi Tharoor, accomplished UK authors to lighter reads by Twinkle Khanna. Over the years she has become so addicted to reading that she feels she may end up reading the newspaper 3 times if she doesn’t have any books to read!. She is particularly fond of the Indian scriptures and mythology. However they are quite complex for young children. Most of the good books are thick, there is a lot of narration and large part of it is about praising the Gods which small children find difficult to follow. They lose interest beyond a point.  Her own children, when small, could not go beyond the first 10 pages. So it is her wish to convey these stories in simple language & with age appropriate narration so as to catch the attention of the young readers. And she tries to write unusual stories. In today’s time of television and YouTube, most children know of Krishna as a naughty boy who is always up to some mischief. One incidence she shares is when she visited her granddaughters in London. The kid’s version of the story was - Krishna is a very naughty boy. Once he saw some aunties in the swimming pool. So he took out the dresses of all the aunties from the locker and hid them. When the aunties were done with their swim, they came out and took a shower. When they went to their locker to take out their dress all the dresses were missing? The aunties knew who was up to mischief, so they all came to Krishna’s house and complained to his mother. When Krishna was summoned, he justified by saying that the aunties complain all the time about him opening their refrigerator and eating their cheese. That is why he hid all their clothes, so as to teach them a lesson.";
     private ViewPager mViewPager;
     private ArticleDetailsPagerAdapter mViewPagerAdapter;
     private Toolbar mToolbar;
     private ImageView backNavigationImageView;
     private ImageView playTtsTextView;
-    private ImageView coachmarksImageView;
 
     private boolean isAudioPlaying = false;
     private String authorId;
@@ -65,6 +64,8 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
     private String userDynamoId;
     private String preferredLang;
     private long audioStartTime = 0;
+    private RelativeLayout guideOverlay;
+    private Toolbar guidetoolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +78,8 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
         mToolbar = (Toolbar) findViewById(R.id.anim_toolbar);
         backNavigationImageView = (ImageView) findViewById(R.id.backNavigationImageView);
         playTtsTextView = (ImageView) findViewById(R.id.playTtsTextView);
-        coachmarksImageView = (ImageView) findViewById(R.id.coachmarksImageView);
+        guideOverlay = (RelativeLayout) findViewById(R.id.guideOverlay);
+        guidetoolbar = (Toolbar) findViewById(R.id.guidetoolbar);
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("");
@@ -156,17 +158,12 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
 
         backNavigationImageView.setOnClickListener(this);
         playTtsTextView.setOnClickListener(this);
-        coachmarksImageView.setOnClickListener(this);
+        guideOverlay.setOnClickListener(this);
+        guidetoolbar.setOnClickListener(this);
 
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
             playTtsTextView.setVisibility(View.GONE);
         }
-
-
-        if (!SharedPrefUtils.isCoachmarksShownFlag(this, "article_details")) {
-            coachmarksImageView.setVisibility(View.VISIBLE);
-        }
-
 
         Intent readArticleIntent = new Intent(this, ReadArticleService.class);
         startService(readArticleIntent);
@@ -289,8 +286,9 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
                             articleDetailsFragment.getGTMLanguage(), "" + duration);
                 }
                 break;
-            case R.id.coachmarksImageView:
-                coachmarksImageView.setVisibility(View.GONE);
+            case R.id.guidetoolbar:
+            case R.id.guideOverlay:
+                guideOverlay.setVisibility(View.GONE);
                 SharedPrefUtils.setCoachmarksShownFlag(this, "article_details", true);
                 break;
         }
@@ -302,6 +300,10 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
     }
 
     public void showPlayArticleAudioButton() {
+        if (!SharedPrefUtils.isCoachmarksShownFlag(this, "article_details")) {
+            guideOverlay.setVisibility(View.VISIBLE);
+        }
+
         playTtsTextView.setVisibility(View.VISIBLE);
     }
 
@@ -383,7 +385,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
         public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
 
             if (response == null || response.body() == null) {
-                Call<ArticleListingResponse> filterCall = topicsAPI.getTrendingArticles(1, 6, preferredLang);
+                Call<ArticleListingResponse> filterCall = topicsAPI.getVernacularTrendingArticles(1, 6, preferredLang);
                 filterCall.enqueue(articleListingResponseCallback);
                 return;
             }
@@ -399,20 +401,20 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
                         }
                     }
                     if (dataList.size() < 5) {
-                        Call<ArticleListingResponse> filterCall = topicsAPI.getTrendingArticles(1, 6, preferredLang);
+                        Call<ArticleListingResponse> filterCall = topicsAPI.getVernacularTrendingArticles(1, 6, preferredLang);
                         filterCall.enqueue(articleListingResponseCallback);
                     } else {
                         articleList.addAll(dataList);
                         initializeViewPager();
                     }
                 } else {
-                    Call<ArticleListingResponse> filterCall = topicsAPI.getTrendingArticles(1, 6, preferredLang);
+                    Call<ArticleListingResponse> filterCall = topicsAPI.getVernacularTrendingArticles(1, 6, preferredLang);
                     filterCall.enqueue(articleListingResponseCallback);
                 }
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
-                Call<ArticleListingResponse> filterCall = topicsAPI.getTrendingArticles(1, 6, preferredLang);
+                Call<ArticleListingResponse> filterCall = topicsAPI.getVernacularTrendingArticles(1, 6, preferredLang);
                 filterCall.enqueue(articleListingResponseCallback);
 
             }
@@ -420,7 +422,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
 
         @Override
         public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
-            Call<ArticleListingResponse> filterCall = topicsAPI.getTrendingArticles(1, 6, preferredLang);
+            Call<ArticleListingResponse> filterCall = topicsAPI.getVernacularTrendingArticles(1, 6, preferredLang);
             filterCall.enqueue(articleListingResponseCallback);
         }
     };

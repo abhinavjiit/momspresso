@@ -411,6 +411,7 @@ public class AppConstants {
     public static final String FOLLOW_UNFOLLOW_TOPICS_JSON_FILE = "follow_unfollow_topics.json";
     public static final String PHOENIX_RELEASE_VERSION = "5.0";
     public static final String VENUS_RELEASE_VERSION = "5.0";
+    public static final String LOCALIZATION_RELEASE_VERSION = "8.0.0";
     public static final String FACEBOOK_CONNECT_RELEASE_VERSION = "5.5";
     public static final String UPLOAD_VIDEO_RELEASE_VERSION = "5.6.2";
 
@@ -536,4 +537,10 @@ public class AppConstants {
     public static final String FB_AD_PLACEMENT_USER_ARTICLE = "206155642763202_1712333168812101";
     public static final String FB_AD_PLACEMENT_ARTICLE_DETAILS = "206155642763202_1699568463421905";
     public static final long MYCITY_TO_MOMSPRESSO_SWITCH_TIME = 1515936600;
+
+    public static final String LOCALE_ENGLISH = "en";
+    public static final String LOCALE_HINDI = "hi";
+    public static final String LOCALE_MARATHI = "mr";
+    public static final String LOCALE_BENGALI = "bn";
+
 }

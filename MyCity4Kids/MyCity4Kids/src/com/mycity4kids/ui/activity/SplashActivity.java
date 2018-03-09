@@ -140,9 +140,12 @@ public class SplashActivity extends BaseActivity {
 
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             String version = pInfo.versionName;
-            if (!"0".equals(SharedPrefUtils.getUserDetailModel(this).getId()) && version.equals(AppConstants.PHOENIX_RELEASE_VERSION) && SharedPrefUtils.isPhoenixFirstLaunch(this)) {
-                SharedPrefUtils.clearPrefrence(this);
-                SharedPrefUtils.setPhoenixFirstLaunch(this, false);
+            if (!"0".equals(SharedPrefUtils.getUserDetailModel(this).getId()) && version.equals(AppConstants.LOCALIZATION_RELEASE_VERSION) && SharedPrefUtils.isLocalizationFirstLaunch(this)) {
+                SharedPrefUtils.setCoachmarksShownFlag(this, "home", false);
+                SharedPrefUtils.setCoachmarksShownFlag(this, "topics", false);
+                SharedPrefUtils.setCoachmarksShownFlag(this, "topics_article", false);
+                SharedPrefUtils.setCoachmarksShownFlag(this, "article_details", false);
+                SharedPrefUtils.setLocalizationFirstLaunch(this, false);
             }
 
             if (!"0".equals(SharedPrefUtils.getUserDetailModel(this).getId()) && version.equals(AppConstants.FACEBOOK_CONNECT_RELEASE_VERSION) && SharedPrefUtils.isFBConnectFirstLaunch(this)) {
@@ -368,7 +371,7 @@ public class SplashActivity extends BaseActivity {
                 if (SharedPrefUtils.getLogoutFlag(this))
                     intent = new Intent(SplashActivity.this, ActivityLogin.class);
                 else
-                    intent = new Intent(SplashActivity.this, TutorialActivity.class);
+                    intent = new Intent(SplashActivity.this, LanguageSelectionActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 finish();

@@ -774,6 +774,8 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                                 articleDataModelsNew.get(i).setBookmarkId(responseData.getData().getResult().getBookmarkId());
                                 if (viewHolder instanceof FeedViewHolder) {
                                     ((FeedViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
+                                } else if (viewHolder instanceof HeaderViewHolder) {
+                                    ((HeaderViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
                                 } else {
                                     ((AdViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
                                 }
@@ -783,6 +785,8 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                                 articleDataModelsNew.get(i).setBookmarkId("");
                                 if (viewHolder instanceof FeedViewHolder) {
                                     ((FeedViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
+                                } else if (viewHolder instanceof HeaderViewHolder) {
+                                    ((HeaderViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
                                 } else {
                                     ((AdViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
                                 }
@@ -791,6 +795,8 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                                 articleDataModelsNew.get(i).setBookmarkId(responseData.getData().getResult().getBookmarkId());
                                 if (viewHolder instanceof FeedViewHolder) {
                                     ((FeedViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch_added));
+                                } else if (viewHolder instanceof HeaderViewHolder) {
+                                    ((HeaderViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch_added));
                                 } else {
                                     ((AdViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch_added));
                                 }
@@ -799,6 +805,8 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
                                 articleDataModelsNew.get(i).setBookmarkId("");
                                 if (viewHolder instanceof FeedViewHolder) {
                                     ((FeedViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch));
+                                } else if (viewHolder instanceof HeaderViewHolder) {
+                                    ((HeaderViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch));
                                 } else {
                                     ((AdViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch));
                                 }
@@ -818,24 +826,32 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
             if (type.equals("bookmark")) {
                 if (viewHolder instanceof FeedViewHolder) {
                     ((FeedViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
+                } else if (viewHolder instanceof HeaderViewHolder) {
+                    ((HeaderViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
                 } else {
                     ((AdViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark));
                 }
             } else if ("unbookmarkArticle".equals(type)) {
                 if (viewHolder instanceof FeedViewHolder) {
                     ((FeedViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
+                } else if (viewHolder instanceof HeaderViewHolder) {
+                    ((HeaderViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
                 } else {
                     ((AdViewHolder) viewHolder).bookmarkArticleImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmarked));
                 }
             } else if ("bookmarkVideo".equals(type)) {
                 if (viewHolder instanceof FeedViewHolder) {
                     ((FeedViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch));
+                } else if (viewHolder instanceof HeaderViewHolder) {
+                    ((HeaderViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch));
                 } else {
                     ((AdViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch));
                 }
             } else if ("unbookmarkVideo".equals(type)) {
                 if (viewHolder instanceof FeedViewHolder) {
                     ((FeedViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch_added));
+                } else if (viewHolder instanceof HeaderViewHolder) {
+                    ((HeaderViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch_added));
                 } else {
                     ((AdViewHolder) viewHolder).watchLaterImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_watch_added));
                 }

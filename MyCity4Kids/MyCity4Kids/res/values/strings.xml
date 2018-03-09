@@ -177,6 +177,7 @@
     <string name="ad.recent_logs_from.title">MORE FROM AUTHOR</string>
     <string name="ad.share.follow_author">FOLLOW %1$s</string>
     <string name="ad.trending.title">TRENDING BLOGS</string>
+    <string name="ad.write_blog">WRITE A BLOG</string>
     <string name="ad.tts.toast_unplayable_article">Unable to play this article</string>
 
     <string name="vd.recent_videos_from.title">RECENT VIDEOS FROM</string>
@@ -376,6 +377,7 @@
 
     <string name="app_settings.toolbar.title">SETTINGS</string>
     <string name="app_settings.tabbar.edit_prefs">EDIT PREFERENCES</string>
+    <string name="app_settings.tabbar.lang_prefs">LANGUAGE PREFERENCES</string>
     <string name="app_settings.tabbar.change_password">CHANGE PASSWORD</string>
     <string name="app_settings.tabbar.edit_profile">EDIT PROFILE</string>
 
@@ -612,5 +614,33 @@
     <string name="article_listing.type.videos_label">VIDEOS</string>
     <string name="article_listing.type.recent_label">RECENT</string>
 
+    <string name="lang_sel.welcome_msg">WELCOME TO MOMSPRESSO</string>
+    <string name="lang_sel.sel_lang">SELECT A LANGUAGE TO VIEW YOUR APP</string>
+    <string name="lang_sel.curr_lang">Current Language</string>
+    <string name="lang_sel.app_lang_desc">You are using %1$s as current language. Would you like to view this application in the same language?</string>
+    <string name="lang_sel.yes">YES</string>
+    <string name="lang_sel.select_more">SELECT MORE</string>
+    <string name="lang_sel.continue">CONTINUE</string>
+    <string name="lang_sel.choose_lang_toast">Please choose a language to continue</string>
+
+    <string name="all_categories_label">ALL</string>
+
+    <string name="language_label.english">English</string>
+    <string name="language_label.hindi">हिंदी</string>
+    <string name="language_label.marathi">मराठी</string>
+    <string name="language_label.bengali">বাংলা</string>
+
+    <string name="choose_pref_lang">Choose your preferred language</string>
+    <string name="choose_pref_lang.cancel">CANCEL</string>
+
+    <string name="guide.language_tour">You can view this app in any \nlanguage of your choice</string>
+    <string name="guide.settings_tour">Manage the languages you want to read the \narticles in</string>
+    <string name="guide.trending_tour">Tap here to access the menu</string>
+    <string name="guide.quick_link_tour">With our new quick links, you can discover content easier and faster!</string>
+    <string name="guide.topics_tour">These topics allow you to read\n and explore all facets of parenting</string>
+    <string name="guide.sub_topics_list_tour">Click here to look at more categories</string>
+    <string name="guide.share_like_bookmark_tour">Share, Bookmark and Love this post</string>
+    <string name="guide.comment_tour">Share your thoughts</string>
+    <string name="guide.listen_tour">Click here to listen to this blog</string>
 
 </resources>

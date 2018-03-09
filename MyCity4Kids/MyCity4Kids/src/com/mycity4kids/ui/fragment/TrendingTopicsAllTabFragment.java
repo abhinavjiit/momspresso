@@ -59,6 +59,7 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
     private boolean isHeaderVisible = false;
     private RecyclerView recyclerView;
     private FeedNativeAd feedNativeAd;
+//    private SwipeRefreshLayout swipe_refresh_layout;
 
     @Nullable
     @Override
@@ -67,11 +68,12 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
         View view = inflater.inflate(R.layout.new_article_layout, container, false);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-
+//        swipe_refresh_layout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
 
+//        swipe_refresh_layout.setOnRefreshListener(this);
         progressBar.setVisibility(View.VISIBLE);
 
         articleDataModelsNew = new ArrayList<ArticleListingResult>();
@@ -128,7 +130,7 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
         TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
 
         int from = (nextPageNumber - 1) * limit + 1;
-        Call<ArticleListingResponse> filterCall = topicsAPI.getTrendingArticles(from, from + limit - 1, SharedPrefUtils.getLanguageFilters(getActivity()));
+        Call<ArticleListingResponse> filterCall = topicsAPI.getVernacularTrendingArticles(from, from + limit - 1, SharedPrefUtils.getLanguageFilters(getActivity()));
         filterCall.enqueue(articleListingResponseCallback);
     }
 
@@ -136,6 +138,7 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
         @Override
         public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
             isReuqestRunning = false;
+//            swipe_refresh_layout.setRefreshing(false);
             progressBar.setVisibility(View.INVISIBLE);
             if (mLodingView.getVisibility() == View.VISIBLE) {
                 mLodingView.setVisibility(View.GONE);
@@ -161,6 +164,7 @@ public class TrendingTopicsAllTabFragment extends BaseFragment implements View.O
             if (mLodingView.getVisibility() == View.VISIBLE) {
                 mLodingView.setVisibility(View.GONE);
             }
+//            swipe_refresh_layout.setRefreshing(false);
             progressBar.setVisibility(View.INVISIBLE);
             Crashlytics.logException(t);
             Log.d("MC4KException", Log.getStackTraceString(t));

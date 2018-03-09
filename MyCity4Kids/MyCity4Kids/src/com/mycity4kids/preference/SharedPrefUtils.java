@@ -10,6 +10,8 @@ import com.mycity4kids.models.city.MetroCity;
 import com.mycity4kids.models.user.UserInfo;
 import com.mycity4kids.models.version.RateVersion;
 
+import java.util.Locale;
+
 /**
  * To save the Preference for My City App
  *
@@ -81,6 +83,7 @@ public class SharedPrefUtils {
 
     private static final String PHOENIX_FIRST_LAUNCH_FLAG = "phoenixFirstLaunchFlag";
     private static final String FB_CONNECT_FIRST_LAUNCH_FLAG = "fbConnectFirstLaunchFlag";
+    private static final String LOCALIZATION_FIRST_LAUNCH_FLAG = "localizationFirstLaunchFlag";
 
     private static final String COACHMARK_HOME = "coachmarkHome";
     private static final String COACHMARK_TOPICS = "coachmarkTopics";
@@ -390,6 +393,18 @@ public class SharedPrefUtils {
         return _sharedPref.getBoolean(PHOENIX_FIRST_LAUNCH_FLAG, true);
     }
 
+    public static void setLocalizationFirstLaunch(Context context, boolean flag) {
+        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        _editor.putBoolean(LOCALIZATION_FIRST_LAUNCH_FLAG, flag);
+        _editor.commit();
+    }
+
+    public static boolean isLocalizationFirstLaunch(Context context) {
+        SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        return _sharedPref.getBoolean(LOCALIZATION_FIRST_LAUNCH_FLAG, true);
+    }
+
     public static void setCoachmarksShownFlag(Context context, String screenName, boolean flag) {
         SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         Editor _editor = _sharedPref.edit();
@@ -577,7 +592,7 @@ public class SharedPrefUtils {
 
     public static String getAppLocale(Context context) {
         SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
-        String language = (_sharedPref.getString(LOCALE_LANGUAGE_KEY, "en"));
+        String language = (_sharedPref.getString(LOCALE_LANGUAGE_KEY, Locale.getDefault().getLanguage()));
         return language;
     }
 }

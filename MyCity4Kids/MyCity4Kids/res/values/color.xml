@@ -408,4 +408,24 @@
     <color name="suggested_topic.index.text">#545454</color>
     <color name="suggested_topic.topic_text">#9c9dac</color>
     <color name="suggested_topic.start_writing_label">#507cbe</color>
+
+    <color name="lang_sel.welcome_msg">#545454</color>
+    <color name="lang_sel.sel_lang">#9c9dac</color>
+    <color name="lang_sel.curr_lang">#545454</color>
+    <color name="lang_sel.app_lang_desc">#545454</color>
+    <color name="lang_sel.yes">#545454</color>
+    <color name="lang_sel.select_more">#507cbe</color>
+    <color name="lang_sel.lang_text_selected">#FFFFFF</color>
+    <color name="lang_sel.lang_text_unselected">#9c9dac</color>
+    <color name="lang_sel.lang_item_selected">#507cbe</color>
+    <color name="lang_sel.lang_item_unselected">#e2eaf9</color>
+    <color name="lang_sel.continue_text">#FFFFFF</color>
+    <color name="lang_sel.continue_bg">#507cbe</color>
+
+    <color name="guide.next_btn_bg">#507cbe</color>
+    <color name="guide.message">#FFFFFF</color>
+    <color name="guide.next_btn_text">#FFFFFF</color>
+
+    <color name="dark_transparent">#BB000000</color>
+
 </resources>

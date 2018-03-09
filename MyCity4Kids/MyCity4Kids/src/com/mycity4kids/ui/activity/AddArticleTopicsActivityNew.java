@@ -138,7 +138,6 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
                 @Override
                 public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
                     boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(AddArticleTopicsActivityNew.this, AppConstants.CATEGORIES_JSON_FILE, response.body());
-                    Log.d("AddArticleTopicsActivityNew", "file download was a success? " + writtenToDisk);
 
                     try {
                         FileInputStream fileInputStream = openFileInput(AppConstants.CATEGORIES_JSON_FILE);

@@ -95,6 +95,24 @@
                 android:visibility="gone"
                 app:fontName="oswald_regular.ttf" />
 
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/langTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/searchAllImageView"
+                android:drawablePadding="5dp"
+                android:drawableRight="@drawable/arrowdownnew"
+                android:paddingBottom="10dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
+                android:text="English"
+                android:textColor="#545454"
+                android:textSize="20sp"
+                android:visibility="visible"
+                app:fontName="oswald_regular.ttf" />
+
             <ImageView
                 android:id="@+id/searchAllImageView"
                 android:layout_width="wrap_content"
@@ -137,12 +155,322 @@
         app:itemTextColor="@color/bottom_navigation_bar.textColor"
         app:menu="@menu/menu_bottom_navigation_bar" />
 
-    <ImageView
-        android:id="@+id/coachmarksImageView"
+    <FrameLayout
+        android:id="@+id/transparentLayerToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/toolbarUnderline"
+        android:layout_alignTop="@+id/toolbar"
+        android:background="@color/dark_transparent"
+        android:clickable="true"
+        android:elevation="10dp"
+        android:visibility="gone" />
+
+    <!--<ImageView-->
+        <!--android:id="@+id/coachmarksImageView"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:elevation="5dp"-->
+        <!--android:scaleType="fitXY"-->
+        <!--android:src="@drawable/coachmark_home"-->
+        <!--android:visibility="gone" />-->
+
+    <FrameLayout
+        android:id="@+id/transparentLayerNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/navigation"
+        android:layout_alignTop="@+id/navigation"
+        android:background="@color/dark_transparent"
+        android:clickable="true"
+        android:elevation="10dp"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/firstCoachmark"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:elevation="5dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/coachmark_home"
-        android:visibility="gone" />
+        android:layout_alignParentBottom="true"
+        android:background="@color/dark_transparent"
+        android:elevation="8dp"
+        android:visibility="invisible">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize"
+            app:theme="@style/ToolbarTheme"
+            app:titleTextAppearance="@style/ToolbarTheme.Title">
+
+            <RelativeLayout
+                android:id="@+id/toolbarRelativeLayout1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/menuImageView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:paddingBottom="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="10dp"
+                    android:src="@drawable/hamburger_menu"
+                    android:visibility="invisible" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/toolbarTitle1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/menuImageView1"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
+                    android:text="@string/home.toolbar.title"
+                    android:textColor="@color/home.toolbar.titlecolor"
+                    android:textSize="20sp"
+                    android:visibility="invisible"
+                    app:fontName="oswald_regular.ttf" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/selectedlangGuideTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/searchAllImageView1"
+                    android:drawablePadding="5dp"
+                    android:drawableRight="@drawable/arrowdownnew"
+                    android:drawableTint="@color/white"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="10dp"
+                    android:text="@string/language_label.english"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:visibility="visible"
+                    app:fontName="oswald_regular.ttf" />
+
+                <ImageView
+                    android:id="@+id/searchAllImageView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="10dp"
+                    android:src="@drawable/ic_search"
+                    android:visibility="invisible" />
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.Toolbar>
+
+        <View
+            android:layout_width="60dp"
+            android:layout_height="2dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/toolbar1"
+            android:layout_marginRight="50dp"
+            android:background="@color/white" />
+
+        <View
+            android:id="@+id/verticalLine"
+            android:layout_width="2dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/toolbar1"
+            android:layout_marginRight="80dp"
+            android:background="@color/white" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/langGuideTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/verticalLine"
+            android:layout_marginRight="15dp"
+            android:background="@color/white"
+            android:paddingBottom="7dp"
+            android:paddingLeft="9dp"
+            android:paddingRight="9dp"
+            android:paddingTop="7dp"
+            android:text="@string/guide.language_tour"
+            android:textColor="@color/black"
+            app:fontName="oswald.ttf" />
+
+        <View
+            android:layout_width="54dp"
+            android:layout_height="2dp"
+            android:layout_above="@+id/navBar"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"
+            android:background="@color/white" />
+
+        <View
+            android:id="@+id/verticalLine2"
+            android:layout_width="2dp"
+            android:layout_height="30dp"
+            android:layout_above="@+id/navBar"
+            android:layout_marginLeft="35dp"
+            android:background="@color/white" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/settingGuideTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/verticalLine2"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="15dp"
+            android:background="@color/white"
+            android:paddingBottom="7dp"
+            android:paddingLeft="9dp"
+            android:paddingRight="9dp"
+            android:paddingTop="7dp"
+            android:text="@string/guide.settings_tour"
+            android:textColor="@color/black"
+            app:fontName="oswald.ttf" />
+
+        <LinearLayout
+            android:id="@+id/navBar"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal"
+            android:weightSum="5">
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:src="@drawable/tab1"
+                android:tint="@color/white" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:src="@drawable/tab2"
+                android:visibility="invisible" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:src="@drawable/bottom_bar_home"
+                android:visibility="invisible" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:src="@drawable/tab3"
+                android:visibility="invisible" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:src="@drawable/tab4"
+                android:visibility="invisible" />
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/secondCoachmark"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:background="@color/dark_transparent"
+        android:elevation="8dp"
+        android:visibility="invisible">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize"
+            app:theme="@style/ToolbarTheme"
+            app:titleTextAppearance="@style/ToolbarTheme.Title">
+
+            <RelativeLayout
+                android:id="@+id/toolbarRelativeLayout2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/menuImageView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:paddingBottom="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="10dp"
+                    android:src="@drawable/hamburger_menu"
+                    android:visibility="invisible" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/toolbarTitle2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/menuImageView2"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
+                    android:text="@string/home.toolbar.title"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:visibility="visible"
+                    app:fontName="oswald_regular.ttf" />
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.Toolbar>
+
+        <View
+            android:layout_width="100dp"
+            android:layout_height="2dp"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/toolbar2"
+            android:layout_marginLeft="40dp"
+            android:background="@color/white" />
+
+        <View
+            android:id="@+id/verticalLine_1"
+            android:layout_width="2dp"
+            android:layout_height="30dp"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/toolbar2"
+            android:layout_marginLeft="90dp"
+            android:background="@color/white" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/langGuideTextView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/verticalLine_1"
+            android:layout_marginLeft="15dp"
+            android:background="@color/white"
+            android:paddingBottom="7dp"
+            android:paddingLeft="9dp"
+            android:paddingRight="9dp"
+            android:paddingTop="7dp"
+            android:text="@string/guide.trending_tour"
+            android:textColor="@color/black"
+            app:fontName="oswald.ttf" />
+
+    </RelativeLayout>
 </RelativeLayout>

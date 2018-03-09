@@ -51,7 +51,7 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:paddingTop="10dp"
-        android:text="FOLLOW"
+        android:text="@string/blogger_profile.follow_button"
         android:textColor="@color/follower_following_list.follow_label"
         android:textSize="14sp"
         app:fontName="oswald.ttf" />
@@ -72,7 +72,7 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:paddingTop="10dp"
-        android:text="FOLLOWING"
+        android:text="@string/blogger_profile.unfollow_button"
         android:textColor="@color/follower_following_list.following_label"
         android:textSize="14sp"
         app:fontName="oswald.ttf" />

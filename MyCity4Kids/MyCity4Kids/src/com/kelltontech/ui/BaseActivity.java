@@ -26,6 +26,7 @@ import com.comscore.analytics.comScore;
 import com.google.android.gms.analytics.Tracker;
 import com.kelltontech.network.Response;
 import com.kelltontech.utils.ConnectivityUtils;
+import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.BuildConfig;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
@@ -35,6 +36,7 @@ import com.mycity4kids.listener.OnButtonClicked;
 import com.mycity4kids.models.parentingstop.ArticleBlogFollowRequest;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.sync.SyncUserInfoService;
+import com.mycity4kids.utils.LocaleManager;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -60,6 +62,11 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen 
         //  mTracker=baseApplication.getTracker(BaseApplication.TrackerName.APP_TRACKER);
         Log.i(getClass().getSimpleName(), "onCreate()");
 
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleManager.setLocale(base));
     }
 
     public void replaceFragment(final Fragment fragment, Bundle bundle, boolean isAddToBackStack) {
@@ -438,8 +445,11 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen 
     public void showToast(String message) {
         if (toast != null)
             toast.cancel();
-        toast = Toast.makeText(BaseActivity.this, "" + message, Toast.LENGTH_LONG);
-        toast.show();
+
+        if (!StringUtils.isNullOrEmpty(message)) {
+            toast = Toast.makeText(BaseActivity.this, "" + message, Toast.LENGTH_LONG);
+            toast.show();
+        }
     }
 
     public void showSnackbar(View view, String message) {

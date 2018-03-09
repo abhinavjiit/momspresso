@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.ui.fragment.ChangePasswordTabFragment;
+import com.mycity4kids.ui.fragment.EditLangPrefsTabFragment;
 import com.mycity4kids.ui.fragment.EditPreferencesTabFragment;
 import com.mycity4kids.ui.fragment.EditProfileTabFragment;
 
@@ -17,6 +18,7 @@ public class AppSettingsPagerAdapter extends FragmentStatePagerAdapter {
     private int mNumOfTabs;
     private EditProfileTabFragment editProfileTabFragment;
     private EditPreferencesTabFragment editPreferencesTabFragment;
+    private EditLangPrefsTabFragment editLangPrefsTabFragment;
     private ChangePasswordTabFragment changePasswordTabFragment;
     private String authorId;
 
@@ -47,6 +49,12 @@ public class AppSettingsPagerAdapter extends FragmentStatePagerAdapter {
                 editPreferencesTabFragment.setArguments(bundle);
                 return editPreferencesTabFragment;
             case 2:
+                if (editLangPrefsTabFragment == null) {
+                    editLangPrefsTabFragment = new EditLangPrefsTabFragment();
+                }
+                editLangPrefsTabFragment.setArguments(bundle);
+                return editLangPrefsTabFragment;
+            case 3:
                 if (changePasswordTabFragment == null) {
                     changePasswordTabFragment = new ChangePasswordTabFragment();
                 }

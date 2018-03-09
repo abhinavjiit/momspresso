@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">मॉस्प्रेस्सो</string>
-    <string name="unknown_person">अनजान</string>
+    <string name="unknown_person">अपरिचित</string>
     <string name="resend_email">रीसेंड ईमेल</string>
 
     <!-- <string name="facebook_app_id">1437325266589625</string>-->
@@ -12,7 +12,7 @@
     <string name="fb_login_protocol_scheme">fb206155642763202</string>
     <string name="admob_id">ca-app-pub-9305149859515387~7341831189</string>
 
-    <string name="write_review_prompt">आप क्या देखना पसंद करेंगे?</string>
+    <string name="write_review_prompt">आप क्या रिव्यू करना चाहते हैं?</string>
 
     <!-- splash screen -->
 
@@ -27,21 +27,21 @@
     <string name="locality_txt">किस जगह पर?</string>
     <string name="error_network">यह उपकरण नेटवर्क क्षेत्र से बाहर है</string>
     <string name="please_wait">कृपया इंतज़ार करें...</string>
-    <string name="no_result_txt">परिणाम नहीं मिल पाया</string>
-    <string name="went_wrong">कुछ जड़बड़ हो गयी है</string>
+    <string name="no_result_txt">कोई परिणाम नहीं मिला</string>
+    <string name="went_wrong">कुछ गलत हो गया है </string>
     <string name="server_went_wrong">सर्वर में कुछ खराबी हो गयी है</string>
-    <string name="no_data">डाटा नहीं मिल पा रहा</string>
-    <string name="toast_network_error">यह उपकरण नेटवर्क क्षेत्र से बाहर है</string>
+    <string name="no_data">डाटा नहीं मिला </string>
+    <string name="toast_network_error"> आपका डीवाइस नेटवर्क क्षेत्र से बाहर है</string>
     <string name="toast_response_error">यह कुछ एरर आ गया है, कृपया कुछ समय बाद कोशिश करें</string>
     <string name="toast_server_error">सर्वर एरर</string>
-    <string name="fetching_data">डाटा ढूँढा जा रहा है&#8230;</string>
+    <string name="fetching_data">डाटा लाया  जा रहा है&#8230;</string>
     <string name="please_select">किसी एक वैल्यू का चुनाव करें</string>
     <!-- slidingDrawer -->
     <string name="no_query">अपनी सर्च क्वेरी यहाँ लिखें</string>
 
     <!-- Filter/sort Screen -->
-    <string name="no_age_group">यह ऐज ग्रुप फ़िल्टर नहीं हो सकता</string>
-    <string name="no_category_group">यह केटेगरी ग्रुप फ़िल्टर नहीं हो सकता</string>
+    <string name="no_age_group">यहाँ फ़िल्टर करने के लिए कोई एज  ग्रुप नहीं है</string>
+    <string name="no_category_group">यहाँ फ़िल्टर करने के लिए कोई केटेगरी ग्रुप नहीं है</string>
     <string name="ageGroup">ऐज ग्रुप</string>
 
     <!-- Add Listing Screen -->
@@ -51,7 +51,7 @@
     <!-- Details Screen -->
 
     <string name="age_grout_txt">ऐज ग्रुप</string>
-    <string name="event_dates_txt">इवेंट की तारिक</string>
+    <string name="event_dates_txt">इवेंट की तारीख </string>
     <string name="description_txt">विवरण</string>
     <string name="contact_txt">सम्पर्क</string>
     <string name="about_txt">हमारे बारे में</string>
@@ -62,15 +62,15 @@
     <string name="address_locality_txt">पता</string>
 
     <!-- Top Picks Screen -->
-    <string name="top_picks">टॉप पिक्स</string>
+    <string name="top_picks">चुनींदा लेख</string>
     <string name="author_img">लेखक की तस्वीर</string>
     <string name="title">आर्टिकल का शीर्षक</string>
     <string name="author_name">लेखक का नाम</string>
-    <string name="article_publish_date">आर्टिकल के छपने की तारिक</string>
+    <string name="article_publish_date">आर्टिकल के छपने की तारीख </string>
     <string name="progress_spinner">प्रोग्रेस स्पिनर</string>
 
     <!-- article details -->
-    <string name="submit">सबमिट</string>
+    <string name="submit">सबमिट करें </string>
     <string name="add_reply">यहाँ लिखें</string>
 
     <!-- Top Picks Detail Screen -->
@@ -85,7 +85,7 @@
 
     <string name="gps_enabled_alert">आपके फ़ोन में लोकेशन डिटेक्शन बंद है। कृपया सेटिंग में जाकर उसे ऑन करें</string>
 
-    <string name="rate_now">रेट नाउ</string>
+    <string name="rate_now">अभी रेट करें </string>
 
     <string name="netwrok_error">नेटवर्क की समस्या</string>
     <string name="transit">पारवहन</string>
@@ -109,27 +109,27 @@
     <string name="empty_directory">डायरेक्टरी को खाली करें</string>
     <string name="storage_removed">स्टोरेज को हटा दिया गया है</string>
     <string name="choose_file">एक फाइल का चुनाव करें</string>
-    <string name="error_selecting_file">फाइल को सेलेक्ट करने में एरर</string>
+    <string name="error_selecting_file">फाइल को सेलेक्ट करने में समस्या है </string>
     <string name="internal_storage">इंटरनल स्टोरेज</string>
 
-    <string name="saving_image">तस्वीर को सेव किया जा रहा है</string>
-    <string name="preparing_card">कार्ड तैयार करना</string>
+    <string name="saving_image">इमेज को सेव किया जा रहा है</string>
+    <string name="preparing_card">कार्ड बनाया जा  रहा है </string>
     <string name="no_storage_card">स्टोरेज कार्ड नहीं है</string>
     <string name="not_enough_space">स्टोरेज कार्ड भर गया है</string>
-    <string name="server_error">कोई एरर आ गया है, कृपया कुछ समय बाद कोशिश करें</string>
+    <string name="server_error">कोई समस्या आ गई है, कृपया कुछ समय बाद कोशिश करें</string>
 
 
     <string name="logout_msg">क्या आप लॉगआउट करना चाहते हैं?</string>
-    <string name="reminder_selected">आप इसे सेलेक्ट नहीं कर सकते</string>
+    <string name="reminder_selected">आप इस का चुनाव  नहीं कर सकते</string>
     <string name="activities_txt">एक्टिविटीज</string>
-    <string name="duration_txt">समय</string>
+    <string name="duration_txt">समय अवधि</string>
     <string name="cost_txt">कीमत</string>
 
     <string name="event_added">इवेंट ऐड किया जा चुका है</string>
 
 
     <string name="new_yes">हाँ</string>
-    <string name="new_cancel">कैंसिल</string>
+    <string name="new_cancel">रद्द करें </string>
     <string name="load_error">फेल्ड टू लोड कंटेनर</string>
     <string name="example_post_title_placeholder">आर्टिकल का शीर्षक</string>
     <string name="example_post_content_placeholder">अपनी कहानी हमारे साथ यहाँ बाटें…</string>
@@ -138,22 +138,22 @@
     <string name="select_image_fail">एक तस्वीर का चुनाव करें (फेलियर डेमो)</string>
     <string name="select_video">एक वीडियो का चुनाव करें</string>
     <string name="select_video_fail">एक वीडियो का चुनाव करें (फेलियर डेमो)</string>
-    <string name="camera_pick">कैमरा से तस्वीर लें</string>
+    <string name="camera_pick">कैमरे  से तस्वीर लें</string>
 
     <string name="analytics.popup.last30days">आखरी 30 दिन</string>
     <string name="analytics.popup.customdates">कस्टम</string>
-    <string name="analytics.popup.improve_page_views">कैसे अपने पेज पर व्यूज बढ़ाएँ?</string>
-    <string name="analytics.popup.increase_followers">कैसे अपने पेज पर फ़ॉलोअरज़ बढ़ाएँ?</string>
-    <string name="analytics.popup.rank_calculation">इसका हिसाब कैसे करते हैं?</string>
-    <string name="analytics.popup.improve_rank">कैसे अपनी रैंक को बेहतर करें?</string>
-    <string name="analytics.popup.improve_social">कैसे अपने सोशल शेयर को बेहतर करें?</string>
+    <string name="analytics.popup.improve_page_views">मैं अपने पेज व्यूज कैसे बढ़ा सकती हूँ </string>
+    <string name="analytics.popup.increase_followers">मैं  अपने पेज पर फ़ॉलोअर कैसे बढ़ा सकती हूँ </string>
+    <string name="analytics.popup.rank_calculation">इसकी  गणना कैसे की जाती है?</string>
+    <string name="analytics.popup.improve_rank">मैं अपनी रैंक को कैसे बेहतर कर सकती हूँ </string>
+    <string name="analytics.popup.improve_social">मैं अपने सोशल शेयर को कैसे बेहतर कर सकती हूं</string>
 
-    <string name="videos.dialog.title">वीडियो अपलोड करने के लिए चुनाव करें</string>
-    <string name="videos.upload_option.camera">वीडियो खीचें</string>
+    <string name="videos.dialog.title">अपलोड  के लिए वीडियो चुनें</string>
+    <string name="videos.upload_option.camera">वीडियो लें </string>
     <string name="videos.upload_option.gallery">गैलरी में से चुने</string>
 
-    <string name="ad.swipe_tootip_text">अगला आर्टिकल पढ़ने के लिए लेफ्ट स्वाइप करें</string>
-    <string name="ad.view_all_tags.text">सब चीज़ें देखें</string>
+    <string name="ad.swipe_tootip_text">अगले लेख को पढ़ने के लिए बाएं स्वाइप करें</string>
+    <string name="ad.view_all_tags.text">सभी  देखें</string>
     <string name="ad.tags_title.text">यह आर्टिकल निम्न श्रेणियों में पोस्ट किया गया है</string>
     <string name="ad.tags_subtitle.text">ऐसे ही और पोस्ट पढ़ने के लिए इसे फॉलो करें</string>
     <string name="ad.follow_author">फॉलो</string>
@@ -176,6 +176,7 @@
     <string name="ad.recent_logs_from.title">लेखक की और से और अधिक</string>
     <string name="ad.share.follow_author">फॉलो %1$s</string>
     <string name="ad.trending.title">ट्रेंडिंग ब्लॉग्स</string>
+    <string name="ad.write_blog">लेख लिखें</string>
     <string name="ad.tts.toast_unplayable_article">यह आर्टिकल प्ले नहीं हो सकता</string>
 
     <string name="vd.recent_videos_from.title">रीसेंट वीडियोस फ्रॉम</string>
@@ -196,15 +197,15 @@
     </string-array>
 
     <string-array name="improve_rank_array">
-        <item>Be consistent in your blogging - post a blog weekly</item>
-        <item>Promote your blog post on all the Facebook groups that you are part of</item>
-        <item>Seek an opinion from peers and edit the blog post accordingly</item>
+        <item>एक निर्धारित समय पर ब्लॉगिंग करते रहे- कम से कम हर हफ्ते एक ब्लॉग करें</item>
+        <item>अपने ब्लॉग पोस्ट को उन सभी फेसबुक ग्रूप्स पर प्रचारित करें, जिनका आप हिस्सा हैं</item>
+        <item>साथियों से  राय लें और ब्लॉग पोस्ट को तदनुसार संपादित करें</item>
     </string-array>
 
     <string-array name="improve_social_share_array">
-        <item>Share blog posts using the buttons for social sharing in your blog post</item>
-        <item>Add Social Plugins to your profile e.g. www.twitter.com/bloggername</item>
-        <item>Try to edit and focus on the content while sharing your blog post</item>
+        <item>अपने ब्लॉग को शेयर करने के लिए सोशल शेयरिंग के बटन को क्लिक करें</item>
+        <item>अपनी प्रोफाइल में सोशल प्लगिन्स डालें जैसे www.twitter.com/bloggername</item>
+        <item>अपने ब्लॉग को पोस्ट करने से पहले एडिट और कंटेंट पर ध्यान दें</item>
         <item>सही हैशटैग्स का इस्तेमाल करें</item>
     </string-array>
 
@@ -262,8 +263,8 @@
     <string name="home_screen.upcoming_events.title">आने वाले इवेंट्स</string>
     <string name="home_screen.kids_res.title">बच्चे के लिए संसाधन</string>
     <string name="home_screen.trending_list_header.title">इन विषयों को चुने जिनमे आपकी दिलचस्पी हो जैसे</string>
-    <string name="home_screen.trending_list_header.topics_label">GETTING PREGNANT, POST PARTUM DEPRESSION ETC.</string>
-    <string name="home_screen.trending_list_header.take_me_there">OKAY GOT IT! TAKE ME THERE</string>
+    <string name="home_screen.trending_list_header.topics_label">प्रेगनेंसी ,पोस्टपार्ट्म  आदि।</string>
+    <string name="home_screen.trending_list_header.take_me_there">समझ आ गया है, कृप्या मुझे वहाँ लेकर चले</string>
 
     <string-array name="onboarding_title_array">
         <item>HARNESSING THE WISDOM OF MUMS</item>
@@ -375,6 +376,7 @@
 
     <string name="app_settings.toolbar.title">सेटिंग्स</string>
     <string name="app_settings.tabbar.edit_prefs">अपनी पसंद को बदले</string>
+    <string name="app_settings.tabbar.lang_prefs">भाषा प्राथमिकताएं</string>
     <string name="app_settings.tabbar.change_password">पासवर्ड बदलें</string>
     <string name="app_settings.tabbar.edit_profile">प्रोफाइल में बदलाव करें</string>
 
@@ -429,7 +431,7 @@
     <string name="blog_setup.one_time_label">ब्लॉग सेटअप करना एक बार की प्रक्रिया है</string>
     <string name="blog_setup.okay">ओके</string>
     <string name="blog_setup.blog_title_label">ब्लॉग का शीर्षक</string>
-    <string name="blog_setup.blog_title_desc">This is like a title of your digital book and encompasses a description of all your blog posts that you\'ll be publishing here. Eg: Mums diary, My monologue.</string>
+    <string name="blog_setup.blog_title_desc">यह एक तरह से आपकी डिजिटल पुस्तक का एक शीर्षक है और इसमें आपके सभी ब्लॉग पोस्टों का वर्णन शामिल है, जो कि आप यहां प्रकाशित करेंगे। उदाहरण: माँ की डायरी, मेरा एकक।</string>
     <string name="blog_setup.hint_blog_title">यहाँ टाइप करें</string>
     <string name="blog_setup.about_yourself_label">आपके बारे में</string>
     <string name="blog_setup.about_desc">सभी पाठकों को अपने बारे में बताएँ</string>
@@ -484,10 +486,10 @@
         <item>कौन कौन अपने योगदान दे सकता है?</item>
     </string-array>
     <string-array name="become_blogger_desc_array">
-        <item>You are one click away from sharing your thoughts, opinions, and stories on India\'s largest parenting community, in the language of your choice. With a reach of over 8 million Mums per month, your voice can be the source of hope, inspiration, comfort and knowledge.</item>
-        <item>You can share your parenting stories via the website or our iOS and Android app. Express yourself in the language of your choice - English, Hindi, Bengali, Marathi, Telugu or Tamil.</item>
-        <item>Momspresso does not pay each blogger on publishing their own posts. We do however offer paid writing assignments which are commissioned by brands. This is offered to bloggers based on the quality of content they produce.</item>
-        <item>Whether your story is about parenthood, womanhood, relationships, struggles, joys or personal well-being, this is the platform to write about it. Join the 5000+ Mums in seeking &amp; sharing advice, opinions and recommendations.\n Do refrain from publishing copied or \'slightly modified\' content.</item>
+        <item>आप अपनी पसंद की भाषा में अपने विचारों, विचारों और कहानियों को साझा करने से भारत की माँओं की सबसे बड़ी कम्युनिटी से  बस एक क्लिक दूर हैं। जहाँ प्रति माह आप 8 मिलियन से अधिक मांओं  तक  पहुंच सकते हैं और  आपकी आवाज़ किसी की आशा, प्रेरणा, आराम और ज्ञान का स्रोत हो सकती है।</item>
+        <item>आप हमारी वेबसाइट ,हमारे आईओएस और एंड्रॉइड ऐप के माध्यम से अपनी पेरेंटिंग कहानियों को साझा कर सकते हैं। अपनी पसंद की भाषा - अंग्रेजी, हिंदी, बंगाली, मराठी, तेलुगू, तमिल या कन्नड़ में खुद को व्यक्त करें।</item>
+        <item>माम्सप्रेसो (पूर्व में माइसिटी4किड्स) प्रत्येक ब्लॉगर को अपनी पोस्ट प्रकाशित करने का भुगतान नहीं करता है। हम हालांकि, ब्रांडों द्वारा नियुक्त किए गए भुगतान लेखन कार्यों की पेशकश करते हैं यह ब्लॉगर्स द्वारा उत्पादित सामग्री की गुणवत्ता के आधार पर ब्लॉगर्स को प्रस्तुत किया जाता है</item>
+        <item>चाहे आपकी कहानी पेरेंटिंग, नारीत्व, रिश्ते, संघर्ष, सुख या निजी कल्याण के बारे में है, इस बारे में लिखने के लिए यह एक बेहतरीन मंच है। सलाह, राय और सिफारिशों की मांग और साझा करने में 3500+ माँओं के साथ  शामिल हों .कॉपी की गयी या \'थोड़ा संशोधित\' सामग्री प्रकाशित करने से बचें </item>
     </string-array>
 
     <string name="upload_video.title">SHARE A MomVlog\n THAT CAPTURES #MOMLIFE</string>
@@ -572,7 +574,7 @@
 
     <string name="city_picker.toolbar.title">शहर का चुनाव करें</string>
 
-    <string name="rate_us.dialog.title">हमारे एप्प को रेट करें ?</string>
+    <string name="rate_us.dialog.title">ऐप को रेट करें ?</string>
     <string name="rate_us.dialog.not_now">अभी नहीं</string>
     <string name="rate_us.dialog.message1">यदि आप मॉम्सप्रेस्सो ऐप का आनंद लेते हैं, तो कृपया इसे रेट करने के लिए कुछ समय दें।</string>
     <string name="rate_us.dialog.message2">आपके सहयोग के लिए धन्यवाद !!!</string>
@@ -608,7 +610,44 @@
     <string name="article_listing.type.editor_label">संपादक की पसंद</string>
     <string name="article_listing.type.for_you_label">खास आपके लिए</string>
     <string name="article_listing.type.languages_label">भाषाएँ</string>
-    <string name="article_listing.type.videos_label">ताजातरीन</string>
+    <string name="article_listing.type.videos_label">विडियोज</string>
     <string name="article_listing.type.recent_label">ताजातरीन</string>
+
+    <!--<string name="lang_sel.welcome_msg">WELCOME TO MOMSPRESSO</string>-->
+    <!--<string name="lang_sel.sel_lang">SELECT A LANGUAGE TO VIEW YOUR APP</string>-->
+    <!--<string name="lang_sel.curr_lang">Current Language</string>-->
+    <!--<string name="lang_sel.app_lang_desc">You are using %1$s as current language. Would you like to view this application in the same language?</string>-->
+    <!--<string name="lang_sel.yes">YES</string>-->
+    <!--<string name="lang_sel.select_more">SELECT MORE</string>-->
+    <!--<string name="lang_sel.continue">CONTINUE</string>-->
+
+    <string name="lang_sel.welcome_msg">मॉस्प्रेस्सो में आपका स्वागत है</string>
+    <string name="lang_sel.sel_lang">अपने ऐप को देखने के लिए भाषा चुनें</string>
+    <string name="lang_sel.curr_lang">वर्तमान भाषा</string>
+    <string name="lang_sel.app_lang_desc">आप वर्तमान भाषा के रूप में %1$s का उपयोग कर रहे हैं.क्या आप इस एप्लिकेशन को उसी भाषा में देखना चाहते हैं?</string>
+    <string name="lang_sel.yes">हाँ</string>
+    <string name="lang_sel.select_more">कुछ और चुनें</string>
+    <string name="lang_sel.continue">जारी रखें</string>
+    <string name="lang_sel.choose_lang_toast">Please choose a language to continue</string>
+
+    <string name="all_categories_label">सब</string>
+
+    <string name="language_label.english">ENGLISH</string>
+    <string name="language_label.hindi">हिंदी</string>
+    <string name="language_label.marathi">मराठी</string>
+    <string name="language_label.bengali">বাংলা</string>
+
+    <string name="choose_pref_lang">अपनी पसंदीदा भाषा चुनें</string>
+    <string name="choose_pref_lang.cancel">कैंसिल</string>
+
+    <string name="guide.language_tour">आप इस ऐप को अपनी पसंद की \nकिसी भी भाषा में देख सकते हैं</string>
+    <string name="guide.settings_tour">उन भाषाओं को प्रबंधित करें, जिनमें आप लेखों को \nपढ़ना चाहते हैं</string>
+    <string name="guide.trending_tour">मेनू तक पहुंचने के लिए \nयहां टैप करें</string>
+    <string name="guide.quick_link_tour">हमारे नए त्वरित लिंक के साथ, आप सामग्री को आसान और तेज़ खोज सकते हैं!</string>
+    <string name="guide.topics_tour">इन विषयों की मदद से आप माता-पिता के सभी पहलुओं को पढ़ सकते हैं और पता लगा सकते हैं</string>
+    <string name="guide.sub_topics_list_tour">अधिक श्रेणियों को देखने के लिए यहां क्लिक करें</string>
+    <string name="guide.share_like_bookmark_tour">इस पोस्ट को शेयर, बुकमार्क या पसंद करे</string>
+    <string name="guide.comment_tour">अपने विचारों को साझा करें</string>
+    <string name="guide.listen_tour">इस ब्लॉग को सुनने के लिए यहां क्लिक करें</string>
 
 </resources>

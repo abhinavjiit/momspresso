@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mycity4kids"
-    android:versionCode="78"
-    android:versionName="7.0.1">
+    android:versionCode="79"
+    android:versionName="8.0.0">
 
     <uses-sdk
         android:minSdkVersion="15"
@@ -118,6 +118,9 @@
                     android:host="www.momspresso.com"
                     android:scheme="http" />
                 <data
+                    android:host="*.momspresso.com"
+                    android:scheme="http" />
+                <data
                     android:host="mycity4kids.com"
                     android:scheme="http" />
                 <data
@@ -131,6 +134,9 @@
                     android:scheme="https" />
                 <data
                     android:host="www.momspresso.com"
+                    android:scheme="https" />
+                <data
+                    android:host="*.momspresso.com"
                     android:scheme="https" />
 
                 <action android:name="android.intent.action.VIEW" />
@@ -386,6 +392,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.AllVideosListingActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.LanguageSelectionActivity"
             android:screenOrientation="portrait" />
 
         <receiver

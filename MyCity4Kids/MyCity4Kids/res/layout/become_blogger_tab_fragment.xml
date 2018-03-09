@@ -11,7 +11,7 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="20dp"
         android:src="@drawable/ic_blogger1" />
 
     <ImageView
@@ -19,7 +19,7 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/become_blogger_circular_image_large"
         android:scaleType="center"
         android:src="@drawable/ic_blogger1" />
@@ -41,27 +41,35 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/rank1BloggerImageView"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:text="string/become_blogger.title1"
         android:textColor="@color/become_blogger.get_started"
         android:textSize="18sp"
         app:fontName="oswald_regular.ttf" />
 
-    <com.mycity4kids.widget.CustomFontTextView
-        android:id="@+id/descTextView"
+    <ScrollView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@+id/titleTextView"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="25dp"
-        android:gravity="center"
-        android:paddingEnd="30dp"
-        android:paddingLeft="30dp"
-        android:paddingRight="30dp"
-        android:paddingStart="30dp"
-        android:text="string/become_blogger.message1"
-        android:textColor="@color/become_blogger.message"
-        android:textSize="18sp"
-        app:fontName="oswald.ttf" />
+        android:layout_marginTop="20dp">
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/descTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingEnd="20dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingStart="20dp"
+            android:text="string/become_blogger.message1"
+            android:textColor="@color/become_blogger.message"
+            android:textSize="17sp"
+            app:fontName="oswald.ttf" />
+    </ScrollView>
 
 </RelativeLayout>

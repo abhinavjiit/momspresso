@@ -21,6 +21,17 @@
         app:tabTextAppearance="@style/CustomTabText"
         app:tabTextColor="@color/topic_articles.tabbar_text" />
 
+    <FrameLayout
+        android:id="@+id/tablayoutLayer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/tab_layout"
+        android:layout_alignTop="@+id/tab_layout"
+        android:background="@color/dark_transparent"
+        android:clickable="true"
+        android:elevation="4dp"
+        android:visibility="gone" />
+
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"

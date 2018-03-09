@@ -11,7 +11,9 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -51,7 +53,7 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant on 4/8/16.
  */
-public class ArticleListingActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, ForYouInfoDialogFragment.IForYourArticleRemove, FeedNativeAd.AdLoadingListener, MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
+public class ArticleListingActivity extends BaseActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, ForYouInfoDialogFragment.IForYourArticleRemove, FeedNativeAd.AdLoadingListener, MainArticleRecyclerViewAdapter.RecyclerViewClickListener {
 
     private MainArticleRecyclerViewAdapter recyclerAdapter;
     private ArrayList<ArticleListingResult> articleDataModelsNew;
@@ -74,6 +76,8 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
     private ImageView menuImageView;
     private RecyclerView recyclerView;
     private FeedNativeAd feedNativeAd;
+    private LinearLayout addTopicsLayout;
+    private FrameLayout headerArticleCardLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +91,10 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         menuImageView = (ImageView) mToolbar.findViewById(R.id.menuImageView);
         toolbarTitleTextView = (TextView) mToolbar.findViewById(R.id.toolbarTitle);
+        addTopicsLayout = (LinearLayout) findViewById(R.id.addTopicsLayout);
+        headerArticleCardLayout = (FrameLayout) findViewById(R.id.headerArticleView);
+
+        addTopicsLayout.setOnClickListener(this);
 
         mToolbar.setVisibility(View.VISIBLE);
 
@@ -239,6 +247,11 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
 
     private void processForYouResponse(ArticleListingResponse responseData) {
         try {
+            if (responseData.getData().get(0).getResult() == null) {
+                addTopicsLayout.setVisibility(View.VISIBLE);
+                headerArticleCardLayout.setVisibility(View.GONE);
+            }
+
             ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
             if (dataList.size() == 0) {
                 isLastPageReached = true;
@@ -475,5 +488,15 @@ public class ArticleListingActivity extends BaseActivity implements SwipeRefresh
         intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
         intent.putExtra(Constants.AUTHOR, articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position).getUserName());
         startActivity(intent);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.addTopicsLayout:
+                Intent subscribeTopicIntent = new Intent(ArticleListingActivity.this, SubscribeTopicsActivity.class);
+                startActivityForResult(subscribeTopicIntent, 1111);
+                break;
+        }
     }
 }

@@ -18,7 +18,6 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.FollowersFollowingResponse;
 import com.mycity4kids.models.response.FollowersFollowingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -95,12 +94,12 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
             Call<FollowersFollowingResponse> callFollowerList = followListAPI.getFollowersList(userId);
             callFollowerList.enqueue(getFollowersListResponseCallback);
             progressBar.setVisibility(View.VISIBLE);
-            getSupportActionBar().setTitle("Followers");
+            getSupportActionBar().setTitle(getString(R.string.myprofile_followers_label));
         } else {
             Call<FollowersFollowingResponse> callFollowingList = followListAPI.getFollowingList(userId);
             callFollowingList.enqueue(getFollowersListResponseCallback);
             progressBar.setVisibility(View.VISIBLE);
-            getSupportActionBar().setTitle("Following");
+            getSupportActionBar().setTitle(getString(R.string.myprofile_following_label));
         }
     }
 
@@ -126,7 +125,6 @@ public class FollowersAndFollowingListActivity extends BaseActivity {
         public void onFailure(Call<FollowersFollowingResponse> call, Throwable t) {
             progressBar.setVisibility(View.INVISIBLE);
             noResultTextView.setVisibility(View.VISIBLE);
-//            showToast(getString(R.string.server_went_wrong));
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }

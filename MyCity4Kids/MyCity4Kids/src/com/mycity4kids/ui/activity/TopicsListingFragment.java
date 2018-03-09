@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
@@ -15,13 +16,13 @@ import com.kelltontech.ui.BaseFragment;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
-import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.TopicsPagerAdapter;
+import com.mycity4kids.ui.fragment.TopicsArticlesTabFragment;
 import com.mycity4kids.utils.AppUtils;
 
 import org.json.JSONObject;
@@ -45,6 +46,7 @@ public class TopicsListingFragment extends BaseFragment {
     private View view;
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private FrameLayout tablayoutLayer;
 
     private TopicsPagerAdapter pagerAdapter;
 
@@ -59,6 +61,7 @@ public class TopicsListingFragment extends BaseFragment {
         view = inflater.inflate(R.layout.topic_listing_activity, container, false);
 
         tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
+        tablayoutLayer = (FrameLayout) view.findViewById(R.id.tablayoutLayer);
 
         parentTopicId = getArguments().getString("parentTopicId");
         try {
@@ -110,13 +113,19 @@ public class TopicsListingFragment extends BaseFragment {
         if (subTopicsList.size() == 0) {
             Topics mainTopic = new Topics();
             mainTopic.setId(parentTopicId);
-            mainTopic.setDisplay_name("ALL");
-            mainTopic.setTitle("ALL");
+            String allCategoryLabel = "";
+            if (isAdded()) {
+                allCategoryLabel = getString(R.string.all_categories_label);
+            } else {
+                allCategoryLabel = "ALL";
+            }
+            mainTopic.setDisplay_name(allCategoryLabel);
+            mainTopic.setTitle(allCategoryLabel);
 
             Topics childTopic = new Topics();
             childTopic.setId(parentTopicId);
-            childTopic.setDisplay_name("ALL");
-            childTopic.setTitle("ALL");
+            childTopic.setDisplay_name(allCategoryLabel);
+            childTopic.setTitle(allCategoryLabel);
 
             ArrayList<Topics> aa = new ArrayList<Topics>();
             aa.add(childTopic);
@@ -313,5 +322,18 @@ public class TopicsListingFragment extends BaseFragment {
     public void onDestroy() {
         super.onDestroy();
         Log.d("TopicListingFragment", "onDestroy");
+    }
+
+    public void showGuideView() {
+        TopicsArticlesTabFragment topicsArticlesTabFragment = ((TopicsArticlesTabFragment) pagerAdapter.instantiateItem(viewPager, viewPager.getCurrentItem()));
+        topicsArticlesTabFragment.showGuideView();
+    }
+
+    public void showTabLayer() {
+        tablayoutLayer.setVisibility(View.VISIBLE);
+    }
+
+    public void hideTabLayer() {
+        tablayoutLayer.setVisibility(View.GONE);
     }
 }

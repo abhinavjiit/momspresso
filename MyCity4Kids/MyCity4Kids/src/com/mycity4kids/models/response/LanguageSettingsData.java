@@ -14,15 +14,6 @@ public class LanguageSettingsData {
 
     private List<Map<String, String>> result;
 
-//    public Map<String, String> getResult() {
-//        return result;
-//    }
-//
-//    public void setResult(Map<String, String> result) {
-//        this.result = result;
-//    }
-
-
     public String getMsg() {
         return msg;
     }

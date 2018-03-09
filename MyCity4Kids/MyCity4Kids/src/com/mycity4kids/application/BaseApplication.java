@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.support.multidex.MultiDex;
@@ -31,6 +32,7 @@ import com.mycity4kids.newmodels.parentingmodel.ArticleFilterListModel;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
+import com.mycity4kids.utils.LocaleManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -299,18 +301,18 @@ public class BaseApplication extends Application {
 
     @Override
     protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
+        super.attachBaseContext(LocaleManager.setLocale(base));
         MultiDex.install(this);
         Log.d(TAG, "attachBaseContext");
     }
 
-//    @Override
-//    public void onConfigurationChanged(Configuration newConfig) {
-//        super.onConfigurationChanged(newConfig);
-//        LocaleManager.setLocale(this);
-//        LocaleManager.setNewLocale(this, newConfig.locale.getLanguage());
-//        Log.d(TAG, "onConfigurationChanged: " + newConfig.locale.getLanguage());
-//    }
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        LocaleManager.setLocale(this);
+        LocaleManager.setNewLocale(this, newConfig.locale.getLanguage());
+        Log.d(TAG, "onConfigurationChanged: " + newConfig.locale.getLanguage());
+    }
 
     public Retrofit createRetrofitInstance(String base_url) {
 

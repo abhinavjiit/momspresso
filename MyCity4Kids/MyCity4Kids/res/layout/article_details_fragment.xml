@@ -204,7 +204,7 @@
                 android:layout_alignBottom="@+id/writeArticleImageView"
                 android:layout_alignTop="@+id/writeArticleImageView"
                 android:gravity="center"
-                android:text="WRITE A BLOG"
+                android:text="@string/ad.write_blog"
                 android:textColor="#507cbe"
                 android:textSize="24sp" />
 
@@ -516,6 +516,33 @@
         android:textSize="12sp"
         android:visibility="gone"
         app:fontName="oswald.ttf" />
+
+    <!--<FrameLayout-->
+    <!--android:id="@+id/shareLikeOverlay"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_above="@+id/bottom_Lout"-->
+    <!--android:background="@color/dark_transparent"-->
+    <!--android:clickable="true"-->
+    <!--android:visibility="gone">-->
+
+    <!--<com.mycity4kids.widget.CustomFontTextView-->
+    <!--android:id="@+id/articleGuideTextView"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="bottom|center_horizontal"-->
+    <!--android:layout_marginBottom="10dp"-->
+    <!--android:layout_marginLeft="30dp"-->
+    <!--android:layout_marginRight="30dp"-->
+    <!--android:gravity="center"-->
+    <!--android:padding="10dp"-->
+    <!--android:text="@string/guide.share_like_bookmark_tour"-->
+    <!--android:textColor="@color/guide.message"-->
+    <!--android:textSize="20sp"-->
+    <!--android:visibility="visible"-->
+    <!--app:fontName="oswald_regular.ttf" />-->
+
+    <!--</FrameLayout>-->
 
     <LinearLayout
         android:id="@+id/bottom_Lout"
