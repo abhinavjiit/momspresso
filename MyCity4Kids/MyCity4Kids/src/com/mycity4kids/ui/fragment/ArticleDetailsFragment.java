@@ -57,6 +57,7 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.OnWebServiceCompleteListener;
+import com.mycity4kids.models.ExploreTopicsResponse;
 import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.parentingdetails.CommentsData;
 import com.mycity4kids.models.parentingdetails.ImageData;
@@ -91,6 +92,7 @@ import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.BloggerProfileActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.FilteredTopicsArticleListingActivity;
+import com.mycity4kids.ui.adapter.ParentTopicsGridAdapter;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.volley.HttpVolleyRequest;
@@ -102,6 +104,7 @@ import com.squareup.picasso.Target;
 import org.apmem.tools.layouts.FlowLayout;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -1793,86 +1796,36 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 FollowUnfollowCategoriesResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
-                    ArrayList<String> previouslyFollowedTopics = (ArrayList<String>) responseData.getData();
-                    ArrayList<Map<String, String>> tagsList = detailData.getTags();
-                    int relatedImageWidth = (int) getResources().getDimension(R.dimen.related_article_article_image_width);
-                    viewAllTagsTextView.setVisibility(View.GONE);
-                    width = width - ((RelativeLayout.LayoutParams) tagsLayout.getLayoutParams()).leftMargin - ((RelativeLayout.LayoutParams) tagsLayout.getLayoutParams()).rightMargin;
+                    final ArrayList<String> previouslyFollowedTopics = (ArrayList<String>) responseData.getData();
+                    final ArrayList<Map<String, String>> tagsList = detailData.getTags();
+                    final ArrayList<String> sponsoredList = new ArrayList<>();
+                    try {
+                        createSponsporedTagsList(sponsoredList);
+                        createArticleTags(previouslyFollowedTopics, tagsList, sponsoredList);
+                    } catch (FileNotFoundException ffe) {
+                        Retrofit retro = BaseApplication.getInstance().getRetrofit();
+                        final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
+                        Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
+                        caller.enqueue(new Callback<ResponseBody>() {
+                            @Override
+                            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                                AppUtils.writeResponseBodyToDisk(getActivity(), AppConstants.CATEGORIES_JSON_FILE, response.body());
 
-                    ArrayList<String> sponsoredList = new ArrayList<>();
-                    FileInputStream fileInputStream = getActivity().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
-                    String fileContent = AppUtils.convertStreamToString(fileInputStream);
-                    TopicsResponse tRes = new Gson().fromJson(fileContent, TopicsResponse.class);
-                    for (int i = 0; i < tRes.getData().size(); i++) {
-                        if (AppConstants.SPONSORED_CATEGORYID.equals(tRes.getData().get(i).getId())) {
-                            for (int j = 0; j < tRes.getData().get(i).getChild().size(); j++) {
-                                for (int k = 0; k < tRes.getData().get(i).getChild().get(j).getChild().size(); k++) {
-                                    sponsoredList.add(tRes.getData().get(i).getChild().get(j).getChild().get(j).getId());
+                                try {
+                                    createSponsporedTagsList(sponsoredList);
+                                    createArticleTags(previouslyFollowedTopics, tagsList, sponsoredList);
+                                } catch (FileNotFoundException e) {
+                                    Crashlytics.logException(e);
+                                    Log.d("FileNotFoundException", Log.getStackTraceString(e));
                                 }
-                                sponsoredList.add(tRes.getData().get(i).getChild().get(j).getId());
-                            }
-                        }
-                    }
-                    for (int i = 0; i < tagsList.size(); i++) {
-
-                        for (Map.Entry<String, String> entry : tagsList.get(i).entrySet()) {
-                            String key = entry.getKey();
-                            final String value = entry.getValue();
-                            if (AppConstants.IGNORE_TAG.equals(key)) {
-                                continue;
                             }
 
-                            final RelativeLayout topicView = (RelativeLayout) mInflater.inflate(R.layout.related_tags_view, null, false);
-                            topicView.setClickable(true);
-                            topicView.getChildAt(0).setTag(key);
-                            topicView.getChildAt(2).setTag(key);
-                            ((TextView) topicView.getChildAt(0)).setText(value.toUpperCase());
-                            ((TextView) topicView.getChildAt(0)).measure(0, 0);
-                            width = width - ((TextView) topicView.getChildAt(0)).getMeasuredWidth() - AppUtils.dpTopx(1)
-                                    - relatedImageWidth - topicView.getPaddingLeft() - topicView.getPaddingRight();
-                            if (width < 0) {
-                                viewAllTagsTextView.setVisibility(View.VISIBLE);
+                            @Override
+                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                Crashlytics.logException(t);
+                                Log.d("MC4KException", Log.getStackTraceString(t));
                             }
-                            if (sponsoredList.contains(key)) {
-                                ((ImageView) topicView.getChildAt(2)).setVisibility(View.GONE);
-                                ((View) topicView.getChildAt(1)).setVisibility(View.GONE);
-                            }
-                            if (null != previouslyFollowedTopics && previouslyFollowedTopics.contains(key)) {
-                                ((ImageView) topicView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.tick));
-                                topicView.getChildAt(2).setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.ad_tags_following_bg));
-                                ((ImageView) topicView.getChildAt(2)).setColorFilter(ContextCompat.getColor(getActivity(), R.color.white_color));
-                                topicView.getChildAt(2).setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        followUnfollowTopics((String) v.getTag(), (RelativeLayout) v.getParent(), 0);
-                                    }
-                                });
-                            } else {
-                                ((ImageView) topicView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.follow_plus));
-                                topicView.getChildAt(2).setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.ad_tags_follow_bg));
-                                ((ImageView) topicView.getChildAt(2)).setColorFilter(ContextCompat.getColor(getActivity(), R.color.ad_tags_following_bg));
-                                topicView.getChildAt(2).setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        followUnfollowTopics((String) v.getTag(), (RelativeLayout) v.getParent(), 1);
-                                    }
-                                });
-                            }
-
-                            topicView.getChildAt(0).setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-//                                    trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
-//                                    trackArticleReadTime.resetTimer();
-                                    String categoryId = (String) v.getTag();
-                                    Intent intent = new Intent(getActivity(), FilteredTopicsArticleListingActivity.class);
-                                    intent.putExtra("selectedTopics", categoryId);
-                                    intent.putExtra("displayName", value);
-                                    startActivity(intent);
-                                }
-                            });
-                            tagsLayout.addView(topicView);
-                        }
+                        });
                     }
                 } else {
                     if (isAdded())
@@ -1890,6 +1843,91 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
+
+    private void createSponsporedTagsList(ArrayList<String> sponsoredList) throws FileNotFoundException {
+        FileInputStream fileInputStream = getActivity().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+        String fileContent = AppUtils.convertStreamToString(fileInputStream);
+        TopicsResponse tRes = new Gson().fromJson(fileContent, TopicsResponse.class);
+        for (int i = 0; i < tRes.getData().size(); i++) {
+            if (AppConstants.SPONSORED_CATEGORYID.equals(tRes.getData().get(i).getId())) {
+                for (int j = 0; j < tRes.getData().get(i).getChild().size(); j++) {
+                    for (int k = 0; k < tRes.getData().get(i).getChild().get(j).getChild().size(); k++) {
+                        sponsoredList.add(tRes.getData().get(i).getChild().get(j).getChild().get(j).getId());
+                    }
+                    sponsoredList.add(tRes.getData().get(i).getChild().get(j).getId());
+                }
+            }
+        }
+    }
+
+    private void createArticleTags(ArrayList<String> previouslyFollowedTopics, ArrayList<Map<String, String>> tagsList, ArrayList<String> sponsoredList) {
+
+        int relatedImageWidth = (int) getResources().getDimension(R.dimen.related_article_article_image_width);
+        viewAllTagsTextView.setVisibility(View.GONE);
+        width = width - ((RelativeLayout.LayoutParams) tagsLayout.getLayoutParams()).leftMargin - ((RelativeLayout.LayoutParams) tagsLayout.getLayoutParams()).rightMargin;
+
+        for (int i = 0; i < tagsList.size(); i++) {
+
+            for (Map.Entry<String, String> entry : tagsList.get(i).entrySet()) {
+                String key = entry.getKey();
+                final String value = entry.getValue();
+                if (AppConstants.IGNORE_TAG.equals(key)) {
+                    continue;
+                }
+
+                final RelativeLayout topicView = (RelativeLayout) mInflater.inflate(R.layout.related_tags_view, null, false);
+                topicView.setClickable(true);
+                topicView.getChildAt(0).setTag(key);
+                topicView.getChildAt(2).setTag(key);
+                ((TextView) topicView.getChildAt(0)).setText(value.toUpperCase());
+                ((TextView) topicView.getChildAt(0)).measure(0, 0);
+                width = width - ((TextView) topicView.getChildAt(0)).getMeasuredWidth() - AppUtils.dpTopx(1)
+                        - relatedImageWidth - topicView.getPaddingLeft() - topicView.getPaddingRight();
+                if (width < 0) {
+                    viewAllTagsTextView.setVisibility(View.VISIBLE);
+                }
+                if (sponsoredList.contains(key)) {
+                    ((ImageView) topicView.getChildAt(2)).setVisibility(View.GONE);
+                    ((View) topicView.getChildAt(1)).setVisibility(View.GONE);
+                }
+                if (null != previouslyFollowedTopics && previouslyFollowedTopics.contains(key)) {
+                    ((ImageView) topicView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.tick));
+                    topicView.getChildAt(2).setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.ad_tags_following_bg));
+                    ((ImageView) topicView.getChildAt(2)).setColorFilter(ContextCompat.getColor(getActivity(), R.color.white_color));
+                    topicView.getChildAt(2).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            followUnfollowTopics((String) v.getTag(), (RelativeLayout) v.getParent(), 0);
+                        }
+                    });
+                } else {
+                    ((ImageView) topicView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.follow_plus));
+                    topicView.getChildAt(2).setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.ad_tags_follow_bg));
+                    ((ImageView) topicView.getChildAt(2)).setColorFilter(ContextCompat.getColor(getActivity(), R.color.ad_tags_following_bg));
+                    topicView.getChildAt(2).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            followUnfollowTopics((String) v.getTag(), (RelativeLayout) v.getParent(), 1);
+                        }
+                    });
+                }
+
+                topicView.getChildAt(0).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+//                                    trackArticleReadTime.updateTimeAtBackendAndGA(shareUrl, articleId, estimatedReadTime);
+//                                    trackArticleReadTime.resetTimer();
+                        String categoryId = (String) v.getTag();
+                        Intent intent = new Intent(getActivity(), FilteredTopicsArticleListingActivity.class);
+                        intent.putExtra("selectedTopics", categoryId);
+                        intent.putExtra("displayName", value);
+                        startActivity(intent);
+                    }
+                });
+                tagsLayout.addView(topicView);
+            }
+        }
+    }
 
 
     private void followUnfollowTopics(String selectedTopic, RelativeLayout tagView, int action) {
