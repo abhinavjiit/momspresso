@@ -265,7 +265,7 @@
     <string name="home_screen.kids_res.title">KIDS RESOURCES</string>
     <string name="home_screen.trending_list_header.title">CHOOSE THE TOPICS THAT YOU ARE INTERESTED IN LIKE</string>
     <string name="home_screen.trending_list_header.topics_label">GETTING PREGNANT, POST PARTUM DEPRESSION ETC.</string>
-    <string name="home_screen.trending_list_header.take_me_there">OKAY GOT IT! TAKE ME THERE</string>
+    <string name="home_screen.trending_list_header.take_me_there">পেয়ে গিয়েছি, এগিয়ে চলুন</string>
 
     <string-array name="onboarding_title_array">
         <item>HARNESSING THE WISDOM OF MUMS</item>
@@ -617,7 +617,7 @@
     <string name="lang_sel.welcome_msg">WELCOME TO MOMSPRESSO</string>
     <string name="lang_sel.sel_lang">SELECT A LANGUAGE TO VIEW YOUR APP</string>
     <string name="lang_sel.curr_lang">Current Language</string>
-    <string name="lang_sel.app_lang_desc">You are using %1$s as current language. Would you like to view this application in the same language?</string>
+    <string name="lang_sel.app_lang_desc">You are using english as current language. Would you like to view this application in the same language?</string>
     <string name="lang_sel.yes">YES</string>
     <string name="lang_sel.select_more">SELECT MORE</string>
     <string name="lang_sel.continue">CONTINUE</string>
@@ -629,6 +629,8 @@
     <string name="language_label.hindi">हिंदी</string>
     <string name="language_label.marathi">मराठी</string>
     <string name="language_label.bengali">বাংলা</string>
+    <string name="language_label.tamil">தமிழ</string>
+    <string name="language_label.telegu">తెలుగ</string>
 
     <string name="choose_pref_lang">Choose your preferred language</string>
     <string name="choose_pref_lang.cancel">CANCEL</string>
@@ -642,5 +644,14 @@
     <string name="guide.share_like_bookmark_tour">Share, Bookmark and Love this post</string>
     <string name="guide.comment_tour">Share your thoughts</string>
     <string name="guide.listen_tour">Click here to listen to this blog</string>
+
+    <string name="author_type.blogger">BLOGGER</string>
+    <string name="author_type.editor">EDITOR</string>
+    <string name="author_type.editorial">EDITORIAL TEAM</string>
+    <string name="author_type.expert">EXPERT</string>
+    <string name="author_type.featured">FEATURED AUTHOR</string>
+    <string name="author_type.user">USER</string>
+
+    <string name="no_article.be_first">Be the first one to write articles in this category!</string>
 
 </resources>

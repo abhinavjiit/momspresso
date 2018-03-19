@@ -636,6 +636,8 @@
     <string name="language_label.hindi">हिंदी</string>
     <string name="language_label.marathi">मराठी</string>
     <string name="language_label.bengali">বাংলা</string>
+    <string name="language_label.tamil">தமிழ</string>
+    <string name="language_label.telegu">తెలుగ</string>
 
     <string name="choose_pref_lang">अपनी पसंदीदा भाषा चुनें</string>
     <string name="choose_pref_lang.cancel">कैंसिल</string>
@@ -650,4 +652,12 @@
     <string name="guide.comment_tour">अपने विचारों को साझा करें</string>
     <string name="guide.listen_tour">इस ब्लॉग को सुनने के लिए यहां क्लिक करें</string>
 
+    <string name="author_type.blogger">ब्लॉगर्स</string>
+    <string name="author_type.editor">एडिटर्स</string>
+    <string name="author_type.editorial">एडिटोरियल टीम</string>
+    <string name="author_type.expert">विशेषज्ञ</string>
+    <string name="author_type.featured">फीचर किए गए लेखक</string>
+    <string name="author_type.user">USER</string>
+
+    <string name="no_article.be_first">इस श्रेणी में लेख लिखने वाले पहले लेखक बनें !​</string>
 </resources>

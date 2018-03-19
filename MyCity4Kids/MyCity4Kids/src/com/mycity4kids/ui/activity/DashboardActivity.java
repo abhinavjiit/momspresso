@@ -190,6 +190,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         } else if (AppConstants.LOCALE_BENGALI.equals(SharedPrefUtils.getAppLocale(this))) {
             langTextView.setText(getString(R.string.language_label_bengali));
             selectedlangGuideTextView.setText(getString(R.string.language_label_bengali));
+        } else if (AppConstants.LOCALE_TAMIL.equals(SharedPrefUtils.getAppLocale(this))) {
+            langTextView.setText(getString(R.string.language_label_tamil));
+            selectedlangGuideTextView.setText(getString(R.string.language_label_tamil));
+        } else if (AppConstants.LOCALE_TELEGU.equals(SharedPrefUtils.getAppLocale(this))) {
+            langTextView.setText(getString(R.string.language_label_telegu));
+            selectedlangGuideTextView.setText(getString(R.string.language_label_telegu));
         } else {
             langTextView.setText(getString(R.string.language_label_english));
             selectedlangGuideTextView.setText(getString(R.string.language_label_english));

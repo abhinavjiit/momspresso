@@ -38,6 +38,7 @@ import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.newmodels.VolleyBaseResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.RecommendationAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
 import com.mycity4kids.ui.fragment.ForYouInfoDialogFragment;
 import com.mycity4kids.utils.ArrayAdapterFactory;
@@ -65,6 +66,7 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
     private ProgressBar progressBar;
     private int from = 1;
     private int to = 15;
+    private int limit = 15;
     private String chunks = "";
     private String fromScreen;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
@@ -198,13 +200,26 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
             progressBar.setVisibility(View.VISIBLE);
             call.enqueue(recommendedArticlesResponseCallback);
         } else if (Constants.KEY_EDITOR_PICKS.equals(sortKey)) {
-            url = AppConstants.LIVE_URL + AppConstants.SERVICE_TYPE__EDITORS_PICKS + AppConstants.EDITOR_PICKS_CATEGORY_ID + "?sort=0&sponsored=0&start=" + from +
-                    "&end=" + to + "&lang=" + SharedPrefUtils.getLanguageFilters(this);
-            HttpVolleyRequest.getStringResponse(this, url, null, mGetArticleListingListener, Request.Method.GET, isCacheRequired);
+            Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+            TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
+
+            int from = (nextPageNumber - 1) * limit + 1;
+            Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(AppConstants.EDITOR_PICKS_CATEGORY_ID, 0, from, from + limit - 1,
+                    SharedPrefUtils.getLanguageFilters(this));
+            filterCall.enqueue(articleListingResponseCallback);
+//            url = AppConstants.LIVE_URL + AppConstants.SERVICE_TYPE__EDITORS_PICKS + AppConstants.EDITOR_PICKS_CATEGORY_ID + "?sort=0&sponsored=0&start=" + from +
+//                    "&end=" + to + "&lang=" + SharedPrefUtils.getLanguageFilters(this);
+//            HttpVolleyRequest.getStringResponse(this, url, null, mGetArticleListingListener, Request.Method.GET, isCacheRequired);
         } else {
-            url = AppConstants.LIVE_URL + AppConstants.SERVICE_TYPE_ARTICLE + sortKey +
-                    AppConstants.SEPARATOR_BACKSLASH + from + AppConstants.SEPARATOR_BACKSLASH + to + "?lang=" + SharedPrefUtils.getLanguageFilters(this);
-            HttpVolleyRequest.getStringResponse(this, url, null, mGetArticleListingListener, Request.Method.GET, isCacheRequired);
+            Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+            TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
+
+            int from = (nextPageNumber - 1) * limit + 1;
+            Call<ArticleListingResponse> filterCall = topicsAPI.getRecentArticles(from, from + limit - 1, SharedPrefUtils.getLanguageFilters(this));
+            filterCall.enqueue(articleListingResponseCallback);
+//            url = AppConstants.LIVE_URL + AppConstants.SERVICE_TYPE_ARTICLE + sortKey +
+//                    AppConstants.SEPARATOR_BACKSLASH + from + AppConstants.SEPARATOR_BACKSLASH + to + "?lang=" + SharedPrefUtils.getLanguageFilters(this);
+//            HttpVolleyRequest.getStringResponse(this, url, null, mGetArticleListingListener, Request.Method.GET, isCacheRequired);
         }
     }
 
@@ -247,9 +262,10 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
 
     private void processForYouResponse(ArticleListingResponse responseData) {
         try {
-            if (responseData.getData().get(0).getResult() == null) {
+            if (responseData.getData().get(0).getResult() == null && (articleDataModelsNew == null || articleDataModelsNew.isEmpty())) {
                 addTopicsLayout.setVisibility(View.VISIBLE);
                 headerArticleCardLayout.setVisibility(View.GONE);
+                return;
             }
 
             ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
@@ -297,6 +313,73 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
             removeVolleyCache(sortType);
             Crashlytics.logException(ex);
             Log.d("MC4kException", Log.getStackTraceString(ex));
+        }
+
+    }
+
+    private Callback<ArticleListingResponse> articleListingResponseCallback = new Callback<ArticleListingResponse>() {
+        @Override
+        public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
+            isReuqestRunning = false;
+            progressBar.setVisibility(View.GONE);
+            if (mLodingView.getVisibility() == View.VISIBLE) {
+                mLodingView.setVisibility(View.GONE);
+            }
+            if (response == null || response.body() == null) {
+                return;
+            }
+            try {
+                ArticleListingResponse responseData = response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    processArticleListingResponse(responseData);
+                } else {
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4KException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
+            if (mLodingView.getVisibility() == View.VISIBLE) {
+                mLodingView.setVisibility(View.GONE);
+            }
+            isReuqestRunning = false;
+            progressBar.setVisibility(View.GONE);
+            Crashlytics.logException(t);
+            Log.d("MC4KException", Log.getStackTraceString(t));
+        }
+    };
+
+    private void processArticleListingResponse(ArticleListingResponse responseData) {
+
+        ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
+
+        if (dataList.size() == 0) {
+            isLastPageReached = false;
+            if (null != articleDataModelsNew && !articleDataModelsNew.isEmpty()) {
+                //No more next results for search from pagination
+                isLastPageReached = true;
+            } else {
+                // No results for search
+                noBlogsTextView.setVisibility(View.VISIBLE);
+                noBlogsTextView.setText(getString(R.string.no_articles_found));
+//                writeArticleCell.setVisibility(View.VISIBLE);
+                articleDataModelsNew = dataList;
+                recyclerAdapter.setNewListData(articleDataModelsNew);
+                recyclerAdapter.notifyDataSetChanged();
+            }
+        } else {
+            noBlogsTextView.setVisibility(View.GONE);
+            if (nextPageNumber == 1) {
+                articleDataModelsNew = dataList;
+            } else {
+                articleDataModelsNew.addAll(dataList);
+            }
+            recyclerAdapter.setNewListData(articleDataModelsNew);
+            nextPageNumber = nextPageNumber + 1;
+            recyclerAdapter.notifyDataSetChanged();
         }
 
     }

@@ -28,10 +28,10 @@ import static com.facebook.FacebookSdk.getApplicationContext;
  */
 public class ChangePreferredLanguageDialogFragment extends DialogFragment implements OnClickListener {
 
-    private TextView englishTextView, hindiTextView, marathiTextView;
+    private TextView englishTextView, hindiTextView, marathiTextView, bengaliTextView, tamilTextView, teleguTextView;
     private String selectedLang = "";
     private TextView cancelTextView;
-    private TextView bengaliTextView;
+    private String userId = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -41,16 +41,24 @@ public class ChangePreferredLanguageDialogFragment extends DialogFragment implem
                 false);
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
+        if (isAdded()) {
+            userId = SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId();
+        }
+
         englishTextView = (TextView) rootView.findViewById(R.id.englishTextView);
         hindiTextView = (TextView) rootView.findViewById(R.id.hindiTextView);
         marathiTextView = (TextView) rootView.findViewById(R.id.marathiTextView);
         bengaliTextView = (TextView) rootView.findViewById(R.id.bengaliTextView);
+        teleguTextView = (TextView) rootView.findViewById(R.id.teleguTextView);
+        tamilTextView = (TextView) rootView.findViewById(R.id.tamilTextView);
         cancelTextView = (TextView) rootView.findViewById(R.id.cancelTextView);
 
         englishTextView.setOnClickListener(this);
         hindiTextView.setOnClickListener(this);
         marathiTextView.setOnClickListener(this);
         bengaliTextView.setOnClickListener(this);
+        teleguTextView.setOnClickListener(this);
+        tamilTextView.setOnClickListener(this);
         cancelTextView.setOnClickListener(this);
 
         return rootView;
@@ -60,35 +68,81 @@ public class ChangePreferredLanguageDialogFragment extends DialogFragment implem
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.englishTextView:
+                if (isAdded()) {
+                    Utils.pushLanguageChangeEvent(getActivity(), "ChangeLanguageDialog", userId, getString(R.string.language_label_english));
+                }
                 selectedLang = AppConstants.LOCALE_ENGLISH;
                 englishTextView.setSelected(true);
                 hindiTextView.setSelected(false);
                 marathiTextView.setSelected(false);
                 bengaliTextView.setSelected(false);
+                tamilTextView.setSelected(false);
+                teleguTextView.setSelected(false);
                 setNewLocale(selectedLang, false);
                 break;
             case R.id.hindiTextView:
+                if (isAdded()) {
+                    Utils.pushLanguageChangeEvent(getActivity(), "ChangeLanguageDialog", userId, getString(R.string.language_label_hindi));
+                }
                 selectedLang = AppConstants.LOCALE_HINDI;
                 englishTextView.setSelected(false);
                 hindiTextView.setSelected(true);
                 marathiTextView.setSelected(false);
                 bengaliTextView.setSelected(false);
+                tamilTextView.setSelected(false);
+                teleguTextView.setSelected(false);
                 setNewLocale(selectedLang, false);
                 break;
             case R.id.marathiTextView:
+                if (isAdded()) {
+                    Utils.pushLanguageChangeEvent(getActivity(), "ChangeLanguageDialog", userId, getString(R.string.language_label_marathi));
+                }
                 selectedLang = AppConstants.LOCALE_MARATHI;
                 englishTextView.setSelected(false);
                 hindiTextView.setSelected(false);
                 marathiTextView.setSelected(true);
                 bengaliTextView.setSelected(false);
+                tamilTextView.setSelected(false);
+                teleguTextView.setSelected(false);
                 setNewLocale(selectedLang, false);
                 break;
             case R.id.bengaliTextView:
+                if (isAdded()) {
+                    Utils.pushLanguageChangeEvent(getActivity(), "ChangeLanguageDialog", userId, getString(R.string.language_label_bengali));
+                }
                 selectedLang = AppConstants.LOCALE_BENGALI;
                 englishTextView.setSelected(false);
                 hindiTextView.setSelected(false);
                 marathiTextView.setSelected(false);
                 bengaliTextView.setSelected(true);
+                tamilTextView.setSelected(false);
+                teleguTextView.setSelected(false);
+                setNewLocale(selectedLang, false);
+                break;
+            case R.id.tamilTextView:
+                if (isAdded()) {
+                    Utils.pushLanguageChangeEvent(getActivity(), "ChangeLanguageDialog", userId, getString(R.string.language_label_tamil));
+                }
+                selectedLang = AppConstants.LOCALE_TAMIL;
+                englishTextView.setSelected(false);
+                hindiTextView.setSelected(false);
+                marathiTextView.setSelected(false);
+                bengaliTextView.setSelected(false);
+                tamilTextView.setSelected(true);
+                teleguTextView.setSelected(false);
+                setNewLocale(selectedLang, false);
+                break;
+            case R.id.teleguTextView:
+                if (isAdded()) {
+                    Utils.pushLanguageChangeEvent(getActivity(), "ChangeLanguageDialog", userId, getString(R.string.language_label_telegu));
+                }
+                selectedLang = AppConstants.LOCALE_TELEGU;
+                englishTextView.setSelected(false);
+                hindiTextView.setSelected(false);
+                marathiTextView.setSelected(false);
+                bengaliTextView.setSelected(false);
+                tamilTextView.setSelected(false);
+                teleguTextView.setSelected(true);
                 setNewLocale(selectedLang, false);
                 break;
             case R.id.cancelTextView:

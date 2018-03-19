@@ -629,6 +629,8 @@
     <string name="language_label.hindi">हिंदी</string>
     <string name="language_label.marathi">मराठी</string>
     <string name="language_label.bengali">বাংলা</string>
+    <string name="language_label.tamil">தமிழ</string>
+    <string name="language_label.telegu">తెలుగ</string>
 
     <string name="choose_pref_lang">Choose your preferred language</string>
     <string name="choose_pref_lang.cancel">कॅन्सल</string>
@@ -643,4 +645,12 @@
     <string name="guide.comment_tour">Share your thoughts</string>
     <string name="guide.listen_tour">Click here to listen to this blog</string>
 
+    <string name="author_type.blogger">ब्लॉगर</string>
+    <string name="author_type.editor">संपादक</string>
+    <string name="author_type.editorial">अव्वल ब्लॉगर्स त्यांच्या नावाप्रमाणे</string>
+    <string name="author_type.expert">तज्ज्ञ</string>
+    <string name="author_type.featured">अव्वल लेखक</string>
+    <string name="author_type.user">USER</string>
+
+    <string name="no_article.be_first">ह्या श्रेणी मध्ये लेख लिहिणारे पहिले लेखक  व्हा</string>
 </resources>

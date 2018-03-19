@@ -54,7 +54,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
 
     private final static String MEET_CONTRIBUTOR_ID = "meetContributorId";
 
-    private String[] sectionsKey = {"TRENDING", "EDITOR'S PICK", "FOR YOU", "LANGUAGES", "VIDEOS", "RECENT"};
+    private String[] sectionsKey = {"TRENDING", "EDITOR'S PICK", "FOR YOU", "VIDEOS", "RECENT"};
 
     private ArrayList<ExploreTopicsModel> mainTopicsList;
     private String fragType = "";
@@ -80,7 +80,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
         }
         String[] sections = {
                 getString(R.string.article_listing_type_trending_label), getString(R.string.article_listing_type_editor_label), getString(R.string.article_listing_type_for_you_label),
-                getString(R.string.article_listing_type_languages_label), getString(R.string.article_listing_type_videos_label), getString(R.string.article_listing_type_recent_label)
+                getString(R.string.article_listing_type_videos_label), getString(R.string.article_listing_type_recent_label)
         };
 
         dynamoUserId = SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId();

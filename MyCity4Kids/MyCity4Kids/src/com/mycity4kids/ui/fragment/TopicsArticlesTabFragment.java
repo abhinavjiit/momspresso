@@ -29,6 +29,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.response.ArticleListingResponse;
@@ -82,6 +83,7 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
     private RecyclerView recyclerView;
     private FeedNativeAd feedNativeAd;
     private RelativeLayout guideOverlay;
+    private RelativeLayout writeArticleCell;
     private boolean showGuide = false;
 
     @Nullable
@@ -94,6 +96,7 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
         guideOverlay = (RelativeLayout) view.findViewById(R.id.guideOverlay);
+        writeArticleCell = (RelativeLayout) view.findViewById(R.id.writeArticleCell);
 
         frameLayout = (FrameLayout) view.findViewById(R.id.frame_layout);
         frameLayout.getBackground().setAlpha(0);
@@ -103,6 +106,7 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
         fabSort = (FloatingActionButton) view.findViewById(R.id.fabSort);
 
         guideOverlay.setOnClickListener(this);
+        writeArticleCell.setOnClickListener(this);
         frameLayout.setVisibility(View.VISIBLE);
         fabSort.setVisibility(View.VISIBLE);
         popularSortFAB.setOnClickListener(this);
@@ -228,6 +232,10 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
                     allSubsubLL.setSelected(true);
                     selectedTopic = (Topics) allSubsubLL.getTag();
                     nextPageNumber = 1;
+                    if (mDatalist != null) {
+                        mDatalist.clear();
+                        recyclerAdapter.notifyDataSetChanged();
+                    }
                     Utils.pushFilterTopicArticlesEvent(getActivity(), "TopicArticlesListingScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "",
                             selectedTopic.getId() + "~" + selectedTopic.getDisplay_name(), currentSubTopic.getId() + "~" + currentSubTopic.getDisplay_name());
                     hitFilteredTopicsArticleListingApi(sortType);
@@ -279,6 +287,10 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
                     public void onClick(View v) {
                         for (int i = 0; i < flowLayout.getChildCount(); i++) {
                             flowLayout.getChildAt(i).setSelected(false);
+                        }
+                        if (mDatalist != null) {
+                            mDatalist.clear();
+                            recyclerAdapter.notifyDataSetChanged();
                         }
                         subsubLL.setSelected(true);
                         selectedTopic = (Topics) subsubLL.getTag();
@@ -406,14 +418,16 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
                 isLastPageReached = true;
             } else {
                 // No results for search
-                noBlogsTextView.setVisibility(View.VISIBLE);
-                noBlogsTextView.setText(getString(R.string.no_articles_found));
+//                noBlogsTextView.setVisibility(View.VISIBLE);
+//                noBlogsTextView.setText(getString(R.string.no_articles_found));
+                writeArticleCell.setVisibility(View.VISIBLE);
                 mDatalist = dataList;
                 recyclerAdapter.setNewListData(mDatalist);
                 recyclerAdapter.notifyDataSetChanged();
             }
         } else {
-            noBlogsTextView.setVisibility(View.GONE);
+//            noBlogsTextView.setVisibility(View.GONE);
+            writeArticleCell.setVisibility(View.GONE);
             if (nextPageNumber == 1) {
                 mDatalist = dataList;
             } else {
@@ -447,6 +461,22 @@ public class TopicsArticlesTabFragment extends BaseFragment implements View.OnCl
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.writeArticleCell:
+                if (isAdded()) {
+                    Intent intent1 = new Intent(getActivity(), EditorPostActivity.class);
+                    Bundle bundle5 = new Bundle();
+                    bundle5.putString(EditorPostActivity.TITLE_PARAM, "");
+                    bundle5.putString(EditorPostActivity.CONTENT_PARAM, "");
+                    bundle5.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
+                            getString(R.string.example_post_title_placeholder));
+                    bundle5.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
+                            getString(R.string.example_post_content_placeholder));
+                    bundle5.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
+                    bundle5.putString("from", "TopicArticlesListingScreen");
+                    intent1.putExtras(bundle5);
+                    startActivity(intent1);
+                }
+                break;
             case R.id.guideOverlay:
                 guideOverlay.setVisibility(View.GONE);
                 TopicsListingFragment frag = ((TopicsListingFragment) this.getParentFragment());

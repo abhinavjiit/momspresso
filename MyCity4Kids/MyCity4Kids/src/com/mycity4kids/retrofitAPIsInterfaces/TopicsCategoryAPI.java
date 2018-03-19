@@ -51,6 +51,13 @@ public interface TopicsCategoryAPI {
                                                         @Query("end") int end,
                                                         @Query("lang") String lang);
 
+    @GET("/v1/articles/topics/{categoryId}")
+    Call<ArticleListingResponse> getEditorPicksArticle(@Path("categoryId") String categoryId,
+                                                       @Query("sort") String sort,
+                                                       @Query("start") int start,
+                                                       @Query("end") int end,
+                                                       @Query("lang") String lang);
+
     @GET("/v1/articles/trending/{start}/{end}")
     Call<ArticleListingResponse> getTrendingArticles(@Path("start") int start,
                                                      @Path("end") int end,
@@ -58,8 +65,13 @@ public interface TopicsCategoryAPI {
 
     @GET("/v1/articles/trending/verna/{start}/{end}")
     Call<ArticleListingResponse> getVernacularTrendingArticles(@Path("start") int start,
-                                                     @Path("end") int end,
-                                                     @Query("lang") String lang);
+                                                               @Path("end") int end,
+                                                               @Query("lang") String lang);
+
+    @GET("/v1/articles/recent/{start}/{end}")
+    Call<ArticleListingResponse> getRecentArticles(@Path("start") int start,
+                                                   @Path("end") int end,
+                                                   @Query("lang") String lang);
 
     @GET("/v1/articles/topics")
     Call<ArticleListingResponse> getFilteredArticlesForCategories(@Query("ids") String categoryIds,

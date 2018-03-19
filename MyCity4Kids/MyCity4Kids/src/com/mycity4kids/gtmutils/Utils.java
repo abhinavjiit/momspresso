@@ -262,6 +262,13 @@ public class Utils {
                 GTMTags.TagScreen, screenName, GTMTags.USER_ID, user, GTMTags.TagLanguage, language));
     }
 
+    public static void pushLanguageChangeEvent(Context context, String screenName, String user, String language) {
+        Log.d("pushLanguageChangeEvent", "" + screenName + " --- " + language);
+        DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
+        dataLayer.push(DataLayer.mapOf(GTMTags.TagEvent, "AppLanguageChanged",
+                GTMTags.TagScreen, screenName, GTMTags.USER_ID, user, GTMTags.TagLanguage, language));
+    }
+
     public static void pushEvent(Context context, GTMEventType event, String user, String eventValue) {
         Log.d("GTMTopic", "" + event + "---" + user + "---" + eventValue);
         DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();

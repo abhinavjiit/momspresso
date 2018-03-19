@@ -48,6 +48,20 @@
         app:fontName="oswald.ttf" />
 
     <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/bengaliTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="23dp"
+        android:paddingRight="23dp"
+        android:paddingTop="8dp"
+        android:text="@string/language_label.bengali"
+        android:textColor="@color/videos.upload_option.gallery"
+        android:textSize="18sp"
+        app:fontName="oswald.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/marathiTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -62,7 +76,7 @@
         app:fontName="oswald.ttf" />
 
     <com.mycity4kids.widget.CustomFontTextView
-        android:id="@+id/bengaliTextView"
+        android:id="@+id/tamilTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -70,7 +84,21 @@
         android:paddingLeft="23dp"
         android:paddingRight="23dp"
         android:paddingTop="8dp"
-        android:text="@string/language_label.bengali"
+        android:text="@string/language_label.tamil"
+        android:textColor="@color/videos.upload_option.gallery"
+        android:textSize="18sp"
+        app:fontName="oswald.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/teleguTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="23dp"
+        android:paddingRight="23dp"
+        android:paddingTop="8dp"
+        android:text="@string/language_label.telegu"
         android:textColor="@color/videos.upload_option.gallery"
         android:textSize="18sp"
         app:fontName="oswald.ttf" />

@@ -94,7 +94,7 @@
     <string name="error_player">ইউটিউব প্লেয়ার আরম্ভের সময় ত্রুটি ছিল (%1$s)</string>
 
     <!-- Facebook Comments -->
-    <string name="ok">ঠিক আছে</string>
+    <string name="ok">ঠিক</string>
     <string name="error">ভুল</string>
     <!-- <string name="app_id">1497460137141503</string> -->
     <string name="post_title">মম্স্প্রেস্সো</string>
@@ -220,8 +220,8 @@
     <string name="confirmation_dialog.no">না</string>
     <string name="confirmation_dialog.yes">হ্যাঁ</string>
 
-    <string name="editor.spell_check.title">বানান যাচাই</string>
-    <string name="editor.spell_check.message">আপনি কি নিশ্চিতভাবে বানানটি যাচাই করেছেন?</string>
+    <string name="editor.spell_check.title">বানান সংশোধন</string>
+    <string name="editor.spell_check.message">আপনি কি নিশ্চিতভাবে বানান চেক করেছেন ?</string>
     <string name="editor.spell_check.no">না</string>
     <string name="editor.spell_check.continue">হ্যাঁ প্রচার বজায় রাখুন</string>
     <string name="editor.banner.message">আপনার পছন্দের ভাষায় ব্লগ</string>
@@ -249,11 +249,11 @@
     <string name="permision_available_init">সমস্ত প্রয়োজনীয় অনুমতি দেওয়া হল</string>
     <string name="permission_calendar_rationale">মনে রাখতে ক্যালেন্ডারের অনুমতি নিন</string>
 
-    <string name="home.toolbar.title">গতিবিধি</string>
-    <string name="explore_listing.explore_categories.title">আপনিও ক্যাটাগরি এক্সপ্লোর করতে পারেন</string>
-    <string name="explore_listing.explore_categories.meet_contributor">আমাদের অবদানকারীদের দেখা</string>
+    <string name="home.toolbar.title">ট্রেন্ডিং</string>
+    <string name="explore_listing.explore_categories.title">শ্রেনী বিশ্লেষণ করুনণ</string>
+    <string name="explore_listing.explore_categories.meet_contributor">আমাদের লেখকেরা</string>
 
-    <string name="home_screen.trending.title">গতিবিধি</string>
+    <string name="home_screen.trending.title">ট্রেন্ডিং</string>
     <string name="home_screen.notification.title">বিজ্ঞপ্তি</string>
     <string name="home_screen.suggested_topic.title">প্রস্তাবিত বিষয়গুলি</string>
     <string name="home_screen.profile.title">আমার অ্যাকাউন্ট</string>
@@ -264,122 +264,122 @@
     <string name="home_screen.upcoming_events.title">আসন্ন ঘটনাবলী</string>
     <string name="home_screen.kids_res.title">বাচ্চাদের রিসোর্স</string>
     <string name="home_screen.trending_list_header.title">আপনি যে মতামত পছন্দ করেন তা পছন্দ করুন</string>
-    <string name="home_screen.trending_list_header.topics_label">গর্ভবতী, পেস্টাম ডিপ্রেসন পোস্ট করুন</string>
+    <string name="home_screen.trending_list_header.topics_label">গর্ভাবস্থা ও প্রসবোত্তর বিষণ্নতা সম্মন্ধীয় পোস্ট পেতে</string>
     <string name="home_screen.trending_list_header.take_me_there">আচ্ছা আমি বুঝে গেছি! সেখানে আমাকে নিতে</string>
 
     <string-array name="onboarding_title_array">
-        <item>ময়মনসিংহের হিংসা</item>
-        <item>6 টি ভাষার মধ্যে একটিতে ব্লগ</item>
-        <item>ভিডিও দেখ</item>
-        <item>আপনার শহর \'এর BEST দেখান</item>
+        <item>মায়েদের অভিজ্ঞাতার সমন্বয়</item>
+        <item>যে কোনো একটি ভাষায় ব্লগ লিখুন</item>
+        <item>ভিডিও দেখুন</item>
+        <item>শহরের সেরাটির সন্ধান</item>
     </string-array>
 
     <string name="onboarding_desc_array.tutorial_1.blogs">ব্লগ</string>
-    <string name="onboarding_desc_array.tutorial_1.videos">MOMVLOGS</string>
+    <string name="onboarding_desc_array.tutorial_1.videos">মায়েদের ব্লগস</string>
     <string name="onboarding_desc_array.tutorial_2.english">ইংরেজি</string>
     <string name="onboarding_desc_array.tutorial_2.hindi">হিন্দি</string>
     <string name="onboarding_desc_array.tutorial_2.bengali">বাংলা</string>
     <string name="onboarding_desc_array.tutorial_2.marathi">মারাঠি</string>
     <string name="onboarding_desc_array.tutorial_2.tamil">তামিল</string>
     <string name="onboarding_desc_array.tutorial_2.telugu">তেলুগু</string>
-    <string name="onboarding_desc_array.tutorial_3.parenting">ম্যামস লাইফ</string>
-    <string name="onboarding_desc_array.tutorial_3.recipe">RECIPES</string>
-    <string name="onboarding_desc_array.tutorial_3.expert_advice">EXPERT ADVICE</string>
-    <string name="onboarding_desc_array.tutorial_4.editorial">CURATED LISTS</string>
-    <string name="onboarding_desc_array.tutorial_4.events">EVENTS</string>
-    <string name="onboarding_desc_array.tutorial_4.resources">RESOURCES</string>
+    <string name="onboarding_desc_array.tutorial_3.parenting">মায়েদের জীবন</string>
+    <string name="onboarding_desc_array.tutorial_3.recipe">রেসিপি</string>
+    <string name="onboarding_desc_array.tutorial_3.expert_advice">বিশেষজ্ঞের পরামর্শ</string>
+    <string name="onboarding_desc_array.tutorial_4.editorial">সেরা তালিকা</string>
+    <string name="onboarding_desc_array.tutorial_4.events">অনুষ্ঠান</string>
+    <string name="onboarding_desc_array.tutorial_4.resources">তালিকা</string>
 
-    <string name="onboarding.signin">SIGN IN</string>
-    <string name="onboarding.already_member">Already a member?</string>
-    <string name="onboarding.get_started">GET STARTED</string>
-    <string name="sign_in.welcome_back">WELCOME BACK</string>
-    <string name="sign_in.desc">Discover the joy of motherhood.\n Join our Mum community to find inspiration &amp; hope.</string>
-    <string name="sign_in.no_account">Don\'t have an account?\u0020</string>
-    <string name="sign_in.sign_up_btn">SIGNUP</string>
+    <string name="onboarding.signin">সাইন ইন</string>
+    <string name="onboarding.already_member">আপনি কি ইতিমধ্যে একজন সদস্য?</string>
+    <string name="onboarding.get_started">শুরু করুন</string>
+    <string name="sign_in.welcome_back">পুনরায় স্বাগতম</string>
+    <string name="sign_in.desc">আরো বেশী অনুপ্রেরণা ও মাতৃত্বের আনন্দ খুঁজে পেতে আমাদের মম সম্প্রদায়ে যোগদান করুন</string>
+    <string name="sign_in.no_account">এখনো অ্যাকাউন্ট নেই ?\u0020</string>
+    <string name="sign_in.sign_up_btn">সাইন আপ</string>
 
-    <string name="sign_up.welcome_back">SIGN UP</string>
-    <string name="sign_up.desc">Discover the joy of motherhood.\n Join our Mum community to find inspiration &amp; hope.</string>
-    <string name="sign_up.already_account">Already have an account?\u0020</string>
-    <string name="sign_up.sign_in_btn">SIGNIN</string>
+    <string name="sign_up.welcome_back">সাইন আপ</string>
+    <string name="sign_up.desc">আরো বেশী অনুপ্রেরণা ও মাতৃত্বের আনন্দ খুঁজে পেতে আমাদের মম সম্প্রদায়ে যোগদান করুন</string>
+    <string name="sign_up.already_account">ইতিমধ্যে একটি অ্যাকাউন্ট আছে ?\u0020</string>
+    <string name="sign_up.sign_in_btn">সাইন ইন</string>
 
-    <string name="login_email.login">LOGIN</string>
-    <string name="login_email.forgot_password">Forgot Password?</string>
-    <string name="login_email.username_hint">Email</string>
-    <string name="login_email.password_hint">Password</string>
+    <string name="login_email.login">লগইন</string>
+    <string name="login_email.forgot_password">পাসওয়ার্ড ভুলে গেছেন?</string>
+    <string name="login_email.username_hint">ইমেইল</string>
+    <string name="login_email.password_hint">পাসওয়ার্ড</string>
 
 
-    <string name="signin.login_via_facebook">LOGIN USING FACEBOOK</string>
-    <string name="signin.login_via_google">LOGIN USING GOOGLE</string>
-    <string name="signin.login_via_email">LOGIN USING EMAIL</string>
+    <string name="signin.login_via_facebook">ফেসবুকের মাধ্যমে লগইন</string>
+    <string name="signin.login_via_google">গুগলের মাধ্যমে লগইন</string>
+    <string name="signin.login_via_email">ইমেল আইডির মাধ্যমে লগইন</string>
 
-    <string name="signup.connect_via_facebook">CONNECT USING FACEBOOK</string>
-    <string name="signup.connect_via_google">CONNECT USING GOOGLE</string>
+    <string name="signup.connect_via_facebook">ফেসবুকের মাধ্যমে সাইন আপ করুন</string>
+    <string name="signup.connect_via_google">গুগলের মাধ্যমে সাইন আপ করুন</string>
 
-    <string name="for_you.reason.why_label">Why am I seeing this?</string>
-    <string name="for_you.reason.dont_want_to_see">Don\'t want to see this</string>
-    <string name="for_you.reason.okay">OKAY</string>
+    <string name="for_you.reason.why_label">কেন আমি এটা দেখছি ?</string>
+    <string name="for_you.reason.dont_want_to_see">এটা দেখতে চাইনা</string>
+    <string name="for_you.reason.okay">ঠিক আছে</string>
 
-    <string name="lang_specific.toolbar.title">LANGUAGES</string>
+    <string name="lang_specific.toolbar.title">ভাষাগুলি</string>
 
-    <string name="lang_setting.stories_label">Stories</string>
+    <string name="lang_setting.stories_label">গল্প</string>
 
-    <string name="search.article_label">ARTICLE</string>
-    <string name="search.author_label">AUTHOR</string>
-    <string name="search.topic_label">TOPIC</string>
-    <string name="search.show_more">SHOW MORE</string>
-    <string name="search.article_topic_tab_label">ARTICLES &amp; TOPICS</string>
-    <string name="search.author_tab_label">AUTHORS</string>
-    <string name="search.article_no_result">No articles or topics found.</string>
-    <string name="search.author_no_result">No authors found.</string>
+    <string name="search.article_label">প্রবন্ধ</string>
+    <string name="search.author_label">লেখক</string>
+    <string name="search.topic_label">বিষয়</string>
+    <string name="search.show_more">আরও দেখান</string>
+    <string name="search.article_topic_tab_label">প্রবন্ধ ও বিষয়সমূহ</string>
+    <string name="search.author_tab_label">লেখক</string>
+    <string name="search.article_no_result">কোন প্রবন্ধ বা বিষয় খুঁজে পাওয়া যায়নি</string>
+    <string name="search.author_no_result">কোন লেখক খুঁজে পাওয়া যায়নি</string>
 
-    <string name="search_topics.toolbar_title">SELECT CATEGORIES</string>
-    <string name="search_topics.hint">Search with Topics</string>
-    <string name="search_topics.title">CATEGORIES</string>
+    <string name="search_topics.toolbar_title">বিভাগ নির্বাচন করুন</string>
+    <string name="search_topics.hint">বিষয়গুলির মাধ্যমে অনুসন্ধান করুন</string>
+    <string name="search_topics.title">বিভাগ</string>
 
-    <string name="subscribe_topics.toolbar.title">SELECT CATEGORIES</string>
-    <string name="subscribe_topics.cancel">CANCEL</string>
-    <string name="subscribe_topics.save">SAVE</string>
-    <string name="subscribe_topics.toast_topic_updated">Successfully updated the list of followed topics.</string>
+    <string name="subscribe_topics.toolbar.title">বিভাগ নির্বাচন করুন</string>
+    <string name="subscribe_topics.cancel">বাতিল</string>
+    <string name="subscribe_topics.save">সংরক্ষিত </string>
+    <string name="subscribe_topics.toast_topic_updated">অনুসৃত বিষয়গুলির তালিকা সফলভাবে আপডেট করা হয়েছে</string>
 
-    <string name="myprofile.following_label">FOLLOWING</string>
-    <string name="myprofile.followers_label">FOLLOWERS</string>
-    <string name="myprofile.section.articles_label">ARTICLES</string>
-    <string name="myprofile.section.videos_label">MOM VLOGS</string>
-    <string name="myprofile.section.activity_label">ACTIVITY</string>
-    <string name="myprofile.section.myranking_label">MY RANKING</string>
-    <string name="myprofile.section.settings_label">SETTINGS</string>
-    <string name="myprofile.section.signout_label">SIGNOUT</string>
-    <string name="myprofile.rank_label">RANK</string>
+    <string name="myprofile.following_label">অনুসরণ</string>
+    <string name="myprofile.followers_label">অনুসরণকারী</string>
+    <string name="myprofile.section.articles_label">প্রবন্ধগুলি</string>
+    <string name="myprofile.section.videos_label">মায়েদের ভিডিও ব্লগস</string>
+    <string name="myprofile.section.activity_label">কার্যকলাপ</string>
+    <string name="myprofile.section.myranking_label">আমার র্যাংকিং</string>
+    <string name="myprofile.section.settings_label">সেটিংস</string>
+    <string name="myprofile.section.signout_label">সাইন আউট</string>
+    <string name="myprofile.rank_label">র‍্যাঙ্ক</string>
 
-    <string name="blogger_profile.follow_button">FOLLOW</string>
-    <string name="blogger_profile.rank_in">RANK IN</string>
-    <string name="blogger_profile.unfollow_button">FOLLOWING</string>
+    <string name="blogger_profile.follow_button">অনুসরণ</string>
+    <string name="blogger_profile.rank_in">র্যাঙ্ক ইন</string>
+    <string name="blogger_profile.unfollow_button">অনুসরণ</string>
     <string name="blogger_profile.view_count_label">VIEWS</string>
     <string name="blogger_profile.article_count_label">POSTS</string>
-    <string name="blogger_profile.section.articles_label">ARTICLES</string>
-    <string name="blogger_profile.section.videos_label">MOM VLOGS</string>
-    <string name="blogger_profile.section.activity_label">ACTIVITY</string>
-    <string name="blogger_profile.section.myranking_label">MY RANKING</string>
-    <string name="blogger_profile.top_3_article">TOP 3 ARTICLES</string>
-    <string name="blogger_profile.rank_label">RANK</string>
+    <string name="blogger_profile.section.articles_label">প্রবন্ধগুলো</string>
+    <string name="blogger_profile.section.videos_label">মায়েদের ভিডিও ব্লগস</string>
+    <string name="blogger_profile.section.activity_label">কার্যকলাপ</string>
+    <string name="blogger_profile.section.myranking_label">আমার র্যাংকিং</string>
+    <string name="blogger_profile.top_3_article">শীর্ষ 3 নিবন্ধ</string>
+    <string name="blogger_profile.rank_label">র‍্যাঙ্ক</string>
 
-    <string name="user_article.toolbar.title">ARTICLES</string>
+    <string name="user_article.toolbar.title">প্রবন্ধগুলো</string>
     <string name="user_article.tabbar.published_label">PUBLISHED</string>
-    <string name="user_article.tabbar.draft_label">DRAFTS</string>
+    <string name="user_article.tabbar.draft_label">ড্রাফটগুলো</string>
     <string name="user_article.draft.saved_on">Saved on</string>
     <string name="user_article.draft.edit">EDIT DRAFT</string>
     <string name="user_article.draft.untitled_draft">Untitled Draft</string>
     <string name="user_article.published.edit">EDIT</string>
     <string name="user_article.published.no_published_article">You have not published any article yet.</string>
     <string name="user_article.draft.status_pending_approval">PENDING FOR APPROVAL</string>
-    <string name="user_article.draft.status_unapproved">UNAPPROVED</string>
+    <string name="user_article.draft.status_unapproved">অননুমোদিত</string>
     <string name="user_article.draft.status_unpublished">UNPUBLISHED</string>
 
-    <string name="app_settings.toolbar.title">SETTINGS</string>
-    <string name="app_settings.tabbar.edit_prefs">EDIT PREFERENCES</string>
-    <string name="app_settings.tabbar.lang_prefs">LANGUAGE PREFERENCES</string>
-    <string name="app_settings.tabbar.change_password">CHANGE PASSWORD</string>
-    <string name="app_settings.tabbar.edit_profile">EDIT PROFILE</string>
+    <string name="app_settings.toolbar.title">সেটিংস</string>
+    <string name="app_settings.tabbar.edit_prefs">পছন্দগুলি এডিট করুন</string>
+    <string name="app_settings.tabbar.lang_prefs">পছন্দের ভাষাগুলি</string>
+    <string name="app_settings.tabbar.change_password">পাসওয়ার্ড বদলান</string>
+    <string name="app_settings.tabbar.edit_profile">প্রোফাইল এডিট করুন</string>
 
     <string name="app_settings.edit_profile.hint_fn">First Name</string>
     <string name="app_settings.edit_profile.hint_ln">Last Name</string>
@@ -391,7 +391,7 @@
     <string name="app_settings.edit_profile.how_many_child">How many children do you have?</string>
     <string name="app_settings.edit_profile.gender">Gender</string>
     <string name="app_settings.edit_profile.dob">Date of Birth</string>
-    <string name="app_settings.edit_profile.save">SAVE</string>
+    <string name="app_settings.edit_profile.save">সংরক্ষিত</string>
     <string name="app_settings.edit_profile.update_success">User profile updated successfully</string>
     <string name="app_settings.edit_profile.toast_fn_empty">First Name cannot be empty</string>
     <string name="app_settings.edit_profile.toast_blog_title_empty">Blog Title cannot be empty</string>
@@ -400,17 +400,17 @@
     <string name="app_settings.edit_profile.toast_user_bio_words">words</string>
     <string name="app_settings.edit_profile.toast_incorrect_date">Please enter a valid date for kids birthday</string>
 
-    <string name="app_settings.edit_prefs.notifications">NOTIFICATIONS</string>
-    <string name="app_settings.edit_prefs.subscriptions">SUBSCRIPTIONS</string>
+    <string name="app_settings.edit_prefs.notifications">বিজ্ঞপ্তিগুলি</string>
+    <string name="app_settings.edit_prefs.subscriptions">সাবস্ক্রিপশন</string>
     <string name="app_settings.edit_prefs.add_account">ADD ACCOUNTS</string>
     <string name="app_settings.edit_prefs.facebook">FACEBOOK</string>
     <string name="app_settings.edit_prefs.twitter">TWITTER</string>
     <string name="app_settings.edit_prefs.google">GOOGLE</string>
     <string name="app_settings.edit_prefs.add">ADD</string>
     <string name="app_settings.edit_prefs.connected">CONNECTED</string>
-    <string name="app_settings.edit_prefs.topics_interested">TOPICS OF INTEREST</string>
-    <string name="app_settings.edit_prefs.add_topics">ADD TOPICS</string>
-    <string name="app_settings.edit_prefs.more_topics">MORE...</string>
+    <string name="app_settings.edit_prefs.topics_interested">পছন্দের বিষয়গুলি</string>
+    <string name="app_settings.edit_prefs.add_topics">বিষয় যোগ করুন</string>
+    <string name="app_settings.edit_prefs.more_topics">আরও...</string>
     <string name="app_settings.edit_prefs.pref_lang">PREFERRED LANGUAGES</string>
     <string name="app_settings.edit_prefs.subscribe_top_reads">Subscribe to the Top Reads Of The Month</string>
     <string name="app_settings.edit_prefs.subscribe_trending_blog">Subscribe to the Trending Blog Of The Day</string>
@@ -420,7 +420,7 @@
     <string name="app_settings.change_pass.hint_current_pass">Current Password</string>
     <string name="app_settings.change_pass.hint_new_pass">New Password</string>
     <string name="app_settings.change_pass.hint_confirm_pass">Confirm Password</string>
-    <string name="app_settings.change_pass.save">SAVE</string>
+    <string name="app_settings.change_pass.save">সংরক্ষিত</string>
     <string name="app_settings.change_pass.toast_current_pass_empty">Current password cannot be empty</string>
     <string name="app_settings.change_pass.toast_new_pass_empty">New password cannot be empty</string>
     <string name="app_settings.change_pass.toast_confirm_pass_match">New passwords do not match</string>
@@ -430,7 +430,7 @@
     <string name="blog_setup.toolbar.title">SETUP A BLOG</string>
     <string name="blog_setup.get_started_label">LET\'S GET YOU STARTED FOR YOUR FIRST BLOG</string>
     <string name="blog_setup.one_time_label">Setup a blog is a one time process.</string>
-    <string name="blog_setup.okay">OKAY</string>
+    <string name="blog_setup.okay">ঠিক আছে</string>
     <string name="blog_setup.blog_title_label">BLOG TITLE</string>
     <string name="blog_setup.blog_title_desc">This is like a title of your digital book and encompasses a description of all your blog posts that you\'ll be publishing here. Eg: Mums diary, My monologue.</string>
     <string name="blog_setup.hint_blog_title">Type here </string>
@@ -440,7 +440,7 @@
     <string name="blog_setup.profile_pic_desc">This is visible to your readers and helps them associate with your writing.</string>
     <string name="blog_setup.your_details">YOUR DETAILS</string>
     <string name="blog_setup.hint_phone">Phone Number</string>
-    <string name="blog_setup.save_publish">SAVE &amp; PUBLISH</string>
+    <string name="blog_setup.save_publish">সংরক্ষিত &amp; পাবলিশ</string>
 
     <string name="ranking.toolbar.title">MY RANKING</string>
     <string name="ranking.improve_view.title">ABOUT</string>
@@ -458,30 +458,30 @@
     <string name="ranking.stats_comments">COMMENTS</string>
     <string name="ranking.how_calculated">How is this calculated?</string>
     <string name="ranking.top_bloggers">TOP BLOGGERS IN</string>
-    <string name="ranking.followers_label">FOLLOWERS</string>
+    <string name="ranking.followers_label">অনুসরণকারী</string>
     <string name="ranking.in">IN</string>
     <string name="ranking.toast_start_end_date">Start date must be less than end date</string>
 
-    <string name="editor.publish">PUBLISH</string>
+    <string name="editor.publish">পাবলিশ</string>
 
     <string name="add_article_topics.toolbar.title">CHOOSE TOPICS</string>
     <string name="add_article_topics.clear_all">CLEAR ALL</string>
     <string name="add_article_topics.min_topics">Please select atleast one topic to continue</string>
     <string name="add_article_topics.max_topics">You can choose a maximum of 8 topics</string>
-    <string name="add_article_topics.apply">APPLY</string>
+    <string name="add_article_topics.apply">প্রয়োগ</string>
 
     <string name="choose_article_image.toolbar.title">CHOOSE IMAGE</string>
     <string name="choose_article_image.upload_photo">CLICK TO UPLOAD PHOTO</string>
-    <string name="choose_article_image.publish">PUBLISH</string>
+    <string name="choose_article_image.publish">পাবলিশ</string>
 
-    <string name="add_article_or_video.upload_video">ADD VIDEO</string>
-    <string name="add_article_or_video.write_article">WRITE AN ARTICLE</string>
-    <string name="add_article_or_video.suggested_topic">SUGGESTED TOPICS</string>
-    <string name="add_article_or_video.become_blogger">BECOME A BLOGGER</string>
+    <string name="add_article_or_video.upload_video">ভিডিও যোগ করুন</string>
+    <string name="add_article_or_video.write_article">একটি আর্টিকেল লিখুন</string>
+    <string name="add_article_or_video.suggested_topic">প্রস্তাবিত বিষয়গুলি</string>
+    <string name="add_article_or_video.become_blogger">একজন ব্লগার হন</string>
 
     <string name="become_blogger.get_started">LET\'S GET STARTED</string>
     <string-array name="become_blogger_title_array">
-        <item>BECOME A BLOGGER</item>
+        <item>একজন ব্লগার হন</item>
         <item>HOW CAN YOU CONTRIBUTE?</item>
         <item>DO YOU GET PAID FOR YOUR CONTRIBUTION?</item>
         <item>WHO CAN CONTRIBUTE?</item>
@@ -502,7 +502,7 @@
     <string name="moderation_or_share.moderation_message">Your article is up for moderation. You\'ll receive an email within 24 hours regarding the status of the blog</string>
     <string name="moderation_or_share.publish_message">Congrats! Your blog has been published.\n Share it with your friends and family.</string>
     <string name="moderation_or_share.later">MAYBE LATER</string>
-    <string name="moderation_or_share.okay">OKAY</string>
+    <string name="moderation_or_share.okay">ঠিক আছে</string>
     <string name="moderation_or_share.gplus_fail">Unable to share with google plus.</string>
     <string name="moderation_or_share.whatsapp_fail">Unable to share with whatsapp.</string>
     <string name="moderation_or_share.whatsapp_not_installed">Whatsapp has not been installed.</string>
@@ -510,7 +510,7 @@
 
     <string name="complete_blogger_profile.complete_label">COMPLETE YOUR BLOGGERS PROFILE</string>
     <string name="complete_blogger_profile.paid_eligibility">Be eligible for paid writing assignments.\n All this information is safe with us.</string>
-    <string name="complete_blogger_profile.save">SAVE</string>
+    <string name="complete_blogger_profile.save">সংরক্ষিত</string>
     <string name="complete_blogger_profile.incorrect_date">Please choose correct date for date of birth.</string>
 
     <string name="add_video_details.title_hint">ENTER A TITLE FOR THE VIDEO</string>
@@ -518,24 +518,24 @@
     <string name="add_video_details.add_music">ADD MUSIC</string>
     <string name="add_video_details.remove">REMOVE</string>
     <string name="add_video_details.error_empty_title">Please enter the title of the video</string>
-    <string name="add_video_details.save_upload">SAVE &amp; UPLOAD</string>
-    <string name="add_video_details.toolbar.title">UPLOAD A VIDEO</string>
+    <string name="add_video_details.save_upload">সংরক্ষিত &amp; UPLOAD</string>
+    <string name="add_video_details.toolbar.title">ভিডিও উপলোড করুন</string>
     <string name="add_video_details.audio_picker.title">ADD MUSIC</string>
 
     <string name="video_progress.uploading_label">UPLOADING ...</string>
     <string name="video_progress.uploading_msg">Please do not exit or kill the app, it will cancel the upload automatically. You can use the app while uploading.</string>
     <string name="video_progress.way_to_go">WAY TO GO!</string>
     <string name="video_progress.success_msg">Video has been successfully uploaded and sent for moderation. We will notify you once moderated.</string>
-    <string name="video_progress.okay">OKAY</string>
+    <string name="video_progress.okay">ঠিক আছে</string>
     <string name="video_progress.uploading_failed">Uploading Failed.</string>
     <string name="video_progress.uploading_error">Error occurred while uploading your video. Please try again.</string>
     <string name="video_progress.progress_lost_msg">Your upload progress will be lost. Are you sure you want to exit?</string>
 
     <string name="user_activities.toolbar.title">ACTIVITY</string>
-    <string name="user_activities.tabs.recommended">LIKED</string>
-    <string name="user_activities.tabs.bookmark">BOOKMARKS</string>
-    <string name="user_activities.tabs.watch_later">WATCH LATER</string>
-    <string name="user_activities.tabs.comment">COMMENTS</string>
+    <string name="user_activities.tabs.recommended">পছন্দ</string>
+    <string name="user_activities.tabs.bookmark">বুকমার্কগুলো</string>
+    <string name="user_activities.tabs.watch_later">পরে দেখুন</string>
+    <string name="user_activities.tabs.comment">মন্তব্য</string>
     <string name="user_activities.bookmarks.remove">REMOVE</string>
     <string name="user_activities.bookmarks.by">By</string>
     <string name="user_activities.comments.saved_on">Saved on:</string>
@@ -545,38 +545,38 @@
     <string name="user_activities.bookmarks.no_bookmarks">No article has been bookmarked yet.</string>
     <string name="user_activities.watch_later.no_watch_later">You have not saved any videos yet.</string>
 
-    <string name="explore.section.events">EVENTS</string>
-    <string name="explore.section.resources">RESOURCES</string>
-    <string name="explore.section.top_things">TOP THINGS TO DO</string>
+    <string name="explore.section.events">অনুষ্ঠান</string>
+    <string name="explore.section.resources">তালিকা</string>
+    <string name="explore.section.top_things">বিশেষ করণীয় কাজ</string>
     <string name="explore.section.no_resources">We do not have any events or resources for your city at present.</string>
     <string name="explore.events.trending_lbl">TRENDING EVENTS</string>
     <string name="explore.events.featured_lbl">FEATURED EVENTS</string>
     <string name="explore.events.upcoming_lbl">UPCOMING EVENTS</string>
 
-    <string name="all_videos.toolbar.title">VIDEOS</string>
-    <string name="all_videos.tabbar.momspresso_label">MOMSPRESSO TV</string>
-    <string name="all_videos.tabbar.funny_label">MOM VLOGS</string>
+    <string name="all_videos.toolbar.title">ভিডিও</string>
+    <string name="all_videos.tabbar.momspresso_label">মমস্প্রেস্সো টিভি</string>
+    <string name="all_videos.tabbar.funny_label">মায়েদের ভিডিও ব্লগস</string>
     <string name="all_videos.funny_videos.no_videos">No mom vlogs added.</string>
 
-    <string name="notification.read_all">Read All</string>
+    <string name="notification.read_all">সম্পূর্ণ পড়া হয়েছে</string>
     <string name="notification.no_notification">No notifications</string>
 
-    <string name="user_funny_video.toolbar.title">MOM VLOGS</string>
+    <string name="user_funny_video.toolbar.title">মায়েদের ভিডিও ব্লগস</string>
     <string name="user_funny_video.published_on">Published on: %1$s</string>
 
-    <string name="article_listing.toolbar.title_recent">RECENT</string>
-    <string name="article_listing.toolbar.title_popular">POPULAR</string>
-    <string name="article_listing.toolbar.title_trending">TRENDING</string>
-    <string name="article_listing.toolbar.title_for_you">FOR YOU</string>
-    <string name="article_listing.toolbar.title_editor_picks">EDITOR\'S PICKS</string>
+    <string name="article_listing.toolbar.title_recent">নতুন</string>
+    <string name="article_listing.toolbar.title_popular">জনপ্রিয়</string>
+    <string name="article_listing.toolbar.title_trending">ট্রেন্ডিং</string>
+    <string name="article_listing.toolbar.title_for_you">আপনাদের জন্য</string>
+    <string name="article_listing.toolbar.title_editor_picks">সম্পাদকের পছন্দ</string>
 
-    <string name="sort.recent">RECENT</string>
-    <string name="sort.popular">POPULAR</string>
+    <string name="sort.recent">নতুন</string>
+    <string name="sort.popular">জনপ্রিয়</string>
 
     <string name="city_picker.toolbar.title">Choose City</string>
 
     <string name="rate_us.dialog.title">RATE OUR APP?</string>
-    <string name="rate_us.dialog.not_now">NOT NOW</string>
+    <string name="rate_us.dialog.not_now">এখন নয়</string>
     <string name="rate_us.dialog.message1">If you enjoy using the Momspresso app, please take a moment to rate it.</string>
     <string name="rate_us.dialog.message2">Thank you for your support !!!</string>
 
@@ -607,40 +607,50 @@
     <string name="android_version_unsupported">This version of android is no more supported.</string>
     <string name="choose_mp4_file">please choose a .mp4 format file</string>
 
-    <string name="article_listing.type.trending_label">TRENDING</string>
-    <string name="article_listing.type.editor_label">EDITOR\'S PICK</string>
-    <string name="article_listing.type.for_you_label">FOR YOU</string>
+    <string name="article_listing.type.trending_label">ট্রেন্ডিং</string>
+    <string name="article_listing.type.editor_label">সম্পাদকের পছন্দ</string>
+    <string name="article_listing.type.for_you_label">আপনাদের জন্য</string>
     <string name="article_listing.type.languages_label">LANGUAGES</string>
-    <string name="article_listing.type.videos_label">VIDEOS</string>
-    <string name="article_listing.type.recent_label">RECENT</string>
+    <string name="article_listing.type.videos_label">ভিডিও</string>
+    <string name="article_listing.type.recent_label">নতুন</string>
 
-    <string name="lang_sel.welcome_msg">WELCOME TO MOMSPRESSO</string>
-    <string name="lang_sel.sel_lang">SELECT A LANGUAGE TO VIEW YOUR APP</string>
-    <string name="lang_sel.curr_lang">Current Language</string>
-    <string name="lang_sel.app_lang_desc">You are using %1$s as current language. Would you like to view this application in the same language?</string>
-    <string name="lang_sel.yes">YES</string>
-    <string name="lang_sel.select_more">SELECT MORE</string>
-    <string name="lang_sel.continue">CONTINUE</string>
-    <string name="lang_sel.choose_lang_toast">Please choose a language to continue</string>
+    <string name="lang_sel.welcome_msg">মমস্প্রেস্সোতে স্বাগতম</string>
+    <string name="lang_sel.sel_lang">অ্যাপ্লিকেশনটি দেখতে একটি ভাষা নির্বাচন করুন</string>
+    <string name="lang_sel.curr_lang">বর্তমান ভাষা</string>
+    <string name="lang_sel.app_lang_desc">আপনি বর্তমানে ইংরেজি ভাষাটি ব্যবহার করছেন । আপনি কি এই ভাষাতেই অ্যাপ্লিকেশনটি দেখতে চান?</string>
+    <string name="lang_sel.yes">হ্যাঁ</string>
+    <string name="lang_sel.select_more">আরও নির্বাচন করুন</string>
+    <string name="lang_sel.continue">অবিরত</string>
+    <string name="lang_sel.choose_lang_toast">অব্যাহত থাকতে একটি ভাষা পছন্দ করুন</string>
 
-    <string name="all_categories_label">ALL</string>
+    <string name="all_categories_label">সকল</string>
 
     <string name="language_label.english">English</string>
     <string name="language_label.hindi">हिंदी</string>
     <string name="language_label.marathi">मराठी</string>
     <string name="language_label.bengali">বাংলা</string>
+    <string name="language_label.tamil">தமிழ</string>
+    <string name="language_label.telegu">తెలుగ</string>
 
-    <string name="choose_pref_lang">Choose your preferred language</string>
-    <string name="choose_pref_lang.cancel">CANCEL</string>
+    <string name="choose_pref_lang">আপনার পছন্দের ভাষা নির্বাচন করুন</string>
+    <string name="choose_pref_lang.cancel">বাতিল</string>
 
-    <string name="guide.language_tour">You can view this app in any \nlanguage of your choice</string>
-    <string name="guide.settings_tour">Manage the languages you want to read the \narticles in</string>
-    <string name="guide.trending_tour">Tap here to access the menu</string>
-    <string name="guide.quick_link_tour">With our new quick links, you can discover content easier and faster!</string>
-    <string name="guide.topics_tour">These topics allow you to read\n and explore all facets of parenting</string>
-    <string name="guide.sub_topics_list_tour">Click here to look at more categories</string>
-    <string name="guide.share_like_bookmark_tour">Share, Bookmark and Love this post</string>
-    <string name="guide.comment_tour">Share your thoughts</string>
-    <string name="guide.listen_tour">Click here to listen to this blog</string>
+    <string name="guide.language_tour">আপনি আপনার পছন্দের যে কোনও ভাষায় এই অ্যাপটি দেখতে পারেন</string>
+    <string name="guide.settings_tour">পছন্দের আর্টিকেলসগুলি পড়তে একটি ভাষা নির্বাচন করুন</string>
+    <string name="guide.trending_tour">মেনুতে যেতে এখানে ট্যাপ করুন</string>
+    <string name="guide.quick_link_tour">নতুন লিঙ্কটির মাধ্যমে খুব সহজেই মূল বিষয়টি খুঁজে পান</string>
+    <string name="guide.topics_tour">এই বিষয়গুলি আপনার প্যারেন্টিং সংক্রান্ত সকল প্রশ্নের উত্তর দেয় </string>
+    <string name="guide.sub_topics_list_tour">অন্যান্য বিভাগুলি দেখতে এখানে ক্লিক করুন</string>
+    <string name="guide.share_like_bookmark_tour">পোস্টটি লাইক করুন, শেয়ার করুন এবং বুকমার্ক করুন</string>
+    <string name="guide.comment_tour">আপনার অভিজ্ঞতা শেয়ার করুন</string>
+    <string name="guide.listen_tour">আর্টিকেলটি শুনতে এখানে ক্লিক করুন</string>
 
+    <string name="author_type.blogger">ব্লগার</string>
+    <string name="author_type.editor">সম্পাদক</string>
+    <string name="author_type.editorial">সম্পাদকীয়দের টিম</string>
+    <string name="author_type.expert">বিশেষজ্ঞ</string>
+    <string name="author_type.featured">বিশিষ্ট লেখক</string>
+    <string name="author_type.user">USER</string>
+
+    <string name="no_article.be_first">এই ক্যাটাগরি তে প্রথম আর্টিকেল টি আপনি লিখুন</string>
 </resources>

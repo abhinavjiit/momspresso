@@ -562,35 +562,56 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             if (!StringUtils.isNullOrEmpty(detailData.getUserType())) {
 
                 if (AppConstants.USER_TYPE_BLOGGER.equals(detailData.getUserType())) {
-                    author_type.setText(AppConstants.AUTHOR_TYPE_BLOGGER.toUpperCase());
+                    if (isAdded()) {
+                        author_type.setText(getString(R.string.author_type_blogger));
+                    } else {
+                        author_type.setText(AppConstants.AUTHOR_TYPE_BLOGGER.toUpperCase());
+                    }
                     if (StringUtils.isNullOrEmpty(deepLinkURL)) {
                         shareUrl = AppConstants.ARTICLE_SHARE_URL + detailData.getBlogTitleSlug().trim() + "/article/" + detailData.getTitleSlug();
                     } else {
                         shareUrl = deepLinkURL;
                     }
                 } else if (AppConstants.USER_TYPE_EXPERT.equals(detailData.getUserType())) {
-                    author_type.setText(AppConstants.AUTHOR_TYPE_EXPERT.toUpperCase());
+                    if (isAdded()) {
+                        author_type.setText(getString(R.string.author_type_expert));
+                    } else {
+                        author_type.setText(AppConstants.AUTHOR_TYPE_EXPERT.toUpperCase());
+                    }
                     if (StringUtils.isNullOrEmpty(deepLinkURL)) {
                         shareUrl = AppConstants.ARTICLE_SHARE_URL + "article/" + detailData.getTitleSlug();
                     } else {
                         shareUrl = deepLinkURL;
                     }
                 } else if (AppConstants.USER_TYPE_EDITOR.equals(detailData.getUserType())) {
-                    author_type.setText(AppConstants.AUTHOR_TYPE_EDITOR.toUpperCase());
+                    if (isAdded()) {
+                        author_type.setText(getString(R.string.author_type_editor));
+                    } else {
+                        author_type.setText(AppConstants.AUTHOR_TYPE_EDITOR.toUpperCase());
+                    }
                     if (StringUtils.isNullOrEmpty(deepLinkURL)) {
                         shareUrl = AppConstants.ARTICLE_SHARE_URL + "article/" + detailData.getTitleSlug();
                     } else {
                         shareUrl = deepLinkURL;
                     }
                 } else if (AppConstants.USER_TYPE_EDITORIAL.equals(detailData.getUserType())) {
-                    author_type.setText(AppConstants.AUTHOR_TYPE_EDITORIAL.toUpperCase());
+                    if (isAdded()) {
+                        author_type.setText(getString(R.string.author_type_editorial));
+                    } else {
+                        author_type.setText(AppConstants.AUTHOR_TYPE_EDITORIAL.toUpperCase());
+                    }
                     if (StringUtils.isNullOrEmpty(deepLinkURL)) {
                         shareUrl = AppConstants.ARTICLE_SHARE_URL + "article/" + detailData.getTitleSlug();
                     } else {
                         shareUrl = deepLinkURL;
                     }
                 } else if (AppConstants.USER_TYPE_FEATURED.equals(detailData.getUserType())) {
-                    author_type.setText(AppConstants.AUTHOR_TYPE_FEATURED.toUpperCase());
+                    if (isAdded()) {
+                        author_type.setText(getString(R.string.author_type_featured));
+                    } else {
+                        author_type.setText(AppConstants.AUTHOR_TYPE_FEATURED.toUpperCase());
+                    }
+//                    author_type.setText(AppConstants.AUTHOR_TYPE_FEATURED.toUpperCase());
                     if (StringUtils.isNullOrEmpty(deepLinkURL)) {
                         shareUrl = AppConstants.ARTICLE_SHARE_URL + "article/" + detailData.getTitleSlug();
                     } else {
@@ -599,7 +620,12 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 }
             } else {
                 // Default Author type set to Blogger
-                author_type.setText("Blogger".toUpperCase());
+                if (isAdded()) {
+                    author_type.setText(getString(R.string.author_type_blogger));
+                } else {
+                    author_type.setText(AppConstants.AUTHOR_TYPE_BLOGGER.toUpperCase());
+                }
+//                author_type.setText("Blogger".toUpperCase());
                 if (StringUtils.isNullOrEmpty(deepLinkURL)) {
                     shareUrl = AppConstants.ARTICLE_SHARE_URL + detailData.getBlogTitleSlug().trim() + "/article/" + detailData.getTitleSlug();
                 } else {
