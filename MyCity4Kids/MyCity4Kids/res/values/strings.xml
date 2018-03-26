@@ -265,7 +265,7 @@
     <string name="home_screen.kids_res.title">KIDS RESOURCES</string>
     <string name="home_screen.trending_list_header.title">CHOOSE THE TOPICS THAT YOU ARE INTERESTED IN LIKE</string>
     <string name="home_screen.trending_list_header.topics_label">GETTING PREGNANT, POST PARTUM DEPRESSION ETC.</string>
-    <string name="home_screen.trending_list_header.take_me_there">পেয়ে গিয়েছি, এগিয়ে চলুন</string>
+    <string name="home_screen.trending_list_header.take_me_there">OKAY GOT IT! TAKE ME THERE</string>
 
     <string-array name="onboarding_title_array">
         <item>HARNESSING THE WISDOM OF MUMS</item>
