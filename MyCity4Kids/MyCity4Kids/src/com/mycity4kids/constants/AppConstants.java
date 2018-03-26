@@ -543,6 +543,6 @@ public class AppConstants {
     public static final String LOCALE_MARATHI = "mr";
     public static final String LOCALE_BENGALI = "bn";
     public static final String LOCALE_TAMIL = "ta";
-    public static final String LOCALE_TELEGU = "te";
+    public static final String LOCALE_TELUGU = "te";
 
 }

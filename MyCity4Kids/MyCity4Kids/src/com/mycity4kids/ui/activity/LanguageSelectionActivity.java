@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
@@ -17,8 +16,6 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.adapter.LanguageRecyclerViewAdapter;
 import com.mycity4kids.utils.LocaleManager;
 
-import static com.facebook.FacebookSdk.getApplicationContext;
-
 /**
  * Created by hemant on 22/2/18.
  */
@@ -27,7 +24,7 @@ public class LanguageSelectionActivity extends BaseActivity implements View.OnCl
 
     private RelativeLayout langListOverlay;
     private TextView selectMoreTextView, okayTextView;
-    private TextView englishTextView, hindiTextView, marathiTextView, bengaliTextView;
+    private TextView englishTextView, hindiTextView, marathiTextView, bengaliTextView, tamilTextView, teluguTextView;
     private TextView continueTextView;
     private String selectedLang = "";
     private TextView currentLangTextView;
@@ -43,6 +40,8 @@ public class LanguageSelectionActivity extends BaseActivity implements View.OnCl
         hindiTextView = (TextView) findViewById(R.id.hindiTextView);
         marathiTextView = (TextView) findViewById(R.id.marathiTextView);
         bengaliTextView = (TextView) findViewById(R.id.bengaliTextView);
+        tamilTextView = (TextView) findViewById(R.id.tamilTextView);
+        teluguTextView = (TextView) findViewById(R.id.teluguTextView);
         langListOverlay = (RelativeLayout) findViewById(R.id.langListOverlay);
         selectMoreTextView = (TextView) findViewById(R.id.selectMoreTextView);
         okayTextView = (TextView) findViewById(R.id.okayTextView);
@@ -52,6 +51,8 @@ public class LanguageSelectionActivity extends BaseActivity implements View.OnCl
         hindiTextView.setOnClickListener(this);
         marathiTextView.setOnClickListener(this);
         bengaliTextView.setOnClickListener(this);
+        tamilTextView.setOnClickListener(this);
+        teluguTextView.setOnClickListener(this);
         selectMoreTextView.setOnClickListener(this);
         okayTextView.setOnClickListener(this);
         continueTextView.setOnClickListener(this);
@@ -64,6 +65,10 @@ public class LanguageSelectionActivity extends BaseActivity implements View.OnCl
             currentLangTextView.setText(getString(R.string.lang_sel_app_lang_desc, getString(R.string.language_label_marathi)));
         } else if (AppConstants.LOCALE_BENGALI.equals(SharedPrefUtils.getAppLocale(this))) {
             currentLangTextView.setText(getString(R.string.lang_sel_app_lang_desc, getString(R.string.language_label_bengali)));
+        } else if (AppConstants.LOCALE_TAMIL.equals(SharedPrefUtils.getAppLocale(this))) {
+            currentLangTextView.setText(getString(R.string.lang_sel_app_lang_desc, getString(R.string.language_label_tamil)));
+        } else if (AppConstants.LOCALE_TELUGU.equals(SharedPrefUtils.getAppLocale(this))) {
+            currentLangTextView.setText(getString(R.string.lang_sel_app_lang_desc, getString(R.string.language_label_telegu)));
         } else {
             langListOverlay.setVisibility(View.GONE);
         }
@@ -98,6 +103,8 @@ public class LanguageSelectionActivity extends BaseActivity implements View.OnCl
                 hindiTextView.setSelected(false);
                 marathiTextView.setSelected(false);
                 bengaliTextView.setSelected(false);
+                tamilTextView.setSelected(false);
+                teluguTextView.setSelected(false);
                 break;
             case R.id.hindiTextView:
                 selectedLang = AppConstants.LOCALE_HINDI;
@@ -105,6 +112,8 @@ public class LanguageSelectionActivity extends BaseActivity implements View.OnCl
                 hindiTextView.setSelected(true);
                 marathiTextView.setSelected(false);
                 bengaliTextView.setSelected(false);
+                tamilTextView.setSelected(false);
+                teluguTextView.setSelected(false);
                 break;
             case R.id.marathiTextView:
                 selectedLang = AppConstants.LOCALE_MARATHI;
@@ -112,6 +121,8 @@ public class LanguageSelectionActivity extends BaseActivity implements View.OnCl
                 hindiTextView.setSelected(false);
                 marathiTextView.setSelected(true);
                 bengaliTextView.setSelected(false);
+                tamilTextView.setSelected(false);
+                teluguTextView.setSelected(false);
                 break;
             case R.id.bengaliTextView:
                 selectedLang = AppConstants.LOCALE_BENGALI;
@@ -119,6 +130,26 @@ public class LanguageSelectionActivity extends BaseActivity implements View.OnCl
                 hindiTextView.setSelected(false);
                 marathiTextView.setSelected(false);
                 bengaliTextView.setSelected(true);
+                tamilTextView.setSelected(false);
+                teluguTextView.setSelected(false);
+                break;
+            case R.id.tamilTextView:
+                selectedLang = AppConstants.LOCALE_TAMIL;
+                englishTextView.setSelected(false);
+                hindiTextView.setSelected(false);
+                marathiTextView.setSelected(false);
+                bengaliTextView.setSelected(false);
+                tamilTextView.setSelected(true);
+                teluguTextView.setSelected(false);
+                break;
+            case R.id.teluguTextView:
+                selectedLang = AppConstants.LOCALE_TELUGU;
+                englishTextView.setSelected(false);
+                hindiTextView.setSelected(false);
+                marathiTextView.setSelected(false);
+                bengaliTextView.setSelected(false);
+                tamilTextView.setSelected(false);
+                teluguTextView.setSelected(true);
                 break;
             case R.id.continueTextView:
                 if (StringUtils.isNullOrEmpty(selectedLang)) {

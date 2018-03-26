@@ -6,96 +6,141 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <!--<android.support.v7.widget.RecyclerView-->
-    <!--android:id="@+id/languagesRecyclerView"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_above="@+id/continueTextView"-->
-    <!--android:layout_alignParentTop="true"-->
-    <!--android:visibility="visible" />-->
-
-    <include
-        android:id="@+id/headerLayout"
-        layout="@layout/language_selection_header" />
-
-    <LinearLayout
-        android:id="@+id/topLangContainer"
+    <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/headerLayout"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        android:weightSum="2">
+        android:layout_above="@+id/continueTextView">
 
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/englishTextView"
-            android:layout_width="0dp"
-            android:layout_height="90dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="10dp"
-            android:layout_weight="1"
-            android:background="@drawable/language_selector_bg"
-            android:gravity="center"
-            android:text="@string/language_label.english"
-            android:textColor="@color/language_selector_text"
-            android:textSize="16sp"
-            app:fontName="oswald.ttf" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical">
 
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/hindiTextView"
-            android:layout_width="0dp"
-            android:layout_height="90dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_weight="1"
-            android:background="@drawable/language_selector_bg"
-            android:gravity="center"
-            android:text="@string/language_label.hindi"
-            android:textColor="@color/language_selector_text"
-            android:textSize="16sp"
-            app:fontName="oswald.ttf" />
-    </LinearLayout>
+            <include
+                android:id="@+id/headerLayout"
+                layout="@layout/language_selection_header" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/topLangContainer"
-        android:weightSum="2">
+            <LinearLayout
+                android:id="@+id/topLangContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/headerLayout"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:weightSum="2">
 
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/marathiTextView"
-            android:layout_width="0dp"
-            android:layout_height="90dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="5dp"
-            android:layout_weight="1"
-            android:background="@drawable/language_selector_bg"
-            android:gravity="center"
-            android:text="@string/language_label.marathi"
-            android:textColor="@color/language_selector_text"
-            android:textSize="16sp"
-            app:fontName="oswald.ttf" />
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/englishTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="90dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/language_selector_bg"
+                    android:gravity="center"
+                    android:text="@string/language_label.english"
+                    android:textColor="@color/language_selector_text"
+                    android:textSize="16sp"
+                    app:fontName="oswald.ttf" />
 
-        <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/bengaliTextView"
-            android:layout_width="0dp"
-            android:layout_height="90dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="10dp"
-            android:layout_weight="1"
-            android:background="@drawable/language_selector_bg"
-            android:gravity="center"
-            android:text="@string/language_label.bengali"
-            android:textColor="@color/language_selector_text"
-            android:textSize="16sp"
-            app:fontName="oswald.ttf" />
-    </LinearLayout>
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/hindiTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="90dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/language_selector_bg"
+                    android:gravity="center"
+                    android:text="@string/language_label.hindi"
+                    android:textColor="@color/language_selector_text"
+                    android:textSize="16sp"
+                    app:fontName="oswald.ttf" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/midLangContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/topLangContainer"
+                android:weightSum="2">
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/marathiTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="90dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/language_selector_bg"
+                    android:gravity="center"
+                    android:text="@string/language_label.marathi"
+                    android:textColor="@color/language_selector_text"
+                    android:textSize="16sp"
+                    app:fontName="oswald.ttf" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/bengaliTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="90dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/language_selector_bg"
+                    android:gravity="center"
+                    android:text="@string/language_label.bengali"
+                    android:textColor="@color/language_selector_text"
+                    android:textSize="16sp"
+                    app:fontName="oswald.ttf" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/bottomContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/midLangContainer"
+                android:weightSum="2">
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/tamilTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="90dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/language_selector_bg"
+                    android:gravity="center"
+                    android:text="@string/language_label.tamil"
+                    android:textColor="@color/language_selector_text"
+                    android:textSize="16sp"
+                    app:fontName="oswald.ttf" />
+
+                <com.mycity4kids.widget.CustomFontTextView
+                    android:id="@+id/teluguTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="90dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/language_selector_bg"
+                    android:gravity="center"
+                    android:text="@string/language_label.telegu"
+                    android:textColor="@color/language_selector_text"
+                    android:textSize="16sp"
+                    app:fontName="oswald.ttf" />
+            </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/continueTextView"
@@ -118,7 +163,7 @@
         android:layout_height="match_parent"
         android:background="@color/trans_gray"
         android:elevation="5dp"
-        android:visibility="visible">
+        android:visibility="invisible">
 
         <LinearLayout
             android:layout_width="match_parent"

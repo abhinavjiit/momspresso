@@ -16,9 +16,7 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.preference.SharedPrefUtils;
-import com.mycity4kids.sync.CategorySyncService;
 import com.mycity4kids.ui.activity.DashboardActivity;
-import com.mycity4kids.ui.activity.TutorialActivity;
 import com.mycity4kids.utils.LocaleManager;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -49,7 +47,7 @@ public class ChangePreferredLanguageDialogFragment extends DialogFragment implem
         hindiTextView = (TextView) rootView.findViewById(R.id.hindiTextView);
         marathiTextView = (TextView) rootView.findViewById(R.id.marathiTextView);
         bengaliTextView = (TextView) rootView.findViewById(R.id.bengaliTextView);
-        teleguTextView = (TextView) rootView.findViewById(R.id.teleguTextView);
+        teleguTextView = (TextView) rootView.findViewById(R.id.teluguTextView);
         tamilTextView = (TextView) rootView.findViewById(R.id.tamilTextView);
         cancelTextView = (TextView) rootView.findViewById(R.id.cancelTextView);
 
@@ -132,11 +130,11 @@ public class ChangePreferredLanguageDialogFragment extends DialogFragment implem
                 teleguTextView.setSelected(false);
                 setNewLocale(selectedLang, false);
                 break;
-            case R.id.teleguTextView:
+            case R.id.teluguTextView:
                 if (isAdded()) {
                     Utils.pushLanguageChangeEvent(getActivity(), "ChangeLanguageDialog", userId, getString(R.string.language_label_telegu));
                 }
-                selectedLang = AppConstants.LOCALE_TELEGU;
+                selectedLang = AppConstants.LOCALE_TELUGU;
                 englishTextView.setSelected(false);
                 hindiTextView.setSelected(false);
                 marathiTextView.setSelected(false);

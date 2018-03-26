@@ -151,6 +151,7 @@
     <string name="videos.dialog.title">अपलोड  के लिए वीडियो चुनें</string>
     <string name="videos.upload_option.camera">वीडियो लें </string>
     <string name="videos.upload_option.gallery">गैलरी में से चुने</string>
+    <string name="videos.upload_option.cancel">कैंसिल</string>
 
     <string name="ad.swipe_tootip_text">अगले लेख को पढ़ने के लिए बाएं स्वाइप करें</string>
     <string name="ad.view_all_tags.text">सभी  देखें</string>
@@ -649,7 +650,6 @@
     <string name="guide.topics_tour">इन विषयों की मदद से आप माता-पिता के सभी पहलुओं को पढ़ सकते हैं और पता लगा सकते हैं</string>
     <string name="guide.sub_topics_list_tour">अधिक श्रेणियों को देखने के लिए यहां क्लिक करें</string>
     <string name="guide.share_like_bookmark_tour">इस पोस्ट को शेयर, बुकमार्क या पसंद करे</string>
-    <string name="guide.comment_tour">अपने विचारों को साझा करें</string>
     <string name="guide.listen_tour">इस ब्लॉग को सुनने के लिए यहां क्लिक करें</string>
 
     <string name="author_type.blogger">ब्लॉगर्स</string>

@@ -90,7 +90,7 @@
         app:fontName="oswald.ttf" />
 
     <com.mycity4kids.widget.CustomFontTextView
-        android:id="@+id/teleguTextView"
+        android:id="@+id/teluguTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"

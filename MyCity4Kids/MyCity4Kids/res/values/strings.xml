@@ -20,7 +20,7 @@
 
     <!-- Login Screen -->
     <!-- Registration Screen -->
-    <string name="subcategoryName">subCagegory</string>
+    <string name="subcategoryName">subCategory</string>
     <string name="location_info">To get personalized recommendations, Please select your preferred location</string>
     <!-- HomeCategoryActivity -->
     <string name="hint_text">What are you looking for ?</string>
@@ -84,8 +84,6 @@
     <!-- alert text for first time if gps off -->
 
     <string name="gps_enabled_alert">It seems that location detection is disabled on your phone.Click OK to go to location settings.</string>
-
-    <string name="rate_now">RATE NOW</string>
 
     <string name="netwrok_error">Network error</string>
     <string name="transit">TRANSIT</string>
@@ -245,7 +243,7 @@
     <string name="permission_camera_rationale">Camera permission is needed to show the camera preview.</string>
     <string name="permission_storage_rationale">Storage permission is needed to pick files.</string>
     <string name="permission_location_rationale">Location permission is required to show relevant events and articles.</string>
-    <string name="permission_phone_state_rationale">Phone state permission is required to keep you updated with latest content via notications.</string>
+    <string name="permission_phone_state_rationale">Phone state permission is required to keep you updated with latest content via notifications.</string>
     <string name="permision_available_init">All required permissions have been granted.</string>
     <string name="permission_calendar_rationale">Calendar permission is needed to add a reminder.</string>
 
@@ -575,6 +573,7 @@
 
     <string name="city_picker.toolbar.title">Choose City</string>
 
+    <string name="rate_now">RATE NOW</string>
     <string name="rate_us.dialog.title">RATE OUR APP?</string>
     <string name="rate_us.dialog.not_now">NOT NOW</string>
     <string name="rate_us.dialog.message1">If you enjoy using the Momspresso app, please take a moment to rate it.</string>
@@ -642,7 +641,6 @@
     <string name="guide.topics_tour">These topics allow you to read\n and explore all facets of parenting</string>
     <string name="guide.sub_topics_list_tour">Click here to look at more categories</string>
     <string name="guide.share_like_bookmark_tour">Share, Bookmark and Love this post</string>
-    <string name="guide.comment_tour">Share your thoughts</string>
     <string name="guide.listen_tour">Click here to listen to this blog</string>
 
     <string name="author_type.blogger">BLOGGER</string>
