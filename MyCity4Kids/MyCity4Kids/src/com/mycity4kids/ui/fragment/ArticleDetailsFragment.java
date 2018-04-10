@@ -1835,7 +1835,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         caller.enqueue(new Callback<ResponseBody>() {
                             @Override
                             public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                                AppUtils.writeResponseBodyToDisk(getActivity(), AppConstants.CATEGORIES_JSON_FILE, response.body());
+                                AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE, response.body());
 
                                 try {
                                     createSponsporedTagsList(sponsoredList);

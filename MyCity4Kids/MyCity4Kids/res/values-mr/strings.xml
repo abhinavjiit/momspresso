@@ -614,13 +614,13 @@
     <string name="article_listing.type.videos_label">व्हिडीओस</string>
     <string name="article_listing.type.recent_label">नवीन</string>
 
-    <string name="lang_sel.welcome_msg">WELCOME TO MOMSPRESSO</string>
+    <string name="lang_sel.welcome_msg">मोमस्प्रेसो वर तुमचे स्वागत आहे</string>
     <string name="lang_sel.sel_lang">SELECT A LANGUAGE TO VIEW YOUR APP</string>
-    <string name="lang_sel.curr_lang">Current Language</string>
+    <string name="lang_sel.curr_lang">चालू भाषा</string>
     <string name="lang_sel.app_lang_desc">You are using %1$s as current language. Would you like to view this application in the same language?</string>
-    <string name="lang_sel.yes">YES</string>
+    <string name="lang_sel.yes">हो</string>
     <string name="lang_sel.select_more">SELECT MORE</string>
-    <string name="lang_sel.continue">CONTINUE</string>
+    <string name="lang_sel.continue">सुरु ठेवा</string>
     <string name="lang_sel.choose_lang_toast">Please choose a language to continue</string>
 
     <string name="all_categories_label">सब</string>
@@ -632,7 +632,7 @@
     <string name="language_label.tamil">தமிழ</string>
     <string name="language_label.telegu">తెలుగ</string>
 
-    <string name="choose_pref_lang">Choose your preferred language</string>
+    <string name="choose_pref_lang">तुमची प्राधान्य भाषा निवडा</string>
     <string name="choose_pref_lang.cancel">कॅन्सल</string>
 
     <string name="guide.language_tour">You can view this app in any \nlanguage of your choice</string>

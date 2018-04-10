@@ -29,6 +29,7 @@ import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.FilteredTopicsArticleListingActivity;
 import com.mycity4kids.ui.activity.SearchAllActivity;
 import com.mycity4kids.ui.adapter.SearchAllArticlesTopicsListingAdapter;
+import com.mycity4kids.widget.NpaLinearLayoutManager;
 
 import java.util.ArrayList;
 
@@ -56,6 +57,8 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
     private int topicShowMoreIndex = 0;
     private SearchAllArticlesTopicsListingAdapter adapter;
     private ArrayList<SearchArticleTopicResult> data = new ArrayList<>();
+    private boolean isShowMoreTopicRequest = false;
+    private boolean isShowMoreArticleRequest = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,7 +70,7 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
         noBlogsTextView = (TextView) view.findViewById(R.id.noBlogsTextView);
 
         adapter = new SearchAllArticlesTopicsListingAdapter(getActivity(), this);
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        NpaLinearLayoutManager llm = new NpaLinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
         recyclerView.setAdapter(adapter);
@@ -125,11 +128,16 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
         public void onResponse(Call<SearchResponse> call, retrofit2.Response<SearchResponse> response) {
             isReuqestRunning = false;
             if (response == null || response.body() == null) {
-				if (isAdded())
-                	((SearchAllActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
+                if (isAdded())
+                    ((SearchAllActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
                 return;
             }
             try {
+                if (!isShowMoreTopicRequest && !isShowMoreArticleRequest) {
+                    if (data != null) {
+                        data.clear();
+                    }
+                }
                 SearchResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     processResponseArticle(responseData);
@@ -156,6 +164,8 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
             if (null != getActivity()) {
                 ((SearchAllActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
             }
+            isShowMoreArticleRequest = false;
+            isShowMoreTopicRequest = false;
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
@@ -165,8 +175,14 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
 
         ArrayList<SearchArticleResult> articleList = responseData.getData().getResult().getArticle();
 
-        if (articleList != null && articleList.size() > 0) {
+//        if (isShowMoreArticleRequest) {
+//            if (articleList == null || articleList.isEmpty()) {
+//                data.remove(articleShowMoreIndex);
+//            }
+//        }
+        if (articleList != null && articleList.size() >= 0) {
             if (data.isEmpty()) {
+                Log.d("FastSearch", "data empty");
                 SearchArticleTopicResult obj = new SearchArticleTopicResult();
                 obj.setTitle(getString(R.string.search_article_label));
                 obj.setListType(AppConstants.SEARCH_ITEM_TYPE_ARTICLE_HEADER);
@@ -197,6 +213,7 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
                 articleShowMoreIndex = articleShowMoreIndex + limit;
             }
         }
+        Log.d("FastSearch", "data added");
 
     }
 
@@ -236,11 +253,14 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
 
     public void refreshAllArticles(String searchText, String sortType) {
         if (null != data) {
+            Log.d("FastSearch", "data cleared");
             data.clear();
         }
         if (noBlogsTextView != null)
             noBlogsTextView.setVisibility(View.GONE);
         nextPageNumber = 1;
+        isShowMoreArticleRequest = false;
+        isShowMoreTopicRequest = false;
         isLastPageReached = true;
         searchName = searchText;
         newSearchTopicArticleListingApi(searchName, "all");
@@ -270,9 +290,11 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
             case AppConstants.SEARCH_ITEM_TYPE_TOPIC_HEADER:
                 break;
             case AppConstants.SEARCH_ITEM_TYPE_ARTICLE_SHOW_MORE:
+                isShowMoreArticleRequest = true;
                 newSearchTopicArticleListingApi(searchName, "article");
                 break;
             case AppConstants.SEARCH_ITEM_TYPE_TOPIC_SHOW_MORE:
+                isShowMoreTopicRequest = true;
                 newSearchTopicArticleListingApi(searchName, "topic");
                 break;
             case AppConstants.SEARCH_ITEM_TYPE_ARTICLE: {

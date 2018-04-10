@@ -234,13 +234,11 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
             topicsMap = new HashMap<Topics, List<Topics>>();
             topicList = new ArrayList<>();
 
-            //Prepare structure for multi-expandable listview.
             for (int i = 0; i < responseData.getData().size(); i++) {
-                ArrayList<Topics> tempUpList = new ArrayList<>();
-
+                ArrayList<Topics> secondLevelLeafNodeList = new ArrayList<>();
 
                 for (int j = 0; j < responseData.getData().get(i).getChild().size(); j++) {
-                    ArrayList<Topics> tempList = new ArrayList<>();
+                    ArrayList<Topics> thirdLevelLeafNodeList = new ArrayList<>();
 
                     for (int k = 0; k < responseData.getData().get(i).getChild().get(j).getChild().size(); k++) {
 
@@ -250,11 +248,11 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
                                     .setParentId(responseData.getData().get(i).getId());
                             responseData.getData().get(i).getChild().get(j).getChild().get(k)
                                     .setParentName(responseData.getData().get(i).getTitle());
-                            tempList.add(responseData.getData().get(i).getChild().get(j).getChild().get(k));
+                            thirdLevelLeafNodeList.add(responseData.getData().get(i).getChild().get(j).getChild().get(k));
                         }
                     }
 
-                    responseData.getData().get(i).getChild().get(j).setChild(tempList);
+                    responseData.getData().get(i).getChild().get(j).setChild(thirdLevelLeafNodeList);
                 }
 
                 for (int k = 0; k < responseData.getData().get(i).getChild().size(); k++) {
@@ -264,14 +262,16 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
                                 .setParentId(responseData.getData().get(i).getId());
                         responseData.getData().get(i).getChild().get(k)
                                 .setParentName(responseData.getData().get(i).getTitle());
-                        tempUpList.add(responseData.getData().get(i).getChild().get(k));
+                        secondLevelLeafNodeList.add(responseData.getData().get(i).getChild().get(k));
                     }
                 }
 
                 if ("1".equals(responseData.getData().get(i).getPublicVisibility())) {
-                    responseData.getData().get(i).setChild(tempUpList);
-                    topicList.add(responseData.getData().get(i));
-                    topicsMap.put(responseData.getData().get(i), tempUpList);
+                    responseData.getData().get(i).setChild(secondLevelLeafNodeList);
+                    if (!secondLevelLeafNodeList.isEmpty()) {
+                        topicList.add(responseData.getData().get(i));
+                        topicsMap.put(responseData.getData().get(i), secondLevelLeafNodeList);
+                    }
                 }
 
             }

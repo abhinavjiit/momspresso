@@ -204,7 +204,7 @@ public class SplashActivity extends BaseActivity {
             if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER) && (!manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))) {
 
                 buildAlertMessageNoGps();
-                return;
+//                return;
             }
         }
 

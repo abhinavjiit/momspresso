@@ -1,9 +1,9 @@
 package com.mycity4kids.ui.activity;
 
 import android.graphics.PorterDuff;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -14,7 +14,6 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -30,6 +29,8 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.ui.adapter.SearchAllPagerAdapter;
 import com.mycity4kids.utils.AppUtils;
 
+import java.util.TimerTask;
+
 /**
  * Created by hemant on 19/4/16.
  */
@@ -43,6 +44,7 @@ public class SearchAllActivity extends BaseActivity implements View.OnClickListe
     private EditText searchEditText;
     String searchParam;
     int tabPosition;
+    Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +98,17 @@ public class SearchAllActivity extends BaseActivity implements View.OnClickListe
 
             @Override
             public void afterTextChanged(Editable s) {
-//                requestSearch();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        runOnUiThread(new TimerTask() {
+                            @Override
+                            public void run() {
+                                requestSearch();
+                            }
+                        });
+                    }
+                }, 500);
             }
         });
 
