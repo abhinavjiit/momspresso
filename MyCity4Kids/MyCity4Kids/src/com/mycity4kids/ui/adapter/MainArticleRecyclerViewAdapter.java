@@ -113,48 +113,51 @@ public class MainArticleRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof AdViewHolder) {
-            addArticleItem((AdViewHolder) holder, position);
-            if (position <= 80 && adList.get((position / 8) - 1) == null) {
-                NativeAd fbAd = feedNativeAd.getAd();
-                adList.set((position / 8) - 1, fbAd);
+            try {
+                addArticleItem((AdViewHolder) holder, position);
+                if (position <= 80 && adList.get((position / 8) - 1) == null) {
+                    NativeAd fbAd = feedNativeAd.getAd();
+                    adList.set((position / 8) - 1, fbAd);
+                }
+                NativeAd fbAd;
+                if (position < 80) {
+                    fbAd = adList.get(((position / 8) % 10) - 1);
+                } else {
+                    fbAd = adList.get(((position / 8) % 10));
+                }
+
+                if (fbAd == null) {
+                    ((AdViewHolder) holder).adContainerView.setVisibility(View.GONE);
+                    return;
+                }
+                ((AdViewHolder) holder).adContainerView.setVisibility(View.VISIBLE);
+                ((AdViewHolder) holder).nativeAdTitle.setText(fbAd.getAdTitle());
+                ((AdViewHolder) holder).nativeAdSocialContext.setText(fbAd.getAdSocialContext());
+                ((AdViewHolder) holder).nativeAdBody.setText(fbAd.getAdBody());
+                ((AdViewHolder) holder).nativeAdCallToAction.setText(fbAd.getAdCallToAction());
+
+                // Download and display the ad icon.
+                NativeAd.Image adIcon = fbAd.getAdIcon();
+                NativeAd.downloadAndDisplayImage(adIcon, ((AdViewHolder) holder).nativeAdIcon);
+
+                // Download and display the cover image.
+                ((AdViewHolder) holder).nativeAdMedia.setNativeAd(fbAd);
+
+                // Add the AdChoices icon
+                if (!isAdChoiceAdded) {
+                    AdChoicesView adChoicesView = new AdChoicesView(mContext, fbAd, true);
+                    ((AdViewHolder) holder).adChoicesContainer.addView(adChoicesView);
+                    isAdChoiceAdded = true;
+                }
+
+                // Register the Title and CTA button to listen for clicks.
+                List<View> clickableViews = new ArrayList<>();
+                clickableViews.add(((AdViewHolder) holder).nativeAdTitle);
+                clickableViews.add(((AdViewHolder) holder).nativeAdCallToAction);
+                fbAd.registerViewForInteraction(((AdViewHolder) holder).adContainerView);
+            } catch (Exception e) {
+
             }
-            NativeAd fbAd;
-            if (position < 80) {
-                fbAd = adList.get(((position / 8) % 10) - 1);
-            } else {
-                fbAd = adList.get(((position / 8) % 10));
-            }
-
-            if (fbAd == null) {
-                ((AdViewHolder) holder).adContainerView.setVisibility(View.GONE);
-                return;
-            }
-            ((AdViewHolder) holder).adContainerView.setVisibility(View.VISIBLE);
-            ((AdViewHolder) holder).nativeAdTitle.setText(fbAd.getAdTitle());
-            ((AdViewHolder) holder).nativeAdSocialContext.setText(fbAd.getAdSocialContext());
-            ((AdViewHolder) holder).nativeAdBody.setText(fbAd.getAdBody());
-            ((AdViewHolder) holder).nativeAdCallToAction.setText(fbAd.getAdCallToAction());
-
-            // Download and display the ad icon.
-            NativeAd.Image adIcon = fbAd.getAdIcon();
-            NativeAd.downloadAndDisplayImage(adIcon, ((AdViewHolder) holder).nativeAdIcon);
-
-            // Download and display the cover image.
-            ((AdViewHolder) holder).nativeAdMedia.setNativeAd(fbAd);
-
-            // Add the AdChoices icon
-            if (!isAdChoiceAdded) {
-                AdChoicesView adChoicesView = new AdChoicesView(mContext, fbAd, true);
-                ((AdViewHolder) holder).adChoicesContainer.addView(adChoicesView);
-                isAdChoiceAdded = true;
-            }
-
-            // Register the Title and CTA button to listen for clicks.
-            List<View> clickableViews = new ArrayList<>();
-            clickableViews.add(((AdViewHolder) holder).nativeAdTitle);
-            clickableViews.add(((AdViewHolder) holder).nativeAdCallToAction);
-            fbAd.registerViewForInteraction(((AdViewHolder) holder).adContainerView);
-
         } else if (holder instanceof HeaderViewHolder) {
             addArticleItem((HeaderViewHolder) holder, position);
         } else {
