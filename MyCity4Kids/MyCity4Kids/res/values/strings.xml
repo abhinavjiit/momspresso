@@ -253,6 +253,7 @@
 
     <string name="home_screen.trending.title">TRENDING</string>
     <string name="home_screen.notification.title">NOTIFICATION</string>
+    <string name="home_screen.group.title">JOIN A GROUP</string>
     <string name="home_screen.suggested_topic.title">SUGGESTED TOPICS</string>
     <string name="home_screen.profile.title">MY ACCOUNT</string>
     <string name="home_screen.select_an_option.title">SELECT AN OPTION</string>
@@ -651,5 +652,20 @@
     <string name="author_type.user">USER</string>
 
     <string name="no_article.be_first">Be the first one to write articles in this category!</string>
+    <string name="groups.join_label">Lorem Ipsum</string>
+    <string name="groups.sections.about">ABOUT</string>
+    <string name="groups.sections.discussions">DISCUSSION</string>
+    <string name="groups.sections.blogs">BLOGS</string>
+    <string name="groups.sections.photos">PHOTOS</string>
+    <string name="groups.sections.videos">VIDEOS</string>
+    <string name="groups.sections.top_posts">TOP POSTS</string>
+    <string name="groups.sections.polls">POLLS</string>
+    <string name="groups.created">Created</string>
+    <string name="groups.anyone_join">Anyone can join</string>
+    <string name="groups.closed_gp">Closed group</string>
+    <string name="groups.invitation_only_gp">Invitation only group</string>
+    <string name="groups.join_group">JOIN GROUP</string>
+    <string name="groups.choose_media">Choose media to upload</string>
+    <string name="groups.search_in">Search in</string>
 
 </resources>

@@ -4,7 +4,7 @@ package com.mycity4kids.models.response;
  * Created by anshul on 7/12/16.
  */
 public class SetupBlogResponse extends BaseResponse {
-SetupBlogData data;
+    private SetupBlogData data;
 
     public SetupBlogData getData() {
         return data;

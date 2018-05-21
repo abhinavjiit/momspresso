@@ -70,8 +70,12 @@ dependencies {
     compile 'commons-io:commons-io:2.4'
     compile 'com.github.ittianyu:BottomNavigationViewEx:1.1.9'
     compile 'q.rorbin:badgeview:1.1.0'
+    compile 'com.akexorcist:RoundCornerProgressBar:2.0.3'
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
     compile 'com.facebook.android:audience-network-sdk:4.27.0'
+    compile "im.ene.toro3:toro:3.4.1"
+    compile "im.ene.toro3:toro-ext-exoplayer:3.4.1"  // to get ExoPlayer support
+    compile 'com.shuhart.bubblepagerindicator:bubblepagerindicator:1.0.13'
 }
 
 //dependencies {

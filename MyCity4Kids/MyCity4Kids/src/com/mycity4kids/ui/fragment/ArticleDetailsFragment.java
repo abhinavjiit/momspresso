@@ -1815,7 +1815,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                 Crashlytics.logException(nee);
                 if (isAdded())
                     ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
-                ;
                 return;
             }
             try {
@@ -1871,7 +1870,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     };
 
     private void createSponsporedTagsList(ArrayList<String> sponsoredList) throws FileNotFoundException {
-        FileInputStream fileInputStream = getActivity().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+        FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
         String fileContent = AppUtils.convertStreamToString(fileInputStream);
         TopicsResponse tRes = new Gson().fromJson(fileContent, TopicsResponse.class);
         for (int i = 0; i < tRes.getData().size(); i++) {
@@ -1887,7 +1886,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     }
 
     private void createArticleTags(ArrayList<String> previouslyFollowedTopics, ArrayList<Map<String, String>> tagsList, ArrayList<String> sponsoredList) {
-
         int relatedImageWidth = (int) getResources().getDimension(R.dimen.related_article_article_image_width);
         viewAllTagsTextView.setVisibility(View.GONE);
         width = width - ((RelativeLayout.LayoutParams) tagsLayout.getLayoutParams()).leftMargin - ((RelativeLayout.LayoutParams) tagsLayout.getLayoutParams()).rightMargin;

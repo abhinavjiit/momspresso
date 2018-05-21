@@ -304,4 +304,17 @@ public class DateTimeUtils {
             return "xx";
         }
     }
+
+    public static String getPostCreationDate(String inputDate) {
+        String outputTimeStr = null;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            SimpleDateFormat output = new SimpleDateFormat("dd MMM yyyy");
+            Date d = sdf.parse(inputDate);
+            outputTimeStr = output.format(d);
+        } catch (Exception e) {
+            return "";
+        }
+        return outputTimeStr;
+    }
 }

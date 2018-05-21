@@ -65,9 +65,9 @@ public class LanguageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof HeaderViewHolder) {
-//            addArticleItem((HeaderViewHolder) holder, position);
+//            addArticleItem((RootCommentViewHolder) holder, position);
         } else {
-//            addArticleItem((LanguageViewHolder) holder, position);
+//            addArticleItem((GroupPostHolder) holder, position);
             ((LanguageViewHolder) holder).languageTextView.setText(articleDataModelsNew.get(position));
             ((LanguageViewHolder) holder).languageTextView.setSelected(position == selectedPosition);
         }

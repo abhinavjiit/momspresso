@@ -188,7 +188,6 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         ArticlePublishAPI articlePublishAPI = retrofit.create(ArticlePublishAPI.class);
         Call<ArticleTagsImagesResponse> tagImagesCall = articlePublishAPI.getImagesForCategories(TextUtils.join(",", tagsKeyList), limit, pageNumber);
-//        Call<ArticleTagsImagesResponse> tagImagesCall = articlePublishAPI.getImagesForCategories("category-721b83f863064a73b1b63b1205cd1959", limit, pageNumber);
         tagImagesCall.enqueue(tagsImagesResponseCallback);
     }
 

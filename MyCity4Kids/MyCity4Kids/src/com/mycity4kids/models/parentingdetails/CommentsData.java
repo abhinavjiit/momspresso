@@ -21,6 +21,7 @@ public class CommentsData implements Parcelable {
     private ProfilePic profilePic;
     private ArrayList<CommentsData> replies;
     private int commentLevel;
+    private int isLastConversation = 0;
 
     public CommentsData() {
 
@@ -40,6 +41,7 @@ public class CommentsData implements Parcelable {
         replies = in.createTypedArrayList(CommentsData.CREATOR);
         commentLevel = in.readInt();
         userType = in.readString();
+        isLastConversation = in.readInt();
     }
 
     public ArrayList<CommentsData> getReplies() {
@@ -146,6 +148,14 @@ public class CommentsData implements Parcelable {
         this.commentLevel = commentLevel;
     }
 
+    public int getIsLastConversation() {
+        return isLastConversation;
+    }
+
+    public void setIsLastConversation(int isLastConversation) {
+        this.isLastConversation = isLastConversation;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -166,6 +176,7 @@ public class CommentsData implements Parcelable {
         dest.writeTypedList(replies);
         dest.writeInt(commentLevel);
         dest.writeString(userType);
+        dest.writeInt(isLastConversation);
     }
 
     public static final Creator<CommentsData> CREATOR = new Creator<CommentsData>() {

@@ -63,7 +63,7 @@ import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
 import com.mycity4kids.ui.fragment.FragmentHomeCategory;
 import com.mycity4kids.ui.fragment.FragmentMC4KHomeNew;
 import com.mycity4kids.ui.fragment.MyAccountProfileFragment;
-import com.mycity4kids.ui.fragment.NotificationFragment;
+import com.mycity4kids.ui.fragment.GroupsFragment;
 import com.mycity4kids.ui.fragment.RateAppDialogFragment;
 import com.mycity4kids.ui.fragment.SendFeedbackFragment;
 import com.mycity4kids.ui.fragment.SuggestedTopicsFragment;
@@ -222,10 +222,10 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                                 addFragment(fragment0, mBundle0, true);
                                 break;
                             case R.id.action_notification:
-                                if (topFragment instanceof NotificationFragment) {
+                                if (topFragment instanceof GroupsFragment) {
                                     return true;
                                 }
-                                NotificationFragment fragment = new NotificationFragment();
+                                GroupsFragment fragment = new GroupsFragment();
                                 Bundle mBundle = new Bundle();
                                 fragment.setArguments(mBundle);
                                 addFragment(fragment, mBundle, true);
@@ -667,12 +667,12 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 searchIntent.putExtra(Constants.TAB_POSITION, 0);
                 startActivity(searchIntent);
                 break;
-            case R.id.readAllTextView:
-                if (topFragment instanceof NotificationFragment) {
-                    ((NotificationFragment) topFragment).markAllNotificationAsRead();
-                    updateUnreadNotificationCount("0");
-                }
-                break;
+//            case R.id.readAllTextView:
+//                if (topFragment instanceof GroupsFragment) {
+//                    ((NotificationFragment) topFragment).markAllNotificationAsRead();
+//                    updateUnreadNotificationCount("0");
+//                }
+//                break;
             case R.id.firstCoachmark:
                 firstCoachmark.setVisibility(View.GONE);
                 secondCoachmark.setVisibility(View.VISIBLE);
@@ -1167,7 +1167,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 setSupportActionBar(mToolbar);
                 getSupportActionBar().setDisplayShowHomeEnabled(false);
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-            } else if (null != topFragment && topFragment instanceof NotificationFragment) {
+            } else if (null != topFragment && topFragment instanceof GroupsFragment) {
                 Utils.pushOpenScreenEvent(this, "NotificationsScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 toolbarTitleTextView.setText(getString(R.string.home_screen_notification_title));
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.notification_toolbar_title));

@@ -66,25 +66,12 @@ public class VideoTrimmerActivity extends AppCompatActivity implements OnTrimVid
             } catch (Exception e) {
                 e.printStackTrace();
             }
-//            mVideoTrimmer.setVideoInformationVisibility(true);
-
         }
     }
-
-//    public void onTrimStarted() {
-//        mProgressDialog.show();
-//    }
 
     @Override
     public void getResult(final Uri uri) {
         mProgressDialog.cancel();
-
-//        runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                Toast.makeText(VideoTrimmerActivity.this, getString(R.string.video_saved_at, uri.getPath()), Toast.LENGTH_SHORT).show();
-//            }
-//        });
         if (!isActivityLaunched) {
             isActivityLaunched = true;
             Intent intent = new Intent(VideoTrimmerActivity.this, AddVideoDetailsActivity.class);
@@ -113,25 +100,5 @@ public class VideoTrimmerActivity extends AppCompatActivity implements OnTrimVid
         mVideoTrimmer.destroy();
         finish();
     }
-
-//    public void onError(final String message) {
-//        mProgressDialog.cancel();
-//
-//        runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                Toast.makeText(VideoTrimmerActivity.this, message, Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
-//
-//    public void onVideoPrepared() {
-//        runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                Toast.makeText(VideoTrimmerActivity.this, "onVideoPrepared", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
 
 }

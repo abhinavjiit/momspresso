@@ -250,7 +250,7 @@
     <string name="permission_calendar_rationale">মনে রাখতে ক্যালেন্ডারের অনুমতি নিন</string>
 
     <string name="home.toolbar.title">ট্রেন্ডিং</string>
-    <string name="explore_listing.explore_categories.title">শ্রেনী বিশ্লেষণ করুনণ</string>
+    <string name="explore_listing.explore_categories.title">শ্রেনী বিশ্লেষণ করুন</string>
     <string name="explore_listing.explore_categories.meet_contributor">আমাদের লেখকেরা</string>
 
     <string name="home_screen.trending.title">ট্রেন্ডিং</string>
@@ -652,4 +652,5 @@
     <string name="author_type.user">USER</string>
 
     <string name="no_article.be_first">এই ক্যাটাগরি তে প্রথম আর্টিকেল টি আপনি লিখুন</string>
+    <string name="groups.join_label">Lorem Ipsum</string>
 </resources>

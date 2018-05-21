@@ -18,7 +18,10 @@
         app:tabMode="scrollable"
         app:tabSelectedTextColor="@color/ranking.tabs_label"
         app:tabTextAppearance="@style/CustomTabText"
-        app:tabTextColor="@color/ranking.tabs_label" />
+        app:tabTextColor="@color/ranking.tabs_label"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"

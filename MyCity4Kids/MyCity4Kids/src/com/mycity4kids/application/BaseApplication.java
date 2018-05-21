@@ -62,7 +62,7 @@ public class BaseApplication extends Application {
     private SQLiteDatabase mWritableDatabase;
     private RequestQueue mRequestQueue;
     private static BaseApplication mInstance;
-    private static Retrofit retrofit, customTimeoutRetrofit;
+    private static Retrofit retrofit, customTimeoutRetrofit, groupsRetrofit;
     private static OkHttpClient client, customTimeoutOkHttpClient;
 
     private static ArrayList<Topics> topicList;
@@ -351,17 +351,17 @@ public class BaseApplication extends Application {
                     .Builder()
                     .addInterceptor(mainInterceptor)
                     .addInterceptor(logging)
-                    .connectTimeout(30, TimeUnit.SECONDS)
-                    .readTimeout(30, TimeUnit.SECONDS)
-                    .writeTimeout(30, TimeUnit.SECONDS)
+                    .connectTimeout(60, TimeUnit.SECONDS)
+                    .readTimeout(60, TimeUnit.SECONDS)
+                    .writeTimeout(60, TimeUnit.SECONDS)
                     .build();
         } else {
             client = new OkHttpClient
                     .Builder()
                     .addInterceptor(mainInterceptor)
-                    .connectTimeout(30, TimeUnit.SECONDS)
-                    .readTimeout(30, TimeUnit.SECONDS)
-                    .writeTimeout(30, TimeUnit.SECONDS)
+                    .connectTimeout(60, TimeUnit.SECONDS)
+                    .readTimeout(60, TimeUnit.SECONDS)
+                    .writeTimeout(60, TimeUnit.SECONDS)
                     .build();
         }
 
@@ -371,6 +371,65 @@ public class BaseApplication extends Application {
                 .client(client)
                 .build();
         return retrofit;
+    }
+
+    public Retrofit createGroupRetrofitInstance(String base_url) {
+
+        Interceptor mainInterceptor = new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                Request original = chain.request();
+                HttpUrl originalHttpUrl = original.url();
+                Request.Builder requestBuilder = original.newBuilder();
+
+                requestBuilder.header("Accept-Language", Locale.getDefault().getLanguage());
+                requestBuilder.addHeader("id", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getDynamoId());
+                requestBuilder.addHeader("mc4kToken", SharedPrefUtils.getUserDetailModel(getApplicationContext()).getMc4kToken());
+                requestBuilder.addHeader("agent", "android");
+                requestBuilder.addHeader("manufacturer", Build.MANUFACTURER);
+                requestBuilder.addHeader("model", Build.MODEL);
+                requestBuilder.addHeader("appVersion", appVersion);
+                requestBuilder.addHeader("latitude", SharedPrefUtils.getUserLocationLatitude(getApplicationContext()));
+                requestBuilder.addHeader("longitude", SharedPrefUtils.getUserLocationLongitude(getApplicationContext()));
+                requestBuilder.addHeader("userPrint", "" + AppUtils.getDeviceId(getApplicationContext()));
+                Request request = requestBuilder.build();
+
+//                Response response = chain.proceed(request);
+//                Log.w("Retrofit@Response", response.body().string());
+                return chain.proceed(request);
+            }
+
+        };
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+// set your desired log level
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        if (BuildConfig.DEBUG) {
+            client = new OkHttpClient
+                    .Builder()
+                    .addInterceptor(mainInterceptor)
+                    .addInterceptor(logging)
+                    .connectTimeout(60, TimeUnit.SECONDS)
+                    .readTimeout(60, TimeUnit.SECONDS)
+                    .writeTimeout(60, TimeUnit.SECONDS)
+                    .build();
+        } else {
+            client = new OkHttpClient
+                    .Builder()
+                    .addInterceptor(mainInterceptor)
+                    .connectTimeout(60, TimeUnit.SECONDS)
+                    .readTimeout(60, TimeUnit.SECONDS)
+                    .writeTimeout(60, TimeUnit.SECONDS)
+                    .build();
+        }
+
+        groupsRetrofit = new Retrofit.Builder()
+                .baseUrl(base_url)
+                .addConverterFactory(buildGsonConverter())
+                .client(client)
+                .build();
+        return groupsRetrofit;
     }
 
     private static GsonConverterFactory buildGsonConverter() {
@@ -392,6 +451,13 @@ public class BaseApplication extends Application {
             createRetrofitInstance(SharedPrefUtils.getBaseURL(this));
         }
         return retrofit;
+    }
+
+    public Retrofit getGroupsRetrofit() {
+        if (null == groupsRetrofit) {
+            createGroupRetrofitInstance(AppConstants.GROUPS_LIVE_URL);
+        }
+        return groupsRetrofit;
     }
 
     public static void changeApiBaseUrl() {

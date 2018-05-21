@@ -34,7 +34,7 @@ import retrofit2.Callback;
 import retrofit2.Retrofit;
 
 /**
- * Created by manish.soni on 30-07-2015.
+ * Created by hemant.parmar on 30-12-2017.
  */
 public class NotificationFragment extends BaseFragment implements View.OnClickListener {
 

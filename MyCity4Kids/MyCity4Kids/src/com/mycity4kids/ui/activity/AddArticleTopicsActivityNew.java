@@ -276,6 +276,9 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
 
             }
 
+            if (null != selectedTopicsIdList && !selectedTopicsIdList.isEmpty()) {
+                retainItemsFromReminaingList(selectedTopicsIdList);
+            }
             createTopicsTabPages();
         } catch (Exception e) {
             progressBar.setVisibility(View.GONE);

@@ -20,7 +20,7 @@ import com.mycity4kids.utils.LocaleManager;
  * Created by hemant on 22/2/18.
  */
 
-public class LanguageSelectionActivity extends BaseActivity implements View.OnClickListener, LanguageRecyclerViewAdapter.RecyclerViewClickListener {
+public class LanguageSelectionActivity extends BaseActivity implements View.OnClickListener {
 
     private RelativeLayout langListOverlay;
     private TextView selectMoreTextView, okayTextView;
@@ -77,11 +77,6 @@ public class LanguageSelectionActivity extends BaseActivity implements View.OnCl
 
     @Override
     protected void updateUi(Response response) {
-
-    }
-
-    @Override
-    public void onRecyclerItemClick(View view, int position) {
 
     }
 

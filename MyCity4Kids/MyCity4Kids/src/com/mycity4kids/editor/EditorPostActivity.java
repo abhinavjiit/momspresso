@@ -464,7 +464,6 @@ public class EditorPostActivity extends BaseActivity implements EditorFragmentAb
                         e.printStackTrace();
                     }
 
-
                     mEditorFragment.appendMediaFile(mediaFile, imageUri.toString(), null);
 
                     if (mEditorFragment instanceof EditorMediaUploadListener) {

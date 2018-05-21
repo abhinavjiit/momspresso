@@ -39,4 +39,6 @@
 
     <dimen name="related_article.article_image.width">30dp</dimen>
     <dimen name="related_article.article_image.height">38dp</dimen>
+
+    <dimen name="groups.column_spacing">10dp</dimen>
 </resources>

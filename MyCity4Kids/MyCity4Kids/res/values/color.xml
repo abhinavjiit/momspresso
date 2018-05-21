@@ -428,4 +428,10 @@
 
     <color name="dark_transparent">#BB000000</color>
 
+    <color name="groups.light_black_color">#545454</color>
+    <color name="groups.grey">#9c9dac</color>
+    <color name="groups.blue_color">#507cbe</color>
+    <color name="groups.dark_black">#333333</color>
+    <color name="groups.main_background">#f5f5f5</color>
+
 </resources>
