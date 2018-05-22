@@ -75,7 +75,7 @@
     <!--android:layout_marginTop="15dp" />-->
 
     <com.mycity4kids.widget.CustomFontTextView
-        android:id="@+id/postContentTextView"
+        android:id="@+id/postDataTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/userImageView"
@@ -94,7 +94,7 @@
         android:id="@+id/postDataViewPager"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:layout_below="@+id/postContentTextView"
+        android:layout_below="@+id/postDataTextView"
         android:layout_marginTop="15dp" />
 
     <com.mycity4kids.widget.CustomFontTextView

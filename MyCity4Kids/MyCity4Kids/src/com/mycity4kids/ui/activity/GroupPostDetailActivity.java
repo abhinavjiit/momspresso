@@ -16,6 +16,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.models.parentingdetails.CommentsData;
 import com.mycity4kids.models.response.GroupPostCommentResponse;
+import com.mycity4kids.models.response.GroupPostCommentResult;
 import com.mycity4kids.models.response.GroupPostResponse;
 import com.mycity4kids.models.response.GroupPostResult;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
@@ -27,6 +28,7 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -42,6 +44,7 @@ public class GroupPostDetailActivity extends BaseActivity implements GroupPostDe
     private String commentURL = "https://s3-ap-southeast-1.amazonaws.com/mycity4kids-phoenix/comments-data/article-e32f733cab7e4d9f8c9344b94a089c1d-1.json";
     private boolean isLoading;
     private ArrayList<CommentsData> modList;
+    private ArrayList<GroupPostCommentResult> completeResponseList;
     private GroupPostDetailsAndCommentsRecyclerAdapter groupPostDetailsAndCommentsRecyclerAdapter;
     private String postType;
 
@@ -96,6 +99,8 @@ public class GroupPostDetailActivity extends BaseActivity implements GroupPostDe
             try {
                 if (response.isSuccessful()) {
                     GroupPostCommentResponse groupPostResponse = response.body();
+                    List<GroupPostCommentResult> commentsList = groupPostResponse.getData().get(0).getResult();
+                    rearrangePostComment(commentsList);
 //                    processPostListingResponse(groupPostResponse);
                 } else {
 
@@ -163,6 +168,23 @@ public class GroupPostDetailActivity extends BaseActivity implements GroupPostDe
 //            handleExceptions(t);
         }
     };
+
+    private void rearrangePostComment(List<GroupPostCommentResult> commentsList) {
+        for (int i = 0; i < commentsList.size(); i++) {
+//            commentsList.get(i).setCommentLevel(0);
+            completeResponseList.add(commentsList.get(i));
+            for (int j = 0; j < commentsList.get(i).getChildData().size(); j++) {
+//                commentsList.get(i).getChildData().get(j).setCommentLevel(1);
+                completeResponseList.add(commentsList.get(i).getChildData().get(j));
+//                for (int k = 0; k < commentsList.get(i).getChildData().get(j).getChildData().size(); k++) {
+//                    commentsList.get(i).getChildData().get(j).getChildData().get(k).setCommentLevel(2);
+//                    completeResponseList.add(commentsList.get(i).getChildData().get(j).getChildData().get(k));
+//                }
+            }
+            completeResponseList.get(completeResponseList.size() - 1).setIsLastConversation(1);
+        }
+        groupPostDetailsAndCommentsRecyclerAdapter.notifyDataSetChanged();
+    }
 
     private void arrangeComments(ArrayList<CommentsData> arrayList) {
         for (int i = 0; i < arrayList.size(); i++) {

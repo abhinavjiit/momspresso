@@ -158,7 +158,7 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
                         Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(AddPollGroupPostActivity.this.getContentResolver(), imageUri);
                         float actualHeight = imageBitmap.getHeight();
                         float actualWidth = imageBitmap.getWidth();
-                        if (actualHeight < 405 || actualWidth < 720) {
+                        if (actualHeight < 450 || actualWidth < 720) {
                             showToast(getString(R.string.upload_bigger_image));
                             return;
                         }
@@ -185,8 +185,8 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
         String destinationFileName = SAMPLE_CROPPED_IMAGE_NAME + ".jpg";
         Log.e("instartCropActivity", "test");
         UCrop uCrop = UCrop.of(uri, Uri.fromFile(new File(getCacheDir(), destinationFileName)));
-        uCrop.withAspectRatio(16, 9);
-        uCrop.withMaxResultSize(720, 405);
+        uCrop.withAspectRatio(16, 10);
+        uCrop.withMaxResultSize(720, 450);
         uCrop.start(AddPollGroupPostActivity.this);
     }
 
@@ -197,7 +197,7 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
         RequestBody requestBodyFile = RequestBody.create(MEDIA_TYPE_PNG, file);
         Log.e("requestBodyFile", requestBodyFile.toString());
         //   RequestBody userId = RequestBody.create(MediaType.parse("text/plain"), "" + userModel.getUser().getId());
-        RequestBody imageType = RequestBody.create(MediaType.parse("text/plain"), "1");
+        RequestBody imageType = RequestBody.create(MediaType.parse("text/plain"), "2");
         // prepare call in Retrofit 2.0
 
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
@@ -370,7 +370,7 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
             AddGroupPostRequest addGroupPostRequest = new AddGroupPostRequest();
             addGroupPostRequest.setContent(pollQuestionEditText.getText().toString());
             addGroupPostRequest.setType("2");
-            addGroupPostRequest.setPollType(0);
+            addGroupPostRequest.setPollType("0");
             addGroupPostRequest.setGroupId(Integer.parseInt(selectedGroup.getId()));
             addGroupPostRequest.setUserId(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
             Map<String, String> pollOptionsMap = new HashMap<>();
@@ -384,14 +384,14 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
             AddGroupPostRequest addGroupPostRequest = new AddGroupPostRequest();
             addGroupPostRequest.setContent(pollQuestionEditText.getText().toString());
             addGroupPostRequest.setType("2");
-            addGroupPostRequest.setPollType(1);
-            addGroupPostRequest.setGroupId(7);
+            addGroupPostRequest.setPollType("1");
+            addGroupPostRequest.setGroupId(Integer.parseInt(selectedGroup.getId()));
             addGroupPostRequest.setUserId(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
             Map<String, String> pollOptionsMap = new HashMap<>();
             for (int i = 0; i < urlList.size(); i++) {
-                pollOptionsMap.put("image" + (i + 1), urlList.get(i));
+                pollOptionsMap.put("option" + (i + 1), urlList.get(i));
             }
-            addGroupPostRequest.setMediaUrls(pollOptionsMap);
+            addGroupPostRequest.setPollOptions(pollOptionsMap);
             Call<AddGroupPostResponse> call = groupsAPI.createPost(addGroupPostRequest);
             call.enqueue(postAdditionResponseCallback);
         }

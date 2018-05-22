@@ -1,6 +1,7 @@
 package com.mycity4kids.retrofitAPIsInterfaces;
 
 import com.mycity4kids.models.request.AddGroupPostRequest;
+import com.mycity4kids.models.request.GroupActionsRequest;
 import com.mycity4kids.models.request.JoinGroupRequest;
 import com.mycity4kids.models.request.UpdateUserPostSettingsRequest;
 import com.mycity4kids.models.response.AddGroupPostResponse;
@@ -8,6 +9,7 @@ import com.mycity4kids.models.response.GroupDetailResponse;
 import com.mycity4kids.models.response.GroupPostCommentResponse;
 import com.mycity4kids.models.response.GroupPostResponse;
 import com.mycity4kids.models.response.GroupPostResult;
+import com.mycity4kids.models.response.GroupsActionResponse;
 import com.mycity4kids.models.response.GroupsJoinResponse;
 import com.mycity4kids.models.response.GroupsListingData;
 import com.mycity4kids.models.response.GroupsListingResponse;
@@ -110,7 +112,7 @@ public interface GroupsAPI {
     //Post Comments
     @GET("/api/v1/groups/response")
     Call<GroupPostCommentResponse> getPostComments(@Query("groupId") String groupId,
-                                                   @Query("postId") String postId);
+                                                   @Query("postId") int postId);
 
     @POST("/api/v1/groups/response")
     Call<UserPostSettingResponse> addPostComment(@Body UpdateUserPostSettingsRequest joinGroupRequest);
@@ -118,4 +120,10 @@ public interface GroupsAPI {
 //    @PUT("/api/v1/groups/usersettings/{userSettingId}")
 //    Call<UserPostSettingResponse> updatePostSettingsForUser(@Path("userSettingId") int userSettingId,
 //                                                            @Body UpdateUserPostSettingsRequest joinGroupRequest);
+
+
+    //Group Action Items
+    @POST("/api/v1/groups/action")
+    Call<GroupsActionResponse> addAction(@Body GroupActionsRequest groupActionsRequest);
+
 }

@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class GroupPostResult extends BaseResponse implements Parcelable {
 
-    private String id;
+    private int id;
     private String content;
     private String url;
     private String type;
@@ -32,12 +32,13 @@ public class GroupPostResult extends BaseResponse implements Parcelable {
     private String updatedAt;
     private String pollType;
     private Object pollOptions;
+    private boolean isVoted;
 
     public GroupPostResult() {
     }
 
     protected GroupPostResult(Parcel in) {
-        id = in.readString();
+        id = in.readInt();
         content = in.readString();
         url = in.readString();
         type = in.readString();
@@ -70,11 +71,11 @@ public class GroupPostResult extends BaseResponse implements Parcelable {
         }
     };
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -238,6 +239,14 @@ public class GroupPostResult extends BaseResponse implements Parcelable {
         this.pollOptions = pollOptions;
     }
 
+    public boolean isVoted() {
+        return isVoted;
+    }
+
+    public void setVoted(boolean voted) {
+        isVoted = voted;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -245,7 +254,7 @@ public class GroupPostResult extends BaseResponse implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
+        dest.writeInt(id);
         dest.writeString(content);
         dest.writeString(url);
         dest.writeString(type);

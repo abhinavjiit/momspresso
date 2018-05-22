@@ -10,7 +10,7 @@ public class AddGroupPostRequest {
 
     private String content;
     private String type;
-    private int pollType;
+    private String pollType;
     private Map<String, String> pollOptions;
     private Map<String, String> mediaUrls;
     private int groupId;
@@ -32,11 +32,11 @@ public class AddGroupPostRequest {
         this.type = type;
     }
 
-    public int getPollType() {
+    public String getPollType() {
         return pollType;
     }
 
-    public void setPollType(int pollType) {
+    public void setPollType(String pollType) {
         this.pollType = pollType;
     }
 

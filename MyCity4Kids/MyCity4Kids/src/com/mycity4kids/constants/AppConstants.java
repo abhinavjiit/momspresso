@@ -562,4 +562,9 @@ public class AppConstants {
     public static final String GROUP_TYPE_CLOSED_KEY = "1";
     public static final String GROUP_TYPE_INVITE_ONLY_KEY = "2";
 
+    public static final String GROUP_ACTION_TYPE_HELPFUL_KEY = "0";
+    public static final String GROUP_ACTION_TYPE_UNHELPFUL_KEY = "1";
+    public static final String GROUP_ACTION_TYPE_SHARE_KEY = "2";
+    public static final String GROUP_ACTION_TYPE_VOTE_KEY = "3";
+    public static final String GROUP_ACTION_TYPE_TAG_KEY = "4";
 }

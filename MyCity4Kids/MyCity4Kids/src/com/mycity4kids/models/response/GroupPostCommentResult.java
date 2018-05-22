@@ -1,5 +1,7 @@
 package com.mycity4kids.models.response;
 
+import java.util.ArrayList;
+
 /**
  * Created by hemant on 21/5/18.
  */
@@ -20,6 +22,8 @@ public class GroupPostCommentResult {
     private String lang;
     private String createdAt;
     private String updatedAt;
+    private ArrayList<GroupPostCommentResult> childData;
+    private int isLastConversation = 0;
 
     public int getId() {
         return id;
@@ -139,5 +143,21 @@ public class GroupPostCommentResult {
 
     public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public ArrayList<GroupPostCommentResult> getChildData() {
+        return childData;
+    }
+
+    public void setChildData(ArrayList<GroupPostCommentResult> childData) {
+        this.childData = childData;
+    }
+
+    public int getIsLastConversation() {
+        return isLastConversation;
+    }
+
+    public void setIsLastConversation(int isLastConversation) {
+        this.isLastConversation = isLastConversation;
     }
 }

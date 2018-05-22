@@ -89,8 +89,8 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         pollContainer = (LinearLayout) findViewById(R.id.pollContainer);
         closeImageView = (ImageView) findViewById(R.id.closeImageView);
         noPostsTextView = (TextView) findViewById(R.id.noPostsTextView);
-        groupNameTextView = (TextView) findViewById(R.id.noPostsTextView);
-        toolbarTitle = (TextView) findViewById(R.id.noPostsTextView);
+        groupNameTextView = (TextView) findViewById(R.id.groupNameTextView);
+        toolbarTitle = (TextView) findViewById(R.id.toolbarTitle);
 
         selectedGroup = (GroupResult) getIntent().getParcelableExtra("groupItem");
 
@@ -249,6 +249,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             break;
             case R.id.pollContainer: {
                 Intent intent = new Intent(GroupDetailsActivity.this, AddPollGroupPostActivity.class);
+                intent.putExtra("groupItem", selectedGroup);
                 startActivity(intent);
             }
             break;
