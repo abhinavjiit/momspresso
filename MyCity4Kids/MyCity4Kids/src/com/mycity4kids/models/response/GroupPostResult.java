@@ -26,7 +26,7 @@ public class GroupPostResult extends BaseResponse implements Parcelable {
     private String moderationStatus;
     private String moderationOn;
     private String createdOn;
-    private String groupId;
+    private int groupId;
     private String userId;
     private String createdAt;
     private String updatedAt;
@@ -52,7 +52,7 @@ public class GroupPostResult extends BaseResponse implements Parcelable {
         moderationStatus = in.readString();
         moderationOn = in.readString();
         createdOn = in.readString();
-        groupId = in.readString();
+        groupId = in.readInt();
         userId = in.readString();
         createdAt = in.readString();
         updatedAt = in.readString();
@@ -191,11 +191,11 @@ public class GroupPostResult extends BaseResponse implements Parcelable {
         this.createdOn = createdOn;
     }
 
-    public String getGroupId() {
+    public int getGroupId() {
         return groupId;
     }
 
-    public void setGroupId(String groupId) {
+    public void setGroupId(int groupId) {
         this.groupId = groupId;
     }
 
@@ -268,7 +268,7 @@ public class GroupPostResult extends BaseResponse implements Parcelable {
         dest.writeString(moderationStatus);
         dest.writeString(moderationOn);
         dest.writeString(createdOn);
-        dest.writeString(groupId);
+        dest.writeInt(groupId);
         dest.writeString(userId);
         dest.writeString(createdAt);
         dest.writeString(updatedAt);

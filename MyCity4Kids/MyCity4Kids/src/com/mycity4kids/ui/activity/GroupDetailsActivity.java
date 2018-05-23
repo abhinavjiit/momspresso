@@ -27,6 +27,7 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
+import com.mycity4kids.models.response.GroupDetailResponse;
 import com.mycity4kids.models.response.GroupPostResponse;
 import com.mycity4kids.models.response.GroupPostResult;
 import com.mycity4kids.models.response.GroupResult;
@@ -78,6 +79,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     private TextView noPostsTextView;
     private TextView groupNameTextView;
     private TextView toolbarTitle;
+    private int groupId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,9 +95,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         toolbarTitle = (TextView) findViewById(R.id.toolbarTitle);
 
         selectedGroup = (GroupResult) getIntent().getParcelableExtra("groupItem");
-
-        toolbarTitle.setText(getString(R.string.groups_search_in) + " " + selectedGroup.getTitle());
-        groupNameTextView.setText(selectedGroup.getTitle());
+        groupId = getIntent().getIntExtra("groupId", 0);
 
         addPostFAB.setOnClickListener(this);
         pollContainer.setOnClickListener(this);
@@ -131,10 +131,6 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         arrayList.add("five");
         arrayList.add("six");
 
-        groupAboutRecyclerAdapter = new GroupAboutRecyclerAdapter(this, this);
-        groupAboutRecyclerAdapter.setData(selectedGroup);
-        recyclerView.setAdapter(groupAboutRecyclerAdapter);
-
         articleDataModelsNew = new ArrayList<ArticleListingResult>();
 
         groupBlogsRecyclerAdapter = new GroupBlogsRecyclerAdapter(this, this);
@@ -162,10 +158,64 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 }
             }
         });
+        if (selectedGroup == null) {
+            getGroupDetails();
+        } else {
+            toolbarTitle.setText(getString(R.string.groups_search_in) + " " + selectedGroup.getTitle());
+            groupNameTextView.setText(selectedGroup.getTitle());
 
-        getGroupPosts();
+            groupAboutRecyclerAdapter = new GroupAboutRecyclerAdapter(this, this);
+            groupAboutRecyclerAdapter.setData(selectedGroup);
+            recyclerView.setAdapter(groupAboutRecyclerAdapter);
 
+            getGroupPosts();
+        }
     }
+
+    private void getGroupDetails() {
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+
+        Call<GroupDetailResponse> call = groupsAPI.getGroupById(groupId);
+        call.enqueue(groupDetailsResponseCallback);
+    }
+
+    private Callback<GroupDetailResponse> groupDetailsResponseCallback = new Callback<GroupDetailResponse>() {
+        @Override
+        public void onResponse(Call<GroupDetailResponse> call, retrofit2.Response<GroupDetailResponse> response) {
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    GroupDetailResponse groupPostResponse = response.body();
+                    selectedGroup = groupPostResponse.getData().getResult();
+                    toolbarTitle.setText(getString(R.string.groups_search_in) + " " + selectedGroup.getTitle());
+                    groupNameTextView.setText(selectedGroup.getTitle());
+
+                    groupAboutRecyclerAdapter = new GroupAboutRecyclerAdapter(GroupDetailsActivity.this, GroupDetailsActivity.this);
+                    groupAboutRecyclerAdapter.setData(selectedGroup);
+                    recyclerView.setAdapter(groupAboutRecyclerAdapter);
+
+                    getGroupPosts();
+                } else {
+
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<GroupDetailResponse> call, Throwable t) {
+
+        }
+    };
 
     private void getGroupPosts() {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();

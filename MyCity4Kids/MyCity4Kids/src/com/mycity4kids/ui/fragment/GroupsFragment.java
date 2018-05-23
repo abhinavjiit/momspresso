@@ -128,6 +128,11 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
                 if (response != null && response.raw() != null) {
                     NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
                     Crashlytics.logException(nee);
+
+//                    Intent intent = new Intent(getActivity(), GroupDetailsActivity.class);
+//                    intent.putExtra("groupId", 1);
+//                    intent.putExtra("isMember", true);
+//                    startActivity(intent);
                 }
                 return;
             }
@@ -164,6 +169,11 @@ public class GroupsFragment extends BaseFragment implements View.OnClickListener
             isReuqestRunning = false;
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
+
+//            Intent intent = new Intent(getActivity(), GroupDetailsActivity.class);
+//            intent.putExtra("groupId", 1);
+//            intent.putExtra("isMember", true);
+//            startActivity(intent);
 
         }
     };

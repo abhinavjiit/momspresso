@@ -1,5 +1,6 @@
 package com.mycity4kids.models.response;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -7,13 +8,13 @@ import java.util.List;
  */
 
 public class GroupPostCommentData {
-    private List<GroupPostCommentResult> result;
+    private ArrayList<GroupPostCommentResult> result;
 
-    public List<GroupPostCommentResult> getResult() {
+    public ArrayList<GroupPostCommentResult> getResult() {
         return result;
     }
 
-    public void setResult(List<GroupPostCommentResult> result) {
+    public void setResult(ArrayList<GroupPostCommentResult> result) {
         this.result = result;
     }
 

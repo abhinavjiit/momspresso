@@ -315,6 +315,16 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             upvoteCountTextView = (TextView) view.findViewById(R.id.upvoteTextView);
             downvoteCountTextView = (TextView) view.findViewById(R.id.downvoteTextView);
             postCommentsTextView = (TextView) view.findViewById(R.id.postCommentsTextView);
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
+                    intent.putExtra("postType", AppConstants.POST_TYPE_TEXT);
+                    intent.putExtra("postData", postList.get(getAdapterPosition()));
+                    mContext.startActivity(intent);
+                }
+            });
         }
 
         @Override
@@ -441,6 +451,18 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             pollOption4ProgressTextView = (TextView) view.findViewById(R.id.pollOption4ProgressTextView);
             option3Container = (RelativeLayout) view.findViewById(R.id.option3Container);
             option4Container = (RelativeLayout) view.findViewById(R.id.option4Container);
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
+                    intent.putExtra("postType", AppConstants.POST_TYPE_TEXT_POLL);
+                    intent.putExtra("postData", postList.get(getAdapterPosition()));
+                    LinkedTreeMap<String, String> linkedTreeMap = (LinkedTreeMap<String, String>) postList.get(getAdapterPosition()).getPollOptions();
+                    intent.putExtra("pollOptions", linkedTreeMap);
+                    mContext.startActivity(intent);
+                }
+            });
 
             pollOption1ProgressBar.setOnClickListener(new View.OnClickListener() {
                 @Override

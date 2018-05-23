@@ -47,7 +47,7 @@ public interface GroupsAPI {
     Call<SetupBlogResponse> createGroup();
 
     @GET("/api/v1/groups/group/{groupId}")
-    Call<GroupDetailResponse> getGroupById(@Path("groupId") String groupId);
+    Call<GroupDetailResponse> getGroupById(@Path("groupId") int groupId);
 
     @FormUrlEncoded
     @PUT("/api/v1/groups/group")
@@ -100,7 +100,7 @@ public interface GroupsAPI {
 
     //User Settings
     @GET("/api/v1/groups/usersettings")
-    Call<UserPostSettingResponse> getPostSettingForUser(@Query("postId") String postId);
+    Call<UserPostSettingResponse> getPostSettingForUser(@Query("postId") int postId);
 
     @POST("/api/v1/groups/usersettings")
     Call<UserPostSettingResponse> createNewPostSettingsForUser(@Body UpdateUserPostSettingsRequest joinGroupRequest);
@@ -110,9 +110,18 @@ public interface GroupsAPI {
                                                             @Body UpdateUserPostSettingsRequest joinGroupRequest);
 
     //Post Comments
+    @GET("/api/v1/groups/responsenested")
+    Call<GroupPostCommentResponse> getPostComments(@Query("groupId") int groupId,
+                                                   @Query("postId") int postId,
+                                                   @Query("$skip") int skip,
+                                                   @Query("$limit") int limit);
+
     @GET("/api/v1/groups/response")
-    Call<GroupPostCommentResponse> getPostComments(@Query("groupId") String groupId,
-                                                   @Query("postId") int postId);
+    Call<GroupPostCommentResponse> getPostCommentReplies(@Query("groupId") int groupId,
+                                                         @Query("postId") int postId,
+                                                         @Query("parentId") int parentId,
+                                                         @Query("$skip") int skip,
+                                                         @Query("$limit") int limit);
 
     @POST("/api/v1/groups/response")
     Call<UserPostSettingResponse> addPostComment(@Body UpdateUserPostSettingsRequest joinGroupRequest);

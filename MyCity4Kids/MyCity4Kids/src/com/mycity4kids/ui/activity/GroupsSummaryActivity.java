@@ -59,7 +59,7 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
     private int limit = 10;
     private int totalPostCount;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
-    private String groupId;
+    private int groupId;
     private GroupPostResult selectedPost;
 
     private Animation slideAnim, fadeAnim;
@@ -102,7 +102,7 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
         overlayView.setOnClickListener(this);
 
         selectedGroup = getIntent().getParcelableExtra("groupItem");
-        groupId = getIntent().getStringExtra("groupId");
+        groupId = getIntent().getIntExtra("groupId", 0);
         questionMap = (HashMap<String, String>) getIntent().getSerializableExtra("questionnaire");
 
         setSupportActionBar(toolbar);
@@ -225,7 +225,7 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.savePostTextView:
-                Log.d("savePostTextView", selectedPost.getId());
+                Log.d("savePostTextView", "" + selectedPost.getId());
                 if (savePostTextView.getText().toString().equals("SAVE POST")) {
                     updateUserPostPreferences("savePost");
                 } else {
@@ -233,11 +233,11 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
                 }
                 break;
             case R.id.commentToggleTextView:
-                Log.d("commentToggleTextView", selectedPost.getId());
+                Log.d("commentToggleTextView", "" + selectedPost.getId());
                 commentToggleTextView.setText("Disable Comment");
                 break;
             case R.id.notificationToggleTextView:
-                Log.d("notifToggleTextView", selectedPost.getId());
+                Log.d("notifToggleTextView", "" + selectedPost.getId());
                 if (notificationToggleTextView.getText().toString().equals("Disable Notification")) {
                     updateUserPostPreferences("enableNotif");
                 } else {
@@ -245,7 +245,7 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
                 }
                 break;
             case R.id.reportPostTextView:
-                Log.d("reportPostTextView", selectedPost.getId());
+                Log.d("reportPostTextView", "" + selectedPost.getId());
                 GroupPostReportDialogFragment groupPostReportDialogFragment = new GroupPostReportDialogFragment();
                 FragmentManager fm = getSupportFragmentManager();
                 Bundle _args = new Bundle();
@@ -290,7 +290,7 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
 
         UpdateUserPostSettingsRequest request = new UpdateUserPostSettingsRequest();
-        request.setPostId(Integer.parseInt(selectedPost.getId()));
+        request.setPostId(selectedPost.getId());
         request.setIsAnno(selectedPost.getIsAnnon());
         request.setUserId(selectedPost.getUserId());
         Call<UserPostSettingResponse> call;

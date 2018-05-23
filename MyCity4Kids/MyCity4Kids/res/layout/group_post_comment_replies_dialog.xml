@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:background="@color/white_color">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -25,8 +27,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="@string/user_activities.toolbar.title"
-                android:textColor="@color/user_activities.toolbar.title"
+                android:text="@string/city_picker.toolbar.title"
+                android:textColor="@color/city_picker.toolbar.title"
                 android:textSize="20sp"
                 app:fontName="oswald_regular.ttf" />
 
@@ -34,7 +36,7 @@
     </android.support.v7.widget.Toolbar>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/repliesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/topLineView"
@@ -55,7 +57,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/writeCommentEditText"
-        android:background="@color/black"
+        android:background="@color/white"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:src="@drawable/ic_play_tts" />
@@ -66,4 +68,5 @@
         android:layout_height="1dp"
         android:layout_above="@+id/writeCommentEditText"
         android:background="@color/light_underline" />
+
 </RelativeLayout>

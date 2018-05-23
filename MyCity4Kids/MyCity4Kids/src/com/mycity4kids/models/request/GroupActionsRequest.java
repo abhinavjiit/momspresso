@@ -7,7 +7,7 @@ package com.mycity4kids.models.request;
 public class GroupActionsRequest {
 
     private String userId;
-    private String groupId;
+    private int groupId;
     private int postId;
 
     // {'0': 'helpfull', '1': 'nothelpfull', '2': 'share', '3': 'vote', '4': 'tag'}
@@ -26,11 +26,11 @@ public class GroupActionsRequest {
         this.userId = userId;
     }
 
-    public String getGroupId() {
+    public int getGroupId() {
         return groupId;
     }
 
-    public void setGroupId(String groupId) {
+    public void setGroupId(int groupId) {
         this.groupId = groupId;
     }
 
