@@ -14,8 +14,8 @@ public class GroupsActionResult {
     private String userId;
     private int type;
     private int voteOption;
-    private String createdAt;
-    private String updatedAt;
+    private long createdAt;
+    private long updatedAt;
 
     public int getId() {
         return id;
@@ -89,19 +89,19 @@ public class GroupsActionResult {
         this.voteOption = voteOption;
     }
 
-    public String getCreatedAt() {
+    public long getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(long createdAt) {
         this.createdAt = createdAt;
     }
 
-    public String getUpdatedAt() {
+    public long getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(String updatedAt) {
+    public void setUpdatedAt(long updatedAt) {
         this.updatedAt = updatedAt;
     }
 }

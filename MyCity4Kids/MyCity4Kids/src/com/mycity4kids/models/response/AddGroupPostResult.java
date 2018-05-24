@@ -28,8 +28,8 @@ public class AddGroupPostResult implements Parcelable {
     private String userId;
     private String pollType;
     private Object pollOptions;
-    private String createdAt;
-    private String updatedAt;
+    private long createdAt;
+    private long updatedAt;
 
     protected AddGroupPostResult(Parcel in) {
         id = in.readString();
@@ -48,8 +48,8 @@ public class AddGroupPostResult implements Parcelable {
         groupId = in.readString();
         userId = in.readString();
         pollType = in.readString();
-        createdAt = in.readString();
-        updatedAt = in.readString();
+        createdAt = in.readLong();
+        updatedAt = in.readLong();
     }
 
     @Override
@@ -70,8 +70,8 @@ public class AddGroupPostResult implements Parcelable {
         dest.writeString(groupId);
         dest.writeString(userId);
         dest.writeString(pollType);
-        dest.writeString(createdAt);
-        dest.writeString(updatedAt);
+        dest.writeLong(createdAt);
+        dest.writeLong(updatedAt);
     }
 
     @Override
@@ -235,19 +235,19 @@ public class AddGroupPostResult implements Parcelable {
         this.pollOptions = pollOptions;
     }
 
-    public String getCreatedAt() {
+    public long getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(long createdAt) {
         this.createdAt = createdAt;
     }
 
-    public String getUpdatedAt() {
+    public long getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(String updatedAt) {
+    public void setUpdatedAt(long updatedAt) {
         this.updatedAt = updatedAt;
     }
 }

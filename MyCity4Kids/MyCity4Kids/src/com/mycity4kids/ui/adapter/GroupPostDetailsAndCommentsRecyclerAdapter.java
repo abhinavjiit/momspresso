@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.crashlytics.android.Crashlytics;
+import com.kelltontech.utils.DateTimeUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
@@ -116,18 +117,18 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         if (holder instanceof TextPostViewHolder) {
             TextPostViewHolder textPostViewHolder = (TextPostViewHolder) holder;
             textPostViewHolder.postDataTextView.setText(groupPostResult.getContent());
-            textPostViewHolder.postDateTextView.setText(groupPostResult.getCreatedAt());
+            textPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(groupPostResult.getCreatedAt()));
             textPostViewHolder.usernameTextView.setText(groupPostResult.getUserId());
         } else if (holder instanceof MediaPostViewHolder) {
             MediaPostViewHolder mediaPostViewHolder = (MediaPostViewHolder) holder;
             mediaPostViewHolder.postDataTextView.setText(groupPostResult.getContent());
-            mediaPostViewHolder.postDateTextView.setText(groupPostResult.getCreatedAt());
+            mediaPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(groupPostResult.getCreatedAt()));
             mediaPostViewHolder.usernameTextView.setText(groupPostResult.getUserId());
             initializeViews((MediaPostViewHolder) holder, position);
         } else if (holder instanceof TextPollPostViewHolder) {
             TextPollPostViewHolder textPollPostViewHolder = (TextPollPostViewHolder) holder;
             textPollPostViewHolder.pollQuestionTextView.setText(groupPostResult.getContent());
-            textPollPostViewHolder.postDateTextView.setText(groupPostResult.getCreatedAt());
+            textPollPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(groupPostResult.getCreatedAt()));
             textPollPostViewHolder.usernameTextView.setText(groupPostResult.getUserId());
             textPollPostViewHolder.option3Container.setVisibility(View.GONE);
             textPollPostViewHolder.option4Container.setVisibility(View.GONE);
@@ -161,7 +162,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
 //            }
         } else if (holder instanceof ImagePollPostViewHolder) {
             ImagePollPostViewHolder imageHolder = (ImagePollPostViewHolder) holder;
-            imageHolder.postDateTextView.setText(groupPostResult.getCreatedAt());
+            imageHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(groupPostResult.getCreatedAt()));
             imageHolder.usernameTextView.setText(groupPostResult.getUserId());
             imageHolder.pollQuestionTextView.setText(groupPostResult.getContent());
             Map<String, String> imageMap = (Map<String, String>) groupPostResult.getPollOptions();
@@ -202,7 +203,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             RootCommentViewHolder rootCommentViewHolder = (RootCommentViewHolder) holder;
             rootCommentViewHolder.commentorUsernameTextView.setText(postCommentsList.get(position).getUserId());
             rootCommentViewHolder.commentDataTextView.setText(postCommentsList.get(position).getContent());
-            rootCommentViewHolder.commentDateTextView.setText(postCommentsList.get(position).getCreatedAt());
+            rootCommentViewHolder.commentDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postCommentsList.get(position).getCreatedAt()));
             if (postCommentsList.get(position).getChildData() == null || postCommentsList.get(position).getChildData().isEmpty()) {
                 rootCommentViewHolder.replyCountTextView.setVisibility(View.GONE);
             } else {
@@ -246,6 +247,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         TextView upvoteCountTextView;
         TextView downvoteCountTextView;
         TextView postCommentsTextView;
+        ImageView postSettingImageView;
 
         TextPostViewHolder(View view) {
             super(view);
@@ -256,7 +258,11 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             upvoteCountTextView = (TextView) view.findViewById(R.id.upvoteTextView);
             downvoteCountTextView = (TextView) view.findViewById(R.id.downvoteTextView);
             postCommentsTextView = (TextView) view.findViewById(R.id.postCommentsTextView);
+            postSettingImageView = (ImageView) view.findViewById(R.id.postSettingImageView);
 
+            userImageView.setOnClickListener(this);
+            usernameTextView.setOnClickListener(this);
+            postSettingImageView.setOnClickListener(this);
         }
 
         @Override
@@ -273,6 +279,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         TextView upvoteCountTextView;
         TextView downvoteCountTextView;
         TextView postCommentsTextView;
+        ImageView postSettingImageView;
         private BubblePageIndicator dotIndicatorView;
         private GroupPostMediaViewPager postDataViewPager;
         private TextView indexTextView;
@@ -287,9 +294,14 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             upvoteCountTextView = (TextView) view.findViewById(R.id.upvoteTextView);
             downvoteCountTextView = (TextView) view.findViewById(R.id.downvoteTextView);
             postCommentsTextView = (TextView) view.findViewById(R.id.postCommentsTextView);
+            postSettingImageView = (ImageView) view.findViewById(R.id.postSettingImageView);
             dotIndicatorView = (BubblePageIndicator) view.findViewById(R.id.dotIndicatorView);
             postDataViewPager = (GroupPostMediaViewPager) view.findViewById(R.id.postDataViewPager);
             indexTextView = (TextView) view.findViewById(R.id.indexTextView);
+
+            userImageView.setOnClickListener(this);
+            usernameTextView.setOnClickListener(this);
+            postSettingImageView.setOnClickListener(this);
 
             mViewPagerAdapter = new GroupMediaPostViewPagerAdapter(mContext);
             postDataViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -325,6 +337,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         TextView upvoteCountTextView;
         TextView downvoteCountTextView;
         TextView postCommentsTextView;
+        ImageView postSettingImageView;
         TextView pollQuestionTextView;
         RoundCornerProgressBar pollOption1ProgressBar;
         RoundCornerProgressBar pollOption2ProgressBar;
@@ -353,6 +366,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             upvoteCountTextView = (TextView) view.findViewById(R.id.upvoteTextView);
             downvoteCountTextView = (TextView) view.findViewById(R.id.downvoteTextView);
             postCommentsTextView = (TextView) view.findViewById(R.id.postCommentsTextView);
+            postSettingImageView = (ImageView) view.findViewById(R.id.postSettingImageView);
             pollQuestionTextView = (TextView) view.findViewById(R.id.pollQuestionTextView);
             pollOption1ProgressBar = (RoundCornerProgressBar) view.findViewById(R.id.pollOption1ProgressBar);
             pollOption2ProgressBar = (RoundCornerProgressBar) view.findViewById(R.id.pollOption2ProgressBar);
@@ -372,6 +386,10 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             pollOption4ProgressTextView = (TextView) view.findViewById(R.id.pollOption4ProgressTextView);
             option3Container = (RelativeLayout) view.findViewById(R.id.option3Container);
             option4Container = (RelativeLayout) view.findViewById(R.id.option4Container);
+
+            userImageView.setOnClickListener(this);
+            usernameTextView.setOnClickListener(this);
+            postSettingImageView.setOnClickListener(this);
 
             pollOption1ProgressBar.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -456,6 +474,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         TextView upvoteCountTextView;
         TextView downvoteCountTextView;
         TextView postCommentsTextView;
+        ImageView postSettingImageView;
         TextView pollQuestionTextView;
         ImageView option1ImageView;
         ImageView option2ImageView;
@@ -483,6 +502,7 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             upvoteCountTextView = (TextView) view.findViewById(R.id.upvoteTextView);
             downvoteCountTextView = (TextView) view.findViewById(R.id.downvoteTextView);
             postCommentsTextView = (TextView) view.findViewById(R.id.postCommentsTextView);
+            postSettingImageView = (ImageView) view.findViewById(R.id.postSettingImageView);
             option1ImageView = (ImageView) view.findViewById(R.id.option1ImageView);
             option2ImageView = (ImageView) view.findViewById(R.id.option2ImageView);
             option3ImageView = (ImageView) view.findViewById(R.id.option3ImageView);
@@ -502,6 +522,10 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             option3Container = (RelativeLayout) view.findViewById(R.id.option3Container);
             option4Container = (RelativeLayout) view.findViewById(R.id.option4Container);
 
+            userImageView.setOnClickListener(this);
+            usernameTextView.setOnClickListener(this);
+            postSettingImageView.setOnClickListener(this);
+            
             option1Container.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

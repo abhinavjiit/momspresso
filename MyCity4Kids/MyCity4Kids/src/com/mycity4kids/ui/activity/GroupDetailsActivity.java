@@ -4,14 +4,18 @@ import android.accounts.NetworkErrorException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -25,18 +29,22 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.models.request.UpdateUserPostSettingsRequest;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.GroupDetailResponse;
 import com.mycity4kids.models.response.GroupPostResponse;
 import com.mycity4kids.models.response.GroupPostResult;
 import com.mycity4kids.models.response.GroupResult;
+import com.mycity4kids.models.response.UserPostSettingResponse;
+import com.mycity4kids.models.response.UserPostSettingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.GroupAboutRecyclerAdapter;
 import com.mycity4kids.ui.adapter.GroupBlogsRecyclerAdapter;
 import com.mycity4kids.ui.adapter.GroupsGenericPostRecyclerAdapter;
+import com.mycity4kids.ui.fragment.GroupPostReportDialogFragment;
 import com.mycity4kids.utils.AppUtils;
 
 import java.util.ArrayList;
@@ -52,6 +60,8 @@ import retrofit2.Retrofit;
 public class GroupDetailsActivity extends BaseActivity implements View.OnClickListener, GroupAboutRecyclerAdapter.RecyclerViewClickListener, GroupBlogsRecyclerAdapter.RecyclerViewClickListener,
         GroupsGenericPostRecyclerAdapter.RecyclerViewClickListener {
 
+    private final static String[] sectionsKey = {"ABOUT", "DISCUSSION", "BLOGS", "PHOTOS", "VIDEOS", "TOP POSTS", "POLLS"};
+
     private int nextPageNumber = 1;
     private int totalPostCount;
     private int skip = 0;
@@ -61,9 +71,12 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     private ArrayList<ArticleListingResult> articleDataModelsNew;
     private ArrayList<GroupPostResult> postList;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
-
-    private final static String[] sectionsKey = {"ABOUT", "DISCUSSION", "BLOGS", "PHOTOS", "VIDEOS", "TOP POSTS", "POLLS"};
+    private UserPostSettingResult currentPostPrefsForUser;
     private GroupResult selectedGroup;
+    private GroupPostResult selectedPost;
+    private int groupId;
+
+    private Animation slideAnim, fadeAnim;
 
     private Toolbar toolbar;
     private RecyclerView recyclerView;
@@ -79,12 +92,21 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     private TextView noPostsTextView;
     private TextView groupNameTextView;
     private TextView toolbarTitle;
-    private int groupId;
+    private LinearLayout postSettingsContainer;
+    private RelativeLayout postSettingsContainerMain;
+    private View overlayView;
+    private TextView savePostTextView, notificationToggleTextView, commentToggleTextView, reportPostTextView;
+    private ProgressBar progressBar;
+    private ImageView groupSettingsImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.group_details_activity);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        groupPostTabLayout = (TabLayout) findViewById(R.id.groupPostTabLayout);
         addPostContainer = (RelativeLayout) findViewById(R.id.addPostContainer);
         addPostFAB = (FloatingActionButton) findViewById(R.id.addPostFAB);
         postContainer = (LinearLayout) findViewById(R.id.postContainer);
@@ -93,14 +115,37 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         noPostsTextView = (TextView) findViewById(R.id.noPostsTextView);
         groupNameTextView = (TextView) findViewById(R.id.groupNameTextView);
         toolbarTitle = (TextView) findViewById(R.id.toolbarTitle);
+        groupSettingsImageView = (ImageView) findViewById(R.id.groupSettingsImageView);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        postSettingsContainer = (LinearLayout) findViewById(R.id.postSettingsContainer);
+        postSettingsContainerMain = (RelativeLayout) findViewById(R.id.postSettingsContainerMain);
+        overlayView = findViewById(R.id.overlayView);
+        savePostTextView = (TextView) findViewById(R.id.savePostTextView);
+        notificationToggleTextView = (TextView) findViewById(R.id.notificationToggleTextView);
+        commentToggleTextView = (TextView) findViewById(R.id.commentToggleTextView);
+        reportPostTextView = (TextView) findViewById(R.id.reportPostTextView);
 
         selectedGroup = (GroupResult) getIntent().getParcelableExtra("groupItem");
         groupId = getIntent().getIntExtra("groupId", 0);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+
+        slideAnim = AnimationUtils.loadAnimation(this, R.anim.appear_from_bottom);
+        fadeAnim = AnimationUtils.loadAnimation(this, R.anim.alpha_anim);
 
         addPostFAB.setOnClickListener(this);
         pollContainer.setOnClickListener(this);
         postContainer.setOnClickListener(this);
         closeImageView.setOnClickListener(this);
+        savePostTextView.setOnClickListener(this);
+        notificationToggleTextView.setOnClickListener(this);
+        commentToggleTextView.setOnClickListener(this);
+        reportPostTextView.setOnClickListener(this);
+        overlayView.setOnClickListener(this);
+        groupSettingsImageView.setOnClickListener(this);
 
         String[] sections = {
                 getString(R.string.groups_sections_about), getString(R.string.groups_sections_discussions), getString(R.string.groups_sections_blogs),
@@ -108,14 +153,6 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         };
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        groupPostTabLayout = (TabLayout) findViewById(R.id.groupPostTabLayout);
-
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         setUpTabLayout(sections);
 
@@ -137,7 +174,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         groupBlogsRecyclerAdapter.setData(articleDataModelsNew);
 
         postList = new ArrayList<>();
-        groupsGenericPostRecyclerAdapter = new GroupsGenericPostRecyclerAdapter(this, this);
+        groupsGenericPostRecyclerAdapter = new GroupsGenericPostRecyclerAdapter(this, this, selectedGroup);
         groupsGenericPostRecyclerAdapter.setData(postList);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -161,7 +198,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         if (selectedGroup == null) {
             getGroupDetails();
         } else {
-            toolbarTitle.setText(getString(R.string.groups_search_in) + " " + selectedGroup.getTitle());
+            toolbarTitle.setHint(getString(R.string.groups_search_in) + " " + selectedGroup.getTitle());
             groupNameTextView.setText(selectedGroup.getTitle());
 
             groupAboutRecyclerAdapter = new GroupAboutRecyclerAdapter(this, this);
@@ -289,6 +326,12 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.groupSettingsImageView: {
+                Intent intent = new Intent(GroupDetailsActivity.this, GroupSettingsActivity.class);
+                intent.putExtra("groupItem", selectedGroup);
+                startActivity(intent);
+            }
+            break;
             case R.id.addPostFAB:
                 addPostContainer.setVisibility(View.VISIBLE);
                 break;
@@ -308,8 +351,125 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                     addPostContainer.setVisibility(View.GONE);
                 }
                 break;
+            case R.id.savePostTextView:
+                Log.d("savePostTextView", "" + selectedPost.getId());
+                if (savePostTextView.getText().toString().equals("SAVE POST")) {
+                    updateUserPostPreferences("savePost");
+                } else {
+                    updateUserPostPreferences("deletePost");
+                }
+                break;
+            case R.id.commentToggleTextView:
+                Log.d("commentToggleTextView", "" + selectedPost.getId());
+                commentToggleTextView.setText("Disable Comment");
+                break;
+            case R.id.notificationToggleTextView:
+                Log.d("notifToggleTextView", "" + selectedPost.getId());
+                if (notificationToggleTextView.getText().toString().equals("Disable Notification")) {
+                    updateUserPostPreferences("enableNotif");
+                } else {
+                    updateUserPostPreferences("disableNotif");
+                }
+                break;
+            case R.id.reportPostTextView:
+                Log.d("reportPostTextView", "" + selectedPost.getId());
+                GroupPostReportDialogFragment groupPostReportDialogFragment = new GroupPostReportDialogFragment();
+                FragmentManager fm = getSupportFragmentManager();
+                Bundle _args = new Bundle();
+                groupPostReportDialogFragment.setArguments(_args);
+                groupPostReportDialogFragment.setCancelable(false);
+                groupPostReportDialogFragment.show(fm, "Choose video report option");
+                reportPostTextView.setText("Unreport");
+                break;
+            case R.id.overlayView:
+                postSettingsContainerMain.setVisibility(View.GONE);
+                overlayView.setVisibility(View.GONE);
+                postSettingsContainer.setVisibility(View.GONE);
+                break;
         }
     }
+
+    private void updateUserPostPreferences(String action) {
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+
+        UpdateUserPostSettingsRequest request = new UpdateUserPostSettingsRequest();
+        request.setPostId(selectedPost.getId());
+        request.setIsAnno(selectedPost.getIsAnnon());
+        request.setUserId(selectedPost.getUserId());
+        Call<UserPostSettingResponse> call;
+        if (currentPostPrefsForUser == null) {
+            if ("savePost".equals(action)) {
+                request.setIsBookmarked(1);
+                request.setNotificationOff(1);
+            } else if ("deletePost".equals(action)) {
+                request.setIsBookmarked(0);
+                request.setNotificationOff(1);
+            } else if ("enableNotif".equals(action)) {
+                request.setIsBookmarked(0);
+                request.setNotificationOff(1);
+            } else if ("disableNotif".equals(action)) {
+                request.setIsBookmarked(0);
+                request.setNotificationOff(0);
+            }
+            call = groupsAPI.createNewPostSettingsForUser(request);
+        } else {
+            if ("savePost".equals(action)) {
+                request.setIsBookmarked(1);
+                request.setNotificationOff(currentPostPrefsForUser.getNotificationOff());
+            } else if ("deletePost".equals(action)) {
+                request.setIsBookmarked(0);
+                request.setNotificationOff(currentPostPrefsForUser.getNotificationOff());
+            } else if ("enableNotif".equals(action)) {
+                request.setIsBookmarked(currentPostPrefsForUser.getIsBookmarked());
+                request.setNotificationOff(1);
+            } else if ("disableNotif".equals(action)) {
+                request.setIsBookmarked(currentPostPrefsForUser.getIsBookmarked());
+                request.setNotificationOff(0);
+            }
+            call = groupsAPI.updatePostSettingsForUser(currentPostPrefsForUser.getId(), request);
+        }
+        call.enqueue(updatePostSettingForUserResponseCallback);
+    }
+
+    private Callback<UserPostSettingResponse> updatePostSettingForUserResponseCallback = new Callback<UserPostSettingResponse>() {
+        @Override
+        public void onResponse(Call<UserPostSettingResponse> call, retrofit2.Response<UserPostSettingResponse> response) {
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    UserPostSettingResponse userPostSettingResponse = response.body();
+                    if (userPostSettingResponse.getData().get(0).getResult().get(0).getNotificationOff() == 1) {
+                        notificationToggleTextView.setText("ENABLE NOTIFICATION");
+                    } else {
+                        notificationToggleTextView.setText("DISABLE NOTIFICATION");
+                    }
+                    if (userPostSettingResponse.getData().get(0).getResult().get(0).getIsBookmarked() == 1) {
+                        savePostTextView.setText("UNSAVE POST");
+                    } else {
+                        savePostTextView.setText("SAVE POST");
+                    }
+                } else {
+
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+//                showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<UserPostSettingResponse> call, Throwable t) {
+
+        }
+    };
 
     @Override
     public void onBackPressed() {
@@ -350,8 +510,8 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                     recyclerView.setAdapter(groupBlogsRecyclerAdapter);
                     hitFilteredTopicsArticleListingApi(0);
                 } else if (AppConstants.GROUP_SECTION_PHOTOS.equalsIgnoreCase(tab.getTag().toString())) {
-                    Intent intent = new Intent(GroupDetailsActivity.this, GroupPostDetailActivity.class);
-                    startActivity(intent);
+//                    Intent intent = new Intent(GroupDetailsActivity.this, GroupPostDetailActivity.class);
+//                    startActivity(intent);
                 } else if (AppConstants.GROUP_SECTION_VIDEOS.equalsIgnoreCase(tab.getTag().toString())) {
                 } else if (AppConstants.GROUP_SECTION_TOP_POSTS.equalsIgnoreCase(tab.getTag().toString())) {
                 } else if (AppConstants.GROUP_SECTION_POLLS.equalsIgnoreCase(tab.getTag().toString())) {
@@ -454,5 +614,109 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     public void onRecyclerItemClick(View view, int position) {
         Intent intent = new Intent(GroupDetailsActivity.this, GroupsQuestionnaireActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onGroupPostRecyclerItemClick(View view, int position) {
+        switch (view.getId()) {
+            case R.id.userImageView:
+            case R.id.usernameTextView: {
+//                Intent intent = new Intent(GroupDetailsActivity.this, GroupDetailsActivity.class);
+//                intent.putExtra("groupItem", selectedGroup);
+//                startActivity(intent);
+                break;
+            }
+            case R.id.postSettingImageView:
+                selectedPost = postList.get(position);
+                getCurrentPostSettingsStatus(selectedPost);
+                postSettingsContainer.startAnimation(slideAnim);
+                overlayView.startAnimation(fadeAnim);
+                postSettingsContainerMain.setVisibility(View.VISIBLE);
+                postSettingsContainer.setVisibility(View.VISIBLE);
+                overlayView.setVisibility(View.VISIBLE);
+                break;
+            case R.id.postDataTextView:
+            case R.id.postDateTextView: {
+//                Intent intent = new Intent(GroupDetailsActivity.this, GroupPostDetailActivity.class);
+//                intent.putExtra("groupItem", selectedGroup);
+//                startActivity(intent);
+                break;
+            }
+        }
+    }
+
+    private void getCurrentPostSettingsStatus(GroupPostResult selectedPost) {
+        progressBar.setVisibility(View.VISIBLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+
+        Call<UserPostSettingResponse> call = groupsAPI.getPostSettingForUser(selectedPost.getId());
+        call.enqueue(userPostSettingResponseCallback);
+    }
+
+    private Callback<UserPostSettingResponse> userPostSettingResponseCallback = new Callback<UserPostSettingResponse>() {
+        @Override
+        public void onResponse(Call<UserPostSettingResponse> call, retrofit2.Response<UserPostSettingResponse> response) {
+            progressBar.setVisibility(View.GONE);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    UserPostSettingResponse userPostSettingResponse = response.body();
+                    setPostCurrentPreferences(userPostSettingResponse);
+                } else {
+
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+//                showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<UserPostSettingResponse> call, Throwable t) {
+            progressBar.setVisibility(View.GONE);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
+    private void setPostCurrentPreferences(UserPostSettingResponse userPostSettingResponse) {
+
+        if (selectedPost.getUserId().equals(SharedPrefUtils.getUserDetailModel(GroupDetailsActivity.this).getDynamoId())) {
+            commentToggleTextView.setVisibility(View.VISIBLE);
+        } else {
+            commentToggleTextView.setVisibility(View.GONE);
+        }
+
+        //No existing settings for this post for this user
+        if (userPostSettingResponse.getData().get(0).getResult() == null || userPostSettingResponse.getData().get(0).getResult().size() == 0) {
+            savePostTextView.setText("SAVE POST");
+            notificationToggleTextView.setText("ENABLE NOTIFICATION");
+            currentPostPrefsForUser = null;
+            return;
+        }
+        currentPostPrefsForUser = userPostSettingResponse.getData().get(0).getResult().get(0);
+        if (currentPostPrefsForUser.getIsBookmarked() == 1) {
+            savePostTextView.setText("UNSAVE POST");
+        } else {
+            savePostTextView.setText("SAVE POST");
+        }
+
+        if (currentPostPrefsForUser.getNotificationOff() == 1) {
+            notificationToggleTextView.setText("ENABLE NOTIFICATION");
+        } else {
+            notificationToggleTextView.setText("DISABLE NOTIFICATION");
+        }
     }
 }

@@ -91,7 +91,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="DISABLE NOTIFICATIONS"
-            android:textColor="@color/groups.light_black_color"
+            android:textColor="@color/groups.blue_color"
             android:textSize="15sp"
             app:fontName="oswald_regular.ttf" />
 
@@ -135,7 +135,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="LEAVE GROUP"
-            android:textColor="@color/groups.light_black_color"
+            android:textColor="@color/groups.blue_color"
             android:textSize="15sp"
             app:fontName="oswald_regular.ttf" />
 

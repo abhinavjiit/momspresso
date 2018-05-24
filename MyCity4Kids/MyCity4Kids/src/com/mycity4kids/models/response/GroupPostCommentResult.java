@@ -21,10 +21,10 @@ public class GroupPostCommentResult implements Parcelable {
     private int isAnnon;
     private String moderationStatus;
     private String moderatedBy;
-    private String moderatedon;
+    private String moderatedOn;
     private String lang;
-    private String createdAt;
-    private String updatedAt;
+    private long createdAt;
+    private long updatedAt;
     private ArrayList<GroupPostCommentResult> childData;
     private int isLastConversation = 0;
     private int childCount;
@@ -45,10 +45,10 @@ public class GroupPostCommentResult implements Parcelable {
         isAnnon = in.readInt();
         moderationStatus = in.readString();
         moderatedBy = in.readString();
-        moderatedon = in.readString();
+        moderatedOn = in.readString();
         lang = in.readString();
-        createdAt = in.readString();
-        updatedAt = in.readString();
+        createdAt = in.readLong();
+        updatedAt = in.readLong();
         childData = in.createTypedArrayList(GroupPostCommentResult.CREATOR);
         isLastConversation = in.readInt();
     }
@@ -153,12 +153,12 @@ public class GroupPostCommentResult implements Parcelable {
         this.moderatedBy = moderatedBy;
     }
 
-    public String getModeratedon() {
-        return moderatedon;
+    public String getModeratedOn() {
+        return moderatedOn;
     }
 
-    public void setModeratedon(String moderatedon) {
-        this.moderatedon = moderatedon;
+    public void setModeratedOn(String moderatedon) {
+        this.moderatedOn = moderatedon;
     }
 
     public String getLang() {
@@ -169,19 +169,19 @@ public class GroupPostCommentResult implements Parcelable {
         this.lang = lang;
     }
 
-    public String getCreatedAt() {
+    public long getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(long createdAt) {
         this.createdAt = createdAt;
     }
 
-    public String getUpdatedAt() {
+    public long getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(String updatedAt) {
+    public void setUpdatedAt(long updatedAt) {
         this.updatedAt = updatedAt;
     }
 
@@ -227,10 +227,10 @@ public class GroupPostCommentResult implements Parcelable {
         dest.writeInt(isAnnon);
         dest.writeString(moderationStatus);
         dest.writeString(moderatedBy);
-        dest.writeString(moderatedon);
+        dest.writeString(moderatedOn);
         dest.writeString(lang);
-        dest.writeString(createdAt);
-        dest.writeString(updatedAt);
+        dest.writeLong(createdAt);
+        dest.writeLong(updatedAt);
         dest.writeTypedList(childData);
         dest.writeInt(isLastConversation);
     }

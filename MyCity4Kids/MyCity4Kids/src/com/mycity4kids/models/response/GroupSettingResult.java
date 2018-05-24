@@ -15,8 +15,8 @@ public class GroupSettingResult implements Parcelable {
     private int dmAllowed;
     private int notificationOn;
     private int annonAllowed;
-    private String createdAt;
-    private String updatedAt;
+    private long createdAt;
+    private long updatedAt;
     private Map<String, String> questionnaire;
 
     protected GroupSettingResult(Parcel in) {
@@ -25,8 +25,8 @@ public class GroupSettingResult implements Parcelable {
         dmAllowed = in.readInt();
         notificationOn = in.readInt();
         annonAllowed = in.readInt();
-        createdAt = in.readString();
-        updatedAt = in.readString();
+        createdAt = in.readLong();
+        updatedAt = in.readLong();
     }
 
     @Override
@@ -36,8 +36,8 @@ public class GroupSettingResult implements Parcelable {
         dest.writeInt(dmAllowed);
         dest.writeInt(notificationOn);
         dest.writeInt(annonAllowed);
-        dest.writeString(createdAt);
-        dest.writeString(updatedAt);
+        dest.writeLong(createdAt);
+        dest.writeLong(updatedAt);
     }
 
     @Override
@@ -97,19 +97,19 @@ public class GroupSettingResult implements Parcelable {
         this.annonAllowed = annonAllowed;
     }
 
-    public String getCreatedAt() {
+    public long getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(long createdAt) {
         this.createdAt = createdAt;
     }
 
-    public String getUpdatedAt() {
+    public long getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(String updatedAt) {
+    public void setUpdatedAt(long updatedAt) {
         this.updatedAt = updatedAt;
     }
 

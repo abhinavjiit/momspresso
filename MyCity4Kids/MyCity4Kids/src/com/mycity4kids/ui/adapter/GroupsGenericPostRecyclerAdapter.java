@@ -17,11 +17,13 @@ import android.widget.TextView;
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.internal.LinkedTreeMap;
+import com.kelltontech.utils.DateTimeUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.request.GroupActionsRequest;
 import com.mycity4kids.models.response.GroupPostResult;
+import com.mycity4kids.models.response.GroupResult;
 import com.mycity4kids.models.response.GroupsActionResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
@@ -52,15 +54,17 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
 
     private final Context mContext;
     private final LayoutInflater mInflator;
+    private final GroupResult selectedGroup;
     private ArrayList<GroupPostResult> postList;
     private HashMap<Integer, Integer> mViewPageStates = new HashMap<>();
     private RecyclerViewClickListener mListener;
     private int selectedPosition;
 
-    public GroupsGenericPostRecyclerAdapter(Context pContext, RecyclerViewClickListener listener) {
+    public GroupsGenericPostRecyclerAdapter(Context pContext, RecyclerViewClickListener listener, GroupResult selectedGroup) {
         mContext = pContext;
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mListener = listener;
+        this.selectedGroup = selectedGroup;
     }
 
     public void setData(ArrayList<GroupPostResult> postList) {
@@ -110,18 +114,18 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
         if (holder instanceof TextPostViewHolder) {
             TextPostViewHolder textPostViewHolder = (TextPostViewHolder) holder;
             textPostViewHolder.postDataTextView.setText(postList.get(position).getContent());
-            textPostViewHolder.postDateTextView.setText(postList.get(position).getCreatedAt());
+            textPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postList.get(position).getCreatedAt()));
             textPostViewHolder.usernameTextView.setText(postList.get(position).getUserId());
         } else if (holder instanceof MediaPostViewHolder) {
             MediaPostViewHolder mediaPostViewHolder = (MediaPostViewHolder) holder;
             mediaPostViewHolder.postDataTextView.setText(postList.get(position).getContent());
-            mediaPostViewHolder.postDateTextView.setText(postList.get(position).getCreatedAt());
+            mediaPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postList.get(position).getCreatedAt()));
             mediaPostViewHolder.usernameTextView.setText(postList.get(position).getUserId());
             initializeViews((MediaPostViewHolder) holder, position);
         } else if (holder instanceof TextPollPostViewHolder) {
             TextPollPostViewHolder textPollPostViewHolder = (TextPollPostViewHolder) holder;
             textPollPostViewHolder.pollQuestionTextView.setText(postList.get(position).getContent());
-            textPollPostViewHolder.postDateTextView.setText(postList.get(position).getCreatedAt());
+            textPollPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postList.get(position).getCreatedAt()));
             textPollPostViewHolder.usernameTextView.setText(postList.get(position).getUserId());
             textPollPostViewHolder.option3Container.setVisibility(View.GONE);
             textPollPostViewHolder.option4Container.setVisibility(View.GONE);
@@ -155,7 +159,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             }
         } else {
             ImagePollPostViewHolder imageHolder = (ImagePollPostViewHolder) holder;
-            imageHolder.postDateTextView.setText(postList.get(position).getCreatedAt());
+            imageHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postList.get(position).getCreatedAt()));
             imageHolder.usernameTextView.setText(postList.get(position).getUserId());
             imageHolder.pollQuestionTextView.setText(postList.get(position).getContent());
             Map<String, String> imageMap = (Map<String, String>) postList.get(position).getPollOptions();
@@ -305,6 +309,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
         TextView upvoteCountTextView;
         TextView downvoteCountTextView;
         TextView postCommentsTextView;
+        ImageView postSettingImageView;
 
         TextPostViewHolder(View view) {
             super(view);
@@ -315,11 +320,17 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             upvoteCountTextView = (TextView) view.findViewById(R.id.upvoteTextView);
             downvoteCountTextView = (TextView) view.findViewById(R.id.downvoteTextView);
             postCommentsTextView = (TextView) view.findViewById(R.id.postCommentsTextView);
+            postSettingImageView = (ImageView) view.findViewById(R.id.postSettingImageView);
+
+            userImageView.setOnClickListener(this);
+            usernameTextView.setOnClickListener(this);
+            postSettingImageView.setOnClickListener(this);
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mContext, GroupPostDetailActivity.class);
+                    intent.putExtra("groupItem", selectedGroup);
                     intent.putExtra("postType", AppConstants.POST_TYPE_TEXT);
                     intent.putExtra("postData", postList.get(getAdapterPosition()));
                     mContext.startActivity(intent);
@@ -329,7 +340,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
 
         @Override
         public void onClick(View v) {
-            mListener.onRecyclerItemClick(v, getAdapterPosition());
+            mListener.onGroupPostRecyclerItemClick(v, getAdapterPosition());
         }
     }
 
@@ -341,6 +352,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
         TextView upvoteCountTextView;
         TextView downvoteCountTextView;
         TextView postCommentsTextView;
+        ImageView postSettingImageView;
         private BubblePageIndicator dotIndicatorView;
         private GroupPostMediaViewPager postDataViewPager;
         private TextView indexTextView;
@@ -355,6 +367,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             upvoteCountTextView = (TextView) view.findViewById(R.id.upvoteTextView);
             downvoteCountTextView = (TextView) view.findViewById(R.id.downvoteTextView);
             postCommentsTextView = (TextView) view.findViewById(R.id.postCommentsTextView);
+            postSettingImageView = (ImageView) view.findViewById(R.id.postSettingImageView);
             dotIndicatorView = (BubblePageIndicator) view.findViewById(R.id.dotIndicatorView);
             postDataViewPager = (GroupPostMediaViewPager) view.findViewById(R.id.postDataViewPager);
             indexTextView = (TextView) view.findViewById(R.id.indexTextView);
@@ -378,6 +391,10 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
                 }
             });
 
+            userImageView.setOnClickListener(this);
+            usernameTextView.setOnClickListener(this);
+            postSettingImageView.setOnClickListener(this);
+
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -393,7 +410,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
 
         @Override
         public void onClick(View v) {
-            mListener.onRecyclerItemClick(v, getAdapterPosition());
+            mListener.onGroupPostRecyclerItemClick(v, getAdapterPosition());
         }
     }
 
@@ -404,6 +421,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
         TextView upvoteCountTextView;
         TextView downvoteCountTextView;
         TextView postCommentsTextView;
+        ImageView postSettingImageView;
         TextView pollQuestionTextView;
         RoundCornerProgressBar pollOption1ProgressBar;
         RoundCornerProgressBar pollOption2ProgressBar;
@@ -432,6 +450,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             upvoteCountTextView = (TextView) view.findViewById(R.id.upvoteTextView);
             downvoteCountTextView = (TextView) view.findViewById(R.id.downvoteTextView);
             postCommentsTextView = (TextView) view.findViewById(R.id.postCommentsTextView);
+            postSettingImageView = (ImageView) view.findViewById(R.id.postSettingImageView);
             pollQuestionTextView = (TextView) view.findViewById(R.id.pollQuestionTextView);
             pollOption1ProgressBar = (RoundCornerProgressBar) view.findViewById(R.id.pollOption1ProgressBar);
             pollOption2ProgressBar = (RoundCornerProgressBar) view.findViewById(R.id.pollOption2ProgressBar);
@@ -451,6 +470,10 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
             pollOption4ProgressTextView = (TextView) view.findViewById(R.id.pollOption4ProgressTextView);
             option3Container = (RelativeLayout) view.findViewById(R.id.option3Container);
             option4Container = (RelativeLayout) view.findViewById(R.id.option4Container);
+
+            userImageView.setOnClickListener(this);
+            usernameTextView.setOnClickListener(this);
+            postSettingImageView.setOnClickListener(this);
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -536,7 +559,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
 
         @Override
         public void onClick(View v) {
-            mListener.onRecyclerItemClick(v, getAdapterPosition());
+            mListener.onGroupPostRecyclerItemClick(v, getAdapterPosition());
         }
     }
 
@@ -547,6 +570,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
         TextView upvoteCountTextView;
         TextView downvoteCountTextView;
         TextView postCommentsTextView;
+        ImageView postSettingImageView;
         TextView pollQuestionTextView;
         ImageView option1ImageView;
         ImageView option2ImageView;
@@ -688,7 +712,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
 
         @Override
         public void onClick(View v) {
-            mListener.onRecyclerItemClick(v, getAdapterPosition());
+            mListener.onGroupPostRecyclerItemClick(v, getAdapterPosition());
         }
     }
 
@@ -742,7 +766,7 @@ public class GroupsGenericPostRecyclerAdapter extends RecyclerView.Adapter<Recyc
     };
 
     public interface RecyclerViewClickListener {
-        void onRecyclerItemClick(View view, int position);
+        void onGroupPostRecyclerItemClick(View view, int position);
     }
 
 }

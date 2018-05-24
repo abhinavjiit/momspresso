@@ -28,8 +28,8 @@ public class GroupPostResult extends BaseResponse implements Parcelable {
     private String createdOn;
     private int groupId;
     private String userId;
-    private String createdAt;
-    private String updatedAt;
+    private long createdAt;
+    private long updatedAt;
     private String pollType;
     private Object pollOptions;
     private boolean isVoted;
@@ -54,8 +54,8 @@ public class GroupPostResult extends BaseResponse implements Parcelable {
         createdOn = in.readString();
         groupId = in.readInt();
         userId = in.readString();
-        createdAt = in.readString();
-        updatedAt = in.readString();
+        createdAt = in.readLong();
+        updatedAt = in.readLong();
         pollType = in.readString();
     }
 
@@ -207,19 +207,19 @@ public class GroupPostResult extends BaseResponse implements Parcelable {
         this.userId = userId;
     }
 
-    public String getCreatedAt() {
+    public long getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(long createdAt) {
         this.createdAt = createdAt;
     }
 
-    public String getUpdatedAt() {
+    public long getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(String updatedAt) {
+    public void setUpdatedAt(long updatedAt) {
         this.updatedAt = updatedAt;
     }
 
@@ -270,8 +270,8 @@ public class GroupPostResult extends BaseResponse implements Parcelable {
         dest.writeString(createdOn);
         dest.writeInt(groupId);
         dest.writeString(userId);
-        dest.writeString(createdAt);
-        dest.writeString(updatedAt);
+        dest.writeLong(createdAt);
+        dest.writeLong(updatedAt);
         dest.writeString(pollType);
     }
 }

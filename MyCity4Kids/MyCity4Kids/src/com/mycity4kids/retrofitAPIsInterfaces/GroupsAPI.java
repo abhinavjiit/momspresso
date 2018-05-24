@@ -1,22 +1,21 @@
 package com.mycity4kids.retrofitAPIsInterfaces;
 
+import com.mycity4kids.models.request.AddGpPostCommentOrReplyRequest;
 import com.mycity4kids.models.request.AddGroupPostRequest;
 import com.mycity4kids.models.request.GroupActionsRequest;
 import com.mycity4kids.models.request.JoinGroupRequest;
 import com.mycity4kids.models.request.UpdateUserPostSettingsRequest;
+import com.mycity4kids.models.response.AddGpPostCommentReplyResponse;
 import com.mycity4kids.models.response.AddGroupPostResponse;
 import com.mycity4kids.models.response.GroupDetailResponse;
 import com.mycity4kids.models.response.GroupPostCommentResponse;
 import com.mycity4kids.models.response.GroupPostResponse;
-import com.mycity4kids.models.response.GroupPostResult;
 import com.mycity4kids.models.response.GroupsActionResponse;
 import com.mycity4kids.models.response.GroupsJoinResponse;
-import com.mycity4kids.models.response.GroupsListingData;
 import com.mycity4kids.models.response.GroupsListingResponse;
 import com.mycity4kids.models.response.GroupsSettingResponse;
 import com.mycity4kids.models.response.SetupBlogResponse;
 import com.mycity4kids.models.response.UserPostSettingResponse;
-import com.mycity4kids.models.response.UserPostSettingResult;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -124,7 +123,7 @@ public interface GroupsAPI {
                                                          @Query("$limit") int limit);
 
     @POST("/api/v1/groups/response")
-    Call<UserPostSettingResponse> addPostComment(@Body UpdateUserPostSettingsRequest joinGroupRequest);
+    Call<AddGpPostCommentReplyResponse> addPostCommentOrReply(@Body AddGpPostCommentOrReplyRequest addGpPostCommentOrReplyRequest);
 
 //    @PUT("/api/v1/groups/usersettings/{userSettingId}")
 //    Call<UserPostSettingResponse> updatePostSettingsForUser(@Path("userSettingId") int userSettingId,

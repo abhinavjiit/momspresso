@@ -76,7 +76,7 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof HeaderViewHolder) {
 //            addArticleItem((RootCommentViewHolder) holder, position);
-            ((HeaderViewHolder) holder).createdTimeTextView.setText(mContext.getString(R.string.groups_created) + " - " + groupDetails.getCreatedAt());
+            ((HeaderViewHolder) holder).createdTimeTextView.setText(mContext.getString(R.string.groups_created) + " - " + DateTimeUtils.getDateFromNanoMilliTimestamp(groupDetails.getCreatedAt()));
             Picasso.with(mContext).load(groupDetails.getHeaderImage())
                     .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(((HeaderViewHolder) holder).groupImageView);
             if ("1".equals(groupDetails.getType())) {
@@ -91,7 +91,7 @@ public class GroupSummaryPostRecyclerAdapter extends RecyclerView.Adapter<Recycl
         } else {
 //            addArticleItem((GroupPostHolder) holder, position);
             ((GroupPostHolder) holder).usernameTextView.setText(postDataList.get(position).getPinnedBy());
-            ((GroupPostHolder) holder).postDateTextView.setText(DateTimeUtils.getPostCreationDate(postDataList.get(position).getCreatedAt()));
+            ((GroupPostHolder) holder).postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postDataList.get(position).getCreatedAt()));
             ((GroupPostHolder) holder).postDataTextView.setText(postDataList.get(position).getContent());
             ((GroupPostHolder) holder).upvoteTextView.setText("32");
             ((GroupPostHolder) holder).downvoteTextView.setText("33");

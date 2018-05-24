@@ -8,13 +8,13 @@ import java.util.List;
  */
 
 public class GroupPostCommentData {
-    private ArrayList<GroupPostCommentResult> result;
+    private List<GroupPostCommentResult> result;
 
-    public ArrayList<GroupPostCommentResult> getResult() {
+    public List<GroupPostCommentResult> getResult() {
         return result;
     }
 
-    public void setResult(ArrayList<GroupPostCommentResult> result) {
+    public void setResult(List<GroupPostCommentResult> result) {
         this.result = result;
     }
 

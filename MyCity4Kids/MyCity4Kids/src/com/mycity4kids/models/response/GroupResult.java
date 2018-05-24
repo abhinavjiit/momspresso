@@ -21,8 +21,8 @@ public class GroupResult implements Parcelable {
     private String createdOn;
     private String hashId;
     private String lang;
-    private String createdAt;
-    private String updatedAt;
+    private long createdAt;
+    private long updatedAt;
     private Map<String, String> questionnaire;
 
     protected GroupResult(Parcel in) {
@@ -37,8 +37,8 @@ public class GroupResult implements Parcelable {
         createdOn = in.readString();
         hashId = in.readString();
         lang = in.readString();
-        createdAt = in.readString();
-        updatedAt = in.readString();
+        createdAt = in.readLong();
+        updatedAt = in.readLong();
     }
 
     public static final Creator<GroupResult> CREATOR = new Creator<GroupResult>() {
@@ -141,19 +141,19 @@ public class GroupResult implements Parcelable {
         this.lang = lang;
     }
 
-    public String getCreatedAt() {
+    public long getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(long createdAt) {
         this.createdAt = createdAt;
     }
 
-    public String getUpdatedAt() {
+    public long getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(String updatedAt) {
+    public void setUpdatedAt(long updatedAt) {
         this.updatedAt = updatedAt;
     }
 
@@ -183,7 +183,7 @@ public class GroupResult implements Parcelable {
         dest.writeString(createdOn);
         dest.writeString(hashId);
         dest.writeString(lang);
-        dest.writeString(createdAt);
-        dest.writeString(updatedAt);
+        dest.writeLong(createdAt);
+        dest.writeLong(updatedAt);
     }
 }

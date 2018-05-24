@@ -11,8 +11,8 @@ public class UserPostSettingResult {
     private int notificationOff;
     private int isBookmarked;
     private int isAnno;
-    private String createdAt;
-    private String updatedAt;
+    private long createdAt;
+    private long updatedAt;
 
     public int getId() {
         return id;
@@ -62,19 +62,19 @@ public class UserPostSettingResult {
         this.isAnno = isAnno;
     }
 
-    public String getCreatedAt() {
+    public long getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(long createdAt) {
         this.createdAt = createdAt;
     }
 
-    public String getUpdatedAt() {
+    public long getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(String updatedAt) {
+    public void setUpdatedAt(long updatedAt) {
         this.updatedAt = updatedAt;
     }
 }

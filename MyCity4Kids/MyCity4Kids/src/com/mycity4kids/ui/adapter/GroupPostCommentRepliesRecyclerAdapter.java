@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.kelltontech.utils.DateTimeUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.models.response.GroupPostCommentResult;
 
@@ -67,12 +68,12 @@ public class GroupPostCommentRepliesRecyclerAdapter extends RecyclerView.Adapter
             CommentsViewHolder commentsViewHolder = (CommentsViewHolder) holder;
             commentsViewHolder.commentorUsernameTextView.setText(repliesList.get(position).getUserId());
             commentsViewHolder.commentDataTextView.setText(repliesList.get(position).getContent());
-            commentsViewHolder.commentDateTextView.setText(repliesList.get(position).getCreatedAt());
+            commentsViewHolder.commentDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(repliesList.get(position).getCreatedAt()));
         } else {
             RepliesViewHolder repliesViewHolder = (RepliesViewHolder) holder;
             repliesViewHolder.commentorUsernameTextView.setText(repliesList.get(position).getUserId());
             repliesViewHolder.commentDataTextView.setText(repliesList.get(position).getContent());
-            repliesViewHolder.commentDateTextView.setText(repliesList.get(position).getCreatedAt());
+            repliesViewHolder.commentDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(repliesList.get(position).getCreatedAt()));
         }
     }
 

@@ -104,9 +104,10 @@
                         android:background="@null"
                         android:drawableLeft="@drawable/ic_search"
                         android:drawablePadding="10dp"
-                        android:drawableTint="@color/grey_light"
+                        android:drawableTint="@color/groups.grey"
                         android:hint=""
                         android:textColor="@color/user_activities.toolbar.title"
+                        android:textColorHint="@color/groups.grey"
                         android:textSize="20sp"
                         app:fontName="oswald_regular.ttf" />
 
@@ -301,6 +302,86 @@
 
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/postSettingsContainerMain"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="6dp"
+        android:visibility="gone">
+
+        <View
+            android:id="@+id/overlayView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:alpha="0.85"
+            android:background="#121212"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/postSettingsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/savePostTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/notificationToggleTextView"
+                android:background="@color/white"
+                android:drawableLeft="@drawable/ic_bookmark"
+                android:drawablePadding="20dp"
+                android:padding="20dp"
+                android:text="SAVE POST"
+                android:textColor="@color/groups.light_black_color"
+                android:textSize="16sp"
+                app:fontName="open_sans.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/notificationToggleTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/commentToggleTextView"
+                android:background="@color/white"
+                android:drawableLeft="@drawable/ic_bookmark"
+                android:drawablePadding="20dp"
+                android:padding="20dp"
+                android:text="SAVE POST"
+                android:textColor="@color/groups.light_black_color"
+                android:textSize="16sp"
+                app:fontName="open_sans.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/commentToggleTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/reportPostTextView"
+                android:background="@color/white"
+                android:drawableLeft="@drawable/ic_bookmark"
+                android:drawablePadding="20dp"
+                android:padding="20dp"
+                android:text="DISABLE COMMENT"
+                android:textColor="@color/groups.light_black_color"
+                android:textSize="16sp"
+                app:fontName="open_sans.ttf" />
+
+            <com.mycity4kids.widget.CustomFontTextView
+                android:id="@+id/reportPostTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:drawableLeft="@drawable/ic_bookmark"
+                android:drawablePadding="20dp"
+                android:padding="20dp"
+                android:text="REPORT POST"
+                android:textColor="@color/groups.light_black_color"
+                android:textSize="16sp"
+                app:fontName="open_sans.ttf" />
+        </LinearLayout>
+    </RelativeLayout>
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/noPostsTextView"
         android:layout_width="match_parent"
