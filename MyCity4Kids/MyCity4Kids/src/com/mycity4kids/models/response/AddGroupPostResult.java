@@ -17,7 +17,7 @@ public class AddGroupPostResult implements Parcelable {
     private String lang;
     private String isActive;
     private Object mediaUrls;
-    private String disableComments;
+    private int disableComments;
     private String isAnnon;
     private String isPinned;
     private String moderatedBy;
@@ -38,7 +38,7 @@ public class AddGroupPostResult implements Parcelable {
         type = in.readString();
         lang = in.readString();
         isActive = in.readString();
-        disableComments = in.readString();
+        disableComments = in.readInt();
         isAnnon = in.readString();
         isPinned = in.readString();
         moderatedBy = in.readString();
@@ -60,7 +60,7 @@ public class AddGroupPostResult implements Parcelable {
         dest.writeString(type);
         dest.writeString(lang);
         dest.writeString(isActive);
-        dest.writeString(disableComments);
+        dest.writeInt(disableComments);
         dest.writeString(isAnnon);
         dest.writeString(isPinned);
         dest.writeString(moderatedBy);
@@ -147,11 +147,11 @@ public class AddGroupPostResult implements Parcelable {
         this.mediaUrls = mediaUrls;
     }
 
-    public String getDisableComments() {
+    public int getDisableComments() {
         return disableComments;
     }
 
-    public void setDisableComments(String disableComments) {
+    public void setDisableComments(int disableComments) {
         this.disableComments = disableComments;
     }
 

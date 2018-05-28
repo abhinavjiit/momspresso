@@ -244,8 +244,8 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         TextView usernameTextView;
         TextView postDateTextView;
         TextView postDataTextView;
-        TextView upvoteCountTextView;
-        TextView downvoteCountTextView;
+        TextView upvoteCountTextView, downvoteCountTextView;
+        LinearLayout upvoteContainer, downvoteContainer;
         TextView postCommentsTextView;
         ImageView postSettingImageView;
 
@@ -257,12 +257,16 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             postDataTextView = (TextView) view.findViewById(R.id.postDataTextView);
             upvoteCountTextView = (TextView) view.findViewById(R.id.upvoteTextView);
             downvoteCountTextView = (TextView) view.findViewById(R.id.downvoteTextView);
+            upvoteContainer = (LinearLayout) view.findViewById(R.id.upvoteContainer);
+            downvoteContainer = (LinearLayout) view.findViewById(R.id.downvoteContainer);
             postCommentsTextView = (TextView) view.findViewById(R.id.postCommentsTextView);
             postSettingImageView = (ImageView) view.findViewById(R.id.postSettingImageView);
 
             userImageView.setOnClickListener(this);
             usernameTextView.setOnClickListener(this);
             postSettingImageView.setOnClickListener(this);
+            upvoteContainer.setOnClickListener(this);
+            downvoteContainer.setOnClickListener(this);
         }
 
         @Override
@@ -276,8 +280,8 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         TextView usernameTextView;
         TextView postDateTextView;
         TextView postDataTextView;
-        TextView upvoteCountTextView;
-        TextView downvoteCountTextView;
+        TextView upvoteCountTextView, downvoteCountTextView;
+        LinearLayout upvoteContainer, downvoteContainer;
         TextView postCommentsTextView;
         ImageView postSettingImageView;
         private BubblePageIndicator dotIndicatorView;
@@ -293,6 +297,8 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             postDataTextView = (TextView) view.findViewById(R.id.postDataTextView);
             upvoteCountTextView = (TextView) view.findViewById(R.id.upvoteTextView);
             downvoteCountTextView = (TextView) view.findViewById(R.id.downvoteTextView);
+            upvoteContainer = (LinearLayout) view.findViewById(R.id.upvoteContainer);
+            downvoteContainer = (LinearLayout) view.findViewById(R.id.downvoteContainer);
             postCommentsTextView = (TextView) view.findViewById(R.id.postCommentsTextView);
             postSettingImageView = (ImageView) view.findViewById(R.id.postSettingImageView);
             dotIndicatorView = (BubblePageIndicator) view.findViewById(R.id.dotIndicatorView);
@@ -302,6 +308,8 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             userImageView.setOnClickListener(this);
             usernameTextView.setOnClickListener(this);
             postSettingImageView.setOnClickListener(this);
+            upvoteContainer.setOnClickListener(this);
+            downvoteContainer.setOnClickListener(this);
 
             mViewPagerAdapter = new GroupMediaPostViewPagerAdapter(mContext);
             postDataViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -334,29 +342,16 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         ImageView userImageView;
         TextView usernameTextView;
         TextView postDateTextView;
-        TextView upvoteCountTextView;
-        TextView downvoteCountTextView;
+        TextView upvoteCountTextView, downvoteCountTextView;
+        LinearLayout upvoteContainer, downvoteContainer;
         TextView postCommentsTextView;
         ImageView postSettingImageView;
         TextView pollQuestionTextView;
-        RoundCornerProgressBar pollOption1ProgressBar;
-        RoundCornerProgressBar pollOption2ProgressBar;
-        RoundCornerProgressBar pollOption3ProgressBar;
-        RoundCornerProgressBar pollOption4ProgressBar;
-        TextView pollOption1TextView;
-        TextView pollOption2TextView;
-        TextView pollOption3TextView;
-        TextView pollOption4TextView;
-        TextView pollResult1TextView;
-        TextView pollResult2TextView;
-        TextView pollResult3TextView;
-        TextView pollResult4TextView;
-        TextView pollOption1ProgressTextView;
-        TextView pollOption2ProgressTextView;
-        TextView pollOption3ProgressTextView;
-        TextView pollOption4ProgressTextView;
-        RelativeLayout option3Container;
-        RelativeLayout option4Container;
+        RoundCornerProgressBar pollOption1ProgressBar, pollOption2ProgressBar, pollOption3ProgressBar, pollOption4ProgressBar;
+        TextView pollOption1TextView, pollOption2TextView, pollOption3TextView, pollOption4TextView;
+        TextView pollResult1TextView, pollResult2TextView, pollResult3TextView, pollResult4TextView;
+        TextView pollOption1ProgressTextView, pollOption2ProgressTextView, pollOption3ProgressTextView, pollOption4ProgressTextView;
+        RelativeLayout option3Container, option4Container;
 
         TextPollPostViewHolder(View view) {
             super(view);
@@ -365,6 +360,8 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             postDateTextView = (TextView) view.findViewById(R.id.postDateTextView);
             upvoteCountTextView = (TextView) view.findViewById(R.id.upvoteTextView);
             downvoteCountTextView = (TextView) view.findViewById(R.id.downvoteTextView);
+            upvoteContainer = (LinearLayout) view.findViewById(R.id.upvoteContainer);
+            downvoteContainer = (LinearLayout) view.findViewById(R.id.downvoteContainer);
             postCommentsTextView = (TextView) view.findViewById(R.id.postCommentsTextView);
             postSettingImageView = (ImageView) view.findViewById(R.id.postSettingImageView);
             pollQuestionTextView = (TextView) view.findViewById(R.id.pollQuestionTextView);
@@ -390,6 +387,8 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             userImageView.setOnClickListener(this);
             usernameTextView.setOnClickListener(this);
             postSettingImageView.setOnClickListener(this);
+            upvoteContainer.setOnClickListener(this);
+            downvoteContainer.setOnClickListener(this);
 
             pollOption1ProgressBar.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -471,28 +470,16 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         ImageView userImageView;
         TextView usernameTextView;
         TextView postDateTextView;
-        TextView upvoteCountTextView;
-        TextView downvoteCountTextView;
+        TextView upvoteCountTextView, downvoteCountTextView;
+        LinearLayout upvoteContainer, downvoteContainer;
         TextView postCommentsTextView;
         ImageView postSettingImageView;
         TextView pollQuestionTextView;
-        ImageView option1ImageView;
-        ImageView option2ImageView;
-        ImageView option3ImageView;
-        ImageView option4ImageView;
-        RoundCornerProgressBar pollOption1ProgressBar;
-        RoundCornerProgressBar pollOption2ProgressBar;
-        RoundCornerProgressBar pollOption3ProgressBar;
-        RoundCornerProgressBar pollOption4ProgressBar;
-        TextView pollOption1TextView;
-        TextView pollOption2TextView;
-        TextView pollOption3TextView;
-        TextView pollOption4TextView;
+        ImageView option1ImageView, option2ImageView, option3ImageView, option4ImageView;
+        RoundCornerProgressBar pollOption1ProgressBar, pollOption2ProgressBar, pollOption3ProgressBar, pollOption4ProgressBar;
+        TextView pollOption1TextView, pollOption2TextView, pollOption3TextView, pollOption4TextView;
+        RelativeLayout option1Container, option2Container, option3Container, option4Container;
         LinearLayout lastOptionsContainer;
-        RelativeLayout option1Container;
-        RelativeLayout option2Container;
-        RelativeLayout option3Container;
-        RelativeLayout option4Container;
 
         ImagePollPostViewHolder(View view) {
             super(view);
@@ -501,6 +488,8 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             postDateTextView = (TextView) view.findViewById(R.id.postDateTextView);
             upvoteCountTextView = (TextView) view.findViewById(R.id.upvoteTextView);
             downvoteCountTextView = (TextView) view.findViewById(R.id.downvoteTextView);
+            upvoteContainer = (LinearLayout) view.findViewById(R.id.upvoteContainer);
+            downvoteContainer = (LinearLayout) view.findViewById(R.id.downvoteContainer);
             postCommentsTextView = (TextView) view.findViewById(R.id.postCommentsTextView);
             postSettingImageView = (ImageView) view.findViewById(R.id.postSettingImageView);
             option1ImageView = (ImageView) view.findViewById(R.id.option1ImageView);
@@ -525,7 +514,21 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             userImageView.setOnClickListener(this);
             usernameTextView.setOnClickListener(this);
             postSettingImageView.setOnClickListener(this);
-            
+            upvoteContainer.setOnClickListener(this);
+            downvoteContainer.setOnClickListener(this);
+
+            upvoteCountTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    markAsHelpfulOrUnhelpful(getAdapterPosition(), AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY);
+                }
+            });
+            downvoteCountTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    markAsHelpfulOrUnhelpful(getAdapterPosition(), AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY);
+                }
+            });
             option1Container.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -625,55 +628,6 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         }
     }
 
-    private void addVote(int position, String option) {
-        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
-        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
-        GroupActionsRequest groupActionsRequest = new GroupActionsRequest();
-        groupActionsRequest.setGroupId(groupPostResult.getGroupId());
-        groupActionsRequest.setPostId(groupPostResult.getId());
-        groupActionsRequest.setUserId(SharedPrefUtils.getUserDetailModel(mContext).getDynamoId());
-        groupActionsRequest.setType(AppConstants.GROUP_ACTION_TYPE_VOTE_KEY);
-        groupActionsRequest.setVoteOption(option);
-        Call<GroupsActionResponse> call = groupsAPI.addAction(groupActionsRequest);
-        call.enqueue(groupActionResponseCallback);
-    }
-
-    private Callback<GroupsActionResponse> groupActionResponseCallback = new Callback<GroupsActionResponse>() {
-        @Override
-        public void onResponse(Call<GroupsActionResponse> call, Response<GroupsActionResponse> response) {
-            if (response == null || response.body() == null) {
-                if (response != null && response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
-                }
-                return;
-            }
-            try {
-                if (response.isSuccessful()) {
-                    GroupsActionResponse groupsActionResponse = response.body();
-//                    for (int i = 0; i < postList.size(); i++) {
-//                        if (postList.get(i).getId() == groupsActionResponse.getData().getResult().getPostId()) {
-                    groupPostResult.setVoted(true);
-                    notifyDataSetChanged();
-//                            break;
-//                        }
-//                    }
-                } else {
-
-                }
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                Log.d("MC4kException", Log.getStackTraceString(e));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<GroupsActionResponse> call, Throwable t) {
-            Crashlytics.logException(t);
-            Log.d("MC4kException", Log.getStackTraceString(t));
-        }
-    };
-
     public class RootCommentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ImageView commentorImageView;
@@ -733,6 +687,67 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         public void onClick(View v) {
             mListener.onRecyclerItemClick(v, getAdapterPosition());
         }
+    }
+
+    private void addVote(int position, String option) {
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+        GroupActionsRequest groupActionsRequest = new GroupActionsRequest();
+        groupActionsRequest.setGroupId(groupPostResult.getGroupId());
+        groupActionsRequest.setPostId(groupPostResult.getId());
+        groupActionsRequest.setUserId(SharedPrefUtils.getUserDetailModel(mContext).getDynamoId());
+        groupActionsRequest.setType(AppConstants.GROUP_ACTION_TYPE_VOTE_KEY);
+        groupActionsRequest.setVoteOption(option);
+        Call<GroupsActionResponse> call = groupsAPI.addAction(groupActionsRequest);
+        call.enqueue(groupActionResponseCallback);
+    }
+
+    private Callback<GroupsActionResponse> groupActionResponseCallback = new Callback<GroupsActionResponse>() {
+        @Override
+        public void onResponse(Call<GroupsActionResponse> call, Response<GroupsActionResponse> response) {
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    GroupsActionResponse groupsActionResponse = response.body();
+//                    for (int i = 0; i < postList.size(); i++) {
+//                        if (postList.get(i).getId() == groupsActionResponse.getData().getResult().getPostId()) {
+                    groupPostResult.setVoted(true);
+                    notifyDataSetChanged();
+//                            break;
+//                        }
+//                    }
+                } else {
+
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<GroupsActionResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
+    private void markAsHelpfulOrUnhelpful(int position, String markType) {
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+        GroupActionsRequest groupActionsRequest = new GroupActionsRequest();
+        groupActionsRequest.setGroupId(groupPostResult.getGroupId());
+        groupActionsRequest.setPostId(groupPostResult.getId());
+        groupActionsRequest.setUserId(SharedPrefUtils.getUserDetailModel(mContext).getDynamoId());
+        groupActionsRequest.setType(markType);//AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY
+        Call<GroupsActionResponse> call = groupsAPI.addAction(groupActionsRequest);
+        call.enqueue(groupActionResponseCallback);
     }
 
     public interface RecyclerViewClickListener {

@@ -29,6 +29,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.models.request.UpdateGroupPostRequest;
 import com.mycity4kids.models.request.UpdateUserPostSettingsRequest;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
@@ -66,6 +67,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     private int totalPostCount;
     private int skip = 0;
     private int limit = 10;
+    private String postType;
     private boolean isReuqestRunning = false;
     private boolean isLastPageReached = false;
     private ArrayList<ArticleListingResult> articleDataModelsNew;
@@ -262,6 +264,14 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         call.enqueue(groupPostResponseCallback);
     }
 
+    private void getFilteredGroupPosts() {
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+
+        Call<GroupPostResponse> call = groupsAPI.getAllFilteredPostsForAGroup(selectedGroup.getId(), skip, limit, postType);
+        call.enqueue(groupPostResponseCallback);
+    }
+
     private Callback<GroupPostResponse> groupPostResponseCallback = new Callback<GroupPostResponse>() {
         @Override
         public void onResponse(Call<GroupPostResponse> call, retrofit2.Response<GroupPostResponse> response) {
@@ -296,7 +306,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
 
     private void processPostListingResponse(GroupPostResponse response) {
         totalPostCount = response.getTotal();
-        ArrayList<GroupPostResult> dataList = response.getData().get(0).getResult();
+        ArrayList<GroupPostResult> dataList = (ArrayList<GroupPostResult>) response.getData().get(0).getResult();
         if (dataList.size() == 0) {
             isLastPageReached = false;
             if (null != postList && !postList.isEmpty()) {
@@ -360,8 +370,11 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 }
                 break;
             case R.id.commentToggleTextView:
-                Log.d("commentToggleTextView", "" + selectedPost.getId());
-                commentToggleTextView.setText("Disable Comment");
+                if (commentToggleTextView.getText().toString().equals("DISABLE COMMENTS")) {
+                    updatePostCommentSettings(1);
+                } else {
+                    updatePostCommentSettings(0);
+                }
                 break;
             case R.id.notificationToggleTextView:
                 Log.d("notifToggleTextView", "" + selectedPost.getId());
@@ -377,7 +390,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 FragmentManager fm = getSupportFragmentManager();
                 Bundle _args = new Bundle();
                 groupPostReportDialogFragment.setArguments(_args);
-                groupPostReportDialogFragment.setCancelable(false);
+                groupPostReportDialogFragment.setCancelable(true);
                 groupPostReportDialogFragment.show(fm, "Choose video report option");
                 reportPostTextView.setText("Unreport");
                 break;
@@ -388,6 +401,53 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 break;
         }
     }
+
+    private void updatePostCommentSettings(int status) {
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+
+        UpdateGroupPostRequest updateGroupPostRequest = new UpdateGroupPostRequest();
+        updateGroupPostRequest.setGroupId(selectedGroup.getId());
+        updateGroupPostRequest.setDisableComments(status);
+
+        Call<GroupPostResponse> call = groupsAPI.disablePostComment(selectedPost.getId(), updateGroupPostRequest);
+        call.enqueue(postUpdateResponseListener);
+    }
+
+    private Callback<GroupPostResponse> postUpdateResponseListener = new Callback<GroupPostResponse>() {
+        @Override
+        public void onResponse(Call<GroupPostResponse> call, retrofit2.Response<GroupPostResponse> response) {
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    GroupPostResponse groupPostResponse = response.body();
+                    if (groupPostResponse.getData().get(0).getResult().get(0).getDisableComments() == 1) {
+                        commentToggleTextView.setText("ENABLE COMMENTS");
+                    } else {
+                        commentToggleTextView.setText("DISABLE COMMENTS");
+                    }
+                } else {
+
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+//                showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<GroupPostResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
 
     private void updateUserPostPreferences(String action) {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
@@ -510,14 +570,24 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                     recyclerView.setAdapter(groupBlogsRecyclerAdapter);
                     hitFilteredTopicsArticleListingApi(0);
                 } else if (AppConstants.GROUP_SECTION_PHOTOS.equalsIgnoreCase(tab.getTag().toString())) {
+                    postList.clear();
+                    skip = 0;
+                    limit = 10;
+                    postType = AppConstants.POST_TYPE_MEDIA_KEY;
+                    getFilteredGroupPosts();
 //                    Intent intent = new Intent(GroupDetailsActivity.this, GroupPostDetailActivity.class);
 //                    startActivity(intent);
                 } else if (AppConstants.GROUP_SECTION_VIDEOS.equalsIgnoreCase(tab.getTag().toString())) {
                 } else if (AppConstants.GROUP_SECTION_TOP_POSTS.equalsIgnoreCase(tab.getTag().toString())) {
                 } else if (AppConstants.GROUP_SECTION_POLLS.equalsIgnoreCase(tab.getTag().toString())) {
-                    Intent intent = new Intent(GroupDetailsActivity.this, AddPollGroupPostActivity.class);
-                    intent.putExtra("groupItem", selectedGroup);
-                    startActivity(intent);
+                    postList.clear();
+                    skip = 0;
+                    limit = 10;
+                    postType = AppConstants.POST_TYPE_POLL_KEY;
+                    getFilteredGroupPosts();
+//                    Intent intent = new Intent(GroupDetailsActivity.this, AddPollGroupPostActivity.class);
+//                    intent.putExtra("groupItem", selectedGroup);
+//                    startActivity(intent);
                 }
             }
 
@@ -629,6 +699,11 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             case R.id.postSettingImageView:
                 selectedPost = postList.get(position);
                 getCurrentPostSettingsStatus(selectedPost);
+                if (selectedPost.getDisableComments() == 1) {
+                    commentToggleTextView.setText("ENABLE COMMENTS");
+                } else {
+                    commentToggleTextView.setText("DISABLE COMMENTS");
+                }
                 postSettingsContainer.startAnimation(slideAnim);
                 overlayView.startAnimation(fadeAnim);
                 postSettingsContainerMain.setVisibility(View.VISIBLE);

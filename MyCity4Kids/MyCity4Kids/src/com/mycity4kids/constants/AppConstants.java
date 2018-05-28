@@ -558,6 +558,10 @@ public class AppConstants {
     public static final String POST_TYPE_TEXT_POLL = "textPoll";
     public static final String POST_TYPE_IMAGE_POLL = "imagePoll";
 
+    public static final String POST_TYPE_TEXT_KEY = "0";
+    public static final String POST_TYPE_MEDIA_KEY = "1";
+    public static final String POST_TYPE_POLL_KEY = "2";
+
     public static final String GROUP_TYPE_OPEN_KEY = "0";
     public static final String GROUP_TYPE_CLOSED_KEY = "1";
     public static final String GROUP_TYPE_INVITE_ONLY_KEY = "2";

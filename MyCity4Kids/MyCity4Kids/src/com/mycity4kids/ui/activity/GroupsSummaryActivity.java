@@ -23,6 +23,7 @@ import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.models.request.JoinGroupRequest;
+import com.mycity4kids.models.request.UpdateGroupPostRequest;
 import com.mycity4kids.models.request.UpdateUserPostSettingsRequest;
 import com.mycity4kids.models.response.GroupDetailResponse;
 import com.mycity4kids.models.response.GroupPostResponse;
@@ -194,7 +195,7 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
 
     private void processPostListingResponse(GroupPostResponse response) {
         totalPostCount = response.getTotal();
-        ArrayList<GroupPostResult> dataList = response.getData().get(0).getResult();
+        ArrayList<GroupPostResult> dataList = (ArrayList<GroupPostResult>) response.getData().get(0).getResult();
         if (dataList.size() == 0) {
             isLastPageReached = false;
             if (null != postList && !postList.isEmpty()) {
@@ -233,8 +234,11 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
                 }
                 break;
             case R.id.commentToggleTextView:
-                Log.d("commentToggleTextView", "" + selectedPost.getId());
-                commentToggleTextView.setText("Disable Comment");
+                if (commentToggleTextView.getText().toString().equals("DISABLE COMMENTS")) {
+                    updatePostCommentSettings(1);
+                } else {
+                    updatePostCommentSettings(0);
+                }
                 break;
             case R.id.notificationToggleTextView:
                 Log.d("notifToggleTextView", "" + selectedPost.getId());
@@ -250,7 +254,7 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
                 FragmentManager fm = getSupportFragmentManager();
                 Bundle _args = new Bundle();
                 groupPostReportDialogFragment.setArguments(_args);
-                groupPostReportDialogFragment.setCancelable(false);
+                groupPostReportDialogFragment.setCancelable(true);
                 groupPostReportDialogFragment.show(fm, "Choose video report option");
                 reportPostTextView.setText("Unreport");
                 break;
@@ -284,6 +288,53 @@ public class GroupsSummaryActivity extends BaseActivity implements View.OnClickL
         }
 
     }
+
+    private void updatePostCommentSettings(int status) {
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+
+        UpdateGroupPostRequest updateGroupPostRequest = new UpdateGroupPostRequest();
+        updateGroupPostRequest.setGroupId(selectedGroup.getId());
+        updateGroupPostRequest.setDisableComments(status);
+
+        Call<GroupPostResponse> call = groupsAPI.disablePostComment(selectedPost.getId(), updateGroupPostRequest);
+        call.enqueue(postUpdateResponseListener);
+    }
+
+    private Callback<GroupPostResponse> postUpdateResponseListener = new Callback<GroupPostResponse>() {
+        @Override
+        public void onResponse(Call<GroupPostResponse> call, retrofit2.Response<GroupPostResponse> response) {
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    GroupPostResponse groupPostResponse = response.body();
+                    if (groupPostResponse.getData().get(0).getResult().get(0).getDisableComments() == 1) {
+                        commentToggleTextView.setText("ENABLE COMMENTS");
+                    } else {
+                        commentToggleTextView.setText("DISABLE COMMENTS");
+                    }
+                } else {
+
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+//                showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<GroupPostResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
 
     private void updateUserPostPreferences(String action) {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();

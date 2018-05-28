@@ -28,12 +28,16 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.request.AddGpPostCommentOrReplyRequest;
+import com.mycity4kids.models.request.GroupActionsRequest;
+import com.mycity4kids.models.request.UpdateGroupPostRequest;
 import com.mycity4kids.models.request.UpdateUserPostSettingsRequest;
 import com.mycity4kids.models.response.AddGpPostCommentReplyResponse;
 import com.mycity4kids.models.response.GroupPostCommentResponse;
 import com.mycity4kids.models.response.GroupPostCommentResult;
+import com.mycity4kids.models.response.GroupPostResponse;
 import com.mycity4kids.models.response.GroupPostResult;
 import com.mycity4kids.models.response.GroupResult;
+import com.mycity4kids.models.response.GroupsActionResponse;
 import com.mycity4kids.models.response.UserPostSettingResponse;
 import com.mycity4kids.models.response.UserPostSettingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -110,6 +114,11 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         postType = getIntent().getStringExtra("postType");
         postData = (GroupPostResult) getIntent().getParcelableExtra("postData");
 
+        if (postData.getDisableComments() == 1) {
+            writeCommentEditText.setVisibility(View.GONE);
+            addCommentImageView.setVisibility(View.GONE);
+            findViewById(R.id.topLineView).setVisibility(View.GONE);
+        }
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -252,14 +261,69 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 break;
             case R.id.postSettingImageView:
                 getCurrentPostSettingsStatus(postData);
+                if (postData.getDisableComments() == 1) {
+                    commentToggleTextView.setText("ENABLE COMMENTS");
+                } else {
+                    commentToggleTextView.setText("DISABLE COMMENTS");
+                }
                 postSettingsContainer.startAnimation(slideAnim);
                 overlayView.startAnimation(fadeAnim);
                 postSettingsContainerMain.setVisibility(View.VISIBLE);
                 postSettingsContainer.setVisibility(View.VISIBLE);
                 overlayView.setVisibility(View.VISIBLE);
                 break;
+            case R.id.upvoteContainer:
+                markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY);
+                break;
+            case R.id.downvoteContainer:
+                markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY);
+                break;
         }
     }
+
+    private void markAsHelpfulOrUnhelpful(String markType) {
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+        GroupActionsRequest groupActionsRequest = new GroupActionsRequest();
+        groupActionsRequest.setGroupId(postData.getGroupId());
+        groupActionsRequest.setPostId(postData.getId());
+        groupActionsRequest.setUserId(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+        groupActionsRequest.setType(markType);//AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY
+        Call<GroupsActionResponse> call = groupsAPI.addAction(groupActionsRequest);
+        call.enqueue(groupActionResponseCallback);
+    }
+
+
+    private Callback<GroupsActionResponse> groupActionResponseCallback = new Callback<GroupsActionResponse>() {
+        @Override
+        public void onResponse(Call<GroupsActionResponse> call, retrofit2.Response<GroupsActionResponse> response) {
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    GroupsActionResponse groupsActionResponse = response.body();
+//                    groupPostResult.setVoted(true);
+//                    notifyDataSetChanged();
+                } else {
+
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<GroupsActionResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
 
     private void getCurrentPostSettingsStatus(GroupPostResult selectedPost) {
         progressBar.setVisibility(View.VISIBLE);
@@ -359,8 +423,11 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 }
                 break;
             case R.id.commentToggleTextView:
-                Log.d("commentToggleTextView", "" + selectedPost.getId());
-                commentToggleTextView.setText("Disable Comment");
+                if (commentToggleTextView.getText().toString().equals("DISABLE COMMENTS")) {
+                    updatePostCommentSettings(1);
+                } else {
+                    updatePostCommentSettings(0);
+                }
                 break;
             case R.id.notificationToggleTextView:
                 Log.d("notifToggleTextView", "" + selectedPost.getId());
@@ -376,7 +443,7 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 FragmentManager fm = getSupportFragmentManager();
                 Bundle _args = new Bundle();
                 groupPostReportDialogFragment.setArguments(_args);
-                groupPostReportDialogFragment.setCancelable(false);
+                groupPostReportDialogFragment.setCancelable(true);
                 groupPostReportDialogFragment.show(fm, "Choose video report option");
                 reportPostTextView.setText("Unreport");
                 break;
@@ -387,6 +454,53 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 break;
         }
     }
+
+    private void updatePostCommentSettings(int status) {
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+
+        UpdateGroupPostRequest updateGroupPostRequest = new UpdateGroupPostRequest();
+        updateGroupPostRequest.setGroupId(selectedGroup.getId());
+        updateGroupPostRequest.setDisableComments(status);
+
+        Call<GroupPostResponse> call = groupsAPI.disablePostComment(postData.getId(), updateGroupPostRequest);
+        call.enqueue(postUpdateResponseListener);
+    }
+
+    private Callback<GroupPostResponse> postUpdateResponseListener = new Callback<GroupPostResponse>() {
+        @Override
+        public void onResponse(Call<GroupPostResponse> call, retrofit2.Response<GroupPostResponse> response) {
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    GroupPostResponse groupPostResponse = response.body();
+                    if (groupPostResponse.getData().get(0).getResult().get(0).getDisableComments() == 1) {
+                        commentToggleTextView.setText("ENABLE COMMENTS");
+                    } else {
+                        commentToggleTextView.setText("DISABLE COMMENTS");
+                    }
+                } else {
+
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+//                showToast(getString(R.string.went_wrong));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<GroupPostResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
 
     private void updateUserPostPreferences(String action) {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
@@ -466,7 +580,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
 
         @Override
         public void onFailure(Call<UserPostSettingResponse> call, Throwable t) {
-
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
 

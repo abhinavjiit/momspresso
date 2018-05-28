@@ -4,6 +4,7 @@ import com.mycity4kids.models.request.AddGpPostCommentOrReplyRequest;
 import com.mycity4kids.models.request.AddGroupPostRequest;
 import com.mycity4kids.models.request.GroupActionsRequest;
 import com.mycity4kids.models.request.JoinGroupRequest;
+import com.mycity4kids.models.request.UpdateGroupPostRequest;
 import com.mycity4kids.models.request.UpdateUserPostSettingsRequest;
 import com.mycity4kids.models.response.AddGpPostCommentReplyResponse;
 import com.mycity4kids.models.response.AddGroupPostResponse;
@@ -21,6 +22,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -69,9 +71,15 @@ public interface GroupsAPI {
 
     //Group Posts
     @GET("/api/v1/groups/post")
-    Call<GroupPostResponse> getAllPostsForAGroup(@Query("groupId") String groupId,
+    Call<GroupPostResponse> getAllPostsForAGroup(@Query("groupId") int groupId,
                                                  @Query("$skip") int skip,
                                                  @Query("$limit") int limit);
+
+    @GET("/api/v1/groups/post")
+    Call<GroupPostResponse> getAllFilteredPostsForAGroup(@Query("groupId") int groupId,
+                                                         @Query("$skip") int skip,
+                                                         @Query("$limit") int limit,
+                                                         @Query("type") String type);
 
     @GET("/api/v1/groups/post/{postId}")
     Call<GroupsListingResponse> getSinglePost(@Path("postId") String settingsId);
@@ -82,6 +90,9 @@ public interface GroupsAPI {
     @PUT("/api/v1/groups/post")
     Call<GroupsListingResponse> updatePost();
 
+    @PATCH("/api/v1/groups/post/{postId}")
+    Call<GroupPostResponse> disablePostComment(@Path("postId") int postId,
+                                               @Body UpdateGroupPostRequest updateGroupPostRequest);
 
     //Group Members
     @GET("/api/v1/groups/members")

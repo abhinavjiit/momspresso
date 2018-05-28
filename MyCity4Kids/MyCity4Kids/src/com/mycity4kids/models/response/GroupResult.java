@@ -10,7 +10,7 @@ import java.util.Map;
  */
 
 public class GroupResult implements Parcelable {
-    private String id;
+    private int id;
     private String title;
     private String logoImage;
     private String headerImage;
@@ -26,7 +26,7 @@ public class GroupResult implements Parcelable {
     private Map<String, String> questionnaire;
 
     protected GroupResult(Parcel in) {
-        id = in.readString();
+        id = in.readInt();
         title = in.readString();
         logoImage = in.readString();
         headerImage = in.readString();
@@ -53,11 +53,11 @@ public class GroupResult implements Parcelable {
         }
     };
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -172,7 +172,7 @@ public class GroupResult implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
+        dest.writeInt(id);
         dest.writeString(title);
         dest.writeString(logoImage);
         dest.writeString(headerImage);

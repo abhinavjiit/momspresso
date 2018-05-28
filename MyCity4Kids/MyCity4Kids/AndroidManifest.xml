@@ -418,6 +418,12 @@
         <activity
             android:name=".ui.activity.GroupsListingActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.GroupSettingsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.LeaveGroupActivity"
+            android:screenOrientation="portrait" />
 
         <receiver
             android:name="com.mycity4kids.reminders.BootCompleteReceiver"

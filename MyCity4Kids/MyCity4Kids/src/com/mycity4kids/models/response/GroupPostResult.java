@@ -18,7 +18,7 @@ public class GroupPostResult extends BaseResponse implements Parcelable {
     private String lang;
     private int isActive;
     private Object mediaUrls;
-    private String disableComments;
+    private int disableComments;
     private int isAnnon;
     private String pinnedBy;
     private int isPinned;
@@ -44,7 +44,7 @@ public class GroupPostResult extends BaseResponse implements Parcelable {
         type = in.readString();
         lang = in.readString();
         isActive = in.readInt();
-        disableComments = in.readString();
+        disableComments = in.readInt();
         isAnnon = in.readInt();
         pinnedBy = in.readString();
         isPinned = in.readInt();
@@ -127,11 +127,11 @@ public class GroupPostResult extends BaseResponse implements Parcelable {
         this.mediaUrls = mediaUrls;
     }
 
-    public String getDisableComments() {
+    public int getDisableComments() {
         return disableComments;
     }
 
-    public void setDisableComments(String disableComments) {
+    public void setDisableComments(int disableComments) {
         this.disableComments = disableComments;
     }
 
@@ -260,7 +260,7 @@ public class GroupPostResult extends BaseResponse implements Parcelable {
         dest.writeString(type);
         dest.writeString(lang);
         dest.writeInt(isActive);
-        dest.writeString(disableComments);
+        dest.writeInt(disableComments);
         dest.writeInt(isAnnon);
         dest.writeString(pinnedBy);
         dest.writeInt(isPinned);

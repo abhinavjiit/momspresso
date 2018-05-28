@@ -8,15 +8,15 @@ import java.util.Map;
 
 public class JoinGroupRequest {
 
-    private String groupId;
+    private int groupId;
     private String userId;
     private Map<String, String> questionnaireResponse;
 
-    public String getGroupId() {
+    public int getGroupId() {
         return groupId;
     }
 
-    public void setGroupId(String groupId) {
+    public void setGroupId(int groupId) {
         this.groupId = groupId;
     }
 
