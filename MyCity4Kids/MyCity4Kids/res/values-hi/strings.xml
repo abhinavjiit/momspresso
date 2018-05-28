@@ -568,6 +568,7 @@
     <string name="article_listing.toolbar.title_popular">प्रचलित</string>
     <string name="article_listing.toolbar.title_trending">ट्रेंडिंग</string>
     <string name="article_listing.toolbar.title_for_you">खास आपके लिए </string>
+    <string name="article_listing.toolbar.title_todays_best">आज का सबसे अच्छा</string>
     <string name="article_listing.toolbar.title_editor_picks">संपादक की पसंद</string>
 
     <string name="sort.recent">ताजातरीन</string>
@@ -609,6 +610,7 @@
 
     <string name="article_listing.type.trending_label">ट्रेंडिंग</string>
     <string name="article_listing.type.editor_label">संपादक की पसंद</string>
+    <string name="article_listing.type.todays_best_label">आज का सबसे अच्छा</string>
     <string name="article_listing.type.for_you_label">खास आपके लिए</string>
     <string name="article_listing.type.languages_label">भाषाएँ</string>
     <string name="article_listing.type.videos_label">विडियोज</string>

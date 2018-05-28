@@ -54,7 +54,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
 
     private final static String MEET_CONTRIBUTOR_ID = "meetContributorId";
 
-    private String[] sectionsKey = {"TRENDING", "EDITOR'S PICK", "FOR YOU", "VIDEOS", "RECENT"};
+    private String[] sectionsKey = {"TRENDING", "TODAY'S BEST", "EDITOR'S PICK", "FOR YOU", "VIDEOS", "RECENT"};
 
     private ArrayList<ExploreTopicsModel> mainTopicsList;
     private String fragType = "";
@@ -79,8 +79,8 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
             fragType = getArguments().getString("fragType", "");
         }
         String[] sections = {
-                getString(R.string.article_listing_type_trending_label), getString(R.string.article_listing_type_editor_label), getString(R.string.article_listing_type_for_you_label),
-                getString(R.string.article_listing_type_videos_label), getString(R.string.article_listing_type_recent_label)
+                getString(R.string.article_listing_type_trending_label), getString(R.string.article_listing_type_todays_best_label), getString(R.string.article_listing_type_editor_label),
+                getString(R.string.article_listing_type_for_you_label), getString(R.string.article_listing_type_videos_label), getString(R.string.article_listing_type_recent_label)
         };
 
         dynamoUserId = SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId();
@@ -240,7 +240,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                 caller.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                        boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(getActivity(), AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE, response.body());
+                        boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE, response.body());
                         Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
 
                         try {
@@ -310,6 +310,10 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                     Utils.pushOpenScreenEvent(getActivity(), "EditorsPickScreen", dynamoUserId + "");
                     Utils.pushViewQuickLinkArticlesEvent(getActivity(), "TopicScreen", dynamoUserId + "", "EditorsPickScreen");
                     intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_EDITOR_PICKS);
+                } else if (Constants.TAB_TODAYS_BEST.equalsIgnoreCase(tab.getTag().toString())) {
+                    Utils.pushOpenScreenEvent(getActivity(), "TodaysBestScreen", dynamoUserId + "");
+                    Utils.pushViewQuickLinkArticlesEvent(getActivity(), "TodaysBestScreen", dynamoUserId + "", "TodaysBestScreen");
+                    intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_TODAYS_BEST);
                 } else if (Constants.TAB_RECENT.equalsIgnoreCase(tab.getTag().toString())) {
                     Utils.pushOpenScreenEvent(getActivity(), "RecentScreen", dynamoUserId + "");
                     Utils.pushViewQuickLinkArticlesEvent(getActivity(), "TopicScreen", dynamoUserId + "", "RecentScreen");
@@ -355,6 +359,8 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                     intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_POPULAR);
                 } else if (Constants.TAB_EDITOR_PICKS.equalsIgnoreCase(tab.getTag().toString())) {
                     intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_EDITOR_PICKS);
+                } else if (Constants.TAB_TODAYS_BEST.equalsIgnoreCase(tab.getTag().toString())) {
+                    intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_TODAYS_BEST);
                 } else if (Constants.TAB_RECENT.equalsIgnoreCase(tab.getTag().toString())) {
                     intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_RECENT);
                 } else if (Constants.TAB_IN_YOUR_CITY.equalsIgnoreCase(tab.getTag().toString())) {

@@ -51,6 +51,13 @@ public interface TopicsCategoryAPI {
                                                         @Query("end") int end,
                                                         @Query("lang") String lang);
 
+    @GET("/v1/articles/handpicked/")
+    Call<ArticleListingResponse> getTodaysBestArticles(@Query("publicationDate") String categoryId,
+                                                       @Query("start") int start,
+                                                       @Query("end") int end,
+                                                       @Query("lang") String lang);
+
+
     @GET("/v1/articles/topics/{categoryId}")
     Call<ArticleListingResponse> getEditorPicksArticle(@Path("categoryId") String categoryId,
                                                        @Query("sort") String sort,

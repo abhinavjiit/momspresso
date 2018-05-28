@@ -1871,7 +1871,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     };
 
     private void createSponsporedTagsList(ArrayList<String> sponsoredList) throws FileNotFoundException {
-        FileInputStream fileInputStream = getActivity().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+        FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
         String fileContent = AppUtils.convertStreamToString(fileInputStream);
         TopicsResponse tRes = new Gson().fromJson(fileContent, TopicsResponse.class);
         for (int i = 0; i < tRes.getData().size(); i++) {
