@@ -228,11 +228,13 @@ public class Constants {
     public static final String KEY_FOR_YOU = "foryou";
     public static final String KEY_IN_YOUR_CITY = "inYourCity";
     public static final String KEY_EDITOR_PICKS = "editorPicks";
+    public static final String KEY_TODAYS_BEST = "todaysBest";
     public static final String KEY_MOMSPRESSO = "momspresso";
     public static final String KEY_HINDI = "hindi";
 
     public static final String TAB_EDITOR_PICKS = "EDITOR'S PICK";
     public static final String TAB_TRENDING = "TRENDING";
+    public static final String TAB_TODAYS_BEST = "TODAY'S BEST";
     public static final String TAB_RECENT = "RECENT";
     public static final String TAB_POPULAR = "POPULAR";
     public static final String TAB_IN_YOUR_CITY = "IN YOUR CITY";

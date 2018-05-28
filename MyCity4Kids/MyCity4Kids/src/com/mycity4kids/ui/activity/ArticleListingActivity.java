@@ -20,29 +20,23 @@ import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.crashlytics.android.Crashlytics;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
+import com.kelltontech.utils.DateTimeUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
-import com.mycity4kids.interfaces.OnWebServiceCompleteListener;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
-import com.mycity4kids.newmodels.VolleyBaseResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.RecommendationAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.MainArticleRecyclerViewAdapter;
 import com.mycity4kids.ui.fragment.ForYouInfoDialogFragment;
-import com.mycity4kids.utils.ArrayAdapterFactory;
-import com.mycity4kids.volley.HttpVolleyRequest;
 import com.mycity4kids.widget.FeedNativeAd;
 
 import java.util.ArrayList;
@@ -115,6 +109,8 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
             toolbarTitleTextView.setText(getString(R.string.article_listing_toolbar_title_trending));
         } else if (sortType.equals(Constants.KEY_FOR_YOU)) {
             toolbarTitleTextView.setText(getString(R.string.article_listing_toolbar_title_for_you));
+        } else if (sortType.equals(Constants.KEY_TODAYS_BEST)) {
+            toolbarTitleTextView.setText(getString(R.string.article_listing_toolbar_title_todays_best));
         } else {
             toolbarTitleTextView.setText(getString(R.string.article_listing_toolbar_title_editor_picks));
         }
@@ -162,6 +158,8 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
                     Utils.pushTopMenuClickEvent(ArticleListingActivity.this, "EditorsPickScreen", SharedPrefUtils.getUserDetailModel(ArticleListingActivity.this).getDynamoId() + "");
                 } else if (Constants.TAB_RECENT.equalsIgnoreCase(sortType)) {
                     Utils.pushTopMenuClickEvent(ArticleListingActivity.this, "RecentScreen", SharedPrefUtils.getUserDetailModel(ArticleListingActivity.this).getDynamoId() + "");
+                } else if (Constants.TAB_TODAYS_BEST.equalsIgnoreCase(sortType)) {
+                    Utils.pushTopMenuClickEvent(ArticleListingActivity.this, "TodaysBestScreen", SharedPrefUtils.getUserDetailModel(ArticleListingActivity.this).getDynamoId() + "");
                 }
                 onBackPressed();
             }
@@ -175,6 +173,8 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
                     Utils.pushTopMenuClickEvent(ArticleListingActivity.this, "EditorsPickScreen", SharedPrefUtils.getUserDetailModel(ArticleListingActivity.this).getDynamoId() + "");
                 } else if (Constants.TAB_RECENT.equalsIgnoreCase(sortType)) {
                     Utils.pushTopMenuClickEvent(ArticleListingActivity.this, "RecentScreen", SharedPrefUtils.getUserDetailModel(ArticleListingActivity.this).getDynamoId() + "");
+                } else if (Constants.TAB_TODAYS_BEST.equalsIgnoreCase(sortType)) {
+                    Utils.pushTopMenuClickEvent(ArticleListingActivity.this, "TodaysBestScreen", SharedPrefUtils.getUserDetailModel(ArticleListingActivity.this).getDynamoId() + "");
                 }
                 onBackPressed();
             }
@@ -192,7 +192,6 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
             showToast(getString(R.string.error_network));
             return;
         }
-        String url = "";
         if (Constants.KEY_FOR_YOU.equals(sortKey)) {
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
             RecommendationAPI recommendationAPI = retrofit.create(RecommendationAPI.class);
@@ -207,9 +206,14 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
             Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(AppConstants.EDITOR_PICKS_CATEGORY_ID, 0, from, from + limit - 1,
                     SharedPrefUtils.getLanguageFilters(this));
             filterCall.enqueue(articleListingResponseCallback);
-//            url = AppConstants.LIVE_URL + AppConstants.SERVICE_TYPE__EDITORS_PICKS + AppConstants.EDITOR_PICKS_CATEGORY_ID + "?sort=0&sponsored=0&start=" + from +
-//                    "&end=" + to + "&lang=" + SharedPrefUtils.getLanguageFilters(this);
-//            HttpVolleyRequest.getStringResponse(this, url, null, mGetArticleListingListener, Request.Method.GET, isCacheRequired);
+        } else if (Constants.KEY_TODAYS_BEST.equals(sortKey)) {
+            Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+            TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
+
+            int from = (nextPageNumber - 1) * limit + 1;
+            Call<ArticleListingResponse> filterCall = topicsAPI.getTodaysBestArticles(DateTimeUtils.getKidsDOBNanoMilliTimestamp("" + System.currentTimeMillis()), from, from + limit - 1,
+                    SharedPrefUtils.getLanguageFilters(this));
+            filterCall.enqueue(articleListingResponseCallback);
         } else {
             Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
             TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
@@ -217,9 +221,6 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
             int from = (nextPageNumber - 1) * limit + 1;
             Call<ArticleListingResponse> filterCall = topicsAPI.getRecentArticles(from, from + limit - 1, SharedPrefUtils.getLanguageFilters(this));
             filterCall.enqueue(articleListingResponseCallback);
-//            url = AppConstants.LIVE_URL + AppConstants.SERVICE_TYPE_ARTICLE + sortKey +
-//                    AppConstants.SEPARATOR_BACKSLASH + from + AppConstants.SEPARATOR_BACKSLASH + to + "?lang=" + SharedPrefUtils.getLanguageFilters(this);
-//            HttpVolleyRequest.getStringResponse(this, url, null, mGetArticleListingListener, Request.Method.GET, isCacheRequired);
         }
     }
 
@@ -384,108 +385,6 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
 
     }
 
-    private OnWebServiceCompleteListener mGetArticleListingListener = new OnWebServiceCompleteListener() {
-        @Override
-        public void onWebServiceComplete(VolleyBaseResponse response, boolean isError) {
-            progressBar.setVisibility(View.GONE);
-            if (isError) {
-                if (response.getResponseCode() != 999)
-                    showToast(getString(R.string.server_went_wrong));
-            } else {
-
-                if (response == null) {
-                    showToast(getString(R.string.server_went_wrong));
-                    isReuqestRunning = false;
-                    mLodingView.setVisibility(View.GONE);
-                    return;
-                }
-                Log.d("Response back =", " " + response.getResponseBody());
-                ArticleListingResponse responseData;
-                try {
-                    Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
-                    responseData = gson.fromJson(response.getResponseBody(), ArticleListingResponse.class);
-                } catch (JsonSyntaxException jse) {
-                    Crashlytics.logException(jse);
-                    Log.d("JsonSyntaxException", Log.getStackTraceString(jse));
-                    showToast(getString(R.string.server_error));
-                    return;
-                }
-
-                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    processResponse(responseData);
-                } else if (responseData.getCode() == 400) {
-                    String message = responseData.getReason();
-                    if (!StringUtils.isNullOrEmpty(message)) {
-                        showToast(message);
-                    } else {
-                        showToast(getString(R.string.went_wrong));
-                    }
-                }
-
-                isReuqestRunning = false;
-                mLodingView.setVisibility(View.GONE);
-            }
-
-        }
-    };
-
-    private void processResponse(ArticleListingResponse responseData) {
-        try {
-            ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
-
-            if (dataList.size() == 0) {
-
-                isLastPageReached = true;
-                if (null != articleDataModelsNew && !articleDataModelsNew.isEmpty()) {
-                    //No more next results for search from pagination
-
-                } else {
-                    // No results for search
-                    articleDataModelsNew = dataList;
-                    recyclerAdapter.setNewListData(dataList);
-                    recyclerAdapter.notifyDataSetChanged();
-                    noBlogsTextView.setVisibility(View.VISIBLE);
-                    noBlogsTextView.setText(getString(R.string.no_articles_found));
-                }
-
-            } else {
-                noBlogsTextView.setVisibility(View.GONE);
-                if (from == 1) {
-                    articleDataModelsNew = dataList;
-                } else {
-                    int prevFrom = Integer.parseInt(responseData.getData().get(0).getChunks().split("-")[0]);
-                    if (prevFrom < from) {
-                        //Response from cache refresh request. Update the dataset and refresh list
-                        //cache refresh request response and response from pagination may overlap causing duplication
-                        // to prevent check the page number in response
-                        //-- open article listing and immediately scroll to next page to reproduce.
-                        int articleNumber = prevFrom - 1;
-                        for (int i = 0; i < dataList.size(); i++) {
-                            articleDataModelsNew.set(articleNumber + i, dataList.get(i));
-                        }
-                        recyclerAdapter.setNewListData(articleDataModelsNew);
-                        recyclerAdapter.notifyDataSetChanged();
-                        return;
-                    } else {
-                        articleDataModelsNew.addAll(dataList);
-                    }
-
-                }
-                from = from + 15;
-                to = to + 15;
-                nextPageNumber++;
-                recyclerAdapter.setNewListData(articleDataModelsNew);
-                recyclerAdapter.notifyDataSetChanged();
-            }
-        } catch (Exception ex) {
-            mLodingView.setVisibility(View.GONE);
-            removeVolleyCache(sortType);
-            Crashlytics.logException(ex);
-            Log.d("MC4kException", Log.getStackTraceString(ex));
-        }
-
-    }
-
     @Override
     public void onRefresh() {
         if (!ConnectivityUtils.isNetworkEnabled(this)) {
@@ -562,6 +461,10 @@ public class ArticleListingActivity extends BaseActivity implements View.OnClick
         } else if (Constants.KEY_RECENT.equalsIgnoreCase(sortType)) {
             intent.putExtra(Constants.ARTICLE_OPENED_FROM, "RecentScreen");
             intent.putExtra(Constants.FROM_SCREEN, "RecentScreen");
+        } else if (Constants.KEY_TODAYS_BEST.equalsIgnoreCase(sortType)) {
+            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "TodaysBestScreen");
+            intent.putExtra(Constants.FROM_SCREEN, "TodaysBestScreen");
+            intent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
         }
 
         intent.putExtra(Constants.ARTICLE_ID, articleDataModelsNew.get(position).getId());

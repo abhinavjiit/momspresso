@@ -567,6 +567,7 @@
     <string name="article_listing.toolbar.title_popular">POPULAR</string>
     <string name="article_listing.toolbar.title_trending">TRENDING</string>
     <string name="article_listing.toolbar.title_for_you">FOR YOU</string>
+    <string name="article_listing.toolbar.title_todays_best">TODAY\'S BEST</string>
     <string name="article_listing.toolbar.title_editor_picks">EDITOR\'S PICKS</string>
 
     <string name="sort.recent">RECENT</string>
@@ -609,6 +610,7 @@
 
     <string name="article_listing.type.trending_label">TRENDING</string>
     <string name="article_listing.type.editor_label">EDITOR\'S PICK</string>
+    <string name="article_listing.type.todays_best_label">TODAY\'S BEST</string>
     <string name="article_listing.type.for_you_label">FOR YOU</string>
     <string name="article_listing.type.languages_label">LANGUAGES</string>
     <string name="article_listing.type.videos_label">VIDEOS</string>
