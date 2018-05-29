@@ -3,6 +3,7 @@ package com.mycity4kids.models.response;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -33,6 +34,7 @@ public class GroupPostResult extends BaseResponse implements Parcelable {
     private String pollType;
     private Object pollOptions;
     private boolean isVoted;
+    private ArrayList<GroupPostCounts> counts;
 
     public GroupPostResult() {
     }
@@ -57,6 +59,8 @@ public class GroupPostResult extends BaseResponse implements Parcelable {
         createdAt = in.readLong();
         updatedAt = in.readLong();
         pollType = in.readString();
+        counts = new ArrayList<>();
+        in.readTypedList(counts, GroupPostCounts.CREATOR);
     }
 
     public static final Creator<GroupPostResult> CREATOR = new Creator<GroupPostResult>() {
@@ -247,6 +251,14 @@ public class GroupPostResult extends BaseResponse implements Parcelable {
         isVoted = voted;
     }
 
+    public ArrayList<GroupPostCounts> getCounts() {
+        return counts;
+    }
+
+    public void setCounts(ArrayList<GroupPostCounts> counts) {
+        this.counts = counts;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -273,6 +285,7 @@ public class GroupPostResult extends BaseResponse implements Parcelable {
         dest.writeLong(createdAt);
         dest.writeLong(updatedAt);
         dest.writeString(pollType);
+        dest.writeTypedList(counts);
     }
 }
 
