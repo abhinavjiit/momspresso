@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.StringUtils;
@@ -43,6 +44,7 @@ import com.mycity4kids.models.response.UserPostSettingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
 import com.mycity4kids.ui.adapter.GroupPostDetailsAndCommentsRecyclerAdapter;
+import com.mycity4kids.ui.fragment.AddGpPostCommentReplyDialogFragment;
 import com.mycity4kids.ui.fragment.AddViewGroupPostCommentsRepliesDialogFragment;
 import com.mycity4kids.ui.fragment.GroupPostReportDialogFragment;
 
@@ -83,14 +85,15 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     private GroupPostResult postData;
     private Toolbar toolbar;
     private AddViewGroupPostCommentsRepliesDialogFragment addViewGroupPostCommentsRepliesDialogFragment;
-    private ImageView addCommentImageView;
-    private EditText writeCommentEditText;
+    //    private ImageView addCommentImageView;
+//    private EditText writeCommentEditText;
     private LinearLayout postSettingsContainer;
     private RelativeLayout postSettingsContainerMain;
     private View overlayView;
     private TextView savePostTextView, notificationToggleTextView, commentToggleTextView, reportPostTextView;
     private ProgressBar progressBar;
     private ImageView groupSettingsImageView;
+    private FloatingActionButton openAddCommentDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,8 +101,8 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         setContentView(R.layout.group_post_detail_activity);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        addCommentImageView = (ImageView) findViewById(R.id.addCommentImageView);
-        writeCommentEditText = (EditText) findViewById(R.id.writeCommentEditText);
+//        addCommentImageView = (ImageView) findViewById(R.id.addCommentImageView);
+//        writeCommentEditText = (EditText) findViewById(R.id.writeCommentEditText);
         groupSettingsImageView = (ImageView) findViewById(R.id.groupSettingsImageView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         postSettingsContainer = (LinearLayout) findViewById(R.id.postSettingsContainer);
@@ -109,14 +112,15 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         notificationToggleTextView = (TextView) findViewById(R.id.notificationToggleTextView);
         commentToggleTextView = (TextView) findViewById(R.id.commentToggleTextView);
         reportPostTextView = (TextView) findViewById(R.id.reportPostTextView);
+        openAddCommentDialog = (FloatingActionButton) findViewById(R.id.openAddCommentDialog);
 
         selectedGroup = getIntent().getParcelableExtra("groupItem");
         postType = getIntent().getStringExtra("postType");
         postData = (GroupPostResult) getIntent().getParcelableExtra("postData");
 
         if (postData.getDisableComments() == 1) {
-            writeCommentEditText.setVisibility(View.GONE);
-            addCommentImageView.setVisibility(View.GONE);
+//            writeCommentEditText.setVisibility(View.GONE);
+//            addCommentImageView.setVisibility(View.GONE);
             findViewById(R.id.topLineView).setVisibility(View.GONE);
         }
         setSupportActionBar(toolbar);
@@ -134,12 +138,13 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         slideAnim = AnimationUtils.loadAnimation(this, R.anim.appear_from_bottom);
         fadeAnim = AnimationUtils.loadAnimation(this, R.anim.alpha_anim);
 
-        addCommentImageView.setOnClickListener(this);
+//        addCommentImageView.setOnClickListener(this);
         savePostTextView.setOnClickListener(this);
         notificationToggleTextView.setOnClickListener(this);
         commentToggleTextView.setOnClickListener(this);
         reportPostTextView.setOnClickListener(this);
         overlayView.setOnClickListener(this);
+        openAddCommentDialog.setOnClickListener(this);
 
         completeResponseList = new ArrayList<>();
         completeResponseList.add(new GroupPostCommentResult()); // Empty element for Header position
@@ -409,11 +414,6 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                 startActivity(intent);
             }
             break;
-            case R.id.addCommentImageView:
-                if (validateCommentText()) {
-                    addComment();
-                }
-                break;
             case R.id.savePostTextView:
                 Log.d("savePostTextView", "" + selectedPost.getId());
                 if (savePostTextView.getText().toString().equals("SAVE POST")) {
@@ -437,6 +437,15 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
                     updateUserPostPreferences("disableNotif");
                 }
                 break;
+            case R.id.openAddCommentDialog: {
+                AddGpPostCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddGpPostCommentReplyDialogFragment();
+                FragmentManager fm = getSupportFragmentManager();
+                Bundle _args = new Bundle();
+                addGpPostCommentReplyDialogFragment.setArguments(_args);
+                addGpPostCommentReplyDialogFragment.setCancelable(true);
+                addGpPostCommentReplyDialogFragment.show(fm, "Add Comment");
+            }
+            break;
             case R.id.reportPostTextView:
                 Log.d("reportPostTextView", "" + selectedPost.getId());
                 GroupPostReportDialogFragment groupPostReportDialogFragment = new GroupPostReportDialogFragment();
@@ -585,14 +594,14 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
         }
     };
 
-    private void addComment() {
+    public void addComment(String content) {
         Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
         GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
         AddGpPostCommentOrReplyRequest addGpPostCommentOrReplyRequest = new AddGpPostCommentOrReplyRequest();
         addGpPostCommentOrReplyRequest.setGroupId(postData.getGroupId());
         addGpPostCommentOrReplyRequest.setPostId(postData.getId());
         addGpPostCommentOrReplyRequest.setUserId(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
-        addGpPostCommentOrReplyRequest.setContent(writeCommentEditText.getText().toString());
+        addGpPostCommentOrReplyRequest.setContent(content);
         Call<AddGpPostCommentReplyResponse> call = groupsAPI.addPostCommentOrReply(addGpPostCommentOrReplyRequest);
         call.enqueue(addCommentReplyResponseListener);
 //        Call ca
@@ -651,10 +660,10 @@ public class GroupPostDetailActivity extends BaseActivity implements View.OnClic
     };
 
     private boolean validateCommentText() {
-        if (StringUtils.isNullOrEmpty(writeCommentEditText.getText().toString())) {
-            Toast.makeText(this, "Please add a comment", Toast.LENGTH_LONG).show();
-            return false;
-        }
+//        if (StringUtils.isNullOrEmpty(writeCommentEditText.getText().toString())) {
+//            Toast.makeText(this, "Please add a comment", Toast.LENGTH_LONG).show();
+//            return false;
+//        }
         return true;
     }
 }

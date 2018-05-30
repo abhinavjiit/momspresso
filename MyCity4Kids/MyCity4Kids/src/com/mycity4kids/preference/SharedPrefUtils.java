@@ -105,6 +105,7 @@ public class SharedPrefUtils {
     private static final String FIRST_VIDEO_UPLOAD_FLAG = "firstVideoUploadFlag";
 
     private static final String LOCALE_LANGUAGE_KEY = "language_key";
+    private static final String ANONYMOUS_FLAG = "anonymousFlag";
 
     /**
      * this shared preference save current versions for control city,locality,category APIs .
@@ -594,5 +595,18 @@ public class SharedPrefUtils {
         SharedPreferences _sharedPref = context.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
         String language = (_sharedPref.getString(LOCALE_LANGUAGE_KEY, Locale.getDefault().getLanguage()));
         return language;
+    }
+
+    public static boolean isUserAnonymous(Context pContext) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        boolean flag = (_sharedPref.getBoolean(ANONYMOUS_FLAG, false));
+        return flag;
+    }
+
+    public static void setUserAnonymous(Context pContext, boolean flag) {
+        SharedPreferences _sharedPref = pContext.getSharedPreferences(COMMON_PREF_FILE, Context.MODE_PRIVATE);
+        Editor _editor = _sharedPref.edit();
+        _editor.putBoolean(ANONYMOUS_FLAG, flag);
+        _editor.commit();
     }
 }

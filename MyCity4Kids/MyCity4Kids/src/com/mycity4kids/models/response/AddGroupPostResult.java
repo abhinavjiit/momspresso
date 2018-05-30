@@ -15,11 +15,11 @@ public class AddGroupPostResult implements Parcelable {
     private String url;
     private String type;
     private String lang;
-    private String isActive;
+    private boolean isActive;
     private Object mediaUrls;
-    private int disableComments;
-    private String isAnnon;
-    private String isPinned;
+    private boolean disableComments;
+    private boolean isAnnon;
+    private boolean isPinned;
     private String moderatedBy;
     private String moderationStatus;
     private String moderationOn;
@@ -31,16 +31,17 @@ public class AddGroupPostResult implements Parcelable {
     private long createdAt;
     private long updatedAt;
 
+
     protected AddGroupPostResult(Parcel in) {
         id = in.readString();
         content = in.readString();
         url = in.readString();
         type = in.readString();
         lang = in.readString();
-        isActive = in.readString();
-        disableComments = in.readInt();
-        isAnnon = in.readString();
-        isPinned = in.readString();
+        isActive = in.readByte() != 0;
+        disableComments = in.readByte() != 0;
+        isAnnon = in.readByte() != 0;
+        isPinned = in.readByte() != 0;
         moderatedBy = in.readString();
         moderationStatus = in.readString();
         moderationOn = in.readString();
@@ -59,10 +60,10 @@ public class AddGroupPostResult implements Parcelable {
         dest.writeString(url);
         dest.writeString(type);
         dest.writeString(lang);
-        dest.writeString(isActive);
-        dest.writeInt(disableComments);
-        dest.writeString(isAnnon);
-        dest.writeString(isPinned);
+        dest.writeByte((byte) (isActive ? 1 : 0));
+        dest.writeByte((byte) (disableComments ? 1 : 0));
+        dest.writeByte((byte) (isAnnon ? 1 : 0));
+        dest.writeByte((byte) (isPinned ? 1 : 0));
         dest.writeString(moderatedBy);
         dest.writeString(moderationStatus);
         dest.writeString(moderationOn);
@@ -131,14 +132,6 @@ public class AddGroupPostResult implements Parcelable {
         this.lang = lang;
     }
 
-    public String getIsActive() {
-        return isActive;
-    }
-
-    public void setIsActive(String isActive) {
-        this.isActive = isActive;
-    }
-
     public Object getMediaUrls() {
         return mediaUrls;
     }
@@ -147,28 +140,36 @@ public class AddGroupPostResult implements Parcelable {
         this.mediaUrls = mediaUrls;
     }
 
-    public int getDisableComments() {
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    public boolean isDisableComments() {
         return disableComments;
     }
 
-    public void setDisableComments(int disableComments) {
+    public void setDisableComments(boolean disableComments) {
         this.disableComments = disableComments;
     }
 
-    public String getIsAnnon() {
+    public boolean isAnnon() {
         return isAnnon;
     }
 
-    public void setIsAnnon(String isAnnon) {
-        this.isAnnon = isAnnon;
+    public void setAnnon(boolean annon) {
+        isAnnon = annon;
     }
 
-    public String getIsPinned() {
+    public boolean isPinned() {
         return isPinned;
     }
 
-    public void setIsPinned(String isPinned) {
-        this.isPinned = isPinned;
+    public void setPinned(boolean pinned) {
+        isPinned = pinned;
     }
 
     public String getModeratedBy() {

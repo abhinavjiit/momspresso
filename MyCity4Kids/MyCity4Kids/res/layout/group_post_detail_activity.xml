@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -37,40 +38,54 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/topLineView"
         android:layout_below="@+id/toolbar" />
 
-    <com.mycity4kids.widget.CustomFontEditText
-        android:id="@+id/writeCommentEditText"
-        android:layout_width="match_parent"
+    <com.getbase.floatingactionbutton.FloatingActionButton
+        android:id="@+id/openAddCommentDialog"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/addCommentImageView"
-        android:background="@null"
-        android:hint="Add a reply"
-        android:minHeight="48dp"
-        android:paddingLeft="6dp"
-        android:paddingRight="6dp"
-        android:textColor="@color/groups.light_black_color" />
-
-    <ImageView
-        android:id="@+id/addCommentImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="49dp"
-        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:background="@color/groups.blue_color"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:src="@drawable/ic_gp_add_response" />
+        android:layout_gravity="right|bottom"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        app:fab_colorNormal="@color/groups.blue_color"
+        app:fab_colorPressed="@color/groups.blue_color"
+        app:fab_icon="@drawable/ic_add_comments" />
 
-    <View
-        android:id="@+id/topLineView"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_above="@+id/writeCommentEditText"
-        android:layout_toLeftOf="@+id/addCommentImageView"
-        android:background="@color/light_underline" />
+
+    <!--<com.mycity4kids.widget.CustomFontEditText-->
+    <!--android:id="@+id/writeCommentEditText"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:layout_toLeftOf="@+id/addCommentImageView"-->
+    <!--android:background="@null"-->
+    <!--android:hint="Add a comment"-->
+    <!--android:minHeight="48dp"-->
+    <!--android:paddingLeft="6dp"-->
+    <!--android:paddingRight="6dp"-->
+    <!--android:textColor="@color/groups.light_black_color" />-->
+
+    <!--<ImageView-->
+    <!--android:id="@+id/addCommentImageView"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="49dp"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:background="@color/groups.blue_color"-->
+    <!--android:paddingLeft="16dp"-->
+    <!--android:paddingRight="16dp"-->
+    <!--android:src="@drawable/ic_gp_add_response" />-->
+
+    <!--<View-->
+    <!--android:id="@+id/topLineView"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="1dp"-->
+    <!--android:layout_above="@+id/writeCommentEditText"-->
+    <!--android:layout_toLeftOf="@+id/addCommentImageView"-->
+    <!--android:background="@color/light_underline" />-->
 
     <RelativeLayout
         android:id="@+id/postSettingsContainerMain"

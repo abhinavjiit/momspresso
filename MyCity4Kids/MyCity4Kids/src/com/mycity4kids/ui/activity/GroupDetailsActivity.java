@@ -29,6 +29,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.models.request.GroupActionsRequest;
 import com.mycity4kids.models.request.UpdateGroupPostRequest;
 import com.mycity4kids.models.request.UpdateUserPostSettingsRequest;
 import com.mycity4kids.models.response.ArticleListingResponse;
@@ -37,6 +38,7 @@ import com.mycity4kids.models.response.GroupDetailResponse;
 import com.mycity4kids.models.response.GroupPostResponse;
 import com.mycity4kids.models.response.GroupPostResult;
 import com.mycity4kids.models.response.GroupResult;
+import com.mycity4kids.models.response.GroupsActionResponse;
 import com.mycity4kids.models.response.UserPostSettingResponse;
 import com.mycity4kids.models.response.UserPostSettingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
@@ -161,14 +163,6 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         final LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
-
-        ArrayList<String> arrayList = new ArrayList<>();
-        arrayList.add("one");
-        arrayList.add("two");
-        arrayList.add("three");
-        arrayList.add("four");
-        arrayList.add("five");
-        arrayList.add("six");
 
         articleDataModelsNew = new ArrayList<ArticleListingResult>();
 
@@ -347,6 +341,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 break;
             case R.id.postContainer: {
                 Intent intent = new Intent(GroupDetailsActivity.this, AddTextOrMediaGroupPostActivity.class);
+                intent.putExtra("groupItem", selectedGroup);
                 startActivity(intent);
             }
             break;
@@ -717,8 +712,57 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
 //                startActivity(intent);
                 break;
             }
+            case R.id.upvoteContainer:
+                markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, position);
+                break;
+            case R.id.downvoteContainer:
+                markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, position);
+                break;
         }
     }
+
+    private void markAsHelpfulOrUnhelpful(String markType, int position) {
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+        GroupActionsRequest groupActionsRequest = new GroupActionsRequest();
+        groupActionsRequest.setGroupId(postList.get(position).getGroupId());
+        groupActionsRequest.setPostId(postList.get(position).getId());
+        groupActionsRequest.setUserId(SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+        groupActionsRequest.setType(markType);//AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY
+        Call<GroupsActionResponse> call = groupsAPI.addAction(groupActionsRequest);
+        call.enqueue(groupActionResponseCallback);
+    }
+
+    private Callback<GroupsActionResponse> groupActionResponseCallback = new Callback<GroupsActionResponse>() {
+        @Override
+        public void onResponse(Call<GroupsActionResponse> call, retrofit2.Response<GroupsActionResponse> response) {
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    GroupsActionResponse groupsActionResponse = response.body();
+//                    groupPostResult.setVoted(true);
+//                    notifyDataSetChanged();
+                } else {
+
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<GroupsActionResponse> call, Throwable t) {
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
 
     private void getCurrentPostSettingsStatus(GroupPostResult selectedPost) {
         progressBar.setVisibility(View.VISIBLE);

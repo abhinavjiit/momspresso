@@ -15,6 +15,30 @@ public class GroupPostCounts implements Parcelable {
     private int count;
     private ArrayList<GroupPostCounts> counts;
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public ArrayList<GroupPostCounts> getCounts() {
+        return counts;
+    }
+
+    public void setCounts(ArrayList<GroupPostCounts> counts) {
+        this.counts = counts;
+    }
+
     protected GroupPostCounts(Parcel in) {
         name = in.readString();
         count = in.readInt();
@@ -43,5 +67,6 @@ public class GroupPostCounts implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
         dest.writeInt(count);
+        dest.writeTypedList(counts);
     }
 }

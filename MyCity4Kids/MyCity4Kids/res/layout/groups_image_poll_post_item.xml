@@ -11,7 +11,7 @@
     android:paddingRight="10dp"
     android:paddingTop="8dp">
 
-    <ImageView
+    <com.mikhaellopez.circularimageview.CircularImageView
         android:id="@+id/userImageView"
         android:layout_width="@dimen/ad_comments_profile_pic_width"
         android:layout_height="@dimen/ad_comments_profile_pic_width"
@@ -20,7 +20,10 @@
         android:layout_alignParentTop="true"
         android:contentDescription="@string/author_img"
         android:src="@drawable/default_commentor_img"
-        android:visibility="visible" />
+        app:civ_border="true"
+        app:civ_border_color="@color/line_separator_color"
+        app:civ_border_width="1px"
+        app:civ_shadow="false" />
 
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/usernameTextView"
@@ -400,22 +403,49 @@
             app:fontName="oswald.ttf" />
     </LinearLayout>
 
+    <!--<com.mycity4kids.widget.CustomFontTextView-->
+    <!--android:id="@+id/postCommentsTextView"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@+id/lastOptionsContainer"-->
+    <!--android:layout_marginRight="10dp"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:layout_toLeftOf="@+id/shareTextView"-->
+    <!--android:drawablePadding="5dp"-->
+    <!--android:drawableRight="@drawable/ic_comments"-->
+    <!--android:gravity="bottom"-->
+    <!--android:padding="5dp"-->
+    <!--android:text="20"-->
+    <!--android:textColor="@color/ad.comment.date"-->
+    <!--android:textSize="12sp"-->
+    <!--app:fontName="oswald.ttf" />-->
+
     <com.mycity4kids.widget.CustomFontTextView
         android:id="@+id/postCommentsTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/lastOptionsContainer"
-        android:layout_marginRight="10dp"
+        android:layout_marginRight="5dp"
         android:layout_marginTop="10dp"
-        android:layout_toLeftOf="@+id/shareTextView"
-        android:drawablePadding="5dp"
-        android:drawableRight="@drawable/ic_comments"
+        android:layout_toLeftOf="@+id/addCommentImageView"
         android:gravity="bottom"
         android:padding="5dp"
-        android:text="20"
-        android:textColor="@color/ad.comment.date"
+        android:text="20 Comments"
+        android:textColor="@color/groups.blue_color"
         android:textSize="12sp"
         app:fontName="oswald.ttf" />
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/addCommentImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lastOptionsContainer"
+        android:layout_marginRight="4dp"
+        android:layout_marginTop="10dp"
+        android:layout_toLeftOf="@+id/shareTextView"
+        android:padding="5dp"
+        android:src="@drawable/ic_comments"
+        android:tint="@color/groups.blue_color" />
 
     <ImageView
         android:id="@+id/shareTextView"
