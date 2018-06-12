@@ -60,7 +60,7 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
     private RelativeLayout topArticle_1, topArticle_2, topArticle_3;
     private ImageView imgTopArticle_1, imgTopArticle_2, imgTopArticle_3;
     private TextView txvTopArticle_1, txvTopArticle_2, txvTopArticle_3;
-    private TextView articleSectionTextView, videosSectionTextView, activitySectionTextView, rankingSectionTextView;
+    private TextView articleSectionTextView, storySectionTextView, videosSectionTextView, activitySectionTextView, rankingSectionTextView;
     private TextView followButton, unfollowButton;
     private TextView rankLanguageTextView;
     private LinearLayout followerContainer, followingContainer, rankContainer;
@@ -103,6 +103,7 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
         videosSectionTextView = (TextView) findViewById(R.id.videosSectionTextView);
         activitySectionTextView = (TextView) findViewById(R.id.activitySectionTextView);
         rankingSectionTextView = (TextView) findViewById(R.id.rankingSectionTextView);
+        storySectionTextView = (TextView) findViewById(R.id.storySectionTextView);
         followButton = (TextView) findViewById(R.id.followTextView);
         unfollowButton = (TextView) findViewById(R.id.unfollowTextView);
         topArticleLabel = (TextView) findViewById(R.id.topArticleLabel);
@@ -121,6 +122,7 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
         videosSectionTextView.setOnClickListener(this);
         activitySectionTextView.setOnClickListener(this);
         rankingSectionTextView.setOnClickListener(this);
+        storySectionTextView.setOnClickListener(this);
         followingContainer.setOnClickListener(this);
         followerContainer.setOnClickListener(this);
 
@@ -133,7 +135,7 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
 
         if (AppConstants.DEBUGGING_USER_ID.equals(userId)) {
             rankingSectionTextView.setVisibility(View.VISIBLE);
-            findViewById(R.id.underline_4).setVisibility(View.VISIBLE);
+            findViewById(R.id.underline_5).setVisibility(View.VISIBLE);
         }
 
         getUserDetails();
@@ -634,6 +636,12 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
                 startActivity(intent);
             }
             break;
+            case R.id.storySectionTextView:
+                Intent ssIntent = new Intent(this, UserPublishedAndDraftsActivity.class);
+                ssIntent.putExtra(Constants.AUTHOR_ID, authorId);
+                ssIntent.putExtra("contentType", "shortStory");
+                startActivity(ssIntent);
+                break;
             case R.id.followingContainer: {
 //                Intent intent = new Intent(this, FollowersAndFollowingListActivity.class);
 //                intent.putExtra(AppConstants.FOLLOW_LIST_TYPE, AppConstants.FOLLOWING_LIST);

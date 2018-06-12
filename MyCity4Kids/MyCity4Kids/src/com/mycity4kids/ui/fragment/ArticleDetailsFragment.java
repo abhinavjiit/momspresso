@@ -436,9 +436,13 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     }
 
     private void hitRelatedArticleAPI() {
-        String url = AppConstants.LIVE_URL + AppConstants.SERVICE_TYPE_ARTICLE + "trending" +
-                AppConstants.SEPARATOR_BACKSLASH + "1" + AppConstants.SEPARATOR_BACKSLASH + "3" + "?lang=" + SharedPrefUtils.getLanguageFilters(getActivity());
-        HttpVolleyRequest.getStringResponse(getActivity(), url, null, mGetArticleListingListener, Request.Method.GET, true);
+//        String url = AppConstants.LIVE_URL + AppConstants.SERVICE_TYPE_ARTICLE + "trending" +
+//                AppConstants.SEPARATOR_BACKSLASH + "1" + AppConstants.SEPARATOR_BACKSLASH + "3" + "?lang=" + SharedPrefUtils.getLanguageFilters(getActivity());
+//        HttpVolleyRequest.getStringResponse(getActivity(), url, null, mGetArticleListingListener, Request.Method.GET, true);
+        Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+        TopicsCategoryAPI topicsCategoryAPI = retrofit.create(TopicsCategoryAPI.class);
+        Call<ArticleListingResponse> vernacularTrendingCall = topicsCategoryAPI.getVernacularTrendingArticles(1, 4, SharedPrefUtils.getLanguageFilters(getActivity()));
+        vernacularTrendingCall.enqueue(vernacularTrendingResponseCallback);
 
         Call<ArticleListingResponse> categoryRelatedArticlesCall = articleDetailsAPI.getCategoryRelatedArticles(articleId, 0, 3, SharedPrefUtils.getLanguageFilters(getActivity()));
         categoryRelatedArticlesCall.enqueue(categoryArticleResponseCallback);
@@ -1515,7 +1519,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             if (response == null || response.body() == null) {
                 if (isAdded())
                     ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
-                ;
                 return;
             }
             try {
@@ -1575,7 +1578,6 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     Log.d("JsonSyntaxException", Log.getStackTraceString(jse));
                     if (isAdded())
                         ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
-                    ;
                     removeProgressDialog();
                     return;
                 }
@@ -1626,6 +1628,88 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     }
                 }
             }
+        }
+    };
+
+    private Callback<ArticleListingResponse> vernacularTrendingResponseCallback = new Callback<ArticleListingResponse>() {
+        @Override
+        public void onResponse(Call<ArticleListingResponse> call, retrofit2.Response<ArticleListingResponse> response) {
+            if (mLodingView.getVisibility() == View.VISIBLE) {
+                mLodingView.setVisibility(View.GONE);
+            }
+            if (response == null || response.body() == null) {
+                NetworkErrorException nee = new NetworkErrorException("Trending Article API failure");
+                Crashlytics.logException(nee);
+                return;
+            }
+
+            try {
+                ArticleListingResponse responseData = response.body();
+                if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
+                    if (dataList != null) {
+                        for (int i = 0; i < dataList.size(); i++) {
+                            if (dataList.get(i).getId().equals(articleId)) {
+                                dataList.remove(i);
+                                break;
+                            }
+                        }
+                    }
+                    if (dataList == null || dataList.size() == 0) {
+
+                    } else {
+                        trendingArticles.setVisibility(View.VISIBLE);
+                        impressionList.addAll(dataList);
+                        Collections.shuffle(dataList);
+                        if (dataList.size() >= 3) {
+                            Picasso.with(getActivity()).load(dataList.get(0).getImageUrl().getThumbMin()).
+                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles1.getArticleImageView());
+                            trendingRelatedArticles1.setArticleTitle(dataList.get(0).getTitle());
+                            trendingRelatedArticles1.setTag(dataList);
+
+                            Picasso.with(getActivity()).load(dataList.get(1).getImageUrl().getThumbMin()).
+                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles2.getArticleImageView());
+                            trendingRelatedArticles2.setArticleTitle(dataList.get(1).getTitle());
+                            trendingRelatedArticles2.setTag(dataList);
+
+                            Picasso.with(getActivity()).load(dataList.get(2).getImageUrl().getThumbMin()).
+                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles3.getArticleImageView());
+                            trendingRelatedArticles3.setArticleTitle(dataList.get(2).getTitle());
+                            trendingRelatedArticles3.setTag(dataList);
+                        } else if (dataList.size() == 2) {
+                            Picasso.with(getActivity()).load(dataList.get(0).getImageUrl().getThumbMin()).
+                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles1.getArticleImageView());
+                            trendingRelatedArticles1.setArticleTitle(dataList.get(0).getTitle());
+                            trendingRelatedArticles1.setTag(dataList);
+
+                            Picasso.with(getActivity()).load(dataList.get(1).getImageUrl().getThumbMin()).
+                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles2.getArticleImageView());
+                            trendingRelatedArticles2.setArticleTitle(dataList.get(1).getTitle());
+                            trendingRelatedArticles2.setTag(dataList);
+
+                            trendingRelatedArticles3.setVisibility(View.GONE);
+                        } else if (dataList.size() == 1) {
+                            Picasso.with(getActivity()).load(dataList.get(0).getImageUrl().getThumbMin()).
+                                    placeholder(R.drawable.default_article).fit().into(trendingRelatedArticles1.getArticleImageView());
+                            trendingRelatedArticles1.setArticleTitle(dataList.get(0).getTitle());
+                            trendingRelatedArticles1.setTag(dataList);
+                            trendingRelatedArticles2.setVisibility(View.GONE);
+                            trendingRelatedArticles3.setVisibility(View.GONE);
+                        }
+                    }
+                } else {
+                    NetworkErrorException nee = new NetworkErrorException("Trending Article Error Response");
+                    Crashlytics.logException(nee);
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<ArticleListingResponse> call, Throwable t) {
+            handleExceptions(t);
         }
     };
 
@@ -1888,7 +1972,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
 
     private void createArticleTags(ArrayList<String> previouslyFollowedTopics, ArrayList<Map<String, String>> tagsList, ArrayList<String> sponsoredList) {
 
-        int relatedImageWidth = (int) getResources().getDimension(R.dimen.related_article_article_image_width);
+        int relatedImageWidth = (int) BaseApplication.getAppContext().getResources().getDimension(R.dimen.related_article_article_image_width);
         viewAllTagsTextView.setVisibility(View.GONE);
         width = width - ((RelativeLayout.LayoutParams) tagsLayout.getLayoutParams()).leftMargin - ((RelativeLayout.LayoutParams) tagsLayout.getLayoutParams()).rightMargin;
 
@@ -1917,9 +2001,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                     ((View) topicView.getChildAt(1)).setVisibility(View.GONE);
                 }
                 if (null != previouslyFollowedTopics && previouslyFollowedTopics.contains(key)) {
-                    ((ImageView) topicView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.tick));
-                    topicView.getChildAt(2).setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.ad_tags_following_bg));
-                    ((ImageView) topicView.getChildAt(2)).setColorFilter(ContextCompat.getColor(getActivity(), R.color.white_color));
+                    ((ImageView) topicView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(BaseApplication.getAppContext(), R.drawable.tick));
+                    topicView.getChildAt(2).setBackgroundColor(ContextCompat.getColor(BaseApplication.getAppContext(), R.color.ad_tags_following_bg));
+                    ((ImageView) topicView.getChildAt(2)).setColorFilter(ContextCompat.getColor(BaseApplication.getAppContext(), R.color.white_color));
                     topicView.getChildAt(2).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -1927,9 +2011,9 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
                         }
                     });
                 } else {
-                    ((ImageView) topicView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.follow_plus));
-                    topicView.getChildAt(2).setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.ad_tags_follow_bg));
-                    ((ImageView) topicView.getChildAt(2)).setColorFilter(ContextCompat.getColor(getActivity(), R.color.ad_tags_following_bg));
+                    ((ImageView) topicView.getChildAt(2)).setImageDrawable(ContextCompat.getDrawable(BaseApplication.getAppContext(), R.drawable.follow_plus));
+                    topicView.getChildAt(2).setBackgroundColor(ContextCompat.getColor(BaseApplication.getAppContext(), R.color.ad_tags_follow_bg));
+                    ((ImageView) topicView.getChildAt(2)).setColorFilter(ContextCompat.getColor(BaseApplication.getAppContext(), R.color.ad_tags_following_bg));
                     topicView.getChildAt(2).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

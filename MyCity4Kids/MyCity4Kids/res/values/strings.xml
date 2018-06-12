@@ -342,6 +342,7 @@
     <string name="myprofile.following_label">FOLLOWING</string>
     <string name="myprofile.followers_label">FOLLOWERS</string>
     <string name="myprofile.section.articles_label">ARTICLES</string>
+    <string name="myprofile.section.short_story_label">100 WORD STORY</string>
     <string name="myprofile.section.videos_label">MOM VLOGS</string>
     <string name="myprofile.section.activity_label">ACTIVITY</string>
     <string name="myprofile.section.myranking_label">MY RANKING</string>
@@ -584,6 +585,7 @@
 
     <string name="no_articles_found">No articles found</string>
     <string name="check_out_blog">Momspresso\n\nCheck out this interesting blog post\n</string>
+    <string name="check_out_short_story">Momspresso\n\nCheck out this interesting short story\n</string>
     <string name="contributors">Contributors</string>
     <string name="contributor_in">Contributors in</string>
     <string name="recent_article">RELATED ARTICLES</string>
@@ -611,6 +613,7 @@
     <string name="article_listing.type.editor_label">EDITOR\'S PICK</string>
     <string name="article_listing.type.todays_best_label">TODAY\'S BEST</string>
     <string name="article_listing.type.for_you_label">FOR YOU</string>
+    <string name="article_listing.type.short_story_label">100WORDSTORY</string>
     <string name="article_listing.type.languages_label">LANGUAGES</string>
     <string name="article_listing.type.videos_label">VIDEOS</string>
     <string name="article_listing.type.recent_label">RECENT</string>
@@ -654,4 +657,20 @@
 
     <string name="no_article.be_first">Be the first one to write articles in this category!</string>
 
+    <string name="random_text">Your trekking to Stok Kangri begins with the arrival to Leh. You can easily reach Leh once you come to Delhi. You can reach Leh from Delhi either through a flight or through the road. Taking the flight is a better option as you would be saving a lot on time and energy. Taking the road may cost you a lot of time as you have to first go to either Srinagar or Manali to start for Leh. You can spend a day in Leh to acclimatize to the weather. Trekking in the area of Leh is among the best options among Trekking in India</string>
+
+    <string name="short_s.add_story">Add Story</string>
+    <string name="short_s.add_comment">Add Comment</string>
+    <string name="short_s.edit_response">Edit</string>
+    <string name="short_s.replying_to">Replying to</string>
+    <string name="short_s.toolbar_title">100 Words Story</string>
+    <string name="short_s.add.title_hint">Write an exciting title that suits your story. Character limit is 60.</string>
+    <string name="short_s.add.body_hint">Write your amazing story or poem in 100 words or less.</string>
+    <string name="short_s.publish_message">Congrats! Your story has been published.\n Share it with your friends and family.</string>
+    <string name="short_s.post">POST</string>
+
+    <string name="report.reason">This content is inappropriate because</string>
+    <string name="report.abuse">Abusive Content</string>
+    <string name="report.spam">It\'s a Spam</string>
+    <string name="report.not_relevant">Not Relevant</string>
 </resources>

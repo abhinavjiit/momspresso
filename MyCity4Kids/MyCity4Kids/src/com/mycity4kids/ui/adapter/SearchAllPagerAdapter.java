@@ -91,13 +91,13 @@ public class SearchAllPagerAdapter extends FragmentStatePagerAdapter {
             mArticlefragment = new SearchAllArticlesAndTopicsTabFragment();
         }
         mArticlefragment.refreshAllArticles(searchText, Constants.KEY_RECENT);
-        mAuthorsFragment.resetOnceLoadedFlag(searchText);
+        mArticlefragment.resetOnceLoadedFlag(searchText);
 
         if (null == mAuthorsFragment) {
             mAuthorsFragment = new SearchAllAuthorsTabFragment();
         }
         mAuthorsFragment.refreshAllAuthors(searchText);
-        mArticlefragment.resetOnceLoadedFlag(searchText);
+        mAuthorsFragment.resetOnceLoadedFlag(searchText);
 
     }
 

@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.support.design.widget.TabLayout;
@@ -31,6 +32,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
+import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.LanguageConfigModel;
 
 import org.json.JSONArray;
@@ -468,6 +470,22 @@ public class AppUtils {
         return false;
     }
 
+    public static String getShortStoryShareUrl(String userType, String blogSlug, String titleSlug) {
+        String shareUrl = "";
+        if (AppConstants.USER_TYPE_BLOGGER.equals(userType) || AppConstants.USER_TYPE_USER.equals(userType)) {
+            shareUrl = AppConstants.ARTICLE_SHARE_URL + blogSlug + "/story/" + titleSlug;
+        } else if (AppConstants.USER_TYPE_EXPERT.equals(userType)) {
+            shareUrl = AppConstants.ARTICLE_SHARE_URL + "story/" + titleSlug;
+        } else if (AppConstants.USER_TYPE_EDITOR.equals(userType)) {
+            shareUrl = AppConstants.ARTICLE_SHARE_URL + "story/" + titleSlug;
+        } else if (AppConstants.USER_TYPE_EDITORIAL.equals(userType)) {
+            shareUrl = AppConstants.ARTICLE_SHARE_URL + "story/" + titleSlug;
+        } else if (AppConstants.USER_TYPE_FEATURED.equals(userType)) {
+            shareUrl = AppConstants.ARTICLE_SHARE_URL + "story/" + titleSlug;
+        }
+        return shareUrl;
+    }
+
     public static String getShareUrl(String userType, String blogSlug, String titleSlug) {
         String shareUrl = "";
         if (AppConstants.USER_TYPE_BLOGGER.equals(userType)) {
@@ -508,4 +526,25 @@ public class AppUtils {
                 count / Math.pow(1000, exp),
                 "kMGTPE".charAt(exp - 1));
     }
+
+    public static ArrayList<ArticleListingResult> getFilteredContentList(ArrayList<ArticleListingResult> originalList, String contentType) {
+        ArrayList<ArticleListingResult> filteredList = new ArrayList<>();
+        for (int i = 0; i < originalList.size(); i++) {
+            if (contentType.equals(originalList.get(i).getContentType())) {
+                filteredList.add(originalList.get(i));
+            }
+        }
+        return filteredList;
+    }
+
+    public static int getFilteredPosition(String id, ArrayList<ArticleListingResult> filteredList) {
+        for (int i = 0; i < filteredList.size(); i++) {
+            if (id.equals(filteredList.get(i).getId())) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
+
 }

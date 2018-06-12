@@ -8,12 +8,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
 import com.mycity4kids.R;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.ui.adapter.UserArticlesPagerAdapter;
+import com.mycity4kids.ui.adapter.UserShortStoryPagerAdapter;
 import com.mycity4kids.utils.AppUtils;
 
 /**
@@ -25,6 +27,8 @@ public class UserPublishedAndDraftsActivity extends BaseActivity implements View
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private ImageView searchAllImageView;
+    private TextView toolbarTitleTextView;
+    private String contentType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +39,9 @@ public class UserPublishedAndDraftsActivity extends BaseActivity implements View
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         viewPager = (ViewPager) findViewById(R.id.pager);
         searchAllImageView = (ImageView) findViewById(R.id.searchAllImageView);
+        toolbarTitleTextView = (TextView) findViewById(R.id.toolbarTitle);
 
+        contentType = getIntent().getStringExtra("contentType");
         searchAllImageView.setOnClickListener(this);
 
         String authorId = getIntent().getStringExtra(Constants.AUTHOR_ID);
@@ -50,8 +56,15 @@ public class UserPublishedAndDraftsActivity extends BaseActivity implements View
             tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.user_article_tabbar_draft_label)));
         }
         AppUtils.changeTabsFont(this, tabLayout);
-        UserArticlesPagerAdapter adapter = new UserArticlesPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), authorId, isPrivateProfile);
-        viewPager.setAdapter(adapter);
+        if ("shortStory".equals(contentType)) {
+            toolbarTitleTextView.setText(getString(R.string.myprofile_section_short_story_label));
+            UserShortStoryPagerAdapter adapter = new UserShortStoryPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), authorId, isPrivateProfile);
+            viewPager.setAdapter(adapter);
+        } else {
+            UserArticlesPagerAdapter adapter = new UserArticlesPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), authorId, isPrivateProfile);
+            viewPager.setAdapter(adapter);
+        }
+
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -69,6 +82,7 @@ public class UserPublishedAndDraftsActivity extends BaseActivity implements View
 
             }
         });
+
 
 //        viewPager.setCurrentItem(0);
     }

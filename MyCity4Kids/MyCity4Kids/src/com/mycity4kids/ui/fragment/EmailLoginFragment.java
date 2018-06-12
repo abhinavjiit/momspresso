@@ -103,7 +103,7 @@ public class EmailLoginFragment extends BaseFragment implements View.OnClickList
             String emailId = mEmailId.getText().toString().trim();
             String password = mPassword.getText().toString().trim();
             if (BuildConfig.DEBUG && emailId.equals("bbb@mc4k.com")) {
-                password = "rikki";
+                password = "rikkichu";
             }
             ((ActivityLogin) getActivity()).loginRequest(emailId, password);
         }

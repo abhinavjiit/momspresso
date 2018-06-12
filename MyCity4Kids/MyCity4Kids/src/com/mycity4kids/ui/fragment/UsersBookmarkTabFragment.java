@@ -31,6 +31,7 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
+import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.activity.UserPublishedAndDraftsActivity;
 import com.mycity4kids.ui.adapter.UsersBookmarksRecycleAdapter;
 import com.mycity4kids.utils.AppUtils;
@@ -151,6 +152,48 @@ public class UsersBookmarkTabFragment extends BaseFragment implements UsersBookm
         }
     };
 
+//DONOT DELETE --- GET ALL BOOKMARKS
+//    private void processResponse(ArticleListingResponse responseData) {
+//        //	parentingResponse = responseData ;
+//        try {
+//            ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
+//
+//            if (dataList.size() == 0) {
+//                paginationValue = responseData.getData().get(0).getPagination();
+//                if (AppConstants.PAGINATION_END_VALUE.equals(paginationValue)) {
+//                    isLastPageReached = true;
+//                } else {
+//                    getUsersBookmarks();
+//                }
+//
+////                isLastPageReached = true;
+////                if (null != bookmarksList && !bookmarksList.isEmpty()) {
+////                    //No more next results for search from pagination
+////                } else {
+////                    // No results for search
+////                    bookmarksList.addAll(dataList);
+////                    adapter.setListData(bookmarksList);
+////                    adapter.notifyDataSetChanged();
+//////                    noBlogsTextView.setVisibility(View.VISIBLE);
+////                }
+//            } else {
+//                noBlogsTextView.setVisibility(View.GONE);
+//                bookmarksList.addAll(dataList);
+//                paginationValue = responseData.getData().get(0).getPagination();
+//                if (AppConstants.PAGINATION_END_VALUE.equals(paginationValue)) {
+//                    isLastPageReached = true;
+//                }else{
+//                    getUsersBookmarks();
+//                }
+//                adapter.setListData(bookmarksList);
+//                adapter.notifyDataSetChanged();
+//            }
+//        } catch (Exception ex) {
+//            Crashlytics.logException(ex);
+//            Log.d("MC4kException", Log.getStackTraceString(ex));
+//        }
+//    }
+
     private void processResponse(ArticleListingResponse responseData) {
         //	parentingResponse = responseData ;
         try {
@@ -192,38 +235,80 @@ public class UsersBookmarkTabFragment extends BaseFragment implements UsersBookm
     public void onClick(View view, int position) {
         switch (view.getId()) {
             case R.id.shareImageView:
-                Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
-                shareIntent.setType("text/plain");
-                String shareUrl = AppUtils.getShareUrl(bookmarksList.get(position).getUserType(),
-                        bookmarksList.get(position).getBlogPageSlug(), bookmarksList.get(position).getTitleSlug());
-                String shareMessage;
-                if (StringUtils.isNullOrEmpty(shareUrl)) {
-                    shareMessage = getString(R.string.check_out_blog) + "\"" +
-                            bookmarksList.get(position).getTitle() + "\" by " + bookmarksList.get(position).getUserName() + ".";
+                if ("1".equals(bookmarksList.get(position).getContentType())) {
+                    Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+                    shareIntent.setType("text/plain");
+
+                    String shareUrl = AppUtils.getShortStoryShareUrl(bookmarksList.get(position).getUserType(),
+                            bookmarksList.get(position).getBlogPageSlug(), bookmarksList.get(position).getTitleSlug());
+                    String shareMessage;
+                    if (StringUtils.isNullOrEmpty(shareUrl)) {
+                        shareMessage = getString(R.string.check_out_short_story) + "\"" +
+                                bookmarksList.get(position).getTitle() + "\" by " + bookmarksList.get(position).getUserName() + ".";
+                    } else {
+                        shareMessage = getString(R.string.check_out_short_story) + "\"" +
+                                bookmarksList.get(position).getTitle() + "\" by " + bookmarksList.get(position).getUserName() + ".\nRead Here: " + shareUrl;
+                    }
+                    shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
+                    startActivity(Intent.createChooser(shareIntent, "Momspresso"));
+//                    if (authorId.equals(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId())) {
+//                        Utils.pushShareArticleEvent(getActivity(), "PrivateLikedScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", recommendationsList.get(position).getId(),
+//                                recommendationsList.get(position).getUserId() + "~" + recommendationsList.get(position).getUserName(), "-");
+//                    } else {
+//                        Utils.pushShareArticleEvent(getActivity(), "PublicLikedScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", recommendationsList.get(position).getId(),
+//                                recommendationsList.get(position).getUserId() + "~" + recommendationsList.get(position).getUserName(), "-");
+//                    }
                 } else {
-                    shareMessage = getString(R.string.check_out_blog) + "\"" +
-                            bookmarksList.get(position).getTitle() + "\" by " + bookmarksList.get(position).getUserName() + ".\nRead Here: " + shareUrl;
+                    Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+                    shareIntent.setType("text/plain");
+                    String shareUrl = AppUtils.getShareUrl(bookmarksList.get(position).getUserType(),
+                            bookmarksList.get(position).getBlogPageSlug(), bookmarksList.get(position).getTitleSlug());
+                    String shareMessage;
+                    if (StringUtils.isNullOrEmpty(shareUrl)) {
+                        shareMessage = getString(R.string.check_out_blog) + "\"" +
+                                bookmarksList.get(position).getTitle() + "\" by " + bookmarksList.get(position).getUserName() + ".";
+                    } else {
+                        shareMessage = getString(R.string.check_out_blog) + "\"" +
+                                bookmarksList.get(position).getTitle() + "\" by " + bookmarksList.get(position).getUserName() + ".\nRead Here: " + shareUrl;
+                    }
+                    shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
+                    startActivity(Intent.createChooser(shareIntent, "Momspresso"));
+                    Utils.pushShareArticleEvent(getActivity(), "BookmarkedScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", bookmarksList.get(position).getId(),
+                            bookmarksList.get(position).getUserId() + "~" + bookmarksList.get(position).getUserName(), "-");
                 }
-                shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
-                startActivity(Intent.createChooser(shareIntent, "Momspresso"));
-                Utils.pushShareArticleEvent(getActivity(), "BookmarkedScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", bookmarksList.get(position).getId(),
-                        bookmarksList.get(position).getUserId() + "~" + bookmarksList.get(position).getUserName(), "-");
                 break;
             case R.id.removeBookmarkTextView:
                 bookmarkDeletePos = position;
                 hitDeleteBookmarkAPI(bookmarksList.get(position));
                 break;
             case R.id.rootView:
-                Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
-                intent.putExtra(Constants.ARTICLE_ID, bookmarksList.get(position).getId());
-                intent.putExtra(Constants.AUTHOR_ID, bookmarksList.get(position).getUserId());
-                intent.putExtra(Constants.BLOG_SLUG, bookmarksList.get(position).getBlogPageSlug());
-                intent.putExtra(Constants.TITLE_SLUG, bookmarksList.get(position).getTitleSlug());
-                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "BookmarkList");
-                intent.putExtra(Constants.FROM_SCREEN, "PrivateActivityScreen");
-                intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
-                intent.putExtra(Constants.AUTHOR, bookmarksList.get(position).getUserId() + "~" + bookmarksList.get(position).getUserName());
-                startActivity(intent);
+                if ("1".equals(bookmarksList.get(position).getContentType())) {
+                    Intent intent = new Intent(getActivity(), ShortStoryContainerActivity.class);
+                    intent.putExtra(Constants.ARTICLE_ID, bookmarksList.get(position).getId());
+                    intent.putExtra(Constants.AUTHOR_ID, bookmarksList.get(position).getUserId());
+                    intent.putExtra(Constants.BLOG_SLUG, bookmarksList.get(position).getBlogPageSlug());
+                    intent.putExtra(Constants.TITLE_SLUG, bookmarksList.get(position).getTitleSlug());
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "BookmarkList");
+                    intent.putExtra(Constants.FROM_SCREEN, "PrivateActivityScreen");
+                    ArrayList<ArticleListingResult> filteredResult = AppUtils.getFilteredContentList(bookmarksList, AppConstants.CONTENT_TYPE_SHORT_STORY);
+                    intent.putParcelableArrayListExtra("pagerListData", filteredResult);
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(bookmarksList.get(position).getId(), filteredResult));
+                    intent.putExtra(Constants.AUTHOR, bookmarksList.get(position).getUserId() + "~" + bookmarksList.get(position).getUserName());
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
+                    intent.putExtra(Constants.ARTICLE_ID, bookmarksList.get(position).getId());
+                    intent.putExtra(Constants.AUTHOR_ID, bookmarksList.get(position).getUserId());
+                    intent.putExtra(Constants.BLOG_SLUG, bookmarksList.get(position).getBlogPageSlug());
+                    intent.putExtra(Constants.TITLE_SLUG, bookmarksList.get(position).getTitleSlug());
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "BookmarkList");
+                    intent.putExtra(Constants.FROM_SCREEN, "PrivateActivityScreen");
+                    ArrayList<ArticleListingResult> filteredResult = AppUtils.getFilteredContentList(bookmarksList, AppConstants.CONTENT_TYPE_ARTICLE);
+                    intent.putParcelableArrayListExtra("pagerListData", filteredResult);
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(bookmarksList.get(position).getId(), filteredResult));
+                    intent.putExtra(Constants.AUTHOR, bookmarksList.get(position).getUserId() + "~" + bookmarksList.get(position).getUserName());
+                    startActivity(intent);
+                }
                 break;
         }
     }

@@ -344,6 +344,7 @@
     <string name="myprofile.following_label">फॉलोविंग </string>
     <string name="myprofile.followers_label">फॉलोवर्स </string>
     <string name="myprofile.section.articles_label">लेख</string>
+    <string name="myprofile.section.short_story_label">100 WORD STORY</string>
     <string name="myprofile.section.videos_label">मॉम वलॉग्स</string>
     <string name="myprofile.section.activity_label">गोष्टी </string>
     <string name="myprofile.section.myranking_label">माझा क्रमांक </string>
@@ -568,7 +569,7 @@
     <string name="article_listing.toolbar.title_popular">लोकप्रिय </string>
     <string name="article_listing.toolbar.title_trending">ट्रेंडिंग</string>
     <string name="article_listing.toolbar.title_for_you">तुमच्या साठी </string>
-    <string name="article_listing.toolbar.title_todays_best">TODAY\'S BEST</string>
+    <string name="article_listing.toolbar.title_todays_best">आजचे बेस्ट</string>
     <string name="article_listing.toolbar.title_editor_picks">संपादकांची निवड </string>
 
     <string name="sort.recent">नवीन</string>
@@ -585,6 +586,7 @@
 
     <string name="no_articles_found">लेख उपलब्ध नाही </string>
     <string name="check_out_blog">मॉम्स प्रेसो हा मनोरंजक लेख वाचून पहा  \n</string>
+    <string name="check_out_short_story">Momspresso\n\nCheck out this interesting short story\n</string>
     <string name="contributors">योगदान कर्ते</string>
     <string name="contributor_in">योगदान कर्ते ह्या मध्ये </string>
     <string name="recent_article">संबंधित लेख </string>
@@ -610,7 +612,8 @@
 
     <string name="article_listing.type.trending_label">ट्रेंडिंग</string>
     <string name="article_listing.type.editor_label">संपादकांची निवड</string>
-    <string name="article_listing.type.todays_best_label">TODAY\'S BEST</string>
+    <string name="article_listing.type.todays_best_label">आजचे बेस्ट</string>
+    <string name="article_listing.type.short_story_label">100WORDSTORY</string>
     <string name="article_listing.type.for_you_label">ुमच्या साठी</string>
     <string name="article_listing.type.languages_label">भाषा </string>
     <string name="article_listing.type.videos_label">व्हिडीओस</string>

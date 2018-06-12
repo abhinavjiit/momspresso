@@ -8,6 +8,10 @@ import java.util.Map;
  */
 public class UpdateViewCountRequest {
     private String userId;
+
+    //For Short Stories only
+    private String contentType;
+
     private List<Map<String, String>> tags;
     private List<Map<String, String>> cities;
 
@@ -17,6 +21,14 @@ public class UpdateViewCountRequest {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
     }
 
     public List<Map<String, String>> getTags() {

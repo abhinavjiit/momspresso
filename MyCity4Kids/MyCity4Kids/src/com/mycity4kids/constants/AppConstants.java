@@ -377,6 +377,7 @@ public class AppConstants {
     public static final String DEEP_LINK_ARTICLE_LISTING = "article_listing";
     public static final String DEEP_LINK_TOPIC_LISTING = "category_listing";
     public static final String DEEP_LINK_VLOG_DETAIL = "video";
+    public static final String DEEP_LINK_STORY_DETAILS = "story_detail";
     public static final String APP_SETTINGS_DEEPLINK = "app_settings";
     public static final String CONTAINER_ID = "GTM-MS864S";
 
@@ -447,8 +448,12 @@ public class AppConstants {
     public static final String BANGLA_CATEGORYID = "category-5ad20fb85f7c4a84b66b8d6993dbad9f";
     public static final String MARATHI_CATEGORYID = "category-bd1d0a1ab9c0436d97f78d90a115ee71";
     public static final String SPONSORED_CATEGORYID = "category-51a2ea215c634753ac6a9aa377deae0b";
-    public static final String DEEPLINK_EDITOR_URL = "mc4k://www.mycity4kids.com/editor";
-    public static final String DEEPLINK_MOMSPRESSO_EDITOR_URL = "mc4k://www.momspresso.com/editor";
+    public static final String SHORT_STORY_CATEGORYID = "category-ce8bdcadbe0548a9982eec4e425a0851";
+    public static final String DEEPLINK_EDITOR_URL = "mc4k/www.mycity4kids.com/editor";
+    public static final String DEEPLINK_ADD_SHORT_STORY_URL = "mc4k/www.momspresso.com/addashortstory/";
+    public static final String DEEPLINK_EDIT_SHORT_DRAFT_URL = "mc4k/www.momspresso.com/editshortdraft/";
+    public static final String DEEPLINK_EDIT_SHORT_STORY_URL = "mc4k/www.momspresso.com/editashortstory/";
+    public static final String DEEPLINK_MOMSPRESSO_EDITOR_URL = "mc4k/www.momspresso.com/editor/";
     public static final String DEEPLINK_PROFILE_URL = "mc4k://www.mycity4kids.com/profile";
     public static final String DEEPLINK_MOMSPRESSO_PROFILE_URL = "mc4k://www.momspresso.com/profile";
     public static final String DEEPLINK_SUGGESTED_TOPIC_URL = "mc4k://www.mycity4kids.com/suggested_topics";
@@ -486,6 +491,9 @@ public class AppConstants {
     public static final String NOTIFICATION_TYPE_VIDEO_DETAILS = "video_details";
     public static final String NOTIFICATION_TYPE_EDITOR = "editor";
     public static final String NOTIFICATION_TYPE_SUGGESTED_TOPICS = "suggested_topics";
+    public static final String NOTIFICATION_TYPE_TODAYS_BEST = "todays_best";
+    public static final String NOTIFICATION_TYPE_SHORT_STORY_LIST = "short_story_list";
+    public static final String NOTIFICATION_TYPE_SHORT_STORY_DETAILS = "short_story_details";
 
     public static final String FOLLOWING_STATUS_ACTIVITY_RESULT = "followingStatusActivityResult";
     public static final String VIDEO_STATUS_DRAFT = "0";
@@ -545,4 +553,8 @@ public class AppConstants {
     public static final String LOCALE_TAMIL = "ta";
     public static final String LOCALE_TELUGU = "te";
 
+    public static final String CONTENT_TYPE_SHORT_STORY = "1";
+    public static final String CONTENT_TYPE_ARTICLE = "0";
+    public static final String REPORT_TYPE_STORY = "1";
+    public static final String REPORT_TYPE_COMMENT = "2";
 }

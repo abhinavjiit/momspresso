@@ -44,6 +44,13 @@ public class Utils {
                 GTMTags.TagListingType, listingType, GTMTags.TagIndex, index, GTMTags.Author, author));
     }
 
+    public static void pushViewShortStoryEvent(Context context, String screenName, String user, String articleId, String listingType, String index, String author) {
+        Log.d("pushViewArticleEvent", "" + screenName + " --- " + listingType + " --- " + author);
+        DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
+        dataLayer.push(DataLayer.mapOf(GTMTags.TagEvent, "ShortStoryClick", GTMTags.TagScreen, screenName, GTMTags.USER_ID, user, GTMTags.ArticleId, articleId,
+                GTMTags.TagListingType, listingType, GTMTags.TagIndex, index, GTMTags.Author, author));
+    }
+
     public static void pushViewTopicArticlesEvent(Context context, String screenName, String user, String topic) {
         DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
         dataLayer.push(DataLayer.mapOf(GTMTags.TagEvent, "ViewTopicArticles", GTMTags.TagScreen, screenName, GTMTags.USER_ID, user, GTMTags.TagTopic, topic));

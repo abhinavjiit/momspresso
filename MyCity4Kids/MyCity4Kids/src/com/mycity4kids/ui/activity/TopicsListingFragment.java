@@ -69,7 +69,7 @@ public class TopicsListingFragment extends BaseFragment {
             allTopicsMap = BaseApplication.getTopicsMap();
 
             if (allTopicsList == null || allTopicsMap == null) {
-                FileInputStream fileInputStream = getActivity().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                 String fileContent = AppUtils.convertStreamToString(fileInputStream);
                 TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
                 createTopicsData(res);

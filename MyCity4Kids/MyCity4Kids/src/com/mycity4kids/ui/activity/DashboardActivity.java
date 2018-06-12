@@ -34,6 +34,7 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.gson.Gson;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
@@ -50,10 +51,12 @@ import com.mycity4kids.listener.OnButtonClicked;
 import com.mycity4kids.models.response.BlogPageResponse;
 import com.mycity4kids.models.response.DeepLinkingResposnse;
 import com.mycity4kids.models.response.DeepLinkingResult;
+import com.mycity4kids.models.response.ShortStoryDetailResponse;
 import com.mycity4kids.models.version.RateVersion;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.DeepLinkingAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
 import com.mycity4kids.ui.fragment.AddArticleVideoFragment;
 import com.mycity4kids.ui.fragment.BecomeBloggerFragment;
 import com.mycity4kids.ui.fragment.ChangePreferredLanguageDialogFragment;
@@ -431,6 +434,22 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     } else {
                         fragmentToLoad = Constants.PROFILE_FRAGMENT;
                     }
+                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_ADD_SHORT_STORY_URL)) {
+                    Intent ssIntent = new Intent(this, AddShortStoryActivity.class);
+                    startActivity(intent);
+                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_EDIT_SHORT_DRAFT_URL)) {
+//                    final String draftId = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("/") + 1, tempDeepLinkURL.length());
+                    Intent ssIntent = new Intent(this, UserPublishedAndDraftsActivity.class);
+                    ssIntent.putExtra("isPrivateProfile", true);
+                    ssIntent.putExtra("contentType", "shortStory");
+                    ssIntent.putExtra(Constants.AUTHOR_ID, SharedPrefUtils.getUserDetailModel(this).getDynamoId());
+                    startActivity(ssIntent);
+                } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_EDIT_SHORT_STORY_URL)) {
+                    final String storyId = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("/") + 1, tempDeepLinkURL.length());
+                    Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+                    ShortStoryAPI shortStoryAPI = retrofit.create(ShortStoryAPI.class);
+                    Call<ShortStoryDetailResponse> call = shortStoryAPI.getShortStoryDetails(storyId);
+                    call.enqueue(ssDetailResponseCallback);
                 } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_SUGGESTED_TOPIC_URL) || tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_SUGGESTED_TOPIC_URL)) {
                     fragmentToLoad = Constants.SUGGESTED_TOPICS_FRAGMENT;
                 } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_UPCOMING_EVENTS)) {
@@ -460,6 +479,39 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             deepLinkUrl = intent.getStringExtra(AppConstants.DEEP_LINK_URL);
         }
     }
+
+    Callback<ShortStoryDetailResponse> ssDetailResponseCallback = new Callback<ShortStoryDetailResponse>() {
+        @Override
+        public void onResponse(Call<ShortStoryDetailResponse> call, retrofit2.Response<ShortStoryDetailResponse> response) {
+            removeProgressDialog();
+            if (response == null || response.body() == null) {
+                return;
+            }
+            try {
+                ShortStoryDetailResponse responseData = response.body();
+                Intent intent = new Intent(DashboardActivity.this, AddShortStoryActivity.class);
+                intent.putExtra("from", "publishedList");
+                intent.putExtra("title", responseData.getData().getTitle());
+                intent.putExtra("body", responseData.getData().getBody());
+                intent.putExtra("articleId", responseData.getData().getId());
+                intent.putExtra("tag", new Gson().toJson(responseData.getData().getTags()));
+                intent.putExtra("cities", new Gson().toJson(responseData.getData().getCities()));
+                startActivity(intent);
+            } catch (Exception e) {
+                removeProgressDialog();
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+
+        }
+
+        @Override
+        public void onFailure(Call<ShortStoryDetailResponse> call, Throwable t) {
+            removeProgressDialog();
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
 
     private void checkIsBlogSetup() {
         showProgressDialog(getResources().getString(R.string.please_wait));
@@ -651,6 +703,9 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             case R.id.toolbarTitle:
                 if (topFragment instanceof TopicsListingFragment) {
                     Utils.pushTopMenuClickEvent(this, "TopicArticlesListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+                    onBackPressed();
+                } else if (topFragment instanceof TopicsShortStoriesContainerFragment) {
+                    Utils.pushTopMenuClickEvent(this, "TopicShortStoriesListingScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                     onBackPressed();
                 } else {
                     Utils.pushTopMenuClickEvent(this, "HomeScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
@@ -865,6 +920,23 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             case AppConstants.APP_SETTINGS_DEEPLINK:
                 renderAppSettingsScreen(data);
                 break;
+            case AppConstants.DEEP_LINK_STORY_DETAILS:
+                navigateToShortStory(data);
+                break;
+        }
+    }
+
+    private void navigateToShortStory(DeepLinkingResult data) {
+        if (!StringUtils.isNullOrEmpty(data.getArticle_id())) {
+            Intent intent = new Intent(DashboardActivity.this, ShortStoryContainerActivity.class);
+            intent.putExtra(Constants.AUTHOR_ID, data.getAuthor_id());
+            intent.putExtra(Constants.ARTICLE_ID, data.getArticle_id());
+            intent.putExtra(Constants.DEEPLINK_URL, deepLinkUrl);
+            intent.putExtra(Constants.ARTICLE_OPENED_FROM, "DeepLinking");
+            intent.putExtra(Constants.ARTICLE_INDEX, "-1");
+            intent.putExtra(Constants.FROM_SCREEN, "DeepLinking");
+            intent.putExtra(Constants.AUTHOR, data.getAuthor_id() + "~" + data.getAuthor_name());
+            startActivity(intent);
         }
     }
 
@@ -1213,6 +1285,17 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                 }
                 toolbarTitleTextView.setOnClickListener(this);
                 toolbarTitleTextView.setText(mToolbarTitle);
+                toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.home_toolbar_titlecolor));
+                menu.findItem(R.id.action_home).setChecked(true);
+                toolbarRelativeLayout.setVisibility(View.VISIBLE);
+                menuImageView.setVisibility(View.VISIBLE);
+                setSupportActionBar(mToolbar);
+                getSupportActionBar().setDisplayShowHomeEnabled(false);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            } else if (null != topFragment && topFragment instanceof TopicsShortStoriesContainerFragment) {
+                Utils.pushOpenScreenEvent(this, "TopicsShortStoriesContainerFragment", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
+                toolbarTitleTextView.setOnClickListener(this);
+                toolbarTitleTextView.setText(getString(R.string.short_s_toolbar_title));
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.home_toolbar_titlecolor));
                 menu.findItem(R.id.action_home).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);

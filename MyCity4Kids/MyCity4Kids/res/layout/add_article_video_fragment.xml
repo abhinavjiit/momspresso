@@ -5,12 +5,21 @@
     android:layout_height="match_parent"
     android:background="#545454"
     android:clickable="true"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingRight="10dp">
+
+    <!--<com.mycity4kids.widget.CustomFontTextView-->
+    <!--android:id="@+id/addShortStoryTextView"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:padding="20dp"-->
+    <!--android:text="Short Story"-->
+    <!--android:textColor="@color/white" />-->
 
     <LinearLayout
         android:id="@+id/addVideoLL"
         android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_height="100dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
@@ -19,8 +28,8 @@
 
         <ImageView
             android:id="@+id/uploadVideoImageView"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_gravity="center"
             android:background="@drawable/circular_image_bg"
             android:scaleType="center"
@@ -31,8 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:gravity="center"
             android:text="@string/add_article_or_video.upload_video"
             android:textColor="@color/white"
@@ -43,17 +51,17 @@
     <LinearLayout
         android:id="@+id/blogSetUpLL"
         android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_height="100dp"
         android:layout_above="@+id/addVideoLL"
         android:layout_alignParentRight="true"
         android:orientation="vertical">
 
         <ImageView
             android:id="@+id/setUpBlogImageView"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_gravity="center"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="5dp"
             android:background="@drawable/circular_image_bg"
             android:scaleType="center"
             android:src="@drawable/ic_become_a_bloger"
@@ -74,17 +82,17 @@
     <LinearLayout
         android:id="@+id/writeArticleLL"
         android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_height="100dp"
         android:layout_above="@+id/addVideoLL"
         android:layout_alignParentRight="true"
         android:orientation="vertical">
 
         <ImageView
             android:id="@+id/writeArticleImageView"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_gravity="center"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="5dp"
             android:background="@drawable/circular_image_bg"
             android:scaleType="center"
             android:src="@drawable/ic_write_white"
@@ -105,17 +113,17 @@
     <LinearLayout
         android:id="@+id/suggestedTopicsLL"
         android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_height="100dp"
         android:layout_above="@+id/writeArticleLL"
         android:layout_alignParentRight="true"
         android:orientation="vertical">
 
         <ImageView
             android:id="@+id/suggestedTopicImageView"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_gravity="center"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="5dp"
             android:background="@drawable/circular_image_bg"
             android:scaleType="center"
             android:src="@drawable/ic_suggested_topics"
@@ -131,10 +139,43 @@
             android:visibility="visible"
             app:fontName="oswald.ttf" />
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/shortStoryLL"
+        android:layout_width="120dp"
+        android:layout_height="100dp"
+        android:layout_above="@+id/suggestedTopicsLL"
+        android:layout_alignParentRight="true"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/shortStoryImageView"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/circular_image_bg"
+            android:padding="15dp"
+            android:scaleType="fitStart"
+            android:src="@drawable/ic_add_story"
+            android:tint="@color/white"
+            android:visibility="visible" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/shortStoryTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/short_s.add_story"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:visibility="visible"
+            app:fontName="oswald.ttf" />
+    </LinearLayout>
     <!--<ImageView-->
     <!--android:id="@+id/suggestedTopicImageView"-->
-    <!--android:layout_width="80dp"-->
-    <!--android:layout_height="80dp"-->
+    <!--android:layout_width="70dp"-->
+    <!--android:layout_height="70dp"-->
     <!--android:layout_above="@+id/suggestedTopicTextView"-->
     <!--android:layout_alignEnd="@+id/uploadVideoImageView"-->
     <!--android:layout_alignRight="@+id/uploadVideoImageView"-->
@@ -161,8 +202,8 @@
 
     <!--<ImageView-->
     <!--android:id="@+id/writeArticleImageView"-->
-    <!--android:layout_width="80dp"-->
-    <!--android:layout_height="80dp"-->
+    <!--android:layout_width="70dp"-->
+    <!--android:layout_height="70dp"-->
     <!--android:layout_above="@+id/writeArticleTextView"-->
     <!--android:layout_alignEnd="@+id/uploadVideoImageView"-->
     <!--android:layout_alignRight="@+id/uploadVideoImageView"-->
@@ -189,8 +230,8 @@
 
     <!--<ImageView-->
     <!--android:id="@+id/setUpBlogImageView"-->
-    <!--android:layout_width="80dp"-->
-    <!--android:layout_height="80dp"-->
+    <!--android:layout_width="70dp"-->
+    <!--android:layout_height="70dp"-->
     <!--android:layout_above="@+id/becomeBloggerTextView"-->
     <!--android:layout_alignEnd="@+id/uploadVideoImageView"-->
     <!--android:layout_alignRight="@+id/uploadVideoImageView"-->
@@ -217,8 +258,8 @@
 
     <!--<ImageView-->
     <!--android:id="@+id/uploadVideoImageView"-->
-    <!--android:layout_width="80dp"-->
-    <!--android:layout_height="80dp"-->
+    <!--android:layout_width="70dp"-->
+    <!--android:layout_height="70dp"-->
     <!--android:layout_above="@+id/uploadVideoTextView"-->
     <!--android:layout_alignParentEnd="true"-->
     <!--android:layout_alignParentRight="true"-->
@@ -235,7 +276,7 @@
     <!--android:layout_alignParentBottom="true"-->
     <!--android:layout_alignParentEnd="true"-->
     <!--android:layout_alignParentRight="true"-->
-    <!--android:layout_marginBottom="80dp"-->
+    <!--android:layout_marginBottom="70dp"-->
     <!--android:layout_marginEnd="60dp"-->
     <!--android:layout_marginRight="60dp"-->
     <!--android:layout_marginTop="10dp"-->

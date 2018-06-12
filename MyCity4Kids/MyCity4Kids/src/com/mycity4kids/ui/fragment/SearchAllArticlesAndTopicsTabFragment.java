@@ -28,6 +28,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.SearchArticlesAuthorsAPI;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.FilteredTopicsArticleListingActivity;
 import com.mycity4kids.ui.activity.SearchAllActivity;
+import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.adapter.SearchAllArticlesTopicsListingAdapter;
 import com.mycity4kids.widget.NpaLinearLayoutManager;
 
@@ -203,6 +204,7 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
                 obj.setTitleSlug(articleList.get(i).getTitleSlug());
                 obj.setUserId(articleList.get(i).getUserId());
                 obj.setListType(AppConstants.SEARCH_ITEM_TYPE_ARTICLE);
+                obj.setContentType(articleList.get(i).getContentType());
                 data.add(articleShowMoreIndex + i, obj);
             }
             if (articleList.size() == limit) {
@@ -298,17 +300,30 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
                 newSearchTopicArticleListingApi(searchName, "topic");
                 break;
             case AppConstants.SEARCH_ITEM_TYPE_ARTICLE: {
-                Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
                 SearchArticleTopicResult searchData = data.get(position);
-                intent.putExtra(Constants.ARTICLE_ID, searchData.getId());
-                intent.putExtra(Constants.AUTHOR_ID, searchData.getUserId());
-                intent.putExtra(Constants.BLOG_SLUG, searchData.getBlogSlug());
-                intent.putExtra(Constants.TITLE_SLUG, searchData.getTitleSlug());
-                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "SearchScreen");
-                intent.putExtra(Constants.FROM_SCREEN, "SearchScreen");
-                intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
-                intent.putExtra(Constants.AUTHOR, searchData.getUserId() + "~");
-                startActivity(intent);
+                if ("1".equals(searchData.getContentType())) {
+                    Intent intent = new Intent(getActivity(), ShortStoryContainerActivity.class);
+                    intent.putExtra(Constants.ARTICLE_ID, searchData.getId());
+                    intent.putExtra(Constants.AUTHOR_ID, searchData.getUserId());
+                    intent.putExtra(Constants.BLOG_SLUG, searchData.getBlogSlug());
+                    intent.putExtra(Constants.TITLE_SLUG, searchData.getTitleSlug());
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "SearchScreen");
+                    intent.putExtra(Constants.FROM_SCREEN, "SearchScreen");
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
+                    intent.putExtra(Constants.AUTHOR, searchData.getUserId() + "~");
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
+                    intent.putExtra(Constants.ARTICLE_ID, searchData.getId());
+                    intent.putExtra(Constants.AUTHOR_ID, searchData.getUserId());
+                    intent.putExtra(Constants.BLOG_SLUG, searchData.getBlogSlug());
+                    intent.putExtra(Constants.TITLE_SLUG, searchData.getTitleSlug());
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "SearchScreen");
+                    intent.putExtra(Constants.FROM_SCREEN, "SearchScreen");
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
+                    intent.putExtra(Constants.AUTHOR, searchData.getUserId() + "~");
+                    startActivity(intent);
+                }
             }
             break;
             case AppConstants.SEARCH_ITEM_TYPE_TOPIC: {
@@ -335,6 +350,7 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
         private String slug;
         private String display_name;
         private String listType;
+        private String contentType;
 
         public String getId() {
             return id;
@@ -414,6 +430,14 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
 
         public void setListType(String listType) {
             this.listType = listType;
+        }
+
+        public String getContentType() {
+            return contentType;
+        }
+
+        public void setContentType(String contentType) {
+            this.contentType = contentType;
         }
     }
 }

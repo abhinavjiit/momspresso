@@ -1,0 +1,80 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:background="@drawable/short_story_border_bg">
+
+    <RelativeLayout
+        android:id="@+id/titleContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/storyTitleTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/storyOptionImageView"
+            android:maxLines="2"
+            android:paddingBottom="15dp"
+            android:paddingLeft="14dp"
+            android:paddingRight="14dp"
+            android:paddingTop="15dp"
+            android:text="PRIZED POSESSION"
+            android:textColor="@color/short_story.light_black_color"
+            android:textSize="17sp"
+            app:fontName="georgia.ttf" />
+
+        <View
+            android:layout_width="100dp"
+            android:layout_height="1dp"
+            android:layout_below="@+id/storyTitleTextView"
+            android:layout_marginLeft="14dp"
+            android:background="@color/common_underline" />
+
+        <ImageView
+            android:id="@+id/storyOptionImageView"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:padding="15dp"
+            android:src="@drawable/momspresso_logo" />
+    </RelativeLayout>
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/storyBodyTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/titleContainer"
+        android:paddingLeft="14dp"
+        android:paddingRight="14dp"
+        android:paddingTop="15dp"
+        android:text="@string/random_text"
+        android:textColor="@color/short_story.light_black_color"
+        android:textSize="16sp"
+        app:fontName="georgia.ttf" />
+
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/authorNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/storyBodyTextView"
+        android:padding="14dp"
+        android:text="Reena Goyal"
+        android:textColor="@color/short_story.blue"
+        android:textSize="16sp"
+        app:fontName="georgia.ttf" />
+
+    <View
+        android:id="@+id/underline"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/authorNameTextView"
+        android:background="@color/light_underline" />
+
+</RelativeLayout>

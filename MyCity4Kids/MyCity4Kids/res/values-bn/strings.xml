@@ -344,6 +344,7 @@
     <string name="myprofile.following_label">অনুসরণ</string>
     <string name="myprofile.followers_label">অনুসরণকারী</string>
     <string name="myprofile.section.articles_label">প্রবন্ধগুলি</string>
+    <string name="myprofile.section.short_story_label">100 WORD STORY</string>
     <string name="myprofile.section.videos_label">মায়েদের ভিডিও ব্লগস</string>
     <string name="myprofile.section.activity_label">কার্যকলাপ</string>
     <string name="myprofile.section.myranking_label">আমার র্যাংকিং</string>
@@ -568,7 +569,7 @@
     <string name="article_listing.toolbar.title_popular">জনপ্রিয়</string>
     <string name="article_listing.toolbar.title_trending">ট্রেন্ডিং</string>
     <string name="article_listing.toolbar.title_for_you">আপনাদের জন্য</string>
-    <string name="article_listing.toolbar.title_todays_best">TODAY\'S BEST</string>
+    <string name="article_listing.toolbar.title_todays_best">আজকের সেরা</string>
     <string name="article_listing.toolbar.title_editor_picks">সম্পাদকের পছন্দ</string>
 
     <string name="sort.recent">নতুন</string>
@@ -585,6 +586,7 @@
 
     <string name="no_articles_found">No articles found</string>
     <string name="check_out_blog">Momspresso\n\nCheck out this interesting blog post\n</string>
+    <string name="check_out_short_story">Momspresso\n\nCheck out this interesting short story\n</string>
     <string name="contributors">আমাদের লেখকেরা</string>
     <string name="contributor_in">Contributors in</string>
     <string name="recent_article">একই সম্পর্কিত আর্টিকেলস</string>
@@ -610,8 +612,9 @@
 
     <string name="article_listing.type.trending_label">ট্রেন্ডিং</string>
     <string name="article_listing.type.editor_label">সম্পাদকের পছন্দ</string>
-    <string name="article_listing.type.todays_best_label">TODAY\'S BEST</string>
+    <string name="article_listing.type.todays_best_label">আজকের সেরা</string>
     <string name="article_listing.type.for_you_label">আপনাদের জন্য</string>
+    <string name="article_listing.type.short_story_label">100WORDSTORY</string>
     <string name="article_listing.type.languages_label">LANGUAGES</string>
     <string name="article_listing.type.videos_label">ভিডিও</string>
     <string name="article_listing.type.recent_label">নতুন</string>

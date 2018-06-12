@@ -33,8 +33,11 @@ import com.mycity4kids.models.response.DraftListResponse;
 import com.mycity4kids.models.response.DraftListResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDraftAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
+import com.mycity4kids.ui.activity.AddShortStoryActivity;
 import com.mycity4kids.ui.activity.UserPublishedAndDraftsActivity;
 import com.mycity4kids.ui.adapter.UserDraftArticleAdapter;
+import com.mycity4kids.ui.adapter.UserDraftShortStoriesAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,12 +55,15 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant.parmar on 21-04-2016.
  */
-public class UserDraftArticleTabFragment extends BaseFragment implements View.OnClickListener, UserDraftArticleAdapter.RecyclerViewClickListener, ConfirmationDialogFragment.IConfirmationResult {
+public class UserDraftArticleTabFragment extends BaseFragment implements View.OnClickListener, UserDraftArticleAdapter.RecyclerViewClickListener, ConfirmationDialogFragment.IConfirmationResult,
+        UserDraftShortStoriesAdapter.SSRecyclerViewClickListener {
 
     ArrayList<DraftListResult> draftList;
     RecyclerView recyclerView;
     private RelativeLayout mLodingView;
     private UserDraftArticleAdapter adapter;
+    private UserDraftShortStoriesAdapter shortStoriesDraftAdapter;
+    private String contentType;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,11 +74,20 @@ public class UserDraftArticleTabFragment extends BaseFragment implements View.On
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
 
-        adapter = new UserDraftArticleAdapter(getActivity(), this);
+        contentType = getArguments().getString("contentType");
+
         final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
-        recyclerView.setAdapter(adapter);
+
+        if ("shortStory".equals(contentType)) {
+            shortStoriesDraftAdapter = new UserDraftShortStoriesAdapter(getActivity(), this);
+            recyclerView.setAdapter(shortStoriesDraftAdapter);
+        } else {
+            adapter = new UserDraftArticleAdapter(getActivity(), this);
+            recyclerView.setAdapter(adapter);
+        }
+
         draftList = new ArrayList<DraftListResult>();
 
         //only when first time fragment is created
@@ -81,8 +96,28 @@ public class UserDraftArticleTabFragment extends BaseFragment implements View.On
 
     @Override
     public void onResume() {
-        getUserDraftArticles();
+        if ("shortStory".equals(contentType)) {
+            getUserDraftStories();
+        } else {
+            getUserDraftArticles();
+        }
+
         super.onResume();
+    }
+
+    private void getUserDraftStories() {
+        if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
+            ((UserPublishedAndDraftsActivity) getActivity()).showToast(getString(R.string.connectivity_unavailable));
+            return;
+        }
+        if (isAdded()) {
+            showProgressDialog(getString(R.string.please_wait));
+        }
+
+        Retrofit retro = BaseApplication.getInstance().getRetrofit();
+        ShortStoryAPI shortStoryAPI = retro.create(ShortStoryAPI.class);
+        final Call<ResponseBody> call = shortStoryAPI.getDraftsList("0,1,2,4");
+        call.enqueue(userDraftArticleResponseListener);
     }
 
     private void getUserDraftArticles() {
@@ -197,8 +232,14 @@ public class UserDraftArticleTabFragment extends BaseFragment implements View.On
         if (draftList.size() == 0 && recyclerView.getVisibility() == View.VISIBLE) {
 //            noDraftTextView.setVisibility(View.VISIBLE);
         } else {
-            adapter.setListData(draftList);
-            adapter.notifyDataSetChanged();
+            if ("shortStory".equals(contentType)) {
+                shortStoriesDraftAdapter.setListData(draftList);
+                shortStoriesDraftAdapter.notifyDataSetChanged();
+            } else {
+                adapter.setListData(draftList);
+                adapter.notifyDataSetChanged();
+            }
+
         }
 
     }
@@ -261,7 +302,11 @@ public class UserDraftArticleTabFragment extends BaseFragment implements View.On
 
                              if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
                                  draftList.remove(position);
-                                 adapter.notifyDataSetChanged();
+                                 if ("shortStory".equals(contentType)) {
+                                     shortStoriesDraftAdapter.notifyDataSetChanged();
+                                 } else {
+                                     adapter.notifyDataSetChanged();
+                                 }
                              } else {
                                  if (StringUtils.isNullOrEmpty(responseModel.getReason())) {
 //                                     showToast(getString(R.string.toast_response_error));
@@ -285,5 +330,35 @@ public class UserDraftArticleTabFragment extends BaseFragment implements View.On
     public void onContinue(int position) {
         Utils.pushRemoveDraftEvent(getActivity(), "DraftList", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), draftList.get(position).getId());
         deleteDraftAPI(draftList.get(position), position);
+    }
+
+    @Override
+    public void onShortStoryClick(View view, int position) {
+        switch (view.getId()) {
+            case R.id.editDraftTextView:
+                if (Build.VERSION.SDK_INT > 15) {
+                    Utils.pushEditDraftEvent(getActivity(), "DraftList", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId(), draftList.get(position).getId());
+                    Intent intent = new Intent(getActivity(), AddShortStoryActivity.class);
+                    intent.putExtra("draftItem", draftList.get(position));
+                    intent.putExtra("from", "draftList");
+                    startActivity(intent);
+                } else {
+                    Intent viewIntent =
+                            new Intent("android.intent.action.VIEW",
+                                    Uri.parse("http://www.momspresso.com/parenting/admin/setupablog"));
+                    startActivity(viewIntent);
+                }
+                break;
+            case R.id.deleteDraftImageView:
+                ConfirmationDialogFragment confirmationDialogFragment = new ConfirmationDialogFragment();
+                FragmentManager fm = getChildFragmentManager();
+                confirmationDialogFragment.setTargetFragment(this, 0);
+                Bundle _args = new Bundle();
+                _args.putInt("position", position);
+                confirmationDialogFragment.setArguments(_args);
+                confirmationDialogFragment.setCancelable(true);
+                confirmationDialogFragment.show(fm, "Delete Draft");
+                break;
+        }
     }
 }
