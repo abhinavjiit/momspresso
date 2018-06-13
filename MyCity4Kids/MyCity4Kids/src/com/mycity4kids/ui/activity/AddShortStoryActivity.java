@@ -2,11 +2,19 @@ package com.mycity4kids.ui.activity;
 
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,6 +33,8 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.editor.EditorPostActivity;
+import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.listener.OnButtonClicked;
 import com.mycity4kids.models.ExploreTopicsModel;
 import com.mycity4kids.models.ExploreTopicsResponse;
@@ -33,8 +43,10 @@ import com.mycity4kids.models.request.ShortStoryDraftOrPublishRequest;
 import com.mycity4kids.models.response.ArticleDraftResponse;
 import com.mycity4kids.models.response.BlogPageResponse;
 import com.mycity4kids.models.response.DraftListResult;
+import com.mycity4kids.models.response.ImageUploadResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.ShortStoryTopicsRecyclerAdapter;
@@ -43,13 +55,19 @@ import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.widget.StartSnapHelper;
 
 import org.json.JSONArray;
+import org.wordpress.android.editor.EditorFragmentAbstract;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -79,6 +97,8 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     private String articleId;
     private String tagsJson;
     private String publishedArticleId;
+    private TextView titleTextView, bodyTextView, authorTextView;
+    private View shareSSView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +110,12 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         storyTitleEditText = (EditText) findViewById(R.id.storyTitleEditText);
         storyBodyEditText = (EditText) findViewById(R.id.storyBodyEditText);
+        titleTextView = (TextView) findViewById(R.id.titleTextView);
+        bodyTextView = (TextView) findViewById(R.id.bodyTextView);
+        authorTextView = (TextView) findViewById(R.id.authorTextView);
+        shareSSView = findViewById(R.id.shareSSView);
+
+        authorTextView.setText("By - " + SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name());
 
         source = getIntent().getStringExtra("from");
         ssTopicsList = new ArrayList<>();
@@ -167,6 +193,39 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             });
         }
 
+        storyTitleEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                titleTextView.setText(s.toString());
+            }
+        });
+
+        storyBodyEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                bodyTextView.setText(s.toString());
+            }
+        });
     }
 
     private void updateTagListFromJson(String tagsJson) {
@@ -220,12 +279,15 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.publishTextView:
+
                 if (isValid()) {
                     if ("publishedList".equals(source)) {
+                        shareSSView.invalidate();
                         shortStoryDraftOrPublishRequest = new ShortStoryDraftOrPublishRequest();
                         shortStoryDraftOrPublishRequest.setTitle(storyTitleEditText.getText().toString().trim());
                         shortStoryDraftOrPublishRequest.setBody(storyBodyEditText.getText().toString());
@@ -385,7 +447,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             BlogPageResponse responseModel = response.body();
             if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
                 if (responseModel.getData().getResult().getIsSetup() == 1) {
-                    publishArticleRequest();
+                    createAndUploadShareableImage();
                 } else if (responseModel.getData().getResult().getIsSetup() == 0) {
                     Intent intent = new Intent(AddShortStoryActivity.this, BlogSetupActivity.class);
                     startActivity(intent);
@@ -398,6 +460,69 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             removeProgressDialog();
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
+    private void createAndUploadShareableImage() {
+//        titleTextView.setText(storyTitleEditText.getText());
+//        bodyTextView.setText(storyBodyEditText.getText());
+        showProgressDialog(getResources().getString(R.string.please_wait));
+        shareSSView.setDrawingCacheEnabled(true);
+        Bitmap finalBitmap = shareSSView.getDrawingCache();
+
+        try {
+            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 95, new FileOutputStream(Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg"));
+        } catch (FileNotFoundException e) {
+            Crashlytics.logException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
+
+        Retrofit retro = BaseApplication.getInstance().getRetrofit();
+        ImageUploadAPI imageUploadAPI = retro.create(ImageUploadAPI.class);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        String path = MediaStore.Images.Media.insertImage(getContentResolver(), finalBitmap, "Title", null);
+        Uri imageUriTemp = Uri.parse(path);
+        EditorFragmentAbstract.imageUploading = 0;
+        File file = FileUtils.getFile(this, imageUriTemp);
+
+        MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
+        RequestBody requestBodyFile = RequestBody.create(MEDIA_TYPE_PNG, file);
+        RequestBody userId = RequestBody.create(MediaType.parse("text/plain"), //"" + userModel.getUser().getId());
+                0 + "");
+        RequestBody imageType = RequestBody.create(MediaType.parse("text/plain"), "4");
+        Call<ImageUploadResponse> call = imageUploadAPI.uploadImage(imageType, requestBodyFile);
+        call.enqueue(ssImageUploadCallback);
+    }
+
+    private Callback<ImageUploadResponse> ssImageUploadCallback = new Callback<ImageUploadResponse>() {
+        @Override
+        public void onResponse(Call<ImageUploadResponse> call, retrofit2.Response<ImageUploadResponse> response) {
+            shareSSView.setDrawingCacheEnabled(false);
+            if (response == null || response.body() == null) {
+                removeProgressDialog();
+                showToast(getString(R.string.went_wrong));
+                return;
+            }
+            ImageUploadResponse responseModel = response.body();
+            if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
+                publishArticleRequest(responseModel.getData().getResult().getUrl());
+            } else {
+                removeProgressDialog();
+                if (StringUtils.isNullOrEmpty(responseModel.getReason())) {
+                    showToast(getString(R.string.toast_response_error));
+                } else {
+                    showToast(responseModel.getReason());
+                }
+            }
+        }
+
+        @Override
+        public void onFailure(Call<ImageUploadResponse> call, Throwable t) {
+            shareSSView.setDrawingCacheEnabled(false);
+            removeProgressDialog();
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+            showToast(getString(R.string.went_wrong));
         }
     };
 
@@ -496,9 +621,8 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         }
     };
 
-    private void publishArticleRequest() {
+    private void publishArticleRequest(String url) {
 
-        showProgressDialog(getResources().getString(R.string.please_wait));
         Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
         // prepare call in Retrofit 2.0
         ShortStoryAPI shortStoryAPI = retrofit.create(ShortStoryAPI.class);
@@ -520,6 +644,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             shortStoryDraftOrPublishRequest.setLang("0");
         }
         shortStoryDraftOrPublishRequest.setUserAgent("android");
+        shortStoryDraftOrPublishRequest.setStoryImage(url);
         if ("publishedList".equals(source)) {
             draftId = articleId;
             shortStoryDraftOrPublishRequest.setTags(tagsList);

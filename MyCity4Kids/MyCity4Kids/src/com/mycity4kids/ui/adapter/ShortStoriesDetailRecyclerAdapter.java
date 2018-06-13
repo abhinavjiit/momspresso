@@ -77,9 +77,9 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
                 ssViewHolder.storyBodyTextView.setText(datalist.get(position).getSsResult().getBody());
                 ssViewHolder.authorNameTextView.setText(datalist.get(position).getSsResult().getUserName());
 
-                ssViewHolder.titleTextView.setText(datalist.get(position).getSsResult().getTitle());
-                ssViewHolder.bodyTextView.setText(datalist.get(position).getSsResult().getBody());
-                ssViewHolder.authorTextView.setText(datalist.get(position).getSsResult().getUserName());
+//                ssViewHolder.titleTextView.setText(datalist.get(position).getSsResult().getTitle());
+//                ssViewHolder.bodyTextView.setText(datalist.get(position).getSsResult().getBody());
+//                ssViewHolder.authorTextView.setText(datalist.get(position).getSsResult().getUserName());
 
                 if (null == datalist.get(position).getSsResult().getCommentCount() || "0".equals(datalist.get(position).getSsResult().getCommentCount())) {
                     ssViewHolder.storyCommentCountTextView.setVisibility(View.GONE);
@@ -126,9 +126,9 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
     }
 
     public class ShortStoriesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView storyTitleTextView, titleTextView;
-        TextView storyBodyTextView, bodyTextView;
-        TextView authorNameTextView, authorTextView;
+        TextView storyTitleTextView;
+        TextView storyBodyTextView;
+        TextView authorNameTextView;
         TextView storyCommentCountTextView;
         TextView storyRecommendationCountTextView;
         ImageView storyOptionImageView;
@@ -137,11 +137,11 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
         public ShortStoriesViewHolder(View itemView, RecyclerViewClickListener listener) {
             super(itemView);
             storyTitleTextView = (TextView) itemView.findViewById(R.id.storyTitleTextView);
-            titleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
+//            titleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
             storyBodyTextView = (TextView) itemView.findViewById(R.id.storyBodyTextView);
-            bodyTextView = (TextView) itemView.findViewById(R.id.bodyTextView);
+//            bodyTextView = (TextView) itemView.findViewById(R.id.bodyTextView);
             authorNameTextView = (TextView) itemView.findViewById(R.id.authorNameTextView);
-            authorTextView = (TextView) itemView.findViewById(R.id.authorTextView);
+//            authorTextView = (TextView) itemView.findViewById(R.id.authorTextView);
             storyCommentCountTextView = (TextView) itemView.findViewById(R.id.storyCommentCountTextView);
             storyRecommendationCountTextView = (TextView) itemView.findViewById(R.id.storyRecommendationCountTextView);
             storyOptionImageView = (ImageView) itemView.findViewById(R.id.storyOptionImageView);

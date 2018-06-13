@@ -14,6 +14,7 @@ public class ShortStoryDraftOrPublishRequest {
     private String lang;
     private String type;
     private String userAgent;
+    private String storyImage;
     private List<Map<String, String>> tags;
 
     public String getId() {
@@ -62,6 +63,14 @@ public class ShortStoryDraftOrPublishRequest {
 
     public void setUserAgent(String userAgent) {
         this.userAgent = userAgent;
+    }
+
+    public String getStoryImage() {
+        return storyImage;
+    }
+
+    public void setStoryImage(String storyImage) {
+        this.storyImage = storyImage;
     }
 
     public List<Map<String, String>> getTags() {

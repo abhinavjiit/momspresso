@@ -24,6 +24,8 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
@@ -100,6 +102,8 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
     private RelativeLayout writeArticleCell;
     private boolean showGuide = false;
     private String userDynamoId;
+    private View shareSSView;
+    private TextView titleTextView, bodyTextView, authorTextView;
 
     @Nullable
     @Override
@@ -114,8 +118,12 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         mLodingView = (RelativeLayout) view.findViewById(R.id.relativeLoadingView);
         guideOverlay = (RelativeLayout) view.findViewById(R.id.guideOverlay);
         writeArticleCell = (RelativeLayout) view.findViewById(R.id.writeArticleCell);
-
         frameLayout = (FrameLayout) view.findViewById(R.id.frame_layout);
+        shareSSView = view.findViewById(R.id.shareSSView);
+        titleTextView = (TextView) view.findViewById(R.id.titleTextView);
+        bodyTextView = (TextView) view.findViewById(R.id.bodyTextView);
+        authorTextView = (TextView) view.findViewById(R.id.authorTextView);
+
         frameLayout.getBackground().setAlpha(0);
         fabMenu = (FloatingActionsMenu) view.findViewById(R.id.fab_menu);
         popularSortFAB = (FloatingActionButton) view.findViewById(R.id.popularSortFAB);
@@ -195,6 +203,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             }
         });
 
+        //Just For First Time -- Since complete text is not rendered in the bitmap
         return view;
     }
 
@@ -230,6 +239,17 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             try {
                 ArticleListingResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
+                    authorTextView.setText("By - ");
+                    titleTextView.setText("Title");
+                    bodyTextView.setText("Body");
+                    shareSSView.setDrawingCacheEnabled(true);
+                    Bitmap b = shareSSView.getDrawingCache();
+                    try {
+                        b.compress(Bitmap.CompressFormat.JPEG, 95, new FileOutputStream(Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg"));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    shareSSView.setDrawingCacheEnabled(true);
                     processArticleListingResponse(responseData);
                 } else {
                 }
@@ -366,29 +386,49 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 recommendUnrecommentArticleAPI("1", mDatalist.get(position).getId());
                 break;
             case R.id.facebookShareImageView: {
-                String shareUrl = AppUtils.getShortStoryShareUrl(mDatalist.get(position).getUserType(),
-                        mDatalist.get(position).getBlogPageSlug(), mDatalist.get(position).getTitleSlug());
-                if (ShareDialog.canShow(ShareLinkContent.class)) {
-                    ShareLinkContent content = new ShareLinkContent.Builder().setQuote(mDatalist.get(position).getTitle())
-                            .setContentUrl(Uri.parse(shareUrl))
-                            .build();
-                    new ShareDialog(this).show(content);
-                }
-                Utils.pushShareArticleEvent(getActivity(), "DetailArticleScreen", userDynamoId + "", mDatalist.get(position).getId(),
-                        mDatalist.get(position).getUserId() + "~" + mDatalist.get(position).getUserName(), "Facebook");
-            }
-            break;
-            case R.id.whatsappShareImageView: {
-                View tempView = (View) view.getTag();
-                View shareView = tempView.findViewById(R.id.shareView);
-                shareView.setDrawingCacheEnabled(true);
-                Bitmap b = shareView.getDrawingCache();
+                authorTextView.setText("By - " + mDatalist.get(position).getUserName());
+                titleTextView.setText(mDatalist.get(position).getTitle());
+                bodyTextView.setText(mDatalist.get(position).getBody());
+                shareSSView.setDrawingCacheEnabled(true);
+                Bitmap b = shareSSView.getDrawingCache();
                 try {
                     b.compress(Bitmap.CompressFormat.JPEG, 95, new FileOutputStream(Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg"));
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
-
+                SharePhoto photo = new SharePhoto.Builder()
+                        .setBitmap(b)
+                        .build();
+                SharePhotoContent content = new SharePhotoContent.Builder()
+                        .addPhoto(photo)
+                        .build();
+                ShareDialog shareDialog = new ShareDialog(this);
+                shareDialog.show(content);
+                shareSSView.setDrawingCacheEnabled(false);
+//                String shareUrl = AppUtils.getShortStoryShareUrl(mDatalist.get(position).getUserType(),
+//                        mDatalist.get(position).getBlogPageSlug(), mDatalist.get(position).getTitleSlug());
+//                if (ShareDialog.canShow(ShareLinkContent.class)) {
+//                    ShareLinkContent content = new ShareLinkContent.Builder().setQuote(mDatalist.get(position).getTitle())
+//                            .setContentUrl(Uri.parse(shareUrl))
+//                            .build();
+//                    new ShareDialog(this).show(content);
+//                }
+//                Utils.pushShareArticleEvent(getActivity(), "DetailArticleScreen", userDynamoId + "", mDatalist.get(position).getId(),
+//                        mDatalist.get(position).getUserId() + "~" + mDatalist.get(position).getUserName(), "Facebook");
+            }
+            break;
+            case R.id.whatsappShareImageView: {
+                authorTextView.setText("By - " + mDatalist.get(position).getUserName());
+                titleTextView.setText(mDatalist.get(position).getTitle());
+                bodyTextView.setText(mDatalist.get(position).getBody());
+                shareSSView.setDrawingCacheEnabled(true);
+                Bitmap b = shareSSView.getDrawingCache();
+                try {
+                    b.compress(Bitmap.CompressFormat.JPEG, 95, new FileOutputStream(Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg"));
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                shareSSView.setDrawingCacheEnabled(false);
                 String shareUrl = AppUtils.getShortStoryShareUrl(mDatalist.get(position).getUserType(),
                         mDatalist.get(position).getBlogPageSlug(), mDatalist.get(position).getTitleSlug());
 
@@ -398,6 +438,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                     Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg");
                     Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
                     whatsappIntent.putExtra(Intent.EXTRA_STREAM, uri);
+//                    whatsappIntent.putExtra(Intent.EXTRA_TEXT, shareUrl);
                     whatsappIntent.setPackage("com.whatsapp");
                     whatsappIntent.setType("image/*");
 //                    whatsappIntent.putExtra(Intent.EXTRA_TEXT, mDatalist.get(position).getTitle() + "\n\n" + getString(R.string.ad_share_follow_author, mDatalist.get(position).getUserName()) + "\n" + shareUrl);

@@ -52,27 +52,27 @@ public class ShortStoriesRecyclerAdapter extends RecyclerView.Adapter<ShortStori
 
         switch (position % 6) {
             case 0:
-                holder.shareView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_1));
+//                holder.shareView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_1));
                 holder.mainView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_1));
                 break;
             case 1:
-                holder.shareView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_2));
+//                holder.shareView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_2));
                 holder.mainView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_2));
                 break;
             case 2:
-                holder.shareView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_3));
+//                holder.shareView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_3));
                 holder.mainView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_3));
                 break;
             case 3:
-                holder.shareView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_4));
+//                holder.shareView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_4));
                 holder.mainView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_4));
                 break;
             case 4:
-                holder.shareView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_5));
+//                holder.shareView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_5));
                 holder.mainView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_5));
                 break;
             case 5:
-                holder.shareView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_6));
+//                holder.shareView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_6));
                 holder.mainView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_6));
                 break;
         }
@@ -80,10 +80,10 @@ public class ShortStoriesRecyclerAdapter extends RecyclerView.Adapter<ShortStori
         holder.storyTitleTextView.setText(articleDataModelsNew.get(position).getTitle());
         holder.storyBodyTextView.setText(articleDataModelsNew.get(position).getBody());
         holder.authorNameTextView.setText(articleDataModelsNew.get(position).getUserName());
-
-        holder.titleTextView.setText(articleDataModelsNew.get(position).getTitle());
-        holder.bodyTextView.setText(articleDataModelsNew.get(position).getBody());
-        holder.authorTextView.setText(articleDataModelsNew.get(position).getUserName());
+//
+//        holder.titleTextView.setText(articleDataModelsNew.get(position).getTitle());
+//        holder.bodyTextView.setText(articleDataModelsNew.get(position).getBody());
+//        holder.authorTextView.setText(articleDataModelsNew.get(position).getUserName());
 
         if (null == articleDataModelsNew.get(position).getCommentsCount()) {
             holder.storyCommentCountTextView.setText("0");
@@ -104,25 +104,24 @@ public class ShortStoriesRecyclerAdapter extends RecyclerView.Adapter<ShortStori
     }
 
     public class ShortStoriesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView storyTitleTextView, titleTextView;
-        TextView storyBodyTextView, bodyTextView;
-        TextView authorNameTextView, authorTextView;
+        TextView storyTitleTextView;
+        TextView storyBodyTextView;
+        TextView authorNameTextView;
         TextView storyCommentCountTextView;
         TextView storyRecommendationCountTextView;
         ImageView storyOptionImageView;
         ImageView facebookShareImageView, whatsappShareImageView, genericShareImageView;
-        RelativeLayout shareView, mainView;
+        RelativeLayout mainView;
 
         public ShortStoriesViewHolder(View itemView, RecyclerViewClickListener listener) {
             super(itemView);
-            shareView = (RelativeLayout) itemView.findViewById(R.id.shareView);
             mainView = (RelativeLayout) itemView.findViewById(R.id.mainView);
             storyTitleTextView = (TextView) itemView.findViewById(R.id.storyTitleTextView);
-            titleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
+//            titleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
             storyBodyTextView = (TextView) itemView.findViewById(R.id.storyBodyTextView);
-            bodyTextView = (TextView) itemView.findViewById(R.id.bodyTextView);
+//            bodyTextView = (TextView) itemView.findViewById(R.id.bodyTextView);
             authorNameTextView = (TextView) itemView.findViewById(R.id.authorNameTextView);
-            authorTextView = (TextView) itemView.findViewById(R.id.authorTextView);
+//            authorTextView = (TextView) itemView.findViewById(R.id.authorTextView);
             storyCommentCountTextView = (TextView) itemView.findViewById(R.id.storyCommentCountTextView);
             storyRecommendationCountTextView = (TextView) itemView.findViewById(R.id.storyRecommendationCountTextView);
             storyOptionImageView = (ImageView) itemView.findViewById(R.id.storyOptionImageView);

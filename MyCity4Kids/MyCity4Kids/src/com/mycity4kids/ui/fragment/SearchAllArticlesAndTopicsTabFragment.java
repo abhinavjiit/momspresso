@@ -286,56 +286,60 @@ public class SearchAllArticlesAndTopicsTabFragment extends BaseFragment implemen
     @Override
     public void onClick(View view, int position) {
         Log.d("Recylcer Click", "" + position);
-        switch (data.get(position).getListType()) {
-            case AppConstants.SEARCH_ITEM_TYPE_ARTICLE_HEADER:
+        try {
+            switch (data.get(position).getListType()) {
+                case AppConstants.SEARCH_ITEM_TYPE_ARTICLE_HEADER:
+                    break;
+                case AppConstants.SEARCH_ITEM_TYPE_TOPIC_HEADER:
+                    break;
+                case AppConstants.SEARCH_ITEM_TYPE_ARTICLE_SHOW_MORE:
+                    isShowMoreArticleRequest = true;
+                    newSearchTopicArticleListingApi(searchName, "article");
+                    break;
+                case AppConstants.SEARCH_ITEM_TYPE_TOPIC_SHOW_MORE:
+                    isShowMoreTopicRequest = true;
+                    newSearchTopicArticleListingApi(searchName, "topic");
+                    break;
+                case AppConstants.SEARCH_ITEM_TYPE_ARTICLE: {
+                    SearchArticleTopicResult searchData = data.get(position);
+                    if ("1".equals(searchData.getContentType())) {
+                        Intent intent = new Intent(getActivity(), ShortStoryContainerActivity.class);
+                        intent.putExtra(Constants.ARTICLE_ID, searchData.getId());
+                        intent.putExtra(Constants.AUTHOR_ID, searchData.getUserId());
+                        intent.putExtra(Constants.BLOG_SLUG, searchData.getBlogSlug());
+                        intent.putExtra(Constants.TITLE_SLUG, searchData.getTitleSlug());
+                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "SearchScreen");
+                        intent.putExtra(Constants.FROM_SCREEN, "SearchScreen");
+                        intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
+                        intent.putExtra(Constants.AUTHOR, searchData.getUserId() + "~");
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
+                        intent.putExtra(Constants.ARTICLE_ID, searchData.getId());
+                        intent.putExtra(Constants.AUTHOR_ID, searchData.getUserId());
+                        intent.putExtra(Constants.BLOG_SLUG, searchData.getBlogSlug());
+                        intent.putExtra(Constants.TITLE_SLUG, searchData.getTitleSlug());
+                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "SearchScreen");
+                        intent.putExtra(Constants.FROM_SCREEN, "SearchScreen");
+                        intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
+                        intent.putExtra(Constants.AUTHOR, searchData.getUserId() + "~");
+                        startActivity(intent);
+                    }
+                }
                 break;
-            case AppConstants.SEARCH_ITEM_TYPE_TOPIC_HEADER:
-                break;
-            case AppConstants.SEARCH_ITEM_TYPE_ARTICLE_SHOW_MORE:
-                isShowMoreArticleRequest = true;
-                newSearchTopicArticleListingApi(searchName, "article");
-                break;
-            case AppConstants.SEARCH_ITEM_TYPE_TOPIC_SHOW_MORE:
-                isShowMoreTopicRequest = true;
-                newSearchTopicArticleListingApi(searchName, "topic");
-                break;
-            case AppConstants.SEARCH_ITEM_TYPE_ARTICLE: {
-                SearchArticleTopicResult searchData = data.get(position);
-                if ("1".equals(searchData.getContentType())) {
-                    Intent intent = new Intent(getActivity(), ShortStoryContainerActivity.class);
-                    intent.putExtra(Constants.ARTICLE_ID, searchData.getId());
-                    intent.putExtra(Constants.AUTHOR_ID, searchData.getUserId());
-                    intent.putExtra(Constants.BLOG_SLUG, searchData.getBlogSlug());
-                    intent.putExtra(Constants.TITLE_SLUG, searchData.getTitleSlug());
-                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "SearchScreen");
-                    intent.putExtra(Constants.FROM_SCREEN, "SearchScreen");
-                    intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
-                    intent.putExtra(Constants.AUTHOR, searchData.getUserId() + "~");
-                    startActivity(intent);
-                } else {
-                    Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
-                    intent.putExtra(Constants.ARTICLE_ID, searchData.getId());
-                    intent.putExtra(Constants.AUTHOR_ID, searchData.getUserId());
-                    intent.putExtra(Constants.BLOG_SLUG, searchData.getBlogSlug());
-                    intent.putExtra(Constants.TITLE_SLUG, searchData.getTitleSlug());
-                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "SearchScreen");
-                    intent.putExtra(Constants.FROM_SCREEN, "SearchScreen");
-                    intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
-                    intent.putExtra(Constants.AUTHOR, searchData.getUserId() + "~");
+                case AppConstants.SEARCH_ITEM_TYPE_TOPIC: {
+                    Intent intent = new Intent(getActivity(), FilteredTopicsArticleListingActivity.class);
+                    SearchArticleTopicResult topic = data.get(position);
+                    intent.putExtra("selectedTopics", topic.getId());
+                    intent.putExtra("displayName", topic.getDisplay_name());
+                    intent.putExtra(Constants.FROM_SCREEN, "Search Screen");
                     startActivity(intent);
                 }
+                break;
             }
-            break;
-            case AppConstants.SEARCH_ITEM_TYPE_TOPIC: {
-                Intent intent = new Intent(getActivity(), FilteredTopicsArticleListingActivity.class);
-                SearchArticleTopicResult topic = data.get(position);
-                intent.putExtra("selectedTopics", topic.getId());
-                intent.putExtra("displayName", topic.getDisplay_name());
-                intent.putExtra(Constants.FROM_SCREEN, "Search Screen");
-                startActivity(intent);
-            }
-            break;
-
+        } catch (Exception t) {
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
         }
     }
 

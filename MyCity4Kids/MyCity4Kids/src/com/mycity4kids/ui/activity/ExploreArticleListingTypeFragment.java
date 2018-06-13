@@ -245,7 +245,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                         Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
 
                         try {
-                            FileInputStream fileInputStream = getActivity().openFileInput(AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
+                            FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
                             String fileContent = AppUtils.convertStreamToString(fileInputStream);
                             Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
                             ExploreTopicsModel[] res = gson.fromJson(fileContent, ExploreTopicsModel[].class);
