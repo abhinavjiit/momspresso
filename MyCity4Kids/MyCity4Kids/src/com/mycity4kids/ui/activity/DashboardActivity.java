@@ -448,7 +448,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     final String storyId = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("/") + 1, tempDeepLinkURL.length());
                     Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
                     ShortStoryAPI shortStoryAPI = retrofit.create(ShortStoryAPI.class);
-                    Call<ShortStoryDetailResponse> call = shortStoryAPI.getShortStoryDetails(storyId);
+                    Call<ShortStoryDetailResponse> call = shortStoryAPI.getShortStoryDetails(storyId, "articleId");
                     call.enqueue(ssDetailResponseCallback);
                 } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_SUGGESTED_TOPIC_URL) || tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_SUGGESTED_TOPIC_URL)) {
                     fragmentToLoad = Constants.SUGGESTED_TOPICS_FRAGMENT;

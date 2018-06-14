@@ -473,7 +473,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
 
             //Prepare structure for multi-expandable listview.
             for (int i = 0; i < responseData.getData().size(); i++) {
-                if ("1".equals(responseData.getData().get(i).getShowInMenu())) {
+                if ("1".equals(responseData.getData().get(i).getShowInMenu()) && !AppConstants.SHORT_STORY_CATEGORYID.equals(responseData.getData().get(i).getId())) {
                     mainTopicsList.add(responseData.getData().get(i));
                 }
             }

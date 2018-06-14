@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.preference.SharedPrefUtils;
 
 /**
  * Created by user on 08-06-2015.
@@ -21,6 +23,7 @@ public class CommentOptionsDialogFragment extends DialogFragment implements OnCl
     //    private IConfirmationResult iConfirmationResult;
     private int position;
     private String responseType;
+    private String authorId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -32,6 +35,7 @@ public class CommentOptionsDialogFragment extends DialogFragment implements OnCl
 
         position = getArguments().getInt("position");
         responseType = getArguments().getString("responseType");
+        authorId = getArguments().getString("authorId");
 
         TextView deleteCommentTextView = (TextView) rootView.findViewById(R.id.deleteCommentTextView);
         TextView editCommentTextView = (TextView) rootView.findViewById(R.id.editCommentTextView);
@@ -41,6 +45,15 @@ public class CommentOptionsDialogFragment extends DialogFragment implements OnCl
         editCommentTextView.setOnClickListener(this);
         reportCommentTextView.setOnClickListener(this);
 
+        if (SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId().equals(authorId)) {
+            deleteCommentTextView.setVisibility(View.VISIBLE);
+            editCommentTextView.setVisibility(View.VISIBLE);
+            reportCommentTextView.setVisibility(View.VISIBLE);
+        } else {
+            deleteCommentTextView.setVisibility(View.GONE);
+            editCommentTextView.setVisibility(View.GONE);
+            reportCommentTextView.setVisibility(View.VISIBLE);
+        }
         return rootView;
     }
 

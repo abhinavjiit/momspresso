@@ -2,18 +2,27 @@ package com.mycity4kids.ui.activity;
 
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.net.Uri;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.InputFilter;
+import android.text.Layout;
+import android.text.StaticLayout;
+import android.text.TextPaint;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
@@ -27,18 +36,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseActivity;
-import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.editor.EditorPostActivity;
-import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.listener.OnButtonClicked;
 import com.mycity4kids.models.ExploreTopicsModel;
 import com.mycity4kids.models.ExploreTopicsResponse;
-import com.mycity4kids.models.editor.ArticleDraftRequest;
 import com.mycity4kids.models.request.ShortStoryDraftOrPublishRequest;
 import com.mycity4kids.models.response.ArticleDraftResponse;
 import com.mycity4kids.models.response.BlogPageResponse;
@@ -46,7 +51,6 @@ import com.mycity4kids.models.response.DraftListResult;
 import com.mycity4kids.models.response.ImageUploadResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
-import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.ShortStoryTopicsRecyclerAdapter;
@@ -55,10 +59,7 @@ import com.mycity4kids.utils.ArrayAdapterFactory;
 import com.mycity4kids.widget.StartSnapHelper;
 
 import org.json.JSONArray;
-import org.wordpress.android.editor.EditorFragmentAbstract;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -66,8 +67,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -79,6 +78,7 @@ import retrofit2.Retrofit;
 
 public class AddShortStoryActivity extends BaseActivity implements View.OnClickListener, ShortStoryTopicsRecyclerAdapter.RecyclerViewClickListener {
 
+    private static final int MAX_WORDS = 100;
     private Toolbar toolbar;
     private TextView publishTextView;
     private String dynamoUserId;
@@ -87,6 +87,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     private ShortStoryDraftOrPublishRequest shortStoryDraftOrPublishRequest;
     private DraftListResult draftObject;
     private ArrayList<Map<String, String>> tagsList = new ArrayList<Map<String, String>>();
+    private InputFilter filter;
 
     private RecyclerView recyclerView;
     private ShortStoryTopicsRecyclerAdapter adapter;
@@ -96,9 +97,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     private String source;
     private String articleId;
     private String tagsJson;
-    private String publishedArticleId;
-    private TextView titleTextView, bodyTextView, authorTextView;
-    private View shareSSView;
+    private boolean isMaxLengthToastShown = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,12 +109,44 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         storyTitleEditText = (EditText) findViewById(R.id.storyTitleEditText);
         storyBodyEditText = (EditText) findViewById(R.id.storyBodyEditText);
-        titleTextView = (TextView) findViewById(R.id.titleTextView);
-        bodyTextView = (TextView) findViewById(R.id.bodyTextView);
-        authorTextView = (TextView) findViewById(R.id.authorTextView);
-        shareSSView = findViewById(R.id.shareSSView);
 
-        authorTextView.setText("By - " + SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name());
+        publishTextView.setOnClickListener(this);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        storyBodyEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                try {
+                    int wordsLength = countWords(s.toString());// words.length;
+                    // count == 0 means a new word is going to start
+                    if (count == 0 && wordsLength >= MAX_WORDS) {
+                        setCharLimit(storyBodyEditText, storyBodyEditText.getText().length());
+                        if (!isMaxLengthToastShown) {
+                            showToast(getString(R.string.short_s_max_word));
+                            isMaxLengthToastShown = true;
+                        }
+                    } else {
+                        removeFilter(storyBodyEditText);
+                        isMaxLengthToastShown = false;
+                    }
+                } catch (Exception e) {
+
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         source = getIntent().getStringExtra("from");
         ssTopicsList = new ArrayList<>();
@@ -133,12 +164,6 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             updateTagListFromJson(tagsJson);
             recyclerView.setVisibility(View.GONE);
         }
-
-        publishTextView.setOnClickListener(this);
-
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         dynamoUserId = SharedPrefUtils.getUserDetailModel(this).getDynamoId();
 
@@ -192,40 +217,111 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                 }
             });
         }
+    }
 
-        storyTitleEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    private int countWords(String s) {
+        String trim = s.trim();
+        if (trim.isEmpty())
+            return 0;
+        return trim.split("\\s+").length; // separate string around spaces
+    }
 
-            }
+    private void setCharLimit(EditText et, int max) {
+        filter = new InputFilter.LengthFilter(max);
+        et.setFilters(new InputFilter[]{filter});
+    }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+    private void removeFilter(EditText et) {
+        if (filter != null) {
+            et.setFilters(new InputFilter[0]);
+            filter = null;
+        }
+    }
 
-            }
+    public Bitmap drawMultilineTextToBitmap(String title, String body) {
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                titleTextView.setText(s.toString());
-            }
-        });
+        // prepare canvas
+        Resources resources = getResources();
+        float scale = resources.getDisplayMetrics().density;
+        Bitmap bitmap = BitmapFactory.decodeResource(resources, R.drawable.ss_share_web);
 
-        storyBodyEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        android.graphics.Bitmap.Config bitmapConfig = bitmap.getConfig();
+        // set default bitmap config if none
+        if (bitmapConfig == null) {
+            bitmapConfig = android.graphics.Bitmap.Config.ARGB_8888;
+        }
+        // resource bitmaps are imutable,
+        // so we need to convert it to mutable one
+        bitmap = bitmap.copy(bitmapConfig, true);
 
-            }
+        Canvas canvas = new Canvas(bitmap);
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+        Typeface georgiaTypeface = Typeface.createFromAsset(getAssets(), "fonts/georgia.ttf");
+        TextPaint titlePaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
+        titlePaint.setTypeface(georgiaTypeface);
+        titlePaint.setColor(Color.rgb(61, 61, 61));
+        titlePaint.setTextSize((int) (10 * scale));
 
-            }
+        TextPaint bodyPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
+        bodyPaint.setTypeface(georgiaTypeface);
+        bodyPaint.setColor(Color.rgb(61, 61, 61));
+        bodyPaint.setTextSize((int) (9 * scale));
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                bodyTextView.setText(s.toString());
-            }
-        });
+        Typeface geoBoldTypeface = Typeface.createFromAsset(getAssets(), "fonts/georgia_bold.ttf");
+        TextPaint authorPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
+        authorPaint.setTypeface(geoBoldTypeface);
+        authorPaint.setColor(Color.rgb(61, 61, 61));
+        authorPaint.setTextSize((int) (9 * scale));
+        // set text width to canvas width minus 16dp padding
+        int textWidth = canvas.getWidth() - (int) (16 * scale);
+
+        String author = "By - " + SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name();
+
+        // init StaticLayout for text
+        StaticLayout bodyLayout = new StaticLayout(
+                body, bodyPaint, textWidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+
+        StaticLayout titleLayout = new StaticLayout(
+                title, titlePaint, textWidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+
+        StaticLayout authorLayout = new StaticLayout(
+                author, authorPaint, textWidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+
+        // get height of multiline text
+        int bodyHeight = bodyLayout.getHeight();
+        int titleHeight = titleLayout.getHeight();
+
+        // get position of text's top left corner
+        float x = (bitmap.getWidth() - textWidth) / 2;
+        float y = (bitmap.getHeight() - bodyHeight) / 2;
+
+        // get position of text's top left corner
+        float ySeparator = y - 10 * scale;
+        float yAuthor = bitmap.getHeight() - y;
+
+        Paint p = new Paint();
+        p.setColor(ContextCompat.getColor(this, R.color.short_story_light_black_color));
+        p.setStrokeWidth(2);
+        // draw text to the Canvas center
+        canvas.save();
+        canvas.translate(x, y);
+        bodyLayout.draw(canvas);
+        canvas.restore();
+        canvas.save();
+        canvas.drawLine(x, ySeparator, 40 * scale, ySeparator, p);
+        canvas.translate(x, ySeparator - titleHeight - 10 * scale);
+        titleLayout.draw(canvas);
+        canvas.restore();
+        canvas.save();
+        canvas.translate(x, yAuthor + 10 * scale);
+        authorLayout.draw(canvas);
+        try {
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 95, new FileOutputStream(Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg"));
+        } catch (FileNotFoundException e) {
+            Crashlytics.logException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
+        return bitmap;
     }
 
     private void updateTagListFromJson(String tagsJson) {
@@ -251,9 +347,9 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                 if (AppConstants.SHORT_STORY_CATEGORYID.equals(responseData.getData().get(i).getId())) {
                     for (int j = 0; j < responseData.getData().get(i).getChild().size(); j++) {
                         //DO NOT REMOVE below commented check -- showInMenu 0 from backend --might be used to show/hide in future
-//                        if ("1".equals(responseData.getData().get(i).getChild().get(j).getShowInMenu())) {
-                        ssTopicsList.add(responseData.getData().get(i).getChild().get(j));
-//                        }
+                        if ("1".equals(responseData.getData().get(i).getChild().get(j).getPublicVisibility())) {
+                            ssTopicsList.add(responseData.getData().get(i).getChild().get(j));
+                        }
                     }
                     break;
                 }
@@ -284,10 +380,8 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.publishTextView:
-
                 if (isValid()) {
                     if ("publishedList".equals(source)) {
-                        shareSSView.invalidate();
                         shortStoryDraftOrPublishRequest = new ShortStoryDraftOrPublishRequest();
                         shortStoryDraftOrPublishRequest.setTitle(storyTitleEditText.getText().toString().trim());
                         shortStoryDraftOrPublishRequest.setBody(storyBodyEditText.getText().toString());
@@ -298,13 +392,13 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                         } else if (AppConstants.LOCALE_HINDI.equals(SharedPrefUtils.getAppLocale(this))) {
                             shortStoryDraftOrPublishRequest.setLang("1");
                         } else if (AppConstants.LOCALE_MARATHI.equals(SharedPrefUtils.getAppLocale(this))) {
-                            shortStoryDraftOrPublishRequest.setLang("0");
+                            shortStoryDraftOrPublishRequest.setLang("2");
                         } else if (AppConstants.LOCALE_BENGALI.equals(SharedPrefUtils.getAppLocale(this))) {
-                            shortStoryDraftOrPublishRequest.setLang("0");
+                            shortStoryDraftOrPublishRequest.setLang("3");
                         } else if (AppConstants.LOCALE_TAMIL.equals(SharedPrefUtils.getAppLocale(this))) {
-                            shortStoryDraftOrPublishRequest.setLang("0");
+                            shortStoryDraftOrPublishRequest.setLang("4");
                         } else if (AppConstants.LOCALE_TELUGU.equals(SharedPrefUtils.getAppLocale(this))) {
-                            shortStoryDraftOrPublishRequest.setLang("0");
+                            shortStoryDraftOrPublishRequest.setLang("5");
                         } else {
                             shortStoryDraftOrPublishRequest.setLang("0");
                         }
@@ -366,13 +460,13 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         } else if (AppConstants.LOCALE_HINDI.equals(SharedPrefUtils.getAppLocale(this))) {
             shortStoryDraftOrPublishRequest.setLang("1");
         } else if (AppConstants.LOCALE_MARATHI.equals(SharedPrefUtils.getAppLocale(this))) {
-            shortStoryDraftOrPublishRequest.setLang("0");
+            shortStoryDraftOrPublishRequest.setLang("2");
         } else if (AppConstants.LOCALE_BENGALI.equals(SharedPrefUtils.getAppLocale(this))) {
-            shortStoryDraftOrPublishRequest.setLang("0");
+            shortStoryDraftOrPublishRequest.setLang("3");
         } else if (AppConstants.LOCALE_TAMIL.equals(SharedPrefUtils.getAppLocale(this))) {
-            shortStoryDraftOrPublishRequest.setLang("0");
+            shortStoryDraftOrPublishRequest.setLang("4");
         } else if (AppConstants.LOCALE_TELUGU.equals(SharedPrefUtils.getAppLocale(this))) {
-            shortStoryDraftOrPublishRequest.setLang("0");
+            shortStoryDraftOrPublishRequest.setLang("5");
         } else {
             shortStoryDraftOrPublishRequest.setLang("0");
         }
@@ -466,38 +560,32 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     private void createAndUploadShareableImage() {
 //        titleTextView.setText(storyTitleEditText.getText());
 //        bodyTextView.setText(storyBodyEditText.getText());
-        showProgressDialog(getResources().getString(R.string.please_wait));
-        shareSSView.setDrawingCacheEnabled(true);
-        Bitmap finalBitmap = shareSSView.getDrawingCache();
-
+//        showProgressDialog(getResources().getString(R.string.please_wait));
+        Bitmap finalBitmap = null;
         try {
-            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 95, new FileOutputStream(Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg"));
-        } catch (FileNotFoundException e) {
+            finalBitmap = drawMultilineTextToBitmap(storyTitleEditText.getText().toString(), storyBodyEditText.getText().toString());
+        } catch (Exception e) {
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
 
-        Retrofit retro = BaseApplication.getInstance().getRetrofit();
-        ImageUploadAPI imageUploadAPI = retro.create(ImageUploadAPI.class);
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        String path = MediaStore.Images.Media.insertImage(getContentResolver(), finalBitmap, "Title", null);
-        Uri imageUriTemp = Uri.parse(path);
-        EditorFragmentAbstract.imageUploading = 0;
-        File file = FileUtils.getFile(this, imageUriTemp);
-
-        MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
-        RequestBody requestBodyFile = RequestBody.create(MEDIA_TYPE_PNG, file);
-        RequestBody userId = RequestBody.create(MediaType.parse("text/plain"), //"" + userModel.getUser().getId());
-                0 + "");
-        RequestBody imageType = RequestBody.create(MediaType.parse("text/plain"), "4");
-        Call<ImageUploadResponse> call = imageUploadAPI.uploadImage(imageType, requestBodyFile);
-        call.enqueue(ssImageUploadCallback);
+//        Retrofit retro = BaseApplication.getInstance().getRetrofit();
+//        ImageUploadAPI imageUploadAPI = retro.create(ImageUploadAPI.class);
+//        String path = MediaStore.Images.Media.insertImage(getContentResolver(), finalBitmap, "Title", null);
+//        Uri imageUriTemp = Uri.parse(path);
+//
+//        File file = FileUtils.getFile(this, imageUriTemp);
+//
+//        MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
+//        RequestBody requestBodyFile = RequestBody.create(MEDIA_TYPE_PNG, file);
+//        RequestBody imageType = RequestBody.create(MediaType.parse("text/plain"), "4");
+//        Call<ImageUploadResponse> call = imageUploadAPI.uploadImage(imageType, requestBodyFile);
+//        call.enqueue(ssImageUploadCallback);
     }
 
     private Callback<ImageUploadResponse> ssImageUploadCallback = new Callback<ImageUploadResponse>() {
         @Override
         public void onResponse(Call<ImageUploadResponse> call, retrofit2.Response<ImageUploadResponse> response) {
-            shareSSView.setDrawingCacheEnabled(false);
             if (response == null || response.body() == null) {
                 removeProgressDialog();
                 showToast(getString(R.string.went_wrong));
@@ -518,7 +606,6 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
 
         @Override
         public void onFailure(Call<ImageUploadResponse> call, Throwable t) {
-            shareSSView.setDrawingCacheEnabled(false);
             removeProgressDialog();
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
@@ -557,13 +644,13 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         } else if (AppConstants.LOCALE_HINDI.equals(SharedPrefUtils.getAppLocale(this))) {
             shortStoryDraftOrPublishRequest.setLang("1");
         } else if (AppConstants.LOCALE_MARATHI.equals(SharedPrefUtils.getAppLocale(this))) {
-            shortStoryDraftOrPublishRequest.setLang("0");
+            shortStoryDraftOrPublishRequest.setLang("2");
         } else if (AppConstants.LOCALE_BENGALI.equals(SharedPrefUtils.getAppLocale(this))) {
-            shortStoryDraftOrPublishRequest.setLang("0");
+            shortStoryDraftOrPublishRequest.setLang("3");
         } else if (AppConstants.LOCALE_TAMIL.equals(SharedPrefUtils.getAppLocale(this))) {
-            shortStoryDraftOrPublishRequest.setLang("0");
+            shortStoryDraftOrPublishRequest.setLang("4");
         } else if (AppConstants.LOCALE_TELUGU.equals(SharedPrefUtils.getAppLocale(this))) {
-            shortStoryDraftOrPublishRequest.setLang("0");
+            shortStoryDraftOrPublishRequest.setLang("5");
         } else {
             shortStoryDraftOrPublishRequest.setLang("0");
         }
@@ -633,13 +720,13 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
         } else if (AppConstants.LOCALE_HINDI.equals(SharedPrefUtils.getAppLocale(this))) {
             shortStoryDraftOrPublishRequest.setLang("1");
         } else if (AppConstants.LOCALE_MARATHI.equals(SharedPrefUtils.getAppLocale(this))) {
-            shortStoryDraftOrPublishRequest.setLang("0");
+            shortStoryDraftOrPublishRequest.setLang("2");
         } else if (AppConstants.LOCALE_BENGALI.equals(SharedPrefUtils.getAppLocale(this))) {
-            shortStoryDraftOrPublishRequest.setLang("0");
+            shortStoryDraftOrPublishRequest.setLang("3");
         } else if (AppConstants.LOCALE_TAMIL.equals(SharedPrefUtils.getAppLocale(this))) {
-            shortStoryDraftOrPublishRequest.setLang("0");
+            shortStoryDraftOrPublishRequest.setLang("4");
         } else if (AppConstants.LOCALE_TELUGU.equals(SharedPrefUtils.getAppLocale(this))) {
-            shortStoryDraftOrPublishRequest.setLang("0");
+            shortStoryDraftOrPublishRequest.setLang("5");
         } else {
             shortStoryDraftOrPublishRequest.setLang("0");
         }
@@ -672,7 +759,6 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                 }
                 ArticleDraftResponse responseModel = response.body();
                 if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
-                    publishedArticleId = responseModel.getData().get(0).getResult().getId() + "";
                     if (StringUtils.isNullOrEmpty(responseModel.getData().get(0).getResult().getUrl())) {
 //                        Utils.pushPublishArticleEvent(AddShortStoryActivity.this, "AddImageScreen", SharedPrefUtils.getUserDetailModel(AddShortStoryActivity.this).getDynamoId(), "moderation");
                     } else {

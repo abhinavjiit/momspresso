@@ -254,6 +254,7 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
                 Bundle _args = new Bundle();
                 _args.putInt("position", position);
                 _args.putString("responseType", "COMMENT");
+                _args.putString("authorId", repliesList.get(position).getUserId());
                 commentOptionsDialogFragment.setArguments(_args);
                 commentOptionsDialogFragment.setCancelable(true);
                 commentOptionsDialogFragment.show(fm, "Comment Options");
@@ -266,6 +267,7 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
                 Bundle _args = new Bundle();
                 _args.putInt("position", position);
                 _args.putString("responseType", "REPLY");
+                _args.putString("authorId", repliesList.get(position).getUserId());
                 commentOptionsDialogFragment.setArguments(_args);
                 commentOptionsDialogFragment.setCancelable(true);
                 commentOptionsDialogFragment.show(fm, "Comment Options");

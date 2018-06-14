@@ -5,9 +5,9 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -23,7 +22,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
@@ -38,7 +36,6 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
-import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.request.RecommendUnrecommendArticleRequest;
@@ -48,6 +45,7 @@ import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
+import com.mycity4kids.ui.activity.AddShortStoryActivity;
 import com.mycity4kids.ui.activity.BloggerProfileActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
@@ -58,7 +56,6 @@ import com.mycity4kids.widget.FeedNativeAd;
 
 import org.apmem.tools.layouts.FlowLayout;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -239,17 +236,6 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             try {
                 ArticleListingResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    authorTextView.setText("By - ");
-                    titleTextView.setText("Title");
-                    bodyTextView.setText("Body");
-                    shareSSView.setDrawingCacheEnabled(true);
-                    Bitmap b = shareSSView.getDrawingCache();
-                    try {
-                        b.compress(Bitmap.CompressFormat.JPEG, 95, new FileOutputStream(Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg"));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    shareSSView.setDrawingCacheEnabled(true);
                     processArticleListingResponse(responseData);
                 } else {
                 }
@@ -312,18 +298,8 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         switch (view.getId()) {
             case R.id.writeArticleCell:
                 if (isAdded()) {
-                    Intent intent1 = new Intent(getActivity(), EditorPostActivity.class);
-                    Bundle bundle5 = new Bundle();
-                    bundle5.putString(EditorPostActivity.TITLE_PARAM, "");
-                    bundle5.putString(EditorPostActivity.CONTENT_PARAM, "");
-                    bundle5.putString(EditorPostActivity.TITLE_PLACEHOLDER_PARAM,
-                            getString(R.string.example_post_title_placeholder));
-                    bundle5.putString(EditorPostActivity.CONTENT_PLACEHOLDER_PARAM,
-                            getString(R.string.example_post_content_placeholder));
-                    bundle5.putInt(EditorPostActivity.EDITOR_PARAM, EditorPostActivity.USE_NEW_EDITOR);
-                    bundle5.putString("from", "TopicArticlesListingScreen");
-                    intent1.putExtras(bundle5);
-                    startActivity(intent1);
+                    Intent intent = new Intent(getActivity(), AddShortStoryActivity.class);
+                    startActivity(intent);
                 }
                 break;
             case R.id.guideOverlay:
@@ -355,7 +331,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
     }
 
     @Override
-    public void onClick(View view, int position) {
+    public void onClick(View view, final int position) {
         switch (view.getId()) {
             case R.id.storyOptionImageView: {
                 ReportStoryOrCommentDialogFragment reportStoryOrCommentDialogFragment = new ReportStoryOrCommentDialogFragment();
@@ -386,69 +362,84 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 recommendUnrecommentArticleAPI("1", mDatalist.get(position).getId());
                 break;
             case R.id.facebookShareImageView: {
-                authorTextView.setText("By - " + mDatalist.get(position).getUserName());
-                titleTextView.setText(mDatalist.get(position).getTitle());
-                bodyTextView.setText(mDatalist.get(position).getBody());
-                shareSSView.setDrawingCacheEnabled(true);
-                Bitmap b = shareSSView.getDrawingCache();
                 try {
-                    b.compress(Bitmap.CompressFormat.JPEG, 95, new FileOutputStream(Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg"));
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
+                    authorTextView.setText("By - " + mDatalist.get(position).getUserName());
+                    titleTextView.setText(mDatalist.get(position).getTitle());
+                    bodyTextView.setText(mDatalist.get(position).getBody());
+                    shareSSView.setDrawingCacheEnabled(true);
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Bitmap b = shareSSView.getDrawingCache();
+                            try {
+                                b.compress(Bitmap.CompressFormat.JPEG, 95, new FileOutputStream(Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg"));
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                            SharePhoto photo = new SharePhoto.Builder()
+                                    .setBitmap(b)
+                                    .build();
+                            SharePhotoContent content = new SharePhotoContent.Builder()
+                                    .addPhoto(photo)
+                                    .build();
+                            ShareDialog shareDialog = new ShareDialog(TopicsShortStoriesTabFragment.this);
+                            shareDialog.show(content);
+                            shareSSView.setDrawingCacheEnabled(false);
+                        }
+                    }, 200);
+                } catch (Exception e) {
+                    if (isAdded())
+                        Toast.makeText(getActivity(), getString(R.string.moderation_or_share_facebook_fail), Toast.LENGTH_SHORT).show();
                 }
-                SharePhoto photo = new SharePhoto.Builder()
-                        .setBitmap(b)
-                        .build();
-                SharePhotoContent content = new SharePhotoContent.Builder()
-                        .addPhoto(photo)
-                        .build();
-                ShareDialog shareDialog = new ShareDialog(this);
-                shareDialog.show(content);
-                shareSSView.setDrawingCacheEnabled(false);
-//                String shareUrl = AppUtils.getShortStoryShareUrl(mDatalist.get(position).getUserType(),
-//                        mDatalist.get(position).getBlogPageSlug(), mDatalist.get(position).getTitleSlug());
-//                if (ShareDialog.canShow(ShareLinkContent.class)) {
-//                    ShareLinkContent content = new ShareLinkContent.Builder().setQuote(mDatalist.get(position).getTitle())
-//                            .setContentUrl(Uri.parse(shareUrl))
-//                            .build();
-//                    new ShareDialog(this).show(content);
-//                }
-//                Utils.pushShareArticleEvent(getActivity(), "DetailArticleScreen", userDynamoId + "", mDatalist.get(position).getId(),
-//                        mDatalist.get(position).getUserId() + "~" + mDatalist.get(position).getUserName(), "Facebook");
             }
             break;
             case R.id.whatsappShareImageView: {
-                authorTextView.setText("By - " + mDatalist.get(position).getUserName());
-                titleTextView.setText(mDatalist.get(position).getTitle());
-                bodyTextView.setText(mDatalist.get(position).getBody());
-                shareSSView.setDrawingCacheEnabled(true);
-                Bitmap b = shareSSView.getDrawingCache();
                 try {
-                    b.compress(Bitmap.CompressFormat.JPEG, 95, new FileOutputStream(Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg"));
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                shareSSView.setDrawingCacheEnabled(false);
-                String shareUrl = AppUtils.getShortStoryShareUrl(mDatalist.get(position).getUserType(),
-                        mDatalist.get(position).getBlogPageSlug(), mDatalist.get(position).getTitleSlug());
+                    authorTextView.setText("By - " + mDatalist.get(position).getUserName());
+                    titleTextView.setText(mDatalist.get(position).getTitle());
+                    bodyTextView.setText(mDatalist.get(position).getBody());
+                    shareSSView.setDrawingCacheEnabled(true);
 
-                if (StringUtils.isNullOrEmpty(shareUrl)) {
-                    Toast.makeText(getActivity(), "Unable to share with whatsapp.", Toast.LENGTH_SHORT).show();
-                } else {
-                    Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg");
-                    Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
-                    whatsappIntent.putExtra(Intent.EXTRA_STREAM, uri);
-//                    whatsappIntent.putExtra(Intent.EXTRA_TEXT, shareUrl);
-                    whatsappIntent.setPackage("com.whatsapp");
-                    whatsappIntent.setType("image/*");
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Bitmap b = shareSSView.getDrawingCache();
+                            try {
+                                b.compress(Bitmap.CompressFormat.JPEG, 95, new FileOutputStream(Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg"));
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                            shareSSView.setDrawingCacheEnabled(false);
+                            String shareUrl = AppUtils.getShortStoryShareUrl(mDatalist.get(position).getUserType(),
+                                    mDatalist.get(position).getBlogPageSlug(), mDatalist.get(position).getTitleSlug());
+
+                            if (StringUtils.isNullOrEmpty(shareUrl)) {
+                                Toast.makeText(getActivity(), getString(R.string.moderation_or_share_facebook_fail), Toast.LENGTH_SHORT).show();
+                            } else {
+                                Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg");
+                                Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
+                                whatsappIntent.putExtra(Intent.EXTRA_STREAM, uri);
+                                whatsappIntent.putExtra(Intent.EXTRA_TEXT, shareUrl);
+                                whatsappIntent.setPackage("com.whatsapp");
+                                whatsappIntent.setType("image/*");
 //                    whatsappIntent.putExtra(Intent.EXTRA_TEXT, mDatalist.get(position).getTitle() + "\n\n" + getString(R.string.ad_share_follow_author, mDatalist.get(position).getUserName()) + "\n" + shareUrl);
-                    try {
-                        startActivity(Intent.createChooser(whatsappIntent, "Share image via:"));
-                    } catch (android.content.ActivityNotFoundException ex) {
-                        Toast.makeText(getActivity(), "Whatsapp has not been installed.", Toast.LENGTH_SHORT).show();
-                    }
-                    Utils.pushShareArticleEvent(getActivity(), "DetailArticleScreen", userDynamoId + "", mDatalist.get(position).getId(), mDatalist.get(position).getUserId() + "~" + mDatalist.get(position).getUserName(), "Whatsapp");
+                                try {
+                                    startActivity(Intent.createChooser(whatsappIntent, "Share image via:"));
+                                } catch (android.content.ActivityNotFoundException ex) {
+                                    if (isAdded())
+                                        Toast.makeText(getActivity(), getString(R.string.moderation_or_share_whatsapp_not_installed), Toast.LENGTH_SHORT).show();
+                                }
+                                Utils.pushShareArticleEvent(getActivity(), "DetailArticleScreen", userDynamoId + "", mDatalist.get(position).getId(), mDatalist.get(position).getUserId() + "~" + mDatalist.get(position).getUserName(), "Whatsapp");
+                            }
+                        }
+                    }, 200);
+
+                } catch (Exception e) {
+                    if (isAdded())
+                        Toast.makeText(getActivity(), getString(R.string.moderation_or_share_whatsapp_fail), Toast.LENGTH_SHORT).show();
                 }
+
             }
             break;
             case R.id.genericShareImageView: {

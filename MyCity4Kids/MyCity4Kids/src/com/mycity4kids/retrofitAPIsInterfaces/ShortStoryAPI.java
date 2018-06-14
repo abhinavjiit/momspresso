@@ -69,8 +69,12 @@ public interface ShortStoryAPI {
                                                        @Path("end") int end,
                                                        @Query("lang") String lang);
 
+    @GET("/v1/articles/story/{storyId}")
+    Call<ShortStoryDetailResponse> getShortStoryDetails(@Path("storyId") String storyId,
+                                                        @Query("type") String type);
+
     @GET("/v1/articles/doc/")
-    Call<ShortStoryDetailResponse> getShortStoryDetails(@Query("articleId") String articleId);
+    Call<ShortStoryDetailResponse> getShortStoryDetailsFallback(@Query("articleId") String articleId);
 
     @GET("v1/users/checkFollowingBookmarkStatus/")
     Call<ArticleDetailResponse> checkFollowingBookmarkStatus(@Query("articleId") String articleId,
@@ -100,8 +104,7 @@ public interface ShortStoryAPI {
     Call<ShortStoryCommentListResponse> addCommentOrReply(@Body AddEditShortStoryCommentOrReplyRequest body);
 
     @DELETE("v3/comments/{commentOrReplyId}")
-    Call<ShortStoryCommentListResponse> deleteCommentOrReply(@Path("commentOrReplyId") String commentOrReplyId,
-                                                             @Query("postId") String postId);
+    Call<ShortStoryCommentListResponse> deleteCommentOrReply(@Path("commentOrReplyId") String commentOrReplyId);
 
     @PUT("v3/comments/{commentOrReplyId}")
     Call<ShortStoryCommentListResponse> editCommentOrReply(@Path("commentOrReplyId") String commentOrReplyId,

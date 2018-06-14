@@ -203,7 +203,12 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     }
 
     private void getShortStoryDetails() {
-        Call<ShortStoryDetailResponse> call = shortStoryAPI.getShortStoryDetails(articleId);
+        Call<ShortStoryDetailResponse> call = shortStoryAPI.getShortStoryDetails(articleId, "articleId");
+        call.enqueue(articleDetailResponseCallbackRedis);
+    }
+
+    private void getShortStoryDetailsFallback() {
+        Call<ShortStoryDetailResponse> call = shortStoryAPI.getShortStoryDetailsFallback(articleId);
         call.enqueue(articleDetailResponseCallbackRedis);
     }
 
@@ -644,6 +649,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 commentOptionsDialogFragment.setTargetFragment(this, 0);
                 Bundle _args = new Bundle();
                 _args.putInt("position", position);
+                _args.putString("authorId", consolidatedList.get(position).getSsResult().getUserId());
                 _args.putString("responseType", "COMMENT");
                 commentOptionsDialogFragment.setArguments(_args);
                 commentOptionsDialogFragment.setCancelable(true);
@@ -994,8 +1000,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     public void deleteReply(int commentPos, int replyPos) {
         deleteCommentPos = commentPos;
         deleteReplyPos = replyPos;
-        Call<ShortStoryCommentListResponse> call = shortStoryAPI.deleteCommentOrReply(consolidatedList.get(commentPos).getSsComment().getReplies().get(replyPos).get_id(),
-                consolidatedList.get(commentPos).getSsComment().getPostId());
+        Call<ShortStoryCommentListResponse> call = shortStoryAPI.deleteCommentOrReply(consolidatedList.get(commentPos).getSsComment().getReplies().get(replyPos).get_id());
         call.enqueue(deleteReplyResponseListener);
     }
 
@@ -1054,8 +1059,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
 
     @Override
     public void onResponseDelete(int position, String responseType) {
-        Call<ShortStoryCommentListResponse> call = shortStoryAPI.deleteCommentOrReply(consolidatedList.get(position).getSsComment().get_id(),
-                consolidatedList.get(position).getSsComment().getPostId());
+        Call<ShortStoryCommentListResponse> call = shortStoryAPI.deleteCommentOrReply(consolidatedList.get(position).getSsComment().get_id());
         call.enqueue(deleteCommentResponseListener);
         actionItemPosition = position;
     }

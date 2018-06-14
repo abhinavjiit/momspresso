@@ -195,34 +195,34 @@ public class TopicsShortStoriesContainerFragment extends BaseFragment {
                     for (int k = 0; k < responseData.getData().get(i).getChild().size(); k++) {
 
                         //DO NOT REMOVE below commented check -- showInMenu 0 from backend --might be used to show/hide in future
-//                        if ("1".equals(responseData.getData().get(i).getChild().get(k).getShowInMenu())) {
-                        //Adding All subcategories
-                        responseData.getData().get(i).getChild().get(k)
-                                .setParentId(responseData.getData().get(i).getId());
-                        responseData.getData().get(i).getChild().get(k)
-                                .setParentName(responseData.getData().get(i).getTitle());
+                        if ("1".equals(responseData.getData().get(i).getChild().get(k).getShowInMenu())) {
+                            //Adding All subcategories
+                            responseData.getData().get(i).getChild().get(k)
+                                    .setParentId(responseData.getData().get(i).getId());
+                            responseData.getData().get(i).getChild().get(k)
+                                    .setParentName(responseData.getData().get(i).getTitle());
 
-                        // create duplicate entry for subcategories with no child
-                        if (responseData.getData().get(i).getChild().get(k).getChild().isEmpty()) {
-                            ArrayList<Topics> duplicateEntry = new ArrayList<Topics>();
-                            //adding exact same object adds the object recursively producing stackoverflow exception when writing for Parcel.
-                            //So need to create different object with same params
-                            Topics dupChildTopic = new Topics();
-                            dupChildTopic.setChild(new ArrayList<Topics>());
-                            dupChildTopic.setId(responseData.getData().get(i).getChild().get(k).getId());
-                            dupChildTopic.setIsSelected(responseData.getData().get(i).getChild().get(k).isSelected());
-                            dupChildTopic.setParentId(responseData.getData().get(i).getChild().get(k).getParentId());
-                            dupChildTopic.setDisplay_name(responseData.getData().get(i).getChild().get(k).getDisplay_name());
-                            dupChildTopic.setParentName(responseData.getData().get(i).getChild().get(k).getParentName());
-                            dupChildTopic.setPublicVisibility(responseData.getData().get(i).getChild().get(k).getPublicVisibility());
-                            dupChildTopic.setShowInMenu(responseData.getData().get(i).getChild().get(k).getShowInMenu());
-                            dupChildTopic.setSlug(responseData.getData().get(i).getChild().get(k).getSlug());
-                            dupChildTopic.setTitle(responseData.getData().get(i).getChild().get(k).getTitle());
-                            duplicateEntry.add(dupChildTopic);
-                            responseData.getData().get(i).getChild().get(k).setChild(duplicateEntry);
+                            // create duplicate entry for subcategories with no child
+                            if (responseData.getData().get(i).getChild().get(k).getChild().isEmpty()) {
+                                ArrayList<Topics> duplicateEntry = new ArrayList<Topics>();
+                                //adding exact same object adds the object recursively producing stackoverflow exception when writing for Parcel.
+                                //So need to create different object with same params
+                                Topics dupChildTopic = new Topics();
+                                dupChildTopic.setChild(new ArrayList<Topics>());
+                                dupChildTopic.setId(responseData.getData().get(i).getChild().get(k).getId());
+                                dupChildTopic.setIsSelected(responseData.getData().get(i).getChild().get(k).isSelected());
+                                dupChildTopic.setParentId(responseData.getData().get(i).getChild().get(k).getParentId());
+                                dupChildTopic.setDisplay_name(responseData.getData().get(i).getChild().get(k).getDisplay_name());
+                                dupChildTopic.setParentName(responseData.getData().get(i).getChild().get(k).getParentName());
+                                dupChildTopic.setPublicVisibility(responseData.getData().get(i).getChild().get(k).getPublicVisibility());
+                                dupChildTopic.setShowInMenu(responseData.getData().get(i).getChild().get(k).getShowInMenu());
+                                dupChildTopic.setSlug(responseData.getData().get(i).getChild().get(k).getSlug());
+                                dupChildTopic.setTitle(responseData.getData().get(i).getChild().get(k).getTitle());
+                                duplicateEntry.add(dupChildTopic);
+                                responseData.getData().get(i).getChild().get(k).setChild(duplicateEntry);
+                            }
+                            tempUpList.add(responseData.getData().get(i).getChild().get(k));
                         }
-                        tempUpList.add(responseData.getData().get(i).getChild().get(k));
-//                        }
                     }
                 }
                 responseData.getData().get(i).setChild(tempUpList);
