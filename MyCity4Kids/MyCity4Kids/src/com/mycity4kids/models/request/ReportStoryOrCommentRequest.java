@@ -8,7 +8,7 @@ public class ReportStoryOrCommentRequest {
 
     private String id;
     private String reason;
-    private String type;
+    private int type;
 
     public String getId() {
         return id;
@@ -26,11 +26,11 @@ public class ReportStoryOrCommentRequest {
         this.reason = reason;
     }
 
-    public String getType() {
+    public int getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(int type) {
         this.type = type;
     }
 }

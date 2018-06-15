@@ -154,6 +154,7 @@ public class ChangePreferredLanguageDialogFragment extends DialogFragment implem
         getApplicationContext().deleteFile(AppConstants.CATEGORIES_JSON_FILE);
         BaseApplication.setTopicList(null);
         BaseApplication.setTopicsMap(null);
+        BaseApplication.setShortStoryTopicList(null);
         LocaleManager.setNewLocale(getActivity(), language);
         SharedPrefUtils.setConfigCategoryVersion(getActivity(), 0);
         Intent i = new Intent(getActivity(), DashboardActivity.class);

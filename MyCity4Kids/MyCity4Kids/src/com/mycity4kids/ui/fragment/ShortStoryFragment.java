@@ -2,9 +2,12 @@ package com.mycity4kids.ui.fragment;
 
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -19,7 +22,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.kelltontech.network.Response;
@@ -36,7 +40,6 @@ import com.mycity4kids.models.request.AddEditShortStoryCommentOrReplyRequest;
 import com.mycity4kids.models.request.ArticleDetailRequest;
 import com.mycity4kids.models.request.DeleteBookmarkRequest;
 import com.mycity4kids.models.request.RecommendUnrecommendArticleRequest;
-import com.mycity4kids.models.request.ReportStoryOrCommentRequest;
 import com.mycity4kids.models.request.UpdateViewCountRequest;
 import com.mycity4kids.models.response.AddBookmarkResponse;
 import com.mycity4kids.models.response.ArticleDetailResponse;
@@ -50,10 +53,14 @@ import com.mycity4kids.models.response.ViewCountResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
+import com.mycity4kids.ui.activity.BloggerProfileActivity;
+import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.adapter.ShortStoriesDetailRecyclerAdapter;
 import com.mycity4kids.utils.AppUtils;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -84,7 +91,6 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     private int bookmarkStatus;
     private int recommendStatus;
     private boolean isFollowing = false;
-    private boolean isSwipeNextAvailable;
     private String bookmarkFlag = "0";
     private String recommendationFlag = "0";
     private String commentURL = "";
@@ -120,6 +126,9 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     private String editReplyId;
     private int deleteCommentPos;
     private int deleteReplyPos;
+    private View shareSSView;
+    private TextView titleTextView, bodyTextView, authorTextView;
+    private int colorPosition = 0;
 
     @Nullable
     @Override
@@ -129,12 +138,21 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         shortStoryRecyclerView = (RecyclerView) fragmentView.findViewById(R.id.shortStoryRecyclerView);
         openAddCommentDialog = (FloatingActionButton) fragmentView.findViewById(R.id.openAddCommentDialog);
         mLodingView = (RelativeLayout) fragmentView.findViewById(R.id.relativeLoadingView);
+        shareSSView = fragmentView.findViewById(R.id.shareSSView);
+        titleTextView = (TextView) fragmentView.findViewById(R.id.titleTextView);
+        bodyTextView = (TextView) fragmentView.findViewById(R.id.bodyTextView);
+        authorTextView = (TextView) fragmentView.findViewById(R.id.authorTextView);
 
         userDynamoId = SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId();
 
         deepLinkURL = "";// getIntent().getStringExtra(Constants.DEEPLINK_URL);
         try {
             openAddCommentDialog.setOnClickListener(this);
+
+            Bundle bundle = getArguments();
+            if (bundle != null) {
+                colorPosition = bundle.getInt("colorPosition", 0);
+            }
 
             final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
             llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -143,21 +161,15 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             headerModel = new ShortStoryDetailAndCommentModel();
 
             consolidatedList = new ArrayList<>();
-            adapter = new ShortStoriesDetailRecyclerAdapter(getActivity(), this);
+            adapter = new ShortStoriesDetailRecyclerAdapter(getActivity(), this, colorPosition);
             adapter.setListData(consolidatedList);
             shortStoryRecyclerView.setAdapter(adapter);
             isReuqestRunning = true;
-            Bundle bundle = getArguments();
             if (bundle != null) {
                 articleId = bundle.getString(Constants.ARTICLE_ID);
                 authorId = bundle.getString(Constants.AUTHOR_ID, "");
                 blogSlug = bundle.getString(Constants.BLOG_SLUG);
                 titleSlug = bundle.getString(Constants.TITLE_SLUG);
-                isSwipeNextAvailable = bundle.getBoolean("swipeNext", false);
-                if (isSwipeNextAvailable) {
-                    isSwipeNextAvailable = BaseApplication.isFirstSwipe();
-                }
-
                 if (bundle.getBoolean("fromNotification")) {
 //                    Utils.pushEventNotificationClick(getActivity(), GTMEventType.NOTIFICATION_CLICK_EVENT, userDynamoId, "Notification Popup", "article_details");
 //                    Utils.pushOpenArticleEvent(getActivity(), GTMEventType.ARTICLE_DETAILS_CLICK_EVENT, "Notification", userDynamoId + "", articleId, "-1" + "~Notification", "Notification");
@@ -203,13 +215,13 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     }
 
     private void getShortStoryDetails() {
-        Call<ShortStoryDetailResponse> call = shortStoryAPI.getShortStoryDetails(articleId, "articleId");
-        call.enqueue(articleDetailResponseCallbackRedis);
+        Call<ShortStoryDetailResult> call = shortStoryAPI.getShortStoryDetails(articleId, "articleId");
+        call.enqueue(storyDetailResponseCallbackRedis);
     }
 
     private void getShortStoryDetailsFallback() {
         Call<ShortStoryDetailResponse> call = shortStoryAPI.getShortStoryDetailsFallback(articleId);
-        call.enqueue(articleDetailResponseCallbackRedis);
+        call.enqueue(storyDetailResponseCallbackFallback);
     }
 
     private void getViewCountAPI() {
@@ -309,7 +321,41 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         }
     }
 
-    Callback<ShortStoryDetailResponse> articleDetailResponseCallbackRedis = new Callback<ShortStoryDetailResponse>() {
+    Callback<ShortStoryDetailResult> storyDetailResponseCallbackRedis = new Callback<ShortStoryDetailResult>() {
+        @Override
+        public void onResponse(Call<ShortStoryDetailResult> call, retrofit2.Response<ShortStoryDetailResult> response) {
+            removeProgressDialog();
+            if (response == null || response.body() == null) {
+                getShortStoryDetailsFallback();
+                return;
+            }
+            try {
+                ShortStoryDetailResult responseData = response.body();
+                headerModel.setSsResult(responseData);
+                headerModel.setType(0);
+                consolidatedList.add(headerModel);
+                getStoryComments(articleId, null);
+                getViewCountAPI();
+                adapter.notifyDataSetChanged();
+                hitUpdateViewCountAPI(responseData.getUserId(), responseData.getTags(), responseData.getCities());
+            } catch (Exception e) {
+                removeProgressDialog();
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+                getShortStoryDetailsFallback();
+            }
+
+        }
+
+        @Override
+        public void onFailure(Call<ShortStoryDetailResult> call, Throwable t) {
+            removeProgressDialog();
+            handleExceptions(t);
+            getShortStoryDetailsFallback();
+        }
+    };
+
+    Callback<ShortStoryDetailResponse> storyDetailResponseCallbackFallback = new Callback<ShortStoryDetailResponse>() {
         @Override
         public void onResponse(Call<ShortStoryDetailResponse> call, retrofit2.Response<ShortStoryDetailResponse> response) {
             removeProgressDialog();
@@ -324,21 +370,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 getStoryComments(articleId, null);
                 getViewCountAPI();
                 adapter.notifyDataSetChanged();
-//                getResponseUpdateUi(responseData.getData());
-//                authorId = detailData.getUserId();
-//                isArticleDetailLoaded = true;
-//                hitBookmarkFollowingStatusAPI();
-//                hitRelatedArticleAPI();
-//                commentURL = responseData.getCommentsUri();
-//                commentMainUrl = responseData.getCommentsUri();
                 hitUpdateViewCountAPI(responseData.getData().getUserId(), responseData.getData().getTags(), responseData.getData().getCities());
-                if (!StringUtils.isNullOrEmpty(commentURL) && commentURL.contains("http")) {
-//                    getMoreComments();
-                } else {
-                    commentType = "fb";
-                    commentURL = "http";
-//                    getMoreComments();
-                }
             } catch (Exception e) {
                 removeProgressDialog();
                 Crashlytics.logException(e);
@@ -575,8 +607,10 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                     if (!isAdded()) {
                         return;
                     }
-                    if (null == responseData.getData() && responseData.getData().isEmpty()) {
+                    if (null != responseData.getData() && !responseData.getData().isEmpty()) {
                         ((ShortStoryContainerActivity) getActivity()).showToast(responseData.getReason());
+                        headerModel.getSsResult().setLikeCount("" + (Integer.parseInt(headerModel.getSsResult().getLikeCount()) + 1));
+                        adapter.notifyDataSetChanged();
                     } else {
                         ((ShortStoryContainerActivity) getActivity()).showToast(responseData.getReason());
                     }
@@ -636,7 +670,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 FragmentManager fm = getChildFragmentManager();
                 Bundle _args = new Bundle();
                 _args.putString("postId", consolidatedList.get(position).getSsResult().getId());
-                _args.putString("type", AppConstants.REPORT_TYPE_STORY);
+                _args.putInt("type", AppConstants.REPORT_TYPE_STORY);
                 reportStoryOrCommentDialogFragment.setArguments(_args);
                 reportStoryOrCommentDialogFragment.setCancelable(true);
                 reportStoryOrCommentDialogFragment.setTargetFragment(this, 0);
@@ -649,7 +683,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 commentOptionsDialogFragment.setTargetFragment(this, 0);
                 Bundle _args = new Bundle();
                 _args.putInt("position", position);
-                _args.putString("authorId", consolidatedList.get(position).getSsResult().getUserId());
+                _args.putString("authorId", consolidatedList.get(position).getSsComment().getUserId());
                 _args.putString("responseType", "COMMENT");
                 commentOptionsDialogFragment.setArguments(_args);
                 commentOptionsDialogFragment.setCancelable(true);
@@ -677,35 +711,82 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 recommendUnrecommentArticleAPI("1");
                 break;
             case R.id.facebookShareImageView: {
-                String shareUrl = AppUtils.getShortStoryShareUrl(headerModel.getSsResult().getUserType(),
-                        headerModel.getSsResult().getBlogTitleSlug(), headerModel.getSsResult().getTitleSlug());
-                if (ShareDialog.canShow(ShareLinkContent.class)) {
-                    ShareLinkContent content = new ShareLinkContent.Builder().setQuote(headerModel.getSsResult().getTitle())
-                            .setContentUrl(Uri.parse(shareUrl))
-                            .build();
-                    new ShareDialog(this).show(content);
+                try {
+                    authorTextView.setText("By - " + headerModel.getSsResult().getUserName());
+                    titleTextView.setText(headerModel.getSsResult().getTitle());
+                    bodyTextView.setText(headerModel.getSsResult().getBody());
+                    shareSSView.setDrawingCacheEnabled(true);
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Bitmap b = shareSSView.getDrawingCache();
+                            try {
+                                b.compress(Bitmap.CompressFormat.JPEG, 95, new FileOutputStream(Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg"));
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                            SharePhoto photo = new SharePhoto.Builder()
+                                    .setBitmap(b)
+                                    .build();
+                            SharePhotoContent content = new SharePhotoContent.Builder()
+                                    .addPhoto(photo)
+                                    .build();
+                            ShareDialog shareDialog = new ShareDialog(ShortStoryFragment.this);
+                            shareDialog.show(content);
+                            shareSSView.setDrawingCacheEnabled(false);
+                        }
+                    }, 200);
+                } catch (Exception e) {
+                    if (isAdded())
+                        Toast.makeText(getActivity(), getString(R.string.moderation_or_share_facebook_fail), Toast.LENGTH_SHORT).show();
                 }
-                Utils.pushShareArticleEvent(getActivity(), "DetailArticleScreen", userDynamoId + "", headerModel.getSsResult().getId(),
-                        headerModel.getSsResult().getUserId() + "~" + headerModel.getSsResult().getUserName(), "Facebook");
             }
             break;
             case R.id.whatsappShareImageView: {
-                String shareUrl = AppUtils.getShortStoryShareUrl(headerModel.getSsResult().getUserType(),
-                        headerModel.getSsResult().getBlogTitleSlug(), headerModel.getSsResult().getTitleSlug());
+                try {
+                    authorTextView.setText("By - " + headerModel.getSsResult().getUserName());
+                    titleTextView.setText(headerModel.getSsResult().getTitle());
+                    bodyTextView.setText(headerModel.getSsResult().getBody());
+                    shareSSView.setDrawingCacheEnabled(true);
 
-                if (StringUtils.isNullOrEmpty(shareUrl)) {
-                    Toast.makeText(getActivity(), "Unable to share with whatsapp.", Toast.LENGTH_SHORT).show();
-                } else {
-                    Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
-                    whatsappIntent.setType("text/plain");
-                    whatsappIntent.setPackage("com.whatsapp");
-                    whatsappIntent.putExtra(Intent.EXTRA_TEXT, headerModel.getSsResult().getTitle() + "\n\n" + getString(R.string.ad_share_follow_author, headerModel.getSsResult().getUserName()) + "\n" + shareUrl);
-                    try {
-                        startActivity(whatsappIntent);
-                    } catch (android.content.ActivityNotFoundException ex) {
-                        Toast.makeText(getActivity(), "Whatsapp have not been installed.", Toast.LENGTH_SHORT).show();
-                    }
-                    Utils.pushShareArticleEvent(getActivity(), "DetailArticleScreen", userDynamoId + "", headerModel.getSsResult().getId(), headerModel.getSsResult().getUserId() + "~" + headerModel.getSsResult().getUserName(), "Whatsapp");
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Bitmap b = shareSSView.getDrawingCache();
+                            try {
+                                b.compress(Bitmap.CompressFormat.JPEG, 95, new FileOutputStream(Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg"));
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                            shareSSView.setDrawingCacheEnabled(false);
+                            String shareUrl = AppUtils.getShortStoryShareUrl(headerModel.getSsResult().getUserType(),
+                                    headerModel.getSsResult().getBlogTitleSlug(), headerModel.getSsResult().getTitleSlug());
+
+                            if (StringUtils.isNullOrEmpty(shareUrl)) {
+                                Toast.makeText(getActivity(), getString(R.string.moderation_or_share_facebook_fail), Toast.LENGTH_SHORT).show();
+                            } else {
+                                Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg");
+                                Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
+                                whatsappIntent.putExtra(Intent.EXTRA_STREAM, uri);
+                                whatsappIntent.putExtra(Intent.EXTRA_TEXT, shareUrl);
+                                whatsappIntent.setPackage("com.whatsapp");
+                                whatsappIntent.setType("image/*");
+//                    whatsappIntent.putExtra(Intent.EXTRA_TEXT, mDatalist.get(position).getTitle() + "\n\n" + getString(R.string.ad_share_follow_author, mDatalist.get(position).getUserName()) + "\n" + shareUrl);
+                                try {
+                                    startActivity(Intent.createChooser(whatsappIntent, "Share image via:"));
+                                } catch (android.content.ActivityNotFoundException ex) {
+                                    if (isAdded())
+                                        Toast.makeText(getActivity(), getString(R.string.moderation_or_share_whatsapp_not_installed), Toast.LENGTH_SHORT).show();
+                                }
+//                                Utils.pushShareArticleEvent(getActivity(), "DetailArticleScreen", userDynamoId + "", mDatalist.get(position).getId(), mDatalist.get(position).getUserId() + "~" + mDatalist.get(position).getUserName(), "Whatsapp");
+                            }
+                        }
+                    }, 200);
+
+                } catch (Exception e) {
+                    if (isAdded())
+                        Toast.makeText(getActivity(), getString(R.string.moderation_or_share_whatsapp_fail), Toast.LENGTH_SHORT).show();
                 }
             }
             break;
@@ -727,6 +808,20 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 startActivity(Intent.createChooser(shareIntent, "ShortStory"));
             }
             break;
+            case R.id.authorNameTextView: {
+                if (userDynamoId.equals(headerModel.getSsResult().getUserId())) {
+                    Intent profileIntent = new Intent(getActivity(), DashboardActivity.class);
+                    profileIntent.putExtra("TabType", "profile");
+                    startActivity(profileIntent);
+                } else {
+                    Intent intentnn = new Intent(getActivity(), BloggerProfileActivity.class);
+                    intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, headerModel.getSsResult().getUserId());
+                    intentnn.putExtra(AppConstants.AUTHOR_NAME, headerModel.getSsResult().getUserName());
+                    intentnn.putExtra(Constants.FROM_SCREEN, "ShortStoryScreen");
+                    startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
+                }
+                break;
+            }
         }
     }
 
@@ -776,6 +871,8 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                     shortStoryCommentListData.setCreatedTime(responseData.getData().get(0).getCreatedTime());
                     shortStoryCommentListData.setPostId(responseData.getData().get(0).getPostId());
                     shortStoryCommentListData.setParentCommentId("0");
+                    shortStoryCommentListData.setReplies(new ArrayList<ShortStoryCommentListData>());
+                    shortStoryCommentListData.setReplies_count(0);
                     shortStoryCommentListData.setUserPic(responseData.getData().get(0).getUserPic());
                     shortStoryCommentListData.setUserName(responseData.getData().get(0).getUserName());
                     shortStoryCommentListData.setUserId(responseData.getData().get(0).getUserId());
@@ -1131,7 +1228,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         FragmentManager fm = getChildFragmentManager();
         Bundle _args = new Bundle();
         _args.putString("postId", consolidatedList.get(position).getSsComment().get_id());
-        _args.putString("type", AppConstants.REPORT_TYPE_COMMENT);
+        _args.putInt("type", AppConstants.REPORT_TYPE_COMMENT);
         reportStoryOrCommentDialogFragment.setArguments(_args);
         reportStoryOrCommentDialogFragment.setCancelable(true);
         reportStoryOrCommentDialogFragment.setTargetFragment(this, 0);

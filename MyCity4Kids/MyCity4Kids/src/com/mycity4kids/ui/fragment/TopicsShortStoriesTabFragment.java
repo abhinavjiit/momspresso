@@ -219,7 +219,8 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         TopicsCategoryAPI topicsAPI = retrofit.create(TopicsCategoryAPI.class);
 
         int from = (nextPageNumber - 1) * limit + 1;
-        Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(selectedTopic.getId(), sortType, from, from + limit - 1, SharedPrefUtils.getLanguageFilters(getActivity()));
+        Call<ArticleListingResponse> filterCall = topicsAPI.getArticlesForCategory(selectedTopic.getId(), sortType, from, from + limit - 1, "0");
+
         filterCall.enqueue(articleListingResponseCallback);
     }
 
@@ -338,7 +339,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 FragmentManager fm = getChildFragmentManager();
                 Bundle _args = new Bundle();
                 _args.putString("postId", mDatalist.get(position).getId());
-                _args.putString("type", AppConstants.REPORT_TYPE_STORY);
+                _args.putInt("type", AppConstants.REPORT_TYPE_STORY);
                 reportStoryOrCommentDialogFragment.setArguments(_args);
                 reportStoryOrCommentDialogFragment.setCancelable(true);
                 reportStoryOrCommentDialogFragment.setTargetFragment(this, 0);

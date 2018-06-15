@@ -20,6 +20,7 @@ import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
 import com.mycity4kids.models.response.ReportStoryOrCommentResponse;
 import com.mycity4kids.models.response.ShortStoryCommentListResponse;
 import com.mycity4kids.models.response.ShortStoryDetailResponse;
+import com.mycity4kids.models.response.ShortStoryDetailResult;
 import com.mycity4kids.models.response.ViewCountResponse;
 
 import okhttp3.ResponseBody;
@@ -70,8 +71,8 @@ public interface ShortStoryAPI {
                                                        @Query("lang") String lang);
 
     @GET("/v1/articles/story/{storyId}")
-    Call<ShortStoryDetailResponse> getShortStoryDetails(@Path("storyId") String storyId,
-                                                        @Query("type") String type);
+    Call<ShortStoryDetailResult> getShortStoryDetails(@Path("storyId") String storyId,
+                                                      @Query("type") String type);
 
     @GET("/v1/articles/doc/")
     Call<ShortStoryDetailResponse> getShortStoryDetailsFallback(@Query("articleId") String articleId);

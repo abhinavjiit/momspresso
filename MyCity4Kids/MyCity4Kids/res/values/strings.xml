@@ -614,7 +614,7 @@
     <string name="article_listing.type.editor_label">EDITOR\'S PICK</string>
     <string name="article_listing.type.todays_best_label">TODAY\'S BEST</string>
     <string name="article_listing.type.for_you_label">FOR YOU</string>
-    <string name="article_listing.type.short_story_label">100WORDSTORY</string>
+    <string name="article_listing.type.short_story_label">#100WORDSTORY</string>
     <string name="article_listing.type.languages_label">LANGUAGES</string>
     <string name="article_listing.type.videos_label">VIDEOS</string>
     <string name="article_listing.type.recent_label">RECENT</string>
@@ -661,19 +661,28 @@
 
     <string name="random_text">Your trekking to Stok Kangri begins with the arrival to Leh. You can easily reach Leh once you come to Delhi. You can reach Leh from Delhi either through a flight or through the road. Taking the flight is a better option as you would be saving a lot on time and energy. Taking the road may cost you a lot of time as you have to first go to either Srinagar or Manali to start for Leh. You can spend a day in Leh to acclimatize to the weather. Trekking in the area of Leh is among the best options among Trekking in India</string>
     <string name="random_100_words">Trekking to Stok Kangri begins with the arrival to Leh. You can easily reach Leh once you come to Delhi. You can reach Leh from Delhi either through a flight Taking the flight is a better option as you would be saving a lot on time and energy. Taking the road may cost you a lot of time as you have to first go to either Srinagar or Manali to start for Leh. You can spend a day in Leh to acclimatize to the weather. Trekking in the area of Leh is among the best options among Trekking in India</string>
-    <string name="short_s.add_story">Add Story</string>
-    <string name="short_s.add_comment">Add Comment</string>
-    <string name="short_s.edit_response">Edit</string>
-    <string name="short_s.replying_to">Replying to</string>
-    <string name="short_s.toolbar_title">100 Words Story</string>
+    <string name="short_s.add_story">Write a 100 word story</string>
+    <string name="short_s.add_comment">ADD A COMMENT</string>
     <string name="short_s.add.title_hint">Write an exciting title that suits your story. Character limit is 60.</string>
     <string name="short_s.add.body_hint">Write your amazing story or poem in 100 words or less.</string>
     <string name="short_s.publish_message">Congrats! Your story has been published.\n Share it with your friends and family.</string>
-    <string name="short_s.post">POST</string>
-    <string name="short_s.max_word">Short story cannot have more than 100 words</string>
+    <string name="short_s.max_word">Your story can have maximum 100 words.</string>
+    <string name="short_s.choose_genre">CHOOSE THE GENRE OF YOUR STORY</string>
+    <string name="short_s.choose_one_genre">Choose the genre that best describes the content of your story. You can choose only 1 genre.</string>
+    <string name="short_s.no_drafts">No short story drafted as yet</string>
+    <string name="short_s.no_published">No short story published as yet</string>
+    <string name="short_s.view_replies">View replies</string>
+    <string name="short_s.choose_topic">Please choose at least one topic to continue</string>
+    <string name="short_s.add_comment_fail">Failed to add comment. Please try again</string>
+    <string name="short_s.edit_comment_fail">Failed to edit comment. Please try again</string>
+    <string name="short_s.delete_comment_fail">Failed to delete comment. Please try again</string>
+    <string name="short_s.add_reply_fail">Failed to add reply. Please try again</string>
+    <string name="short_s.edit_reply_fail">Failed to edit reply. Please try again</string>
+    <string name="short_s.delete_reply_fail">Failed to delete reply. Please try again</string>
 
-    <string name="report.reason">This content is inappropriate because</string>
-    <string name="report.abuse">Abusive Content</string>
-    <string name="report.spam">It\'s a Spam</string>
-    <string name="report.not_relevant">Not Relevant</string>
+    <string name="report.reason">Inappropriate because</string>
+    <string name="report.abuse">Its abusive</string>
+    <string name="report.spam">It hurts religious sentiments</string>
+    <string name="report.not_relevant">Any other</string>
+    <string name="reply">Reply</string>
 </resources>

@@ -52,6 +52,7 @@ import com.mycity4kids.models.response.BlogPageResponse;
 import com.mycity4kids.models.response.DeepLinkingResposnse;
 import com.mycity4kids.models.response.DeepLinkingResult;
 import com.mycity4kids.models.response.ShortStoryDetailResponse;
+import com.mycity4kids.models.response.ShortStoryDetailResult;
 import com.mycity4kids.models.version.RateVersion;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
@@ -448,7 +449,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
                     final String storyId = tempDeepLinkURL.substring(tempDeepLinkURL.lastIndexOf("/") + 1, tempDeepLinkURL.length());
                     Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
                     ShortStoryAPI shortStoryAPI = retrofit.create(ShortStoryAPI.class);
-                    Call<ShortStoryDetailResponse> call = shortStoryAPI.getShortStoryDetails(storyId, "articleId");
+                    Call<ShortStoryDetailResult> call = shortStoryAPI.getShortStoryDetails(storyId, "articleId");
                     call.enqueue(ssDetailResponseCallback);
                 } else if (tempDeepLinkURL.contains(AppConstants.DEEPLINK_SUGGESTED_TOPIC_URL) || tempDeepLinkURL.contains(AppConstants.DEEPLINK_MOMSPRESSO_SUGGESTED_TOPIC_URL)) {
                     fragmentToLoad = Constants.SUGGESTED_TOPICS_FRAGMENT;
@@ -480,22 +481,22 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
-    Callback<ShortStoryDetailResponse> ssDetailResponseCallback = new Callback<ShortStoryDetailResponse>() {
+    Callback<ShortStoryDetailResult> ssDetailResponseCallback = new Callback<ShortStoryDetailResult>() {
         @Override
-        public void onResponse(Call<ShortStoryDetailResponse> call, retrofit2.Response<ShortStoryDetailResponse> response) {
+        public void onResponse(Call<ShortStoryDetailResult> call, retrofit2.Response<ShortStoryDetailResult> response) {
             removeProgressDialog();
             if (response == null || response.body() == null) {
                 return;
             }
             try {
-                ShortStoryDetailResponse responseData = response.body();
+                ShortStoryDetailResult responseData = response.body();
                 Intent intent = new Intent(DashboardActivity.this, AddShortStoryActivity.class);
                 intent.putExtra("from", "publishedList");
-                intent.putExtra("title", responseData.getData().getTitle());
-                intent.putExtra("body", responseData.getData().getBody());
-                intent.putExtra("articleId", responseData.getData().getId());
-                intent.putExtra("tag", new Gson().toJson(responseData.getData().getTags()));
-                intent.putExtra("cities", new Gson().toJson(responseData.getData().getCities()));
+                intent.putExtra("title", responseData.getTitle());
+                intent.putExtra("body", responseData.getBody());
+                intent.putExtra("articleId", responseData.getId());
+                intent.putExtra("tag", new Gson().toJson(responseData.getTags()));
+                intent.putExtra("cities", new Gson().toJson(responseData.getCities()));
                 startActivity(intent);
             } catch (Exception e) {
                 removeProgressDialog();
@@ -506,7 +507,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
         }
 
         @Override
-        public void onFailure(Call<ShortStoryDetailResponse> call, Throwable t) {
+        public void onFailure(Call<ShortStoryDetailResult> call, Throwable t) {
             removeProgressDialog();
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
@@ -1295,7 +1296,7 @@ public class DashboardActivity extends BaseActivity implements View.OnClickListe
             } else if (null != topFragment && topFragment instanceof TopicsShortStoriesContainerFragment) {
                 Utils.pushOpenScreenEvent(this, "TopicsShortStoriesContainerFragment", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
                 toolbarTitleTextView.setOnClickListener(this);
-                toolbarTitleTextView.setText(getString(R.string.short_s_toolbar_title));
+                toolbarTitleTextView.setText(getString(R.string.article_listing_type_short_story_label));
                 toolbarTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.home_toolbar_titlecolor));
                 menu.findItem(R.id.action_home).setChecked(true);
                 toolbarRelativeLayout.setVisibility(View.VISIBLE);

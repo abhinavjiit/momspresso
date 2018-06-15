@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.models.response.ArticleListingResult;
-import com.mycity4kids.ui.fragment.ArticleDetailsFragment;
 import com.mycity4kids.ui.fragment.ShortStoryFragment;
 
 import java.util.ArrayList;
@@ -42,6 +41,7 @@ public class ShortStoryPagerAdapter extends FragmentStatePagerAdapter {
         bundle.putString(Constants.FROM_SCREEN, fromScreen);
         bundle.putString(Constants.ARTICLE_OPENED_FROM, "Notification Popup");
         bundle.putString(Constants.ARTICLE_INDEX, "-1");
+        bundle.putInt("colorPosition", position);
         bundle.putBoolean("fromNotification", false);
         bundle.putBoolean("swipeNext", isSwipeNextAvailable);
 

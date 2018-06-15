@@ -41,7 +41,7 @@ public class ReportStoryOrCommentDialogFragment extends DialogFragment implement
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 //        getDialog().setCanceledOnTouchOutside(false);
         String postId = getArguments().getString("postId");
-        String type = getArguments().getString("type");
+        int type = getArguments().getInt("type");
 
         RadioGroup reportReasonRadioGroup = (RadioGroup) rootView.findViewById(R.id.reportReasonRadioGroup);
         final AppCompatRadioButton reason1RadioButton = (AppCompatRadioButton) rootView.findViewById(R.id.reason1RadioButton);

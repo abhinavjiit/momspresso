@@ -46,7 +46,7 @@
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:singleLine="false"
-            android:text="Comment Title"
+            android:text=""
             android:textColor="@color/ad.comment.username"
             android:textSize="@dimen/ad_comments_username"
             app:fontName="oswald_regular.ttf" />
@@ -63,7 +63,7 @@
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:singleLine="false"
-            android:text="Comment Desc"
+            android:text=""
             android:textColor="@color/ad.comment.body"
             android:textSize="@dimen/ad_comments_text"
             app:fontName="open_sans.ttf" />
@@ -83,7 +83,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:padding="5dp"
-                android:text="Date"
+                android:text=""
                 android:textColor="@color/ad.comment.date"
                 android:textSize="@dimen/ad_comments_date"
                 app:fontName="oswald.ttf" />

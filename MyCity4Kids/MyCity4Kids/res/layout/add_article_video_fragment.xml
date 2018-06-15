@@ -18,7 +18,7 @@
 
     <LinearLayout
         android:id="@+id/addVideoLL"
-        android:layout_width="120dp"
+        android:layout_width="150dp"
         android:layout_height="100dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
@@ -50,7 +50,7 @@
 
     <LinearLayout
         android:id="@+id/blogSetUpLL"
-        android:layout_width="120dp"
+        android:layout_width="150dp"
         android:layout_height="100dp"
         android:layout_above="@+id/addVideoLL"
         android:layout_alignParentRight="true"
@@ -81,7 +81,7 @@
 
     <LinearLayout
         android:id="@+id/writeArticleLL"
-        android:layout_width="120dp"
+        android:layout_width="150dp"
         android:layout_height="100dp"
         android:layout_above="@+id/addVideoLL"
         android:layout_alignParentRight="true"
@@ -112,7 +112,7 @@
 
     <LinearLayout
         android:id="@+id/suggestedTopicsLL"
-        android:layout_width="120dp"
+        android:layout_width="150dp"
         android:layout_height="100dp"
         android:layout_above="@+id/writeArticleLL"
         android:layout_alignParentRight="true"
@@ -142,7 +142,7 @@
 
     <LinearLayout
         android:id="@+id/shortStoryLL"
-        android:layout_width="120dp"
+        android:layout_width="150dp"
         android:layout_height="100dp"
         android:layout_above="@+id/suggestedTopicsLL"
         android:layout_alignParentRight="true"

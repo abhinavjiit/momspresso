@@ -28,6 +28,7 @@ import com.mycity4kids.models.response.ArticleDetailResult;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.ShortStoryDetailResponse;
+import com.mycity4kids.models.response.ShortStoryDetailResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
@@ -217,6 +218,8 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
                 articleDataModelsNew.addAll(dataList);
                 shortStoriesAdapter.setListData(articleDataModelsNew);
                 shortStoriesAdapter.notifyDataSetChanged();
+                if (isAdded())
+                    noBlogsTextView.setText(getString(R.string.short_s_no_published));
                 noBlogsTextView.setVisibility(View.VISIBLE);
             }
         } else {
@@ -422,7 +425,7 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
             case R.id.editPublishedTextView:
                 Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
                 ShortStoryAPI shortStoryAPI = retrofit.create(ShortStoryAPI.class);
-                Call<ShortStoryDetailResponse> call = shortStoryAPI.getShortStoryDetails(articleDataModelsNew.get(position).getId(), "articleId");
+                Call<ShortStoryDetailResult> call = shortStoryAPI.getShortStoryDetails(articleDataModelsNew.get(position).getId(), "articleId");
                 call.enqueue(ssDetailResponseCallbackRedis);
                 break;
             case R.id.shareArticleImageView:
@@ -452,22 +455,22 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
         }
     }
 
-    Callback<ShortStoryDetailResponse> ssDetailResponseCallbackRedis = new Callback<ShortStoryDetailResponse>() {
+    Callback<ShortStoryDetailResult> ssDetailResponseCallbackRedis = new Callback<ShortStoryDetailResult>() {
         @Override
-        public void onResponse(Call<ShortStoryDetailResponse> call, retrofit2.Response<ShortStoryDetailResponse> response) {
+        public void onResponse(Call<ShortStoryDetailResult> call, retrofit2.Response<ShortStoryDetailResult> response) {
             removeProgressDialog();
             if (response == null || response.body() == null) {
                 return;
             }
             try {
-                ShortStoryDetailResponse responseData = response.body();
+                ShortStoryDetailResult responseData = response.body();
                 Intent intent = new Intent(getActivity(), AddShortStoryActivity.class);
                 intent.putExtra("from", "publishedList");
-                intent.putExtra("title", responseData.getData().getTitle());
-                intent.putExtra("body", responseData.getData().getBody());
-                intent.putExtra("articleId", responseData.getData().getId());
-                intent.putExtra("tag", new Gson().toJson(responseData.getData().getTags()));
-                intent.putExtra("cities", new Gson().toJson(responseData.getData().getCities()));
+                intent.putExtra("title", responseData.getTitle());
+                intent.putExtra("body", responseData.getBody());
+                intent.putExtra("articleId", responseData.getId());
+                intent.putExtra("tag", new Gson().toJson(responseData.getTags()));
+                intent.putExtra("cities", new Gson().toJson(responseData.getCities()));
                 startActivity(intent);
             } catch (Exception e) {
                 removeProgressDialog();
@@ -478,7 +481,7 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
         }
 
         @Override
-        public void onFailure(Call<ShortStoryDetailResponse> call, Throwable t) {
+        public void onFailure(Call<ShortStoryDetailResult> call, Throwable t) {
             removeProgressDialog();
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));

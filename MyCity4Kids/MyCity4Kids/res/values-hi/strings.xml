@@ -613,7 +613,7 @@
     <string name="article_listing.type.trending_label">ट्रेंडिंग</string>
     <string name="article_listing.type.editor_label">संपादक की पसंद</string>
     <string name="article_listing.type.todays_best_label">आज के बेस्ट</string>
-    <string name="article_listing.type.short_story_label">100WORDSTORY</string>
+    <string name="article_listing.type.short_story_label">#100 शब्दों की कहानी</string>
     <string name="article_listing.type.for_you_label">खास आपके लिए</string>
     <string name="article_listing.type.languages_label">भाषाएँ</string>
     <string name="article_listing.type.videos_label">विडियोज</string>
@@ -665,4 +665,33 @@
     <string name="author_type.user">USER</string>
 
     <string name="no_article.be_first">इस श्रेणी में लेख लिखने वाले पहले लेखक बनें !​</string>
+    <string name="no_story.be_first">Be the first one to write stories in this category!</string>
+
+    <string name="random_text">Your trekking to Stok Kangri begins with the arrival to Leh. You can easily reach Leh once you come to Delhi. You can reach Leh from Delhi either through a flight or through the road. Taking the flight is a better option as you would be saving a lot on time and energy. Taking the road may cost you a lot of time as you have to first go to either Srinagar or Manali to start for Leh. You can spend a day in Leh to acclimatize to the weather. Trekking in the area of Leh is among the best options among Trekking in India</string>
+    <string name="random_100_words">Trekking to Stok Kangri begins with the arrival to Leh. You can easily reach Leh once you come to Delhi. You can reach Leh from Delhi either through a flight Taking the flight is a better option as you would be saving a lot on time and energy. Taking the road may cost you a lot of time as you have to first go to either Srinagar or Manali to start for Leh. You can spend a day in Leh to acclimatize to the weather. Trekking in the area of Leh is among the best options among Trekking in India</string>
+    <string name="short_s.add_story">100 शब्दों में कहानी लिखें</string>
+    <string name="short_s.add_comment">कमेंट करें</string>
+    <string name="short_s.replying_to">Replying to</string>
+    <string name="short_s.add.title_hint">अपनी कहानी के अनुसार एक आकर्षक  शीर्षक लिखें । अक्षर सीमा 60 है।</string>
+    <string name="short_s.add.body_hint">आप 100 शब्द या उससे कम में अपनी अद्भुत कहानी या कविता लिख सकते हैं।</string>
+    <string name="short_s.publish_message">बधाई !आपका ब्लॉग पब्लिश हो गया है \nअपने दोस्तों और परिवार के साथ शेयर करें</string>
+    <string name="short_s.max_word">- आपका कहानी अधिकतम 100 शब्दों तक हो सकती है।</string>
+    <string name="short_s.choose_genre">अपनी कहानी की कैटेगरी का चुनाव करें</string>
+    <string name="short_s.choose_one_genre">अपनी  कहानी का बेहतर तरीके से वर्णन करने के लिए एक विशिष्ट कैटेगरी का चुनाव करें । आप केवल 1 ही कैटेगरी चुन सकते हैं</string>
+    <string name="short_s.no_drafts">अभी तक कोई छोटी कहानी तैयार नहीं की गई है</string>
+    <string name="short_s.no_published">अभी तक कोई छोटी कहानी प्रकाशित नहीं की गई है</string>
+    <string name="short_s.view_replies">View replies</string>
+    <string name="short_s.choose_topic">Please choose at least one topic to continue</string>
+    <string name="short_s.add_comment_fail">Failed to add comment. Please try again</string>
+    <string name="short_s.edit_comment_fail">Failed to edit comment. Please try again</string>
+    <string name="short_s.delete_comment_fail">Failed to delete comment. Please try again</string>
+    <string name="short_s.add_reply_fail">Failed to add reply. Please try again</string>
+    <string name="short_s.edit_reply_fail">Failed to edit reply. Please try again</string>
+    <string name="short_s.delete_reply_fail">Failed to delete reply. Please try again</string>
+
+    <string name="report.reason">ये अनुपयुक्त है क्योंकि</string>
+    <string name="report.abuse">ये अपमानजनक हैं</string>
+    <string name="report.spam">यह धार्मिक भावनाओं को नुकसान पहुंचाता है</string>
+    <string name="report.not_relevant">कोई  अन्य</string>
+    <string name="reply">जवाब</string>
 </resources>

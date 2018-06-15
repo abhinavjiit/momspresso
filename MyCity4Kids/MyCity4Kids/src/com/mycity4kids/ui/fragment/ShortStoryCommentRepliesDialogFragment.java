@@ -336,7 +336,7 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
         FragmentManager fm = getChildFragmentManager();
         Bundle _args = new Bundle();
         _args.putString("postId", repliesList.get(position).get_id());
-        _args.putString("type", AppConstants.REPORT_TYPE_COMMENT);
+        _args.putInt("type", AppConstants.REPORT_TYPE_COMMENT);
         reportStoryOrCommentDialogFragment.setArguments(_args);
         reportStoryOrCommentDialogFragment.setCancelable(true);
         reportStoryOrCommentDialogFragment.setTargetFragment(this, 0);

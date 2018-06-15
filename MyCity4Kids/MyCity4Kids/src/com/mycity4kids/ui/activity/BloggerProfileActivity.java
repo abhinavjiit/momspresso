@@ -435,17 +435,22 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
                         topArticle_1.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Intent intent = new Intent(BloggerProfileActivity.this, ArticleDetailsContainerActivity.class);
-                                intent.putExtra(Constants.ARTICLE_ID, dataList.get(0).getId());
-                                intent.putExtra(Constants.AUTHOR_ID, dataList.get(0).getUserId());
-                                intent.putExtra(Constants.BLOG_SLUG, dataList.get(0).getBlogPageSlug());
-                                intent.putExtra(Constants.TITLE_SLUG, dataList.get(0).getTitleSlug());
-                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Top3Article");
-                                intent.putExtra(Constants.FROM_SCREEN, "PublicProfileScreen");
-                                intent.putExtra(Constants.ARTICLE_INDEX, "" + 0);
-                                intent.putParcelableArrayListExtra("pagerListData", dataList);
-                                intent.putExtra(Constants.AUTHOR, dataList.get(0).getUserId() + "~" + dataList.get(0).getUserName());
-                                startActivity(intent);
+                                if (AppConstants.CONTENT_TYPE_SHORT_STORY.equals(dataList.get(0).getContentType())) {
+                                    launchShortStory(dataList, 0);
+                                } else {
+                                    launchArticleDetails(dataList, 0);
+                                }
+//                                Intent intent = new Intent(BloggerProfileActivity.this, ArticleDetailsContainerActivity.class);
+//                                intent.putExtra(Constants.ARTICLE_ID, dataList.get(0).getId());
+//                                intent.putExtra(Constants.AUTHOR_ID, dataList.get(0).getUserId());
+//                                intent.putExtra(Constants.BLOG_SLUG, dataList.get(0).getBlogPageSlug());
+//                                intent.putExtra(Constants.TITLE_SLUG, dataList.get(0).getTitleSlug());
+//                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Top3Article");
+//                                intent.putExtra(Constants.FROM_SCREEN, "PublicProfileScreen");
+//                                intent.putExtra(Constants.ARTICLE_INDEX, "" + 0);
+//                                intent.putParcelableArrayListExtra("pagerListData", dataList);
+//                                intent.putExtra(Constants.AUTHOR, dataList.get(0).getUserId() + "~" + dataList.get(0).getUserName());
+//                                startActivity(intent);
                             }
                         });
                     } else if (dataList.size() == 2) {
@@ -469,33 +474,43 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
                         topArticle_1.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Intent intent = new Intent(BloggerProfileActivity.this, ArticleDetailsContainerActivity.class);
-                                intent.putExtra(Constants.ARTICLE_ID, dataList.get(0).getId());
-                                intent.putExtra(Constants.AUTHOR_ID, dataList.get(0).getUserId());
-                                intent.putExtra(Constants.BLOG_SLUG, dataList.get(0).getBlogPageSlug());
-                                intent.putExtra(Constants.TITLE_SLUG, dataList.get(0).getTitleSlug());
-                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Top3Article");
-                                intent.putExtra(Constants.FROM_SCREEN, "PublicProfileScreen");
-                                intent.putExtra(Constants.ARTICLE_INDEX, "" + 0);
-                                intent.putParcelableArrayListExtra("pagerListData", dataList);
-                                intent.putExtra(Constants.AUTHOR, dataList.get(0).getUserId() + "~" + dataList.get(0).getUserName());
-                                startActivity(intent);
+                                if (AppConstants.CONTENT_TYPE_SHORT_STORY.equals(dataList.get(0).getContentType())) {
+                                    launchShortStory(dataList, 0);
+                                } else {
+                                    launchArticleDetails(dataList, 0);
+                                }
+//                                Intent intent = new Intent(BloggerProfileActivity.this, ArticleDetailsContainerActivity.class);
+//                                intent.putExtra(Constants.ARTICLE_ID, dataList.get(0).getId());
+//                                intent.putExtra(Constants.AUTHOR_ID, dataList.get(0).getUserId());
+//                                intent.putExtra(Constants.BLOG_SLUG, dataList.get(0).getBlogPageSlug());
+//                                intent.putExtra(Constants.TITLE_SLUG, dataList.get(0).getTitleSlug());
+//                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Top3Article");
+//                                intent.putExtra(Constants.FROM_SCREEN, "PublicProfileScreen");
+//                                intent.putExtra(Constants.ARTICLE_INDEX, "" + 0);
+//                                intent.putParcelableArrayListExtra("pagerListData", dataList);
+//                                intent.putExtra(Constants.AUTHOR, dataList.get(0).getUserId() + "~" + dataList.get(0).getUserName());
+//                                startActivity(intent);
                             }
                         });
                         topArticle_2.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Intent intent = new Intent(BloggerProfileActivity.this, ArticleDetailsContainerActivity.class);
-                                intent.putExtra(Constants.ARTICLE_ID, dataList.get(1).getId());
-                                intent.putExtra(Constants.AUTHOR_ID, dataList.get(1).getUserId());
-                                intent.putExtra(Constants.BLOG_SLUG, dataList.get(1).getBlogPageSlug());
-                                intent.putExtra(Constants.TITLE_SLUG, dataList.get(1).getTitleSlug());
-                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Top3Article");
-                                intent.putExtra(Constants.FROM_SCREEN, "PublicProfileScreen");
-                                intent.putExtra(Constants.ARTICLE_INDEX, "" + 1);
-                                intent.putParcelableArrayListExtra("pagerListData", dataList);
-                                intent.putExtra(Constants.AUTHOR, dataList.get(1).getUserId() + "~" + dataList.get(1).getUserName());
-                                startActivity(intent);
+                                if (AppConstants.CONTENT_TYPE_SHORT_STORY.equals(dataList.get(1).getContentType())) {
+                                    launchShortStory(dataList, 1);
+                                } else {
+                                    launchArticleDetails(dataList, 1);
+                                }
+//                                Intent intent = new Intent(BloggerProfileActivity.this, ArticleDetailsContainerActivity.class);
+//                                intent.putExtra(Constants.ARTICLE_ID, dataList.get(1).getId());
+//                                intent.putExtra(Constants.AUTHOR_ID, dataList.get(1).getUserId());
+//                                intent.putExtra(Constants.BLOG_SLUG, dataList.get(1).getBlogPageSlug());
+//                                intent.putExtra(Constants.TITLE_SLUG, dataList.get(1).getTitleSlug());
+//                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Top3Article");
+//                                intent.putExtra(Constants.FROM_SCREEN, "PublicProfileScreen");
+//                                intent.putExtra(Constants.ARTICLE_INDEX, "" + 1);
+//                                intent.putParcelableArrayListExtra("pagerListData", dataList);
+//                                intent.putExtra(Constants.AUTHOR, dataList.get(1).getUserId() + "~" + dataList.get(1).getUserName());
+//                                startActivity(intent);
                             }
                         });
                     } else {
@@ -525,49 +540,64 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
                         topArticle_1.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Intent intent = new Intent(BloggerProfileActivity.this, ArticleDetailsContainerActivity.class);
-                                intent.putExtra(Constants.ARTICLE_ID, dataList.get(0).getId());
-                                intent.putExtra(Constants.AUTHOR_ID, dataList.get(0).getUserId());
-                                intent.putExtra(Constants.BLOG_SLUG, dataList.get(0).getBlogPageSlug());
-                                intent.putExtra(Constants.TITLE_SLUG, dataList.get(0).getTitleSlug());
-                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Top3Article");
-                                intent.putExtra(Constants.FROM_SCREEN, "PublicProfileScreen");
-                                intent.putExtra(Constants.ARTICLE_INDEX, "" + 0);
-                                intent.putParcelableArrayListExtra("pagerListData", dataList);
-                                intent.putExtra(Constants.AUTHOR, dataList.get(0).getUserId() + "~" + dataList.get(0).getUserName());
-                                startActivity(intent);
+                                if (AppConstants.CONTENT_TYPE_SHORT_STORY.equals(dataList.get(0).getContentType())) {
+                                    launchShortStory(dataList, 0);
+                                } else {
+                                    launchArticleDetails(dataList, 0);
+                                }
+//                                Intent intent = new Intent(BloggerProfileActivity.this, ArticleDetailsContainerActivity.class);
+//                                intent.putExtra(Constants.ARTICLE_ID, dataList.get(0).getId());
+//                                intent.putExtra(Constants.AUTHOR_ID, dataList.get(0).getUserId());
+//                                intent.putExtra(Constants.BLOG_SLUG, dataList.get(0).getBlogPageSlug());
+//                                intent.putExtra(Constants.TITLE_SLUG, dataList.get(0).getTitleSlug());
+//                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Top3Article");
+//                                intent.putExtra(Constants.FROM_SCREEN, "PublicProfileScreen");
+//                                intent.putExtra(Constants.ARTICLE_INDEX, "" + 0);
+//                                intent.putParcelableArrayListExtra("pagerListData", dataList);
+//                                intent.putExtra(Constants.AUTHOR, dataList.get(0).getUserId() + "~" + dataList.get(0).getUserName());
+//                                startActivity(intent);
                             }
                         });
                         topArticle_2.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Intent intent = new Intent(BloggerProfileActivity.this, ArticleDetailsContainerActivity.class);
-                                intent.putExtra(Constants.ARTICLE_ID, dataList.get(1).getId());
-                                intent.putExtra(Constants.AUTHOR_ID, dataList.get(1).getUserId());
-                                intent.putExtra(Constants.BLOG_SLUG, dataList.get(1).getBlogPageSlug());
-                                intent.putExtra(Constants.TITLE_SLUG, dataList.get(1).getTitleSlug());
-                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Top3Article");
-                                intent.putExtra(Constants.FROM_SCREEN, "PublicProfileScreen");
-                                intent.putExtra(Constants.ARTICLE_INDEX, "" + 1);
-                                intent.putParcelableArrayListExtra("pagerListData", dataList);
-                                intent.putExtra(Constants.AUTHOR, dataList.get(1).getUserId() + "~" + dataList.get(1).getUserName());
-                                startActivity(intent);
+                                if (AppConstants.CONTENT_TYPE_SHORT_STORY.equals(dataList.get(1).getContentType())) {
+                                    launchShortStory(dataList, 1);
+                                } else {
+                                    launchArticleDetails(dataList, 1);
+                                }
+//                                Intent intent = new Intent(BloggerProfileActivity.this, ArticleDetailsContainerActivity.class);
+//                                intent.putExtra(Constants.ARTICLE_ID, dataList.get(1).getId());
+//                                intent.putExtra(Constants.AUTHOR_ID, dataList.get(1).getUserId());
+//                                intent.putExtra(Constants.BLOG_SLUG, dataList.get(1).getBlogPageSlug());
+//                                intent.putExtra(Constants.TITLE_SLUG, dataList.get(1).getTitleSlug());
+//                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Top3Article");
+//                                intent.putExtra(Constants.FROM_SCREEN, "PublicProfileScreen");
+//                                intent.putExtra(Constants.ARTICLE_INDEX, "" + 1);
+//                                intent.putParcelableArrayListExtra("pagerListData", dataList);
+//                                intent.putExtra(Constants.AUTHOR, dataList.get(1).getUserId() + "~" + dataList.get(1).getUserName());
+//                                startActivity(intent);
                             }
                         });
                         topArticle_3.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Intent intent = new Intent(BloggerProfileActivity.this, ArticleDetailsContainerActivity.class);
-                                intent.putExtra(Constants.ARTICLE_ID, dataList.get(2).getId());
-                                intent.putExtra(Constants.AUTHOR_ID, dataList.get(2).getUserId());
-                                intent.putExtra(Constants.BLOG_SLUG, dataList.get(2).getBlogPageSlug());
-                                intent.putExtra(Constants.TITLE_SLUG, dataList.get(2).getTitleSlug());
-                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Top3Article");
-                                intent.putExtra(Constants.FROM_SCREEN, "PublicProfileScreen");
-                                intent.putExtra(Constants.ARTICLE_INDEX, "" + 2);
-                                intent.putParcelableArrayListExtra("pagerListData", dataList);
-                                intent.putExtra(Constants.AUTHOR, dataList.get(2).getUserId() + "~" + dataList.get(2).getUserName());
-                                startActivity(intent);
+                                if (AppConstants.CONTENT_TYPE_SHORT_STORY.equals(dataList.get(2).getContentType())) {
+                                    launchShortStory(dataList, 2);
+                                } else {
+                                    launchArticleDetails(dataList, 2);
+                                }
+//                                Intent intent = new Intent(BloggerProfileActivity.this, ArticleDetailsContainerActivity.class);
+//                                intent.putExtra(Constants.ARTICLE_ID, dataList.get(2).getId());
+//                                intent.putExtra(Constants.AUTHOR_ID, dataList.get(2).getUserId());
+//                                intent.putExtra(Constants.BLOG_SLUG, dataList.get(2).getBlogPageSlug());
+//                                intent.putExtra(Constants.TITLE_SLUG, dataList.get(2).getTitleSlug());
+//                                intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Top3Article");
+//                                intent.putExtra(Constants.FROM_SCREEN, "PublicProfileScreen");
+//                                intent.putExtra(Constants.ARTICLE_INDEX, "" + 2);
+//                                intent.putParcelableArrayListExtra("pagerListData", dataList);
+//                                intent.putExtra(Constants.AUTHOR, dataList.get(2).getUserId() + "~" + dataList.get(2).getUserName());
+//                                startActivity(intent);
                             }
                         });
                     }
@@ -587,6 +617,34 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
+
+    private void launchArticleDetails(ArrayList<ArticleListingResult> dataList, int i) {
+        Intent intent = new Intent(this, ArticleDetailsContainerActivity.class);
+        intent.putExtra(Constants.ARTICLE_ID, dataList.get(i).getId());
+        intent.putExtra(Constants.AUTHOR_ID, dataList.get(i).getUserId());
+        intent.putExtra(Constants.BLOG_SLUG, dataList.get(i).getBlogPageSlug());
+        intent.putExtra(Constants.TITLE_SLUG, dataList.get(i).getTitleSlug());
+        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Top3Article");
+        intent.putExtra(Constants.FROM_SCREEN, "PublicProfileScreen");
+        intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
+        intent.putParcelableArrayListExtra("pagerListData", dataList);
+        intent.putExtra(Constants.AUTHOR, dataList.get(i).getUserId() + "~" + dataList.get(i).getUserName());
+        startActivity(intent);
+    }
+
+    private void launchShortStory(ArrayList<ArticleListingResult> dataList, int i) {
+        Intent intent = new Intent(this, ShortStoryContainerActivity.class);
+        intent.putExtra(Constants.ARTICLE_ID, dataList.get(i).getId());
+        intent.putExtra(Constants.AUTHOR_ID, dataList.get(i).getUserId());
+        intent.putExtra(Constants.BLOG_SLUG, dataList.get(i).getBlogPageSlug());
+        intent.putExtra(Constants.TITLE_SLUG, dataList.get(i).getTitleSlug());
+        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "Top3Article");
+        intent.putExtra(Constants.FROM_SCREEN, "PublicProfileScreen");
+        intent.putExtra(Constants.ARTICLE_INDEX, "" + i);
+        intent.putParcelableArrayListExtra("pagerListData", dataList);
+        intent.putExtra(Constants.AUTHOR, dataList.get(i).getUserId() + "~" + dataList.get(i).getUserName());
+        startActivity(intent);
+    }
 
     @Override
     protected void updateUi(Response response) {

@@ -9,9 +9,11 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -41,6 +43,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
 import com.mycity4kids.listener.OnButtonClicked;
 import com.mycity4kids.models.ExploreTopicsModel;
 import com.mycity4kids.models.ExploreTopicsResponse;
@@ -51,6 +54,7 @@ import com.mycity4kids.models.response.DraftListResult;
 import com.mycity4kids.models.response.ImageUploadResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.ImageUploadAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.ShortStoryTopicsRecyclerAdapter;
@@ -60,6 +64,7 @@ import com.mycity4kids.widget.StartSnapHelper;
 
 import org.json.JSONArray;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -67,6 +72,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -428,17 +435,17 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                 }
             }
             if (!isTopicSelected) {
-                Toast.makeText(this, "Topic not selected", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please choose atleast one topic to continue", Toast.LENGTH_SHORT).show();
                 return false;
             }
         }
 
         if (storyTitleEditText.getText() == null || StringUtils.isNullOrEmpty(storyTitleEditText.getText().toString())) {
-            Toast.makeText(this, "Title not valid", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.editor_title_empty), Toast.LENGTH_SHORT).show();
             return false;
         }
         if (storyBodyEditText.getText() == null || StringUtils.isNullOrEmpty(storyBodyEditText.getText().toString())) {
-            Toast.makeText(this, "Body not valid", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.editor_body_empty), Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
@@ -569,18 +576,18 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             Log.d("MC4kException", Log.getStackTraceString(e));
         }
 
-//        Retrofit retro = BaseApplication.getInstance().getRetrofit();
-//        ImageUploadAPI imageUploadAPI = retro.create(ImageUploadAPI.class);
-//        String path = MediaStore.Images.Media.insertImage(getContentResolver(), finalBitmap, "Title", null);
-//        Uri imageUriTemp = Uri.parse(path);
-//
-//        File file = FileUtils.getFile(this, imageUriTemp);
-//
-//        MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
-//        RequestBody requestBodyFile = RequestBody.create(MEDIA_TYPE_PNG, file);
-//        RequestBody imageType = RequestBody.create(MediaType.parse("text/plain"), "4");
-//        Call<ImageUploadResponse> call = imageUploadAPI.uploadImage(imageType, requestBodyFile);
-//        call.enqueue(ssImageUploadCallback);
+        Retrofit retro = BaseApplication.getInstance().getRetrofit();
+        ImageUploadAPI imageUploadAPI = retro.create(ImageUploadAPI.class);
+        String path = MediaStore.Images.Media.insertImage(getContentResolver(), finalBitmap, "Title", null);
+        Uri imageUriTemp = Uri.parse(path);
+
+        File file = FileUtils.getFile(this, imageUriTemp);
+
+        MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
+        RequestBody requestBodyFile = RequestBody.create(MEDIA_TYPE_PNG, file);
+        RequestBody imageType = RequestBody.create(MediaType.parse("text/plain"), "4");
+        Call<ImageUploadResponse> call = imageUploadAPI.uploadImage(imageType, requestBodyFile);
+        call.enqueue(ssImageUploadCallback);
     }
 
     private Callback<ImageUploadResponse> ssImageUploadCallback = new Callback<ImageUploadResponse>() {

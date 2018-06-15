@@ -79,11 +79,11 @@ public class AddShortStoryCommentReplyDialogFragment extends DialogFragment impl
             relativeMainContainer.setVisibility(View.GONE);
         } else {
             if ("EDIT_COMMENT".equals(actionType) || "EDIT_REPLY".equals(actionType)) {
-                headingTextView.setText(BaseApplication.getAppContext().getString(R.string.short_s_edit_response));
+                headingTextView.setText(BaseApplication.getAppContext().getString(R.string.ad_comments_edit_label));
                 relativeMainContainer.setVisibility(View.GONE);
                 commentReplyEditText.setText(commentOrReplyData.getMessage());
             } else {
-                headingTextView.setText(BaseApplication.getAppContext().getString(R.string.short_s_replying_to));
+                headingTextView.setText(BaseApplication.getAppContext().getString(R.string.reply));
                 relativeMainContainer.setVisibility(View.VISIBLE);
                 try {
                     Picasso.with(getActivity()).load(commentOrReplyData.getUserPic().getClientAppMin())
@@ -180,9 +180,9 @@ public class AddShortStoryCommentReplyDialogFragment extends DialogFragment impl
     }
 
     private boolean isValid() {
-
         if (StringUtils.isNullOrEmpty(commentReplyEditText.getText().toString())) {
-            Toast.makeText(getActivity(), "Please add a reply", Toast.LENGTH_LONG).show();
+            if (isAdded())
+                Toast.makeText(getActivity(), getString(R.string.ad_comments_toast_empty_comment), Toast.LENGTH_LONG).show();
             return false;
         }
         return true;

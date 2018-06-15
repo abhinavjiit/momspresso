@@ -8,73 +8,73 @@
     android:background="@drawable/short_story_border_bg">
 
     <!--<RelativeLayout-->
-        <!--android:id="@+id/shareView"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:background="@color/short_story.card_bg_1">-->
+    <!--android:id="@+id/shareView"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:background="@color/short_story.card_bg_1">-->
 
-        <!--<RelativeLayout-->
-            <!--android:id="@+id/shareTitleContainer"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content">-->
+    <!--<RelativeLayout-->
+    <!--android:id="@+id/shareTitleContainer"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content">-->
 
-            <!--<com.mycity4kids.widget.CustomFontTextView-->
-                <!--android:id="@+id/titleTextView"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_toLeftOf="@+id/optionImageView"-->
-                <!--android:maxLines="2"-->
-                <!--android:paddingBottom="15dp"-->
-                <!--android:paddingLeft="14dp"-->
-                <!--android:paddingRight="14dp"-->
-                <!--android:paddingTop="15dp"-->
-                <!--android:text="PRIZED POSESSION"-->
-                <!--android:textColor="@color/short_story.light_black_color"-->
-                <!--android:textSize="17sp"-->
-                <!--app:fontName="georgia.ttf" />-->
+    <!--<com.mycity4kids.widget.CustomFontTextView-->
+    <!--android:id="@+id/titleTextView"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_toLeftOf="@+id/optionImageView"-->
+    <!--android:maxLines="2"-->
+    <!--android:paddingBottom="15dp"-->
+    <!--android:paddingLeft="14dp"-->
+    <!--android:paddingRight="14dp"-->
+    <!--android:paddingTop="15dp"-->
+    <!--android:text="PRIZED POSESSION"-->
+    <!--android:textColor="@color/short_story.light_black_color"-->
+    <!--android:textSize="17sp"-->
+    <!--app:fontName="georgia.ttf" />-->
 
-            <!--<View-->
-                <!--android:id="@+id/separator"-->
-                <!--android:layout_width="100dp"-->
-                <!--android:layout_height="1dp"-->
-                <!--android:layout_below="@+id/titleTextView"-->
-                <!--android:layout_marginLeft="14dp"-->
-                <!--android:background="@color/common_underline" />-->
+    <!--<View-->
+    <!--android:id="@+id/separator"-->
+    <!--android:layout_width="100dp"-->
+    <!--android:layout_height="1dp"-->
+    <!--android:layout_below="@+id/titleTextView"-->
+    <!--android:layout_marginLeft="14dp"-->
+    <!--android:background="@color/common_underline" />-->
 
-            <!--<ImageView-->
-                <!--android:id="@+id/optionImageView"-->
-                <!--android:layout_width="50dp"-->
-                <!--android:layout_height="50dp"-->
-                <!--android:layout_alignParentEnd="true"-->
-                <!--android:layout_alignParentRight="true"-->
-                <!--android:layout_centerVertical="true"-->
-                <!--android:padding="8dp"-->
-                <!--android:src="@drawable/momspresso_logo" />-->
-        <!--</RelativeLayout>-->
+    <!--<ImageView-->
+    <!--android:id="@+id/optionImageView"-->
+    <!--android:layout_width="50dp"-->
+    <!--android:layout_height="50dp"-->
+    <!--android:layout_alignParentEnd="true"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:layout_centerVertical="true"-->
+    <!--android:padding="8dp"-->
+    <!--android:src="@drawable/momspresso_logo" />-->
+    <!--</RelativeLayout>-->
 
-        <!--<com.mycity4kids.widget.CustomFontTextView-->
-            <!--android:id="@+id/bodyTextView"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_below="@+id/shareTitleContainer"-->
-            <!--android:paddingLeft="14dp"-->
-            <!--android:paddingRight="14dp"-->
-            <!--android:paddingTop="15dp"-->
-            <!--android:text="@string/random_text"-->
-            <!--android:textColor="@color/short_story.light_black_color"-->
-            <!--android:textSize="16sp"-->
-            <!--app:fontName="georgia.ttf" />-->
+    <!--<com.mycity4kids.widget.CustomFontTextView-->
+    <!--android:id="@+id/bodyTextView"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@+id/shareTitleContainer"-->
+    <!--android:paddingLeft="14dp"-->
+    <!--android:paddingRight="14dp"-->
+    <!--android:paddingTop="15dp"-->
+    <!--android:text="@string/random_text"-->
+    <!--android:textColor="@color/short_story.light_black_color"-->
+    <!--android:textSize="16sp"-->
+    <!--app:fontName="georgia.ttf" />-->
 
-        <!--<com.mycity4kids.widget.CustomFontTextView-->
-            <!--android:id="@+id/authorTextView"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_below="@+id/bodyTextView"-->
-            <!--android:padding="14dp"-->
-            <!--android:text="Reena Goyal"-->
-            <!--android:textColor="@color/short_story.blue"-->
-            <!--android:textSize="16sp"-->
-            <!--app:fontName="georgia.ttf" />-->
+    <!--<com.mycity4kids.widget.CustomFontTextView-->
+    <!--android:id="@+id/authorTextView"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@+id/bodyTextView"-->
+    <!--android:padding="14dp"-->
+    <!--android:text="Reena Goyal"-->
+    <!--android:textColor="@color/short_story.blue"-->
+    <!--android:textSize="16sp"-->
+    <!--app:fontName="georgia.ttf" />-->
 
     <!--</RelativeLayout>-->
 
@@ -100,7 +100,7 @@
                 android:paddingLeft="14dp"
                 android:paddingRight="14dp"
                 android:paddingTop="15dp"
-                android:text="PRIZED POSESSION"
+                android:text=""
                 android:textColor="@color/short_story.light_black_color"
                 android:textSize="17sp"
                 app:fontName="georgia.ttf" />
@@ -133,7 +133,7 @@
             android:paddingLeft="14dp"
             android:paddingRight="14dp"
             android:paddingTop="15dp"
-            android:text="@string/random_text"
+            android:text=""
             android:textColor="@color/short_story.light_black_color"
             android:textSize="16sp"
             app:fontName="georgia.ttf" />
