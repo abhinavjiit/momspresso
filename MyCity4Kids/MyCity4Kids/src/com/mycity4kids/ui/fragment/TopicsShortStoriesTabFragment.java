@@ -368,7 +368,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                     titleTextView.setText(mDatalist.get(position).getTitle());
                     bodyTextView.setText(mDatalist.get(position).getBody());
                     shareSSView.setDrawingCacheEnabled(true);
-
+                    AppUtils.createDirIfNotExists("MyCity4Kids/videos");
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -401,7 +401,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                     titleTextView.setText(mDatalist.get(position).getTitle());
                     bodyTextView.setText(mDatalist.get(position).getBody());
                     shareSSView.setDrawingCacheEnabled(true);
-
+                    AppUtils.createDirIfNotExists("MyCity4Kids/videos");
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -444,21 +444,36 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             }
             break;
             case R.id.genericShareImageView: {
-                Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
-                shareIntent.setType("text/plain");
+                authorTextView.setText("By - " + mDatalist.get(position).getUserName());
+                titleTextView.setText(mDatalist.get(position).getTitle());
+                bodyTextView.setText(mDatalist.get(position).getBody());
+                shareSSView.setDrawingCacheEnabled(true);
+                AppUtils.createDirIfNotExists("MyCity4Kids/videos");
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Bitmap b = shareSSView.getDrawingCache();
+                        try {
+                            b.compress(Bitmap.CompressFormat.JPEG, 95, new FileOutputStream(Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg"));
+                        } catch (Exception e) {
+                            Crashlytics.logException(e);
+                            Log.d("MC4kException", Log.getStackTraceString(e));
+                        }
+                        shareSSView.setDrawingCacheEnabled(false);
+                        Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg");
 
-                String shareUrl = AppUtils.getShareUrl(mDatalist.get(position).getUserType(),
-                        mDatalist.get(position).getBlogPageSlug(), mDatalist.get(position).getTitleSlug());
-                String shareMessage;
-                if (StringUtils.isNullOrEmpty(shareUrl)) {
-                    shareMessage = getString(R.string.check_out_blog) + "\"" +
-                            mDatalist.get(position).getTitle() + "\" by " + mDatalist.get(position).getUserName() + ".";
-                } else {
-                    shareMessage = getString(R.string.check_out_blog) + "\"" +
-                            mDatalist.get(position).getTitle() + "\" by " + mDatalist.get(position).getUserName() + ".\nRead Here: " + shareUrl;
-                }
-                shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
-                startActivity(Intent.createChooser(shareIntent, "ShortStory"));
+                        Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+                        shareIntent.setType("text/plain");
+
+                        String shareUrl = AppUtils.getShortStoryShareUrl(mDatalist.get(position).getUserType(),
+                                mDatalist.get(position).getBlogPageSlug(), mDatalist.get(position).getTitleSlug());
+
+                        shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+                        shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareUrl);
+                        shareIntent.setType("image/*");
+                        startActivity(Intent.createChooser(shareIntent, "ShortStory"));
+                    }
+                }, 200);
             }
             break;
             case R.id.authorNameTextView:

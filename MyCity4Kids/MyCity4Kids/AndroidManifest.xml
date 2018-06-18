@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mycity4kids"
-    android:versionCode="86"
-    android:versionName="9.0.1">
+    android:versionCode="87"
+    android:versionName="9.0.2">
 
     <uses-sdk
         android:minSdkVersion="15"
