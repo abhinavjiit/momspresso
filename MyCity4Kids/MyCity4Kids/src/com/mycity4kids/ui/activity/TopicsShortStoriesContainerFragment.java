@@ -24,6 +24,7 @@ import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.adapter.TopicsPagerAdapter;
 import com.mycity4kids.ui.adapter.TopicsShortStoriesPagerAdapter;
 import com.mycity4kids.ui.fragment.TopicsArticlesTabFragment;
+import com.mycity4kids.ui.fragment.TopicsShortStoriesTabFragment;
 import com.mycity4kids.utils.AppUtils;
 
 import org.json.JSONObject;
@@ -253,63 +254,6 @@ public class TopicsShortStoriesContainerFragment extends BaseFragment {
 
     }
 
-    Callback<ResponseBody> downloadCategoriesJSONCallback = new Callback<ResponseBody>() {
-        @Override
-        public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-            if (response == null || response.body() == null) {
-//                showToast("Something went wrong from server");
-                return;
-            }
-            try {
-                String resData = new String(response.body().bytes());
-                JSONObject jsonObject = new JSONObject(resData);
-
-                Retrofit retro = BaseApplication.getInstance().getRetrofit();
-                final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
-
-                Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
-                caller.enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                        boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE, response.body());
-                        Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
-
-                        try {
-
-                            FileInputStream fileInputStream = getActivity().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
-                            String fileContent = AppUtils.convertStreamToString(fileInputStream);
-                            TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
-                            createTopicsData(res);
-                            getCurrentParentTopicCategoriesAndSubCategories();
-                        } catch (FileNotFoundException e) {
-                            Crashlytics.logException(e);
-                            Log.d("FileNotFoundException", Log.getStackTraceString(e));
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        Crashlytics.logException(t);
-                        Log.d("MC4KException", Log.getStackTraceString(t));
-                    }
-                });
-            } catch (Exception e) {
-//                progressBar.setVisibility(View.GONE);
-                Crashlytics.logException(e);
-                Log.d("MC4KException", Log.getStackTraceString(e));
-//                showToast(getString(R.string.went_wrong));
-            }
-        }
-
-        @Override
-        public void onFailure(Call<ResponseBody> call, Throwable t) {
-//            progressBar.setVisibility(View.GONE);
-//            showToast(getString(R.string.went_wrong));
-            Crashlytics.logException(t);
-            Log.d("MC4KException", Log.getStackTraceString(t));
-        }
-    };
-
     @Override
     protected void updateUi(Response response) {
 
@@ -319,24 +263,18 @@ public class TopicsShortStoriesContainerFragment extends BaseFragment {
     public void onStop() {
         super.onStop();
         Log.d("TopicListingFragment", "onStop");
+        try {
+            TopicsShortStoriesTabFragment topicsShortStoriesTabFragment = ((TopicsShortStoriesTabFragment) pagerAdapter.instantiateItem(viewPager, viewPager.getCurrentItem()));
+            topicsShortStoriesTabFragment.stopTracking();
+        } catch (Exception e) {
+
+        }
+
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         Log.d("TopicListingFragment", "onDestroy");
-    }
-
-    public void showGuideView() {
-        TopicsArticlesTabFragment topicsArticlesTabFragment = ((TopicsArticlesTabFragment) pagerAdapter.instantiateItem(viewPager, viewPager.getCurrentItem()));
-        topicsArticlesTabFragment.showGuideView();
-    }
-
-    public void showTabLayer() {
-        tablayoutLayer.setVisibility(View.VISIBLE);
-    }
-
-    public void hideTabLayer() {
-        tablayoutLayer.setVisibility(View.GONE);
     }
 }

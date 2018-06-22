@@ -2,6 +2,7 @@ package com.mycity4kids.ui.fragment;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -15,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -39,11 +41,13 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.request.RecommendUnrecommendArticleRequest;
+import com.mycity4kids.models.request.UpdateViewCountRequest;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.TopicsCategoryAPI;
 import com.mycity4kids.ui.activity.AddShortStoryActivity;
 import com.mycity4kids.ui.activity.BloggerProfileActivity;
@@ -53,13 +57,20 @@ import com.mycity4kids.ui.activity.TopicsListingFragment;
 import com.mycity4kids.ui.adapter.ShortStoriesRecyclerAdapter;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.widget.FeedNativeAd;
+import com.mycity4kids.widget.TrackingData;
 
 import org.apmem.tools.layouts.FlowLayout;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -83,6 +94,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
     private ShortStoriesRecyclerAdapter recyclerAdapter;
 //    private MainArticleListingAdapter adapter;
 
+    private LinearLayoutManager llm;
     private RelativeLayout mLodingView;
     private TextView noBlogsTextView;
     private FlowLayout flowLayout;
@@ -101,6 +113,8 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
     private String userDynamoId;
     private View shareSSView;
     private TextView titleTextView, bodyTextView, authorTextView;
+    private ShortStoryAPI shortStoryAPI;
+    Set<Integer> viewedStoriesSet = new HashSet<>();
 
     @Nullable
     @Override
@@ -166,11 +180,14 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
 
         mDatalist = new ArrayList<>();
         recyclerAdapter = new ShortStoriesRecyclerAdapter(getActivity(), this);
-        final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
         recyclerAdapter.setListData(mDatalist);
         recyclerView.setAdapter(recyclerAdapter);
+
+        Retrofit retro = BaseApplication.getInstance().getRetrofit();
+        shortStoryAPI = retro.create(ShortStoryAPI.class);
 
         if (getArguments() != null) {
             currentSubTopic = getArguments().getParcelable("currentSubTopic");
@@ -179,7 +196,6 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
 
 
         hitFilteredTopicsArticleListingApi(sortType);
-
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -279,12 +295,16 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             writeArticleCell.setVisibility(View.GONE);
             if (nextPageNumber == 1) {
                 mDatalist = dataList;
+
             } else {
                 mDatalist.addAll(dataList);
             }
             recyclerAdapter.setListData(mDatalist);
             nextPageNumber = nextPageNumber + 1;
             recyclerAdapter.notifyDataSetChanged();
+            if (nextPageNumber == 2) {
+                startTracking();
+            }
         }
 
     }
@@ -553,6 +573,241 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         public void onFailure(Call<RecommendUnrecommendArticleResponse> call, Throwable t) {
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
+
+    // Time from which a particular view has been started viewing.
+    private long startTime = 0;
+
+    // Time at which a particular view has been stopped viewing.
+    private long endTime = 0;
+
+    // Flag is required because 'addOnGlobalLayoutListener'
+    // is called multiple times.
+    // The flag limits the action inside 'onGlobalLayout' to only once.
+    private boolean firstTrackFlag = false;
+
+    // ArrayList of view ids that are being considered for tracking.
+    private ArrayList<Integer> viewsViewed = new ArrayList<>();
+
+    // ArrayList of TrackingData class instances.
+    private ArrayList<TrackingData> trackingData = new ArrayList<>();
+
+    // The minimum amount of area of the list item that should be on
+    // the screen for the tracking to start.
+    private double minimumVisibleHeightThreshold = 60;
+
+    // Start the tracking process.
+    public void startTracking() {
+
+        // Track the views when the data is loaded into
+        // recycler view for the first time.
+        recyclerView.getViewTreeObserver()
+                .addOnGlobalLayoutListener(new ViewTreeObserver
+                        .OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+
+                        if (!firstTrackFlag) {
+
+                            startTime = System.currentTimeMillis();
+
+                            int firstVisibleItemPosition = ((LinearLayoutManager)
+                                    recyclerView.getLayoutManager())
+                                    .findFirstVisibleItemPosition();
+
+                            int lastVisibleItemPosition = ((LinearLayoutManager)
+                                    recyclerView.getLayoutManager())
+                                    .findLastVisibleItemPosition();
+
+                            analyzeAndAddViewData(firstVisibleItemPosition,
+                                    lastVisibleItemPosition);
+
+                            firstTrackFlag = true;
+                        }
+                    }
+                });
+
+        // Track the views when user scrolls through the recyclerview.
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView,
+                                             int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                // User is scrolling, calculate and store the tracking
+                // data of the views that were being viewed
+                // before the scroll.
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                    endTime = System.currentTimeMillis();
+
+                    for (int trackedViewsCount = 0;
+                         trackedViewsCount < viewsViewed.size();
+                         trackedViewsCount++) {
+
+//                        trackingData.add(prepareTrackingData(String
+//                                        .valueOf(viewsViewed
+//                                                .get(trackedViewsCount)),
+//                                (endTime - startTime) / 1000));
+                        if (((endTime - startTime) / 1000) >= 5) {
+                            if (!viewedStoriesSet.contains(viewsViewed.get(trackedViewsCount))) {
+                                updateViewCount(viewsViewed.get(trackedViewsCount));
+                                viewedStoriesSet.add(viewsViewed.get(trackedViewsCount));
+                            }
+                        }
+                    }
+
+                    // We clear the list of current item positions.
+                    // If we don't do this, the items will be tracked
+                    // every time the new items are added.
+                    viewsViewed.clear();
+                }
+
+                // Scrolling has ended, start the tracking
+                // process by assigning a start time
+                // and maintaining a list of views being viewed.
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+
+                    startTime = System.currentTimeMillis();
+
+                    int firstVisibleItemPosition = ((LinearLayoutManager)
+                            recyclerView.getLayoutManager())
+                            .findFirstVisibleItemPosition();
+
+                    int lastVisibleItemPosition = ((LinearLayoutManager)
+                            recyclerView.getLayoutManager())
+                            .findLastVisibleItemPosition();
+
+                    analyzeAndAddViewData(firstVisibleItemPosition,
+                            lastVisibleItemPosition);
+                }
+            }
+        });
+    }
+
+    // Track the items currently visible and then stop the tracking process.
+    public void stopTracking() {
+
+        endTime = System.currentTimeMillis();
+
+        int firstVisibleItemPosition = ((LinearLayoutManager)
+                recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+
+        int lastVisibleItemPosition = ((LinearLayoutManager)
+                recyclerView.getLayoutManager()).findLastVisibleItemPosition();
+
+        analyzeAndAddViewData(firstVisibleItemPosition,
+                lastVisibleItemPosition);
+
+        for (int trackedViewsCount = 0; trackedViewsCount < viewsViewed.size();
+             trackedViewsCount++) {
+
+//            trackingData.add(prepareTrackingData(String.valueOf(viewsViewed
+//                            .get(trackedViewsCount)),
+//                    (endTime - startTime) / 1000));
+            if (((endTime - startTime) / 1000) >= 5) {
+                if (!viewedStoriesSet.contains(viewsViewed.get(trackedViewsCount))) {
+                    updateViewCount(viewsViewed.get(trackedViewsCount));
+                    viewedStoriesSet.add(viewsViewed.get(trackedViewsCount));
+                }
+            }
+            viewsViewed.clear();
+        }
+    }
+
+    private void analyzeAndAddViewData(int firstVisibleItemPosition,
+                                       int lastVisibleItemPosition) {
+
+        // Analyze all the views
+        for (int viewPosition = firstVisibleItemPosition;
+             viewPosition <= lastVisibleItemPosition; viewPosition++) {
+
+            Log.i("View being considered", String.valueOf(viewPosition));
+
+            // Get the view from its position.
+            View itemView = recyclerView.getLayoutManager()
+                    .findViewByPosition(viewPosition);
+
+            // Check if the visibility of the view is more than or equal
+            // to the threshold provided. If it falls under the desired limit,
+            // add it to the tracking data.
+            if (viewPosition >= 0) {
+                if (getVisibleHeightPercentage(itemView) >= minimumVisibleHeightThreshold) {
+                    viewsViewed.add(viewPosition);
+                }
+            }
+        }
+    }
+
+    // Method to calculate how much of the view is visible
+    // (i.e. within the screen) wrt the view height.
+    // @param view
+    // @return Percentage of the height visible.
+    private double getVisibleHeightPercentage(View view) {
+
+        Rect itemRect = new Rect();
+        view.getLocalVisibleRect(itemRect);
+
+        // Find the height of the item.
+        double visibleHeight = itemRect.height();
+        double height = view.getMeasuredHeight();
+
+        Log.i("Visible Height", String.valueOf(visibleHeight));
+        Log.i("Measured Height", String.valueOf(height));
+
+        double viewVisibleHeightPercentage = ((visibleHeight / height) * 100);
+
+        Log.i("Percentage visible", String.valueOf(viewVisibleHeightPercentage));
+
+        Log.i("___", "___");
+
+        return viewVisibleHeightPercentage;
+    }
+
+    // Method to store the tracking data in an instance of "TrackingData" and
+    // then returning that instance.
+    // @param viewId
+    // @param viewDuration in seconds.
+    private TrackingData prepareTrackingData(String viewId, long viewDuration) {
+
+        TrackingData trackingData = new TrackingData();
+
+        trackingData.setViewId(viewId);
+        trackingData.setViewDuration(viewDuration);
+
+        return trackingData;
+    }
+
+    private void updateViewCount(int position) {
+        Log.d("VIEW INFO", "updateViewCount -- " + mDatalist.get(position).getTitle());
+        UpdateViewCountRequest updateViewCountRequest = new UpdateViewCountRequest();
+        updateViewCountRequest.setUserId(SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId());
+        ArrayList<Map<String, String>> tagData = mDatalist.get(position).getTags();
+        Map<String, String> tagMap = new HashMap<>();
+        for (Map.Entry<String, String> entry : tagData.get(0).entrySet()) {
+            if (entry.getKey().contains("category-")) {
+                tagMap.put(entry.getKey(), entry.getValue());
+                break;
+            }
+        }
+        List<Map<String, String>> requestTagList = new ArrayList<>();
+        requestTagList.add(tagMap);
+        updateViewCountRequest.setTags(requestTagList);
+        updateViewCountRequest.setContentType("1");
+        Call<ResponseBody> callUpdateViewCount = shortStoryAPI.updateViewCount(mDatalist.get(position).getId(), updateViewCountRequest);
+        callUpdateViewCount.enqueue(updateViewCountResponseCallback);
+    }
+
+    private Callback<ResponseBody> updateViewCountResponseCallback = new Callback<ResponseBody>() {
+        @Override
+        public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+
+        }
+
+        @Override
+        public void onFailure(Call<ResponseBody> call, Throwable t) {
+
         }
     };
 }
