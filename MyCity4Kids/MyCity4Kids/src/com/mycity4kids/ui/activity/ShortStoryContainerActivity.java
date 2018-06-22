@@ -41,6 +41,7 @@ public class ShortStoryContainerActivity extends BaseActivity implements View.On
     private String userDynamoId;
     private RelativeLayout guideOverlay;
     private Toolbar guidetoolbar;
+    private int currPos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,15 +99,21 @@ public class ShortStoryContainerActivity extends BaseActivity implements View.On
             mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                    currPos = position;
                 }
 
                 @Override
                 public void onPageSelected(int position) {
+                    if (currPos == position) {
+                        Utils.pushArticleSwipeEvent(ShortStoryContainerActivity.this, "ShortStoryDetailContainerScreen", userDynamoId + "", articleId, "" + (currPos + 1), "" + position);
+                    } else {
+                        Utils.pushArticleSwipeEvent(ShortStoryContainerActivity.this, "ShortStoryDetailContainerScreen", userDynamoId + "", articleId, "" + currPos, "" + position);
+                    }
                 }
 
                 @Override
                 public void onPageScrollStateChanged(int state) {
-                    BaseApplication.setFirstSwipe(false);
+
                 }
             });
         }
@@ -167,7 +174,6 @@ public class ShortStoryContainerActivity extends BaseActivity implements View.On
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                BaseApplication.setFirstSwipe(false);
             }
         });
     }

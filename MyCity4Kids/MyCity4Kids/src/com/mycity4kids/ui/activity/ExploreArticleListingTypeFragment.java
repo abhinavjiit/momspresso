@@ -313,9 +313,11 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                     intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_EDITOR_PICKS);
                 } else if (Constants.TAB_TODAYS_BEST.equalsIgnoreCase(tab.getTag().toString())) {
                     Utils.pushOpenScreenEvent(getActivity(), "TodaysBestScreen", dynamoUserId + "");
-                    Utils.pushViewQuickLinkArticlesEvent(getActivity(), "TodaysBestScreen", dynamoUserId + "", "TodaysBestScreen");
+                    Utils.pushViewQuickLinkArticlesEvent(getActivity(), "TopicScreen", dynamoUserId + "", "TodaysBestScreen");
                     intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_TODAYS_BEST);
                 } else if (Constants.TAB_100WORD_STORY.equalsIgnoreCase(tab.getTag().toString())) {
+                    Utils.pushOpenScreenEvent(getActivity(), "ShortStoryListingScreen", dynamoUserId + "");
+                    Utils.pushViewQuickLinkArticlesEvent(getActivity(), "TopicScreen", dynamoUserId + "", "ShortStoryListingScreen");
                     TopicsShortStoriesContainerFragment fragment1 = new TopicsShortStoriesContainerFragment();
                     Bundle mBundle1 = new Bundle();
                     mBundle1.putString("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);

@@ -788,7 +788,7 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
     private void setArticleLanguageCategoryId() {
         ArrayList<Map<String, String>> tagsList = detailData.getTags();
         try {
-            FileInputStream fileInputStream = getActivity().openFileInput(AppConstants.LANGUAGES_JSON_FILE);
+            FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.LANGUAGES_JSON_FILE);
             String fileContent = AppUtils.convertStreamToString(fileInputStream);
             LinkedHashMap<String, LanguageConfigModel> retMap = new Gson().fromJson(
                     fileContent, new TypeToken<LinkedHashMap<String, LanguageConfigModel>>() {

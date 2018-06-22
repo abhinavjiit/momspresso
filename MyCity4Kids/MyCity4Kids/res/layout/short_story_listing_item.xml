@@ -7,77 +7,6 @@
     android:layout_margin="10dp"
     android:background="@drawable/short_story_border_bg">
 
-    <!--<RelativeLayout-->
-    <!--android:id="@+id/shareView"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:background="@color/short_story.card_bg_1">-->
-
-    <!--<RelativeLayout-->
-    <!--android:id="@+id/shareTitleContainer"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content">-->
-
-    <!--<com.mycity4kids.widget.CustomFontTextView-->
-    <!--android:id="@+id/titleTextView"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_toLeftOf="@+id/optionImageView"-->
-    <!--android:maxLines="2"-->
-    <!--android:paddingBottom="15dp"-->
-    <!--android:paddingLeft="14dp"-->
-    <!--android:paddingRight="14dp"-->
-    <!--android:paddingTop="15dp"-->
-    <!--android:text="PRIZED POSESSION"-->
-    <!--android:textColor="@color/short_story.light_black_color"-->
-    <!--android:textSize="17sp"-->
-    <!--app:fontName="georgia.ttf" />-->
-
-    <!--<View-->
-    <!--android:id="@+id/separator"-->
-    <!--android:layout_width="100dp"-->
-    <!--android:layout_height="1dp"-->
-    <!--android:layout_below="@+id/titleTextView"-->
-    <!--android:layout_marginLeft="14dp"-->
-    <!--android:background="@color/common_underline" />-->
-
-    <!--<ImageView-->
-    <!--android:id="@+id/optionImageView"-->
-    <!--android:layout_width="50dp"-->
-    <!--android:layout_height="50dp"-->
-    <!--android:layout_alignParentEnd="true"-->
-    <!--android:layout_alignParentRight="true"-->
-    <!--android:layout_centerVertical="true"-->
-    <!--android:padding="8dp"-->
-    <!--android:src="@drawable/momspresso_logo" />-->
-    <!--</RelativeLayout>-->
-
-    <!--<com.mycity4kids.widget.CustomFontTextView-->
-    <!--android:id="@+id/bodyTextView"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_below="@+id/shareTitleContainer"-->
-    <!--android:paddingLeft="14dp"-->
-    <!--android:paddingRight="14dp"-->
-    <!--android:paddingTop="15dp"-->
-    <!--android:text="@string/random_text"-->
-    <!--android:textColor="@color/short_story.light_black_color"-->
-    <!--android:textSize="16sp"-->
-    <!--app:fontName="georgia.ttf" />-->
-
-    <!--<com.mycity4kids.widget.CustomFontTextView-->
-    <!--android:id="@+id/authorTextView"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_below="@+id/bodyTextView"-->
-    <!--android:padding="14dp"-->
-    <!--android:text="Reena Goyal"-->
-    <!--android:textColor="@color/short_story.blue"-->
-    <!--android:textSize="16sp"-->
-    <!--app:fontName="georgia.ttf" />-->
-
-    <!--</RelativeLayout>-->
-
     <RelativeLayout
         android:id="@+id/mainView"
         android:layout_width="match_parent"
@@ -96,13 +25,13 @@
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@+id/storyOptionImageView"
                 android:maxLines="2"
-                android:paddingBottom="15dp"
+                android:paddingBottom="14dp"
                 android:paddingLeft="14dp"
                 android:paddingRight="14dp"
-                android:paddingTop="15dp"
+                android:paddingTop="14dp"
                 android:text=""
                 android:textColor="@color/short_story.light_black_color"
-                android:textSize="17sp"
+                android:textSize="18sp"
                 app:fontName="georgia.ttf" />
 
             <View
@@ -132,10 +61,10 @@
             android:layout_below="@+id/titleContainer"
             android:paddingLeft="14dp"
             android:paddingRight="14dp"
-            android:paddingTop="15dp"
+            android:paddingTop="14dp"
             android:text=""
             android:textColor="@color/short_story.light_black_color"
-            android:textSize="16sp"
+            android:textSize="17sp"
             app:fontName="georgia.ttf" />
 
         <com.mycity4kids.widget.CustomFontTextView
@@ -170,12 +99,12 @@
                 android:layout_centerVertical="true"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
-                android:paddingBottom="14dp"
+                android:paddingBottom="12dp"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
-                android:paddingTop="14dp"
+                android:paddingTop="12dp"
                 android:src="@drawable/ic_facebook"
-                android:tint="@color/short_story.light_black_color" />
+                android:tint="@color/short_story.blue" />
 
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/whatsappShareImageView"
@@ -185,12 +114,12 @@
                 android:layout_toRightOf="@+id/facebookShareImageView"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
-                android:paddingBottom="14dp"
+                android:paddingBottom="12dp"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
-                android:paddingTop="14dp"
+                android:paddingTop="12dp"
                 android:src="@drawable/ic_whats_app"
-                android:tint="@color/short_story.light_black_color" />
+                android:tint="@color/short_story.blue" />
 
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/genericShareImageView"
@@ -200,12 +129,12 @@
                 android:layout_toRightOf="@+id/whatsappShareImageView"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
-                android:paddingBottom="14dp"
+                android:paddingBottom="12dp"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
-                android:paddingTop="14dp"
+                android:paddingTop="12dp"
                 android:src="@drawable/ic_share_white"
-                android:tint="@color/short_story.light_black_color" />
+                android:tint="@color/short_story.blue" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -214,37 +143,63 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true">
 
-                <com.mycity4kids.widget.CustomFontTextView
-                    android:id="@+id/storyRecommendationCountTextView"
+                <LinearLayout
+                    android:id="@+id/storyRecommendationContainer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:clickable="true"
-                    android:drawablePadding="3dp"
-                    android:drawableRight="@drawable/ic_likes"
-                    android:paddingBottom="10dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="5dp"
-                    android:paddingTop="10dp"
-                    android:text="0"
-                    android:textColor="@color/ad.stats.text"
-                    android:textSize="12sp"
-                    app:fontName="open_sans.ttf" />
+                    android:orientation="horizontal">
 
-                <com.mycity4kids.widget.CustomFontTextView
-                    android:id="@+id/storyCommentCountTextView"
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:id="@+id/storyRecommendationCountTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="10dp"
+                        android:paddingLeft="6dp"
+                        android:paddingTop="10dp"
+                        android:text="0"
+                        android:textColor="@color/ad.stats.text"
+                        android:textSize="15sp"
+                        app:fontName="open_sans.ttf" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:paddingBottom="12dp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="4dp"
+                        android:paddingTop="12dp"
+                        android:src="@drawable/ic_ss_like" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/storyCommentContainer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:drawablePadding="3dp"
-                    android:drawableRight="@drawable/ic_comments"
-                    android:paddingBottom="10dp"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="10dp"
-                    android:paddingTop="10dp"
-                    android:text="0"
-                    android:textColor="@color/ad.stats.text"
-                    android:textSize="12sp"
-                    app:fontName="open_sans.ttf" />
+                    android:orientation="horizontal">
+
+                    <com.mycity4kids.widget.CustomFontTextView
+                        android:id="@+id/storyCommentCountTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="10dp"
+                        android:paddingLeft="6dp"
+                        android:paddingTop="10dp"
+                        android:text="0"
+                        android:textColor="@color/ad.stats.text"
+                        android:textSize="15sp"
+                        app:fontName="open_sans.ttf" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:paddingBottom="12dp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="4dp"
+                        android:paddingTop="12dp"
+                        android:src="@drawable/ic_ss_comment" />
+                </LinearLayout>
 
             </LinearLayout>
             <!--<com.mycity4kids.widget.CustomFontTextView-->

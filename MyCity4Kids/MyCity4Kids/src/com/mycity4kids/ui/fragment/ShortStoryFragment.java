@@ -26,6 +26,8 @@ import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.kelltontech.network.Response;
 import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.ConnectivityUtils;
@@ -44,6 +46,7 @@ import com.mycity4kids.models.request.UpdateViewCountRequest;
 import com.mycity4kids.models.response.AddBookmarkResponse;
 import com.mycity4kids.models.response.ArticleDetailResponse;
 import com.mycity4kids.models.response.ArticleRecommendationStatusResponse;
+import com.mycity4kids.models.response.LanguageConfigModel;
 import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
 import com.mycity4kids.models.response.ShortStoryCommentListData;
 import com.mycity4kids.models.response.ShortStoryCommentListResponse;
@@ -59,11 +62,13 @@ import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.adapter.ShortStoriesDetailRecyclerAdapter;
 import com.mycity4kids.utils.AppUtils;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -255,6 +260,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     }
 
     private void recommendUnrecommentArticleAPI(String status) {
+        Utils.pushLikeStoryEvent(getActivity(), "ShortStoryDetailsScreen", userDynamoId + "", articleId, authorId + "~" + author);
         RecommendUnrecommendArticleRequest recommendUnrecommendArticleRequest = new RecommendUnrecommendArticleRequest();
         recommendUnrecommendArticleRequest.setArticleId(articleId);
         recommendUnrecommendArticleRequest.setStatus(status);
@@ -308,7 +314,6 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             bookmarkArticleTextView.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null);
             Call<AddBookmarkResponse> call = shortStoryAPI.addBookmark(articleDetailRequest);
             call.enqueue(addBookmarkResponseCallback);
-            Utils.pushBookmarkArticleEvent(getActivity(), "DetailArticleScreen", userDynamoId + "", articleId, authorId + "~" + author);
         } else {
             DeleteBookmarkRequest deleteBookmarkRequest = new DeleteBookmarkRequest();
             deleteBookmarkRequest.setId(bookmarkId);
@@ -317,7 +322,6 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             bookmarkArticleTextView.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null);
             Call<AddBookmarkResponse> call = shortStoryAPI.deleteBookmark(deleteBookmarkRequest);
             call.enqueue(addBookmarkResponseCallback);
-            Utils.pushUnbookmarkArticleEvent(getActivity(), "DetailArticleScreen", userDynamoId + "", articleId, authorId + "~" + author);
         }
     }
 
@@ -333,11 +337,15 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 ShortStoryDetailResult responseData = response.body();
                 headerModel.setSsResult(responseData);
                 headerModel.setType(0);
+                author = responseData.getUserName();
+                authorId = responseData.getUserId();
                 consolidatedList.add(headerModel);
                 getStoryComments(articleId, null);
                 getViewCountAPI();
                 adapter.notifyDataSetChanged();
                 hitUpdateViewCountAPI(responseData.getUserId(), responseData.getTags(), responseData.getCities());
+                if (isAdded())
+                    updateGTMEvent(responseData.getLang());
             } catch (Exception e) {
                 removeProgressDialog();
                 Crashlytics.logException(e);
@@ -371,6 +379,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 getViewCountAPI();
                 adapter.notifyDataSetChanged();
                 hitUpdateViewCountAPI(responseData.getData().getUserId(), responseData.getData().getTags(), responseData.getData().getCities());
+                updateGTMEvent(responseData.getData().getLang());
             } catch (Exception e) {
                 removeProgressDialog();
                 Crashlytics.logException(e);
@@ -385,6 +394,26 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             handleExceptions(t);
         }
     };
+
+    private void updateGTMEvent(String lang) {
+        try {
+            FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.LANGUAGES_JSON_FILE);
+            String fileContent = AppUtils.convertStreamToString(fileInputStream);
+            LinkedHashMap<String, LanguageConfigModel> retMap = new Gson().fromJson(
+                    fileContent, new TypeToken<LinkedHashMap<String, LanguageConfigModel>>() {
+                    }.getType()
+            );
+            if ("0".equals(lang)) {
+                Utils.pushStoryLoadedEvent(getActivity(), "ShortStoryDetailsScreen", userDynamoId + "", articleId, authorId + "~" + author, "English");
+            } else {
+                LanguageConfigModel languageConfigModel = retMap.get(lang);
+                Utils.pushStoryLoadedEvent(getActivity(), "ShortStoryDetailsScreen", userDynamoId + "", articleId, authorId + "~" + author, languageConfigModel.getDisplay_name());
+            }
+        } catch (FileNotFoundException e) {
+
+        }
+
+    }
 
     private void getStoryComments(String id, String commentType) {
         Call<ShortStoryCommentListResponse> call = shortStoryAPI.getStoryComments(id, commentType, paginationCommentId);
@@ -707,7 +736,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 shortStoryCommentRepliesDialogFragment.show(fm, "View Replies");
             }
             break;
-            case R.id.storyRecommendationCountTextView:
+            case R.id.storyRecommendationContainer:
                 recommendUnrecommentArticleAPI("1");
                 break;
             case R.id.facebookShareImageView: {
@@ -737,6 +766,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                             shareSSView.setDrawingCacheEnabled(false);
                         }
                     }, 200);
+                    Utils.pushShareStoryEvent(getActivity(), "ShortStoryDetailsScreen", userDynamoId + "", articleId, authorId + "~" + author, "Facebook");
                 } catch (Exception e) {
                     if (isAdded())
                         Toast.makeText(getActivity(), getString(R.string.moderation_or_share_facebook_fail), Toast.LENGTH_SHORT).show();
@@ -783,7 +813,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                             }
                         }
                     }, 200);
-
+                    Utils.pushShareStoryEvent(getActivity(), "ShortStoryDetailsScreen", userDynamoId + "", articleId, authorId + "~" + author, "Whatsapp");
                 } catch (Exception e) {
                     if (isAdded())
                         Toast.makeText(getActivity(), getString(R.string.moderation_or_share_whatsapp_fail), Toast.LENGTH_SHORT).show();
@@ -820,7 +850,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                         startActivity(Intent.createChooser(shareIntent, "ShortStory"));
                     }
                 }, 200);
-
+                Utils.pushShareStoryEvent(getActivity(), "ShortStoryDetailsScreen", userDynamoId + "", articleId, authorId + "~" + author, "Generic");
             }
             break;
             case R.id.authorNameTextView: {
@@ -832,7 +862,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                     Intent intentnn = new Intent(getActivity(), BloggerProfileActivity.class);
                     intentnn.putExtra(AppConstants.PUBLIC_PROFILE_USER_ID, headerModel.getSsResult().getUserId());
                     intentnn.putExtra(AppConstants.AUTHOR_NAME, headerModel.getSsResult().getUserName());
-                    intentnn.putExtra(Constants.FROM_SCREEN, "ShortStoryScreen");
+                    intentnn.putExtra(Constants.FROM_SCREEN, "ShortStoryDetailsScreen");
                     startActivityForResult(intentnn, Constants.BLOG_FOLLOW_STATUS);
                 }
                 break;
@@ -895,6 +925,8 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                     commentModel.setSsComment(shortStoryCommentListData);
                     consolidatedList.add(1, commentModel);
                     adapter.notifyDataSetChanged();
+                    if (isAdded())
+                        Utils.pushShortStoryCommentReplyChangeEvent(getActivity(), "ShortStoryDetailsScreen", userDynamoId, articleId, "add", "comment");
                 } else {
                     if (isAdded())
                         ((ShortStoryContainerActivity) getActivity()).showToast("Failed to add comment. Please try again");
@@ -947,6 +979,8 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     consolidatedList.get(actionItemPosition).getSsComment().setMessage(editContent);
                     adapter.notifyDataSetChanged();
+                    if (isAdded())
+                        Utils.pushShortStoryCommentReplyChangeEvent(getActivity(), "ShortStoryDetailsScreen", userDynamoId, articleId, "edit", "comment");
                 } else {
                     if (isAdded())
                         ((ShortStoryContainerActivity) getActivity()).showToast("Failed to edit comment. Please try again");
@@ -1018,6 +1052,8 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                         }
                     }
                     adapter.notifyDataSetChanged();
+                    if (isAdded())
+                        Utils.pushShortStoryCommentReplyChangeEvent(getActivity(), "ShortStoryDetailsScreen", userDynamoId, articleId, "add", "reply");
                 } else {
                     if (isAdded())
                         ((ShortStoryContainerActivity) getActivity()).showToast("Failed to add reply. Please try again");
@@ -1088,6 +1124,8 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                         }
                     }
                     adapter.notifyDataSetChanged();
+                    if (isAdded())
+                        Utils.pushShortStoryCommentReplyChangeEvent(getActivity(), "ShortStoryDetailsScreen", userDynamoId, articleId, "edit", "reply");
                 } else {
                     if (isAdded())
                         ((ShortStoryContainerActivity) getActivity()).showToast("Failed to edit reply. Please try again");
@@ -1142,6 +1180,8 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                         }
                     }
                     adapter.notifyDataSetChanged();
+                    if (isAdded())
+                        Utils.pushShortStoryCommentReplyChangeEvent(getActivity(), "ShortStoryDetailsScreen", userDynamoId, articleId, "delete", "reply");
                 } else {
                     if (isAdded())
                         ((ShortStoryContainerActivity) getActivity()).showToast("Failed to delete reply. Please try again");
@@ -1198,6 +1238,8 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                         shortStoryCommentRepliesDialogFragment.dismiss();
                     }
                     adapter.notifyDataSetChanged();
+                    if (isAdded())
+                        Utils.pushShortStoryCommentReplyChangeEvent(getActivity(), "ShortStoryDetailsScreen", userDynamoId, articleId, "delete", "comment");
                 } else {
                     if (isAdded())
                         ((ShortStoryContainerActivity) getActivity()).showToast("Failed to delete comment. Please try again");

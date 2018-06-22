@@ -9,11 +9,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.models.ExploreTopicsModel;
-import com.mycity4kids.models.Topics;
-import com.mycity4kids.models.parentingstop.CommonParentingList;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -27,11 +24,9 @@ public class ParentTopicsGridAdapter extends BaseAdapter {
     private ArrayList<ExploreTopicsModel> arraylist;
     private Context mContext;
     private LayoutInflater mInflator;
-    private final float density;
 
     public ParentTopicsGridAdapter(Context pContext) {
         mContext = pContext;
-        density = pContext.getResources().getDisplayMetrics().density;
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 

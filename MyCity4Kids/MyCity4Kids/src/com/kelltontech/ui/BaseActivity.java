@@ -282,24 +282,29 @@ public abstract class BaseActivity extends AppCompatActivity implements IScreen 
     }
 
     public void showAlertDialog(String title, String message, final OnButtonClicked onButtonClicked) {
-        new AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
-                .setTitle(title)
-                .setMessage(message)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // continue with delete
-                        dialog.dismiss();
-                        onButtonClicked.onButtonCLick(0);
-                    }
-                })
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // do nothing
-                        dialog.dismiss();
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
+        try {
+            new AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
+                    .setTitle(title)
+                    .setMessage(message)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // continue with delete
+                            dialog.dismiss();
+                            onButtonClicked.onButtonCLick(0);
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // do nothing
+                            dialog.dismiss();
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+        } catch (Exception e) {
+
+        }
+
     }
 
     public void showOkDialog(String title, String message, final OnButtonClicked onButtonClicked) {

@@ -8,15 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.utils.DateTimeUtils;
 import com.mycity4kids.R;
-import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.ui.fragment.ShortStoryFragment;
-import com.mycity4kids.utils.AppUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -32,13 +31,11 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
     private Context mContext;
     private LayoutInflater mInflator;
     ArrayList<ShortStoryFragment.ShortStoryDetailAndCommentModel> datalist;
-    private final float density;
     private RecyclerViewClickListener mListener;
     private int colorPosition;
 
     public ShortStoriesDetailRecyclerAdapter(Context pContext, RecyclerViewClickListener listener, int colorPosition) {
 
-        density = pContext.getResources().getDisplayMetrics().density;
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = pContext;
         this.mListener = listener;
@@ -69,7 +66,6 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
             SSCommentViewHolder ssCommentViewHolder = new SSCommentViewHolder(v0, mListener);
             return ssCommentViewHolder;
         }
-
     }
 
     @Override
@@ -82,43 +78,34 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
                 ssViewHolder.authorNameTextView.setText(datalist.get(position).getSsResult().getUserName());
                 switch (colorPosition % 6) {
                     case 0:
-//                holder.shareView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_1));
                         ssViewHolder.mainView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_1));
                         break;
                     case 1:
-//                holder.shareView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_2));
                         ssViewHolder.mainView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_2));
                         break;
                     case 2:
-//                holder.shareView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_3));
                         ssViewHolder.mainView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_3));
                         break;
                     case 3:
-//                holder.shareView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_4));
                         ssViewHolder.mainView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_4));
                         break;
                     case 4:
-//                holder.shareView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_5));
                         ssViewHolder.mainView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_5));
                         break;
                     case 5:
-//                holder.shareView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_6));
                         ssViewHolder.mainView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_6));
                         break;
                 }
-//                ssViewHolder.titleTextView.setText(datalist.get(position).getSsResult().getTitle());
-//                ssViewHolder.bodyTextView.setText(datalist.get(position).getSsResult().getBody());
-//                ssViewHolder.authorTextView.setText(datalist.get(position).getSsResult().getUserName());
 
-                if (null == datalist.get(position).getSsResult().getCommentCount() || "0".equals(datalist.get(position).getSsResult().getCommentCount())) {
-                    ssViewHolder.storyCommentCountTextView.setVisibility(View.GONE);
+                if (null == datalist.get(position).getSsResult().getCommentCount()) {
+                    ssViewHolder.storyCommentCountTextView.setText("0");
                 } else {
                     ssViewHolder.storyCommentCountTextView.setVisibility(View.VISIBLE);
                     ssViewHolder.storyCommentCountTextView.setText(datalist.get(position).getSsResult().getCommentCount());
                 }
 
-                if (null == datalist.get(position).getSsResult().getLikeCount() || "0".equals(datalist.get(position).getSsResult().getLikeCount())) {
-                    ssViewHolder.storyRecommendationCountTextView.setVisibility(View.GONE);
+                if (null == datalist.get(position).getSsResult().getLikeCount()) {
+                    ssViewHolder.storyRecommendationCountTextView.setText("0");
                 } else {
                     ssViewHolder.storyRecommendationCountTextView.setVisibility(View.VISIBLE);
                     ssViewHolder.storyRecommendationCountTextView.setText(datalist.get(position).getSsResult().getLikeCount());
@@ -158,6 +145,7 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
         TextView storyTitleTextView;
         TextView storyBodyTextView;
         TextView authorNameTextView;
+        LinearLayout storyRecommendationContainer, storyCommentContainer;
         TextView storyCommentCountTextView;
         TextView storyRecommendationCountTextView;
         ImageView storyOptionImageView;
@@ -167,11 +155,10 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
         public ShortStoriesViewHolder(View itemView, RecyclerViewClickListener listener) {
             super(itemView);
             storyTitleTextView = (TextView) itemView.findViewById(R.id.storyTitleTextView);
-//            titleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
             storyBodyTextView = (TextView) itemView.findViewById(R.id.storyBodyTextView);
-//            bodyTextView = (TextView) itemView.findViewById(R.id.bodyTextView);
             authorNameTextView = (TextView) itemView.findViewById(R.id.authorNameTextView);
-//            authorTextView = (TextView) itemView.findViewById(R.id.authorTextView);
+            storyRecommendationContainer = (LinearLayout) itemView.findViewById(R.id.storyRecommendationContainer);
+            storyCommentContainer = (LinearLayout) itemView.findViewById(R.id.storyCommentContainer);
             storyCommentCountTextView = (TextView) itemView.findViewById(R.id.storyCommentCountTextView);
             storyRecommendationCountTextView = (TextView) itemView.findViewById(R.id.storyRecommendationCountTextView);
             storyOptionImageView = (ImageView) itemView.findViewById(R.id.storyOptionImageView);
@@ -185,7 +172,7 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
             genericShareImageView.setOnClickListener(this);
             authorNameTextView.setOnClickListener(this);
             storyOptionImageView.setOnClickListener(this);
-            storyRecommendationCountTextView.setOnClickListener(this);
+            storyRecommendationContainer.setOnClickListener(this);
             itemView.setOnClickListener(this);
         }
 

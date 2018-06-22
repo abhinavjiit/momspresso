@@ -255,7 +255,7 @@ public class NotificationCenterListAdapter extends BaseAdapter {
                     notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
                     hitNotificationReadAPI(notificationList.get(position).getId());
                     notifyDataSetChanged();
-//                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "suggested_topics");
+                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "todaysBest");
                     Intent intent1 = new Intent(mContext, ArticleListingActivity.class);
                     intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_TODAYS_BEST);
                     mContext.startActivity(intent1);
@@ -269,7 +269,7 @@ public class NotificationCenterListAdapter extends BaseAdapter {
                     notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
                     hitNotificationReadAPI(notificationList.get(position).getId());
                     notifyDataSetChanged();
-//                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "suggested_topics");
+                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "shortStoryListing");
                     TopicsShortStoriesContainerFragment fragment1 = new TopicsShortStoriesContainerFragment();
                     Bundle mBundle1 = new Bundle();
                     mBundle1.putString("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
@@ -285,7 +285,7 @@ public class NotificationCenterListAdapter extends BaseAdapter {
                     notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
                     hitNotificationReadAPI(notificationList.get(position).getId());
                     notifyDataSetChanged();
-//                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "article_details");
+                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "shortStoryDetails");
                     Intent intent = new Intent(mContext, ShortStoryContainerActivity.class);
                     intent.putExtra(Constants.ARTICLE_ID, notificationList.get(position).getArticleId());
                     intent.putExtra(Constants.AUTHOR_ID, notificationList.get(position).getAuthorId());

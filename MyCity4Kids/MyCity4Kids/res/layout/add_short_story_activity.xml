@@ -46,11 +46,21 @@
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
+    <com.mycity4kids.widget.CustomFontTextView
+        android:id="@+id/topicHeading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:padding="8dp"
+        android:text="@string/short_s.choose_genre"
+        android:textSize="16sp"
+        app:fontName="georgia.ttf" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
+        android:layout_below="@+id/topicHeading"
         android:layout_marginTop="5dp"
         android:gravity="center"
         android:scrollbars="horizontal"

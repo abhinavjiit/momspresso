@@ -18,9 +18,11 @@ import com.crashlytics.android.Crashlytics;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.ReportStoryOrCommentRequest;
 import com.mycity4kids.models.response.ReportStoryOrCommentResponse;
 import com.mycity4kids.models.response.ShortStoryCommentListResponse;
+import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
 import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 
@@ -40,8 +42,8 @@ public class ReportStoryOrCommentDialogFragment extends DialogFragment implement
 
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 //        getDialog().setCanceledOnTouchOutside(false);
-        String postId = getArguments().getString("postId");
-        int type = getArguments().getInt("type");
+        final String postId = getArguments().getString("postId");
+        final int type = getArguments().getInt("type");
 
         RadioGroup reportReasonRadioGroup = (RadioGroup) rootView.findViewById(R.id.reportReasonRadioGroup);
         final AppCompatRadioButton reason1RadioButton = (AppCompatRadioButton) rootView.findViewById(R.id.reason1RadioButton);
@@ -61,18 +63,27 @@ public class ReportStoryOrCommentDialogFragment extends DialogFragment implement
                     reportStoryOrCommentRequest.setReason(reason1RadioButton.getText().toString());
                     Call<ReportStoryOrCommentResponse> call = shortStoryAPI.reportStoryOrComment(reportStoryOrCommentRequest);
                     call.enqueue(reportCallback);
+                    if (isAdded())
+                        Utils.pushReportShortStoryEvent(getActivity(), "ReportDialog", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                                postId, reason1RadioButton.getText().toString(), "" + type);
                 }
                 if (reason2RadioButton.isChecked()) {
                     Log.d("RadioGroup", "option2");
                     reportStoryOrCommentRequest.setReason(reason2RadioButton.getText().toString());
                     Call<ReportStoryOrCommentResponse> call = shortStoryAPI.reportStoryOrComment(reportStoryOrCommentRequest);
                     call.enqueue(reportCallback);
+                    if (isAdded())
+                        Utils.pushReportShortStoryEvent(getActivity(), "ReportDialog", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                                postId, reason2RadioButton.getText().toString(), "" + type);
                 }
                 if (reason3RadioButton.isChecked()) {
                     Log.d("RadioGroup", "option3");
                     reportStoryOrCommentRequest.setReason(reason3RadioButton.getText().toString());
                     Call<ReportStoryOrCommentResponse> call = shortStoryAPI.reportStoryOrComment(reportStoryOrCommentRequest);
                     call.enqueue(reportCallback);
+                    if (isAdded())
+                        Utils.pushReportShortStoryEvent(getActivity(), "ReportDialog", SharedPrefUtils.getUserDetailModel(BaseApplication.getAppContext()).getDynamoId(),
+                                postId, reason3RadioButton.getText().toString(), "" + type);
                 }
             }
         });

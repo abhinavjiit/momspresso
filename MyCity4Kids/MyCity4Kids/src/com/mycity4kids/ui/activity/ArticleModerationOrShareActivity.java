@@ -21,6 +21,7 @@ import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.UserDetailResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
@@ -40,6 +41,7 @@ import retrofit2.Retrofit;
  */
 public class ArticleModerationOrShareActivity extends BaseActivity implements View.OnClickListener {
     private String shareUrl;
+    private String source;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,7 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
         setContentView(R.layout.article_moderation_share_activity);
 
         shareUrl = getIntent().getStringExtra("shareUrl");
+        source = getIntent().getStringExtra("source");
 
         LinearLayout moderationContainer = (LinearLayout) findViewById(R.id.moderationContainer);
         LinearLayout publishContainer = (LinearLayout) findViewById(R.id.publishContainer);
@@ -88,26 +91,28 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
         switch (v.getId()) {
             case R.id.facebookImageView:
                 if (ShareDialog.canShow(ShareLinkContent.class)) {
+                    if ("addStory".equals(source)) {
+                        Utils.pushShareStoryEvent(this, "PublishSuccessScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", shareUrl, "NA", "Facebook");
+                    } else {
+                        Utils.pushShareArticleEvent(this, "PublishSuccessScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", shareUrl, "NA", "Facebook");
+                    }
+
                     ShareLinkContent content = new ShareLinkContent.Builder()
                             .setContentUrl(Uri.parse(shareUrl))
                             .build();
                     new ShareDialog(this).show(content);
                 }
-
-//                if (FacebookDialog.canPresentShareDialog(this, FacebookDialog.ShareDialogFeature.SHARE_DIALOG) && !StringUtils.isNullOrEmpty(shareUrl)) {
-//                    FacebookDialog shareDialog = new FacebookDialog.ShareDialogBuilder(
-//                            this).setName("mycity4kids")
-//                            .setDescription("Check out this interesting blog post")
-//                            .setLink(shareUrl).build();
-//                    shareDialog.present();
-//                } else {
-//                    Toast.makeText(this, "Unable to share with facebook.", Toast.LENGTH_SHORT).show();
-//                }
                 break;
             case R.id.googlePlusImageView:
                 if (StringUtils.isNullOrEmpty(shareUrl)) {
                     Toast.makeText(this, getString(R.string.moderation_or_share_gplus_fail), Toast.LENGTH_SHORT).show();
                 } else {
+                    if ("addStory".equals(source)) {
+                        Utils.pushShareStoryEvent(this, "PublishSuccessScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", shareUrl, "NA", "GPlus");
+                    } else {
+                        Utils.pushShareArticleEvent(this, "PublishSuccessScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", shareUrl, "NA", "GPlus");
+                    }
+
                     Intent shareIntent = new PlusShare.Builder(this)
                             .setType("text/plain")
                             .setText(getString(R.string.check_out_blog))
@@ -120,6 +125,12 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
                 if (StringUtils.isNullOrEmpty(shareUrl)) {
                     Toast.makeText(this, getString(R.string.moderation_or_share_whatsapp_fail), Toast.LENGTH_SHORT).show();
                 } else {
+                    if ("addStory".equals(source)) {
+                        Utils.pushShareStoryEvent(this, "PublishSuccessScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", shareUrl, "NA", "Whatsapp");
+                    } else {
+                        Utils.pushShareArticleEvent(this, "PublishSuccessScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", shareUrl, "NA", "Whatsapp");
+                    }
+
                     Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
                     whatsappIntent.setType("text/plain");
                     whatsappIntent.setPackage("com.whatsapp");
@@ -135,6 +146,12 @@ public class ArticleModerationOrShareActivity extends BaseActivity implements Vi
                 if (StringUtils.isNullOrEmpty(shareUrl)) {
                     Toast.makeText(this, getString(R.string.moderation_or_share_twitter_fail), Toast.LENGTH_SHORT).show();
                 } else {
+                    if ("addStory".equals(source)) {
+                        Utils.pushShareStoryEvent(this, "PublishSuccessScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", shareUrl, "NA", "Twitter");
+                    } else {
+                        Utils.pushShareArticleEvent(this, "PublishSuccessScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "", shareUrl, "NA", "Twitter");
+                    }
+
                     // Create intent using ACTION_VIEW and a normal Twitter url:
                     String tweetUrl = String.format("https://twitter.com/intent/tweet?text=%s&url=%s",
                             urlEncode(getString(R.string.check_out_blog)),

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -52,27 +53,21 @@ public class ShortStoriesRecyclerAdapter extends RecyclerView.Adapter<ShortStori
 
         switch (position % 6) {
             case 0:
-//                holder.shareView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_1));
                 holder.mainView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_1));
                 break;
             case 1:
-//                holder.shareView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_2));
                 holder.mainView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_2));
                 break;
             case 2:
-//                holder.shareView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_3));
                 holder.mainView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_3));
                 break;
             case 3:
-//                holder.shareView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_4));
                 holder.mainView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_4));
                 break;
             case 4:
-//                holder.shareView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_5));
                 holder.mainView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_5));
                 break;
             case 5:
-//                holder.shareView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_6));
                 holder.mainView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.short_story_card_bg_6));
                 break;
         }
@@ -80,10 +75,6 @@ public class ShortStoriesRecyclerAdapter extends RecyclerView.Adapter<ShortStori
         holder.storyTitleTextView.setText(articleDataModelsNew.get(position).getTitle());
         holder.storyBodyTextView.setText(articleDataModelsNew.get(position).getBody());
         holder.authorNameTextView.setText(articleDataModelsNew.get(position).getUserName());
-//
-//        holder.titleTextView.setText(articleDataModelsNew.get(position).getTitle());
-//        holder.bodyTextView.setText(articleDataModelsNew.get(position).getBody());
-//        holder.authorTextView.setText(articleDataModelsNew.get(position).getUserName());
 
         if (null == articleDataModelsNew.get(position).getCommentsCount()) {
             holder.storyCommentCountTextView.setText("0");
@@ -108,6 +99,7 @@ public class ShortStoriesRecyclerAdapter extends RecyclerView.Adapter<ShortStori
         TextView storyBodyTextView;
         TextView authorNameTextView;
         TextView storyCommentCountTextView;
+        LinearLayout storyRecommendationContainer, storyCommentContainer;
         TextView storyRecommendationCountTextView;
         ImageView storyOptionImageView;
         ImageView facebookShareImageView, whatsappShareImageView, genericShareImageView;
@@ -117,11 +109,10 @@ public class ShortStoriesRecyclerAdapter extends RecyclerView.Adapter<ShortStori
             super(itemView);
             mainView = (RelativeLayout) itemView.findViewById(R.id.mainView);
             storyTitleTextView = (TextView) itemView.findViewById(R.id.storyTitleTextView);
-//            titleTextView = (TextView) itemView.findViewById(R.id.titleTextView);
             storyBodyTextView = (TextView) itemView.findViewById(R.id.storyBodyTextView);
-//            bodyTextView = (TextView) itemView.findViewById(R.id.bodyTextView);
             authorNameTextView = (TextView) itemView.findViewById(R.id.authorNameTextView);
-//            authorTextView = (TextView) itemView.findViewById(R.id.authorTextView);
+            storyRecommendationContainer = (LinearLayout) itemView.findViewById(R.id.storyRecommendationContainer);
+            storyCommentContainer = (LinearLayout) itemView.findViewById(R.id.storyCommentContainer);
             storyCommentCountTextView = (TextView) itemView.findViewById(R.id.storyCommentCountTextView);
             storyRecommendationCountTextView = (TextView) itemView.findViewById(R.id.storyRecommendationCountTextView);
             storyOptionImageView = (ImageView) itemView.findViewById(R.id.storyOptionImageView);
@@ -131,7 +122,7 @@ public class ShortStoriesRecyclerAdapter extends RecyclerView.Adapter<ShortStori
 
             whatsappShareImageView.setTag(itemView);
 
-            storyRecommendationCountTextView.setOnClickListener(this);
+            storyRecommendationContainer.setOnClickListener(this);
             facebookShareImageView.setOnClickListener(this);
             whatsappShareImageView.setOnClickListener(this);
             genericShareImageView.setOnClickListener(this);

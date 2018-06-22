@@ -43,7 +43,11 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.editor.ArticleImageTagUploadActivity;
+import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.filechooser.com.ipaulpro.afilechooser.utils.FileUtils;
+import com.mycity4kids.gtmutils.GTMEventType;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.listener.OnButtonClicked;
 import com.mycity4kids.models.ExploreTopicsModel;
 import com.mycity4kids.models.ExploreTopicsResponse;
@@ -110,7 +114,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_short_story_activity);
-
+        Utils.pushOpenScreenEvent(this, "AddShortStoryScreen", SharedPrefUtils.getUserDetailModel(this).getDynamoId() + "");
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         publishTextView = (TextView) toolbar.findViewById(R.id.publishTextView);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -565,9 +569,6 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     };
 
     private void createAndUploadShareableImage() {
-//        titleTextView.setText(storyTitleEditText.getText());
-//        bodyTextView.setText(storyBodyEditText.getText());
-//        showProgressDialog(getResources().getString(R.string.please_wait));
         Bitmap finalBitmap = null;
         try {
             finalBitmap = drawMultilineTextToBitmap(storyTitleEditText.getText().toString(), storyBodyEditText.getText().toString());
@@ -766,13 +767,10 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                 }
                 ArticleDraftResponse responseModel = response.body();
                 if (responseModel.getCode() == 200 && Constants.SUCCESS.equals(responseModel.getStatus())) {
-                    if (StringUtils.isNullOrEmpty(responseModel.getData().get(0).getResult().getUrl())) {
-//                        Utils.pushPublishArticleEvent(AddShortStoryActivity.this, "AddImageScreen", SharedPrefUtils.getUserDetailModel(AddShortStoryActivity.this).getDynamoId(), "moderation");
-                    } else {
-//                        Utils.pushPublishArticleEvent(AddShortStoryActivity.this, "AddImageScreen", SharedPrefUtils.getUserDetailModel(AddShortStoryActivity.this).getDynamoId(), "published");
-                    }
+                    Utils.pushPublishStoryEvent(AddShortStoryActivity.this, "AddShortStoryScreen", SharedPrefUtils.getUserDetailModel(AddShortStoryActivity.this).getDynamoId(), "published");
                     Intent intent = new Intent(AddShortStoryActivity.this, ArticleModerationOrShareActivity.class);
                     intent.putExtra("shareUrl", "" + responseModel.getData().get(0).getResult().getUrl());
+                    intent.putExtra("source", "addStory");
                     startActivity(intent);
                 } else {
                     if (!StringUtils.isNullOrEmpty(responseModel.getReason())) {

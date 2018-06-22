@@ -359,7 +359,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 intent.putExtra(Constants.AUTHOR, mDatalist.get(position).getUserId() + "~" + mDatalist.get(position).getUserName());
                 startActivity(intent);
                 break;
-            case R.id.storyRecommendationCountTextView:
+            case R.id.storyRecommendationContainer:
                 recommendUnrecommentArticleAPI("1", mDatalist.get(position).getId());
                 break;
             case R.id.facebookShareImageView: {

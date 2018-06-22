@@ -667,7 +667,7 @@
     <string name="short_s.add.body_hint">Write your amazing story or poem in 100 words or less.</string>
     <string name="short_s.publish_message">Congrats! Your story has been published.\n Share it with your friends and family.</string>
     <string name="short_s.max_word">Your story can have maximum 100 words.</string>
-    <string name="short_s.choose_genre">CHOOSE THE GENRE OF YOUR STORY</string>
+    <string name="short_s.choose_genre">Choose the genre of your story</string>
     <string name="short_s.choose_one_genre">Choose the genre that best describes the content of your story. You can choose only 1 genre.</string>
     <string name="short_s.no_drafts">No short story drafted as yet</string>
     <string name="short_s.no_published">No short story published as yet</string>

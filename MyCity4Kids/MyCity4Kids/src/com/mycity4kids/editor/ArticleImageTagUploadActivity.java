@@ -373,6 +373,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                                          }
                                          Intent intent = new Intent(ArticleImageTagUploadActivity.this, ArticleModerationOrShareActivity.class);
                                          intent.putExtra("shareUrl", "" + responseModel.getData().get(0).getResult().getUrl());
+                                         intent.putExtra("source", "addArticle");
                                          startActivity(intent);
                                      } else {
                                          showToast(responseModel.getReason().toString());
@@ -436,6 +437,7 @@ public class ArticleImageTagUploadActivity extends BaseActivity implements View.
                         }
                         Intent intent = new Intent(ArticleImageTagUploadActivity.this, ArticleModerationOrShareActivity.class);
                         intent.putExtra("shareUrl", "" + responseModel.getData().get(0).getResult().getUrl());
+                        intent.putExtra("source", "addArticle");
                         startActivity(intent);
                     } else {
                         if (!StringUtils.isNullOrEmpty(responseModel.getReason())) {
