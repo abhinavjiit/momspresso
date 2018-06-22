@@ -360,7 +360,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 startActivity(intent);
                 break;
             case R.id.storyRecommendationContainer:
-                recommendUnrecommentArticleAPI("1", mDatalist.get(position).getId());
+                recommendUnrecommentArticleAPI("1", mDatalist.get(position).getId(), mDatalist.get(position).getUserId(), mDatalist.get(position).getUserName());
                 break;
             case R.id.facebookShareImageView: {
                 try {
@@ -389,6 +389,8 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                             shareSSView.setDrawingCacheEnabled(false);
                         }
                     }, 200);
+                    Utils.pushShareStoryEvent(getActivity(), "ShortStoryListingScreen", userDynamoId + "", mDatalist.get(position).getId(),
+                            mDatalist.get(position).getUserId() + "~" + mDatalist.get(position).getUserName(), "Facebook");
                 } catch (Exception e) {
                     if (isAdded())
                         Toast.makeText(getActivity(), getString(R.string.moderation_or_share_facebook_fail), Toast.LENGTH_SHORT).show();
@@ -435,7 +437,8 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                             }
                         }
                     }, 200);
-
+                    Utils.pushShareStoryEvent(getActivity(), "ShortStoryListingScreen", userDynamoId + "", mDatalist.get(position).getId(),
+                            mDatalist.get(position).getUserId() + "~" + mDatalist.get(position).getUserName(), "Whatsapp");
                 } catch (Exception e) {
                     if (isAdded())
                         Toast.makeText(getActivity(), getString(R.string.moderation_or_share_whatsapp_fail), Toast.LENGTH_SHORT).show();
@@ -474,6 +477,8 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                         startActivity(Intent.createChooser(shareIntent, "ShortStory"));
                     }
                 }, 200);
+                Utils.pushShareStoryEvent(getActivity(), "ShortStoryListingScreen", userDynamoId + "", mDatalist.get(position).getId(),
+                        mDatalist.get(position).getUserId() + "~" + mDatalist.get(position).getUserName(), "Generic");
             }
             break;
             case R.id.authorNameTextView:
@@ -494,7 +499,8 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         }
     }
 
-    private void recommendUnrecommentArticleAPI(String status, String articleId) {
+    private void recommendUnrecommentArticleAPI(String status, String articleId, String authorId, String author) {
+        Utils.pushLikeStoryEvent(getActivity(), "ShortStoryListingScreen", userDynamoId + "", articleId, authorId + "~" + author);
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
         ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
 
