@@ -293,10 +293,10 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
         addEditCommentOrReplyRequest.setPost_id(articleId);
         addEditCommentOrReplyRequest.setMessage(content);
         Call<CommentListResponse> call = articleDetailsAPI.editCommentOrReply(responseId, addEditCommentOrReplyRequest);
-        call.enqueue(editCommentOrReplyResponseListener);
+        call.enqueue(editCommentResponseListener);
     }
 
-    private Callback<CommentListResponse> editCommentOrReplyResponseListener = new Callback<CommentListResponse>() {
+    private Callback<CommentListResponse> editCommentResponseListener = new Callback<CommentListResponse>() {
         @Override
         public void onResponse(Call<CommentListResponse> call, retrofit2.Response<CommentListResponse> response) {
             removeProgressDialog();
@@ -314,6 +314,9 @@ public class ArticleCommentsFragment extends BaseFragment implements OnClickList
                 CommentListResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     commentsList.get(actionItemPosition).setMessage(editContent);
+                    if (articleCommentRepliesDialogFragment != null) {
+                        articleCommentRepliesDialogFragment.updateRepliesList(commentsList.get(actionItemPosition));
+                    }
                     articleCommentsRecyclerAdapter.notifyDataSetChanged();
                     if (isAdded())
                         Utils.pushArticleCommentReplyChangeEvent(getActivity(), "DetailArticleScreen", userDynamoId, articleId, "edit", "comment");

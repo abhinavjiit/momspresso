@@ -67,6 +67,12 @@ public interface ArticleDetailsAPI {
                                                  @Query("type") String type,
                                                  @Query("commentId") String paginationCommentId);
 
+    @GET("v3/comments")
+    Call<CommentListResponse> getArticleCommentReplies(@Query("postId") String articleId,
+                                                       @Query("type") String type,
+                                                       @Query("commentId") String parentCommentId,
+                                                       @Query("replyId") String paginationReplyId);
+
     @POST("v3/comments/")
     Call<CommentListResponse> addCommentOrReply(@Body AddEditCommentOrReplyRequest body);
 

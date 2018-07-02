@@ -897,10 +897,10 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         addEditShortStoryCommentOrReplyRequest.setPost_id(articleId);
         addEditShortStoryCommentOrReplyRequest.setMessage(content);
         Call<CommentListResponse> call = shortStoryAPI.editCommentOrReply(responseId, addEditShortStoryCommentOrReplyRequest);
-        call.enqueue(editCommentOrReplyResponseListener);
+        call.enqueue(editCommentResponseListener);
     }
 
-    private Callback<CommentListResponse> editCommentOrReplyResponseListener = new Callback<CommentListResponse>() {
+    private Callback<CommentListResponse> editCommentResponseListener = new Callback<CommentListResponse>() {
         @Override
         public void onResponse(Call<CommentListResponse> call, retrofit2.Response<CommentListResponse> response) {
             removeProgressDialog();
@@ -918,6 +918,9 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 CommentListResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     consolidatedList.get(actionItemPosition).getSsComment().setMessage(editContent);
+                    if (shortStoryCommentRepliesDialogFragment != null) {
+                        shortStoryCommentRepliesDialogFragment.updateRepliesList(consolidatedList.get(actionItemPosition).getSsComment());
+                    }
                     adapter.notifyDataSetChanged();
                     if (isAdded())
                         Utils.pushShortStoryCommentReplyChangeEvent(getActivity(), "ShortStoryDetailsScreen", userDynamoId, articleId, "edit", "comment");

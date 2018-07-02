@@ -29,8 +29,8 @@ import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.response.CommentListData;
 import com.mycity4kids.models.response.CommentListResponse;
-import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
-import com.mycity4kids.ui.adapter.ShortStoryCommentRepliesRecyclerAdapter;
+import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
+import com.mycity4kids.ui.adapter.CommentRepliesRecyclerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
-public class ArticleCommentRepliesDialogFragment extends DialogFragment implements View.OnClickListener, ShortStoryCommentRepliesRecyclerAdapter.RecyclerViewClickListener,
+public class ArticleCommentRepliesDialogFragment extends DialogFragment implements View.OnClickListener, CommentRepliesRecyclerAdapter.RecyclerViewClickListener,
         CommentOptionsDialogFragment.ICommentOptionAction {
 
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
@@ -53,7 +53,7 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
     private TextView toolbarTitleTextView;
     private ProgressDialog mProgressDialog;
 
-    private ShortStoryCommentRepliesRecyclerAdapter shortStoryCommentRepliesRecyclerAdapter;
+    private CommentRepliesRecyclerAdapter commentRepliesRecyclerAdapter;
     private int totalRepliesCount;
     private FloatingActionButton openAddReplyDialog;
     private String paginationReplyId;
@@ -112,9 +112,9 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
             isLastPageReached = true;
         }
 
-        shortStoryCommentRepliesRecyclerAdapter = new ShortStoryCommentRepliesRecyclerAdapter(getActivity(), this);
-        shortStoryCommentRepliesRecyclerAdapter.setData(repliesList);
-        repliesRecyclerView.setAdapter(shortStoryCommentRepliesRecyclerAdapter);
+        commentRepliesRecyclerAdapter = new CommentRepliesRecyclerAdapter(getActivity(), this);
+        commentRepliesRecyclerAdapter.setData(repliesList);
+        repliesRecyclerView.setAdapter(commentRepliesRecyclerAdapter);
 
         repliesRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -137,12 +137,12 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
 
     private void getCommentReplies() {
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
-        ShortStoryAPI shortStoryAPI = retro.create(ShortStoryAPI.class);
-        Call<CommentListResponse> call = shortStoryAPI.getStoryCommentReplies(data.getPostId(), "reply", data.get_id(), paginationReplyId);
-        call.enqueue(storyCommentRepliesCallback);
+        ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
+        Call<CommentListResponse> call = articleDetailsAPI.getArticleCommentReplies(data.getPostId(), "reply", data.get_id(), paginationReplyId);
+        call.enqueue(articleCommentRepliesCallback);
     }
 
-    private Callback<CommentListResponse> storyCommentRepliesCallback = new Callback<CommentListResponse>() {
+    private Callback<CommentListResponse> articleCommentRepliesCallback = new Callback<CommentListResponse>() {
         @Override
         public void onResponse(Call<CommentListResponse> call, retrofit2.Response<CommentListResponse> response) {
             isReuqestRunning = false;
@@ -179,14 +179,14 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
             }
         } else {
             repliesList.addAll(replyList);
-            shortStoryCommentRepliesRecyclerAdapter.setData(repliesList);
+            commentRepliesRecyclerAdapter.setData(repliesList);
             paginationReplyId = replyList.get(replyList.size() - 1).get_id();
             downloadedReplies = downloadedReplies + replyList.size();
             if (downloadedReplies >= totalRepliesCount) {
                 isLastPageReached = true;
             }
         }
-        shortStoryCommentRepliesRecyclerAdapter.notifyDataSetChanged();
+        commentRepliesRecyclerAdapter.notifyDataSetChanged();
     }
 
     @NonNull
@@ -302,7 +302,7 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
                 isLastPageReached = true;
             }
         }
-        shortStoryCommentRepliesRecyclerAdapter.notifyDataSetChanged();
+        commentRepliesRecyclerAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -318,16 +318,21 @@ public class ArticleCommentRepliesDialogFragment extends DialogFragment implemen
 
     @Override
     public void onResponseEdit(int position, String responseType) {
-        AddShortStoryCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddShortStoryCommentReplyDialogFragment();
+        AddArticleCommentReplyDialogFragment addArticleCommentReplyDialogFragment = new AddArticleCommentReplyDialogFragment();
         FragmentManager fm = getChildFragmentManager();
         Bundle _args = new Bundle();
-        _args.putString("action", "EDIT_REPLY");
+        if (position == 0) {
+            _args.putString("action", "EDIT_COMMENT");
+            _args.putInt("position", commentPosition);
+        } else {
+            _args.putString("action", "EDIT_REPLY");
+            _args.putInt("position", position);
+        }
         _args.putParcelable("parentCommentData", repliesList.get(position));
-        _args.putInt("position", position);
-        addGpPostCommentReplyDialogFragment.setArguments(_args);
-        addGpPostCommentReplyDialogFragment.setCancelable(true);
-        addGpPostCommentReplyDialogFragment.setTargetFragment(getParentFragment(), 0);
-        addGpPostCommentReplyDialogFragment.show(fm, "Add Comment");
+        addArticleCommentReplyDialogFragment.setArguments(_args);
+        addArticleCommentReplyDialogFragment.setCancelable(true);
+        addArticleCommentReplyDialogFragment.setTargetFragment(getParentFragment(), 0);
+        addArticleCommentReplyDialogFragment.show(fm, "Add Comment");
     }
 
     @Override
