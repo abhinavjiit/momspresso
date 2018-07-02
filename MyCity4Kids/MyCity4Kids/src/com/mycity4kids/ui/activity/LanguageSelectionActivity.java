@@ -161,7 +161,7 @@ public class LanguageSelectionActivity extends BaseActivity implements View.OnCl
         getApplicationContext().deleteFile(AppConstants.CATEGORIES_JSON_FILE);
         BaseApplication.setTopicList(null);
         BaseApplication.setTopicsMap(null);
-
+        BaseApplication.setShortStoryTopicList(null);
         LocaleManager.setNewLocale(this, language);
 
         Intent i = new Intent(this, TutorialActivity.class);

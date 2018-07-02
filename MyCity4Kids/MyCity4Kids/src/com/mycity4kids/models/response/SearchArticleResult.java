@@ -12,6 +12,7 @@ public class SearchArticleResult {
     private String title;
     private String body;
     private String blogSlug;
+    private String contentType;
 
     public String getId() {
         return id;
@@ -67,5 +68,13 @@ public class SearchArticleResult {
 
     public void setBlogSlug(String blogSlug) {
         this.blogSlug = blogSlug;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
     }
 }

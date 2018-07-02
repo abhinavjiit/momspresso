@@ -66,6 +66,7 @@ public class BaseApplication extends Application {
     private static OkHttpClient client, customTimeoutOkHttpClient;
 
     private static ArrayList<Topics> topicList;
+    private static ArrayList<Topics> shortStoryTopicList;
     private static HashMap<Topics, List<Topics>> topicsMap;
     private static HashMap<String, Topics> selectedTopicsMap;
 
@@ -124,6 +125,14 @@ public class BaseApplication extends Application {
 
     public static void setTopicList(ArrayList<Topics> topicLists) {
         topicList = topicLists;
+    }
+
+    public static ArrayList<Topics> getShortStoryTopicList() {
+        return shortStoryTopicList;
+    }
+
+    public static void setShortStoryTopicList(ArrayList<Topics> shortStoryTopicList) {
+        BaseApplication.shortStoryTopicList = shortStoryTopicList;
     }
 
     public static HashMap<Topics, List<Topics>> getTopicsMap() {

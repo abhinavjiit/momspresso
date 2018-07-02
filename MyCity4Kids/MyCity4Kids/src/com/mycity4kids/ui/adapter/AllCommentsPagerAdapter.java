@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.ui.fragment.ArticleCommentsFragment;
 import com.mycity4kids.ui.fragment.FacebookCommentsFragment;
 import com.mycity4kids.ui.fragment.MyCityCommentsFragment;
 
@@ -19,8 +20,10 @@ public class AllCommentsPagerAdapter extends FragmentStatePagerAdapter {
     private String fbCommentURL;
     private String author;
     private String type;
+    private String titleSlug, blogSlug, userType;
 
-    public AllCommentsPagerAdapter(FragmentManager fm, int NumOfTabs, String mycityCommentURL, String fbCommentURL, String articleId, String author, String type) {
+    public AllCommentsPagerAdapter(FragmentManager fm, int NumOfTabs, String mycityCommentURL, String fbCommentURL, String articleId, String author, String type,
+                                   String titleSlug, String blogSlug, String userType) {
         super(fm);
         this.mNumOfTabs = NumOfTabs;
         this.mycityCommentURL = mycityCommentURL;
@@ -28,6 +31,9 @@ public class AllCommentsPagerAdapter extends FragmentStatePagerAdapter {
         this.articleId = articleId;
         this.author = author;
         this.type = type;
+        this.userType = userType;
+        this.titleSlug = titleSlug;
+        this.blogSlug = blogSlug;
     }
 
     @Override
@@ -36,8 +42,12 @@ public class AllCommentsPagerAdapter extends FragmentStatePagerAdapter {
         bundle.putString("type", type);
         bundle.putString(Constants.ARTICLE_ID, articleId);
         bundle.putString(Constants.AUTHOR, author);
+        bundle.putString(Constants.TITLE_SLUG, titleSlug);
+        bundle.putString(Constants.BLOG_SLUG, blogSlug);
+        bundle.putString("userType", userType);
+
         if (position == 0) {
-            FacebookCommentsFragment tab1 = new FacebookCommentsFragment();
+            ArticleCommentsFragment tab1 = new ArticleCommentsFragment();
             bundle.putString("commentURL", fbCommentURL);
             tab1.setArguments(bundle);
             return tab1;

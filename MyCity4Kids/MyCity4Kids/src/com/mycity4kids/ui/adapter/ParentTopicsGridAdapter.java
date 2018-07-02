@@ -9,11 +9,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.models.ExploreTopicsModel;
-import com.mycity4kids.models.Topics;
-import com.mycity4kids.models.parentingstop.CommonParentingList;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -25,14 +23,10 @@ public class ParentTopicsGridAdapter extends BaseAdapter {
 
     private ArrayList<ExploreTopicsModel> topicsList;
     private ArrayList<ExploreTopicsModel> arraylist;
-    private Context mContext;
     private LayoutInflater mInflator;
-    private final float density;
 
-    public ParentTopicsGridAdapter(Context pContext) {
-        mContext = pContext;
-        density = pContext.getResources().getDisplayMetrics().density;
-        mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    public ParentTopicsGridAdapter() {
+        mInflator = (LayoutInflater) BaseApplication.getAppContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
@@ -67,10 +61,10 @@ public class ParentTopicsGridAdapter extends BaseAdapter {
 
         //useless backend can't do shit. tired of checking null, empty, json object or json array.
         try {
-            Picasso.with(mContext).load(topicsList.get(position).getExtraData().get(0).getCategoryBackImage().getApp()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
+            Picasso.with(BaseApplication.getAppContext()).load(topicsList.get(position).getExtraData().get(0).getCategoryBackImage().getApp()).placeholder(R.drawable.default_article).error(R.drawable.default_article)
                     .fit().into(holder.tagsImageView);
         } catch (Exception e) {
-            holder.tagsImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.default_article));
+            holder.tagsImageView.setImageDrawable(ContextCompat.getDrawable(BaseApplication.getAppContext(), R.drawable.default_article));
         }
 
         return view;

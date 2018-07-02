@@ -44,6 +44,34 @@ public class Utils {
                 GTMTags.TagListingType, listingType, GTMTags.TagIndex, index, GTMTags.Author, author));
     }
 
+    public static void pushViewShortStoryEvent(Context context, String screenName, String user, String articleId, String listingType, String index, String author) {
+        Log.d("pushViewShortStoryEvent", "" + screenName + " --- " + listingType + " --- " + author);
+        DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
+        dataLayer.push(DataLayer.mapOf(GTMTags.TagEvent, "ShortStoryClick", GTMTags.TagScreen, screenName, GTMTags.USER_ID, user, GTMTags.ArticleId, articleId,
+                GTMTags.TagListingType, listingType, GTMTags.TagIndex, index, GTMTags.Author, author));
+    }
+
+    public static void pushReportShortStoryEvent(Context context, String screenName, String user, String articleId, String reason, String type) {
+        Log.d("pushViewArticleEvent", "" + screenName + " --- " + reason + " --- " + type);
+        DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
+        dataLayer.push(DataLayer.mapOf(GTMTags.TagEvent, "ReportContent", GTMTags.TagScreen, screenName, GTMTags.USER_ID, user, GTMTags.ArticleId, articleId,
+                GTMTags.TagListingType, reason, GTMTags.TagIndex, type));
+    }
+
+    public static void pushShortStoryCommentReplyChangeEvent(Context context, String screenName, String user, String articleId, String action, String type) {
+        Log.d("ShortStoryCommentEvent", "" + screenName + " --- ");
+        DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
+        dataLayer.push(DataLayer.mapOf(GTMTags.TagEvent, "StoryCommentReplyChangeEvent", GTMTags.TagScreen, screenName, GTMTags.USER_ID, user, GTMTags.ArticleId, articleId,
+                GTMTags.TagListingType, action, GTMTags.TagIndex, type));
+    }
+
+    public static void pushArticleCommentReplyChangeEvent(Context context, String screenName, String user, String articleId, String action, String type) {
+        Log.d("ShortStoryCommentEvent", "" + screenName + " --- ");
+        DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
+        dataLayer.push(DataLayer.mapOf(GTMTags.TagEvent, "ArticleCommentReplyChangeEvent", GTMTags.TagScreen, screenName, GTMTags.USER_ID, user, GTMTags.ArticleId, articleId,
+                GTMTags.TagListingType, action, GTMTags.TagIndex, type));
+    }
+
     public static void pushViewTopicArticlesEvent(Context context, String screenName, String user, String topic) {
         DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
         dataLayer.push(DataLayer.mapOf(GTMTags.TagEvent, "ViewTopicArticles", GTMTags.TagScreen, screenName, GTMTags.USER_ID, user, GTMTags.TagTopic, topic));
@@ -63,6 +91,13 @@ public class Utils {
         Log.d("pushArticleLoadedEvent", "" + screenName + " --- " + articleId + " --- " + language);
         DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
         dataLayer.push(DataLayer.mapOf(GTMTags.TagEvent, "ArticleDetailLoaded",
+                GTMTags.TagScreen, screenName, GTMTags.USER_ID, user, GTMTags.ArticleId, articleId, GTMTags.Author, author, GTMTags.TagLanguage, language));
+    }
+
+    public static void pushStoryLoadedEvent(Context context, String screenName, String user, String articleId, String author, String language) {
+        Log.d("pushStoryLoadedEvent", "" + screenName + " --- " + articleId + " --- " + language);
+        DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
+        dataLayer.push(DataLayer.mapOf(GTMTags.TagEvent, "StoryDetailLoaded",
                 GTMTags.TagScreen, screenName, GTMTags.USER_ID, user, GTMTags.ArticleId, articleId, GTMTags.Author, author, GTMTags.TagLanguage, language));
     }
 
@@ -94,6 +129,13 @@ public class Utils {
                 GTMTags.TagScreen, screenName, GTMTags.USER_ID, user, GTMTags.ArticleId, articleId, GTMTags.TagShareMedium, shareMedium, GTMTags.Author, author));
     }
 
+    public static void pushShareStoryEvent(Context context, String screenName, String user, String articleId, String author, String shareMedium) {
+        Log.d("pushShareArticleEvent", "" + screenName + " --- " + shareMedium);
+        DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
+        dataLayer.push(DataLayer.mapOf(GTMTags.TagEvent, "ShareStory",
+                GTMTags.TagScreen, screenName, GTMTags.USER_ID, user, GTMTags.ArticleId, articleId, GTMTags.TagShareMedium, shareMedium, GTMTags.Author, author));
+    }
+
     public static void pushBookmarkArticleEvent(Context context, String screenName, String user, String articleId, String author) {
         Log.d("pushBookmarkArticleEvent", "" + screenName + " --- " + author);
         DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
@@ -112,6 +154,13 @@ public class Utils {
         Log.d("pushLikeArticleEvent", "" + screenName + " --- " + author);
         DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
         dataLayer.push(DataLayer.mapOf(GTMTags.TagEvent, "LikeArticle",
+                GTMTags.TagScreen, screenName, GTMTags.USER_ID, user, GTMTags.ArticleId, articleId, GTMTags.Author, author));
+    }
+
+    public static void pushLikeStoryEvent(Context context, String screenName, String user, String articleId, String author) {
+        Log.d("pushLikeArticleEvent", "" + screenName + " --- " + author);
+        DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
+        dataLayer.push(DataLayer.mapOf(GTMTags.TagEvent, "LikeStory",
                 GTMTags.TagScreen, screenName, GTMTags.USER_ID, user, GTMTags.ArticleId, articleId, GTMTags.Author, author));
     }
 
@@ -238,6 +287,13 @@ public class Utils {
         Log.d("pushPublishArticleEvent", "" + screenName + " --- " + listingType);
         DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
         dataLayer.push(DataLayer.mapOf(GTMTags.TagEvent, "PublishArticle",
+                GTMTags.TagScreen, screenName, GTMTags.USER_ID, user, GTMTags.TagListingType, listingType));
+    }
+
+    public static void pushPublishStoryEvent(Context context, String screenName, String user, String listingType) {
+        Log.d("pushPublishStoryEvent", "" + screenName + " --- " + listingType);
+        DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
+        dataLayer.push(DataLayer.mapOf(GTMTags.TagEvent, "PublishStory",
                 GTMTags.TagScreen, screenName, GTMTags.USER_ID, user, GTMTags.TagListingType, listingType));
     }
 

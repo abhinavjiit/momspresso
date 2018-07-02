@@ -434,4 +434,14 @@
     <color name="groups.dark_black">#333333</color>
     <color name="groups.main_background">#f5f5f5</color>
 
+    <color name="short_story.light_black_color">#545454</color>
+    <color name="short_story.blue">#507cbe</color>
+    <color name="short_story.tag_images.selected_bg">#80000000</color>
+    <color name="short_story.add_topics_bg">#e0e0e0</color>
+    <color name="short_story.card_bg_1">#d1eff9</color>
+    <color name="short_story.card_bg_2">#fef6ec</color>
+    <color name="short_story.card_bg_3">#eaeafb</color>
+    <color name="short_story.card_bg_4">#f1fbeb</color>
+    <color name="short_story.card_bg_5">#fdf5f8</color>
+    <color name="short_story.card_bg_6">#fbfbee</color>
 </resources>

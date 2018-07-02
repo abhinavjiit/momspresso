@@ -129,7 +129,7 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
     private TextView followingCountTextView, followerCountTextView, rankCountTextView;
     private TextView rankLanguageTextView;
     private TextView authorNameTextView, authorTypeTextView, authorBioTextView;
-    private TextView articleSectionTextView, videosSectionTextView, activitySectionTextView, rankingSectionTextView, settingsSectionTextView, signoutSectionTextView;
+    private TextView articleSectionTextView, storySectionTextView, videosSectionTextView, activitySectionTextView, rankingSectionTextView, settingsSectionTextView, signoutSectionTextView;
     private ImageView imgProfile;
     private ImageView settingImageView;
     private LinearLayout followerContainer, followingContainer, rankContainer;
@@ -161,6 +161,7 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
         rankCountTextView = (TextView) rootView.findViewById(R.id.rankCountTextView);
         rankLanguageTextView = (TextView) rootView.findViewById(R.id.rankLanguageTextView);
         articleSectionTextView = (TextView) rootView.findViewById(R.id.articleSectionTextView);
+        storySectionTextView = (TextView) rootView.findViewById(R.id.storySectionTextView);
         videosSectionTextView = (TextView) rootView.findViewById(R.id.videosSectionTextView);
         activitySectionTextView = (TextView) rootView.findViewById(R.id.activitySectionTextView);
         rankingSectionTextView = (TextView) rootView.findViewById(R.id.rankingSectionTextView);
@@ -177,6 +178,7 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
         authorBioTextView.setOnClickListener(this);
         imgProfile.setOnClickListener(this);
         articleSectionTextView.setOnClickListener(this);
+        storySectionTextView.setOnClickListener(this);
         videosSectionTextView.setOnClickListener(this);
         activitySectionTextView.setOnClickListener(this);
         rankingSectionTextView.setOnClickListener(this);
@@ -282,31 +284,31 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
                     case AppConstants.USER_TYPE_BLOGGER:
                         authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_BLOGGER.toUpperCase());
                         rankingSectionTextView.setVisibility(View.VISIBLE);
-                        rootView.findViewById(R.id.underline_4).setVisibility(View.VISIBLE);
+                        rootView.findViewById(R.id.underline_5).setVisibility(View.VISIBLE);
                         break;
                     case AppConstants.USER_TYPE_EDITOR:
                         rankingSectionTextView.setVisibility(View.GONE);
-                        rootView.findViewById(R.id.underline_4).setVisibility(View.GONE);
+                        rootView.findViewById(R.id.underline_5).setVisibility(View.GONE);
                         authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_EDITOR.toUpperCase());
                         break;
                     case AppConstants.USER_TYPE_EDITORIAL:
                         rankingSectionTextView.setVisibility(View.GONE);
-                        rootView.findViewById(R.id.underline_4).setVisibility(View.GONE);
+                        rootView.findViewById(R.id.underline_5).setVisibility(View.GONE);
                         authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_EDITORIAL.toUpperCase());
                         break;
                     case AppConstants.USER_TYPE_EXPERT:
                         rankingSectionTextView.setVisibility(View.GONE);
-                        rootView.findViewById(R.id.underline_4).setVisibility(View.GONE);
+                        rootView.findViewById(R.id.underline_5).setVisibility(View.GONE);
                         authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_EXPERT.toUpperCase());
                         break;
                     case AppConstants.USER_TYPE_USER:
                         rankingSectionTextView.setVisibility(View.GONE);
-                        rootView.findViewById(R.id.underline_4).setVisibility(View.GONE);
+                        rootView.findViewById(R.id.underline_5).setVisibility(View.GONE);
                         authorTypeTextView.setVisibility(View.GONE);
                         break;
                     default:
                         rankingSectionTextView.setVisibility(View.GONE);
-                        rootView.findViewById(R.id.underline_4).setVisibility(View.GONE);
+                        rootView.findViewById(R.id.underline_5).setVisibility(View.GONE);
                 }
 
                 if (!StringUtils.isNullOrEmpty(responseData.getData().get(0).getResult().getProfilePicUrl().getClientApp())) {
@@ -484,6 +486,13 @@ public class MyAccountProfileFragment extends BaseFragment implements View.OnCli
                 articleIntent.putExtra("isPrivateProfile", true);
                 articleIntent.putExtra(Constants.AUTHOR_ID, userId);
                 startActivity(articleIntent);
+                break;
+            case R.id.storySectionTextView:
+                Intent ssIntent = new Intent(getActivity(), UserPublishedAndDraftsActivity.class);
+                ssIntent.putExtra("isPrivateProfile", true);
+                ssIntent.putExtra("contentType", "shortStory");
+                ssIntent.putExtra(Constants.AUTHOR_ID, userId);
+                startActivity(ssIntent);
                 break;
             case R.id.videosSectionTextView:
                 Intent funnyIntent = new Intent(getActivity(), MyFunnyVideosListingActivity.class);

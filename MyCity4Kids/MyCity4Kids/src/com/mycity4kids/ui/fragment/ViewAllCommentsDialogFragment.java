@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -86,7 +85,7 @@ public class ViewAllCommentsDialogFragment extends DialogFragment implements Vie
 //        wrapTabIndicatorToTitle(tabLayout, 25, 25);
         final ViewPager viewPager = (ViewPager) view.findViewById(R.id.pager);
         final AllCommentsPagerAdapter adapter = new AllCommentsPagerAdapter
-                (getChildFragmentManager(), tabLayout.getTabCount(), mycityCommentURL, fbCommentURL, articleId, author, "video");
+                (getChildFragmentManager(), tabLayout.getTabCount(), mycityCommentURL, fbCommentURL, articleId, author, "video", "", "", "");
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

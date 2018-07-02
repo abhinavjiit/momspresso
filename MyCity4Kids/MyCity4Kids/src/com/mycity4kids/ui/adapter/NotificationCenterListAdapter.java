@@ -30,9 +30,12 @@ import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.NotificationsAPI;
 import com.mycity4kids.ui.activity.AppSettingsActivity;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
+import com.mycity4kids.ui.activity.ArticleListingActivity;
 import com.mycity4kids.ui.activity.BloggerProfileActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.LoadWebViewActivity;
+import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
+import com.mycity4kids.ui.activity.TopicsShortStoriesContainerFragment;
 import com.mycity4kids.ui.activity.VlogsDetailActivity;
 import com.mycity4kids.ui.fragment.FragmentBusinesslistEvents;
 import com.mycity4kids.ui.fragment.MyAccountProfileFragment;
@@ -242,6 +245,57 @@ public class NotificationCenterListAdapter extends BaseAdapter {
                     Bundle mBundle0 = new Bundle();
                     fragment0.setArguments(mBundle0);
                     ((DashboardActivity) mContext).addFragment(fragment0, mBundle0, true);
+                }
+            });
+        } else if ((StringUtils.isNullOrEmpty(nType) && "7".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_TODAYS_BEST.equals(nType)) {
+            holder.rootView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
+                    hitNotificationReadAPI(notificationList.get(position).getId());
+                    notifyDataSetChanged();
+                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "todaysBest");
+                    Intent intent1 = new Intent(mContext, ArticleListingActivity.class);
+                    intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_TODAYS_BEST);
+                    mContext.startActivity(intent1);
+                }
+            });
+        } else if ((StringUtils.isNullOrEmpty(nType) && "8".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_SHORT_STORY_LIST.equals(nType)) {
+            holder.rootView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
+                    hitNotificationReadAPI(notificationList.get(position).getId());
+                    notifyDataSetChanged();
+                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "shortStoryListing");
+                    TopicsShortStoriesContainerFragment fragment1 = new TopicsShortStoriesContainerFragment();
+                    Bundle mBundle1 = new Bundle();
+                    mBundle1.putString("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
+                    fragment1.setArguments(mBundle1);
+                    ((DashboardActivity) mContext).addFragment(fragment1, mBundle1, true);
+                }
+            });
+        } else if ((StringUtils.isNullOrEmpty(nType) && "9".equals(notificationList.get(position).getNotifType())) || AppConstants.NOTIFICATION_TYPE_SHORT_STORY_DETAILS.equals(nType)) {
+            holder.rootView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    notificationList.get(position).setIsRead(AppConstants.NOTIFICATION_STATUS_READ);
+                    hitNotificationReadAPI(notificationList.get(position).getId());
+                    notifyDataSetChanged();
+                    Utils.pushEventNotificationClick(mContext, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(mContext).getDynamoId(), "Notification Centre", "shortStoryDetails");
+                    Intent intent = new Intent(mContext, ShortStoryContainerActivity.class);
+                    intent.putExtra(Constants.ARTICLE_ID, notificationList.get(position).getArticleId());
+                    intent.putExtra(Constants.AUTHOR_ID, notificationList.get(position).getAuthorId());
+                    intent.putExtra(Constants.BLOG_SLUG, notificationList.get(position).getBlogTitleSlug());
+                    intent.putExtra(Constants.TITLE_SLUG, notificationList.get(position).getTitleSlug());
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "NotificationsScreen");
+                    intent.putExtra(Constants.FROM_SCREEN, "NotificationsScreen");
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
+                    intent.putExtra(Constants.AUTHOR, notificationList.get(position).getUserId() + "~");
+                    mContext.startActivity(intent);
                 }
             });
         }

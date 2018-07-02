@@ -204,10 +204,33 @@
             android:background="@color/light_grey1" />
 
         <com.mycity4kids.widget.CustomFontTextView
-            android:id="@+id/videosSectionTextView"
+            android:id="@+id/storySectionTextView"
             android:layout_width="match_parent"
             android:layout_height="42dp"
             android:layout_below="@+id/underline_1"
+            android:drawableLeft="@drawable/ic_story"
+            android:drawablePadding="18dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:text="@string/myprofile.section.short_story_label"
+            app:fontName="oswald.ttf" />
+
+        <View
+            android:id="@+id/underline_2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/storySectionTextView"
+            android:layout_marginEnd="20dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginStart="40dp"
+            android:background="@color/light_grey1" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/videosSectionTextView"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_below="@+id/underline_2"
             android:drawableLeft="@drawable/ic_video"
             android:drawablePadding="20dp"
             android:gravity="center_vertical"
@@ -216,7 +239,7 @@
             app:fontName="oswald.ttf" />
 
         <View
-            android:id="@+id/underline_2"
+            android:id="@+id/underline_3"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_below="@+id/videosSectionTextView"
@@ -230,7 +253,7 @@
             android:id="@+id/activitySectionTextView"
             android:layout_width="match_parent"
             android:layout_height="42dp"
-            android:layout_below="@+id/underline_2"
+            android:layout_below="@+id/underline_3"
             android:drawableLeft="@drawable/ic_activity"
             android:drawablePadding="20dp"
             android:gravity="center_vertical"
@@ -239,7 +262,7 @@
             app:fontName="oswald.ttf" />
 
         <View
-            android:id="@+id/underline_3"
+            android:id="@+id/underline_4"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_below="@+id/activitySectionTextView"
@@ -253,7 +276,7 @@
             android:id="@+id/rankingSectionTextView"
             android:layout_width="match_parent"
             android:layout_height="42dp"
-            android:layout_below="@+id/underline_3"
+            android:layout_below="@+id/underline_4"
             android:drawableLeft="@drawable/ic_my_ranking"
             android:drawablePadding="16dp"
             android:gravity="center_vertical"
@@ -263,7 +286,7 @@
             app:fontName="oswald.ttf" />
 
         <View
-            android:id="@+id/underline_4"
+            android:id="@+id/underline_5"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_below="@+id/rankingSectionTextView"
@@ -278,7 +301,7 @@
             android:id="@+id/settingsSectionTextView"
             android:layout_width="match_parent"
             android:layout_height="42dp"
-            android:layout_below="@+id/underline_4"
+            android:layout_below="@+id/underline_5"
             android:drawableLeft="@drawable/ic_settings"
             android:drawablePadding="20dp"
             android:gravity="center_vertical"
@@ -287,7 +310,7 @@
             app:fontName="oswald.ttf" />
 
         <View
-            android:id="@+id/underline_5"
+            android:id="@+id/underline_6"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_below="@+id/settingsSectionTextView"
@@ -301,7 +324,7 @@
             android:id="@+id/signoutSectionTextView"
             android:layout_width="match_parent"
             android:layout_height="42dp"
-            android:layout_below="@+id/underline_5"
+            android:layout_below="@+id/underline_6"
             android:drawableLeft="@drawable/ic_sign_out"
             android:drawablePadding="20dp"
             android:gravity="center_vertical"

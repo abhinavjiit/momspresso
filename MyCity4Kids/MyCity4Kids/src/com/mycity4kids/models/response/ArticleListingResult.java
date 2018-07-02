@@ -14,6 +14,7 @@ public class ArticleListingResult implements Parcelable {
 
     private String id;
     private String title;
+    private String body;
     private String excerpt;
     private String titleSlug;
     private ImageURL imageUrl;
@@ -25,7 +26,7 @@ public class ArticleListingResult implements Parcelable {
     private String commentsCount;
     private String trendingCount;
     private String blogTitleSlug;
-    private Long createdTime;
+    private Long createdTime = 0l;
     private String articleCount;
     private String videoUrl;
     private ArrayList<Map<String, String>> tags;
@@ -36,6 +37,7 @@ public class ArticleListingResult implements Parcelable {
     private String isMomspresso;
     private int listingWatchLaterStatus = 0;
     private String lang;
+    private String contentType;
 
     public ArticleListingResult() {
     }
@@ -62,6 +64,7 @@ public class ArticleListingResult implements Parcelable {
         bookmarkId = in.readString();
         isMomspresso = in.readString();
         lang = in.readString();
+        body = in.readString();
     }
 
     public static final Creator<ArticleListingResult> CREATOR = new Creator<ArticleListingResult>() {
@@ -90,6 +93,14 @@ public class ArticleListingResult implements Parcelable {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
     }
 
     public String getExcerpt() {
@@ -277,6 +288,14 @@ public class ArticleListingResult implements Parcelable {
         this.lang = lang;
     }
 
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -304,5 +323,6 @@ public class ArticleListingResult implements Parcelable {
         dest.writeString(bookmarkId);
         dest.writeString(isMomspresso);
         dest.writeString(lang);
+        dest.writeString(body);
     }
 }

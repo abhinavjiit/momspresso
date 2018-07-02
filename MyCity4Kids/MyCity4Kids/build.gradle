@@ -76,6 +76,8 @@ dependencies {
     compile "im.ene.toro3:toro:3.4.1"
     compile "im.ene.toro3:toro-ext-exoplayer:3.4.1"  // to get ExoPlayer support
     compile 'com.shuhart.bubblepagerindicator:bubblepagerindicator:1.0.13'
+    compile 'com.mixpanel.android:mixpanel-android:5.+'
+    compile 'com.google.android.gms:play-services-gcm:10.0.1'
 }
 
 //dependencies {

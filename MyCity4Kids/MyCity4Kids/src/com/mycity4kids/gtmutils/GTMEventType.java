@@ -491,6 +491,12 @@ public enum GTMEventType {
         public String toString() {
             return "sortListingEvent";
         }
-    }
+    },
+    PUBLISH_STORY_BUTTON_CLICKED_EVENT {
+        @Override
+        public String toString() {
+            return "PublishStoryClicked";
+        }
+    },
 
 }

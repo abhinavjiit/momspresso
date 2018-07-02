@@ -35,7 +35,7 @@ public class GroupPostReportDialogFragment extends DialogFragment implements OnC
         final AppCompatRadioButton reason1RadioButton = (AppCompatRadioButton) rootView.findViewById(R.id.reason1RadioButton);
         final AppCompatRadioButton reason2RadioButton = (AppCompatRadioButton) rootView.findViewById(R.id.reason2RadioButton);
         final AppCompatRadioButton reason3RadioButton = (AppCompatRadioButton) rootView.findViewById(R.id.reason3RadioButton);
-        final AppCompatRadioButton reason4RadioButton = (AppCompatRadioButton) rootView.findViewById(R.id.reason4RadioButton);
+//        final AppCompatRadioButton reason4RadioButton = (AppCompatRadioButton) rootView.findViewById(R.id.reason4RadioButton);
 
         reportReasonRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -49,9 +49,9 @@ public class GroupPostReportDialogFragment extends DialogFragment implements OnC
                 if (reason3RadioButton.isChecked()) {
                     Log.d("RadioGroup", "option1");
                 }
-                if (reason4RadioButton.isChecked()) {
-                    Log.d("RadioGroup", "option1");
-                }
+//                if (reason4RadioButton.isChecked()) {
+//                    Log.d("RadioGroup", "option1");
+//                }
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {

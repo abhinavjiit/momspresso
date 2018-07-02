@@ -14,8 +14,8 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical|left"
         android:padding="20dp"
-        android:text="This content is inappropriate because"
-        android:textColor="@color/groups.light_black_color"
+        android:text="@string/report.reason"
+        android:textColor="@color/short_story.light_black_color"
         android:textSize="20sp"
         app:fontName="oswald.ttf" />
 
@@ -30,33 +30,26 @@
             android:id="@+id/reason1RadioButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Not Interested"
-            android:textColor="@color/groups.light_black_color"
-            app:buttonTint="@color/groups.blue_color" />
+            android:text="@string/report.abuse"
+            android:textColor="@color/short_story.light_black_color"
+            app:buttonTint="@color/short_story.blue" />
 
         <android.support.v7.widget.AppCompatRadioButton
             android:id="@+id/reason2RadioButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Religious Sentiments"
-            android:textColor="@color/groups.light_black_color"
-            app:buttonTint="@color/groups.blue_color" />
+            android:text="@string/report.spam"
+            android:textColor="@color/short_story.light_black_color"
+            app:buttonTint="@color/short_story.blue" />
 
         <android.support.v7.widget.AppCompatRadioButton
             android:id="@+id/reason3RadioButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="It's Spam"
-            android:textColor="@color/groups.light_black_color"
-            app:buttonTint="@color/groups.blue_color" />
+            android:text="@string/report.not_relevant"
+            android:textColor="@color/short_story.light_black_color"
+            app:buttonTint="@color/short_story.blue" />
 
-        <android.support.v7.widget.AppCompatRadioButton
-            android:id="@+id/reason4RadioButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Any other"
-            android:textColor="@color/groups.light_black_color"
-            app:buttonTint="@color/groups.blue_color" />
     </RadioGroup>
 
 </LinearLayout>

@@ -27,12 +27,18 @@ import com.mycity4kids.models.parentingdetails.ImageData;
 import com.mycity4kids.models.response.ArticleDetailResult;
 import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
+import com.mycity4kids.models.response.ShortStoryDetailResponse;
+import com.mycity4kids.models.response.ShortStoryDetailResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ArticleDetailsAPI;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
+import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
+import com.mycity4kids.ui.activity.AddShortStoryActivity;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
+import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.activity.UserPublishedAndDraftsActivity;
 import com.mycity4kids.ui.adapter.UserPublishedArticleAdapter;
+import com.mycity4kids.ui.adapter.UserPublishedShortStoriesAdapter;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.widget.FeedNativeAd;
 
@@ -47,7 +53,8 @@ import retrofit2.Retrofit;
 /**
  * Created by hemant.parmar on 21-04-2016.
  */
-public class UserPublishedArticleTabFragment extends BaseFragment implements View.OnClickListener, UserPublishedArticleAdapter.RecyclerViewClickListener, FeedNativeAd.AdLoadingListener {
+public class UserPublishedArticleTabFragment extends BaseFragment implements View.OnClickListener, UserPublishedArticleAdapter.RecyclerViewClickListener, FeedNativeAd.AdLoadingListener,
+        UserPublishedShortStoriesAdapter.SSRecyclerViewClickListener {
 
     private ArrayList<ArticleListingResult> articleDataModelsNew;
     private RecyclerView recyclerView;
@@ -55,6 +62,7 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
     private TextView noBlogsTextView;
 
     private UserPublishedArticleAdapter adapter;
+    private UserPublishedShortStoriesAdapter shortStoriesAdapter;
 
     private int nextPageNumber = 0;
     private boolean isReuqestRunning = false;
@@ -64,6 +72,7 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
 
     private FeedNativeAd feedNativeAd;
+    private String contentType;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,21 +87,31 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
         if (getArguments() != null) {
             authorId = getArguments().getString(Constants.AUTHOR_ID);
             isPrivateProfile = getArguments().getBoolean("isPrivateProfile", false);
+            contentType = getArguments().getString("contentType");
         }
 
-        feedNativeAd = new FeedNativeAd(getActivity(), this, AppConstants.FB_AD_PLACEMENT_USER_ARTICLE);
-        feedNativeAd.loadAds();
-        adapter = new UserPublishedArticleAdapter(getActivity(), this, isPrivateProfile, feedNativeAd);
         final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
-        recyclerView.setAdapter(adapter);
-
         articleDataModelsNew = new ArrayList<ArticleListingResult>();
 
-        //only when first time fragment is created
+        feedNativeAd = new FeedNativeAd(getActivity(), this, AppConstants.FB_AD_PLACEMENT_USER_ARTICLE);
+        feedNativeAd.loadAds();
+
         nextPageNumber = 0;
-        getUserPublishedArticles();
+        if ("shortStory".equals(contentType)) {
+            shortStoriesAdapter = new UserPublishedShortStoriesAdapter(getActivity(), this, isPrivateProfile, feedNativeAd);
+            recyclerView.setAdapter(shortStoriesAdapter);
+            getUserPublishedShortStories();
+        } else {
+            adapter = new UserPublishedArticleAdapter(getActivity(), this, isPrivateProfile, feedNativeAd);
+            recyclerView.setAdapter(adapter);
+            getUserPublishedArticles();
+        }
+
+
+        //only when first time fragment is created
+
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -107,13 +126,31 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
                         if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
                             isReuqestRunning = true;
                             mLodingView.setVisibility(View.VISIBLE);
-                            getUserPublishedArticles();
+                            if ("shortStory".equals(contentType)) {
+                                getUserPublishedShortStories();
+                            } else {
+                                getUserPublishedArticles();
+                            }
+
                         }
                     }
                 }
             }
         });
         return view;
+    }
+
+    private void getUserPublishedShortStories() {
+        if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
+            ((UserPublishedAndDraftsActivity) getActivity()).showToast(getString(R.string.connectivity_unavailable));
+            return;
+        }
+
+        Retrofit retro = BaseApplication.getInstance().getRetrofit();
+        ShortStoryAPI shortStoryAPI = retro.create(ShortStoryAPI.class);
+        int from = 15 * nextPageNumber + 1;
+        final Call<ArticleListingResponse> call = shortStoryAPI.getAuthorsPublishedStories(authorId, 0, from, from + 14);
+        call.enqueue(userPublishedArticleResponseListener);
     }
 
     private void getUserPublishedArticles() {
@@ -146,7 +183,11 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
             try {
                 ArticleListingResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    processPublisedArticlesResponse(responseData);
+                    if ("shortStory".equals(contentType)) {
+                        processPublishedStoriesResponse(responseData);
+                    } else {
+                        processPublisedArticlesResponse(responseData);
+                    }
                 } else {
 
                 }
@@ -163,6 +204,37 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
+
+    private void processPublishedStoriesResponse(ArticleListingResponse responseData) {
+        ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
+
+        if (dataList.size() == 0) {
+
+            isLastPageReached = false;
+            if (null != articleDataModelsNew && !articleDataModelsNew.isEmpty()) {
+                //No more next results for search from pagination
+            } else {
+                // No results
+                articleDataModelsNew.addAll(dataList);
+                shortStoriesAdapter.setListData(articleDataModelsNew);
+                shortStoriesAdapter.notifyDataSetChanged();
+                if (isAdded())
+                    noBlogsTextView.setText(getString(R.string.short_s_no_published));
+                noBlogsTextView.setVisibility(View.VISIBLE);
+            }
+        } else {
+            if (nextPageNumber == 1) {
+                articleDataModelsNew.addAll(dataList);
+                shortStoriesAdapter.setListData(articleDataModelsNew);
+                shortStoriesAdapter.notifyDataSetChanged();
+            } else {
+                articleDataModelsNew.addAll(dataList);
+            }
+            shortStoriesAdapter.setListData(articleDataModelsNew);
+            nextPageNumber = nextPageNumber + 1;
+            shortStoriesAdapter.notifyDataSetChanged();
+        }
+    }
 
     private void processPublisedArticlesResponse(ArticleListingResponse responseData) {
         ArrayList<ArticleListingResult> dataList = responseData.getData().get(0).getResult();
@@ -328,4 +400,91 @@ public class UserPublishedArticleTabFragment extends BaseFragment implements Vie
     public void onErrorToLoadAd() {
 
     }
+
+    @Override
+    public void onShortStoryClick(View view, int position) {
+        switch (view.getId()) {
+            case R.id.rootLayout:
+                Intent intent = new Intent(getActivity(), ShortStoryContainerActivity.class);
+                intent.putExtra(Constants.ARTICLE_ID, articleDataModelsNew.get(position).getId());
+                intent.putExtra(Constants.AUTHOR_ID, articleDataModelsNew.get(position).getUserId());
+                intent.putExtra(Constants.BLOG_SLUG, articleDataModelsNew.get(position).getBlogPageSlug());
+                intent.putExtra(Constants.TITLE_SLUG, articleDataModelsNew.get(position).getTitleSlug());
+                if (authorId.equals(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId())) {
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "PrivatePublishedArticles");
+                    intent.putExtra(Constants.FROM_SCREEN, "PrivateUserArticlesScreen");
+                } else {
+                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "PublicPublishedArticles");
+                    intent.putExtra(Constants.FROM_SCREEN, "PublicUserArticlesScreen");
+                }
+                intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
+                intent.putParcelableArrayListExtra("pagerListData", articleDataModelsNew);
+                intent.putExtra(Constants.AUTHOR, articleDataModelsNew.get(position).getUserId() + "~" + articleDataModelsNew.get(position).getUserName());
+                startActivity(intent);
+                break;
+            case R.id.editPublishedTextView:
+                Retrofit retrofit = BaseApplication.getInstance().getRetrofit();
+                ShortStoryAPI shortStoryAPI = retrofit.create(ShortStoryAPI.class);
+                Call<ShortStoryDetailResult> call = shortStoryAPI.getShortStoryDetails(articleDataModelsNew.get(position).getId(), "articleId");
+                call.enqueue(ssDetailResponseCallbackRedis);
+                break;
+            case R.id.shareArticleImageView:
+                Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+
+                String shareUrl = AppUtils.getShortStoryShareUrl(articleDataModelsNew.get(position).getUserType(),
+                        articleDataModelsNew.get(position).getBlogPageSlug(), articleDataModelsNew.get(position).getTitleSlug());
+                String shareMessage;
+                if (StringUtils.isNullOrEmpty(shareUrl)) {
+                    shareMessage = getString(R.string.check_out_short_story) + "\"" +
+                            articleDataModelsNew.get(position).getTitle() + "\" by " + articleDataModelsNew.get(position).getUserName() + ".";
+                } else {
+                    shareMessage = getString(R.string.check_out_short_story) + "\"" +
+                            articleDataModelsNew.get(position).getTitle() + "\" by " + articleDataModelsNew.get(position).getUserName() + ".\nRead Here: " + shareUrl;
+                }
+                shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
+                startActivity(Intent.createChooser(shareIntent, "Momspresso"));
+                if (isPrivateProfile) {
+                    Utils.pushShareArticleEvent(getActivity(), "PrivateUserArticlesScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", articleDataModelsNew.get(position).getId(),
+                            authorId + "~" + articleDataModelsNew.get(position).getUserName(), "-");
+                } else {
+                    Utils.pushShareArticleEvent(getActivity(), "PublicUserArticlesScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", articleDataModelsNew.get(position).getId(),
+                            authorId + "~" + articleDataModelsNew.get(position).getUserName(), "-");
+                }
+                break;
+        }
+    }
+
+    Callback<ShortStoryDetailResult> ssDetailResponseCallbackRedis = new Callback<ShortStoryDetailResult>() {
+        @Override
+        public void onResponse(Call<ShortStoryDetailResult> call, retrofit2.Response<ShortStoryDetailResult> response) {
+            removeProgressDialog();
+            if (response == null || response.body() == null) {
+                return;
+            }
+            try {
+                ShortStoryDetailResult responseData = response.body();
+                Intent intent = new Intent(getActivity(), AddShortStoryActivity.class);
+                intent.putExtra("from", "publishedList");
+                intent.putExtra("title", responseData.getTitle());
+                intent.putExtra("body", responseData.getBody());
+                intent.putExtra("articleId", responseData.getId());
+                intent.putExtra("tag", new Gson().toJson(responseData.getTags()));
+                intent.putExtra("cities", new Gson().toJson(responseData.getCities()));
+                startActivity(intent);
+            } catch (Exception e) {
+                removeProgressDialog();
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+
+        }
+
+        @Override
+        public void onFailure(Call<ShortStoryDetailResult> call, Throwable t) {
+            removeProgressDialog();
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
 }

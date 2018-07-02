@@ -939,7 +939,7 @@ public class FilteredTopicsArticleListingActivity extends BaseActivity implement
                     responseData.getData().get(i).getChild().get(j).setChild(tempList);
                 }
 
-                if ("1".equals(responseData.getData().get(i).getShowInMenu())) {
+                if ("1".equals(responseData.getData().get(i).getShowInMenu()) && !AppConstants.SHORT_STORY_CATEGORYID.equals(responseData.getData().get(i).getId())) {
                     for (int k = 0; k < responseData.getData().get(i).getChild().size(); k++) {
                         if ("1".equals(responseData.getData().get(i).getChild().get(k).getShowInMenu())) {
                             //Adding All subcategories

@@ -151,7 +151,7 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
 
                 @Override
                 public void onPageScrollStateChanged(int state) {
-                    BaseApplication.setFirstSwipe(false);
+
                 }
             });
         }

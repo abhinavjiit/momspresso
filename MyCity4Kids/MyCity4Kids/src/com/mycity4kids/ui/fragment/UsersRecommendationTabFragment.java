@@ -20,6 +20,7 @@ import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
+import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.ArticleListingResponse;
@@ -27,6 +28,7 @@ import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BloggerDashboardAPI;
 import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
+import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 import com.mycity4kids.ui.activity.UserPublishedAndDraftsActivity;
 import com.mycity4kids.ui.adapter.UsersRecommendationsRecycleAdapter;
 import com.mycity4kids.utils.AppUtils;
@@ -142,44 +144,93 @@ public class UsersRecommendationTabFragment extends BaseFragment implements User
     public void onClick(View view, int position) {
         switch (view.getId()) {
             case R.id.shareImageView:
-                Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
-                shareIntent.setType("text/plain");
-                String shareUrl = AppUtils.getShareUrl(recommendationsList.get(position).getUserType(),
-                        recommendationsList.get(position).getBlogPageSlug(), recommendationsList.get(position).getTitleSlug());
-                String shareMessage;
-                if (StringUtils.isNullOrEmpty(shareUrl)) {
-                    shareMessage = getString(R.string.check_out_blog) + "\"" +
-                            recommendationsList.get(position).getTitle() + "\" by " + recommendationsList.get(position).getUserName() + ".";
+                if ("1".equals(recommendationsList.get(position).getContentType())) {
+                    Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+                    shareIntent.setType("text/plain");
+
+                    String shareUrl = AppUtils.getShortStoryShareUrl(recommendationsList.get(position).getUserType(),
+                            recommendationsList.get(position).getBlogPageSlug(), recommendationsList.get(position).getTitleSlug());
+                    String shareMessage;
+                    if (StringUtils.isNullOrEmpty(shareUrl)) {
+                        shareMessage = getString(R.string.check_out_short_story) + "\"" +
+                                recommendationsList.get(position).getTitle() + "\" by " + recommendationsList.get(position).getUserName() + ".";
+                    } else {
+                        shareMessage = getString(R.string.check_out_short_story) + "\"" +
+                                recommendationsList.get(position).getTitle() + "\" by " + recommendationsList.get(position).getUserName() + ".\nRead Here: " + shareUrl;
+                    }
+                    shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
+                    startActivity(Intent.createChooser(shareIntent, "Momspresso"));
+//                    if (authorId.equals(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId())) {
+//                        Utils.pushShareArticleEvent(getActivity(), "PrivateLikedScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", recommendationsList.get(position).getId(),
+//                                recommendationsList.get(position).getUserId() + "~" + recommendationsList.get(position).getUserName(), "-");
+//                    } else {
+//                        Utils.pushShareArticleEvent(getActivity(), "PublicLikedScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", recommendationsList.get(position).getId(),
+//                                recommendationsList.get(position).getUserId() + "~" + recommendationsList.get(position).getUserName(), "-");
+//                    }
                 } else {
-                    shareMessage = getString(R.string.check_out_blog) + "\"" +
-                            recommendationsList.get(position).getTitle() + "\" by " + recommendationsList.get(position).getUserName() + ".\nRead Here: " + shareUrl;
-                }
-                shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
-                startActivity(Intent.createChooser(shareIntent, "Momspresso"));
-                if (authorId.equals(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId())) {
-                    Utils.pushShareArticleEvent(getActivity(), "PrivateLikedScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", recommendationsList.get(position).getId(),
-                            recommendationsList.get(position).getUserId() + "~" + recommendationsList.get(position).getUserName(), "-");
-                } else {
-                    Utils.pushShareArticleEvent(getActivity(), "PublicLikedScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", recommendationsList.get(position).getId(),
-                            recommendationsList.get(position).getUserId() + "~" + recommendationsList.get(position).getUserName(), "-");
+                    Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+                    shareIntent.setType("text/plain");
+                    String shareUrl = AppUtils.getShareUrl(recommendationsList.get(position).getUserType(),
+                            recommendationsList.get(position).getBlogPageSlug(), recommendationsList.get(position).getTitleSlug());
+                    String shareMessage;
+                    if (StringUtils.isNullOrEmpty(shareUrl)) {
+                        shareMessage = getString(R.string.check_out_blog) + "\"" +
+                                recommendationsList.get(position).getTitle() + "\" by " + recommendationsList.get(position).getUserName() + ".";
+                    } else {
+                        shareMessage = getString(R.string.check_out_blog) + "\"" +
+                                recommendationsList.get(position).getTitle() + "\" by " + recommendationsList.get(position).getUserName() + ".\nRead Here: " + shareUrl;
+                    }
+                    shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareMessage);
+                    startActivity(Intent.createChooser(shareIntent, "Momspresso"));
+                    if (authorId.equals(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId())) {
+                        Utils.pushShareArticleEvent(getActivity(), "PrivateLikedScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", recommendationsList.get(position).getId(),
+                                recommendationsList.get(position).getUserId() + "~" + recommendationsList.get(position).getUserName(), "-");
+                    } else {
+                        Utils.pushShareArticleEvent(getActivity(), "PublicLikedScreen", SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId() + "", recommendationsList.get(position).getId(),
+                                recommendationsList.get(position).getUserId() + "~" + recommendationsList.get(position).getUserName(), "-");
+                    }
                 }
                 break;
             case R.id.rootView:
-                Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
-                intent.putExtra(Constants.ARTICLE_ID, recommendationsList.get(position).getId());
-                intent.putExtra(Constants.AUTHOR_ID, recommendationsList.get(position).getUserId());
-                intent.putExtra(Constants.BLOG_SLUG, recommendationsList.get(position).getBlogPageSlug());
-                intent.putExtra(Constants.TITLE_SLUG, recommendationsList.get(position).getTitleSlug());
-                if (authorId.equals(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId())) {
-                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "UserPrivateLikes");
-                    intent.putExtra(Constants.FROM_SCREEN, "PrivateProfileScreen");
+                if ("1".equals(recommendationsList.get(position).getContentType())) {
+                    Intent intent = new Intent(getActivity(), ShortStoryContainerActivity.class);
+                    intent.putExtra(Constants.ARTICLE_ID, recommendationsList.get(position).getId());
+                    intent.putExtra(Constants.AUTHOR_ID, recommendationsList.get(position).getUserId());
+                    intent.putExtra(Constants.BLOG_SLUG, recommendationsList.get(position).getBlogPageSlug());
+                    intent.putExtra(Constants.TITLE_SLUG, recommendationsList.get(position).getTitleSlug());
+                    if (authorId.equals(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId())) {
+                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "PrivatePublishedArticles");
+                        intent.putExtra(Constants.FROM_SCREEN, "PrivateUserArticlesScreen");
+                    } else {
+                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "PublicPublishedArticles");
+                        intent.putExtra(Constants.FROM_SCREEN, "PublicUserArticlesScreen");
+                    }
+                    ArrayList<ArticleListingResult> filteredResult = AppUtils.getFilteredContentList(recommendationsList, AppConstants.CONTENT_TYPE_SHORT_STORY);
+                    intent.putParcelableArrayListExtra("pagerListData", filteredResult);
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(position, recommendationsList, AppConstants.CONTENT_TYPE_SHORT_STORY));
+                    intent.putExtra(Constants.AUTHOR, recommendationsList.get(position).getUserId() + "~" + recommendationsList.get(position).getUserName());
+                    startActivity(intent);
                 } else {
-                    intent.putExtra(Constants.ARTICLE_OPENED_FROM, "UserPublicLikes");
-                    intent.putExtra(Constants.FROM_SCREEN, "PublicProfileScreen");
+                    Intent intent = new Intent(getActivity(), ArticleDetailsContainerActivity.class);
+                    intent.putExtra(Constants.ARTICLE_ID, recommendationsList.get(position).getId());
+                    intent.putExtra(Constants.AUTHOR_ID, recommendationsList.get(position).getUserId());
+                    intent.putExtra(Constants.BLOG_SLUG, recommendationsList.get(position).getBlogPageSlug());
+                    intent.putExtra(Constants.TITLE_SLUG, recommendationsList.get(position).getTitleSlug());
+                    intent.putExtra(Constants.AUTHOR, recommendationsList.get(position).getUserId() + "~" + recommendationsList.get(position).getUserName());
+                    if (authorId.equals(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId())) {
+                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "UserPrivateLikes");
+                        intent.putExtra(Constants.FROM_SCREEN, "PrivateProfileScreen");
+                    } else {
+                        intent.putExtra(Constants.ARTICLE_OPENED_FROM, "UserPublicLikes");
+                        intent.putExtra(Constants.FROM_SCREEN, "PublicProfileScreen");
+                    }
+                    ArrayList<ArticleListingResult> filteredResult = AppUtils.getFilteredContentList(recommendationsList, AppConstants.CONTENT_TYPE_ARTICLE);
+                    intent.putParcelableArrayListExtra("pagerListData", filteredResult);
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(position, recommendationsList, AppConstants.CONTENT_TYPE_ARTICLE));
+
+                    startActivity(intent);
                 }
-                intent.putExtra(Constants.ARTICLE_INDEX, "" + position);
-                intent.putExtra(Constants.AUTHOR, recommendationsList.get(position).getUserId() + "~" + recommendationsList.get(position).getUserName());
-                startActivity(intent);
+
         }
     }
 }

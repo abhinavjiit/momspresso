@@ -344,6 +344,7 @@
     <string name="myprofile.following_label">फॉलोविंग </string>
     <string name="myprofile.followers_label">फॉलोवर्स </string>
     <string name="myprofile.section.articles_label">लेख</string>
+    <string name="myprofile.section.short_story_label">#100 शब्दांची गोष्ट</string>
     <string name="myprofile.section.videos_label">मॉम वलॉग्स</string>
     <string name="myprofile.section.activity_label">गोष्टी </string>
     <string name="myprofile.section.myranking_label">माझा क्रमांक </string>
@@ -504,8 +505,10 @@
     <string name="moderation_or_share.later">कदाचित नंतर </string>
     <string name="moderation_or_share.okay">ओके</string>
     <string name="moderation_or_share.gplus_fail">गूगल प्लेस सोबत शेअर करण्यास असमर्थ </string>
-    <string name="moderation_or_share.whatsapp_fail">व्हाट्स अँप वर शेअर करण्यास असमर्थ </string>
+    <string name="moderation_or_share.whatsapp_fail">व्हाट्स अँप वर शेअर करण्यास असमर्थ</string>
+    <string name="moderation_or_share.insta_fail">इंस्टाग्राम वर शेअर करण्यास असमर्थ</string>
     <string name="moderation_or_share.whatsapp_not_installed">व्हाट्स अँप इंस्टाल केलेले नाही </string>
+    <string name="moderation_or_share.insta_not_installed">इंस्टाग्राम इंस्टाल केलेले नाही</string>
     <string name="moderation_or_share.twitter_fail">ट्विटर वर शेअर करण्यास असमर्थ </string>
 
     <string name="complete_blogger_profile.complete_label">तुमची ब्लॉगर्स प्रोफाइल पूर्ण करा </string>
@@ -568,7 +571,7 @@
     <string name="article_listing.toolbar.title_popular">लोकप्रिय </string>
     <string name="article_listing.toolbar.title_trending">ट्रेंडिंग</string>
     <string name="article_listing.toolbar.title_for_you">तुमच्या साठी </string>
-    <string name="article_listing.toolbar.title_todays_best">TODAY\'S BEST</string>
+    <string name="article_listing.toolbar.title_todays_best">आजचे बेस्ट</string>
     <string name="article_listing.toolbar.title_editor_picks">संपादकांची निवड </string>
 
     <string name="sort.recent">नवीन</string>
@@ -585,6 +588,7 @@
 
     <string name="no_articles_found">लेख उपलब्ध नाही </string>
     <string name="check_out_blog">मॉम्स प्रेसो हा मनोरंजक लेख वाचून पहा  \n</string>
+    <string name="check_out_short_story">Momspresso\n\nCheck out this interesting short story\n</string>
     <string name="contributors">योगदान कर्ते</string>
     <string name="contributor_in">योगदान कर्ते ह्या मध्ये </string>
     <string name="recent_article">संबंधित लेख </string>
@@ -610,7 +614,8 @@
 
     <string name="article_listing.type.trending_label">ट्रेंडिंग</string>
     <string name="article_listing.type.editor_label">संपादकांची निवड</string>
-    <string name="article_listing.type.todays_best_label">TODAY\'S BEST</string>
+    <string name="article_listing.type.todays_best_label">आजचे बेस्ट</string>
+    <string name="article_listing.type.short_story_label">100WORDSTORY</string>
     <string name="article_listing.type.for_you_label">ुमच्या साठी</string>
     <string name="article_listing.type.languages_label">भाषा </string>
     <string name="article_listing.type.videos_label">व्हिडीओस</string>
@@ -631,7 +636,7 @@
     <string name="language_label.hindi">हिंदी</string>
     <string name="language_label.marathi">मराठी</string>
     <string name="language_label.bengali">বাংলা</string>
-    <string name="language_label.tamil">தமிழ</string>
+    <string name="language_label.tamil">தமிழ்</string>
     <string name="language_label.telegu">తెలుగ</string>
 
     <string name="choose_pref_lang">तुमची प्राधान्य भाषा निवडा</string>
@@ -654,5 +659,53 @@
     <string name="author_type.user">USER</string>
 
     <string name="no_article.be_first">ह्या श्रेणी मध्ये लेख लिहिणारे पहिले लेखक  व्हा</string>
+
     <string name="groups.join_label">Lorem Ipsum</string>
+    <string name="groups.sections.about">ABOUT</string>
+    <string name="groups.sections.discussions">DISCUSSION</string>
+    <string name="groups.sections.blogs">BLOGS</string>
+    <string name="groups.sections.photos">PHOTOS</string>
+    <string name="groups.sections.videos">VIDEOS</string>
+    <string name="groups.sections.top_posts">TOP POSTS</string>
+    <string name="groups.sections.polls">POLLS</string>
+    <string name="groups.created">Created</string>
+    <string name="groups.anyone_join">Anyone can join</string>
+    <string name="groups.closed_gp">Closed group</string>
+    <string name="groups.invitation_only_gp">Invitation only group</string>
+    <string name="groups.join_group">JOIN GROUP</string>
+    <string name="groups.choose_media">Choose media to upload</string>
+    <string name="groups.search_in">Search in</string>
+    <string name="groups.post_comment">Comments</string>
+    <string name="groups.post_helpful">Helpful</string>
+    <string name="groups.post_nothelpful">Not Helpful</string>
+    <string name="groups.post_label">POST</string>
+
+    <string name="no_story.be_first">Be the first one to write stories in this category!</string>
+
+    <string name="random_text">Your trekking to Stok Kangri begins with the arrival to Leh. You can easily reach Leh once you come to Delhi. You can reach Leh from Delhi either through a flight or through the road. Taking the flight is a better option as you would be saving a lot on time and energy. Taking the road may cost you a lot of time as you have to first go to either Srinagar or Manali to start for Leh. You can spend a day in Leh to acclimatize to the weather. Trekking in the area of Leh is among the best options among Trekking in India</string>
+    <string name="random_100_words">Trekking to Stok Kangri begins with the arrival to Leh. You can easily reach Leh once you come to Delhi. You can reach Leh from Delhi either through a flight Taking the flight is a better option as you would be saving a lot on time and energy. Taking the road may cost you a lot of time as you have to first go to either Srinagar or Manali to start for Leh. You can spend a day in Leh to acclimatize to the weather. Trekking in the area of Leh is among the best options among Trekking in India</string>
+    <string name="short_s.add_story">100 शब्दात गोष्ट लिहा</string>
+    <string name="short_s.add_comment">टिप्पणी लिहा</string>
+    <string name="short_s.add.title_hint">Write an exciting title that suits your story. Character limit is 60.</string>
+    <string name="short_s.add.body_hint">Write your amazing story or poem in 100 words or less.</string>
+    <string name="short_s.publish_message">अभिनंदन. तुमचा ब्लॉग प्रकाशित झाला आहे. आता तुम्ही तो मित्र आणि परिवारामध्ये शेअर करू शकता</string>
+    <string name="short_s.max_word">तुमचे कथा कमाल 100 शब्दापर्यंत असावी.</string>
+    <string name="short_s.choose_genre">तुमच्या कथेची शैली निवडा</string>
+    <string name="short_s.choose_one_genre">तुमच्या कथेची शैली निवडा जी तुमच्या कथेचे खूप चांगल्या प्रकारे विश्लेषण करू शकेल. तुम्ही कोणतीही १ शैली निवडा.</string>
+    <string name="short_s.no_drafts">आतापर्यंत कोणतीही छोटी कथा तयार केली गेली नाहीये.</string>
+    <string name="short_s.no_published">आतापर्यंत कोणतीही छोटी कथा प्रकाशित केली गेली नाहीये.</string>
+    <string name="short_s.view_replies">View replies</string>
+    <string name="short_s.choose_topic">Please choose at least one topic to continue</string>
+    <string name="short_s.add_comment_fail">Failed to add comment. Please try again</string>
+    <string name="short_s.edit_comment_fail">Failed to edit comment. Please try again</string>
+    <string name="short_s.delete_comment_fail">Failed to delete comment. Please try again</string>
+    <string name="short_s.add_reply_fail">Failed to add reply. Please try again</string>
+    <string name="short_s.edit_reply_fail">Failed to edit reply. Please try again</string>
+    <string name="short_s.delete_reply_fail">Failed to delete reply. Please try again</string>
+
+    <string name="report.reason">हे उपयोगी नाही कारण</string>
+    <string name="report.abuse">हे अपमानास्पद आहे.</string>
+    <string name="report.spam">हे धार्मिक भावनांना नुकसान पोहचवत आहे.</string>
+    <string name="report.not_relevant">दुसरं अन्य</string>
+    <string name="reply">उत्तर द्या</string>
 </resources>

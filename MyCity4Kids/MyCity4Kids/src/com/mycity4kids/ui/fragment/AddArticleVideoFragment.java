@@ -24,6 +24,7 @@ import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.response.BlogPageResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.BlogPageAPI;
+import com.mycity4kids.ui.activity.AddShortStoryActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 
 import retrofit2.Call;
@@ -36,8 +37,8 @@ import retrofit2.Retrofit;
 public class AddArticleVideoFragment extends BaseFragment implements View.OnClickListener {
 
     private ImageView setUpBlogImageView, writeArticleImageView, uploadVideoImageView, suggestedTopicImageView;
-    private TextView writeArticleTextView, uploadVideoTextView, becomeBloggerTextView, suggestedTopicTextView;
-    private LinearLayout blogSetUpLL, writeArticleLL, addVideoLL, suggestedTopicsLL;
+    private TextView writeArticleTextView, uploadVideoTextView, becomeBloggerTextView, suggestedTopicTextView, addShortStoryTextView;
+    private LinearLayout blogSetUpLL, writeArticleLL, addVideoLL, suggestedTopicsLL, shortStoryLL;
 
     @Nullable
     @Override
@@ -57,11 +58,13 @@ public class AddArticleVideoFragment extends BaseFragment implements View.OnClic
         uploadVideoTextView = (TextView) view.findViewById(R.id.uploadVideoTextView);
         becomeBloggerTextView = (TextView) view.findViewById(R.id.becomeBloggerTextView);
         suggestedTopicTextView = (TextView) view.findViewById(R.id.suggestedTopicTextView);
+        shortStoryLL = (LinearLayout) view.findViewById(R.id.shortStoryLL);
 
         suggestedTopicsLL.setOnClickListener(this);
         blogSetUpLL.setOnClickListener(this);
         writeArticleLL.setOnClickListener(this);
         addVideoLL.setOnClickListener(this);
+        shortStoryLL.setOnClickListener(this);
 
         if ("0".equals(SharedPrefUtils.getUserDetailModel(getActivity()).getUserType()) && !SharedPrefUtils.getBecomeBloggerFlag(getActivity())) {
             writeArticleLL.setVisibility(View.INVISIBLE);
@@ -163,6 +166,11 @@ public class AddArticleVideoFragment extends BaseFragment implements View.OnClic
             case R.id.suggestedTopicsLL: {
                 SuggestedTopicsFragment suggestedTopicsFragment = new SuggestedTopicsFragment();
                 ((DashboardActivity) getActivity()).addFragment(suggestedTopicsFragment, null, true);
+            }
+            break;
+            case R.id.shortStoryLL: {
+                Intent intent = new Intent(getActivity(), AddShortStoryActivity.class);
+                startActivity(intent);
             }
             break;
         }

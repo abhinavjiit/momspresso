@@ -266,7 +266,7 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
                     }
                 }
 
-                if ("1".equals(responseData.getData().get(i).getPublicVisibility())) {
+                if ("1".equals(responseData.getData().get(i).getPublicVisibility()) && !AppConstants.SHORT_STORY_CATEGORYID.equals(responseData.getData().get(i).getId())) {
                     responseData.getData().get(i).setChild(secondLevelLeafNodeList);
                     if (!secondLevelLeafNodeList.isEmpty()) {
                         topicList.add(responseData.getData().get(i));

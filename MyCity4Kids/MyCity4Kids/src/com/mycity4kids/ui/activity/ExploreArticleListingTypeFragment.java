@@ -53,7 +53,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
 
     private final static String MEET_CONTRIBUTOR_ID = "meetContributorId";
 
-    private String[] sectionsKey = {"TRENDING", "TODAY'S BEST", "EDITOR'S PICK", "FOR YOU", "VIDEOS", "RECENT"};
+    private String[] sectionsKey = {"TRENDING", "TODAY'S BEST", "EDITOR'S PICK", "100WORDSTORY", "FOR YOU", "VIDEOS", "RECENT"};
 
     private ArrayList<ExploreTopicsModel> mainTopicsList;
     private String fragType = "";
@@ -79,7 +79,8 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
         }
         String[] sections = {
                 getString(R.string.article_listing_type_trending_label), getString(R.string.article_listing_type_todays_best_label), getString(R.string.article_listing_type_editor_label),
-                getString(R.string.article_listing_type_for_you_label), getString(R.string.article_listing_type_videos_label), getString(R.string.article_listing_type_recent_label)
+                getString(R.string.article_listing_type_short_story_label), getString(R.string.article_listing_type_for_you_label),
+                getString(R.string.article_listing_type_videos_label), getString(R.string.article_listing_type_recent_label)
         };
 
         dynamoUserId = SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId();
@@ -97,12 +98,12 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
             searchTopicsEditText.setVisibility(View.VISIBLE);
             exploreCategoriesLabel.setText(getString(R.string.search_topics_title));
             try {
-                FileInputStream fileInputStream = getActivity().openFileInput(AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
+                FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
                 String fileContent = AppUtils.convertStreamToString(fileInputStream);
                 Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
                 ExploreTopicsModel[] res = gson.fromJson(fileContent, ExploreTopicsModel[].class);
                 createTopicsDataForFollow(res);
-                adapter = new ParentTopicsGridAdapter(getActivity());
+                adapter = new ParentTopicsGridAdapter();
                 gridview.setAdapter(adapter);
                 adapter.setDatalist(mainTopicsList);
 
@@ -127,7 +128,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                 Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
                 ExploreTopicsResponse res = gson.fromJson(fileContent, ExploreTopicsResponse.class);
                 createTopicsData(res);
-                adapter = new ParentTopicsGridAdapter(getActivity());
+                adapter = new ParentTopicsGridAdapter();
                 gridview.setAdapter(adapter);
                 adapter.setDatalist(mainTopicsList);
                 guideTopicTextView1.setText(mainTopicsList.get(0).getDisplay_name().toUpperCase());
@@ -142,7 +143,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                 caller.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                        boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(getActivity(), AppConstants.CATEGORIES_JSON_FILE, response.body());
+                        boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE, response.body());
 
                         try {
                             FileInputStream fileInputStream = getActivity().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
@@ -150,7 +151,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                             Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
                             ExploreTopicsResponse res = gson.fromJson(fileContent, ExploreTopicsResponse.class);
                             createTopicsData(res);
-                            adapter = new ParentTopicsGridAdapter(getActivity());
+                            adapter = new ParentTopicsGridAdapter();
                             gridview.setAdapter(adapter);
                             adapter.setDatalist(mainTopicsList);
                             guideTopicTextView1.setText(mainTopicsList.get(0).getDisplay_name().toUpperCase());
@@ -248,7 +249,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                             Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
                             ExploreTopicsModel[] res = gson.fromJson(fileContent, ExploreTopicsModel[].class);
                             createTopicsDataForFollow(res);
-                            adapter = new ParentTopicsGridAdapter(getActivity());
+                            adapter = new ParentTopicsGridAdapter();
                             gridview.setAdapter(adapter);
                             adapter.setDatalist(mainTopicsList);
 
@@ -311,8 +312,17 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                     intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_EDITOR_PICKS);
                 } else if (Constants.TAB_TODAYS_BEST.equalsIgnoreCase(tab.getTag().toString())) {
                     Utils.pushOpenScreenEvent(getActivity(), "TodaysBestScreen", dynamoUserId + "");
-                    Utils.pushViewQuickLinkArticlesEvent(getActivity(), "TodaysBestScreen", dynamoUserId + "", "TodaysBestScreen");
+                    Utils.pushViewQuickLinkArticlesEvent(getActivity(), "TopicScreen", dynamoUserId + "", "TodaysBestScreen");
                     intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_TODAYS_BEST);
+                } else if (Constants.TAB_100WORD_STORY.equalsIgnoreCase(tab.getTag().toString())) {
+                    Utils.pushOpenScreenEvent(getActivity(), "ShortStoryListingScreen", dynamoUserId + "");
+                    Utils.pushViewQuickLinkArticlesEvent(getActivity(), "TopicScreen", dynamoUserId + "", "ShortStoryListingScreen");
+                    TopicsShortStoriesContainerFragment fragment1 = new TopicsShortStoriesContainerFragment();
+                    Bundle mBundle1 = new Bundle();
+                    mBundle1.putString("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
+                    fragment1.setArguments(mBundle1);
+                    ((DashboardActivity) getActivity()).addFragment(fragment1, mBundle1, true);
+                    return;
                 } else if (Constants.TAB_RECENT.equalsIgnoreCase(tab.getTag().toString())) {
                     Utils.pushOpenScreenEvent(getActivity(), "RecentScreen", dynamoUserId + "");
                     Utils.pushViewQuickLinkArticlesEvent(getActivity(), "TopicScreen", dynamoUserId + "", "RecentScreen");
@@ -360,6 +370,13 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                     intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_EDITOR_PICKS);
                 } else if (Constants.TAB_TODAYS_BEST.equalsIgnoreCase(tab.getTag().toString())) {
                     intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_TODAYS_BEST);
+                } else if (Constants.TAB_100WORD_STORY.equalsIgnoreCase(tab.getTag().toString())) {
+                    TopicsShortStoriesContainerFragment fragment1 = new TopicsShortStoriesContainerFragment();
+                    Bundle mBundle1 = new Bundle();
+                    mBundle1.putString("parentTopicId", AppConstants.SHORT_STORY_CATEGORYID);
+                    fragment1.setArguments(mBundle1);
+                    ((DashboardActivity) getActivity()).addFragment(fragment1, mBundle1, true);
+                    return;
                 } else if (Constants.TAB_RECENT.equalsIgnoreCase(tab.getTag().toString())) {
                     intent1.putExtra(Constants.SORT_TYPE, Constants.KEY_RECENT);
                 } else if (Constants.TAB_IN_YOUR_CITY.equalsIgnoreCase(tab.getTag().toString())) {
@@ -457,7 +474,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
 
             //Prepare structure for multi-expandable listview.
             for (int i = 0; i < responseData.getData().size(); i++) {
-                if ("1".equals(responseData.getData().get(i).getShowInMenu())) {
+                if ("1".equals(responseData.getData().get(i).getShowInMenu()) && !AppConstants.SHORT_STORY_CATEGORYID.equals(responseData.getData().get(i).getId())) {
                     mainTopicsList.add(responseData.getData().get(i));
                 }
             }
