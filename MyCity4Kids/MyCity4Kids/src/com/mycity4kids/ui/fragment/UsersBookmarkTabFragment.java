@@ -292,7 +292,7 @@ public class UsersBookmarkTabFragment extends BaseFragment implements UsersBookm
                     intent.putExtra(Constants.FROM_SCREEN, "PrivateActivityScreen");
                     ArrayList<ArticleListingResult> filteredResult = AppUtils.getFilteredContentList(bookmarksList, AppConstants.CONTENT_TYPE_SHORT_STORY);
                     intent.putParcelableArrayListExtra("pagerListData", filteredResult);
-                    intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(bookmarksList.get(position).getId(), filteredResult));
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(position, bookmarksList, AppConstants.CONTENT_TYPE_SHORT_STORY));
                     intent.putExtra(Constants.AUTHOR, bookmarksList.get(position).getUserId() + "~" + bookmarksList.get(position).getUserName());
                     startActivity(intent);
                 } else {
@@ -305,7 +305,7 @@ public class UsersBookmarkTabFragment extends BaseFragment implements UsersBookm
                     intent.putExtra(Constants.FROM_SCREEN, "PrivateActivityScreen");
                     ArrayList<ArticleListingResult> filteredResult = AppUtils.getFilteredContentList(bookmarksList, AppConstants.CONTENT_TYPE_ARTICLE);
                     intent.putParcelableArrayListExtra("pagerListData", filteredResult);
-                    intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(bookmarksList.get(position).getId(), filteredResult));
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(position, bookmarksList, AppConstants.CONTENT_TYPE_ARTICLE));
                     intent.putExtra(Constants.AUTHOR, bookmarksList.get(position).getUserId() + "~" + bookmarksList.get(position).getUserName());
                     startActivity(intent);
                 }

@@ -506,7 +506,9 @@
     <string name="moderation_or_share.okay">ঠিক আছে</string>
     <string name="moderation_or_share.gplus_fail">Unable to share with google plus.</string>
     <string name="moderation_or_share.whatsapp_fail">Unable to share with whatsapp.</string>
+    <string name="moderation_or_share.insta_fail">Unable to share with instagram.</string>
     <string name="moderation_or_share.whatsapp_not_installed">Whatsapp has not been installed.</string>
+    <string name="moderation_or_share.insta_not_installed">Instagram has not been installed.</string>
     <string name="moderation_or_share.twitter_fail">Unable to share with twitter.</string>
 
     <string name="complete_blogger_profile.complete_label">COMPLETE YOUR BLOGGERS PROFILE</string>
@@ -634,7 +636,7 @@
     <string name="language_label.hindi">हिंदी</string>
     <string name="language_label.marathi">मराठी</string>
     <string name="language_label.bengali">বাংলা</string>
-    <string name="language_label.tamil">தமிழ</string>
+    <string name="language_label.tamil">தமிழ்</string>
     <string name="language_label.telegu">తెలుగ</string>
 
     <string name="choose_pref_lang">আপনার পছন্দের ভাষা নির্বাচন করুন</string>

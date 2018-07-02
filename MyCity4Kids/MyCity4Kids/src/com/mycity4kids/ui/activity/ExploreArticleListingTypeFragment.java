@@ -104,7 +104,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                 Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
                 ExploreTopicsModel[] res = gson.fromJson(fileContent, ExploreTopicsModel[].class);
                 createTopicsDataForFollow(res);
-                adapter = new ParentTopicsGridAdapter(getActivity());
+                adapter = new ParentTopicsGridAdapter();
                 gridview.setAdapter(adapter);
                 adapter.setDatalist(mainTopicsList);
 
@@ -129,7 +129,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                 Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
                 ExploreTopicsResponse res = gson.fromJson(fileContent, ExploreTopicsResponse.class);
                 createTopicsData(res);
-                adapter = new ParentTopicsGridAdapter(getActivity());
+                adapter = new ParentTopicsGridAdapter();
                 gridview.setAdapter(adapter);
                 adapter.setDatalist(mainTopicsList);
                 guideTopicTextView1.setText(mainTopicsList.get(0).getDisplay_name().toUpperCase());
@@ -152,7 +152,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                             Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
                             ExploreTopicsResponse res = gson.fromJson(fileContent, ExploreTopicsResponse.class);
                             createTopicsData(res);
-                            adapter = new ParentTopicsGridAdapter(getActivity());
+                            adapter = new ParentTopicsGridAdapter();
                             gridview.setAdapter(adapter);
                             adapter.setDatalist(mainTopicsList);
                             guideTopicTextView1.setText(mainTopicsList.get(0).getDisplay_name().toUpperCase());
@@ -250,7 +250,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                             Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
                             ExploreTopicsModel[] res = gson.fromJson(fileContent, ExploreTopicsModel[].class);
                             createTopicsDataForFollow(res);
-                            adapter = new ParentTopicsGridAdapter(getActivity());
+                            adapter = new ParentTopicsGridAdapter();
                             gridview.setAdapter(adapter);
                             adapter.setDatalist(mainTopicsList);
 

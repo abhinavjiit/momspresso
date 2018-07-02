@@ -207,7 +207,7 @@ public class UsersRecommendationTabFragment extends BaseFragment implements User
                     }
                     ArrayList<ArticleListingResult> filteredResult = AppUtils.getFilteredContentList(recommendationsList, AppConstants.CONTENT_TYPE_SHORT_STORY);
                     intent.putParcelableArrayListExtra("pagerListData", filteredResult);
-                    intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(recommendationsList.get(position).getId(), filteredResult));
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(position, recommendationsList, AppConstants.CONTENT_TYPE_SHORT_STORY));
                     intent.putExtra(Constants.AUTHOR, recommendationsList.get(position).getUserId() + "~" + recommendationsList.get(position).getUserName());
                     startActivity(intent);
                 } else {
@@ -216,6 +216,7 @@ public class UsersRecommendationTabFragment extends BaseFragment implements User
                     intent.putExtra(Constants.AUTHOR_ID, recommendationsList.get(position).getUserId());
                     intent.putExtra(Constants.BLOG_SLUG, recommendationsList.get(position).getBlogPageSlug());
                     intent.putExtra(Constants.TITLE_SLUG, recommendationsList.get(position).getTitleSlug());
+                    intent.putExtra(Constants.AUTHOR, recommendationsList.get(position).getUserId() + "~" + recommendationsList.get(position).getUserName());
                     if (authorId.equals(SharedPrefUtils.getUserDetailModel(getActivity()).getDynamoId())) {
                         intent.putExtra(Constants.ARTICLE_OPENED_FROM, "UserPrivateLikes");
                         intent.putExtra(Constants.FROM_SCREEN, "PrivateProfileScreen");
@@ -225,8 +226,8 @@ public class UsersRecommendationTabFragment extends BaseFragment implements User
                     }
                     ArrayList<ArticleListingResult> filteredResult = AppUtils.getFilteredContentList(recommendationsList, AppConstants.CONTENT_TYPE_ARTICLE);
                     intent.putParcelableArrayListExtra("pagerListData", filteredResult);
-                    intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(recommendationsList.get(position).getId(), filteredResult));
-                    intent.putExtra(Constants.AUTHOR, recommendationsList.get(position).getUserId() + "~" + recommendationsList.get(position).getUserName());
+                    intent.putExtra(Constants.ARTICLE_INDEX, "" + AppUtils.getFilteredPosition(position, recommendationsList, AppConstants.CONTENT_TYPE_ARTICLE));
+
                     startActivity(intent);
                 }
 

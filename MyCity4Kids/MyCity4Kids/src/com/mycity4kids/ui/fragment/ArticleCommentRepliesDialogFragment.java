@@ -39,7 +39,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
-public class ShortStoryCommentRepliesDialogFragment extends DialogFragment implements View.OnClickListener, ShortStoryCommentRepliesRecyclerAdapter.RecyclerViewClickListener,
+public class ArticleCommentRepliesDialogFragment extends DialogFragment implements View.OnClickListener, ShortStoryCommentRepliesRecyclerAdapter.RecyclerViewClickListener,
         CommentOptionsDialogFragment.ICommentOptionAction {
 
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
@@ -153,8 +153,8 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
             }
 
             try {
-                CommentListResponse shortStoryCommentListResponse = response.body();
-                showReplies(shortStoryCommentListResponse.getData());
+                CommentListResponse commentListResponse = response.body();
+                showReplies(commentListResponse.getData());
             } catch (Exception e) {
                 Crashlytics.logException(e);
                 Log.d("MC4kException", Log.getStackTraceString(e));
@@ -274,14 +274,14 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
             }
             break;
         }
-//        ((ShortStoryFragment) getTargetFragment()).openAddCommentReplyDialog(data);
+//        ((ArticleCommentsFragment) getTargetFragment()).openAddCommentReplyDialog(data);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.openAddReplyDialog: {
-                ((ShortStoryFragment) getTargetFragment()).openAddCommentReplyDialog(data);
+                ((ArticleCommentsFragment) getTargetFragment()).openAddCommentReplyDialog(data);
             }
             break;
         }
@@ -309,9 +309,9 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
     public void onResponseDelete(int position, String responseType) {
         // position-1 to adjust for the comment added on the top of reply list
         if ("REPLY".equals(responseType)) {
-            ((ShortStoryFragment) getTargetFragment()).deleteReply(commentPosition, position - 1);
+            ((ArticleCommentsFragment) getTargetFragment()).deleteReply(commentPosition, position - 1);
         } else {
-            ((ShortStoryFragment) getTargetFragment()).onResponseDelete(commentPosition, "COMMENT");
+            ((ArticleCommentsFragment) getTargetFragment()).onResponseDelete(commentPosition, "COMMENT");
         }
 
     }

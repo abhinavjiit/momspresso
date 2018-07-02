@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.kelltontech.utils.DateTimeUtils;
 import com.mycity4kids.R;
-import com.mycity4kids.models.response.ShortStoryCommentListData;
+import com.mycity4kids.models.response.CommentListData;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ public class ShortStoryCommentRepliesRecyclerAdapter extends RecyclerView.Adapte
     private static final int RESPONSE_TYPE_REPLY = 1;
     private final Context mContext;
     private final LayoutInflater mInflator;
-    private ArrayList<ShortStoryCommentListData> repliesList;
+    private ArrayList<CommentListData> repliesList;
     private RecyclerViewClickListener mListener;
 
     public ShortStoryCommentRepliesRecyclerAdapter(Context pContext, RecyclerViewClickListener listener) {
@@ -32,7 +32,7 @@ public class ShortStoryCommentRepliesRecyclerAdapter extends RecyclerView.Adapte
         mListener = listener;
     }
 
-    public void setData(ArrayList<ShortStoryCommentListData> repliesList) {
+    public void setData(ArrayList<CommentListData> repliesList) {
         this.repliesList = repliesList;
     }
 

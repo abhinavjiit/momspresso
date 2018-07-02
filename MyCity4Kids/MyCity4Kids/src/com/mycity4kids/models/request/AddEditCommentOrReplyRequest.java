@@ -4,11 +4,12 @@ package com.mycity4kids.models.request;
  * Created by hemant on 6/6/18.
  */
 
-public class AddEditShortStoryCommentOrReplyRequest {
+public class AddEditCommentOrReplyRequest {
 
     private String post_id;
     private String message;
     private String parent_id;
+    private String type;
 
     public String getPost_id() {
         return post_id;
@@ -34,4 +35,11 @@ public class AddEditShortStoryCommentOrReplyRequest {
         this.parent_id = parent_id;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 }

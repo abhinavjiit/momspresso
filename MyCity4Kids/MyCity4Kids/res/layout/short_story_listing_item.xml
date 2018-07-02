@@ -122,11 +122,26 @@
                 android:tint="@color/short_story.blue" />
 
             <android.support.v7.widget.AppCompatImageView
-                android:id="@+id/genericShareImageView"
+                android:id="@+id/instagramShareImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/whatsappShareImageView"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:paddingBottom="12dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="12dp"
+                android:src="@drawable/ic_insta"
+                android:tint="@color/short_story.blue" />
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/genericShareImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/instagramShareImageView"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
                 android:paddingBottom="12dp"

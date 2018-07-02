@@ -505,8 +505,10 @@
     <string name="moderation_or_share.later">कदाचित नंतर </string>
     <string name="moderation_or_share.okay">ओके</string>
     <string name="moderation_or_share.gplus_fail">गूगल प्लेस सोबत शेअर करण्यास असमर्थ </string>
-    <string name="moderation_or_share.whatsapp_fail">व्हाट्स अँप वर शेअर करण्यास असमर्थ </string>
+    <string name="moderation_or_share.whatsapp_fail">व्हाट्स अँप वर शेअर करण्यास असमर्थ</string>
+    <string name="moderation_or_share.insta_fail">इंस्टाग्राम वर शेअर करण्यास असमर्थ</string>
     <string name="moderation_or_share.whatsapp_not_installed">व्हाट्स अँप इंस्टाल केलेले नाही </string>
+    <string name="moderation_or_share.insta_not_installed">इंस्टाग्राम इंस्टाल केलेले नाही</string>
     <string name="moderation_or_share.twitter_fail">ट्विटर वर शेअर करण्यास असमर्थ </string>
 
     <string name="complete_blogger_profile.complete_label">तुमची ब्लॉगर्स प्रोफाइल पूर्ण करा </string>
@@ -634,7 +636,7 @@
     <string name="language_label.hindi">हिंदी</string>
     <string name="language_label.marathi">मराठी</string>
     <string name="language_label.bengali">বাংলা</string>
-    <string name="language_label.tamil">தமிழ</string>
+    <string name="language_label.tamil">தமிழ்</string>
     <string name="language_label.telegu">తెలుగ</string>
 
     <string name="choose_pref_lang">तुमची प्राधान्य भाषा निवडा</string>

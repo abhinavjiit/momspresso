@@ -506,7 +506,9 @@
     <string name="moderation_or_share.okay">ठीक है </string>
     <string name="moderation_or_share.gplus_fail">अपना ब्लॉगर प्रोफाइल अपडेट करें</string>
     <string name="moderation_or_share.whatsapp_fail">वाट्स एप्प के साथ शेयर करने में असमर्थ</string>
+    <string name="moderation_or_share.insta_fail">इंस्टाग्राम के साथ शेयर करने में असमर्थ</string>
     <string name="moderation_or_share.whatsapp_not_installed">वाट्स एप्प इंस्टाल  नहीं किया गया है</string>
+    <string name="moderation_or_share.insta_not_installed">इंस्टाग्राम इंस्टाल  नहीं किया गया है</string>
     <string name="moderation_or_share.twitter_fail">ट्विटर के साथ शेयर  करने में असमर्थ</string>
 
     <string name="complete_blogger_profile.complete_label">अपना ब्लॉगर प्रोफाइल अपडेट करें</string>
@@ -642,7 +644,7 @@
     <string name="language_label.hindi">हिंदी</string>
     <string name="language_label.marathi">मराठी</string>
     <string name="language_label.bengali">বাংলা</string>
-    <string name="language_label.tamil">தமிழ</string>
+    <string name="language_label.tamil">தமிழ்</string>
     <string name="language_label.telegu">తెలుగ</string>
 
     <string name="choose_pref_lang">अपनी पसंदीदा भाषा चुनें</string>

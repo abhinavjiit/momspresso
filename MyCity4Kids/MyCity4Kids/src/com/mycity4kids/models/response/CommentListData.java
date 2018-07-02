@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * Created by hemant on 6/6/18.
  */
 
-public class ShortStoryCommentListData implements Parcelable {
+public class CommentListData implements Parcelable {
     private String _id;
     private String userName;
     private String userId;
@@ -18,14 +18,14 @@ public class ShortStoryCommentListData implements Parcelable {
     private String parentCommentId;
     private String createdTime;
     private String message;
-    private ArrayList<ShortStoryCommentListData> replies;
+    private ArrayList<CommentListData> replies;
     private int replies_count;
 
-    public ShortStoryCommentListData() {
+    public CommentListData() {
 
     }
 
-    protected ShortStoryCommentListData(Parcel in) {
+    protected CommentListData(Parcel in) {
         _id = in.readString();
         userName = in.readString();
         userId = in.readString();
@@ -34,19 +34,19 @@ public class ShortStoryCommentListData implements Parcelable {
         parentCommentId = in.readString();
         createdTime = in.readString();
         message = in.readString();
-        replies = in.createTypedArrayList(ShortStoryCommentListData.CREATOR);
+        replies = in.createTypedArrayList(CommentListData.CREATOR);
         replies_count = in.readInt();
     }
 
-    public static final Creator<ShortStoryCommentListData> CREATOR = new Creator<ShortStoryCommentListData>() {
+    public static final Creator<CommentListData> CREATOR = new Creator<CommentListData>() {
         @Override
-        public ShortStoryCommentListData createFromParcel(Parcel in) {
-            return new ShortStoryCommentListData(in);
+        public CommentListData createFromParcel(Parcel in) {
+            return new CommentListData(in);
         }
 
         @Override
-        public ShortStoryCommentListData[] newArray(int size) {
-            return new ShortStoryCommentListData[size];
+        public CommentListData[] newArray(int size) {
+            return new CommentListData[size];
         }
     };
 
@@ -114,11 +114,11 @@ public class ShortStoryCommentListData implements Parcelable {
         this.message = message;
     }
 
-    public ArrayList<ShortStoryCommentListData> getReplies() {
+    public ArrayList<CommentListData> getReplies() {
         return replies;
     }
 
-    public void setReplies(ArrayList<ShortStoryCommentListData> replies) {
+    public void setReplies(ArrayList<CommentListData> replies) {
         this.replies = replies;
     }
 

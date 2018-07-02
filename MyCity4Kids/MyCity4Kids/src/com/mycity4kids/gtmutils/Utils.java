@@ -65,6 +65,13 @@ public class Utils {
                 GTMTags.TagListingType, action, GTMTags.TagIndex, type));
     }
 
+    public static void pushArticleCommentReplyChangeEvent(Context context, String screenName, String user, String articleId, String action, String type) {
+        Log.d("ShortStoryCommentEvent", "" + screenName + " --- ");
+        DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
+        dataLayer.push(DataLayer.mapOf(GTMTags.TagEvent, "ArticleCommentReplyChangeEvent", GTMTags.TagScreen, screenName, GTMTags.USER_ID, user, GTMTags.ArticleId, articleId,
+                GTMTags.TagListingType, action, GTMTags.TagIndex, type));
+    }
+
     public static void pushViewTopicArticlesEvent(Context context, String screenName, String user, String topic) {
         DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
         dataLayer.push(DataLayer.mapOf(GTMTags.TagEvent, "ViewTopicArticles", GTMTags.TagScreen, screenName, GTMTags.USER_ID, user, GTMTags.TagTopic, topic));

@@ -31,7 +31,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.ads.Ad;
 import com.facebook.ads.AdChoicesView;
@@ -57,7 +56,6 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.editor.EditorPostActivity;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.interfaces.OnWebServiceCompleteListener;
-import com.mycity4kids.models.ExploreTopicsResponse;
 import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.parentingdetails.CommentsData;
 import com.mycity4kids.models.parentingdetails.ImageData;
@@ -92,10 +90,8 @@ import com.mycity4kids.ui.activity.ArticleDetailsContainerActivity;
 import com.mycity4kids.ui.activity.BloggerProfileActivity;
 import com.mycity4kids.ui.activity.DashboardActivity;
 import com.mycity4kids.ui.activity.FilteredTopicsArticleListingActivity;
-import com.mycity4kids.ui.adapter.ParentTopicsGridAdapter;
 import com.mycity4kids.utils.AppUtils;
 import com.mycity4kids.utils.ArrayAdapterFactory;
-import com.mycity4kids.volley.HttpVolleyRequest;
 import com.mycity4kids.widget.CustomFontTextView;
 import com.mycity4kids.widget.RelatedArticlesView;
 import com.squareup.picasso.Picasso;
@@ -1113,6 +1109,28 @@ public class ArticleDetailsFragment extends BaseFragment implements View.OnClick
             } else {
                 _args.putString("fbCommentURL", shareUrl);
             }
+            _args.putString(Constants.ARTICLE_ID, articleId);
+            _args.putString(Constants.AUTHOR, authorId + "~" + author);
+            _args.putString(Constants.BLOG_SLUG, detailData.getBlogTitleSlug());
+            _args.putString(Constants.TITLE_SLUG, detailData.getTitleSlug());
+            _args.putString("userType", detailData.getUserType());
+            commentFrag.setArguments(_args);
+            ((ArticleDetailsContainerActivity) getActivity()).hideToolbarPerm();
+            ((ArticleDetailsContainerActivity) getActivity()).addFragment(commentFrag, null, true, "topToBottom");
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+            if (isAdded())
+                ((ArticleDetailsContainerActivity) getActivity()).showToast(getString(R.string.unable_to_load_comment));
+        }
+    }
+
+    private void openViewCommentDialogV2() {
+        try {
+            MyCityCommentsFragment commentFrag = new MyCityCommentsFragment();
+            commentFrag.setTargetFragment(this, 0);
+            Bundle _args = new Bundle();
+            _args.putString("commentURL", commentMainUrl);
             _args.putString(Constants.ARTICLE_ID, articleId);
             _args.putString(Constants.AUTHOR, authorId + "~" + author);
             commentFrag.setArguments(_args);

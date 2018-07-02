@@ -33,6 +33,9 @@ public class ViewAllCommentsFragment extends BaseFragment implements View.OnClic
     private String fbCommentURL;
     private String articleId;
     private String author;
+    private String blogSlug;
+    private String titleSlug;
+    private String userType;
 
     @Nullable
     @Override
@@ -49,6 +52,10 @@ public class ViewAllCommentsFragment extends BaseFragment implements View.OnClic
         mycityCommentURL = getArguments().getString("mycityCommentURL");
         articleId = getArguments().getString(Constants.ARTICLE_ID);
         author = getArguments().getString(Constants.AUTHOR);
+        blogSlug = getArguments().getString(Constants.BLOG_SLUG);
+        titleSlug = getArguments().getString(Constants.TITLE_SLUG);
+        userType = getArguments().getString("userType");
+
         addCommentTabs();
         return view;
     }
@@ -63,7 +70,7 @@ public class ViewAllCommentsFragment extends BaseFragment implements View.OnClic
 //        wrapTabIndicatorToTitle(tabLayout, 25, 25);
         final ViewPager viewPager = (ViewPager) view.findViewById(R.id.pager);
         final AllCommentsPagerAdapter adapter = new AllCommentsPagerAdapter
-                (getChildFragmentManager(), tabLayout.getTabCount(), mycityCommentURL, fbCommentURL, articleId, author, "article");
+                (getChildFragmentManager(), tabLayout.getTabCount(), mycityCommentURL, fbCommentURL, articleId, author, "article", titleSlug, blogSlug, userType);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

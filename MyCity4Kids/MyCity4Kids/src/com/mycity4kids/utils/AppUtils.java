@@ -8,6 +8,11 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Environment;
@@ -18,22 +23,33 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 import android.text.Html;
+import android.text.Layout;
 import android.text.Spanned;
+import android.text.StaticLayout;
+import android.text.TextPaint;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.kelltontech.ui.BaseFragment;
 import com.kelltontech.utils.StringUtils;
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
+import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.Topics;
 import com.mycity4kids.models.TopicsResponse;
 import com.mycity4kids.models.response.ArticleListingResult;
 import com.mycity4kids.models.response.LanguageConfigModel;
+import com.mycity4kids.preference.SharedPrefUtils;
+import com.mycity4kids.ui.fragment.TopicsShortStoriesTabFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,6 +59,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -65,6 +82,9 @@ import okhttp3.ResponseBody;
  * Created by hemant on 22/11/16.
  */
 public class AppUtils {
+
+    private static float singleContentHeight = 1100f;
+
     public static int randInt(int min, int max) {
 
         // NOTE: This will (intentionally) not run as written so that folks
@@ -537,14 +557,218 @@ public class AppUtils {
         return filteredList;
     }
 
-    public static int getFilteredPosition(String id, ArrayList<ArticleListingResult> filteredList) {
-        for (int i = 0; i < filteredList.size(); i++) {
-            if (id.equals(filteredList.get(i).getId())) {
-                return i;
+    public static int getFilteredPosition(int position, ArrayList<ArticleListingResult> filteredList, String contentType) {
+        int effectivePosition = 0;
+        for (int i = 0; i < position; i++) {
+            if (contentType.equals(filteredList.get(i).getContentType())) {
+                effectivePosition++;
             }
         }
-        return 0;
+        return effectivePosition;
     }
 
+    public static Bitmap drawMultilineTextToBitmap(String title, String body, String authorName) {
 
+        // prepare canvas
+        Resources resources = BaseApplication.getAppContext().getResources();
+        float scale = resources.getDisplayMetrics().density;
+        Bitmap bitmap = BitmapFactory.decodeResource(resources, R.drawable.ss_share_web);
+        Bitmap logoBitmap = BitmapFactory.decodeResource(resources, R.drawable.icon_notify);
+        android.graphics.Bitmap.Config bitmapConfig = bitmap.getConfig();
+        // set default bitmap config if none
+        if (bitmapConfig == null) {
+            bitmapConfig = android.graphics.Bitmap.Config.ARGB_8888;
+        }
+        // resource bitmaps are imutable,
+        // so we need to convert it to mutable one
+        bitmap = bitmap.copy(bitmapConfig, true);
+
+        Canvas canvas = new Canvas(bitmap);
+
+        Typeface georgiaTypeface = Typeface.createFromAsset(BaseApplication.getAppContext().getAssets(), "fonts/georgia.ttf");
+        TextPaint titlePaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
+        titlePaint.setTypeface(georgiaTypeface);
+        titlePaint.setColor(Color.rgb(61, 61, 61));
+        titlePaint.setTextSize((int) (10 * scale));
+
+        TextPaint bodyPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
+        bodyPaint.setTypeface(georgiaTypeface);
+        bodyPaint.setColor(Color.rgb(61, 61, 61));
+        bodyPaint.setTextSize((int) (9 * scale));
+
+        Typeface geoBoldTypeface = Typeface.createFromAsset(BaseApplication.getAppContext().getAssets(), "fonts/georgia_bold.ttf");
+        TextPaint authorPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
+        authorPaint.setTypeface(geoBoldTypeface);
+        authorPaint.setColor(Color.rgb(61, 61, 61));
+        authorPaint.setTextSize((int) (9 * scale));
+        // set text width to canvas width minus 16dp padding
+        int textWidth = canvas.getWidth() - (int) (16 * scale);
+
+        String author = "By - " + authorName;
+
+        // init StaticLayout for text
+        StaticLayout bodyLayout = new StaticLayout(
+                body, bodyPaint, textWidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+
+        StaticLayout titleLayout = new StaticLayout(
+                title, titlePaint, textWidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+
+        StaticLayout authorLayout = new StaticLayout(
+                author, authorPaint, textWidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
+
+        // get height of multiline text
+        int bodyHeight = bodyLayout.getHeight();
+        int titleHeight = titleLayout.getHeight();
+
+        float currentContentHeight = bodyHeight + (30 * scale) + titleHeight;
+
+        if (currentContentHeight > singleContentHeight) {
+            int totalBitmapReq = (int) (currentContentHeight / singleContentHeight) + 1;
+            bitmap = combineImages(bitmap, totalBitmapReq);
+            canvas = new Canvas(bitmap);
+        }
+
+        // get position of text's top left corner
+        float x = (bitmap.getWidth() - textWidth) / 2;
+        float y = (bitmap.getHeight() - bodyHeight) / 2;
+
+        // get position of text's top left corner
+        float ySeparator = y - 10 * scale;
+        float yAuthor = bitmap.getHeight() - y;
+
+        Paint p = new Paint();
+        p.setColor(ContextCompat.getColor(BaseApplication.getAppContext(), R.color.short_story_light_black_color));
+        p.setStrokeWidth(2);
+        // draw text to the Canvas center
+        canvas.save();
+        canvas.translate(x, y);
+        bodyLayout.draw(canvas);
+        canvas.restore();
+        canvas.save();
+        canvas.drawLine(x, ySeparator, 40 * scale, ySeparator, p);
+        canvas.translate(x, ySeparator - titleHeight - 10 * scale);
+        titleLayout.draw(canvas);
+        canvas.restore();
+        canvas.save();
+        canvas.translate(x, yAuthor + 10 * scale);
+        authorLayout.draw(canvas);
+        canvas.restore();
+        canvas.save();
+        canvas.drawBitmap(logoBitmap, bitmap.getWidth() - 30 * scale, bitmap.getHeight() - 30 * scale, null);
+        AppUtils.createDirIfNotExists("MyCity4Kids/videos");
+        try {
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 95, new FileOutputStream(Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg"));
+        } catch (FileNotFoundException e) {
+            Crashlytics.logException(e);
+            Log.d("MC4kException", Log.getStackTraceString(e));
+        }
+        return bitmap;
+    }
+
+    public static Bitmap combineImages(Bitmap c, int s) { // can add a 3rd parameter 'String loc' if you want to save the new image - left some code to do that at the bottom
+        Bitmap cs = null;
+
+        int width, height = 0;
+
+        height = s * c.getHeight();
+        width = c.getWidth();
+
+        cs = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+
+        Canvas comboImage = new Canvas(cs);
+
+        for (int i = 0; i < s; i++) {
+            comboImage.drawBitmap(c, 0f, i * c.getHeight(), null);
+        }
+//        comboImage.drawBitmap(c, 0f, 0f, null);
+//        comboImage.drawBitmap(c, 0f, c.getHeight(), null);
+
+        // this is an extra bit I added, just incase you want to save the new image somewhere and then return the location
+    /*String tmpImg = String.valueOf(System.currentTimeMillis()) + ".png";
+
+    OutputStream os = null;
+    try {
+      os = new FileOutputStream(loc + tmpImg);
+      cs.compress(CompressFormat.PNG, 100, os);
+    } catch(IOException e) {
+      Log.e("combineImages", "problem combining images", e);
+    }*/
+
+        return cs;
+    }
+
+    public static void shareStoryWithWhatsApp(Context mContext, String userType, String blogSlug, String titleSlug,
+                                              String screenName, String userDynamoId, String articleId, String authorId, String authorName) {
+        String shareUrl = AppUtils.getShortStoryShareUrl(userType, blogSlug, titleSlug);
+
+        if (StringUtils.isNullOrEmpty(shareUrl)) {
+            Toast.makeText(mContext, mContext.getString(R.string.moderation_or_share_whatsapp_fail), Toast.LENGTH_SHORT).show();
+        } else {
+            Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg");
+            Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
+            whatsappIntent.putExtra(Intent.EXTRA_STREAM, uri);
+            whatsappIntent.putExtra(Intent.EXTRA_TEXT, shareUrl);
+            whatsappIntent.setPackage("com.whatsapp");
+            whatsappIntent.setType("image/*");
+            try {
+                mContext.startActivity(Intent.createChooser(whatsappIntent, "Share image via:"));
+            } catch (android.content.ActivityNotFoundException ex) {
+                Toast.makeText(mContext, mContext.getString(R.string.moderation_or_share_whatsapp_not_installed), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Utils.pushShareArticleEvent(mContext, screenName, userDynamoId + "", articleId, authorId + "~" + authorName, "Whatsapp");
+        }
+    }
+
+    public static void shareStoryWithInstagram(Context mContext, String userType, String blogSlug, String titleSlug,
+                                               String screenName, String userDynamoId, String articleId, String authorId, String authorName) {
+        String shareUrl = AppUtils.getShortStoryShareUrl(userType, blogSlug, titleSlug);
+
+        if (StringUtils.isNullOrEmpty(shareUrl)) {
+            Toast.makeText(mContext, mContext.getString(R.string.moderation_or_share_insta_fail), Toast.LENGTH_SHORT).show();
+        } else {
+            Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg");
+            Intent instaIntent = new Intent(Intent.ACTION_SEND);
+            instaIntent.putExtra(Intent.EXTRA_STREAM, uri);
+            instaIntent.setType("image/*");
+            instaIntent.setPackage("com.instagram.android");
+            try {
+                mContext.startActivity(Intent.createChooser(instaIntent, "Share image via:"));
+            } catch (android.content.ActivityNotFoundException ex) {
+                Toast.makeText(mContext, mContext.getString(R.string.moderation_or_share_insta_not_installed), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Utils.pushShareArticleEvent(mContext, screenName, userDynamoId + "", articleId, authorId + "~" + authorName, "Instagram");
+        }
+    }
+
+    public static void shareStoryWithFB(BaseFragment topicsShortStoriesTabFragment, String userType, String blogSlug, String titleSlug,
+                                        String screenName, String userDynamoId, String articleId, String authorId, String authorName) {
+        String shareUrl = AppUtils.getShortStoryShareUrl(userType, blogSlug, titleSlug);
+
+        if (ShareDialog.canShow(ShareLinkContent.class)) {
+            ShareLinkContent content = new ShareLinkContent.Builder()
+                    .setContentUrl(Uri.parse(shareUrl))
+                    .build();
+            new ShareDialog(topicsShortStoriesTabFragment).show(content);
+        }
+        Utils.pushShareArticleEvent(topicsShortStoriesTabFragment.getContext(), screenName, userDynamoId + "", articleId, authorId + "~" + authorName, "Facebook");
+    }
+
+    public static void shareStoryGeneric(Context mContext, String userType, String blogSlug, String titleSlug,
+                                         String screenName, String userDynamoId, String articleId, String authorId, String authorName) {
+        String shareUrl = AppUtils.getShortStoryShareUrl(userType, blogSlug, titleSlug);
+
+        Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+
+        if (StringUtils.isNullOrEmpty(shareUrl)) {
+
+        } else {
+            shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareUrl);
+            mContext.startActivity(Intent.createChooser(shareIntent, "Momspresso"));
+            Utils.pushShareStoryEvent(mContext, screenName, userDynamoId + "", articleId,
+                    authorId + "~" + authorName, "Generic");
+        }
+    }
 }

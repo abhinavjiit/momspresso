@@ -1,7 +1,7 @@
 package com.mycity4kids.retrofitAPIsInterfaces;
 
 import com.mycity4kids.models.request.AddCommentRequest;
-import com.mycity4kids.models.request.AddEditShortStoryCommentOrReplyRequest;
+import com.mycity4kids.models.request.AddEditCommentOrReplyRequest;
 import com.mycity4kids.models.request.ArticleDetailRequest;
 import com.mycity4kids.models.request.ArticleReadTimeRequest;
 import com.mycity4kids.models.request.DeleteBookmarkRequest;
@@ -18,7 +18,7 @@ import com.mycity4kids.models.response.ArticleRecommendationStatusResponse;
 import com.mycity4kids.models.response.FBCommentResponse;
 import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
 import com.mycity4kids.models.response.ReportStoryOrCommentResponse;
-import com.mycity4kids.models.response.ShortStoryCommentListResponse;
+import com.mycity4kids.models.response.CommentListResponse;
 import com.mycity4kids.models.response.ShortStoryDetailResponse;
 import com.mycity4kids.models.response.ShortStoryDetailResult;
 import com.mycity4kids.models.response.ViewCountResponse;
@@ -91,25 +91,25 @@ public interface ShortStoryAPI {
                                                       @Query("end") int end);
 
     @GET("v3/comments")
-    Call<ShortStoryCommentListResponse> getStoryComments(@Query("postId") String articleId,
-                                                         @Query("type") String type,
-                                                         @Query("commentId") String paginationCommentId);
+    Call<CommentListResponse> getStoryComments(@Query("postId") String articleId,
+                                               @Query("type") String type,
+                                               @Query("commentId") String paginationCommentId);
 
     @GET("v3/comments")
-    Call<ShortStoryCommentListResponse> getStoryCommentReplies(@Query("postId") String articleId,
-                                                               @Query("type") String type,
-                                                               @Query("commentId") String parentCommentId,
-                                                               @Query("replyId") String paginationReplyId);
+    Call<CommentListResponse> getStoryCommentReplies(@Query("postId") String articleId,
+                                                     @Query("type") String type,
+                                                     @Query("commentId") String parentCommentId,
+                                                     @Query("replyId") String paginationReplyId);
 
     @POST("v3/comments/")
-    Call<ShortStoryCommentListResponse> addCommentOrReply(@Body AddEditShortStoryCommentOrReplyRequest body);
+    Call<CommentListResponse> addCommentOrReply(@Body AddEditCommentOrReplyRequest body);
 
     @DELETE("v3/comments/{commentOrReplyId}")
-    Call<ShortStoryCommentListResponse> deleteCommentOrReply(@Path("commentOrReplyId") String commentOrReplyId);
+    Call<CommentListResponse> deleteCommentOrReply(@Path("commentOrReplyId") String commentOrReplyId);
 
     @PUT("v3/comments/{commentOrReplyId}")
-    Call<ShortStoryCommentListResponse> editCommentOrReply(@Path("commentOrReplyId") String commentOrReplyId,
-                                                           @Body AddEditShortStoryCommentOrReplyRequest body);
+    Call<CommentListResponse> editCommentOrReply(@Path("commentOrReplyId") String commentOrReplyId,
+                                                 @Body AddEditCommentOrReplyRequest body);
 
     @POST("v1/articles/report/")
     Call<ReportStoryOrCommentResponse> reportStoryOrComment(@Body ReportStoryOrCommentRequest body);

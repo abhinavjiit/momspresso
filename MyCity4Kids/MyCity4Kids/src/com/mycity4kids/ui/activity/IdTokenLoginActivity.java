@@ -69,13 +69,13 @@ public class IdTokenLoginActivity extends BaseActivity implements View.OnClickLi
     private String loginUser;
     private UserInfo uInfo = new UserInfo();
 
-    private String[] userNameArray = {"bbb", "Shavet", "Monika", "Priyanka", "Rakhi", "A.K Talwar", "Vinod Passi", "Pretty Arun", "Tina Sequeira", "Chiragi", "Monika Mahecha", "Prachi Mendiratta",
+    private String[] userNameArray = {"vania","bbb", "Shavet", "Monika", "Priyanka", "Rakhi", "A.K Talwar", "Vinod Passi", "Pretty Arun", "Tina Sequeira", "Chiragi", "Monika Mahecha", "Prachi Mendiratta",
             "shweta shrivastva","geetha","rakheejain28@gmail.com","prernawahi@yahoo.com", "Nivedita Khokhar"};
-    private String[] userIdArray = {"6f57d7cb01fa46c89bf85e3d2ade7de3", "43f6a6e57f3d4ba0b41bab18509eae1f", "9b5032cd504b4c20a9f543059f18e2e6", "b1b10f47e32e4fdaa182e850f715414b", "61de7db0a6114272a906662f47af78b1",
+    private String[] userIdArray = {"1d6324b6114347c495394803d416b5fd","6f57d7cb01fa46c89bf85e3d2ade7de3", "43f6a6e57f3d4ba0b41bab18509eae1f", "9b5032cd504b4c20a9f543059f18e2e6", "b1b10f47e32e4fdaa182e850f715414b", "61de7db0a6114272a906662f47af78b1",
             "92bf1a5a7dc2436dbca03c4f00e057a9", "e0e2fefd0eaf4f1996411c79454839f7", "382b2fe057d749ae8b1599b1dbbfba5f", "e9e055218682433faf10377c0266e412", "5cc5d90c19ab4d858a47d5ecf04a95c1",
             "f76d7bc8f996409696ed552a4e102c1b", "1676bec922db473fb0c708c984730f4a", "e576fb0752464a1898dc3673cf6584b4","7d907fab39f942d884f2fe13fadb8c54","058faef0c56541a9bbc027714ba31cc6","a2cc05e5a20d4ee7ada030d471c5dcff",
     "8029226cf1e24f498f85cdc00b67b54e"};
-    private String[] mc4kArray = {"acf825688fc4a97f3ddc046ec7ba9af6", "438d2aeb4d53b871e5204b5ee4b6c150", "ya29.Ci9rAwTDTDT7jAe0CfLZW5kgceRtPIPdOH0sirQpl0jKxRKSmsUvO4Py_P3kkcPnIQ", "f0eb6d95a80583fc4b98aabd820aa037",
+    private String[] mc4kArray = {"b43287acba314e5005558ed4f1b1cc8d", "acf825688fc4a97f3ddc046ec7ba9af6", "438d2aeb4d53b871e5204b5ee4b6c150", "ya29.Ci9rAwTDTDT7jAe0CfLZW5kgceRtPIPdOH0sirQpl0jKxRKSmsUvO4Py_P3kkcPnIQ", "f0eb6d95a80583fc4b98aabd820aa037",
             "c2cdb6540e8b3b694717ee0ca0f1047d", "ya29.GlvVBH8EGj-G3yQKgUuVZFy944ILJQLXEULCczUO6NCqrdQfoVKU-R9ezAD2z3PzniXzlojsxx8I51kOnD7KDM5W_eUFSxKpqWYNDTSPwbs01N34pirUz5bdmM0n",
             "EAAC7f1na98IBAEQabXwsYkXeCwx0ZApOZA4v0Bq2RSDqejXffIrg5HM5QvsTQqowzCVNKG6CjXev4Uc9a6WqPwxTT3abYqLMdEKQxkZBZCeEZCqttgGiGZCZC4b1HDNbODezV40RYuzhN81UZBG2yHh6yQ9P7mOs4b69hrvZAWZAJIj7kzPwhKTQJNTGWQoZCDY1hc4T7BqCOBuU7e3Fsi6l5K5F2kioPH0Q1bvd2qGZAhbGmWYVyFxxZCsN7",
             "ya29.Gls8BYKEi2wvLR-Zet7XKYc1zLAWdpVyO5hd371G6qbWY7K5qHqRr9uO9DzR2i3iAaPBfiLgoNFiDOssLpMsFkJhbGm0V_Ml676CsBKdoQrto_Iqqjv2ZlXAD7wZ",

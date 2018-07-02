@@ -102,7 +102,7 @@ public class ShortStoriesRecyclerAdapter extends RecyclerView.Adapter<ShortStori
         LinearLayout storyRecommendationContainer, storyCommentContainer;
         TextView storyRecommendationCountTextView;
         ImageView storyOptionImageView;
-        ImageView facebookShareImageView, whatsappShareImageView, genericShareImageView;
+        ImageView facebookShareImageView, whatsappShareImageView, instagramShareImageView, genericShareImageView;
         RelativeLayout mainView;
 
         public ShortStoriesViewHolder(View itemView, RecyclerViewClickListener listener) {
@@ -118,6 +118,7 @@ public class ShortStoriesRecyclerAdapter extends RecyclerView.Adapter<ShortStori
             storyOptionImageView = (ImageView) itemView.findViewById(R.id.storyOptionImageView);
             facebookShareImageView = (ImageView) itemView.findViewById(R.id.facebookShareImageView);
             whatsappShareImageView = (ImageView) itemView.findViewById(R.id.whatsappShareImageView);
+            instagramShareImageView = (ImageView) itemView.findViewById(R.id.instagramShareImageView);
             genericShareImageView = (ImageView) itemView.findViewById(R.id.genericShareImageView);
 
             whatsappShareImageView.setTag(itemView);
@@ -125,6 +126,7 @@ public class ShortStoriesRecyclerAdapter extends RecyclerView.Adapter<ShortStori
             storyRecommendationContainer.setOnClickListener(this);
             facebookShareImageView.setOnClickListener(this);
             whatsappShareImageView.setOnClickListener(this);
+            instagramShareImageView.setOnClickListener(this);
             genericShareImageView.setOnClickListener(this);
             authorNameTextView.setOnClickListener(this);
             storyOptionImageView.setOnClickListener(this);

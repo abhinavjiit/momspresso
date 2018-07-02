@@ -4,7 +4,6 @@ import android.accounts.NetworkErrorException;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.AppCompatRadioButton;
 import android.util.Log;
@@ -21,17 +20,15 @@ import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.request.ReportStoryOrCommentRequest;
 import com.mycity4kids.models.response.ReportStoryOrCommentResponse;
-import com.mycity4kids.models.response.ShortStoryCommentListResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
-import com.mycity4kids.ui.activity.ShortStoryContainerActivity;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class ReportStoryOrCommentDialogFragment extends DialogFragment implements View.OnClickListener {
+public class ReportContentDialogFragment extends DialogFragment implements View.OnClickListener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

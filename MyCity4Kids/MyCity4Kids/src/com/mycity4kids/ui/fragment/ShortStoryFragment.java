@@ -2,12 +2,9 @@ package com.mycity4kids.ui.fragment;
 
 import android.accounts.NetworkErrorException;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -19,11 +16,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.facebook.share.model.SharePhoto;
-import com.facebook.share.model.SharePhotoContent;
+import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
@@ -38,7 +33,7 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.models.parentingdetails.CommentsData;
-import com.mycity4kids.models.request.AddEditShortStoryCommentOrReplyRequest;
+import com.mycity4kids.models.request.AddEditCommentOrReplyRequest;
 import com.mycity4kids.models.request.ArticleDetailRequest;
 import com.mycity4kids.models.request.DeleteBookmarkRequest;
 import com.mycity4kids.models.request.RecommendUnrecommendArticleRequest;
@@ -48,8 +43,8 @@ import com.mycity4kids.models.response.ArticleDetailResponse;
 import com.mycity4kids.models.response.ArticleRecommendationStatusResponse;
 import com.mycity4kids.models.response.LanguageConfigModel;
 import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
-import com.mycity4kids.models.response.ShortStoryCommentListData;
-import com.mycity4kids.models.response.ShortStoryCommentListResponse;
+import com.mycity4kids.models.response.CommentListData;
+import com.mycity4kids.models.response.CommentListResponse;
 import com.mycity4kids.models.response.ShortStoryDetailResponse;
 import com.mycity4kids.models.response.ShortStoryDetailResult;
 import com.mycity4kids.models.response.ViewCountResponse;
@@ -64,7 +59,6 @@ import com.mycity4kids.utils.AppUtils;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -102,6 +96,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     private String bookmarkId;
     private String authorId;
     private String author;
+    private String userType;
     private String articleId;
     private String deepLinkURL;
     private String blogSlug;
@@ -338,6 +333,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 headerModel.setSsResult(responseData);
                 headerModel.setType(0);
                 author = responseData.getUserName();
+                userType = responseData.getUserType();
                 authorId = responseData.getUserId();
                 consolidatedList.add(headerModel);
                 getStoryComments(articleId, null);
@@ -416,13 +412,13 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     }
 
     private void getStoryComments(String id, String commentType) {
-        Call<ShortStoryCommentListResponse> call = shortStoryAPI.getStoryComments(id, commentType, paginationCommentId);
+        Call<CommentListResponse> call = shortStoryAPI.getStoryComments(id, commentType, paginationCommentId);
         call.enqueue(ssCommentsResponseCallback);
     }
 
-    private Callback<ShortStoryCommentListResponse> ssCommentsResponseCallback = new Callback<ShortStoryCommentListResponse>() {
+    private Callback<CommentListResponse> ssCommentsResponseCallback = new Callback<CommentListResponse>() {
         @Override
-        public void onResponse(Call<ShortStoryCommentListResponse> call, retrofit2.Response<ShortStoryCommentListResponse> response) {
+        public void onResponse(Call<CommentListResponse> call, retrofit2.Response<CommentListResponse> response) {
             isReuqestRunning = false;
             if (response == null || response.body() == null) {
                 NetworkErrorException nee = new NetworkErrorException("Trending Article API failure");
@@ -431,7 +427,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             }
 
             try {
-                ShortStoryCommentListResponse shortStoryCommentListResponse = response.body();
+                CommentListResponse shortStoryCommentListResponse = response.body();
                 if (shortStoryCommentListResponse.getCount() != 0) {
                     totalCommentCount = shortStoryCommentListResponse.getCount();
                 }
@@ -443,14 +439,14 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         }
 
         @Override
-        public void onFailure(Call<ShortStoryCommentListResponse> call, Throwable t) {
+        public void onFailure(Call<CommentListResponse> call, Throwable t) {
             isReuqestRunning = false;
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
 
-    private void showComments(List<ShortStoryCommentListData> commentList) {
+    private void showComments(List<CommentListData> commentList) {
         if (commentList.size() == 0) {
             isLastPageReached = false;
             if (null != consolidatedList && !consolidatedList.isEmpty()) {
@@ -695,15 +691,15 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     public void onClick(View view, int position) {
         switch (view.getId()) {
             case R.id.storyOptionImageView: {
-                ReportStoryOrCommentDialogFragment reportStoryOrCommentDialogFragment = new ReportStoryOrCommentDialogFragment();
+                ReportContentDialogFragment reportContentDialogFragment = new ReportContentDialogFragment();
                 FragmentManager fm = getChildFragmentManager();
                 Bundle _args = new Bundle();
                 _args.putString("postId", consolidatedList.get(position).getSsResult().getId());
                 _args.putInt("type", AppConstants.REPORT_TYPE_STORY);
-                reportStoryOrCommentDialogFragment.setArguments(_args);
-                reportStoryOrCommentDialogFragment.setCancelable(true);
-                reportStoryOrCommentDialogFragment.setTargetFragment(this, 0);
-                reportStoryOrCommentDialogFragment.show(fm, "Report Content");
+                reportContentDialogFragment.setArguments(_args);
+                reportContentDialogFragment.setCancelable(true);
+                reportContentDialogFragment.setTargetFragment(this, 0);
+                reportContentDialogFragment.show(fm, "Report Content");
             }
             break;
             case R.id.commentRootLayout: {
@@ -740,117 +736,48 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 recommendUnrecommentArticleAPI("1");
                 break;
             case R.id.facebookShareImageView: {
-                try {
-                    authorTextView.setText("By - " + headerModel.getSsResult().getUserName());
-                    titleTextView.setText(headerModel.getSsResult().getTitle());
-                    bodyTextView.setText(headerModel.getSsResult().getBody());
-                    shareSSView.setDrawingCacheEnabled(true);
-                    AppUtils.createDirIfNotExists("MyCity4Kids/videos");
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Bitmap b = shareSSView.getDrawingCache();
-                            try {
-                                b.compress(Bitmap.CompressFormat.JPEG, 95, new FileOutputStream(Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg"));
-                            } catch (FileNotFoundException e) {
-                                e.printStackTrace();
-                            }
-                            SharePhoto photo = new SharePhoto.Builder()
-                                    .setBitmap(b)
-                                    .build();
-                            SharePhotoContent content = new SharePhotoContent.Builder()
-                                    .addPhoto(photo)
-                                    .build();
-                            ShareDialog shareDialog = new ShareDialog(ShortStoryFragment.this);
-                            shareDialog.show(content);
-                            shareSSView.setDrawingCacheEnabled(false);
-                        }
-                    }, 200);
-                    Utils.pushShareStoryEvent(getActivity(), "ShortStoryDetailsScreen", userDynamoId + "", articleId, authorId + "~" + author, "Facebook");
-                } catch (Exception e) {
-                    if (isAdded())
-                        Toast.makeText(getActivity(), getString(R.string.moderation_or_share_facebook_fail), Toast.LENGTH_SHORT).show();
+                if (isAdded()) {
+                    AppUtils.shareStoryWithFB(this, headerModel.getSsResult().getUserType(), headerModel.getSsResult().getBlogTitleSlug(), headerModel.getSsResult().getTitleSlug(),
+                            "ShortStoryDetailsScreen", userDynamoId + "", articleId, authorId, author);
                 }
             }
             break;
             case R.id.whatsappShareImageView: {
-                try {
-                    authorTextView.setText("By - " + headerModel.getSsResult().getUserName());
-                    titleTextView.setText(headerModel.getSsResult().getTitle());
-                    bodyTextView.setText(headerModel.getSsResult().getBody());
-                    shareSSView.setDrawingCacheEnabled(true);
-                    AppUtils.createDirIfNotExists("MyCity4Kids/videos");
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Bitmap b = shareSSView.getDrawingCache();
-                            try {
-                                b.compress(Bitmap.CompressFormat.JPEG, 95, new FileOutputStream(Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg"));
-                            } catch (FileNotFoundException e) {
-                                e.printStackTrace();
-                            }
-                            shareSSView.setDrawingCacheEnabled(false);
-                            String shareUrl = AppUtils.getShortStoryShareUrl(headerModel.getSsResult().getUserType(),
-                                    headerModel.getSsResult().getBlogTitleSlug(), headerModel.getSsResult().getTitleSlug());
 
-                            if (StringUtils.isNullOrEmpty(shareUrl)) {
-                                Toast.makeText(getActivity(), getString(R.string.moderation_or_share_facebook_fail), Toast.LENGTH_SHORT).show();
-                            } else {
-                                Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg");
-                                Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
-                                whatsappIntent.putExtra(Intent.EXTRA_STREAM, uri);
-                                whatsappIntent.putExtra(Intent.EXTRA_TEXT, shareUrl);
-                                whatsappIntent.setPackage("com.whatsapp");
-                                whatsappIntent.setType("image/*");
-//                    whatsappIntent.putExtra(Intent.EXTRA_TEXT, mDatalist.get(position).getTitle() + "\n\n" + getString(R.string.ad_share_follow_author, mDatalist.get(position).getUserName()) + "\n" + shareUrl);
-                                try {
-                                    startActivity(Intent.createChooser(whatsappIntent, "Share image via:"));
-                                } catch (android.content.ActivityNotFoundException ex) {
-                                    if (isAdded())
-                                        Toast.makeText(getActivity(), getString(R.string.moderation_or_share_whatsapp_not_installed), Toast.LENGTH_SHORT).show();
-                                }
-//                                Utils.pushShareArticleEvent(getActivity(), "DetailArticleScreen", userDynamoId + "", mDatalist.get(position).getId(), mDatalist.get(position).getUserId() + "~" + mDatalist.get(position).getUserName(), "Whatsapp");
-                            }
-                        }
-                    }, 200);
-                    Utils.pushShareStoryEvent(getActivity(), "ShortStoryDetailsScreen", userDynamoId + "", articleId, authorId + "~" + author, "Whatsapp");
+                try {
+                    AppUtils.drawMultilineTextToBitmap(headerModel.getSsResult().getTitle().trim(), headerModel.getSsResult().getBody().trim(), author);
                 } catch (Exception e) {
-                    if (isAdded())
-                        Toast.makeText(getActivity(), getString(R.string.moderation_or_share_whatsapp_fail), Toast.LENGTH_SHORT).show();
+                    Crashlytics.logException(e);
+                    Log.d("MC4kException", Log.getStackTraceString(e));
+                    return;
+                }
+                if (isAdded()) {
+                    AppUtils.shareStoryWithWhatsApp(getActivity(), headerModel.getSsResult().getUserType(), headerModel.getSsResult().getBlogTitleSlug(), headerModel.getSsResult().getTitleSlug(),
+                            "ShortStoryDetailsScreen", userDynamoId, articleId, authorId, author);
+                }
+            }
+            break;
+            case R.id.instagramShareImageView: {
+
+                try {
+                    AppUtils.drawMultilineTextToBitmap(headerModel.getSsResult().getTitle().trim(), headerModel.getSsResult().getBody().trim(), author);
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
+                    Log.d("MC4kException", Log.getStackTraceString(e));
+                    return;
+                }
+                if (isAdded()) {
+                    AppUtils.shareStoryWithInstagram(getActivity(), headerModel.getSsResult().getUserType(), headerModel.getSsResult().getBlogTitleSlug(), headerModel.getSsResult().getTitleSlug(),
+                            "ShortStoryDetailsScreen", userDynamoId, articleId, authorId, author);
                 }
             }
             break;
             case R.id.genericShareImageView: {
-                authorTextView.setText("By - " + headerModel.getSsResult().getUserName());
-                titleTextView.setText(headerModel.getSsResult().getTitle());
-                bodyTextView.setText(headerModel.getSsResult().getBody());
-                shareSSView.setDrawingCacheEnabled(true);
-                AppUtils.createDirIfNotExists("MyCity4Kids/videos");
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Bitmap b = shareSSView.getDrawingCache();
-                        try {
-                            b.compress(Bitmap.CompressFormat.JPEG, 95, new FileOutputStream(Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg"));
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                        shareSSView.setDrawingCacheEnabled(false);
-                        Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg");
 
-                        Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
-                        shareIntent.setType("text/plain");
-
-                        String shareUrl = AppUtils.getShortStoryShareUrl(headerModel.getSsResult().getUserType(),
-                                headerModel.getSsResult().getBlogTitleSlug(), headerModel.getSsResult().getTitleSlug());
-
-                        shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
-                        shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareUrl);
-                        shareIntent.setType("image/*");
-                        startActivity(Intent.createChooser(shareIntent, "ShortStory"));
-                    }
-                }, 200);
-                Utils.pushShareStoryEvent(getActivity(), "ShortStoryDetailsScreen", userDynamoId + "", articleId, authorId + "~" + author, "Generic");
+                if (isAdded()) {
+                    AppUtils.shareStoryGeneric(getActivity(), headerModel.getSsResult().getUserType(), headerModel.getSsResult().getBlogTitleSlug(), headerModel.getSsResult().getTitleSlug(),
+                            "ShortStoryListingScreen", userDynamoId, articleId, authorId, author);
+                }
             }
             break;
             case R.id.authorNameTextView: {
@@ -870,7 +797,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         }
     }
 
-    public void openAddCommentReplyDialog(ShortStoryCommentListData cData) {
+    public void openAddCommentReplyDialog(CommentListData cData) {
         AddShortStoryCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddShortStoryCommentReplyDialogFragment();
         FragmentManager fm = getChildFragmentManager();
         Bundle _args = new Bundle();
@@ -883,17 +810,18 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
 
     public void addComment(String content) {
         showProgressDialog("Adding Comment");
-        AddEditShortStoryCommentOrReplyRequest addEditShortStoryCommentOrReplyRequest = new AddEditShortStoryCommentOrReplyRequest();
+        AddEditCommentOrReplyRequest addEditShortStoryCommentOrReplyRequest = new AddEditCommentOrReplyRequest();
         addEditShortStoryCommentOrReplyRequest.setPost_id(articleId);
         addEditShortStoryCommentOrReplyRequest.setMessage(content);
         addEditShortStoryCommentOrReplyRequest.setParent_id("0");
-        Call<ShortStoryCommentListResponse> call = shortStoryAPI.addCommentOrReply(addEditShortStoryCommentOrReplyRequest);
+        addEditShortStoryCommentOrReplyRequest.setType("story");
+        Call<CommentListResponse> call = shortStoryAPI.addCommentOrReply(addEditShortStoryCommentOrReplyRequest);
         call.enqueue(addCommentResponseListener);
     }
 
-    private Callback<ShortStoryCommentListResponse> addCommentResponseListener = new Callback<ShortStoryCommentListResponse>() {
+    private Callback<CommentListResponse> addCommentResponseListener = new Callback<CommentListResponse>() {
         @Override
-        public void onResponse(Call<ShortStoryCommentListResponse> call, retrofit2.Response<ShortStoryCommentListResponse> response) {
+        public void onResponse(Call<CommentListResponse> call, retrofit2.Response<CommentListResponse> response) {
             removeProgressDialog();
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
@@ -906,17 +834,17 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 return;
             }
             try {
-                ShortStoryCommentListResponse responseData = response.body();
+                CommentListResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
                     ShortStoryDetailAndCommentModel commentModel = new ShortStoryDetailAndCommentModel();
-                    ShortStoryCommentListData shortStoryCommentListData = new ShortStoryCommentListData();
+                    CommentListData shortStoryCommentListData = new CommentListData();
                     shortStoryCommentListData.set_id(responseData.getData().get(0).get_id());
                     shortStoryCommentListData.setMessage(responseData.getData().get(0).getMessage());
                     shortStoryCommentListData.setCreatedTime(responseData.getData().get(0).getCreatedTime());
                     shortStoryCommentListData.setPostId(responseData.getData().get(0).getPostId());
                     shortStoryCommentListData.setParentCommentId("0");
-                    shortStoryCommentListData.setReplies(new ArrayList<ShortStoryCommentListData>());
+                    shortStoryCommentListData.setReplies(new ArrayList<CommentListData>());
                     shortStoryCommentListData.setReplies_count(0);
                     shortStoryCommentListData.setUserPic(responseData.getData().get(0).getUserPic());
                     shortStoryCommentListData.setUserName(responseData.getData().get(0).getUserName());
@@ -925,6 +853,18 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                     commentModel.setSsComment(shortStoryCommentListData);
                     consolidatedList.add(1, commentModel);
                     adapter.notifyDataSetChanged();
+                    if (StringUtils.isNullOrEmpty(userType) || StringUtils.isNullOrEmpty(titleSlug) || StringUtils.isNullOrEmpty(blogSlug)) {
+
+                    } else {
+                        String shareUrl = AppUtils.getShortStoryShareUrl(userType, blogSlug, titleSlug);
+                        if (ShareDialog.canShow(ShareLinkContent.class)) {
+                            ShareLinkContent content = new ShareLinkContent.Builder()
+                                    .setQuote(responseData.getData().get(0).getMessage())
+                                    .setContentUrl(Uri.parse(shareUrl))
+                                    .build();
+                            new ShareDialog(ShortStoryFragment.this).show(content);
+                        }
+                    }
                     if (isAdded())
                         Utils.pushShortStoryCommentReplyChangeEvent(getActivity(), "ShortStoryDetailsScreen", userDynamoId, articleId, "add", "comment");
                 } else {
@@ -940,7 +880,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         }
 
         @Override
-        public void onFailure(Call<ShortStoryCommentListResponse> call, Throwable t) {
+        public void onFailure(Call<CommentListResponse> call, Throwable t) {
             removeProgressDialog();
             if (isAdded())
                 ((ShortStoryContainerActivity) getActivity()).showToast("Failed to add comment. Please try again");
@@ -953,16 +893,16 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         showProgressDialog("Editing your response");
         actionItemPosition = position;
         editContent = content;
-        AddEditShortStoryCommentOrReplyRequest addEditShortStoryCommentOrReplyRequest = new AddEditShortStoryCommentOrReplyRequest();
+        AddEditCommentOrReplyRequest addEditShortStoryCommentOrReplyRequest = new AddEditCommentOrReplyRequest();
         addEditShortStoryCommentOrReplyRequest.setPost_id(articleId);
         addEditShortStoryCommentOrReplyRequest.setMessage(content);
-        Call<ShortStoryCommentListResponse> call = shortStoryAPI.editCommentOrReply(responseId, addEditShortStoryCommentOrReplyRequest);
+        Call<CommentListResponse> call = shortStoryAPI.editCommentOrReply(responseId, addEditShortStoryCommentOrReplyRequest);
         call.enqueue(editCommentOrReplyResponseListener);
     }
 
-    private Callback<ShortStoryCommentListResponse> editCommentOrReplyResponseListener = new Callback<ShortStoryCommentListResponse>() {
+    private Callback<CommentListResponse> editCommentOrReplyResponseListener = new Callback<CommentListResponse>() {
         @Override
-        public void onResponse(Call<ShortStoryCommentListResponse> call, retrofit2.Response<ShortStoryCommentListResponse> response) {
+        public void onResponse(Call<CommentListResponse> call, retrofit2.Response<CommentListResponse> response) {
             removeProgressDialog();
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
@@ -975,7 +915,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 return;
             }
             try {
-                ShortStoryCommentListResponse responseData = response.body();
+                CommentListResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     consolidatedList.get(actionItemPosition).getSsComment().setMessage(editContent);
                     adapter.notifyDataSetChanged();
@@ -994,7 +934,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         }
 
         @Override
-        public void onFailure(Call<ShortStoryCommentListResponse> call, Throwable t) {
+        public void onFailure(Call<CommentListResponse> call, Throwable t) {
             removeProgressDialog();
             if (isAdded())
                 ((ShortStoryContainerActivity) getActivity()).showToast("Failed to edit comment. Please try again");
@@ -1005,17 +945,18 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
 
     public void addReply(String content, String parentCommentId) {
         showProgressDialog("Adding Reply");
-        AddEditShortStoryCommentOrReplyRequest addEditShortStoryCommentOrReplyRequest = new AddEditShortStoryCommentOrReplyRequest();
+        AddEditCommentOrReplyRequest addEditShortStoryCommentOrReplyRequest = new AddEditCommentOrReplyRequest();
         addEditShortStoryCommentOrReplyRequest.setPost_id(articleId);
         addEditShortStoryCommentOrReplyRequest.setMessage(content);
         addEditShortStoryCommentOrReplyRequest.setParent_id(parentCommentId);
-        Call<ShortStoryCommentListResponse> call = shortStoryAPI.addCommentOrReply(addEditShortStoryCommentOrReplyRequest);
+        addEditShortStoryCommentOrReplyRequest.setType("story");
+        Call<CommentListResponse> call = shortStoryAPI.addCommentOrReply(addEditShortStoryCommentOrReplyRequest);
         call.enqueue(addReplyResponseListener);
     }
 
-    private Callback<ShortStoryCommentListResponse> addReplyResponseListener = new Callback<ShortStoryCommentListResponse>() {
+    private Callback<CommentListResponse> addReplyResponseListener = new Callback<CommentListResponse>() {
         @Override
-        public void onResponse(Call<ShortStoryCommentListResponse> call, retrofit2.Response<ShortStoryCommentListResponse> response) {
+        public void onResponse(Call<CommentListResponse> call, retrofit2.Response<CommentListResponse> response) {
             removeProgressDialog();
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
@@ -1028,10 +969,10 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 return;
             }
             try {
-                ShortStoryCommentListResponse responseData = response.body();
+                CommentListResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
 
-                    ShortStoryCommentListData shortStoryCommentListData = new ShortStoryCommentListData();
+                    CommentListData shortStoryCommentListData = new CommentListData();
                     shortStoryCommentListData.set_id(responseData.getData().get(0).get_id());
                     shortStoryCommentListData.setMessage(responseData.getData().get(0).getMessage());
                     shortStoryCommentListData.setCreatedTime(responseData.getData().get(0).getCreatedTime());
@@ -1067,7 +1008,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         }
 
         @Override
-        public void onFailure(Call<ShortStoryCommentListResponse> call, Throwable t) {
+        public void onFailure(Call<CommentListResponse> call, Throwable t) {
             removeProgressDialog();
             if (isAdded())
                 ((ShortStoryContainerActivity) getActivity()).showToast("Failed to add reply. Please try again");
@@ -1078,19 +1019,19 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
 
     public void editReply(String content, String parentCommentId, String replyId) {
         showProgressDialog("Editing Reply");
-        AddEditShortStoryCommentOrReplyRequest addEditShortStoryCommentOrReplyRequest = new AddEditShortStoryCommentOrReplyRequest();
+        AddEditCommentOrReplyRequest addEditShortStoryCommentOrReplyRequest = new AddEditCommentOrReplyRequest();
         addEditShortStoryCommentOrReplyRequest.setPost_id(articleId);
         addEditShortStoryCommentOrReplyRequest.setMessage(content);
-        Call<ShortStoryCommentListResponse> call = shortStoryAPI.editCommentOrReply(replyId, addEditShortStoryCommentOrReplyRequest);
+        Call<CommentListResponse> call = shortStoryAPI.editCommentOrReply(replyId, addEditShortStoryCommentOrReplyRequest);
         call.enqueue(editReplyResponseListener);
         editReplyId = replyId;
         editReplyParentCommentId = parentCommentId;
         editContent = content;
     }
 
-    private Callback<ShortStoryCommentListResponse> editReplyResponseListener = new Callback<ShortStoryCommentListResponse>() {
+    private Callback<CommentListResponse> editReplyResponseListener = new Callback<CommentListResponse>() {
         @Override
-        public void onResponse(Call<ShortStoryCommentListResponse> call, retrofit2.Response<ShortStoryCommentListResponse> response) {
+        public void onResponse(Call<CommentListResponse> call, retrofit2.Response<CommentListResponse> response) {
             removeProgressDialog();
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
@@ -1103,7 +1044,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 return;
             }
             try {
-                ShortStoryCommentListResponse responseData = response.body();
+                CommentListResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     boolean isReplyUpdated = false;
                     for (int i = 1; i < consolidatedList.size(); i++) {
@@ -1139,7 +1080,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         }
 
         @Override
-        public void onFailure(Call<ShortStoryCommentListResponse> call, Throwable t) {
+        public void onFailure(Call<CommentListResponse> call, Throwable t) {
             if (isAdded())
                 ((ShortStoryContainerActivity) getActivity()).showToast("Failed to edit reply. Please try again");
             Crashlytics.logException(t);
@@ -1150,13 +1091,13 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     public void deleteReply(int commentPos, int replyPos) {
         deleteCommentPos = commentPos;
         deleteReplyPos = replyPos;
-        Call<ShortStoryCommentListResponse> call = shortStoryAPI.deleteCommentOrReply(consolidatedList.get(commentPos).getSsComment().getReplies().get(replyPos).get_id());
+        Call<CommentListResponse> call = shortStoryAPI.deleteCommentOrReply(consolidatedList.get(commentPos).getSsComment().getReplies().get(replyPos).get_id());
         call.enqueue(deleteReplyResponseListener);
     }
 
-    private Callback<ShortStoryCommentListResponse> deleteReplyResponseListener = new Callback<ShortStoryCommentListResponse>() {
+    private Callback<CommentListResponse> deleteReplyResponseListener = new Callback<CommentListResponse>() {
         @Override
-        public void onResponse(Call<ShortStoryCommentListResponse> call, retrofit2.Response<ShortStoryCommentListResponse> response) {
+        public void onResponse(Call<CommentListResponse> call, retrofit2.Response<CommentListResponse> response) {
             removeProgressDialog();
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
@@ -1169,7 +1110,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 return;
             }
             try {
-                ShortStoryCommentListResponse responseData = response.body();
+                CommentListResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     consolidatedList.get(deleteCommentPos).getSsComment().getReplies().remove(deleteReplyPos);
                     consolidatedList.get(deleteCommentPos).getSsComment().setReplies_count(consolidatedList.get(deleteCommentPos).getSsComment().getReplies_count() - 1);
@@ -1195,7 +1136,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         }
 
         @Override
-        public void onFailure(Call<ShortStoryCommentListResponse> call, Throwable t) {
+        public void onFailure(Call<CommentListResponse> call, Throwable t) {
             removeProgressDialog();
             if (isAdded())
                 ((ShortStoryContainerActivity) getActivity()).showToast("Failed to delete reply. Please try again");
@@ -1211,14 +1152,14 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
 
     @Override
     public void onResponseDelete(int position, String responseType) {
-        Call<ShortStoryCommentListResponse> call = shortStoryAPI.deleteCommentOrReply(consolidatedList.get(position).getSsComment().get_id());
+        Call<CommentListResponse> call = shortStoryAPI.deleteCommentOrReply(consolidatedList.get(position).getSsComment().get_id());
         call.enqueue(deleteCommentResponseListener);
         actionItemPosition = position;
     }
 
-    private Callback<ShortStoryCommentListResponse> deleteCommentResponseListener = new Callback<ShortStoryCommentListResponse>() {
+    private Callback<CommentListResponse> deleteCommentResponseListener = new Callback<CommentListResponse>() {
         @Override
-        public void onResponse(Call<ShortStoryCommentListResponse> call, retrofit2.Response<ShortStoryCommentListResponse> response) {
+        public void onResponse(Call<CommentListResponse> call, retrofit2.Response<CommentListResponse> response) {
             removeProgressDialog();
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
@@ -1231,7 +1172,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                 return;
             }
             try {
-                ShortStoryCommentListResponse responseData = response.body();
+                CommentListResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     consolidatedList.remove(actionItemPosition);
                     if (shortStoryCommentRepliesDialogFragment != null) {
@@ -1253,7 +1194,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         }
 
         @Override
-        public void onFailure(Call<ShortStoryCommentListResponse> call, Throwable t) {
+        public void onFailure(Call<CommentListResponse> call, Throwable t) {
             removeProgressDialog();
             if (isAdded())
                 ((ShortStoryContainerActivity) getActivity()).showToast("Failed to delete comment. Please try again");
@@ -1281,21 +1222,21 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
 //        ReportStoryOrCommentRequest reportStoryOrCommentRequest = new ReportStoryOrCommentRequest();
 //        reportStoryOrCommentRequest.setId(consolidatedList.get(position).getSsResult());
 //        shortStoryAPI.reportStoryOrComment(reportStoryOrCommentRequest);
-        ReportStoryOrCommentDialogFragment reportStoryOrCommentDialogFragment = new ReportStoryOrCommentDialogFragment();
+        ReportContentDialogFragment reportContentDialogFragment = new ReportContentDialogFragment();
         FragmentManager fm = getChildFragmentManager();
         Bundle _args = new Bundle();
         _args.putString("postId", consolidatedList.get(position).getSsComment().get_id());
         _args.putInt("type", AppConstants.REPORT_TYPE_COMMENT);
-        reportStoryOrCommentDialogFragment.setArguments(_args);
-        reportStoryOrCommentDialogFragment.setCancelable(true);
-        reportStoryOrCommentDialogFragment.setTargetFragment(this, 0);
-        reportStoryOrCommentDialogFragment.show(fm, "Report Content");
+        reportContentDialogFragment.setArguments(_args);
+        reportContentDialogFragment.setCancelable(true);
+        reportContentDialogFragment.setTargetFragment(this, 0);
+        reportContentDialogFragment.show(fm, "Report Content");
     }
 
     public class ShortStoryDetailAndCommentModel {
         private int type;
         private ShortStoryDetailResult ssResult;
-        private ShortStoryCommentListData ssComment;
+        private CommentListData ssComment;
 
         public int getType() {
             return type;
@@ -1313,11 +1254,11 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             this.ssResult = ssResult;
         }
 
-        public ShortStoryCommentListData getSsComment() {
+        public CommentListData getSsComment() {
             return ssComment;
         }
 
-        public void setSsComment(ShortStoryCommentListData ssComment) {
+        public void setSsComment(CommentListData ssComment) {
             this.ssComment = ssComment;
         }
     }

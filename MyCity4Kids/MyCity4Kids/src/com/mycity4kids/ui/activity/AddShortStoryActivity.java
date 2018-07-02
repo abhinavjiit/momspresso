@@ -99,6 +99,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     private DraftListResult draftObject;
     private ArrayList<Map<String, String>> tagsList = new ArrayList<Map<String, String>>();
     private InputFilter filter;
+    private float singleContentHeight = 1100f;
 
     private RecyclerView recyclerView;
     private ShortStoryTopicsRecyclerAdapter adapter;
@@ -247,92 +248,6 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
             et.setFilters(new InputFilter[0]);
             filter = null;
         }
-    }
-
-    public Bitmap drawMultilineTextToBitmap(String title, String body) {
-
-        // prepare canvas
-        Resources resources = getResources();
-        float scale = resources.getDisplayMetrics().density;
-        Bitmap bitmap = BitmapFactory.decodeResource(resources, R.drawable.ss_share_web);
-
-        android.graphics.Bitmap.Config bitmapConfig = bitmap.getConfig();
-        // set default bitmap config if none
-        if (bitmapConfig == null) {
-            bitmapConfig = android.graphics.Bitmap.Config.ARGB_8888;
-        }
-        // resource bitmaps are imutable,
-        // so we need to convert it to mutable one
-        bitmap = bitmap.copy(bitmapConfig, true);
-
-        Canvas canvas = new Canvas(bitmap);
-
-        Typeface georgiaTypeface = Typeface.createFromAsset(getAssets(), "fonts/georgia.ttf");
-        TextPaint titlePaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
-        titlePaint.setTypeface(georgiaTypeface);
-        titlePaint.setColor(Color.rgb(61, 61, 61));
-        titlePaint.setTextSize((int) (10 * scale));
-
-        TextPaint bodyPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
-        bodyPaint.setTypeface(georgiaTypeface);
-        bodyPaint.setColor(Color.rgb(61, 61, 61));
-        bodyPaint.setTextSize((int) (9 * scale));
-
-        Typeface geoBoldTypeface = Typeface.createFromAsset(getAssets(), "fonts/georgia_bold.ttf");
-        TextPaint authorPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
-        authorPaint.setTypeface(geoBoldTypeface);
-        authorPaint.setColor(Color.rgb(61, 61, 61));
-        authorPaint.setTextSize((int) (9 * scale));
-        // set text width to canvas width minus 16dp padding
-        int textWidth = canvas.getWidth() - (int) (16 * scale);
-
-        String author = "By - " + SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name();
-
-        // init StaticLayout for text
-        StaticLayout bodyLayout = new StaticLayout(
-                body, bodyPaint, textWidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
-
-        StaticLayout titleLayout = new StaticLayout(
-                title, titlePaint, textWidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
-
-        StaticLayout authorLayout = new StaticLayout(
-                author, authorPaint, textWidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
-
-        // get height of multiline text
-        int bodyHeight = bodyLayout.getHeight();
-        int titleHeight = titleLayout.getHeight();
-
-        // get position of text's top left corner
-        float x = (bitmap.getWidth() - textWidth) / 2;
-        float y = (bitmap.getHeight() - bodyHeight) / 2;
-
-        // get position of text's top left corner
-        float ySeparator = y - 10 * scale;
-        float yAuthor = bitmap.getHeight() - y;
-
-        Paint p = new Paint();
-        p.setColor(ContextCompat.getColor(this, R.color.short_story_light_black_color));
-        p.setStrokeWidth(2);
-        // draw text to the Canvas center
-        canvas.save();
-        canvas.translate(x, y);
-        bodyLayout.draw(canvas);
-        canvas.restore();
-        canvas.save();
-        canvas.drawLine(x, ySeparator, 40 * scale, ySeparator, p);
-        canvas.translate(x, ySeparator - titleHeight - 10 * scale);
-        titleLayout.draw(canvas);
-        canvas.restore();
-        canvas.save();
-        canvas.translate(x, yAuthor + 10 * scale);
-        authorLayout.draw(canvas);
-        try {
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 95, new FileOutputStream(Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg"));
-        } catch (FileNotFoundException e) {
-            Crashlytics.logException(e);
-            Log.d("MC4kException", Log.getStackTraceString(e));
-        }
-        return bitmap;
     }
 
     private void updateTagListFromJson(String tagsJson) {
@@ -571,7 +486,8 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
     private void createAndUploadShareableImage() {
         Bitmap finalBitmap = null;
         try {
-            finalBitmap = drawMultilineTextToBitmap(storyTitleEditText.getText().toString(), storyBodyEditText.getText().toString());
+            finalBitmap = AppUtils.drawMultilineTextToBitmap(storyTitleEditText.getText().toString(), storyBodyEditText.getText().toString(),
+                    SharedPrefUtils.getUserDetailModel(this).getFirst_name() + " " + SharedPrefUtils.getUserDetailModel(this).getLast_name());
         } catch (Exception e) {
             Crashlytics.logException(e);
             Log.d("MC4kException", Log.getStackTraceString(e));

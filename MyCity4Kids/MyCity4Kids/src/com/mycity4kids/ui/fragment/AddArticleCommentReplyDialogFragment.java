@@ -30,7 +30,7 @@ import com.squareup.picasso.Picasso;
  * Created by hemant on 6/6/18.
  */
 
-public class AddShortStoryCommentReplyDialogFragment extends DialogFragment implements View.OnClickListener {
+public class AddArticleCommentReplyDialogFragment extends DialogFragment implements View.OnClickListener {
 
     private CommentListData commentOrReplyData;
 
@@ -129,14 +129,14 @@ public class AddShortStoryCommentReplyDialogFragment extends DialogFragment impl
             case R.id.postCommentReplyTextView:
                 if (isValid()) {
                     if ("EDIT_COMMENT".equals(actionType)) {
-                        ((ShortStoryFragment) getTargetFragment()).editComment(commentReplyEditText.getText().toString(), commentOrReplyData.get_id(), position);
+                        ((ArticleCommentsFragment) getTargetFragment()).editComment(commentReplyEditText.getText().toString(), commentOrReplyData.get_id(), position);
                     } else if ("EDIT_REPLY".equals(actionType)) {
-                        ((ShortStoryFragment) getTargetFragment()).editReply(commentReplyEditText.getText().toString(), commentOrReplyData.getParentCommentId(), commentOrReplyData.get_id());
+                        ((ArticleCommentsFragment) getTargetFragment()).editReply(commentReplyEditText.getText().toString(), commentOrReplyData.getParentCommentId(), commentOrReplyData.get_id());
                     } else {
                         if (commentOrReplyData == null) {
-                            ((ShortStoryFragment) getTargetFragment()).addComment(commentReplyEditText.getText().toString());
+                            ((ArticleCommentsFragment) getTargetFragment()).addComment(commentReplyEditText.getText().toString());
                         } else {
-                            ((ShortStoryFragment) getTargetFragment()).addReply(commentReplyEditText.getText().toString(), commentOrReplyData.get_id());
+                            ((ArticleCommentsFragment) getTargetFragment()).addReply(commentReplyEditText.getText().toString(), commentOrReplyData.get_id());
                         }
                     }
 
@@ -185,4 +185,5 @@ public class AddShortStoryCommentReplyDialogFragment extends DialogFragment impl
         }
         return true;
     }
+
 }

@@ -1,22 +1,21 @@
 package com.mycity4kids.models.response;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by hemant on 6/6/18.
  */
 
-public class ShortStoryCommentListResponse extends BaseResponse {
+public class CommentListResponse extends BaseResponse {
 
-    private List<ShortStoryCommentListData> data;
+    private List<CommentListData> data;
     private int count;
 
-    public List<ShortStoryCommentListData> getData() {
+    public List<CommentListData> getData() {
         return data;
     }
 
-    public void setData(List<ShortStoryCommentListData> data) {
+    public void setData(List<CommentListData> data) {
         this.data = data;
     }
 

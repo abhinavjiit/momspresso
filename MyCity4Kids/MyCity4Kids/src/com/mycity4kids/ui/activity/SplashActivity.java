@@ -38,6 +38,7 @@ import com.kelltontech.ui.BaseActivity;
 import com.kelltontech.utils.ConnectivityUtils;
 import com.kelltontech.utils.StringUtils;
 import com.kelltontech.utils.ToastUtils;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.asynctask.HeavyDbTask;
@@ -78,7 +79,7 @@ import retrofit2.Retrofit;
 public class SplashActivity extends BaseActivity {
 
     private static final int REQUEST_INIT_PERMISSION = 1;
-
+    private static final String MIX_PANEL_TOKEN = "76ebc952badcc143b417b3a4cf89cadd";
     private static String[] PERMISSIONS_INIT = {Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_PHONE_STATE};
 
@@ -101,6 +102,7 @@ public class SplashActivity extends BaseActivity {
     FirebaseAnalytics mFirebaseAnalytics;
     private View mLayout;
     private boolean shouldResumeSplash = false;
+    MixpanelAPI mixpanel;
 
     // The onNewIntent() is overridden to get and resolve the data for deep linking
     @Override
@@ -120,6 +122,7 @@ public class SplashActivity extends BaseActivity {
         extras = getIntent().getExtras();
         setUpGTM();
         MobileAds.initialize(this, getString(R.string.admob_id));
+        mixpanel = MixpanelAPI.getInstance(BaseApplication.getAppContext(), MIX_PANEL_TOKEN);
 
         if (getIntent().getBooleanExtra("fromNotification", false)) {
             Utils.pushEventNotificationClick(this, GTMEventType.NOTIFICATION_CLICK_EVENT, SharedPrefUtils.getUserDetailModel(this).getDynamoId(), "Notification Popup", "default");
@@ -740,4 +743,10 @@ public class SplashActivity extends BaseActivity {
             showToast(getString(R.string.went_wrong));
         }
     };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mixpanel.flush();
+    }
 }

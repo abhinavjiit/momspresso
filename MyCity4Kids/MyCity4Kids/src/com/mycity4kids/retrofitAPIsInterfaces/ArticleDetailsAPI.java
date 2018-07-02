@@ -1,6 +1,7 @@
 package com.mycity4kids.retrofitAPIsInterfaces;
 
 import com.mycity4kids.models.request.AddCommentRequest;
+import com.mycity4kids.models.request.AddEditCommentOrReplyRequest;
 import com.mycity4kids.models.request.ArticleDetailRequest;
 import com.mycity4kids.models.request.ArticleReadTimeRequest;
 import com.mycity4kids.models.request.DeleteBookmarkRequest;
@@ -15,11 +16,13 @@ import com.mycity4kids.models.response.ArticleListingResponse;
 import com.mycity4kids.models.response.ArticleRecommendationStatusResponse;
 import com.mycity4kids.models.response.FBCommentResponse;
 import com.mycity4kids.models.response.RecommendUnrecommendArticleResponse;
+import com.mycity4kids.models.response.CommentListResponse;
 import com.mycity4kids.models.response.ViewCountResponse;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -58,6 +61,21 @@ public interface ArticleDetailsAPI {
                                                       @Query("sort") int authorId,
                                                       @Query("start") int start,
                                                       @Query("end") int end);
+
+    @GET("v3/comments/")
+    Call<CommentListResponse> getArticleComments(@Query("postId") String articleId,
+                                                 @Query("type") String type,
+                                                 @Query("commentId") String paginationCommentId);
+
+    @POST("v3/comments/")
+    Call<CommentListResponse> addCommentOrReply(@Body AddEditCommentOrReplyRequest body);
+
+    @DELETE("v3/comments/{commentOrReplyId}")
+    Call<CommentListResponse> deleteCommentOrReply(@Path("commentOrReplyId") String commentOrReplyId);
+
+    @PUT("v3/comments/{commentOrReplyId}")
+    Call<CommentListResponse> editCommentOrReply(@Path("commentOrReplyId") String commentOrReplyId,
+                                                 @Body AddEditCommentOrReplyRequest body);
 
     @GET
     Call<ResponseBody> getComments(@Url String url);
