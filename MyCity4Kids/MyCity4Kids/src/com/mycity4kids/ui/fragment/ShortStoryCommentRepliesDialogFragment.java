@@ -30,7 +30,7 @@ import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.models.response.CommentListData;
 import com.mycity4kids.models.response.CommentListResponse;
 import com.mycity4kids.retrofitAPIsInterfaces.ShortStoryAPI;
-import com.mycity4kids.ui.adapter.ShortStoryCommentRepliesRecyclerAdapter;
+import com.mycity4kids.ui.adapter.CommentRepliesRecyclerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
-public class ShortStoryCommentRepliesDialogFragment extends DialogFragment implements View.OnClickListener, ShortStoryCommentRepliesRecyclerAdapter.RecyclerViewClickListener,
+public class ShortStoryCommentRepliesDialogFragment extends DialogFragment implements View.OnClickListener, CommentRepliesRecyclerAdapter.RecyclerViewClickListener,
         CommentOptionsDialogFragment.ICommentOptionAction {
 
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
@@ -53,7 +53,7 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
     private TextView toolbarTitleTextView;
     private ProgressDialog mProgressDialog;
 
-    private ShortStoryCommentRepliesRecyclerAdapter shortStoryCommentRepliesRecyclerAdapter;
+    private CommentRepliesRecyclerAdapter commentRepliesRecyclerAdapter;
     private int totalRepliesCount;
     private FloatingActionButton openAddReplyDialog;
     private String paginationReplyId;
@@ -112,9 +112,9 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
             isLastPageReached = true;
         }
 
-        shortStoryCommentRepliesRecyclerAdapter = new ShortStoryCommentRepliesRecyclerAdapter(getActivity(), this);
-        shortStoryCommentRepliesRecyclerAdapter.setData(repliesList);
-        repliesRecyclerView.setAdapter(shortStoryCommentRepliesRecyclerAdapter);
+        commentRepliesRecyclerAdapter = new CommentRepliesRecyclerAdapter(getActivity(), this);
+        commentRepliesRecyclerAdapter.setData(repliesList);
+        repliesRecyclerView.setAdapter(commentRepliesRecyclerAdapter);
 
         repliesRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -179,14 +179,14 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
             }
         } else {
             repliesList.addAll(replyList);
-            shortStoryCommentRepliesRecyclerAdapter.setData(repliesList);
+            commentRepliesRecyclerAdapter.setData(repliesList);
             paginationReplyId = replyList.get(replyList.size() - 1).get_id();
             downloadedReplies = downloadedReplies + replyList.size();
             if (downloadedReplies >= totalRepliesCount) {
                 isLastPageReached = true;
             }
         }
-        shortStoryCommentRepliesRecyclerAdapter.notifyDataSetChanged();
+        commentRepliesRecyclerAdapter.notifyDataSetChanged();
     }
 
     @NonNull
@@ -302,7 +302,7 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
                 isLastPageReached = true;
             }
         }
-        shortStoryCommentRepliesRecyclerAdapter.notifyDataSetChanged();
+        commentRepliesRecyclerAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -321,9 +321,14 @@ public class ShortStoryCommentRepliesDialogFragment extends DialogFragment imple
         AddShortStoryCommentReplyDialogFragment addGpPostCommentReplyDialogFragment = new AddShortStoryCommentReplyDialogFragment();
         FragmentManager fm = getChildFragmentManager();
         Bundle _args = new Bundle();
-        _args.putString("action", "EDIT_REPLY");
+        if (position == 0) {
+            _args.putString("action", "EDIT_COMMENT");
+            _args.putInt("position", commentPosition);
+        } else {
+            _args.putString("action", "EDIT_REPLY");
+            _args.putInt("position", position);
+        }
         _args.putParcelable("parentCommentData", repliesList.get(position));
-        _args.putInt("position", position);
         addGpPostCommentReplyDialogFragment.setArguments(_args);
         addGpPostCommentReplyDialogFragment.setCancelable(true);
         addGpPostCommentReplyDialogFragment.setTargetFragment(getParentFragment(), 0);

@@ -17,7 +17,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class ShortStoryCommentRepliesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class CommentRepliesRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int RESPONSE_TYPE_COMMENT = 0;
     private static final int RESPONSE_TYPE_REPLY = 1;
@@ -26,7 +26,7 @@ public class ShortStoryCommentRepliesRecyclerAdapter extends RecyclerView.Adapte
     private ArrayList<CommentListData> repliesList;
     private RecyclerViewClickListener mListener;
 
-    public ShortStoryCommentRepliesRecyclerAdapter(Context pContext, RecyclerViewClickListener listener) {
+    public CommentRepliesRecyclerAdapter(Context pContext, RecyclerViewClickListener listener) {
         mContext = pContext;
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mListener = listener;
