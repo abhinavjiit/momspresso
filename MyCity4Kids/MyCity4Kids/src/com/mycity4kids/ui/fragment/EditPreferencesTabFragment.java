@@ -287,7 +287,7 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
                     mDatalist = (ArrayList<String>) responseData.getData();
                     try {
-                        FileInputStream fileInputStream = getActivity().openFileInput(AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
+                        FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
                         String fileContent = AppUtils.convertStreamToString(fileInputStream);
                         FollowTopics[] res = new Gson().fromJson(fileContent, FollowTopics[].class);
                         checkCurrentCategoryExists(res, mDatalist);
@@ -343,7 +343,7 @@ public class EditPreferencesTabFragment extends BaseFragment implements View.OnC
                         Log.d("TopicsFilterActivity", "file download was a success? " + writtenToDisk);
 
                         try {
-                            FileInputStream fileInputStream = getActivity().openFileInput(AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
+                            FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.FOLLOW_UNFOLLOW_TOPICS_JSON_FILE);
                             String fileContent = AppUtils.convertStreamToString(fileInputStream);
                             FollowTopics[] res = new Gson().fromJson(fileContent, FollowTopics[].class);
                             checkCurrentCategoryExists(res, mDatalist);

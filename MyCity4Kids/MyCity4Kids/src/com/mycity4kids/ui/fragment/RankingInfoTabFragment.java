@@ -156,7 +156,7 @@ public class RankingInfoTabFragment extends BaseFragment implements View.OnClick
 
         languageConfigModelArrayList.add(languageConfigModel);
         try {
-            FileInputStream fileInputStream = getActivity().openFileInput(AppConstants.LANGUAGES_JSON_FILE);
+            FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.LANGUAGES_JSON_FILE);
             String fileContent = AppUtils.convertStreamToString(fileInputStream);
 //            ConfigResult res = new Gson().fromJson(fileContent, ConfigResult.class);
             LinkedHashMap<String, LanguageConfigModel> retMap = new Gson().fromJson(

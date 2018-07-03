@@ -123,7 +123,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
 
             guideOverLay.setOnClickListener(this);
             try {
-                FileInputStream fileInputStream = getActivity().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                 String fileContent = AppUtils.convertStreamToString(fileInputStream);
                 Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
                 ExploreTopicsResponse res = gson.fromJson(fileContent, ExploreTopicsResponse.class);
@@ -146,7 +146,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                         boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE, response.body());
 
                         try {
-                            FileInputStream fileInputStream = getActivity().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                            FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                             String fileContent = AppUtils.convertStreamToString(fileInputStream);
                             Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
                             ExploreTopicsResponse res = gson.fromJson(fileContent, ExploreTopicsResponse.class);
