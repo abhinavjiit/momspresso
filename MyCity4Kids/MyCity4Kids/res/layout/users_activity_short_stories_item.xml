@@ -27,8 +27,42 @@
         android:textSize="14sp"
         app:fontName="oswald_regular.ttf" />
 
+    <!--<com.mycity4kids.widget.CustomFontTextView-->
+    <!--android:id="@+id/viewCountTextView"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignLeft="@+id/articleTitleTextView"-->
+    <!--android:layout_alignStart="@+id/articleTitleTextView"-->
+    <!--android:layout_below="@+id/articleTitleTextView"-->
+    <!--android:layout_marginBottom="5dp"-->
+    <!--android:layout_marginTop="5dp"-->
+    <!--android:drawableLeft="@drawable/ic_views"-->
+    <!--android:drawablePadding="4dp"-->
+    <!--android:drawableStart="@drawable/ic_views"-->
+    <!--android:gravity="center"-->
+    <!--android:paddingLeft="2dp"-->
+    <!--android:paddingStart="2dp"-->
+    <!--android:text="0"-->
+    <!--android:textColor="@color/article_listing.stats"-->
+    <!--android:textSize="12sp"-->
+    <!--app:fontName="open_sans.ttf" />-->
+
+    <!--<View-->
+    <!--android:id="@+id/separatorView1"-->
+    <!--android:layout_width="1dp"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignBottom="@+id/viewCountTextView"-->
+    <!--android:layout_alignTop="@+id/viewCountTextView"-->
+    <!--android:layout_marginBottom="3dp"-->
+    <!--android:layout_marginLeft="5dp"-->
+    <!--android:layout_marginStart="5dp"-->
+    <!--android:layout_marginTop="3dp"-->
+    <!--android:layout_toEndOf="@+id/viewCountTextView"-->
+    <!--android:layout_toRightOf="@+id/viewCountTextView"-->
+    <!--android:background="@color/common_underline" />-->
+
     <com.mycity4kids.widget.CustomFontTextView
-        android:id="@+id/viewCountTextView"
+        android:id="@+id/commentCountTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/articleTitleTextView"
@@ -36,42 +70,6 @@
         android:layout_below="@+id/articleTitleTextView"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
-        android:drawableLeft="@drawable/ic_views"
-        android:drawablePadding="4dp"
-        android:drawableStart="@drawable/ic_views"
-        android:gravity="center"
-        android:paddingLeft="2dp"
-        android:paddingStart="2dp"
-        android:text="0"
-        android:textColor="@color/article_listing.stats"
-        android:textSize="12sp"
-        app:fontName="open_sans.ttf" />
-
-    <View
-        android:id="@+id/separatorView1"
-        android:layout_width="1dp"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/viewCountTextView"
-        android:layout_alignTop="@+id/viewCountTextView"
-        android:layout_marginBottom="3dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="3dp"
-        android:layout_toEndOf="@+id/viewCountTextView"
-        android:layout_toRightOf="@+id/viewCountTextView"
-        android:background="@color/common_underline" />
-
-    <com.mycity4kids.widget.CustomFontTextView
-        android:id="@+id/commentCountTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/viewCountTextView"
-        android:layout_alignTop="@+id/viewCountTextView"
-        android:layout_below="@id/articleTitleTextView"
-        android:layout_marginLeft="11dp"
-        android:layout_marginStart="11dp"
-        android:layout_toEndOf="@+id/viewCountTextView"
-        android:layout_toRightOf="@+id/viewCountTextView"
         android:drawableLeft="@drawable/ic_comments"
         android:drawablePadding="4dp"
         android:drawableStart="@drawable/ic_comments"
@@ -85,8 +83,8 @@
         android:id="@+id/separatorView2"
         android:layout_width="1dp"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/viewCountTextView"
-        android:layout_alignTop="@+id/viewCountTextView"
+        android:layout_alignBottom="@+id/commentCountTextView"
+        android:layout_alignTop="@+id/commentCountTextView"
         android:layout_marginBottom="3dp"
         android:layout_marginLeft="5dp"
         android:layout_marginStart="5dp"
@@ -99,8 +97,8 @@
         android:id="@+id/recommendCountTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/viewCountTextView"
-        android:layout_alignTop="@+id/viewCountTextView"
+        android:layout_alignBottom="@+id/commentCountTextView"
+        android:layout_alignTop="@+id/commentCountTextView"
         android:layout_below="@id/articleTitleTextView"
         android:layout_marginLeft="11dp"
         android:layout_marginStart="11dp"

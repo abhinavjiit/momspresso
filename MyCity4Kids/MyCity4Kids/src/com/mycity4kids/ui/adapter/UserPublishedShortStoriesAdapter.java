@@ -128,23 +128,20 @@ public class UserPublishedShortStoriesAdapter extends RecyclerView.Adapter<Recyc
         } else {
 
             ((UserPublishedArticleViewHolder) holder).txvArticleTitle.setText(articleDataModelsNew.get(position).getTitle());
-            ((UserPublishedArticleViewHolder) holder).viewCountTextView.setText(articleDataModelsNew.get(position).getArticleCount());
 
             ((UserPublishedArticleViewHolder) holder).commentCountTextView.setText(articleDataModelsNew.get(position).getCommentsCount());
             if (StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getCommentsCount()) || "0".equals(articleDataModelsNew.get(position).getCommentsCount())) {
                 ((UserPublishedArticleViewHolder) holder).commentCountTextView.setVisibility(View.GONE);
-                ((UserPublishedArticleViewHolder) holder).separatorView1.setVisibility(View.GONE);
+                ((UserPublishedArticleViewHolder) holder).separatorView2.setVisibility(View.GONE);
             } else {
                 ((UserPublishedArticleViewHolder) holder).commentCountTextView.setVisibility(View.VISIBLE);
-                ((UserPublishedArticleViewHolder) holder).separatorView1.setVisibility(View.VISIBLE);
+                ((UserPublishedArticleViewHolder) holder).separatorView2.setVisibility(View.VISIBLE);
             }
             ((UserPublishedArticleViewHolder) holder).recommendCountTextView.setText(articleDataModelsNew.get(position).getLikesCount());
             if (StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getLikesCount()) || "0".equals(articleDataModelsNew.get(position).getLikesCount())) {
-                ((UserPublishedArticleViewHolder) holder).recommendCountTextView.setVisibility(View.GONE);
-                ((UserPublishedArticleViewHolder) holder).separatorView2.setVisibility(View.GONE);
+                ((UserPublishedArticleViewHolder) holder).recommendCountTextView.setVisibility(View.INVISIBLE);
             } else {
                 ((UserPublishedArticleViewHolder) holder).recommendCountTextView.setVisibility(View.VISIBLE);
-                ((UserPublishedArticleViewHolder) holder).separatorView2.setVisibility(View.VISIBLE);
             }
             if (isPrivateProfile) {
                 ((UserPublishedArticleViewHolder) holder).editPublishedTextView.setVisibility(View.VISIBLE);
@@ -179,23 +176,22 @@ public class UserPublishedShortStoriesAdapter extends RecyclerView.Adapter<Recyc
         }
 
         holder.txvArticleTitle.setText(articleDataModelsNew.get(position).getTitle());
-        holder.viewCountTextView.setText(articleDataModelsNew.get(position).getArticleCount());
 
         holder.commentCountTextView.setText(articleDataModelsNew.get(position).getCommentsCount());
         if (StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getCommentsCount()) || "0".equals(articleDataModelsNew.get(position).getCommentsCount())) {
             holder.commentCountTextView.setVisibility(View.GONE);
-            holder.separatorView1.setVisibility(View.GONE);
+            holder.separatorView2.setVisibility(View.GONE);
         } else {
             holder.commentCountTextView.setVisibility(View.VISIBLE);
-            holder.separatorView1.setVisibility(View.VISIBLE);
+            holder.separatorView2.setVisibility(View.VISIBLE);
         }
         holder.recommendCountTextView.setText(articleDataModelsNew.get(position).getLikesCount());
         if (StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getLikesCount()) || "0".equals(articleDataModelsNew.get(position).getLikesCount())) {
-            holder.recommendCountTextView.setVisibility(View.GONE);
-            holder.separatorView2.setVisibility(View.GONE);
+            holder.recommendCountTextView.setVisibility(View.INVISIBLE);
+
         } else {
             holder.recommendCountTextView.setVisibility(View.VISIBLE);
-            holder.separatorView2.setVisibility(View.VISIBLE);
+
         }
         if (isPrivateProfile) {
             holder.editPublishedTextView.setVisibility(View.VISIBLE);
@@ -242,12 +238,10 @@ public class UserPublishedShortStoriesAdapter extends RecyclerView.Adapter<Recyc
         ImageView articleImageView;
         TextView txvArticleTitle;
         TextView txvPublishDate;
-        TextView viewCountTextView;
         TextView commentCountTextView;
         TextView recommendCountTextView;
         ImageView shareArticleImageView;
         TextView editPublishedTextView;
-        View separatorView1;
         View separatorView2;
 
         AdViewHolder(View adView) {
@@ -264,13 +258,11 @@ public class UserPublishedShortStoriesAdapter extends RecyclerView.Adapter<Recyc
             rootLayout = (RelativeLayout) itemView.findViewById(R.id.rootLayout);
             txvArticleTitle = (TextView) itemView.findViewById(R.id.txvArticleTitle);
             txvPublishDate = (TextView) itemView.findViewById(R.id.txvPublishDate);
-            viewCountTextView = (TextView) itemView.findViewById(R.id.viewCountTextView);
             commentCountTextView = (TextView) itemView.findViewById(R.id.commentCountTextView);
             recommendCountTextView = (TextView) itemView.findViewById(R.id.recommendCountTextView);
             articleImageView = (ImageView) itemView.findViewById(R.id.articleImageView);
             shareArticleImageView = (ImageView) itemView.findViewById(R.id.shareArticleImageView);
             editPublishedTextView = (TextView) itemView.findViewById(R.id.editPublishedTextView);
-            separatorView1 = itemView.findViewById(R.id.separatorView1);
             separatorView2 = itemView.findViewById(R.id.separatorView2);
             shareArticleImageView.setOnClickListener(this);
             editPublishedTextView.setOnClickListener(this);
@@ -286,24 +278,20 @@ public class UserPublishedShortStoriesAdapter extends RecyclerView.Adapter<Recyc
     public class UserPublishedArticleViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView txvArticleTitle;
         TextView txvPublishDate;
-        TextView viewCountTextView;
         TextView commentCountTextView;
         TextView recommendCountTextView;
         ImageView shareArticleImageView;
         TextView editPublishedTextView;
-        View separatorView1;
         View separatorView2;
 
         public UserPublishedArticleViewHolder(View itemView, SSRecyclerViewClickListener listener) {
             super(itemView);
             txvArticleTitle = (TextView) itemView.findViewById(R.id.txvArticleTitle);
             txvPublishDate = (TextView) itemView.findViewById(R.id.txvPublishDate);
-            viewCountTextView = (TextView) itemView.findViewById(R.id.viewCountTextView);
             commentCountTextView = (TextView) itemView.findViewById(R.id.commentCountTextView);
             recommendCountTextView = (TextView) itemView.findViewById(R.id.recommendCountTextView);
             shareArticleImageView = (ImageView) itemView.findViewById(R.id.shareArticleImageView);
             editPublishedTextView = (TextView) itemView.findViewById(R.id.editPublishedTextView);
-            separatorView1 = itemView.findViewById(R.id.separatorView1);
             separatorView2 = itemView.findViewById(R.id.separatorView2);
             shareArticleImageView.setOnClickListener(this);
             editPublishedTextView.setOnClickListener(this);

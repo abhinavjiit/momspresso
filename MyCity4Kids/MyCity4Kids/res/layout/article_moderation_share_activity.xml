@@ -127,12 +127,23 @@
                     android:padding="10dp"
                     android:src="@drawable/ic_share_gplus" />
 
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/instagramImageView"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="5dp"
+                    android:layout_toRightOf="@+id/googlePlusImageView"
+                    android:background="@drawable/unfollow_topic_author_bg"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_insta"
+                    android:tint="@color/white" />
+
                 <ImageView
                     android:id="@+id/whatsappImageView"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_margin="5dp"
-                    android:layout_toRightOf="@+id/googlePlusImageView"
+                    android:layout_toRightOf="@+id/instagramImageView"
                     android:background="@drawable/unfollow_topic_author_bg"
                     android:padding="10dp"
                     android:src="@drawable/ic_share_whats_up" />

@@ -38,6 +38,7 @@ public class ArticleListingResult implements Parcelable {
     private int listingWatchLaterStatus = 0;
     private String lang;
     private String contentType;
+    private boolean isLiked;
 
     public ArticleListingResult() {
     }
@@ -294,6 +295,14 @@ public class ArticleListingResult implements Parcelable {
 
     public void setContentType(String contentType) {
         this.contentType = contentType;
+    }
+
+    public boolean isLiked() {
+        return isLiked;
+    }
+
+    public void setLiked(boolean liked) {
+        isLiked = liked;
     }
 
     @Override

@@ -257,7 +257,9 @@ public class BloggerProfileActivity extends BaseActivity implements View.OnClick
                 authorName = responseData.getData().get(0).getResult().getFirstName() + " " + responseData.getData().get(0).getResult().getLastName();
                 authorNameTextView.setText(responseData.getData().get(0).getResult().getFirstName() + " " + responseData.getData().get(0).getResult().getLastName());
                 toolbarTitle.setText(responseData.getData().get(0).getResult().getFirstName() + " " + responseData.getData().get(0).getResult().getLastName());
-
+                if (responseData.getData().get(0).getResult().getUserType() == null) {
+                    responseData.getData().get(0).getResult().setUserType("");
+                }
                 switch (responseData.getData().get(0).getResult().getUserType()) {
                     case AppConstants.USER_TYPE_BLOGGER:
                         authorTypeTextView.setText(AppConstants.AUTHOR_TYPE_BLOGGER.toUpperCase());

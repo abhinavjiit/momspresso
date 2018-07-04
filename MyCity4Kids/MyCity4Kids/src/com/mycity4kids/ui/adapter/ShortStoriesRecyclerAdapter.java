@@ -72,8 +72,8 @@ public class ShortStoriesRecyclerAdapter extends RecyclerView.Adapter<ShortStori
                 break;
         }
 
-        holder.storyTitleTextView.setText(articleDataModelsNew.get(position).getTitle());
-        holder.storyBodyTextView.setText(articleDataModelsNew.get(position).getBody());
+        holder.storyTitleTextView.setText(articleDataModelsNew.get(position).getTitle().trim());
+        holder.storyBodyTextView.setText(articleDataModelsNew.get(position).getBody().trim());
         holder.authorNameTextView.setText(articleDataModelsNew.get(position).getUserName());
 
         if (null == articleDataModelsNew.get(position).getCommentsCount()) {
@@ -86,6 +86,12 @@ public class ShortStoriesRecyclerAdapter extends RecyclerView.Adapter<ShortStori
             holder.storyRecommendationCountTextView.setText("0");
         } else {
             holder.storyRecommendationCountTextView.setText(articleDataModelsNew.get(position).getLikesCount());
+        }
+
+        if (articleDataModelsNew.get(position).isLiked()) {
+            holder.likeImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_recommended));
+        } else {
+            holder.likeImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_ss_like));
         }
     }
 
@@ -101,7 +107,7 @@ public class ShortStoriesRecyclerAdapter extends RecyclerView.Adapter<ShortStori
         TextView storyCommentCountTextView;
         LinearLayout storyRecommendationContainer, storyCommentContainer;
         TextView storyRecommendationCountTextView;
-        ImageView storyOptionImageView;
+        ImageView storyOptionImageView, likeImageView;
         ImageView facebookShareImageView, whatsappShareImageView, instagramShareImageView, genericShareImageView;
         RelativeLayout mainView;
 
@@ -116,6 +122,7 @@ public class ShortStoriesRecyclerAdapter extends RecyclerView.Adapter<ShortStori
             storyCommentCountTextView = (TextView) itemView.findViewById(R.id.storyCommentCountTextView);
             storyRecommendationCountTextView = (TextView) itemView.findViewById(R.id.storyRecommendationCountTextView);
             storyOptionImageView = (ImageView) itemView.findViewById(R.id.storyOptionImageView);
+            likeImageView = (ImageView) itemView.findViewById(R.id.likeImageView);
             facebookShareImageView = (ImageView) itemView.findViewById(R.id.facebookShareImageView);
             whatsappShareImageView = (ImageView) itemView.findViewById(R.id.whatsappShareImageView);
             instagramShareImageView = (ImageView) itemView.findViewById(R.id.instagramShareImageView);

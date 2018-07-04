@@ -700,6 +700,10 @@ public class AppUtils {
     public static void shareStoryWithWhatsApp(Context mContext, String userType, String blogSlug, String titleSlug,
                                               String screenName, String userDynamoId, String articleId, String authorId, String authorName) {
         String shareUrl = AppUtils.getShortStoryShareUrl(userType, blogSlug, titleSlug);
+        shareStoryWithWhatsApp(mContext, shareUrl, screenName, userDynamoId, articleId, authorId, authorName);
+    }
+
+    public static void shareStoryWithWhatsApp(Context mContext, String shareUrl, String screenName, String userDynamoId, String articleId, String authorId, String authorName) {
 
         if (StringUtils.isNullOrEmpty(shareUrl)) {
             Toast.makeText(mContext, mContext.getString(R.string.moderation_or_share_whatsapp_fail), Toast.LENGTH_SHORT).show();
@@ -716,31 +720,25 @@ public class AppUtils {
                 Toast.makeText(mContext, mContext.getString(R.string.moderation_or_share_whatsapp_not_installed), Toast.LENGTH_SHORT).show();
                 return;
             }
-            Utils.pushShareArticleEvent(mContext, screenName, userDynamoId + "", articleId, authorId + "~" + authorName, "Whatsapp");
+            Utils.pushShareStoryEvent(mContext, screenName, userDynamoId + "", articleId, authorId + "~" + authorName, "Whatsapp");
         }
     }
 
-    public static void shareStoryWithInstagram(Context mContext, String userType, String blogSlug, String titleSlug,
-                                               String screenName, String userDynamoId, String articleId, String authorId, String authorName) {
-        String shareUrl = AppUtils.getShortStoryShareUrl(userType, blogSlug, titleSlug);
-
-        if (StringUtils.isNullOrEmpty(shareUrl)) {
-            Toast.makeText(mContext, mContext.getString(R.string.moderation_or_share_insta_fail), Toast.LENGTH_SHORT).show();
-        } else {
-            Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg");
-            Intent instaIntent = new Intent(Intent.ACTION_SEND);
-            instaIntent.putExtra(Intent.EXTRA_STREAM, uri);
-            instaIntent.setType("image/*");
-            instaIntent.setPackage("com.instagram.android");
-            try {
-                mContext.startActivity(Intent.createChooser(instaIntent, "Share image via:"));
-            } catch (android.content.ActivityNotFoundException ex) {
-                Toast.makeText(mContext, mContext.getString(R.string.moderation_or_share_insta_not_installed), Toast.LENGTH_SHORT).show();
-                return;
-            }
-            Utils.pushShareArticleEvent(mContext, screenName, userDynamoId + "", articleId, authorId + "~" + authorName, "Instagram");
+    public static void shareStoryWithInstagram(Context mContext, String screenName, String userDynamoId, String articleId, String authorId, String authorName) {
+        Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/MyCity4Kids/videos/image.jpg");
+        Intent instaIntent = new Intent(Intent.ACTION_SEND);
+        instaIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        instaIntent.setType("image/*");
+        instaIntent.setPackage("com.instagram.android");
+        try {
+            mContext.startActivity(Intent.createChooser(instaIntent, "Share image via:"));
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(mContext, mContext.getString(R.string.moderation_or_share_insta_not_installed), Toast.LENGTH_SHORT).show();
+            return;
         }
+        Utils.pushShareStoryEvent(mContext, screenName, userDynamoId + "", articleId, authorId + "~" + authorName, "Instagram");
     }
+
 
     public static void shareStoryWithFB(BaseFragment topicsShortStoriesTabFragment, String userType, String blogSlug, String titleSlug,
                                         String screenName, String userDynamoId, String articleId, String authorId, String authorName) {
@@ -752,7 +750,7 @@ public class AppUtils {
                     .build();
             new ShareDialog(topicsShortStoriesTabFragment).show(content);
         }
-        Utils.pushShareArticleEvent(topicsShortStoriesTabFragment.getContext(), screenName, userDynamoId + "", articleId, authorId + "~" + authorName, "Facebook");
+        Utils.pushShareStoryEvent(topicsShortStoriesTabFragment.getContext(), screenName, userDynamoId + "", articleId, authorId + "~" + authorName, "Facebook");
     }
 
     public static void shareStoryGeneric(Context mContext, String userType, String blogSlug, String titleSlug,

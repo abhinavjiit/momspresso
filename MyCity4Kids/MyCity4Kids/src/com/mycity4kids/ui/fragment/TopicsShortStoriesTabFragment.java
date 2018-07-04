@@ -69,6 +69,8 @@ import retrofit2.Retrofit;
  */
 public class TopicsShortStoriesTabFragment extends BaseFragment implements View.OnClickListener, ShortStoriesRecyclerAdapter.RecyclerViewClickListener {
 
+    private static final long MIN_TIME_VIEW = 3;
+
     private int nextPageNumber = 1;
     private int limit = 15;
     private boolean isReuqestRunning = false;
@@ -104,6 +106,9 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
     private TextView titleTextView, bodyTextView, authorTextView;
     private ShortStoryAPI shortStoryAPI;
     Set<Integer> viewedStoriesSet = new HashSet<>();
+    private boolean isRecommendRequestRunning;
+    private String likeStatus;
+    private int currentShortStoryPosition;
 
     @Nullable
     @Override
@@ -369,7 +374,17 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 startActivity(intent);
                 break;
             case R.id.storyRecommendationContainer:
-                recommendUnrecommentArticleAPI("1", mDatalist.get(position).getId(), mDatalist.get(position).getUserId(), mDatalist.get(position).getUserName());
+                if (!isRecommendRequestRunning) {
+                    if (mDatalist.get(position).isLiked()) {
+                        likeStatus = "0";
+                        currentShortStoryPosition = position;
+                        recommendUnrecommentArticleAPI("0", mDatalist.get(position).getId(), mDatalist.get(position).getUserId(), mDatalist.get(position).getUserName());
+                    } else {
+                        likeStatus = "1";
+                        currentShortStoryPosition = position;
+                        recommendUnrecommentArticleAPI("1", mDatalist.get(position).getId(), mDatalist.get(position).getUserId(), mDatalist.get(position).getUserName());
+                    }
+                }
                 break;
             case R.id.facebookShareImageView: {
                 if (isAdded()) {
@@ -401,8 +416,8 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
                 }
 
                 if (isAdded()) {
-                    AppUtils.shareStoryWithInstagram(getActivity(), mDatalist.get(position).getUserType(), mDatalist.get(position).getBlogPageSlug(), mDatalist.get(position).getTitleSlug(),
-                            "ShortStoryListingScreen", userDynamoId, mDatalist.get(position).getId(), mDatalist.get(position).getUserId(), mDatalist.get(position).getUserName());
+                    AppUtils.shareStoryWithInstagram(getActivity(), "ShortStoryListingScreen", userDynamoId, mDatalist.get(position).getId(),
+                            mDatalist.get(position).getUserId(), mDatalist.get(position).getUserName());
                 }
             }
             break;
@@ -437,9 +452,10 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
         Retrofit retro = BaseApplication.getInstance().getRetrofit();
         ArticleDetailsAPI articleDetailsAPI = retro.create(ArticleDetailsAPI.class);
 
+        isRecommendRequestRunning = true;
         RecommendUnrecommendArticleRequest recommendUnrecommendArticleRequest = new RecommendUnrecommendArticleRequest();
         recommendUnrecommendArticleRequest.setArticleId(articleId);
-        recommendUnrecommendArticleRequest.setStatus(status);
+        recommendUnrecommendArticleRequest.setStatus(likeStatus);
         Call<RecommendUnrecommendArticleResponse> recommendUnrecommendArticle = articleDetailsAPI.recommendUnrecommendArticle(recommendUnrecommendArticleRequest);
         recommendUnrecommendArticle.enqueue(recommendUnrecommendArticleResponseCallback);
     }
@@ -447,6 +463,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
     private Callback<RecommendUnrecommendArticleResponse> recommendUnrecommendArticleResponseCallback = new Callback<RecommendUnrecommendArticleResponse>() {
         @Override
         public void onResponse(Call<RecommendUnrecommendArticleResponse> call, retrofit2.Response<RecommendUnrecommendArticleResponse> response) {
+            isRecommendRequestRunning = false;
             if (response == null || null == response.body()) {
                 if (!isAdded()) {
                     return;
@@ -458,18 +475,31 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
             try {
                 RecommendUnrecommendArticleResponse responseData = response.body();
                 if (responseData.getCode() == 200 && Constants.SUCCESS.equals(responseData.getStatus())) {
-                    if (!responseData.getData().isEmpty()) {
-                        for (int i = 0; i < mDatalist.size(); i++) {
-                            if (responseData.getData().get(0).equals(mDatalist.get(i).getId())) {
-                                mDatalist.get(i).setLikesCount("" + (Integer.parseInt(mDatalist.get(i).getLikesCount()) + 1));
-                                recyclerAdapter.notifyDataSetChanged();
-                            }
+//                    if (!responseData.getData().isEmpty()) {
+//                        for (int i = 0; i < mDatalist.size(); i++) {
+//                            if (responseData.getData().get(0).equals(mDatalist.get(i).getId())) {
+//                                mDatalist.get(i).setLikesCount("" + (Integer.parseInt(mDatalist.get(i).getLikesCount()) + 1));
+//                                mDatalist.get(i).setLiked(true);
+//                                recyclerAdapter.notifyDataSetChanged();
+//                            }
+//                        }
+//                    }
+                    if (likeStatus.equals("1")) {
+                        if (!responseData.getData().isEmpty()) {
+                            mDatalist.get(currentShortStoryPosition).setLikesCount("" + (Integer.parseInt(mDatalist.get(currentShortStoryPosition).getLikesCount()) + 1));
                         }
+                        mDatalist.get(currentShortStoryPosition).setLiked(true);
+                    } else {
+                        if (!responseData.getData().isEmpty()) {
+                            mDatalist.get(currentShortStoryPosition).setLikesCount("" + (Integer.parseInt(mDatalist.get(currentShortStoryPosition).getLikesCount()) - 1));
+                        }
+                        mDatalist.get(currentShortStoryPosition).setLiked(false);
                     }
-                    if (!isAdded()) {
-                        return;
+                    recyclerAdapter.notifyDataSetChanged();
+                    if (isAdded()) {
+                        ((DashboardActivity) getActivity()).showToast("" + responseData.getReason());
                     }
-                    ((DashboardActivity) getActivity()).showToast("" + responseData.getReason());
+
                 } else {
                     if (isAdded())
                         ((DashboardActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
@@ -484,6 +514,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
 
         @Override
         public void onFailure(Call<RecommendUnrecommendArticleResponse> call, Throwable t) {
+            isRecommendRequestRunning = false;
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
         }
@@ -563,7 +594,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
 //                                        .valueOf(viewsViewed
 //                                                .get(trackedViewsCount)),
 //                                (endTime - startTime) / 1000));
-                        if (((endTime - startTime) / 1000) >= 5) {
+                        if (((endTime - startTime) / 1000) >= MIN_TIME_VIEW) {
                             if (!viewedStoriesSet.contains(viewsViewed.get(trackedViewsCount))) {
                                 updateViewCount(viewsViewed.get(trackedViewsCount));
                                 viewedStoriesSet.add(viewsViewed.get(trackedViewsCount));
@@ -619,7 +650,7 @@ public class TopicsShortStoriesTabFragment extends BaseFragment implements View.
 //            trackingData.add(prepareTrackingData(String.valueOf(viewsViewed
 //                            .get(trackedViewsCount)),
 //                    (endTime - startTime) / 1000));
-            if (((endTime - startTime) / 1000) >= 5) {
+            if (((endTime - startTime) / 1000) >= MIN_TIME_VIEW) {
                 if (!viewedStoriesSet.contains(viewsViewed.get(trackedViewsCount))) {
                     updateViewCount(viewsViewed.get(trackedViewsCount));
                     viewedStoriesSet.add(viewsViewed.get(trackedViewsCount));

@@ -107,7 +107,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                 adapter = new ParentTopicsGridAdapter();
                 gridview.setAdapter(adapter);
                 adapter.setDatalist(mainTopicsList);
-
+                initializeTopicSearch();
             } catch (FileNotFoundException e) {
                 Crashlytics.logException(e);
                 Log.d("FileNotFoundException", Log.getStackTraceString(e));
@@ -121,10 +121,9 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
             searchTopicsEditText.setVisibility(View.GONE);
             exploreCategoriesLabel.setText(getString(R.string.explore_listing_explore_categories_title));
             setUpTabLayout(sections);
-
             guideOverLay.setOnClickListener(this);
             try {
-                FileInputStream fileInputStream = getActivity().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                 String fileContent = AppUtils.convertStreamToString(fileInputStream);
                 Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
                 ExploreTopicsResponse res = gson.fromJson(fileContent, ExploreTopicsResponse.class);
@@ -134,20 +133,18 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                 adapter.setDatalist(mainTopicsList);
                 guideTopicTextView1.setText(mainTopicsList.get(0).getDisplay_name().toUpperCase());
                 guideTopicTextView2.setText(mainTopicsList.get(1).getDisplay_name().toUpperCase());
-
             } catch (FileNotFoundException e) {
                 Retrofit retro = BaseApplication.getInstance().getRetrofit();
                 final TopicsCategoryAPI topicsAPI = retro.create(TopicsCategoryAPI.class);
 
                 Call<ResponseBody> caller = topicsAPI.downloadTopicsJSON();
-
                 caller.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                        boolean writtenToDisk = AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE, response.body());
+                        AppUtils.writeResponseBodyToDisk(BaseApplication.getAppContext(), AppConstants.CATEGORIES_JSON_FILE, response.body());
 
                         try {
-                            FileInputStream fileInputStream = getActivity().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
+                            FileInputStream fileInputStream = BaseApplication.getAppContext().openFileInput(AppConstants.CATEGORIES_JSON_FILE);
                             String fileContent = AppUtils.convertStreamToString(fileInputStream);
                             Gson gson = new GsonBuilder().registerTypeAdapterFactory(new ArrayAdapterFactory()).create();
                             ExploreTopicsResponse res = gson.fromJson(fileContent, ExploreTopicsResponse.class);
@@ -171,25 +168,6 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                 });
             }
         }
-
-        searchTopicsEditText.addTextChangedListener(new TextWatcher() {
-
-            @Override
-            public void afterTextChanged(Editable arg0) {
-                String text = searchTopicsEditText.getText().toString().toLowerCase();
-                adapter.filter(text);
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence arg0, int arg1,
-                                          int arg2, int arg3) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence arg0, int arg1, int arg2,
-                                      int arg3) {
-            }
-        });
 
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -217,6 +195,27 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
         });
 
         return view;
+    }
+
+    private void initializeTopicSearch() {
+        searchTopicsEditText.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable arg0) {
+                String text = searchTopicsEditText.getText().toString().toLowerCase();
+                adapter.filter(text);
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence arg0, int arg1,
+                                          int arg2, int arg3) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence arg0, int arg1, int arg2,
+                                      int arg3) {
+            }
+        });
     }
 
     public void showGuideView() {
@@ -253,7 +252,7 @@ public class ExploreArticleListingTypeFragment extends BaseFragment implements V
                             adapter = new ParentTopicsGridAdapter();
                             gridview.setAdapter(adapter);
                             adapter.setDatalist(mainTopicsList);
-
+                            initializeTopicSearch();
                         } catch (FileNotFoundException e) {
                             Crashlytics.logException(e);
                             Log.d("FileNotFoundException", Log.getStackTraceString(e));

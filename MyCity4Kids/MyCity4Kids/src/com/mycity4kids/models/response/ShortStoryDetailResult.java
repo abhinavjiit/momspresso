@@ -35,6 +35,7 @@ public class ShortStoryDetailResult {
     private String commentCount;
     private String likeCount;
     private String lang;
+    private boolean isLiked;
 
     public String getId() {
         return id;
@@ -242,5 +243,13 @@ public class ShortStoryDetailResult {
 
     public void setLang(String lang) {
         this.lang = lang;
+    }
+
+    public boolean isLiked() {
+        return isLiked;
+    }
+
+    public void setLiked(boolean liked) {
+        isLiked = liked;
     }
 }

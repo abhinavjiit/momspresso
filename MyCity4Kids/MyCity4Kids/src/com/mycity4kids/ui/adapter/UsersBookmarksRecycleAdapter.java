@@ -80,11 +80,11 @@ public class UsersBookmarksRecycleAdapter extends RecyclerView.Adapter<RecyclerV
                 articleViewHolder.viewCountTextView.setText(articleDataModelsNew.get(position).getArticleCount());
             }
 
-            if (null == articleDataModelsNew.get(position).getCommentsCount() || "0".equals(articleDataModelsNew.get(position).getCommentsCount())) {
+            if (null == articleDataModelsNew.get(position).getCommentCount() || "0".equals(articleDataModelsNew.get(position).getCommentCount())) {
                 articleViewHolder.commentCountTextView.setVisibility(View.GONE);
             } else {
                 articleViewHolder.commentCountTextView.setVisibility(View.VISIBLE);
-                articleViewHolder.commentCountTextView.setText(articleDataModelsNew.get(position).getCommentsCount());
+                articleViewHolder.commentCountTextView.setText(articleDataModelsNew.get(position).getCommentCount());
             }
 
             if (null == articleDataModelsNew.get(position).getLikesCount() || "0".equals(articleDataModelsNew.get(position).getLikesCount())) {
@@ -111,15 +111,12 @@ public class UsersBookmarksRecycleAdapter extends RecyclerView.Adapter<RecyclerV
         } else {
             UserRecommendedSSViewHolder shortStoryViewHolder = (UserRecommendedSSViewHolder) holder;
             shortStoryViewHolder.txvArticleTitle.setText(articleDataModelsNew.get(position).getTitle());
-            shortStoryViewHolder.viewCountTextView.setText(articleDataModelsNew.get(position).getArticleCount());
 
             shortStoryViewHolder.commentCountTextView.setText(articleDataModelsNew.get(position).getCommentsCount());
             if (StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getCommentsCount()) || "0".equals(articleDataModelsNew.get(position).getCommentsCount())) {
                 shortStoryViewHolder.commentCountTextView.setVisibility(View.GONE);
-                shortStoryViewHolder.separatorView1.setVisibility(View.GONE);
             } else {
                 shortStoryViewHolder.commentCountTextView.setVisibility(View.VISIBLE);
-                shortStoryViewHolder.separatorView1.setVisibility(View.VISIBLE);
             }
             shortStoryViewHolder.recommendCountTextView.setText(articleDataModelsNew.get(position).getLikesCount());
             if (StringUtils.isNullOrEmpty(articleDataModelsNew.get(position).getLikesCount()) || "0".equals(articleDataModelsNew.get(position).getLikesCount())) {
@@ -172,22 +169,18 @@ public class UsersBookmarksRecycleAdapter extends RecyclerView.Adapter<RecyclerV
     public class UserRecommendedSSViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView txvArticleTitle;
         TextView txvPublishDate;
-        TextView viewCountTextView;
         TextView commentCountTextView;
         TextView recommendCountTextView;
         ImageView shareArticleImageView;
-        View separatorView1;
         View separatorView2;
 
         public UserRecommendedSSViewHolder(View itemView, RecyclerViewClickListener listener) {
             super(itemView);
             txvArticleTitle = (TextView) itemView.findViewById(R.id.articleTitleTextView);
             txvPublishDate = (TextView) itemView.findViewById(R.id.txvPublishDate);
-            viewCountTextView = (TextView) itemView.findViewById(R.id.viewCountTextView);
             commentCountTextView = (TextView) itemView.findViewById(R.id.commentCountTextView);
             recommendCountTextView = (TextView) itemView.findViewById(R.id.recommendCountTextView);
             shareArticleImageView = (ImageView) itemView.findViewById(R.id.shareImageView);
-            separatorView1 = itemView.findViewById(R.id.separatorView1);
             separatorView2 = itemView.findViewById(R.id.separatorView2);
             shareArticleImageView.setOnClickListener(this);
             itemView.setOnClickListener(this);

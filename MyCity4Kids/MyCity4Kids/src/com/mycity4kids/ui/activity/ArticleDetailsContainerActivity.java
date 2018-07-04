@@ -501,9 +501,5 @@ public class ArticleDetailsContainerActivity extends BaseActivity implements Vie
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        for (String result : impressionArticleList) {
-            Log.d("bdfbdbfdbfbdfbdbfbfbf", result);
-        }
-
     }
 }

@@ -179,6 +179,7 @@
                         app:fontName="open_sans.ttf" />
 
                     <ImageView
+                        android:id="@+id/likeImageView"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:paddingBottom="12dp"

@@ -85,6 +85,8 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     private boolean isLastPageReached = false;
     private int totalCommentCount = 0;
     private int downloadedComment = 0;
+    private boolean isRecommendRequestRunning;
+    private String likeStatus;
 
     private ShortStoryAPI shortStoryAPI;
     private int bookmarkStatus;
@@ -254,11 +256,12 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
         checkArticleRecommendStaus.enqueue(recommendStatusResponseCallback);
     }
 
-    private void recommendUnrecommentArticleAPI(String status) {
+    private void recommendUnrecommentArticleAPI() {
         Utils.pushLikeStoryEvent(getActivity(), "ShortStoryDetailsScreen", userDynamoId + "", articleId, authorId + "~" + author);
+        isRecommendRequestRunning = true;
         RecommendUnrecommendArticleRequest recommendUnrecommendArticleRequest = new RecommendUnrecommendArticleRequest();
         recommendUnrecommendArticleRequest.setArticleId(articleId);
-        recommendUnrecommendArticleRequest.setStatus(status);
+        recommendUnrecommendArticleRequest.setStatus(likeStatus);
         Call<RecommendUnrecommendArticleResponse> recommendUnrecommendArticle = shortStoryAPI.recommendUnrecommendArticle(recommendUnrecommendArticleRequest);
         recommendUnrecommendArticle.enqueue(recommendUnrecommendArticleResponseCallback);
     }
@@ -618,6 +621,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
     private Callback<RecommendUnrecommendArticleResponse> recommendUnrecommendArticleResponseCallback = new Callback<RecommendUnrecommendArticleResponse>() {
         @Override
         public void onResponse(Call<RecommendUnrecommendArticleResponse> call, retrofit2.Response<RecommendUnrecommendArticleResponse> response) {
+            isRecommendRequestRunning = false;
             if (response == null || null == response.body()) {
                 if (!isAdded()) {
                     return;
@@ -632,13 +636,28 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                     if (!isAdded()) {
                         return;
                     }
-                    if (null != responseData.getData() && !responseData.getData().isEmpty()) {
-                        ((ShortStoryContainerActivity) getActivity()).showToast(responseData.getReason());
-                        headerModel.getSsResult().setLikeCount("" + (Integer.parseInt(headerModel.getSsResult().getLikeCount()) + 1));
-                        adapter.notifyDataSetChanged();
+                    if (likeStatus.equals("1")) {
+                        if (!responseData.getData().isEmpty()) {
+                            headerModel.getSsResult().setLikeCount("" + (Integer.parseInt(headerModel.getSsResult().getLikeCount()) + 1));
+                        }
+                        headerModel.getSsResult().setLiked(true);
                     } else {
-                        ((ShortStoryContainerActivity) getActivity()).showToast(responseData.getReason());
+                        if (!responseData.getData().isEmpty()) {
+                            headerModel.getSsResult().setLikeCount("" + (Integer.parseInt(headerModel.getSsResult().getLikeCount()) - 1));
+                        }
+                        headerModel.getSsResult().setLiked(false);
                     }
+                    adapter.notifyDataSetChanged();
+                    if (isAdded()) {
+                        ((ShortStoryContainerActivity) getActivity()).showToast("" + responseData.getReason());
+                    }
+//                    if (null != responseData.getData() && !responseData.getData().isEmpty()) {
+//                        ((ShortStoryContainerActivity) getActivity()).showToast(responseData.getReason());
+//                        headerModel.getSsResult().setLikeCount("" + (Integer.parseInt(headerModel.getSsResult().getLikeCount()) + 1));
+//                        adapter.notifyDataSetChanged();
+//                    } else {
+//                        ((ShortStoryContainerActivity) getActivity()).showToast(responseData.getReason());
+//                    }
                 } else {
                     ((ShortStoryContainerActivity) getActivity()).showToast(getString(R.string.server_went_wrong));
                 }
@@ -652,6 +671,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
 
         @Override
         public void onFailure(Call<RecommendUnrecommendArticleResponse> call, Throwable t) {
+            isRecommendRequestRunning = false;
             handleExceptions(t);
         }
     };
@@ -733,7 +753,15 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
             }
             break;
             case R.id.storyRecommendationContainer:
-                recommendUnrecommentArticleAPI("1");
+                if (!isRecommendRequestRunning) {
+                    if (headerModel.getSsResult().isLiked()) {
+                        likeStatus = "0";
+                        recommendUnrecommentArticleAPI();
+                    } else {
+                        likeStatus = "1";
+                        recommendUnrecommentArticleAPI();
+                    }
+                }
                 break;
             case R.id.facebookShareImageView: {
                 if (isAdded()) {
@@ -767,8 +795,7 @@ public class ShortStoryFragment extends BaseFragment implements View.OnClickList
                     return;
                 }
                 if (isAdded()) {
-                    AppUtils.shareStoryWithInstagram(getActivity(), headerModel.getSsResult().getUserType(), headerModel.getSsResult().getBlogTitleSlug(), headerModel.getSsResult().getTitleSlug(),
-                            "ShortStoryDetailsScreen", userDynamoId, articleId, authorId, author);
+                    AppUtils.shareStoryWithInstagram(getActivity(), "ShortStoryDetailsScreen", userDynamoId, articleId, authorId, author);
                 }
             }
             break;
