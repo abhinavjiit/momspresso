@@ -330,7 +330,7 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                         }
                         getBlogPage();
                     } else {
-                        saveDraftBeforePublishRequest(storyTitleEditText.getText().toString(), storyBodyEditText.getText().toString(), draftId);
+                        saveDraftBeforePublishRequest(storyTitleEditText.getText().toString().trim(), storyBodyEditText.getText().toString().trim(), draftId);
                     }
                 }
                 break;
@@ -687,6 +687,8 @@ public class AddShortStoryActivity extends BaseActivity implements View.OnClickL
                     Intent intent = new Intent(AddShortStoryActivity.this, ArticleModerationOrShareActivity.class);
                     intent.putExtra("shareUrl", "" + responseModel.getData().get(0).getResult().getUrl());
                     intent.putExtra("source", "addStory");
+                    intent.putExtra("title", shortStoryDraftOrPublishRequest.getTitle());
+                    intent.putExtra("body", shortStoryDraftOrPublishRequest.getBody());
                     startActivity(intent);
                 } else {
                     if (!StringUtils.isNullOrEmpty(responseModel.getReason())) {

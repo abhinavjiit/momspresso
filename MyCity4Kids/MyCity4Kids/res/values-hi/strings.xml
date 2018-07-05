@@ -344,7 +344,7 @@
     <string name="myprofile.following_label">फॉलोविंग</string>
     <string name="myprofile.followers_label">फॉलोवर्स</string>
     <string name="myprofile.section.articles_label">आर्टिकल्स</string>
-    <string name="myprofile.section.short_story_label">100 WORD STORY</string>
+    <string name="myprofile.section.short_story_label">#100 शब्दों की कहानी</string>
     <string name="myprofile.section.videos_label">मोम व्लॉग</string>
     <string name="myprofile.section.activity_label">एक्टिविटी</string>
     <string name="myprofile.section.myranking_label">माय रैंकिंग</string>

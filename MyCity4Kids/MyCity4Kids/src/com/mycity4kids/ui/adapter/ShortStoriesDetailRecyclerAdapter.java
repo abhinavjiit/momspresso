@@ -73,8 +73,8 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
         try {
             if (holder instanceof ShortStoriesViewHolder) {
                 ShortStoriesViewHolder ssViewHolder = (ShortStoriesViewHolder) holder;
-                ssViewHolder.storyTitleTextView.setText(datalist.get(position).getSsResult().getTitle());
-                ssViewHolder.storyBodyTextView.setText(datalist.get(position).getSsResult().getBody());
+                ssViewHolder.storyTitleTextView.setText(datalist.get(position).getSsResult().getTitle().trim());
+                ssViewHolder.storyBodyTextView.setText(datalist.get(position).getSsResult().getBody().trim());
                 ssViewHolder.authorNameTextView.setText(datalist.get(position).getSsResult().getUserName());
                 switch (colorPosition % 6) {
                     case 0:
@@ -109,6 +109,12 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
                 } else {
                     ssViewHolder.storyRecommendationCountTextView.setVisibility(View.VISIBLE);
                     ssViewHolder.storyRecommendationCountTextView.setText(datalist.get(position).getSsResult().getLikeCount());
+                }
+
+                if (datalist.get(position).getSsResult().isLiked()) {
+                    ssViewHolder.likeImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_recommended));
+                } else {
+                    ssViewHolder.likeImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_ss_like));
                 }
             } else {
                 SSCommentViewHolder ssCommentViewHolder = (SSCommentViewHolder) holder;
@@ -148,7 +154,7 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
         LinearLayout storyRecommendationContainer, storyCommentContainer;
         TextView storyCommentCountTextView;
         TextView storyRecommendationCountTextView;
-        ImageView storyOptionImageView;
+        ImageView storyOptionImageView, likeImageView;
         ImageView facebookShareImageView, whatsappShareImageView, instagramShareImageView, genericShareImageView;
         RelativeLayout mainView;
 
@@ -162,6 +168,7 @@ public class ShortStoriesDetailRecyclerAdapter extends RecyclerView.Adapter<Recy
             storyCommentCountTextView = (TextView) itemView.findViewById(R.id.storyCommentCountTextView);
             storyRecommendationCountTextView = (TextView) itemView.findViewById(R.id.storyRecommendationCountTextView);
             storyOptionImageView = (ImageView) itemView.findViewById(R.id.storyOptionImageView);
+            likeImageView = (ImageView) itemView.findViewById(R.id.likeImageView);
             facebookShareImageView = (ImageView) itemView.findViewById(R.id.facebookShareImageView);
             whatsappShareImageView = (ImageView) itemView.findViewById(R.id.whatsappShareImageView);
             instagramShareImageView = (ImageView) itemView.findViewById(R.id.instagramShareImageView);
