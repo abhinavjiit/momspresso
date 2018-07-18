@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mycity4kids.R;
+import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.gtmutils.Utils;
 import com.mycity4kids.preference.SharedPrefUtils;
 
@@ -45,10 +46,11 @@ public class ChooseAnonymousDialogFragment extends DialogFragment implements OnC
         switch (view.getId()) {
             case R.id.closeDialogImageView:
             case R.id.cancelTextView:
+                SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), false);
                 dismiss();
                 break;
             case R.id.okTextView:
-                SharedPrefUtils.setUserAnonymous(getActivity(), true);
+                SharedPrefUtils.setUserAnonymous(BaseApplication.getAppContext(), true);
                 dismiss();
                 break;
         }

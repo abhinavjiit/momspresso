@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/groupImageView"
+            android:layout_width="match_parent"
+            android:layout_height="210dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="20dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/default_article" />
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/editGroupImageView"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignRight="@+id/groupImageView"
+            android:layout_alignTop="@+id/groupImageView"
+            android:paddingBottom="6dp"
+            android:paddingLeft="6dp"
+            android:paddingRight="10dp"
+            android:paddingTop="6dp"
+            android:src="@drawable/ic_camera"
+            android:tint="@color/white" />
+
+        <!--<com.mycity4kids.widget.CustomFontEditText-->
+        <!--android:id="@+id/groupCategoriesEditText"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/groupImageView"-->
+        <!--android:layout_marginLeft="10dp"-->
+        <!--android:layout_marginRight="10dp"-->
+        <!--android:layout_marginTop="12dp"-->
+        <!--android:background="@drawable/dotted_line"-->
+        <!--android:text="Linked Categories"-->
+        <!--android:textColor="@color/groups.grey"-->
+        <!--android:textSize="16sp"-->
+        <!--app:fontName="oswald.ttf" />-->
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/topicInterestLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/groupImageView"
+            android:layout_toLeftOf="@+id/addTopicsBtn"
+            android:paddingBottom="10dp"
+            android:paddingLeft="20dp"
+            android:paddingTop="10dp"
+            android:text="Add Group Categories"
+            android:textColor="@color/app_settings.edit_prefs.topics_interested"
+            android:textSize="14sp"
+            app:fontName="oswald_regular.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/addTopicsBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/groupImageView"
+            android:paddingBottom="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="10dp"
+            android:text="@string/app_settings.edit_prefs.add_topics"
+            android:textColor="@color/app_settings.edit_prefs.add_topics"
+            android:textSize="14sp"
+            app:fontName="oswald.ttf" />
+
+
+        <LinearLayout
+            android:id="@+id/flContainerLL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/topicInterestLabel"
+            android:animateLayoutChanges="true"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="12dp">
+
+            <org.apmem.tools.layouts.FlowLayout
+                android:id="@+id/flowLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true">
+
+            </org.apmem.tools.layouts.FlowLayout>
+        </LinearLayout>
+
+        <com.mycity4kids.widget.CustomFontEditText
+            android:id="@+id/groupDescEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/flContainerLL"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/border"
+            android:gravity="top|left"
+            android:lines="6"
+            android:minHeight="120dp"
+            android:padding="10dp"
+            android:text="LOREM IPSUM"
+            android:textColor="@color/groups.grey"
+            android:textSize="16sp"
+            app:fontName="oswald.ttf" />
+    </RelativeLayout>
+</ScrollView>

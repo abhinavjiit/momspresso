@@ -1,15 +1,16 @@
 package com.mycity4kids.models.response;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GroupsActionData {
-    private GroupsActionResult result;
+    private List<GroupsActionResult> result;
 
-    public GroupsActionResult getResult() {
+    public List<GroupsActionResult> getResult() {
         return result;
     }
 
-    public void setResult(GroupsActionResult result) {
+    public void setResult(List<GroupsActionResult> result) {
         this.result = result;
     }
 

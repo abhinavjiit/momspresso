@@ -29,6 +29,7 @@ import com.mycity4kids.R;
 import com.mycity4kids.application.BaseApplication;
 import com.mycity4kids.constants.AppConstants;
 import com.mycity4kids.constants.Constants;
+import com.mycity4kids.models.request.GroupActionsPatchRequest;
 import com.mycity4kids.models.request.GroupActionsRequest;
 import com.mycity4kids.models.request.UpdateGroupPostRequest;
 import com.mycity4kids.models.request.UpdateUserPostSettingsRequest;
@@ -50,6 +51,11 @@ import com.mycity4kids.ui.adapter.GroupsGenericPostRecyclerAdapter;
 import com.mycity4kids.ui.fragment.GroupPostReportDialogFragment;
 import com.mycity4kids.utils.AppUtils;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -102,6 +108,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
     private TextView savePostTextView, notificationToggleTextView, commentToggleTextView, reportPostTextView;
     private ProgressBar progressBar;
     private ImageView groupSettingsImageView;
+    private TextView memberCountTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,6 +132,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         postSettingsContainerMain = (RelativeLayout) findViewById(R.id.postSettingsContainerMain);
         overlayView = findViewById(R.id.overlayView);
         savePostTextView = (TextView) findViewById(R.id.savePostTextView);
+        memberCountTextView = (TextView) findViewById(R.id.memberCountTextView);
         notificationToggleTextView = (TextView) findViewById(R.id.notificationToggleTextView);
         commentToggleTextView = (TextView) findViewById(R.id.commentToggleTextView);
         reportPostTextView = (TextView) findViewById(R.id.reportPostTextView);
@@ -196,7 +204,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         } else {
             toolbarTitle.setHint(getString(R.string.groups_search_in) + " " + selectedGroup.getTitle());
             groupNameTextView.setText(selectedGroup.getTitle());
-
+            memberCountTextView.setText(selectedGroup.getMemberCount() + " " + getString(R.string.groups_member_label));
             groupAboutRecyclerAdapter = new GroupAboutRecyclerAdapter(this, this);
             groupAboutRecyclerAdapter.setData(selectedGroup);
             recyclerView.setAdapter(groupAboutRecyclerAdapter);
@@ -228,6 +236,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                     GroupDetailResponse groupPostResponse = response.body();
                     selectedGroup = groupPostResponse.getData().getResult();
                     toolbarTitle.setText(getString(R.string.groups_search_in) + " " + selectedGroup.getTitle());
+                    memberCountTextView.setText(selectedGroup.getMemberCount() + " " + getString(R.string.groups_member_label));
                     groupNameTextView.setText(selectedGroup.getTitle());
 
                     groupAboutRecyclerAdapter = new GroupAboutRecyclerAdapter(GroupDetailsActivity.this, GroupDetailsActivity.this);
@@ -246,7 +255,8 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
 
         @Override
         public void onFailure(Call<GroupDetailResponse> call, Throwable t) {
-
+            Crashlytics.logException(t);
+            Log.d("MC4kException", Log.getStackTraceString(t));
         }
     };
 
@@ -315,6 +325,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
 //                groupSummaryPostRecyclerAdapter.notifyDataSetChanged();
             }
         } else {
+            formatPostData(dataList);
             noPostsTextView.setVisibility(View.GONE);
             postList.addAll(dataList);
 //            groupsGenericPostRecyclerAdapter.setHeaderData(selectedGroup);
@@ -324,6 +335,24 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 isLastPageReached = true;
             }
             groupsGenericPostRecyclerAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void formatPostData(ArrayList<GroupPostResult> dataList) {
+        for (int j = 0; j < dataList.size(); j++) {
+            for (int i = 0; i < dataList.get(j).getCounts().size(); i++) {
+                switch (dataList.get(j).getCounts().get(i).getName()) {
+                    case "helpfullCount":
+                        dataList.get(j).setHelpfullCount(dataList.get(j).getCounts().get(i).getCount());
+                        break;
+                    case "notHelpfullCount":
+                        dataList.get(j).setNotHelpfullCount(dataList.get(j).getCounts().get(i).getCount());
+                        break;
+                    case "responseCount":
+                        dataList.get(j).setResponseCount(dataList.get(j).getCounts().get(i).getCount());
+                        break;
+                }
+            }
         }
     }
 
@@ -342,13 +371,13 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             case R.id.postContainer: {
                 Intent intent = new Intent(GroupDetailsActivity.this, AddTextOrMediaGroupPostActivity.class);
                 intent.putExtra("groupItem", selectedGroup);
-                startActivity(intent);
+                startActivityForResult(intent, 1111);
             }
             break;
             case R.id.pollContainer: {
                 Intent intent = new Intent(GroupDetailsActivity.this, AddPollGroupPostActivity.class);
                 intent.putExtra("groupItem", selectedGroup);
-                startActivity(intent);
+                startActivityForResult(intent, 1111);
             }
             break;
             case R.id.closeImageView:
@@ -373,7 +402,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 break;
             case R.id.notificationToggleTextView:
                 Log.d("notifToggleTextView", "" + selectedPost.getId());
-                if (notificationToggleTextView.getText().toString().equals("Disable Notification")) {
+                if (notificationToggleTextView.getText().toString().equals("DISABLE NOTIFICATION")) {
                     updateUserPostPreferences("enableNotif");
                 } else {
                     updateUserPostPreferences("disableNotif");
@@ -384,10 +413,13 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 GroupPostReportDialogFragment groupPostReportDialogFragment = new GroupPostReportDialogFragment();
                 FragmentManager fm = getSupportFragmentManager();
                 Bundle _args = new Bundle();
+                _args.putInt("groupId", groupId);
+                _args.putInt("postId", selectedPost.getId());
+                _args.putString("type", AppConstants.GROUP_REPORT_TYPE_POST);
                 groupPostReportDialogFragment.setArguments(_args);
                 groupPostReportDialogFragment.setCancelable(true);
                 groupPostReportDialogFragment.show(fm, "Choose video report option");
-                reportPostTextView.setText("Unreport");
+                reportPostTextView.setText("UNREPORT");
                 break;
             case R.id.overlayView:
                 postSettingsContainerMain.setVisibility(View.GONE);
@@ -424,8 +456,10 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                     GroupPostResponse groupPostResponse = response.body();
                     if (groupPostResponse.getData().get(0).getResult().get(0).getDisableComments() == 1) {
                         commentToggleTextView.setText("ENABLE COMMENTS");
+                        selectedPost.setDisableComments(1);
                     } else {
                         commentToggleTextView.setText("DISABLE COMMENTS");
+                        selectedPost.setDisableComments(0);
                     }
                 } else {
 
@@ -500,6 +534,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             try {
                 if (response.isSuccessful()) {
                     UserPostSettingResponse userPostSettingResponse = response.body();
+                    currentPostPrefsForUser = userPostSettingResponse.getData().get(0).getResult().get(0);
                     if (userPostSettingResponse.getData().get(0).getResult().get(0).getNotificationOff() == 1) {
                         notificationToggleTextView.setText("ENABLE NOTIFICATION");
                     } else {
@@ -716,7 +751,7 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
                 markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, position);
                 break;
             case R.id.downvoteContainer:
-                markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_HELPFUL_KEY, position);
+                markAsHelpfulOrUnhelpful(AppConstants.GROUP_ACTION_TYPE_UNHELPFUL_KEY, position);
                 break;
         }
     }
@@ -738,14 +773,56 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         public void onResponse(Call<GroupsActionResponse> call, retrofit2.Response<GroupsActionResponse> response) {
             if (response == null || response.body() == null) {
                 if (response != null && response.raw() != null) {
-                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
-                    Crashlytics.logException(nee);
+                    if (response.code() == 400) {
+                        try {
+                            int patchActionId = 0;
+                            String patchActionType = null;
+
+                            String errorBody = new String(response.errorBody().bytes());
+                            JSONObject jObject = new JSONObject(errorBody);
+                            JSONArray dataArray = jObject.optJSONArray("data");
+                            if (dataArray.getJSONObject(0).get("type").equals(dataArray.getJSONObject(1).get("type"))) {
+                                //Same Action Event
+                                if ("0".equals(dataArray.getJSONObject(0).get("type"))) {
+                                    showToast("already marked unhelpful");
+                                } else {
+                                    showToast("already marked helpful");
+                                }
+
+                            } else {
+                                if (dataArray.getJSONObject(0).has("id") && !dataArray.getJSONObject(0).isNull("id")) {
+                                    patchActionId = dataArray.getJSONObject(0).getInt("id");
+                                    patchActionType = dataArray.getJSONObject(1).getString("type");
+                                } else {
+                                    patchActionType = dataArray.getJSONObject(0).getString("type");
+                                    patchActionId = dataArray.getJSONObject(1).getInt("id");
+                                }
+                                sendUpvoteDownvotePatchRequest(patchActionId, patchActionType);
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
                 return;
             }
             try {
                 if (response.isSuccessful()) {
                     GroupsActionResponse groupsActionResponse = response.body();
+                    if (groupsActionResponse.getData().getResult().size() == 1) {
+                        for (int i = 0; i < postList.size(); i++) {
+                            if (postList.get(i).getId() == groupsActionResponse.getData().getResult().get(0).getPostId()) {
+                                if ("1".equals(groupsActionResponse.getData().getResult().get(0).getType())) {
+                                    postList.get(i).setHelpfullCount(postList.get(i).getHelpfullCount() + 1);
+                                } else {
+                                    postList.get(i).setNotHelpfullCount(postList.get(i).getNotHelpfullCount() + 1);
+                                }
+                            }
+                        }
+                    }
+                    groupsGenericPostRecyclerAdapter.notifyDataSetChanged();
 //                    groupPostResult.setVoted(true);
 //                    notifyDataSetChanged();
                 } else {
@@ -761,6 +838,59 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
         public void onFailure(Call<GroupsActionResponse> call, Throwable t) {
             Crashlytics.logException(t);
             Log.d("MC4kException", Log.getStackTraceString(t));
+        }
+    };
+
+    private void sendUpvoteDownvotePatchRequest(int patchActionId, String patchActionType) {
+        Retrofit retrofit = BaseApplication.getInstance().getGroupsRetrofit();
+        GroupsAPI groupsAPI = retrofit.create(GroupsAPI.class);
+
+        GroupActionsPatchRequest groupActionsRequest = new GroupActionsPatchRequest();
+        groupActionsRequest.setType(patchActionType);
+
+        Call<GroupsActionResponse> call = groupsAPI.patchAction(patchActionId, groupActionsRequest);
+        call.enqueue(patchActionResponseCallback);
+    }
+
+    private Callback<GroupsActionResponse> patchActionResponseCallback = new Callback<GroupsActionResponse>() {
+        @Override
+        public void onResponse(Call<GroupsActionResponse> call, retrofit2.Response<GroupsActionResponse> response) {
+            if (response == null || response.body() == null) {
+                if (response != null && response.raw() != null) {
+                    NetworkErrorException nee = new NetworkErrorException(response.raw().toString());
+                    Crashlytics.logException(nee);
+                }
+                return;
+            }
+            try {
+                if (response.isSuccessful()) {
+                    GroupsActionResponse groupsActionResponse = response.body();
+                    if (groupsActionResponse.getData().getResult().size() == 1) {
+                        for (int i = 0; i < postList.size(); i++) {
+                            if (postList.get(i).getId() == groupsActionResponse.getData().getResult().get(0).getPostId()) {
+                                if ("1".equals(groupsActionResponse.getData().getResult().get(0).getType())) {
+                                    postList.get(i).setHelpfullCount(postList.get(i).getHelpfullCount() + 1);
+                                } else {
+                                    postList.get(i).setNotHelpfullCount(postList.get(i).getNotHelpfullCount() + 1);
+                                }
+                            }
+                        }
+                    }
+                    groupsGenericPostRecyclerAdapter.notifyDataSetChanged();
+//                    groupPostResult.setVoted(true);
+//                    notifyDataSetChanged();
+                } else {
+
+                }
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+                Log.d("MC4kException", Log.getStackTraceString(e));
+            }
+        }
+
+        @Override
+        public void onFailure(Call<GroupsActionResponse> call, Throwable t) {
+
         }
     };
 
@@ -836,6 +966,21 @@ public class GroupDetailsActivity extends BaseActivity implements View.OnClickLi
             notificationToggleTextView.setText("ENABLE NOTIFICATION");
         } else {
             notificationToggleTextView.setText("DISABLE NOTIFICATION");
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1111) {
+            if (addPostContainer.getVisibility() == View.VISIBLE) {
+                addPostContainer.setVisibility(View.GONE);
+            }
+            isLastPageReached = false;
+            skip = 0;
+            limit = 10;
+            postList.clear();
+            getGroupPosts();
         }
     }
 }

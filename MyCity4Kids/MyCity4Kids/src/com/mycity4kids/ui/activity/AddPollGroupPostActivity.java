@@ -416,6 +416,7 @@ public class AddPollGroupPostActivity extends BaseActivity implements View.OnCli
             try {
                 if (response.isSuccessful()) {
                     AddGroupPostResponse responseModel = response.body();
+                    onBackPressed();
 //                    processGroupListingResponse(responseModel);
                 } else {
 

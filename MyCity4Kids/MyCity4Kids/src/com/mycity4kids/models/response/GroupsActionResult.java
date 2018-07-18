@@ -12,7 +12,7 @@ public class GroupsActionResult {
     private int groupId;
     private int postId;
     private String userId;
-    private int type;
+    private String type;
     private int voteOption;
     private long createdAt;
     private long updatedAt;
@@ -73,11 +73,11 @@ public class GroupsActionResult {
         this.responseId = responseId;
     }
 
-    public int getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(String type) {
         this.type = type;
     }
 

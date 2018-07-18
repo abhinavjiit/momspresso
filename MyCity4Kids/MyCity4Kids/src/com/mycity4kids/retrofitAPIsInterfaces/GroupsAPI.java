@@ -2,7 +2,11 @@ package com.mycity4kids.retrofitAPIsInterfaces;
 
 import com.mycity4kids.models.request.AddGpPostCommentOrReplyRequest;
 import com.mycity4kids.models.request.AddGroupPostRequest;
+import com.mycity4kids.models.request.CreateUpdateGroupRequest;
+import com.mycity4kids.models.request.GroupActionsPatchRequest;
 import com.mycity4kids.models.request.GroupActionsRequest;
+import com.mycity4kids.models.request.GroupReportContentRequest;
+import com.mycity4kids.models.request.GroupsCategoryUpdateRequest;
 import com.mycity4kids.models.request.JoinGroupRequest;
 import com.mycity4kids.models.request.UpdateGroupPostRequest;
 import com.mycity4kids.models.request.UpdateUserPostSettingsRequest;
@@ -12,11 +16,16 @@ import com.mycity4kids.models.response.GroupDetailResponse;
 import com.mycity4kids.models.response.GroupPostCommentResponse;
 import com.mycity4kids.models.response.GroupPostResponse;
 import com.mycity4kids.models.response.GroupsActionResponse;
+import com.mycity4kids.models.response.GroupsCategoryMappingResponse;
 import com.mycity4kids.models.response.GroupsJoinResponse;
 import com.mycity4kids.models.response.GroupsListingResponse;
+import com.mycity4kids.models.response.GroupsReportContentResponse;
+import com.mycity4kids.models.response.GroupsReportedContentResponse;
 import com.mycity4kids.models.response.GroupsSettingResponse;
 import com.mycity4kids.models.response.SetupBlogResponse;
 import com.mycity4kids.models.response.UserPostSettingResponse;
+
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -43,16 +52,15 @@ public interface GroupsAPI {
     Call<GroupsListingResponse> getJoinedGroupList(@Query("$skip") int skip,
                                                    @Query("$limit") int limit);
 
-    @FormUrlEncoded
     @POST("/api/v1/groups/group")
     Call<SetupBlogResponse> createGroup();
 
     @GET("/api/v1/groups/group/{groupId}")
     Call<GroupDetailResponse> getGroupById(@Path("groupId") int groupId);
 
-    @FormUrlEncoded
-    @PUT("/api/v1/groups/group")
-    Call<SetupBlogResponse> updateGroup();
+    @PATCH("/api/v1/groups/group/{groupId}")
+    Call<GroupDetailResponse> updateGroup(@Path("groupId") int groupId,
+                                          @Body CreateUpdateGroupRequest body);
 
 
     //Group Settings Functionalities
@@ -82,7 +90,7 @@ public interface GroupsAPI {
                                                          @Query("type") String type);
 
     @GET("/api/v1/groups/post/{postId}")
-    Call<GroupsListingResponse> getSinglePost(@Path("postId") String settingsId);
+    Call<GroupPostResponse> getSinglePost(@Path("postId") int postId);
 
     @POST("/api/v1/groups/post")
     Call<AddGroupPostResponse> createPost(@Body AddGroupPostRequest addGroupPostRequest);
@@ -145,4 +153,21 @@ public interface GroupsAPI {
     @POST("/api/v1/groups/action")
     Call<GroupsActionResponse> addAction(@Body GroupActionsRequest groupActionsRequest);
 
+    @PATCH("/api/v1/groups/action/{actionId}")
+    Call<GroupsActionResponse> patchAction(@Path("actionId") int actionId,
+                                           @Body GroupActionsPatchRequest groupActionsRequest);
+
+    //Groups Category Mapping
+    @GET("/api/v1/groups/categorygroupmap/")
+    Call<GroupsCategoryMappingResponse> getGroupCategories(@Query("groupId") int groupId);
+
+    @POST("/api/v1/groups/categorygroupmap")
+    Call<GroupsCategoryMappingResponse> addGroupCategory(@Body ArrayList<GroupsCategoryUpdateRequest> groupsCategoryUpdateRequest);
+
+    //Report Content
+    @GET("/api/v1/groups/moderation-view/")
+    Call<GroupsReportedContentResponse> getReportedContent();
+
+    @POST("/api/v1/groups/categorygroupmap")
+    Call<GroupsReportContentResponse> reportContent(@Body GroupReportContentRequest groupReportContentRequest);
 }

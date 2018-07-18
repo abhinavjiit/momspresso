@@ -38,6 +38,11 @@ public class GroupPostResult extends BaseResponse implements Parcelable {
     private boolean isVoted;
     private ArrayList<GroupPostCounts> counts;
     private UserDetailResult userInfo;
+    private int notHelpfullCount;
+    private int helpfullCount;
+    private int shareCount;
+    private int responseCount;
+    private int votesCount;
 
     public GroupPostResult() {
     }
@@ -268,6 +273,46 @@ public class GroupPostResult extends BaseResponse implements Parcelable {
 
     public void setUserInfo(UserDetailResult userInfo) {
         this.userInfo = userInfo;
+    }
+
+    public int getNotHelpfullCount() {
+        return notHelpfullCount;
+    }
+
+    public void setNotHelpfullCount(int notHelpfullCount) {
+        this.notHelpfullCount = notHelpfullCount;
+    }
+
+    public int getHelpfullCount() {
+        return helpfullCount;
+    }
+
+    public void setHelpfullCount(int helpfullCount) {
+        this.helpfullCount = helpfullCount;
+    }
+
+    public int getShareCount() {
+        return shareCount;
+    }
+
+    public void setShareCount(int shareCount) {
+        this.shareCount = shareCount;
+    }
+
+    public int getResponseCount() {
+        return responseCount;
+    }
+
+    public void setResponseCount(int responseCount) {
+        this.responseCount = responseCount;
+    }
+
+    public int getVotesCount() {
+        return votesCount;
+    }
+
+    public void setVotesCount(int votesCount) {
+        this.votesCount = votesCount;
     }
 
     @Override

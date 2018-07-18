@@ -95,6 +95,7 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
     private TextView imageCameraTextView, imageGalleryTextView, videoCameraTextView, videoGalleryTextView, cancelTextView;
     private RelativeLayout chooseMediaTypeContainer;
     private LinearLayout mediaContainer;
+    private ImageView closeEditorImageView;
 
 
     @Override
@@ -103,6 +104,7 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
         setContentView(R.layout.add_text_group_post_activity);
         mLayout = findViewById(R.id.rootLayout);
         postContentEditText = (EditText) findViewById(R.id.postContentEditText);
+        closeEditorImageView = (ImageView) findViewById(R.id.closeEditorImageView);
         anonymousImageView = (ImageView) findViewById(R.id.anonymousImageView);
         addMediaImageView = (ImageView) findViewById(R.id.addMediaImageView);
         postImageView = (ImageView) findViewById(R.id.postImageView);
@@ -126,7 +128,7 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
         videoCameraTextView.setOnClickListener(this);
         videoGalleryTextView.setOnClickListener(this);
         cancelTextView.setOnClickListener(this);
-
+        closeEditorImageView.setOnClickListener(this);
     }
 
     @Override
@@ -137,6 +139,9 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.closeEditorImageView:
+                onBackPressed();
+                break;
             case R.id.cancelTextView:
                 chooseMediaTypeContainer.setVisibility(View.GONE);
                 break;
@@ -244,6 +249,7 @@ public class AddTextOrMediaGroupPostActivity extends BaseActivity implements Vie
             try {
                 if (response.isSuccessful()) {
                     AddGroupPostResponse responseModel = response.body();
+                    onBackPressed();
 //                    processGroupListingResponse(responseModel);
                 } else {
 

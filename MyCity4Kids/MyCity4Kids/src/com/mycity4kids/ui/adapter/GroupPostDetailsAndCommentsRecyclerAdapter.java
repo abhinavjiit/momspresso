@@ -2,6 +2,7 @@ package com.mycity4kids.ui.adapter;
 
 import android.accounts.NetworkErrorException;
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -25,6 +26,8 @@ import com.mycity4kids.models.response.GroupPostResult;
 import com.mycity4kids.models.response.GroupsActionResponse;
 import com.mycity4kids.preference.SharedPrefUtils;
 import com.mycity4kids.retrofitAPIsInterfaces.GroupsAPI;
+import com.mycity4kids.ui.activity.BloggerProfileActivity;
+import com.mycity4kids.utils.RoundedTransformation;
 import com.mycity4kids.widget.GroupPostMediaViewPager;
 import com.shuhart.bubblepagerindicator.BubblePageIndicator;
 import com.squareup.picasso.Picasso;
@@ -46,8 +49,9 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
     public static final int HEADER = -1;
     public static final int COMMENT_LEVEL_ROOT = 0;
     public static final int COMMENT_LEVEL_REPLY = 1;
-    public static final int COMMENT_LEVEL_REPLY_REPLY = 2;
+    private final String localizedNotHelpful, localizedHelpful, localizedComment;
 
+    public static final int COMMENT_LEVEL_REPLY_REPLY = 2;
     private final Context mContext;
     private final LayoutInflater mInflator;
     private ArrayList<GroupPostCommentResult> postCommentsList;
@@ -62,6 +66,9 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
         mInflator = (LayoutInflater) pContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mListener = listener;
         this.postType = postType;
+        localizedComment = mContext.getString(R.string.groups_post_comment);
+        localizedHelpful = mContext.getString(R.string.groups_post_helpful);
+        localizedNotHelpful = mContext.getString(R.string.groups_post_nothelpful);
     }
 
     public void setData(GroupPostResult groupPostResult, ArrayList<GroupPostCommentResult> postCommentsList) {
@@ -118,18 +125,60 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
             TextPostViewHolder textPostViewHolder = (TextPostViewHolder) holder;
             textPostViewHolder.postDataTextView.setText(groupPostResult.getContent());
             textPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(groupPostResult.getCreatedAt()));
-            textPostViewHolder.usernameTextView.setText(groupPostResult.getUserId());
+            textPostViewHolder.upvoteCountTextView.setText(groupPostResult.getHelpfullCount() + " " + localizedHelpful);
+            textPostViewHolder.downvoteCountTextView.setText(groupPostResult.getNotHelpfullCount() + " " + localizedNotHelpful);
+            textPostViewHolder.postCommentsTextView.setText(groupPostResult.getResponseCount() + " " + localizedComment);
+            if (groupPostResult.getIsAnnon() == 1) {
+                textPostViewHolder.usernameTextView.setText("Anonymous");
+                textPostViewHolder.userImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_followers));
+            } else {
+                textPostViewHolder.usernameTextView.setText(groupPostResult.getUserInfo().getFirstName() + " " + groupPostResult.getUserInfo().getLastName());
+                try {
+                    Picasso.with(mContext).load(groupPostResult.getUserInfo().getProfilePicUrl().getClientApp())
+                            .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(textPostViewHolder.userImageView);
+                } catch (Exception e) {
+                    textPostViewHolder.userImageView.setBackgroundResource(R.drawable.default_article);
+                }
+            }
         } else if (holder instanceof MediaPostViewHolder) {
             MediaPostViewHolder mediaPostViewHolder = (MediaPostViewHolder) holder;
             mediaPostViewHolder.postDataTextView.setText(groupPostResult.getContent());
             mediaPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(groupPostResult.getCreatedAt()));
-            mediaPostViewHolder.usernameTextView.setText(groupPostResult.getUserId());
+            mediaPostViewHolder.upvoteCountTextView.setText(groupPostResult.getHelpfullCount() + " " + localizedHelpful);
+            mediaPostViewHolder.downvoteCountTextView.setText(groupPostResult.getNotHelpfullCount() + " " + localizedNotHelpful);
+            mediaPostViewHolder.postCommentsTextView.setText(groupPostResult.getResponseCount() + " " + localizedComment);
+            if (groupPostResult.getIsAnnon() == 1) {
+                mediaPostViewHolder.usernameTextView.setText("Anonymous");
+                mediaPostViewHolder.userImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_followers));
+            } else {
+                mediaPostViewHolder.usernameTextView.setText(groupPostResult.getUserInfo().getFirstName() + " " + groupPostResult.getUserInfo().getLastName());
+                try {
+                    Picasso.with(mContext).load(groupPostResult.getUserInfo().getProfilePicUrl().getClientApp())
+                            .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(mediaPostViewHolder.userImageView);
+                } catch (Exception e) {
+                    mediaPostViewHolder.userImageView.setBackgroundResource(R.drawable.default_article);
+                }
+            }
             initializeViews((MediaPostViewHolder) holder, position);
         } else if (holder instanceof TextPollPostViewHolder) {
             TextPollPostViewHolder textPollPostViewHolder = (TextPollPostViewHolder) holder;
             textPollPostViewHolder.pollQuestionTextView.setText(groupPostResult.getContent());
             textPollPostViewHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(groupPostResult.getCreatedAt()));
-            textPollPostViewHolder.usernameTextView.setText(groupPostResult.getUserId());
+            textPollPostViewHolder.upvoteCountTextView.setText(groupPostResult.getHelpfullCount() + " " + localizedHelpful);
+            textPollPostViewHolder.downvoteCountTextView.setText(groupPostResult.getNotHelpfullCount() + " " + localizedNotHelpful);
+            textPollPostViewHolder.postCommentsTextView.setText(groupPostResult.getResponseCount() + " " + localizedComment);
+            if (groupPostResult.getIsAnnon() == 1) {
+                textPollPostViewHolder.usernameTextView.setText("Anonymous");
+                textPollPostViewHolder.userImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_followers));
+            } else {
+                textPollPostViewHolder.usernameTextView.setText(groupPostResult.getUserInfo().getFirstName() + " " + groupPostResult.getUserInfo().getLastName());
+                try {
+                    Picasso.with(mContext).load(groupPostResult.getUserInfo().getProfilePicUrl().getClientApp())
+                            .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(textPollPostViewHolder.userImageView);
+                } catch (Exception e) {
+                    textPollPostViewHolder.userImageView.setBackgroundResource(R.drawable.default_article);
+                }
+            }
             textPollPostViewHolder.option3Container.setVisibility(View.GONE);
             textPollPostViewHolder.option4Container.setVisibility(View.GONE);
             Map<String, String> optionsMap = (Map<String, String>) groupPostResult.getPollOptions();
@@ -155,20 +204,30 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                         break;
                 }
             }
-//            if (groupPostResult.isVoted()) {
-//                showVotingData(textPollPostViewHolder);
-//            } else {
-//                hideVotingData(textPollPostViewHolder);
-//            }
         } else if (holder instanceof ImagePollPostViewHolder) {
             ImagePollPostViewHolder imageHolder = (ImagePollPostViewHolder) holder;
             imageHolder.postDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(groupPostResult.getCreatedAt()));
             imageHolder.usernameTextView.setText(groupPostResult.getUserId());
             imageHolder.pollQuestionTextView.setText(groupPostResult.getContent());
-            Map<String, String> imageMap = (Map<String, String>) groupPostResult.getPollOptions();
+            imageHolder.upvoteCountTextView.setText(groupPostResult.getHelpfullCount() + " " + localizedHelpful);
+            imageHolder.downvoteCountTextView.setText(groupPostResult.getNotHelpfullCount() + " " + localizedNotHelpful);
+            imageHolder.postCommentsTextView.setText(groupPostResult.getResponseCount() + " " + localizedComment);
+            if (groupPostResult.getIsAnnon() == 1) {
+                imageHolder.usernameTextView.setText("Anonymous");
+                imageHolder.userImageView.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_followers));
+            } else {
+                imageHolder.usernameTextView.setText(groupPostResult.getUserInfo().getFirstName() + " " + groupPostResult.getUserInfo().getLastName());
+                try {
+                    Picasso.with(mContext).load(groupPostResult.getUserInfo().getProfilePicUrl().getClientApp())
+                            .placeholder(R.drawable.default_article).error(R.drawable.default_article).into(imageHolder.userImageView);
+                } catch (Exception e) {
+                    imageHolder.userImageView.setBackgroundResource(R.drawable.default_article);
+                }
+            }
             imageHolder.lastOptionsContainer.setVisibility(View.GONE);
             imageHolder.option3Container.setVisibility(View.GONE);
             imageHolder.option4Container.setVisibility(View.GONE);
+            Map<String, String> imageMap = (Map<String, String>) groupPostResult.getPollOptions();
             for (Map.Entry<String, String> entry : imageMap.entrySet()) {
                 switch (entry.getKey()) {
                     case "option1":
@@ -193,23 +252,25 @@ public class GroupPostDetailsAndCommentsRecyclerAdapter extends RecyclerView.Ada
                         break;
                 }
             }
-//            if (groupPostResult.isVoted()) {
-//                showImagePollVotingData(imageHolder);
-//            } else {
-//                hideImagePollVotingData(imageHolder);
-//            }
-
         } else if (holder instanceof RootCommentViewHolder) {
             RootCommentViewHolder rootCommentViewHolder = (RootCommentViewHolder) holder;
-            rootCommentViewHolder.commentorUsernameTextView.setText(postCommentsList.get(position).getUserId());
+            rootCommentViewHolder.commentorUsernameTextView.setText(postCommentsList.get(position).getUserInfo().getFirstName()
+                    + " " + postCommentsList.get(position).getUserInfo().getLastName());
             rootCommentViewHolder.commentDataTextView.setText(postCommentsList.get(position).getContent());
             rootCommentViewHolder.commentDateTextView.setText(DateTimeUtils.getDateFromNanoMilliTimestamp(postCommentsList.get(position).getCreatedAt()));
             if (postCommentsList.get(position).getChildData() == null || postCommentsList.get(position).getChildData().isEmpty()) {
                 rootCommentViewHolder.replyCountTextView.setVisibility(View.GONE);
             } else {
                 rootCommentViewHolder.replyCountTextView.setVisibility(View.VISIBLE);
-                rootCommentViewHolder.replyCountTextView.setText("View Replies (" + postCommentsList.get(position).getChildCount() + ") replies");
+                rootCommentViewHolder.replyCountTextView.setText("View (" + postCommentsList.get(position).getChildCount() + ") replies");
             }
+            try {
+                Picasso.with(mContext).load(postCommentsList.get(position).getUserInfo().getProfilePicUrl().getClientApp())
+                        .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img).transform(new RoundedTransformation()).into(rootCommentViewHolder.commentorImageView);
+            } catch (Exception e) {
+                rootCommentViewHolder.commentorImageView.setBackgroundResource(R.drawable.default_commentor_img);
+            }
+
         } else if (holder instanceof CommentReplyViewHolder) {
 
         } else {

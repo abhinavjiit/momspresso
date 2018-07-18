@@ -63,6 +63,7 @@ public class AddTextPollRecyclerGridAdapter extends RecyclerView.Adapter<AddText
 
         if (textChoiceList.get(x).length() > 0) {
             holder.textPollEditText.setText(textChoiceList.get(x));
+            holder.textPollEditText.setHint("Choice " + (position + 1));
         } else {
             holder.textPollEditText.setText(null);
             holder.textPollEditText.setHint("Choice " + (position + 1));

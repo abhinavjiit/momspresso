@@ -43,15 +43,6 @@
             android:visibility="invisible" />
     </RelativeLayout>
 
-    <!--<com.mycity4kids.observablescrollview.ObservableListView-->
-    <!--android:id="@+id/scroll"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_below="@+id/headerRL"-->
-    <!--android:background="@color/grey_light"-->
-    <!--android:divider="@color/transparent"-->
-    <!--android:drawSelectorOnTop="true" />-->
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"

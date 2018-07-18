@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.mycity4kids.widget.CustomFontEditText
+        android:id="@+id/groupQAEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/border"
+        android:gravity="top|left"
+        android:lines="8"
+        android:minHeight="160dp"
+        android:padding="10dp"
+        android:text="LOREM IPSUM"
+        android:textColor="@color/groups.grey"
+        android:textSize="16sp"
+        app:fontName="oswald.ttf" />
+</LinearLayout>

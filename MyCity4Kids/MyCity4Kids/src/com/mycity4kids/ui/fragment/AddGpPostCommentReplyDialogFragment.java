@@ -98,14 +98,14 @@ public class AddGpPostCommentReplyDialogFragment extends DialogFragment implemen
     public void onClick(View view) {
 
         switch (view.getId()) {
-            case R.id.addCommentTextView:
-
+            case R.id.postCommentReplyTextView:
                 if (!ConnectivityUtils.isNetworkEnabled(getActivity())) {
                     ((BaseActivity) getActivity()).showSnackbar(getView().findViewById(R.id.root), getString(R.string.error_network));
                     return;
                 }
                 if (isValid()) {
                     ((GroupPostDetailActivity) getActivity()).addComment(commentReplyEditText.getText().toString());
+                    dismiss();
                 }
 
                 break;

@@ -50,8 +50,12 @@ public class RankingTopBloggerAdapter extends RecyclerView.Adapter<RankingTopBlo
     @Override
     public void onBindViewHolder(final TopBloggerViewHolder holder, int position) {
 
-        Picasso.with(mContext).load(contributorListResults.get(position).getProfilePic().getClientApp()).fit()
-                .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img).into(holder.rank1BloggerImageView);
+        try {
+            Picasso.with(mContext).load(contributorListResults.get(position).getProfilePic().getClientApp()).fit()
+                    .placeholder(R.drawable.default_commentor_img).error(R.drawable.default_commentor_img).into(holder.rank1BloggerImageView);
+        } catch (Exception e) {
+            Picasso.with(mContext).load(R.drawable.default_commentor_img).into(holder.rank1BloggerImageView);
+        }
 
         holder.rank1BloggerNameTV.setText(contributorListResults.get(position).getFirstName() + " " + contributorListResults.get(position).getLastName());
         holder.rank1FollowersCount.setText(contributorListResults.get(position).getFollowersCount() + " " + mContext.getString(R.string.ranking_followers_label));

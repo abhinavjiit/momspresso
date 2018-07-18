@@ -67,20 +67,58 @@
             app:fontName="oswald_regular.ttf" />
 
         <ImageView
-            android:id="@+id/shareGroupImageView"
+            android:id="@+id/editGroupImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignRight="@+id/groupImageView"
             android:layout_alignTop="@+id/groupImageView"
             android:padding="12dp"
-            android:src="@drawable/ic_share_white" />
+            android:src="@drawable/ic_edit" />
     </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/inviteMemberContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/groupHeaderContainer"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:paddingBottom="15dp"
+        android:paddingTop="15dp">
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/inviteMemberLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="INVITE MEMBER"
+            android:textColor="@color/groups.blue_color"
+            android:textSize="15sp"
+            app:fontName="oswald_regular.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/inviteMemberDescLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/inviteMemberLabel"
+            android:text="You can invite your friends, family to this group"
+            android:textColor="@color/groups.grey"
+            android:textSize="11sp"
+            app:fontName="oswald.ttf" />
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/underlineView0"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/inviteMemberContainer"
+        android:background="@color/light_underline" />
 
     <RelativeLayout
         android:id="@+id/disableNotificationContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/groupHeaderContainer"
+        android:layout_below="@+id/underlineView0"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:paddingBottom="15dp"
@@ -145,6 +183,37 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/leaveGroupTitleLabel"
             android:text="Yopu can choose to exit the group at any point of time"
+            android:textColor="@color/groups.grey"
+            android:textSize="11sp"
+            app:fontName="oswald.ttf" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/reportedContentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/leaveGroupContainer"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:paddingBottom="15dp"
+        android:paddingTop="15dp">
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/reportedContentTitleLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="REPORTED CONTENT"
+            android:textColor="@color/groups.blue_color"
+            android:textSize="15sp"
+            app:fontName="oswald_regular.ttf" />
+
+        <com.mycity4kids.widget.CustomFontTextView
+            android:id="@+id/reportedContentDescLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/reportedContentTitleLabel"
+            android:text="View all the reported content for this group"
             android:textColor="@color/groups.grey"
             android:textSize="11sp"
             app:fontName="oswald.ttf" />

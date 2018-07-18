@@ -680,6 +680,8 @@
     <string name="groups.post_helpful">Helpful</string>
     <string name="groups.post_nothelpful">Not Helpful</string>
     <string name="groups.post_label">POST</string>
+    <string name="groups.join_form">JOINING FORM</string>
+    <string name="groups.member_label">MEMBERS</string>
 
     <string name="no_story.be_first">Be the first one to write stories in this category!</string>
 

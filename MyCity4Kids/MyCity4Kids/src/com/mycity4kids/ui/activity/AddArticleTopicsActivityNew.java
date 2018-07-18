@@ -121,7 +121,7 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
 
         try {
             FileInputStream fileInputStream = openFileInput(AppConstants.CATEGORIES_JSON_FILE);
-            String fileContent = convertStreamToString(fileInputStream);
+            String fileContent = AppUtils.convertStreamToString(fileInputStream);
             TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
             createTopicsData(res);
         } catch (FileNotFoundException e) {
@@ -141,7 +141,7 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
 
                     try {
                         FileInputStream fileInputStream = openFileInput(AppConstants.CATEGORIES_JSON_FILE);
-                        String fileContent = convertStreamToString(fileInputStream);
+                        String fileContent = AppUtils.convertStreamToString(fileInputStream);
                         TopicsResponse res = new Gson().fromJson(fileContent, TopicsResponse.class);
                         createTopicsData(res);
                     } catch (FileNotFoundException e) {
@@ -336,10 +336,6 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
 
     }
 
-    /*
-     *Update dataset for Expandable Listview remove topics removed from EditSelectedActivity from topics Map also
-     * Also updates the total selected items.
-     */
     private int retainItemsFromReminaingList(ArrayList<String> list) {
         int totalSelectedItems = 0;
         Iterator it = topicsMap.entrySet().iterator();
@@ -376,22 +372,6 @@ public class AddArticleTopicsActivityNew extends BaseActivity {
             }
         }
         return totalSelectedItems;
-    }
-
-    public static String convertStreamToString(InputStream is) {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        StringBuilder sb = new StringBuilder();
-        String line = null;
-        try {
-            while ((line = reader.readLine()) != null) {
-                sb.append(line).append("\n");
-            }
-            reader.close();
-        } catch (IOException e) {
-            Crashlytics.logException(e);
-            Log.d("IOException", Log.getStackTraceString(e));
-        }
-        return sb.toString();
     }
 
     private void clearTopicsSelection() {

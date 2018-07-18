@@ -28,6 +28,7 @@ public class GroupPostCommentResult implements Parcelable {
     private ArrayList<GroupPostCommentResult> childData;
     private int isLastConversation = 0;
     private int childCount;
+    private UserDetailResult userInfo;
 
     public GroupPostCommentResult() {
 
@@ -212,6 +213,14 @@ public class GroupPostCommentResult implements Parcelable {
     @Override
     public int describeContents() {
         return 0;
+    }
+
+    public UserDetailResult getUserInfo() {
+        return userInfo;
+    }
+
+    public void setUserInfo(UserDetailResult userInfo) {
+        this.userInfo = userInfo;
     }
 
     @Override

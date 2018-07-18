@@ -24,6 +24,7 @@ public class GroupResult implements Parcelable {
     private long createdAt;
     private long updatedAt;
     private Map<String, String> questionnaire;
+    private int memberCount;
 
     protected GroupResult(Parcel in) {
         id = in.readInt();
@@ -39,6 +40,7 @@ public class GroupResult implements Parcelable {
         lang = in.readString();
         createdAt = in.readLong();
         updatedAt = in.readLong();
+        memberCount = in.readInt();
     }
 
     public static final Creator<GroupResult> CREATOR = new Creator<GroupResult>() {
@@ -165,6 +167,14 @@ public class GroupResult implements Parcelable {
         this.questionnaire = questionnaire;
     }
 
+    public int getMemberCount() {
+        return memberCount;
+    }
+
+    public void setMemberCount(int memberCount) {
+        this.memberCount = memberCount;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -185,5 +195,6 @@ public class GroupResult implements Parcelable {
         dest.writeString(lang);
         dest.writeLong(createdAt);
         dest.writeLong(updatedAt);
+        dest.writeInt(memberCount);
     }
 }
